@@ -26,16 +26,16 @@
     assertFileExists home-files/.bashrc
     assertFileContains \
       home-files/.bashrc \
-      'eval "$(zellij setup --generate-auto-start bash)"'
+      'eval "$(@zellij@/bin/dummy setup --generate-auto-start bash)"'
 
     assertFileExists home-files/.zshrc
     assertFileContains \
       home-files/.zshrc \
-      'eval "$(zellij setup --generate-auto-start zsh)"'
+      'eval "$(@zellij@/bin/dummy setup --generate-auto-start zsh)"'
 
     assertFileExists home-files/.config/fish/config.fish
     assertFileContains \
       home-files/.config/fish/config.fish \
-      'eval (zellij setup --generate-auto-start fish | string collect)'
+      'eval (@zellij@/bin/dummy setup --generate-auto-start fish | string collect)'
   '';
 }

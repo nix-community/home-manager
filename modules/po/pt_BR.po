@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-11-30 15:04+0000\n"
-"Last-Translator: Gabriel Fontes <hi@m7.rs>\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"PO-Revision-Date: 2024-04-19 17:07+0000\n"
+"Last-Translator: Felipe Silva <hey@felipeqq2.rocks>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "home-manager/modules/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -17,25 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
-#: modules/files.nix:234
+#: modules/files.nix:191
 msgid "Creating home file links in %s"
 msgstr "Criando links simbólicos em %s"
 
-#: modules/files.nix:247
+#: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
-msgstr "Limpando links órfãos do directório %s"
+msgstr "Limpando links órfãos de %s"
 
-#: modules/files.nix:263
+#: modules/files.nix:220
 msgid "Creating profile generation %s"
-msgstr "Criando geração %s para o perfil"
+msgstr "Criando perfil de geração %s"
 
-#: modules/files.nix:280
+#: modules/files.nix:237
 msgid "No change so reusing latest profile generation %s"
 msgstr "Nenhuma mudança, portanto reusando a última geração %s para o perfil"
 
-#: modules/home-environment.nix:640
+#: modules/home-environment.nix:634
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "E então tente novamente ativar a sua configuração do Home Manager."
 
-#: modules/home-environment.nix:673
+#: modules/home-environment.nix:667
 msgid "Activating %s"
 msgstr "Ativando %s"
 
@@ -71,16 +71,16 @@ msgstr "Ativando %s"
 msgid "Migrating profile from %s to %s"
 msgstr "Migrando perfil de %s para %s"
 
-#: modules/lib-bash/activation-init.sh:53
+#: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
-"Não foi possível encontrar um diretório de perfil apropriado, tentei %s e %s"
+"Não foi possível encontrar um diretório de perfil apropriado, tentou %s e %s"
 
-#: modules/lib-bash/activation-init.sh:81
+#: modules/lib-bash/activation-init.sh:83
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "Revalidando oldGenNum e oldGenPath"
 
-#: modules/lib-bash/activation-init.sh:84
+#: modules/lib-bash/activation-init.sh:86
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -108,34 +108,34 @@ msgstr ""
 "\n"
 "e tentar rodar \"home-manager switch\" de novo. Boa sorte!"
 
-#: modules/lib-bash/activation-init.sh:95
+#: modules/lib-bash/activation-init.sh:127
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 msgstr "Erro: USER está definido como \"%s\" mas o esperado é \"%s\""
 
-#: modules/lib-bash/activation-init.sh:104
+#: modules/lib-bash/activation-init.sh:136
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
 msgstr "Erro: HOME está definido como \"%s\" mas o esperado é \"%s\""
 
-#: modules/lib-bash/activation-init.sh:119
+#: modules/lib-bash/activation-init.sh:153
 msgid "Starting Home Manager activation"
 msgstr "Iniciando ativação do Home Manager"
 
-#: modules/lib-bash/activation-init.sh:123
+#: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"
 msgstr "Revalidando Nix"
 
-#: modules/lib-bash/activation-init.sh:133
+#: modules/lib-bash/activation-init.sh:170
 msgid "This is a dry run"
 msgstr "Essa é uma execução de teste"
 
-#: modules/lib-bash/activation-init.sh:137
+#: modules/lib-bash/activation-init.sh:174
 msgid "This is a live run"
 msgstr "Essa é uma execução de fato"
 
-#: modules/lib-bash/activation-init.sh:143
+#: modules/lib-bash/activation-init.sh:180
 msgid "Using Nix version: %s"
 msgstr "Usando versão do Nix: %s"
 
-#: modules/lib-bash/activation-init.sh:146
+#: modules/lib-bash/activation-init.sh:183
 msgid "Activation variables:"
 msgstr "Variáveis durante ativação:"

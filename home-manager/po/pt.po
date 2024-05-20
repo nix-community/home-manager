@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-12-11 16:06+0000\n"
-"Last-Translator: Lucas Eduardo <lucas59356@gmail.com>\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"PO-Revision-Date: 2024-04-19 17:07+0000\n"
+"Last-Translator: Felipe Silva <hey@felipeqq2.rocks>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/home-manager/"
 "cli/pt/>\n"
 "Language: pt\n"
@@ -17,16 +17,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
-#: home-manager/home-manager:81
+#. translators: For example: "home-manager: missing argument for --cores"
+#: home-manager/home-manager:16
+msgid "%s: missing argument for %s"
+msgstr "%s: faltando argumento para %s"
+
+#: home-manager/home-manager:64
 msgid "No configuration file found at %s"
 msgstr "Nenhum ficheiro de configuração encontrado em %s"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
-#: home-manager/home-manager:98 home-manager/home-manager:102
-#: home-manager/home-manager:192
+#: home-manager/home-manager:81 home-manager/home-manager:85
+#: home-manager/home-manager:184
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
@@ -34,16 +39,16 @@ msgstr ""
 "Manter o %s do seu Home Manager em %s já não é suportado,\n"
 "por favor mova-o para %s"
 
-#: home-manager/home-manager:109
+#: home-manager/home-manager:92
 msgid "No configuration file found. Please create one at %s"
 msgstr "Ficheiro de configuração não encontrado. Por favor crie um em %s"
 
-#: home-manager/home-manager:124
+#: home-manager/home-manager:107
 msgid "Home Manager not found at %s."
 msgstr "Home Manager não foi encontrado em %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:132
+#: home-manager/home-manager:115
 msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
@@ -52,7 +57,7 @@ msgstr ""
 "diretório foi encontrado lá."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:135
+#: home-manager/home-manager:118
 msgid ""
 "To remove this warning, do one of the following.\n"
 "\n"
@@ -91,40 +96,44 @@ msgstr ""
 "\n"
 "     $ rm -r \"%s\""
 
-#: home-manager/home-manager:174
+#: home-manager/home-manager:146
+msgid "Sanity checking Nix"
+msgstr "Revalidando Nix"
+
+#: home-manager/home-manager:166
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
 "Não foi possível encontrar uma diretoria de perfil apropriada, foi tentado "
 "%s e %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:229
+#: home-manager/home-manager:221
 msgid "Can't inspect options of a flake configuration"
 msgstr "Não é possivel inspecionar a opção de configuração do flake"
 
-#: home-manager/home-manager:291 home-manager/home-manager:314
-#: home-manager/home-manager:1034
+#: home-manager/home-manager:296 home-manager/home-manager:319
+#: home-manager/home-manager:1051
 msgid "%s: unknown option '%s'"
 msgstr "%s: opção não reconhecida '%s'"
 
-#: home-manager/home-manager:296 home-manager/home-manager:1035
+#: home-manager/home-manager:301 home-manager/home-manager:1052
 msgid "Run '%s --help' for usage help"
 msgstr "Execute '%s --help' para instruções de uso"
 
-#: home-manager/home-manager:322 home-manager/home-manager:421
+#: home-manager/home-manager:327 home-manager/home-manager:431
 msgid "The file %s already exists, leaving it unchanged..."
 msgstr "O arquivo %s já existe, deixando do jeito que está..."
 
-#: home-manager/home-manager:324 home-manager/home-manager:423
+#: home-manager/home-manager:329 home-manager/home-manager:433
 msgid "Creating %s..."
 msgstr "Criando %s..."
 
-#: home-manager/home-manager:465
+#: home-manager/home-manager:475
 msgid "Creating initial Home Manager generation..."
 msgstr "Criando a geração inicial do Home Manager..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/home-manager:470
+#: home-manager/home-manager:480
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -141,7 +150,7 @@ msgstr ""
 "ver todas as opções disponíveis."
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/home-manager:475
+#: home-manager/home-manager:485
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -156,11 +165,11 @@ msgstr ""
 "se o erro lhe parecer ser um problema do Home Manager."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:486
+#: home-manager/home-manager:496
 msgid "Can't instantiate a flake configuration"
 msgstr "Não foi possível instanciar a configuração de flake"
 
-#: home-manager/home-manager:562
+#: home-manager/home-manager:572
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -174,72 +183,72 @@ msgstr[1] ""
 "Há %d novos itens relevants não lidos\n"
 "Leia executando o comando \"%s news\"."
 
-#: home-manager/home-manager:576
+#: home-manager/home-manager:586
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Valor \"%s\" para configuração \"news.display\" não reconhecido."
 
-#: home-manager/home-manager:583
+#: home-manager/home-manager:594
 #, sh-format
-msgid "Please set the $EDITOR environment variable"
-msgstr "Por favor defina a variável de ambiente $EDITOR"
+msgid "Please set the $EDITOR or $VISUAL environment variable"
+msgstr "Por favor, defina a variável de ambiente $EDITOR ou $VISUAL"
 
-#: home-manager/home-manager:598
+#: home-manager/home-manager:612
 msgid "Cannot run build in read-only directory"
 msgstr "Não é possível fazer o build num diretório somente leitura"
 
-#: home-manager/home-manager:676
+#: home-manager/home-manager:693
 msgid "No generation with ID %s"
 msgstr "Nenhuma geração com ID %s"
 
-#: home-manager/home-manager:678
+#: home-manager/home-manager:695
 msgid "Cannot remove the current generation %s"
 msgstr "Não foi possível remover a geração atual %s"
 
-#: home-manager/home-manager:680
+#: home-manager/home-manager:697
 msgid "Removing generation %s"
 msgstr "A remover a geração %s"
 
-#: home-manager/home-manager:699
+#: home-manager/home-manager:718
 msgid "No generations to expire"
 msgstr "Nenhuma geração a expirar"
 
-#: home-manager/home-manager:710
+#: home-manager/home-manager:729
 msgid "No home-manager packages seem to be installed."
 msgstr "Nenhum pacote parece instalado com home-manager."
 
-#: home-manager/home-manager:792
+#: home-manager/home-manager:811
 msgid "Unknown argument %s"
 msgstr "Argumento desconhecido %s"
 
-#: home-manager/home-manager:816
+#: home-manager/home-manager:835
 msgid "This will remove Home Manager from your system."
 msgstr "Isto irá remover o Home Manager do seu sistema."
 
-#: home-manager/home-manager:819
+#: home-manager/home-manager:838
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Essa é uma execução de teste, nada de fato será desinstalado."
 
-#: home-manager/home-manager:823
+#: home-manager/home-manager:842
 msgid "Really uninstall Home Manager?"
 msgstr "Confirma a desinstalação do Home Manager?"
 
-#: home-manager/home-manager:829
+#: home-manager/home-manager:848
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Trocando para configuração vazia do Home Manager..."
 
-#: home-manager/home-manager:857
+#: home-manager/home-manager:863
 msgid "Yay!"
 msgstr "Boa!"
 
-#: home-manager/home-manager:862
+#: home-manager/home-manager:868
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager foi desinstalado, mas o seu home.nix foi deixado intacto."
 
-#: home-manager/home-manager:1074
+#: home-manager/home-manager:1091
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations espera um argumento, recebeu %d."
 
-#: home-manager/home-manager:1096
+#: home-manager/home-manager:1113
 msgid "Unknown command: %s"
 msgstr "Comando não reconhecido: %s"
 
@@ -248,6 +257,10 @@ msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
 "O build dessa derivation não pode ser feito, por favor rode usando o nix-"
 "shell."
+
+#, sh-format
+#~ msgid "Please set the $EDITOR environment variable"
+#~ msgstr "Por favor defina a variável de ambiente $EDITOR"
 
 #~ msgid "Creating initial Home Manager configuration..."
 #~ msgstr "Criando a configuração inicial do Home Manager..."

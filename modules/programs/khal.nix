@@ -12,13 +12,25 @@ let
   khalCalendarAccounts =
     filterAttrs (_: a: a.khal.enable) config.accounts.calendar.accounts;
 
-  khalContactAccounts = mapAttrs (_: v: v // { type = "birthdays"; })
-    (filterAttrs (_: a: a.khal.enable) config.accounts.contact.accounts);
+  # a contact account may have multiple collections, each a separate calendar
+  expandContactAccount = name: acct:
+    if acct.khal.collections != null then
+      listToAttrs (map (c: {
+        name = "${name}-${c}";
+        value = recursiveUpdate acct { khal.thisCollection = c; };
+      }) acct.khal.collections)
+    else {
+      ${name} = acct;
+    };
+
+  khalContactAccounts = concatMapAttrs expandContactAccount
+    (mapAttrs (_: v: recursiveUpdate v { khal.type = "birthdays"; })
+      (filterAttrs (_: a: a.khal.enable) config.accounts.contact.accounts));
 
   khalAccounts = khalCalendarAccounts // khalContactAccounts;
 
   primaryAccount = findSingle (a: a.primary) null null
-    (mapAttrsToList (n: v: v // { name = n; }) khalAccounts);
+    (mapAttrsToList (n: v: v // { name = n; }) khalCalendarAccounts);
 
   definedAttrs = filterAttrs (_: v: !isNull v);
 
@@ -30,10 +42,16 @@ let
       "path = ${
         value.local.path + "/"
         + (optionalString (value.khal.type == "discover") value.khal.glob)
+        + (optionalString
+          (value.khal.type == "birthdays" && value.khal ? thisCollection)
+          value.khal.thisCollection)
       }"
-    ] ++ optional (value.khal.readOnly) "readonly = True" ++ [
-      (toKeyValueIfDefined (getAttrs [ "type" "color" "priority" ] value.khal))
-    ] ++ [ "\n" ]);
+    ] ++ optional (value.khal.readOnly) "readonly = True"
+      ++ optional (value.khal.addresses != [ ])
+      "addresses= ${lib.concatStringsSep ", " value.khal.addresses}"
+      ++ optional (value.khal.color != null) "color = '${value.khal.color}'"
+      ++ [ (toKeyValueIfDefined (getAttrs [ "type" "priority" ] value.khal)) ]
+      ++ [ "\n" ]);
 
   localeFormatOptions = let
     T = lib.types;
@@ -153,7 +171,7 @@ in {
     locale = mkOption {
       type = lib.types.submodule { options = localeOptions; };
       description = ''
-        khal locale settings. 
+        khal locale settings.
       '';
       default = { };
     };

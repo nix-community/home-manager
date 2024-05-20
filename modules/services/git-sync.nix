@@ -13,7 +13,9 @@ let
 
     Service = {
       Environment = [
-        "PATH=${lib.makeBinPath (with pkgs; [ openssh git ])}"
+        "PATH=${
+          lib.makeBinPath (with pkgs; [ openssh git ] ++ repo.extraPackages)
+        }"
         "GIT_SYNC_DIRECTORY=${repo.path}"
         "GIT_SYNC_COMMAND=${cfg.package}/bin/git-sync"
         "GIT_SYNC_REPOSITORY=${repo.uri}"
@@ -74,6 +76,15 @@ let
         description = ''
           The interval, specified in seconds, at which the synchronization will
           be triggered even without filesystem changes.
+        '';
+      };
+
+      extraPackages = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExpression "with pkgs; [ git-crypt ]";
+        description = ''
+          Extra packages available to git-sync.
         '';
       };
     };

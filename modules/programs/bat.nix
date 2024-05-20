@@ -6,8 +6,6 @@ let
 
   cfg = config.programs.bat;
 
-  package = pkgs.bat;
-
   toConfigFile = attrs:
     let
       inherit (builtins) isBool attrNames;
@@ -51,6 +49,8 @@ in {
         Additional bat packages to install.
       '';
     };
+
+    package = mkPackageOption pkgs "bat" { };
 
     themes = mkOption {
       type = types.attrsOf (types.either types.lines (types.submodule {
@@ -138,7 +138,7 @@ in {
       ''];
     })
     {
-      home.packages = [ package ] ++ cfg.extraPackages;
+      home.packages = [ cfg.package ] ++ cfg.extraPackages;
 
       xdg.configFile = mkMerge ([({
         "bat/config" =
@@ -159,11 +159,15 @@ in {
         };
       })));
 
+      # NOTE: run `bat cache --build` in an empty directory to work
+      # around failure when ~/cache exists
+      # https://github.com/sharkdp/bat/issues/1726
       home.activation.batCache = hm.dag.entryAfter [ "linkGeneration" ] ''
         (
           export XDG_CACHE_HOME=${escapeShellArg config.xdg.cacheHome}
           verboseEcho "Rebuilding bat theme cache"
-          run ${lib.getExe package} cache --build
+          cd "${pkgs.emptyDirectory}"
+          run ${lib.getExe cfg.package} cache --build
         )
       '';
     }

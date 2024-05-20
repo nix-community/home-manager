@@ -190,6 +190,8 @@ in {
         HISTIGNORE = escapeShellArg (concatStringsSep ":" cfg.historyIgnore);
       }));
   in mkIf cfg.enable {
+    home.packages = [ pkgs.bashInteractive ];
+
     home.file.".bash_profile".source = writeBashScript "bash_profile" ''
       # include .profile if it exists
       [[ -f ~/.profile ]] && . ~/.profile

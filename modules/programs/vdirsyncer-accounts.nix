@@ -10,6 +10,20 @@ in {
   options.vdirsyncer = {
     enable = mkEnableOption "synchronization using vdirsyncer";
 
+    urlCommand = mkOption {
+      type = types.nullOr (types.listOf types.str);
+      default = null;
+      example = [ "~/get-url.sh" ];
+      description = "A command that prints the URL of the storage.";
+    };
+
+    userNameCommand = mkOption {
+      type = types.nullOr (types.listOf types.str);
+      default = null;
+      example = [ "~/get-username.sh" ];
+      description = "A command that prints the user name to standard output.";
+    };
+
     collections = mkOption {
       type = types.nullOr (types.listOf collection);
       default = null;
@@ -93,9 +107,10 @@ in {
     };
 
     verify = mkOption {
-      type = types.nullOr types.bool;
+      type = types.nullOr types.path;
       default = null;
-      description = "Verify SSL certificate.";
+      description = "Null or path to certificate to verify SSL against";
+      example = "/path/to/cert.pem";
     };
 
     verifyFingerprint = mkOption {
@@ -137,8 +152,8 @@ in {
     };
 
     postHook = mkOption {
-      type = types.lines;
-      default = "";
+      type = types.nullOr types.lines;
+      default = null;
       description = ''
         Command to call for each item creation and modification.
         The command will be called with the path of the new/updated

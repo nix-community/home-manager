@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-09-13 23:46+0200\n"
-"PO-Revision-Date: 2023-03-08 07:22+0000\n"
-"Last-Translator: \"Kim A. Ødegaard\" <kim@dyktig.no>\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"PO-Revision-Date: 2024-04-02 21:38+0000\n"
+"Last-Translator: LilleAila <olai.solsvik@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/home-"
 "manager/modules/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -17,25 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
-#: modules/files.nix:234
+#: modules/files.nix:191
 msgid "Creating home file links in %s"
 msgstr "Lager hjemmefillenker i %s"
 
-#: modules/files.nix:247
+#: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
 msgstr "Fjerner frakoblede lenker fra %s"
 
-#: modules/files.nix:263
+#: modules/files.nix:220
 msgid "Creating profile generation %s"
 msgstr "Oppretter profil for generering %s"
 
-#: modules/files.nix:280
+#: modules/files.nix:237
 msgid "No change so reusing latest profile generation %s"
 msgstr "Ingen endring, gjenbruker derfor siste profilgenerering %s"
 
-#: modules/home-environment.nix:640
+#: modules/home-environment.nix:634
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "for så å aktivere ditt Home Manager-oppsett igjen."
 
-#: modules/home-environment.nix:673
+#: modules/home-environment.nix:667
 msgid "Activating %s"
 msgstr "Aktiverer %s"
 
@@ -71,15 +71,15 @@ msgstr "Aktiverer %s"
 msgid "Migrating profile from %s to %s"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:53
+#: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Kunne ikke finne en passende profilmappe, prøvde %s og %s"
 
-#: modules/lib-bash/activation-init.sh:81
+#: modules/lib-bash/activation-init.sh:83
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "Kontrollerer verdiene av oldGenNum og oldGenPath"
 
-#: modules/lib-bash/activation-init.sh:84
+#: modules/lib-bash/activation-init.sh:86
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -107,35 +107,35 @@ msgstr ""
 "\n"
 "for så å forsøke `home-manager switch` igjen. Lykke til!"
 
-#: modules/lib-bash/activation-init.sh:95
+#: modules/lib-bash/activation-init.sh:127
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Feil: USER er satt til \"%s\", men vi forventet \"%s\""
 
-#: modules/lib-bash/activation-init.sh:104
+#: modules/lib-bash/activation-init.sh:136
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Feil: HOME er satt til \"%s\", men vi forventet \"%s\""
 
-#: modules/lib-bash/activation-init.sh:119
+#: modules/lib-bash/activation-init.sh:153
 msgid "Starting Home Manager activation"
 msgstr "Starter aktivering av Home Manager"
 
-#: modules/lib-bash/activation-init.sh:123
+#: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"
 msgstr "Kontrollerer at Nix fungerer"
 
-#: modules/lib-bash/activation-init.sh:133
+#: modules/lib-bash/activation-init.sh:170
 msgid "This is a dry run"
 msgstr "Dette er en simulert kjøring"
 
-#: modules/lib-bash/activation-init.sh:137
+#: modules/lib-bash/activation-init.sh:174
 msgid "This is a live run"
 msgstr "Dette er en virkelig kjøring"
 
-#: modules/lib-bash/activation-init.sh:143
+#: modules/lib-bash/activation-init.sh:180
 msgid "Using Nix version: %s"
 msgstr "Bruker Nix-versjon: %s"
 
-#: modules/lib-bash/activation-init.sh:146
+#: modules/lib-bash/activation-init.sh:183
 msgid "Activation variables:"
 msgstr "Aktiveringsvariabler:"
 

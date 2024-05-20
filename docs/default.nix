@@ -7,28 +7,37 @@
 
 let
 
-  nmdSrc = fetchTarball {
-    url = "https://git.sr.ht/~rycee/nmd/archive/v0.5.0.tar.gz";
-    sha256 = "0hnd86jd19zb5j3hmpwmdmdiasg65lgahqv7n8frl9p1vdqz6z67";
-  };
-
-  nmd = import nmdSrc {
-    inherit lib;
-    # The DocBook output of `nixos-render-docs` doesn't have the change
-    # `nmd` uses to work around the broken stylesheets in
-    # `docbook-xsl-ns`, so we restore the patched version here.
-    pkgs = pkgs // {
-      docbook-xsl-ns =
-        pkgs.docbook-xsl-ns.override { withManOptDedupPatch = true; };
-    };
-  };
+  # Recursively replace each derivation in the given attribute set
+  # with the same derivation but with the `outPath` attribute set to
+  # the string `"\${pkgs.attribute.path}"`. This allows the
+  # documentation to refer to derivations through their values without
+  # establishing an actual dependency on the derivation output.
+  #
+  # This is not perfect, but it seems to cover a vast majority of use
+  # cases.
+  #
+  # Caveat: even if the package is reached by a different means, the
+  # path above will be shown and not e.g.
+  # `${config.services.foo.package}`.
+  scrubDerivations = prefixPath: attrs:
+    let
+      scrubDerivation = name: value:
+        let pkgAttrName = prefixPath + "." + name;
+        in if lib.isAttrs value then
+          scrubDerivations pkgAttrName value
+          // lib.optionalAttrs (lib.isDerivation value) {
+            outPath = "\${${pkgAttrName}}";
+          }
+        else
+          value;
+    in lib.mapAttrs scrubDerivation attrs;
 
   # Make sure the used package is scrubbed to avoid actually
   # instantiating derivations.
   scrubbedPkgsModule = {
     imports = [{
       _module.args = {
-        pkgs = lib.mkForce (nmd.scrubDerivations "pkgs" pkgs);
+        pkgs = lib.mkForce (scrubDerivations "pkgs" pkgs);
         pkgs_i686 = lib.mkForce { };
       };
     }];
@@ -46,7 +55,11 @@ let
   hmPath = toString ./..;
 
   buildOptionsDocs = args@{ modules, includeModuleSystemOptions ? true, ... }:
-    let options = (lib.evalModules { inherit modules; }).options;
+    let
+      options = (lib.evalModules {
+        inherit modules;
+        class = "homeManager";
+      }).options;
     in pkgs.buildPackages.nixosOptionsDoc ({
       options = if includeModuleSystemOptions then
         options
@@ -113,7 +126,6 @@ let
     '';
   # Generate the HTML manual pages
   home-manager-manual = pkgs.callPackage ./home-manager-manual.nix {
-    nmd = nmdSrc;
     home-manager-options = {
       home-manager = hmOptionsDocs.optionsJSON;
       nixos = nixosOptionsDocs.optionsJSON;
@@ -124,8 +136,6 @@ let
   html = home-manager-manual;
   htmlOpenTool = pkgs.callPackage ./html-open-tool.nix { } { inherit html; };
 in {
-  inherit nmdSrc;
-
   options = {
     # TODO: Use `hmOptionsDocs.optionsJSON` directly once upstream
     # `nixosOptionsDoc` is more customizable.
@@ -154,6 +164,7 @@ in {
         inherit lib pkgs;
         check = false;
       } ++ [ scrubbedPkgsModule ];
+      class = "homeManager";
     };
   in builtins.toJSON result.config.meta.maintainers);
 }

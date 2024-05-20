@@ -18,7 +18,7 @@
 
   nmt.script = ''
     assertFileContent \
-      home-files/.config/fusuma/config.yaml \
+      home-files/.config/fusuma/config.yml \
       ${./expected-settings.yaml}
   '';
 }

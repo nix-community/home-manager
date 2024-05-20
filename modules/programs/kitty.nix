@@ -29,17 +29,20 @@ let
   shellIntegrationInit = {
     bash = ''
       if test -n "$KITTY_INSTALLATION_DIR"; then
+        export KITTY_SHELL_INTEGRATION="${cfg.shellIntegration.mode}"
         source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"
       fi
     '';
     fish = ''
       if set -q KITTY_INSTALLATION_DIR
+        set --global KITTY_SHELL_INTEGRATION "${cfg.shellIntegration.mode}"
         source "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_conf.d/kitty-shell-integration.fish"
         set --prepend fish_complete_path "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_completions.d"
       end
     '';
     zsh = ''
       if test -n "$KITTY_INSTALLATION_DIR"; then
+        export KITTY_SHELL_INTEGRATION="${cfg.shellIntegration.mode}"
         autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
         kitty-integration
         unfunction kitty-integration
@@ -48,9 +51,9 @@ let
   };
 
   shellIntegrationDefaultOpt = {
-    default = cfg.shellIntegration.mode != "disabled";
+    default = !(elem "disabled" (splitString " " cfg.shellIntegration.mode));
     defaultText = literalExpression ''
-      config.programs.kitty.shellIntegration.mode != "disabled"
+      !(elem "disabled" (splitString " " config.programs.kitty.shellIntegration.mode))
     '';
   };
 in {
@@ -141,8 +144,13 @@ in {
     shellIntegration = {
       mode = mkOption {
         type = types.str;
-        default = "enabled";
+        default = "no-rc";
         example = "no-cursor";
+        apply = (o:
+          let
+            modes = splitString " " o;
+            filtered = filter (m: m != "no-rc") modes;
+          in concatStringsSep " " (concatLists [ [ "no-rc" ] filtered ]));
         description = ''
           Set the mode of the shell integration. This accepts the same options
           as the `shell_integration` option of Kitty. Note that
@@ -197,7 +205,7 @@ in {
         '')
         ''
           # Shell integration is sourced and configured manually
-          shell_integration no-rc ${cfg.shellIntegration.mode}
+          shell_integration ${cfg.shellIntegration.mode}
         ''
         (toKittyConfig cfg.settings)
         (toKittyKeybindings cfg.keybindings)

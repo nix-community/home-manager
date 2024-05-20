@@ -405,10 +405,16 @@ in
         : Runs the given command on live run, otherwise prints the command to
         standard output.
 
+        {command}`run --quiet {command}`
+        : Runs the given command on live run and sends its standard output to
+        {file}`/dev/null`, otherwise prints the command to standard output.
+
         {command}`run --silence {command}`
         : Runs the given command on live run and sends its standard and error
         output to {file}`/dev/null`, otherwise prints the command to standard
         output.
+
+        The `--quiet` and `--silence` flags are mutually exclusive.
 
         A script block should also respect the {var}`VERBOSE` variable, and if
         set print information on standard out that may be useful for debugging
@@ -465,6 +471,12 @@ in
 
         When this option is enabled and a mismatch is detected then a warning
         will be printed when the user configuration is being built.
+      '';
+    };
+
+    home.preferXdgDirectories = mkEnableOption "" // {
+      description = ''
+        Whether to make programs use XDG directories whenever supported.
       '';
     };
   };

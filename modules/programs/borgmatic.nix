@@ -76,10 +76,37 @@ let
       (mkAfter [ (toString hmExcludeFile) ]);
     options = {
       location = {
-        sourceDirectories = mkOption {
+        sourceDirectories = mkNullableOption {
           type = types.listOf types.str;
-          description = "Directories to backup.";
+          default = null;
+          description = ''
+            Directories to backup.
+
+            Mutually exclusive with [](#opt-programs.borgmatic.backups._name_.location.patterns).
+          '';
           example = literalExpression "[config.home.homeDirectory]";
+        };
+
+        patterns = mkNullableOption {
+          type = types.listOf types.str;
+          default = null;
+          description = ''
+            Patterns to include/exclude.
+
+            See the output of `borg help patterns` for the syntax. Pattern paths
+            are relative to `/` even when a different recursion root is set.
+
+            Mutually exclusive with [](#opt-programs.borgmatic.backups._name_.location.sourceDirectories).
+          '';
+          example = literalExpression ''
+            [
+              "R /home/user"
+              "- home/user/.cache"
+              "- home/user/Downloads"
+              "+ home/user/Videos/Important Video"
+              "- home/user/Videos"
+            ]
+          '';
         };
 
         repositories = mkOption {
@@ -194,6 +221,7 @@ let
   writeConfig = config:
     generators.toYAML { } (removeNullValues ({
       source_directories = config.location.sourceDirectories;
+      patterns = config.location.patterns;
       repositories = config.location.repositories;
       encryption_passcommand = config.storage.encryptionPasscommand;
       keep_within = config.retention.keepWithin;
@@ -247,7 +275,19 @@ in {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.borgmatic" pkgs
         lib.platforms.linux)
-    ];
+    ] ++ (mapAttrsToList (backup: opts: {
+      assertion = opts.location.sourceDirectories == null
+        || opts.location.patterns == null;
+      message = ''
+        Borgmatic backup configuration "${backup}" cannot specify both 'location.sourceDirectories' and 'location.patterns'.
+      '';
+    }) cfg.backups) ++ (mapAttrsToList (backup: opts: {
+      assertion = !(opts.location.sourceDirectories == null
+        && opts.location.patterns == null);
+      message = ''
+        Borgmatic backup configuration "${backup}" must specify one of 'location.sourceDirectories' or 'location.patterns'.
+      '';
+    }) cfg.backups);
 
     xdg.configFile = with lib.attrsets;
       mapAttrs' (configName: config:
