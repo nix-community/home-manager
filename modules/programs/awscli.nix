@@ -3,7 +3,14 @@
 let
   cfg = config.programs.awscli;
   iniFormat = pkgs.formats.ini { };
-
+  settingsPath =
+    if config.programs.awscli.settings.path != ""
+    then config.programs.awscli.settings.path
+    else "${config.home.homeDirectory}/.aws/config";
+  credentialsPath =
+    if config.programs.awscli.credentials.path != ""
+    then config.programs.awscli.credentials.path
+    else "${config.home.homeDirectory}/.aws/credentials";
 in {
   meta.maintainers = [ lib.maintainers.anthonyroussel ];
 
@@ -57,13 +64,21 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file."${config.home.homeDirectory}/.aws/config" =
+    home.sessionVariables =
+      (lib.mkIf (cfg.settings.path != "") {
+        AWS_CONFIG_FILE = cfg.settings.path;
+      }) //
+      (lib.mkIf (cfg.credentials.path != "") {
+        AWS_SHARED_CREDENTIALS_FILE = cfg.credentials.path;
+      });
+
+    home.file.(settingsPath) =
       lib.mkIf (cfg.settings != { }) {
-        source =
-          iniFormat.generate "aws-config-${config.home.username}" cfg.settings;
+        source = iniFormat.generate "aws-config-${config.home.username}"
+            cfg.settings;
       };
 
-    home.file."${config.home.homeDirectory}/.aws/credentials" =
+    home.file.(credentialsPath) =
       lib.mkIf (cfg.credentials != { }) {
         source = iniFormat.generate "aws-credentials-${config.home.username}"
           cfg.credentials;
