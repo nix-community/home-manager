@@ -6,25 +6,35 @@ let
 
   cfg = config.programs.qutebrowser;
 
+  formatValue = v:
+    if v == null then
+      "None"
+    else if builtins.isBool v then
+      (if v then "True" else "False")
+    else if builtins.isString v then
+      ''"${v}"''
+    else if builtins.isList v then
+      "[${concatStringsSep ", " (map formatValue v)}]"
+    else
+      builtins.toString v;
+
   formatLine = o: n: v:
-    let
-      formatValue = v:
-        if builtins.isNull v then
-          "None"
-        else if builtins.isBool v then
-          (if v then "True" else "False")
-        else if builtins.isString v then
-          ''"${v}"''
-        else if builtins.isList v then
-          "[${concatStringsSep ", " (map formatValue v)}]"
-        else
-          builtins.toString v;
-    in if builtins.isAttrs v then
+    if builtins.isAttrs v then
       concatStringsSep "\n" (mapAttrsToList (formatLine "${o}${n}.") v)
     else
       "${o}${n} = ${formatValue v}";
 
   formatDictLine = o: n: v: ''${o}['${n}'] = "${v}"'';
+
+  formatDomainBlock = n: v:
+    let
+      formatDomainLine = d: o: on: ov:
+        if builtins.isAttrs ov then
+          concatStringsSep "\n"
+          (mapAttrsToList (formatDomainLine d "${o}${on}.") ov)
+        else
+          ''config.set("${o}${on}", ${formatValue ov}, "${d}")'';
+    in concatStringsSep "\n" (mapAttrsToList (formatDomainLine n "") v);
 
   formatKeyBindings = m: b:
     let
@@ -105,6 +115,26 @@ in {
             tabs.bar.bg = "#000000";
           };
           tabs.tabs_are_windows = true;
+        }
+      '';
+    };
+
+    domainSettings = mkOption {
+      type = types.attrsOf (types.attrsOf types.anything);
+      default = { };
+      description = ''
+        Per-domain options to add to qutebrowser {file}`config.py` file.
+        See <https://qutebrowser.org/doc/help/settings.html>
+        for options.
+      '';
+      example = literalExpression ''
+        {
+          "https://netflix.com" = {
+            content.notifications.enable = false;
+          };
+          "https://facebook.com" = {
+            content.notifications.enable = false;
+          };
         }
       '';
     };
@@ -277,6 +307,7 @@ in {
       else
         "config.load_autoconfig(False)")
     ] ++ mapAttrsToList (formatLine "c.") cfg.settings
+      ++ mapAttrsToList formatDomainBlock cfg.domainSettings
       ++ mapAttrsToList (formatDictLine "c.aliases") cfg.aliases
       ++ mapAttrsToList (formatDictLine "c.url.searchengines") cfg.searchEngines
       ++ mapAttrsToList (formatDictLine "c.bindings.key_mappings")
