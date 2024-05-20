@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-02-15 16:04+0100\n"
-"PO-Revision-Date: 2023-05-28 22:49+0000\n"
-"Last-Translator: Mohammad Abdolirad <m.abdolirad@gmail.com>\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"PO-Revision-Date: 2024-05-02 10:58+0000\n"
+"Last-Translator: Keivan <keyvan0082@gmail.com>\n"
 "Language-Team: Persian <https://hosted.weblate.org/projects/home-manager/cli/"
 "fa/>\n"
 "Language: fa\n"
@@ -17,38 +17,47 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.5.3-dev\n"
 
-#: home-manager/home-manager:58
+#. translators: For example: "home-manager: missing argument for --cores"
+#: home-manager/home-manager:16
+msgid "%s: missing argument for %s"
+msgstr "%s: مقدار %s یافت نشد"
+
+#: home-manager/home-manager:64
 msgid "No configuration file found at %s"
-msgstr "هیچ فایل تنظیماتی در %s پیدا نشد"
+msgstr "هیچ فایل تنظیماتی در %s یافت نشد"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
-#: home-manager/home-manager:75 home-manager/home-manager:79
-#: home-manager/home-manager:178
+#: home-manager/home-manager:81 home-manager/home-manager:85
+#: home-manager/home-manager:184
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"نگه داری %s در %s منسوخ شده است.\n"
+"لطفا آنرا به %s انتفال دهید"
 
-#: home-manager/home-manager:86
+#: home-manager/home-manager:92
 msgid "No configuration file found. Please create one at %s"
 msgstr "هیچ فایل تنظیماتی پیدا نشد. لطفا یک فایل در %s بسازید"
 
-#: home-manager/home-manager:101
+#: home-manager/home-manager:107
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home manager در %s یافت نشد."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:109
+#: home-manager/home-manager:115
 msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"مسیر زاپاس برای Home manager در %s منسوخ شده است اما یک فایل/دایرکتوری در "
+"این مسیر پیدا شد."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:112
+#: home-manager/home-manager:118
 msgid ""
 "To remove this warning, do one of the following.\n"
 "\n"
@@ -68,43 +77,61 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"برای از بین بردن این اخطار, یکی از کار های زیر را انجام دهید.\n"
+"\n"
+"1. مسیر Home Manager را به صورت دقیق با اضافه کردن خط زیر\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"به کانفیگ خود, تعریف کنید\n"
+"\n"
+"اگر Home Manager را به طور مستقیم import کرده اید, میتوانید از پارامتر `path`"
+" استفاده کنید\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"برای هنگامی که دارید پکیج Home Manager را صدا میزنید\n"
+"\n"
+"2. مسیر منسوخ شده را پاک کنید\n"
+"\n"
+"     $ rm -r \"%s\""
 
-#: home-manager/home-manager:140
+#: home-manager/home-manager:146
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "چک کردن پایداری Nix"
 
-#: home-manager/home-manager:160
+#: home-manager/home-manager:166
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "بعد از امتحان کردن %s و %s , دایرکتوری مناسب برای پروفایل یافت نشد"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:215
+#: home-manager/home-manager:221
 msgid "Can't inspect options of a flake configuration"
-msgstr ""
+msgstr "عدم امکان بررسی گزینه‌های تنظیمات Flake"
 
-#: home-manager/home-manager:288 home-manager/home-manager:311
-#: home-manager/home-manager:1030
+#: home-manager/home-manager:296 home-manager/home-manager:319
+#: home-manager/home-manager:1051
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: آپشن مورد نظر شما یافت نشد %s"
 
-#: home-manager/home-manager:293 home-manager/home-manager:1031
+#: home-manager/home-manager:301 home-manager/home-manager:1052
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "%s --help برای دیدن راهنمایی دستور رو به رو را اجرا کنید"
 
-#: home-manager/home-manager:319 home-manager/home-manager:423
+#: home-manager/home-manager:327 home-manager/home-manager:431
 msgid "The file %s already exists, leaving it unchanged..."
 msgstr "فایل %s از قبل وجود داشته است، بدون تغییر رها شد..."
 
-#: home-manager/home-manager:321 home-manager/home-manager:425
+#: home-manager/home-manager:329 home-manager/home-manager:433
 msgid "Creating %s..."
-msgstr "ساختن %s..."
+msgstr "درحال ساختن %s..."
 
-#: home-manager/home-manager:467
+#: home-manager/home-manager:475
 msgid "Creating initial Home Manager generation..."
-msgstr ""
+msgstr "در حال ساخت نسخه اولیه Home Manager."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/home-manager:472
+#: home-manager/home-manager:480
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -113,9 +140,15 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"پایان! ابزار home-manager نصب شده است و شما میتوانید با تغییر دادن فایل\n"
+"\n"
+"    %s\n"
+"\n"
+"تنظیمات Home Manager خود را تغییر دهید. برای دیدن همه ی تنظیمات موجود\n"
+"دستور 'man home-configuration.nix' را اجرا کنید."
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/home-manager:477
+#: home-manager/home-manager:485
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -123,13 +156,19 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"ای بابا, فرایند نصب با شکست مواجه شد! اگر بنظرتان میاید مشکل از Home Manager "
+"است, لطفا یک issue در\n"
+"\n"
+"    %s\n"
+"\n"
+"ایجاد کنید."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:488
+#: home-manager/home-manager:496
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "عدم امکان نمونه‌سازی تنظیمات flake"
 
-#: home-manager/home-manager:564
+#: home-manager/home-manager:572
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -137,81 +176,84 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"%d خبر خوانده نشده وجود دارد.\n"
+"میتوانید آن را با اجرای دستور \"%s news\" بخوانید."
 msgstr[1] ""
-
-#: home-manager/home-manager:578
-msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+"%d خبر خوانده نشده وجود دارد.\n"
+"میتوانید آنها را با اجرای دستور \"%s news\" بخوانید."
 
 #: home-manager/home-manager:586
+msgid "Unknown \"news.display\" setting \"%s\"."
+msgstr "تنظیمات \"news.display\" در \"%s\" شناخته شده نیست."
+
+#: home-manager/home-manager:594
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "لطفا متغیر محلی $EDITOR و یا $VISUAL را تنظیم کنید"
 
-#: home-manager/home-manager:604
+#: home-manager/home-manager:612
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "نمیتوان دستور build را در یک دایکتوری read-only اجرا کرد"
 
-#: home-manager/home-manager:685
+#: home-manager/home-manager:693
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "هیچ نسل ای با شناسه %s یافت نشد"
 
-#: home-manager/home-manager:687
+#: home-manager/home-manager:695
 msgid "Cannot remove the current generation %s"
 msgstr "نمی‌توان نسل فعلی %s را حذف کرد"
 
-#: home-manager/home-manager:689
+#: home-manager/home-manager:697
 msgid "Removing generation %s"
 msgstr "حذف کردن نسل %s"
 
-#: home-manager/home-manager:710
+#: home-manager/home-manager:718
 msgid "No generations to expire"
-msgstr ""
+msgstr "هیچ نسلی برای منسوخ کردن وجود ندارد"
 
-#: home-manager/home-manager:721
+#: home-manager/home-manager:729
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "بنظر میاید هیچ پکیجی از home-manager نصب نشده است."
 
-#: home-manager/home-manager:803
+#: home-manager/home-manager:811
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "پارامتر %s شناخته نشده است"
 
-#: home-manager/home-manager:827
+#: home-manager/home-manager:835
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "این عمل Home Manager را از سیستم شما حذف میکند."
 
-#: home-manager/home-manager:830
+#: home-manager/home-manager:838
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "این یک عمل آزمایشی است, قرار نیست چیزی واقعا حذف شود."
 
-#: home-manager/home-manager:834
+#: home-manager/home-manager:842
 msgid "Really uninstall Home Manager?"
-msgstr "واقعاً هوم منیجر را حذف نصب کنید؟"
+msgstr "واقعا میخواهید Home Manager را حذف کنید؟"
 
-#: home-manager/home-manager:840
+#: home-manager/home-manager:848
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "در حال انتقال به تنظیمات خالی Home Manager..."
 
-#: home-manager/home-manager:855
-#, fuzzy
+#: home-manager/home-manager:863
 msgid "Yay!"
-msgstr "آره!"
+msgstr "ایول!"
 
-#: home-manager/home-manager:860
+#: home-manager/home-manager:868
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr "هوم منیجر حذف نصب شد اما home.nix شما دست نخورده باقی ماند."
+msgstr "Home Manager حذف نصب شد اما home.nix شما دست نخورده باقی ماند."
 
-#: home-manager/home-manager:1070
+#: home-manager/home-manager:1091
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
+msgstr "expire-generations یک پارامتر نیاز دارد, اما %d پارامتر دریافت کرد"
 
-#: home-manager/home-manager:1092
+#: home-manager/home-manager:1113
 msgid "Unknown command: %s"
 msgstr "دستور ناشناخته: %s"
 
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
-msgstr ""
+msgstr "این نسخه قابل build کردن نیست, لطفا آن را با nix-shell اجرا کنید."
 
 #, sh-format
 #~ msgid "Please set the $EDITOR environment variable"

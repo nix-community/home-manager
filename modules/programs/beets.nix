@@ -32,8 +32,8 @@ in {
         type = types.package;
         default = pkgs.beets;
         defaultText = literalExpression "pkgs.beets";
-        example =
-          literalExpression "(pkgs.beets.override { enableCheck = true; })";
+        example = literalExpression
+          "(pkgs.beets.override { pluginOverrides = { beatport.enable = false; }; })";
         description = ''
           The `beets` package to use.
           Can be used to specify extensions.

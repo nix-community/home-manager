@@ -13,9 +13,9 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.jjconfig.toml
+    assertFileExists home-files/.config/jj/config.toml
     assertFileContent \
-      home-files/.jjconfig.toml \
+      home-files/.config/jj/config.toml \
       ${
         builtins.toFile "expected.toml" ''
           [user]

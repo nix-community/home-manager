@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-02-15 16:04+0100\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
 "PO-Revision-Date: 2023-08-03 05:07+0000\n"
 "Last-Translator: 박수원 <bboxone@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/home-manager/"
@@ -19,25 +19,25 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.0-dev\n"
 
-#: modules/files.nix:236
+#: modules/files.nix:191
 msgid "Creating home file links in %s"
 msgstr "home 파일 링크를 %s에 생성하는 중"
 
-#: modules/files.nix:249
+#: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
 msgstr "%s에서 연결이 끊어진 링크 파일들을 지우는 중"
 
-#: modules/files.nix:265
+#: modules/files.nix:220
 msgid "Creating profile generation %s"
 msgstr "profile 세대 %s를 생성하는 중"
 
-#: modules/files.nix:282
+#: modules/files.nix:237
 msgid "No change so reusing latest profile generation %s"
 msgstr ""
 "바뀐 것이 없어서 가장 최근의 profile 세대 %s를 다시 사용하는 것으로 설정하는 "
 "중"
 
-#: modules/home-environment.nix:622
+#: modules/home-environment.nix:634
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -65,7 +65,7 @@ msgstr ""
 "\n"
 "그런 후, 다시 홈 매니저 설정을 활성화 해보세요."
 
-#: modules/home-environment.nix:655
+#: modules/home-environment.nix:667
 msgid "Activating %s"
 msgstr "%s를 활성화 하는 중"
 

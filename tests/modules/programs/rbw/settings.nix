@@ -14,7 +14,7 @@ let
       "email": "name@example.com",
       "identity_url": "identity.example.com",
       "lock_timeout": 300,
-      "pinentry": "@pinentry-gnome3@/bin/pinentry"
+      "pinentry": "@pinentry-gnome3@/bin/dummy"
     }
   '';
 in {
@@ -27,7 +27,7 @@ in {
       base_url = "bitwarden.example.com";
       identity_url = "identity.example.com";
       lock_timeout = 300;
-      pinentry = "gnome3";
+      pinentry = pkgs.pinentry-gnome3;
     };
   };
 

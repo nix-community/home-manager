@@ -79,59 +79,14 @@ in
             (mapAttrsToList (n: v: v.target)
             (filterAttrs (n: v: v.force) cfg));
 
-        check = pkgs.writeText "check" ''
-          ${config.lib.bash.initHomeManagerLib}
+        storeDir = escapeShellArg builtins.storeDir;
 
-          # A symbolic link whose target path matches this pattern will be
-          # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+        check = pkgs.substituteAll {
+          src = ./files/check-link-targets.sh;
 
-          forcedPaths=(${forcedPaths})
-
-          newGenFiles="$1"
-          shift
-          for sourcePath in "$@" ; do
-            relativePath="''${sourcePath#$newGenFiles/}"
-            targetPath="$HOME/$relativePath"
-
-            forced=""
-            for forcedPath in "''${forcedPaths[@]}"; do
-              if [[ $targetPath == $forcedPath* ]]; then
-                forced="yeah"
-                break
-              fi
-            done
-
-            if [[ -n $forced ]]; then
-              verboseEcho "Skipping collision check for $targetPath"
-            elif [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
-              # The target file already exists and it isn't a symlink owned by Home Manager.
-              if cmp -s "$sourcePath" "$targetPath"; then
-                # First compare the files' content. If they're equal, we're fine.
-                warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be skipped since they are the same"
-              elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
-                # Next, try to move the file to a backup location if configured and possible
-                backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-                if [[ -e "$backup" ]]; then
-                  errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
-                  collision=1
-                else
-                  warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
-                fi
-              else
-                # Fail if nothing else works
-                errorEcho "Existing file '$targetPath' is in the way of '$sourcePath'"
-                collision=1
-              fi
-            fi
-          done
-
-          if [[ -v collision ]] ; then
-            errorEcho "Please move the above files and try again or use 'home-manager switch -b backup' to back up existing files automatically."
-            exit 1
-          fi
-        '';
+          inherit (config.lib.bash) initHomeManagerLib;
+          inherit forcedPaths storeDir;
+        };
       in
       ''
         function checkNewGenCollision() {
@@ -274,7 +229,7 @@ in
               run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
             fi
 
-            run --silence nix-store --realise "$newGenPath" --add-root "$newGenGcPath"
+            run --quiet nix-store --realise "$newGenPath" --add-root "$newGenGcPath" --indirect
             if [[ -e "$legacyGenGcPath" ]]; then
               run rm $VERBOSE_ARG "$legacyGenGcPath"
             fi

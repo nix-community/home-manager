@@ -6,7 +6,8 @@ let
 
   cfg = config.services.pueue;
   yamlFormat = pkgs.formats.yaml { };
-  configFile = yamlFormat.generate "pueue.yaml" cfg.settings;
+  configFile =
+    yamlFormat.generate "pueue.yaml" ({ shared = { }; } // cfg.settings);
 
 in {
   meta.maintainers = [ maintainers.AndersonTorres ];
@@ -39,8 +40,7 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile =
-      mkIf (cfg.settings != { }) { "pueue/pueue.yml".source = configFile; };
+    xdg.configFile."pueue/pueue.yml".source = configFile;
 
     systemd.user = {
       services.pueued = {

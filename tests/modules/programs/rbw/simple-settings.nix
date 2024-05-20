@@ -14,7 +14,7 @@ let
       "email": "name@example.com",
       "identity_url": null,
       "lock_timeout": 3600,
-      "pinentry": "@pinentry-gtk2@/bin/pinentry"
+      "pinentry": null
     }
   '';
 in {

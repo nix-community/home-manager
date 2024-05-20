@@ -17,7 +17,7 @@ For a systematic overview of Home Manager and its available options, please see:
 - [Home Manager manual][manual]
 - [Home Manager configuration options][configuration options]
 - [3rd party Home Manager option
-  search](https://mipmip.github.io/home-manager-option-search/)
+  search](https://home-manager-options.extranix.com/)
 
 If you would like to contribute to Home Manager, then please have a look at
 ["Contributing" in the manual][contributing].
@@ -112,7 +112,7 @@ License
 This project is licensed under the terms of the [MIT license](LICENSE).
 
 [#home-manager]: https://webchat.oftc.net/?channels=home-manager
-[Nix Flakes]: https://nixos.wiki/wiki/Flakes
+[Nix Flakes]: https://wiki.nixos.org/wiki/Flakes
 [NixOS]: https://nixos.org/
 [Nix]: https://nixos.org/explore.html
 [Nixpkgs]: https://github.com/NixOS/nixpkgs
@@ -125,4 +125,4 @@ This project is licensed under the terms of the [MIT license](LICENSE).
 [manual standalone install]: https://nix-community.github.io/home-manager/#sec-install-standalone
 [manual]: https://nix-community.github.io/home-manager/
 [nix-darwin]: https://github.com/LnL7/nix-darwin
-[rollbacks]: https://nix-community.github.io/home-manager/#sec-usage-rollbacks
+[rollbacks]: https://nix-community.github.io/home-manager/index.xhtml#sec-usage-rollbacks

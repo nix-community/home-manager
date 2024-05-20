@@ -1,30 +1,29 @@
-{ config, pkgs, lib, generators, ... }:
-with lib;
+{ config, pkgs, lib, ... }:
+
 let
+  inherit (lib) literalExpression mkIf mkOption mkRemovedOptionModule types;
+
   cfg = config.i18n.inputMethod.kime;
-  yamlFormat = pkgs.formats.yaml { };
 in {
+  imports = [
+    (mkRemovedOptionModule [ "i18n" "inputMethod" "kime" "config" ] ''
+      Please use 'i18n.inputMethod.kime.extraConfig' instead.
+    '')
+  ];
+
   options = {
     i18n.inputMethod.kime = {
-      config = mkOption {
-        type = yamlFormat.type;
-        default = { };
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
         example = literalExpression ''
-          {
-            daemon = {
-              modules = ["Xim" "Indicator"];
-            };
-
-            indicator = {
-              icon_color = "White";
-            };
-
-            engine = {
-              hangul = {
-                layout = "dubeolsik";
-              };
-            };
-          }
+          daemon:
+            modules: [Xim,Indicator]
+          indicator:
+            icon_color: White
+          engine:
+            hangul:
+              layout: dubeolsik
         '';
         description = ''
           kime configuration. Refer to
@@ -44,8 +43,7 @@ in {
       XMODIFIERS = "@im=kime";
     };
 
-    xdg.configFile."kime/config.yaml".text =
-      replaceStrings [ "\\\\" ] [ "\\" ] (builtins.toJSON cfg.config);
+    xdg.configFile."kime/config.yaml".text = cfg.extraConfig;
 
     systemd.user.services.kime-daemon = {
       Unit = {

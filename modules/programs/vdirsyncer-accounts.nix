@@ -10,6 +10,20 @@ in {
   options.vdirsyncer = {
     enable = mkEnableOption "synchronization using vdirsyncer";
 
+    urlCommand = mkOption {
+      type = types.nullOr (types.listOf types.str);
+      default = null;
+      example = [ "~/get-url.sh" ];
+      description = "A command that prints the URL of the storage.";
+    };
+
+    userNameCommand = mkOption {
+      type = types.nullOr (types.listOf types.str);
+      default = null;
+      example = [ "~/get-username.sh" ];
+      description = "A command that prints the user name to standard output.";
+    };
+
     collections = mkOption {
       type = types.nullOr (types.listOf collection);
       default = null;
@@ -93,9 +107,10 @@ in {
     };
 
     verify = mkOption {
-      type = types.nullOr types.bool;
+      type = types.nullOr types.path;
       default = null;
-      description = "Verify SSL certificate.";
+      description = "Null or path to certificate to verify SSL against";
+      example = "/path/to/cert.pem";
     };
 
     verifyFingerprint = mkOption {

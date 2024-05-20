@@ -4,11 +4,17 @@ with lib;
 
 let
   cfg = config.nix.gc;
+  darwinIntervals =
+    [ "hourly" "daily" "weekly" "monthly" "semiannually" "annually" ];
 
   mkCalendarInterval = frequency:
     let
       freq = {
         "hourly" = [{ Minute = 0; }];
+        "daily" = [{
+          Hour = 0;
+          Minute = 0;
+        }];
         "weekly" = [{
           Weekday = 1;
           Hour = 0;
@@ -62,15 +68,16 @@ in {
       };
 
       frequency = mkOption {
-        type =
-          types.enum [ "hourly" "weekly" "monthly" "semiannually" "annually" ];
+        type = types.str;
         default = "weekly";
-        example = "monthly";
+        example = "03:15";
         description = ''
-          The frequency at which to run the garbage collector.
+          When to run the Nix garbage collector.
 
-          These enums are based on special expressions from the
-          {manpage}`systemd.time(7)`
+          On Linux this is a string as defined by {manpage}`systemd.time(7)`.
+
+          On Darwin it must be one of: ${toString darwinIntervals}, which are
+          implemented as defined in the manual page above.
         '';
       };
 
@@ -107,6 +114,13 @@ in {
     })
 
     (mkIf pkgs.stdenv.isDarwin {
+      assertions = [{
+        assertion = elem cfg.frequency darwinIntervals;
+        message = "On Darwin nix.gc.frequency must be one of: ${
+            toString darwinIntervals
+          }.";
+      }];
+
       launchd.agents.nix-gc = {
         enable = true;
         config = {

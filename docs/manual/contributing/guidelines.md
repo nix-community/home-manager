@@ -69,13 +69,10 @@ All contributed code *must* pass the test suite.
 
 ## Add relevant documentation {#sec-guidelines-module-maintainer}
 
-Many code changes require changing the documentation as well. Module
-options should be documented with [Nixpkgs-flavoured
-Markdown](https://nixos.org/manual/nixpkgs/unstable/#sec-contributing-markup).
-Home Manager is itself documented using a combination of
-[DocBook](https://tdg.docbook.org/) and
-[AsciiDoc](https://asciidoc.org/). All text is hosted in Home Manager's
-Git repository.
+Many code changes require changing the documentation as well. The
+documentation is written in
+[Nixpkgs-flavoured Markdown](https://nixos.org/manual/nixpkgs/unstable/#sec-contributing-markup).
+All text is hosted in Home Manager's Git repository.
 
 The HTML version of the manual containing both the module option
 descriptions and the documentation of Home Manager can be generated and
@@ -104,6 +101,9 @@ currently lacks a maintainer then please consider adopting it.
 If you are present in the nixpkgs maintainer list then you can use that
 entry. If you are not then you can add yourself to
 `modules/lib/maintainers.nix` in the Home Manager project.
+
+As a maintainer you are expected to respond to issues and
+pull-requests associated with your module.
 
 Maintainers are encouraged to join the IRC or Matrix channel and
 participate when they have opportunity.

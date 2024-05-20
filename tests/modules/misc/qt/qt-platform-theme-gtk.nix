@@ -1,10 +1,8 @@
-{ config, lib, pkgs, ... }:
-
 {
   config = {
     qt = {
       enable = true;
-      platformTheme = "gtk";
+      platformTheme.name = "gtk";
     };
     i18n.inputMethod.enabled = "fcitx5";
 

@@ -1,0 +1,10 @@
+dir {
+	blk1 p1 "\"p2\"" {
+		sub1 arg11 arg12
+		sub2 arg21 arg22
+		sub3 arg31 arg32 {
+			sub-sub1
+			sub-sub2 arg321 arg322
+		}
+	}
+}

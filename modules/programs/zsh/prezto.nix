@@ -16,7 +16,8 @@ let
 
       caseSensitive = mkOption {
         type = types.nullOr types.bool;
-        default = null;
+        # See <https://github.com/nix-community/home-manager/issues/2255>.
+        default = true;
         example = true;
         description =
           "Set case-sensitivity for completion, history lookup, etc.";

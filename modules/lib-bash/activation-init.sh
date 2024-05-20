@@ -115,7 +115,7 @@ function nixProfileRemove() {
         nixProfileList "$1" | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
     else
         if nix-env -q | grep -q "^$1$"; then
-            run --silence nix-env -e "$1"
+            run --quiet nix-env -e "$1"
         fi
     fi
 }
@@ -155,7 +155,7 @@ _i "Starting Home Manager activation"
 # Verify that we can connect to the Nix store and/or daemon. This will
 # also create the necessary directories in profiles and gcroots.
 _iVerbose "Sanity checking Nix"
-nix-build --expr '{}' --no-out-link
+nix-build --quiet --expr '{}' --no-out-link
 
 # Also make sure that the Nix profiles path is created.
 nix-env -q > /dev/null 2>&1 || true

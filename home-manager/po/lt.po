@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-02-15 16:04+0100\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
 "PO-Revision-Date: 2024-02-16 22:01+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/home-manager/"
@@ -16,18 +16,23 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && ("
-"n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"(n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.4\n"
 
-#: home-manager/home-manager:58
+#. translators: For example: "home-manager: missing argument for --cores"
+#: home-manager/home-manager:16
+msgid "%s: missing argument for %s"
+msgstr ""
+
+#: home-manager/home-manager:64
 msgid "No configuration file found at %s"
 msgstr "Nerastas konfigūracijos failas %s"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
-#: home-manager/home-manager:75 home-manager/home-manager:79
-#: home-manager/home-manager:178
+#: home-manager/home-manager:81 home-manager/home-manager:85
+#: home-manager/home-manager:184
 #, fuzzy
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
@@ -36,23 +41,23 @@ msgstr ""
 "Home Manager saugojimas %s viduje %s yra pasenes,\n"
 "prašome perkelti į %s"
 
-#: home-manager/home-manager:86
+#: home-manager/home-manager:92
 msgid "No configuration file found. Please create one at %s"
 msgstr "Nerastas konfigūracijos failas. Sukurkite jį adresu %s"
 
-#: home-manager/home-manager:101
+#: home-manager/home-manager:107
 msgid "Home Manager not found at %s."
 msgstr "Nerastas Home Manager šioje vietoje %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:109
+#: home-manager/home-manager:115
 msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:112
+#: home-manager/home-manager:118
 msgid ""
 "To remove this warning, do one of the following.\n"
 "\n"
@@ -73,42 +78,42 @@ msgid ""
 "     $ rm -r \"%s\""
 msgstr ""
 
-#: home-manager/home-manager:140
+#: home-manager/home-manager:146
 msgid "Sanity checking Nix"
 msgstr "Nix tikrinamas"
 
-#: home-manager/home-manager:160
+#: home-manager/home-manager:166
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "Nepavyko rasti tinkamo profilio katalogo, bandyta naudoti %s ir %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:215
+#: home-manager/home-manager:221
 msgid "Can't inspect options of a flake configuration"
 msgstr "Negalima patikrinti flake konfigūracijos pasirinkimų"
 
-#: home-manager/home-manager:288 home-manager/home-manager:311
-#: home-manager/home-manager:1030
+#: home-manager/home-manager:296 home-manager/home-manager:319
+#: home-manager/home-manager:1051
 msgid "%s: unknown option '%s'"
 msgstr "%s: nežinomas pasirinkimas „%s“"
 
-#: home-manager/home-manager:293 home-manager/home-manager:1031
+#: home-manager/home-manager:301 home-manager/home-manager:1052
 msgid "Run '%s --help' for usage help"
 msgstr "Paleiskite „%s --help“, kad gautumėte naudojimosi instrukcijas"
 
-#: home-manager/home-manager:319 home-manager/home-manager:423
+#: home-manager/home-manager:327 home-manager/home-manager:431
 msgid "The file %s already exists, leaving it unchanged..."
 msgstr "Failas %s jau egzistuoja, jis paliekamas nepakeistas..."
 
-#: home-manager/home-manager:321 home-manager/home-manager:425
+#: home-manager/home-manager:329 home-manager/home-manager:433
 msgid "Creating %s..."
 msgstr "Kuriamas %s..."
 
-#: home-manager/home-manager:467
+#: home-manager/home-manager:475
 msgid "Creating initial Home Manager generation..."
 msgstr "Kuriama pradinė Home Manager generacija..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/home-manager:472
+#: home-manager/home-manager:480
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -127,7 +132,7 @@ msgstr ""
 "jei norite pamatyti visus pasirinkimus."
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/home-manager:477
+#: home-manager/home-manager:485
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -142,11 +147,11 @@ msgstr ""
 "jei atrodo, kad klaida įvyko dėl Home Manager."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:488
+#: home-manager/home-manager:496
 msgid "Can't instantiate a flake configuration"
 msgstr "Negalima sukurti pradinės flake konfigūracijos"
 
-#: home-manager/home-manager:564
+#: home-manager/home-manager:572
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -163,73 +168,73 @@ msgstr[2] ""
 "Yra %d neperskaitytų ir aktualių naujienų.\n"
 "Perskaitykite jas paleidus komandą \"%s news\"."
 
-#: home-manager/home-manager:578
+#: home-manager/home-manager:586
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Nežinomas \"news.display\" nustatymas \"%s\"."
 
-#: home-manager/home-manager:586
+#: home-manager/home-manager:594
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
 msgstr ""
 
-#: home-manager/home-manager:604
+#: home-manager/home-manager:612
 #, fuzzy
 msgid "Cannot run build in read-only directory"
 msgstr "Negalima vykdyti kompiliavimo read-only kataloge"
 
-#: home-manager/home-manager:685
+#: home-manager/home-manager:693
 msgid "No generation with ID %s"
 msgstr "Nėra generacijos su ID %s"
 
-#: home-manager/home-manager:687
+#: home-manager/home-manager:695
 msgid "Cannot remove the current generation %s"
 msgstr "Negalima pašalinti esamos generacijos %s"
 
-#: home-manager/home-manager:689
+#: home-manager/home-manager:697
 msgid "Removing generation %s"
 msgstr "Pašalinama generacija %s"
 
-#: home-manager/home-manager:710
+#: home-manager/home-manager:718
 msgid "No generations to expire"
 msgstr "Nėra generacijų, kurios baigtų galioti"
 
-#: home-manager/home-manager:721
+#: home-manager/home-manager:729
 msgid "No home-manager packages seem to be installed."
 msgstr "Nėra instaliuotų home-manager paketų."
 
-#: home-manager/home-manager:803
+#: home-manager/home-manager:811
 msgid "Unknown argument %s"
 msgstr "Nežinomas argumentas %s"
 
-#: home-manager/home-manager:827
+#: home-manager/home-manager:835
 msgid "This will remove Home Manager from your system."
 msgstr "Tai pašalins Home Manager iš jūsų sistemos."
 
-#: home-manager/home-manager:830
+#: home-manager/home-manager:838
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Tai bandomasis paleidimas, niekas nebus ištrinta."
 
-#: home-manager/home-manager:834
+#: home-manager/home-manager:842
 msgid "Really uninstall Home Manager?"
 msgstr "Tikrai išdiegti Home Manager?"
 
-#: home-manager/home-manager:840
+#: home-manager/home-manager:848
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Perjungiama į tuščią Home Manager konfigūraciją..."
 
-#: home-manager/home-manager:855
+#: home-manager/home-manager:863
 msgid "Yay!"
 msgstr "Valio!"
 
-#: home-manager/home-manager:860
+#: home-manager/home-manager:868
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr "Home Manager yra išdiegtas, bet jūsų home.nix liko nepaliestas."
 
-#: home-manager/home-manager:1070
+#: home-manager/home-manager:1091
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations tikisi vieno argumento, gauta %d."
 
-#: home-manager/home-manager:1092
+#: home-manager/home-manager:1113
 msgid "Unknown command: %s"
 msgstr "Nežinoma komanda: %s"
 

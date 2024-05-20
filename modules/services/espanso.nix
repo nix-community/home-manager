@@ -1,10 +1,8 @@
 { pkgs, config, lib, ... }:
 let
   inherit (lib)
-    mkOption mkEnableOption mkIf maintainers literalExpression types platforms
+    mkOption mkEnableOption mkIf maintainers literalExpression types
     mkRemovedOptionModule versionAtLeast;
-
-  inherit (lib.hm.assertions) assertPlatform;
 
   cfg = config.services.espanso;
   espansoVersion = cfg.package.version;
@@ -19,6 +17,7 @@ in {
     maintainers.lucasew
     maintainers.bobvanderlinden
     lib.hm.maintainers.liyangau
+    maintainers.n8henrie
   ];
   options = {
     services.espanso = {
@@ -99,15 +98,12 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      (assertPlatform "services.espanso" pkgs platforms.linux)
-      {
-        assertion = versionAtLeast espansoVersion "2";
-        message = ''
-          The services.espanso module only supports Espanso version 2 or later.
-        '';
-      }
-    ];
+    assertions = [{
+      assertion = versionAtLeast espansoVersion "2";
+      message = ''
+        The services.espanso module only supports Espanso version 2 or later.
+      '';
+    }];
 
     home.packages = [ cfg.package ];
 
@@ -130,6 +126,20 @@ in {
         Restart = "on-failure";
       };
       Install = { WantedBy = [ "default.target" ]; };
+    };
+
+    launchd.agents.espanso = {
+      enable = true;
+      config = {
+        ProgramArguments = [ "${cfg.package}/bin/espanso" "launcher" ];
+        EnvironmentVariables.PATH =
+          "${cfg.package}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+        KeepAlive = {
+          Crashed = true;
+          SuccessfulExit = false;
+        };
+        RunAtLoad = true;
+      };
     };
   };
 }

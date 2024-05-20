@@ -11,6 +11,12 @@ export TEXTDOMAINDIR=@OUT@/share/locale
 # shellcheck disable=1091
 source @HOME_MANAGER_LIB@
 
+function errMissingOptArg() {
+    # translators: For example: "home-manager: missing argument for --cores"
+    _iError "%s: missing argument for %s" "$0" "$1" >&2
+    exit 1
+}
+
 function setNixProfileCommands() {
     if  [[ -e $HOME/.nix-profile/manifest.json \
         || -e ${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json ]] ; then
@@ -138,7 +144,7 @@ function setHomeManagerPathVariables() {
     fi
 
     _iVerbose "Sanity checking Nix"
-    nix-build -q --expr '{}' --no-out-link > /dev/null 2>&1 || true
+    nix-build --quiet --expr '{}' --no-out-link > /dev/null 2>&1 || true
     nix-env -q > /dev/null 2>&1 || true
 
     declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
@@ -277,10 +283,12 @@ function doInit() {
                 switch=1
                 ;;
             --home-manager-url)
+                [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
                 homeManagerUrl="$1"
                 shift
                 ;;
             --nixpkgs-url)
+                [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
                 nixpkgsUrl="$1"
                 shift
                 ;;
@@ -390,9 +398,10 @@ $xdgVars
   };
 
   # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. If you don't want to manage your shell through Home
-  # Manager then you have to manually source 'hm-session-vars.sh' located at
-  # either
+  # 'home.sessionVariables'. These will be explicitly sourced when using a
+  # shell provided by Home Manager. If you don't want to manage your shell
+  # through Home Manager then you have to manually source 'hm-session-vars.sh'
+  # located at either
   #
   #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
   #
@@ -733,7 +742,11 @@ function newsReadIdsFile() {
         touch "$path"
     fi
 
-    echo "$path"
+    # Remove duplicate slashes in case $HOME or $XDG_DATA_HOME have a trailing
+    # slash. Double slashes causes Nix to error out with
+    #
+    #     error: syntax error, unexpected PATH_END, expecting DOLLAR_CURLY".
+    echo "$path" | tr -s /
 }
 
 # Builds the Home Manager news data file.
@@ -768,7 +781,7 @@ function buildNews() {
     done
 
     local readIdsFile
-    readIdsFile=$(newsReadIdsFile)
+    readIdsFile="$(newsReadIdsFile)"
 
     nix-instantiate \
         --no-build-output --strict \
@@ -787,7 +800,7 @@ function doShowNews() {
     buildNews "$newsNixFile"
 
     local readIdsFile
-    readIdsFile=$(newsReadIdsFile)
+    readIdsFile="$(newsReadIdsFile)"
 
     local news
 
@@ -951,22 +964,27 @@ while [[ $# -gt 0 ]]; do
             COMMAND="$opt"
             ;;
         -A)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             HOME_MANAGER_CONFIG_ATTRIBUTE="$1"
             shift
             ;;
         -I)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             EXTRA_NIX_PATH+=("$1")
             shift
             ;;
         -b)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             export HOME_MANAGER_BACKUP_EXT="$1"
             shift
             ;;
         -f|--file)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             HOME_MANAGER_CONFIG="$1"
             shift
             ;;
         --flake)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             FLAKE_ARG="$1"
             shift
             ;;
@@ -974,18 +992,23 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt")
             ;;
         --update-input)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
         --override-input)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            [[ -v 2 && $2 != -* ]] || errMissingOptArg "$opt $1"
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
         --experimental-features)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
         --extra-experimental-features)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
@@ -1003,10 +1026,13 @@ while [[ $# -gt 0 ]]; do
             export DRY_RUN=1
             ;;
         --option|--arg|--argstr)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            [[ -v 2 ]] || errMissingOptArg "$opt $1"
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
         -j|--max-jobs|--cores|--builders)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;

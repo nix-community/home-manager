@@ -1,7 +1,7 @@
 { config, lib, ... }:
 
 {
-  home.file."result.txt".text = lib.hm.generators.toKDL { } {
+  home.file."tokdl-result.txt".text = lib.hm.generators.toKDL { } {
     a = 1;
     b = "string";
     c = ''
@@ -47,7 +47,7 @@
 
   nmt.script = ''
     assertFileContent \
-      home-files/result.txt \
+      home-files/tokdl-result.txt \
       ${./tokdl-result.txt}
   '';
 }

@@ -34,6 +34,7 @@ let
     ./misc/numlock.nix
     ./misc/pam.nix
     ./misc/qt.nix
+    ./misc/qt/kconfig.nix
     ./misc/specialisation.nix
     ./misc/submodule-support.nix
     ./misc/tmpfiles.nix
@@ -72,6 +73,7 @@ let
     ./programs/broot.nix
     ./programs/browserpass.nix
     ./programs/btop.nix
+    ./programs/bun.nix
     ./programs/carapace.nix
     ./programs/cava.nix
     ./programs/chromium.nix
@@ -85,10 +87,13 @@ let
     ./programs/emacs.nix
     ./programs/eww.nix
     ./programs/eza.nix
+    ./programs/fastfetch.nix
+    ./programs/fd.nix
     ./programs/feh.nix
     ./programs/firefox.nix
     ./programs/fish.nix
     ./programs/foot.nix
+    ./programs/freetube.nix
     ./programs/fuzzel.nix
     ./programs/fzf.nix
     ./programs/gallery-dl.nix
@@ -99,6 +104,7 @@ let
     ./programs/git-credential-oauth.nix
     ./programs/git.nix
     ./programs/gitui.nix
+    ./programs/gnome-shell.nix
     ./programs/gnome-terminal.nix
     ./programs/go.nix
     ./programs/gpg.nix
@@ -112,6 +118,7 @@ let
     ./programs/hstr.nix
     ./programs/htop.nix
     ./programs/hyfetch.nix
+    ./programs/hyprlock.nix
     ./programs/i3blocks.nix
     ./programs/i3status-rust.nix
     ./programs/i3status.nix
@@ -124,6 +131,7 @@ let
     ./programs/jq.nix
     ./programs/jujutsu.nix
     ./programs/joshuto.nix
+    ./programs/joplin-desktop.nix
     ./programs/just.nix
     ./programs/k9s.nix
     ./programs/kakoune.nix
@@ -182,6 +190,7 @@ let
     ./programs/pistol.nix
     ./programs/piston-cli.nix
     ./programs/pls.nix
+    ./programs/poetry.nix
     ./programs/powerline-go.nix
     ./programs/pqiv.nix
     ./programs/pubs.nix
@@ -189,6 +198,7 @@ let
     ./programs/pylint.nix
     ./programs/qcal.nix
     ./programs/qutebrowser.nix
+    ./programs/ranger.nix
     ./programs/rbw.nix
     ./programs/readline.nix
     ./programs/rio.nix
@@ -207,6 +217,7 @@ let
     ./programs/sioyek.nix
     ./programs/skim.nix
     ./programs/sm64ex.nix
+    ./programs/spotify-player.nix
     ./programs/sqls.nix
     ./programs/ssh.nix
     ./programs/starship.nix
@@ -224,6 +235,7 @@ let
     ./programs/tiny.nix
     ./programs/tmate.nix
     ./programs/tmux.nix
+    ./programs/tofi.nix
     ./programs/topgrade.nix
     ./programs/translate-shell.nix
     ./programs/urxvt.nix
@@ -242,16 +254,20 @@ let
     ./programs/wpaperd.nix
     ./programs/xmobar.nix
     ./programs/xplr.nix
+    ./programs/yambar.nix
     ./programs/yazi.nix
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
     ./programs/zathura.nix
     ./programs/zellij.nix
+    ./programs/zk.nix
     ./programs/zoxide.nix
     ./programs/zplug.nix
     ./programs/zsh.nix
     ./programs/zsh/prezto.nix
     ./programs/zsh/zsh-abbr.nix
+    ./services/activitywatch.nix
+    ./services/amberol.nix
     ./services/arrpc.nix
     ./services/autorandr.nix
     ./services/avizo.nix
@@ -267,6 +283,7 @@ let
     ./services/clipman.nix
     ./services/clipmenu.nix
     ./services/comodoro.nix
+    ./services/conky.nix
     ./services/copyq.nix
     ./services/darkman.nix
     ./services/devilspie2.nix
@@ -289,6 +306,8 @@ let
     ./services/gromit-mpx.nix
     ./services/home-manager-auto-upgrade.nix
     ./services/hound.nix
+    ./services/hypridle.nix
+    ./services/hyprpaper.nix
     ./services/imapnotify.nix
     ./services/kanshi.nix
     ./services/kbfs.nix
@@ -326,12 +345,14 @@ let
     ./services/plex-mpv-shim.nix
     ./services/polybar.nix
     ./services/poweralertd.nix
+    ./services/psd.nix
     ./services/pueue.nix
     ./services/pulseeffects.nix
     ./services/random-background.nix
     ./services/recoll.nix
     ./services/redshift-gammastep/gammastep.nix
     ./services/redshift-gammastep/redshift.nix
+    ./services/remmina.nix
     ./services/rsibreak.nix
     ./services/safeeyes.nix
     ./services/screen-locker.nix
@@ -342,6 +363,7 @@ let
     ./services/stalonetray.nix
     ./services/status-notifier-watcher.nix
     ./services/swayidle.nix
+    ./services/swaync.nix
     ./services/swayosd.nix
     ./services/sxhkd.nix
     ./services/syncthing.nix

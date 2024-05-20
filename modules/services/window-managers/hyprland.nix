@@ -9,7 +9,6 @@ let
   systemdActivation = ''
     exec-once = ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}
   '';
-
 in {
   meta.maintainers = [ lib.maintainers.fufexan ];
 
@@ -28,9 +27,12 @@ in {
       [ "wayland" "windowManager" "hyprland" "xwayland" "hidpi" ]
       "HiDPI patches are deprecated. Refer to https://wiki.hyprland.org/Configuring/XWayland")
 
-    (lib.mkRenamedOptionModule # \
+    (lib.mkRemovedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "nvidiaPatches" ] # \
-      [ "wayland" "windowManager" "hyprland" "enableNvidiaPatches" ])
+      "Nvidia patches are no longer needed")
+    (lib.mkRemovedOptionModule # \
+      [ "wayland" "windowManager" "hyprland" "enableNvidiaPatches" ] # \
+      "Nvidia patches are no longer needed")
 
     (lib.mkRenamedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "systemdIntegration" ] # \
@@ -45,10 +47,7 @@ in {
     finalPackage = lib.mkOption {
       type = lib.types.package;
       readOnly = true;
-      default = cfg.package.override {
-        enableXWayland = cfg.xwayland.enable;
-        enableNvidiaPatches = cfg.enableNvidiaPatches;
-      };
+      default = cfg.package.override { enableXWayland = cfg.xwayland.enable; };
       defaultText = lib.literalMD
         "`wayland.windowManager.hyprland.package` with applied configuration";
       description = ''
@@ -88,7 +87,7 @@ in {
           "WAYLAND_DISPLAY"
           "XDG_CURRENT_DESKTOP"
         ];
-        example = [ "-all" ];
+        example = [ "--all" ];
         description = ''
           Environment variables to be imported in the systemd & D-Bus user
           environment.
@@ -103,12 +102,13 @@ in {
         ];
         description = "Extra commands to be run after D-Bus activation.";
       };
+
+      enableXdgAutostart = lib.mkEnableOption ''
+        autostart of applications using
+        {manpage}`systemd-xdg-autostart-generator(8)`'';
     };
 
     xwayland.enable = lib.mkEnableOption "XWayland" // { default = true; };
-
-    enableNvidiaPatches =
-      lib.mkEnableOption "patching wlroots for better Nvidia support";
 
     settings = lib.mkOption {
       type = with lib.types;
@@ -181,6 +181,16 @@ in {
     '' // {
       default = true;
     };
+
+    importantPrefixes = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ "$" "bezier" "name" ]
+        ++ lib.optionals cfg.sourceFirst [ "source" ];
+      example = [ "$" "bezier" ];
+      description = ''
+        List of prefix of attributes to source at the top of the config.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -202,47 +212,28 @@ in {
       shouldGenerate = cfg.systemd.enable || cfg.extraConfig != ""
         || cfg.settings != { } || cfg.plugins != [ ];
 
-      toHyprconf = with lib;
-        attrs: indentLevel:
-        let
-          indent = concatStrings (replicate indentLevel "  ");
-
-          mkSection = n: attrs: ''
-            ${indent}${n} {
-            ${toHyprconf attrs (indentLevel + 1)}${indent}}
-          '';
-          sections = filterAttrs (n: v: isAttrs v) attrs;
-
-          mkFields = generators.toKeyValue {
-            listsAsDuplicateKeys = true;
-            inherit indent;
-          };
-          allFields = filterAttrs (n: v: !(isAttrs v)) attrs;
-          importantFields = filterAttrs (n: _:
-            (hasPrefix "$" n) || (hasPrefix "bezier" n)
-            || (cfg.sourceFirst && (hasPrefix "source" n))) allFields;
-          fields = builtins.removeAttrs allFields
-            (mapAttrsToList (n: _: n) importantFields);
-        in mkFields importantFields
-        + concatStringsSep "\n" (mapAttrsToList mkSection sections)
-        + mkFields fields;
-
       pluginsToHyprconf = plugins:
-        toHyprconf {
-          plugin = let
-            mkEntry = entry:
-              if lib.types.package.check entry then
-                "${entry}/lib/lib${entry.pname}.so"
-              else
-                entry;
-          in map mkEntry cfg.plugins;
-        } 0;
+        lib.hm.generators.toHyprconf {
+          attrs = {
+            plugin = let
+              mkEntry = entry:
+                if lib.types.package.check entry then
+                  "${entry}/lib/lib${entry.pname}.so"
+                else
+                  entry;
+            in map mkEntry cfg.plugins;
+          };
+          inherit (cfg) importantPrefixes;
+        };
     in lib.mkIf shouldGenerate {
       text = lib.optionalString cfg.systemd.enable systemdActivation
         + lib.optionalString (cfg.plugins != [ ])
         (pluginsToHyprconf cfg.plugins)
-        + lib.optionalString (cfg.settings != { }) (toHyprconf cfg.settings 0)
-        + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
+        + lib.optionalString (cfg.settings != { })
+        (lib.hm.generators.toHyprconf {
+          attrs = cfg.settings;
+          inherit (cfg) importantPrefixes;
+        }) + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
       onChange = lib.mkIf (cfg.package != null) ''
         ( # Execute in subshell so we don't poision environment with vars
@@ -260,8 +251,12 @@ in {
         Description = "Hyprland compositor session";
         Documentation = [ "man:systemd.special(7)" ];
         BindsTo = [ "graphical-session.target" ];
-        Wants = [ "graphical-session-pre.target" ];
+        Wants = [ "graphical-session-pre.target" ]
+          ++ lib.optional cfg.systemd.enableXdgAutostart
+          "xdg-desktop-autostart.target";
         After = [ "graphical-session-pre.target" ];
+        Before = lib.mkIf cfg.systemd.enableXdgAutostart
+          [ "xdg-desktop-autostart.target" ];
       };
     };
 

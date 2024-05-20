@@ -1,1 +1,1 @@
-{"identities":[{"color":"yellow","icon":"circle","name":"shopping","public":true,"userContextId":6}],"lastUserContextId":6,"version":4}
+{"identities":[{"color":"yellow","icon":"circle","name":"shopping","public":true,"userContextId":6},{"accessKey":"","color":"","icon":"","name":"userContextIdInternal.thumbnail","public":false,"userContextId":4294967294},{"accessKey":"","color":"","icon":"","name":"userContextIdInternal.webextStorageLocal","public":false,"userContextId":4294967295}],"lastUserContextId":6,"version":4}
