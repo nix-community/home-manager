@@ -1,0 +1,8 @@
+version="9"
+logging="no"
+name="test filter"
+enabled="yes"
+type="32"
+action="ACTION_NAME"
+actionValue="//imap:"
+condition="AND "

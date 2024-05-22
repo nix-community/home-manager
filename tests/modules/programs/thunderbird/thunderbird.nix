@@ -6,6 +6,14 @@
       thunderbird = {
         enable = true;
         profiles = [ "first" ];
+        msgFilters = [{
+          name = "test filter";
+          enabled = true;
+          type = "32";
+          action = "ACTION_NAME";
+          actionValue = "//imap:";
+          condition = "AND ";
+        }];
       };
 
       aliases = [ "home-manager@example.com" ];
@@ -84,5 +92,13 @@
     assertFileExists home-files/.thunderbird/first/chrome/userContent.css
     assertFileContent home-files/.thunderbird/first/chrome/userContent.css \
       <(echo "* { color: red !important; }")
+
+    assertFileExists home-files/.thunderbird/first/ImapMail/${
+      builtins.hashString "sha256" "hm@example.com"
+    }/msgFilterRules.dat
+    assertFileContent home-files/.thunderbird/first/ImapMail/${
+      builtins.hashString "sha256" "hm@example.com"
+    }/msgFilterRules.dat \
+      ${./thunderbird-expected-msgFilterRules.dat}    
   '';
 }
