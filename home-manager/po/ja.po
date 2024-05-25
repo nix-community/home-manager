@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-04-29 18:07+0000\n"
-"Last-Translator: Kento Okamoto <kentokamoto@protonmail.com>\n"
+"PO-Revision-Date: 2024-05-23 07:09+0000\n"
+"Last-Translator: Narazaki Shuji <shujinarazaki@protonmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
 "Language: ja\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5.2\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -45,7 +45,7 @@ msgstr "設定ファイルがありません。ファイルを %s に作って�
 
 #: home-manager/home-manager:107
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "%s にHome Managerが見つかりません。"
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:115
@@ -168,7 +168,7 @@ msgstr "\"news.display\"に\"%s\"という設定は存在しません。"
 #: home-manager/home-manager:594
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "環境変数 $EDITOR または $VISUAL を設定してください"
 
 #: home-manager/home-manager:612
 msgid "Cannot run build in read-only directory"
