@@ -1,8 +1,12 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+
+  inherit (lib)
+    boolToString concatStringsSep escape floatToString getVersion isBool
+    isConvertibleWithToString isDerivation isFloat isInt isList isString
+    literalExpression maintainers mapAttrsToList mkDefault mkEnableOption mkIf
+    mkMerge mkOption optionalString toPretty types versionAtLeast;
 
   cfg = config.nix;
 
@@ -10,7 +14,7 @@ let
 
   isNixAtLeast = versionAtLeast (getVersion nixPackage);
 
-  nixPath = lib.concatStringsSep ":" cfg.nixPath;
+  nixPath = concatStringsSep ":" cfg.nixPath;
 
   useXdg = config.nix.enable
     && (config.nix.settings.use-xdg-base-directories or false);
@@ -130,7 +134,7 @@ in {
         "$HOME/.nix-defexpr/channels"
         "darwin-config=$HOME/.config/nixpkgs/darwin-configuration.nix"
       ];
-      description = lib.mdDoc ''
+      description = ''
         Adds new directories to the Nix expression search path.
 
         Used by Nix when looking up paths in angular brackets
@@ -142,7 +146,7 @@ in {
       type = types.bool;
       default = true;
       example = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether {option}`nix.nixPath` should keep the previously set values in
         {env}`NIX_PATH`.
       '';
@@ -152,7 +156,7 @@ in {
       type = with lib.types; attrsOf package;
       default = { };
       example = lib.literalExpression "{ inherit nixpkgs; }";
-      description = lib.mdDoc ''
+      description = ''
         A declarative alternative to Nix channels. Whereas with stock channels,
         you would register URLs and fetch them into the Nix store with
         {manpage}`nix-channel(1)`, this option allows you to register the store
