@@ -49,7 +49,7 @@ in {
     sync = {
       target = lib.mkOption {
         type = lib.types.enum [
-          null
+          "undefined"
           "none"
           "file-system"
           "onedrive"
@@ -60,15 +60,23 @@ in {
           "joplin-server"
           "joplin-cloud"
         ];
-        default = null;
+        default = "undefined";
         example = "dropbox";
         description = "What is the type of sync target.";
       };
 
       interval = lib.mkOption {
-        type =
-          lib.types.enum [ null "disabled" "5m" "10m" "30m" "1h" "12h" "1d" ];
-        default = null;
+        type = lib.types.enum [
+          "undefined"
+          "disabled"
+          "5m"
+          "10m"
+          "30m"
+          "1h"
+          "12h"
+          "1d"
+        ];
+        default = "undefined";
         example = "10m";
         description = ''
           Set the synchronisation interval.
@@ -90,6 +98,7 @@ in {
             "editor" = cfg.general.editor;
 
             "sync.target" = {
+              "undefined" = null;
               "none" = 0;
               "file-system" = 2;
               "onedrive" = 3;
@@ -99,9 +108,10 @@ in {
               "s3" = 8;
               "joplin-server" = 9;
               "joplin-cloud" = 10;
-            }.${cfg.sync.target} or null;
+            }.${cfg.sync.target};
 
             "sync.interval" = {
+              "undefined" = null;
               "disabled" = 0;
               "5m" = 300;
               "10m" = 600;
@@ -109,10 +119,11 @@ in {
               "1h" = 3600;
               "12h" = 43200;
               "1d" = 86400;
-            }.${cfg.sync.interval} or null;
+            }.${cfg.sync.interval};
           } // cfg.extraConfig));
       in lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         # Ensure that settings.json exists.
+        mkdir -p ${builtins.dirOf configPath}
         touch ${configPath}
         # Config has to be written to temporary variable because jq cannot edit files in place.
         config="$(jq -s '.[0] + .[1]' ${configPath} ${newConfig})"

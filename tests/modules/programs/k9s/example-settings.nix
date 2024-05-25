@@ -1,6 +1,8 @@
-{ config, ... }:
+{ config, pkgs, lib, ... }:
 
 {
+  xdg.enable = lib.mkIf pkgs.stdenv.isDarwin (lib.mkForce false);
+
   programs.k9s = {
     enable = true;
     package = config.lib.test.mkStubPackage { };
@@ -76,34 +78,39 @@
     };
   };
 
-  nmt.script = ''
-    assertFileExists home-files/.config/k9s/config.yaml
+  nmt.script = let
+    configDir = if !pkgs.stdenv.isDarwin then
+      ".config/k9s"
+    else
+      "Library/Application Support/k9s";
+  in ''
+    assertFileExists "home-files/${configDir}/config.yaml"
     assertFileContent \
-      home-files/.config/k9s/config.yaml \
+      "home-files/${configDir}/config.yaml" \
       ${./example-config-expected.yaml}
-    assertFileExists home-files/.config/k9s/skins/default.yaml
+    assertFileExists "home-files/${configDir}/skins/default.yaml"
     assertFileContent \
-      home-files/.config/k9s/skins/default.yaml \
+      "home-files/${configDir}/skins/default.yaml" \
       ${./example-skin-expected.yaml}
-    assertFileExists home-files/.config/k9s/skins/alt-skin.yaml
+    assertFileExists "home-files/${configDir}/skins/alt-skin.yaml"
     assertFileContent \
-      home-files/.config/k9s/skins/alt-skin.yaml \
+      "home-files/${configDir}/skins/alt-skin.yaml" \
       ${./example-skin-expected-alt.yaml}
-    assertFileExists home-files/.config/k9s/hotkey.yaml
+    assertFileExists "home-files/${configDir}/hotkeys.yaml"
     assertFileContent \
-      home-files/.config/k9s/hotkey.yaml \
+      "home-files/${configDir}/hotkeys.yaml" \
       ${./example-hotkey-expected.yaml}
-    assertFileExists home-files/.config/k9s/aliases.yaml
+    assertFileExists "home-files/${configDir}/aliases.yaml"
     assertFileContent \
-      home-files/.config/k9s/aliases.yaml \
+      "home-files/${configDir}/aliases.yaml" \
       ${./example-aliases-expected.yaml}
-    assertFileExists home-files/.config/k9s/plugin.yaml
+    assertFileExists "home-files/${configDir}/plugins.yaml"
     assertFileContent \
-      home-files/.config/k9s/plugin.yaml \
+      "home-files/${configDir}/plugins.yaml" \
       ${./example-plugin-expected.yaml}
-    assertFileExists home-files/.config/k9s/views.yaml
+    assertFileExists "home-files/${configDir}/views.yaml"
     assertFileContent \
-      home-files/.config/k9s/views.yaml \
+      "home-files/${configDir}/views.yaml" \
       ${./example-views-expected.yaml}
   '';
 }

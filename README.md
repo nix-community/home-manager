@@ -112,7 +112,7 @@ License
 This project is licensed under the terms of the [MIT license](LICENSE).
 
 [#home-manager]: https://webchat.oftc.net/?channels=home-manager
-[Nix Flakes]: https://nixos.wiki/wiki/Flakes
+[Nix Flakes]: https://wiki.nixos.org/wiki/Flakes
 [NixOS]: https://nixos.org/
 [Nix]: https://nixos.org/explore.html
 [Nixpkgs]: https://github.com/NixOS/nixpkgs

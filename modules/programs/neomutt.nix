@@ -235,7 +235,8 @@ let
         account.neomutt.extraMailboxes;
     in with account; ''
       # register account ${name}
-      ${mailboxes} "${mailroot}/${folders.inbox}"
+      ${optionalString account.neomutt.showDefaultMailbox
+      ''${mailboxes} "${mailroot}/${folders.inbox}"''}
       ${extraMailboxes}
       ${hookName} ${mailroot}/ " \
           source ${accountFilename account} "
@@ -402,6 +403,11 @@ in {
           default = true;
         };
 
+      sourcePrimaryAccount =
+        mkEnableOption "source the primary account by default" // {
+          default = true;
+        };
+
       unmailboxes = mkOption {
         type = types.bool;
         default = false;
@@ -451,14 +457,14 @@ in {
 
         set delete = yes
 
+        ${optionalString cfg.vimKeys
+        "source ${pkgs.neomutt}/share/doc/neomutt/vim-keys/vim-keys.rc"}
+
         # Binds
         ${bindSection}
 
         # Macros
         ${macroSection}
-
-        ${optionalString cfg.vimKeys
-        "source ${pkgs.neomutt}/share/doc/neomutt/vim-keys/vim-keys.rc"}
 
         # Register accounts
         ${
@@ -467,8 +473,9 @@ in {
           ''
         }${concatMapStringsSep "\n" registerAccount neomuttAccounts}
 
-        # Source primary account
-        source ${accountFilename primary}
+        ${optionalString cfg.sourcePrimaryAccount ''
+          # Source primary account
+          source ${accountFilename primary}''}
 
         # Extra configuration
         ${optionsStr cfg.settings}

@@ -1,0 +1,58 @@
+[[themes]]
+name = "default2"
+
+[themes.component_style]
+[themes.component_style.block_title]
+fg = "Magenta"
+
+[themes.component_style.border]
+
+[themes.component_style.current_playing]
+fg = "Green"
+modifiers = ["Bold"]
+
+[themes.component_style.page_desc]
+fg = "Cyan"
+modifiers = ["Bold"]
+
+[themes.component_style.playback_album]
+fg = "Yellow"
+
+[themes.component_style.playback_artists]
+fg = "Cyan"
+modifiers = ["Bold"]
+
+[themes.component_style.playback_metadata]
+fg = "BrightBlack"
+
+[themes.component_style.playback_progress_bar]
+bg = "BrightBlack"
+fg = "Green"
+
+[themes.component_style.playback_track]
+fg = "Cyan"
+modifiers = ["Bold"]
+
+[themes.component_style.selection]
+modifiers = ["Bold", "Reversed"]
+
+[themes.component_style.table_header]
+fg = "Blue"
+
+[themes.palette]
+black = "black"
+blue = "blue"
+bright_black = "bright_black"
+bright_blue = "bright_blue"
+bright_cyan = "bright_cyan"
+bright_green = "bright_green"
+bright_magenta = "bright_magenta"
+bright_red = "bright_red"
+bright_white = "bright_white"
+bright_yellow = "bright_yellow"
+cyan = "cyan"
+green = "green"
+magenta = "magenta"
+red = "red"
+white = "white"
+yellow = "yellow"

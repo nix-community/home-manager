@@ -3,6 +3,7 @@
 {
   services.mopidy = {
     enable = true;
+    extensionPackages = [ ];
     settings = {
       file = {
         enabled = true;
@@ -29,7 +30,7 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/systemd/user/mopidy.service
-    assertFileExists home-files/.config/systemd/user/mopidy-scan.service
+    assertPathNotExists home-files/.config/systemd/user/mopidy-scan.service
 
     assertFileExists home-files/.config/mopidy/mopidy.conf
     assertFileContent home-files/.config/mopidy/mopidy.conf \

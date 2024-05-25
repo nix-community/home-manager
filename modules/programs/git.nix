@@ -392,7 +392,7 @@ in {
           nameValuePair "sendemail.${name}" (if account.msmtp.enable then {
             smtpServer = "${pkgs.msmtp}/bin/msmtp";
             envelopeSender = "auto";
-            from = address;
+            from = "${realName} <${address}>";
           } else
             {
               smtpEncryption = if smtp.tls.enable then
@@ -407,7 +407,7 @@ in {
                 mkIf smtp.tls.enable (toString smtp.tls.certificatesFile);
               smtpServer = smtp.host;
               smtpUser = userName;
-              from = address;
+              from = "${realName} <${address}>";
             } // optionalAttrs (smtp.port != null) {
               smtpServerPort = smtp.port;
             });

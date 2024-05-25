@@ -22,19 +22,26 @@ in {
 
     package = mkPackageOption pkgs "jujutsu" { };
 
+    ediff = mkOption {
+      type = types.bool;
+      default = config.programs.emacs.enable;
+      defaultText = literalExpression "config.programs.emacs.enable";
+      description = ''
+        Enable ediff as a merge tool
+      '';
+    };
+
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      example = literalExpression ''
-        {
-          user = {
-            name = "John Doe";
-            email = "jdoe@example.org";
-          };
-        }
-      '';
+      example = {
+        user = {
+          name = "John Doe";
+          email = "jdoe@example.org";
+        };
+      };
       description = ''
-        Options to add to the {file}`.jjconfig.toml` file. See
+        Options to add to the {file}`config.toml` file. See
         <https://github.com/martinvonz/jj/blob/main/docs/config.md>
         for options.
       '';
@@ -44,8 +51,19 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file.".jjconfig.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "jujutsu-config" cfg.settings;
+    xdg.configFile."jj/config.toml" = mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "jujutsu-config" (cfg.settings
+        // optionalAttrs (cfg.ediff) (let
+          emacsDiffScript = pkgs.writeShellScriptBin "emacs-ediff" ''
+            set -euxo pipefail
+            ${config.programs.emacs.package}/bin/emacsclient -c --eval "(ediff-merge-files-with-ancestor \"$1\" \"$2\" \"$3\" nil \"$4\")"
+          '';
+        in {
+          merge-tools.ediff = {
+            program = getExe emacsDiffScript;
+            merge-args = [ "$left" "$right" "$base" "$output" ];
+          };
+        }));
     };
   };
 }

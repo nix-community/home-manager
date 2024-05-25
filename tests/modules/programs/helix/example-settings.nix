@@ -43,6 +43,8 @@ with lib;
         }];
       };
 
+      ignores = [ ".build/" "!.gitignore" ];
+
       themes = {
         base16 = let
           transparent = "none";
@@ -131,6 +133,9 @@ with lib;
       assertFileContent \
         home-files/.config/helix/languages.toml \
         ${./languages-expected.toml}
+      assertFileContent \
+        home-files/.config/helix/ignore \
+        ${./ignore-expected}
       assertFileContent \
         home-files/.config/helix/themes/base16.toml \
         ${./theme-base16-expected.toml}

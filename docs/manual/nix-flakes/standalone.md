@@ -58,5 +58,5 @@ If you only want to update a single flake input, then the command
 You can also pass flake-related options such as `--recreate-lock-file`
 or `--update-input <input>` to `home-manager` when building or
 switching, and these options will be forwarded to `nix build`. See the
-[NixOS Wiki page](https://nixos.wiki/wiki/Flakes) for details.
+[NixOS Wiki page](https://wiki.nixos.org/wiki/Flakes) for details.
 :::

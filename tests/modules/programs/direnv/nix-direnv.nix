@@ -10,9 +10,7 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/.bashrc
-      assertFileRegex \
-        home-files/.config/direnv/direnvrc \
-        'source /nix/store/.*nix-direnv.*/share/nix-direnv/direnvrc'
+      assertFileExists home-files/.config/direnv/lib/hm-nix-direnv.sh
     '';
   };
 }

@@ -33,8 +33,8 @@ with lib;
         ./git-with-email-expected.conf
       }
 
-      assertGitConfig "sendemail.hm@example.com.from" "hm@example.com"
-      assertGitConfig "sendemail.hm-account.from" "hm@example.org"
+      assertGitConfig "sendemail.hm@example.com.from" "H. M. Test <hm@example.com>"
+      assertGitConfig "sendemail.hm-account.from" "H. M. Test Jr. <hm@example.org>"
     '';
   };
 }

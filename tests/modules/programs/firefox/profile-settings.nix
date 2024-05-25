@@ -27,7 +27,7 @@
             toolbar = true;
             bookmarks = [{
               name = "Home Manager";
-              url = "https://nixos.wiki/wiki/Home_Manager";
+              url = "https://wiki.nixos.org/wiki/Home_Manager";
             }];
           }
           {
@@ -51,7 +51,7 @@
               {
                 name = "wiki";
                 tags = [ "wiki" "nix" ];
-                url = "https://nixos.wiki/";
+                url = "https://wiki.nixos.org/";
               }
               {
                 name = "Nix sites";
@@ -62,7 +62,7 @@
                   }
                   {
                     name = "wiki";
-                    url = "https://nixos.wiki/";
+                    url = "https://wiki.nixos.org/";
                   }
                 ];
               }
@@ -102,9 +102,10 @@
 
             "NixOS Wiki" = {
               urls = [{
-                template = "https://nixos.wiki/index.php?search={searchTerms}";
+                template =
+                  "https://wiki.nixos.org/index.php?search={searchTerms}";
               }];
-              iconUpdateURL = "https://nixos.wiki/favicon.png";
+              iconUpdateURL = "https://wiki.nixos.org/favicon.png";
               updateInterval = 24 * 60 * 60 * 1000;
               definedAliases = [ "@nw" ];
             };

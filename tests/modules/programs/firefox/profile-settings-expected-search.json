@@ -31,8 +31,8 @@
       "_definedAliases": [
         "@nw"
       ],
-      "_iconURL": "https://nixos.wiki/favicon.png",
-      "_iconUpdateURL": "https://nixos.wiki/favicon.png",
+      "_iconURL": "https://wiki.nixos.org/favicon.png",
+      "_iconUpdateURL": "https://wiki.nixos.org/favicon.png",
       "_isAppProvided": false,
       "_loadPath": "[home-manager]/programs.firefox.profiles.search.search.engines.\"NixOS Wiki\"",
       "_metaData": {
@@ -42,7 +42,7 @@
       "_updateInterval": 86400000,
       "_urls": [
         {
-          "template": "https://nixos.wiki/index.php?search={searchTerms}"
+          "template": "https://wiki.nixos.org/index.php?search={searchTerms}"
         }
       ]
     },

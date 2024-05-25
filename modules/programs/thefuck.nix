@@ -32,6 +32,14 @@ with lib;
         Whether to enable Zsh integration.
       '';
     };
+
+    enableNushellIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Nushell integration.
+      '';
+    };
   };
 
   config = let
@@ -66,5 +74,11 @@ with lib;
     };
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration shEvalCmd;
+
+    programs.nushell = mkIf cfg.enableNushellIntegration {
+      extraConfig = ''
+        alias fuck = ${cfg.package}/bin/thefuck $"(history | last 1 | get command | get 0)"
+      '';
+    };
   };
 }

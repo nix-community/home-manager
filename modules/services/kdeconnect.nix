@@ -24,7 +24,6 @@ in {
         default = false;
         description = "Whether to enable kdeconnect-indicator service.";
       };
-
     };
   };
 
@@ -71,6 +70,7 @@ in {
             "stalonetray.service"
           ];
           PartOf = [ "graphical-session.target" ];
+          Requires = [ "tray.target" ];
         };
 
         Install = { WantedBy = [ "graphical-session.target" ]; };
@@ -82,6 +82,5 @@ in {
         };
       };
     })
-
   ];
 }

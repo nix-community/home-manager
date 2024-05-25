@@ -1,10 +1,8 @@
-{ config, lib, pkgs, ... }:
-
 {
   config = {
     qt = {
       enable = true;
-      platformTheme = "gtk3";
+      platformTheme.name = "gtk3";
     };
 
     nmt.script = ''

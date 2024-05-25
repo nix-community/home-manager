@@ -13,6 +13,7 @@ let
 
   hmModule = types.submoduleWith {
     description = "Home Manager module";
+    class = "homeManager";
     specialArgs = {
       lib = extendedLib;
       osConfig = config;

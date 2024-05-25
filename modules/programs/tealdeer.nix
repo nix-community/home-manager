@@ -50,7 +50,7 @@ in {
       The activation script should be fast and idempotent, so the option was removed.
       Please use
 
-        `programs.teadleer.settings.updates.auto_update = true`
+        `programs.tealdeer.settings.updates.auto_update = true`
 
       instead, to make sure tealdeer's cache is updated periodically.
     '')

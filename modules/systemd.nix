@@ -5,8 +5,8 @@ let
   cfg = config.systemd.user;
 
   inherit (lib)
-    any attrValues getAttr hm isBool literalExpression mkIf mkMerge mkOption
-    types;
+    any attrValues getAttr hm isBool literalExpression mkIf mkMerge
+    mkEnableOption mkOption types;
 
   settingsFormat = pkgs.formats.ini { listsAsDuplicateKeys = true; };
 
@@ -105,6 +105,11 @@ in {
 
   options = {
     systemd.user = {
+      enable = mkEnableOption "the user systemd service manager" // {
+        default = pkgs.stdenv.isLinux;
+        defaultText = literalExpression "pkgs.stdenv.isLinux";
+      };
+
       systemctlPath = mkOption {
         default = "${pkgs.systemd}/bin/systemctl";
         defaultText = literalExpression ''"''${pkgs.systemd}/bin/systemctl"'';
@@ -286,7 +291,12 @@ in {
   # If we run under a Linux system we assume that systemd is
   # available, in particular we assume that systemctl is in PATH.
   # Do not install any user services if username is root.
-  config = mkIf (pkgs.stdenv.isLinux && config.home.username != "root") {
+  config = mkIf (cfg.enable && config.home.username != "root") {
+    assertions = [{
+      assertion = pkgs.stdenv.isLinux;
+      message = "This module is only available on Linux.";
+    }];
+
     xdg.configFile = mkMerge [
       (lib.listToAttrs ((buildServices "service" cfg.services)
         ++ (buildServices "slice" cfg.slices)

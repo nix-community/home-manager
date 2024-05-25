@@ -198,6 +198,28 @@ in {
         '';
       };
 
+      extraWrapperArgs = mkOption {
+        type = with types; listOf str;
+        default = [ ];
+        example = literalExpression ''
+          [
+            "--suffix"
+            "LIBRARY_PATH"
+            ":"
+            "''${lib.makeLibraryPath [ pkgs.stdenv.cc.cc pkgs.zlib ]}"
+            "--suffix"
+            "PKG_CONFIG_PATH"
+            ":"
+            "''${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.stdenv.cc.cc pkgs.zlib ]}"
+          ]
+        '';
+        description = ''
+          Extra arguments to be passed to the neovim wrapper.
+          This option sets environment variables required for building and running binaries
+          with external package managers like mason.nvim.
+        '';
+      };
+
       generatedConfigViml = mkOption {
         type = types.lines;
         visible = true;
@@ -415,7 +437,8 @@ in {
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
-        wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
+        wrapperArgs = (lib.escapeShellArgs
+          (neovimConfig.wrapperArgs ++ cfg.extraWrapperArgs)) + " "
           + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
           + extraMakeWrapperLuaArgs;
         wrapRc = false;

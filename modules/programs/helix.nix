@@ -96,6 +96,16 @@ in {
       '';
     };
 
+    ignores = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ ".build/" "!.gitignore" ];
+      description = ''
+        List of paths that should be globally ignored for file picker.
+        Supports the usual ignore and negative ignore (unignore) rules used in `.gitignore` files.
+      '';
+    };
+
     themes = mkOption {
       type = types.attrsOf tomlFormat.type;
       default = { };
@@ -194,6 +204,9 @@ in {
         };
         "helix/languages.toml" = mkIf (cfg.languages != { }) {
           source = tomlFormat.generate "helix-languages-config" cfg.languages;
+        };
+        "helix/ignore" = mkIf (cfg.ignores != [ ]) {
+          text = concatStringsSep "\n" cfg.ignores + "\n";
         };
       };
 

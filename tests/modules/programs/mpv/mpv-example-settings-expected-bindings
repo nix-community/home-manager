@@ -1,3 +1,4 @@
 Alt+0 set window-scale 0.5
 WHEEL_DOWN seek -10
 WHEEL_UP seek 10
+#           script-binding uosc/video                   #! Video tracks

@@ -6,7 +6,7 @@ let
 
   cfg = config.programs.nushell;
 
-  configDir = if pkgs.stdenv.isDarwin then
+  configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
     "Library/Application Support/nushell"
   else
     "${config.xdg.configHome}/nushell";

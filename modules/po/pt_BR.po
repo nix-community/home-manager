@@ -7,35 +7,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-02-15 16:04+0100\n"
-"PO-Revision-Date: 2023-11-30 15:04+0000\n"
-"Last-Translator: Gabriel Fontes <hi@m7.rs>\n"
-"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/home-"
-"manager/modules/pt_BR/>\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"PO-Revision-Date: 2024-04-19 17:07+0000\n"
+"Last-Translator: Felipe Silva <hey@felipeqq2.rocks>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"home-manager/modules/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
-#: modules/files.nix:236
+#: modules/files.nix:191
 msgid "Creating home file links in %s"
 msgstr "Criando links simbólicos em %s"
 
-#: modules/files.nix:249
+#: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
-msgstr "Limpando links órfãos do directório %s"
+msgstr "Limpando links órfãos de %s"
 
-#: modules/files.nix:265
+#: modules/files.nix:220
 msgid "Creating profile generation %s"
-msgstr "Criando geração %s para o perfil"
+msgstr "Criando perfil de geração %s"
 
-#: modules/files.nix:282
+#: modules/files.nix:237
 msgid "No change so reusing latest profile generation %s"
 msgstr "Nenhuma mudança, portanto reusando a última geração %s para o perfil"
 
-#: modules/home-environment.nix:622
+#: modules/home-environment.nix:634
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "E então tente novamente ativar a sua configuração do Home Manager."
 
-#: modules/home-environment.nix:655
+#: modules/home-environment.nix:667
 msgid "Activating %s"
 msgstr "Ativando %s"
 
@@ -74,7 +74,7 @@ msgstr "Migrando perfil de %s para %s"
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
-"Não foi possível encontrar um diretório de perfil apropriado, tentei %s e %s"
+"Não foi possível encontrar um diretório de perfil apropriado, tentou %s e %s"
 
 #: modules/lib-bash/activation-init.sh:83
 msgid "Sanity checking oldGenNum and oldGenPath"

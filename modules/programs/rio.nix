@@ -6,7 +6,7 @@ let
 in {
   options.programs.rio = {
     enable = lib.mkEnableOption null // {
-      description = lib.mdDoc ''
+      description = ''
         Enable Rio, a terminal built to run everywhere, as a native desktop applications by
         Rust/WebGPU or even in the browsers powered by WebAssembly/WebGPU.
       '';

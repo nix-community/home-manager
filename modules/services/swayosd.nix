@@ -26,6 +26,15 @@ in {
       description = "OSD margin from top edge (0.5 would be screen center).";
     };
 
+    stylePath = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      example = "/etc/xdg/swayosd/style.css";
+      description = ''
+        Use a custom Stylesheet file instead of looking for one.
+      '';
+    };
+
     display = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -57,6 +66,8 @@ in {
           Type = "simple";
           ExecStart = "${cfg.package}/bin/swayosd-server"
             + (optionalString (cfg.display != null) " --display ${cfg.display}")
+            + (optionalString (cfg.stylePath != null)
+              " --style ${escapeShellArg cfg.stylePath}")
             + (optionalString (cfg.topMargin != null)
               " --top-margin ${toString cfg.topMargin}");
           Restart = "always";

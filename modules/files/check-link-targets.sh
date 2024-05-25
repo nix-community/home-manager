@@ -48,6 +48,12 @@ for sourcePath in "$@" ; do
 done
 
 if [[ -v collision ]] ; then
-  errorEcho "Please move the above files and try again or use 'home-manager switch -b backup' to back up existing files automatically."
+  errorEcho "Please do one of the following:
+- Move or remove the above files and try again.
+- In standalone mode, use 'home-manager switch -b backup' to back up
+  files automatically.
+- When used as a NixOS or nix-darwin module, set
+    'home-manager.backupFileExtension'
+  to, for example, 'backup' and rebuild."
   exit 1
 fi
