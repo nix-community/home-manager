@@ -12,6 +12,7 @@ let
       "${config.xdg.configHome}/zed";
   configFilePath = "${configDir}/settings.json";
   keymapFilePath = "${configDir}/keymap.json";
+  extensionPath  = ".local/share/zed/extensions";
 in
 {
   options = {
