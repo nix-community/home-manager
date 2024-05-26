@@ -61914,24 +61914,26 @@ attribute set of (submodule)</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">undocked = {
-  outputs = [
-    {
-      criteria = &quot;eDP-1&quot;;
-    }
-  ];
-};
-docked = {
-  outputs = [
-    {
-      criteria = &quot;eDP-1&quot;;
-    }
-    {
-      criteria = &quot;Some Company ASDF 4242&quot;;
-      transform = &quot;90&quot;;
-    }
-  ];
-};
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  undocked = {
+    outputs = [
+      {
+        criteria = &quot;eDP-1&quot;;
+      }
+    ];
+  };
+  docked = {
+    outputs = [
+      {
+        criteria = &quot;eDP-1&quot;;
+      }
+      {
+        criteria = &quot;Some Company ASDF 4242&quot;;
+        transform = &quot;90&quot;;
+      }
+    ];
+  };
+}
 
 </code></pre>
 
@@ -62222,28 +62224,30 @@ list of attribute-tagged union</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{ include = &quot;path/to/included/files&quot;; }
-{ output.criteria = &quot;eDP-1&quot;;
-  output.scale = 2;
-}
-{ profile.name = &quot;undocked&quot;;
-  profile.outputs = [
-    {
-      criteria = &quot;eDP-1&quot;;
-    }
-  ];
-}
-{ profile.name = &quot;docked&quot;;
-  profile.outputs = [
-    {
-      criteria = &quot;eDP-1&quot;;
-    }
-    {
-      criteria = &quot;Some Company ASDF 4242&quot;;
-      transform = &quot;90&quot;;
-    }
-  ];
-}
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  { include = &quot;path/to/included/files&quot;; }
+  { output.criteria = &quot;eDP-1&quot;;
+    output.scale = 2;
+  }
+  { profile.name = &quot;undocked&quot;;
+    profile.outputs = [
+      {
+        criteria = &quot;eDP-1&quot;;
+      }
+    ];
+  }
+  { profile.name = &quot;docked&quot;;
+    profile.outputs = [
+      {
+        criteria = &quot;eDP-1&quot;;
+      }
+      {
+        criteria = &quot;Some Company ASDF 4242&quot;;
+        transform = &quot;90&quot;;
+      }
+    ];
+  }
+]
 
 </code></pre>
 
