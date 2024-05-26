@@ -51,7 +51,8 @@ in {
       };
 
       musicDirectory = mkOption {
-        type = with types; either path str;
+        type = with types;
+          either path (strMatching "(http|https|nfs|smb)://.+");
         defaultText = literalExpression ''
           ''${home.homeDirectory}/music    if state version < 22.11
           ''${xdg.userDirs.music}          if xdg.userDirs.enable == true
