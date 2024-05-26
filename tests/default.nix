@@ -161,6 +161,7 @@ in import nmtSrc {
     ./modules/programs/watson
     ./modules/programs/wezterm
     ./modules/programs/yazi
+    ./modules/programs/zed-editor
     ./modules/programs/zellij
     ./modules/programs/zk
     ./modules/programs/zplug

@@ -349,6 +349,11 @@
     githubId = 12465195;
     name = "Bruno BELANYI";
   };
+  libewa = {
+    email = "libewa-git@icloud.com";
+    github = "libewa";
+    githubId = 67926131;
+  };
   malvo = {
     email = "malte@malvo.org";
     github = "malte-v";

@@ -262,6 +262,7 @@ let
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
     ./programs/zathura.nix
+    ./programs/zed-editor.nix
     ./programs/zellij.nix
     ./programs/zk.nix
     ./programs/zoxide.nix
