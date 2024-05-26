@@ -13,6 +13,7 @@ let
   configFilePath = "${configDir}/settings.json";
   keymapFilePath = "${configDir}/keymap.json";
 in {
+  meta.maintainers = [ maintainers.libewa ];
   options = {
     programs.zed-editor = {
       enable = mkEnableOption
