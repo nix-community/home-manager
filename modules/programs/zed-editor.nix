@@ -7,17 +7,19 @@ let
   jsonFormat = pkgs.formats.json { };
 
   configDir = if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/zed" #TODO: see if this is actually the correct directory
-    else
-      "${config.xdg.configHome}/zed";
+    "Library/Application Support/zed" # TODO: see if this is actually the correct directory
+  else
+    "${config.xdg.configHome}/zed";
   configFilePath = "${configDir}/settings.json";
   keymapFilePath = "${configDir}/keymap.json";
-  mergedSettings = cfg.userSettings // { auto_install_extensions = cfg.extensions; };
-in
-{
+  mergedSettings = cfg.userSettings // {
+    auto_install_extensions = cfg.extensions;
+  };
+in {
   options = {
     programs.zed-editor = {
-      enable = mkEnableOption "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
+      enable = mkEnableOption
+        "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
       package = mkOption {
         type = types.package;
         default = pkgs.zed-editor;
@@ -30,17 +32,17 @@ in
         type = jsonFormat.type;
         default = { };
         example = literalExpression ''
-        {
-          "features": {
-            "copilot": false
-          },
-          "telemetry": {
-            "metrics": false
-          },
-          "vim_mode": false,
-          "ui_font_size": 16,
-          "buffer_font_size": 16
-        }
+          {
+            "features": {
+              "copilot": false
+            },
+            "telemetry": {
+              "metrics": false
+            },
+            "vim_mode": false,
+            "ui_font_size": 16,
+            "buffer_font_size": 16
+          }
         '';
         description = ''
           Configuration written to Zed's {file}`settings.json`.
@@ -79,16 +81,16 @@ in
   };
 
   config = mkIf cfg.enable {
-      home.packages = [ cfg.package ];
-      home.file = mkMerge [
-        (mkIf (mergedSettings != { }) {
-          "${configFilePath}".source =
-            jsonFormat.generate "zed-user-settings" mergedSettings;
-        })
-        (mkIf (cfg.userKeymaps != { }) {
-          "${keymapFilePath}".source =
-            jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
-        })
-      ];
-    };
+    home.packages = [ cfg.package ];
+    home.file = mkMerge [
+      (mkIf (mergedSettings != { }) {
+        "${configFilePath}".source =
+          jsonFormat.generate "zed-user-settings" mergedSettings;
+      })
+      (mkIf (cfg.userKeymaps != { }) {
+        "${keymapFilePath}".source =
+          jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
+      })
+    ];
+  };
 }
