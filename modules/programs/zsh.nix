@@ -148,19 +148,27 @@ let
         type = types.str;
         description = ''
           The name of the plugin.
-
-          Don't forget to add {option}`file`
-          if the script name does not follow convention.
         '';
       };
 
       file = mkOption {
         type = types.str;
-        description = "The plugin script to source.";
+        description = ''
+          The plugin script to source.
+
+          Required if the script name does not match {file}`name.plugin.zsh`
+          using the plugin {option}`name` from the plugin {option}`src`.
+        '';
+      };
+
+      completions = mkOption {
+        type = types.listOf types.str;
+        description = "Paths of additional functions to add to {env}`fpath`.";
       };
     };
 
     config.file = mkDefault "${config.name}.plugin.zsh";
+    config.completions = mkDefault [];
   });
 
   ohMyZshModule = types.submodule {
@@ -499,16 +507,6 @@ in
         example = literalExpression ''
           [
             {
-              # will source zsh-autosuggestions.plugin.zsh
-              name = "zsh-autosuggestions";
-              src = pkgs.fetchFromGitHub {
-                owner = "zsh-users";
-                repo = "zsh-autosuggestions";
-                rev = "v0.4.0";
-                sha256 = "0z6i9wjjklb4lvr7zjhbphibsyx51psv50gm07mbb0kj9058j6kc";
-              };
-            }
-            {
               name = "enhancd";
               file = "init.sh";
               src = pkgs.fetchFromGitHub {
@@ -517,6 +515,12 @@ in
                 rev = "v2.2.1";
                 sha256 = "0iqa9j09fwm6nj5rpip87x3hnvbbz9w9ajgm6wkrd5fls8fn8i5g";
               };
+            }
+            {
+              name = "wd";
+              src = pkgs.zsh-wd;
+              file = "share/wd/wd.plugin.zsh";
+              completions = [ "share/zsh/site-functions" ];
             }
           ]
         '';
@@ -629,6 +633,9 @@ in
         (concatStrings (map (plugin: ''
           path+="$HOME/${pluginsDir}/${plugin.name}"
           fpath+="$HOME/${pluginsDir}/${plugin.name}"
+          ${(optionalString (plugin.completions != []) ''
+          fpath+=(${concatMapStringsSep " " (completion: "\"$HOME/${pluginsDir}/${plugin.name}/${completion}\"") plugin.completions})
+          '')}
         '') cfg.plugins))
 
         ''
