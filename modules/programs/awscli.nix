@@ -2,14 +2,16 @@
 
 let
   cfg = config.programs.awscli;
+
   iniFormat = pkgs.formats.ini { };
+
   settingsPath =
-    if config.programs.awscli.settings.path != ""
-    then config.programs.awscli.settings.path
+    if config.programs.awscli.settingsPath != ""
+    then config.programs.awscli.settingsPath
     else "${config.home.homeDirectory}/.aws/config";
   credentialsPath =
-    if config.programs.awscli.credentials.path != ""
-    then config.programs.awscli.credentials.path
+    if config.programs.awscli.credentialsPath != ""
+    then config.programs.awscli.credentialsPath
     else "${config.home.homeDirectory}/.aws/credentials";
 in {
   meta.maintainers = [ lib.maintainers.anthonyroussel ];
@@ -24,6 +26,15 @@ in {
       description = "Package providing {command}`aws`.";
     };
 
+    settingsPath = lib.mkOption {
+      type = lib.types.path;
+      defaultText = "~/.config/aws/config";
+      apply = builtins.toString;
+      description = ''
+        Absolute path to where the settings file should be placed.
+      '';
+    };
+
     settings = lib.mkOption {
       type = lib.types.submodule { freeformType = iniFormat.type; };
       default = { };
@@ -36,6 +47,15 @@ in {
         };
       '';
       description = "Configuration written to {file}`$HOME/.aws/config`.";
+    };
+
+    credentialsPath = lib.mkOption {
+      type = lib.types.path;
+      defaultText = "~/.config/aws/credentials";
+      apply = builtins.toString;
+      description = ''
+        Absolute path to where the credentials file should be placed.
+      '';
     };
 
     credentials = lib.mkOption {
@@ -64,24 +84,25 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables =
-      (lib.mkIf (cfg.settings.path != "") {
-        AWS_CONFIG_FILE = cfg.settings.path;
-      }) //
-      (lib.mkIf (cfg.credentials.path != "") {
-        AWS_SHARED_CREDENTIALS_FILE = cfg.credentials.path;
-      });
+    home.sessionVariables = mkMerge [
+      (lib.mkIf (cfg.settingsPath != "") {
+        AWS_CONFIG_FILE = cfg.settingsPath;
+      })
+      (lib.mkIf (cfg.credentialsPath != "") {
+        AWS_SHARED_CREDENTIALS_FILE = cfg.credentialsPath;
+      })
+    ];
 
-    home.file.(settingsPath) =
+    home.file.${settingsPath} =
       lib.mkIf (cfg.settings != { }) {
         source = iniFormat.generate "aws-config-${config.home.username}"
             cfg.settings;
       };
 
-    home.file.(credentialsPath) =
+    home.file.${credentialsPath} =
       lib.mkIf (cfg.credentials != { }) {
         source = iniFormat.generate "aws-credentials-${config.home.username}"
-          cfg.credentials;
+            cfg.credentials;
       };
   };
 }
