@@ -11,7 +11,7 @@ let
       local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
       yazi "$@" --cwd-file="$tmp"
       if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        cd -- "$cwd"
+        builtin cd -- "$cwd"
       fi
       rm -f -- "$tmp"
     }
@@ -22,7 +22,7 @@ let
       set tmp (mktemp -t "yazi-cwd.XXXXX")
       yazi $argv --cwd-file="$tmp"
       if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-        cd -- "$cwd"
+        builtin cd -- "$cwd"
       end
       rm -f -- "$tmp"
     end
