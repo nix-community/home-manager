@@ -48902,13 +48902,15 @@ TOML value</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  assume_yes = true;
-  disable = [
-    &quot;flutter&quot;
-    &quot;node&quot;
-  ];
-  set_title = false;
-  cleanup = true;
+  misc = {
+    assume_yes = true;
+    disable = [
+      &quot;flutter&quot;
+      &quot;node&quot;
+    ];
+    set_title = false;
+    cleanup = true;
+  };
   commands = {
     &quot;Run garbage collection on Nix store&quot; = &quot;nix-collect-garbage&quot;;
   };
