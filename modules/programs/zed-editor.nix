@@ -12,7 +12,7 @@ let
       "${config.xdg.configHome}/zed";
   configFilePath = "${configDir}/settings.json";
   keymapFilePath = "${configDir}/keymap.json";
-  extensionPath  = ".local/share/zed/extensions";
+  mergedSettings = cfg.userSettings // { auto_install_extensions = cfg.extensions; };
 in
 {
   options = {
@@ -63,6 +63,17 @@ in
           Configuration written to Zed's {file}`keymap.json`.
         '';
       };
+      extensions = mkOption {
+        type = listOf str;
+        default = [ ];
+        example = literalExpression ''
+          [ "swift" "nix" "xy-zed" ]
+        '';
+        description = ''
+          A list of the extensions Zed should install on startup.
+          Use the name of a repository in the [extension list](https://github.com/zed-industries/extensions/tree/main/extensions).
+        '';
+      };
       #TODO: add vscode option parity (installing extensions, configuring keybinds with nix etc.)
     };
   };
@@ -70,12 +81,12 @@ in
   config = mkIf cfg.enable {
       home.packages = [ cfg.package ];
       home.file = mkMerge [
-        (mkIf (cfg.userSettings != { }) {
+        (mkIf (mergedSettings != { }) {
           "${configFilePath}".source =
-            jsonFormat.generate "zed-user-settings" cfg.userSettings;
+            jsonFormat.generate "zed-user-settings" mergedSettings;
         })
         (mkIf (cfg.userKeymaps != { }) {
-          "${keymapFilePath}".source = 
+          "${keymapFilePath}".source =
             jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
         })
       ];
