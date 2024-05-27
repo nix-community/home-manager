@@ -73,7 +73,7 @@ with lib;
     args = escapeShellArgs (optional cfg.icons "--icons"
       ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
-    optionsAlias = { eza = "eza ${args}"; };
+    optionsAlias = optionalAttrs (args != "") { eza = "eza ${args}"; };
 
     aliases = builtins.mapAttrs (_name: value: lib.mkDefault value) {
       ls = "eza";
