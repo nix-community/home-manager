@@ -38,7 +38,7 @@ with lib; {
 
     args = escapeShellArgs (optional cfg.hidden "--hidden" ++ cfg.extraOptions);
 
-    optionsAlias = { fd = "fd ${args}"; };
+    optionsAlias = optionalAttrs (args != "") { fd = "fd ${args}"; };
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
