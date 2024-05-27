@@ -1,18 +1,12 @@
 # Test custom keymap functionality
-{ pkgs, ...}:
+{ pkgs, ... }:
 
 let
   binds = [
-    {
-      bindings = {
-        up = "menu::SelectPrev";
-      };
-    }
+    { bindings = { up = "menu::SelectPrev"; }; }
     {
       context = "Editor";
-      bindings = {
-        escape = "editor::Cancel";
-      };
+      bindings = { escape = "editor::Cancel"; };
     }
   ];
 
@@ -36,8 +30,7 @@ let
     "Library/Application Support/zed/keymap.json"
   else
     ".config/zed/keymap.json";
-in
-{
+in {
   programs.zed-editor = {
     enable = true;
     userKeymaps = binds;

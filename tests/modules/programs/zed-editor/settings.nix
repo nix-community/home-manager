@@ -1,12 +1,10 @@
 # Test custom keymap functionality
-{ pkgs, ...}:
+{ pkgs, ... }:
 
 let
   binds = {
     theme = "XY-Zed";
-    features = {
-      copilot = false;
-    };
+    features = { copilot = false; };
     vim_mode = false;
     ui_font_size = 16;
     buffer_font_size = 16;
@@ -28,8 +26,7 @@ let
     "Library/Application Support/zed/settings.json"
   else
     ".config/zed/settings.json";
-in
-{
+in {
   programs.zed-editor = {
     enable = true;
     userKeymaps = binds;
