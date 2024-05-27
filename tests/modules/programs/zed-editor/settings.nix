@@ -2,7 +2,7 @@
 { pkgs, ... }:
 
 let
-  binds = {
+  settings = {
     theme = "XY-Zed";
     features = { copilot = false; };
     vim_mode = false;
@@ -29,7 +29,7 @@ let
 in {
   programs.zed-editor = {
     enable = true;
-    userKeymaps = binds;
+    userKeymaps = settings;
     package = pkgs.writeScriptBin "zed" "" // { pname = "zed-editor"; };
   };
 
