@@ -67,7 +67,7 @@ in {
         '';
       };
       extensions = mkOption {
-        type = listOf str;
+        type = types.listOf types.str;
         default = [ ];
         example = literalExpression ''
           [ "swift" "nix" "xy-zed" ]
