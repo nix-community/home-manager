@@ -51877,13 +51877,71 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>Yazi package to install.</p>
+<p>The yazi package to use.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.yazi</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yazi.nix" target="_top">
+&lt;home-manager/modules/programs/yazi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.yazi.flavors"></a><a class="term" href="options.xhtml#opt-programs.yazi.flavors"><code class="option">programs.yazi.flavors</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Pre-made themes.</p><p>See https://yazi-rs.github.io/docs/flavors/overview/ for documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (path or package)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  foo = ./foo;
+  bar = pkgs.bar;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yazi.nix" target="_top">
+&lt;home-manager/modules/programs/yazi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.yazi.initLua"></a><a class="term" href="options.xhtml#opt-programs.yazi.initLua"><code class="option">programs.yazi.initLua</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The init.lua for Yazi itself.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">./init.lua</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -51923,6 +51981,37 @@ TOML value</p>
     { exec = &quot;quit&quot;; on = [ &quot;q&quot; ]; }
     { exec = &quot;close&quot;; on = [ &quot;&lt;C-q&gt;&quot; ]; }
   ];
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yazi.nix" target="_top">
+&lt;home-manager/modules/programs/yazi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.yazi.plugins"></a><a class="term" href="options.xhtml#opt-programs.yazi.plugins"><code class="option">programs.yazi.plugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Lua plugins.</p><p>See https://yazi-rs.github.io/docs/plugins/overview/ for documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (path or package)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  foo = ./foo;
+  bar = pkgs.bar;
 }
 
 </code></pre>
