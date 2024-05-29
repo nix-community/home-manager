@@ -40,17 +40,12 @@ let
     }
   '';
 in {
-  meta.maintainers = [ maintainers.xyenon ];
+  meta.maintainers = with maintainers; [ xyenon ];
 
   options.programs.yazi = {
     enable = mkEnableOption "yazi";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.yazi;
-      defaultText = literalExpression "pkgs.yazi";
-      description = "Yazi package to install.";
-    };
+    package = mkPackageOption pkgs "yazi" { };
 
     enableBashIntegration = mkEnableOption "Bash integration";
 
@@ -135,6 +130,48 @@ in {
         for the full list of options
       '';
     };
+
+    initLua = mkOption {
+      type = with types; nullOr path;
+      default = null;
+      description = ''
+        The init.lua for Yazi itself.
+      '';
+      example = literalExpression "./init.lua";
+    };
+
+    plugins = mkOption {
+      type = with types; attrsOf (oneOf [ path package ]);
+      default = { };
+      description = ''
+        Lua plugins.
+
+        See https://yazi-rs.github.io/docs/plugins/overview/ for documentation.
+      '';
+      example = literalExpression ''
+        {
+          foo = ./foo;
+          bar = pkgs.bar;
+        }
+      '';
+    };
+
+    flavors = mkOption {
+      type = with types; attrsOf (oneOf [ path package ]);
+      default = { };
+      description = ''
+        Pre-made themes.
+
+        See https://yazi-rs.github.io/docs/flavors/overview/ for documentation.
+      '';
+      example = literalExpression ''
+        {
+          foo = ./foo;
+          bar = pkgs.bar;
+        }
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -160,6 +197,11 @@ in {
       "yazi/theme.toml" = mkIf (cfg.theme != { }) {
         source = tomlFormat.generate "yazi-theme" cfg.theme;
       };
-    };
+      "yazi/init.lua" = mkIf (cfg.initLua != null) { source = cfg.initLua; };
+    } // (mapAttrs'
+      (name: value: nameValuePair "yazi/plugins/${name}" { source = value; })
+      cfg.plugins) // (mapAttrs'
+        (name: value: nameValuePair "yazi/flavors/${name}" { source = value; })
+        cfg.flavors);
   };
 }
