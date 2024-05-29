@@ -8,7 +8,7 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
-  starshipCmd = "${config.home.profileDirectory}/bin/starship";
+  starshipCmd = lib.getExe cfg.package;
 
 in {
   meta.maintainers = [ ];
