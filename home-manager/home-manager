@@ -200,7 +200,7 @@ function setFlakeAttribute() {
                 local name="$USER"
                 # Check FQDN, long, and short hostnames; long first to preserve
                 # pre-existing behaviour in case both happen to be defined.
-                for n in "$USER@$(hostname --fqdn)" "$USER@$(hostname)" "$USER@$(hostname -s)"; do
+                for n in "$USER@$(hostname -f)" "$USER@$(hostname)" "$USER@$(hostname -s)"; do
                     if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$n\"")" == "true" ]]; then
                         name="$n"
                         if [[ -v VERBOSE ]]; then
