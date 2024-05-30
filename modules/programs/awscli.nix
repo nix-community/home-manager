@@ -6,12 +6,12 @@ let
   iniFormat = pkgs.formats.ini { };
 
   settingsPath =
-    if config.programs.awscli.settingsPath != ""
-    then config.programs.awscli.settingsPath
+    if cfg.settingsPath != ""
+    then cfg.settingsPath
     else "${config.home.homeDirectory}/.aws/config";
   credentialsPath =
-    if config.programs.awscli.credentialsPath != ""
-    then config.programs.awscli.credentialsPath
+    if cfg.credentialsPath != ""
+    then cfg.credentialsPath
     else "${config.home.homeDirectory}/.aws/credentials";
 in {
   meta.maintainers = [ lib.maintainers.anthonyroussel ];
