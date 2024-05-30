@@ -80,5 +80,9 @@ with lib;
         alias fuck = ${cfg.package}/bin/thefuck $"(history | last 1 | get command | get 0)"
       '';
     };
+
+    programs.xonsh.xonshrc = ''
+      aliases["fuck"] = lambda args, stdin=None: execx($(${cfg.package}/bin/thefuck @(__xonsh__.history[-1].cmd)))
+    '';
   };
 }
