@@ -16,6 +16,7 @@ let
   modules =
     [
       # keep-sorted start case=no numeric=yes
+
       ./accounts/calendar.nix
       ./accounts/contacts.nix
       ./accounts/email.nix
@@ -323,6 +324,7 @@ let
       ./programs/wlogout.nix
       ./programs/wofi.nix
       ./programs/xmobar.nix
+      ./programs/xonsh.nix
       ./programs/xplr.nix
       ./programs/yambar.nix
       ./programs/yazi.nix
