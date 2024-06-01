@@ -24,6 +24,10 @@ in {
       default = true;
     };
 
+    enableXonshIntegration = mkEnableOption "Xonsh integration" // {
+      default = true;
+    };
+
     enableFishIntegration = mkEnableOption "Fish integration" // {
       default = true;
     };
@@ -43,6 +47,10 @@ in {
 
       zsh.initExtra = mkIf cfg.enableZshIntegration ''
         source <(${bin} _carapace zsh)
+      '';
+
+      xonsh.xonshrc = mkIf cfg.enableXonshIntegration ''
+        exec($(${bin} _carapace))
       '';
 
       fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
