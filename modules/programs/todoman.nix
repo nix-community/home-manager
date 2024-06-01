@@ -56,7 +56,7 @@ in {
 
     xdg.configFile."todoman/config.py".text = lib.concatLines [
       ''path = "${config.accounts.calendar.basePath}/${cfg.glob}"''
-      cfg.config
+      cfg.extraConfig
     ];
   };
 }
