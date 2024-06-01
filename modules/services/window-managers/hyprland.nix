@@ -236,8 +236,9 @@ in {
         }) + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
       onChange = lib.mkIf (cfg.package != null) ''
-        ( # Execute in subshell so we don't poision environment with vars
-          if [[ -d "/tmp/hypr" ]]; then
+        (
+          XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+          if [[ -d "/tmp/hypr" || -d "$XDG_RUNTIME_DIR/hypr" ]]; then
             for i in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
               ${cfg.finalPackage}/bin/hyprctl -i "$i" reload config-only
             done

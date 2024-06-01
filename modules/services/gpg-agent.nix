@@ -48,9 +48,8 @@ let
   hexStringToBase32 = let
     mod = a: b: a - a / b * b;
     pow2 = elemAt [ 1 2 4 8 16 32 64 128 256 ];
-    splitChars = s: init (tail (splitString "" s));
 
-    base32Alphabet = splitChars "ybndrfg8ejkmcpqxot1uwisza345h769";
+    base32Alphabet = stringToCharacters "ybndrfg8ejkmcpqxot1uwisza345h769";
     hexToIntTable = listToAttrs (genList (x: {
       name = toLower (toHexString x);
       value = x;
@@ -76,7 +75,7 @@ let
         buf = buf';
         bufBits = bufBits';
       };
-  in hexString: (foldl' go initState (splitChars hexString)).ret;
+  in hexString: (foldl' go initState (stringToCharacters hexString)).ret;
 
 in {
   meta.maintainers = [ maintainers.rycee ];

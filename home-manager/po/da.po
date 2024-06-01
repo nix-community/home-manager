@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-02-16 22:01+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"PO-Revision-Date: 2024-05-25 11:09+0000\n"
+"Last-Translator: DeeKahy <Lennart.Diego.Kahn@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/home-manager/cli/"
 "da/>\n"
 "Language: da\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "%s: manglende argument for %s"
 
 #: home-manager/home-manager:64
 msgid "No configuration file found at %s"
@@ -36,8 +36,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
-"At have din Home Manager %s i %s er forældet,\n"
-"flyt den venligst til %s"
+"Det er forældet at holde Home Manager %s i %s,\n"
+"ryk den venligst til %s"
 
 #: home-manager/home-manager:92
 msgid "No configuration file found. Please create one at %s"
@@ -45,7 +45,7 @@ msgstr "Ingen konfigurationsfiler fundet. Venligst lav en ved %s"
 
 #: home-manager/home-manager:107
 msgid "Home Manager not found at %s."
-msgstr "Home Manager kan ikke findes under %s."
+msgstr "Home Manager blev ikke fundet ved %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:115
@@ -53,8 +53,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
-"Fallback-stien til Home Manager %s er blevet forældet, og en fil/mappe blev "
-"fundet der."
+"Det er forældet at bruge fallback Home Manager path %s og der blev fundet en "
+"fil/mappe der."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:118
@@ -120,7 +120,7 @@ msgstr "Kør '%s --help' for brugsvejledning"
 
 #: home-manager/home-manager:327 home-manager/home-manager:431
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr "Filen %s findes allerede, lader den være uændret..."
+msgstr "Filen %s eksisterer allerede, efterlader den uændret…"
 
 #: home-manager/home-manager:329 home-manager/home-manager:433
 msgid "Creating %s..."
@@ -189,7 +189,7 @@ msgstr "Ubekændt \"news.display\" indstilling \"%s\"."
 #: home-manager/home-manager:594
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Indstil venligst miljøvariablen $EDITOR eller $VISUAL"
 
 #: home-manager/home-manager:612
 msgid "Cannot run build in read-only directory"

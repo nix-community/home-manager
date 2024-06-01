@@ -209,24 +209,26 @@ in {
         Attribute set of profiles.
       '';
       example = literalExpression ''
-        undocked = {
-          outputs = [
-            {
-              criteria = "eDP-1";
-            }
-          ];
-        };
-        docked = {
-          outputs = [
-            {
-              criteria = "eDP-1";
-            }
-            {
-              criteria = "Some Company ASDF 4242";
-              transform = "90";
-            }
-          ];
-        };
+        {
+          undocked = {
+            outputs = [
+              {
+                criteria = "eDP-1";
+              }
+            ];
+          };
+          docked = {
+            outputs = [
+              {
+                criteria = "eDP-1";
+              }
+              {
+                criteria = "Some Company ASDF 4242";
+                transform = "90";
+              }
+            ];
+          };
+        }
       '';
     };
 
@@ -247,28 +249,30 @@ in {
         See kanshi(5) for informations.
       '';
       example = literalExpression ''
-        { include = "path/to/included/files"; }
-        { output.criteria = "eDP-1";
-          output.scale = 2;
-        }
-        { profile.name = "undocked";
-          profile.outputs = [
-            {
-              criteria = "eDP-1";
-            }
-          ];
-        }
-        { profile.name = "docked";
-          profile.outputs = [
-            {
-              criteria = "eDP-1";
-            }
-            {
-              criteria = "Some Company ASDF 4242";
-              transform = "90";
-            }
-          ];
-        }
+        [
+          { include = "path/to/included/files"; }
+          { output.criteria = "eDP-1";
+            output.scale = 2;
+          }
+          { profile.name = "undocked";
+            profile.outputs = [
+              {
+                criteria = "eDP-1";
+              }
+            ];
+          }
+          { profile.name = "docked";
+            profile.outputs = [
+              {
+                criteria = "eDP-1";
+              }
+              {
+                criteria = "Some Company ASDF 4242";
+                transform = "90";
+              }
+            ];
+          }
+        ]
       '';
     };
 
