@@ -8,21 +8,24 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-05-31 17:09+0000\n"
+"Last-Translator: jarre johansson <jarre@johansson.today>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/home-manager/"
+"modules/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: modules/files.nix:191
 msgid "Creating home file links in %s"
-msgstr ""
+msgstr "Luodaan kotitiedostolinkkejä sijaintiin %s"
 
 #: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
-msgstr ""
+msgstr "Siivotaan orpoja linkkejä sijainnista %s"
 
 #: modules/files.nix:220
 msgid "Creating profile generation %s"
@@ -50,15 +53,15 @@ msgstr ""
 
 #: modules/home-environment.nix:667
 msgid "Activating %s"
-msgstr ""
+msgstr "Aktivoidaan %s"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "Siirretään profiilia sijainnista %s kohteeseen %s"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Sopivaa profiilihakemistoa ei löytynyt, yritettiin %s ja %s"
 
 #: modules/lib-bash/activation-init.sh:83
 msgid "Sanity checking oldGenNum and oldGenPath"
@@ -79,6 +82,19 @@ msgid ""
 "\n"
 "and trying home-manager switch again. Good luck!"
 msgstr ""
+"Edellinen generaation numero ja polku ovat ristiriidassa! Niiden on oltava "
+"joko molemmat tyhjiä tai molemmat määritettyjä, mutta ne ovat nyt asetettu "
+"seuraavasti:\n"
+"\n"
+"'%s' ja '%s'\n"
+"\n"
+"Jos et välitä menettää aiempia profiilin generointeja, niin helpoin ratkaisu "
+"on todennäköisesti suorittaa\n"
+"\n"
+"rm %s/home-manager*\n"
+"rm %s/current-home\n"
+"\n"
+"ja yrittää sitten uudelleen home-manager switch -komentoa. Onnea matkaan!"
 
 #: modules/lib-bash/activation-init.sh:127
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
@@ -90,15 +106,15 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:153
 msgid "Starting Home Manager activation"
-msgstr ""
+msgstr "Home Managerin aktivointi käynnistyy"
 
 #: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Nixin eheys tarkistetaan"
 
 #: modules/lib-bash/activation-init.sh:170
 msgid "This is a dry run"
-msgstr ""
+msgstr "Tämä on testiajo"
 
 #: modules/lib-bash/activation-init.sh:174
 msgid "This is a live run"
@@ -110,4 +126,4 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:183
 msgid "Activation variables:"
-msgstr ""
+msgstr "Aktivointimuuttujat:"
