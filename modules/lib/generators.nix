@@ -1,6 +1,46 @@
 { lib }:
 
 {
+  toSwayConf =
+    {
+      outerBlock ? true,
+      indent ? "",
+      indentSpace ? "  ",
+    }@args:
+    v:
+    let
+      outroSpace = "\n" + lib.strings.removeSuffix indentSpace indent;
+      outro = outroSpace + lib.optionalString (!outerBlock) "}";
+      intro =
+        lib.optionalString (!outerBlock) ''
+          {
+        ''
+        + indent;
+
+      innerArgs = args // {
+        outerBlock = false;
+        indent = indent + indentSpace;
+      };
+      genInner =
+        key: value: builtins.toString key + indentSpace + lib.hm.generators.toSwayConf innerArgs value;
+      concatItems = lib.concatStringsSep ''
+
+        ${indent}'';
+    in
+    if lib.isInt v || lib.isFloat v || lib.isString v then
+      (builtins.toString v)
+    else if lib.isList v then
+      intro + concatItems v + outro
+    else if lib.isAttrs v then
+      (
+        if v == { } then
+          abort "toSwayConfig: empty attribute set is unsupported"
+        else
+          intro + concatItems (lib.mapAttrsToList genInner v) + outro
+      )
+    else
+      (abort "toSwayConfig: type ${builtins.typeOf v} is unsupported");
+
   toHyprconf =
     {
       attrs,
