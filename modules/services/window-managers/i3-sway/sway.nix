@@ -506,6 +506,7 @@ in
     Scrumplex
     alexarice
     sumnerevans
+    sinanmohd
   ];
 
   imports =
