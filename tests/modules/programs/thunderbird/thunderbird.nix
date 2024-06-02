@@ -58,6 +58,37 @@
     };
   };
 
+  accounts.calendar.accounts = {
+    calendar = {
+      thunderbird = {
+        enable = true;
+        profiles = [ "first" ];
+      };
+      primary = true;
+      remote = {
+        type = "caldav";
+        url = "https://my.caldav.server/calendar";
+        userName = "testuser";
+      };
+    };
+    holidays = {
+      thunderbird = {
+        enable = true;
+        readOnly = true;
+      };
+      remote = {
+        type = "http";
+        url = "https://www.thunderbird.net/media/caldata/autogen/GermanHolidays.ics";
+      };
+    };
+    local = {
+      thunderbird = {
+        enable = true;
+        profiles = [ "second" ];
+      };
+    };
+  };
+
   programs.thunderbird = {
     enable = true;
     package = config.lib.test.mkStubPackage {
@@ -86,17 +117,25 @@
           "imperative_account"
           "hm-account"
         ];
-      };
-
-      second.settings = {
-        "second.setting" = "some-test-setting";
-        second.nested.evenFurtherNested = [
-          1
-          2
-          3
+        calendarAccountsOrder = [
+          "calendar"
+          "imperative_cal"
+          "holidays"
         ];
       };
-      second.accountsOrder = [ "account1" ];
+
+      second = {
+        settings = {
+          "second.setting" = "some-test-setting";
+          second.nested.evenFurtherNested = [
+            1
+            2
+            3
+          ];
+        };
+        accountsOrder = [ "account1" ];
+        calendarAccountsOrder = [ "calendar1" ];
+      };
     };
 
     settings = {
