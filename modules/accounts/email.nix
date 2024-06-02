@@ -493,17 +493,14 @@ in {
     maildirBasePath = mkOption {
       type = types.str;
       default = "${config.home.homeDirectory}/Maildir";
-      defaultText = "$HOME/Maildir";
+      defaultText = "Maildir";
       apply = p:
         if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory for account maildir directories. May be a
         relative path (e.g. the user setting this value as "MyMaildir"),
         in which case it is relative the home directory (e.g. resulting
-        in "~/MyMaildir"). Note that "$HOME/Maildir" being cited as the
-        default value is showing the result, and could be achieved by
-        the user setting this value as "Maildir". Using "$HOME/" will
-        not do any interpolation.
+        in "~/MyMaildir").
       '';
     };
 
