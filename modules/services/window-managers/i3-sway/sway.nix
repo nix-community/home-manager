@@ -344,6 +344,7 @@ in {
     alexarice
     sumnerevans
     oxalica
+    sinanmohd
   ];
 
   imports = let modulePath = [ "wayland" "windowManager" "sway" ];
