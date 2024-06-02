@@ -498,6 +498,7 @@ in
     alexarice
     sumnerevans
     oxalica
+    sinanmohd
   ];
 
   imports =
