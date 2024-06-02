@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-03-27 15:05+0000\n"
-"Last-Translator: Nguyen Khanh <nguynkhan479@gmail.com>\n"
+"PO-Revision-Date: 2024-06-02 08:12+0000\n"
+"Last-Translator: goatastronaut0212 <goatastronaut0212@proton.me>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/home-manager/"
 "cli/vi/>\n"
 "Language: vi\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "%s: bị thiếu đối số cho %s"
 
 #: home-manager/home-manager:64
 msgid "No configuration file found at %s"
@@ -36,6 +36,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Giữ Home Manager của bạn %s ở %s đã không còn phù hợp,\n"
+"hãy chuyển nó tới %s"
 
 #: home-manager/home-manager:92
 msgid "No configuration file found. Please create one at %s"
@@ -95,7 +97,7 @@ msgstr ""
 
 #: home-manager/home-manager:146
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Kiểm tra độ hợp lệ của Nix"
 
 #: home-manager/home-manager:166
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -104,7 +106,7 @@ msgstr "Không thể tìm thấy thư mục hồ sơ phù hợp, đã thử %s v
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:221
 msgid "Can't inspect options of a flake configuration"
-msgstr ""
+msgstr "Không thể kiểm tra tùy chọn của cấu hình flake"
 
 #: home-manager/home-manager:296 home-manager/home-manager:319
 #: home-manager/home-manager:1051
@@ -137,6 +139,13 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Đã hoàn thành! Công cụ home-manager giờ đạ được cài đặt và bạn có thể chỉnh "
+"sửa\n"
+"\n"
+"    %s\n"
+"\n"
+"để cấu hình Home Manager. Chạy lệnh 'man home-configuration.nix' để\n"
+"xem toàn bộ tùy chọn có sẵn."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:485
@@ -147,6 +156,11 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"Quá trình cài đặt đã thất bại! Vui lòng tạo 1 báo cáo lỗi tại\n"
+"\n"
+"    %s\n"
+"\n"
+"nếu như lỗi đó thuộc về Home Manager."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:496
@@ -170,11 +184,11 @@ msgstr ""
 #: home-manager/home-manager:594
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Vui lòng đặt biến môi trường $EDITOR hoặc $VISUAL"
 
 #: home-manager/home-manager:612
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "Không thể chạy lệnh xây dựng trong thư mục chỉ cho phép đọc"
 
 #: home-manager/home-manager:693
 msgid "No generation with ID %s"
@@ -194,31 +208,31 @@ msgstr ""
 
 #: home-manager/home-manager:729
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Không có bất kỳ gói home-manager nào được cài đặt."
 
 #: home-manager/home-manager:811
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Không tồn tại đối số %s"
 
 #: home-manager/home-manager:835
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Việc này sẽ xóa Home Manager khỏi hệ thống của bạn."
 
 #: home-manager/home-manager:838
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "Đây là chạy thử nghiệm, sẽ không có bất cư thứ gì được gỡ cài đặt."
 
 #: home-manager/home-manager:842
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Bạn có muốn gỡ Home Manager không?"
 
 #: home-manager/home-manager:848
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "Chuyển đổi sang cấu hình Home Manager trống..."
 
 #: home-manager/home-manager:863
 msgid "Yay!"
-msgstr ""
+msgstr "Tuyệt vời!"
 
 #: home-manager/home-manager:868
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
@@ -230,7 +244,7 @@ msgstr ""
 
 #: home-manager/home-manager:1113
 msgid "Unknown command: %s"
-msgstr ""
+msgstr "Không tồn tại câu lệnh: %s"
 
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
