@@ -157,37 +157,36 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file = mkMerge [
-      (let
-        writeConfig = cfg.configFile != null || cfg.extraConfig != ""
-          || aliasesStr != "";
+    home.file."${configDir}/config.nu" = let
+      writeConfig = cfg.configFile != null || cfg.extraConfig != ""
+        || aliasesStr != "";
+      aliasesStr = concatStringsSep "\n"
+        (mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
+    in mkIf writeConfig {
+      text = mkMerge [
+        (mkIf (cfg.configFile != null) cfg.configFile.text)
+        cfg.extraConfig
+        aliasesStr
+      ];
+    };
 
-        aliasesStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
-      in mkIf writeConfig {
-        "${configDir}/config.nu".text = mkMerge [
-          (mkIf (cfg.configFile != null) cfg.configFile.text)
-          cfg.extraConfig
-          aliasesStr
-        ];
-      })
+    home.file."${configDir}/env.nu" = let
+      envVarsStr = concatStringsSep "\n"
+        (mapAttrsToList (k: v: "$env.${k} = ${v}") cfg.environmentVariables);
+    in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
+      text = mkMerge [
+        (mkIf (cfg.envFile != null) cfg.envFile.text)
+        cfg.extraEnv
+        envVarsStr
+      ];
+    };
 
-      (let
-        envVarsStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "$env.${k} = ${v}") cfg.environmentVariables);
-      in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
-        "${configDir}/env.nu".text = mkMerge [
-          (mkIf (cfg.envFile != null) cfg.envFile.text)
-          cfg.extraEnv
-          envVarsStr
-        ];
-      })
-      (mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
-        "${configDir}/login.nu".text = mkMerge [
+    home.file."${configDir}/login.nu" =
+      mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
+        text = mkMerge [
           (mkIf (cfg.loginFile != null) cfg.loginFile.text)
           cfg.extraLogin
         ];
-      })
-    ];
+      };
   };
 }
