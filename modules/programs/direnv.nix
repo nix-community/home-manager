@@ -57,7 +57,6 @@ in {
         Note, enabling the direnv module will always active its functionality
         for Fish since the direnv package automatically gets loaded in Fish.
         If this is not the case try adding
-
         ```nix
         environment.pathsToLink = [ "/share/fish" ];
         ```
@@ -68,6 +67,15 @@ in {
       default = true;
       readOnly = true;
     };
+
+    enableXonshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Xonsh integration.
+      '';
+    };
+
 
     enableNushellIntegration =
       lib.hm.shell.mkNushellIntegrationOption { inherit config; };
@@ -159,6 +167,27 @@ in {
           }
       )
     '');
+
+    programs.xonsh = mkIf cfg.enableXonshIntegration {
+      xonshrc = "xontrib load direnv";
+      extraPackages = ps:
+        [
+          (ps.buildPythonPackage {
+            name = "xonsh-direnv";
+            src = pkgs.fetchFromGitHub {
+              owner = "74th";
+              repo = "xonsh-direnv";
+              rev = "fd086e737a2d54495619a40d2a0f9e96475626e7";
+              hash = "sha256-6/V7ZYMOB3E7TO7y8emC5lfdgeYxmfc/yLnEhjrWQ54=";
+            };
+            postPatch = ''
+              substituteInPlace xontrib/direnv.xsh --replace '$(direnv' '$(${
+                getExe cfg.package
+              }'
+            '';
+          })
+        ];
+    };
 
     home.sessionVariables = lib.mkIf cfg.silent { DIRENV_LOG_FORMAT = ""; };
   };
