@@ -64,6 +64,14 @@ in {
       '';
     };
 
+    enableXonshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Xonsh integration.
+      '';
+    };
+
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
@@ -128,6 +136,27 @@ in {
       mkAfter ''
         ${getExe cfg.package} hook fish | source
       '');
+
+    programs.xonsh = mkIf cfg.enableXonshIntegration {
+      xonshrc = "xontrib load direnv";
+      extraPackages = ps:
+        [
+          (ps.buildPythonPackage rec {
+            name = "xonsh-direnv";
+            src = pkgs.fetchFromGitHub {
+              owner = "74th";
+              repo = name;
+              rev = "fd086e737a2d54495619a40d2a0f9e96475626e7";
+              hash = "sha256-h56Gx/MMCW4L6nGwLAhBkiR7bX+qfFk80LEsJMiDtjQ=";
+            };
+            postPatch = ''
+              substituteInPlace xontrib/direnv.xsh --replace '$(direnv' '$(${
+                getExe cfg.package
+              }'
+            '';
+          })
+        ];
+    };
 
     programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration (
       # Using mkAfter to make it more likely to appear after other
