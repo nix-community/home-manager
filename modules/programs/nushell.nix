@@ -39,7 +39,7 @@ let
       };
     });
 in {
-  meta.maintainers = [ maintainers.Philipp-M ];
+  meta.maintainers = with maintainers; [ Philipp-M joaquintrinanes ];
 
   imports = [
     (mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
@@ -152,6 +152,13 @@ in {
         An attribute set that maps an environment variable to a shell interpreted string.
       '';
     };
+
+    plugins = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = lib.literalExpression "[ pkgs.nushellPlugins.formats ]";
+      description = "List of nushell plugins ";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -188,5 +195,23 @@ in {
           cfg.extraLogin
         ];
       };
+
+    home.file."${configDir}/plugin.msgpackz" = let
+      pluginExprs = map (plugin: "plugin add ${lib.getExe plugin}") cfg.plugins;
+    in mkIf (cfg.plugins != [ ]) {
+      source = pkgs.runCommandLocal "plugin.msgpackz" { } ''
+        touch $out {config,env}.nu
+
+        ${lib.getExe cfg.package} \
+        --config config.nu \
+        --env-config env.nu \
+        --plugin-config plugin.msgpackz \
+        --no-history \
+        --no-std-lib \
+        --commands '${lib.concatStringsSep ";" pluginExprs};'
+
+        cp plugin.msgpackz $out
+      '';
+    };
   };
 }
