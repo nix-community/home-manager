@@ -3,6 +3,7 @@ WantedBy=timers.target
 
 [Timer]
 OnCalendar=monthly
+Persistent=true
 Unit=nix-gc.service
 
 [Unit]

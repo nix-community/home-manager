@@ -90,6 +90,18 @@ in {
           garbage collector is run automatically.
         '';
       };
+
+      persistent = mkOption {
+        type = types.bool;
+        default = true;
+        example = false;
+        description = ''
+          If true, the time when the service unit was last triggered is
+          stored on disk. When the timer is activated, the service unit is
+          triggered immediately if it would have been triggered at least once
+          during the time when the timer was inactive.
+        '';
+      };
     };
   };
 
@@ -107,6 +119,7 @@ in {
         Unit = { Description = "Nix Garbage Collector"; };
         Timer = {
           OnCalendar = "${cfg.frequency}";
+          Persistent = cfg.persistent;
           Unit = "nix-gc.service";
         };
         Install = { WantedBy = [ "timers.target" ]; };
