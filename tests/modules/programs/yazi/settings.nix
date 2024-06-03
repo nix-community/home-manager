@@ -70,7 +70,10 @@
       };
     };
     initLua = ./init.lua;
-    plugins = { "test.yazi" = ./plugin; };
+    plugins = {
+      "test.yazi" = ./plugin;
+      "anotherTest" = ./plugin;
+    };
     flavors = { "test.yazi" = ./flavor; };
   };
 
@@ -86,6 +89,8 @@
     assertFileContent home-files/.config/yazi/init.lua \
       ${./init.lua}
     assertFileContent home-files/.config/yazi/plugins/test.yazi/init.lua \
+      ${./plugin/init.lua}
+    assertFileContent home-files/.config/yazi/plugins/anotherTest.yazi/init.lua \
       ${./plugin/init.lua}
     assertFileContent home-files/.config/yazi/flavors/test.yazi/init.lua \
       ${./flavor/init.lua}

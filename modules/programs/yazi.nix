@@ -144,9 +144,10 @@ in {
       type = with types; attrsOf (oneOf [ path package ]);
       default = { };
       description = ''
-        Lua plugins.
+        Lua plugins. Will be linked into {file}`$XDG_CONFIG_HOME/yazi/plugins/`.
 
-        See https://yazi-rs.github.io/docs/plugins/overview/ for documentation.
+        See <https://yazi-rs.github.io/docs/plugins/overview>
+        for documentation.
       '';
       example = literalExpression ''
         {
@@ -162,7 +163,7 @@ in {
       description = ''
         Pre-made themes.
 
-        See https://yazi-rs.github.io/docs/flavors/overview/ for documentation.
+        See <https://yazi-rs.github.io/docs/flavors/overview/> for documentation.
       '';
       example = literalExpression ''
         {
@@ -171,7 +172,6 @@ in {
         }
       '';
     };
-
   };
 
   config = mkIf cfg.enable {
@@ -199,9 +199,22 @@ in {
       };
       "yazi/init.lua" = mkIf (cfg.initLua != null) { source = cfg.initLua; };
     } // (mapAttrs'
-      (name: value: nameValuePair "yazi/plugins/${name}" { source = value; })
-      cfg.plugins) // (mapAttrs'
-        (name: value: nameValuePair "yazi/flavors/${name}" { source = value; })
-        cfg.flavors);
+      (name: value: nameValuePair "yazi/flavors/${name}" { source = value; })
+      cfg.flavors) // (let
+        # Make sure that the directory ends in `.yazi`, to comply with specification.
+        # `pluginName` is essential, it's needed to apply config in yazi's `init.lua`
+        ensureSuffix = pluginName:
+          if lib.hasSuffix ".yazi" pluginName then
+            "yazi/plugins/${pluginName}"
+          else
+            "yazi/plugins/${pluginName}.yazi";
+
+        mkPluginLink = pluginName: pluginPackage: {
+          name = ensureSuffix pluginName;
+          value.source = pluginPackage;
+        };
+
+        pluginLinks = mapAttrs' mkPluginLink cfg.plugins;
+      in pluginLinks);
   };
 }
