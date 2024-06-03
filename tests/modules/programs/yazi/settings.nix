@@ -71,8 +71,8 @@
     };
     initLua = ./init.lua;
     plugins = {
-      "test.yazi" = ./plugin;
-      "anotherTest" = ./plugin;
+      "test" = ./plugin;
+      "another-test" = ./plugin;
     };
     flavors = { "test.yazi" = ./flavor; };
   };
