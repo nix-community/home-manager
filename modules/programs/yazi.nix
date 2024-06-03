@@ -209,12 +209,31 @@ in {
           else
             "yazi/plugins/${pluginName}.yazi";
 
-        mkPluginLink = pluginName: pluginPackage: {
+        mkPluginLink = pluginName: pluginPackageOrPath: {
           name = ensureSuffix pluginName;
-          value.source = pluginPackage;
+          value.source = pluginPackageOrPath;
         };
 
         pluginLinks = mapAttrs' mkPluginLink cfg.plugins;
       in pluginLinks);
+
+    assertions = (mapAttrsToList (pluginName: pluginPackageOrPath:
+      let
+        isDir = pathIsDirectory "${pluginPackageOrPath}";
+        hasInitLua = pathExists "${pluginPackageOrPath}/init.lua"
+          && !(pathIsDirectory "${pluginPackageOrPath}/init.lua");
+      in {
+        assertion = isDir && hasInitLua;
+        message =
+          "Value at `programs.yazi.plugins.${pluginName}` is not a valid yazi plugin."
+          + (optionalString (!isDir) ''
+
+            The path or package should be a directory, not a single file.'')
+          + (optionalString (!hasInitLua) ''
+
+            The path or package must contain a file `init.lua`.'') + ''
+
+              Evaluated value: `${pluginPackageOrPath}`'';
+      }) cfg.plugins);
   };
 }
