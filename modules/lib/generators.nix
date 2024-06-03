@@ -22,6 +22,8 @@
         ${indent}'';
     in if lib.isInt v || lib.isFloat v || lib.isString v then
       (builtins.toString v)
+    else if lib.isList v then
+      intro + concatItems v + outro
     else if lib.isAttrs v then
       (if v == { } then
         abort "toSwayConfig: empty attribute set is unsupported"
