@@ -201,13 +201,13 @@ let
 
     in if package == null then
       null
-    else if isDarwin then
-      package
     else if versionAtLeast config.home.stateVersion "19.09" then
       package.override (old: {
-        cfg = old.cfg or { } // fcfg;
+        cfg = old.cfg or { } // (if isDarwin then { } else fcfg);
         extraPolicies = (old.extraPolicies or { }) // cfg.policies;
       })
+    else if isDarwin then
+      package
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
