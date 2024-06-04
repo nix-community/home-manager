@@ -12,9 +12,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Nix
-        uses: cachix/install-nix-action@v23
+        uses: cachix/install-nix-action@v27
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v21
+        uses: DeterminateSystems/update-flake-lock@v22
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
           pr-labels: dependencies
