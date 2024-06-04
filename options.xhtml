@@ -11230,6 +11230,36 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-nix.gc.persistent"></a><a class="term" href="options.xhtml#opt-nix.gc.persistent"><code class="option">nix.gc.persistent</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>If true, the time when the service unit was last triggered is
+stored on disk. When the timer is activated, the service unit is
+triggered immediately if it would have been triggered at least once
+during the time when the timer was inactive.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/nix-gc.nix" target="_top">
+&lt;home-manager/modules/services/nix-gc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-nix.registry"></a><a class="term" href="options.xhtml#opt-nix.registry"><code class="option">nix.registry</code>
   </a>
  </span>
@@ -45928,7 +45958,7 @@ boolean</p>
 package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&lt;derivation terminator-2.1.3&gt;</code></p>
+<code class="literal">&lt;derivation terminator-2.1.4&gt;</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">pkgs.terminator</code></p>
