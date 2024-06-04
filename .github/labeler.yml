@@ -1,6 +1,6 @@
 "mail":
-- changed-files
-  - any-glob-to-any-file
+- changed-files:
+  - any-glob-to-any-file:
     - modules/programs/aerc*.nix
     - modules/programs/alot*.nix
     - tests/modules/programs/aerc/*
@@ -20,27 +20,27 @@
     - modules/services/imapnotify.nix
 
 "neovim":
-- changed-files
-  - any-glob-to-any-file
+- changed-files:
+  - any-glob-to-any-file:
     - modules/programs/neovim.nix
     - tests/modules/programs/neovim/**/*
 
 "shell":
-- changed-files
-  - any-glob-to-any-file
+- changed-files:
+  - any-glob-to-any-file:
     - modules/lib/zsh.nix
     - modules/programs/zsh*
     - modules/programs/bash*
     - tests/modules/programs/zsh/**/*
 
 "calendar":
-- changed-files
-  - any-glob-to-any-file
+- changed-files:
+  - any-glob-to-any-file:
     - modules/programs/khal*
     - modules/*/vdirsyncer*
     - modules/accounts/calendar.nix
 
 "contacts":
-- changed-files
-  - any-glob-to-any-file
+- changed-files:
+  - any-glob-to-any-file:
     - modules/accounts/contacts.nix
