@@ -116,7 +116,7 @@ in {
           '';
         };
 
-        format = mkOption ({
+        format = mkOption {
           type = types.enum [ "openpgp" "ssh" "x509" ];
           description = ''
             The signing method to use when signing commits and tags.
@@ -124,9 +124,9 @@ in {
 
             Defaults to `openpgp` until state version 24.11 for backwards compatibility reasons.
           '';
-        } // optionalAttrs (versionOlder config.home.stateVersion "24.11") {
-          default = "openpgp";
-        });
+          default =
+            mkIf (versionOlder config.home.stateVersion "24.11") "openpgp";
+        };
 
         signByDefault = mkOption {
           type = types.bool;
