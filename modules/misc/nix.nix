@@ -314,7 +314,7 @@ in
       default = { };
       example = literalExpression ''
         {
-          use-sandbox = true;
+          sandbox = true;
           show-trace = true;
           system-features = [ "big-parallel" "kvm" "recursive-nix" ];
         }
