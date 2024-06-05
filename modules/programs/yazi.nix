@@ -43,11 +43,11 @@ let
   xonshIntegration = ''
     def __yazi_init():
       def yy(args):
-        tmp = $(mktemp -t "yazi-cwd.XXXXX")
+        tmp = $(mktemp -t "yazi-cwd.XXXXX").strip()
         $[yazi @(args) @(f"--cwd-file={tmp}")]
         cwd = fp"{tmp}".read_text()
         if cwd != "" and cwd != $PWD:
-          xonsh.dirstack.cd(cwd)
+          xonsh.dirstack.cd((cwd,))
         $[rm -f -- @(tmp)]
 
       aliases['yy'] = yy
