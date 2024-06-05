@@ -144,7 +144,9 @@ in {
       type = with types; attrsOf (oneOf [ path package ]);
       default = { };
       description = ''
-        Lua plugins. Will be linked into {file}`$XDG_CONFIG_HOME/yazi/plugins/`.
+        Lua plugins.
+        Values should be a package or path containing an `init.lua` file.
+        Will be linked to {file}`$XDG_CONFIG_HOME/yazi/plugins/<name>.yazi`.
 
         See <https://yazi-rs.github.io/docs/plugins/overview>
         for documentation.
@@ -162,6 +164,8 @@ in {
       default = { };
       description = ''
         Pre-made themes.
+        Values should be a package or path containing an `init.lua` file.
+        Will be linked to {file}`$XDG_CONFIG_HOME/yazi/flavors/<name>.yazi`.
 
         See <https://yazi-rs.github.io/docs/flavors/overview/> for documentation.
       '';
@@ -198,42 +202,52 @@ in {
         source = tomlFormat.generate "yazi-theme" cfg.theme;
       };
       "yazi/init.lua" = mkIf (cfg.initLua != null) { source = cfg.initLua; };
-    } // (mapAttrs'
-      (name: value: nameValuePair "yazi/flavors/${name}" { source = value; })
-      cfg.flavors) // (let
-        # Make sure that the directory ends in `.yazi`, to comply with specification.
-        # `pluginName` is essential, it's needed to apply config in yazi's `init.lua`
-        ensureSuffix = pluginName:
-          if lib.hasSuffix ".yazi" pluginName then
-            "yazi/plugins/${pluginName}"
-          else
-            "yazi/plugins/${pluginName}.yazi";
+    } // (mapAttrs' (name: value:
+      nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
+      cfg.flavors) // (mapAttrs' (name: value:
+        nameValuePair "yazi/plugins/${name}.yazi" { source = value; })
+        cfg.plugins);
 
-        mkPluginLink = pluginName: pluginPackageOrPath: {
-          name = ensureSuffix pluginName;
-          value.source = pluginPackageOrPath;
-        };
+    warnings = filter (s: s != "") (concatLists [
+      (mapAttrsToList (name: value:
+        optionalString (hasSuffix ".yazi" name) ''
+          Flavors like `programs.yazi.flavors."${name}"` should no longer have the suffix ".yazi" in their attribute name.
+          The flavor will be linked to `$XDG_CONFIG_HOME/yazi/flavors/${name}.yazi`.
+          You probably want to rename it to `programs.yazi.flavors."${
+            removeSuffix ".yazi" name
+          }"`.
+        '') cfg.flavors)
+      (mapAttrsToList (name: value:
+        optionalString (hasSuffix ".yazi" name) ''
+          Plugins like `programs.yazi.plugins."${name}"` should no longer have the suffix ".yazi" in their attribute name.
+          The plugin will be linked to `$XDG_CONFIG_HOME/yazi/plugins/${name}.yazi`.
+          You probably want to rename it to `programs.yazi.plugins."${
+            removeSuffix ".yazi" name
+          }"`.
+        '') cfg.plugins)
+    ]);
 
-        pluginLinks = mapAttrs' mkPluginLink cfg.plugins;
-      in pluginLinks);
-
-    assertions = (mapAttrsToList (pluginName: pluginPackageOrPath:
-      let
-        isDir = pathIsDirectory "${pluginPackageOrPath}";
-        hasInitLua = pathExists "${pluginPackageOrPath}/init.lua"
-          && !(pathIsDirectory "${pluginPackageOrPath}/init.lua");
-      in {
-        assertion = isDir && hasInitLua;
-        message =
-          "Value at `programs.yazi.plugins.${pluginName}` is not a valid yazi plugin."
-          + (optionalString (!isDir) ''
-
-            The path or package should be a directory, not a single file.'')
-          + (optionalString (!hasInitLua) ''
-
-            The path or package must contain a file `init.lua`.'') + ''
-
-              Evaluated value: `${pluginPackageOrPath}`'';
-      }) cfg.plugins);
+    assertions = let
+      mkAsserts = opt:
+        mapAttrsToList (name: value:
+          let
+            isDir = pathIsDirectory "${value}";
+            msgNotDir = optionalString (!isDir)
+              "The path or package should be a directory, not a single file.";
+            hasInitLua = pathExists "${value}/init.lua"
+              && !(pathIsDirectory "${value}/init.lua");
+            msgNoInitLua = optionalString (!hasInitLua)
+              "The path or package must contain a file `init.lua`.";
+            singularOpt = removeSuffix "s" opt;
+          in {
+            assertion = isDir && hasInitLua;
+            message = ''
+              Value at `programs.yazi.${opt}.${name}` is not a valid yazi ${singularOpt}.
+              ${msgNotDir}
+              ${msgNoInitLua}
+              Evaluated value: `${value}`
+            '';
+          }) cfg.${opt};
+    in (mkAsserts "flavors") ++ (mkAsserts "plugins");
   };
 }
