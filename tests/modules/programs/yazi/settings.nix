@@ -83,7 +83,7 @@
       ## Produces warning
       #"flavor-with-suffix.yazi" = ./flavor;
       ## Fails assertion
-      #single-file-flavor = ./flavor/init.lua;
+      #single-file-flavor = ./flavor/flavor.toml;
       #empty-dir-flavor = ./empty;
     };
   };
@@ -101,7 +101,7 @@
       ${./init.lua}
     assertFileContent home-files/.config/yazi/plugins/testplugin.yazi/init.lua \
       ${./plugin/init.lua}
-    assertFileContent home-files/.config/yazi/flavors/testflavor.yazi/init.lua \
-      ${./flavor/init.lua}
+    assertFileContent home-files/.config/yazi/flavors/testflavor.yazi/flavor.toml \
+      ${./flavor/flavor.toml}
   '';
 }

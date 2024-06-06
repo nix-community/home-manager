@@ -164,7 +164,7 @@ in {
       default = { };
       description = ''
         Pre-made themes.
-        Values should be a package or path containing an `init.lua` file.
+        Values should be a package or path containing the required files.
         Will be linked to {file}`$XDG_CONFIG_HOME/yazi/flavors/<name>.yazi`.
 
         See <https://yazi-rs.github.io/docs/flavors/overview/> for documentation.
@@ -228,26 +228,37 @@ in {
     ]);
 
     assertions = let
-      mkAsserts = opt:
+      mkAsserts = opt: requiredFiles:
         mapAttrsToList (name: value:
           let
             isDir = pathIsDirectory "${value}";
             msgNotDir = optionalString (!isDir)
               "The path or package should be a directory, not a single file.";
-            hasInitLua = pathExists "${value}/init.lua"
-              && !(pathIsDirectory "${value}/init.lua");
-            msgNoInitLua = optionalString (!hasInitLua)
-              "The path or package must contain a file `init.lua`.";
+            isFileMissing = file:
+              !(pathExists "${value}/${file}")
+              || pathIsDirectory "${value}/${file}";
+            missingFiles = filter isFileMissing requiredFiles;
+            msgFilesMissing = optionalString (missingFiles != [ ])
+              "The ${singularOpt} is missing these files: ${
+                toString missingFiles
+              }";
             singularOpt = removeSuffix "s" opt;
           in {
-            assertion = isDir && hasInitLua;
+            assertion = isDir && missingFiles == [ ];
             message = ''
               Value at `programs.yazi.${opt}.${name}` is not a valid yazi ${singularOpt}.
               ${msgNotDir}
-              ${msgNoInitLua}
+              ${msgFilesMissing}
               Evaluated value: `${value}`
             '';
           }) cfg.${opt};
-    in (mkAsserts "flavors") ++ (mkAsserts "plugins");
+    in (mkAsserts "flavors" [
+      "flavor.toml"
+      "tmtheme.xml"
+      "README.md"
+      "preview.png"
+      "LICENSE"
+      "LICENSE-tmtheme"
+    ]) ++ (mkAsserts "plugins" [ "init.lua" ]);
   };
 }
