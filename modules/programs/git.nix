@@ -108,6 +108,7 @@ in {
       signing = {
         key = mkOption {
           type = types.nullOr types.str;
+          default = null;
           description = ''
             The default signing key fingerprint.
 
@@ -116,7 +117,7 @@ in {
           '';
         };
 
-        format = mkOption ({
+        format = mkOption {
           type = types.enum [ "openpgp" "ssh" "x509" ];
           description = ''
             The signing method to use when signing commits and tags.
@@ -124,9 +125,7 @@ in {
 
             Defaults to `openpgp` until state version 24.11 for backwards compatibility reasons.
           '';
-        } // optionalAttrs (versionOlder config.home.stateVersion "24.11") {
-          default = "openpgp";
-        });
+        };
 
         signByDefault = mkOption {
           type = types.bool;
@@ -136,13 +135,6 @@ in {
 
         signer = mkOption {
           type = types.str;
-
-          default = {
-            openpgp = getExe' pkgs.gnupg "gpg2";
-            ssh = getExe pkgs.ssh;
-            x509 = getExe' pkgs.gnupg "gpgsm";
-          }.${cfg.signing.format};
-
           description = "Path to signer binary to use.";
         };
       };
@@ -435,14 +427,26 @@ in {
     }
 
     (mkIf (cfg.signing != { }) {
-      programs.git.iniContent = let inherit (cfg.signing) format;
-      in {
-        user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
-        commit.gpgSign = mkDefault cfg.signing.signByDefault;
-        tag.gpgSign = mkDefault cfg.signing.signByDefault;
-        gpg = {
-          inherit format;
-          ${format}.program = cfg.signing.signer;
+      programs.git = {
+        signing = {
+          format = mkIf (versionOlder config.home.stateVersion "24.11")
+            (mkOptionDefault "openpgp");
+          signer = mkIf (cfg.signing.format != null) (mkOptionDefault {
+            openpgp = getExe' pkgs.gnupg "gpg2";
+            ssh = getExe pkgs.ssh;
+            x509 = getExe' pkgs.gnupg "gpgsm";
+          }.${cfg.signing.format});
+        };
+
+        iniContent = let inherit (cfg.signing) format;
+        in {
+          user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
+          commit.gpgSign = mkDefault cfg.signing.signByDefault;
+          tag.gpgSign = mkDefault cfg.signing.signByDefault;
+          gpg = {
+            inherit format;
+            ${format}.program = cfg.signing.signer;
+          };
         };
       };
     })
