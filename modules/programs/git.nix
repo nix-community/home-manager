@@ -120,7 +120,7 @@ in {
           type = types.enum [ "openpgp" "ssh" "x509" ];
           description = ''
             The signing method to use when signing commits and tags.
-            Valid values are `openpgp` (OpenPGP/GnuPG), `ssh`, (SSH) and `x509` (X.509 certificates).
+            Valid values are `openpgp` (OpenPGP/GnuPG), `ssh` (SSH), and `x509` (X.509 certificates).
 
             Defaults to `openpgp` until state version 24.11 for backwards compatibility reasons.
           '';
