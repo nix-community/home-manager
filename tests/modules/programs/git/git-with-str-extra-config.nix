@@ -7,6 +7,7 @@ with lib;
     programs.git = {
       enable = true;
       package = pkgs.gitMinimal;
+      signing.signer = "path-to-gpg";
       extraConfig = ''
         This can be anything.
       '';

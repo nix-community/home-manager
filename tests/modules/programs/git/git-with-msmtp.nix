@@ -11,6 +11,7 @@ with lib;
     programs.git = {
       enable = true;
       package = pkgs.gitMinimal;
+      signing.signer = "path-to-gpg";
       userEmail = "hm@example.com";
       userName = "H. M. Test";
     };
