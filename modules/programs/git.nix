@@ -434,9 +434,9 @@ in {
           format = mkIf (versionOlder config.home.stateVersion "24.11")
             (mkOptionDefault "openpgp");
           signer = mkIf (cfg.signing.format != null) (mkOptionDefault {
-            openpgp = getExe' pkgs.gnupg "gpg2";
-            ssh = getExe pkgs.ssh;
-            x509 = getExe' pkgs.gnupg "gpgsm";
+            openpgp = getExe config.programs.gpg.package;
+            ssh = getExe' pkgs.openssh "ssh-keygen";
+            x509 = getExe' config.programs.gpg.package "gpgsm";
           }.${cfg.signing.format});
         };
 
