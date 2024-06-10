@@ -55,8 +55,13 @@ let
 
   mpvPackage = if cfg.scripts == [ ] then
     cfg.package
+  else if hasAttr "wrapMpv" pkgs then
+    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; }
   else
-    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; };
+    pkgs.mpv-unwrapped.wrapper {
+      mpv = pkgs.mpv-unwrapped;
+      scripts = cfg.scripts;
+    };
 
 in {
   options = {
