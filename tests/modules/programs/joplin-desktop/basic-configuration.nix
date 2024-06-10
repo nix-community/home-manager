@@ -1,14 +1,29 @@
 {
   programs.joplin-desktop = {
     enable = true;
-    sync = {
-      target = "dropbox";
-      interval = "10m";
+    general = {
+      editor = "kate";
+      language = "en_GB";
+    };
+    sync.interval = "10m";
+    appearance = { theme = "dark"; };
+    note = {
+      resizeLargeImages = "alwaysAsk";
+      newTodoFocus = "title";
+      newNoteFocus = "title";
+      saveGeoLocation = false;
+      autoPairBraces = true;
+    };
+    markdown = {
+      softbreaks = true;
+      fountain = false;
     };
     extraConfig = {
       "richTextBannerDismissed" = true;
-      "newNoteFocus" = "title";
+      "editor.codeView" = true;
+      "spellChecker.languages" = [ "en-GB" "de-DE" "fr-FR" ];
     };
+    profiles = { Default = { }; };
   };
 
   test.stubs.joplin-desktop = { };
