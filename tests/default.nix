@@ -262,6 +262,7 @@ in import nmtSrc {
     ./modules/services/picom
     ./modules/services/playerctld
     ./modules/services/polybar
+    ./modules/services/radicle
     ./modules/services/recoll
     ./modules/services/redshift-gammastep
     ./modules/services/remmina
