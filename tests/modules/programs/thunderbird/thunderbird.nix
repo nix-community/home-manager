@@ -35,6 +35,38 @@
     };
   };
 
+  accounts.calendar.accounts = {
+    calendar = {
+      thunderbird = {
+        enable = true;
+        profiles = [ "first" ];
+      };
+      primary = true;
+      remote = {
+        type = "caldav";
+        url = "https://my.caldav.server/calendar";
+        userName = "testuser";
+      };
+    };
+    holidays = {
+      thunderbird = {
+        enable = true;
+        readOnly = true;
+      };
+      remote = {
+        type = "http";
+        url =
+          "https://www.thunderbird.net/media/caldata/autogen/GermanHolidays.ics";
+      };
+    };
+    local = {
+      thunderbird = {
+        enable = true;
+        profiles = [ "second" ];
+      };
+    };
+  };
+
   programs.thunderbird = {
     enable = true;
 

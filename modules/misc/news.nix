@@ -1656,6 +1656,15 @@ in {
           See https://codeberg.org/dnkl/yambar for more.
         '';
       }
+
+      {
+        time = "2024-06-02T17:00:00+00:00";
+        condition = config.programs.thunderbird.enable;
+        message = ''
+          'programs.thunderbird' now supports declaration of calendars
+          using 'accounts.calendar.accounts'.
+        '';
+      }
     ];
   };
 }
