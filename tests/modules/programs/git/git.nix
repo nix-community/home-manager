@@ -55,7 +55,8 @@ in {
           }
         ];
         signing = {
-          gpgPath = "path-to-gpg";
+          signer = "path-to-gpg";
+          format = "openpgp";
           key = "00112233445566778899AABBCCDDEEFF";
           signByDefault = true;
         };

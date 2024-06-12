@@ -9,7 +9,10 @@
     };
   };
 
-  programs.git.enable = true;
+  programs.git = {
+    enable = true;
+    signing.signer = "path-to-gpg";
+  };
 
   test.stubs.gh = { };
 
