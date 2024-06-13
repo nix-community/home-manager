@@ -300,6 +300,7 @@ let
     ./services/fusuma.nix
     ./services/getmail.nix
     ./services/git-sync.nix
+    ./services/git-workspace.nix
     ./services/gnome-keyring.nix
     ./services/gpg-agent.nix
     ./services/grobi.nix

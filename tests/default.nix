@@ -241,6 +241,7 @@ in import nmtSrc {
     ./modules/services/fusuma
     ./modules/services/git-sync
     ./modules/services/gpg-agent
+    ./modules/services/git-workspace
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/hypridle
