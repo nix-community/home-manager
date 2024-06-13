@@ -1,14 +1,39 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+
+  inherit (lib)
+    boolToString concatStringsSep escape floatToString getVersion isBool
+    isConvertibleWithToString isDerivation isFloat isInt isList isString
+    literalExpression maintainers mapAttrsToList mkDefault mkEnableOption mkIf
+    mkMerge mkOption optionalString toPretty types versionAtLeast;
 
   cfg = config.nix;
 
   nixPackage = cfg.package;
 
   isNixAtLeast = versionAtLeast (getVersion nixPackage);
+
+  nixPath = concatStringsSep ":" cfg.nixPath;
+
+  useXdg = config.nix.enable
+    && (config.nix.settings.use-xdg-base-directories or false);
+  defexprDir = if useXdg then
+    "${config.xdg.stateHome}/nix/defexpr"
+  else
+    "${config.home.homeDirectory}/.nix-defexpr";
+
+  # The deploy path for declarative channels. The directory name is prefixed
+  # with a number to make it easier for files in defexprDir to control the order
+  # they'll be read relative to each other.
+  channelPath = "${defexprDir}/50-home-manager";
+
+  channelsDrv = let
+    mkEntry = name: drv: {
+      inherit name;
+      path = toString drv;
+    };
+  in pkgs.linkFarm "channels" (lib.mapAttrsToList mkEntry cfg.channels);
 
   nixConf = assert isNixAtLeast "2.2";
     let
@@ -99,6 +124,47 @@ in {
       example = literalExpression "pkgs.nix";
       description = ''
         The Nix package that the configuration should be generated for.
+      '';
+    };
+
+    nixPath = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [
+        "$HOME/.nix-defexpr/channels"
+        "darwin-config=$HOME/.config/nixpkgs/darwin-configuration.nix"
+      ];
+      description = ''
+        Adds new directories to the Nix expression search path.
+
+        Used by Nix when looking up paths in angular brackets
+        (e.g. `<nixpkgs>`).
+      '';
+    };
+
+    keepOldNixPath = mkOption {
+      type = types.bool;
+      default = true;
+      example = false;
+      description = ''
+        Whether {option}`nix.nixPath` should keep the previously set values in
+        {env}`NIX_PATH`.
+      '';
+    };
+
+    channels = lib.mkOption {
+      type = with lib.types; attrsOf package;
+      default = { };
+      example = lib.literalExpression "{ inherit nixpkgs; }";
+      description = ''
+        A declarative alternative to Nix channels. Whereas with stock channels,
+        you would register URLs and fetch them into the Nix store with
+        {manpage}`nix-channel(1)`, this option allows you to register the store
+        path directly. One particularly useful example is registering flake
+        inputs as channels.
+
+        This option can coexist with stock Nix channels. If the same channel is
+        defined in both, this option takes precedence.
       '';
     };
 
@@ -210,6 +276,19 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
+    (mkIf (cfg.nixPath != [ ] && !cfg.keepOldNixPath) {
+      home.sessionVariables.NIX_PATH = "${nixPath}";
+    })
+
+    (mkIf (cfg.nixPath != [ ] && cfg.keepOldNixPath) {
+      home.sessionVariables.NIX_PATH = "${nixPath}\${NIX_PATH:+:$NIX_PATH}";
+    })
+
+    (lib.mkIf (cfg.channels != { }) {
+      nix.nixPath = [ channelPath ];
+      home.file."${channelPath}".source = channelsDrv;
+    })
+
     (mkIf (cfg.registry != { }) {
       xdg.configFile."nix/registry.json".source =
         jsonFormat.generate "registry.json" {

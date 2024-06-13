@@ -17,6 +17,8 @@ with lib;
         '';
       };
 
+      nixPath = [ "/a" "/b/c" ];
+
       settings = {
         use-sandbox = true;
         show-trace = true;
@@ -28,6 +30,9 @@ with lib;
       assertFileContent \
         home-files/.config/nix/nix.conf \
         ${./example-settings-expected.conf}
+
+      assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
+        'export NIX_PATH="/a:/b/c''${NIX_PATH:+:$NIX_PATH}"'
     '';
   };
 }
