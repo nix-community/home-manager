@@ -414,26 +414,25 @@ in {
 
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
 
-    xdg.configFile =
-      let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
-      in mkMerge (
-        # writes runtime
-        (map (x: x.runtime) pluginsNormalized) ++ [{
-          "nvim/init.lua" = let
-            luaRcContent =
-              lib.optionalString (neovimConfig.neovimRcContent != "")
-              "vim.cmd [[source ${
-                pkgs.writeText "nvim-init-home-manager.vim"
-                neovimConfig.neovimRcContent
-              }]]" + config.programs.neovim.extraLuaConfig
-              + lib.optionalString hasLuaConfig
-              config.programs.neovim.generatedConfigs.lua;
-          in mkIf (luaRcContent != "") { text = luaRcContent; };
-
-          "nvim/coc-settings.json" = mkIf cfg.coc.enable {
-            source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
-          };
-        }]);
+    xdg.configFile = let
+      hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
+      vimRcContent = lib.optionalString (neovimConfig != "") pkgs.writeText
+        "nvim-init-home-manager.vim" neovimConfig.neovimRcContent;
+      luaRcContent = lib.concatStringsSep "\n" (lib.remove "" [
+        (lib.optionalString (vimRcContent != "")
+          "vim.cmd [[source ${vimRcContent}]]")
+        (config.programs.neovim.extraLuaConfig)
+        (lib.optionalString hasLuaConfig
+          config.programs.neovim.generatedConfigs.lua)
+      ]);
+    in mkMerge (
+      # writes runtime
+      (map (x: x.runtime) pluginsNormalized) ++ [{
+        "nvim/init.lua" = mkIf (luaRcContent != "") { text = luaRcContent; };
+        "nvim/coc-settings.json" = mkIf cfg.coc.enable {
+          source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
+        };
+      }]);
 
     programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
       (neovimConfig // {
