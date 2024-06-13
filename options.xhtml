@@ -11096,6 +11096,38 @@ null or package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-nix.channels"></a><a class="term" href="options.xhtml#opt-nix.channels"><code class="option">nix.channels</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A declarative alternative to Nix channels. Whereas with stock channels,
+you would register URLs and fetch them into the Nix store with
+<span class="citerefentry"><span class="refentrytitle">nix-channel</span>(1)</span>, this option allows you to register the store
+path directly. One particularly useful example is registering flake
+inputs as channels.</p><p>This option can coexist with stock Nix channels. If the same channel is
+defined in both, this option takes precedence.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">{ inherit nixpkgs; }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix" target="_top">
+&lt;home-manager/modules/misc/nix.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-nix.checkConfig"></a><a class="term" href="options.xhtml#opt-nix.checkConfig"><code class="option">nix.checkConfig</code>
   </a>
  </span>
@@ -11255,6 +11287,65 @@ boolean</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/nix-gc.nix" target="_top">
 &lt;home-manager/modules/services/nix-gc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-nix.keepOldNixPath"></a><a class="term" href="options.xhtml#opt-nix.keepOldNixPath"><code class="option">nix.keepOldNixPath</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether <code class="option">nix.nixPath</code> should keep the previously set values in
+<code class="envar">NIX_PATH</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix" target="_top">
+&lt;home-manager/modules/misc/nix.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-nix.nixPath"></a><a class="term" href="options.xhtml#opt-nix.nixPath"><code class="option">nix.nixPath</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Adds new directories to the Nix expression search path.</p><p>Used by Nix when looking up paths in angular brackets
+(e.g. <code class="literal">&lt;nixpkgs&gt;</code>).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;$HOME/.nix-defexpr/channels&quot;
+  &quot;darwin-config=$HOME/.config/nixpkgs/darwin-configuration.nix&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/nix.nix" target="_top">
+&lt;home-manager/modules/misc/nix.nix&gt;
 </a></code>
 </td></tr>
 </table>
@@ -49693,7 +49784,7 @@ strings concatenated with “\n”</p>
 list of (string or package)</p>
 
 <p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
-  &lt;derivation vimplugin-vim-sensible-2023-03-29&gt;
+  &lt;derivation vimplugin-vim-sensible-2024-06-08&gt;
 ]
 </code></pre>
 
