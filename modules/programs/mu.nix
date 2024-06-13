@@ -31,6 +31,15 @@ in {
 
       package = mkPackageOption pkgs "mu" { };
 
+      home = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        example = "\${config.home.homeDirectory}/Maildir/.mu";
+        description = ''
+          Directory to store Mu's database.
+        '';
+      };
+
       # No options/config file present for mu, and program author will not be
       # adding one soon. See https://github.com/djcb/mu/issues/882 for more
       # information about this.
@@ -46,9 +55,13 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
+    home.sessionVariables = filterAttrs (n: v: v != null) {
+      MUHOME = cfg.home;
+    };
+
     home.activation.runMuInit = let
       maildirOption = genCmdMaildir config.accounts.email.maildirBasePath;
-      dbLocation = config.xdg.cacheHome + "/mu";
+      dbLocation = if cfg.home != null then cfg.home else (config.xdg.cacheHome + "/mu");
     in hm.dag.entryAfter [ "writeBoundary" ] ''
       # If the database directory exists, then `mu init` should NOT be run.
       # In theory, mu is the only thing that creates that directory, and it is
@@ -56,7 +69,7 @@ in {
       if [[ ! -d "${dbLocation}" ]]; then
         run ${
           getExe cfg.package
-        } init ${maildirOption} ${myAddresses} $VERBOSE_ARG;
+        } init ${maildirOption} --muhome "${dbLocation}" ${myAddresses} $VERBOSE_ARG;
       fi
     '';
   };
