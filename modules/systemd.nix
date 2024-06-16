@@ -314,6 +314,11 @@ in {
       settings
     ];
 
+    # Make `home.sessionVariables` part of the default environment
+    # using `mkDefault` so users' settings take priority.
+    systemd.user.settings.Manager.DefaultEnvironment =
+      lib.mapAttrs (_: lib.mkDefault) config.home.sessionVariables;
+
     # Run systemd service reload if user is logged in. If we're
     # running this from the NixOS module then XDG_RUNTIME_DIR is not
     # set and systemd commands will fail. We'll therefore have to
