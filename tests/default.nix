@@ -266,6 +266,7 @@ in import nmtSrc {
     ./modules/services/redshift-gammastep
     ./modules/services/remmina
     ./modules/services/screen-locker
+    ./modules/services/secret-service
     ./modules/services/signaturepdf
     ./modules/services/swayidle
     ./modules/services/swaync

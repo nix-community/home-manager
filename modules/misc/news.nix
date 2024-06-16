@@ -1667,6 +1667,14 @@ in {
           - 'nix.channels'
         '';
       }
+
+      {
+        time = "2024-06-14T10:14:35+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.secret-service'.
+        '';
+      }
     ];
   };
 }
