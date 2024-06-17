@@ -198,6 +198,7 @@ let
     ./programs/poetry.nix
     ./programs/powerline-go.nix
     ./programs/pqiv.nix
+    ./programs/prismlauncher.nix
     ./programs/pubs.nix
     ./programs/pyenv.nix
     ./programs/pylint.nix
