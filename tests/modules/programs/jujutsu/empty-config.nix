@@ -1,15 +1,14 @@
 { pkgs, ... }:
 
 let
-  expectedConfDir =
-    if pkgs.stdenv.isDarwin then "Library/Application Support" else ".config";
-  expectedConfigPath = "home-files/${expectedConfDir}/jj/config.toml";
+  configDir =
+    if pkgs.stdenv.isDarwin then "Library/Application\\ Support" else ".config";
 in {
   programs.jujutsu.enable = true;
 
   test.stubs.jujutsu = { };
 
   nmt.script = ''
-    assertPathNotExists ${expectedConfigPath}
+    assertPathNotExists home-files/${configDir}/jj/config.toml
   '';
 }
