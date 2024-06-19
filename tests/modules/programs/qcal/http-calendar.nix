@@ -1,7 +1,10 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 
 {
-  programs.qcal.enable = true;
+  programs.qcal = {
+    enable = true;
+    package = config.lib.test.mkStubPackage { outPath = "@qcal@"; };
+  };
   accounts.calendar.accounts.test = {
     qcal.enable = true;
     remote = { url = "https://example.com/events.ical"; };
