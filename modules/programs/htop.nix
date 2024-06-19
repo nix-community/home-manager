@@ -171,7 +171,7 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."htop/htoprc" = let
+    xdg.configFile."htop" = let
       defaults = {
         fields = if isDarwin then
           remove fields.M_SHARE defaultFields
@@ -188,9 +188,9 @@ in {
       formatOptions = mapAttrsToList formatOption;
 
     in mkIf (cfg.settings != { }) {
-      text =
-        concatStringsSep "\n" (formatOptions before ++ formatOptions settings)
-        + "\n";
+      source = pkgs.writeTextDir "htoprc"
+        (concatStringsSep "\n" (formatOptions before ++ formatOptions settings)
+          + "\n");
     };
   };
 }
