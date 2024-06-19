@@ -13,9 +13,9 @@ in {
       The nixGL command that `lib.nixGL.wrap` should wrap packages with.
       This can be used to provide libGL access to applications on non-NixOS systems.
 
-      Some packages are wrapped by default (e.g. kitty, firefox), but you can wrap other packages
-      as well, with `(config.lib.nixGL.wrap <package>)`. If this option is empty (the default),
-      then `lib.nixGL.wrap` is a no-op.
+      Wrap individual packages like so: `(config.lib.nixGL.wrap <package>)`. The returned package
+      can be used just like the original one, but will have access to libGL. If this option is empty (the default),
+      then `lib.nixGL.wrap` is a no-op. This is useful on NixOS, where the wrappers are unnecessary.
     '';
   };
 
@@ -53,9 +53,12 @@ in {
             rm -rf $out/bin/*
             shopt -s nullglob # Prevent loop from running if no files
             for file in ${pkg.out}/bin/*; do
-              echo "#!${pkgs.bash}/bin/bash" > "$out/bin/$(basename $file)"
-              echo "exec -a \"\$0\" ${cfg.prefix} $file \"\$@\"" >> "$out/bin/$(basename $file)"
-              chmod +x "$out/bin/$(basename $file)"
+              local prog="$(basename "$file")"
+              makeWrapper \
+                "${cfg.prefix}" \
+                "$out/bin/$prog" \
+                --argv0 "$prog" \
+                --add-flags "$file"
             done
 
             # If .desktop files refer to the old package, replace the references
