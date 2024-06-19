@@ -166,7 +166,8 @@ in {
 
   config = mkIf cfg.enable {
     lib.htop = {
-      inherit fields modes leftMeters rightMeters bar text graph led blank;
+      inherit fields defaultFields modes leftMeters rightMeters bar text graph
+        led blank;
     };
 
     home.packages = [ cfg.package ];
