@@ -1,0 +1,14 @@
+[accounts.imap-maildir]
+[accounts.imap-maildir.left.backend]
+encryption = "tls"
+host = "imap.example.com"
+login = "home.manager"
+port = 993
+type = "imap"
+
+[accounts.imap-maildir.left.backend.passwd]
+cmd = "password-command"
+
+[accounts.imap-maildir.right.backend]
+root-dir = "/home/hm-user/Mail/hm@example.com"
+type = "maildir"
