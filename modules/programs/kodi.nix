@@ -151,8 +151,8 @@ in {
     settings = mkOption {
       type = with types;
         let
-          valueType = either str (attrsOf valueType) // {
-            description = "attribute sets of strings";
+          valueType = oneOf [ str (attrsOf valueType) (listOf valueType) ] // {
+            description = "attribute sets or lists of strings";
           };
         in nullOr valueType;
       default = null;
