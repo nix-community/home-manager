@@ -1,10 +1,12 @@
 # Adapted from Nixpkgs.
 
-{ config, lib, pkgs, pkgsPath, ... }:
+{ config, lib, pkgs, pkgsPath, superPkgs, ... }:
 
 with lib;
 
 let
+
+  cfg = config.nixpkgs;
 
   isConfig = x: builtins.isAttrs x || builtins.isFunction x;
 
@@ -40,22 +42,58 @@ let
     merge = lib.mergeOneOption;
   };
 
-  _pkgs = import pkgsPath (filterAttrs (n: v: v != null) config.nixpkgs);
+  _pkgs = if cfg.inheritGlobalPkgs then
+    if cfg.config == { } && cfg.overlays == [ ] && cfg.system == null then
+      superPkgs
+    else
+      import superPkgs.path {
+        localSystem = superPkgs.stdenv.buildPlatform;
+        crossSystem = if cfg.system == null then
+          superPkgs.stdenv.hostPlatform
+        else
+          cfg.system;
+        config = mergeConfig superPkgs.config cfg.config;
+        overlays = superPkgs.overlays ++ cfg.overlays;
+      }
+  else
+    import pkgsPath (filterAttrs (n: v: v != null) cfg);
 
 in {
   options.nixpkgs = {
+    inheritGlobalPkgs = mkOption {
+      defaultText = literalExpression "usingNixosModule && useGlobalPkgs";
+      example = false;
+      type = types.bool;
+      description = ''
+        Whether to build the configuration with the Nixpkgs passed to
+        Home Manager instead of re-importing it fresh.
+      '';
+    };
+
+    readOnly = mkOption {
+      default = false;
+      example = true;
+      type = types.bool;
+      description = ''
+        Whether to prohibit specifying <option>nixpkgs.config</option>,
+        <option>nixpkgs.overlays</option> or, in the case
+        <option>nixpkgs.inheritGlobalPkgs</option> is
+        <literal>true</literal>, <option>nixpkgs.system</option>.
+      '';
+    };
+
     config = mkOption {
-      default = null;
+      default = { };
       example = { allowBroken = true; };
-      type = types.nullOr configType;
+      type = configType;
       description = ''
         The configuration of the Nix Packages collection. (For
         details, see the Nixpkgs documentation.) It allows you to set
         package configuration options.
 
-        If `null`, then configuration is taken from
-        the fallback location, for example,
-        {file}`~/.config/nixpkgs/config.nix`.
+        If `null` and {option}`nixpkgs.inheritGlobalPkgs` is `false`,
+        then configuration is taken from the fallback location, for
+        example, {file}`~/.config/nixpkgs/config.nix`.
 
         Note, this option will not apply outside your Home Manager
         configuration like when installing manually through
@@ -73,7 +111,7 @@ in {
     };
 
     overlays = mkOption {
-      default = null;
+      default = [ ];
       example = literalExpression ''
         [
           (final: prev: {
@@ -85,7 +123,7 @@ in {
           })
         ]
       '';
-      type = types.nullOr (types.listOf overlayType);
+      type = types.listOf overlayType;
       description = ''
         List of overlays to use with the Nix Packages collection. (For
         details, see the Nixpkgs documentation.) It allows you to
@@ -94,9 +132,9 @@ in {
         first argument should be used for finding dependencies, and
         the second should be used for overriding recipes.
 
-        If `null`, then the overlays are taken from
-        the fallback location, for example,
-        {file}`~/.config/nixpkgs/overlays`.
+        If `null` and {option}`nixpkgs.inheritGlobalPkgs` is `false`,
+        then the overlays are taken from the fallback location, for
+        example, {file}`~/.config/nixpkgs/overlays`.
 
         Like {var}`nixpkgs.config` this option only
         applies within the Home Manager configuration. See
@@ -106,7 +144,7 @@ in {
     };
 
     system = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
       example = "i686-linux";
       internal = true;
       description = ''
@@ -121,14 +159,23 @@ in {
 
   config = {
     _module.args = {
-      # We use a no-op override to make sure that the option can be merged without evaluating
-      # `_pkgs`, see https://github.com/nix-community/home-manager/pull/993
-      pkgs = mkOverride modules.defaultOverridePriority _pkgs;
+
+      # An override is also necessary here to make sure that the option
+      # can be merged without evaluating `_pkgs`, see
+      # https://github.com/nix-community/home-manager/pull/993
+      pkgs = mkDefault _pkgs;
       pkgs_i686 =
-        if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86 then
-          _pkgs.pkgsi686Linux
-        else
-          { };
+        optionalAttrs (_pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86)
+        _pkgs.pkgsi686Linux;
     };
+
+    assertions = [{
+      assertion = !cfg.readOnly || cfg.config == { } && cfg.overlays == [ ]
+        && (!cfg.inheritGlobalPkgs || cfg.system == null);
+      message = ''
+        Nixpkgs cannot be reconfigured or extended because
+        <option>nixpkgs.readOnly</option> is <literal>true</literal>.
+      '';
+    }];
   };
 }
