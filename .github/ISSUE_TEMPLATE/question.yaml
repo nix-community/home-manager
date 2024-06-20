@@ -1,0 +1,51 @@
+name: Question
+description: Ask a question
+title: 'question: '
+labels: [question]
+
+assignees: [rycee, berbiche]
+
+body:
+- type: textarea
+  id: question
+  attributes:
+    label: Question
+  validations:
+    required: true
+- type: textarea
+  id: maintainers
+  attributes:
+    label: Maintainer CC
+    description: |
+      Please @ people who are in the `meta.maintainers` list of the module in question.
+      If in doubt, check `git blame` for whoever last touched something.
+  validations:
+    required: true
+
+- type: markdown
+  attributes:
+    value: |
+      Information about how you use Nix and Home Manager and your system that runs them.
+- type: textarea
+  id: system
+  attributes:
+    label: System
+    description: Please run `nix-shell -p nix-info --run "nix-info -m"` and paste the output below.
+    render: markdown
+  validations:
+    required: true
+- type: checkboxes
+  id: usage
+  attributes:
+    label: Usage
+    options:
+    - label: Do you use nix flakes?
+      required: false
+    - label: Do you use Home Manager as a standalone program?
+      required: false
+    - label: Do you use Home Manager as a NixOS module?
+      required: false
+    - label: Do you use Home Manager as a nix-darwin module?
+      required: false
+  validations:
+    required: false
