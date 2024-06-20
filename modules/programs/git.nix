@@ -221,6 +221,12 @@ in {
             See <https://github.com/Wilfred/difftastic>.
           '';
         };
+        enableAsDifftool = mkEnableOption "" // {
+          description = ''
+            Enable the {command}`difftastic` syntax highlighter as a git difftool.
+            See <https://github.com/Wilfred/difftastic>.
+          '';
+        };
 
         background = mkOption {
           type = types.enum [ "light" "dark" ];
@@ -477,18 +483,26 @@ in {
         };
     })
 
-    (mkIf cfg.difftastic.enable {
-      home.packages = [ pkgs.difftastic ];
-
-      programs.git.iniContent = let
-        difftCommand = concatStringsSep " " [
-          "${pkgs.difftastic}/bin/difft"
-          "--color ${cfg.difftastic.color}"
-          "--background ${cfg.difftastic.background}"
-          "--display ${cfg.difftastic.display}"
-        ];
-      in { diff.external = difftCommand; };
-    })
+    (let
+      difftCommand = concatStringsSep " " [
+        "${pkgs.difftastic}/bin/difft"
+        "--color ${cfg.difftastic.color}"
+        "--background ${cfg.difftastic.background}"
+        "--display ${cfg.difftastic.display}"
+      ];
+    in (lib.mkMerge [
+      (mkIf cfg.difftastic.enable {
+        home.packages = [ pkgs.difftastic ];
+        programs.git.iniContent = { diff.external = difftCommand; };
+      })
+      (mkIf cfg.difftastic.enableAsDifftool {
+        home.packages = [ pkgs.difftastic ];
+        programs.git.iniContent = {
+          diff = { tool = lib.mkDefault "difftastic"; };
+          difftool = { difftastic = { cmd = "difft $LOCAL $REMOTE"; }; };
+        };
+      })
+    ]))
 
     (let
       deltaPackage = cfg.delta.package;
