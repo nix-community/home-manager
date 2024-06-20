@@ -424,6 +424,12 @@
     github = "mainrs";
     githubId = 5113257;
   };
+  mikilio = {
+    name = "mikilio";
+    email = "official.mikilio+dev@gmail.com";
+    github = "mikilio";
+    githubId = 86004375;
+  };
   kmaasrud = {
     name = "Knut Magnus Aasrud";
     email = "km@aasrud.com";
