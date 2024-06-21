@@ -221,10 +221,9 @@ in {
 
   config = mkIf cfg.enable (let
     gtkIni = optionalAttrs (cfg.font != null) {
-      gtk-font-name = let
-        fontSize =
-          optionalString (cfg.font.size != null) " ${toString cfg.font.size}";
-      in "${cfg.font.name}" + fontSize;
+      gtk-font-name =
+        let fontSize = if cfg.font.size != null then cfg.font.size else 10;
+        in "${cfg.font.name} ${toString fontSize}";
     } // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         gtk-icon-theme-name = cfg.iconTheme.name;
@@ -245,10 +244,9 @@ in {
       '' + cfg4.extraCss;
 
     dconfIni = optionalAttrs (cfg.font != null) {
-      font-name = let
-        fontSize =
-          optionalString (cfg.font.size != null) " ${toString cfg.font.size}";
-      in "${cfg.font.name}" + fontSize;
+      font-name =
+        let fontSize = if cfg.font.size != null then cfg.font.size else 10;
+        in "${cfg.font.name} ${toString fontSize}";
     } // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
       // optionalAttrs (cfg.iconTheme != null) {
         icon-theme = cfg.iconTheme.name;
