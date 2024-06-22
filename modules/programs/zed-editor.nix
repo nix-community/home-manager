@@ -6,14 +6,10 @@ let
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
 
-  configDir = if pkgs.stdenv.hostPlatform.isDarwin then
-    "Library/Application Support/zed" # TODO: see if this is actually the correct directory
-  else
-    "${config.xdg.configHome}/zed";
-  configFilePath = "${configDir}/settings.json";
-  keymapFilePath = "${configDir}/keymap.json";
   mergedSettings = cfg.userSettings // {
-    auto_install_extensions = cfg.extensions;
+    # this part by @cmacrae
+    auto_install_extensions = lib.listToAttrs
+      (map (ext: lib.nameValuePair ext true) cfg.extensions);
   };
 in {
   meta.maintainers = [ maintainers.libewa ];
@@ -83,15 +79,11 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    home.file = mkMerge [
-      (mkIf (mergedSettings != { }) {
-        "${configFilePath}".source =
-          jsonFormat.generate "zed-user-settings" mergedSettings;
-      })
-      (mkIf (cfg.userKeymaps != { }) {
-        "${keymapFilePath}".source =
-          jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
-      })
-    ];
+    xdg.configFile."zed/settings.json" = (mkIf (mergedSettings != { }) {
+        source = jsonFormat.generate "zed-user-settings" mergedSettings;
+    });
+    xdg.configFile."zed/keymap.json" = (mkIf (cfg.userKeymaps != { }) {
+        source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
+    });
   };
 }
