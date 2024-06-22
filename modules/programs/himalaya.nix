@@ -82,7 +82,7 @@ let
       sendmailConfig =
         lib.optionalAttrs (isNull account.smtp && !isNull account.msmtp) {
           sender = "sendmail";
-          sendmail.cmd = "${pkgs.msmtp}/bin/msmtp";
+          sendmail.cmd = lib.getExe pkgs.msmtp;
         };
 
       config = lib.attrsets.mergeAttrsList [
@@ -130,16 +130,6 @@ in {
           Extra environment variables to be exported in the service.
         '';
       };
-
-      settings.account = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        example = "personal";
-        description = ''
-          Name of the account the watcher should be started for.
-          If no account is given, the default one is used.
-        '';
-      };
     };
 
     accounts.email.accounts = lib.mkOption {
@@ -164,31 +154,39 @@ in {
   config = lib.mkIf himalaya.enable {
     home.packages = [ himalaya.package ];
 
-    xdg.configFile."himalaya/config.toml".source = let
-      enabledAccounts = lib.filterAttrs (_: account: account.himalaya.enable)
-        config.accounts.email.accounts;
-      accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
-      globalConfig = compactAttrs himalaya.settings;
-      allConfig = globalConfig // { accounts = accountsConfig; };
-    in tomlFormat.generate "himalaya-config.toml" allConfig;
-    systemd.user.services = let
-      inherit (config.services.himalaya-watch) enable environment settings;
-      optionalArg = key:
-        if (key ? settings && !isNull settings."${key}") then
-          [ "--${key} ${settings."${key}"}" ]
-        else
-          [ ];
-    in {
-      himalaya-watch = lib.mkIf enable {
+    xdg = {
+      configFile."himalaya/config.toml".source = let
+        enabledAccounts = lib.filterAttrs (_: account: account.himalaya.enable)
+          config.accounts.email.accounts;
+        accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
+        globalConfig = compactAttrs himalaya.settings;
+        allConfig = globalConfig // { accounts = accountsConfig; };
+      in tomlFormat.generate "himalaya-config.toml" allConfig;
+
+      desktopEntries.himalaya = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+        type = "Application";
+        name = "himalaya";
+        genericName = "Email Client";
+        comment = "CLI to manage emails";
+        terminal = true;
+        exec = "himalaya %u";
+        categories = [ "Network" ];
+        mimeType = [ "x-scheme-handler/mailto" "message/rfc822" ];
+        settings = { Keywords = "email"; };
+      };
+    };
+
+    systemd.user.services."himalaya-watch@" =
+      let inherit (config.services.himalaya-watch) enable environment;
+      in lib.mkIf enable {
         Unit = {
           Description = "Email client Himalaya CLI envelopes watcher service";
           After = [ "network.target" ];
         };
         Install = { WantedBy = [ "default.target" ]; };
         Service = {
-          ExecStart = lib.concatStringsSep " "
-            ([ "${himalaya.package}/bin/himalaya" "envelopes" "watch" ]
-              ++ optionalArg "account");
+          ExecStart =
+            "${lib.getExe himalaya.package} envelopes watch --account %I";
           ExecSearchPath = "/bin";
           Environment =
             lib.mapAttrsToList (key: val: "${key}=${val}") environment;
@@ -196,6 +194,5 @@ in {
           RestartSec = 10;
         };
       };
-    };
   };
 }
