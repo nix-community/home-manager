@@ -188,7 +188,7 @@ in {
           nativeBuildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
             wrapProgram $out/bin/hx \
-              --prefix PATH : ${lib.makeBinPath cfg.extraPackages}
+              --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
           '';
         })
       ]
