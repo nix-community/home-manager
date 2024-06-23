@@ -40,7 +40,7 @@ let
     }
   '';
 in {
-  meta.maintainers = with maintainers; [ xyenon ];
+  meta.maintainers = with maintainers; [ xyenon eljamm ];
 
   options.programs.yazi = {
     enable = mkEnableOption "yazi";
