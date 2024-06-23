@@ -52023,7 +52023,9 @@ package</p>
  </span>
 </dt>
 <dd>
-<p>Pre-made themes.</p><p>See https://yazi-rs.github.io/docs/flavors/overview/ for documentation.</p>
+<p>Pre-made themes.
+Values should be a package or path containing the required files.
+Will be linked to <code class="filename">$XDG_CONFIG_HOME/yazi/flavors/&lt;name&gt;.yazi</code>.</p><p>See <a class="link" href="https://yazi-rs.github.io/docs/flavors/overview/"  target="_top">https://yazi-rs.github.io/docs/flavors/overview/</a> for documentation.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set of (path or package)</p>
@@ -52123,7 +52125,10 @@ TOML value</p>
  </span>
 </dt>
 <dd>
-<p>Lua plugins.</p><p>See https://yazi-rs.github.io/docs/plugins/overview/ for documentation.</p>
+<p>Lua plugins.
+Values should be a package or path containing an <code class="literal">init.lua</code> file.
+Will be linked to <code class="filename">$XDG_CONFIG_HOME/yazi/plugins/&lt;name&gt;.yazi</code>.</p><p>See <a class="link" href="https://yazi-rs.github.io/docs/plugins/overview"  target="_top">https://yazi-rs.github.io/docs/plugins/overview</a>
+for documentation.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set of (path or package)</p>
