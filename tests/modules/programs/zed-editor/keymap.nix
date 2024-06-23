@@ -26,10 +26,7 @@ let
     ]
   '';
 
-  keymapPath = if pkgs.stdenv.hostPlatform.isDarwin then
-    "Library/Application Support/zed/keymap.json"
-  else
-    ".config/zed/keymap.json";
+  keymapPath = ".config/zed/keymap.json";
 in {
   programs.zed-editor = {
     enable = true;

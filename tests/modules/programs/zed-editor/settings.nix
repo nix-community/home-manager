@@ -22,14 +22,11 @@ let
     }
   '';
 
-  settingsPath = if pkgs.stdenv.hostPlatform.isDarwin then
-    "Library/Application Support/zed/settings.json"
-  else
-    ".config/zed/settings.json";
+  settingsPath = ".config/zed/settings.json";
 in {
   programs.zed-editor = {
     enable = true;
-    userKeymaps = settings;
+    userSettings = settings;
     package = pkgs.writeScriptBin "zed" "" // { pname = "zed-editor"; };
   };
 
