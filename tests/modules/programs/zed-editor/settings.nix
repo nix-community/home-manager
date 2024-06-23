@@ -19,11 +19,6 @@ let
       "vim_mode": false,
       "ui_font_size": 16,
       "buffer_font_size": 16,
-      "auto_install_extensions": [
-        "swift",
-        "nix",
-        "xy-zed"
-      ]
     }
   '';
 
@@ -36,7 +31,6 @@ in {
     enable = true;
     userKeymaps = settings;
     package = pkgs.writeScriptBin "zed" "" // { pname = "zed-editor"; };
-    extensions = [ "swift" "nix" "xy-zed" ];
   };
 
   nmt.script = ''
