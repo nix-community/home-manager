@@ -5,7 +5,7 @@ let
   cfg = config.services.ssh-agent;
 
 in {
-  meta.maintainers = [ lib.maintainers.lheckemann ];
+  meta.maintainers = [ lib.hm.maintainers.lheckemann ];
 
   options = {
     services.ssh-agent = {

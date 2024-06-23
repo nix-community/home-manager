@@ -201,6 +201,12 @@
     github = "kubukoz";
     githubId = 894884;
   };
+  lheckemann = {
+    name = "Linus Heckemann";
+    email = "git@sphalerite.org";
+    github = "lheckemann";
+    githubId = 341954;
+  };
   loicreynier = {
     name = "Loïc Reynier";
     email = "loic@loireynier.fr";
