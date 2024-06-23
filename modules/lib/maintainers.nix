@@ -222,6 +222,12 @@
     githubId = 298109;
     name = "Lily Foster";
   };
+  lheckemann = {
+    name = "Linus Heckemann";
+    email = "git@sphalerite.org";
+    github = "lheckemann";
+    githubId = 341954;
+  };
   loicreynier = {
     name = "Loïc Reynier";
     email = "loic@loireynier.fr";
