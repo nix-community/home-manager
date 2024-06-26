@@ -100,6 +100,11 @@ let
       settingsFormat.generate "user.conf" cfg.settings;
   };
 
+  configHome = if (config.xdg.enable) then
+    lib.removePrefix config.home.homeDirectory config.xdg.configHome
+  else
+    "/.config";
+
 in {
   meta.maintainers = [ lib.maintainers.rycee ];
 
@@ -355,13 +360,13 @@ in {
         fi
 
         if [[ -v oldGenPath ]]; then
-          oldUnitsDir="$oldGenPath/home-files/.config/systemd/user"
+          oldUnitsDir="$oldGenPath/home-files${configHome}/systemd/user"
           if [[ ! -e $oldUnitsDir ]]; then
             oldUnitsDir=
           fi
         fi
 
-        newUnitsDir="$newGenPath/home-files/.config/systemd/user"
+        newUnitsDir="$newGenPath/home-files${configHome}/systemd/user"
         if [[ ! -e $newUnitsDir ]]; then
           newUnitsDir=${pkgs.emptyDirectory}
         fi
