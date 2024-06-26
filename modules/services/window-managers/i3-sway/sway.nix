@@ -387,6 +387,7 @@ in {
           * {env}`NIXOS_OZONE_WL`
           * {env}`XCURSOR_THEME`
           * {env}`XCURSOR_SIZE`
+          * {env}`PATH`
           You can extend this list using the `systemd.variables` option.
         '';
       };
@@ -402,6 +403,7 @@ in {
           "NIXOS_OZONE_WL"
           "XCURSOR_THEME"
           "XCURSOR_SIZE"
+          "PATH"
         ];
         example = [ "-all" ];
         description = ''
