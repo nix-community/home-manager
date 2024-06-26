@@ -23,7 +23,8 @@ in {
     };
 
     configDir = mkOption {
-      type = types.path;
+      type = types.nullOr types.path;
+      default = null;
       example = literalExpression "./eww-config-dir";
       description = ''
         The directory that gets symlinked to
@@ -32,8 +33,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
-    xdg.configFile."eww".source = cfg.configDir;
-  };
+  config = mkIf cfg.enable (mkMerge [
+    { home.packages = [ cfg.package ]; }
+
+    (mkIf (cfg.configDir != null) {
+      xdg.configFile."eww".source = cfg.configDir;
+    })
+  ]);
 }
