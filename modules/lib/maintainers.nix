@@ -555,8 +555,8 @@
     githubId = 1327662;
   };
   zorrobert = {
-    name = "zorrobert";
-    email = "zorrobert@mailbox.org";
+    name = "Robert Lotz";
+    email = "robert.lotz@mailbox.org";
     github = "zorrobert";
     githubId = 118135271;
   };
