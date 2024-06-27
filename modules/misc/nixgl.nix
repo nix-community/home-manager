@@ -63,7 +63,7 @@ in {
 
             # If .desktop files refer to the old package, replace the references
             for dsk in "$out/share/applications"/*.desktop ; do
-              if ! grep "${pkg.out}" "$dsk" > /dev/null; then
+              if ! grep -q "${pkg.out}" "$dsk"; then
                 continue
               fi
               src="$(readlink "$dsk")"
