@@ -35,7 +35,7 @@ in {
           # a new debug output to be produced. We won't be producing any debug info
           # for the original package.
           separateDebugInfo = false;
-
+          nativeBuildInputs = old.nativeBuildInputs or [ ] ++ [ pkgs.makeWrapper ];
           buildCommand = ''
             set -eo pipefail
 
