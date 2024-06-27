@@ -412,6 +412,12 @@
     githubId = 9267430;
     name = "Philipp Mildenberger";
   };
+  phil170 = {
+    name = "phil170";
+    email = "phil170@mailbox.org";
+    github = "phil170";
+    githubId = 93428721;
+  };
   pinage404 = {
     name = "pinage404";
     email = "pinage404@gmail.com";
