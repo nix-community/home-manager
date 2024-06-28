@@ -22,18 +22,48 @@ in {
       '';
     };
 
-    configDir = mkOption {
-      type = types.path;
-      example = literalExpression "./eww-config-dir";
+    configYuck = mkOption {
+      type = types.lines;
+      example = literalExpression ''
+        (defwindow example
+             :monitor 0
+             :geometry (geometry :x "0%"
+                                 :y "20px"
+                                 :width "90%"
+                                 :height "30px"
+                                 :anchor "top center")
+             :stacking "fg"
+             :reserve (struts :distance "40px" :side "top")
+             :windowtype "dock"
+             :wm-ignore false
+          "example content")
+      '';
       description = ''
-        The directory that gets symlinked to
-        {file}`$XDG_CONFIG_HOME/eww`.
+        The content that gets symlinked to
+        {file} `$XDG_CONFIG_HOME/eww/eww.yuck`.
+      '';
+    };
+
+    configScss = mkOption {
+      type = types.lines;
+      example = literalExpression ''
+        window {
+          background: pink;
+        }
+      '';
+      description = ''
+        The content that gets symlinked to
+        {file} `$XDG_CONFIG_HOME/eww/eww.scss`
       '';
     };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    xdg.configFile."eww".source = cfg.configDir;
+    xdg.configFile = {
+      "eww/eww.yuck".text = cfg.configYuck;
+      "eww/eww.scss".text = cfg.configScss;
+    };
   };
 }
+
