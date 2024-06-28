@@ -60575,6 +60575,125 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.glance.enable"></a><a class="term" href="options.xhtml#opt-services.glance.enable"><code class="option">services.glance.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable glance.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/glance.nix" target="_top">
+&lt;home-manager/modules/services/glance.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.glance.package"></a><a class="term" href="options.xhtml#opt-services.glance.package"><code class="option">services.glance.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The glance package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.glance</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/glance.nix" target="_top">
+&lt;home-manager/modules/services/glance.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.glance.settings"></a><a class="term" href="options.xhtml#opt-services.glance.settings"><code class="option">services.glance.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to a yaml file that is read by glance. See
+<a class="link" href="https://github.com/glanceapp/glance/blob/main/docs/configuration.md"  target="_top">https://github.com/glanceapp/glance/blob/main/docs/configuration.md</a>
+for more.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  pages = [
+    {
+      columns = [
+        {
+          size = &quot;full&quot;;
+          widgets = [
+            {
+              type = &quot;calendar&quot;;
+            }
+          ];
+        }
+      ];
+      name = &quot;Calendar&quot;;
+    }
+  ];
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  pages = [
+    {
+      columns = [
+        {
+          size = &quot;full&quot;;
+          widgets = [
+            {
+              type = &quot;calendar&quot;;
+            }
+            {
+              location = &quot;London, United Kingdom&quot;;
+              type = &quot;weather&quot;;
+            }
+          ];
+        }
+      ];
+      name = &quot;Home&quot;;
+    }
+  ];
+  server = {
+    port = 5678;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/glance.nix" target="_top">
+&lt;home-manager/modules/services/glance.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.gnome-keyring.enable"></a><a class="term" href="options.xhtml#opt-services.gnome-keyring.enable"><code class="option">services.gnome-keyring.enable</code>
   </a>
  </span>
