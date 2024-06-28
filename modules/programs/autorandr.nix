@@ -177,6 +177,18 @@ let
         default = null;
         example = "nearest";
       };
+
+      extraConfig = mkOption {
+        type = types.nullOr types.lines;
+        description = "Extra lines to append to this profile's config.";
+        default = null;
+        example = literalExpression ''
+          '''
+            x-prop-non_desktop 0
+            some-key some-value
+          '''
+        '';
+      };
     };
   };
 
@@ -267,7 +279,8 @@ let
           + concatMapStringsSep "," toString (flatten config.transform))
         ++ optional (config.scale != null)
         ((if config.scale.method == "factor" then "scale" else "scale-from")
-          + " ${toString config.scale.x}x${toString config.scale.y}"))
+          + " ${toString config.scale.x}x${toString config.scale.y}")
+        ++ optional (config.extraConfig != null) config.extraConfig)
     else ''
       output ${name}
       off
