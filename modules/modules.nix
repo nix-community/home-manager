@@ -278,7 +278,9 @@ let
       ./programs/translate-shell.nix
       ./programs/urxvt.nix
       ./programs/vdirsyncer.nix
+      ./programs/vesktop.nix
       ./programs/vifm.nix
+      ./programs/vim.nix
       ./programs/vim-vint.nix
       ./programs/vim.nix
       ./programs/vinegar.nix
