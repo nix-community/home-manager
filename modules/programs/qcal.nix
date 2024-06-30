@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
-
 let
-
   cfg = config.programs.qcal;
 
   qcalAccounts = lib.attrValues
@@ -23,7 +21,6 @@ let
           if passwordCommand == null then null else toString passwordCommand;
       });
   in map mkAccount qcalAccounts;
-
 in {
   meta.maintainers = with lib.maintainers; [ antonmosich ];
 
@@ -43,6 +40,11 @@ in {
         default = 30;
         description = "Default number of days to show calendar entries for";
       };
+      package = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.qcal;
+        description = "Package providing {command}`qcal`";
+      };
     };
 
     accounts.calendar.accounts = lib.mkOption {
@@ -53,7 +55,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.qcal ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."qcal/config.json".source =
       let jsonFormat = pkgs.formats.json { };
