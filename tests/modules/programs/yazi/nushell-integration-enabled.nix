@@ -2,7 +2,7 @@
 
 let
   shellIntegration = ''
-    def --env ya [...args] {
+    def --env yy [...args] {
       let tmp = (mktemp -t "yazi-cwd.XXXXX")
       yazi ...$args --cwd-file $tmp
       let cwd = (open $tmp)

@@ -173,6 +173,13 @@
     github = "iosmanthus";
     githubId = 16307070;
   };
+  jonringer = {
+    email = "jonringer117@gmail.com";
+    matrix = "@jonringer:matrix.org";
+    github = "jonringer";
+    githubId = 7673602;
+    name = "Jonathan Ringer";
+  };
   kalhauge = {
     name = "Christian Gram Kalhauge";
     email = "kalhauge@users.noreply.github.com";
@@ -200,6 +207,12 @@
     email = "kubukoz@users.noreply.github.com";
     github = "kubukoz";
     githubId = 894884;
+  };
+  lheckemann = {
+    name = "Linus Heckemann";
+    email = "git@sphalerite.org";
+    github = "lheckemann";
+    githubId = 341954;
   };
   loicreynier = {
     name = "Loïc Reynier";

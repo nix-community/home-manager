@@ -1,0 +1,10 @@
+pages:
+- columns:
+  - size: full
+    widgets:
+    - type: calendar
+    - location: London, United Kingdom
+      type: weather
+  name: Home
+server:
+  port: 5678

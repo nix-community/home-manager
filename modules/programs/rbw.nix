@@ -19,7 +19,7 @@ let
         base_url = mkOption {
           type = with types; nullOr str;
           default = null;
-          example = "bitwarden.example.com";
+          example = "https://bitwarden.example.com/";
           description =
             "The base-url for a self-hosted bitwarden installation.";
         };
@@ -27,7 +27,7 @@ let
         identity_url = mkOption {
           type = with types; nullOr str;
           default = null;
-          example = "identity.example.com";
+          example = "https://identity.example.com/";
           description = "The identity url for your bitwarden installation.";
         };
 

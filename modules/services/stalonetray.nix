@@ -74,7 +74,7 @@ in {
     }
 
     (mkIf (cfg.config != { }) {
-      home.file.".stalonetrayrc".text = let
+      xdg.configFile."stalonetrayrc".text = let
         valueToString = v:
           if isBool v then
             (if v then "true" else "false")
@@ -88,7 +88,7 @@ in {
     })
 
     (mkIf (cfg.extraConfig != "") {
-      home.file.".stalonetrayrc".text = cfg.extraConfig;
+      xdg.configFile."stalonetrayrc".text = cfg.extraConfig;
     })
   ]);
 }

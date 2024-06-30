@@ -34,7 +34,7 @@ function systemdPostReload() {
     touch "$oldServiceFiles"
   else
     find "$oldUserServicePath" \
-      -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
+      -maxdepth 1 -name '*.service' \! -name '*@.service' -exec basename '{}' ';' \
       | sort \
       > "$oldServiceFiles"
   fi
@@ -43,7 +43,7 @@ function systemdPostReload() {
     touch "$newServiceFiles"
   else
     find "$newUserServicePath" \
-      -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
+      -maxdepth 1 -name '*.service' \! -name '*@.service' -exec basename '{}' ';' \
       | sort \
       > "$newServiceFiles"
   fi
