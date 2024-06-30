@@ -1,0 +1,27 @@
+[[shades]]
+default = true
+end_time = 06:00:00
+name = "vibrance"
+start_time = 19:00:00
+
+[shades.config]
+fuck = "me"
+
+[[shades]]
+default = false
+end_time = 19:00:00
+name = "blue-light-filter"
+start_time = 06:00:00
+
+[shades.config]
+fuck = "me"
+
+[[shades]]
+default = false
+end_time = 06:00:00
+name = "color-filter"
+start_time = 19:00:00
+
+[shades.config]
+strength = 0.5
+type = "red-green"
