@@ -41,7 +41,7 @@ in {
 
             ${
             # Heavily inspired by https://stackoverflow.com/a/68523368/6259505
-            pkgs.lib.concatStringsSep "\n" (map (outputName: ''
+            lib.concatStringsSep "\n" (map (outputName: ''
               echo "Copying output ${outputName}"
               set -x
               cp -rs --no-preserve=mode "${
