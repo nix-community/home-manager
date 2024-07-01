@@ -260,6 +260,13 @@ with lib;
           };
         };
       };
+      q_gpg = basics // {
+        gpg = {
+          signByDefault = true;
+          encryptByDefault = true;
+          key = "00112233445566778899AABBCCDDEEFF";
+        };
+      };
     };
   };
 }
