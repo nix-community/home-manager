@@ -34,26 +34,25 @@ for sourcePath in "$@" ; do
       # Next, try to move the file to a backup location if configured and possible
       backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
       if [[ -e "$backup" ]]; then
-        errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
-        collision=1
+        collisionError="Existing file '$backup' would be clobbered by backing up '$targetPath'"
       else
         warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
       fi
     else
       # Fail if nothing else works
-      errorEcho "Existing file '$targetPath' is in the way of '$sourcePath'"
-      collision=1
+      collisionError="Existing file '$targetPath' is in the way of '$sourcePath'"
     fi
   fi
 done
 
-if [[ -v collision ]] ; then
+if [[ -v collisionError ]] ; then
   errorEcho "Please do one of the following:
-- Move or remove the above files and try again.
+- Move or remove the files below and try again.
 - In standalone mode, use 'home-manager switch -b backup' to back up
   files automatically.
 - When used as a NixOS or nix-darwin module, set
     'home-manager.backupFileExtension'
   to, for example, 'backup' and rebuild."
+  errorEcho "$collisionError"
   exit 1
 fi
