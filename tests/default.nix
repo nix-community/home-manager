@@ -201,6 +201,7 @@ in import nmtSrc {
     ./modules/programs/i3blocks
     ./modules/programs/i3status-rust
     ./modules/programs/imv
+    ./modules/programs/jrnl
     ./modules/programs/kodi
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
