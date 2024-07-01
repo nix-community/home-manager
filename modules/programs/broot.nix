@@ -167,6 +167,14 @@ in {
       '';
     };
 
+    enableXonshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Xonsh integration.
+      '';
+    };
+
     enableFishIntegration = mkOption {
       default = true;
       type = types.bool;
@@ -237,5 +245,27 @@ in {
 
     programs.nushell.extraConfig =
       mkIf cfg.enableNushellIntegration (shellInit "nushell");
+
+    programs.xonsh = mkIf cfg.enableXonshIntegration {
+      xonshrc = "xontrib load broot";
+      extraPackages = ps:
+        [
+          (ps.buildPythonPackage rec {
+            name = "xontrib-broot";
+            src = pkgs.fetchFromGitHub {
+              owner = "jnoortheen ";
+              repo = name;
+              rev = "6f658ff88aba27b921017297d8c2c3dfb2ffa332";
+              hash = "sha256-9GqsTVCMvrWpTopHtEdicTyYRQzP1NVtQHZsfBT+fUg=";
+            };
+            pyproject = true;
+            nativeBuildInputs = [ ps.setuptools ps.pdm-pep517 ];
+            postPatch = ''
+              substituteInPlace xontrib/broot.py --replace '"broot"' '"${cfg.package}/bin/broot"'
+              sed 's/dependencies = [[].*[]]//' < pyproject.toml > pyproject.toml
+            '';
+          })
+        ];
+    };
   };
 }

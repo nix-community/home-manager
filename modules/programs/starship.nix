@@ -74,6 +74,10 @@ in {
       default = true;
     };
 
+    enableXonshIntegration = mkEnableOption "Xonsh integration" // {
+      default = true;
+    };
+
     enableNushellIntegration = mkEnableOption "Nushell integration" // {
       default = true;
     };
@@ -122,6 +126,11 @@ in {
       if test $TERM != "dumb"
         eval $(${starshipCmd} init ion)
       end
+    '';
+
+    programs.xonsh.xonshrc = mkIf cfg.enableXonshIntegration ''
+      if $TERM != "dumb":
+        execx($(${starshipCmd} init xonsh))
     '';
 
     programs.nushell = mkIf cfg.enableNushellIntegration {
