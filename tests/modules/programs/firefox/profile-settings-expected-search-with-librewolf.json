@@ -1,0 +1,17 @@
+{
+  "engines": [
+    {
+      "_isAppProvided": true,
+      "_metaData": {},
+      "_name": "DuckDuckGo"
+    }
+  ],
+  "metaData": {
+    "current": "DuckDuckGo",
+    "hash": "ZIx5PXpJILB0NZQARse1Y6PRrlroZEb6VMvu1FY2sow=",
+    "private": "DuckDuckGo",
+    "privateHash": "ZIx5PXpJILB0NZQARse1Y6PRrlroZEb6VMvu1FY2sow=",
+    "useSavedOrder": false
+  },
+  "version": 6
+}

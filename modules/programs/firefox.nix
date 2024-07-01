@@ -10,13 +10,33 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  mozillaConfigPath =
-    if isDarwin then "Library/Application Support/Mozilla" else ".mozilla";
+  # see application.ini's "Vendor" and "Name" properties
+  # this can be parsed with IFD, but obviously it's better to avoid IFD
+  # XXX: is it better to push the maintenance of this list into nixpkgs?
+  vendor = {
+    librewolf = null;
+  }.${cfg.package.binaryName or lib.getName cfg.package} or "Mozilla";
+  appName = {
+    librewolf = "LibreWolf";
+  }.${cfg.package.binaryName or lib.getName cfg.package} or "Firefox";
+
+  vendorLower = if vendor != null then lib.toLower vendor else null;
+  appNameLower = lib.toLower appName;
+
+  vendorOrApp = if vendor != null then vendor else appName;
+  vendorOrAppLower = lib.toLower vendorOrApp;
+
+  mozillaConfigPath = if isDarwin then
+    "Library/Application Support/${vendorOrApp}"
+  else
+    ".${vendorOrAppLower}";
 
   firefoxConfigPath = if isDarwin then
-    "Library/Application Support/Firefox"
+    "Library/Application Support/${appName}"
+  else if vendorLower != null then
+    "${mozillaConfigPath}/${appNameLower}"
   else
-    "${mozillaConfigPath}/firefox";
+    mozillaConfigPath;
 
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
@@ -193,11 +213,10 @@ let
       fcfg = { enableGnomeExtensions = cfg.enableGnomeExtensions; };
 
       # A bit of hackery to force a config into the wrapper.
-      browserName =
-        package.browserName or (builtins.parseDrvName package.name).name;
+      applicationName = package.binaryName or lib.getName package;
 
       # The configuration expected by the Firefox wrapper builder.
-      bcfg = setAttrByPath [ browserName ] fcfg;
+      bcfg = setAttrByPath [ applicationName ] fcfg;
 
     in if package == null then
       null
@@ -212,7 +231,12 @@ let
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
 in {
-  meta.maintainers = [ maintainers.rycee maintainers.kira-bruneau ];
+  meta.maintainers = [
+    maintainers.rycee
+    maintainers.kira-bruneau
+    # LibreWolf-specific
+    maintainers.chayleaf
+  ];
 
   imports = [
     (mkRemovedOptionModule [ "programs" "firefox" "extensions" ] ''
@@ -896,22 +920,22 @@ in {
               # maliciously. We're modifying the search outside of Firefox, but
               # a claim by Mozilla to remove this would be very anti-user, and
               # is unlikely to be an issue for our use case.
-              disclaimer = appName:
-                "By modifying this file, I agree that I am doing so "
-                + "only within ${appName} itself, using official, user-driven search "
+              # Use appName from application.ini as this can safely be detected
+              # without using an IFD.
+              disclaimer = "By modifying this file, I agree that I am doing so "
+                + "only within $appName itself, using official, user-driven search "
                 + "engine selection processes, and in a way which does not circumvent "
                 + "user consent. I acknowledge that any attempt to change this file "
-                + "from outside of ${appName} is a malicious act, and will be responded "
+                + "from outside of $appName is a malicious act, and will be responded "
                 + "to accordingly.";
 
               salt = if profile.search.default != null then
-                profile.path + profile.search.default + disclaimer "Firefox"
+                profile.path + profile.search.default + disclaimer
               else
                 null;
 
               privateSalt = if profile.search.privateDefault != null then
-                profile.path + profile.search.privateDefault
-                + disclaimer "Firefox"
+                profile.path + profile.search.privateDefault + disclaimer
               else
                 null;
             in pkgs.runCommand "search.json.mozlz4" {
@@ -920,8 +944,9 @@ in {
               inherit salt privateSalt;
             } ''
               if [[ -n $salt ]]; then
-                export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
-                export privateHash=$(echo -n "$privateSalt" | openssl dgst -sha256 -binary | base64)
+                appName="$(sed '/^Name=/!d;s/Name=//' ${cfg.finalPackage}/lib/*/application.ini)"
+                hash=$(echo -n "$salt" | sed "s=\$appName=$appName=g" | openssl dgst -sha256 -binary | base64)
+                privateHash=$(echo -n "$privateSalt" | sed "s=\$appName=$appName=g" | openssl dgst -sha256 -binary | base64)
                 mozlz4a <(substituteStream json search.json.in --subst-var hash --subst-var privateHash) "$out"
               else
                 mozlz4a <(echo "$json") "$out"
