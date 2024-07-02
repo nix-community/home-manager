@@ -174,6 +174,7 @@ in {
       Unit = {
         After = [ "network.target" "sound.target" ];
         Description = "Music Player Daemon";
+        Requires = mkIf cfg.network.startWhenNeeded "mpd.socket";
       };
 
       Install = mkIf (!cfg.network.startWhenNeeded) {
