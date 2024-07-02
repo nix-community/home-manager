@@ -1,4 +1,9 @@
 #!/nix/store/00000000000000000000000000000000-bash/bin/bash
+shopt -s expand_aliases
+
+# shellcheck disable=SC2142
+alias herbstclient='set -- "$@" ";"'
+set --
 
 
 herbstclient emit_hook reload
@@ -43,5 +48,6 @@ herbstclient use 1
 
 herbstclient unlock
 
+@herbstluftwm@/bin/herbstclient chain ";" "$@"
 
 
