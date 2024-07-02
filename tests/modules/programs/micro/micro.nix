@@ -8,6 +8,11 @@
       autosu = false;
       cursorline = false;
     };
+
+    keybinds = {
+      "Ctrl-y" = "Undo";
+      "Ctrl-z" = "Redo";
+    };
   };
 
   test.stubs.micro = { };
@@ -18,6 +23,14 @@
       {
         "autosu": false,
         "cursorline": false
+      }
+    ''}
+
+    assertFileContent home-files/.config/micro/bindings.json \
+    ${builtins.toFile "micro-expected-keybinds.json" ''
+      {
+        "Ctrl-y": "Undo",
+        "Ctrl-z": "Redo"
       }
     ''}
   '';
