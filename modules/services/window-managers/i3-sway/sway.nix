@@ -411,7 +411,12 @@ in {
 
       extraCommands = mkOption {
         type = types.listOf types.str;
-        default = [ "systemctl --user start sway-session.target" ];
+        default = [
+          "systemctl --user reset-failed"
+          "systemctl --user start sway-session.target"
+          "swaymsg -mt subscribe '[]' || true"
+          "systemctl --user stop sway-session.target"
+        ];
         description = ''
           Extra commands to run after D-Bus activation.
         '';
