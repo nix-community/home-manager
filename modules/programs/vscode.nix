@@ -25,19 +25,11 @@ let
     "openvscode-server" = "openvscode-server";
   }.${vscodePname};
 
-  userDir = if pkgs.stdenv.hostPlatform.isDarwin then
-    "Library/Application Support/${configDir}/User"
-  else
-    "${config.xdg.configHome}/${configDir}/User";
+  configFilePath = "${cfg.userDir}/settings.json";
+  tasksFilePath = "${cfg.userDir}/tasks.json";
+  keybindingsFilePath = "${cfg.userDir}/keybindings.json";
 
-  configFilePath = "${userDir}/settings.json";
-  tasksFilePath = "${userDir}/tasks.json";
-  keybindingsFilePath = "${userDir}/keybindings.json";
-
-  snippetDir = "${userDir}/snippets";
-
-  # TODO: On Darwin where are the extensions?
-  extensionPath = ".${extensionDir}/extensions";
+  snippetDir = "${cfg.userDir}/snippets";
 
   extensionJson = pkgs.vscode-utils.toExtensionJson cfg.extensions;
   extensionJsonFile = pkgs.writeTextFile {
@@ -71,6 +63,21 @@ in {
         example = literalExpression "pkgs.vscodium";
         description = ''
           Version of Visual Studio Code to install.
+        '';
+      };
+
+      extensionPath = mkOption {
+        type = types.str;
+        default = ".${extensionDir}/extensions";
+        description = ''
+          The path where extensions should be installed.
+        '';
+      };
+
+      userDir = mkOption {
+        type = types.str;
+        description = ''
+          The path where user configuration is stored.
         '';
       };
 
@@ -223,6 +230,12 @@ in {
   };
 
   config = mkIf cfg.enable {
+    programs.vscode.userDir = lib.mkDefault
+      (if pkgs.stdenv.hostPlatform.isDarwin then
+        "Library/Application Support/${configDir}/User"
+      else
+        "${config.xdg.configHome}/${configDir}/User");
+
     home.packages = [ cfg.package ];
 
     home.file = mkMerge [
@@ -246,7 +259,8 @@ in {
 
         # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
         toPaths = ext:
-          map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; })
+          map
+          (k: { "${cfg.extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; })
           (if ext ? vscodeExtUniqueId then
             [ ext.vscodeExtUniqueId ]
           else
@@ -256,17 +270,17 @@ in {
           ++ lib.optional (lib.versionAtLeast vscodeVersion "1.74.0") {
             # Whenever our immutable extensions.json changes, force VSCode to regenerate
             # extensions.json with both mutable and immutable extensions.
-            "${extensionPath}/.extensions-immutable.json" = {
+            "${cfg.extensionPath}/.extensions-immutable.json" = {
               text = extensionJson;
               onChange = ''
-                run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
+                run rm $VERBOSE_ARG -f ${cfg.extensionPath}/{extensions.json,.init-default-profile-extensions}
                 verboseEcho "Regenerating VSCode extensions.json"
                 run ${getExe cfg.package} --list-extensions > /dev/null
               '';
             };
           })
       else {
-        "${extensionPath}".source = let
+        "${cfg.extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
             name = "vscode-extensions";
             paths = cfg.extensions
