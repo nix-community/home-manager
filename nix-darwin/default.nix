@@ -22,7 +22,7 @@ in {
                 lib.escapeShellArg cfg.backupFileExtension
               }"}
               ${lib.optionalString cfg.verbose "export VERBOSE=1"}
-              exec ${usercfg.home.activationPackage}/activate
+              exec ${usercfg.home.activationPackage}/activate --driver-version 1
             ''
           }
         '') cfg.users);
