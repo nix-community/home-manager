@@ -15,7 +15,7 @@ let
     "--basic-auth ${escapeShellArg cfg.httpAuth}");
 
 in {
-  meta.maintainers = [ maintainers.ivar ];
+  meta.maintainers = [ ];
 
   options.services.pbgopy = {
     enable = mkEnableOption "pbgopy";
