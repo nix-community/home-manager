@@ -403,7 +403,7 @@ in {
           "XCURSOR_THEME"
           "XCURSOR_SIZE"
         ];
-        example = [ "-all" ];
+        example = [ "--all" ];
         description = ''
           Environment variables imported into the systemd and D-Bus user environment.
         '';
