@@ -141,7 +141,7 @@ in {
     };
 
     initLua = mkOption {
-      type = with types; nullOr path;
+      type = with types; nullOr (either path lines);
       default = null;
       description = ''
         The init.lua for Yazi itself.
@@ -210,7 +210,12 @@ in {
       "yazi/theme.toml" = mkIf (cfg.theme != { }) {
         source = tomlFormat.generate "yazi-theme" cfg.theme;
       };
-      "yazi/init.lua" = mkIf (cfg.initLua != null) { source = cfg.initLua; };
+      "yazi/init.lua" = mkIf (cfg.initLua != null)
+        (if builtins.isPath cfg.initLua then {
+          source = cfg.initLua;
+        } else {
+          text = cfg.initLua;
+        });
     } // (mapAttrs' (name: value:
       nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
       cfg.flavors) // (mapAttrs' (name: value:
