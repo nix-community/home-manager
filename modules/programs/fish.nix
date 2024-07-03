@@ -253,9 +253,11 @@ in {
         '';
       };
 
-      generateCompletions = mkEnableOption "the automatic generation of completions based upon installed man pages." // {
-        default = true;
-      };
+      generateCompletions = mkEnableOption
+        "the automatic generation of completions based upon installed man pages."
+        // {
+          default = true;
+        };
 
       shellAliases = mkOption {
         type = with types; attrsOf str;
@@ -384,9 +386,7 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    {
-      home.packages = [ cfg.package ];
-    }
+    { home.packages = [ cfg.package ]; }
 
     (mkIf cfg.generateCompletions {
       # Support completion for `man` by building a cache for `apropos`.
