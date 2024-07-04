@@ -7,7 +7,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 
 in {
-  meta.maintainers = [ lib.maintainers.janik ];
+  meta.maintainers = [ ];
 
   options.programs.gh-dash = {
     enable = lib.mkEnableOption "GitHub CLI dashboard plugin";

@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let cfg = config.services.cliphist;
 in {
-  meta.maintainers = [ lib.maintainers.janik ];
+  meta.maintainers = [ ];
 
   options.services.cliphist = {
     enable =
