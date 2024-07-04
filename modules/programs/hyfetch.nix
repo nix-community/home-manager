@@ -7,7 +7,7 @@ let
 
   jsonFormat = pkgs.formats.json { };
 in {
-  meta.maintainers = [ maintainers.lilyinstarlight ];
+  meta.maintainers = [ hm.maintainers.lilyinstarlight ];
 
   options.programs.hyfetch = {
     enable = mkEnableOption "hyfetch";

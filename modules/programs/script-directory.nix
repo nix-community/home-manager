@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 let cfg = config.programs.script-directory;
 in {
-  meta.maintainers = [ lib.maintainers.janik ];
+  meta.maintainers = [ lib.hm.maintainers.janik ];
 
   options.programs.script-directory = {
     enable = lib.mkEnableOption "script-directory";
