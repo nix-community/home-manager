@@ -75556,16 +75556,17 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>Whether to enable Hyprland wayland compositor.</p>
+<p>Whether to enable configuration for Hyprland, a tiling Wayland
+compositor that doesn’t sacrifice on its looks.</p><div class="note"><h3 class="title">Note</h3><p>This module configures Hyprland and adds it to your user’s <code class="envar">PATH</code>,
+but does not make certain system-level changes. NixOS users should
+enable the NixOS module with <code class="option">programs.hyprland.enable</code>, which
+makes system-level changes such as adding a desktop session entry.</p></div>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
