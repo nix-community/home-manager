@@ -113,6 +113,13 @@
     github = "jack5079";
     githubId = 29169102;
   };
+  janik = {
+    name = "Janik";
+    email = "janik@aq0.de";
+    matrix = "@janik0:matrix.org";
+    github = "Janik-Haag";
+    githubId = 80165193;
+  };
   jkarlson = {
     email = "jekarlson@gmail.com";
     github = "jkarlson";
@@ -200,6 +207,13 @@
     email = "kubukoz@users.noreply.github.com";
     github = "kubukoz";
     githubId = 894884;
+  };
+  lilyinstarlight = {
+    email = "lily@lily.flowers";
+    matrix = "@lily:lily.flowers";
+    github = "lilyinstarlight";
+    githubId = 298109;
+    name = "Lily Foster";
   };
   loicreynier = {
     name = "Loïc Reynier";
