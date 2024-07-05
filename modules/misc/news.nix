@@ -1660,7 +1660,7 @@ in {
       {
         time = "2024-05-26T14:43:44+00:00";
         message = ''
-          A new module is available: 'programs.zed-editor'
+          A new module is available: 'programs.zed-editor'.
 
           Zed is a fast text editor for Mac and Linux.
 
