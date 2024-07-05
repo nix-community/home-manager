@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-06-14 20:40+0000\n"
-"Last-Translator: Balint Barna Kovari <balint+weblate@kovari.cc>\n"
+"PO-Revision-Date: 2024-07-05 14:09+0000\n"
+"Last-Translator: Ferenci Ákos <synthetace@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/home-manager/"
 "cli/hu/>\n"
 "Language: hu\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -36,14 +36,17 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"A Home Manager %s %s elérési úton való tárolása elavult. Kérem helyezze át a "
+"%s elérési úthoz"
 
 #: home-manager/home-manager:92
 msgid "No configuration file found. Please create one at %s"
 msgstr ""
+"Nem található konfigurációs fájl. Kérem hozza létre a fájlt a %s elérési úton"
 
 #: home-manager/home-manager:107
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager nem található a %s elérési úton."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:115
@@ -90,23 +93,23 @@ msgstr ""
 #: home-manager/home-manager:296 home-manager/home-manager:319
 #: home-manager/home-manager:1051
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: ismeretlen opció '%s'"
 
 #: home-manager/home-manager:301 home-manager/home-manager:1052
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "Futtasa a '%s --help' parancsot a használattal kapcsolatos segítségért"
 
 #: home-manager/home-manager:327 home-manager/home-manager:431
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "A fájl %s már létezik és változatlan marad..."
 
 #: home-manager/home-manager:329 home-manager/home-manager:433
 msgid "Creating %s..."
-msgstr ""
+msgstr "%s létrehozása..."
 
 #: home-manager/home-manager:475
 msgid "Creating initial Home Manager generation..."
-msgstr ""
+msgstr "Kezdeti Home Manager generáció létrehozása..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:480
@@ -132,7 +135,7 @@ msgstr ""
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:496
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "Flake konfiguráció nem példányosítható"
 
 #: home-manager/home-manager:572
 msgid ""
@@ -155,7 +158,7 @@ msgstr ""
 
 #: home-manager/home-manager:612
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "Build futtatása nem lehetséges csak-olvasható könyvtárban"
 
 #: home-manager/home-manager:693
 msgid "No generation with ID %s"
@@ -167,7 +170,7 @@ msgstr ""
 
 #: home-manager/home-manager:697
 msgid "Removing generation %s"
-msgstr ""
+msgstr "%s generáció eltávolítása"
 
 #: home-manager/home-manager:718
 msgid "No generations to expire"
@@ -179,7 +182,7 @@ msgstr ""
 
 #: home-manager/home-manager:811
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Ismeretlen argumentum %s"
 
 #: home-manager/home-manager:835
 msgid "This will remove Home Manager from your system."
@@ -199,7 +202,7 @@ msgstr ""
 
 #: home-manager/home-manager:863
 msgid "Yay!"
-msgstr ""
+msgstr "Hurrá!"
 
 #: home-manager/home-manager:868
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
@@ -211,7 +214,7 @@ msgstr ""
 
 #: home-manager/home-manager:1113
 msgid "Unknown command: %s"
-msgstr ""
+msgstr "Ismeretlen parancs: %s"
 
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
