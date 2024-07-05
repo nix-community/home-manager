@@ -78968,7 +78968,10 @@ boolean</p>
 list of string</p>
 
 <p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;systemctl --user reset-failed&quot;
   &quot;systemctl --user start sway-session.target&quot;
+  &quot;swaymsg -mt subscribe &#x27;[]&#x27; || true&quot;
+  &quot;systemctl --user stop sway-session.target&quot;
 ]
 </code></pre>
 
