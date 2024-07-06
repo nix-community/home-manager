@@ -27,6 +27,7 @@
 .Cm | option Ar option.name
 .Cm | packages
 .Cm | remove-generations Ar ID \&...
+.Cm | switch Op Fl -rollback
 .Cm | uninstall
 .Brc
 .Op Fl A Ar attrPath
@@ -155,9 +156,14 @@ sub-command to find suitable generation numbers.
 .RE
 .Pp
 
-.It Cm switch
+.It Cm switch Op Fl -rollback
 .RS 4
 Build and activate the configuration\&.
+.sp
+If the
+.Fl -rollback
+option is given, then the build is not done, instead roll back to and
+activate the configuration prior to the current configuration\&.
 .RE
 .Pp
 
