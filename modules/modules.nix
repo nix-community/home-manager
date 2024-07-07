@@ -345,6 +345,7 @@ let
     ./services/plan9port.nix
     ./services/playerctld.nix
     ./services/plex-mpv-shim.nix
+    ./services/polkit-gnome.nix
     ./services/polybar.nix
     ./services/poweralertd.nix
     ./services/psd.nix
