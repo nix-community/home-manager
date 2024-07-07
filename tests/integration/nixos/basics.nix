@@ -7,6 +7,8 @@
   nodes.machine = { ... }: {
     imports = [ ../../../nixos ]; # Import the HM NixOS module.
 
+    virtualisation.memorySize = 2048;
+
     users.users.alice = {
       isNormalUser = true;
       description = "Alice Foobar";
