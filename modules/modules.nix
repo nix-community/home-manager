@@ -392,6 +392,7 @@ let
     ./services/window-managers/spectrwm.nix
     ./services/window-managers/xmonad.nix
     ./services/wlsunset.nix
+    ./services/wl-clip-persist.nix
     ./services/wob.nix
     ./services/xcape.nix
     ./services/xembed-sni-proxy.nix
