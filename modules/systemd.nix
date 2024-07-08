@@ -335,7 +335,7 @@ in {
         in ''
           ${pkgs.sd-switch}/bin/sd-switch \
             ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
-            ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
+            ''${oldUnitsDir:+--old-units $oldUnitsDir} \
             --new-units "$newUnitsDir"
         '';
       };
@@ -354,6 +354,13 @@ in {
           warnEcho "Attempting to reload services anyway..."
         fi
 
+        if [[ -v oldGenPath ]]; then
+          oldUnitsDir="$oldGenPath/home-files/.config/systemd/user"
+          if [[ ! -e $oldUnitsDir ]]; then
+            oldUnitsDir=
+          fi
+        fi
+
         newUnitsDir="$newGenPath/home-files/.config/systemd/user"
         if [[ ! -e $newUnitsDir ]]; then
           newUnitsDir=${pkgs.emptyDirectory}
@@ -362,7 +369,7 @@ in {
         ${ensureRuntimeDir} \
           ${getAttr cfg.startServices cmd}
 
-        unset newUnitsDir
+        unset newUnitsDir oldUnitsDir
       else
         echo "User systemd daemon not running. Skipping reload."
       fi
