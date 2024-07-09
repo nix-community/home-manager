@@ -250,11 +250,11 @@ in {
       xonshrc = "xontrib load broot";
       extraPackages = ps:
         [
-          (ps.buildPythonPackage rec {
+          (ps.buildPythonPackage {
             name = "xontrib-broot";
             src = pkgs.fetchFromGitHub {
               owner = "jnoortheen ";
-              repo = name;
+              repo = "xontrib-broot";
               rev = "6f658ff88aba27b921017297d8c2c3dfb2ffa332";
               hash = "sha256-9GqsTVCMvrWpTopHtEdicTyYRQzP1NVtQHZsfBT+fUg=";
             };
