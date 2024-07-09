@@ -141,13 +141,13 @@ in {
       xonshrc = "xontrib load direnv";
       extraPackages = ps:
         [
-          (ps.buildPythonPackage rec {
+          (ps.buildPythonPackage {
             name = "xonsh-direnv";
             src = pkgs.fetchFromGitHub {
               owner = "74th";
-              repo = name;
+              repo = "xonsh-direnv";
               rev = "fd086e737a2d54495619a40d2a0f9e96475626e7";
-              hash = "sha256-h56Gx/MMCW4L6nGwLAhBkiR7bX+qfFk80LEsJMiDtjQ=";
+              hash = "sha256-6/V7ZYMOB3E7TO7y8emC5lfdgeYxmfc/yLnEhjrWQ54=";
             };
             postPatch = ''
               substituteInPlace xontrib/direnv.xsh --replace '$(direnv' '$(${
