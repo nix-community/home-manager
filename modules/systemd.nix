@@ -100,10 +100,7 @@ let
       settingsFormat.generate "user.conf" cfg.settings;
   };
 
-  configHome = if (config.xdg.enable) then
-    lib.removePrefix config.home.homeDirectory config.xdg.configHome
-  else
-    "/.config";
+  configHome = lib.removePrefix config.home.homeDirectory config.xdg.configHome;
 
 in {
   meta.maintainers = [ lib.maintainers.rycee ];
