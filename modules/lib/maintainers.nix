@@ -590,6 +590,11 @@
     github = "pedorich-n";
     githubId = 15573098;
   };
+  PopeRigby = {
+    name = "PopeRigby";
+    github = "poperigby";
+    githubId = 20866468;
+  };
   liyangau = {
     name = "Li Yang";
     email = "d@aufomm.com";
