@@ -1,21 +1,14 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.services.ludusavi;
   settingsFormat = pkgs.formats.yaml { };
 
-  configFile =
-    if cfg.configFile == null then
-      settingsFormat.generate "config.yaml" cfg.settings
-    else
-      cfg.configFile;
-in
-{
+  configFile = if cfg.configFile == null then
+    settingsFormat.generate "config.yaml" cfg.settings
+  else
+    cfg.configFile;
+in {
   meta.maintainers = [ lib.maintainers.PopeRigby ];
 
   options.services.ludusavi = {
@@ -31,7 +24,8 @@ in
     settings = lib.mkOption {
       type = settingsFormat.type;
       default = {
-        manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
+        manifest.url =
+          "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
         roots = [ ];
         backup.path = "~/.local/state/backups/ludusavi";
         restore.path = "~/.local/state/backups/ludusavi";
@@ -39,12 +33,10 @@ in
       example = {
         language = "en-US";
         theme = "light";
-        roots = [
-          {
-            path = "~/.local/share/Steam";
-            store = "steam";
-          }
-        ];
+        roots = [{
+          path = "~/.local/share/Steam";
+          store = "steam";
+        }];
         backup.path = "~/.local/state/backups/ludusavi";
         restore.path = "~/.local/state/backups/ludusavi";
       };
@@ -57,12 +49,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = (cfg.settings != { }) != (cfg.configFile != null);
-        message = "The `settings` and `configFile` options are mutually exclusive.";
-      }
-    ];
+    assertions = [{
+      assertion = (cfg.settings != { }) != (cfg.configFile != null);
+      message =
+        "The `settings` and `configFile` options are mutually exclusive.";
+    }];
 
     systemd.user = {
       services.ludusavi = {
