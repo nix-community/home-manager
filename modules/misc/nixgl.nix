@@ -1,45 +1,166 @@
 { config, lib, pkgs, ... }:
 
-let cfg = config.nixGL;
+let
+  cfg = config.nixGL;
+  wrapperListMarkdown = with builtins;
+    foldl' (list: name:
+      list + ''
+        - ${name}
+      '') "" (attrNames config.lib.nixGL.wrappers);
 in {
   meta.maintainers = [ lib.maintainers.smona ];
 
-  options.nixGL.prefix = lib.mkOption {
-    type = lib.types.str;
-    default = "";
-    example = lib.literalExpression
-      ''"''${inputs.nixGL.packages.x86_64-linux.nixGLIntel}/bin/nixGLIntel"'';
-    description = ''
-      The [nixGL](https://github.com/nix-community/nixGL) command that `lib.nixGL.wrap` should prefix
-      package binaries with. nixGL provides your system's version of libGL to applications, enabling
-      them to access the GPU on non-NixOS systems.
+  options.nixGL = {
+    packages = lib.mkOption {
+      type = with lib.types; nullOr attrs;
+      default = null;
+      example = lib.literalExpression "inputs.nixGL.packages";
+      description = ''
+        The nixGL package set containing GPU library wrappers. This can be used
+        to provide OpenGL and Vulkan access to applications on non-NixOS systems
+        by using `(config.lib.nixGL.wrap <package>)` for the default wrapper, or
+        `(config.lib.nixGL.wrappers.<wrapper> <package>)` for any available
+        wrapper.
 
-      Wrap individual packages which require GPU access with the function like so: `(config.lib.nixGL.wrap <package>)`.
-      The returned package can be used just like the original one, but will have access to libGL. For example:
+        The wrapper functions are always available. If this option is empty (the
+        default), they are a no-op. This is useful on NixOS where the wrappers
+        are unnecessary.
 
-      ```nix
-      # If you're using a Home Manager module to configure the package,
-      # pass it into the module's package argument:
-      programs.kitty = {
-        enable = true;
-        package = (config.lib.nixGL.wrap pkgs.kitty);
-      };
+        Note that using any Nvidia wrapper requires building the configuration
+        with the `--impure` option.
+      '';
+    };
 
-      # Otherwise, pass it to any option where a package is expected:
-      home.packages = [ (config.lib.nixGL.wrap pkgs.hello) ];
-      ```
+    defaultWrapper = lib.mkOption {
+      type = lib.types.enum (builtins.attrNames config.lib.nixGL.wrappers);
+      default = "mesa";
+      description = ''
+        The package wrapper function available for use as `(config.lib.nixGL.wrap
+        <package>)`. Intended to start programs on the main GPU.
 
-      If this option is empty (the default), then `lib.nixGL.wrap` is a no-op. This is useful for sharing your Home Manager
-      configurations between NixOS and non-NixOS systems, since NixOS already provides libGL to applications without the
-      need for nixGL.
-    '';
+        Wrapper functions can be found under `config.lib.nixGL.wrappers`. They
+        can be used directly, however, setting this option provides a convenient
+        shorthand.
+
+        The following wrappers are available:
+        ${wrapperListMarkdown}
+      '';
+    };
+
+    offloadWrapper = lib.mkOption {
+      type = lib.types.enum (builtins.attrNames config.lib.nixGL.wrappers);
+      default = "mesaPrime";
+      description = ''
+        The package wrapper function available for use as
+        `(config.lib.nixGL.wrapOffload <package>)`. Intended to start programs
+        on the secondary GPU.
+
+        Wrapper functions can be found under `config.lib.nixGL.wrappers`. They
+        can be used directly, however, setting this option provides a convenient
+        shorthand.
+
+        The following wrappers are available:
+        ${wrapperListMarkdown}
+      '';
+    };
+
+    prime.card = lib.mkOption {
+      type = lib.types.str;
+      default = "1";
+      example = "pci-0000_06_00_0";
+      description = ''
+        Selects the non-default graphics card used for PRIME render offloading.
+        The value can be:
+
+        - a number, selecting the n-th non-default GPU;
+        - a PCI bus id in the form `pci-XXX_YY_ZZ_U`;
+        - a PCI id in the form `vendor_id:device_id`
+
+        For more information, consult the Mesa documentation on the `DRI_PRIME`
+        environment variable.
+      '';
+    };
+
+    prime.nvidiaProvider = lib.mkOption {
+      type = with lib.types; nullOr str;
+      default = null;
+      example = "NVIDIA-G0";
+      description = ''
+        If this option is set, it overrides the offload provider for Nvidia
+        PRIME offloading. Consult the proprietary Nvidia driver documentation
+        on the `__NV_PRIME_RENDER_OFFLOAD_PROVIDER` environment variable.
+      '';
+    };
+
+    prime.installScript = lib.mkOption {
+      type = with lib.types; nullOr (enum [ "mesa" "nvidia" ]);
+      default = null;
+      example = "mesa";
+      description = ''
+        If this option is set, the wrapper script `prime-offload` is installed
+        into the environment. It allows starting programs on the secondary GPU
+        selected by the `nixGL.prime.card` option. This makes sense when the
+        program is not already using one of nixGL PRIME wrappers, or for
+        programs not installed from Nixpkgs.
+
+        This option can be set to either "mesa" or "nvidia", making the script
+        use one or the other graphics library.
+      '';
+    };
+
+    installScripts = lib.mkOption {
+      type = with lib.types;
+        nullOr (listOf (enum (builtins.attrNames config.lib.nixGL.wrappers)));
+      default = null;
+      example = [ "mesa" "mesaPrime" ];
+      description = ''
+        For each wrapper `wrp` named in the provided list, a wrapper script
+        named `nixGLWrp` is installed into the environment. These scripts are
+        useful for running programs not installed via Home Manager.
+
+        The following wrappers are available:
+        ${wrapperListMarkdown}
+      '';
+    };
+
+    vulkan.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to enable Vulkan in nixGL wrappers.
+
+        This is disabled by default bacause Vulkan brings in several libraries
+        that can cause symbol version conflicts in wrapped programs. Your
+        mileage may vary.
+      '';
+    };
   };
 
-  config = {
-    lib.nixGL.wrap = # Wrap a single package with the configured nixGL wrapper
-      pkg:
+  config = let
+    getWrapperExe = vendor:
+      let
+        glPackage = cfg.packages.${pkgs.system}."nixGL${vendor}";
+        glExe = lib.getExe glPackage;
+        vulkanPackage = cfg.packages.${pkgs.system}."nixVulkan${vendor}";
+        vulkanExe = if cfg.vulkan.enable then lib.getExe vulkanPackage else "";
+      in "${glExe} ${vulkanExe}";
 
-      if cfg.prefix == "" then
+    mesaOffloadEnv = { "DRI_PRIME" = "${cfg.prime.card}"; };
+
+    nvOffloadEnv = {
+      "DRI_PRIME" = "${cfg.prime.card}";
+      "__NV_PRIME_RENDER_OFFLOAD" = "1";
+      "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
+      "__VK_LAYER_NV_optimus" = "NVIDIA_only";
+    } // (let provider = cfg.prime.nvidiaProvider;
+    in if !isNull provider then {
+      "__NV_PRIME_RENDER_OFFLOAD_PROVIDER" = "${provider}";
+    } else
+      { });
+
+    makePackageWrapper = vendor: environment: pkg:
+      if builtins.isNull cfg.packages then
         pkg
       else
       # Wrap the package's binaries with nixGL, while preserving the rest of
@@ -53,11 +174,17 @@ in {
           separateDebugInfo = false;
           nativeBuildInputs = old.nativeBuildInputs or [ ]
             ++ [ pkgs.makeWrapper ];
-          buildCommand = ''
+          buildCommand = let
+            # We need an intermediate wrapper package because makeWrapper
+            # requires a single executable as the wrapper.
+            combinedWrapperPkg =
+              pkgs.writeShellScriptBin "nixGLCombinedWrapper-${vendor}" ''
+                exec ${getWrapperExe vendor} "$@"
+              '';
+          in ''
             set -eo pipefail
 
-            ${
-            # Heavily inspired by https://stackoverflow.com/a/68523368/6259505
+            ${ # Heavily inspired by https://stackoverflow.com/a/68523368/6259505
             lib.concatStringsSep "\n" (map (outputName: ''
               echo "Copying output ${outputName}"
               set -x
@@ -72,10 +199,14 @@ in {
             for file in ${pkg.out}/bin/*; do
               local prog="$(basename "$file")"
               makeWrapper \
-                "${cfg.prefix}" \
+                "${lib.getExe combinedWrapperPkg}" \
                 "$out/bin/$prog" \
                 --argv0 "$prog" \
-                --add-flags "$file"
+                --add-flags "$file" \
+                ${
+                  lib.concatStringsSep " " (lib.attrsets.mapAttrsToList
+                    (var: val: "--set '${var}' '${val}'") environment)
+                }
             done
 
             # If .desktop files refer to the old package, replace the references
@@ -91,5 +222,56 @@ in {
             shopt -u nullglob # Revert nullglob back to its normal default state
           '';
         }));
+
+    wrappers = {
+      mesa = makePackageWrapper "Intel" { };
+      mesaPrime = makePackageWrapper "Intel" mesaOffloadEnv;
+      nvidia = makePackageWrapper "Nvidia" { };
+      nvidiaPrime = makePackageWrapper "Nvidia" nvOffloadEnv;
+    };
+  in {
+    lib.nixGL.wrap = wrappers.${cfg.defaultWrapper};
+    lib.nixGL.wrapOffload = wrappers.${cfg.offloadWrapper};
+    lib.nixGL.wrappers = wrappers;
+
+    home.packages = let
+      wantsPrimeWrapper = (!isNull cfg.prime.installScript);
+      wantsWrapper = wrapper:
+        (!isNull cfg.packages) && (!isNull cfg.installScripts)
+        && (builtins.elem wrapper cfg.installScripts);
+      envVarsAsScript = environment:
+        lib.concatStringsSep "\n"
+        (lib.attrsets.mapAttrsToList (var: val: "export ${var}=${val}")
+          environment);
+    in [
+      (lib.mkIf wantsPrimeWrapper (pkgs.writeShellScriptBin "prime-offload" ''
+        ${if cfg.prime.installScript == "mesa" then
+          (envVarsAsScript mesaOffloadEnv)
+        else
+          (envVarsAsScript nvOffloadEnv)}
+        exec "$@"
+      ''))
+
+      (lib.mkIf (wantsWrapper "mesa") (pkgs.writeShellScriptBin "nixGLMesa" ''
+        exec ${getWrapperExe "Intel"} "$@"
+      ''))
+
+      (lib.mkIf (wantsWrapper "mesaPrime")
+        (pkgs.writeShellScriptBin "nixGLMesaPrime" ''
+          ${envVarsAsScript mesaOffloadEnv}
+          exec ${getWrapperExe "Intel"} "$@"
+        ''))
+
+      (lib.mkIf (wantsWrapper "nvidia")
+        (pkgs.writeShellScriptBin "nixGLNvidia" ''
+          exec ${getWrapperExe "Nvidia"} "$@"
+        ''))
+
+      (lib.mkIf (wantsWrapper "nvidia")
+        (pkgs.writeShellScriptBin "nixGLNvidiaPrime" ''
+          ${envVarsAsScript nvOffloadEnv}
+          exec ${getWrapperExe "Nvidia"} "$@"
+        ''))
+    ];
   };
 }
