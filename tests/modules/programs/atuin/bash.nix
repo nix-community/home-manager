@@ -10,7 +10,7 @@
   };
 
   test.stubs = {
-    atuin = { };
+    atuin = { name = "atuin"; };
     bash-preexec = { };
   };
 
