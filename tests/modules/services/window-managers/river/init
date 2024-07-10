@@ -6,6 +6,9 @@ export BAR="bar"
 export FOO="foo"
 export FOURTY_TWO="42"
 
+### SYSTEMD INTEGRATION ###
+/nix/store/00000000000000000000000000000000-dbus/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE && systemctl --user stop river-session.target && systemctl --user start river-session.target
+
 ### CONFIGURATION ###
 riverctl attach-mode bottom
 riverctl background-color 0x002b36
@@ -59,9 +62,5 @@ riverctl xcursor-theme someGreatTheme 12
 rivertile -view-padding 6 -outer-padding 6 &
 some
 extra config
-
-
-### SYSTEMD INTEGRATION ###
-/nix/store/00000000000000000000000000000000-dbus/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE && systemctl --user stop river-session.target && systemctl --user start river-session.target
 
 

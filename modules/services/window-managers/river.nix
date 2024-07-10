@@ -1,16 +1,14 @@
 { config, lib, pkgs, ... }:
-
 let
   inherit (lib) types;
   cfg = config.wayland.windowManager.river;
 
   # Systemd integration
   variables = builtins.concatStringsSep " " cfg.systemd.variables;
-  extraCommands = builtins.concatStringsSep " "
-    (map (f: "&& ${f}") cfg.systemd.extraCommands);
-  systemdActivation = ''
-    ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}
-  '';
+  systemdActivation = builtins.concatStringsSep " && " ([
+    "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}"
+  ] ++ (lib.optional cfg.systemd.runInService "systemd-notify --ready")
+    ++ cfg.systemd.extraCommands);
 
   toValue = val:
     if lib.isString val || lib.isDerivation val then
@@ -28,7 +26,6 @@ let
 
   # Intermediary function that converts some value (attrs, str, ...) to one or several commands.
   toArgs = path: value:
-
     let
       stringValue = lib.concatStringsSep " " (path ++ [ (toValue value) ]);
       finalValue = if lib.isAttrs value then
@@ -47,7 +44,6 @@ let
   toCommand = basePath: attrs:
     lib.concatLists (lib.mapAttrsToList
       (key: value: let path = basePath ++ [ key ]; in toArgs path value) attrs);
-
 in {
   meta.maintainers = [ lib.maintainers.GaetanLepage ];
 
@@ -81,6 +77,25 @@ in {
         '';
       };
 
+      runInService = lib.mkEnableOption null // {
+        default = false;
+        description = ''
+          Whether river should run inside systemd (`true`) or outside of systemd
+          (`false`).
+
+          Running inside systemd means river lifecycle is fully known/managed by
+          systemd. Stopping your computer or river crashing will stop the
+          appropriate targets and will make sure everything stays in sync.
+
+          If river runs inside systemd, river logs will be available with
+          {command}`journalctl`.
+
+          To start river, you will need to run
+          {command}`systemctl --user start river`
+          and not run it from the command line.
+        '';
+      };
+
       variables = lib.mkOption {
         type = types.listOf types.str;
         default = [
@@ -100,10 +115,11 @@ in {
 
       extraCommands = lib.mkOption {
         type = types.listOf types.str;
-        default = [
+        default = if (!cfg.systemd.runInService) then [
           "systemctl --user stop river-session.target"
           "systemctl --user start river-session.target"
-        ];
+        ] else
+          [ ];
         description = "Extra commands to be run after D-Bus activation.";
       };
     };
@@ -180,16 +196,17 @@ in {
       ### SHELL VARIABLES ###
       ${config.lib.shell.exportAll cfg.extraSessionVariables}
 
+    '' + (lib.optionalString cfg.systemd.enable ''
+      ### SYSTEMD INTEGRATION ###
+      ${systemdActivation}
+    '') + ''
+
       ### CONFIGURATION ###
       ${lib.concatStringsSep "\n" (toCommand [ "riverctl" ] cfg.settings)}
 
       ### EXTRA CONFIGURATION ###
       ${cfg.extraConfig}
-
-    '' + (lib.optionalString cfg.systemd.enable ''
-      ### SYSTEMD INTEGRATION ###
-      ${systemdActivation}
-    ''));
+    '');
 
     # Systemd integration
     systemd.user.targets.river-session = lib.mkIf cfg.systemd.enable {
@@ -197,10 +214,35 @@ in {
         Description = "river compositor session";
         Documentation = [ "man:systemd.special(7)" ];
         BindsTo = [ "graphical-session.target" ];
+        Before = [ "graphical-session.target" ];
         Wants = [ "graphical-session-pre.target" ];
         After = [ "graphical-session-pre.target" ];
+        RefuseManualStart = if cfg.systemd.runInService then "yes" else "no";
+        StopWhenUnneeded = "yes";
       };
     };
+
+    systemd.user.services.river =
+      lib.mkIf (cfg.systemd.enable && cfg.systemd.runInService) {
+        Unit = {
+          Description = "River compositor";
+          Documentation = "man:river(1)";
+          BindsTo = [ "river-session.target" ];
+          Before = [ "river-session.target" ];
+        };
+
+        Service = {
+          Type = "notify";
+          #  /bin/sh -lc is used to get env/session vars (and path).
+          ExecStart = "/bin/sh -lc ${pkgs.river}/bin/river";
+          TimeoutStopSec = 10;
+          NotifyAccess = "all";
+          # disable oom killing
+          OOMScoreAdjust = -1000;
+          ExecStopPost =
+            "${pkgs.systemd}/bin/systemctl --user unset-environment ${variables}";
+        };
+      };
 
     systemd.user.targets.tray = {
       Unit = {
