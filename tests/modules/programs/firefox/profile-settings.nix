@@ -153,6 +153,17 @@
           };
         };
       };
+
+      profiles.overwrite = {
+        id = 6;
+        preConfig = ''
+          user_pref("browser.search.suggest.enabled", false);
+        '';
+        settings = { "browser.search.suggest.enabled" = true; };
+        extraConfig = ''
+          user_pref("findbar.highlightAll", true);
+        '';
+      };
     };
 
     nmt.script = ''
@@ -203,6 +214,10 @@
       assertFirefoxSearchContent \
         home-files/.mozilla/firefox/searchWithoutDefault/search.json.mozlz4 \
         ${./profile-settings-expected-search-without-default.json}
+
+      assertFileContent \
+        home-files/.mozilla/firefox/overwrite/user.js \
+        ${./profile-settings-expected-overwrite-user.js}
     '';
   };
 }
