@@ -43,6 +43,15 @@ in {
         X display to use.
       '';
     };
+
+    systemdTarget = mkOption {
+      type = types.str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        Systemd target to bind to.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -56,8 +65,8 @@ in {
       services.swayosd = {
         Unit = {
           Description = "Volume/backlight OSD indicator";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+          PartOf = [ cfg.systemdTarget ];
+          After = [ cfg.systemdTarget ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           Documentation = "man:swayosd(1)";
         };

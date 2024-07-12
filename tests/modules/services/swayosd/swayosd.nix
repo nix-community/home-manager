@@ -10,6 +10,7 @@
     display = "DISPLAY";
     stylePath = "/etc/xdg/swayosd/style.css";
     topMargin = 0.1;
+    systemdTarget = "test.target";
   };
 
   nmt.script = ''
@@ -26,11 +27,11 @@
           Type=simple
 
           [Unit]
-          After=graphical-session.target
+          After=test.target
           ConditionEnvironment=WAYLAND_DISPLAY
           Description=Volume/backlight OSD indicator
           Documentation=man:swayosd(1)
-          PartOf=graphical-session.target
+          PartOf=test.target
         ''
       }
   '';
