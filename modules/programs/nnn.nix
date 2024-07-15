@@ -157,7 +157,6 @@ in {
       bash_sh_zsh =
         builtins.readFile "${nnnPackage}/share/quitcd/quitcd.bash_sh_zsh";
       fish = builtins.readFile "${nnnPackage}/share/quitcd/quitcd.fish";
-      nu = builtins.readFile "${nnnPackage}/share/quitcd/quitcd.nu";
     };
   in mkIf cfg.enable {
     programs.nnn.finalPackage = nnnPackage;
