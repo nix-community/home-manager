@@ -199,14 +199,26 @@ let
     };
   allProfiles = cfg.profiles ++ [ cfg.defaultProfile ];
 in {
-  # TODO: Backwards compatibility with old options.
   imports = [
     (mkChangedOptionModule [ "programs" "vscode" "immutableExtensionsDir" ] [
       "programs"
       "vscode"
       "mutableExtensionsDir"
     ] (config: !config.programs.vscode.immutableExtensionsDir))
-  ];
+  ] ++ map (v:
+    mkRenamedOptionModule [ "programs" "vscode" v ] [
+      "programs"
+      "vscode"
+      "defaultProfile"
+      v
+    ]) [
+      "userSettings"
+      "userTasks"
+      "keybindings"
+      "extensions"
+      "languageSnippets"
+      "globalSnippets"
+    ];
 
   options.programs.vscode = {
     enable = mkEnableOption "Visual Studio Code";
