@@ -117,7 +117,7 @@ in {
         default = true;
       };
 
-      quitcd = mkEnableOption "cd on quit" // { default = true; };
+      quitcd = mkEnableOption "cd on quit" // { default = false; };
     };
   };
 
