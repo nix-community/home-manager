@@ -152,6 +152,7 @@ let
       ./programs/just.nix
       ./programs/k9s.nix
       ./programs/kakoune.nix
+      ./programs/keepassxc.nix
       ./programs/keychain.nix
       ./programs/khal.nix
       ./programs/khard.nix
