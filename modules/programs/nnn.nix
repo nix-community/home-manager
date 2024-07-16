@@ -105,37 +105,19 @@ in {
         default = { };
       };
 
-      enableBashIntegration = mkOption {
+      enableBashIntegration = mkEnableOption "Bash integration" // {
         default = true;
-        type = types.bool;
-        description = ''
-          Whether to enable Bash integration.
-        '';
       };
 
-      enableZshIntegration = mkOption {
+      enableZshIntegration = mkEnableOption "Zsh integration" // {
         default = true;
-        type = types.bool;
-        description = ''
-          Whether to enable Zsh integration.
-        '';
       };
 
-      enableFishIntegration = mkOption {
+      enableFishIntegration = mkEnableOption "Fish integration" // {
         default = true;
-        type = types.bool;
-        description = ''
-          Whether to enable Fish integration.
-        '';
       };
 
-      quitcd = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          Whether to enable cd on quit.
-        '';
-      };
+      quitcd = mkEnableOption "cd on quit" // { default = true; };
     };
   };
 
