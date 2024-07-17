@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-# TODO: Re-write tests to support profiles.
-
 with lib;
 
 let
