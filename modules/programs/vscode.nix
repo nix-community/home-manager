@@ -253,18 +253,25 @@ in {
       example = false;
       description = ''
         Whether extensions can be installed or updated manually
-        or by Visual Studio Code. This option is effective only
-        when there is a single profile (i.e. default).
+        or by Visual Studio Code. Mutually exclusive to
+        programs.vscode.profiles.
       '';
     };
 
     profiles = mkOption {
       type = types.listOf (profileType true);
       default = [ ];
+      description = ''
+        A list of all VSCode profiles. Mutually exclusive
+        to programs.vscode.mutableExtensionsDir
+      '';
     };
     defaultProfile = mkOption {
       type = profileType false;
       default = { };
+      description = ''
+        The default VSCode profile.
+      '';
     };
   };
 
