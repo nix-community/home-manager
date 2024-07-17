@@ -278,14 +278,36 @@ in {
 
     home.packages = [ cfg.package ];
 
-    /* *
-       TODO: Write a home.activation script for ${userDir}/globalStorage/storage.json, appending
-       every profile in the format `{ "name": <profile_name>, "location": <profile_name> }` to the
-       userDataProfiles array.
+    home.activation.vscodeProfiles = hm.dag.entryAfter [ "writeBoundary" ] (let
+      modifyGlobalStorage =
+        pkgs.writeShellScript "vscode-global-storage-modify" ''
+          PATH=${makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
+          file="${userDir}/globalStorage/storage.json"
 
-       This file needs to mutable, and cannot be symlinked. This is because the file stores other data,
-       such as background themes, keybindingReferences, etc.
-    */
+          if [ -f "$file" ]; then
+            existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' $file)
+            file_write=""
+            profiles=(${escapeShellArgs (map (v: v.name) cfg.profiles)})
+
+            for profile in "''${profiles[@]}"; do
+              if [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile $profile '.[$profile]')" != "\"$profile\"" ]]; then
+                file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
+              fi
+            done
+          else
+            for profile in "''${profiles[@]}"; do
+              file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
+            done
+
+            echo "{}" > $file
+          fi
+
+          if [ "$file_write" != "" ]; then
+            userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split(" ") | map({ name: ., location: . })')" $file)
+            echo $userDataProfiles > $file
+          fi
+        '';
+    in modifyGlobalStorage.outPath);
 
     home.file = mkMerge (flatten [
       (map (v:
