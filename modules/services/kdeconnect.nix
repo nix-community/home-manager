@@ -48,7 +48,12 @@ in {
 
         Service = {
           Environment = "PATH=${config.home.profileDirectory}/bin";
-          ExecStart = "${cfg.package}/libexec/kdeconnectd";
+          ExecStart =
+            if strings.versionAtLeast (versions.majorMinor cfg.package.version)
+            "24.05" then
+              "${cfg.package}/bin/kdeconnectd"
+            else
+              "${cfg.package}/libexec/kdeconnectd";
           Restart = "on-abort";
         };
       };

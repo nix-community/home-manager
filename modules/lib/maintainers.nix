@@ -113,6 +113,13 @@
     github = "jack5079";
     githubId = 29169102;
   };
+  janik = {
+    name = "Janik";
+    email = "janik@aq0.de";
+    matrix = "@janik0:matrix.org";
+    github = "Janik-Haag";
+    githubId = 80165193;
+  };
   jkarlson = {
     email = "jekarlson@gmail.com";
     github = "jkarlson";
@@ -173,6 +180,13 @@
     github = "iosmanthus";
     githubId = 16307070;
   };
+  jonringer = {
+    email = "jonringer117@gmail.com";
+    matrix = "@jonringer:matrix.org";
+    github = "jonringer";
+    githubId = 7673602;
+    name = "Jonathan Ringer";
+  };
   kalhauge = {
     name = "Christian Gram Kalhauge";
     email = "kalhauge@users.noreply.github.com";
@@ -200,6 +214,19 @@
     email = "kubukoz@users.noreply.github.com";
     github = "kubukoz";
     githubId = 894884;
+  };
+  lheckemann = {
+    name = "Linus Heckemann";
+    email = "git@sphalerite.org";
+    github = "lheckemann";
+    githubId = 341954;
+  };
+  lilyinstarlight = {
+    email = "lily@lily.flowers";
+    matrix = "@lily:lily.flowers";
+    github = "lilyinstarlight";
+    githubId = 298109;
+    name = "Lily Foster";
   };
   loicreynier = {
     name = "Loïc Reynier";

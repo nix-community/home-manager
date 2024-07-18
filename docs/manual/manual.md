@@ -8,6 +8,7 @@ preface.md
 ```
 
 ```{=include=} parts
+introduction.md
 installation.md
 usage.md
 nix-flakes.md

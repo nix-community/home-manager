@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-02-16 22:01+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"PO-Revision-Date: 2024-06-17 09:46+0000\n"
+"Last-Translator: Mateusz P <medan1993@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/home-manager/cli/"
 "pl/>\n"
 "Language: pl\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.4\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "%s: brakuje wartości dla %s"
 
 #: home-manager/home-manager:64
 msgid "No configuration file found at %s"
@@ -194,7 +194,7 @@ msgstr "Nieznane ustawienie „%s” „news.display”."
 #: home-manager/home-manager:594
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Proszę ustawić zmienną środowiskową $EDITOR lub $VISUAL"
 
 #: home-manager/home-manager:612
 msgid "Cannot run build in read-only directory"

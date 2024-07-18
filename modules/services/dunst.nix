@@ -172,7 +172,7 @@ in {
 
         mkPath = { basePath, theme, category }:
           "${basePath}/share/icons/${theme.name}/${theme.size}/${category}";
-      in concatMapStringsSep ":" mkPath (cartesianProductOfSets {
+      in concatMapStringsSep ":" mkPath (cartesianProduct {
         basePath = basePaths;
         theme = themes;
         category = categories;

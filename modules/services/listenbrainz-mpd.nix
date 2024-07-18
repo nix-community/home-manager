@@ -24,7 +24,7 @@ in {
         Configuration for listenbrainz-mpd written to
         {file}`$XDG_CONFIG_HOME/listenbrainz-mpd/config.toml`.
       '';
-      example = { submission.tokenFile = "/run/secrets/listenbrainz-mpd"; };
+      example = { submission.token_file = "/run/secrets/listenbrainz-mpd"; };
     };
   };
 

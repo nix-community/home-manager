@@ -69,6 +69,23 @@
         ];
       };
     };
+    initLua = ./init.lua;
+    plugins = {
+      testplugin = ./plugin;
+      ## Produces warning
+      #"plugin-with-suffix.yazi" = ./plugin;
+      ## Fails assertion
+      #single-file-plugin = ./plugin/init.lua;
+      #empty-dir-plugin = ./empty;
+    };
+    flavors = {
+      testflavor = ./flavor;
+      ## Produces warning
+      #"flavor-with-suffix.yazi" = ./flavor;
+      ## Fails assertion
+      #single-file-flavor = ./flavor/flavor.toml;
+      #empty-dir-flavor = ./empty;
+    };
   };
 
   test.stubs.yazi = { };
@@ -80,5 +97,11 @@
       ${./settings-expected.toml}
     assertFileContent home-files/.config/yazi/theme.toml \
       ${./theme-expected.toml}
+    assertFileContent home-files/.config/yazi/init.lua \
+      ${./init.lua}
+    assertFileContent home-files/.config/yazi/plugins/testplugin.yazi/init.lua \
+      ${./plugin/init.lua}
+    assertFileContent home-files/.config/yazi/flavors/testflavor.yazi/flavor.toml \
+      ${./flavor/flavor.toml}
   '';
 }

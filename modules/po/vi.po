@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-03-27 15:05+0000\n"
-"Last-Translator: Nguyen Khanh <nguynkhan479@gmail.com>\n"
+"PO-Revision-Date: 2024-06-02 08:12+0000\n"
+"Last-Translator: goatastronaut0212 <goatastronaut0212@proton.me>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/home-manager/"
 "modules/vi/>\n"
 "Language: vi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: modules/files.nix:191
 msgid "Creating home file links in %s"
@@ -97,7 +97,7 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Kiểm tra độ hợp lệ của Nix"
 
 #: modules/lib-bash/activation-init.sh:170
 msgid "This is a dry run"
@@ -109,8 +109,8 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:180
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Phiên bản Nix đươc sử dụng: %s"
 
 #: modules/lib-bash/activation-init.sh:183
 msgid "Activation variables:"
-msgstr ""
+msgstr "Các biến được kích hoạt:"

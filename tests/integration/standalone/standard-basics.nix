@@ -85,7 +85,7 @@
       } /home/alice/.config/home-manager/home.nix")
 
       actual = succeed_as_alice("home-manager switch")
-      expected = "Started pueued.service - active"
+      expected = "Starting units: pueued.service"
       assert expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 

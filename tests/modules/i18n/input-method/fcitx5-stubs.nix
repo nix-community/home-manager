@@ -4,11 +4,15 @@
       version = "0";
       outPath = null;
       buildScript = ''
-        mkdir -p $out/bin $out/share/applications $out/etc/xdg/autostart
+        mkdir -p $out/bin $out/share/applications $out/share/dbus-1/services $out/etc/xdg/autostart
         touch $out/bin/fcitx5 \
               $out/bin/fcitx5-config-qt \
               $out/share/applications/org.fcitx.Fcitx5.desktop \
+              $out/share/dbus-1/services/org.fcitx.Fcitx5.service \
               $out/etc/xdg/autostart/org.fcitx.Fcitx5.desktop
+        # The grep usage of fcitx5-with-addons expects one of the files to match with the fcitx5.out
+        # https://github.com/NixOS/nixpkgs/blob/d2eb4be48705289791428c07aca8ff654c1422ba/pkgs/tools/inputmethods/fcitx5/with-addons.nix#L40-L44
+        echo $out >> $out/etc/xdg/autostart/org.fcitx.Fcitx5.desktop
         chmod +x $out/bin/fcitx5 \
                  $out/bin/fcitx5-config-qt
       '';

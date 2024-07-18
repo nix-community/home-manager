@@ -1,36 +1,46 @@
 "mail":
-  - modules/programs/aerc*.nix
-  - modules/programs/alot*.nix
-  - tests/modules/programs/aerc/*
-  - tests/modules/programs/alot/*
-  - modules/programs/mujmap.nix
-  - tests/modules/programs/mujmap/*
-  - modules/programs/notmuch.nix
-  - modules/programs/neomutt*
-  - tests/modules/programs/neomutt/*
-  - modules/programs/getmail*
-  - modules/*/mbsync*
-  - tests/modules/programs/mbsync/*
-  - modules/programs/himalaya.nix
-  - tests/modules/programs/himalaya/*
-  - modules/programs/thunderbird.nix
-  - tests/modules/programs/thunderbird/*
-  - modules/services/imapnotify.nix
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/programs/aerc*.nix
+    - modules/programs/alot*.nix
+    - tests/modules/programs/aerc/*
+    - tests/modules/programs/alot/*
+    - modules/programs/mujmap.nix
+    - tests/modules/programs/mujmap/*
+    - modules/programs/notmuch.nix
+    - modules/programs/neomutt*
+    - tests/modules/programs/neomutt/*
+    - modules/programs/getmail*
+    - modules/*/mbsync*
+    - tests/modules/programs/mbsync/*
+    - modules/programs/himalaya.nix
+    - tests/modules/programs/himalaya/*
+    - modules/programs/thunderbird.nix
+    - tests/modules/programs/thunderbird/*
+    - modules/services/imapnotify.nix
 
 "neovim":
-  - modules/programs/neovim.nix
-  - tests/modules/programs/neovim/**/*
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/programs/neovim.nix
+    - tests/modules/programs/neovim/**/*
 
 "shell":
-  - modules/lib/zsh.nix
-  - modules/programs/zsh*
-  - modules/programs/bash*
-  - tests/modules/programs/zsh/**/*
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/lib/zsh.nix
+    - modules/programs/zsh*
+    - modules/programs/bash*
+    - tests/modules/programs/zsh/**/*
 
 "calendar":
-  - modules/programs/khal*
-  - modules/*/vdirsyncer*
-  - modules/accounts/calendar.nix
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/programs/khal*
+    - modules/*/vdirsyncer*
+    - modules/accounts/calendar.nix
 
 "contacts":
-  - modules/accounts/contacts.nix
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/accounts/contacts.nix
