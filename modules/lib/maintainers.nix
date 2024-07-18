@@ -563,6 +563,12 @@
     github = "wcarlsen";
     githubId = 17003032;
   };
+  willbou1 = {
+    name = "William Boulanger";
+    github = "willbou1";
+    email = "willbou2@gmail.com";
+    githubId = 6372967;
+  };
   "9p4" = {
     name = "9p4";
     email = "vcs@ersei.net";
