@@ -1,27 +1,27 @@
 [[input.keymap]]
-exec = "close"
 on = ["<C-q>"]
+run = "close"
 
 [[input.keymap]]
-exec = "close --submit"
 on = ["<Enter>"]
+run = "close --submit"
 
 [[input.keymap]]
-exec = "escape"
 on = ["<Esc>"]
+run = "escape"
 
 [[input.keymap]]
-exec = "backspace"
 on = ["<Backspace>"]
+run = "backspace"
 
 [[manager.keymap]]
-exec = "escape"
 on = ["<Esc>"]
+run = "escape"
 
 [[manager.keymap]]
-exec = "quit"
 on = ["q"]
+run = "quit"
 
 [[manager.keymap]]
-exec = "close"
 on = ["<C-q>"]
+run = "close"

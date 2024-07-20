@@ -70,15 +70,15 @@ in {
       example = literalExpression ''
         {
           input.keymap = [
-            { exec = "close"; on = [ "<C-q>" ]; }
-            { exec = "close --submit"; on = [ "<Enter>" ]; }
-            { exec = "escape"; on = [ "<Esc>" ]; }
-            { exec = "backspace"; on = [ "<Backspace>" ]; }
+            { on = [ "<C-q>" ]; run = "close"; }
+            { on = [ "<Enter>" ];  run = "close --submit"; }
+            { on = [ "<Esc>" ];  run = "escape"; }
+            { on = [ "<Backspace>" ]; run = "backspace"; }
           ];
           manager.keymap = [
-            { exec = "escape"; on = [ "<Esc>" ]; }
-            { exec = "quit"; on = [ "q" ]; }
-            { exec = "close"; on = [ "<C-q>" ]; }
+            {  on = [ "<Esc>" ]; run = "escape"; }
+            {  on = [ "q" ]; run = "quit"; }
+            {  on = [ "<C-q>" ]; run = "close"; }
           ];
         }
       '';
