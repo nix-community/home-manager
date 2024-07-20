@@ -658,12 +658,29 @@ in {
           {command}`nix-env -f '<nixpkgs>' -qaP -A kakounePlugins`.
         '';
       };
+
+      colorSchemePackage = mkOption {
+        type = with types; nullOr package;
+        default = null;
+        example = literalExpression "pkgs.kakounePlugins.kakoune-catppuccin";
+        description = ''
+          A kakoune color schemes to add to your colors folder. This works
+          because kakoune recursively checks
+          {file}`$XDG_CONFIG_HOME/kak/colors/`. To apply the color scheme use
+          `programs.kakoune.config.colorScheme = "theme"`.
+        '';
+      };
     };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ kakouneWithPlugins ];
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "kak"; };
-    xdg.configFile."kak/kakrc".source = configFile;
+    xdg.configFile = mkMerge [
+      { "kak/kakrc".source = configFile; }
+      (mkIf (cfg.colorSchemePackage != null) {
+        "kak/colors/${cfg.colorSchemePackage.name}" = cfg.colorSchemePackage;
+      })
+    ];
   };
 }
