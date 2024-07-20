@@ -1813,6 +1813,16 @@ in {
           systems" section in the Home Manager mantual for more.
         '';
       }
+      {
+        time = "2024-07-20T12:05:41+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.swayimg'.
+
+          Swayimg is a lightweight image viewer for Wayland display servers.
+          See https://github.com/artemsen/swayimg for more.
+        '';
+      }
     ];
   };
 }

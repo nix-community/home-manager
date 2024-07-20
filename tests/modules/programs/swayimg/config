@@ -1,0 +1,12 @@
+[font]
+name=monospace
+size=14
+
+[general]
+antialiasing=no
+fixed=yes
+fullscreen=no
+position=parent
+scale=optimal
+size=parent
+transparency=grid
