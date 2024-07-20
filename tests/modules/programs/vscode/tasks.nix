@@ -37,12 +37,14 @@ let
 in {
   programs.vscode = {
     enable = true;
-    package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
-    defaultProfile.userTasks = tasks;
-    profiles = [{
-      name = "test";
-      userTasks = tasks;
-    }];
+    package = pkgs.writeScriptBin "vscode" "" // {
+      pname = "vscode";
+      version = "1.75.0";
+    };
+    profiles = {
+      default.userTasks = tasks;
+      test.userTasks = tasks;
+    };
   };
 
   nmt.script = ''

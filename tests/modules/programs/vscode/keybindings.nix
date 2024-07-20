@@ -75,12 +75,14 @@ let
 in {
   programs.vscode = {
     enable = true;
-    defaultProfile.keybindings = bindings;
-    profiles = [{
-      name = "test";
-      keybindings = bindings;
-    }];
-    package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
+    profiles = {
+      default.keybindings = bindings;
+      test.keybindings = bindings;
+    };
+    package = pkgs.writeScriptBin "vscode" "" // {
+      pname = "vscode";
+      version = "1.75.0";
+    };
   };
 
   nmt.script = ''

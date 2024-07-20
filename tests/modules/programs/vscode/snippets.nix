@@ -66,9 +66,14 @@ let
 in {
   programs.vscode = {
     enable = true;
-    package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
-    defaultProfile = snippets;
-    profiles = [ ({ name = "test"; } // snippets) ];
+    package = pkgs.writeScriptBin "vscode" "" // {
+      pname = "vscode";
+      version = "1.75.0";
+    };
+    profiles = {
+      default = snippets;
+      test = snippets;
+    };
   };
 
   nmt.script = ''

@@ -17,9 +17,14 @@ let
 in {
   programs.vscode = {
     enable = true;
-    package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
-    enableUpdateCheck = false;
-    enableExtensionUpdateCheck = false;
+    package = pkgs.writeScriptBin "vscode" "" // {
+      pname = "vscode";
+      version = "1.75.0";
+    };
+    profiles.default = {
+      enableUpdateCheck = false;
+      enableExtensionUpdateCheck = false;
+    };
   };
 
   nmt.script = ''
