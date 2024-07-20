@@ -59,143 +59,159 @@ let
       destination = "/share/vscode/extensions/extensions.json";
     };
 
-  mergedUserSettings = userSettings:
+  mergedUserSettings =
+    userSettings: enableUpdateCheck: enableExtensionUpdateCheck:
     userSettings
-    // optionalAttrs (!cfg.enableUpdateCheck) { "update.mode" = "none"; }
-    // optionalAttrs (!cfg.enableExtensionUpdateCheck) {
+    // optionalAttrs (enableUpdateCheck == false) { "update.mode" = "none"; }
+    // optionalAttrs (enableExtensionUpdateCheck == false) {
       "extensions.autoCheckUpdates" = false;
     };
 
-  profileType = default:
-    types.submodule {
-      options = {
-        userSettings = mkOption {
-          type = jsonFormat.type;
-          default = { };
-          example = literalExpression ''
-            {
-              "files.autoSave" = "off";
-              "[nix]"."editor.tabSize" = 2;
-            }
-          '';
-          description = ''
-            Configuration written to Visual Studio Code's
-            {file}`settings.json`.
-          '';
-        };
+  profileType = types.submodule {
+    options = {
+      userSettings = mkOption {
+        type = jsonFormat.type;
+        default = { };
+        example = literalExpression ''
+          {
+            "files.autoSave" = "off";
+            "[nix]"."editor.tabSize" = 2;
+          }
+        '';
+        description = ''
+          Configuration written to Visual Studio Code's
+          {file}`settings.json`.
+        '';
+      };
 
-        userTasks = mkOption {
-          type = jsonFormat.type;
-          default = { };
-          example = literalExpression ''
-            {
-              version = "2.0.0";
-              tasks = [
-                {
-                  type = "shell";
-                  label = "Hello task";
-                  command = "hello";
-                }
-              ];
-            }
-          '';
-          description = ''
-            Configuration written to Visual Studio Code's
-            {file}`tasks.json`.
-          '';
-        };
-
-        keybindings = mkOption {
-          type = types.listOf (types.submodule {
-            options = {
-              key = mkOption {
-                type = types.str;
-                example = "ctrl+c";
-                description = "The key or key-combination to bind.";
-              };
-
-              command = mkOption {
-                type = types.str;
-                example = "editor.action.clipboardCopyAction";
-                description = "The VS Code command to execute.";
-              };
-
-              when = mkOption {
-                type = types.nullOr (types.str);
-                default = null;
-                example = "textInputFocus";
-                description = "Optional context filter.";
-              };
-
-              # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
-              args = mkOption {
-                type = types.nullOr (jsonFormat.type);
-                default = null;
-                example = { direction = "up"; };
-                description = "Optional arguments for a command.";
-              };
-            };
-          });
-          default = [ ];
-          example = literalExpression ''
-            [
+      userTasks = mkOption {
+        type = jsonFormat.type;
+        default = { };
+        example = literalExpression ''
+          {
+            version = "2.0.0";
+            tasks = [
               {
-                key = "ctrl+c";
-                command = "editor.action.clipboardCopyAction";
-                when = "textInputFocus";
+                type = "shell";
+                label = "Hello task";
+                command = "hello";
               }
-            ]
-          '';
-          description = ''
-            Keybindings written to Visual Studio Code's
-            {file}`keybindings.json`.
-          '';
-        };
+            ];
+          }
+        '';
+        description = ''
+          Configuration written to Visual Studio Code's
+          {file}`tasks.json`.
+        '';
+      };
 
-        extensions = mkOption {
-          type = types.listOf types.package;
-          default = [ ];
-          example = literalExpression "[ pkgs.vscode-extensions.bbenoist.nix ]";
-          description = ''
-            The extensions Visual Studio Code should be started with.
-          '';
-        };
+      keybindings = mkOption {
+        type = types.listOf (types.submodule {
+          options = {
+            key = mkOption {
+              type = types.str;
+              example = "ctrl+c";
+              description = "The key or key-combination to bind.";
+            };
 
-        languageSnippets = mkOption {
-          type = jsonFormat.type;
-          default = { };
-          example = {
-            haskell = {
-              fixme = {
-                prefix = [ "fixme" ];
-                body = [ "$LINE_COMMENT FIXME: $0" ];
-                description = "Insert a FIXME remark";
-              };
+            command = mkOption {
+              type = types.str;
+              example = "editor.action.clipboardCopyAction";
+              description = "The VS Code command to execute.";
+            };
+
+            when = mkOption {
+              type = types.nullOr (types.str);
+              default = null;
+              example = "textInputFocus";
+              description = "Optional context filter.";
+            };
+
+            # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
+            args = mkOption {
+              type = types.nullOr (jsonFormat.type);
+              default = null;
+              example = { direction = "up"; };
+              description = "Optional arguments for a command.";
             };
           };
-          description = "Defines user snippets for different languages.";
-        };
+        });
+        default = [ ];
+        example = literalExpression ''
+          [
+            {
+              key = "ctrl+c";
+              command = "editor.action.clipboardCopyAction";
+              when = "textInputFocus";
+            }
+          ]
+        '';
+        description = ''
+          Keybindings written to Visual Studio Code's
+          {file}`keybindings.json`.
+        '';
+      };
 
-        globalSnippets = mkOption {
-          type = jsonFormat.type;
-          default = { };
-          example = {
+      extensions = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression "[ pkgs.vscode-extensions.bbenoist.nix ]";
+        description = ''
+          The extensions Visual Studio Code should be started with.
+        '';
+      };
+
+      languageSnippets = mkOption {
+        type = jsonFormat.type;
+        default = { };
+        example = {
+          haskell = {
             fixme = {
               prefix = [ "fixme" ];
               body = [ "$LINE_COMMENT FIXME: $0" ];
               description = "Insert a FIXME remark";
             };
           };
-          description = "Defines global user snippets.";
         };
-      } // optionalAttrs default {
-        name = mkOption {
-          type = types.str;
-          description = "Visual Studio Code's Profile name.";
+        description = "Defines user snippets for different languages.";
+      };
+
+      globalSnippets = mkOption {
+        type = jsonFormat.type;
+        default = { };
+        example = {
+          fixme = {
+            prefix = [ "fixme" ];
+            body = [ "$LINE_COMMENT FIXME: $0" ];
+            description = "Insert a FIXME remark";
+          };
         };
+        description = "Defines global user snippets.";
+      };
+
+      enableUpdateCheck = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          Whether to enable update checks/notifications.
+          Can only be set for the default profile, but
+          it applies to all profiles.
+        '';
+      };
+
+      enableExtensionUpdateCheck = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          Whether to enable update notifications for extensions.
+          Can only be set for the default profile, but
+          it applies to all profiles.
+        '';
       };
     };
-  allProfiles = cfg.profiles ++ [ cfg.defaultProfile ];
+  };
+  defaultProfile = (filterAttrs (n: v: n == "default") cfg.profiles).default;
+  allProfilesExceptDefault = (removeAttrs cfg.profiles [ "default" ]);
 in {
   imports = [
     (mkChangedOptionModule [ "programs" "vscode" "immutableExtensionsDir" ] [
@@ -207,9 +223,12 @@ in {
     mkRenamedOptionModule [ "programs" "vscode" v ] [
       "programs"
       "vscode"
-      "defaultProfile"
+      "profiles"
+      "default"
       v
     ]) [
+      "enableUpdateCheck"
+      "enableExtensionUpdateCheck"
       "userSettings"
       "userTasks"
       "keybindings"
@@ -231,25 +250,9 @@ in {
       '';
     };
 
-    enableUpdateCheck = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable update checks/notifications.
-      '';
-    };
-
-    enableExtensionUpdateCheck = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable update notifications for extensions.
-      '';
-    };
-
     mutableExtensionsDir = mkOption {
       type = types.bool;
-      default = cfg.profiles == [ ];
+      default = allProfilesExceptDefault == { };
       example = false;
       description = ''
         Whether extensions can be installed or updated manually
@@ -259,30 +262,34 @@ in {
     };
 
     profiles = mkOption {
-      type = types.listOf (profileType true);
-      default = [ ];
+      type = types.attrsOf profileType;
+      default = { };
       description = ''
         A list of all VSCode profiles. Mutually exclusive
         to programs.vscode.mutableExtensionsDir
-      '';
-    };
-    defaultProfile = mkOption {
-      type = profileType false;
-      default = { };
-      description = ''
-        The default VSCode profile.
       '';
     };
   };
 
   config = mkIf cfg.enable {
     warnings = [
-      (mkIf (cfg.profiles != [ ] && cfg.mutableExtensionsDir)
-        "programs.vscode.mutableExtensionsDir can be used only if profiles is an empty list.")
+      (mkIf (allProfilesExceptDefault != { } && cfg.mutableExtensionsDir)
+        "programs.vscode.mutableExtensionsDir can be used only if no profiles apart from default are set.")
+      (mkIf ((filterAttrs (n: v:
+        (v ? enableExtensionUpdateCheck || v ? enableUpdateCheck)
+        && (v.enableExtensionUpdateCheck != null || v.enableUpdateCheck
+          != null)) allProfilesExceptDefault) != { })
+        "The option programs.vscode.profiles.*.enableExtensionUpdateCheck and option programs.vscode.profiles.*.enableUpdateCheck is invalid for all profiles except default.")
     ];
 
     home.packages = [ cfg.package ];
 
+    # The file `${userDir}/globalStorage/storage.json` needs to be writable by VSCode,
+    # since it contains other data, such as theme backgrounds, recently opened folders, etc.
+
+    # A caveat of adding profiles this way is, VSCode has to be closed
+    # when this file is being written, since the file is loaded into RAM
+    # and overwritten on closing VSCode.
     home.activation.vscodeProfiles = hm.dag.entryAfter [ "writeBoundary" ] (let
       modifyGlobalStorage =
         pkgs.writeShellScript "vscode-global-storage-modify" ''
@@ -292,7 +299,10 @@ in {
           if [ -f "$file" ]; then
             existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' $file)
             file_write=""
-            profiles=(${escapeShellArgs (map (v: v.name) cfg.profiles)})
+            profiles=(${
+              escapeShellArgs
+              (flatten (mapAttrsToList (n: v: n) allProfilesExceptDefault))
+            })
 
             for profile in "''${profiles[@]}"; do
               if [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile $profile '.[$profile]')" != "\"$profile\"" ]]; then
@@ -308,58 +318,56 @@ in {
           fi
 
           if [ "$file_write" != "" ]; then
-            userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split(" ") | map({ name: ., location: . })')" $file)
+            userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split("...") | map({ name: ., location: . })')" $file)
             echo $userDataProfiles > $file
           fi
         '';
     in modifyGlobalStorage.outPath);
 
     home.file = mkMerge (flatten [
-      (map (v:
-        let
-          # The default profile does not have the `name` key
-          name = if v ? name then v.name else "default";
-        in [
-          (mkIf ((mergedUserSettings v.userSettings) != { }) {
-            "${configFilePath name}".source =
+      (mapAttrsToList (n: v: [
+        (mkIf ((mergedUserSettings v.userSettings v.enableUpdateCheck
+          v.enableExtensionUpdateCheck) != { }) {
+            "${configFilePath n}".source =
               jsonFormat.generate "vscode-user-settings"
-              (mergedUserSettings v.userSettings);
+              (mergedUserSettings v.userSettings v.enableUpdateCheck
+                v.enableExtensionUpdateCheck);
           })
 
-          (mkIf (v.userTasks != { }) {
-            "${tasksFilePath name}".source =
-              jsonFormat.generate "vscode-user-tasks" v.userTasks;
-          })
+        (mkIf (v.userTasks != { }) {
+          "${tasksFilePath n}".source =
+            jsonFormat.generate "vscode-user-tasks" v.userTasks;
+        })
 
-          (mkIf (v.keybindings != [ ]) {
-            "${keybindingsFilePath name}".source =
-              jsonFormat.generate "vscode-keybindings"
-              (map (filterAttrs (_: v: v != null)) v.keybindings);
-          })
+        (mkIf (v.keybindings != [ ]) {
+          "${keybindingsFilePath n}".source =
+            jsonFormat.generate "vscode-keybindings"
+            (map (filterAttrs (_: v: v != null)) v.keybindings);
+        })
 
-          (mkIf (v.languageSnippets != { }) (lib.mapAttrs' (language: snippet:
-            lib.nameValuePair "${snippetDir name}/${language}.json" {
-              source =
-                jsonFormat.generate "user-snippet-${language}.json" snippet;
-            }) v.languageSnippets))
+        (mkIf (v.languageSnippets != { }) (mapAttrs' (language: snippet:
+          nameValuePair "${snippetDir n}/${language}.json" {
+            source =
+              jsonFormat.generate "user-snippet-${language}.json" snippet;
+          }) v.languageSnippets))
 
-          (mkIf (v.globalSnippets != { }) {
-            "${snippetDir name}/global.code-snippets".source =
-              jsonFormat.generate "user-snippet-global.code-snippets"
-              v.globalSnippets;
-          })
-        ]) allProfiles)
+        (mkIf (v.globalSnippets != { }) {
+          "${snippetDir n}/global.code-snippets".source =
+            jsonFormat.generate "user-snippet-global.code-snippets"
+            v.globalSnippets;
+        })
+      ]) cfg.profiles)
 
       # We write extensions.json for all profiles, except the default profile,
       # since that is handled by code below.
-      (mkIf (cfg.profiles != [ ]) (listToAttrs (map (v:
-        nameValuePair "${userDir}/profiles/${v.name}/extensions.json" {
+      (mkIf (allProfilesExceptDefault != { }) (mapAttrs' (n: v:
+        nameValuePair "${userDir}/profiles/${n}/extensions.json" {
           source = "${
-              extensionJsonFile v.name (extensionJson v.extensions)
+              extensionJsonFile n (extensionJson v.extensions)
             }/share/vscode/extensions/extensions.json";
-        }) cfg.profiles)))
+        }) allProfilesExceptDefault))
 
-      (mkIf ((filter (v: v.extensions != [ ]) allProfiles) != [ ]) (let
+      (mkIf (cfg.profiles != { }) (let
         # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
         subDir = "share/vscode/extensions";
         toPaths = ext:
@@ -368,13 +376,19 @@ in {
             [ ext.vscodeExtUniqueId ]
           else
             builtins.attrNames (builtins.readDir (ext + "/${subDir}")));
-      in if (cfg.mutableExtensionsDir && cfg.profiles == [ ]) then
-        mkMerge (concatMap toPaths (flatten (map (v: v.extensions) allProfiles))
-          ++ lib.optional (lib.versionAtLeast vscodeVersion "1.74.0") {
+      in if (cfg.mutableExtensionsDir && allProfilesExceptDefault == { }) then
+      # Mutable extensions dir can only occur when only default profile is set.
+      # Force regenerating extensions.json using the below method,
+      # causes VSCode to create the extensions.json with all the extensions
+      # in the extension directory, which includes extensions from other profiles.
+        mkMerge (concatMap toPaths
+          (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
+          ++ optional
+          (versionAtLeast vscodeVersion "1.74.0" && defaultProfile != { }) {
             # Whenever our immutable extensions.json changes, force VSCode to regenerate
             # extensions.json with both mutable and immutable extensions.
             "${extensionPath}/.extensions-immutable.json" = {
-              text = extensionJson cfg.defaultProfile.extensions;
+              text = extensionJson defaultProfile.extensions;
               onChange = ''
                 run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
                 verboseEcho "Regenerating VSCode extensions.json"
@@ -386,10 +400,11 @@ in {
         "${extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
             name = "vscode-extensions";
-            paths = flatten (map (v: v.extensions) allProfiles) ++ lib.optional
-              (lib.versionAtLeast vscodeVersion "1.74.0" && cfg.defaultProfile
-                != { }) (extensionJsonFile "default"
-                  (extensionJson cfg.defaultProfile.extensions));
+            paths = (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
+              ++ optional
+              (versionAtLeast vscodeVersion "1.74.0" && defaultProfile != { })
+              (extensionJsonFile "default"
+                (extensionJson defaultProfile.extensions));
           };
         in "${combinedExtensionsDrv}/${subDir}";
       }))
