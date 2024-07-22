@@ -52,7 +52,6 @@ in {
           "${pkgs.kbfs}/bin/kbfsfuse ${toString cfg.extraFlags} ${mountPoint}";
         ExecStopPost = "/run/wrappers/bin/fusermount -u ${mountPoint}";
         Restart = "on-failure";
-        PrivateTmp = true;
       };
 
       Install.WantedBy = [ "default.target" ];
