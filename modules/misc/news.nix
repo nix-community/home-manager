@@ -1748,6 +1748,18 @@ in {
           add `-w` to your assignment of `services.swayidle.extraArgs`.
         '';
       }
+
+      {
+        time = "2024-09-28T09:03:43+00:00";
+        condition = with config.programs.starship;
+          enable && enableFishIntegration;
+        message = ''
+          A new option `programs.starship.enableInteractive` is available for
+          the Fish shell that only enables starship if the shell is interactive.
+
+          Some plugins require this to be set to `false` to function correctly.
+        '';
+      }
     ];
   };
 }
