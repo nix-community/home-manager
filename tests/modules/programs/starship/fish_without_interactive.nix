@@ -19,7 +19,7 @@ with lib;
       export GOT="$(tail -n 5 `_abs home-files/.config/fish/config.fish`)"
       export EXPECTED="
       if test \"\$TERM\" != dumb
-          eval (/home/hm-user/.nix-profile/bin/starship init fish)
+          /home/hm-user/.nix-profile/bin/starship init fish | source
 
       end"
 

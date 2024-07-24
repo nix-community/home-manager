@@ -119,7 +119,7 @@ in {
 
     programs.fish.${initFish} = mkIf cfg.enableFishIntegration ''
       if test "$TERM" != "dumb"
-        eval (${starshipCmd} init fish)
+        ${starshipCmd} init fish | source
         ${lib.optionalString cfg.enableTransience "enable_transience"}
       end
     '';
