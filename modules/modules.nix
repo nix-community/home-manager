@@ -175,6 +175,7 @@ let
     ./programs/noti.nix
     ./programs/notmuch.nix
     ./programs/nushell.nix
+    ./programs/nu-scripts.nix
     ./programs/obs-studio.nix
     ./programs/octant.nix
     ./programs/offlineimap.nix
