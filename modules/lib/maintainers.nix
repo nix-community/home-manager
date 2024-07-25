@@ -581,4 +581,10 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  "1adept" = {
+    name = "1adept";
+    email = "69433209+1adept@users.noreply.github.com";
+    github = "1adept";
+    githubId = 69433209;
+  };
 }
