@@ -21,6 +21,10 @@ in {
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
+      description = ''
+      '';
+      example = literalExpression ''
+      '';
     };
   };
 
