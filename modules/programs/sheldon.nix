@@ -5,6 +5,7 @@ with lib;
 let
   cfg = config.programs.sheldon;
   tomlFormat = pkgs.formats.toml {};
+  cmd = "${config.home.profileDirectory}/bin/sheldon";
 in {
   meta.maintainers = pkgs.sheldon.meta.maintainers;
 
@@ -34,5 +35,13 @@ in {
     xdg.configFile."sheldon/plugins.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "sheldon-config" cfg.settings;
     };
+
+    programs.bash.initExtra = mkIf (cfg.settings != { }) ''
+        eval "$(sheldon source)"
+    '';
+
+    programs.zsh.initExtra = mkIf (cfg.settings != { }) ''
+        eval "$(sheldon source)"
+    '';
   };
 }
