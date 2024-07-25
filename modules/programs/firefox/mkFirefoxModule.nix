@@ -402,7 +402,7 @@ in {
             description = "Custom ${name} user chrome CSS.";
             example = ''
               /* Hide tab bar in FF Quantum */
-              @-moz-document url("chrome://browser/content/browser.xul") {
+              @-moz-document url(chrome://browser/content/browser.xul), url(chrome://browser/content/browser.xhtml) {
                 #TabsToolbar {
                   visibility: collapse !important;
                   margin-bottom: 21px !important;
