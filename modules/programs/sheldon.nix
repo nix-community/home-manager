@@ -4,9 +4,9 @@ with lib;
 
 let
   cfg = config.programs.sheldon;
-  tomlFormat = pkgs.formats.toml { };
+  tomlFormat = pkgs.formats.toml {};
 in {
-  inherit (pkgs.sheldon) meta;
+  meta.maintainers = pkgs.sheldon.meta.maintainers;
 
   options.programs.sheldon = {
     enable = mkEnableOption "sheldon";
