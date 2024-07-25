@@ -4,7 +4,7 @@ with lib;
 
 let
   cfg = config.programs.sheldon;
-  tomlFormat = pkgs.formats.toml {};
+  tomlFormat = pkgs.formats.toml { };
   cmd = "${config.home.profileDirectory}/bin/sheldon";
 in {
   meta.maintainers = pkgs.sheldon.meta.maintainers;
@@ -22,10 +22,8 @@ in {
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      description = ''
-      '';
-      example = literalExpression ''
-      '';
+      description = "";
+      example = literalExpression "";
     };
   };
 
@@ -37,11 +35,11 @@ in {
     };
 
     programs.bash.initExtra = mkIf (cfg.settings != { }) ''
-        eval "$(sheldon source)"
+      eval "$(sheldon source)"
     '';
 
     programs.zsh.initExtra = mkIf (cfg.settings != { }) ''
-        eval "$(sheldon source)"
+      eval "$(sheldon source)"
     '';
   };
 }
