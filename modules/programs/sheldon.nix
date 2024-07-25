@@ -25,7 +25,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.packages ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."sheldon/plugins.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "sheldon-config" cfg.settings;
