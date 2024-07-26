@@ -1,0 +1,60 @@
+shell = "zsh"
+[plugins]
+[plugins.add-zsh-hook]
+inline = "autoload -U add-zsh-hook"
+
+[plugins.anyframe]
+github = "mollifier/anyframe"
+
+[plugins.async]
+apply = ["defer"]
+local = "~/.config/sheldon/async"
+use = ["*.zsh"]
+
+[plugins.colors]
+inline = "autoload -U colors && zsh-defer colors"
+
+[plugins.compinit]
+inline = "autoload -U compinit && zsh-defer compinit -C"
+
+[plugins.fzf]
+github = "junegunn/fzf"
+
+[plugins.predict]
+inline = "autoload -U predict-on && predict-on"
+
+[plugins.starship]
+inline = "eval \"$(starship init zsh)\"\n"
+
+[plugins.sync]
+apply = ["source"]
+local = "~/.config/sheldon/sync"
+use = ["*.zsh"]
+
+[plugins.zcalc]
+inline = "autoload -U zcalc"
+
+[plugins.zsh-async]
+github = "mafredri/zsh-async"
+
+[plugins.zsh-complations]
+apply = ["defer"]
+github = "zsh-users/zsh-completions"
+
+[plugins.zsh-defer]
+apply = ["source"]
+github = "romkatv/zsh-defer"
+
+[plugins.zsh-history-substring-search]
+apply = ["defer"]
+github = "zsh-users/zsh-history-substring-search"
+
+[plugins.zsh-syntax-highlighting]
+apply = ["defer"]
+github = "zsh-users/zsh-syntax-highlighting"
+
+[plugins.zsh-terminfo]
+inline = "zmodload zsh/terminfo"
+
+[templates]
+defer = "{{ hooks | get: \"pre\" | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks | get: \"post\" | nl }}"
