@@ -71,6 +71,7 @@ in import nmtSrc {
     ./modules/programs/dircolors
     ./modules/programs/direnv
     ./modules/programs/emacs
+    ./modules/programs/eww
     ./modules/programs/fastfetch
     ./modules/programs/feh
     ./modules/programs/fish
