@@ -7,7 +7,7 @@ let
   tomlFormat = pkgs.formats.toml { };
   cmd = "${config.home.profileDirectory}/bin/sheldon";
 in {
-  meta.maintainers = pkgs.sheldon.meta.maintainers;
+  meta.maintainers = [ maintainers.Kyure-A ];
 
   options.programs.sheldon = {
     enable = mkEnableOption "sheldon";

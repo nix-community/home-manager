@@ -581,4 +581,11 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+
+  Kyure-A = {
+    name = "Kyure_A";
+    email = "k@kyre.moe";
+    github = "Kyure-A";
+    githubId = 49436968;
+  };
 }
