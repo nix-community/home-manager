@@ -67,7 +67,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.polykernel maintainers.league ];
+  meta.maintainers = [ hm.maintainers.polykernel maintainers.league ];
 
   imports = [
     (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [

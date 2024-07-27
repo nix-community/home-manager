@@ -432,6 +432,11 @@
     github = "podocarp";
     githubId = 10473184;
   };
+  polykernel = {
+    github = "polykernel";
+    githubId = 81340136;
+    name = "polykernel";
+  };
   mainrs = {
     name = "mainrs";
     email = "5113257+mainrs@users.noreply.github.com";
