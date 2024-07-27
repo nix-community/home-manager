@@ -473,6 +473,7 @@ import nmtSrc {
       ./modules/programs/wallust
       ./modules/programs/watson
       ./modules/programs/wezterm
+      ./modules/programs/wlr-which-key
       ./modules/programs/yazi
       ./modules/programs/zed-editor
       ./modules/programs/zellij
