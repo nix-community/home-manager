@@ -311,5 +311,5 @@ in {
     })
   ]);
 
-  meta.maintainers = [ maintainers.polykernel ];
+  meta.maintainers = [ lib.hm.maintainers.polykernel ];
 }
