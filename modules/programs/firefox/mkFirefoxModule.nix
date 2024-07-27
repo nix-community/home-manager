@@ -553,6 +553,7 @@ in {
                 inherit (args) config;
                 inherit lib pkgs;
                 appName = cfg.name;
+                package = cfg.finalPackage;
                 modulePath = modulePath ++ [ "profiles" name "search" ];
                 profilePath = config.path;
               });

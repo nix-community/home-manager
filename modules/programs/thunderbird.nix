@@ -232,6 +232,7 @@ in {
                     inherit (args) config;
                     inherit lib pkgs;
                     appName = "Thunderbird";
+                    package = cfg.package;
                     modulePath =
                       [ "programs" "thunderbird" "profiles" name "search" ];
                     profilePath = name;
