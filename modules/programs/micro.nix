@@ -15,12 +15,7 @@ in {
     programs.micro = {
       enable = mkEnableOption "micro, a terminal-based text editor";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.micro;
-        defaultText = literalExpression "pkgs.micro";
-        description = "micro package to use.";
-      };
+      package = mkPackageOption pkgs "micro" { };
 
       settings = mkOption {
         type = jsonFormat.type;
