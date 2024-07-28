@@ -18999,7 +18999,7 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>The Firefox package to use. If state version ≥ 19.09 then
+<p>The Firefox package to use. If state version ≥ 19.09 then
 this should be a wrapped Firefox package. For earlier state
 versions it should be an unwrapped Firefox package.
 Set to <code class="literal">null</code> to disable installing Firefox.</p>
@@ -19363,10 +19363,10 @@ string</p>
  </span>
 </dt>
 <dd>
-<p>Whether to force replace the existing containers
-configuration. This is recommended since Firefox will
-replace the symlink on every launch, but note that you’ll
-lose any existing configuration by enabling this.</p>
+<p>Whether to force replace the existing containers configuration.
+This is recommended since Firefox will replace the symlink on
+every launch, but note that you’ll lose any existing configuration
+by enabling this.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
@@ -19390,12 +19390,12 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>List of Firefox add-on packages to install for this profile.
+<p>List of ‹name› add-on packages to install for this profile.
 Some pre-packaged add-ons are accessible from the
 <a class="link" href="https://github.com/nix-community/NUR"  target="_top">Nix User Repository</a>.
 Once you have NUR installed run</p><pre><code class="programlisting console">$ nix-env -f &#x27;&lt;nixpkgs&gt;&#x27; -qaP -A nur.repos.rycee.firefox-addons
-</code></pre><p>to list the available Firefox add-ons.</p><p>Note that it is necessary to manually enable these extensions
-inside Firefox after the first installation.</p><p>To automatically enable extensions add
+</code></pre><p>to list the available ‹name› add-ons.</p><p>Note that it is necessary to manually enable these extensions
+inside ‹name› after the first installation.</p><p>To automatically enable extensions add
 <code class="literal">&quot;extensions.autoDisableScopes&quot; = 0;</code>
 to
 <a class="link" href="options.xhtml#opt-programs.firefox.profiles._name_.settings"  ><code class="option">programs.firefox.profiles.&lt;profile&gt;.settings</code></a></p>
@@ -19577,7 +19577,7 @@ null or string</p>
 <dd>
 <p>Attribute set of search engine configurations. Engines
 that only have <code class="varname">metaData</code> specified will
-be treated as builtin to Firefox.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177"  target="_top">SearchEngine.jsm</a>
+be treated as builtin to ‹name›.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177"  target="_top">SearchEngine.jsm</a>
 in Firefox’s source for available options. We maintain a
 mapping to let you specify all options in the referenced
 link without underscores, but it may fall out of date with
@@ -19635,7 +19635,7 @@ attribute set of attribute set of (JSON value)</p>
 </dt>
 <dd>
 <p>Whether to force replace the existing search
-configuration. This is recommended since Firefox will
+configuration. This is recommended since ‹name› will
 replace the symlink for the search configuration on every
 launch, but note that you’ll lose any existing
 configuration by enabling this.</p>
@@ -19721,12 +19721,12 @@ null or string</p>
  </span>
 </dt>
 <dd>
-<p>Attribute set of Firefox preferences.</p><p>Firefox only supports int, bool, and string types for
+<p>Attribute set of ‹name› preferences.</p><p>‹name› only supports int, bool, and string types for
 preferences, but home-manager will automatically
 convert all other JSON-compatible values into strings.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (Firefox preference (int, bool, string, and also attrs, list, float as a JSON string))</p>
+attribute set of (‹name› preference (int, bool, string, and also attrs, list, float as a JSON string))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -19762,7 +19762,7 @@ attribute set of (Firefox preference (int, bool, string, and also attrs, list, f
  </span>
 </dt>
 <dd>
-<p>Custom Firefox user chrome CSS.</p>
+<p>Custom ‹name› user chrome CSS.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 strings concatenated with “\n”</p>
@@ -19801,7 +19801,7 @@ strings concatenated with “\n”</p>
  </span>
 </dt>
 <dd>
-<p>Custom Firefox user content CSS.</p>
+<p>Custom ‹name› user content CSS.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 strings concatenated with “\n”</p>
