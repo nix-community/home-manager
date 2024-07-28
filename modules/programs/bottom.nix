@@ -56,5 +56,5 @@ in {
     };
   };
 
-  meta.maintainers = [ hm.maintainers.polykernel ];
+  meta.maintainers = [ ];
 }
