@@ -12,7 +12,7 @@
         "@np"
       ],
       "_isAppProvided": false,
-      "_loadPath": "[home-manager]/programs.firefox.profiles.searchWithoutDefault.search.engines.\"Nix Packages\"",
+      "_loadPath": "[home-manager]/programs.@name@.profiles.searchWithoutDefault.search.engines.\"Nix Packages\"",
       "_metaData": {
         "order": 2
       },
