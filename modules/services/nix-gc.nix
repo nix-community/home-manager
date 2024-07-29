@@ -110,6 +110,7 @@ in {
       systemd.user.services.nix-gc = {
         Unit = { Description = "Nix Garbage Collector"; };
         Service = {
+          Type = "oneshot";
           ExecStart = toString (pkgs.writeShellScript "nix-gc" ''
             exec "${nixPackage}/bin/nix-collect-garbage ${
               lib.optionalString (cfg.options != null) cfg.options
