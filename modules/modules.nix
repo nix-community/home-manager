@@ -92,6 +92,7 @@ let
     ./programs/feh.nix
     ./programs/firefox.nix
     ./programs/fish.nix
+    ./programs/floorp.nix
     ./programs/foot.nix
     ./programs/freetube.nix
     ./programs/fuzzel.nix
