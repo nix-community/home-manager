@@ -9,7 +9,7 @@ let
 
   iniFormat = pkgs.formats.ini { };
 in {
-  meta.maintainers = with maintainers; [ polykernel ];
+  meta.maintainers = [ ];
 
   options = {
     services.fnott = {

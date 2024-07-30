@@ -4,7 +4,7 @@
   nix.gc = {
     automatic = true;
     frequency = "monthly";
-    options = "--delete-older-than 30d";
+    options = "--delete-older-than 30d --max-freed $((64 * 1024**3))";
   };
 
   test.stubs.nix = { name = "nix"; };

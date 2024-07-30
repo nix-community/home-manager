@@ -14,7 +14,7 @@ let
     config.xdg.configHome;
 
 in {
-  meta.maintainers = [ maintainers.polykernel ];
+  meta.maintainers = [ ];
 
   options.programs.watson = {
     enable = mkEnableOption "watson, a wonderful CLI to track your time";

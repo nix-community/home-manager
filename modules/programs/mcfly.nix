@@ -5,6 +5,8 @@ let
 
   cfg = config.programs.mcfly;
 
+  tomlFormat = pkgs.formats.toml { };
+
   bashIntegration = ''
     eval "$(${getExe pkgs.mcfly} init bash)"
   '' + optionalString cfg.fzf.enable ''
@@ -39,6 +41,37 @@ in {
 
   options.programs.mcfly = {
     enable = mkEnableOption "mcfly";
+
+    settings = mkOption {
+      type = tomlFormat.type;
+      default = { };
+      example = literalExpression ''
+        {
+          colors = {
+            menubar = {
+              bg = "black";
+              fg = "red";
+            };
+            darkmode = {
+              prompt = "cyan";
+              timing = "yellow";
+              results_selection_fg = "cyan";
+              results_selection_bg = "black";
+              results_selection_hl = "red";
+            };
+          };
+        }
+      '';
+      description = ''
+        Settings written to {file}`~/.config/mcfly/config.toml`.
+
+        Note, if your McFly database is currently in {file}`~/.mcfly`,
+        then this option has no effect.
+        Move the database to {file}`$XDG_DATA_DIR/mcfly/history.db` and
+        remove {file}`~/.mcfly` to make the settings take effect. See
+        <https://github.com/cantino/mcfly#database-location>.
+      '';
+    };
 
     keyScheme = mkOption {
       type = types.enum [ "emacs" "vim" ];
@@ -104,6 +137,11 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [ pkgs.mcfly ] ++ optional cfg.fzf.enable pkgs.mcfly-fzf;
+
+      # Oddly enough, McFly expects this in the data path, not in config.
+      xdg.dataFile."mcfly/config.toml" = mkIf (cfg.settings != { }) {
+        source = tomlFormat.generate "mcfly-config.toml" cfg.settings;
+      };
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
