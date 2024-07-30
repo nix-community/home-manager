@@ -398,6 +398,22 @@ in
             {manpage}`zshzle(1)` for syntax.
           '';
         };
+
+        strategy = mkOption {
+          type = types.listOf (types.enum [ "history" "completion" "match_prev_cmd" ]);
+          default = [ "history" ];
+          description = ''
+            `ZSH_AUTOSUGGEST_STRATEGY` is an array that specifies how suggestions should be generated.
+            The strategies in the array are tried successively until a suggestion is found.
+            There are currently three built-in strategies to choose from:
+
+            - `history`: Chooses the most recent match from history.
+            - `completion`: Chooses a suggestion based on what tab-completion would suggest. (requires `zpty` module)
+            - `match_prev_cmd`: Like `history`, but chooses the most recent match whose preceding history item matches
+                the most recently executed command. Note that this strategy won't work as expected with ZSH options that
+                don't preserve the history order such as `HIST_IGNORE_ALL_DUPS` or `HIST_EXPIRE_DUPS_FIRST`.
+          '';
+        };
       };
 
       history = mkOption {
@@ -610,6 +626,7 @@ in
 
         (optionalString cfg.autosuggestion.enable ''
           source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+          ZSH_AUTOSUGGEST_STRATEGY=(${concatStringsSep " " cfg.autosuggestion.strategy})
         '')
         (optionalString (cfg.autosuggestion.enable && cfg.autosuggestion.highlight != null) ''
           ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="${cfg.autosuggestion.highlight}"
