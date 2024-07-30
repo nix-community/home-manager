@@ -46,28 +46,49 @@ in {
       source = tomlFormat.generate "sheldon-config" cfg.settings;
     };
 
-    programs.bash.initExtra = mkIf (cfg.settings != { }) ''
-      eval "$(sheldon source)"
-    '' + mkIf cfg.enableBashCompletions ''
-      if [[ $TERM != "dumb" ]]; then
-         eval "$(${cmd} completions --shell=bash)"
-      fi
-    '';
+    programs.bash.initExtra = concatStringsSep "\n" [
+      mkIf
+      (cfg.settings != { })
+      ''
+        eval "$(sheldon source)"
+      ''
+      mkIf
+      cfg.enableBashCompletions
+      ''
+        if [[ $TERM != "dumb" ]]; then
+           eval "$(${cmd} completions --shell=bash)"
+        fi
+      ''
+    ];
 
-    programs.zsh.initExtra = mkIf (cfg.settings != { }) ''
-      eval "$(sheldon source)"
-    '' + mkIf cfg.enableZshCompletions ''
-      if [[ $TERM != "dumb" ]]; then
-         eval "$(${cmd} completions --shell=zsh)"
-      fi
-    '';
+    programs.zsh.initExtra = concatStringsSep "\n" [
+      mkIf
+      (cfg.settings != { })
+      ''
+        eval "$(sheldon source)"
+      ''
+      mkIf
+      cfg.enableZshCompletions
+      ''
+        if [[ $TERM != "dumb" ]]; then
+           eval "$(${cmd} completions --shell=zsh)"
+        fi
+      ''
+    ];
 
-    programs.fish.interactiveShellInit = mkIf (cfg.settings != { }) ''
-      eval "$(sheldon source)"
-    '' + mkIf cfg.enableFishCompletions ''
-      if test "$TERM" != "dumb"
-         eval "$(${cmd} completions --shell=fish)"
-      end
-    '';
+    programs.fish.interactiveShellInit = concatStringsSep "\n" [
+      mkIf
+      (cfg.settings != { })
+      ''
+        eval "$(sheldon source)"
+      ''
+      mkIf
+      cfg.enableFishCompletions
+      ''
+        if test "$TERM" != "dumb"
+           eval "$(${cmd} completions --shell=fish)"
+        end
+      ''
+    ];
   };
 }
