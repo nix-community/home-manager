@@ -47,48 +47,36 @@ in {
     };
 
     programs.bash.initExtra = builtins.concatStringsSep "\n" [
-      mkIf
-      (cfg.settings != { })
-      ''
+      (mkIf (cfg.settings != { }) ''
         eval "$(sheldon source)"
-      ''
-      mkIf
-      cfg.enableBashCompletions
-      ''
+      '')
+      (mkIf cfg.enableBashCompletions ''
         if [[ $TERM != "dumb" ]]; then
            eval "$(${cmd} completions --shell=bash)"
         fi
-      ''
+      '')
     ];
 
     programs.zsh.initExtra = builtins.concatStringsSep "\n" [
-      mkIf
-      (cfg.settings != { })
-      ''
+      (mkIf (cfg.settings != { }) ''
         eval "$(sheldon source)"
-      ''
-      mkIf
-      cfg.enableZshCompletions
-      ''
+      '')
+      (mkIf cfg.enableZshCompletions ''
         if [[ $TERM != "dumb" ]]; then
            eval "$(${cmd} completions --shell=zsh)"
         fi
-      ''
+      '')
     ];
 
     programs.fish.interactiveShellInit = builtins.concatStringsSep "\n" [
-      mkIf
-      (cfg.settings != { })
-      ''
+      (mkIf (cfg.settings != { }) ''
         eval "$(sheldon source)"
-      ''
-      mkIf
-      cfg.enableFishCompletions
-      ''
+      '')
+      (mkIf cfg.enableFishCompletions ''
         if test "$TERM" != "dumb"
            eval "$(${cmd} completions --shell=fish)"
         end
-      ''
+      '')
     ];
   };
 }
