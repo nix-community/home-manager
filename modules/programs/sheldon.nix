@@ -27,15 +27,15 @@ in {
     };
 
     enableZshCompletions = mkEnableOption "Zsh completions" // {
-      default = false;
+      default = true;
     };
 
     enableBashCompletions = mkEnableOption "Bash completions" // {
-      default = false;
+      default = true;
     };
 
     enableFishCompletions = mkEnableOption "Fish completions" // {
-      default = false;
+      default = true;
     };
   };
 
