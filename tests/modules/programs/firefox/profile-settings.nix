@@ -9,6 +9,9 @@ let
 
   firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
 
+  userChromeExample = "#example-user-chrome { display: none; }";
+  userContentExample = "#example-user-content { display: none; }";
+
 in {
   imports = [ firefoxMockOverlay ];
 
@@ -154,12 +157,18 @@ in {
       id = 5;
       containers = {
         "shopping" = {
-          id = 6;
           icon = "circle";
           color = "yellow";
         };
       };
     };
+
+    profiles.userChrome = {
+      id = 6;
+      userChrome = userChromeExample;
+      userContent = userContentExample;
+    };
+
   } // {
 
     nmt.script = ''
@@ -172,10 +181,6 @@ in {
       assertFileContent \
         home-files/${cfg.configPath}/test/user.js \
         ${./profile-settings-expected-user.js}
-
-      assertFileContent \
-        home-files/${cfg.configPath}/containers/containers.json \
-        ${./profile-settings-expected-containers.json}
 
       bookmarksUserJs=$(normalizeStorePaths \
         home-files/${cfg.configPath}/bookmarks/user.js)
@@ -210,6 +215,22 @@ in {
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
         ${./profile-settings-expected-search-without-default.json}
+
+      assertFileContent \
+        home-files/${cfg.configPath}/containers/containers.json \
+        ${./profile-settings-expected-containers.json}
+
+      assertFileContains \
+        home-files/.mozilla/firefox/userChrome/user.js \
+        'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true)'
+
+      assertFileContains \
+        home-files/.mozilla/firefox/userChrome/chrome/userChrome.css \
+        '${userChromeExample}'
+
+      assertFileContains \
+        home-files/.mozilla/firefox/userChrome/chrome/userContent.css \
+        '${userContentExample}'
     '';
   });
 }
