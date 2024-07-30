@@ -46,7 +46,7 @@ in {
       source = tomlFormat.generate "sheldon-config" cfg.settings;
     };
 
-    programs.bash.initExtra = concatStringsSep "\n" [
+    programs.bash.initExtra = builtins.concatStringsSep "\n" [
       mkIf
       (cfg.settings != { })
       ''
@@ -61,7 +61,7 @@ in {
       ''
     ];
 
-    programs.zsh.initExtra = concatStringsSep "\n" [
+    programs.zsh.initExtra = builtins.concatStringsSep "\n" [
       mkIf
       (cfg.settings != { })
       ''
@@ -76,7 +76,7 @@ in {
       ''
     ];
 
-    programs.fish.interactiveShellInit = concatStringsSep "\n" [
+    programs.fish.interactiveShellInit = builtins.concatStringsSep "\n" [
       mkIf
       (cfg.settings != { })
       ''
