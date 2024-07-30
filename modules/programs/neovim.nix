@@ -65,8 +65,10 @@ let
   luaPackages = cfg.finalPackage.unwrapped.lua.pkgs;
   resolvedExtraLuaPackages = cfg.extraLuaPackages luaPackages;
 
-  extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ])
-    ''--suffix PATH : "${lib.makeBinPath cfg.extraPackages}"'';
+  extraMakeWrapperArgs = lib.optionalString (cfg.extraPackages != [ ]) ''
+    --suffix PATH : "${lib.makeBinPath cfg.extraPackages}"
+    --prefix PATH : "${lib.makeBinPath cfg.extraPrefixedPackages}"
+  '';
   extraMakeWrapperLuaCArgs =
     lib.optionalString (resolvedExtraLuaPackages != [ ]) ''
       --suffix LUA_CPATH ";" "${
@@ -298,7 +300,18 @@ in {
         type = with types; listOf package;
         default = [ ];
         example = literalExpression "[ pkgs.shfmt ]";
-        description = "Extra packages available to nvim.";
+        description = "Extra packages available to {command}`nvim`.";
+      };
+
+      extraPrefixedPackages = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExpression "[ pkgs.gcc ]";
+        description = ''
+          Extra packages available to {command}`nvim`. Packages are *prepended*
+          to the {env}`PATH` environment variable, whereas packages in
+          `extraPackages` are *appended*.
+        '';
       };
 
       plugins = mkOption {
