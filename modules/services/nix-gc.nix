@@ -111,10 +111,10 @@ in {
         Unit = { Description = "Nix Garbage Collector"; };
         Service = {
           Type = "oneshot";
-          ExecStart = toString (pkgs.writeShellScript "nix-gc" ''
-            exec "${nixPackage}/bin/nix-collect-garbage ${
+          ExecStart = toString (pkgs.writeShellScript "nix-gc"
+            "exec ${nixPackage}/bin/nix-collect-garbage ${
               lib.optionalString (cfg.options != null) cfg.options
-            }"'');
+            }");
         };
       };
       systemd.user.timers.nix-gc = {
