@@ -5,7 +5,7 @@ with lib;
 let
   cfg = config.programs.sheldon;
   tomlFormat = pkgs.formats.toml { };
-  cmd = "${config.home.profileDirectory}/bin/sheldon";
+  sheldonCmd = "${config.home.profileDirectory}/bin/sheldon";
 in {
   meta.maintainers = [ maintainers.Kyure-A ];
 
@@ -46,37 +46,37 @@ in {
       source = tomlFormat.generate "sheldon-config" cfg.settings;
     };
 
-    programs.bash.initExtra = builtins.concatStringsSep "\n" [
-      (mkIf (cfg.settings != { }) ''
+    programs.bash.initExtra = ''
+      ${optionalString (cfg.settings != { }) ''
         eval "$(sheldon source)"
-      '')
-      (mkIf cfg.enableBashCompletions ''
+      ''}
+      ${optionalString cfg.enableBashCompletions ''
         if [[ $TERM != "dumb" ]]; then
-           eval "$(${cmd} completions --shell=bash)"
+           eval "$(${sheldonCmd} completions --shell=bash)"
         fi
-      '')
-    ];
+      ''}
+    '';
 
-    programs.zsh.initExtra = builtins.concatStringsSep "\n" [
-      (mkIf (cfg.settings != { }) ''
+    programs.zsh.initExtra = ''
+      ${optionalString (cfg.settings != { }) ''
         eval "$(sheldon source)"
-      '')
-      (mkIf cfg.enableZshCompletions ''
+      ''}
+      ${optionalString cfg.enableZshCompletions ''
         if [[ $TERM != "dumb" ]]; then
-           eval "$(${cmd} completions --shell=zsh)"
+           eval "$(${sheldonCmd} completions --shell=zsh)"
         fi
-      '')
-    ];
+      ''}
+    '';
 
-    programs.fish.interactiveShellInit = builtins.concatStringsSep "\n" [
-      (mkIf (cfg.settings != { }) ''
+    programs.fish.interactiveShellInit = ''
+      ${optionalString (cfg.settings != { }) ''
         eval "$(sheldon source)"
-      '')
-      (mkIf cfg.enableFishCompletions ''
+      ''}
+      ${optionalString cfg.enableFishCompletions ''
         if test "$TERM" != "dumb"
-           eval "$(${cmd} completions --shell=fish)"
+           eval "$(${sheldonCmd} completions --shell=fish)"
         end
-      '')
-    ];
+      ''}
+    '';
   };
 }
