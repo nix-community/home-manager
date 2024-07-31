@@ -25,5 +25,16 @@
     timerFile=$(normalizeStorePaths $timerFile)
 
     assertFileContent $timerFile ${./expected.timer}
+
+    nixgcScriptFile=$(grep -o \
+      '/nix/store/.*-nix-gc' \
+      $TESTED/home-files/.config/systemd/user/nix-gc.service
+    )
+
+    assertFileExists $nixgcScriptFile
+
+    nixgcScriptFile=$(normalizeStorePaths $nixgcScriptFile)
+
+    assertFileContent $nixgcScriptFile ${./nix-gc-script-expected}
   '';
 }
