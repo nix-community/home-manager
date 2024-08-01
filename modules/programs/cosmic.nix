@@ -1,10 +1,8 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}: let
-  inherit (lib) filterAttrs concatStrings concatStringsSep mapAttrsToList concatLists foldlAttrs concatMapAttrs mapAttrs' nameValuePair boolToString;
+{ pkgs, lib, config, ... }:
+let
+  inherit (lib)
+    filterAttrs concatStrings concatStringsSep mapAttrsToList concatLists
+    foldlAttrs concatMapAttrs mapAttrs' nameValuePair boolToString;
   inherit (builtins) typeOf toString stringLength;
 
   # build up serialisation machinery from here for various types
@@ -13,24 +11,27 @@
   array = a: "[${concatStringsSep "," a}]";
   # attrset -> hashmap
   _assoc = a: mapAttrsToList (name: val: "${name}: ${val}") a;
-  assoc = a: ''    {
-        ${concatStringsSep ",\n" (concatLists (map _assoc a))}
+  assoc = a: ''
+    {
+        ${
+          concatStringsSep ''
+            ,
+          '' (concatLists (map _assoc a))
+        }
         }'';
   # attrset -> struct
   _struct_kv = k: v:
-    if v == null
-    then ""
-    else (concatStringsSep ":" [k (serialise.${typeOf v} v)]);
+    if v == null then
+      ""
+    else
+      (concatStringsSep ":" [ k (serialise.${typeOf v} v) ]);
   _struct_concat = s:
-    foldlAttrs (
-      acc: k: v:
-        if stringLength acc > 0
-        then concatStringsSep ", " [acc (_struct_kv k v)]
-        else _struct_kv k v
-    ) ""
-    s;
-  _struct_filt = s:
-    _struct_concat (filterAttrs (k: v: v != null) s);
+    foldlAttrs (acc: k: v:
+      if stringLength acc > 0 then
+        concatStringsSep ", " [ acc (_struct_kv k v) ]
+      else
+        _struct_kv k v) "" s;
+  _struct_filt = s: _struct_concat (filterAttrs (k: v: v != null) s);
   struct = s: "(${_struct_filt s})";
   toQuotedString = s: ''"${toString s}"'';
 
@@ -50,49 +51,42 @@
   defineBinding = binding:
     struct {
       inherit (binding) modifiers;
-      key =
-        if isNull binding.key
-        then null
-        else toQuotedString binding.key;
+      key = if isNull binding.key then null else toQuotedString binding.key;
     };
 
   # map keybinding from list of attrset to hashmap of (mod,key): action
   _mapBindings = bindings:
-    map (
-      inner: {"${defineBinding inner}" = maybeToString (checkAction inner.action);}
-    )
-    bindings;
-  mapBindings = bindings:
-    assoc (_mapBindings bindings);
+    map (inner: {
+      "${defineBinding inner}" = maybeToString (checkAction inner.action);
+    }) bindings;
+  mapBindings = bindings: assoc (_mapBindings bindings);
 
   # check a keybinding's action
   # escape with quotes if it's a Spawn action
   checkAction = a:
-    if typeOf a == "set" && a.type == "Spawn"
-    then {
+    if typeOf a == "set" && a.type == "Spawn" then {
       inherit (a) type;
       data = toQuotedString a.data;
-    }
-    else a;
+    } else
+      a;
 
   maybeToString = s:
-    if typeOf s == "set"
-    then concatStrings [s.type "(" (toString s.data) ")"]
-    else s;
+    if typeOf s == "set" then
+      concatStrings [ s.type "(" (toString s.data) ")" ]
+    else
+      s;
 
   mapCosmicSettings = application: options:
     mapAttrs' (k: v:
       nameValuePair "cosmic/${application}/v${options.version}/${k}" {
         enable = true;
         text = serialise.${typeOf v} v;
-      })
-    options.option;
+      }) options.option;
 
   cfg = config.programs.cosmic;
 in {
   options.programs.cosmic = {
-    enable = with lib;
-      mkEnableOption "COSMIC DE";
+    enable = with lib; mkEnableOption "COSMIC DE";
 
     defaultKeybindings = with lib;
       mkOption {
@@ -103,13 +97,13 @@ in {
 
     keybindings = with lib;
       mkOption {
-        default = [];
+        default = [ ];
         type = with types;
           listOf (submodule {
             options = {
               modifiers = mkOption {
                 type = listOf str;
-                default = [];
+                default = [ ];
               };
               key = mkOption {
                 type = nullOr str;
@@ -118,11 +112,9 @@ in {
               action = mkOption {
                 type = either str (submodule {
                   options = {
-                    type = mkOption {
-                      type = str;
-                    };
+                    type = mkOption { type = str; };
                     data = mkOption {
-                      type = oneOf [str int];
+                      type = oneOf [ str int ];
                       default = "";
                     };
                   };
@@ -164,7 +156,7 @@ in {
 
     settings = with lib;
       mkOption {
-        default = {};
+        default = { };
         type = with types;
           attrsOf (submodule {
             options = {
@@ -172,9 +164,7 @@ in {
                 type = str;
                 default = "1";
               };
-              option = mkOption {
-                type = attrsOf anything;
-              };
+              option = mkOption { type = attrsOf anything; };
             };
           });
         description = ''
@@ -191,20 +181,18 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [(hm.assertions.assertPlatform "programs.cosmic" pkgs platforms.linux)];
+    assertions =
+      [ (hm.assertions.assertPlatform "programs.cosmic" pkgs platforms.linux) ];
 
-    xdg.configFile =
-      {
-        "cosmic/com.system76.CosmicSettings.Shortcuts/v1/custom".text = mapBindings cfg.keybindings;
-        "cosmic/com.system76.CosmicSettings.Shortcuts/v1/defaults" = {
-          text = "{}";
-          enable = !cfg.defaultKeybindings;
-        };
-      }
-      // concatMapAttrs (
-        application: options:
-          mapCosmicSettings application options
-      )
+    xdg.configFile = {
+      "cosmic/com.system76.CosmicSettings.Shortcuts/v1/custom".text =
+        mapBindings cfg.keybindings;
+      "cosmic/com.system76.CosmicSettings.Shortcuts/v1/defaults" = {
+        text = "{}";
+        enable = !cfg.defaultKeybindings;
+      };
+    } // concatMapAttrs
+      (application: options: mapCosmicSettings application options)
       config.programs.cosmic.settings;
   };
 }
