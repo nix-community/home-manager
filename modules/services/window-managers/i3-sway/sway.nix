@@ -269,7 +269,9 @@ let
     checkPhase = lib.optionalString cfg.checkConfig ''
       export DBUS_SESSION_BUS_ADDRESS=/dev/null
       export XDG_RUNTIME_DIR=$(mktemp -d)
-      ${pkgs.xvfb-run}/bin/xvfb-run ${swayPackage}/bin/sway --config "$target" --validate --unsupported-gpu
+      cp "$target" sway.conf
+      ${cfg.preCheckConfig}
+      ${pkgs.xvfb-run}/bin/xvfb-run ${swayPackage}/bin/sway --config sway.conf --validate --unsupported-gpu
     '';
 
     text = concatStringsSep "\n"
@@ -481,6 +483,22 @@ in {
       type = types.nullOr configModule;
       default = { };
       description = "Sway configuration options.";
+    };
+
+    preCheckConfig = mkOption {
+      type = types.lines;
+      default = "";
+      example = ''
+        sed 's/foo/bar/g' -i sway.conf
+        export HOME=$(mktemp -d)
+        touch ~/background.png
+      '';
+      description = ''
+        Script to run before running `sway --validate` on the generated config
+        file. The config file is available as `sway.conf`, and can be
+        manipulated without affecting the build output. Only used if
+        `checkConfig = true`.
+      '';
     };
 
     checkConfig = mkOption {
