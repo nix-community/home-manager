@@ -85,6 +85,7 @@ let
 
   cfg = config.programs.cosmic;
 in {
+  meta.maintainers = [ hm.maintainers.atagen ];
   options.programs.cosmic = {
     enable = with lib; mkEnableOption "COSMIC DE";
 
@@ -181,18 +182,15 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "programs.cosmic" pkgs platforms.linux) ];
-
     xdg.configFile = {
       "cosmic/com.system76.CosmicSettings.Shortcuts/v1/custom".text =
-        mapBindings cfg.keybindings;
+        (lib.mkIf cfg.keybindings != [ ]) mapBindings cfg.keybindings;
       "cosmic/com.system76.CosmicSettings.Shortcuts/v1/defaults" = {
         text = "{}";
         enable = !cfg.defaultKeybindings;
       };
     } // concatMapAttrs
       (application: options: mapCosmicSettings application options)
-      config.programs.cosmic.settings;
+      cfg.settings;
   };
 }
