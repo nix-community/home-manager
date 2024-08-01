@@ -5,7 +5,7 @@ with lib;
 
 let
 
-  firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
+  firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 
 in {
   imports = [ firefoxMockOverlay ];
