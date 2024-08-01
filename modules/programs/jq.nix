@@ -22,6 +22,7 @@ let
       strings = colorType;
       arrays = colorType;
       objects = colorType;
+      objectKeys = colorType;
     };
   };
 
@@ -41,19 +42,20 @@ in {
         description = ''
           The colors used in colored JSON output.
 
-          See the [Colors section](https://jqlang.github.io/jq/manual/#Colors)
+          See the [Colors section](https://jqlang.github.io/jq/manual/#colors)
           of the jq manual.
         '';
 
         example = literalExpression ''
           {
-            null    = "1;30";
-            false   = "0;31";
-            true    = "0;32";
-            numbers = "0;36";
-            strings = "0;33";
-            arrays  = "1;35";
-            objects = "1;37";
+            null       = "1;30";
+            false      = "0;31";
+            true       = "0;32";
+            numbers    = "0;36";
+            strings    = "0;33";
+            arrays     = "1;35";
+            objects    = "1;37";
+            objectKeys = "1;34";
           }
         '';
 
@@ -65,6 +67,7 @@ in {
           strings = "0;32";
           arrays = "1;37";
           objects = "1;37";
+          objectKeys = "1;34";
         };
 
         type = colorsType;
@@ -78,7 +81,7 @@ in {
     home.sessionVariables = let c = cfg.colors;
     in {
       JQ_COLORS =
-        "${c.null}:${c.false}:${c.true}:${c.numbers}:${c.strings}:${c.arrays}:${c.objects}";
+        "${c.null}:${c.false}:${c.true}:${c.numbers}:${c.strings}:${c.arrays}:${c.objects}:${c.objectKeys}";
     };
   };
 }
