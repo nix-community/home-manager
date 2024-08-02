@@ -274,7 +274,7 @@ in {
 
       shell = mkOption {
         default = defaultShell;
-        example = "\${pkgs.zsh}/bin/zsh";
+        example = "/${pkgs.zsh}/bin/zsh";
         type = with types; nullOr str;
         description = "Set the default-shell tmux variable.";
       };
