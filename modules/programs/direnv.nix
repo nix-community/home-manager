@@ -8,7 +8,8 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
-in {
+in
+{
   imports = [
     (mkRenamedOptionModule [
       "programs"
@@ -88,9 +89,14 @@ in {
     };
 
     nix-direnv = {
-      enable = mkEnableOption ''
-        [nix-direnv](https://github.com/nix-community/nix-direnv),
-        a fast, persistent use_nix implementation for direnv'';
+      enable = mkOption {
+        default = true;
+        type = types.bool;
+        description = ''
+          [nix-direnv](https://github.com/nix-community/nix-direnv),
+          a fast, persistent use_nix implementation for direnv
+        '';
+      };
 
       package = mkPackageOption pkgs "nix-direnv" { };
     };
