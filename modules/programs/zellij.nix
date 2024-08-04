@@ -28,8 +28,37 @@ in {
       default = { };
       example = literalExpression ''
         {
-          theme = "custom";
-          themes.custom.fg = "#ffffff";
+          default_layout = "compact";
+          keybinds = {
+            _props = {
+              clear-defaults = true;
+            };
+            normal = {
+              _props = {
+                clear-defaults = true;
+              };
+              "bind \"Alt /\"" = {
+                NewPane = "Right";
+                SwitchToMode = "Normal";
+              };
+              "bind \"Alt \\\\\"" = {
+                NewPane = "Down";
+                SwitchToMode = "Normal";
+              };
+              "bind \"Ctrl h\"" = {
+                MoveFocusOrTab = "Left";
+              };
+              "bind \"Ctrl l\"" = {
+                MoveFocusOrTab = "Right";
+              };
+              "bind \"Ctrl j\"" = {
+                MoveFocus = "Down";
+              };
+              "bind \"Ctrl k\"" = {
+                MoveFocus = "Up";
+              };
+            };
+          };
         }
       '';
       description = ''
