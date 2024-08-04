@@ -58,6 +58,8 @@ in {
 
     package = lib.mkPackageOption pkgs "hyprland" { };
 
+    portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" { };
+
     finalPackage = lib.mkOption {
       type = lib.types.package;
       readOnly = true;
@@ -66,6 +68,18 @@ in {
         "`wayland.windowManager.hyprland.package` with applied configuration";
       description = ''
         The Hyprland package after applying configuration.
+      '';
+    };
+
+    finalPortalPackage = lib.mkOption {
+      type = lib.types.package;
+      readOnly = true;
+      default = cfg.portalPackage.override { hyprland = cfg.finalPackage; };
+      defaultText = lib.literalMD ''
+        `wayland.windowManager.hyprland.portalPackage` with
+                `wayland.windowManager.hyprland.finalPackage` override'';
+      description = ''
+        The xdg-desktop-portal-hyprland package after overriding its hyprland input.
       '';
     };
 
@@ -262,6 +276,12 @@ in {
           fi
         )
       '';
+    };
+
+    xdg.portal = {
+      enable = true;
+      extraPortals = [ cfg.finalPortalPackage ];
+      configPackages = lib.mkDefault [ cfg.finalPackage ];
     };
 
     systemd.user.targets.hyprland-session = lib.mkIf cfg.systemd.enable {
