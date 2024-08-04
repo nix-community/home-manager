@@ -51,6 +51,8 @@
         extraConfig = ''
           user_pref("mail.html_compose", false);
         '';
+
+        feedAccounts.rss = { };
       };
 
       second.settings = { "second.setting" = "some-test-setting"; };
