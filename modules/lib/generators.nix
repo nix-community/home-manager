@@ -221,7 +221,7 @@
         lib.throwIf (name == "") "Directive must not be empty"
         (let vType = typeOf value;
         in if elem vType [ "int" "float" "bool" "string" ] then
-          "${name} ${literalValueToString value}"
+          "${name} ${literalValueToString value};"
         else if vType == "set" then
           convertAttrsToSCFG name value
         else if vType == "list" then
