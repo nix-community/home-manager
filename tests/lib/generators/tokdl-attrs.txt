@@ -1,0 +1,8 @@
+resize {
+	bind "k" "Up" {
+		Resize "Increase Up"
+	}
+	bind "j" "Down" {
+		Resize "Increase Down"
+	}
+}
