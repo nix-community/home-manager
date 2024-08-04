@@ -27,8 +27,8 @@ in {
         manifest.url =
           "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
         roots = [ ];
-        backup.path = "~/.local/state/backups/ludusavi";
-        restore.path = "~/.local/state/backups/ludusavi";
+        backup.path = "$XDG_STATE_HOME/backups/ludusavi";
+        restore.path = "$XDG_STATE_HOME/backups/ludusavi";
       };
       example = {
         language = "en-US";
