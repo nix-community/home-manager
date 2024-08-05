@@ -65,9 +65,8 @@ in {
       };
 
       configFile = mkOption {
-        type = with types; either str path;
-        default = "${config.xdg.configHome}/dunst/dunstrc";
-        defaultText = "$XDG_CONFIG_HOME/dunst/dunstrc";
+        type = with types; nullOr (either str path);
+        default = null;
         description = ''
           Path to the configuration file read by dunst.
 
@@ -170,7 +169,7 @@ in {
           "stock"
         ];
 
-        mkPath = { basePath, theme, category }:
+        mkPath = { basePath, theme, category, }:
           "${basePath}/share/icons/${theme.name}/${theme.size}/${category}";
       in concatMapStringsSep ":" mkPath (cartesianProduct {
         basePath = basePaths;
@@ -188,7 +187,9 @@ in {
         Service = {
           Type = "dbus";
           BusName = "org.freedesktop.Notifications";
-          ExecStart = "${cfg.package}/bin/dunst -config ${cfg.configFile}";
+          ExecStart = escapeShellArgs ([ "${cfg.package}/bin/dunst" ] ++
+            # Using `-config` breaks dunst's drop-ins, so only use it when an alternative path is set
+            optionals (cfg.configFile != null) [ "-config" cfg.configFile ]);
           Environment = optionalString (cfg.waylandDisplay != "")
             "WAYLAND_DISPLAY=${cfg.waylandDisplay}";
         };
