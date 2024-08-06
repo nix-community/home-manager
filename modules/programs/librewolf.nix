@@ -37,6 +37,8 @@ in {
         vendorPath = "Library/Application Support/LibreWolf";
         configPath = "Library/Application Support/LibreWolf";
       };
+
+      enableBookmarks = false;
     })
   ];
 
