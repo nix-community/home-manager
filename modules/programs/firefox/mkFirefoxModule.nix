@@ -1,5 +1,6 @@
 { modulePath, name, description ? null, wrappedPackageName ? null
-, unwrappedPackageName ? null, platforms, visible ? false }:
+, unwrappedPackageName ? null, platforms, visible ? false
+, enableBookmarks ? true }:
 
 { config, lib, pkgs, ... }:
 
@@ -435,6 +436,7 @@ in {
           };
 
           bookmarks = mkOption {
+            internal = !enableBookmarks;
             type = let
               bookmarkSubmodule = types.submodule ({ config, name, ... }: {
                 options = {
