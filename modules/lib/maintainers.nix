@@ -587,4 +587,10 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  svl = {
+    matrix = "@gyn:matrix.org";
+    github = "4lxs";
+    githubId = 66408983;
+    name = "svl";
+  };
 }
