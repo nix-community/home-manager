@@ -1,0 +1,19 @@
+{
+  "autoUpdate": false,
+  "autoUpdateNotification": false,
+  "disableMinSize": true,
+  "enabledThemes": [
+    "theme.css"
+  ],
+  "notifyAboutUpdates": false,
+  "plugins": {
+    "FakeNitro": {
+      "enabled": true
+    },
+    "MessageLogger": {
+      "enabled": true,
+      "ignoreSelf": true
+    }
+  },
+  "useQuickCss": true
+}
