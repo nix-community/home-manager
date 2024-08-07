@@ -26,7 +26,9 @@ in {
             };
           };
           display = {
-            binaryPrefix = "si";
+            size = {
+              binaryPrefix = "si";
+            };
             color = "blue";
             separator = "  ";
           };
