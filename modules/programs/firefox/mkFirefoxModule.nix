@@ -397,7 +397,7 @@ in {
           };
 
           userChrome = mkOption {
-            type = types.lines;
+            type = types.oneOf [ types.lines types.path ];
             default = "";
             description = "Custom ${name} user chrome CSS.";
             example = ''
@@ -416,7 +416,7 @@ in {
           };
 
           userContent = mkOption {
-            type = types.lines;
+            type = types.oneOf [ types.lines types.path ];
             default = "";
             description = "Custom ${name} user content CSS.";
             example = ''
@@ -836,10 +836,16 @@ in {
       "${profilesPath}/${profile.path}/.keep".text = "";
 
       "${profilesPath}/${profile.path}/chrome/userChrome.css" =
-        mkIf (profile.userChrome != "") { text = profile.userChrome; };
+        mkIf (profile.userChrome != "") (let
+          key =
+            if builtins.isString profile.userChrome then "text" else "source";
+        in { "${key}" = profile.userChrome; });
 
       "${profilesPath}/${profile.path}/chrome/userContent.css" =
-        mkIf (profile.userContent != "") { text = profile.userContent; };
+        mkIf (profile.userContent != "") (let
+          key =
+            if builtins.isString profile.userContent then "text" else "source";
+        in { "${key}" = profile.userContent; });
 
       "${profilesPath}/${profile.path}/user.js" = mkIf (profile.settings != { }
         || profile.extraConfig != "" || profile.bookmarks != [ ]) {
