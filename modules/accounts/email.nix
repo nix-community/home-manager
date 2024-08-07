@@ -509,6 +509,13 @@ in {
       default = { };
       description = "List of email accounts.";
     };
+
+    order = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description =
+        "Order of email accounts from [](#opt-accounts.email.accounts).";
+    };
   };
 
   config = mkIf (cfg.accounts != { }) {
