@@ -1703,6 +1703,14 @@ in {
           one place. See https://github.com/glanceapp/glance for more.
         '';
       }
+
+      {
+        time = "2024-04-23T18:50:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.nh'.
+        '';
+      }
     ];
   };
 }
