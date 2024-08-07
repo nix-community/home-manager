@@ -587,4 +587,10 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  atagen = {
+    name = "atagen";
+    email = "boss@atagen.co";
+    github = "atagen";
+    githubId = 11548989;
+  };
 }
