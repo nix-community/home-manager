@@ -1,0 +1,10 @@
+resize {
+	bind {
+		- "k" "Up" {
+			Resize "Increase Up"
+		}
+		- "j" "Down" {
+			Resize "Increase Down"
+		}
+	}
+}

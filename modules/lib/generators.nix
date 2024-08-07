@@ -111,10 +111,8 @@
         in "${name} ${concatStringsSep " " flatElements}";
 
       # String -> ListOf Anything -> String
-      convertListOfNonFlatAttrsToKDL = name: list: ''
-        ${name} {
-        ${indentStrings (map (x: convertAttributeToKDL "-" x) list)}
-        }'';
+      convertListOfNonFlatAttrsToKDL = name: list:
+        "${concatStringsSep "\n" (map (x: convertAttributeToKDL name x) list)}";
 
       # String -> ListOf Anything  -> String
       convertListToKDL = name: list:
