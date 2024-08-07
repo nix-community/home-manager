@@ -523,8 +523,16 @@ in {
             set -l plugin_dir ${plugin.src}
 
             # Set paths to import plugin components
+            if test -d $plugin_dir/share/fish/vendor_functions.d
+              set fish_function_path $fish_function_path[1] $plugin_dir/share/fish/vendor_functions.d $fish_function_path[2..-1]
+            end
+
             if test -d $plugin_dir/functions
               set fish_function_path $fish_function_path[1] $plugin_dir/functions $fish_function_path[2..-1]
+            end
+
+            if test -d $plugin_dir/share/fish/vendor_completions.d
+              set fish_complete_path $fish_complete_path[1] $plugin_dir/share/fish/vendor_completions.d $fish_complete_path[2..-1]
             end
 
             if test -d $plugin_dir/completions
@@ -532,6 +540,12 @@ in {
             end
 
             # Source initialization code if it exists.
+            if test -d $plugin_dir/share/fish/vendor_conf.d
+              for f in $plugin_dir/share/fish/vendor_conf.d/*.fish
+                source $f
+              end
+            end
+
             if test -d $plugin_dir/conf.d
               for f in $plugin_dir/conf.d/*.fish
                 source $f
