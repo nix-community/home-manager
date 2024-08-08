@@ -176,14 +176,14 @@ in {
         home-path/bin/${cfg.wrappedPackageName} \
         MOZ_APP_LAUNCHER
 
-      assertDirectoryExists home-files/${cfg.configPath}/basic
+      assertDirectoryExists home-files/${cfg.profilesPath}/basic
 
       assertFileContent \
-        home-files/${cfg.configPath}/test/user.js \
+        home-files/${cfg.profilesPath}/test/user.js \
         ${./profile-settings-expected-user.js}
 
       bookmarksUserJs=$(normalizeStorePaths \
-        home-files/${cfg.configPath}/bookmarks/user.js)
+        home-files/${cfg.profilesPath}/bookmarks/user.js)
 
       assertFileContent \
         $bookmarksUserJs \
@@ -191,7 +191,7 @@ in {
 
       bookmarksFile="$(sed -n \
         '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \
-        $TESTED/home-files/${cfg.configPath}/bookmarks/user.js)"
+        $TESTED/home-files/${cfg.profilesPath}/bookmarks/user.js)"
 
       assertFileContent \
         $bookmarksFile \
@@ -209,27 +209,27 @@ in {
       }
 
       assertFirefoxSearchContent \
-        home-files/${cfg.configPath}/search/search.json.mozlz4 \
+        home-files/${cfg.profilesPath}/search/search.json.mozlz4 \
         ${./profile-settings-expected-search.json}
 
       assertFirefoxSearchContent \
-        home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
+        home-files/${cfg.profilesPath}/searchWithoutDefault/search.json.mozlz4 \
         ${./profile-settings-expected-search-without-default.json}
 
       assertFileContent \
-        home-files/${cfg.configPath}/containers/containers.json \
+        home-files/${cfg.profilesPath}/containers/containers.json \
         ${./profile-settings-expected-containers.json}
 
       assertFileContains \
-        home-files/.mozilla/firefox/userChrome/user.js \
+        home-files/${cfg.profilesPath}/userChrome/user.js \
         'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true)'
 
       assertFileContains \
-        home-files/.mozilla/firefox/userChrome/chrome/userChrome.css \
+        home-files/${cfg.profilesPath}/userChrome/chrome/userChrome.css \
         '${userChromeExample}'
 
       assertFileContains \
-        home-files/.mozilla/firefox/userChrome/chrome/userContent.css \
+        home-files/${cfg.profilesPath}/userChrome/chrome/userContent.css \
         '${userContentExample}'
     '';
   });
