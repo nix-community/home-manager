@@ -6,4 +6,5 @@
   xdg-default-locations = ./default-locations.nix;
   xdg-user-dirs-null = ./user-dirs-null.nix;
   xdg-portal = ./portal.nix;
+  xdg-autostart = ./autostart.nix;
 }
