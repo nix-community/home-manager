@@ -20,4 +20,5 @@ rec {
   nixos = import ./nixos;
 
   path = ./.;
+  lib = import ./lib { inherit (pkgs) lib; };
 }
