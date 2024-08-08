@@ -28,9 +28,6 @@ let
   else
     unwrappedPackageName;
 
-  profilesPath =
-    if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
-
   nativeMessagingHostsPath = if isDarwin then
     "${cfg.vendorPath}/NativeMessagingHosts"
   else
@@ -310,6 +307,15 @@ in {
         if isDarwin then darwin.configPath else linux.configPath;
       example = ".mozilla/firefox";
       description = "Directory containing the ${name} configuration files.";
+    };
+
+    profilesPath = mkOption {
+      internal = true;
+      type = types.str;
+      default =
+        if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
+      example = ".mozilla/firefox";
+      description = "Directory containing the ${name} profiles.";
     };
 
     nativeMessagingHosts = optionalAttrs (cfg.vendorPath != null) (mkOption {
@@ -746,6 +752,13 @@ in {
           };
 
         };
+
+        config = let profile = config;
+        in {
+          settings."toolkit.legacyUserProfileCustomizations.stylesheets" =
+            mkIf (profile.userChrome != "" || profile.userContent != "") true;
+        };
+
       }));
       default = { };
       description = "Attribute set of ${name} profiles.";
@@ -801,7 +814,28 @@ in {
       }
 
       (mkNoDuplicateAssertion cfg.profiles "profile")
-    ] ++ (mapAttrsToList
+    ] ++ (
+
+      # Assert "toolkit.legacyUserProfileCustomizations.stylesheets" is enabled
+      # if userChrome/userContent is used.
+      let
+
+        assertProfile = userChromeAttr: profile:
+          profile.${userChromeAttr} != ""
+          -> (profile.settings."toolkit.legacyUserProfileCustomizations.stylesheets"
+            != false);
+
+        mkAssertion = userChromeAttr: {
+          assertion =
+            all (assertProfile userChromeAttr) (attrValues cfg.profiles);
+          message = ''
+            `${userChromeAttr}` won't work with `settings."toolkit.legacyUserProfileCustomizations.stylesheets"` set to false.
+          '';
+        };
+
+      in [ (mkAssertion "userChrome") (mkAssertion "userContent") ]
+
+    ) ++ (mapAttrsToList
       (_: profile: mkNoDuplicateAssertion profile.containers "container")
       cfg.profiles);
 
@@ -833,27 +867,27 @@ in {
         recursive = true;
       };
     } ++ flip mapAttrsToList cfg.profiles (_: profile: {
-      "${profilesPath}/${profile.path}/.keep".text = "";
+      "${cfg.profilesPath}/${profile.path}/.keep".text = "";
 
-      "${profilesPath}/${profile.path}/chrome/userChrome.css" =
+      "${cfg.profilesPath}/${profile.path}/chrome/userChrome.css" =
         mkIf (profile.userChrome != "") { text = profile.userChrome; };
 
-      "${profilesPath}/${profile.path}/chrome/userContent.css" =
+      "${cfg.profilesPath}/${profile.path}/chrome/userContent.css" =
         mkIf (profile.userContent != "") { text = profile.userContent; };
 
-      "${profilesPath}/${profile.path}/user.js" = mkIf (profile.settings != { }
-        || profile.extraConfig != "" || profile.bookmarks != [ ]) {
+      "${cfg.profilesPath}/${profile.path}/user.js" = mkIf (profile.settings
+        != { } || profile.extraConfig != "" || profile.bookmarks != [ ]) {
           text =
             mkUserJs profile.settings profile.extraConfig profile.bookmarks;
         };
 
-      "${profilesPath}/${profile.path}/containers.json" =
+      "${cfg.profilesPath}/${profile.path}/containers.json" =
         mkIf (profile.containers != { }) {
           text = mkContainersJson profile.containers;
           force = profile.containersForce;
         };
 
-      "${profilesPath}/${profile.path}/search.json.mozlz4" = mkIf
+      "${cfg.profilesPath}/${profile.path}/search.json.mozlz4" = mkIf
         (profile.search.default != null || profile.search.privateDefault != null
           || profile.search.order != [ ] || profile.search.engines != { }) {
             force = profile.search.force;
@@ -1000,7 +1034,7 @@ in {
             '';
           };
 
-      "${profilesPath}/${profile.path}/extensions" =
+      "${cfg.profilesPath}/${profile.path}/extensions" =
         mkIf (profile.extensions != [ ]) {
           source = let
             extensionsEnvPkg = pkgs.buildEnv {
