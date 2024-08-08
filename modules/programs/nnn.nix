@@ -104,6 +104,20 @@ in {
         '';
         default = { };
       };
+
+      enableBashIntegration = mkEnableOption "Bash integration" // {
+        default = true;
+      };
+
+      enableZshIntegration = mkEnableOption "Zsh integration" // {
+        default = true;
+      };
+
+      enableFishIntegration = mkEnableOption "Fish integration" // {
+        default = true;
+      };
+
+      quitcd = mkEnableOption "cd on quit" // { default = false; };
     };
   };
 
@@ -120,10 +134,23 @@ in {
           --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}"
       '';
     });
+
+    quitcd = {
+      bash_sh_zsh =
+        builtins.readFile "${nnnPackage}/share/quitcd/quitcd.bash_sh_zsh";
+      fish = builtins.readFile "${nnnPackage}/share/quitcd/quitcd.fish";
+    };
   in mkIf cfg.enable {
     programs.nnn.finalPackage = nnnPackage;
     home.packages = [ nnnPackage ];
     xdg.configFile."nnn/plugins" =
       mkIf (cfg.plugins.src != null) { source = cfg.plugins.src; };
+
+    programs.bash.initExtra = mkIf (cfg.enableBashIntegration && cfg.quitcd)
+      (mkAfter quitcd.bash_sh_zsh);
+    programs.zsh.initExtra = mkIf (cfg.enableZshIntegration && cfg.quitcd)
+      (mkAfter quitcd.bash_sh_zsh);
+    programs.fish.interactiveShellInit =
+      mkIf (cfg.enableFishIntegration && cfg.quitcd) (mkAfter quitcd.fish);
   };
 }
