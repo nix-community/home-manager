@@ -9,8 +9,10 @@ let
 
   homedir = config.programs.gpg.homedir;
 
+  gpgConnectAgentOpts = optionalString cfg.quietShellIntegration "--quiet";
+
   gpgSshSupportStr = ''
-    ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
+    ${gpgPkg}/bin/gpg-connect-agent ${gpgConnectAgentOpts} updatestartuptty /bye > /dev/null
   '';
 
   gpgInitStr = ''
@@ -25,7 +27,7 @@ let
   gpgNushellInitStr = ''
     $env.GPG_TTY = (tty)
   '' + optionalString cfg.enableSshSupport ''
-    ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye | ignore
+    ${gpgPkg}/bin/gpg-connect-agent ${gpgConnectAgentOpts} updatestartuptty /bye | ignore
 
     $env.SSH_AUTH_SOCK = ($env.SSH_AUTH_SOCK? | default (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket))
   '';
@@ -228,6 +230,14 @@ in {
 
       enableNushellIntegration = mkEnableOption "Nushell integration" // {
         default = true;
+      };
+
+      quietShellIntegration = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to pass the `--quiet` flag to gpg-connect-agent.
+        '';
       };
     };
   };
