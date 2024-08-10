@@ -7,7 +7,7 @@ let
   cfg = config.services.volnoti;
 
 in {
-  meta.maintainers = [ maintainers.imalison ];
+  meta.maintainers = with maintainers; [ imalison tomodachi94 ];
 
   options = {
     services.volnoti = {
