@@ -287,6 +287,7 @@ in import nmtSrc {
     ./modules/services/trayscale
     ./modules/services/twmn
     ./modules/services/udiskie
+    ./modules/services/volnoti
     ./modules/services/window-managers/bspwm
     ./modules/services/window-managers/herbstluftwm
     ./modules/services/window-managers/hyprland

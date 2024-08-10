@@ -37,7 +37,7 @@ in {
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
 
-      Service = { ExecStart = "${pkgs.volnoti}/bin/volnoti -v -n"; };
+      Service = { ExecStart = "${lib.getExe cfg.package} -v -n"; };
     };
   };
 }
