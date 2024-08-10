@@ -61,8 +61,7 @@ let
     }) // {
       General = {
         StartWithLastProfile = 1;
-        Version = 2;
-      };
+      } // (if isDarwin then { } else { Version = 2; });
     };
 
   profilesIni = generators.toINI { } profiles;
