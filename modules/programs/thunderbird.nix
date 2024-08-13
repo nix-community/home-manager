@@ -27,7 +27,6 @@ let
   profilesIni = foldl recursiveUpdate {
     General = {
       StartWithLastProfile = 1;
-      Version = 2;
     };
   } (flip map profilesWithId (profile: {
     "Profile${profile.id}" = {
