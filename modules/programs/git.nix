@@ -38,6 +38,17 @@ let
         defaultText = "\${pkgs.gnupg}/bin/gpg2";
         description = "Path to GnuPG binary to use.";
       };
+
+      gpgFormat = mkOption {
+        type = types.str;
+        default = "openpgp";
+        defaultText = "openpgp";
+        description = ''
+          Specifies which key format to use when signing with
+          --gpg-sign. Default is "openpgp". Other possible values
+          are "x509", "ssh".
+        '';
+      };
     };
   };
 
@@ -421,6 +432,7 @@ in {
         commit.gpgSign = mkDefault cfg.signing.signByDefault;
         tag.gpgSign = mkDefault cfg.signing.signByDefault;
         gpg.program = cfg.signing.gpgPath;
+        gpg.format = cfg.signing.gpgFormat;
       };
     })
 
