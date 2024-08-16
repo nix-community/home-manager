@@ -27,12 +27,12 @@
               status = "disable";
             }
             {
-              criteria = "Iiyama North America PLE2483H-DP";
+              criteria = ''"Iiyama North America" PLE2483H-DP Unknown'';
               status = "enable";
               position = "0,0";
             }
             {
-              criteria = "Iiyama North America PLE2483H-DP 1158765348486";
+              criteria = ''"Iiyama North America" PLE2483H-DP 1158765348486'';
               status = "enable";
               position = "1920,0";
               scale = 2.1;

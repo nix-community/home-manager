@@ -137,7 +137,7 @@ let
 
   outputStr =
     { criteria, status, mode, position, scale, transform, adaptiveSync, ... }:
-    ''output "${criteria}"'' + optionalString (status != null) " ${status}"
+    "output ${criteria}" + optionalString (status != null) " ${status}"
     + optionalString (mode != null) " mode ${mode}"
     + optionalString (position != null) " position ${position}"
     + optionalString (scale != null) " scale ${toString scale}"
