@@ -17,16 +17,24 @@ let
     (pkgs.path + "/nixos/modules/installer/tools/nixos-option") { });
 
 in stdenvNoCC.mkDerivation (finalAttrs: {
-  name = "home-manager";
+  pname = "home-manager";
+  name = finalAttrs.pname; # without `version`
   inherit src;
   preferLocalBuild = true;
   nativeBuildInputs = [ gettext installShellFiles ];
-  meta = with lib; {
+  meta = {
     mainProgram = "home-manager";
-    description = "A user environment configurator";
-    maintainers = [ maintainers.rycee ];
-    platforms = platforms.unix;
-    license = licenses.mit;
+    description = "Nix-based user environment configurator";
+    maintainers = [ lib.maintainers.rycee ];
+    platforms = lib.platforms.unix;
+    license = lib.licenses.mit;
+    homepage = "https://nix-community.github.io/home-manager/";
+    longDescription = ''
+      The Home-Manager project provides a basic system for managing a user
+      environment using the Nix package manager together with the Nix libraries
+      found in Nixpkgs. It allows declarative configuration of user specific
+      (non global) packages and dotfiles.
+    '';
   };
 dontConfigure = true;
 dontBuild = true;
