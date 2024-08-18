@@ -100,7 +100,7 @@ let
       };
     in ''
       ${builtins.toJSON {
-        version = 4;
+        version = 5;
         lastUserContextId =
           elemAt (mapAttrsToList (_: container: container.id) containers) 0;
         identities = mapAttrsToList containerToIdentity containers ++ [
