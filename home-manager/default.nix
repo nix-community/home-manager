@@ -1,21 +1,26 @@
-{ runCommand, lib, bash, callPackage, coreutils, findutils, gettext, gnused, jq
+{ stdenvNoCC, lib, bash, callPackage, coreutils, findutils, gettext, gnused, jq
 , less, ncurses, inetutils
 # used for pkgs.path for nixos-option
 , pkgs
+, installShellFiles
 
 # Path to use as the Home Manager channel.
 , path ? null }:
 
 let
 
-  pathStr = if path == null then "" else path;
+  src = ../.;
+  pathStr = if path == null then "" else
+    if path == pkgs.path /* `path` is not passed to `callPackage` */ then "${src}" else path;
 
   nixos-option = pkgs.nixos-option or (callPackage
     (pkgs.path + "/nixos/modules/installer/tools/nixos-option") { });
 
-in runCommand "home-manager" {
+in stdenvNoCC.mkDerivation (finalAttrs: {
+  name = "home-manager";
+  inherit src;
   preferLocalBuild = true;
-  nativeBuildInputs = [ gettext ];
+  nativeBuildInputs = [ gettext installShellFiles ];
   meta = with lib; {
     mainProgram = "home-manager";
     description = "A user environment configurator";
@@ -23,8 +28,13 @@ in runCommand "home-manager" {
     platforms = platforms.unix;
     license = licenses.mit;
   };
-} ''
-  install -v -D -m755  ${./home-manager} $out/bin/home-manager
+dontConfigure = true;
+dontBuild = true;
+installPhase = ''
+  runHook preInstall
+
+  install -v -D -m755 home-manager/home-manager $out/bin/home-manager
+  install -v -D -m755 lib/bash/home-manager.sh $out/share/bash/home-manager.sh
 
   substituteInPlace $out/bin/home-manager \
     --subst-var-by bash "${bash}" \
@@ -41,24 +51,22 @@ in runCommand "home-manager" {
         inetutils # for `hostname`
       ]
     }" \
-    --subst-var-by HOME_MANAGER_LIB '${../lib/bash/home-manager.sh}' \
-    --subst-var-by HOME_MANAGER_PATH '${pathStr}' \
+    --subst-var-by HOME_MANAGER_LIB "$out/share/bash/home-manager.sh" \
+    --subst-var-by HOME_MANAGER_PATH "${pathStr}" \
     --subst-var-by OUT "$out"
 
-  install -D -m755 ${./completion.bash} \
-    $out/share/bash-completion/completions/home-manager
-  install -D -m755 ${./completion.zsh} \
-    $out/share/zsh/site-functions/_home-manager
-  install -D -m755 ${./completion.fish} \
-    $out/share/fish/vendor_completions.d/home-manager.fish
+  installShellCompletion --cmd home-manager \
+    --bash home-manager/completion.bash \
+    --fish home-manager/completion.fish \
+    --zsh home-manager/completion.zsh
 
-  install -D -m755 ${../lib/bash/home-manager.sh} \
-    "$out/share/bash/home-manager.sh"
-
-  for path in ${./po}/*.po; do
-    lang="''${path##*/}"
+  for pofile in home-manager/po/*.po; do
+    lang="''${pofile##*/}"
     lang="''${lang%%.*}"
     mkdir -p "$out/share/locale/$lang/LC_MESSAGES"
-    msgfmt -o "$out/share/locale/$lang/LC_MESSAGES/home-manager.mo" "$path"
+    msgfmt -o "$out/share/locale/$lang/LC_MESSAGES/home-manager.mo" "$pofile"
   done
-''
+
+  runHook postInstall
+'';
+})
