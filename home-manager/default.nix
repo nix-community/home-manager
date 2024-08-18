@@ -36,6 +36,21 @@ installPhase = ''
   install -v -D -m755 home-manager/home-manager $out/bin/home-manager
   install -v -D -m755 lib/bash/home-manager.sh $out/share/bash/home-manager.sh
 
+  installShellCompletion --cmd home-manager \
+    --bash home-manager/completion.bash \
+    --fish home-manager/completion.fish \
+    --zsh home-manager/completion.zsh
+
+  for pofile in home-manager/po/*.po; do
+    lang="''${pofile##*/}"
+    lang="''${lang%%.*}"
+    mkdir -p "$out/share/locale/$lang/LC_MESSAGES"
+    msgfmt -o "$out/share/locale/$lang/LC_MESSAGES/home-manager.mo" "$pofile"
+  done
+
+  runHook postInstall
+'';
+postFixup = ''
   substituteInPlace $out/bin/home-manager \
     --subst-var-by bash "${bash}" \
     --subst-var-by DEP_PATH "${
@@ -54,19 +69,5 @@ installPhase = ''
     --subst-var-by HOME_MANAGER_LIB "$out/share/bash/home-manager.sh" \
     --subst-var-by HOME_MANAGER_PATH "${pathStr}" \
     --subst-var-by OUT "$out"
-
-  installShellCompletion --cmd home-manager \
-    --bash home-manager/completion.bash \
-    --fish home-manager/completion.fish \
-    --zsh home-manager/completion.zsh
-
-  for pofile in home-manager/po/*.po; do
-    lang="''${pofile##*/}"
-    lang="''${lang%%.*}"
-    mkdir -p "$out/share/locale/$lang/LC_MESSAGES"
-    msgfmt -o "$out/share/locale/$lang/LC_MESSAGES/home-manager.mo" "$pofile"
-  done
-
-  runHook postInstall
 '';
 })
