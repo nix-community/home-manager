@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 with lib;
 
@@ -7,7 +7,7 @@ let
   extraConfigType = with lib.types;
     attrsOf (oneOf [ str int bool (listOf str) ]);
 
-  perAccountGroups = { name, config, ... }: {
+  perAccountGroups = { name, ... }: {
     options = {
       name = mkOption {
         type = types.str;
@@ -36,7 +36,7 @@ let
   };
 
   # Options for configuring channel(s) that will be composed together into a group.
-  channel = { name, config, ... }: {
+  channel = { name, ... }: {
     options = {
       name = mkOption {
         type = types.str;

@@ -6,7 +6,7 @@ let
 
   cfg = config.programs.fish;
 
-  pluginModule = types.submodule ({ config, ... }: {
+  pluginModule = types.submodule ({ ... }: {
     options = {
       src = mkOption {
         type = types.path;
@@ -388,7 +388,7 @@ in {
 
       xdg.dataFile."fish/home-manager_generated_completions".source = let
         # paths later in the list will overwrite those already linked
-        destructiveSymlinkJoin = args_@{ name, paths, preferLocalBuild ? true
+        destructiveSymlinkJoin = args_@{ name, preferLocalBuild ? true
           , allowSubstitutes ? false, postBuild ? "", ... }:
           let
             args = removeAttrs args_ [ "name" "postBuild" ] // {

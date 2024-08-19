@@ -141,7 +141,7 @@ in {
 
       profiles = mkOption {
         type = with types;
-          attrsOf (submodule ({ config, name, ... }: {
+          attrsOf (submodule ({ name, ... }: {
             options = {
               name = mkOption {
                 type = types.str;

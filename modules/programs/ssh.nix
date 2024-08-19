@@ -61,7 +61,7 @@ let
     };
   };
 
-  matchBlockModule = types.submodule ({ dagName, ... }: {
+  matchBlockModule = types.submodule ({ ... }: {
     options = {
       host = mkOption {
         type = types.nullOr types.str;

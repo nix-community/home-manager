@@ -427,7 +427,7 @@ in {
 
           bookmarks = mkOption {
             type = let
-              bookmarkSubmodule = types.submodule ({ config, name, ... }: {
+              bookmarkSubmodule = types.submodule ({ name, ... }: {
                 options = {
                   name = mkOption {
                     type = types.str;
@@ -458,7 +458,7 @@ in {
 
               bookmarkType = types.addCheck bookmarkSubmodule (x: x ? "url");
 
-              directoryType = types.submodule ({ config, name, ... }: {
+              directoryType = types.submodule ({ name, ... }: {
                 options = {
                   name = mkOption {
                     type = types.str;
