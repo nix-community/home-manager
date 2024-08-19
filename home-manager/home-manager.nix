@@ -1,5 +1,4 @@
-{ pkgs ? import <nixpkgs> { }, confPath, confAttr ? null, check ? true
-, newsReadIdsFile ? null }:
+{ pkgs ? import <nixpkgs> { }, confPath, confAttr ? null, check ? true }:
 
 let
   env = import ../modules {
