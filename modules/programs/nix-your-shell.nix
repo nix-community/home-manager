@@ -18,6 +18,10 @@ in {
       to run the same shell inside the new environment.
     '';
 
+    nom = lib.mkEnableOption ''
+      `nix-output-monitor` to provide better visualisation of build progress.
+    '';
+
     extraArgs = lib.mkOption {
       default = [ ];
       description = ''
@@ -32,5 +36,7 @@ in {
     ion.shellAliases = mkShellAliases "ion";
     nushell.shellAliases = mkShellAliases "nushell";
     zsh.shellAliases = mkShellAliases "zsh";
+
+    nix-your-shell.extraArgs = lib.optional cfg.nom "--nom";
   };
 }
