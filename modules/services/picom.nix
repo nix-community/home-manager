@@ -1,11 +1,11 @@
 { config, options, lib, pkgs, ... }:
 
 let
-  inherit (builtins) elemAt isAttrs isBool length mapAttrs toJSON;
+  inherit (builtins) elemAt isAttrs length mapAttrs;
   inherit (lib)
     boolToString concatMapStringsSep concatStringsSep escape literalExpression
     mapAttrsToList mkEnableOption mkRenamedOptionModule mkRemovedOptionModule
-    mkDefault mkIf mkOption optional types warn getExe;
+    mkDefault mkIf mkOption types getExe;
 
   cfg = config.services.picom;
   opt = options.services.picom;

@@ -7,13 +7,6 @@ let
   qcalAccounts = lib.attrValues
     (lib.filterAttrs (_: a: a.qcal.enable) config.accounts.calendar.accounts);
 
-  rename = oldname:
-    builtins.getAttr oldname {
-      url = "Url";
-      userName = "Username";
-      passwordCommand = "PasswordCmd";
-    };
-
   filteredAccounts = let
     mkAccount = account:
       lib.filterAttrs (_: v: v != null) (with account.remote; {

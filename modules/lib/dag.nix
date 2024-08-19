@@ -110,9 +110,7 @@ in {
   entriesBetween = tag:
     let
       go = i: before: after: entries:
-        let
-          name = "${tag}-${toString i}";
-          i' = i + 1;
+        let name = "${tag}-${toString i}";
         in if entries == [ ] then
           hm.dag.empty
         else if length entries == 1 then {

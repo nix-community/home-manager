@@ -211,21 +211,6 @@ let
     };
   };
 
-  renamedOptions = account:
-    let prefix = [ "accounts" "email" "accounts" account.name "lieer" ];
-    in [
-      (mkRenamedOptionModule (prefix ++ [ "dropNonExistingLabels" ])
-        (prefix ++ [ "settings" "drop_non_existing_label" ]))
-      (mkRenamedOptionModule (prefix ++ [ "ignoreTagsRemote" ])
-        (prefix ++ [ "settings" "ignore_remote_labels" ]))
-      (mkRenamedOptionModule (prefix ++ [ "ignoreTagsLocal" ])
-        (prefix ++ [ "settings" "ignore_tags" ]))
-      (mkRenamedOptionModule (prefix ++ [ "timeout" ])
-        (prefix ++ [ "settings" "timeout" ]))
-      (mkRenamedOptionModule (prefix ++ [ "replaceSlashWithDot" ])
-        (prefix ++ [ "settings" "replace_slash_with_dot" ]))
-    ];
-
 in {
   meta.maintainers = [ maintainers.tadfisher ];
 

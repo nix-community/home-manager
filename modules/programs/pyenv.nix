@@ -4,8 +4,6 @@ let
 
   cfg = config.programs.pyenv;
 
-  tomlFormat = pkgs.formats.toml { };
-
 in {
   meta.maintainers = with lib.maintainers; [ tmarkus ];
 

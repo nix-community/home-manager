@@ -3,8 +3,8 @@
 let
   inherit (lib)
     all concatMap foldl' getFiles getValues head isFunction literalExpression
-    mergeAttrs mergeDefaultOption mergeOneOption mergeOptions mkOption
-    mkOptionType showFiles showOption types;
+    mergeAttrs mergeDefaultOption mergeOneOption mkOption mkOptionType showFiles
+    showOption types;
 
   typesDag = import ./types-dag.nix { inherit lib; };
 
