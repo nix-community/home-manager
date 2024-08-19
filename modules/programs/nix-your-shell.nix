@@ -1,11 +1,12 @@
 { config, lib, pkgs, ... }:
 let
-  inherit (lib) genAttrs getExe;
   cfg = config.programs.nix-your-shell;
 
-  # In principle `bash` is supported too, but...  😹
-  shells = [ "fish" "ion" "nushell" "zsh" ];
-  programs = [ "nix" "nix-shell" ];
+  exe = lib.getExe pkgs.nix-your-shell;
+  mkShellAliases = shell: {
+    nix = "${exe} ${shell} nix --";
+    nix-shell = "${exe} ${shell} nix-shell --";
+  };
 in {
   meta.maintainers = with lib.maintainers; [ nicoo ];
 
@@ -14,8 +15,10 @@ in {
     to run the same shell inside the new environment.
   '';
 
-  config.programs = lib.mkIf cfg.enable (genAttrs shells (shell: {
-    shellAliases = genAttrs programs
-      (program: "${getExe pkgs.nix-your-shell} ${shell} ${program} --");
-  }));
+  config.programs = lib.mkIf cfg.enable {
+    fish.shellAliases = mkShellAliases "fish";
+    ion.shellAliases = mkShellAliases "ion";
+    nushell.shellAliases = mkShellAliases "nushell";
+    zsh.shellAliases = mkShellAliases "zsh";
+  };
 }
