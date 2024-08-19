@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 {
   home.file."tokdl-result.txt".text = lib.hm.generators.toKDL { } {

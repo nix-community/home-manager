@@ -3,7 +3,6 @@
 let
 
   backups = config.programs.borgmatic.backups;
-  excludeFile = builtins.toFile "excludeFile.txt" "/foo/bar";
 
 in {
   programs.borgmatic = {
