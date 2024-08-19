@@ -2,10 +2,6 @@
 , newsReadIdsFile ? null }:
 
 let
-  inherit (pkgs.lib)
-    concatMapStringsSep fileContents filter length optionalString removeSuffix
-    replaceStrings splitString;
-
   env = import ../modules {
     configuration = if confAttr == "" || confAttr == null then
       confPath

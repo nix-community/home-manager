@@ -6,8 +6,8 @@
 
 let
   inherit (builtins)
-    concatStringsSep filter hasAttr isString length optionalString readFile
-    replaceStrings sort split;
+    concatStringsSep filter hasAttr isString length readFile replaceStrings sort
+    split;
 
   newsJson = builtins.fromJSON (builtins.readFile newsJsonFile);
 
