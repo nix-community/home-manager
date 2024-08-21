@@ -55,6 +55,7 @@ in import nmtSrc {
     ./modules/programs/alot
     ./modules/programs/antidote
     ./modules/programs/aria2
+    ./modules/programs/asdf-vm
     ./modules/programs/atuin
     ./modules/programs/autojump
     ./modules/programs/bacon

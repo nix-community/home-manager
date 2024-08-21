@@ -56,6 +56,7 @@ let
     ./programs/alot.nix
     ./programs/antidote.nix
     ./programs/aria2.nix
+    ./programs/asdf-vm.nix
     ./programs/astroid.nix
     ./programs/atuin.nix
     ./programs/autojump.nix
