@@ -56,7 +56,13 @@ in {
       '';
     };
 
-    package = lib.mkPackageOption pkgs "hyprland" { };
+    package = lib.mkPackageOption pkgs "hyprland" {
+      nullable = true;
+      extraDescription = ''
+        Set to `null` to not add the hyprland package to your path.
+        This should be done if you want to use the hyprland package from the NixOS module.
+      '';
+    };
 
     finalPackage = lib.mkOption {
       type = lib.types.package;
