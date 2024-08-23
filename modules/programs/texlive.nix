@@ -17,8 +17,12 @@ in {
       enable = mkEnableOption ''
         TeX Live package customization.
 
-        This module allows you to select which texlive packages you want to install.
-        Start by exteding {option}`programs.texlive.extraPackages`.
+        This module allows you to select which `pkgs.texlivePackages.*` you want to install.
+        Start by editing {option}`programs.texlive.extraPackages`.
+
+        If one of the pre-built common environments already suits you
+        (e.g. `pkgs.texliveFull` or `pkgs.texliveMedium`),
+        you do not need to use this module.
       '';
 
       packageSet = mkOption {
@@ -39,7 +43,16 @@ in {
         default = tpkgs: { inherit (tpkgs) collection-basic; };
         defaultText = "tpkgs: { inherit (tpkgs) collection-basic; }";
         example = literalExpression ''
-          tpkgs: { inherit (tpkgs) collection-fontsrecommended algorithms; }
+          tpkgs: with tpkgs; { # E.g. you can select from & combine
+            # pre-built environments (e.g. this equals pkgs.texliveSmall)
+            inherit scheme-small;
+            # collection of smaller packages (similar granularity to packages in Linux distros like Debian)
+            inherit collection-fontsrecommended;
+            # or individual tex packages (corresponds in general to packages from CTAN & co.).
+            inherit algorithms;
+            # You can mix them however you see fit (overlaps should be no problem)
+            inherit scheme-bookpub bibtex8 latexmk;
+          }
         '';
         description = ''
           Extra packages which should be appended.
@@ -48,7 +61,7 @@ in {
           In case you changed your `packageSet`,
           you can find all available packages to select from
           in nixpkgs under `pkgs.texlivePackages`,
-          see [here to search for them in the latest release](https://search.nixos.org/packages?type=packages&query=texlivePackages.).
+          search [here for them](https://search.nixos.org/packages?type=packages&query=texlivePackages.).
         '';
       };
 
@@ -67,6 +80,7 @@ in {
         + " 'programs.texlive.extraPackages'.";
     }];
 
+    # note: cfg.enable states that this module’s only purpose is to customize the texlive environment
     home.packages = [ cfg.package ];
 
     programs.texlive.package = texlive.combine texlivePkgs;
