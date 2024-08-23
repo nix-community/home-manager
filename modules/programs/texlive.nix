@@ -14,12 +14,25 @@ in {
 
   options = {
     programs.texlive = {
-      enable = mkEnableOption "TeX Live";
+      enable = mkEnableOption ''
+        TeX Live package customization.
+
+        This module allows you to select which texlive packages you want to install.
+        Start by exteding {option}`programs.texlive.extraPackages`.
+      '';
 
       packageSet = mkOption {
         default = pkgs.texlive;
-        defaultText = literalExpression "pkgs.texlive";
-        description = "TeX Live package set to use.";
+        defaultText = literalExpression ''
+          pkgs.texlive  # corresponds to packages in pkgs.texlivePackages
+        '';
+        description = ''
+          TeX Live package set to use.
+
+          This is used in the option {option}`programs.texlive.extraPackages`.
+          Normally you do not want to change this from the default
+          except if you want to use texlive packages from a different nixpkgs release than your config’s default.
+        '';
       };
 
       extraPackages = mkOption {
@@ -28,7 +41,15 @@ in {
         example = literalExpression ''
           tpkgs: { inherit (tpkgs) collection-fontsrecommended algorithms; }
         '';
-        description = "Extra packages available to TeX Live.";
+        description = ''
+          Extra packages which should be appended.
+
+          {option}`programs.texlive.packageSet` will be passed to this function.
+          In case you changed your `packageSet`,
+          you can find all available packages to select from
+          in nixpkgs under `pkgs.texlivePackages`,
+          see [here to search for them in the latest release](https://search.nixos.org/packages?type=packages&query=texlivePackages.).
+        '';
       };
 
       package = mkOption {
