@@ -34,6 +34,21 @@ let
 
   historyModule = types.submodule ({ config, ... }: {
     options = {
+      append = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          If set, zsh sessions will append their history list to the history
+          file, rather than replace it. Thus, multiple parallel zsh sessions
+          will all have the new entries from their history lists added to the
+          history file, in the order that they exit.
+
+          This file will still be periodically re-written to trim it when the
+          number of lines grows 20% beyond the value specified by
+          `programs.zsh.history.save`.
+        '';
+      };
+
       size = mkOption {
         type = types.int;
         default = 10000;
@@ -669,6 +684,7 @@ in
         mkdir -p "$(dirname "$HISTFILE")"
 
         setopt HIST_FCNTL_LOCK
+        ${if cfg.history.append then "setopt" else "unsetopt"} APPEND_HISTORY
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
         ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
         ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
