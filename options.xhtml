@@ -74282,13 +74282,11 @@ systemd socket unit configuration</p>
 should be started. Additionally, stop obsolete services from the
 previous generation.</p><p>The alternatives are</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">suggest</code> (or <code class="literal">false</code>)</span></dt><dd><p>Use a very simple shell script to print suggested
 <span class="command"><strong>systemctl</strong></span> commands to run. You will have to
-manually run those commands after the switch.</p></dd><dt><span class="term"><code class="literal">legacy</code> (or <code class="literal">true</code>)</span></dt><dd><p>Use a Ruby script to, in a more robust fashion, determine the
+manually run those commands after the switch.</p></dd><dt><span class="term"><code class="literal">legacy</code></span></dt><dd><p>Use a Ruby script to, in a more robust fashion, determine the
 necessary changes and automatically run the
-<span class="command"><strong>systemctl</strong></span> commands.</p></dd><dt><span class="term"><code class="literal">sd-switch</code></span></dt><dd><p>Use sd-switch, a third party application, to perform the service
-updates. This tool offers more features while having a small
-closure size. Note, it requires a fully functional user D-Bus
-session. Once tested and deemed sufficiently robust, this will
-become the default.</p></dd></dl></div>
+<span class="command"><strong>systemctl</strong></span> commands. Note, this alternative will soon
+be removed.</p></dd><dt><span class="term"><code class="literal">sd-switch</code> (or <code class="literal">true</code>)</span></dt><dd><p>Use sd-switch, a tool that determines the necessary changes and
+automatically apply them.</p></dd></dl></div>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean or one of “suggest”, “legacy”, “sd-switch”</p>
