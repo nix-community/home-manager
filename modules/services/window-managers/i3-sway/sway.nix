@@ -249,7 +249,7 @@ let
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
     ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") attrs)}
+    (mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
     }
   '';
   inputStr = moduleStr "input";
