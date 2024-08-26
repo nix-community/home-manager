@@ -110,6 +110,7 @@ in import nmtSrc {
     ./modules/programs/ncmpcpp
     ./modules/programs/ne
     ./modules/programs/neomutt
+    ./modules/programs/neovide
     ./modules/programs/neovim
     ./modules/programs/newsboat
     ./modules/programs/nheko

@@ -167,6 +167,7 @@ let
     ./programs/ncspot.nix
     ./programs/ne.nix
     ./programs/neomutt.nix
+    ./programs/neovide.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
     ./programs/nheko.nix

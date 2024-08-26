@@ -1703,6 +1703,15 @@ in {
           one place. See https://github.com/glanceapp/glance for more.
         '';
       }
+
+      {
+        time = "2024-08-26T18:41:20+00:00";
+        message = ''
+          A new module is available: 'programs.neovide'.
+
+          Neovide is a simple, no-nonsense, cross-platform graphical user interface for Neovim (an aggressively refactored and updated Vim editor).
+        '';
+      }
     ];
   };
 }
