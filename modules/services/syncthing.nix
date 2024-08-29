@@ -66,12 +66,7 @@ let
     ''}
   '';
 
-  updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (''
-    set -efu
-
-    # be careful not to leak secrets in the filesystem or in process listings
-    umask 0077
-
+  curlShellFunction = ''
     curl() {
         # get the api key by parsing the config.xml
         while
@@ -85,6 +80,15 @@ let
             --retry 1000 --retry-delay 1 --retry-all-errors \
             "$@"
     }
+  '';
+
+  updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (''
+    set -efu
+
+    # be careful not to leak secrets in the filesystem or in process listings
+    umask 0077
+
+    ${curlShellFunction}
   '' +
 
     /* Syncthing's rest API for the folders and devices is almost identical.
