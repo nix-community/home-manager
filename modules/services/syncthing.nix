@@ -202,7 +202,6 @@ in {
     services.syncthing = {
       enable = mkEnableOption ''
         Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.
-        Further declarative configuration options only supported on Linux devices.
       '';
 
       cert = mkOption {
@@ -687,16 +686,33 @@ in {
         };
       };
 
-      launchd.agents = {
+      launchd.agents = let
+        # agent `syncthing` uses `${syncthing_dir}/${watch_file}` to notify agent `syncthing-init`
+        watch_file = ".launchd_update_config";
+      in {
         syncthing = {
           enable = true;
           config = {
-            ProgramArguments = syncthingArgs;
+            ProgramArguments = [ "${
+              pkgs.writers.writeBash "syncthing-wrapper" ''
+                ${copyKeys}                               # simulate systemd's `syncthing-init.Service.ExecStartPre`
+                touch "${syncthing_dir}/${watch_file}"    # notify syncthing-init agent
+                exec ${lib.escapeShellArgs syncthingArgs}
+              ''
+            }" ];
             KeepAlive = {
               Crashed = true;
               SuccessfulExit = false;
             };
             ProcessType = "Background";
+          };
+        };
+
+        syncthing-init = {
+          enable = true;
+          config = {
+            ProgramArguments = [ "${updateConfig}" ];
+            WatchPaths = [ "${config.home.homeDirectory}/Library/Application Support/Syncthing/${watch_file}" ];
           };
         };
       };
