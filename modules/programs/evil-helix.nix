@@ -3,19 +3,19 @@
 with lib;
 
 let
-  cfg = config.programs.helix;
+  cfg = config.programs.evil-helix;
   tomlFormat = pkgs.formats.toml { };
 in {
-  meta.maintainers = [ hm.maintainers.Philipp-M ];
+  meta.maintainers = [ hm.maintainers.gurevitch ];
 
-  options.programs.helix = {
-    enable = mkEnableOption "helix text editor";
+  options.programs.evil-helix = {
+    enable = mkEnableOption "evil-helix text editor";
 
     package = mkOption {
       type = types.package;
-      default = pkgs.helix;
-      defaultText = literalExpression "pkgs.helix";
-      description = "The package to use for helix.";
+      default = pkgs.evil-helix;
+      defaultText = literalExpression "pkgs.evil-helix";
+      description = "The package to use for evil-helix.";
     };
 
     extraPackages = mkOption {
@@ -69,7 +69,7 @@ in {
             It now generates the whole languages.toml file instead of just the language array in that file.
 
             Use
-            programs.helix.languages = { language = <languages list>; }
+            programs.evil-helix.languages = { language = <languages list>; }
             instead.
           '' { inherit language; }) (addCheck tomlFormat.type builtins.isAttrs);
       default = { };

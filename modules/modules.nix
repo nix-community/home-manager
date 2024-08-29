@@ -85,6 +85,7 @@ let
     ./programs/discocss.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
+    ./programs/evil-helix.nix
     ./programs/eww.nix
     ./programs/eza.nix
     ./programs/fastfetch.nix

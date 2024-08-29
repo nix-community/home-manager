@@ -107,6 +107,12 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
   };
+  gurevitch = {
+    name = "Chet Gurevitch";
+    email = "chet@gurevitch.net";
+    github = "chetgurevitch";
+    githubId = 25513187;
+  };
   henrisota = {
     email = "henrisota@users.noreply.github.com";
     github = "henrisota";
