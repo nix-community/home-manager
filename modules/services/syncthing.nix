@@ -50,6 +50,7 @@ let
   cat = lib.getExe' pkgs.coreutils "cat";
   curl = lib.getExe pkgs.curl;
   install = lib.getExe' pkgs.coreutils "install";
+  mktemp = lib.getExe' pkgs.coreutils "mktemp";
   syncthing = lib.getExe cfg.package;
 
   copyKeys = pkgs.writers.writeBash "syncthing-copy-keys" ''
@@ -67,6 +68,10 @@ let
   '';
 
   curlShellFunction = ''
+    # systemd sets and creates RUNTIME_DIRECTORY on Linux
+    # on Darwin, we create it manually via mktemp
+    RUNTIME_DIRECTORY="''${RUNTIME_DIRECTORY:=$(${mktemp} -d)}"
+
     curl() {
         # get the api key by parsing the config.xml
         while
