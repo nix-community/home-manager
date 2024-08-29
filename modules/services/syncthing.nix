@@ -46,6 +46,21 @@ let
   install = "${pkgs.coreutils}/bin/install";
   syncthing = "${pkgs.syncthing}/bin/syncthing";
 
+  copyKeys = pkgs.writers.writeBash "syncthing-copy-keys" ''
+    syncthing_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/syncthing"
+    ${install} -dm700 "$syncthing_dir"
+    ${optionalString (cfg.cert != null) ''
+      ${install} -Dm400 ${
+        toString cfg.cert
+      } "$syncthing_dir/cert.pem"
+    ''}
+    ${optionalString (cfg.key != null) ''
+      ${install} -Dm400 ${
+        toString cfg.key
+      } "$syncthing_dir/key.pem"
+    ''}
+  '';
+
   updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (''
     set -efu
 
@@ -618,22 +633,7 @@ in {
           };
 
           Service = {
-            ExecStartPre = mkIf (cfg.cert != null || cfg.key != null) "+${
-                pkgs.writers.writeBash "syncthing-copy-keys" ''
-                  syncthing_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/syncthing"
-                  ${install} -dm700 "$syncthing_dir"
-                  ${optionalString (cfg.cert != null) ''
-                    ${install} -Dm400 ${
-                      toString cfg.cert
-                    } "$syncthing_dir/cert.pem"
-                  ''}
-                  ${optionalString (cfg.key != null) ''
-                    ${install} -Dm400 ${
-                      toString cfg.key
-                    } "$syncthing_dir/key.pem"
-                  ''}
-                ''
-              }";
+            ExecStartPre = mkIf (cfg.cert != null || cfg.key != null) "+${copyKeys}";
             ExecStart = escapeShellArgs syncthingArgs;
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
