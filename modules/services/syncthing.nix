@@ -11,6 +11,12 @@ let
 
   isUnixGui = (builtins.substring 0 1 cfg.guiAddress) == "/";
 
+  # syncthing's configuration directory (see https://docs.syncthing.net/users/config.html)
+  syncthing_dir = if pkgs.stdenv.isDarwin then
+      "$HOME/Library/Application Support/Syncthing"
+    else
+      "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
+
   # Syncthing supports serving the GUI over Unix sockets. If that happens, the
   # API is served over the Unix socket as well.  This function returns the correct
   # curl arguments for the address portion of the curl command for both network
@@ -47,17 +53,16 @@ let
   syncthing = lib.getExe cfg.package;
 
   copyKeys = pkgs.writers.writeBash "syncthing-copy-keys" ''
-    syncthing_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/syncthing"
-    ${install} -dm700 "$syncthing_dir"
+    ${install} -dm700 "${syncthing_dir}"
     ${lib.optionalString (cfg.cert != null) ''
       ${install} -Dm400 ${
         toString cfg.cert
-      } "$syncthing_dir/cert.pem"
+      } "${syncthing_dir}/cert.pem"
     ''}
     ${lib.optionalString (cfg.key != null) ''
       ${install} -Dm400 ${
         toString cfg.key
-      } "$syncthing_dir/key.pem"
+      } "${syncthing_dir}/key.pem"
     ''}
   '';
 
@@ -72,7 +77,7 @@ let
         while
             ! ${pkgs.libxml2}/bin/xmllint \
                 --xpath 'string(configuration/gui/apikey)' \
-                ''${XDG_STATE_HOME:-$HOME/.local/state}/syncthing/config.xml \
+                "${syncthing_dir}/config.xml" \
                 >"$RUNTIME_DIRECTORY/api_key"
         do ${sleep} 1; done
         (${printf} "X-API-Key: "; ${cat} "$RUNTIME_DIRECTORY/api_key") >"$RUNTIME_DIRECTORY/headers"
