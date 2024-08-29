@@ -687,15 +687,17 @@ in {
         };
       };
 
-      launchd.agents.syncthing = {
-        enable = true;
-        config = {
-          ProgramArguments = syncthingArgs;
-          KeepAlive = {
-            Crashed = true;
-            SuccessfulExit = false;
+      launchd.agents = {
+        syncthing = {
+          enable = true;
+          config = {
+            ProgramArguments = syncthingArgs;
+            KeepAlive = {
+              Crashed = true;
+              SuccessfulExit = false;
+            };
+            ProcessType = "Background";
           };
-          ProcessType = "Background";
         };
       };
     })
