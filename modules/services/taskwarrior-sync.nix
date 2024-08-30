@@ -12,7 +12,8 @@ in {
   options.services.taskwarrior-sync = {
     enable = mkEnableOption "Taskwarrior periodic sync";
 
-    package = mkPackageOption pkgs "taskwarrior" { };
+    package =
+      mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
 
     frequency = mkOption {
       type = types.str;

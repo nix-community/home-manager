@@ -85,7 +85,8 @@ in {
         '';
       };
 
-      package = mkPackageOption pkgs "taskwarrior" { };
+      package =
+        mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
     };
   };
 
