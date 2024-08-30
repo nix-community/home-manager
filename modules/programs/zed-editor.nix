@@ -30,15 +30,15 @@ in {
         default = { };
         example = literalExpression ''
           {
-            "features": {
-              "copilot": false
-            },
-            "telemetry": {
-              "metrics": false
-            },
-            "vim_mode": false,
-            "ui_font_size": 16,
-            "buffer_font_size": 16
+            features = {
+              copilot = false;
+            };
+            telemetry = {
+              metrics = false;
+            };
+            vim_mode = false;
+            ui_font_size = 16;
+            buffer_font_size = 16;
           }
         '';
         description = ''
@@ -51,9 +51,9 @@ in {
         example = literalExpression ''
           [
             {
-              "context" = "Workspace";
-              "bindings" = {
-                "ctrl-shift-t" = "workspace::NewTerminal";
+              context = "Workspace";
+              bindings = {
+                ctrl-shift-t = "workspace::NewTerminal";
               };
             };
           ]
