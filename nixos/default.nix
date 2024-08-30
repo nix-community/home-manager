@@ -48,7 +48,6 @@ in {
           serviceConfig = {
             User = usercfg.home.username;
             Type = "oneshot";
-            RemainAfterExit = "yes";
             TimeoutStartSec = "5m";
             SyslogIdentifier = "hm-activate-${username}";
 
