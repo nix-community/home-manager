@@ -6,25 +6,34 @@ let
 
   cfg = config.programs.qutebrowser;
 
+  formatValue = v:
+    if v == null then
+      "None"
+    else if builtins.isBool v then
+      (if v then "True" else "False")
+    else if builtins.isString v then
+      ''"${v}"''
+    else if builtins.isList v then
+      "[${concatStringsSep ", " (map formatValue v)}]"
+    else
+      builtins.toString v;
+
   formatLine = o: n: v:
-    let
-      formatValue = v:
-        if v == null then
-          "None"
-        else if builtins.isBool v then
-          (if v then "True" else "False")
-        else if builtins.isString v then
-          ''"${v}"''
-        else if builtins.isList v then
-          "[${concatStringsSep ", " (map formatValue v)}]"
-        else
-          builtins.toString v;
-    in if builtins.isAttrs v then
-      concatStringsSep "\n" (mapAttrsToList (formatLine "${o}${n}.") v)
+    if builtins.isAttrs v then
+    # Allow outputting python dicts in the config with the special __isDict attribute
+      if (v ? __isDict && v.__isDict == true) then
+        let
+          # Remove the __isDict attribute from the final output
+          removedSpecialAttr =
+            attrsets.filterAttrs (name: _value: name != "__isDict") v;
+        in concatStringsSep "\n"
+        (mapAttrsToList (formatDictLine "${o}${n}") removedSpecialAttr)
+      else
+        concatStringsSep "\n" (mapAttrsToList (formatLine "${o}${n}.") v)
     else
       "${o}${n} = ${formatValue v}";
 
-  formatDictLine = o: n: v: ''${o}['${n}'] = "${v}"'';
+  formatDictLine = o: n: v: "${o}['${n}'] = ${formatValue v}";
 
   formatKeyBindings = m: b:
     let
@@ -108,6 +117,15 @@ in {
             tabs.bar.bg = "#000000";
           };
           tabs.tabs_are_windows = true;
+
+          # Special `__isDict` attribute to allow outputting Python Dicts
+          tabs.padding = {
+            __isDict = true;
+            bottom = 1;
+            left = 5;
+            right = 5;
+            top = 1;
+          };
         }
       '';
     };
