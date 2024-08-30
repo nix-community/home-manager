@@ -47,6 +47,8 @@ let
   formatQuickmarks = n: s: "${n} ${s}";
 
 in {
+  meta.maintainers = with lib.maintainers; [ giodamelio ];
+
   options.programs.qutebrowser = {
     enable = mkEnableOption "qutebrowser";
 
