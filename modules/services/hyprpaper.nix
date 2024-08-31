@@ -73,7 +73,7 @@ in {
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hyprpaper";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
         X-Restart-Triggers =
           [ "${config.xdg.configFile."hypr/hyprpaper.conf".source}" ];
