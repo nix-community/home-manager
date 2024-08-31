@@ -1662,7 +1662,7 @@ in {
         message = ''
           A new module is available: 'programs.zed-editor'.
 
-          Zed is a fast text editor for Mac and Linux.
+          Zed is a fast text editor for macOS and Linux.
 
           See https://zed.dev for more.
         '';
