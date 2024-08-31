@@ -128,6 +128,7 @@ in {
     systemd.user.services.wlsunset = {
       Unit = {
         Description = "Day/night gamma adjustments for Wayland compositors.";
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

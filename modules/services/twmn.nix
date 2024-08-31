@@ -361,7 +361,7 @@ in {
     systemd.user.services.twmnd = {
       Unit = {
         Description = "twmn daemon";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
         X-Restart-Triggers =
           [ "${config.xdg.configFile."twmn/twmn.conf".source}" ];

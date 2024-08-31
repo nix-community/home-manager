@@ -696,7 +696,7 @@ in {
           Unit = {
             Description = cfg.tray.package.pname;
             Requires = [ "tray.target" ];
-            After = [ "graphical-session-pre.target" "tray.target" ];
+            After = [ "graphical-session.target" "tray.target" ];
             PartOf = [ "graphical-session.target" ];
           };
 
@@ -721,7 +721,7 @@ in {
           Unit = {
             Description = "syncthingtray";
             Requires = [ "tray.target" ];
-            After = [ "graphical-session-pre.target" "tray.target" ];
+            After = [ "graphical-session.target" "tray.target" ];
             PartOf = [ "graphical-session.target" ];
           };
 

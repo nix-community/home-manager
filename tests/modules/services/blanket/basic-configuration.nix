@@ -20,7 +20,7 @@
         RestartSec=5
 
         [Unit]
-        After=graphical-session-pre.target
+        After=graphical-session.target
         Description=Blanket daemon
         PartOf=graphical-session.target
         PartOf=pipewire.service

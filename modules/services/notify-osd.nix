@@ -33,7 +33,7 @@ in {
     systemd.user.services.notify-osd = {
       Unit = {
         Description = "notify-osd";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

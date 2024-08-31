@@ -23,7 +23,7 @@ in {
     systemd.user.services.rsibreak = {
       Unit = {
         Description = "RSI break timer";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
