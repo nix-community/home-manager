@@ -162,6 +162,7 @@ in import nmtSrc {
     ./modules/programs/zk
     ./modules/programs/zplug
     ./modules/programs/zsh
+    ./modules/services/gpg-agent
     ./modules/services/syncthing/common
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
@@ -242,7 +243,6 @@ in import nmtSrc {
     ./modules/services/fusuma
     ./modules/services/git-sync
     ./modules/services/glance
-    ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/hypridle
