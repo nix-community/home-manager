@@ -127,6 +127,7 @@ in import nmtSrc {
     ./modules/programs/powerline-go
     ./modules/programs/pubs
     ./modules/programs/pyenv
+    ./modules/programs/process-compose
     ./modules/programs/qcal
     ./modules/programs/qutebrowser
     ./modules/programs/ranger
