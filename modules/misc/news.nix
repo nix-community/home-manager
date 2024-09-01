@@ -1703,6 +1703,21 @@ in {
           one place. See https://github.com/glanceapp/glance for more.
         '';
       }
+
+      {
+        time = "2024-08-19T16:57:24Z";
+        condition = hostPlatform.isLinux;
+        message = ''
+          `home.sessionVariables` is now added to the environment used by `systemd` units.
+
+          `systemd` does not support the whole [POSIX parameter expansion] syntax,
+          but only `${FOO}`, `${FOO:-DEFAULT_VALUE}` and `${FOO:+ALTERNATE_VALUE}`;
+          in particular, substring processing (such as removing prefixes and suffices)
+          is not supported.  See `environment.d(5)`.
+
+          [POSIX parameter expansion]: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02
+        '';
+      }
     ];
   };
 }
