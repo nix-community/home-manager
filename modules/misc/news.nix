@@ -2114,6 +2114,17 @@ in {
           systemd service to ensure its execution.
         '';
       }
+
+      {
+        time = "2025-02-27T12:05:39+00:00";
+        message = ''
+          A new module is available: 'programs.sesh'.
+
+          Sesh is a CLI that helps you create and manage tmux sessions quickly
+          and easily using zoxide. See https://github.com/joshmedeski/sesh for
+          more.
+        '';
+      }
     ];
   };
 }
