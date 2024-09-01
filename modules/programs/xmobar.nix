@@ -1,9 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
-let cfg = config.programs.xmobar;
-in {
+let
+  cfg = config.programs.xmobar;
+  # convertDate = literalExpression ''
+  #   asda/n
+  #   sbdf/n
+  # '';
+  convertDate = _commands: "Run Date " + _commands.date + " \"date\"" + " 10";
+in
+{
   options.programs.xmobar = {
     enable = mkEnableOption "Xmobar, a minimalistic status bar";
 
@@ -48,11 +60,43 @@ in {
         for options.
       '';
     };
+
+    commands = mkOption {
+      type = types.submodule {
+        options = {
+          date = mkOption {
+            type = types.str;
+            description = "Date monitor";
+          };
+          com = mkOption {
+            type = types.submodule {
+              options = {
+                executable = mkOption {
+                  type = types.str;
+                  description = "Executable name";
+                };
+                arguments = mkOption {
+                  type = types.listOf types.str;
+                  description = "Command line arguments to pass to the executable.";
+                };
+                rate = mkOption {
+                  type = types.int;
+                  description = "Refresh rate in tenth of s second.";
+                };
+              };
+            };
+            description = "Executing external commands";
+          };
+        };
+      };
+      description = "All the possible commands of Xmobar";
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
     xdg.configFile."xmobar/.xmobarrc".text = cfg.extraConfig;
+    xdg.configFile."xmobar/bla.txt".text = convertDate cfg.commands;
   };
 
   meta.maintainers = [ hm.maintainers.t4ccer ];
