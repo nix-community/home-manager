@@ -101,6 +101,12 @@
     github = "diniamo";
     githubId = 55629891;
   };
+  dudeofawesome = {
+    name = "Louis Orleans";
+    email = "louis@orleans.io";
+    github = "dudeofawesome";
+    githubId = 1683595;
+  };
   dwagenk = {
     email = "dwagenk@mailbox.org";
     github = "dwagenk";
