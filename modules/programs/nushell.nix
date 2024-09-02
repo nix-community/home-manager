@@ -145,11 +145,17 @@ in {
     };
 
     environmentVariables = mkOption {
-      type = types.attrsOf types.str;
+      type = types.attrsOf (pkgs.formats.json { }).type;
       default = { };
-      example = { FOO = "BAR"; };
+      example = {
+        FOO = "BAR";
+        BOOLEAN_VAR = true;
+        NUMERIC_VAR = 4;
+        LIST_VAR = [ "elem1" 2 ];
+        OBJECT_VAR = { some = "field"; };
+      };
       description = ''
-        An attribute set that maps an environment variable to a shell interpreted string.
+        Environment variables that will be set.
       '';
     };
   };
@@ -173,9 +179,12 @@ in {
       })
 
       (let
-        envVarsStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "$env.${k} = ${v}") cfg.environmentVariables);
-      in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
+        hasEnvVars = cfg.environmentVariables != { };
+        envVarsStr = lib.mkIf hasEnvVars ''
+          ${builtins.toJSON cfg.environmentVariables} | load-env
+        '';
+
+      in mkIf (cfg.envFile != null || cfg.extraEnv != "" || hasEnvVars) {
         "${configDir}/env.nu".text = mkMerge [
           (mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
