@@ -231,7 +231,7 @@ in {
 
       darwinSetupWarning = mkOption {
         type = types.bool;
-        default = true;
+        default = false;
         example = false;
         visible = isDarwin;
         readOnly = !isDarwin;
@@ -324,17 +324,8 @@ in {
     ];
 
     warnings = optional (isDarwin && cfg.darwinSetupWarning) ''
-      Thunderbird packages are not yet supported on Darwin. You can still use
-      this module to manage your accounts and profiles by setting
-      'programs.thunderbird.package' to a dummy value, for example using
-      'pkgs.runCommand'.
-
-      Note that this module requires you to set the following environment
-      variables when using an installation of Thunderbird that is not provided
-      by Nix:
-
-          export MOZ_LEGACY_PROFILES=1
-          export MOZ_ALLOW_DOWNGRADE=1
+      Using programs.thunderbird.darwinSetupWarning is deprecated. The module
+      is now compatible with all thunderbird installations.
     '';
 
     home.packages = [ cfg.package ]
