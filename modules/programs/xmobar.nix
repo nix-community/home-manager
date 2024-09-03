@@ -9,11 +9,17 @@ with lib;
 
 let
   cfg = config.programs.xmobar;
-  # convertDate = literalExpression ''
-  #   asda/n
-  #   sbdf/n
-  # '';
-  convertDate = _commands: "Run Date " + _commands.date + " \"date\"" + " 10";
+  convertDate =
+    _commands:
+    "Run Date "
+    + _commands.date
+    + " \"date\""
+    + " 10"
+    + "\n"
+    + "Run Com "
+    + "\""
+    + _commands.com.executable
+    + "\"";
 in
 {
   options.programs.xmobar = {
