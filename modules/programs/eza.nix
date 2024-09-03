@@ -93,6 +93,10 @@ with lib;
 
     programs.fish.shellAliases = optionsAlias
       // optionalAttrs cfg.enableFishIntegration aliases;
+    programs.fish.plugins = mkIf cfg.enableFishIntegration [{
+      name = "eza-remove-default-ls-completion";
+      src = pkgs.writeTextDir "completions/ls.fish" "";
+    }];
 
     programs.ion.shellAliases = optionsAlias
       // optionalAttrs cfg.enableIonIntegration aliases;
