@@ -12,6 +12,8 @@ in {
   options.services.taskwarrior-sync = {
     enable = mkEnableOption "Taskwarrior periodic sync";
 
+    package = mkPackageOption pkgs "taskwarrior" { };
+
     frequency = mkOption {
       type = types.str;
       default = "*:0/5";
@@ -36,7 +38,7 @@ in {
       Service = {
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
-        ExecStart = "${pkgs.taskwarrior}/bin/task synchronize";
+        ExecStart = "${cfg.package}/bin/task synchronize";
       };
     };
 
