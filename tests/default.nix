@@ -275,6 +275,7 @@ in import nmtSrc {
     ./modules/services/sxhkd
     ./modules/services/syncthing/linux
     ./modules/services/trayer
+    ./modules/services/trayscale
     ./modules/services/twmn
     ./modules/services/udiskie
     ./modules/services/window-managers/bspwm

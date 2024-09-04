@@ -1703,6 +1703,16 @@ in {
           one place. See https://github.com/glanceapp/glance for more.
         '';
       }
+
+      {
+        time = "2024-09-13T08:58:17+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.trayscale'.
+
+          An unofficial GUI wrapper around the Tailscale CLI client.
+        '';
+      }
     ];
   };
 }
