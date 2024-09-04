@@ -374,6 +374,7 @@ let
     ./services/tahoe-lafs.nix
     ./services/taskwarrior-sync.nix
     ./services/trayer.nix
+    ./services/trayscale.nix
     ./services/twmn.nix
     ./services/udiskie.nix
     ./services/unclutter.nix

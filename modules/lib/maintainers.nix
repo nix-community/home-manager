@@ -587,4 +587,12 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  callumio = {
+    name = "Callum Leslie";
+    email = "git+nix@cleslie.uk";
+    github = "callumio";
+    githubId = 16057677;
+    keys =
+      [{ fingerprint = "BC82 4BB5 1656 D144 285E  A0EC D382 C4AF EECE AA90"; }];
+  };
 }
