@@ -70,6 +70,16 @@ in {
       '';
     };
 
+    stateFile = mkOption {
+      type = fileType "xdg.stateFile" "<varname>xdg.stateHome</varname>"
+        cfg.stateHome;
+      default = { };
+      description = ''
+        Attribute set of files to link into the user's XDG
+        state home.
+      '';
+    };
+
     stateHome = mkOption {
       type = types.path;
       defaultText = "~/.local/state";
@@ -122,6 +132,8 @@ in {
           cfg.configFile)
         (mapAttrs' (name: file: nameValuePair "${cfg.dataHome}/${name}" file)
           cfg.dataFile)
+        (mapAttrs' (name: file: nameValuePair "${cfg.stateHome}/${name}" file)
+          cfg.stateFile)
         { "${cfg.cacheHome}/.keep".text = ""; }
       ];
     }
