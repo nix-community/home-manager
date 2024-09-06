@@ -180,10 +180,9 @@ in {
       };
 
       startServices = mkOption {
-        default = "suggest";
-        type = with types;
-          either bool (enum [ "suggest" "legacy" "sd-switch" ]);
-        apply = p: if isBool p then if p then "sd-switch" else "suggest" else p;
+        default = true;
+        type = types.bool;
+        apply = p: if p == "sd-switch" then true else p;
         description = ''
           Whether new or changed services that are wanted by active targets
           should be started. Additionally, stop obsolete services from the
@@ -191,20 +190,14 @@ in {
 
           The alternatives are
 
-          `suggest` (or `false`)
+          `true` (the default)
+          : Use sd-switch, a tool that determines the necessary changes and
+            automatically apply them.
+
+          `false`
           : Use a very simple shell script to print suggested
             {command}`systemctl` commands to run. You will have to
             manually run those commands after the switch.
-
-          `legacy`
-          : Use a Ruby script to, in a more robust fashion, determine the
-            necessary changes and automatically run the
-            {command}`systemctl` commands. Note, this alternative will soon
-            be removed.
-
-          `sd-switch` (or `true`)
-          : Use sd-switch, a tool that determines the necessary changes and
-            automatically apply them.
         '';
       };
 
@@ -327,10 +320,7 @@ in {
         suggest = ''
           bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
         '';
-        legacy = ''
-          ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
-            "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
-        '';
+
         sd-switch = let
           timeoutArg = if cfg.servicesStartTimeoutMs != 0 then
             "--timeout " + servicesStartTimeoutMs

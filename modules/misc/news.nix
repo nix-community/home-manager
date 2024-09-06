@@ -1724,6 +1724,23 @@ in {
           editor).
         '';
       }
+
+      {
+        time = "2024-09-17T05:45:39+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The option 'systemd.user.startServices' now defaults to 'true'. This
+          means that managed systemd services will be automatically started and
+          stopped as needed.
+
+          If you encounter errors please set the option to 'false' in your
+          configuration:
+
+             systemd.user.startServices = false
+
+          Also, please report the error in the Home Manager issue tracker.
+        '';
+      }
     ];
   };
 }
