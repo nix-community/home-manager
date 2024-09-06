@@ -209,5 +209,21 @@ in {
           setupLaunchAgents
         '';
     })
+
+    (mkIf isDarwin (let
+      launchctl-setenv = pkgs.writeShellScriptBin "launchctl-setenv"
+        (concatStringsSep "\n" (mapAttrsToList
+          (name: val: "/bin/launchctl setenv ${name} ${toString val}")
+          config.home.sessionVariables));
+    in {
+      launchd.agents.launchctl-setenv = {
+        enable = true;
+        config = {
+          ProgramArguments = [ "${launchctl-setenv}/bin/launchctl-setenv" ];
+          KeepAlive.SuccessfulExit = false;
+          RunAtLoad = true;
+        };
+      };
+    }))
   ];
 }
