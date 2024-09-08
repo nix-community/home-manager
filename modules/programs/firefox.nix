@@ -89,7 +89,8 @@ let
       ${builtins.toJSON {
         version = 4;
         lastUserContextId =
-          elemAt (mapAttrsToList (_: container: container.id) containers) 0;
+          foldlAttrs (acc: _: value: if value.id > acc then value.id else acc) 0
+          containers;
         identities = mapAttrsToList containerToIdentity containers ++ [
           {
             userContextId = 4294967294; # 2^32 - 2
