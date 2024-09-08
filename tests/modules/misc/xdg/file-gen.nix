@@ -11,8 +11,8 @@ with lib;
 
     xdg.configFile.test.text = "config";
     xdg.dataFile.test.text = "data";
+    xdg.stateFile.test.text = "state";
     home.file."${config.xdg.cacheHome}/test".text = "cache";
-    home.file."${config.xdg.stateHome}/test".text = "state";
 
     nmt.script = ''
       assertFileExists home-files/.dummy-config/test

@@ -95,6 +95,7 @@ in {
       package = mkPackageOption pkgs "nix-direnv" { };
     };
 
+    silent = mkEnableOption "silent mode, that is, disabling direnv logging";
   };
 
   config = mkIf cfg.enable {
@@ -163,5 +164,7 @@ in {
             }
         )
       '');
+
+    home.sessionVariables = lib.mkIf cfg.silent { DIRENV_LOG_FORMAT = ""; };
   };
 }

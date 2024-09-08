@@ -9,7 +9,7 @@ let
   presetOpts = optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
 
 in {
-  meta.maintainers = [ maintainers.jonringer ];
+  meta.maintainers = [ hm.maintainers.jonringer ];
 
   options.services.pulseeffects = {
     enable = mkEnableOption ''

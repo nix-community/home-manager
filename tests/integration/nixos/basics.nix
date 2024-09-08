@@ -7,6 +7,8 @@
   nodes.machine = { ... }: {
     imports = [ ../../../nixos ]; # Import the HM NixOS module.
 
+    virtualisation.memorySize = 2048;
+
     users.users.alice = {
       isNormalUser = true;
       description = "Alice Foobar";
@@ -31,7 +33,7 @@
       machine.send_chars("alice\n")
       machine.wait_until_tty_matches("1", "Password: ")
       machine.send_chars("foobar\n")
-      machine.wait_until_tty_matches("1", "alice\@machine")
+      machine.wait_until_tty_matches("1", "alice\\@machine")
 
     def logout_alice():
       machine.send_chars("exit\n")

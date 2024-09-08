@@ -100,6 +100,8 @@ let
       settingsFormat.generate "user.conf" cfg.settings;
   };
 
+  configHome = lib.removePrefix config.home.homeDirectory config.xdg.configHome;
+
 in {
   meta.maintainers = [ lib.maintainers.rycee ];
 
@@ -181,7 +183,7 @@ in {
         default = "suggest";
         type = with types;
           either bool (enum [ "suggest" "legacy" "sd-switch" ]);
-        apply = p: if isBool p then if p then "legacy" else "suggest" else p;
+        apply = p: if isBool p then if p then "sd-switch" else "suggest" else p;
         description = ''
           Whether new or changed services that are wanted by active targets
           should be started. Additionally, stop obsolete services from the
@@ -194,17 +196,15 @@ in {
             {command}`systemctl` commands to run. You will have to
             manually run those commands after the switch.
 
-          `legacy` (or `true`)
+          `legacy`
           : Use a Ruby script to, in a more robust fashion, determine the
             necessary changes and automatically run the
-            {command}`systemctl` commands.
+            {command}`systemctl` commands. Note, this alternative will soon
+            be removed.
 
-          `sd-switch`
-          : Use sd-switch, a third party application, to perform the service
-            updates. This tool offers more features while having a small
-            closure size. Note, it requires a fully functional user D-Bus
-            session. Once tested and deemed sufficiently robust, this will
-            become the default.
+          `sd-switch` (or `true`)
+          : Use sd-switch, a tool that determines the necessary changes and
+            automatically apply them.
         '';
       };
 
@@ -297,6 +297,12 @@ in {
       message = "This module is only available on Linux.";
     }];
 
+    warnings = lib.optional (cfg.startServices == "legacy") ''
+      Having 'systemd.user.startServices = "legacy"' is deprecated and will soon be removed.
+
+      Please change to 'systemd.user.startServices = true' to use the new systemd unit switcher (sd-switch).
+    '';
+
     xdg.configFile = mkMerge [
       (lib.listToAttrs ((buildServices "service" cfg.services)
         ++ (buildServices "slice" cfg.slices)
@@ -335,8 +341,8 @@ in {
         in ''
           ${pkgs.sd-switch}/bin/sd-switch \
             ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
-            ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
-            --new-units $newGenPath/home-files/.config/systemd/user
+            ''${oldUnitsDir:+--old-units $oldUnitsDir} \
+            --new-units "$newUnitsDir"
         '';
       };
 
@@ -354,8 +360,22 @@ in {
           warnEcho "Attempting to reload services anyway..."
         fi
 
+        if [[ -v oldGenPath ]]; then
+          oldUnitsDir="$oldGenPath/home-files${configHome}/systemd/user"
+          if [[ ! -e $oldUnitsDir ]]; then
+            oldUnitsDir=
+          fi
+        fi
+
+        newUnitsDir="$newGenPath/home-files${configHome}/systemd/user"
+        if [[ ! -e $newUnitsDir ]]; then
+          newUnitsDir=${pkgs.emptyDirectory}
+        fi
+
         ${ensureRuntimeDir} \
           ${getAttr cfg.startServices cmd}
+
+        unset newUnitsDir oldUnitsDir
       else
         echo "User systemd daemon not running. Skipping reload."
       fi

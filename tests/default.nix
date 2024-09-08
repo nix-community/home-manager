@@ -189,7 +189,7 @@ in import nmtSrc {
     ./modules/programs/bemenu
     ./modules/programs/borgmatic
     ./modules/programs/boxxy
-    ./modules/programs/firefox
+    ./modules/programs/firefox/firefox.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel
@@ -224,6 +224,7 @@ in import nmtSrc {
     ./modules/services/activitywatch
     ./modules/services/avizo
     ./modules/services/barrier
+    ./modules/services/blanket
     ./modules/services/borgmatic
     ./modules/services/cachix-agent
     ./modules/services/cliphist
@@ -240,6 +241,7 @@ in import nmtSrc {
     ./modules/services/fnott
     ./modules/services/fusuma
     ./modules/services/git-sync
+    ./modules/services/glance
     ./modules/services/gpg-agent
     ./modules/services/gromit-mpx
     ./modules/services/home-manager-auto-upgrade

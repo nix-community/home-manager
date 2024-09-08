@@ -198,9 +198,19 @@ function setFlakeAttribute() {
                 ;;
             *)
                 local name="$USER"
+
+                local hostnameArray=()
+                # FQDN lookup can fail depending on the resolver.
+                local fqdn
+                fqdn="$(hostname -f 2> /dev/null)"
+                if [[ $? -eq 0 ]]; then
+                    hostnameArray+=( "$USER@$fqdn"  )
+                fi
                 # Check FQDN, long, and short hostnames; long first to preserve
                 # pre-existing behaviour in case both happen to be defined.
-                for n in "$USER@$(hostname -f)" "$USER@$(hostname)" "$USER@$(hostname -s)"; do
+                hostnameArray+=( "$USER@$(hostname)" "$USER@$(hostname -s)" )
+
+                for n in "${hostnameArray[@]}"; do
                     if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$n\"")" == "true" ]]; then
                         name="$n"
                         if [[ -v VERBOSE ]]; then

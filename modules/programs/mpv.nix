@@ -55,8 +55,10 @@ let
 
   mpvPackage = if cfg.scripts == [ ] then
     cfg.package
+  else if hasAttr "wrapMpv" pkgs then
+    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; }
   else
-    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; };
+    pkgs.mpv.override { scripts = cfg.scripts; };
 
 in {
   options = {
@@ -227,5 +229,5 @@ in {
     }
   ]);
 
-  meta.maintainers = with maintainers; [ tadeokondrak thiagokokada chuangzhu ];
+  meta.maintainers = with maintainers; [ thiagokokada chuangzhu ];
 }

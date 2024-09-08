@@ -23,6 +23,7 @@
           [Service]
           ExecStart=@swayosd@/bin/swayosd-server --display DISPLAY --style '/etc/xdg/swayosd/style.css' --top-margin 0.100000
           Restart=always
+          RestartSec=2s
           Type=simple
 
           [Unit]
@@ -31,6 +32,8 @@
           Description=Volume/backlight OSD indicator
           Documentation=man:swayosd(1)
           PartOf=graphical-session.target
+          StartLimitBurst=5
+          StartLimitIntervalSec=10
         ''
       }
   '';

@@ -249,7 +249,7 @@ let
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
     ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") attrs)}
+    (mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
     }
   '';
   inputStr = moduleStr "input";
@@ -403,7 +403,7 @@ in {
           "XCURSOR_THEME"
           "XCURSOR_SIZE"
         ];
-        example = [ "-all" ];
+        example = [ "--all" ];
         description = ''
           Environment variables imported into the systemd and D-Bus user environment.
         '';
@@ -411,7 +411,12 @@ in {
 
       extraCommands = mkOption {
         type = types.listOf types.str;
-        default = [ "systemctl --user start sway-session.target" ];
+        default = [
+          "systemctl --user reset-failed"
+          "systemctl --user start sway-session.target"
+          "swaymsg -mt subscribe '[]' || true"
+          "systemctl --user stop sway-session.target"
+        ];
         description = ''
           Extra commands to run after D-Bus activation.
         '';

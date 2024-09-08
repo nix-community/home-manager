@@ -7,7 +7,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 
   bashIntegration = ''
-    function ya() {
+    function ${cfg.shellWrapperName}() {
       local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
       yazi "$@" --cwd-file="$tmp"
       if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
@@ -18,7 +18,7 @@ let
   '';
 
   fishIntegration = ''
-    function ya
+    function ${cfg.shellWrapperName}
       set tmp (mktemp -t "yazi-cwd.XXXXX")
       yazi $argv --cwd-file="$tmp"
       if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
@@ -29,7 +29,7 @@ let
   '';
 
   nushellIntegration = ''
-    def --env ya [...args] {
+    def --env ${cfg.shellWrapperName} [...args] {
       let tmp = (mktemp -t "yazi-cwd.XXXXX")
       yazi ...$args --cwd-file $tmp
       let cwd = (open $tmp)
@@ -40,12 +40,21 @@ let
     }
   '';
 in {
-  meta.maintainers = with maintainers; [ xyenon ];
+  meta.maintainers = with maintainers; [ xyenon eljamm ];
 
   options.programs.yazi = {
     enable = mkEnableOption "yazi";
 
     package = mkPackageOption pkgs "yazi" { };
+
+    shellWrapperName = mkOption {
+      type = types.str;
+      default = "yy";
+      example = "y";
+      description = ''
+        Name of the shell wrapper to be called.
+      '';
+    };
 
     enableBashIntegration = mkEnableOption "Bash integration";
 
@@ -132,7 +141,7 @@ in {
     };
 
     initLua = mkOption {
-      type = with types; nullOr path;
+      type = with types; nullOr (either path lines);
       default = null;
       description = ''
         The init.lua for Yazi itself.
@@ -145,8 +154,11 @@ in {
       default = { };
       description = ''
         Lua plugins.
+        Values should be a package or path containing an `init.lua` file.
+        Will be linked to {file}`$XDG_CONFIG_HOME/yazi/plugins/<name>.yazi`.
 
-        See https://yazi-rs.github.io/docs/plugins/overview/ for documentation.
+        See <https://yazi-rs.github.io/docs/plugins/overview>
+        for documentation.
       '';
       example = literalExpression ''
         {
@@ -161,8 +173,10 @@ in {
       default = { };
       description = ''
         Pre-made themes.
+        Values should be a package or path containing the required files.
+        Will be linked to {file}`$XDG_CONFIG_HOME/yazi/flavors/<name>.yazi`.
 
-        See https://yazi-rs.github.io/docs/flavors/overview/ for documentation.
+        See <https://yazi-rs.github.io/docs/flavors/overview/> for documentation.
       '';
       example = literalExpression ''
         {
@@ -171,7 +185,6 @@ in {
         }
       '';
     };
-
   };
 
   config = mkIf cfg.enable {
@@ -197,11 +210,69 @@ in {
       "yazi/theme.toml" = mkIf (cfg.theme != { }) {
         source = tomlFormat.generate "yazi-theme" cfg.theme;
       };
-      "yazi/init.lua" = mkIf (cfg.initLua != null) { source = cfg.initLua; };
-    } // (mapAttrs'
-      (name: value: nameValuePair "yazi/plugins/${name}" { source = value; })
-      cfg.plugins) // (mapAttrs'
-        (name: value: nameValuePair "yazi/flavors/${name}" { source = value; })
-        cfg.flavors);
+      "yazi/init.lua" = mkIf (cfg.initLua != null)
+        (if builtins.isPath cfg.initLua then {
+          source = cfg.initLua;
+        } else {
+          text = cfg.initLua;
+        });
+    } // (mapAttrs' (name: value:
+      nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
+      cfg.flavors) // (mapAttrs' (name: value:
+        nameValuePair "yazi/plugins/${name}.yazi" { source = value; })
+        cfg.plugins);
+
+    warnings = filter (s: s != "") (concatLists [
+      (mapAttrsToList (name: value:
+        optionalString (hasSuffix ".yazi" name) ''
+          Flavors like `programs.yazi.flavors."${name}"` should no longer have the suffix ".yazi" in their attribute name.
+          The flavor will be linked to `$XDG_CONFIG_HOME/yazi/flavors/${name}.yazi`.
+          You probably want to rename it to `programs.yazi.flavors."${
+            removeSuffix ".yazi" name
+          }"`.
+        '') cfg.flavors)
+      (mapAttrsToList (name: value:
+        optionalString (hasSuffix ".yazi" name) ''
+          Plugins like `programs.yazi.plugins."${name}"` should no longer have the suffix ".yazi" in their attribute name.
+          The plugin will be linked to `$XDG_CONFIG_HOME/yazi/plugins/${name}.yazi`.
+          You probably want to rename it to `programs.yazi.plugins."${
+            removeSuffix ".yazi" name
+          }"`.
+        '') cfg.plugins)
+    ]);
+
+    assertions = let
+      mkAsserts = opt: requiredFiles:
+        mapAttrsToList (name: value:
+          let
+            isDir = pathIsDirectory "${value}";
+            msgNotDir = optionalString (!isDir)
+              "The path or package should be a directory, not a single file.";
+            isFileMissing = file:
+              !(pathExists "${value}/${file}")
+              || pathIsDirectory "${value}/${file}";
+            missingFiles = filter isFileMissing requiredFiles;
+            msgFilesMissing = optionalString (missingFiles != [ ])
+              "The ${singularOpt} is missing these files: ${
+                toString missingFiles
+              }";
+            singularOpt = removeSuffix "s" opt;
+          in {
+            assertion = isDir && missingFiles == [ ];
+            message = ''
+              Value at `programs.yazi.${opt}.${name}` is not a valid yazi ${singularOpt}.
+              ${msgNotDir}
+              ${msgFilesMissing}
+              Evaluated value: `${value}`
+            '';
+          }) cfg.${opt};
+    in (mkAsserts "flavors" [
+      "flavor.toml"
+      "tmtheme.xml"
+      "README.md"
+      "preview.png"
+      "LICENSE"
+      "LICENSE-tmtheme"
+    ]) ++ (mkAsserts "plugins" [ "init.lua" ]);
   };
 }

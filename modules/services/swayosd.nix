@@ -60,6 +60,8 @@ in {
           After = [ "graphical-session.target" ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           Documentation = "man:swayosd(1)";
+          StartLimitBurst = 5;
+          StartLimitIntervalSec = 10;
         };
 
         Service = {
@@ -71,6 +73,7 @@ in {
             + (optionalString (cfg.topMargin != null)
               " --top-margin ${toString cfg.topMargin}");
           Restart = "always";
+          RestartSec = "2s";
         };
 
         Install = { WantedBy = [ "graphical-session.target" ]; };
