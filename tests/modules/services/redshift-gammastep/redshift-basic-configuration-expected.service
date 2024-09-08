@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@redshift@/bin/redshift '-c' '/home/hm-user/.config/redshift/redshift.conf'
+ExecStart=@redshift@/bin/redshift -c /home/hm-user/.config/redshift/redshift.conf
 Restart=on-failure
 RestartSec=3
 

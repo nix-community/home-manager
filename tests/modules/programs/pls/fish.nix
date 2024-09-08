@@ -24,7 +24,7 @@ with lib;
       assertFileExists home-files/.config/fish/config.fish
       assertFileContains \
         home-files/.config/fish/config.fish \
-        "alias ls '@pls@/bin/pls'"
+        "alias ls @pls@/bin/pls"
       assertFileContains \
         home-files/.config/fish/config.fish \
         "alias ll '@pls@/bin/pls -d perms -d user -d group -d size -d mtime -d git'"

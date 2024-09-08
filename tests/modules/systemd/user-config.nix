@@ -17,7 +17,7 @@
       pkgs.writeText "expected" ''
         [Manager]
         DefaultCPUAccounting=true
-        DefaultEnvironment=PATH='/bin:/sbin:/some where' TEST='abc'
+        DefaultEnvironment=PATH='/bin:/sbin:/some where' TEST=abc
         LogLevel=debug
       ''
     }

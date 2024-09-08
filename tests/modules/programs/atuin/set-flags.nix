@@ -25,12 +25,12 @@
     assertFileExists home-files/.bashrc
     assertFileContains \
       home-files/.bashrc \
-      "eval \"\$(@atuin@/bin/atuin init bash '--disable-ctrl-r' '--disable-up-arrow')\""
+      "eval \"\$(@atuin@/bin/atuin init bash --disable-ctrl-r --disable-up-arrow)\""
 
     assertFileExists home-files/.zshrc
     assertFileContains \
       home-files/.zshrc \
-      "eval \"\$(@atuin@/bin/atuin init zsh '--disable-ctrl-r' '--disable-up-arrow')\""
+      "eval \"\$(@atuin@/bin/atuin init zsh --disable-ctrl-r --disable-up-arrow)\""
     assertFileExists home-files/.config/fish/config.fish
     assertFileContains \
       home-files/.config/fish/config.fish \

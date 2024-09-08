@@ -1,6 +1,6 @@
 [Service]
 BusName=org.freedesktop.Notifications
-ExecStart=@fnott@/bin/fnott -c '/home/hm-user/.config/fnott/fnott.ini'
+ExecStart=@fnott@/bin/fnott -c /home/hm-user/.config/fnott/fnott.ini
 Type=dbus
 
 [Unit]

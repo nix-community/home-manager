@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@gammastep@/bin/gammastep '-c' '/home/hm-user/.config/gammastep/config.ini'
+ExecStart=@gammastep@/bin/gammastep -c /home/hm-user/.config/gammastep/config.ini
 Restart=on-failure
 RestartSec=3
 

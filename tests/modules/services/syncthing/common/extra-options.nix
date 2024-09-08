@@ -13,7 +13,7 @@ lib.mkMerge [
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/syncthing.service
       assertFileContains home-files/.config/systemd/user/syncthing.service \
-      "ExecStart='@syncthing@/bin/syncthing' '-no-browser' '-no-restart' '-logflags=0' '-foo' '-bar \"baz\"'"
+      "ExecStart=@syncthing@/bin/syncthing -no-browser -no-restart '-logflags=0' -foo '-bar \"baz\"'"
     '';
   })
   (lib.mkIf pkgs.stdenv.isDarwin {

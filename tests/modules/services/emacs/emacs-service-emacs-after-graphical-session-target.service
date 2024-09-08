@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon '-f' 'exwm-enable'"
+ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon -f exwm-enable"
 Restart=on-failure
 SuccessExitStatus=15
 Type=notify
