@@ -251,6 +251,23 @@ in {
         description = ''
           The fish package to install. May be used to change the version.
         '';
+        apply =
+          package:
+          package.override (old: {
+            fishEnvPreInit =
+              (old.fishEnvPreInit or "")
+              + ''
+                # This will ensure that $NIX_PROFILE variable is set as fast as possible
+                # so Nix managed programs can work properly without needing to tweak the OS.
+                # Usually this is done by Nix installer by putting these lines inside fish system config dir
+                # but it's a hit or miss especially when fish is not installed in the system beforehand.
+                # And I also found problem that vendor completion of Nix installed programs are not working
+                # without calling fish twice, I assume it's because $NIX_PROFILE is not set fast enough
+                if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
+                  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
+                end
+              '';
+          });
       };
 
       shellAliases = mkOption {
