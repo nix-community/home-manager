@@ -28,7 +28,17 @@ in {
     (mkRenamed [ "brightness" "night" ] "brightness-night")
   ];
 
-  options = {
+  options = let
+    strNotFloat = (pattern:
+      lib.mkOptionType {
+        inherit (lib.types.str) merge;
+
+        check = x: lib.types.str.check x && builtins.match pattern x == null;
+        description = "string not matching the pattern ${pattern}";
+        descriptionClass = "noun";
+        name = "strNotMatching ${lib.strings.escapeNixString pattern}";
+      }) "^-?[0-9]+\\.[0-9]+$";
+  in {
     enable = mkEnableOption programName;
 
     dawnTime = mkOption {
@@ -52,22 +62,30 @@ in {
     };
 
     latitude = mkOption {
-      type = with types; nullOr (either str float);
+      type = with types; nullOr (either float strNotFloat);
       default = null;
       description = ''
         Your current latitude, between `-90.0` and
         `90.0`. Must be provided along with
         longitude.
+
+        Specifying a string retrieves the latitude using the `"$(<
+        "''${config.services.${moduleName}.latitude}")"` command at runtime,
+        which is useful for reading the value from a decrypted runtime file.
       '';
     };
 
     longitude = mkOption {
-      type = with types; nullOr (either str float);
+      type = with types; nullOr (either float strNotFloat);
       default = null;
       description = ''
         Your current longitude, between `-180.0` and
         `180.0`. Must be provided along with
         latitude.
+
+        Specifying a string retrieves the longitude using the `"$(<
+        "''${config.services.${moduleName}.longitude}")"` command at runtime,
+        which is useful for reading the value from a decrypted runtime file.
       '';
     };
 
@@ -152,7 +170,7 @@ in {
           ? ${mainSection}.dusk-time)
           || (cfg.settings.${mainSection}.location-provider) == "geoclue2"
           || ((cfg.settings.${mainSection}.location-provider) == "manual"
-            && (cfg.settings ? manual.lat || cfg.settings ? manual.lon));
+            && (cfg.latitude != null || cfg.longitude != null));
         message = ''
           In order for ${programName} to know the time of action, you need to set one of
             - services.${moduleName}.provider = "geoclue2" for automatically inferring your location
@@ -170,10 +188,6 @@ in {
         location-provider = cfg.provider;
         dawn-time = mkIf (cfg.dawnTime != null) cfg.dawnTime;
         dusk-time = mkIf (cfg.duskTime != null) cfg.duskTime;
-      };
-      manual = mkIf (cfg.provider == "manual") {
-        lat = mkIf (cfg.latitude != null) (toString cfg.latitude);
-        lon = mkIf (cfg.longitude != null) (toString cfg.longitude);
       };
     };
 
@@ -200,10 +214,30 @@ in {
         ExecStart = let
           command = if cfg.tray then appletExecutable else mainExecutable;
           configFullPath = config.xdg.configHome + "/${xdgConfigFilePath}";
-        in "${cfg.package}/bin/${command} " + cli.toGNUCommandLineShell { } {
-          v = cfg.enableVerboseLogging;
-          c = configFullPath;
-        };
+        in pkgs.writeShellScript moduleName ''
+          ${cfg.package}/bin/${command} ${
+            cli.toGNUCommandLineShell { } {
+              v = cfg.enableVerboseLogging;
+              c = configFullPath;
+            }
+          } ${
+            optionalString (cfg.provider == "manual"
+              && (cfg.latitude != null || cfg.longitude != null)) ''
+                -l "${
+                  optionalString (cfg.latitude != null)
+                  (if builtins.isFloat cfg.latitude then
+                    toString cfg.latitude
+                  else
+                    ''$(< "${cfg.latitude}")'')
+                }:${
+                  optionalString (cfg.latitude != null)
+                  (if builtins.isFloat cfg.longitude then
+                    toString cfg.longitude
+                  else
+                    ''$(< "${cfg.longitude}")'')
+                }"''
+          }
+        '';
         RestartSec = 3;
         Restart = "on-failure";
       };
