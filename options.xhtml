@@ -39347,8 +39347,7 @@ t { montage_mode_enter() }
 </dt>
 <dd>
 <p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/pqivrc</code>. See
-<span class="citerefentry"><span class="refentrytitle">pqiv</span>(1)</span> for a list of available options. To set a
-boolean flag, set the value to 1.</p>
+<span class="citerefentry"><span class="refentrytitle">pqiv</span>(1)</span> for a list of available options.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
@@ -39358,8 +39357,8 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   options = {
-    lazy-load = 1;
-    hide-info-box = 1;
+    lazy-load = true;
+    hide-info-box = true;
     background-pattern = &quot;black&quot;;
     thumbnail-size = &quot;256x256&quot;;
     command-1 = &quot;thunar&quot;;
