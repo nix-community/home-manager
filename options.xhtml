@@ -28056,18 +28056,21 @@ or <code class="filename">Library/Application Support/k9s/skins/</code> (darwin)
 <a class="link" href="https://k9scli.io/topics/skins/"  target="_top">https://k9scli.io/topics/skins/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (YAML value)</p>
+attribute set of (YAML value or path)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">my_blue_skin = {
-  k9s = {
-    body = {
-      fgColor = &quot;dodgerblue&quot;;
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  my_blue_skin = {
+    k9s = {
+      body = {
+        fgColor = &quot;dodgerblue&quot;;
+      };
     };
   };
-};
+  my_red_skin = ./red_skin.yaml;
+}
 
 </code></pre>
 
