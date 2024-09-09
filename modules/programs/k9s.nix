@@ -9,11 +9,7 @@ let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
 in {
-  meta.maintainers = with maintainers; [
-    katexochen
-    liyangau
-    hm.maintainers.LucasWagler
-  ];
+  meta.maintainers = with maintainers; [ liyangau hm.maintainers.LucasWagler ];
 
   imports = [
     (mkRenamedOptionModule [ "programs" "k9s" "skin" ] [
