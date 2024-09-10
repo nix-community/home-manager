@@ -91,8 +91,17 @@ with lib;
     programs.zsh.shellAliases = optionsAlias
       // optionalAttrs cfg.enableZshIntegration aliases;
 
-    programs.fish.shellAliases = optionsAlias
-      // optionalAttrs cfg.enableFishIntegration aliases;
+    programs.fish = mkMerge [
+      (mkIf (!config.programs.fish.preferAbbrs) {
+        shellAliases = optionsAlias
+          // optionalAttrs cfg.enableFishIntegration aliases;
+      })
+
+      (mkIf config.programs.fish.preferAbbrs {
+        shellAliases = optionsAlias;
+        shellAbbrs = optionalAttrs cfg.enableFishIntegration aliases;
+      })
+    ];
 
     programs.ion.shellAliases = optionsAlias
       // optionalAttrs cfg.enableIonIntegration aliases;
