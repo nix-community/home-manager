@@ -288,6 +288,16 @@ in {
         '';
       };
 
+      preferAbbrs = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          If enabled, abbreviations will be preferred over aliases when
+          other modules define aliases for fish.
+        '';
+      };
+
       shellInit = mkOption {
         type = types.lines;
         default = "";
