@@ -25,7 +25,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = literalExpression "pkgs.gnome.adwaita-icon-theme";
+        example = literalExpression "pkgs.adwaita-icon-theme";
         description = "Package providing the theme.";
       };
 
