@@ -28,7 +28,7 @@ in {
       default = [ ];
       example = [ "--no-cmd" ];
       description = ''
-        List of options to pass to zoxide.
+        List of options to pass to zoxide init.
       '';
     };
 
