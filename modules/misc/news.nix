@@ -1703,6 +1703,17 @@ in {
           one place. See https://github.com/glanceapp/glance for more.
         '';
       }
+
+      {
+        time = "2024-09-01T10:01:13+00:0";
+        message = ''
+          A new module is available: 'programs.sesh'.
+
+          Sesh is a CLI that helps you create and manage tmux sessions quickly
+          and easily using zoxide. See https://github.com/joshmedeski/sesh for
+          more.
+        '';
+      }
     ];
   };
 }
