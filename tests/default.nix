@@ -140,6 +140,7 @@ in import nmtSrc {
     ./modules/programs/scmpuff
     ./modules/programs/senpai
     ./modules/programs/sftpman
+    ./modules/programs/sheldon
     ./modules/programs/sioyek
     ./modules/programs/sm64ex
     ./modules/programs/spotify-player
