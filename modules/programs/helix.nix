@@ -15,6 +15,7 @@ in {
       type = types.package;
       default = pkgs.helix;
       defaultText = literalExpression "pkgs.helix";
+      example = literalExpression "pkgs.evil-helix";
       description = "The package to use for helix.";
     };
 
