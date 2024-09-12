@@ -325,11 +325,9 @@ in {
     home.activation.reloadSystemd = hm.dag.entryAfter [ "linkGeneration" ] (let
       cmd = {
         suggest = ''
-          PATH=${dirOf cfg.systemctlPath}:$PATH \
           bash ${./systemd-activate.sh} "''${oldGenPath=}" "$newGenPath"
         '';
         legacy = ''
-          PATH=${dirOf cfg.systemctlPath}:$PATH \
           ${pkgs.ruby}/bin/ruby ${./systemd-activate.rb} \
             "''${oldGenPath=}" "$newGenPath" "${servicesStartTimeoutMs}"
         '';
@@ -346,10 +344,14 @@ in {
         '';
       };
 
-      ensureRuntimeDir =
-        "XDG_RUNTIME_DIR=\${XDG_RUNTIME_DIR:-/run/user/$(id -u)}";
+      # Make sure that we have an environment where we are likely to
+      # successfully talk with systemd.
+      ensureSystemd = ''
+        env XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}" \
+            PATH="${dirOf cfg.systemctlPath}:$PATH" \
+      '';
 
-      systemctl = "${ensureRuntimeDir} ${cfg.systemctlPath}";
+      systemctl = "${ensureSystemd} systemctl";
     in ''
       systemdStatus=$(${systemctl} --user is-system-running 2>&1 || true)
 
@@ -372,8 +374,7 @@ in {
           newUnitsDir=${pkgs.emptyDirectory}
         fi
 
-        ${ensureRuntimeDir} \
-          ${getAttr cfg.startServices cmd}
+        ${ensureSystemd} ${getAttr cfg.startServices cmd}
 
         unset newUnitsDir oldUnitsDir
       else
