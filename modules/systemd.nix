@@ -337,7 +337,7 @@ in {
           else
             "";
         in ''
-          ${pkgs.sd-switch}/bin/sd-switch \
+          ${lib.getExe pkgs.sd-switch} \
             ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
             ''${oldUnitsDir:+--old-units $oldUnitsDir} \
             --new-units "$newUnitsDir"
