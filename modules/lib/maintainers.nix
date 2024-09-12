@@ -276,6 +276,12 @@
     github = "nilp0inter";
     githubId = 1224006;
   };
+  NitroSniper = {
+    name = "Nitro Sniper";
+    email = "nitro@ortin.dev";
+    github = "NitroSniper";
+    githubId = 44097331;
+  };
   seylerius = {
     email = "sable@seyleri.us";
     name = "Sable Seyler";
