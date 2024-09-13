@@ -7,8 +7,8 @@
         { include = "path/to/included/file"; }
         {
           output = {
-            criteria = "*";
-            status = "enable";
+            criteria = "Iiyama North America PLE2483H-DP";
+            alias = "iiyama";
           };
         }
         {
@@ -27,7 +27,7 @@
               status = "disable";
             }
             {
-              criteria = "Iiyama North America PLE2483H-DP";
+              criteria = "$iiyama";
               status = "enable";
               position = "0,0";
             }
