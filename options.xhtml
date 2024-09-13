@@ -34874,6 +34874,102 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.neovide.enable"></a><a class="term" href="options.xhtml#opt-programs.neovide.enable"><code class="option">programs.neovide.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Neovide, No Nonsense Neovim Client in Rust.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovide.nix" target="_top">
+&lt;home-manager/modules/programs/neovide.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.neovide.package"></a><a class="term" href="options.xhtml#opt-programs.neovide.package"><code class="option">programs.neovide.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The neovide package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.neovide</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovide.nix" target="_top">
+&lt;home-manager/modules/programs/neovide.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.neovide.settings"></a><a class="term" href="options.xhtml#opt-programs.neovide.settings"><code class="option">programs.neovide.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Neovide configuration.
+For available settings see <a class="link" href="https://neovide.dev/config-file.html"  target="_top">https://neovide.dev/config-file.html</a>.
+For any option not found will need to be done in your neovim’s config instead.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  fork = false;
+  frame = &quot;full&quot;;
+  idle = true;
+  maximized = false;
+  neovim-bin = &quot;/usr/bin/nvim&quot;;
+  no-multigrid = false;
+  srgb = false;
+  tabs = true;
+  theme = &quot;auto&quot;;
+  title-hidden = true;
+  vsync = true;
+  wsl = false;
+
+  font = {
+    normal = [];
+    size = 14.0;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovide.nix" target="_top">
+&lt;home-manager/modules/programs/neovide.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.neovim.enable"></a><a class="term" href="options.xhtml#opt-programs.neovim.enable"><code class="option">programs.neovim.enable</code>
   </a>
  </span>
