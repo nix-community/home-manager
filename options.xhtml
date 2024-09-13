@@ -24417,6 +24417,9 @@ package</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.helix</code></p>
 
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.evil-helix</code></p>
+
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
 <tr><td>
@@ -24527,7 +24530,6 @@ for more information.</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  # the language-server option currently requires helix from the master branch at https://github.com/helix-editor/helix/
   language-server.typescript-language-server = with pkgs.nodePackages; {
     command = &quot;${typescript-language-server}/bin/typescript-language-server&quot;;
     args = [ &quot;--stdio&quot; &quot;--tsserver-path=${typescript}/lib/node_modules/typescript/lib&quot; ];
