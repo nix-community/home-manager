@@ -1724,6 +1724,16 @@ in {
           editor).
         '';
       }
+
+      {
+        time = "2024-09-13T15:14:05+00:00";
+        message = ''
+          A new module is available: 'services.wpaperd'.
+
+          This replaces the existing module, 'programs.wpaperd', and adds a 
+          systemd service to ensure its execution.
+        '';
+      }
     ];
   };
 }
