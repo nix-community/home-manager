@@ -39,7 +39,7 @@ let
       };
     });
 in {
-  meta.maintainers = [ maintainers.Philipp-M ];
+  meta.maintainers = [ maintainers.Philipp-M maintainers.joaquintrinanes ];
 
   imports = [
     (mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
