@@ -7,8 +7,18 @@ let cfg = config.services.poweralertd;
 in {
   meta.maintainers = [ maintainers.thibautmarty ];
 
-  options.services.poweralertd.enable =
-    mkEnableOption "the Upower-powered power alertd";
+  options.services.poweralertd = {
+    enable = mkEnableOption "the Upower-powered power alertd";
+
+    extraArgs = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [ "-s" "-S" ];
+      description = ''
+        Extra command line arguments to pass to poweralertd.
+      '';
+    };
+  };
 
   config = mkIf cfg.enable {
     assertions = [
@@ -28,7 +38,9 @@ in {
 
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.poweralertd}/bin/poweralertd";
+        ExecStart = "${pkgs.poweralertd}/bin/poweralertd ${
+            utils.escapeSystemdExecArgs cfg.extraArgs
+          }";
         Restart = "always";
       };
     };
