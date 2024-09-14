@@ -11,10 +11,10 @@
       version = "0";
       outPath = null;
       buildScript = ''
-      mkdir -p $out/bin
-      touch $out/bin/mopidy
-      chmod +x $out/bin/mopidy
-    '';
+        mkdir -p $out/bin
+        touch $out/bin/mopidy
+        chmod +x $out/bin/mopidy
+      '';
     };
 
     mopidy-local = { };
