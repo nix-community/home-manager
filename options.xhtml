@@ -77000,7 +77000,8 @@ boolean</p>
 ‘wrapperFeatures’, ‘extraSessionCommands’, and ‘extraOptions’.
 Set to <code class="literal">null</code> to not add any Sway package to your
 path. This should be done if you want to use the NixOS Sway
-module to install Sway.</p>
+module to install Sway. Beware setting to <code class="literal">null</code> will also disable
+reloading Sway when new config is activated.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 null or package</p>
@@ -77024,13 +77025,13 @@ null or package</p>
  </span>
 </dt>
 <dd>
-<p>If enabled (the default), validates the generated config file.</p>
+<p>If enabled, validates the generated config file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
+<code class="literal">wayland.windowManager.sway.package != null</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
