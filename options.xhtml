@@ -48143,13 +48143,23 @@ string <span class="emphasis"><em>(read only)</em></span></p>
 <code class="filename">user.js</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (boolean or signed integer or string)</p>
+Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   &quot;mail.spellcheck.inline&quot; = false;
+  &quot;mailnews.database.global.views.global.columns&quot; = {
+    selectCol = {
+      visible = false;
+      ordinal = 1;
+    };
+    threadCol = {
+      visible = true;
+      ordinal = 2;
+    };
+  };
 }
 
 </code></pre>
@@ -48263,7 +48273,7 @@ boolean</p>
 all profiles.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (boolean or signed integer or string)</p>
+Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
