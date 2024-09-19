@@ -47,7 +47,7 @@ in {
         Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
-          Environment = "PATH=${config.home.profileDirectory}/bin";
+          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
           ExecStart =
             if strings.versionAtLeast (versions.majorMinor cfg.package.version)
             "24.05" then
@@ -81,7 +81,7 @@ in {
         Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
-          Environment = "PATH=${config.home.profileDirectory}/bin";
+          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
           ExecStart = "${cfg.package}/bin/kdeconnect-indicator";
           Restart = "on-abort";
         };
