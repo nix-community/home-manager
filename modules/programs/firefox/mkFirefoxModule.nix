@@ -330,7 +330,7 @@ in {
       description = "Resulting ${cfg.name} package.";
     };
 
-    policies = optionalAttrs (unwrappedPackageName != null) (mkOption {
+    policies = optionalAttrs (wrappedPackageName != null) (mkOption {
       inherit visible;
       type = types.attrsOf jsonFormat.type;
       default = { };
