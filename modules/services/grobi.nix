@@ -88,7 +88,7 @@ in {
         ExecStart = "${pkgs.grobi}/bin/grobi watch -v";
         Restart = "always";
         RestartSec = "2s";
-        Environment = "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.bash}/bin";
+        Environment = [ "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.bash}/bin" ];
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
