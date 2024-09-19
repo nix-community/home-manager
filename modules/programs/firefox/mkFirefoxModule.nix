@@ -61,7 +61,7 @@ let
     }) // {
       General = {
         StartWithLastProfile = 1;
-      } // lib.optionalAttrs (cfg.profileVersion == null) {
+      } // lib.optionalAttrs (cfg.profileVersion != null) {
         Version = cfg.profileVersion;
       };
     };
