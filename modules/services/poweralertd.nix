@@ -2,8 +2,22 @@
 
 with lib;
 
-let cfg = config.services.poweralertd;
-
+let
+  inherit (lib.strings) toJSON;
+  cfg = config.services.poweralertd;
+  escapeSystemdExecArg = arg:
+    let
+      s = if isPath arg then
+        "${arg}"
+      else if isString arg then
+        arg
+      else if isInt arg || isFloat arg || isDerivation arg then
+        toString arg
+      else
+        throw
+        "escapeSystemdExecArg only allows strings, paths, numbers and derivations";
+    in replaceStrings [ "%" "$" ] [ "%%" "$$" ] (toJSON s);
+  escapeSystemdExecArgs = concatMapStringsSep " " escapeSystemdExecArg;
 in {
   meta.maintainers = [ maintainers.thibautmarty ];
 
@@ -39,7 +53,7 @@ in {
       Service = {
         Type = "simple";
         ExecStart = "${pkgs.poweralertd}/bin/poweralertd ${
-            utils.escapeSystemdExecArgs cfg.extraArgs
+            escapeSystemdExecArgs cfg.extraArgs
           }";
         Restart = "always";
       };
