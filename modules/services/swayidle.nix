@@ -94,7 +94,7 @@ in {
 
     extraArgs = mkOption {
       type = with types; listOf str;
-      default = [ ];
+      default = [ "-w" ];
       description = "Extra arguments to pass to swayidle.";
     };
 
@@ -127,8 +127,7 @@ in {
         Restart = "always";
         # swayidle executes commands using "sh -c", so the PATH needs to contain a shell.
         Environment = [ "PATH=${makeBinPath [ pkgs.bash ]}" ];
-        ExecStart =
-          "${cfg.package}/bin/swayidle -w ${concatStringsSep " " args}";
+        ExecStart = "${cfg.package}/bin/swayidle ${concatStringsSep " " args}";
       };
 
       Install = { WantedBy = [ cfg.systemdTarget ]; };
