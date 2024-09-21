@@ -61,8 +61,7 @@ let
     }) // {
       General = {
         StartWithLastProfile = 1;
-      } // lib.optionalAttrs (cfg.profileVersion == null) {
-        Version = cfg.profileVersion;
+        Version = 2;
       };
     };
 
@@ -342,13 +341,6 @@ in {
         BlockAboutConfig = true;
       };
     });
-
-    profileVersion = mkOption {
-      internal = true;
-      type = types.nullOr types.ints.unsigned;
-      default = if isDarwin then null else 2;
-      description = "profile version, set null for nix-darwin";
-    };
 
     profiles = mkOption {
       inherit visible;
