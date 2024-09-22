@@ -14,6 +14,6 @@
   in ''
     assertFileExists "${configFile}"
     assertFileRegex "${configFile}" \
-      '^\s*let direnv = (/nix/store/.*direnv.*/bin/direnv export json$'
+      '^\s*/nix/store/.*direnv.*/bin/direnv export json$'
   '';
 }
