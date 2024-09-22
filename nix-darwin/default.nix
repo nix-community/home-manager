@@ -14,9 +14,9 @@ in {
     (mkIf (cfg.users != { }) {
       system.activationScripts.postActivation.text = concatStringsSep "\n"
         (mapAttrsToList (username: usercfg: ''
-          echo Activating home-manager configuration for ${username}
-          sudo -u ${username} --set-home ${
-            pkgs.writeShellScript "activation-${username}" ''
+          echo Activating home-manager configuration for ${usercfg.home.username}
+          sudo -u ${usercfg.home.username} --set-home ${
+            pkgs.writeShellScript "activation-${usercfg.home.username}" ''
               ${lib.optionalString (cfg.backupFileExtension != null)
               "export HOME_MANAGER_BACKUP_EXT=${
                 lib.escapeShellArg cfg.backupFileExtension
