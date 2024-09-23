@@ -288,6 +288,13 @@ in
 
       package = mkPackageOption pkgs "zsh" { };
 
+      extraPackages = mkOption {
+        type = with types; listOf package;
+        example = literalExpression "with pkgs; [ libnotify ]";
+        description = "Extra packages available to zsh.";
+        default = [ ];
+      };
+
       autocd = mkOption {
         default = null;
         description = ''
@@ -593,6 +600,7 @@ in
 
     {
       home.packages = [ cfg.package ]
+        ++ cfg.extraPackages
         ++ optional cfg.enableCompletion pkgs.nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
