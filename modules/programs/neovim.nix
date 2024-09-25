@@ -391,20 +391,19 @@ in {
     suppressNotVimlConfig = p:
       if p.type != "viml" then p // { config = null; } else p;
 
-    neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
+    neovimConfig = pkgs.wrapNeovimUnstable cfg.package {
       inherit (cfg) extraPython3Packages withPython3 withRuby viAlias vimAlias;
       withNodeJs = cfg.withNodeJs || cfg.coc.enable;
       plugins = map suppressNotVimlConfig pluginsNormalized;
-      customRC = cfg.extraConfig;
-    };
-
-    wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package (neovimConfig // {
-      wrapperArgs =
-        (lib.escapeShellArgs (neovimConfig.wrapperArgs ++ cfg.extraWrapperArgs))
-        + " " + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
+      # it gets ignored
+      neovimRcContent = cfg.extraConfig;
+      wrapperArgs = (lib.escapeShellArgs (cfg.extraWrapperArgs)) + " "
+        + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
         + extraMakeWrapperLuaArgs;
       wrapRc = false;
-    });
+    };
+
+    wrappedNeovim' = neovimConfig;
   in mkIf cfg.enable {
 
     programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
@@ -422,6 +421,14 @@ in {
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
 
     home.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+
+    # link the packpath in expected folder so that even unwrapped neovim can pick
+    # home-manager's plugins
+    xdg.dataFile."nvim/site/pack/hm" = let
+      packpathDirs.hm = neovimConfig.vimPackage;
+    in {
+      source = "${pkgs.neovimUtils.packDir packpathDirs}/pack/hm";
+    };
 
     xdg.configFile = let
       hasLuaConfig = lib.hasAttr "lua" config.programs.neovim.generatedConfigs;
