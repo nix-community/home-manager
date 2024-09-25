@@ -140,9 +140,15 @@ in {
             $env.config.hooks.pre_prompt?
             | default []
             | append {||
-                let direnv = (${getExe cfg.package} export json
-                | from json
-                | default {})
+                let direnv = (
+                    try {
+                        ${getExe cfg.package} export json
+                    } catch {
+                        ""
+                    }
+                    | from json
+                    | default {}
+                )
                 if ($direnv | is-empty) {
                     return
                 }
