@@ -5,7 +5,6 @@
 # are expected to be follow the same format as described in [1].
 #
 # [1] https://github.com/NixOS/nixpkgs/blob/fca0d6e093c82b31103dc0dacc48da2a9b06e24b/maintainers/maintainer-list.nix#LC1
-
 {
   abayomi185 = {
     name = "Yomi";
@@ -84,10 +83,12 @@
     github = "d-dervishi";
     githubId = 61125355;
     name = "David Dervishi";
-    keys = [{
-      longKeyId = "rsa4096/0xB1C012F0E7697195";
-      fingerprint = "4C92 E3B0 21B5 5562 A1E0  CE3D B1C0 12F0 E769 7195";
-    }];
+    keys = [
+      {
+        longKeyId = "rsa4096/0xB1C012F0E7697195";
+        fingerprint = "4C92 E3B0 21B5 5562 A1E0  CE3D B1C0 12F0 E769 7195";
+      }
+    ];
   };
   Dines97 = {
     name = "Denis Kaynar";
@@ -204,10 +205,12 @@
     email = "kamadorueda@gmail.com";
     github = "kamadorueda";
     githubId = 47480384;
-    keys = [{
-      longkeyid = "rsa4096/0x04D0CEAF916A9A40";
-      fingerprint = "2BE3 BAFD 793E A349 ED1F  F00F 04D0 CEAF 916A 9A40";
-    }];
+    keys = [
+      {
+        longkeyid = "rsa4096/0x04D0CEAF916A9A40";
+        fingerprint = "2BE3 BAFD 793E A349 ED1F  F00F 04D0 CEAF 916A 9A40";
+      }
+    ];
   };
   katexochen = {
     name = "Paul Meyer";
@@ -281,10 +284,12 @@
     name = "Sable Seyler";
     github = "seylerius";
     githubId = 1145981;
-    keys = [{
-      logkeyid = "rsa4096/0x68BF2EAE6D91CAFF";
-      fingerprint = "F0E0 0311 126A CD72 4392  25E6 68BF 2EAE 6D91 CAFF";
-    }];
+    keys = [
+      {
+        logkeyid = "rsa4096/0x68BF2EAE6D91CAFF";
+        fingerprint = "F0E0 0311 126A CD72 4392  25E6 68BF 2EAE 6D91 CAFF";
+      }
+    ];
   };
   silmarp = {
     name = "Silmar Pereira da Silva Junior";
@@ -326,10 +331,12 @@
     github = "msfjarvis";
     githubId = "13348378";
     name = "Harsh Shandilya";
-    keys = [{
-      longkeyid = "rsa4096/0xB7843F823355E9B9";
-      fingerprint = "8F87 050B 0F9C B841 1515  7399 B784 3F82 3355 E9B9";
-    }];
+    keys = [
+      {
+        longkeyid = "rsa4096/0xB7843F823355E9B9";
+        fingerprint = "8F87 050B 0F9C B841 1515  7399 B784 3F82 3355 E9B9";
+      }
+    ];
   };
   ambroisie = {
     email = "bruno.home-manager@belanyi.fr";
@@ -498,10 +505,12 @@
     email = "88944439+rcerc@users.noreply.github.com";
     github = "rcerc";
     githubId = 88944439;
-    keys = [{
-      longkeyid = "ed25519/0x3F98EC7EC2B87ED1";
-      fingerprint = "D5D6 FD1F 0D9A 3284 FB9B  C26D 3F98 EC7E C2B8 7ED1";
-    }];
+    keys = [
+      {
+        longkeyid = "ed25519/0x3F98EC7EC2B87ED1";
+        fingerprint = "D5D6 FD1F 0D9A 3284 FB9B  C26D 3F98 EC7E C2B8 7ED1";
+      }
+    ];
   };
   mtoohey = {
     name = "Matthew Toohey";
@@ -521,8 +530,7 @@
     matrix = "@soywod:matrix.org";
     github = "soywod";
     githubId = 10437171;
-    keys =
-      [{ fingerprint = "75F0 AB7C FE01 D077 AEE6  CAFD 353E 4A18 EE0F AB72"; }];
+    keys = [{fingerprint = "75F0 AB7C FE01 D077 AEE6  CAFD 353E 4A18 EE0F AB72";}];
   };
   tensor5 = {
     github = "tensor5";
@@ -535,8 +543,7 @@
     github = "toastal";
     githubId = 561087;
     name = "toastal";
-    keys =
-      [{ fingerprint = "7944 74B7 D236 DAB9 C9EF  E7F9 5CCE 6F14 66D4 7C9E"; }];
+    keys = [{fingerprint = "7944 74B7 D236 DAB9 C9EF  E7F9 5CCE 6F14 66D4 7C9E";}];
   };
   tomodachi94 = {
     email = "tomodachi94+nixpkgs@protonmail.com";
@@ -586,11 +593,5 @@
     email = "zorrobert@mailbox.org";
     github = "zorrobert";
     githubId = 118135271;
-  };
-  atagen = {
-    name = "atagen";
-    email = "boss@atagen.co";
-    github = "atagen";
-    githubId = 11548989;
   };
 }
