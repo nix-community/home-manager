@@ -141,12 +141,12 @@ in {
             | default []
             | append {||
                 let direnv = (
-                    try {
-                        ${getExe cfg.package} export json
-                    } catch {
-                        ""
-                    }
-                    | from json
+                    # We want to get the stdout from direnv even if it exits with non-zero,
+                    # because it will have the DIRENV_ internal variables defined.
+                    do { ${getExe cfg.package} export json }
+                    | complete
+                    | get stdout
+                    | from json --strict
                     | default {}
                 )
                 if ($direnv | is-empty) {
