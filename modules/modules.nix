@@ -269,6 +269,7 @@ let
     ./programs/pywal.nix
     ./programs/rbenv.nix
     ./programs/watson.nix
+    ./programs/waylogout.nix
     ./programs/waybar.nix
     ./programs/wezterm.nix
     ./programs/wlogout.nix
