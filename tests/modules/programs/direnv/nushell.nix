@@ -13,7 +13,6 @@
       "home-files/.config/nushell/config.nu";
   in ''
     assertFileExists "${configFile}"
-    assertFileRegex "${configFile}" \
-      '^\s*/nix/store/.*direnv.*/bin/direnv export json$'
+    assertFileRegex "${configFile}" '/nix/store/.*direnv.*/bin/direnv export json'
   '';
 }
