@@ -112,6 +112,8 @@ in {
         cfg.settings
       ]);
 
+    udisks2.enable = true;
+
     systemd.user.services.udiskie = {
       Unit = {
         Description = "udiskie mount daemon";
