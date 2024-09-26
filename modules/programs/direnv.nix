@@ -143,9 +143,9 @@ in {
                 let direnv = (
                     # We want to get the stdout from direnv even if it exits with non-zero,
                     # because it will have the DIRENV_ internal variables defined.
-                    do { ${getExe cfg.package} export json }
-                    | complete
-                    | get stdout
+                    do --ignore-program-errors { ${
+                      getExe cfg.package
+                    } export json }
                     | from json --strict
                     | default {}
                 )
