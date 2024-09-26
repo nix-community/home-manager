@@ -34,7 +34,7 @@ in {
     browsers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      example = [ "chromium" "firefox" ];
+      example = [ "chromium" "google-chrome" "firefox" ];
       description = ''
         A list of browsers to sync. An empty list will enable all browsers to be managed by profile-sync-daemon.
 
