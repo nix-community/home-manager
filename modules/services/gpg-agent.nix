@@ -358,7 +358,8 @@ in {
           enable = true;
           config = {
             # macOS doesn't like the "--supervised" option
-            ProgramArguments = [ "${gpgPkg}/bin/gpgconf" "--launch" "gpg-agent" ]
+            ProgramArguments =
+              [ "${gpgPkg}/bin/gpgconf" "--launch" "gpg-agent" ]
               ++ optionals cfg.verbose [ "--verbose" ];
             EnvironmentVariables = { GNUPGHOME = homedir; };
             KeepAlive = {

@@ -20,8 +20,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@gpg@/bin/gpg-agent</string>
-		<string>--supervised</string>
+		<string>@gpg@/bin/gpgconf</string>
+		<string>--launch</string>
+		<string>gpg-agent</string>
 	</array>
 	<key>RunAtLoad</key>
 	<false/>
