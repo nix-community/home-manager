@@ -43,7 +43,9 @@ let
       else
         "d.${hash}/${dir}";
     in if pkgs.stdenv.isDarwin then
-      "/private/var/run/org.nix-community.home.gpg-agent/${subdir}"
+    # macOS GnuPG sockets always use the canonical path.
+    # See #3864
+      "${homedir}/${subdir}"
     else
       "%t/gnupg/${subdir}";
 
@@ -355,8 +357,9 @@ in {
         launchd.agents.gpg-agent = {
           enable = true;
           config = {
-            ProgramArguments = [ "${gpgPkg}/bin/gpg-agent" "--supervised" ]
-              ++ optional cfg.verbose "--verbose";
+            # macOS doesn't like the "--supervised" option
+            ProgramArguments = [ "${gpgPkg}/bin/gpgconf" "--launch" "gpg-agent" ]
+              ++ optionals cfg.verbose [ "--verbose" ];
             EnvironmentVariables = { GNUPGHOME = homedir; };
             KeepAlive = {
               Crashed = true;
