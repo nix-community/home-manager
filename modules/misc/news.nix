@@ -1,9 +1,6 @@
 { config, lib, options, pkgs, ... }:
-
 with lib;
-
 let
-
   cfg = config.news;
 
   hostPlatform = pkgs.stdenv.hostPlatform;
@@ -44,7 +41,6 @@ let
 
     config = { id = mkDefault (builtins.hashString "sha256" config.message); };
   });
-
 in {
   meta.maintainers = [ maintainers.rycee ];
 
@@ -1732,6 +1728,35 @@ in {
 
           This replaces the existing module, 'programs.wpaperd', and adds a 
           systemd service to ensure its execution.
+        '';
+      }
+      
+      {
+        time = "2024-09-20T07:00:11+00:00";
+        condition = config.programs.kitty.theme != null;
+        message = ''
+          The option 'programs.kitty.theme' has been deprecated, please use
+          'programs.kitty.themeFile' instead.
+
+          The 'programs.kitty.themeFile' option expects the file name of a
+          theme from `kitty-themes`, without the `.conf` suffix. See
+          <https://github.com/kovidgoyal/kitty-themes/tree/master/themes> for a
+          list of themes.
+        '';
+      }
+
+      {
+        time = "2024-09-20T07:48:08+00:00";
+        condition = hostPlatform.isLinux && config.services.swayidle.enable;
+        message = ''
+          The swayidle module behavior has changed. Specifically, swayidle was
+          previously always called with a `-w` flag. This flag is now moved to
+          the default `services.swayidle.extraArgs` value to make it optional.
+
+          Your configuration may break if you already set this option and also
+          rely on the flag being automatically added. To resolve this, please
+          add `-w` to your assignment of `services.swayidle.extraArgs`.
+
         '';
       }
     ];

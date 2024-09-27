@@ -26,9 +26,9 @@ in {
     options = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "--no-aliases" ];
+      example = [ "--no-cmd" ];
       description = ''
-        List of options to pass to zoxide.
+        List of options to pass to zoxide init.
       '';
     };
 

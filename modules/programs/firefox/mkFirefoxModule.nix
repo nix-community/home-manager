@@ -61,7 +61,8 @@ let
     }) // {
       General = {
         StartWithLastProfile = 1;
-        Version = 2;
+      } // lib.optionalAttrs (cfg.profileVersion != null) {
+        Version = cfg.profileVersion;
       };
     };
 
@@ -330,7 +331,7 @@ in {
       description = "Resulting ${cfg.name} package.";
     };
 
-    policies = optionalAttrs (unwrappedPackageName != null) (mkOption {
+    policies = optionalAttrs (wrappedPackageName != null) (mkOption {
       inherit visible;
       type = types.attrsOf jsonFormat.type;
       default = { };
@@ -341,6 +342,13 @@ in {
         BlockAboutConfig = true;
       };
     });
+
+    profileVersion = mkOption {
+      internal = true;
+      type = types.nullOr types.ints.unsigned;
+      default = if isDarwin then null else 2;
+      description = "profile version, set null for nix-darwin";
+    };
 
     profiles = mkOption {
       inherit visible;
@@ -813,15 +821,6 @@ in {
       its example for how to do this.
     '';
 
-    programs.firefox.policies = {
-      ExtensionSettings = listToAttrs (map (lang:
-        nameValuePair "langpack-${lang}@firefox.mozilla.org" {
-          installation_mode = "normal_installed";
-          install_url =
-            "https://releases.mozilla.org/pub/firefox/releases/${cfg.package.version}/linux-x86_64/xpi/${lang}.xpi";
-        }) cfg.languagePacks);
-    };
-
     home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
     home.file = mkMerge ([{
@@ -1013,6 +1012,17 @@ in {
           force = true;
         };
     }));
-  } // setAttrByPath modulePath { finalPackage = wrapPackage cfg.package; });
+  } // setAttrByPath modulePath {
+    finalPackage = wrapPackage cfg.package;
+
+    policies = {
+      ExtensionSettings = listToAttrs (map (lang:
+        nameValuePair "langpack-${lang}@firefox.mozilla.org" {
+          installation_mode = "normal_installed";
+          install_url =
+            "https://releases.mozilla.org/pub/firefox/releases/${cfg.package.version}/linux-x86_64/xpi/${lang}.xpi";
+        }) cfg.languagePacks);
+    };
+  });
 }
 

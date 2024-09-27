@@ -414,6 +414,8 @@ in {
 
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
 
+    home.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+
     xdg.configFile =
       let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
       in mkMerge (
@@ -443,9 +445,5 @@ in {
           + extraMakeWrapperLuaArgs;
         wrapRc = false;
       });
-
-    programs.bash.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-    programs.fish.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-    programs.zsh.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
   };
 }
