@@ -1,19 +1,10 @@
-{ lib
-, bash
-, callPackage
-, coreutils
-, findutils
-, gettext
-, gnused
-, inetutils
-, installShellFiles
-, jq
-, less
-, ncurses
-, stdenvNoCC
-, pkgs # used for pkgs.path for nixos-option
-, path ? null # Path to use as the Home Manager channel.
-}:
+{ lib, bash, callPackage, coreutils, findutils, gettext, gnused, inetutils
+, installShellFiles, jq, less, ncurses, stdenvNoCC
+# used for pkgs.path for nixos-option
+, pkgs
+
+# Path to use as the Home Manager channel.
+, path ? null }:
 
 let
 
@@ -29,19 +20,14 @@ let
   nixos-option = pkgs.nixos-option or (callPackage
     (pkgs.path + "/nixos/modules/installer/tools/nixos-option") { });
 
-in
-
-stdenvNoCC.mkDerivation (finalAttrs: {
+in stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "home-manager";
   name = finalAttrs.pname; # without `version`
 
   inherit src;
   preferLocalBuild = true;
 
-  nativeBuildInputs = [
-    gettext
-    installShellFiles
-  ];
+  nativeBuildInputs = [ gettext installShellFiles ];
 
   dontConfigure = true;
   dontBuild = true;
