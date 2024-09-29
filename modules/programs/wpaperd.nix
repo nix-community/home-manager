@@ -6,7 +6,7 @@ let
   cfg = config.programs.wpaperd;
   tomlFormat = pkgs.formats.toml { };
 in {
-  meta.maintainers = [ hm.maintainers.Avimitin ];
+  meta.maintainers = with hm.maintainers; [ Avimitin ivandimitrov8080 ];
 
   options.programs.wpaperd = {
     enable = mkEnableOption "wpaperd";
@@ -44,6 +44,15 @@ in {
       "wpaperd/wallpaper.toml" = mkIf (cfg.settings != { }) {
         source = tomlFormat.generate "wpaperd-wallpaper" cfg.settings;
       };
+    };
+    systemd.user.services.wpaperd = {
+      Unit = {
+        Description = "Modern wallpaper daemon for Wayland";
+        After = "graphical-session-pre.target";
+        PartOf = "graphical-session.target";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+      Service.ExecStart = [ "${pkgs.wpaperd}/bin/wpaperd" ];
     };
   };
 }
