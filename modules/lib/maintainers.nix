@@ -601,4 +601,12 @@
     keys =
       [{ fingerprint = "BC82 4BB5 1656 D144 285E  A0EC D382 C4AF EECE AA90"; }];
   };
+  ivandimitrov8080 = {
+    name = "Ivan Dimitrov";
+    email = "ivan@idimitrov.dev";
+    github = "ivandimitrov8080";
+    githubId = 80976541;
+    keys =
+      [{ fingerprint = "C565 2E79 2A7A 9110 DFA7  F77D 0BDA D4B2 11C4 9294"; }];
+  };
 }
