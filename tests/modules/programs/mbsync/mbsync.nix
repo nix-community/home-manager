@@ -79,8 +79,8 @@ with lib;
     test.stubs.isync = { };
 
     nmt.script = ''
-      assertFileExists home-files/.mbsyncrc
-      assertFileContent home-files/.mbsyncrc ${./mbsync-expected.conf}
+      assertFileExists home-files/.config/isyncrc
+      assertFileContent home-files/.config/isyncrc ${./mbsync-expected.conf}
     '';
   };
 }
