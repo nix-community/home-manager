@@ -169,6 +169,7 @@ let
     ./programs/neomutt.nix
     ./programs/neovide.nix
     ./programs/neovim.nix
+    ./programs/neverest.nix
     ./programs/newsboat.nix
     ./programs/nheko.nix
     ./programs/nix-index.nix
