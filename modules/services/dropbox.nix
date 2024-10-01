@@ -13,7 +13,7 @@ in {
   meta.maintainers = [ maintainers.tph5595 ];
 
   options = {
-    services.dropbox_test = {
+    services.dropbox = {
       enable = mkEnableOption "Dropbox daemon";
 
       path = mkOption {
