@@ -55,6 +55,7 @@ in {
           # ensure we have the dirs we need
           ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p \
             ${homeBaseDir}/{.dropbox,.dropbox-dist,Dropbox}
+          ${pkgs.coreutils}/bin/touch ${homeBaseDir}/.dropbox-dist/VERSION
 
           # symlink them as needed
           if [[ ! -d ${config.home.homeDirectory}/.dropbox ]]; then
