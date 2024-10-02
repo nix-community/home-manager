@@ -138,11 +138,30 @@ in {
   };
 
   config = let
+    findWrapperPackage = packageAttr:
+      # NixGL has wrapper packages in different places depending on how you
+      # access it. We want HM configuration to be the same, regardless of how
+      # NixGL is imported.
+      #
+      # First, let's see if we have a flake.
+      if builtins.hasAttr pkgs.system cfg.packages then
+        cfg.packages.${pkgs.system}.${packageAttr}
+      else
+      # Next, let's see if we have a channel.
+      if builtins.hasAttr packageAttr cfg.packages then
+        cfg.packages.${packageAttr}
+      else
+      # Lastly, with channels, some wrappers are grouped under "auto".
+      if builtins.hasAttr "auto" cfg.packages then
+        cfg.packages.auto.${packageAttr}
+      else
+        throw "Incompatible NixGL package layout";
+
     getWrapperExe = vendor:
       let
-        glPackage = cfg.packages.${pkgs.system}."nixGL${vendor}";
+        glPackage = findWrapperPackage "nixGL${vendor}";
         glExe = lib.getExe glPackage;
-        vulkanPackage = cfg.packages.${pkgs.system}."nixVulkan${vendor}";
+        vulkanPackage = findWrapperPackage "nixVulkan${vendor}";
         vulkanExe = if cfg.vulkan.enable then lib.getExe vulkanPackage else "";
       in "${glExe} ${vulkanExe}";
 

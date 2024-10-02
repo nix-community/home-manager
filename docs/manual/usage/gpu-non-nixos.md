@@ -50,9 +50,9 @@ Xonotic to run on the dGPU, but uses the wrapper function directly for
 demonstration purposes.
 
 ```nix
-{ config, lib, pkgs, nixGL, ... }:
+{ config, lib, pkgs, nixgl, ... }:
 {
-  nixGL.packages = nixGL.packages;
+  nixGL.packages = nixgl.packages;
   nixGL.defaultWrapper = "mesa";
   nixGL.offloadWrapper = "nvidiaPrime";
   nixGL.installScripts = [ "mesa" "nvidiaPrime" ];
@@ -67,4 +67,15 @@ demonstration purposes.
     (config.lib.nixGL.wrappers.nvidiaPrime pkgs.xonotic)
   ];
 }
+```
+
+The above example assumes a flake-based setup where `nixgl` was passed from the
+flake. When using channels, the example would instead begin with
+
+```nix
+{ config, lib, pkgs, ... }:
+{
+  nixGL.packages = import <nixgl> { inherit pkgs; };
+  # The rest is the same as above
+  ...
 ```
