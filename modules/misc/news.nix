@@ -1827,6 +1827,16 @@ in {
           as systemd services.
         '';
       }
+
+      {
+        time = "2024-12-06T10:03:58+00:00";
+        message = ''
+          A new module is available: 'programs.kubecolor'.
+
+          Kubecolor is a kubectl wrapper used to add colors to your kubectl
+          output.
+        '';
+      }
     ];
   };
 }
