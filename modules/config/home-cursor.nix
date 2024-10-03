@@ -163,7 +163,7 @@ in {
     }
 
     (mkIf cfg.x11.enable {
-      xsession.initExtra = ''
+      xsession.profileExtra = ''
         ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${
           toString cfg.size
         }
