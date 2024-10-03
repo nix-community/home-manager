@@ -129,6 +129,28 @@ let
     '') prefs)}
     ${extraPrefs}
   '';
+
+  filterIniHeader = ''
+    version="9"
+    logging="no"
+  '';
+
+  mkFilterToIniStr = f: ''
+    name="${f.name}"
+    enabled="${if f.enabled then "yes" else "no"}"
+    type="${f.type}"
+    action="${f.action}"
+    actionValue="${f.actionValue}"
+    condition="${f.condition}"
+  '';
+
+  mkFilterListToIni = filters:
+    filterIniHeader + concatStrings (map (f: mkFilterToIniStr f) filters);
+
+  getAccountsForProfile = profileName: accounts:
+    (filter (a:
+      a.thunderbird.profiles == [ ]
+      || any (p: p == profileName) a.thunderbird.profiles) accounts);
 in {
   meta.maintainers = with hm.maintainers; [ d-dervishi jkarlson ];
 
@@ -310,6 +332,28 @@ in {
                 argument is an automatically generated identifier.
               '';
             };
+
+            msgFilters = mkOption {
+              type = (types.listOf (types.attrs));
+              default = [ ];
+              defaultText = literalExpression "[ ]";
+              example = literalExpression ''
+                [
+                  {
+                    name = "Junk Status is: Junk";
+                    enabled = true;
+                    type = "48";
+                    action = "Move to folder";
+                    actionValue = "imap://joe%40example.com@mail.example.com/Junk";
+                    condition = "AND (junk status,is,2)";
+                  }
+                ]
+              '';
+              description = ''
+                A list of thunderbird message filters which will be added to
+                the account.
+              '';
+            };
           };
         });
     };
@@ -368,10 +412,7 @@ in {
         mkIf (profile.userContent != "") { text = profile.userContent; };
 
       "${thunderbirdProfilesPath}/${name}/user.js" = let
-        accounts = filter (a:
-          a.thunderbird.profiles == [ ]
-          || any (p: p == name) a.thunderbird.profiles) enabledAccountsWithId;
-
+        accounts = getAccountsForProfile name enabledAccountsWithId;
         smtp = filter (a: a.smtp != null) accounts;
       in {
         text = mkUserJs (builtins.foldl' (a: b: a // b) { } ([
@@ -393,6 +434,14 @@ in {
         ] ++ (map (a: toThunderbirdAccount a profile) accounts)))
           profile.extraConfig;
       };
-    }));
+    }) ++ (mapAttrsToList (name: profile:
+      let
+        accountsWithFilters = (filter (a: a.thunderbird.msgFilters != [ ])
+          (getAccountsForProfile name enabledAccountsWithId));
+      in (builtins.listToAttrs (map (a: {
+        name =
+          "${thunderbirdConfigPath}/${name}/ImapMail/${a.id}/msgFilterRules.dat";
+        value = { text = mkFilterListToIni a.thunderbird.msgFilters; };
+      }) accountsWithFilters))) cfg.profiles));
   };
 }
