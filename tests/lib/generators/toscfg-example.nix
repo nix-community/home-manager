@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 {
   home.file."toscfg-example-result.txt".text = lib.hm.generators.toSCFG { } {

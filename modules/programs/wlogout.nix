@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (lib) all filterAttrs isStorePath literalExpression types;
+  inherit (lib) filterAttrs isStorePath literalExpression types;
   inherit (lib.options) mkEnableOption mkPackageOption mkOption;
   inherit (lib.modules) mkIf;
   inherit (lib.strings) concatMapStrings;

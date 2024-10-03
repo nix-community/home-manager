@@ -1,5 +1,5 @@
 modulePath:
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 with lib;
 

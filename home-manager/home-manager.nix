@@ -1,11 +1,6 @@
-{ pkgs ? import <nixpkgs> { }, confPath, confAttr ? null, check ? true
-, newsReadIdsFile ? null }:
+{ pkgs ? import <nixpkgs> { }, confPath, confAttr ? null, check ? true }:
 
 let
-  inherit (pkgs.lib)
-    concatMapStringsSep fileContents filter length optionalString removeSuffix
-    replaceStrings splitString;
-
   env = import ../modules {
     configuration = if confAttr == "" || confAttr == null then
       confPath

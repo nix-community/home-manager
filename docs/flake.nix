@@ -9,7 +9,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, scss-reset }:
+  outputs = { nixpkgs, scss-reset, ... }:
     let
       supportedSystems = [
         "aarch64-darwin"

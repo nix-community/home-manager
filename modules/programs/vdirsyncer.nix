@@ -20,8 +20,6 @@ let
 
   listString = l: "[${concatStringsSep ", " l}]";
 
-  boolString = b: if b then "true" else "false";
-
   localStorage = a:
     filterAttrs (_: v: v != null)
     ((getAttrs [ "type" "fileExt" "encoding" ] a.local) // {

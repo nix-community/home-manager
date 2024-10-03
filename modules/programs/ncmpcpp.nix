@@ -27,7 +27,7 @@ let
 
   valueType = with types; oneOf [ bool int str ];
 
-  bindingType = types.submodule ({ name, config, ... }: {
+  bindingType = types.submodule ({ ... }: {
     options = {
       key = mkOption {
         type = types.str;

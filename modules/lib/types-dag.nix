@@ -1,10 +1,7 @@
 { lib }:
 
 let
-  inherit (lib)
-    concatStringsSep defaultFunctor fixedWidthNumber hm imap1 isAttrs isList
-    length listToAttrs mapAttrs mkIf mkOrder mkOption mkOptionType nameValuePair
-    stringLength types warn;
+  inherit (lib) defaultFunctor hm mkIf mkOrder mkOption mkOptionType types;
 
   dagEntryOf = elemType:
     let

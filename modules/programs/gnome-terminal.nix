@@ -65,7 +65,7 @@ let
     };
   });
 
-  profileSubModule = types.submodule ({ name, config, ... }: {
+  profileSubModule = types.submodule ({ ... }: {
     options = {
       default = mkOption {
         default = false;

@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 
 # When not specified in `programs.k9s.settings.ui.skin`,
 # test that the first skin name (alphabetically) is used in the config file

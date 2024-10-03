@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 with lib; {
   imports = [ ../../accounts/email-test-accounts.nix ];
 

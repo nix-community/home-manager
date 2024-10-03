@@ -6,7 +6,7 @@ let
 
   cfg = config.programs.zsh.zplug;
 
-  pluginModule = types.submodule ({ config, ... }: {
+  pluginModule = types.submodule ({ ... }: {
     options = {
       name = mkOption {
         type = types.str;

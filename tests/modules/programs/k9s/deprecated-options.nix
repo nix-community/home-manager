@@ -1,4 +1,4 @@
-{ config, lib, options, ... }: {
+{ lib, options, ... }: {
   programs.k9s = {
     enable = true;
     skin = {

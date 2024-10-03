@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
-let
-
-  boolToString = bool: if bool then "true" else "false";
-  backups = config.programs.borgmatic.backups;
+let backups = config.programs.borgmatic.backups;
 
 in {
   programs.borgmatic = {

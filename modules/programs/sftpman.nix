@@ -7,7 +7,7 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  mountOpts = { config, name, ... }: {
+  mountOpts = { ... }: {
     options = {
       host = mkOption {
         type = types.str;

@@ -2,11 +2,7 @@
 
 with lib;
 
-let
-
-  cfg = config.xdg.mime;
-
-in {
+{
   options = {
     xdg.mime.enable = mkOption {
       type = types.bool;

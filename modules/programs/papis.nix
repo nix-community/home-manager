@@ -40,7 +40,7 @@ in {
     };
 
     libraries = mkOption {
-      type = types.attrsOf (types.submodule ({ config, name, ... }: {
+      type = types.attrsOf (types.submodule ({ name, ... }: {
         options = {
           name = mkOption {
             type = types.str;
