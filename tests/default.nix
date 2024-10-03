@@ -231,6 +231,7 @@ in import nmtSrc {
     ./modules/services/cachix-agent
     ./modules/services/cliphist
     ./modules/services/clipman
+    ./modules/services/clipse
     ./modules/services/comodoro
     ./modules/services/conky
     ./modules/services/darkman
