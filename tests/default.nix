@@ -128,6 +128,7 @@ in import nmtSrc {
     ./modules/programs/poetry
     ./modules/programs/powerline-go
     ./modules/programs/pubs
+    ./modules/programs/pwninit
     ./modules/programs/pyenv
     ./modules/programs/qcal
     ./modules/programs/qutebrowser
