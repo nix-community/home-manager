@@ -98,6 +98,7 @@ in import nmtSrc {
     ./modules/programs/khal
     ./modules/programs/khard
     ./modules/programs/kitty
+    ./modules/programs/kubecolor
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf
