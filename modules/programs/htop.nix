@@ -76,21 +76,6 @@ let
     M_PSSWP = 120;
   };
 
-  defaultFields = with fields; [
-    PID
-    USER
-    PRIORITY
-    NICE
-    M_SIZE
-    M_RESIDENT
-    M_SHARE
-    STATE
-    PERCENT_CPU
-    PERCENT_MEM
-    TIME
-    COMM
-  ];
-
   modes = {
     Bar = 1;
     Text = 2;
@@ -105,6 +90,59 @@ let
   graph = meter modes.Graph;
   led = meter modes.LED;
   blank = text "Blank";
+
+  screenOptions = {
+    name = mkOption {
+      type = types.str;
+      description = "Name that shows on the screen tab.";
+    };
+
+    fields = mkOption {
+      type = types.oneOf [ types.str (types.listOf types.str) ];
+      default = "PID USER M_VIRT STATE PERCENT_CPU PERCENT_MEM TIME Command";
+      description = "What fields to show in the screen.";
+    };
+
+    all_branches_collapsed = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whether to collapse all branches in the tree view.";
+    };
+
+    sort_direction = mkOption {
+      type = types.enum [ (-1) 1 ];
+      default = -1;
+      description = "Whether to sort ascending or descending.";
+    };
+    sort_key = mkOption {
+      type = types.str;
+      example = "PERCENT_MEM";
+      description = "Key to sort by.";
+    };
+
+    tree_sort_direction = mkOption {
+      type = types.enum [ (-1) 1 ];
+      default = -1;
+      description = "Whether to sort the tree ascending or descending.";
+    };
+    tree_sort_key = mkOption {
+      type = types.str;
+      example = "PERCENT_MEM";
+      description = "Key to sort the three by.";
+    };
+
+    tree_view = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whether the use a tree view.";
+    };
+
+    tree_view_always_by_pid = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whther the tree view groups by pid.";
+    };
+  };
 
 in {
   meta.maintainers = [ hm.maintainers.bjpbakker ];
@@ -155,6 +193,41 @@ in {
       '';
     };
 
+    screens = mkOption {
+      type = hm.types.dagOf (types.submodule ({ dagName, ... }: {
+        options = screenOptions;
+        config.name = mkDefault dagName;
+      }));
+      default = { };
+      example = literalExpression ''
+        {
+          "Main" = {
+            fields = "PID USER PRIORITY NICE M_VIRT M_RESIDENT M_SHARE STATE PERCENT_CPU PERCENT_MEM TIME Command";
+            sort_key = "PERCENT_MEM";
+            tree_sort_key = "PERCENT_MEM";
+            tree_view = false;
+            tree_view_always_by_pid = false;
+            sort_direction = -1;
+            tree_sort_direction = -1;
+            all_branches_collapsed = false;
+          };
+          "I/O" = lib.hm.dag.entryAfter ["Main"] {
+            fields = "PID STATE STARTTIME M_RESIDENT COMM EXE USER IO_PRIORITY IO_RATE IO_READ_RATE IO_WRITE_RATE";
+            sort_key = "IO_RATE";
+            tree_sort_key = "PID";
+            tree_view = false;
+            tree_view_always_by_pid = false;
+            sort_direction = -1;
+            tree_sort_direction = -1;
+            all_branches_collapsed = false;
+          };
+        };
+      '';
+      description = ''
+        List of screens.
+      '';
+    };
+
     package = mkOption {
       type = types.package;
       default = pkgs.htop;
@@ -171,25 +244,55 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."htop/htoprc" = let
-      defaults = {
-        fields = if isDarwin then
-          remove fields.M_SHARE defaultFields
-        else
-          defaultFields;
-      };
-
-      before = optionalAttrs (cfg.settings ? header_layout) {
-        inherit (cfg.settings) header_layout;
-      };
-
-      settings = defaults // (removeAttrs cfg.settings (attrNames before));
-
       formatOptions = mapAttrsToList formatOption;
 
-    in mkIf (cfg.settings != { }) {
-      text =
-        concatStringsSep "\n" (formatOptions before ++ formatOptions settings)
-        + "\n";
+      hasScreens = cfg.screens != { };
+
+      settings = let
+        # old (no screen) configuration support
+        defaultFields = let
+          defaults = with fields; [
+            PID
+            USER
+            PRIORITY
+            NICE
+            M_SIZE
+            M_RESIDENT
+            M_SHARE
+            STATE
+            PERCENT_CPU
+            PERCENT_MEM
+            TIME
+            COMM
+          ];
+        in if isDarwin then remove fields.M_SHARE defaults else defaults;
+
+        oldDefaults = optionalAttrs (!hasScreens) { fields = defaultFields; };
+
+        leading = optionalAttrs (cfg.settings ? header_layout) {
+          inherit (cfg.settings) header_layout;
+        };
+
+        settings' = oldDefaults
+          // (removeAttrs cfg.settings (attrNames leading));
+      in formatOptions leading ++ formatOptions settings';
+
+      screens = let
+        formatOption' = k: formatOption ".${k}";
+        formatScreen = { name, fields, ... }@screen:
+          let
+            options = removeAttrs screen [ "fields" "name" ];
+            newScreen = "screen:${formatOption name fields}";
+          in [ newScreen ] ++ mapAttrsToList formatOption' options;
+
+        screens' = let sorted = hm.dag.topoSort cfg.screens;
+        in sorted.result or (abort
+          "Dependency cycle in htop screens: ${builtins.toJSON sorted}");
+
+      in concatMap (x: formatScreen x.data) screens';
+
+    in mkIf (cfg.settings != { } || hasScreens) {
+      text = concatStringsSep "\n" (settings ++ screens) + "\n";
     };
   };
 }
