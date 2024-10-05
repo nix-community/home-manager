@@ -20,7 +20,7 @@ in {
     package = pkgs.${cfg.wrappedPackageName}.override {
       extraPolicies = { DownloadDirectory = "/foo"; };
     };
-  }) // {
+  } // {
     nmt.script = ''
       jq=${lib.getExe pkgs.jq}
       config_file="${cfg.finalPackage}/lib/${cfg.wrappedPackageName}/distribution/policies.json"
@@ -39,5 +39,5 @@ in {
         fail "Expected '$config_file' to set 'policies.DownloadDirectory' to \"/foo\""
       fi
     '';
-  };
+  });
 }
