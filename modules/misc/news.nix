@@ -1722,6 +1722,16 @@ in {
       }
 
       {
+        time = "2024-09-13T15:14:05+00:00";
+        message = ''
+          A new module is available: 'services.wpaperd'.
+
+          This replaces the existing module, 'programs.wpaperd', and adds a 
+          systemd service to ensure its execution.
+        '';
+      }
+      
+      {
         time = "2024-09-20T07:00:11+00:00";
         condition = config.programs.kitty.theme != null;
         message = ''
@@ -1746,6 +1756,7 @@ in {
           Your configuration may break if you already set this option and also
           rely on the flag being automatically added. To resolve this, please
           add `-w` to your assignment of `services.swayidle.extraArgs`.
+
         '';
       }
     ];
