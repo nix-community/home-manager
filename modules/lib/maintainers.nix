@@ -457,6 +457,12 @@
     github = "podocarp";
     githubId = 10473184;
   };
+  proggerx = {
+    name = "ProggerX";
+    email = "x@proggers.ru";
+    github = "ProggerX";
+    githubId = 88623613;
+  };
   mainrs = {
     name = "mainrs";
     email = "5113257+mainrs@users.noreply.github.com";
