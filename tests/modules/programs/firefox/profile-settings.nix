@@ -9,6 +9,9 @@ let
 
   firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
 
+  userChromeExample = "#example-user-chrome { display: none; }";
+  userContentExample = "#example-user-content { display: none; }";
+
 in {
   imports = [ firefoxMockOverlay ];
 
@@ -154,12 +157,18 @@ in {
       id = 5;
       containers = {
         "shopping" = {
-          id = 6;
           icon = "circle";
           color = "yellow";
         };
       };
     };
+
+    profiles.userChrome = {
+      id = 6;
+      userChrome = userChromeExample;
+      userContent = userContentExample;
+    };
+
   } // {
 
     nmt.script = ''
@@ -167,18 +176,14 @@ in {
         home-path/bin/${cfg.wrappedPackageName} \
         MOZ_APP_LAUNCHER
 
-      assertDirectoryExists home-files/${cfg.configPath}/basic
+      assertDirectoryExists home-files/${cfg.profilesPath}/basic
 
       assertFileContent \
-        home-files/${cfg.configPath}/test/user.js \
+        home-files/${cfg.profilesPath}/test/user.js \
         ${./profile-settings-expected-user.js}
 
-      assertFileContent \
-        home-files/${cfg.configPath}/containers/containers.json \
-        ${./profile-settings-expected-containers.json}
-
       bookmarksUserJs=$(normalizeStorePaths \
-        home-files/${cfg.configPath}/bookmarks/user.js)
+        home-files/${cfg.profilesPath}/bookmarks/user.js)
 
       assertFileContent \
         $bookmarksUserJs \
@@ -186,7 +191,7 @@ in {
 
       bookmarksFile="$(sed -n \
         '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \
-        $TESTED/home-files/${cfg.configPath}/bookmarks/user.js)"
+        $TESTED/home-files/${cfg.profilesPath}/bookmarks/user.js)"
 
       assertFileContent \
         $bookmarksFile \
@@ -204,12 +209,28 @@ in {
       }
 
       assertFirefoxSearchContent \
-        home-files/${cfg.configPath}/search/search.json.mozlz4 \
+        home-files/${cfg.profilesPath}/search/search.json.mozlz4 \
         ${./profile-settings-expected-search.json}
 
       assertFirefoxSearchContent \
-        home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
+        home-files/${cfg.profilesPath}/searchWithoutDefault/search.json.mozlz4 \
         ${./profile-settings-expected-search-without-default.json}
+
+      assertFileContent \
+        home-files/${cfg.profilesPath}/containers/containers.json \
+        ${./profile-settings-expected-containers.json}
+
+      assertFileContains \
+        home-files/${cfg.profilesPath}/userChrome/user.js \
+        'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true)'
+
+      assertFileContains \
+        home-files/${cfg.profilesPath}/userChrome/chrome/userChrome.css \
+        '${userChromeExample}'
+
+      assertFileContains \
+        home-files/${cfg.profilesPath}/userChrome/chrome/userContent.css \
+        '${userContentExample}'
     '';
   });
 }
