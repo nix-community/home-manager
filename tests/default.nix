@@ -159,6 +159,7 @@ in import nmtSrc {
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
+    ./modules/programs/wlr-which-key
     ./modules/programs/yazi
     ./modules/programs/zellij
     ./modules/programs/zk

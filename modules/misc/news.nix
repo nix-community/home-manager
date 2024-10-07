@@ -1748,6 +1748,19 @@ in {
           add `-w` to your assignment of `services.swayidle.extraArgs`.
         '';
       }
+
+      {
+        time = "2024-10-04T20:17:19+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.wlr-which-key'.
+
+          wlr-which-key is a keymap manager for wlroots-based compositors,
+          inspired by which-key.nvim.
+
+          See https://github.com/MaxVerevkin/wlr-which-key for more.
+        '';
+      }
     ];
   };
 }

@@ -251,6 +251,7 @@ let
     ./programs/waybar.nix
     ./programs/wezterm.nix
     ./programs/wlogout.nix
+    ./programs/wlr-which-key.nix
     ./programs/wofi.nix
     ./programs/wpaperd.nix
     ./programs/xmobar.nix
