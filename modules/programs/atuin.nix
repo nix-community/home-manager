@@ -10,7 +10,7 @@ let
 
   inherit (pkgs.stdenv) isLinux isDarwin;
 in {
-  meta.maintainers = [ maintainers.hawkw ];
+  meta.maintainers = [ maintainers.hawkw maintainers.water-sucks ];
 
   options.programs.atuin = {
     enable = mkEnableOption "atuin";
