@@ -107,6 +107,7 @@ in {
         Description = "Idle manager for Wayland";
         Documentation = "man:swayidle(1)";
         ConditionEnvironment = "WAYLAND_DISPLAY";
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
