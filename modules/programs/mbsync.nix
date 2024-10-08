@@ -30,7 +30,7 @@ let
 
   genTlsConfig = tls:
     {
-      SSLType = if !tls.enable then
+      TLSType = if !tls.enable then
         "None"
       else if tls.useStartTls then
         "STARTTLS"
@@ -46,6 +46,13 @@ let
       "mbsync"
       "nearFarMapping"
     ])
+    (mkRenamedOptionModule [
+      "programs"
+      "mbsync"
+      "extraConfig"
+      "account"
+      "SSLVersions"
+    ] [ "programs" "mbsync" "extraConfig" "account" "TLSVersions" ])
   ];
 
   nearFarMapping = {
@@ -267,7 +274,7 @@ in {
 
       programs.notmuch.new.ignore = [ ".uidvalidity" ".mbsyncstate" ];
 
-      home.file.".mbsyncrc".text = let
+      xdg.configFile."isyncrc".text = let
         accountsConfig = map genAccountConfig mbsyncAccounts;
         # Only generate this kind of Group configuration if there are ANY accounts
         # that do NOT have a per-account groups/channels option(s) specified.
