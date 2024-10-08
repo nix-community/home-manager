@@ -49,10 +49,10 @@ with lib;
     };
 
     icons = mkOption {
-      type = types.bool;
+      type = types.either types.bool (types.enum [ "auto" "always" "never" ]);
       default = false;
       description = ''
-        Display icons next to file names ({option}`--icons` argument).
+        Display icons next to file names ({option}`--icons` argument). Setting this option to true uses `--icons=auto`
       '';
     };
 
@@ -69,9 +69,15 @@ with lib;
 
   config = let
     cfg = config.programs.eza;
+    iconsOption = if isBool cfg.icons then
+      optionals cfg.icons [ "--icons" "auto" ]
+    else [
+      "--icons"
+      cfg.icons
+    ];
 
-    args = escapeShellArgs (optional cfg.icons "--icons"
-      ++ optional cfg.git "--git" ++ cfg.extraOptions);
+    args = escapeShellArgs
+      (iconsOption ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     optionsAlias = optionalAttrs (args != "") { eza = "eza ${args}"; };
 
