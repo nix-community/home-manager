@@ -1748,6 +1748,13 @@ in {
           add `-w` to your assignment of `services.swayidle.extraArgs`.
         '';
       }
+
+      {
+        time = "2024-10-03T12:09:07+00:00";
+        message = ''
+          A new module is available: 'programs.kubecolor'.
+        '';
+      }
     ];
   };
 }
