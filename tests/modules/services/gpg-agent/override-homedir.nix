@@ -19,7 +19,9 @@ in {
     nmt.script = if isDarwin then ''
       serviceFile=LaunchAgents/org.nix-community.home.gpg-agent.plist
       assertFileExists "$serviceFile"
-      assertFileContent "$serviceFile" ${./expected-agent.plist}
+      assertFileContent "$serviceFile" ${
+        ./override-homedir-expected-agent.plist
+      }
     '' else ''
       in="${config.systemd.user.sockets.gpg-agent.Socket.ListenStream}"
       if [[ $in != "%t/gnupg/d.wp4h7ks5zxy4dodqadgpbbpz/S.gpg-agent" ]]
