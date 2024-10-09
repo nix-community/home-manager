@@ -22,27 +22,18 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  configDir =
-    {
-      "vscode" = "Code";
-      "vscode-insiders" = "Code - Insiders";
-      "vscodium" = "VSCodium";
-      "openvscode-server" = "OpenVSCode Server";
-      "windsurf" = "Windsurf";
-      "cursor" = "Cursor";
-    }
-    .${vscodePname};
+  productInfoPath =
+    if lib.pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
+      # Visual Studio Code, VSCodium, Windsurf, Cursor
+      "${cfg.package}/lib/vscode/resources/app/product.json"
+    else
+      # OpenVSCode Server
+      "${cfg.package}/product.json";
+  productInfo = lib.importJSON productInfoPath;
 
+  configDir = if cfg.nameShort != null then cfg.nameShort else productInfo.nameShort;
   extensionDir =
-    {
-      "vscode" = "vscode";
-      "vscode-insiders" = "vscode-insiders";
-      "vscodium" = "vscode-oss";
-      "openvscode-server" = "openvscode-server";
-      "windsurf" = "windsurf";
-      "cursor" = "cursor";
-    }
-    .${vscodePname};
+    if cfg.dataFolderName != null then cfg.dataFolderName else productInfo.dataFolderName;
 
   userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -60,7 +51,7 @@ let
   snippetDir = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}snippets";
 
   # TODO: On Darwin where are the extensions?
-  extensionPath = ".${extensionDir}/extensions";
+  extensionPath = "${extensionDir}/extensions";
 
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
@@ -292,6 +283,28 @@ in
         or by Visual Studio Code. Mutually exclusive to
         programs.vscode.profiles.
       '';
+    };
+
+    nameShort = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "MyCoolVSCodeFork";
+      description = ''
+        Override for package "short name", used for generating configuration.
+
+        This should match the `shortName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
+      '';
+    };
+
+    dataFolderName = mkOption {
+      type = types.nullOr types.str;
+      example = ".cool-vscode";
+      description = ''
+        Override for extensions directory.
+
+        This should match the `dataFolderName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
+      '';
+      default = null;
     };
 
     profiles = mkOption {

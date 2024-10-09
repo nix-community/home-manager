@@ -119,10 +119,7 @@ in
       test.keybindings = bindings;
       custom.keybindings = customBindingsPath;
     };
-    package = pkgs.writeScriptBin "vscode" "" // {
-      pname = "vscode";
-      version = "1.75.0";
-    };
+    package = import ./fake-pkg.nix pkgs;
   };
 
   nmt.script = ''
