@@ -216,6 +216,7 @@ in import nmtSrc {
     ./modules/programs/terminator
     ./modules/programs/thunderbird
     ./modules/programs/tofi
+    ./modules/programs/vesktop
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi
