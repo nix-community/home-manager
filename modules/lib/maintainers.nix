@@ -604,6 +604,12 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  joygnu = {
+    name = "joygnu";
+    email = "contact@joygnu.org";
+    github = "joygnu";
+    githubId = 152063003;
+  };
   callumio = {
     name = "Callum Leslie";
     email = "git+nix@cleslie.uk";
