@@ -8,8 +8,7 @@ let
 
   mergedSettings = cfg.userSettings // {
     # this part by @cmacrae
-    auto_install_extensions = lib.listToAttrs
-      (map (ext: lib.nameValuePair ext true) cfg.extensions);
+    auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
   };
 in {
   meta.maintainers = [ maintainers.libewa ];
