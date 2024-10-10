@@ -34,7 +34,7 @@ in {
     home.packages = [ pkgs.cmus ];
 
     home.file.".config/cmus/rc".text = ''
-      colorscheme ${cfg.theme}
+      ${optionalString (cfg.theme != "") "colorscheme ${cfg.theme}"}
       ${cfg.extraConfig}
     '';
   };
