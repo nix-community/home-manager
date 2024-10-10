@@ -270,6 +270,7 @@ in import nmtSrc {
     ./modules/services/remmina
     ./modules/services/screen-locker
     ./modules/services/signaturepdf
+    ./modules/services/snixembed
     ./modules/services/swayidle
     ./modules/services/swaync
     ./modules/services/swayosd
