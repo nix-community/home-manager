@@ -9,7 +9,7 @@ let
   aliases = {
     ls = "${cfg.package}/bin/pls";
     ll =
-      "${cfg.package}/bin/pls -d perms -d user -d group -d size -d mtime -d git";
+      "${cfg.package}/bin/pls -d perm -d user -d group -d size -d mtime -d git";
   };
 
 in {
