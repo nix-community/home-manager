@@ -41,7 +41,7 @@ in {
       Install = { WantedBy = [ "default.target" ]; };
 
       Service = {
-        Environment = [ "HOME=${homeBaseDir}" "LD_LIBRARY_PATH=${pkgs.libGL}/lib/"];
+        Environment = [ "HOME=${homeBaseDir}" ];
 
         PIDFile = "${homeBaseDir}/.dropbox/dropbox.pid";
 
