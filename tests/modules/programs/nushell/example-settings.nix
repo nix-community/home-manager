@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 {
   programs.nushell = {
@@ -28,7 +28,17 @@
       "ll" = "ls -a";
     };
 
-    environmentVariables = { BAR = "$'(echo BAZ)'"; };
+    environmentVariables = {
+      FOO = "BAR";
+      LIST_VALUE = [ "foo" "bar" ];
+      PROMPT_COMMAND = lib.hm.nushell.mkNushellInline ''{|| "> "}'';
+      ENV_CONVERSIONS.PATH = {
+        from_string =
+          lib.hm.nushell.mkNushellInline "{|s| $s | split row (char esep) }";
+        to_string =
+          lib.hm.nushell.mkNushellInline "{|v| $v | str join (char esep) }";
+      };
+    };
   };
 
   test.stubs.nushell = { };
