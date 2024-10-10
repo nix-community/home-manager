@@ -11,19 +11,17 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  configDir = {
-    "vscode" = "Code";
-    "vscode-insiders" = "Code - Insiders";
-    "vscodium" = "VSCodium";
-    "openvscode-server" = "OpenVSCode Server";
-  }.${vscodePname};
+  productInfoPath =
+    if pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
+    # Visual Studio Code, VSCodium
+      "${cfg.package}/lib/vscode/resources/app/product.json"
+    else
+    # OpenVSCode Server
+      "${cfg.package}/product.json";
+  productInfo = lib.importJSON productInfoPath;
 
-  extensionDir = {
-    "vscode" = "vscode";
-    "vscode-insiders" = "vscode-insiders";
-    "vscodium" = "vscode-oss";
-    "openvscode-server" = "openvscode-server";
-  }.${vscodePname};
+  configDir = productInfo.nameShort;
+  extensionDir = productInfo.dataFolderName;
 
   userDir = if pkgs.stdenv.hostPlatform.isDarwin then
     "Library/Application Support/${configDir}/User"
@@ -37,7 +35,7 @@ let
   snippetDir = "${userDir}/snippets";
 
   # TODO: On Darwin where are the extensions?
-  extensionPath = ".${extensionDir}/extensions";
+  extensionPath = "${extensionDir}/extensions";
 
   extensionJson = pkgs.vscode-utils.toExtensionJson cfg.extensions;
   extensionJsonFile = pkgs.writeTextFile {

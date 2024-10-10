@@ -66,7 +66,7 @@ in {
   programs.vscode = {
     enable = true;
     keybindings = bindings;
-    package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
+    package = import ./fake-pkg.nix pkgs;
   };
 
   nmt.script = ''
