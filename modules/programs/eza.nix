@@ -97,8 +97,8 @@ with lib;
     };
 
     clasiffy = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.enum [ "auto" "always" "never" ];
+      default = "auto";
       description = ''
         Display type indicator by file names.
       '';
