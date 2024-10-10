@@ -28,7 +28,12 @@
       "ll" = "ls -a";
     };
 
-    environmentVariables = { BAR = "$'(echo BAZ)'"; };
+    environmentVariables = {
+      BAR = "$'(echo BAZ)'";
+      BOOLEAN_VAR = true;
+      NUMERIC_VAR = 4;
+      LIST_VAR = [ "elem1" 2 ];
+    };
   };
 
   test.stubs.nushell = { };
