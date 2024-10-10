@@ -3,9 +3,8 @@
 with lib;
 
 let cfg = config.programs.cmus;
-
 in {
-  meta.maintainers = [ maintainers.joygnu ];
+  meta.maintainers = [ joygnu ];
 
   options = {
     programs.cmus = {
@@ -14,23 +13,19 @@ in {
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description =
-          "Extra configuration values to be appended to the cmus config file.";
+        example = ''
+          set audio_backend = "mpd"
+          set status_display = "default"
+        '';
+        description = "Extra configuration to add to cmus rc.";
       };
 
-      theme = {
-        name = mkOption {
-          type = types.str;
-          default = "";
-          description = "Name of the theme to create (e.g., gruvbox).";
-        };
-
-        content = mkOption {
-          type = types.lines;
-          default = "";
-          description =
-            "Plain text for the theme. It will be written to <theme.name>.theme.";
-        };
+      theme = mkOption {
+        type = types.lines;
+        default = "";
+        example = "gruvbox";
+        description =
+          "Select color theme; list of available color themes can be found here: https://github.com/cmus/cmus/tree/master/data.";
       };
     };
   };
@@ -39,12 +34,8 @@ in {
     home.packages = [ pkgs.cmus ];
 
     home.file.".config/cmus/rc".text = ''
+      colorscheme ${cfg.theme}
       ${cfg.extraConfig}
-    '';
-
-    home.file.".config/cmus/${cfg.theme.name}.theme".text = ''
-      ${cfg.theme.content}
     '';
   };
 }
-
