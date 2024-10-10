@@ -4,7 +4,7 @@ with lib;
 
 let cfg = config.programs.cmus;
 in {
-  meta.maintainers = [ joygnu ];
+  meta.maintainers = [ maintainers.joygnu ];
 
   options = {
     programs.cmus = {
