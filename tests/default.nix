@@ -156,6 +156,7 @@ in import nmtSrc {
     ./modules/programs/tmux
     ./modules/programs/topgrade
     ./modules/programs/translate-shell
+    ./modules/programs/vifm
     ./modules/programs/vim-vint
     ./modules/programs/vscode
     ./modules/programs/watson
@@ -271,6 +272,7 @@ in import nmtSrc {
     ./modules/services/remmina
     ./modules/services/screen-locker
     ./modules/services/signaturepdf
+    ./modules/services/snixembed
     ./modules/services/swayidle
     ./modules/services/swaync
     ./modules/services/swayosd

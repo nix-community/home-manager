@@ -1748,6 +1748,28 @@ in {
           add `-w` to your assignment of `services.swayidle.extraArgs`.
         '';
       }
+
+      {
+        time = "2024-10-09T06:16:23+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.snixembed'.
+
+          snixembed proxies StatusNotifierItems as XEmbedded systemtray-spec
+          icons. This is useful for some tools in some environments, e.g., Safe
+          Eyes in i3, lxde or mate.
+        '';
+      }
+
+      {
+        time = "2024-10-11T08:23:19+00:00";
+        message = ''
+          A new module is available: 'programs.vifm'.
+
+          Vifm is a curses based Vim-like file manager extended with some useful
+          ideas from mutt.
+        '';
+      }
     ];
   };
 }

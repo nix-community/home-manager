@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-09-13 03:09+0000\n"
-"Last-Translator: Jay Thomas <jay@gfax.ch>\n"
+"PO-Revision-Date: 2024-10-09 14:31+0000\n"
+"Last-Translator: Utkarsh Sharma <utkasharma19@gmail.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/home-manager/cli/"
 "hi/>\n"
 "Language: hi\n"
@@ -22,11 +22,11 @@ msgstr ""
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "%s: ‌%s के लिए कोई आर्ग्यूमेंट नहीं दिया"
 
 #: home-manager/home-manager:64
 msgid "No configuration file found at %s"
-msgstr ""
+msgstr "%s में कोई कन्फि़गरेशन फाइल नहीं मिली"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.

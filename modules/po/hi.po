@@ -8,13 +8,16 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-10-09 14:31+0000\n"
+"Last-Translator: Utkarsh Sharma <utkasharma19@gmail.com>\n"
+"Language-Team: Hindi <https://hosted.weblate.org/projects/home-manager/"
+"modules/hi/>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: modules/files.nix:191
 msgid "Creating home file links in %s"
@@ -22,7 +25,7 @@ msgstr ""
 
 #: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
-msgstr ""
+msgstr "%s से ऑर्फे़न लिंक्स मिटाई जा रही है"
 
 #: modules/files.nix:220
 msgid "Creating profile generation %s"
