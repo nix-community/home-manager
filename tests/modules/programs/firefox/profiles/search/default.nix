@@ -9,6 +9,12 @@ let
 
   firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 
+  withName = path:
+    pkgs.substituteAll {
+      src = path;
+      name = cfg.wrappedPackageName;
+    };
+
 in {
   imports = [ firefoxMockOverlay ];
 
@@ -88,12 +94,32 @@ in {
       };
     };
   } // {
-    nmt.script = ''
+    nmt.script = let
+
+      noHashQuery = ''
+        'def walk(f):
+             . as $in
+             | if type == "object" then
+                 reduce keys[] as $key
+                 ( {}; . + { ($key): ($in[$key] | walk(f)) } | f )
+               elif type == "array" then
+                 map( walk(f) )
+               else
+                 f
+               end;
+             walk(if type == "object" then
+                     if has("hash") then .hash = null else . end |
+                     if has("privateHash") then .privateHash = null else . end
+                  else
+                     .
+                  end)' '';
+
+    in ''
       function assertFirefoxSearchContent() {
         compressedSearch=$(normalizeStorePaths "$1")
 
         decompressedSearch=$(dirname $compressedSearch)/search.json
-        ${pkgs.mozlz4a}/bin/mozlz4a -d "$compressedSearch" >(${pkgs.jq}/bin/jq . > "$decompressedSearch")
+        ${pkgs.mozlz4a}/bin/mozlz4a -d "$compressedSearch" >(${pkgs.jq}/bin/jq ${noHashQuery} > "$decompressedSearch")
 
         assertFileContent \
           $decompressedSearch \
@@ -102,11 +128,11 @@ in {
 
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/search/search.json.mozlz4 \
-        ${./expected-search.json}
+        ${withName ./expected-search.json}
 
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
-        ${./expected-search-without-default.json}
+        ${withName ./expected-search-without-default.json}
     '';
   });
 }

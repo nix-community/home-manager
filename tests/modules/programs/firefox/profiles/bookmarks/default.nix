@@ -9,6 +9,12 @@ let
 
   firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 
+  withName = path:
+    pkgs.substituteAll {
+      src = path;
+      name = cfg.wrappedPackageName;
+    };
+
 in {
   imports = [ firefoxMockOverlay ];
 
@@ -70,7 +76,7 @@ in {
 
       assertFileContent \
         $bookmarksUserJs \
-        ${./expected-bookmarks-user.js}
+        ${withName ./expected-bookmarks-user.js}
 
       bookmarksFile="$(sed -n \
         '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \

@@ -193,6 +193,7 @@ in import nmtSrc {
     ./modules/programs/bemenu
     ./modules/programs/boxxy
     ./modules/programs/firefox/firefox.nix
+    ./modules/programs/firefox/floorp.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel
