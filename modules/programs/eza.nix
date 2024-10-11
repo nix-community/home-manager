@@ -96,7 +96,7 @@ with lib;
       '';
     };
 
-    clasiffy = mkOption {
+    classify = mkOption {
       type = types.enum [ "auto" "always" "never" ];
       default = "auto";
       description = ''
