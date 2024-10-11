@@ -22275,6 +22275,86 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.git.maintenance.enable"></a><a class="term" href="options.xhtml#opt-programs.git.maintenance.enable"><code class="option">programs.git.maintenance.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enable the automatic <span class="command"><strong>git maintenance</strong></span>.</p><p>See <a class="link" href="https://git-scm.com/docs/git-maintenance"  target="_top">https://git-scm.com/docs/git-maintenance</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix" target="_top">
+&lt;home-manager/modules/programs/git.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.git.maintenance.repositories"></a><a class="term" href="options.xhtml#opt-programs.git.maintenance.repositories"><code class="option">programs.git.maintenance.repositories</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Repositories on which <span class="command"><strong>git maintenance</strong></span> should run.</p><p>Should be a list of absolute paths.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix" target="_top">
+&lt;home-manager/modules/programs/git.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.git.maintenance.timers"></a><a class="term" href="options.xhtml#opt-programs.git.maintenance.timers"><code class="option">programs.git.maintenance.timers</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Systemd timers to create for scheduled <span class="command"><strong>git maintenance</strong></span>.</p><p>Key is passed to <code class="literal">--schedule</code> argument in <span class="command"><strong>git maintenance run</strong></span>
+and value is passed to <code class="literal">Timer.OnCalendar</code> in <code class="literal">systemd.user.timers</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  daily = &quot;Tue..Sun *-*-* 0:53:00&quot;;
+  hourly = &quot;*-*-* 1..23:53:00&quot;;
+  weekly = &quot;Mon 0:53:00&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix" target="_top">
+&lt;home-manager/modules/programs/git.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.git.signing"></a><a class="term" href="options.xhtml#opt-programs.git.signing"><code class="option">programs.git.signing</code>
   </a>
  </span>
