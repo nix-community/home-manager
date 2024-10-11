@@ -241,8 +241,9 @@ let
     ./programs/translate-shell.nix
     ./programs/urxvt.nix
     ./programs/vdirsyncer.nix
-    ./programs/vim.nix
+    ./programs/vifm.nix
     ./programs/vim-vint.nix
+    ./programs/vim.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
@@ -361,6 +362,7 @@ let
     ./services/screen-locker.nix
     ./services/sctd.nix
     ./services/signaturepdf.nix
+    ./services/snixembed.nix
     ./services/spotifyd.nix
     ./services/ssh-agent.nix
     ./services/stalonetray.nix
