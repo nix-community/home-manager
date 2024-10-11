@@ -50181,6 +50181,84 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.vifm.enable"></a><a class="term" href="options.xhtml#opt-programs.vifm.enable"><code class="option">programs.vifm.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable vifm, a Vim-like file manager.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vifm.nix" target="_top">
+&lt;home-manager/modules/programs/vifm.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vifm.package"></a><a class="term" href="options.xhtml#opt-programs.vifm.package"><code class="option">programs.vifm.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The vifm package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.vifm</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vifm.nix" target="_top">
+&lt;home-manager/modules/programs/vifm.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vifm.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.vifm.extraConfig"><code class="option">programs.vifm.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra lines added to the <code class="filename">$XDG_CONFIG_HOME/vifm/vifmrc</code> file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;mark h ~/&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vifm.nix" target="_top">
+&lt;home-manager/modules/programs/vifm.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.vim.enable"></a><a class="term" href="options.xhtml#opt-programs.vim.enable"><code class="option">programs.vim.enable</code>
   </a>
  </span>
