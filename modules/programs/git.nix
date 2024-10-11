@@ -214,6 +214,41 @@ in {
         };
       };
 
+      maintenance = {
+        enable = mkEnableOption "" // {
+          description = ''
+            Enable the automatic {command}`git maintenance`.
+
+            See <https://git-scm.com/docs/git-maintenance>.
+          '';
+        };
+
+        repositories = mkOption {
+          type = with types; listOf str;
+          default = [ ];
+          description = ''
+            Repositories on which {command}`git maintenance` should run.
+
+            Should be a list of absolute paths.
+          '';
+        };
+
+        timers = mkOption {
+          type = types.attrsOf types.str;
+          default = {
+            hourly = "*-*-* 1..23:53:00";
+            daily = "Tue..Sun *-*-* 0:53:00";
+            weekly = "Mon 0:53:00";
+          };
+          description = ''
+            Systemd timers to create for scheduled {command}`git maintenance`.
+
+            Key is passed to `--schedule` argument in {command}`git maintenance run`
+            and value is passed to `Timer.OnCalendar` in `systemd.user.timers`.
+          '';
+        };
+      };
+
       diff-highlight = {
         enable = mkEnableOption "" // {
           description = ''
@@ -499,6 +534,48 @@ in {
           smudge = concatStringsSep " "
             ([ "git-lfs" "smudge" ] ++ skipArg ++ [ "--" "%f" ]);
         };
+    })
+
+    (mkIf cfg.maintenance.enable {
+      programs.git.iniContent.maintenance.repo = cfg.maintenance.repositories;
+
+      systemd.user.services."git-maintenance@" = {
+        Unit = {
+          Description = "Optimize Git repositories data";
+          Documentation = [ "man:git-maintenance(1)" ];
+        };
+
+        Service = {
+          Type = "oneshot";
+          ExecStart = let exe = lib.getExe cfg.package;
+          in ''
+            "${exe}" --exec-path="${exe}" for-each-repo --config=maintenance.repo maintenance run --schedule=%i
+          '';
+          LockPersonality = "yes";
+          MemoryDenyWriteExecute = "yes";
+          NoNewPrivileges = "yes";
+          RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_VSOCK";
+          RestrictNamespaces = "yes";
+          RestrictRealtime = "yes";
+          RestrictSUIDSGID = "yes";
+          SystemCallArchitectures = "native";
+          SystemCallFilter = "@system-service";
+        };
+      };
+
+      systemd.user.timers = let
+        toSystemdTimer = name: time:
+          lib.attrsets.nameValuePair "git-maintenance@${name}" {
+            Unit.Description = "Optimize Git repositories data";
+
+            Timer = {
+              OnCalendar = time;
+              Persistent = true;
+            };
+
+            Install.WantedBy = [ "timers.target" ];
+          };
+      in lib.attrsets.mapAttrs' toSystemdTimer cfg.maintenance.timers;
     })
 
     (mkIf cfg.diff-highlight.enable {
