@@ -122,7 +122,7 @@ in {
       Unit = { Description = "Espanso: cross platform text expander in Rust"; };
       Service = {
         Type = "exec";
-        ExecStart = "${cfg.package}/bin/espanso daemon";
+        ExecStart = "${cfg.package}/bin/espanso launcher";
         Restart = "on-failure";
       };
       Install = { WantedBy = [ "default.target" ]; };
