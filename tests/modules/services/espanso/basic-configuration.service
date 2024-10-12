@@ -3,7 +3,14 @@ WantedBy=default.target
 
 [Service]
 ExecStart=@espanso@/bin/espanso daemon
+LockPersonality=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+PrivateUsers=true
 Restart=on-failure
+RestrictNamespaces=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
 Type=exec
 
 [Unit]
