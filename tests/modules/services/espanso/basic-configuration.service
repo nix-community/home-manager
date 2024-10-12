@@ -8,10 +8,10 @@ MemoryDenyWriteExecute=true
 NoNewPrivileges=true
 PrivateUsers=true
 Restart=on-failure
+RestartSec=3
 RestrictNamespaces=true
 SystemCallArchitectures=native
 SystemCallFilter=@system-service
-Type=exec
 
 [Unit]
 Description=Espanso: cross platform text expander in Rust
