@@ -2,7 +2,7 @@
 WantedBy=default.target
 
 [Service]
-ExecStart=@espanso@/bin/espanso daemon
+ExecStart=@espanso@/bin/espanso launcher
 LockPersonality=true
 MemoryDenyWriteExecute=true
 NoNewPrivileges=true
