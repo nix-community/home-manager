@@ -967,22 +967,36 @@ in {
               # maliciously. We're modifying the search outside of the browser, but
               # a claim by Mozilla to remove this would be very anti-user, and
               # is unlikely to be an issue for our use case.
-              disclaimer = appName:
-                "By modifying this file, I agree that I am doing so "
-                + "only within ${appName} itself, using official, user-driven search "
+              disclaimer = "By modifying this file, I agree that I am doing so "
+                + "only within @appName@ itself, using official, user-driven search "
                 + "engine selection processes, and in a way which does not circumvent "
                 + "user consent. I acknowledge that any attempt to change this file "
-                + "from outside of ${appName} is a malicious act, and will be responded "
+                + "from outside of @appName@ is a malicious act, and will be responded "
                 + "to accordingly.";
 
               salt = if profile.search.default != null then
-                profile.path + profile.search.default + disclaimer cfg.name
+                profile.path + profile.search.default + disclaimer
               else
                 null;
 
+              appNameVariable = if cfg.finalPackage == null then
+                "appName=${lib.escapeShellArg cfg.name}"
+              else ''
+                applicationIni="$(find ${
+                  lib.escapeShellArg cfg.finalPackage
+                } -maxdepth 3 -path ${
+                  lib.escapeShellArg cfg.finalPackage
+                }'/lib/*/application.ini' -print -quit)"
+
+                if test -n "$applicationIni"; then
+                  appName="$(sed -n 's/^Name=\(.*\)$/\1/p' "$applicationIni" | head -n1)"
+                else
+                  appName=${lib.escapeShellArg cfg.name}
+                fi
+              '';
+
               privateSalt = if profile.search.privateDefault != null then
-                profile.path + profile.search.privateDefault
-                + disclaimer cfg.name
+                profile.path + profile.search.privateDefault + disclaimer
               else
                 null;
             in pkgs.runCommand "search.json.mozlz4" {
@@ -990,6 +1004,11 @@ in {
               json = builtins.toJSON settings;
               inherit salt privateSalt;
             } ''
+              ${appNameVariable}
+
+              salt=''${salt//@appName@/"$appName"}
+              privateSalt=''${privateSalt//@appName@/"$appName"}
+
               if [[ -n $salt ]]; then
                 export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
                 export privateHash=$(echo -n "$privateSalt" | openssl dgst -sha256 -binary | base64)
