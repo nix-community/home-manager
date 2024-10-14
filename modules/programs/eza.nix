@@ -64,14 +64,61 @@ with lib;
       '';
     };
 
+    all = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Show hidden and 'dot' files.
+      '';
+    };
+
+    long = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Display extended details and attributes.
+      '';
+    };
+
+    extended = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        List each file’s extended attributes and sizes.
+      '';
+    };
+
+    header = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Add a header row to each column.
+      '';
+    };
+
+    classify = mkOption {
+      type = types.enum [ "auto" "always" "never" ];
+      default = "auto";
+      description = ''
+        Display type indicator by file names.
+      '';
+    };
     package = mkPackageOption pkgs "eza" { };
   };
 
   config = let
     cfg = config.programs.eza;
 
-    args = escapeShellArgs (optional cfg.icons "--icons"
-      ++ optional cfg.git "--git" ++ cfg.extraOptions);
+    args = escapeShellArgs (
+      optional cfg.icons "--icons"
+      ++ optional cfg.git "--git"
+      ++ optional cfg.all "--all"
+      ++ optional cfg.long "--long"
+      ++ optional cfg.extended "--extended"
+      ++ optional cfg.header "--header"
+      ++ optional cfg.clasiffy "--classify"
+      ++ cfg.extraOptions
+    );
 
     optionsAlias = optionalAttrs (args != "") { eza = "eza ${args}"; };
 
