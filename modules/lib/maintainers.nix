@@ -37,6 +37,12 @@
     github = "Avimitin";
     githubId = 30021675;
   };
+  bamhm182 = {
+    name = "bamhm182";
+    email = "bamhm182@gmail.com";
+    github = "bamhm182";
+    githubId = 920269;
+  };
   blmhemu = {
     name = "blmhemu";
     email = "19410501+blmhemu@users.noreply.github.com";

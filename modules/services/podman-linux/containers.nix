@@ -3,213 +3,165 @@
 with lib;
 
 let
-  podman-lib = import ./podman-lib.nix { inherit lib; };
+  podman-lib = import ./podman-lib.nix { inherit lib config; };
 
   createQuadletSource = name: containerDef:
     let
-      ### Definitions
-      serviceName = name;
-      containerName = name; # Use the submodule name as the container name
-      mergedServiceConfig = podman-lib.serviceConfigDefaults
-        // containerDef.serviceConfig;
-      mergedUnitConfig = podman-lib.unitConfigDefaults
-        // containerDef.unitConfig;
-      ###
-
-      ### Helpers
-      ifNotNull = podman-lib.sourceHelpers.ifNotNull;
-      ifNotEmptyList = podman-lib.sourceHelpers.ifNotEmptyList;
-      ifNotEmptySet = podman-lib.sourceHelpers.ifNotEmptySet;
-      ###
-
-      ### Formatters
-      formatExtraConfig = podman-lib.formatExtraConfig;
-      formatPrimitiveValue = podman-lib.formatPrimitiveValue;
-
-      formatNetworkDependencies = networks:
-        let formatElement = network: "podman-${network}-network.service";
-        in concatStringsSep " " (map formatElement networks);
-
-      formatEnvironment = env:
-        if env != { } then
-          concatStringsSep " "
-          (mapAttrsToList (k: v: "${k}=${formatPrimitiveValue v}") env)
+      mapHmNetworks = network:
+        if builtins.hasAttr network config.services.podman.networks then
+          "podman-${network}-network.service"
         else
-          "";
+          null;
 
-      formatPorts = ports:
-        if ports != [ ] then
-          concatStringsSep "\n" (map (port: "PublishPort=${port}") ports)
+      finalConfig = let
+        managedNetworks = if lib.isList containerDef.network then
+          map mapHmNetworks containerDef.network
+        else if containerDef.network != null then
+          map mapHmNetworks [ containerDef.network ]
         else
-          "";
-
-      formatVolumes = volumes:
-        if volumes != [ ] then
-          concatStringsSep "\n" (map (volume: "Volume=${volume}") volumes)
-        else
-          "";
-
-      formatDevices = devices:
-        if devices != [ ] then
-          concatStringsSep "\n" (map (device: "AddDevice=${device}") devices)
-        else
-          "";
-
-      formatCapabilities = action: capabilities:
-        if capabilities != [ ] then
-          concatStringsSep "\n"
-          (map (capability: "${action}Capability=${capability}") capabilities)
-        else
-          "";
-
-      formatLabels = labels:
-        if labels != [ ] then
-          concatStringsSep "\n" (map (label: "Label=${label}") labels)
-        else
-          "";
-
-      formatAutoUpdate = autoupdate:
-        if autoupdate == "registry" then
-          "AutoUpdate=registry"
-        else if autoupdate == "local" then
-          "AutoUpdate=local"
-        else
-          "";
-
-      # TODO: check this against networkMode option. IE, if 'host' there are no bridge networks, etc
-      formatBridgeNetworks = containerDef:
-        if containerDef.networks != [ ] then
-          "Network=${concatStringsSep "," containerDef.networks}"
-        else
-          "";
-
-      formatPodmanArgs = containerDef:
-        let
-          networkAliasArg = if containerDef.networkAlias != null then
-            "--network-alias ${containerDef.networkAlias}"
+          [ ];
+      in (podman-lib.deepMerge {
+        Container = {
+          AddCapability = containerDef.addCapabilities;
+          AddDevice = containerDef.devices;
+          AutoUpdate = containerDef.autoUpdate;
+          ContainerName = name;
+          DropCapability = containerDef.dropCapabilities;
+          Entrypoint = containerDef.entrypoint;
+          Environment = containerDef.environment;
+          EnvironmentFile = containerDef.environmentFile;
+          Exec = containerDef.exec;
+          Group = containerDef.group;
+          Image = containerDef.image;
+          IP = containerDef.ip4;
+          IP6 = containerDef.ip6;
+          Label =
+            (containerDef.labels // { "nix.home-manager.managed" = true; });
+          Network = containerDef.network;
+          NetworkAlias = containerDef.networkAlias;
+          PodmanArgs = containerDef.extraPodmanArgs;
+          PublishPort = containerDef.ports;
+          UserNS = containerDef.userNS;
+          User = containerDef.user;
+          Volume = containerDef.volumes;
+        };
+        Install = {
+          WantedBy = (if containerDef.autoStart then [
+            "default.target"
+            "multi-user.target"
+          ] else
+            [ ]);
+        };
+        Service = {
+          Environment = {
+            PATH = (builtins.concatStringsSep ":" [
+              "/run/wrappers/bin"
+              "/run/current-system/sw/bin"
+              "${config.home.homeDirectory}/.nix-profile/bin"
+            ]);
+          };
+          Restart = "always";
+          TimeoutStopSec = 30;
+        };
+        Unit = {
+          After = [ "network.target" ] ++ managedNetworks;
+          Requires = managedNetworks;
+          Description = (if (builtins.isString containerDef.description) then
+            containerDef.description
           else
-            null;
-          entrypointArg = if containerDef.entrypoint != null then
-            "--entrypoint ${containerDef.entrypoint}"
-          else
-            null;
-          allArgs = [ networkAliasArg entrypointArg ]
-            ++ containerDef.extraOptions;
-        in if allArgs != [ ] && allArgs != [ "" ] then
-          "PodmanArgs=${
-            concatStringsSep " "
-            (filter (arg: arg != null && arg != "") allArgs)
-          }"
-        else
-          "";
-      ###
+            "Service for container ${name}");
+        };
+      } containerDef.extraConfig);
     in ''
       # Automatically generated by home-manager podman container configuration
       # DO NOT EDIT THIS FILE DIRECTLY
       #
-      # ${serviceName}.container
-      [Unit]
-      Description=${
-        if containerDef.description != null then
-          containerDef.description
-        else
-          "Service for container ${containerName}"
-      }
-      After=network.target ${formatNetworkDependencies containerDef.networks}
-      ${ifNotEmptyList containerDef.networks
-      "Requires=${formatNetworkDependencies containerDef.networks}"}
-      ${formatExtraConfig mergedUnitConfig}
-
-      [Container]
-      Label=nix.home-manager.managed=true
-      ContainerName=${containerName}
-      Image=${containerDef.image}
-      ${ifNotEmptySet containerDef.environment
-      "Environment=${formatEnvironment containerDef.environment}"}
-      ${ifNotNull containerDef.environmentFile
-      "EnvironmentFile=${containerDef.environmentFile}"}
-      ${ifNotNull containerDef.command "Exec=${containerDef.command}"}
-      ${ifNotNull containerDef.user
-      "User=${formatPrimitiveValue containerDef.user}"}
-      ${ifNotNull containerDef.userNS "UserNS=${containerDef.userNS}"}
-      ${ifNotNull containerDef.group
-      "Group=${formatPrimitiveValue containerDef.group}"}
-      ${ifNotEmptyList containerDef.ports (formatPorts containerDef.ports)}
-      ${ifNotNull containerDef.networkMode
-      "Network=${containerDef.networkMode}"}
-      ${formatBridgeNetworks containerDef}
-      ${ifNotNull containerDef.ip4 "IP=${containerDef.ip4}"}
-      ${ifNotNull containerDef.ip6 "IP6=${containerDef.ip6}"}
-      ${ifNotEmptyList containerDef.volumes
-      (formatVolumes containerDef.volumes)}
-      ${ifNotEmptyList containerDef.devices
-      (formatDevices containerDef.devices)}
-      ${formatAutoUpdate containerDef.autoupdate}
-      ${ifNotEmptyList containerDef.addCapabilities
-      (formatCapabilities "Add" containerDef.addCapabilities)}
-      ${ifNotEmptyList containerDef.dropCapabilities
-      (formatCapabilities "Drop" containerDef.dropCapabilities)}
-      ${ifNotEmptyList containerDef.labels (formatLabels containerDef.labels)}
-      ${formatPodmanArgs containerDef}
-      ${formatExtraConfig containerDef.extraContainerConfig}
-
-      [Service]
-      Environment="PATH=/run/wrappers/bin:/run/current-system/sw/bin:${config.home.homeDirectory}/.nix-profile/bin"
-      ${formatExtraConfig mergedServiceConfig}
-
-      [Install]
-      ${if containerDef.autostart then
-        "WantedBy=multi-user.target default.target"
-      else
-        ""}
+      # ${name}.container
+      ${podman-lib.toQuadletIni finalConfig}
     '';
 
-  toQuadletInternal = name: containerDef:
-    let
-      allAssertions =
-        (podman-lib.buildConfigAsserts name containerDef.serviceConfig
-          podman-lib.serviceConfigTypeRules)
-        ++ (podman-lib.buildConfigAsserts name containerDef.unitConfig
-          podman-lib.unitConfigTypeRules);
-    in {
-      serviceName =
-        "podman-${name}"; # quadlet generater leaves systemd name as 'podman-<name>.service'
-      source =
-        podman-lib.removeBlankLines (createQuadletSource name containerDef);
-      resourceType = "container";
-      assertions = allAssertions;
-    };
+  toQuadletInternal = name: containerDef: {
+    assertions = podman-lib.buildConfigAsserts name containerDef.extraConfig;
+    resourceType = "container";
+    serviceName =
+      "podman-${name}"; # quadlet service name: 'podman-<name>.service'
+    source =
+      podman-lib.removeBlankLines (createQuadletSource name containerDef);
+  };
 
 in let
   # Define the container user type as the user interface
   containerDefinitionType = types.submodule {
     options = {
+
+      addCapabilities = mkOption {
+        type = with types; either str (listOf str);
+        default = [ ];
+        description = "The capabilities to add to the container.";
+        example = literalMD ''
+          `addCapabilities = [ "CAP_DAC_OVERRIDE" "CAP_IPC_OWNER" ];`
+        '';
+      };
+
+      autoStart = mkOption {
+        type = types.bool;
+        default = true;
+        description =
+          "Whether to start the container on boot (requires user lingering).";
+      };
+
+      autoUpdate = mkOption {
+        type = with types; enum [ null "registry" "local" ];
+        default = null;
+        description = "The autoupdate policy for the container.";
+        example = literalMD ''
+          `autoUpdate = "registry";`
+        '';
+      };
+
       description = mkOption {
         type = with types; nullOr str;
         description = "The description of the container.";
         default = null;
+        example = literalMD ''
+          `description = "My Container";`
+        '';
       };
 
-      image = mkOption {
-        type = types.str;
-        description = "The container image.";
+      devices = mkOption {
+        type = with types; either str (listOf str);
+        default = [ ];
+        description = "The devices to mount into the container";
+        example = literalMD ''
+          `devices = "/dev/null:/dev/null";`
+          or
+          `devices = [ "/dev/<host>:/dev/<container>" ];`
+        '';
+      };
+
+      dropCapabilities = mkOption {
+        type = with types; either str (listOf str);
+        default = [ ];
+        description = "The capabilities to drop from the container.";
+        example = literalMD ''
+          `dropCapabilities = "CAP_DAC_OVERRIDE";`
+          or
+          `dropCapabilities = [ "CAP_DAC_OVERRIDE" "CAP_IPC_OWNER" ];`
+        '';
       };
 
       entrypoint = mkOption {
         type = with types; nullOr str;
         description = "The container entrypoint.";
         default = null;
-      };
-
-      command = mkOption {
-        type = with types; nullOr str;
-        description = "The command to run after the container specification.";
-        default = null;
+        example = literalMD ''
+          `entrypoint = "/foo.sh";`
+        '';
       };
 
       environment = mkOption {
         type = podman-lib.primitiveAttrs;
-        description = "Environment variables to set in the container";
+        description = "Environment variables to set in the container.";
         default = { };
         example = literalMD ''
           ```
@@ -223,55 +175,67 @@ in let
       };
 
       environmentFile = mkOption {
-        type = with types; nullOr str;
-        default = null;
+        type = with types; either str (listOf str);
+        default = [ ];
         description =
-          "Path to a file containing environment variables to set in the container.";
+          "Paths to files containing container environment variables.";
         example = literalMD ''
           `environmentFile = "/etc/environment";`
+          or
+          `environmentFile = [ "/etc/environment" "/etc/other-env" ];`
         '';
       };
 
-      ports = mkOption {
-        type = with types; listOf str;
-        default = [ ];
-        description = "A mapping of ports between host and container";
-        example = literalMD ''
-          `ports = [ "8080:80" ];`
-        '';
-      };
-
-      user = mkOption {
-        type = with types; nullOr (oneOf [ str int ]);
-        default = null;
-        description = "The user ID inside the container.";
-      };
-
-      userNS = mkOption {
+      exec = mkOption {
         type = with types; nullOr str;
+        description = "The command to run after the container start.";
         default = null;
-        description = "Use a user namespace for the container.";
+        example = literalMD ''
+          `exec = "sleep inf";`
+        '';
+      };
+
+      extraPodmanArgs = mkOption {
+        type = with types; either str (listOf str);
+        default = [ ];
+        description = "Extra arguments to pass to the podman run command.";
+        example = literalMD ''
+          `extraPodmanArgs = "--security-opt=no-new-privileges";`
+          or
+          `extraPodmanArgs = [ "--security-opt=no-new-privileges" "--security-opt=seccomp=unconfined" ];`
+        '';
+      };
+
+      extraConfig = mkOption {
+        type = podman-lib.extraConfigType;
+        default = { };
+        description =
+          "INI sections and values to populate the Container Quadlet";
+        example = literalMD ''
+          ```
+          extraConfig = {
+            Container = {
+              User = 1000;
+            };
+            Service = {
+              TimeoutStartSec = 15;
+            };
+          };
+          ```
+        '';
       };
 
       group = mkOption {
-        type = with types; nullOr (oneOf [ str int ]);
+        type = with types; nullOr (oneOf [ int str ]);
         default = null;
         description = "The group ID inside the container.";
       };
 
-      networkMode = mkOption {
-        type = with types; nullOr str;
-        default = null;
-        description = "The network mode for the container.";
-      };
-
-      networks = mkOption {
-        type = with types; listOf str;
-        default = [ ];
-        description =
-          "The networks to connect the container to. Best that these networks are defined with services.podman.networks";
+      image = mkOption {
+        type = types.str;
+        description = "The container image.";
         example = literalMD ''
-          `networks = [ "mynet" ];`
+          `image = "registry.access.redhat.com/ubi9-minimal:latest";`
         '';
       };
 
@@ -287,14 +251,70 @@ in let
         description = "Set an IPv6 address for the container.";
       };
 
+      labels = mkOption {
+        type = with types; attrsOf str;
+        default = { };
+        description = "The labels to apply to the container.";
+        example = literalMD ''
+          ```
+          labels = {
+            app = "myapp";
+            "some-label" = "somelabel";
+          };
+          ```
+        '';
+      };
+
+      network = mkOption {
+        type = with types; either str (listOf str);
+        default = [ ];
+        description =
+          "The network mode or network/s to connect the container to. Equivalent to `podman run --network=<option>`";
+        example = literalMD ''
+          `network = "host";`
+          or
+          `network = "bridge_network_1";`
+          or
+          `network = [ "bridge_network_1" "bridge_network_2" ];`
+        '';
+      };
+
       networkAlias = mkOption {
+        type = with types; either str (listOf str);
+        default = [ ];
+        description = "Network aliases for the container.";
+        example = literalMD ''
+          `networkAlias = "mycontainer";`
+          or
+          `networkAlias = [ "mycontainer" "web" ];`
+        '';
+      };
+
+      ports = mkOption {
+        type = with types; either str (listOf str);
+        default = [ ];
+        description = "A mapping of ports between host and container";
+        example = literalMD ''
+          `ports = "8080:80";`
+          or
+          `ports = [ "8080:80" "8443:443" ];`
+        '';
+      };
+
+      userNS = mkOption {
         type = with types; nullOr str;
         default = null;
-        description = "Set a network alias for the container.";
+        description = "Use a user namespace for the container.";
+      };
+
+      user = mkOption {
+        type = with types; nullOr (oneOf [ int str ]);
+        default = null;
+        description = "The user ID inside the container.";
       };
 
       volumes = mkOption {
-        type = with types; listOf str;
+        type = with types; either str (listOf str);
         default = [ ];
         description = "The volumes to mount into the container.";
         example = literalMD ''
@@ -306,83 +326,6 @@ in let
           ```
         '';
       };
-
-      devices = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        description =
-          "The devices to mount into the container, in the format '/dev/<host>:/dev/<container>'.";
-      };
-
-      autoupdate = mkOption {
-        type = with types; enum [ "" "registry" "local" ];
-        default = "";
-        description = "The autoupdate policy for the container.";
-        example = literalMD ''
-          `autoupdate = "registry"`;
-        '';
-      };
-
-      autostart = mkOption {
-        type = types.bool;
-        default = true;
-        description =
-          "Whether to start the container on user login / boot (requires user lingering).";
-      };
-
-      addCapabilities = mkOption {
-        type = with types; listOf str;
-        default = [ ];
-        description = "The capabilities to add to the container.";
-      };
-
-      dropCapabilities = mkOption {
-        type = with types; listOf str;
-        default = [ ];
-        description = "The capabilities to drop from the container.";
-      };
-
-      labels = mkOption {
-        type = with types; listOf str;
-        default = [ ];
-        description = "The labels to apply to the container.";
-      };
-
-      extraOptions = mkOption {
-        type = with types; listOf str;
-        default = [ ];
-        description = "Extra options to pass to the podman run command.";
-      };
-
-      extraContainerConfig = mkOption {
-        type = podman-lib.primitiveAttrs;
-        default = { };
-        description = "Extra configuration, in Podman Quadlet format.";
-        example = literalMD ''
-          ```
-          extraContainerConfig = {
-            UIDMap = "0:1000:1";
-            ReadOnlyTmpfs = true;
-            EnvironmentFile = [ /etc/environment /root/.env];
-          };
-          ```
-        '';
-      };
-
-      serviceConfig = mkOption {
-        type = podman-lib.serviceConfigType;
-        default = { };
-        description =
-          "Configuration values for the systemd service for the container.";
-      };
-
-      unitConfig = mkOption {
-        type = podman-lib.unitConfigType;
-        default = { };
-        description =
-          "Configuration values for the systemd unit for the container.";
-      };
-
     };
   };
 
@@ -393,14 +336,14 @@ in {
   options.services.podman.containers = mkOption {
     type = types.attrsOf containerDefinitionType;
     default = { };
-    description = "Attribute set of container definitions.";
+    description = "Defines Podman container quadlet configurations.";
   };
 
   config = let
     containerQuadlets =
       mapAttrsToList toQuadletInternal config.services.podman.containers;
   in mkIf pkgs.stdenv.isLinux {
-    internal.podman-quadlet-definitions = containerQuadlets;
+    services.podman.internal.quadlet-definitions = containerQuadlets;
     assertions =
       flatten (map (container: container.assertions) containerQuadlets);
 

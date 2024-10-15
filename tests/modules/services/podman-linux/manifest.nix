@@ -4,8 +4,8 @@
   config = {
     services.podman.containers."my-container-1" = {
       description = "home-manager test";
-      autoupdate = "registry";
-      autostart = true;
+      autoUpdate = "registry";
+      autoStart = true;
       image = "docker.io/alpine:latest";
       entrypoint = "sleep 1000";
       environment = {
@@ -17,8 +17,8 @@
 
     services.podman.containers."my-container-2" = {
       description = "home-manager test";
-      autoupdate = "registry";
-      autostart = true;
+      autoUpdate = "registry";
+      autoStart = true;
       image = "docker.io/alpine:latest";
       entrypoint = "sleep 1000";
       environment = {

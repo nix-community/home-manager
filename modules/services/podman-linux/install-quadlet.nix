@@ -3,104 +3,10 @@
 with lib;
 
 let
-  podman-lib = import ./podman-lib.nix { inherit lib; };
+  podman-lib = import ./podman-lib.nix { inherit lib config; };
+  activation = import ./activation.nix { inherit config podman-lib; };
 
-  quadletActivationCleanupScript = ''
-    PATH=$PATH:${podman-lib.newuidmapPaths}
-
-    resourceManifest=()
-    # Define VERBOSE_ENABLED as a function
-    VERBOSE_ENABLED() {
-      if [[ -n "''${VERBOSE:-}" ]]; then
-        return 0
-      else
-        return 1
-      fi
-    }
-
-    # Function to fill resourceManifest from the manifest file
-    function loadManifest {
-      local manifestFile="$1"
-      VERBOSE_ENABLED && echo "Loading manifest from $manifestFile..."
-      IFS=$'\n' read -r -d "" -a resourceManifest <<< "$(cat "$manifestFile")" || true
-    }
-
-    function isResourceInManifest {
-      local resource="$1"
-      for manifestEntry in "''${resourceManifest[@]}"; do
-        if [ "$resource" = "$manifestEntry" ]; then
-          return 0  # Resource found in manifest
-        fi
-      done
-      return 1  # Resource not found in manifest
-    }
-
-    function removeContainer {
-      echo "Removing orphaned container: $1"
-      if [[ -n "''${DRY_RUN:-}" ]]; then
-        echo "Would run podman stop $1"
-        echo "Would run podman $resourceType rm -f $1"
-      else
-        ${config.services.podman.package}/bin/podman stop "$1"
-        ${config.services.podman.package}/bin/podman $resourceType rm -f "$1"
-      fi
-    }
-
-    function removeNetwork {
-      echo "Removing orphaned network: $1"
-      if [[ -n "''${DRY_RUN:-}" ]]; then
-        echo "Would run podman network rm $1"
-      else
-        if ! ${config.services.podman.package}/bin/podman network rm "$1"; then
-          echo "Failed to remove network $1. Is it still in use by a container?"
-          return 1
-        fi
-      fi
-    }
-
-    function cleanup {
-      local resourceType=$1
-      local manifestFile="${config.xdg.configHome}/podman/$2"
-      local extraListCommands="''${3:-}"
-      [[ $resourceType = "container" ]] && extraListCommands+=" -a"
-
-      VERBOSE_ENABLED && echo "Cleaning up ''${resourceType}s not in manifest..."
-
-      loadManifest "$manifestFile"
-
-      formatString="{{.Name}}"
-      [[ $resourceType = "container" ]] && formatString="{{.Names}}"
-
-      # Capture the output of the podman command to a variable
-      local listOutput=$(${config.services.podman.package}/bin/podman $resourceType ls $extraListCommands --filter 'label=nix.home-manager.managed=true' --format "$formatString")
-
-      IFS=$'\n' read -r -d "" -a podmanResources <<< "$listOutput" || true
-
-      # Check if the array is populated and iterate over it
-      if [ ''${#resourceManifest[@]} -eq 0 ]; then
-        VERBOSE_ENABLED && echo "No ''${resourceType}s available to process."
-      else
-        for resource in "''${podmanResources[@]}"; do
-            if ! isResourceInManifest "$resource"; then
-
-              [[ $resourceType = "container" ]] && removeContainer "$resource"
-              [[ $resourceType = "network" ]] && removeNetwork "$resource"
-
-            else
-              if VERBOSE_ENABLED; then
-                echo "Keeping managed $resourceType: $resource"
-              fi
-            fi
-          done
-      fi
-    }
-
-    # Cleanup containers
-    cleanup "container" "containers.manifest"
-
-    # Cleanup networks
-    cleanup "network" "networks.manifest"
-  '';
+  activationCleanupScript = activation.cleanup;
 
   # derivation to build a single Podman quadlet, outputting its systemd unit files
   buildPodmanQuadlet = quadlet:
@@ -111,7 +17,7 @@ let
 
       dontUnpack = true;
 
-      buildPhase = ''
+      installPhase = ''
         mkdir $out
         # Directory for the quadlet file
         mkdir -p $out/quadlets
@@ -134,7 +40,7 @@ let
 
   # Create a derivation for each quadlet spec
   builtQuadlets =
-    map buildPodmanQuadlet config.internal.podman-quadlet-definitions;
+    map buildPodmanQuadlet config.services.podman.internal.quadlet-definitions;
 
   accumulateUnitFiles = prefix: path: quadlet:
     let
@@ -176,7 +82,6 @@ in {
     # if the length of builtQuadlets is 0, then we don't need register the activation script
     home.activation.podmanQuadletCleanup =
       lib.mkIf (lib.length builtQuadlets >= 1)
-      (lib.hm.dag.entryAfter [ "reloadSystemd" ]
-        quadletActivationCleanupScript);
+      (lib.hm.dag.entryAfter [ "reloadSystemd" ] activationCleanupScript);
   };
 }

@@ -5,7 +5,7 @@ with lib;
 let cfg = config.services.podman;
 in {
   options.services.podman = {
-    auto-update = {
+    autoUpdate = {
       enable = mkOption {
         type = types.bool;
         default = false;
@@ -21,7 +21,7 @@ in {
   };
 
   config = mkIf pkgs.stdenv.isLinux (mkMerge [
-    (mkIf cfg.auto-update.enable {
+    (mkIf cfg.autoUpdate.enable {
       systemd.user.services."podman-auto-update" = {
         Unit = {
           Description = "Podman auto-update service";
@@ -31,8 +31,13 @@ in {
         };
         Service = {
           Type = "oneshot";
-          Environment =
-            "PATH=/run/wrappers/bin:/run/current-system/sw/bin:${config.home.homeDirectory}/.nix-profile/bin";
+          Environment = "PATH=${
+              builtins.concatStringsSep ":" [
+                "/run/wrappers/bin"
+                "/run/current-system/sw/bin"
+                "${config.home.homeDirectory}/.nix-profile/bin"
+              ]
+            }";
           ExecStart = "${pkgs.podman}/bin/podman auto-update";
           ExecStartPost = "${pkgs.podman}/bin/podman image prune -f";
           TimeoutStartSec = "300s";
@@ -43,7 +48,7 @@ in {
       systemd.user.timers."podman-auto-update" = {
         Unit = { Description = "Podman auto-update timer"; };
         Timer = {
-          OnCalendar = cfg.auto-update.OnCalendar;
+          OnCalendar = cfg.autoUpdate.OnCalendar;
           RandomizedDelaySec = 300;
           Persistent = true;
         };

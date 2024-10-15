@@ -4,10 +4,10 @@ with lib;
 
 {
   imports =
-    [ ./services.nix ./networks.nix ./containers.nix ./install-quadlet.nix ];
+    [ ./containers.nix ./install-quadlet.nix ./networks.nix ./services.nix ];
 
   config = mkIf pkgs.stdenv.isLinux {
-    meta.maintainers = [ hm.maintainers.n-hass ];
+    meta.maintainers = [ hm.maintainers.bamhm182 hm.maintainers.n-hass ];
     assertions =
       [ (hm.assertions.assertPlatform "podman" pkgs platforms.linux) ];
   };
