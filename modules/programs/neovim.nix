@@ -391,11 +391,16 @@ in {
     suppressNotVimlConfig = p:
       if p.type != "viml" then p // { config = null; } else p;
 
-    neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
+    neovimConfig = pkgs.wrapNeovimUnstable cfg.package {
       inherit (cfg) extraPython3Packages withPython3 withRuby viAlias vimAlias;
       withNodeJs = cfg.withNodeJs || cfg.coc.enable;
       plugins = map suppressNotVimlConfig pluginsNormalized;
       customRC = cfg.extraConfig;
+      wrapperArgs = (lib.escapeShellArgs
+        (cfg.extraWrapperArgs)) + " "
+        + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
+        + extraMakeWrapperLuaArgs;
+      wrapRc = false;
     };
 
   in mkIf cfg.enable {
@@ -418,11 +423,17 @@ in {
 
     # link the packpath in expected folder so that even unwrapped neovim can pick
     # home-manager's plugins
-    xdg.dataFile = mkMerge (mapAttrsToList (name: val: {
-      "nvim/site/pack/hm-${name}" = {
-        source =  "${pkgs.neovimUtils.packDir packpathDirs}/pack/${name}";
-      };
-    }) neovimConfig.packpathDirs);
+    xdg.dataFile."nvim/site/pack/hm" = let
+      #
+      packpathDirs.hm = neovimConfig.vimPackage;
+      finalPackdir = neovimUtils.packDir packpathDirs;
+
+    in {
+      #   packdirStart = vimFarm "pack/${packageName}/start" "packdir-start" allPlugins;
+      # packdirOpt = vimFarm "pack/${packageName}/opt" "packdir-opt" opt;
+
+        source =  "${pkgs.neovimUtils.packDir packpathDirs}/pack/hm";
+    };
 
     xdg.configFile =
       let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
@@ -431,10 +442,10 @@ in {
         (map (x: x.runtime) pluginsNormalized) ++ [{
           "nvim/init.lua" = let
             luaRcContent =
-              lib.optionalString (neovimConfig.neovimRcContent != "")
+              lib.optionalString (neovimConfig.passthru.initRc != "")
               "vim.cmd [[source ${
                 pkgs.writeText "nvim-init-home-manager.vim"
-                neovimConfig.neovimRcContent
+                neovimConfig.passthru.initRc
               }]]" + config.programs.neovim.extraLuaConfig
               + lib.optionalString hasLuaConfig
               config.programs.neovim.generatedConfigs.lua;
@@ -445,13 +456,6 @@ in {
           };
         }]);
 
-    programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
-      (neovimConfig // {
-        wrapperArgs = (lib.escapeShellArgs
-          (neovimConfig.wrapperArgs ++ cfg.extraWrapperArgs)) + " "
-          + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
-          + extraMakeWrapperLuaArgs;
-        wrapRc = false;
-      });
+    programs.neovim.finalPackage = neovimConfig;
   };
 }
