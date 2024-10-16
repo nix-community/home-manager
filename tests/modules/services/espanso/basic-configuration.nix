@@ -1,4 +1,5 @@
-{ ... }:
+espansoExtraArgs:
+{ config, ... }:
 
 {
   services.espanso = {
@@ -36,7 +37,7 @@
         ];
       };
     };
-  };
+  } // espansoExtraArgs;
 
   test.stubs.espanso = { };
 
