@@ -39,7 +39,7 @@ let
       };
     });
 in {
-  meta.maintainers = [ maintainers.Philipp-M ];
+  meta.maintainers = with maintainers; [ Philipp-M joaquintrinanes ];
 
   imports = [
     (mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
@@ -152,42 +152,66 @@ in {
         An attribute set that maps an environment variable to a shell interpreted string.
       '';
     };
+
+    plugins = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = lib.literalExpression "[ pkgs.nushellPlugins.formats ]";
+      description = "List of nushell plugins ";
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file = mkMerge [
-      (let
-        writeConfig = cfg.configFile != null || cfg.extraConfig != ""
-          || aliasesStr != "";
+    home.file."${configDir}/config.nu" = let
+      writeConfig = cfg.configFile != null || cfg.extraConfig != ""
+        || aliasesStr != "";
+      aliasesStr = concatStringsSep "\n"
+        (mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
+    in mkIf writeConfig {
+      text = mkMerge [
+        (mkIf (cfg.configFile != null) cfg.configFile.text)
+        cfg.extraConfig
+        aliasesStr
+      ];
+    };
 
-        aliasesStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
-      in mkIf writeConfig {
-        "${configDir}/config.nu".text = mkMerge [
-          (mkIf (cfg.configFile != null) cfg.configFile.text)
-          cfg.extraConfig
-          aliasesStr
-        ];
-      })
+    home.file."${configDir}/env.nu" = let
+      envVarsStr = concatStringsSep "\n"
+        (mapAttrsToList (k: v: "$env.${k} = ${v}") cfg.environmentVariables);
+    in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
+      text = mkMerge [
+        (mkIf (cfg.envFile != null) cfg.envFile.text)
+        cfg.extraEnv
+        envVarsStr
+      ];
+    };
 
-      (let
-        envVarsStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "$env.${k} = ${v}") cfg.environmentVariables);
-      in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
-        "${configDir}/env.nu".text = mkMerge [
-          (mkIf (cfg.envFile != null) cfg.envFile.text)
-          cfg.extraEnv
-          envVarsStr
-        ];
-      })
-      (mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
-        "${configDir}/login.nu".text = mkMerge [
+    home.file."${configDir}/login.nu" =
+      mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
+        text = mkMerge [
           (mkIf (cfg.loginFile != null) cfg.loginFile.text)
           cfg.extraLogin
         ];
-      })
-    ];
+      };
+
+    home.file."${configDir}/plugin.msgpackz" = let
+      pluginExprs = map (plugin: "plugin add ${lib.getExe plugin}") cfg.plugins;
+    in mkIf (cfg.plugins != [ ]) {
+      source = pkgs.runCommandLocal "plugin.msgpackz" { } ''
+        touch $out {config,env}.nu
+
+        ${lib.getExe cfg.package} \
+        --config config.nu \
+        --env-config env.nu \
+        --plugin-config plugin.msgpackz \
+        --no-history \
+        --no-std-lib \
+        --commands '${lib.concatStringsSep ";" pluginExprs};'
+
+        cp plugin.msgpackz $out
+      '';
+    };
   };
 }
