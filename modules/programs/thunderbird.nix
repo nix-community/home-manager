@@ -225,6 +225,20 @@ in {
                   Extra preferences to add to {file}`user.js`.
                 '';
               };
+
+              search = mkOption {
+                type = types.submodule (args:
+                  import ./firefox/profiles/search.nix {
+                    inherit (args) config;
+                    inherit lib pkgs;
+                    appName = "Thunderbird";
+                    modulePath =
+                      [ "programs" "thunderbird" "profiles" name "search" ];
+                    profilePath = name;
+                  });
+                default = { };
+                description = "Declarative search engine configuration.";
+              };
             };
           }));
         description = "Attribute set of Thunderbird profiles.";
@@ -392,6 +406,12 @@ in {
           profile.settings
         ] ++ (map (a: toThunderbirdAccount a profile) accounts)))
           profile.extraConfig;
+      };
+
+      "${thunderbirdProfilesPath}/${name}/search.json.mozlz4" = {
+        enable = profile.search.enable;
+        force = profile.search.force;
+        source = profile.search.file;
       };
     }));
   };
