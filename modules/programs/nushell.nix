@@ -174,7 +174,8 @@ in {
 
       (let
         envVarsStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "$env.${k} = ${v}") cfg.environmentVariables);
+          (mapAttrsToList (k: v: "$env.${k} = '${v}'")
+            cfg.environmentVariables);
       in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
         "${configDir}/env.nu".text = mkMerge [
           (mkIf (cfg.envFile != null) cfg.envFile.text)
