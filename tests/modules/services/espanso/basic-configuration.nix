@@ -1,3 +1,6 @@
+espansoExtraArgs:
+{ config, ... }:
+
 {
   services.espanso = {
     enable = true;
@@ -42,7 +45,7 @@
         ];
       };
     };
-  };
+  } // espansoExtraArgs;
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/espanso.service
