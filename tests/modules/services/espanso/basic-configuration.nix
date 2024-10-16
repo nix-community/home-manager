@@ -1,3 +1,4 @@
+espansoExtraArgs:
 { config, ... }:
 
 {
@@ -36,7 +37,7 @@
         ];
       };
     };
-  };
+  } // espansoExtraArgs;
 
   test.stubs.espanso = { };
 
