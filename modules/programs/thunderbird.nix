@@ -408,11 +408,12 @@ in {
           profile.extraConfig;
       };
 
-      "${thunderbirdProfilesPath}/${name}/search.json.mozlz4" = {
-        enable = profile.search.enable;
-        force = profile.search.force;
-        source = profile.search.file;
-      };
+      "${thunderbirdProfilesPath}/${name}/search.json.mozlz4" =
+        mkIf (profile.search.enable) {
+          enable = profile.search.enable;
+          force = profile.search.force;
+          source = profile.search.file;
+        };
     }));
   };
 }
