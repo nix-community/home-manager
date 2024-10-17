@@ -121,9 +121,18 @@ in {
     systemd.user.services.espanso = {
       Unit = { Description = "Espanso: cross platform text expander in Rust"; };
       Service = {
-        Type = "exec";
-        ExecStart = "${cfg.package}/bin/espanso daemon";
+        ExecStart = "${cfg.package}/bin/espanso launcher";
         Restart = "on-failure";
+        RestartSec = 3;
+
+        # Sandboxing.
+        LockPersonality = true;
+        MemoryDenyWriteExecute = true;
+        NoNewPrivileges = true;
+        PrivateUsers = true;
+        RestrictNamespaces = true;
+        SystemCallArchitectures = "native";
+        SystemCallFilter = "@system-service";
       };
       Install = { WantedBy = [ "default.target" ]; };
     };
