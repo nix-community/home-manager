@@ -309,12 +309,34 @@ in
         ".git/safe/../../bin"
       ];
       description = ''
-        Extra directories to add to {env}`PATH`.
+        Extra directories to be prepend to {env}`PATH`.
 
         These directories are added to the {env}`PATH` variable in a
         double-quoted context, so expressions like `$HOME` are
         expanded by the shell. However, since expressions like `~` or
         `*` are escaped, they will end up in the {env}`PATH`
+        verbatim.
+      '';
+    };
+
+    home.sessionSearchVariables = mkOption {
+      default = { };
+      type = with types; attrsOf (listOf str);
+      example = {
+        MANPATH = [
+          "$HOME/.npm-packages/man"
+          "\${xdg.configHome}/.local/share/man"
+        ];
+      };
+      description = ''
+        Extra directories to be prepend to arbitrary PATH-like
+        environment variables (e.g.: {env}`MANPATH`). The values
+        will be concatenated by `:`.
+
+        These directories are added to the environment variable in a
+        double-quoted context, so expressions like `$HOME` are
+        expanded by the shell. However, since expressions like `~` or
+        `*` are escaped, they will end up in the environment
         verbatim.
       '';
     };
@@ -575,10 +597,17 @@ in
         export __HM_SESS_VARS_SOURCED=1
 
         ${config.lib.shell.exportAll cfg.sessionVariables}
-      '' + lib.optionalString (cfg.sessionPath != [ ]) ''
-        export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
-      '' + cfg.sessionVariablesExtra;
+      '' + concatStringsSep "\n"
+        (mapAttrsToList
+          (env: values: config.lib.shell.export
+            env
+            (config.lib.shell.prependToVar ":" env values))
+          cfg.sessionSearchVariables)
+        + cfg.sessionVariablesExtra;
     };
+
+    home.sessionSearchVariables.PATH =
+      mkIf (cfg.sessionPath != [ ]) cfg.sessionPath;
 
     home.packages = [ config.home.sessionVariablesPackage ];
 
