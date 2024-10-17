@@ -96,6 +96,7 @@ in import nmtSrc {
     ./modules/programs/khal
     ./modules/programs/khard
     ./modules/programs/kitty
+    ./modules/programs/lapce
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf

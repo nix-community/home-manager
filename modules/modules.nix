@@ -141,6 +141,7 @@ let
     ./programs/khard.nix
     ./programs/kitty.nix
     ./programs/kodi.nix
+    ./programs/lapce.nix
     ./programs/lazygit.nix
     ./programs/ledger.nix
     ./programs/less.nix
