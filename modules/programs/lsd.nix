@@ -65,6 +65,30 @@ in {
         automatically set to `"custom"`.
       '';
     };
+
+    icons = mkOption {
+      type = yamlFormat.type;
+      default = { };
+      example = {
+        name = {
+          ".trash" = "";
+          ".cargo" = "";
+        };
+        extension = {
+          "go" = "";
+          "hs" = "";
+        };
+        filetype = {
+          "dir" = "📂";
+          "file" = "📄";
+        };
+      };
+      description = ''
+        Configuration written to {file}`$XDG_CONFIG_HOME/lsd/icons.yaml`. See
+        <https://github.com/lsd-rs/lsd?tab=readme-ov-file#icon-theme-file-content> for
+        details.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -89,6 +113,10 @@ in {
 
     xdg.configFile."lsd/colors.yaml" = mkIf (cfg.colors != { }) {
       source = yamlFormat.generate "lsd-colors" cfg.colors;
+    };
+
+    xdg.configFile."lsd/icons.yaml" = mkIf (cfg.icons != { }) {
+      source = yamlFormat.generate "lsd-icons" cfg.icons;
     };
 
     xdg.configFile."lsd/config.yaml" = mkIf (cfg.settings != { }) {
