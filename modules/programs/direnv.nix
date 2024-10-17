@@ -162,28 +162,20 @@ in {
           $env.config.hooks.pre_prompt?
           | default []
           | append {||
-              let direnv = (
-                  ${direnvWrapped}
-                  | from json --strict
-                  | default {}
-              )
-              if ($direnv | is-empty) {
-                  return
-              }
-              $direnv
+              ${direnvWrapped}
+              | from json --strict
+              | default {}
               | items {|key, value|
-                  {
-                      key: $key
-                      value: (do (
-                          $env.ENV_CONVERSIONS?
-                          | default {}
-                          | get -i $key
-                          | get -i from_string
-                          | default {|x| $x}
-                      ) $value)
-                  }
+                  let value = do (
+                      $env.ENV_CONVERSIONS?
+                      | default {}
+                      | get -i $key
+                      | get -i from_string
+                      | default {|x| $x}
+                  ) $value
+                  return [ $key $value ]
               }
-              | transpose -ird
+              | into record
               | load-env
           }
       )
