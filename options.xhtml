@@ -38028,17 +38028,25 @@ strings concatenated with “\n”</p>
  </span>
 </dt>
 <dd>
-<p>An attribute set that maps an environment variable to a shell interpreted string.</p>
+<p>Environment variables to be set.</p><p>Inline values can be set with <code class="literal">lib.hm.nushell.mkNushellInline</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of string</p>
+attribute set of (null or (Nushell inline value) or boolean or signed integer or floating point number or string or path or (attribute set of Nushell values) or (list of Nushell values))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   FOO = &quot;BAR&quot;;
+  LIST_VALUE = [ &quot;foo&quot; &quot;bar&quot; ];
+  NU_LIB_DIRS = lib.concatStringsSep &quot;:&quot; [ ./scripts ];
+  PROMPT_COMMAND = lib.hm.nushell.mkNushellInline &#x27;&#x27;{|| &quot;&gt; &quot;}&#x27;&#x27;;
+  ENV_CONVERSIONS.PATH = {
+    from_string = lib.hm.nushell.mkNushellInline &quot;{|s| $s | split row (char esep) }&quot;;
+    to_string = lib.hm.nushell.mkNushellInline &quot;{|v| $v | str join (char esep) }&quot;;
+  };
 }
+
 </code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
