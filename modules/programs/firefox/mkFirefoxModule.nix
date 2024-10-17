@@ -777,11 +777,12 @@ in {
           force = profile.containersForce;
         };
 
-      "${profilesPath}/${profile.path}/search.json.mozlz4" = {
-        enable = profile.search.enable;
-        force = profile.search.force;
-        source = profile.search.file;
-      };
+      "${profilesPath}/${profile.path}/search.json.mozlz4" =
+        mkIf (profile.search.enable) {
+          enable = profile.search.enable;
+          force = profile.search.force;
+          source = profile.search.file;
+        };
 
       "${profilesPath}/${profile.path}/extensions" =
         mkIf (profile.extensions != [ ]) {
