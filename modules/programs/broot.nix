@@ -57,7 +57,7 @@ let
           : whether to quit broot on execution
             (default: `true`)
 
-          `from_shell` (optional)</term>
+          `from_shell` (optional)
           : whether the verb must be executed from the
             parent shell (default: `false`)
         '';
