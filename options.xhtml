@@ -16297,13 +16297,13 @@ attribute set of string</p>
 <dd>
 <p>Define new verbs. For more information, see
 <a class="link" href="https://dystroy.org/broot/documentation/configuration/#verb-definition-attributes"  target="_top">Verb Definition Attributes</a>
-in the broot documentation.</p><p>The possible attributes are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">invocation</code> (optional)</span></dt><dd><p>how the verb is called by the user, with placeholders for arguments</p></dd><dt><span class="term"><code class="literal">execution</code> (mandatory)</span></dt><dd><p>how the verb is executed</p></dd><dt><span class="term"><code class="literal">key</code> (optional)</span></dt><dd><p>a keyboard key triggering execution</p></dd><dt><span class="term"><code class="literal">shortcut</code> (optional)</span></dt><dd><p>an alternate way to call the verb (without
+in the broot documentation.</p><p>The possible attributes are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">invocation</code> (optional)</span></dt><dd><p>how the verb is called by the user, with placeholders for arguments</p></dd><dt><span class="term"><code class="literal">execution</code> (mandatory)</span></dt><dd><p>how the verb is executed</p></dd><dt><span class="term"><code class="literal">key</code> (optional)</span></dt><dd><p>a keyboard key triggering execution</p></dd><dt><span class="term"><code class="literal">keys</code> (optional)</span></dt><dd><p>multiple keyboard keys each triggering execution</p></dd><dt><span class="term"><code class="literal">shortcut</code> (optional)</span></dt><dd><p>an alternate way to call the verb (without
 the arguments part)</p></dd><dt><span class="term"><code class="literal">leave_broot</code> (optional)</span></dt><dd><p>whether to quit broot on execution
 (default: <code class="literal">true</code>)</p></dd><dt><span class="term"><code class="literal">from_shell</code> (optional)&lt;/term&gt;</span></dt><dd><p>whether the verb must be executed from the
 parent shell (default: <code class="literal">false</code>)</p></dd></dl></div>
 
 <p><span class="emphasis"><em>Type:</em></span>
-list of attribute set of (boolean or string)</p>
+list of attribute set of (boolean or string or list of string)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
