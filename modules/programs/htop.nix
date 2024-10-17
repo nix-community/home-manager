@@ -113,7 +113,8 @@ in {
     enable = mkEnableOption "htop";
 
     settings = mkOption {
-      type = types.attrs;
+      type = with types;
+        attrsOf (oneOf [ bool int str (listOf (oneOf [ int str ])) ]);
       default = { };
       example = literalExpression ''
         {
