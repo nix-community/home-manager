@@ -4,8 +4,7 @@ with lib;
 
 let cfg = config.programs.cmus;
 in {
-  meta.maintainers = [ maintainers.joygnu ];
-
+  meta.maintainers = [ hm.maintainers.joygnu ];
   options = {
     programs.cmus = {
       enable = mkEnableOption "Enable cmus, the music player.";
@@ -24,8 +23,10 @@ in {
         type = types.lines;
         default = "";
         example = "gruvbox";
-        description =
-          "Select color theme; list of available color themes can be found here: https://github.com/cmus/cmus/tree/master/data.";
+        description = ''
+          Select color theme. A list of available color themes can be found
+          here: <https://github.com/cmus/cmus/tree/master/data>.
+        '';
       };
     };
   };
