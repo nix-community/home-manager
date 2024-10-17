@@ -54544,6 +54544,159 @@ attribute set of (string or boolean or signed integer or floating point number)<
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.zed-editor.enable"></a><a class="term" href="options.xhtml#opt-programs.zed-editor.enable"><code class="option">programs.zed-editor.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zed-editor.nix" target="_top">
+&lt;home-manager/modules/programs/zed-editor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zed-editor.package"></a><a class="term" href="options.xhtml#opt-programs.zed-editor.package"><code class="option">programs.zed-editor.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The zed-editor package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.zed-editor</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zed-editor.nix" target="_top">
+&lt;home-manager/modules/programs/zed-editor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zed-editor.extensions"></a><a class="term" href="options.xhtml#opt-programs.zed-editor.extensions"><code class="option">programs.zed-editor.extensions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A list of the extensions Zed should install on startup.
+Use the name of a repository in the <a class="link" href="https://github.com/zed-industries/extensions/tree/main/extensions"  target="_top">extension list</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[ &quot;swift&quot; &quot;nix&quot; &quot;xy-zed&quot; ]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zed-editor.nix" target="_top">
+&lt;home-manager/modules/programs/zed-editor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zed-editor.userKeymaps"></a><a class="term" href="options.xhtml#opt-programs.zed-editor.userKeymaps"><code class="option">programs.zed-editor.userKeymaps</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to Zed’s <code class="filename">keymap.json</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    context = &quot;Workspace&quot;;
+    bindings = {
+      ctrl-shift-t = &quot;workspace::NewTerminal&quot;;
+    };
+  };
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zed-editor.nix" target="_top">
+&lt;home-manager/modules/programs/zed-editor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zed-editor.userSettings"></a><a class="term" href="options.xhtml#opt-programs.zed-editor.userSettings"><code class="option">programs.zed-editor.userSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to Zed’s <code class="filename">settings.json</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  features = {
+    copilot = false;
+  };
+  telemetry = {
+    metrics = false;
+  };
+  vim_mode = false;
+  ui_font_size = 16;
+  buffer_font_size = 16;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zed-editor.nix" target="_top">
+&lt;home-manager/modules/programs/zed-editor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.zellij.enable"></a><a class="term" href="options.xhtml#opt-programs.zellij.enable"><code class="option">programs.zellij.enable</code>
   </a>
  </span>
