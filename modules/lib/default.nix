@@ -14,4 +14,5 @@ rec {
 
   shell = import ./shell.nix { inherit lib; };
   zsh = import ./zsh.nix { inherit lib; };
+  nushell = import ./nushell.nix { inherit lib; };
 }
