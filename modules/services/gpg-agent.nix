@@ -13,8 +13,13 @@ let
     ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
   '';
 
-  gpgInitStr = ''
+  gpgBashInitStr = ''
     GPG_TTY="$(tty)"
+    export GPG_TTY
+  '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
+
+  gpgZshInitStr = ''
+    GPG_TTY="$TTY"
     export GPG_TTY
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
@@ -286,8 +291,8 @@ in {
         fi
       '';
 
-      programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
-      programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgInitStr;
+      programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgBashInitStr;
+      programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgZshInitStr;
       programs.fish.interactiveShellInit =
         mkIf cfg.enableFishIntegration gpgFishInitStr;
 
