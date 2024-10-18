@@ -49,10 +49,11 @@ let
     '';
   };
 
-  shellIntegrationDefaultOpt = {
-    default = !(elem "disabled" (splitString " " cfg.shellIntegration.mode));
+  shellIntegrationDefaultOpt = let mode = cfg.shellIntegration.mode;
+  in {
+    default = (mode != null) && !(elem "disabled" (splitString " " mode));
     defaultText = literalExpression ''
-      !(elem "disabled" (splitString " " config.programs.kitty.shellIntegration.mode))
+      (mode != null) && !(elem "disabled" (splitString " " config.programs.kitty.shellIntegration.mode))
     '';
   };
 in {
@@ -162,18 +163,18 @@ in {
 
     shellIntegration = {
       mode = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         default = "no-rc";
         example = "no-cursor";
-        apply = o:
+        apply = mapNullable (o:
           let
             modes = splitString " " o;
             filtered = filter (m: m != "no-rc") modes;
-          in concatStringsSep " " (concatLists [ [ "no-rc" ] filtered ]);
+          in concatStringsSep " " (concatLists [ [ "no-rc" ] filtered ]));
         description = ''
           Set the mode of the shell integration. This accepts the same options
           as the `shell_integration` option of Kitty. Note that
-          `no-rc` is always implied. See
+          `no-rc` is always implied, unless this set to `null`. See
           <https://sw.kovidgoyal.net/kitty/shell-integration>
           for more details.
         '';
@@ -213,10 +214,10 @@ in {
         (optionalString (cfg.themeFile != null) ''
           include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.themeFile}.conf
         '')
-        ''
+        (optionalString (cfg.shellIntegration.mode != null) ''
           # Shell integration is sourced and configured manually
           shell_integration ${cfg.shellIntegration.mode}
-        ''
+        '')
         (toKittyConfig cfg.settings)
         (toKittyKeybindings cfg.keybindings)
         (toKittyEnv cfg.environment)
