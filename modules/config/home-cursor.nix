@@ -45,6 +45,19 @@ let
           gtk config generation for {option}`home.pointerCursor`
         '';
       };
+
+      hyprcursor = {
+        enable = mkEnableOption ''
+          hyprcursor config generation
+        '';
+
+        size = mkOption {
+          type = types.nullOr types.int;
+          example = 32;
+          default = null;
+          description = "The cursor size for hyprcursor.";
+        };
+      };
     };
   };
 
@@ -177,6 +190,14 @@ in {
 
     (mkIf cfg.gtk.enable {
       gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
+    })
+
+    (mkIf cfg.hyprcursor.enable {
+      home.sessionVariables = {
+        HYPRCURSOR_THEME = cfg.name;
+        HYPRCURSOR_SIZE =
+          if isNull cfg.hyprcursor.size then cfg.size else cfg.hyprcursor.size;
+      };
     })
   ]);
 }
