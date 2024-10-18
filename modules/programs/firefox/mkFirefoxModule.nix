@@ -101,7 +101,7 @@ let
       };
     in ''
       ${builtins.toJSON {
-        version = 4;
+        version = 5;
         lastUserContextId =
           foldlAttrs (acc: _: value: if value.id > acc then value.id else acc) 0
           containers;
