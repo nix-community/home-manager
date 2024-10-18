@@ -124,6 +124,15 @@ in {
         Type = "exec";
         ExecStart = "${cfg.package}/bin/espanso daemon";
         Restart = "on-failure";
+
+        # Sandboxing.
+        LockPersonality = true;
+        MemoryDenyWriteExecute = true;
+        NoNewPrivileges = true;
+        PrivateUsers = true;
+        RestrictNamespaces = true;
+        SystemCallArchitectures = "native";
+        SystemCallFilter = "@system-service";
       };
       Install = { WantedBy = [ "default.target" ]; };
     };
