@@ -612,4 +612,10 @@
     keys =
       [{ fingerprint = "BC82 4BB5 1656 D144 285E  A0EC D382 C4AF EECE AA90"; }];
   };
+  noodlez = {
+    name = "Nathaniel Barragan";
+    email = "contact@nathanielbarragan.xyz";
+    github = "Noodlez1232";
+    githubId = 12480453;
+  };
 }
