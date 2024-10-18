@@ -17123,6 +17123,91 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.cmus.enable"></a><a class="term" href="options.xhtml#opt-programs.cmus.enable"><code class="option">programs.cmus.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Enable cmus, the music player…</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cmus.nix" target="_top">
+&lt;home-manager/modules/programs/cmus.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.cmus.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.cmus.extraConfig"><code class="option">programs.cmus.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra configuration to add to cmus <code class="filename">rc</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  set audio_backend = &quot;mpd&quot;
+  set status_display = &quot;default&quot;
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cmus.nix" target="_top">
+&lt;home-manager/modules/programs/cmus.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.cmus.theme"></a><a class="term" href="options.xhtml#opt-programs.cmus.theme"><code class="option">programs.cmus.theme</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Select color theme. A list of available color themes can be found
+here: <a class="link" href="https://github.com/cmus/cmus/tree/master/data"  target="_top">https://github.com/cmus/cmus/tree/master/data</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;gruvbox&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cmus.nix" target="_top">
+&lt;home-manager/modules/programs/cmus.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.command-not-found.enable"></a><a class="term" href="options.xhtml#opt-programs.command-not-found.enable"><code class="option">programs.command-not-found.enable</code>
   </a>
  </span>
