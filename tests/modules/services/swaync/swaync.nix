@@ -24,11 +24,8 @@
           Type=dbus
 
           [Unit]
-          After=graphical-session-pre.target
-          ConditionEnvironment=WAYLAND_DISPLAY
           Description=Swaync notification daemon
           Documentation=https://github.com/ErikReider/SwayNotificationCenter
-          PartOf=graphical-session.target
         ''
       }
   '';
