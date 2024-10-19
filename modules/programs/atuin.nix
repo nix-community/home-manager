@@ -145,11 +145,19 @@ in {
 
     (mkIf cfg.daemon.enable (mkMerge [
       {
-        assertions = [{
-          assertion = isLinux || isDarwin;
-          message =
-            "The atuin daemon can only be configured on either Linux or macOS.";
-        }];
+        assertions = [
+          {
+            assertion = versionAtLeast cfg.package.version "18.2.0";
+            message = ''
+              The atuin daemon requires at least version 18.2.0 or later.
+            '';
+          }
+          {
+            assertion = isLinux || isDarwin;
+            message =
+              "The atuin daemon can only be configured on either Linux or macOS.";
+          }
+        ];
 
         programs.atuin.settings = { daemon = { enabled = true; }; };
       }
