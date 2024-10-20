@@ -108,8 +108,8 @@ in {
       home.packages = [ cfg.package ];
       xdg.configFile = {
         "eww".source = mkIf cfg.configDir;
-        "eww/eww.scss" = mkIf cfg.configScss;
-        "eww/eww.yuck" = mkIf cfg.configYuck;
+        "eww/eww.scss".text = mkIf cfg.configScss;
+        "eww/eww.yuck".text = mkIf cfg.configYuck;
       };
 
       programs.bash.initExtra = let ewwCmd = "${cfg.package}/bin/eww";
