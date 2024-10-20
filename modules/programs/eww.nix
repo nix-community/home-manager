@@ -24,7 +24,7 @@ in {
     };
 
     configYuck = mkOption {
-      type = nullOr types.lines;
+      type = types.nullOr types.lines;
       default = null;
       example = ''
         (defwindow example
@@ -47,7 +47,7 @@ in {
     };
 
     configScss = mkOption {
-      type = nullOr types.lines;
+      type = types.nullOr types.lines;
       default = null;
       example = ''
         window {
@@ -61,7 +61,7 @@ in {
     };
 
     configDir = mkOption {
-      type = nullOr types.path;
+      type = types.nullOr types.path;
       default = null;
       example = literalExpression "./eww-config-dir";
       description = ''
