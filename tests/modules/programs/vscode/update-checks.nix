@@ -17,7 +17,7 @@ let
 in {
   programs.vscode = {
     enable = true;
-    package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
+    package = import ./fake-pkg.nix pkgs;
     enableUpdateCheck = false;
     enableExtensionUpdateCheck = false;
   };
