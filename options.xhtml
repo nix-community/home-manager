@@ -37143,6 +37143,161 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.nh.enable"></a><a class="term" href="options.xhtml#opt-programs.nh.enable"><code class="option">programs.nh.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable nh, yet another Nix CLI helper.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nh.nix" target="_top">
+&lt;home-manager/modules/programs/nh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.nh.package"></a><a class="term" href="options.xhtml#opt-programs.nh.package"><code class="option">programs.nh.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The nh package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.nh</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nh.nix" target="_top">
+&lt;home-manager/modules/programs/nh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.nh.clean.enable"></a><a class="term" href="options.xhtml#opt-programs.nh.clean.enable"><code class="option">programs.nh.clean.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable periodic garbage collection for user profile and nix store with nh clean
+user.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nh.nix" target="_top">
+&lt;home-manager/modules/programs/nh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.nh.clean.dates"></a><a class="term" href="options.xhtml#opt-programs.nh.clean.dates"><code class="option">programs.nh.clean.dates</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>How often cleanup is performed.</p><p>The format is described in <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+(optionally newline-terminated) single-line string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;weekly&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nh.nix" target="_top">
+&lt;home-manager/modules/programs/nh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.nh.clean.extraArgs"></a><a class="term" href="options.xhtml#opt-programs.nh.clean.extraArgs"><code class="option">programs.nh.clean.extraArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Options given to nh clean when the service is run automatically.</p><p>See <code class="literal">nh clean all --help</code> for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+(optionally newline-terminated) single-line string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;--keep 5 --keep-since 3d&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nh.nix" target="_top">
+&lt;home-manager/modules/programs/nh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.nh.flake"></a><a class="term" href="options.xhtml#opt-programs.nh.flake"><code class="option">programs.nh.flake</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The path that will be used for the <code class="envar">FLAKE</code> environment variable.</p><p><code class="envar">FLAKE</code> is used by nh as the default flake for performing actions,
+like <span class="command"><strong>nh os switch</strong></span>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nh.nix" target="_top">
+&lt;home-manager/modules/programs/nh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.nheko.enable"></a><a class="term" href="options.xhtml#opt-programs.nheko.enable"><code class="option">programs.nheko.enable</code>
   </a>
  </span>
