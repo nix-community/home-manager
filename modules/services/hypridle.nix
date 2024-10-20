@@ -11,6 +11,20 @@ in {
 
     package = mkPackageOption pkgs "hypridle" { };
 
+    systemd = {
+      enable = lib.mkEnableOption "Hypridle Systemd integration" // {
+        default = true;
+      };
+      target = lib.mkOption {
+        type = lib.types.str;
+        default = "graphical-session.target";
+        example = "hyprland-session.target";
+        description = ''
+          The systemd target that will automatically start the hypridle service.
+        '';
+      };
+    };
+
     settings = lib.mkOption {
       type = with lib.types;
         let
@@ -73,8 +87,8 @@ in {
       };
     };
 
-    systemd.user.services.hypridle = {
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+    systemd.user.services.hypridle = mkIf cfg.systemd.enable {
+      Install = { WantedBy = [ cfg.systemd.target ]; };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
