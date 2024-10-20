@@ -106,11 +106,6 @@ in {
         `programs.eww.configDir` is now deprecated. Please use `programs.eww.configYuck` & `programs.eww.configScss` instead.
       '';
       home.packages = [ cfg.package ];
-      xdg.configFile = {
-        "eww".source = mkIf cfg.configDir;
-        "eww/eww.scss".text = mkIf cfg.configScss;
-        "eww/eww.yuck".text = mkIf cfg.configYuck;
-      };
 
       programs.bash.initExtra = let ewwCmd = "${cfg.package}/bin/eww";
       in mkIf cfg.enableBashIntegration ''
@@ -131,6 +126,18 @@ in {
         end
       '';
     }
+
+    (mkIf (cfg.configDir != null) {
+      xdg.configFile."eww".source = cfg.configDir;
+    })
+
+    (mkIf (cfg.configYuck != null) {
+      xdg.configFile."eww/eww.yuck".text = cfg.configYuck;
+    })
+
+    (mkIf (cfg.configScss != null) {
+      xdg.configFile."eww/eww.scss".text = cfg.configScss;
+    })
 
     (mkIf cfg.systemd.enable {
       systemd.user.services.eww = {
