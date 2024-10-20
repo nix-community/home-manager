@@ -142,14 +142,14 @@ in {
     (mkIf cfg.systemd.enable {
       systemd.user.services.eww = {
         Unit = {
-          Description = "ElKowars wacky widgets";
+          Description = "ElKowars wacky widgets daemon";
           Documentation = "https://elkowar.github.io/eww/";
           After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
         Service = {
-          ExecStart = "${cfg.package} daemon --no-damonize";
+          ExecStart = "${cfg.package} daemon --no-daemonize";
           ExecStop = "${cfg.package} kill";
           ExecReload = "${cfg.package} reload";
         };

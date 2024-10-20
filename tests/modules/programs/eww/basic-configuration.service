@@ -2,9 +2,9 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecReload=@eww@/bin/eww reload
-ExecStart=@eww@/bin/eww daemon --no-daemonize
-ExecStop=@eww@/bin/eww kill
+ExecReload=@eww@ reload
+ExecStart=@eww@ daemon --no-daemonize
+ExecStop=@eww@ kill
 
 [Unit]
 After=graphical-session.target
