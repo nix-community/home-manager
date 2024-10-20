@@ -24,7 +24,8 @@ in {
     };
 
     configYuck = mkOption {
-      type = types.lines;
+      type = nullOr types.lines;
+      default = null;
       example = ''
         (defwindow example
            :monitor 0
@@ -46,7 +47,8 @@ in {
     };
 
     configScss = mkOption {
-      type = types.lines;
+      type = nullOr types.lines;
+      default = null;
       example = ''
         window {
           background: pink;
@@ -59,7 +61,8 @@ in {
     };
 
     configDir = mkOption {
-      type = types.path;
+      type = nullOr types.path;
+      default = null;
       example = literalExpression "./eww-config-dir";
       description = ''
         The directory that gets symlinked to
@@ -103,7 +106,11 @@ in {
         `programs.eww.configDir` is now deprecated. Please use `programs.eww.configYuck` & `programs.eww.configScss` instead.
       '';
       home.packages = [ cfg.package ];
-      xdg.configFile."eww".source = cfg.configDir;
+      xdg.configFile = {
+        "eww".source = mkIf cfg.configDir;
+        "eww/eww.scss" = mkIf cfg.configScss;
+        "eww/eww.yuck" = mkIf cfg.configYuck;
+      };
 
       programs.bash.initExtra = let ewwCmd = "${cfg.package}/bin/eww";
       in mkIf cfg.enableBashIntegration ''
