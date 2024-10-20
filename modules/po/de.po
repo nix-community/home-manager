@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2023-12-29 02:09+0000\n"
-"Last-Translator: Peter Pfeufer <info@ppfeufer.de>\n"
+"PO-Revision-Date: 2024-10-15 21:37+0000\n"
+"Last-Translator: Viktor Illmer <accounts@viktor.im>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/"
 "modules/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.8-rc\n"
 
 #: modules/files.nix:191
 msgid "Creating home file links in %s"
@@ -120,7 +120,7 @@ msgstr "Fehler: HOME ist auf \"%s\" gesetzt, aber wir erwarten \"%s\""
 
 #: modules/lib-bash/activation-init.sh:153
 msgid "Starting Home Manager activation"
-msgstr "Starte Home Manager Aktivierung"
+msgstr "Starte Home-Manager-Aktivierung"
 
 #: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"

@@ -67,6 +67,7 @@ in import nmtSrc {
     ./modules/programs/btop
     ./modules/programs/carapace
     ./modules/programs/cava
+    ./modules/programs/cmus
     ./modules/programs/comodoro
     ./modules/programs/darcs
     ./modules/programs/dircolors
@@ -161,6 +162,7 @@ in import nmtSrc {
     ./modules/programs/watson
     ./modules/programs/wezterm
     ./modules/programs/yazi
+    ./modules/programs/zed-editor
     ./modules/programs/zellij
     ./modules/programs/zk
     ./modules/programs/zplug
@@ -193,6 +195,7 @@ in import nmtSrc {
     ./modules/programs/bemenu
     ./modules/programs/boxxy
     ./modules/programs/firefox/firefox.nix
+    ./modules/programs/firefox/floorp.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel

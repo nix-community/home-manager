@@ -6,7 +6,7 @@
       ],
       "_iconURL": "file:///run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg",
       "_isAppProvided": false,
-      "_loadPath": "[home-manager]/programs.firefox.profiles.search.search.engines.\"Nix Packages\"",
+      "_loadPath": "[home-manager]/programs.@name@.profiles.search.search.engines.\"Nix Packages\"",
       "_metaData": {
         "order": 1
       },
@@ -34,7 +34,7 @@
       "_iconURL": "https://wiki.nixos.org/favicon.png",
       "_iconUpdateURL": "https://wiki.nixos.org/favicon.png",
       "_isAppProvided": false,
-      "_loadPath": "[home-manager]/programs.firefox.profiles.search.search.engines.\"NixOS Wiki\"",
+      "_loadPath": "[home-manager]/programs.@name@.profiles.search.search.engines.\"NixOS Wiki\"",
       "_metaData": {
         "order": 2
       },
@@ -68,9 +68,9 @@
   ],
   "metaData": {
     "current": "Google",
-    "hash": "IRmKVSQlAYnvLO8kdZyNUR/g5hzVn4++T0PLPGm+kZk=",
+    "hash": null,
     "private": "DuckDuckGo",
-    "privateHash": "BWvqUiaCuMJ20lbymFf2dqzWyl1cgm1LZhhdWNEp0Cc=",
+    "privateHash": null,
     "useSavedOrder": true
   },
   "version": 6

@@ -349,6 +349,11 @@
     githubId = 12465195;
     name = "Bruno BELANYI";
   };
+  libewa = {
+    email = "libewa-git@icloud.com";
+    github = "libewa";
+    githubId = 67926131;
+  };
   malvo = {
     email = "malte@malvo.org";
     github = "malte-v";
@@ -598,6 +603,12 @@
     email = "zorrobert@mailbox.org";
     github = "zorrobert";
     githubId = 118135271;
+  };
+  joygnu = {
+    name = "joygnu";
+    email = "contact@joygnu.org";
+    github = "joygnu";
+    githubId = 152063003;
   };
   callumio = {
     name = "Callum Leslie";

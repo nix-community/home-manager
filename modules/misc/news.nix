@@ -1770,6 +1770,25 @@ in {
           ideas from mutt.
         '';
       }
+
+      {
+        time = "2024-10-17T13:07:55+00:00";
+        message = ''
+          A new module is available: 'programs.zed-editor'.
+
+          Zed is a fast text editor for macOS and Linux.
+          See https://zed.dev for more.
+        '';
+      }
+
+      {
+        time = "2024-10-18T14:01:07+00:00";
+        message = ''
+          A new module is available: 'programs.cmus'.
+
+          cmus is a small, fast and powerful console music player.
+        '';
+      }
     ];
   };
 }
