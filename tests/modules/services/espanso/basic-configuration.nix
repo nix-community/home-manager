@@ -46,8 +46,14 @@
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/espanso.service
+    expectedServiceFile=${./basic-configuration.service}
     assertFileExists "$serviceFile"
-    assertFileContent "$serviceFile" ${./basic-configuration.service}
+    # ensure espanso is in ExecStart
+    assertFileRegex "$serviceFile" 'ExecStart=.*/bin/espanso launcher'
+    # rest of the file should be identical
+    grep -v "/bin/espanso launcher" "$(_abs $serviceFile)" > espanso-service.actual
+    grep -v "/bin/espanso launcher" "$expectedServiceFile" > espanso-service.expected
+    assertFileContent "$(realpath espanso-service.actual)" espanso-service.expected
 
     configFile=home-files/.config/espanso/config/default.yml
     assertFileExists "$configFile"
