@@ -5,6 +5,8 @@
     enable = true;
     package = pkgs.hypridle;
 
+    systemd.target = "hyprland-session.target";
+
     settings = {
       general = {
         after_sleep_cmd = "hyprctl dispatch dpms on";
@@ -34,5 +36,6 @@
     assertFileExists $config
     assertFileExists $clientServiceFile
     assertFileContent $config ${./hypridle.conf}
+    assertFileContains $clientServiceFile "WantedBy=hyprland-session.target"
   '';
 }
