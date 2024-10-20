@@ -101,7 +101,7 @@ let
       };
     in ''
       ${builtins.toJSON {
-        version = 4;
+        version = 5;
         lastUserContextId =
           foldlAttrs (acc: _: value: if value.id > acc then value.id else acc) 0
           containers;
@@ -777,11 +777,12 @@ in {
           force = profile.containersForce;
         };
 
-      "${profilesPath}/${profile.path}/search.json.mozlz4" = {
-        enable = profile.search.enable;
-        force = profile.search.force;
-        source = profile.search.file;
-      };
+      "${profilesPath}/${profile.path}/search.json.mozlz4" =
+        mkIf (profile.search.enable) {
+          enable = profile.search.enable;
+          force = profile.search.force;
+          source = profile.search.file;
+        };
 
       "${profilesPath}/${profile.path}/extensions" =
         mkIf (profile.extensions != [ ]) {
