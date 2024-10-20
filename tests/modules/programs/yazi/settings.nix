@@ -7,34 +7,34 @@
     keymap = {
       input.keymap = [
         {
-          exec = "close";
           on = [ "<C-q>" ];
+          run = "close";
         }
         {
-          exec = "close --submit";
           on = [ "<Enter>" ];
+          run = "close --submit";
         }
         {
-          exec = "escape";
           on = [ "<Esc>" ];
+          run = "escape";
         }
         {
-          exec = "backspace";
           on = [ "<Backspace>" ];
+          run = "backspace";
         }
       ];
       manager.keymap = [
         {
-          exec = "escape";
           on = [ "<Esc>" ];
+          run = "escape";
         }
         {
-          exec = "quit";
           on = [ "q" ];
+          run = "quit";
         }
         {
-          exec = "close";
           on = [ "<C-q>" ];
+          run = "close";
         }
       ];
     };
