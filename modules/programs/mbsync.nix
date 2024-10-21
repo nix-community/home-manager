@@ -30,7 +30,7 @@ let
 
   genTlsConfig = tls:
     {
-      SSLType = if !tls.enable then
+      TLSType = if !tls.enable then
         "None"
       else if tls.useStartTls then
         "STARTTLS"
