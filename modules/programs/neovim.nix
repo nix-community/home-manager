@@ -398,6 +398,13 @@ in {
       customRC = cfg.extraConfig;
     };
 
+    wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package (neovimConfig // {
+      wrapperArgs =
+        (lib.escapeShellArgs (neovimConfig.wrapperArgs ++ cfg.extraWrapperArgs))
+        + " " + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
+        + extraMakeWrapperLuaArgs;
+      wrapRc = false;
+    });
   in mkIf cfg.enable {
 
     programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
@@ -422,11 +429,10 @@ in {
         # writes runtime
         (map (x: x.runtime) pluginsNormalized) ++ [{
           "nvim/init.lua" = let
-            luaRcContent =
-              lib.optionalString (neovimConfig.neovimRcContent != "")
+            luaRcContent = lib.optionalString (wrappedNeovim'.initRc != "")
               "vim.cmd [[source ${
                 pkgs.writeText "nvim-init-home-manager.vim"
-                neovimConfig.neovimRcContent
+                wrappedNeovim'.initRc
               }]]" + config.programs.neovim.extraLuaConfig
               + lib.optionalString hasLuaConfig
               config.programs.neovim.generatedConfigs.lua;
@@ -437,13 +443,6 @@ in {
           };
         }]);
 
-    programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
-      (neovimConfig // {
-        wrapperArgs = (lib.escapeShellArgs
-          (neovimConfig.wrapperArgs ++ cfg.extraWrapperArgs)) + " "
-          + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
-          + extraMakeWrapperLuaArgs;
-        wrapRc = false;
-      });
+    programs.neovim.finalPackage = wrappedNeovim';
   };
 }
