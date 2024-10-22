@@ -4,8 +4,21 @@ let
     mkOption mkEnableOption mkIf maintainers literalExpression types
     mkRemovedOptionModule versionAtLeast;
 
+  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+
   cfg = config.services.espanso;
   espansoVersion = cfg.package.version;
+
+  package-bin = if isLinux then
+    pkgs.writeShellScriptBin "espanso" ''
+      if [ -n "$WAYLAND_DISPLAY" ]; then
+        ${lib.meta.getExe cfg.package-wayland} "$@"
+      else
+        ${lib.meta.getExe cfg.package} "$@"
+      fi
+    ''
+  else
+    cfg.package;
 
   yaml = pkgs.formats.yaml { };
 in {
@@ -26,8 +39,36 @@ in {
       package = mkOption {
         type = types.package;
         description = "Which espanso package to use";
-        default = pkgs.espanso;
+        default = if isDarwin || cfg.x11Support then
+          pkgs.espanso
+        else
+          pkgs.espanso-wayland;
         defaultText = literalExpression "pkgs.espanso";
+      };
+
+      package-wayland = mkOption {
+        type = types.package;
+        description =
+          "Which espanso package to use when running under wayland on linux";
+        default = if isLinux && cfg.waylandSupport then
+          pkgs.espanso-wayland
+        else
+          pkgs.espanso;
+        defaultText = literalExpression "pkgs.espanso-wayland";
+      };
+
+      x11Support = mkOption {
+        type = types.bool;
+        description = "Whether to enable x11 support on linux";
+        default = isLinux;
+        defaultText = literalExpression "enabled on linux";
+      };
+
+      waylandSupport = mkOption {
+        type = types.bool;
+        description = "Whether to enable wayland support on linux";
+        default = isLinux;
+        defaultText = literalExpression "enabled on linux";
       };
 
       configs = mkOption {
@@ -98,14 +139,23 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = versionAtLeast espansoVersion "2";
-      message = ''
-        The services.espanso module only supports Espanso version 2 or later.
-      '';
-    }];
+    assertions = [
+      {
+        assertion = versionAtLeast espansoVersion "2";
+        message = ''
+          The services.espanso module only supports Espanso version 2 or later.
+        '';
+      }
+      {
+        assertion = isLinux -> (cfg.x11Support || cfg.waylandSupport);
+        message = ''
+          In services.espanso at least x11 or wayland support must be enabled on linux.
+        '';
+      }
+    ];
 
-    home.packages = [ cfg.package ];
+    # conflicting to have cfg.package and cfg.package-wayland
+    home.packages = [ package-bin ];
 
     xdg.configFile = let
       configFiles = lib.mapAttrs' (name: value: {
@@ -121,7 +171,7 @@ in {
     systemd.user.services.espanso = {
       Unit = { Description = "Espanso: cross platform text expander in Rust"; };
       Service = {
-        ExecStart = "${cfg.package}/bin/espanso launcher";
+        ExecStart = "${lib.meta.getExe package-bin} launcher";
         Restart = "on-failure";
         RestartSec = 3;
       };
