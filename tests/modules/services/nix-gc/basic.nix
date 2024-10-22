@@ -4,6 +4,7 @@
   nix.gc = {
     automatic = true;
     frequency = "monthly";
+    randomizedDelaySec = "42min";
     options = "--delete-older-than 30d --max-freed $((64 * 1024**3))";
   };
 
