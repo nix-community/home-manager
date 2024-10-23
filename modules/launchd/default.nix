@@ -36,26 +36,9 @@ let
     config = { config.Label = mkDefault "${labelPrefix}${name}"; };
   };
 
-  toAgent = config: pkgs.writeText "${config.Label}.plist" (toPlist { } config);
+  enabledAgents = filterAttrs (n: v: v.enable) cfg.agents;
 
-  agentPlists =
-    mapAttrs' (n: v: nameValuePair "${v.config.Label}.plist" (toAgent v.config))
-    (filterAttrs (n: v: v.enable) cfg.agents);
-
-  agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
-    mkdir -p "$out"
-
-    declare -A plists
-    plists=(${
-      concatStringsSep " "
-      (mapAttrsToList (name: value: "['${name}']='${value}'") agentPlists)
-    })
-
-    for dest in "''${!plists[@]}"; do
-      src="''${plists[$dest]}"
-      ln -s "$src" "$out/$dest"
-    done
-  '';
+  agentWrapperApps = builtins.attrValues (mapAttrs (name: value: pkgs.callPackage ./wrapperApp.nix { inherit name; agent = value; }) enabledAgents);
 in {
   meta.maintainers = with maintainers; [ midchildan ];
 
@@ -80,15 +63,22 @@ in {
   config = mkMerge [
     {
       assertions = [{
-        assertion = (cfg.enable && agentPlists != { }) -> isDarwin;
-        message = let names = lib.concatStringsSep ", " (attrNames agentPlists);
+        assertion = (cfg.enable && enabledAgents != { }) -> isDarwin;
+        message = let names = lib.concatStringsSep ", " (attrNames enabledAgents);
         in "Must use Darwin for modules that require Launchd: " + names;
       }];
     }
 
     (mkIf isDarwin {
+      home.packages = agentWrapperApps;
+
+      home.activation.enableWrappedLaunchAgents = hm.dag.entryAfter ["writeBoundary" "linkApps" "setupLaunchAgents"]
+        (lib.concatStringsSep "\n" (builtins.attrValues (mapAttrs (name: value: "run '${config.home.homeDirectory}/Applications/Home Manager Apps/${name}.app/Contents/MacOS/main' register agent ${value.config.Label}.plist") enabledAgents)));
+
+      # --- LEGACY ---
+
       home.extraBuilderCommands = ''
-        ln -s "${agentsDrv}" $out/LaunchAgents
+        mkdir $out/LaunchAgents
       '';
 
       home.activation.checkLaunchAgents =
@@ -103,7 +93,7 @@ in {
                 oldDir=""
               fi
             fi
-            newDir=${escapeShellArg agentsDrv}
+            newDir="$(mktemp -d)"
             dstDir=${escapeShellArg dstDir}
 
             local oldSrcPath newSrcPath dstPath agentFile agentName
