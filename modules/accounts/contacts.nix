@@ -12,7 +12,8 @@ let
         path = mkOption {
           type = types.str;
           default = "${cfg.basePath}/${name}";
-          defaultText = "‹accounts.contact.basePath›/‹name›";
+          defaultText =
+            lib.literalExpression "‹accounts.contact.basePath›/‹name›";
           description = "The path of the storage.";
         };
 
