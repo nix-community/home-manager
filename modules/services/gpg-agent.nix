@@ -18,6 +18,10 @@ let
     export GPG_TTY
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
+  gpgZshInitStr = ''
+    export GPG_TTY=$TTY
+  '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
+
   gpgFishInitStr = ''
     set -gx GPG_TTY (tty)
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
@@ -287,7 +291,7 @@ in {
       '';
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
-      programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgInitStr;
+      programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgZshInitStr;
       programs.fish.interactiveShellInit =
         mkIf cfg.enableFishIntegration gpgFishInitStr;
 
