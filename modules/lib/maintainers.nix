@@ -43,6 +43,12 @@
     github = "Avimitin";
     githubId = 30021675;
   };
+  bamhm182 = {
+    name = "bamhm182";
+    email = "bamhm182@gmail.com";
+    github = "bamhm182";
+    githubId = 920269;
+  };
   blmhemu = {
     name = "blmhemu";
     email = "19410501+blmhemu@users.noreply.github.com";
@@ -287,6 +293,16 @@
     email = "nitro@ortin.dev";
     github = "NitroSniper";
     githubId = 44097331;
+  };
+  n-hass = {
+    name = "Nicholas Hassan";
+    email = "nick@hassan.host";
+    github = "n-hass";
+    githubId = 72363381;
+    keys = [{
+      longkeyid = "rsa4096/0xFC95AB946A781EE7";
+      fingerprint = "FDEE 6116 DBA7 8840 7323  4466 A371 5973 2728 A6A6";
+    }];
   };
   seylerius = {
     email = "sable@seyleri.us";
