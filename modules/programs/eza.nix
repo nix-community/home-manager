@@ -59,6 +59,14 @@ with lib;
       '';
     };
 
+    colors = mkOption {
+      type = types.enum [ null "auto" "always" "never" ];
+      default = null;
+      description = ''
+        Use terminal colors in output ({option}`--color` argument).
+      '';
+    };
+
     git = mkOption {
       type = types.bool;
       default = false;
@@ -80,8 +88,10 @@ with lib;
         cfg.icons;
     in optionals (v != null) [ "--icons" v ];
 
-    args = escapeShellArgs
-      (iconsOption ++ optional cfg.git "--git" ++ cfg.extraOptions);
+    colorOption = optionals (cfg.colors != null) [ "--color" cfg.colors ];
+
+    args = escapeShellArgs (iconsOption ++ colorOption
+      ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     optionsAlias = optionalAttrs (args != "") { eza = "eza ${args}"; };
 
