@@ -19,7 +19,7 @@ in {
       "Flake support is now always enabled.")
   ];
 
-  meta.maintainers = [ lib.maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee lib.maintainers.shikanime ];
 
   options.programs.direnv = {
     enable = mkEnableOption "direnv, the environment switcher";
@@ -95,6 +95,14 @@ in {
       package = mkPackageOption pkgs "nix-direnv" { };
     };
 
+    mise = {
+      enable = mkEnableOption ''
+        [mise](https://mise.jdx.dev/direnv.html),
+        integration of use_mise for direnv'';
+
+      package = mkPackageOption pkgs "mise" { };
+    };
+
     silent = mkEnableOption "silent mode, that is, disabling direnv logging";
   };
 
@@ -111,6 +119,12 @@ in {
 
     xdg.configFile."direnv/direnvrc" =
       lib.mkIf (cfg.stdlib != "") { text = cfg.stdlib; };
+
+    xdg.configFile."direnv/lib/hm-mise.sh" = mkIf cfg.mise.enable {
+      text = ''
+        eval "$(${getExe cfg.mise.package} direnv activate)"
+      '';
+    };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
       # Using mkAfter to make it more likely to appear after other
