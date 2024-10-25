@@ -11317,6 +11317,36 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-nix.gc.randomizedDelaySec"></a><a class="term" href="options.xhtml#opt-nix.gc.randomizedDelaySec"><code class="option">nix.gc.randomizedDelaySec</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Add a randomized delay before each garbage collection.
+The delay will be chosen between zero and this value.
+This value must be a time span in the format specified by
+<a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+(optionally newline-terminated) single-line string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;0&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;45min&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/nix-gc.nix" target="_top">
+&lt;home-manager/modules/services/nix-gc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-nix.keepOldNixPath"></a><a class="term" href="options.xhtml#opt-nix.keepOldNixPath"><code class="option">nix.keepOldNixPath</code>
   </a>
  </span>
