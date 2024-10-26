@@ -267,6 +267,7 @@ let
     ./programs/zathura.nix
     ./programs/zed-editor.nix
     ./programs/zellij.nix
+    ./programs/zen-browser.nix
     ./programs/zk.nix
     ./programs/zoxide.nix
     ./programs/zplug.nix
