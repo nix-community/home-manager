@@ -81,6 +81,7 @@ in import nmtSrc {
     ./modules/programs/gh-dash
     ./modules/programs/git
     ./modules/programs/git-cliff
+    ./modules/programs/go
     ./modules/programs/gpg
     ./modules/programs/gradle
     ./modules/programs/granted
