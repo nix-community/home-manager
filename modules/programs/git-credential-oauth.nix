@@ -29,7 +29,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.git.extraConfig.credential.helper = [
+    programs.git.extraConfig.credential.helper = lib.mkAfter [
       ("${cfg.package}/bin/git-credential-oauth"
         + lib.optionalString (cfg.extraFlags != [ ])
         " ${lib.strings.concatStringsSep " " cfg.extraFlags}")
