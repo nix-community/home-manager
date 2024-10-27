@@ -30,7 +30,8 @@ in {
     home.packages = [ cfg.package ];
 
     programs.git.extraConfig.credential.helper = [
-      ("${cfg.package}/bin/git-credential-oauth" + lib.mkIf cfg.extraFlags
+      ("${cfg.package}/bin/git-credential-oauth"
+        + lib.optionalString (cfg.extraFlags != [ ])
         " ${lib.strings.concatStringsSep " " cfg.extraFlags}")
     ];
   };
