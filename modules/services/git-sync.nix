@@ -112,6 +112,15 @@ in {
         description = ''
           The repositories that should be synchronized.
         '';
+        example = literalExpression ''
+          {
+            xyz = {
+              path = "''${config.home.homeDirectory}/foo/home-manager";
+              uri = "git@github.com:nix-community/home-manager.git";
+              interval = 1000;
+            };
+          }
+        '';
       };
     };
   };
