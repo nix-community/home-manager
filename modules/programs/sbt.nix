@@ -25,7 +25,7 @@ let
     in
     ''
       lazy val ${symbol} = "${cred.passwordCommand}".!!.trim
-      credentials += Credentials("${cred.realm}", "${cred.host}", "${cred.user}", ${symbol})
+      ThisBuild / credentials += Credentials("${cred.realm}", "${cred.host}", "${cred.user}", ${symbol})
     '';
 
   renderCredentials = creds: ''
