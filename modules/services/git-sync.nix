@@ -16,9 +16,9 @@ let
         "PATH=${
           lib.makeBinPath (with pkgs; [ openssh git ] ++ repo.extraPackages)
         }"
-        "GIT_SYNC_DIRECTORY=${repo.path}"
+        "GIT_SYNC_DIRECTORY=${strings.escapeShellArg repo.path}"
         "GIT_SYNC_COMMAND=${cfg.package}/bin/git-sync"
-        "GIT_SYNC_REPOSITORY=${repo.uri}"
+        "GIT_SYNC_REPOSITORY=${strings.escapeShellArg repo.uri}"
         "GIT_SYNC_INTERVAL=${toString repo.interval}"
       ];
       ExecStart = "${cfg.package}/bin/git-sync-on-inotify";
