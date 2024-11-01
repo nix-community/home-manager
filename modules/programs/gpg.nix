@@ -267,8 +267,7 @@ in
       cert-digest-algo = mkDefault "SHA512";
       s2k-digest-algo = mkDefault "SHA512";
       s2k-cipher-algo = mkDefault "AES256";
-      charset = mkDefault "utf-8";
-      fixed-list-mode = mkDefault true;
+      display-charset = mkDefault "utf-8";
       no-comments = mkDefault true;
       no-emit-version = mkDefault true;
       keyid-format = mkDefault "0xlong";
@@ -277,7 +276,6 @@ in
       with-fingerprint = mkDefault true;
       require-cross-certification = mkDefault true;
       no-symkey-cache = mkDefault true;
-      use-agent = mkDefault true;
     };
 
     programs.gpg.scdaemonSettings = {
