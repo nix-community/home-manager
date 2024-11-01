@@ -16,18 +16,13 @@ let
 
   cfg = config.programs.gpg;
 
-  mkKeyValue =
-    key: value: if lib.isString value then "${key} ${value}" else lib.optionalString value key;
-
-  cfgText = lib.generators.toKeyValue {
-    inherit mkKeyValue;
-    listsAsDuplicateKeys = true;
-  } cfg.settings;
-
-  scdaemonCfgText = lib.generators.toKeyValue {
-    inherit mkKeyValue;
-    listsAsDuplicateKeys = true;
-  } cfg.scdaemonSettings;
+  toKeyValue =
+    settings:
+    lib.generators.toKeyValue {
+      mkKeyValue =
+        key: value: if lib.isString value then "${key} ${value}" else lib.optionalString value key;
+      listsAsDuplicateKeys = true;
+    } settings;
 
   primitiveType = types.oneOf [
     types.str
@@ -193,6 +188,7 @@ in
 
     scdaemonSettings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
       example = literalExpression ''
         {
           disable-ccid = true;
@@ -204,6 +200,41 @@ in
         [
           {manpage}`scdaemon(1)`
         ](https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html).
+      '';
+    };
+
+    dirmngrSettings = mkOption {
+      type = types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
+      example = literalExpression ''
+        {
+          allow-version-check = true;
+          keyserver = "ldaps://ldap.example.com";
+        }
+      '';
+      description = ''
+        Dirmngr configuration options. Available options are described
+        in
+        [
+          {manpage}`dirmngr(1)`
+        ](https://www.gnupg.org/documentation/manuals/gnupg/Dirmngr-Options.html)
+      '';
+    };
+
+    gpgsmSettings = mkOption {
+      type = types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
+      example = literalExpression ''
+        {
+          with-key-data = true;
+        }
+      '';
+      description = ''
+        GPGSM configuration options. Available options are described
+        in
+        [
+          {manpage}`gpgsm(1)`
+        ](https://www.gnupg.org/documentation/manuals/gnupg/GPGSM-Options.html)
       '';
     };
 
@@ -278,18 +309,26 @@ in
       no-symkey-cache = mkDefault true;
     };
 
-    programs.gpg.scdaemonSettings = {
-      # no defaults for scdaemon
-    };
-
     home.packages = [ cfg.package ];
     home.sessionVariables = {
       GNUPGHOME = cfg.homedir;
     };
 
-    home.file."${cfg.homedir}/gpg.conf".text = cfgText;
+    home.file."${cfg.homedir}/gpg.conf" = mkIf (cfg.settings != { }) {
+      text = toKeyValue cfg.settings;
+    };
 
-    home.file."${cfg.homedir}/scdaemon.conf".text = scdaemonCfgText;
+    home.file."${cfg.homedir}/scdaemon.conf" = mkIf (cfg.scdaemonSettings != { }) {
+      text = toKeyValue cfg.scdaemonSettings;
+    };
+
+    home.file."${cfg.homedir}/dirmngr.conf" = mkIf (cfg.dirmngrSettings != { }) {
+      text = toKeyValue cfg.dirmngrSettings;
+    };
+
+    home.file."${cfg.homedir}/gpgsm.conf" = mkIf (cfg.gpgsmSettings != { }) {
+      text = toKeyValue cfg.gpgsmSettings;
+    };
 
     # Link keyring if keys are not mutable
     home.file."${cfg.homedir}/pubring.kbx" = mkIf (!cfg.mutableKeys && cfg.publicKeys != [ ]) {
