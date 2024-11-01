@@ -55,10 +55,8 @@ let
 
   mpvPackage = if cfg.scripts == [ ] then
     cfg.package
-  else if hasAttr "wrapMpv" pkgs then
-    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; }
   else
-    pkgs.mpv.override { scripts = cfg.scripts; };
+    pkgs.mpv.override { inherit (cfg) scripts; };
 
 in {
   options = {
