@@ -184,7 +184,7 @@ in {
       else
       # Wrap the package's binaries with nixGL, while preserving the rest of
       # the outputs and derivation attributes.
-        (pkg.overrideAttrs (old: {
+        ((pkg.overrideAttrs (old: {
           name = "nixGL-${pkg.name}";
 
           # Make sure this is false for the wrapper derivation, so nix doesn't expect
@@ -203,7 +203,8 @@ in {
           in ''
             set -eo pipefail
 
-            ${ # Heavily inspired by https://stackoverflow.com/a/68523368/6259505
+            ${
+            # Heavily inspired by https://stackoverflow.com/a/68523368/6259505
             lib.concatStringsSep "\n" (map (outputName: ''
               echo "Copying output ${outputName}"
               set -x
@@ -240,7 +241,11 @@ in {
 
             shopt -u nullglob # Revert nullglob back to its normal default state
           '';
-        }));
+        })) // {
+          # Override arguments to the package itself, rather than the nixGL wrapper
+          override = args:
+            (makePackageWrapper vendor environment (pkg.override args));
+        });
 
     wrappers = {
       mesa = makePackageWrapper "Intel" { };
