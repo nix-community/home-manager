@@ -12,6 +12,11 @@ let
       "Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)";
   };
 
+  # The extensions path shared by all profiles.
+  extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
+
+  moduleName = "programs.thunderbird";
+
   enabledAccounts = attrValues
     (filterAttrs (_: a: a.thunderbird.enable) config.accounts.email.accounts);
 
@@ -249,6 +254,27 @@ in {
                 default = { };
                 description = "Declarative search engine configuration.";
               };
+
+              extensions = mkOption {
+                type = types.listOf types.package;
+                default = [ ];
+                example = literalExpression ''
+                  [
+                    pkgs.some-thunderbird-extension
+                  ]
+                '';
+                description = ''
+                  List of ${name} add-on packages to install for this profile.
+
+                  Note that it is necessary to manually enable extensions
+                  inside ${name} after the first installation.
+
+                  To automatically enable extensions add
+                  `"extensions.autoDisableScopes" = 0;`
+                  to
+                  [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
+                '';
+              };
             };
           }));
         description = "Attribute set of Thunderbird profiles.";
@@ -416,6 +442,18 @@ in {
           enable = profile.search.enable;
           force = profile.search.force;
           source = profile.search.file;
+        };
+
+      "${thunderbirdProfilesPath}/${name}/extensions" =
+        mkIf (profile.extensions != [ ]) {
+          source = let
+            extensionsEnvPkg = pkgs.buildEnv {
+              name = "hm-thunderbird-extensions";
+              paths = profile.extensions;
+            };
+          in "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+          recursive = true;
+          force = true;
         };
     }));
   };
