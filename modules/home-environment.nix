@@ -280,8 +280,9 @@ in
         };
         ```
         may not work as expected. If you need to reference another
-        session variable, then do so inside Nix instead. The above
-        example then becomes
+        session variable (even if it is declared by using other options
+        like [](#opt-xdg.configHome)), then do so inside Nix instead.
+        The above example then becomes
         ```nix
         home.sessionVariables = {
           FOO = "Hello";
