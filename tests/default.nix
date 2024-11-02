@@ -392,6 +392,7 @@ in import nmtSrc {
     ./modules/programs/spotify-player
     ./modules/programs/ssh
     ./modules/programs/starship
+    ./modules/programs/streamlink
     ./modules/programs/taskwarrior
     ./modules/programs/tealdeer
     ./modules/programs/tex-fmt
