@@ -108,6 +108,7 @@ in {
         Documentation = "man:swayidle(1)";
         ConditionEnvironment = "WAYLAND_DISPLAY";
         PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
 
       Service = {
