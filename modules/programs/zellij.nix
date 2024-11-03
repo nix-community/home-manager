@@ -30,7 +30,7 @@ let
     };
   };
 in {
-  meta.maintainers = [ hm.maintainers.mainrs ];
+  meta.maintainers = [ hm.maintainers.mainrs hm.maintainers.adda ];
 
   options.programs.zellij = {
     enable = mkEnableOption "Zellij";
