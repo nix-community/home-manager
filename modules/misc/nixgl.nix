@@ -242,7 +242,11 @@ in {
             shopt -u nullglob # Revert nullglob back to its normal default state
           '';
         })) // {
-          # Override arguments to the package itself, rather than the nixGL wrapper
+          # When the nixGL-wrapped package is given to a HM module, the module
+          # might want to override the package arguments, but our wrapper
+          # wouldn't know what to do with them. So, we rewrite the override
+          # function to instead forward the arguments to the package's own
+          # override function.
           override = args:
             (makePackageWrapper vendor environment (pkg.override args));
         });
