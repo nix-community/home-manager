@@ -4,9 +4,16 @@
   programs = {
     zellij = {
       enable = true;
-      enableBashIntegration = true;
+
+      autostartOnShellStart = {
+        enable = true;
+        attachExistingSession = true;
+        exitShellOnExit = true;
+      };
+
       enableZshIntegration = true;
       enableFishIntegration = true;
+      enableBashIntegration = true;
     };
     bash.enable = true;
     zsh.enable = true;
@@ -37,5 +44,13 @@
     assertFileContains \
       home-files/.config/fish/config.fish \
       'eval (@zellij@/bin/dummy setup --generate-auto-start fish | string collect)'
+
+    assertFileExists home-path/etc/profile.d/hm-session-vars.sh
+    assertFileContains \
+      home-path/etc/profile.d/hm-session-vars.sh \
+      'export ZELLIJ_AUTO_ATTACH="true"'
+    assertFileContains \
+      home-path/etc/profile.d/hm-session-vars.sh \
+      'export ZELLIJ_AUTO_EXIT="true"'
   '';
 }
