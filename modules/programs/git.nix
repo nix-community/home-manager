@@ -549,7 +549,7 @@ in {
           Type = "oneshot";
           ExecStart = let exe = lib.getExe cfg.package;
           in ''
-            "${exe}" --exec-path="${exe}" for-each-repo --config=maintenance.repo maintenance run --schedule=%i
+            "${exe}" for-each-repo --keep-going --config=maintenance.repo maintenance run --schedule=%i
           '';
           LockPersonality = "yes";
           MemoryDenyWriteExecute = "yes";
