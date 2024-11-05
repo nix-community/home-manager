@@ -19,7 +19,7 @@
       'export GRANTED_ALIAS_CONFIGURED="true"'
     assertFileNotRegex \
       home-files/.zshrc \
-      'source @granted@/bin/.assume-wrapped "$@"'
+      'source @granted@/bin/assume "$@"'
     assertFileNotRegex \
       home-files/.zshrc \
       'unset GRANTED_ALIAS_CONFIGURED'

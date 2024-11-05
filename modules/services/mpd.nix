@@ -171,17 +171,24 @@ in {
     ];
 
     systemd.user.services.mpd = {
-      Unit = {
-        After = [ "network.target" "sound.target" ];
-        Description = "Music Player Daemon";
-      };
+      Unit = mkMerge [
+        {
+          Description = "Music Player Daemon";
+          After = [ "network.target" "sound.target" ];
+        }
+
+        (mkIf cfg.network.startWhenNeeded {
+          Requires = [ "mpd.socket" ];
+          After = [ "mpd.socket" ];
+        })
+      ];
 
       Install = mkIf (!cfg.network.startWhenNeeded) {
         WantedBy = [ "default.target" ];
       };
 
       Service = {
-        Environment = "PATH=${config.home.profileDirectory}/bin";
+        Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
         ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf} ${
             escapeShellArgs cfg.extraArgs
           }";

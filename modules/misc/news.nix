@@ -1,9 +1,6 @@
 { config, lib, options, pkgs, ... }:
-
 with lib;
-
 let
-
   cfg = config.news;
 
   hostPlatform = pkgs.stdenv.hostPlatform;
@@ -44,7 +41,6 @@ let
 
     config = { id = mkDefault (builtins.hashString "sha256" config.message); };
   });
-
 in {
   meta.maintainers = [ maintainers.rycee ];
 
@@ -1654,6 +1650,181 @@ in {
           efficient - polling is only done when absolutely necessary.
 
           See https://codeberg.org/dnkl/yambar for more.
+        '';
+      }
+
+      {
+        time = "2024-05-25T14:36:03+00:00";
+        message = ''
+          Multiple new options are available:
+
+          - 'nix.nixPath'
+          - 'nix.keepOldNixPath'
+          - 'nix.channels'
+        '';
+      }
+
+      {
+        time = "2024-06-22T05:49:48+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.blanket'.
+
+          Blanket is a program you can use to improve your focus and increase
+          your productivity by listening to different sounds. See
+          https://github.com/rafaelmardojai/blanket for more.
+        '';
+      }
+
+      {
+        time = "2024-06-26T07:07:17+00:00";
+        condition = with config.programs.yazi;
+          enable && (enableBashIntegration || enableZshIntegration
+            || enableFishIntegration || enableNushellIntegration);
+        message = ''
+          Yazi's shell integration wrappers have been renamed from 'ya' to 'yy'.
+
+          A new option `programs.yazi.shellWrapperName` is also available that
+          allows you to override this name.
+        '';
+      }
+
+      {
+        time = "2024-06-28T14:18:16+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.glance'.
+
+          Glance is a self-hosted dashboard that puts all your feeds in
+          one place. See https://github.com/glanceapp/glance for more.
+        '';
+      }
+
+      {
+        time = "2024-09-13T08:58:17+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.trayscale'.
+
+          An unofficial GUI wrapper around the Tailscale CLI client.
+        '';
+      }
+
+      {
+        time = "2024-09-13T09:50:49+00:00";
+        message = ''
+          A new module is available: 'programs.neovide'.
+
+          Neovide is a simple, no-nonsense, cross-platform graphical user
+          interface for Neovim (an aggressively refactored and updated Vim
+          editor).
+        '';
+      }
+
+      {
+        time = "2024-09-20T07:00:11+00:00";
+        condition = config.programs.kitty.theme != null;
+        message = ''
+          The option 'programs.kitty.theme' has been deprecated, please use
+          'programs.kitty.themeFile' instead.
+
+          The 'programs.kitty.themeFile' option expects the file name of a
+          theme from `kitty-themes`, without the `.conf` suffix. See
+          <https://github.com/kovidgoyal/kitty-themes/tree/master/themes> for a
+          list of themes.
+        '';
+      }
+
+      {
+        time = "2024-09-20T07:48:08+00:00";
+        condition = hostPlatform.isLinux && config.services.swayidle.enable;
+        message = ''
+          The swayidle module behavior has changed. Specifically, swayidle was
+          previously always called with a `-w` flag. This flag is now moved to
+          the default `services.swayidle.extraArgs` value to make it optional.
+
+          Your configuration may break if you already set this option and also
+          rely on the flag being automatically added. To resolve this, please
+          add `-w` to your assignment of `services.swayidle.extraArgs`.
+        '';
+      }
+
+      {
+        time = "2024-10-09T06:16:23+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.snixembed'.
+
+          snixembed proxies StatusNotifierItems as XEmbedded systemtray-spec
+          icons. This is useful for some tools in some environments, e.g., Safe
+          Eyes in i3, lxde or mate.
+        '';
+      }
+
+      {
+        time = "2024-10-11T08:23:19+00:00";
+        message = ''
+          A new module is available: 'programs.vifm'.
+
+          Vifm is a curses based Vim-like file manager extended with some useful
+          ideas from mutt.
+        '';
+      }
+
+      {
+        time = "2024-10-17T13:07:55+00:00";
+        message = ''
+          A new module is available: 'programs.zed-editor'.
+
+          Zed is a fast text editor for macOS and Linux.
+          See https://zed.dev for more.
+        '';
+      }
+
+      {
+        time = "2024-10-18T14:01:07+00:00";
+        message = ''
+          A new module is available: 'programs.cmus'.
+
+          cmus is a small, fast and powerful console music player.
+        '';
+      }
+
+      {
+        time = "2024-10-20T07:53:54+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.nh'.
+
+          nh is yet another Nix CLI helper. Adding functionality on top of the
+          existing solutions, like nixos-rebuild, home-manager cli or nix
+          itself.
+        '';
+      }
+
+      {
+        time = "2024-10-25T08:18:30+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'nixGL'.
+
+          NixGL solve the "OpenGL" problem with nix. The 'nixGL' module provides
+          integration of NixGL into Home Manager. See the "GPU on non-NixOS
+          systems" section in the Home Manager mantual for more.
+        '';
+      }
+
+      {
+        time = "2024-11-01T19:44:59+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.podman'.
+
+          Podman is a daemonless container engine that lets you manage
+          containers, pods, and images.
+
+          This Home Manager module allows you to define containers that will run
+          as systemd services.
         '';
       }
     ];

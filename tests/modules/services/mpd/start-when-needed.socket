@@ -1,0 +1,8 @@
+[Install]
+WantedBy=sockets.target
+
+[Socket]
+Backlog=5
+KeepAlive=true
+ListenStream=127.0.0.1:6600
+ListenStream=%t/mpd/socket

@@ -17,7 +17,7 @@
   test.stubs.systemd = { }; # depends on gnupg.override
 
   nmt.script = ''
-    assertFileContains activate "export GNUPGHOME='/home/hm-user/.gnupg'"
+    assertFileContains activate "export GNUPGHOME=/home/hm-user/.gnupg"
 
     assertFileContains activate "unset GNUPGHOME QUIET_ARG keyId importTrust"
 

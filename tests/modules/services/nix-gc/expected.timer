@@ -4,6 +4,7 @@ WantedBy=timers.target
 [Timer]
 OnCalendar=monthly
 Persistent=true
+RandomizedDelaySec=42min
 Unit=nix-gc.service
 
 [Unit]

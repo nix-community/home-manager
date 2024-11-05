@@ -62,6 +62,6 @@ extra config
 
 
 ### SYSTEMD INTEGRATION ###
-@dbus@/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE && systemctl --user stop river-session.target && systemctl --user start river-session.target
+/nix/store/00000000000000000000000000000000-dbus/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE && systemctl --user stop river-session.target && systemctl --user start river-session.target
 
 

@@ -2,7 +2,7 @@
 
 with lib;
 
-{
+mkIf pkgs.stdenv.isLinux {
   config = {
     services.gpg-agent.enable = true;
     services.gpg-agent.pinentryPackage = pkgs.pinentry-gnome3;

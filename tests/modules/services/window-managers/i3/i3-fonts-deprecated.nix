@@ -7,7 +7,10 @@
     enable = true;
 
     config = {
-      bars = [{ fonts = [ "FontAwesome" "Iosevka 11.500000" ]; }];
+      bars = [
+        { fonts = [ "FontAwesome" "Iosevka 11.500000" ]; }
+        { fonts = [ "FontAwesome" "Iosevka Bold Semi-Condensed 14px" ]; }
+      ];
       fonts = [ "DejaVuSansMono" "Terminus Bold Semi-Condensed 13.500000" ];
     };
   };
@@ -20,6 +23,7 @@
 
   test.asserts.warnings.expected = [
     "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead."
+    "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
     "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
   ];
 }

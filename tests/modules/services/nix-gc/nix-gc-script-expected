@@ -1,0 +1,2 @@
+#!/nix/store/00000000000000000000000000000000-bash/bin/bash
+exec @nix@/bin/nix-collect-garbage --delete-older-than 30d --max-freed $((64 * 1024**3))

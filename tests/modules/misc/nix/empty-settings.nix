@@ -8,6 +8,7 @@ with lib;
 
     nmt.script = ''
       assertPathNotExists home-files/.config/nix
+      assertPathNotExists home-files/.nix-defexpr/50-home-manager
     '';
   };
 }

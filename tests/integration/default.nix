@@ -10,6 +10,7 @@ let
     };
 
   tests = {
+    kitty = runTest ./standalone/kitty.nix;
     nixos-basics = runTest ./nixos/basics.nix;
     standalone-flake-basics = runTest ./standalone/flake-basics.nix;
     standalone-standard-basics = runTest ./standalone/standard-basics.nix;

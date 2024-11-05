@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-06-02 08:12+0000\n"
+"PO-Revision-Date: 2024-08-01 04:09+0000\n"
 "Last-Translator: goatastronaut0212 <goatastronaut0212@proton.me>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/home-manager/"
 "cli/vi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -97,7 +97,7 @@ msgstr ""
 
 #: home-manager/home-manager:146
 msgid "Sanity checking Nix"
-msgstr "Kiểm tra độ hợp lệ của Nix"
+msgstr "Kiểm tra hợp lệ của Nix"
 
 #: home-manager/home-manager:166
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -175,11 +175,12 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
-msgstr[1] ""
+"Có %d tin tức liên quan và chưa được đọc.\n"
+"Để đọc nó hãy chạy lệnh \"%s news\"."
 
 #: home-manager/home-manager:586
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+msgstr "Không tồn tại \"news.display\" cấu hình \"%s\"."
 
 #: home-manager/home-manager:594
 #, sh-format
@@ -192,19 +193,19 @@ msgstr "Không thể chạy lệnh xây dựng trong thư mục chỉ cho phép 
 
 #: home-manager/home-manager:693
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "Không có thế hệ với ID %s"
 
 #: home-manager/home-manager:695
 msgid "Cannot remove the current generation %s"
-msgstr ""
+msgstr "Không thể xóa thể hệ hiện tại %s"
 
 #: home-manager/home-manager:697
 msgid "Removing generation %s"
-msgstr ""
+msgstr "Đang xóa thế hệ %s"
 
 #: home-manager/home-manager:718
 msgid "No generations to expire"
-msgstr ""
+msgstr "Không có bất kỳ thế hệ nào hết hạn"
 
 #: home-manager/home-manager:729
 msgid "No home-manager packages seem to be installed."
@@ -237,10 +238,12 @@ msgstr "Tuyệt vời!"
 #: home-manager/home-manager:868
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
+"Home Manager đã được gỡ cài đặt nhưng home.nix của bạn sẽ được giữ nguyên "
+"vẹn."
 
 #: home-manager/home-manager:1091
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
+msgstr "expire-generations kỳ vọng 1 đối số, có %d."
 
 #: home-manager/home-manager:1113
 msgid "Unknown command: %s"

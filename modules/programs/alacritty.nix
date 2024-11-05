@@ -56,7 +56,7 @@ in {
           buildCommand = lib.concatStringsSep "\n" [
             prevAttrs.buildCommand
             # TODO: why is this needed? Is there a better way to retain escape sequences?
-            "substituteInPlace $out --replace '\\\\' '\\'"
+            "substituteInPlace $out --replace-quiet '\\\\' '\\'"
           ];
         });
     };

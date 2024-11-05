@@ -18,7 +18,7 @@
       'export GRANTED_ALIAS_CONFIGURED="true"'
     assertFileContains \
       home-files/.zshrc \
-      'source @granted@/bin/.assume-wrapped "$@"'
+      'source @granted@/bin/assume "$@"'
     assertFileContains \
       home-files/.zshrc \
       'unset GRANTED_ALIAS_CONFIGURED'

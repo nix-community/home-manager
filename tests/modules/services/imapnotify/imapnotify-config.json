@@ -1,1 +1,1 @@
-{"boxes":["Inbox"],"host":"imap.example.com","onNewMail":"@notmuch@/bin/notmuch new\n","passwordCmd":"'password-command'","port":993,"tls":true,"tlsOptions":{"starttls":false},"username":"home.manager"}
+{"boxes":["Inbox"],"host":"imap.example.com","onNewMail":"@notmuch@/bin/notmuch new\n","passwordCmd":"password-command","port":993,"tls":true,"tlsOptions":{"starttls":false},"username":"home.manager"}

@@ -28,7 +28,7 @@ in {
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       function assume() {
         export GRANTED_ALIAS_CONFIGURED="true"
-        source ${package}/bin/.assume-wrapped "$@"
+        source ${package}/bin/assume "$@"
         unset GRANTED_ALIAS_CONFIGURED
       }
     '';

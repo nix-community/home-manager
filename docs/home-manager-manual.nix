@@ -32,6 +32,8 @@ in stdenv.mkDerivation {
         OPTIONS_JSON \
         ${home-manager-options.nix-darwin}/share/doc/nixos/options.json
 
+    cp ${./options.html} out/options.html
+
     cp ${./static/style.css} out/style.css
 
     cp -r ${./release-notes} release-notes
@@ -56,6 +58,8 @@ in stdenv.mkDerivation {
     mkdir -p $out/nix-support/
     echo "doc manual $dest index.html" >> $out/nix-support/hydra-build-products
   '';
+
+  passthru = { inherit home-manager-options; };
 
   meta = { maintainers = [ lib.maintainers.considerate ]; };
 }
