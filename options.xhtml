@@ -8492,8 +8492,9 @@ variable. In particular code like</p><pre><code class="programlisting nix">home.
   BAR = &quot;$FOO World!&quot;;
 };
 </code></pre><p>may not work as expected. If you need to reference another
-session variable, then do so inside Nix instead. The above
-example then becomes</p><pre><code class="programlisting nix">home.sessionVariables = {
+session variable (even if it is declared by using other options
+like <a class="xref" href="options.xhtml#opt-xdg.configHome"  ><code class="option">xdg.configHome</code></a>), then do so inside Nix instead.
+The above example then becomes</p><pre><code class="programlisting nix">home.sessionVariables = {
   FOO = &quot;Hello&quot;;
   BAR = &quot;${config.home.sessionVariables.FOO} World!&quot;;
 };
