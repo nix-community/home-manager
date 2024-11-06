@@ -351,7 +351,7 @@ in {
 
     forwardAgent = mkOption {
       default = false;
-      type = types.bool;
+      type = types.nullOr types.bool;
       description = ''
         Whether the connection to the authentication agent (if any)
         will be forwarded to the remote machine.
@@ -533,7 +533,10 @@ in {
         '') ++ (map (block: matchBlockStr block.name block.data) matchBlocks))}
 
       Host *
-        ForwardAgent ${lib.hm.booleans.yesNo cfg.forwardAgent}
+        ${
+          optionalString (cfg.forwardAgent != null)
+          "ForwardAgent ${lib.hm.booleans.yesNo cfg.forwardAgent}"
+        }
         AddKeysToAgent ${cfg.addKeysToAgent}
         Compression ${lib.hm.booleans.yesNo cfg.compression}
         ServerAliveInterval ${toString cfg.serverAliveInterval}
@@ -554,3 +557,4 @@ in {
         cfg.matchBlocks);
   };
 }
+
