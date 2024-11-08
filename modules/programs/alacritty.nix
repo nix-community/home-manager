@@ -77,8 +77,11 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
+    programs.alacritty.settings.general.import =
+      mkIf (cfg.theme != null && lib.versionAtLeast cfg.package.version "0.14") [ "${pkgs.alacritty-theme}/${cfg.theme}.toml" ];
+
     programs.alacritty.settings.import =
-      mkIf (cfg.theme != null) [ "${pkgs.alacritty-theme}/${cfg.theme}.toml" ];
+      mkIf (cfg.theme != null && lib.versionOlder cfg.package.version "0.14") [ "${pkgs.alacritty-theme}/${cfg.theme}.toml" ];
 
     xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {
       source = (tomlFormat.generate "alacritty.toml" cfg.settings).overrideAttrs
