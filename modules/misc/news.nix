@@ -1810,7 +1810,7 @@ in {
 
           NixGL solve the "OpenGL" problem with nix. The 'nixGL' module provides
           integration of NixGL into Home Manager. See the "GPU on non-NixOS
-          systems" section in the Home Manager mantual for more.
+          systems" section in the Home Manager manual for more.
         '';
       }
 
