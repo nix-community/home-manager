@@ -11,61 +11,63 @@ in {
   options.services.podman = {
     enable = lib.mkEnableOption "Podman, a daemonless container engine";
 
-    containersConf.settings = lib.mkOption {
-      type = toml.type;
-      default = { };
-      description = "containers.conf configuration";
-    };
-
-    storage.settings = lib.mkOption {
-      type = toml.type;
-      description = "storage.conf configuration";
-    };
-
-    registries = {
-      search = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        default = [ "docker.io" ];
-        description = ''
-          List of repositories to search.
-        '';
+    config = {
+      containers.settings = lib.mkOption {
+        type = toml.type;
+        default = { };
+        description = "containers.conf configuration";
       };
 
-      insecure = lib.mkOption {
-        default = [ ];
-        type = lib.types.listOf lib.types.str;
-        description = ''
-          List of insecure repositories.
-        '';
+      storage.settings = lib.mkOption {
+        type = toml.type;
+        description = "storage.conf configuration";
       };
 
-      block = lib.mkOption {
-        default = [ ];
-        type = lib.types.listOf lib.types.str;
-        description = ''
-          List of blocked repositories.
-        '';
-      };
-    };
+      registries = {
+        search = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ "docker.io" ];
+          description = ''
+            List of repositories to search.
+          '';
+        };
 
-    policy = lib.mkOption {
-      default = { };
-      type = lib.types.attrs;
-      example = lib.literalExpression ''
-        {
-          default = [ { type = "insecureAcceptAnything"; } ];
-          transports = {
-            docker-daemon = {
-              "" = [ { type = "insecureAcceptAnything"; } ];
+        insecure = lib.mkOption {
+          default = [ ];
+          type = lib.types.listOf lib.types.str;
+          description = ''
+            List of insecure repositories.
+          '';
+        };
+
+        block = lib.mkOption {
+          default = [ ];
+          type = lib.types.listOf lib.types.str;
+          description = ''
+            List of blocked repositories.
+          '';
+        };
+      };
+
+      policy = lib.mkOption {
+        default = { };
+        type = lib.types.attrs;
+        example = lib.literalExpression ''
+          {
+            default = [ { type = "insecureAcceptAnything"; } ];
+            transports = {
+              docker-daemon = {
+                "" = [ { type = "insecureAcceptAnything"; } ];
+              };
             };
-          };
-        }
-      '';
-      description = ''
-        Signature verification policy file.
-        If this option is empty the default policy file from
-        `skopeo` will be used.
-      '';
+          }
+        '';
+        description = ''
+          Signature verification policy file.
+          If this option is empty the default policy file from
+          `skopeo` will be used.
+        '';
+      };
     };
   };
 
@@ -75,22 +77,23 @@ in {
 
     home.packages = [ cfg.package ];
 
-    services.podman.storage.settings = {
+    services.podman.config.storage.settings = {
       storage.driver = lib.mkDefault "overlay";
     };
 
     xdg.configFile = {
-      "containers/policy.json".source = if cfg.policy != { } then
-        pkgs.writeText "policy.json" (builtins.toJSON cfg.policy)
+      "containers/policy.json".source = if cfg.config.policy != { } then
+        pkgs.writeText "policy.json" (builtins.toJSON cfg.config.policy)
       else
         "${pkgs.skopeo.policy}/default-policy.json";
       "containers/registries.conf".source = toml.generate "registries.conf" {
-        registries = lib.mapAttrs (n: v: { registries = v; }) cfg.registries;
+        registries =
+          lib.mapAttrs (n: v: { registries = v; }) cfg.config.registries;
       };
       "containers/storage.conf".source =
-        toml.generate "storage.conf" cfg.storage.settings;
+        toml.generate "storage.conf" cfg.config.storage.settings;
       "containers/containers.conf".source =
-        toml.generate "containers.conf" cfg.containersConf.settings;
+        toml.generate "containers.conf" cfg.config.containers.settings;
     };
   };
 }
