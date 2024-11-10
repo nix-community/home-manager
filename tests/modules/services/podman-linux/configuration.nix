@@ -4,7 +4,7 @@
   services.podman = {
     enable = true;
     config = {
-      containers.settings = {
+      containers = {
         network = {
           default_subnet = "172.16.10.0/24";
           default_subnet_pools = [
@@ -19,7 +19,7 @@
           ];
         };
       };
-      storage.settings = {
+      storage = {
         storage = {
           runroot = "$HOME/.containers/runroot";
           graphroot = "$HOME/.containers/graphroot";

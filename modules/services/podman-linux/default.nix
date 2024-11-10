@@ -12,13 +12,13 @@ in {
     enable = lib.mkEnableOption "Podman, a daemonless container engine";
 
     config = {
-      containers.settings = lib.mkOption {
+      containers = lib.mkOption {
         type = toml.type;
         default = { };
         description = "containers.conf configuration";
       };
 
-      storage.settings = lib.mkOption {
+      storage = lib.mkOption {
         type = toml.type;
         description = "storage.conf configuration";
       };
@@ -77,7 +77,7 @@ in {
 
     home.packages = [ cfg.package ];
 
-    services.podman.config.storage.settings = {
+    services.podman.config.storage = {
       storage.driver = lib.mkDefault "overlay";
     };
 
@@ -91,9 +91,9 @@ in {
           lib.mapAttrs (n: v: { registries = v; }) cfg.config.registries;
       };
       "containers/storage.conf".source =
-        toml.generate "storage.conf" cfg.config.storage.settings;
+        toml.generate "storage.conf" cfg.config.storage;
       "containers/containers.conf".source =
-        toml.generate "containers.conf" cfg.config.containers.settings;
+        toml.generate "containers.conf" cfg.config.containers;
     };
   };
 }
