@@ -126,6 +126,8 @@ in {
         Description = "mopidy music player daemon";
         Documentation = [ "https://mopidy.com/" ];
         After = [ "network.target" "sound.target" ];
+        X-Restart-Triggers = mkIf (cfg.settings != { })
+          [ "${config.xdg.configFile."mopidy/mopidy.conf".source}" ];
       };
 
       Service = {
