@@ -63198,6 +63198,16 @@ package</p>
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set of (submodule)</p>
 
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  xyz = {
+    path = &quot;${config.home.homeDirectory}/foo/home-manager&quot;;
+    uri = &quot;git@github.com:nix-community/home-manager.git&quot;;
+    interval = 1000;
+  };
+}
+
+</code></pre>
+
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
 <tr><td>
