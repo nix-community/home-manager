@@ -466,6 +466,7 @@ import nmtSrc {
       ./modules/programs/tmux
       ./modules/programs/topgrade
       ./modules/programs/translate-shell
+      ./modules/programs/uv
       ./modules/programs/vifm
       ./modules/programs/vim-vint
       ./modules/programs/vscode
