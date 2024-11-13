@@ -330,6 +330,8 @@ in {
     })
 
     {
+      home.packages = [ cfg.package ];
+
       xdg.configFile."kanshi/config".text =
         if cfg.profiles == { } && cfg.extraConfig == "" then
           directivesStr
