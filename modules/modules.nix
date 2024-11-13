@@ -277,6 +277,7 @@ let
       ./programs/topgrade.nix
       ./programs/translate-shell.nix
       ./programs/urxvt.nix
+      ./programs/uv.nix
       ./programs/vdirsyncer.nix
       ./programs/vesktop.nix
       ./programs/vifm.nix
