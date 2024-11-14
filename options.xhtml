@@ -19361,7 +19361,7 @@ package</p>
 <p>Override feh’s default mouse button mapping. If you want to disable an
 action, set its value to null. If you want to bind multiple buttons to
 an action, set its value to a list.
-See <a class="link" href="https://man.finalrewind.org/1/feh/#x425554544f4e53"  target="_top">https://man.finalrewind.org/1/feh/#x425554544f4e53</a> for
+See <a class="link" href="https://man.finalrewind.org/1/feh/#BUTTONS_CONFIG_SYNTAX"  target="_top">https://man.finalrewind.org/1/feh/#BUTTONS_CONFIG_SYNTAX</a> for
 default bindings and available commands.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
@@ -19399,7 +19399,7 @@ attribute set of (null or string or signed integer or list of (string or signed 
 <p>Override feh’s default keybindings. If you want to disable a keybinding
 set its value to null. If you want to bind multiple keys to an action,
 set its value to a list.
-See <a class="link" href="https://man.finalrewind.org/1/feh/#x4b455953"  target="_top">https://man.finalrewind.org/1/feh/#x4b455953</a> for
+See <a class="link" href="https://man.finalrewind.org/1/feh/#KEYS_CONFIG_SYNTAX"  target="_top">https://man.finalrewind.org/1/feh/#KEYS_CONFIG_SYNTAX</a> for
 default bindings and available commands.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
@@ -19415,6 +19415,70 @@ attribute set of (null or string or list of string)</p>
   ];
   zoom_in = &quot;plus&quot;;
   zoom_out = &quot;minus&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/feh.nix" target="_top">
+&lt;home-manager/modules/programs/feh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.feh.themes"></a><a class="term" href="options.xhtml#opt-programs.feh.themes"><code class="option">programs.feh.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Define themes for feh.
+See <a class="link" href="https://man.finalrewind.org/1/feh/#THEMES_CONFIG_SYNTAX"  target="_top">https://man.finalrewind.org/1/feh/#THEMES_CONFIG_SYNTAX</a> for
+important guidelines and limitations related to theme configuration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  booth = [
+    &quot;--full-screen&quot;
+    &quot;--hide-pointer&quot;
+    &quot;--slideshow-delay&quot;
+    &quot;20&quot;
+  ];
+  example = [
+    &quot;--info&quot;
+    &quot;foo bar&quot;
+  ];
+  feh = [
+    &quot;--image-bg&quot;
+    &quot;black&quot;
+  ];
+  imagemap = [
+    &quot;-rVq&quot;
+    &quot;--thumb-width&quot;
+    &quot;40&quot;
+    &quot;--thumb-height&quot;
+    &quot;30&quot;
+    &quot;--index-info&quot;
+    &quot;%n\\n%wx%h&quot;
+  ];
+  present = [
+    &quot;--full-screen&quot;
+    &quot;--sort&quot;
+    &quot;name&quot;
+    &quot;--hide-pointer&quot;
+  ];
+  webcam = [
+    &quot;--multiwindow&quot;
+    &quot;--reload&quot;
+    &quot;20&quot;
+  ];
 }
 </code></pre>
 
