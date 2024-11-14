@@ -59,5 +59,6 @@ usage/configuration.md
 usage/rollbacks.md
 usage/dotfiles.md
 usage/graphical.md
+usage/gpu-non-nixos.md
 usage/updating.md
 ```

@@ -15,6 +15,8 @@ in {
     programs.micro = {
       enable = mkEnableOption "micro, a terminal-based text editor";
 
+      package = mkPackageOption pkgs "micro" { };
+
       settings = mkOption {
         type = jsonFormat.type;
         default = { };
@@ -35,7 +37,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.micro ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."micro/settings.json".source =
       jsonFormat.generate "micro-settings" cfg.settings;

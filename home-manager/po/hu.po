@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-07-05 14:09+0000\n"
+"PO-Revision-Date: 2024-09-02 17:09+0000\n"
 "Last-Translator: Ferenci Ákos <synthetace@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/home-manager/"
 "cli/hu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -54,6 +54,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"A tartalék Home Manager fájlútvonal %s elavult és fájl/könyvtár található "
+"itt."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:118
@@ -76,19 +78,37 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"A felmerült hiba elhárítására a következőket tegye:\n"
+"\n"
+"1. Közvetlen adja át a Home Manager-nek a fájlútvonalat, pl.:\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"    sor  konfigurációhoz való hozzáadásával.\n"
+"\n"
+"   Amennyiben a Home Manager-t közvetlen importolja, használhatja a 'path' "
+"paramétert\n"
+"\n"
+"      pkgs.callPackage/path/tohome-manager-package{path = \"%s\"; }\n"
+"   a Home Manager csomag meghívásakor.\n"
+"\n"
+"   2. Távolítsa el az elavult fájlútvonalat.\n"
+"\n"
+"      $ rm -r \"$s\""
 
 #: home-manager/home-manager:146
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Nix épségének ellenőrzése"
 
 #: home-manager/home-manager:166
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
+"Nem található megfelelő profil mappa, %s és %s útvonalak lettek kipróbálva."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:221
 msgid "Can't inspect options of a flake configuration"
-msgstr ""
+msgstr "Nem lehet a flake konfiguráció beállításait megtekinteni."
 
 #: home-manager/home-manager:296 home-manager/home-manager:319
 #: home-manager/home-manager:1051
@@ -121,6 +141,13 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Elkészült! A home-manager eszköz most már installálva van és a \n"
+"\n"
+"      %s\n"
+"\n"
+"fájl szerkesztésével konfigurálhatja a Home Manager-t. \n"
+"Futtassa a 'man home-configuration.nix' parancsot az összes opció "
+"áttekintéséhez."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:485
@@ -131,6 +158,11 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"Uh oh, az installáció nem sikerült! Kérem készítsen egy jelentést erről a \n"
+"\n"
+"      %s\n"
+"\n"
+"helyen amennyiben a hiba a Home Manager miatt lépett fel."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:496
@@ -145,16 +177,20 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"%d olvasatlan és releváns hírt kapott.\n"
+"Olvassa el a \"%s news\" futattásával."
 msgstr[1] ""
+"%d olvasatlan és releváns hírt kapott.\n"
+"Olvassa el őket a \"%s news\" futattásával."
 
 #: home-manager/home-manager:586
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+msgstr "Ismeretlen \"news.display\" opció \"%s\"."
 
 #: home-manager/home-manager:594
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Kérem állítása be az $EDITOR vagy a $VISUAL környezeti változókat."
 
 #: home-manager/home-manager:612
 msgid "Cannot run build in read-only directory"
@@ -162,11 +198,11 @@ msgstr "Build futtatása nem lehetséges csak-olvasható könyvtárban"
 
 #: home-manager/home-manager:693
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "Nem található generáció a következő ID-val: %"
 
 #: home-manager/home-manager:695
 msgid "Cannot remove the current generation %s"
-msgstr ""
+msgstr "A jelenlegi generáció %s nem eltávolítható"
 
 #: home-manager/home-manager:697
 msgid "Removing generation %s"
@@ -174,11 +210,11 @@ msgstr "%s generáció eltávolítása"
 
 #: home-manager/home-manager:718
 msgid "No generations to expire"
-msgstr ""
+msgstr "Nincs lejárandó generáció"
 
 #: home-manager/home-manager:729
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Nem található installált Home Manager csomag"
 
 #: home-manager/home-manager:811
 msgid "Unknown argument %s"
@@ -186,19 +222,19 @@ msgstr "Ismeretlen argumentum %s"
 
 #: home-manager/home-manager:835
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Ez a művelet eltávolítja a Home Manager-t a rendszeréről."
 
 #: home-manager/home-manager:838
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "Ez egy üres járat, semmi nem lesz valójában eltávolítva."
 
 #: home-manager/home-manager:842
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Biztosan eltávolítja a Home Managert-t?"
 
 #: home-manager/home-manager:848
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "Átváltás üres Home Manager konfigurációra..."
 
 #: home-manager/home-manager:863
 msgid "Yay!"
@@ -206,7 +242,7 @@ msgstr "Hurrá!"
 
 #: home-manager/home-manager:868
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
+msgstr "Home Manager eltávolítva, de a home.nix fájl érintetlenül maradt."
 
 #: home-manager/home-manager:1091
 msgid "expire-generations expects one argument, got %d."
@@ -219,3 +255,4 @@ msgstr "Ismeretlen parancs: %s"
 #: home-manager/install.nix:18
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
+"Ez a származtatás nem építhető fel, kérlek futtasd nix-shell segítségével."

@@ -23,14 +23,13 @@ in {
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/pqivrc`. See
-        {manpage}`pqiv(1)` for a list of available options. To set a
-        boolean flag, set the value to 1.
+        {manpage}`pqiv(1)` for a list of available options.
       '';
       example = literalExpression ''
         {
           options = {
-            lazy-load = 1;
-            hide-info-box = 1;
+            lazy-load = true;
+            hide-info-box = true;
             background-pattern = "black";
             thumbnail-size = "256x256";
             command-1 = "thunar";
@@ -68,7 +67,15 @@ in {
     xdg.configFile."pqivrc" =
       mkIf (cfg.settings != { } && cfg.extraConfig != "") {
         text = lib.concatLines [
-          (generators.toINI { } cfg.settings)
+          (generators.toINI {
+            mkKeyValue = key: value:
+              let
+                value' = if isBool value then
+                  (if value then "1" else "0")
+                else
+                  toString value;
+              in "${key} = ${value'}";
+          } cfg.settings)
           cfg.extraConfig
         ];
       };

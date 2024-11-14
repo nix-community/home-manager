@@ -10,14 +10,6 @@ updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
-    target-branch: "release-23.11"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "ci:"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
     target-branch: "release-24.05"
     schedule:
       interval: "weekly"

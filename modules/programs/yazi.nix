@@ -56,13 +56,21 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration";
+    enableBashIntegration = mkEnableOption "Bash integration" // {
+      default = true;
+    };
 
-    enableZshIntegration = mkEnableOption "Zsh integration";
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
+      default = true;
+    };
 
-    enableFishIntegration = mkEnableOption "Fish integration";
+    enableFishIntegration = mkEnableOption "Fish integration" // {
+      default = true;
+    };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration";
+    enableNushellIntegration = mkEnableOption "Nushell integration" // {
+      default = true;
+    };
 
     keymap = mkOption {
       type = tomlFormat.type;

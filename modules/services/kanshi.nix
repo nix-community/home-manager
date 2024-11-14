@@ -123,6 +123,15 @@ let
         '';
       };
 
+      alias = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "laptopMonitor";
+        description = ''
+          Defines an alias for the output
+        '';
+      };
+
       adaptiveSync = mkOption {
         type = types.nullOr types.bool;
         default = null;
@@ -135,15 +144,16 @@ let
     };
   };
 
-  outputStr =
-    { criteria, status, mode, position, scale, transform, adaptiveSync, ... }:
+  outputStr = { criteria, status, mode, position, scale, transform, adaptiveSync
+    , alias, ... }:
     ''output "${criteria}"'' + optionalString (status != null) " ${status}"
     + optionalString (mode != null) " mode ${mode}"
     + optionalString (position != null) " position ${position}"
     + optionalString (scale != null) " scale ${toString scale}"
     + optionalString (transform != null) " transform ${transform}"
     + optionalString (adaptiveSync != null)
-    " adaptive_sync ${if adaptiveSync then "on" else "off"}";
+    " adaptive_sync ${if adaptiveSync then "on" else "off"}"
+    + optionalString (alias != null) " alias \$${alias}";
 
   profileModule = types.submodule {
     options = {
@@ -296,6 +306,14 @@ in {
           message =
             "Cannot mix kanshi.settings with kanshi.profiles or kanshi.extraConfig";
         }
+        {
+          assertion = let profiles = filter (x: x ? profile) cfg.settings;
+          in length
+          (filter (x: any (a: a ? alias && a.alias != null) x.profile.outputs)
+            profiles) == 0;
+          message =
+            "Output kanshi.*.output.alias can only be defined on global scope";
+        }
       ];
     }
 
@@ -312,6 +330,8 @@ in {
     })
 
     {
+      home.packages = [ cfg.package ];
+
       xdg.configFile."kanshi/config".text =
         if cfg.profiles == { } && cfg.extraConfig == "" then
           directivesStr

@@ -110,18 +110,18 @@ in {
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
         source "${pkgs.bash-preexec}/share/bash/bash-preexec.sh"
-        eval "$(${cfg.package}/bin/atuin init bash ${flagsStr})"
+        eval "$(${lib.getExe cfg.package} init bash ${flagsStr})"
       fi
     '';
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
-        eval "$(${cfg.package}/bin/atuin init zsh ${flagsStr})"
+        eval "$(${lib.getExe cfg.package} init zsh ${flagsStr})"
       fi
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      ${cfg.package}/bin/atuin init fish ${flagsStr} | source
+      ${lib.getExe cfg.package} init fish ${flagsStr} | source
     '';
 
     programs.nushell = mkIf cfg.enableNushellIntegration {
@@ -130,7 +130,9 @@ in {
         if not ($atuin_cache | path exists) {
           mkdir $atuin_cache
         }
-        ${cfg.package}/bin/atuin init nu ${flagsStr} | save --force ${config.xdg.cacheHome}/atuin/init.nu
+        ${
+          lib.getExe cfg.package
+        } init nu ${flagsStr} | save --force ${config.xdg.cacheHome}/atuin/init.nu
       '';
       extraConfig = ''
         source ${config.xdg.cacheHome}/atuin/init.nu

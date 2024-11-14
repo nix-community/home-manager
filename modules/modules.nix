@@ -31,6 +31,7 @@ let
     ./misc/gtk.nix
     ./misc/lib.nix
     ./misc/news.nix
+    ./misc/nixgl.nix
     ./misc/numlock.nix
     ./misc/pam.nix
     ./misc/qt.nix
@@ -77,6 +78,7 @@ let
     ./programs/carapace.nix
     ./programs/cava.nix
     ./programs/chromium.nix
+    ./programs/cmus.nix
     ./programs/command-not-found/command-not-found.nix
     ./programs/comodoro.nix
     ./programs/darcs.nix
@@ -92,6 +94,7 @@ let
     ./programs/feh.nix
     ./programs/firefox.nix
     ./programs/fish.nix
+    ./programs/floorp.nix
     ./programs/foot.nix
     ./programs/freetube.nix
     ./programs/fuzzel.nix
@@ -167,8 +170,10 @@ let
     ./programs/ncspot.nix
     ./programs/ne.nix
     ./programs/neomutt.nix
+    ./programs/neovide.nix
     ./programs/neovim.nix
     ./programs/newsboat.nix
+    ./programs/nh.nix
     ./programs/nheko.nix
     ./programs/nix-index.nix
     ./programs/nnn.nix
@@ -240,8 +245,9 @@ let
     ./programs/translate-shell.nix
     ./programs/urxvt.nix
     ./programs/vdirsyncer.nix
-    ./programs/vim.nix
+    ./programs/vifm.nix
     ./programs/vim-vint.nix
+    ./programs/vim.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
@@ -259,6 +265,7 @@ let
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
     ./programs/zathura.nix
+    ./programs/zed-editor.nix
     ./programs/zellij.nix
     ./programs/zk.nix
     ./programs/zoxide.nix
@@ -345,6 +352,7 @@ let
     ./services/plan9port.nix
     ./services/playerctld.nix
     ./services/plex-mpv-shim.nix
+    ./services/podman-linux
     ./services/polybar.nix
     ./services/poweralertd.nix
     ./services/psd.nix
@@ -360,6 +368,7 @@ let
     ./services/screen-locker.nix
     ./services/sctd.nix
     ./services/signaturepdf.nix
+    ./services/snixembed.nix
     ./services/spotifyd.nix
     ./services/ssh-agent.nix
     ./services/stalonetray.nix
@@ -374,6 +383,7 @@ let
     ./services/tahoe-lafs.nix
     ./services/taskwarrior-sync.nix
     ./services/trayer.nix
+    ./services/trayscale.nix
     ./services/twmn.nix
     ./services/udiskie.nix
     ./services/unclutter.nix

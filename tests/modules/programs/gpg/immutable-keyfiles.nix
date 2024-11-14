@@ -27,7 +27,7 @@
   };
 
   nmt.script = ''
-    assertFileNotRegex activate "^export GNUPGHOME='/home/hm-user/.gnupg'$"
+    assertFileNotRegex activate "^export GNUPGHOME=/home/hm-user/.gnupg$"
 
     assertFileRegex activate \
       '^install -m 0700 /nix/store/[0-9a-z]*-gpg-pubring/trustdb.gpg "/home/hm-user/.gnupg/trustdb.gpg"$'
