@@ -3,7 +3,6 @@
 with lib;
 
 let
-
   cfg = config.programs.zsh;
 
   relToDotDir = file: (optionalString (cfg.dotDir != null) (cfg.dotDir + "/")) + file;
@@ -22,7 +21,10 @@ let
     mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
   );
 
-  zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
+  # Absolute paths are assigned unmutated, relative paths
+  # are prepended with the user's home directory.
+  zdotdir = (strings.optionalString (!strings.hasPrefix "/" cfg.dotDir)
+    config.home.homeDirectory) + escapeShellArg cfg.dotDir;
 
   bindkeyCommands = {
     emacs = "bindkey -e";
@@ -308,9 +310,9 @@ in
         default = null;
         example = ".config/zsh";
         description = ''
-          Directory where the zsh configuration and more should be located,
-          relative to the users home directory. The default is the home
-          directory.
+          Directory where the zsh configuration should be located. The default
+          is the home directory. This option accepts absolute paths, or paths
+          relative to `config.home.homeDirectory`.
         '';
         type = types.nullOr types.str;
       };
