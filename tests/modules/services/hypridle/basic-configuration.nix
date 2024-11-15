@@ -24,6 +24,8 @@
         }
       ];
     };
+
+    systemdTarget = "hyprland-session.target";
   };
 
   test.stubs.hypridle = { };
@@ -34,5 +36,11 @@
     assertFileExists $config
     assertFileExists $clientServiceFile
     assertFileContent $config ${./hypridle.conf}
+
+    serviceFile=$(normalizeStorePaths $clientServiceFile)
+    assertFileContent "$serviceFile" ${
+      ./systemd-with-graphical-session-target.service
+    }
+
   '';
 }

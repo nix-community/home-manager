@@ -63,6 +63,19 @@ in {
         List of prefix of attributes to source at the top of the config.
       '';
     };
+
+    systemdTarget = lib.mkOption {
+      type = lib.types.str;
+      default = "graphical-session.target";
+      example = "hyprland-session.target";
+      description = ''
+        The systemd target that will automatically start the hypridle service.
+
+        When setting this value to `"hyprland-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.hyprland.systemd.enable`,
+        otherwise the service may never be started.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -74,11 +87,12 @@ in {
     };
 
     systemd.user.services.hypridle = {
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = { WantedBy = [ cfg.systemdTarget ]; };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hypridle";
+        Documentation = "https://wiki.hyprland.org/Hypr-Ecosystem/hypridle/";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
         X-Restart-Triggers =
