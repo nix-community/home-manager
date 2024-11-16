@@ -5,6 +5,7 @@ with lib;
 let
 
   cfg = config.programs.atuin;
+  daemonCfg = cfg.daemon;
 
   tomlFormat = pkgs.formats.toml { };
 
@@ -96,7 +97,18 @@ in {
       '';
     };
 
-    daemon.enable = mkEnableOption "atuin daemon";
+    daemon = {
+      enable = mkEnableOption "Atuin daemon";
+
+      logLevel = mkOption {
+        default = null;
+        type =
+          types.nullOr (types.enum [ "trace" "debug" "info" "warn" "error" ]);
+        description = ''
+          Verbosity of Atuin daemon logging.
+        '';
+      };
+    };
   };
 
   config = let flagsStr = escapeShellArgs cfg.flags;
@@ -143,7 +155,7 @@ in {
       };
     }
 
-    (mkIf cfg.daemon.enable (mkMerge [
+    (mkIf daemonCfg.enable (mkMerge [
       {
         assertions = [
           {
@@ -175,7 +187,8 @@ in {
           };
           Service = {
             ExecStart = "${lib.getExe cfg.package} daemon";
-            Environment = [ "ATUIN_LOG=info" ];
+            Environment = lib.optionals (daemonCfg.logLevel != null)
+              [ "ATUIN_LOG=${daemonCfg.logLevel}" ];
             Restart = "on-failure";
             RestartSteps = 3;
             RestartMaxDelaySec = 6;
@@ -197,7 +210,10 @@ in {
           enable = true;
           config = {
             ProgramArguments = [ "${lib.getExe cfg.package}" "daemon" ];
-            EnvironmentVariables = { ATUIN_LOG = "info"; };
+            EnvironmentVariables =
+              lib.optionalAttrs (daemonCfg.logLevel != null) {
+                ATUIN_LOG = daemonCfg.logLevel;
+              };
             KeepAlive = {
               Crashed = true;
               SuccessfulExit = false;
