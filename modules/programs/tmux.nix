@@ -239,7 +239,7 @@ in {
 
       sensibleOnTop = mkOption {
         type = types.bool;
-        default = true;
+        default = false;
         description = ''
           Run the sensible plugin at the top of the configuration. It
           is possible to override the sensible settings using the
