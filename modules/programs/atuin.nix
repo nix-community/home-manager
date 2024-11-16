@@ -149,13 +149,13 @@ in {
           {
             assertion = versionAtLeast cfg.package.version "18.2.0";
             message = ''
-              The atuin daemon requires at least version 18.2.0 or later.
+              The Atuin daemon requires at least version 18.2.0 or later.
             '';
           }
           {
             assertion = isLinux || isDarwin;
             message =
-              "The atuin daemon can only be configured on either Linux or macOS.";
+              "The Atuin daemon can only be configured on either Linux or macOS.";
           }
         ];
 
@@ -166,7 +166,7 @@ in {
 
         systemd.user.services.atuin-daemon = {
           Unit = {
-            Description = "atuin daemon";
+            Description = "Atuin daemon";
             Requires = [ "atuin-daemon.socket" ];
           };
           Install = {
@@ -183,7 +183,7 @@ in {
         };
 
         systemd.user.sockets.atuin-daemon = {
-          Unit = { Description = "atuin daemon socket"; };
+          Unit = { Description = "Atuin daemon socket"; };
           Install = { WantedBy = [ "sockets.target" ]; };
           Socket = {
             ListenStream = "%h/.local/share/atuin/atuin.sock";
