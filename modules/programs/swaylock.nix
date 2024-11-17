@@ -33,7 +33,15 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "swaylock" { };
+    package = mkOption {
+      type = with types; nullOr package;
+      default = pkgs.swaylock;
+      defaultText = literalExpression "pkgs.swaylock";
+      example = null;
+      description = ''
+        The swaylock package to install, or `null` to install no package.
+      '';
+    };
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool float int str ]);
@@ -59,7 +67,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."swaylock/config" = mkIf (cfg.settings != { }) {
       text = concatStrings (mapAttrsToList (n: v:
