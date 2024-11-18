@@ -33216,7 +33216,8 @@ attribute set of (string or signed integer or list of (string or signed integer)
  </span>
 </dt>
 <dd>
-<p>Whether to enable Librewolf browser, a privacy enhanced Firefox fork.</p>
+<p>Whether to enable LibreWolf. LibreWolf is a privacy enhanced Firefox fork.
+See <code class="literal">programs.firefox</code> for more configuration options.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
@@ -33238,18 +33239,27 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.librewolf.package"></a><a class="term" href="options.xhtml#opt-programs.librewolf.package"><code class="option">programs.librewolf.package</code>
+ <a id="opt-programs.librewolf.languagePacks"></a><a class="term" href="options.xhtml#opt-programs.librewolf.languagePacks"><code class="option">programs.librewolf.languagePacks</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>The LibreWolf package to use.</p>
+<p>The language packs to install. Available language codes can be found
+on the releases page:
+<code class="literal">https://releases.mozilla.org/pub/firefox/releases/${version}/linux-x86_64/xpi/</code>,
+replacing <code class="literal">${version}</code> with the version of Firefox you have.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-package</p>
+list of string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">pkgs.librewolf</code></p>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;en-GB&quot;
+  &quot;de&quot;
+]
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -33267,7 +33277,7 @@ package</p>
  </span>
 </dt>
 <dd>
-<p>Attribute set of LibreWolf settings and overrides. Refer to
+<p>Attribute set of global LibreWolf settings and overrides. Refer to
 <a class="link" href="https://librewolf.net/docs/settings/"  target="_top">https://librewolf.net/docs/settings/</a>
 for details on supported values.</p>
 
