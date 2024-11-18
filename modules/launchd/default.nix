@@ -38,6 +38,27 @@ let
 
   enabledAgents = filterAttrs (n: v: v.enable) cfg.agents;
 
+  toAgent = config: pkgs.writeText "${config.Label}.plist" (toPlist { } config);
+
+  agentPlists =
+    mapAttrs' (n: v: nameValuePair "${v.config.Label}.plist" (toAgent v.config))
+    enabledAgents;
+
+  agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
+    mkdir -p "$out"
+
+    declare -A plists
+    plists=(${
+      concatStringsSep " "
+      (mapAttrsToList (name: value: "['${name}']='${value}'") agentPlists)
+    })
+
+    for dest in "''${!plists[@]}"; do
+      src="''${plists[$dest]}"
+      ln -s "$src" "$out/$dest"
+    done
+  '';
+
   agentWrapperApps = builtins.attrValues (mapAttrs (name: value: pkgs.callPackage ./wrapperApp.nix { inherit name; agent = value; }) enabledAgents);
 in {
   meta.maintainers = with maintainers; [ midchildan ];
@@ -53,6 +74,19 @@ in {
       '';
     };
 
+    useAppBundles = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to wrap LaunchAgents in app bundles so that they appear in System Settings
+        with a fancy name, rather than the name of the executable. This is particularly desirous
+        when the "executable" is a shell script that waits for the Nix store to be available
+        before running the true agent, because those show up in System Settings as `sh`.
+
+        This option only works on macOS 13.0 Ventura or later.
+      '';
+    };
+
     agents = mkOption {
       type = with types; attrsOf (submodule launchdConfig);
       default = { };
@@ -63,22 +97,23 @@ in {
   config = mkMerge [
     {
       assertions = [{
-        assertion = (cfg.enable && enabledAgents != { }) -> isDarwin;
-        message = let names = lib.concatStringsSep ", " (attrNames enabledAgents);
+        assertion = (cfg.enable && agentPlists != { }) -> isDarwin;
+        message = let names = lib.concatStringsSep ", " (attrNames agentPlists);
         in "Must use Darwin for modules that require Launchd: " + names;
       }];
     }
 
     (mkIf isDarwin {
-      home.packages = agentWrapperApps;
+      home.packages = mkIf cfg.useAppBundles agentWrapperApps;
 
-      home.activation.enableWrappedLaunchAgents = hm.dag.entryAfter ["writeBoundary" "linkApps" "setupLaunchAgents"]
-        (lib.concatStringsSep "\n" (builtins.attrValues (mapAttrs (name: value: "run '${config.home.homeDirectory}/Applications/Home Manager Apps/${name}.app/Contents/MacOS/main' register agent ${value.config.Label}.plist") enabledAgents)));
+      home.activation.enableWrappedLaunchAgents = mkIf cfg.useAppBundles (hm.dag.entryAfter ["writeBoundary" "linkApps" "setupLaunch
+Agents"]
+        (lib.concatStringsSep "\n" (builtins.attrValues (mapAttrs (name: value: "run '${config.home.homeDirectory}/Applications/Home Manager Apps/${name}.app/Contents/MacOS/main' register agent ${value.config.Label}.plist") enabledAgents))));
 
-      # --- LEGACY ---
-
-      home.extraBuilderCommands = ''
+      home.extraBuilderCommands = if cfg.useAppBundles then ''
         mkdir $out/LaunchAgents
+      '' else ''
+        ln -s "${agentsDrv}" $out/LaunchAgents
       '';
 
       home.activation.checkLaunchAgents =
@@ -93,7 +128,7 @@ in {
                 oldDir=""
               fi
             fi
-            newDir="$(mktemp -d)"
+            newDir=${if cfg.useAppBundles then "$(mktemp -d)" else (escapeShellArg agentsDrv)}
             dstDir=${escapeShellArg dstDir}
 
             local oldSrcPath newSrcPath dstPath agentFile agentName
