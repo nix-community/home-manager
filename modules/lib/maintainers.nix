@@ -320,6 +320,12 @@
     github = "silmarp";
     githubID = 67292496;
   };
+  soratenshi = {
+    email = "dream@neoncity.dev";
+    github = "soratenshi";
+    githubId = 13474089;
+    name = "Sora";
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
