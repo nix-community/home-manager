@@ -275,6 +275,7 @@ in {
         After = [ "graphical-session-pre.target" ];
         Before = lib.mkIf cfg.systemd.enableXdgAutostart
           [ "xdg-desktop-autostart.target" ];
+        ExecStop = "${cfg.finalPackage}/bin/hyprctl dispatch exit";
       };
     };
 
