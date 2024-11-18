@@ -73950,7 +73950,9 @@ attribute set of (null or string or path)</p>
  </span>
 </dt>
 <dd>
-<p>Whether to enable Syncthing continuous file synchronization.</p>
+<p>Whether to enable Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.
+Further declarative configuration options only supported on Linux devices.
+.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
@@ -73972,12 +73974,91 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.syncthing.package"></a><a class="term" href="options.xhtml#opt-services.syncthing.package"><code class="option">services.syncthing.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The syncthing package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.syncthing</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.allProxy"></a><a class="term" href="options.xhtml#opt-services.syncthing.allProxy"><code class="option">services.syncthing.allProxy</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Overwrites the <code class="envar">all_proxy</code> environment variable for the Syncthing
+process to the given value. This is normally used to let Syncthing
+connect through a SOCKS5 proxy server. See
+<a class="link" href="https://docs.syncthing.net/users/proxying.html"  target="_top">https://docs.syncthing.net/users/proxying.html</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;socks5://address.com:1234&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.cert"></a><a class="term" href="options.xhtml#opt-services.syncthing.cert"><code class="option">services.syncthing.cert</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to the <code class="literal">cert.pem</code> file, which will be copied into Syncthing’s
+config directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.syncthing.extraOptions"></a><a class="term" href="options.xhtml#opt-services.syncthing.extraOptions"><code class="option">services.syncthing.extraOptions</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Extra command-line arguments to pass to <span class="command"><strong>syncthing</strong></span>.</p>
+<p>Extra command-line arguments to pass to <span class="command"><strong>syncthing</strong></span></p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 list of string</p>
@@ -73986,9 +74067,764 @@ list of string</p>
 <code class="literal">[ ]</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
-  &quot;--gui-apikey=apiKey&quot;
+  &quot;--reset-deltas&quot;
 ]
 </code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.guiAddress"></a><a class="term" href="options.xhtml#opt-services.syncthing.guiAddress"><code class="option">services.syncthing.guiAddress</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The address to serve the web interface at.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;127.0.0.1:8384&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.key"></a><a class="term" href="options.xhtml#opt-services.syncthing.key"><code class="option">services.syncthing.key</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to the <code class="literal">key.pem</code> file, which will be copied into Syncthing’s
+config directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.overrideDevices"></a><a class="term" href="options.xhtml#opt-services.syncthing.overrideDevices"><code class="option">services.syncthing.overrideDevices</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to delete the devices which are not configured via the
+<a class="link" href="options.xhtml#opt-services.syncthing.settings.devices"  >devices</a> option.
+If set to <code class="literal">false</code>, devices added via the web
+interface will persist and will have to be deleted manually.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.overrideFolders"></a><a class="term" href="options.xhtml#opt-services.syncthing.overrideFolders"><code class="option">services.syncthing.overrideFolders</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to delete the folders which are not configured via the
+<a class="link" href="options.xhtml#opt-services.syncthing.settings.folders"  >folders</a> option.
+If set to <code class="literal">false</code>, folders added via the web
+interface will persist and will have to be deleted manually.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.passwordFile"></a><a class="term" href="options.xhtml#opt-services.syncthing.passwordFile"><code class="option">services.syncthing.passwordFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to the gui password file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings"><code class="option">services.syncthing.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra configuration options for Syncthing.
+See <a class="link" href="https://docs.syncthing.net/users/config.html"  target="_top">https://docs.syncthing.net/users/config.html</a>.
+Note that this attribute set does not exactly match the documented
+XML format. Instead, this is the format of the JSON REST API. There
+are slight differences. For example, this XML:</p><pre><code class="programlisting xml">&lt;options&gt;
+  &lt;listenAddress&gt;default&lt;/listenAddress&gt;
+  &lt;minHomeDiskFree unit=&quot;%&quot;&gt;1&lt;/minHomeDiskFree&gt;
+&lt;/options&gt;
+</code></pre><p>corresponds to the Nix code:</p><pre><code class="programlisting nix">{
+  options = {
+    listenAddresses = [
+      &quot;default&quot;
+    ];
+    minHomeDiskFree = {
+      unit = &quot;%&quot;;
+      value = 1;
+    };
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  gui = {
+    theme = &quot;black&quot;;
+  };
+  options = {
+    localAnnounceEnabled = false;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.devices"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.devices"><code class="option">services.syncthing.settings.devices</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Peers/devices which Syncthing should communicate with.</p><p>Note that you can still add devices manually, but those changes
+will be reverted on restart if <a class="link" href="options.xhtml#opt-services.syncthing.overrideDevices"  >overrideDevices</a>
+is enabled.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (JSON value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  bigbox = {
+    addresses = [
+      &quot;tcp://192.168.0.10:51820&quot;
+    ];
+    id = &quot;7CFNTQM-IMTJBHJ-3UWRDIU-ZGQJFR6-VCXZ3NB-XUH3KZO-N52ITXR-LAIYUAU&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.devices._name_.autoAcceptFolders"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.devices._name_.autoAcceptFolders"><code class="option">services.syncthing.settings.devices.&lt;name&gt;.autoAcceptFolders</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Automatically create or share folders that this device advertises at the default path.
+See <a class="link" href="https://docs.syncthing.net/users/config.html?highlight=autoaccept#config-file-format"  target="_top">https://docs.syncthing.net/users/config.html?highlight=autoaccept#config-file-format</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.devices._name_.id"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.devices._name_.id"><code class="option">services.syncthing.settings.devices.&lt;name&gt;.id</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The device ID. See <a class="link" href="https://docs.syncthing.net/dev/device-ids.html"  target="_top">https://docs.syncthing.net/dev/device-ids.html</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.devices._name_.name"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.devices._name_.name"><code class="option">services.syncthing.settings.devices.&lt;name&gt;.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The name of the device.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders"><code class="option">services.syncthing.settings.folders</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Folders which should be shared by Syncthing.</p><p>Note that you can still add folders manually, but those changes
+will be reverted on restart if <a class="link" href="options.xhtml#opt-services.syncthing.overrideFolders"  >overrideFolders</a>
+is enabled.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (JSON value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;/home/user/sync&quot; = {
+    id = &quot;syncme&quot;;
+    devices = [ &quot;bigbox&quot; ];
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.enable"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.enable"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to share this folder.
+This option is useful when you want to define all folders
+in one place, but not every machine should share all folders.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.copyOwnershipFromParent"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.copyOwnershipFromParent"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.copyOwnershipFromParent</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>On Unix systems, tries to copy file/folder ownership from
+the parent directory (the directory it’s located in).
+Requires running Syncthing as a privileged user, or
+granting it additional capabilities (e.g. CAP_CHOWN on
+Linux).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.devices"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.devices"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.devices</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The devices this folder should be shared with. Each device must
+be defined in the <a class="link" href="options.xhtml#opt-services.syncthing.settings.devices"  >devices</a> option.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.id"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.id"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.id</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The ID of the folder. Must be the same on all devices.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.label"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.label"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.label</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The label of the folder.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.path"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.path"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.path</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The path to the folder which should be shared.
+Only absolute paths (starting with <code class="literal">/</code>) and paths relative to
+the user’s home directory (starting with <code class="literal">~/</code>) are allowed.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string starting with / or ~/</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.type"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.type"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.type</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Controls how the folder is handled by Syncthing.
+See <a class="link" href="https://docs.syncthing.net/users/config.html#config-option-folder.type"  target="_top">https://docs.syncthing.net/users/config.html#config-option-folder.type</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “sendreceive”, “sendonly”, “receiveonly”, “receiveencrypted”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;sendreceive&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.versioning"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.versioning"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.versioning</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>How to keep changed/deleted files with Syncthing.
+There are 4 different types of versioning with different parameters.
+See <a class="link" href="https://docs.syncthing.net/users/versioning.html"  target="_top">https://docs.syncthing.net/users/versioning.html</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (JSON value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    versioning = {
+      type = &quot;simple&quot;;
+      params.keep = &quot;10&quot;;
+    };
+  }
+  {
+    versioning = {
+      type = &quot;trashcan&quot;;
+      params.cleanoutDays = &quot;1000&quot;;
+    };
+  }
+  {
+    versioning = {
+      type = &quot;staggered&quot;;
+      fsPath = &quot;/syncthing/backup&quot;;
+      params = {
+        cleanInterval = &quot;3600&quot;;
+        maxAge = &quot;31536000&quot;;
+      };
+    };
+  }
+  {
+    versioning = {
+      type = &quot;external&quot;;
+      params.versionsPath = pkgs.writers.writeBash &quot;backup&quot; &#x27;&#x27;
+        folderpath=&quot;$1&quot;
+        filepath=&quot;$2&quot;
+        rm -rf &quot;$folderpath/$filepath&quot;
+      &#x27;&#x27;;
+    };
+  }
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.folders._name_.versioning.type"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.folders._name_.versioning.type"><code class="option">services.syncthing.settings.folders.&lt;name&gt;.versioning.type</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The type of versioning.
+See <a class="link" href="https://docs.syncthing.net/users/versioning.html"  target="_top">https://docs.syncthing.net/users/versioning.html</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “external”, “simple”, “staggered”, “trashcan”</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.options"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.options"><code class="option">services.syncthing.settings.options</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The options element contains all other global configuration options</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.options.limitBandwidthInLan"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.options.limitBandwidthInLan"><code class="option">services.syncthing.settings.options.limitBandwidthInLan</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to apply bandwidth limits to devices in the same broadcast domain as the local device.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.options.localAnnounceEnabled"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.options.localAnnounceEnabled"><code class="option">services.syncthing.settings.options.localAnnounceEnabled</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to send announcements to the local LAN, also use such announcements to find other devices.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.options.localAnnouncePort"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.options.localAnnouncePort"><code class="option">services.syncthing.settings.options.localAnnouncePort</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The port on which to listen and send IPv4 broadcast announcements to.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.options.maxFolderConcurrency"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.options.maxFolderConcurrency"><code class="option">services.syncthing.settings.options.maxFolderConcurrency</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>This option controls how many folders may concurrently be in I/O-intensive operations such as syncing or scanning.
+The mechanism is described in detail in a <a class="link" href="https://docs.syncthing.net/advanced/option-max-concurrency.html"  target="_top">separate chapter</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.options.relaysEnabled"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.options.relaysEnabled"><code class="option">services.syncthing.settings.options.relaysEnabled</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When true, relays will be connected to and potentially used for device to device connections.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/syncthing.nix" target="_top">
+&lt;home-manager/modules/services/syncthing.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.syncthing.settings.options.urAccepted"></a><a class="term" href="options.xhtml#opt-services.syncthing.settings.options.urAccepted"><code class="option">services.syncthing.settings.options.urAccepted</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether the user has accepted to submit anonymous usage data.
+The default, 0, mean the user has not made a choice, and Syncthing will ask at some point in the future.
+“-1” means no, a number above zero means that that version of usage reporting has been accepted.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
