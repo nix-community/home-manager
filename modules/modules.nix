@@ -132,6 +132,7 @@ let
     ./programs/java.nix
     ./programs/jetbrains-remote.nix
     ./programs/jq.nix
+    ./programs/jrnl.nix
     ./programs/jujutsu.nix
     ./programs/joshuto.nix
     ./programs/joplin-desktop.nix
