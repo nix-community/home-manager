@@ -1,21 +1,19 @@
 { pkgs, name, agent }:
 
 let
-  staging-next-pkgs = import (builtins.fetchTarball { url = "https://github.com/NixOS/nixpkgs/archive/staging-next.tar.gz"; sha256 = "1qv0a78lrgdhic7qr4xvh2c5s0hch3k3ix08ja04pxs2090m0a6n"; }) { inherit (pkgs) system; };
-
   label = agent.config.Label;
 
-  mainExe = staging-next-pkgs.stdenv.mkDerivation {
+  mainExe = pkgs.stdenv.mkDerivation {
     pname = "agent-wrapper-main-executable";
     version = "0.1.0";
 
     dontUnpack = true;
 
-    nativeBuildInputs = [ staging-next-pkgs.swift ];
+    nativeBuildInputs = [ pkgs.swift ];
 
     buildInputs = [
-      staging-next-pkgs.apple-sdk_13
-      (staging-next-pkgs.darwinMinVersionHook "13.0")
+      pkgs.apple-sdk_13
+      (pkgs.darwinMinVersionHook "13.0")
     ];
 
     buildPhase = ''
