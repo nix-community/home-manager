@@ -49,16 +49,25 @@ let
     };
   }));
 
+  getId = account: address:
+    if address == account.address then
+      account.id
+    else
+      (builtins.hashString "sha256" (if (builtins.isString address) then
+        address
+      else
+        (address.address + address.realName)));
+
   toThunderbirdIdentity = account: address:
     # For backwards compatibility, the primary address reuses the account ID.
     let
-      id = if address == account.address then
-        account.id
-      else
-        builtins.hashString "sha256" address;
+      id = getId account address;
+      addressIsString = builtins.isString address;
     in {
-      "mail.identity.id_${id}.fullName" = account.realName;
-      "mail.identity.id_${id}.useremail" = address;
+      "mail.identity.id_${id}.fullName" =
+        if addressIsString then account.realName else address.realName;
+      "mail.identity.id_${id}.useremail" =
+        if addressIsString then address else address.address;
       "mail.identity.id_${id}.valid" = true;
       "mail.identity.id_${id}.htmlSigText" =
         if account.signature.showSignature == "none" then
@@ -87,9 +96,7 @@ let
       addresses = [ account.address ] ++ account.aliases;
     in {
       "mail.account.account_${id}.identities" = concatStringsSep ","
-        ([ "id_${id}" ]
-          ++ map (address: "id_${builtins.hashString "sha256" address}")
-          account.aliases);
+        (map (address: "id_${getId account address}") addresses);
       "mail.account.account_${id}.server" = "server_${id}";
     } // optionalAttrs account.primary {
       "mail.accountmanager.defaultaccount" = "account_${id}";
