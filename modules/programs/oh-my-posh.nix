@@ -11,6 +11,8 @@ let
     "--config ${config.xdg.configHome}/oh-my-posh/config.json"
   else if cfg.useTheme != null then
     "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
+  else if cfg.configFile != null then 
+    "--config ${cfg.configFile}"
   else
     "";
 
@@ -46,6 +48,15 @@ in {
         `configFile` is set.
       '';
     };
+
+    configFile = mkOption { 
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Path to a custome config path, can be json, yaml or toml  
+      '';
+    };
+
 
     enableBashIntegration = mkOption {
       type = types.bool;
