@@ -13,9 +13,9 @@ let
 
   # syncthing's configuration directory (see https://docs.syncthing.net/users/config.html)
   syncthing_dir = if pkgs.stdenv.isDarwin then
-      "$HOME/Library/Application Support/Syncthing"
-    else
-      "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
+    "$HOME/Library/Application Support/Syncthing"
+  else
+    "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
 
   # Syncthing supports serving the GUI over Unix sockets. If that happens, the
   # API is served over the Unix socket as well.  This function returns the correct
@@ -56,14 +56,10 @@ let
   copyKeys = pkgs.writers.writeBash "syncthing-copy-keys" ''
     ${install} -dm700 "${syncthing_dir}"
     ${lib.optionalString (cfg.cert != null) ''
-      ${install} -Dm400 ${
-        toString cfg.cert
-      } "${syncthing_dir}/cert.pem"
+      ${install} -Dm400 ${toString cfg.cert} "${syncthing_dir}/cert.pem"
     ''}
     ${lib.optionalString (cfg.key != null) ''
-      ${install} -Dm400 ${
-        toString cfg.key
-      } "${syncthing_dir}/key.pem"
+      ${install} -Dm400 ${toString cfg.key} "${syncthing_dir}/key.pem"
     ''}
   '';
 
@@ -647,7 +643,8 @@ in {
           };
 
           Service = {
-            ExecStartPre = lib.mkIf (cfg.cert != null || cfg.key != null) "+${copyKeys}";
+            ExecStartPre =
+              lib.mkIf (cfg.cert != null || cfg.key != null) "+${copyKeys}";
             ExecStart = lib.escapeShellArgs syncthingArgs;
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
@@ -693,13 +690,13 @@ in {
         syncthing = {
           enable = true;
           config = {
-            ProgramArguments = [ "${
-              pkgs.writers.writeBash "syncthing-wrapper" ''
+            ProgramArguments = [
+              "${pkgs.writers.writeBash "syncthing-wrapper" ''
                 ${copyKeys}                               # simulate systemd's `syncthing-init.Service.ExecStartPre`
                 touch "${syncthing_dir}/${watch_file}"    # notify syncthing-init agent
                 exec ${lib.escapeShellArgs syncthingArgs}
-              ''
-            }" ];
+              ''}"
+            ];
             KeepAlive = {
               Crashed = true;
               SuccessfulExit = false;
@@ -712,7 +709,9 @@ in {
           enable = true;
           config = {
             ProgramArguments = [ "${updateConfig}" ];
-            WatchPaths = [ "${config.home.homeDirectory}/Library/Application Support/Syncthing/${watch_file}" ];
+            WatchPaths = [
+              "${config.home.homeDirectory}/Library/Application Support/Syncthing/${watch_file}"
+            ];
           };
         };
       };
