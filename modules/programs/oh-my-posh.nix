@@ -16,6 +16,8 @@ let
       "--config ${config.xdg.configHome}/oh-my-posh/config.json"
     else if cfg.useTheme != null then
       "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
+    else if cfg.configFile != null then
+      "--config ${cfg.configFile}"
     else
       "";
 
@@ -49,6 +51,14 @@ in
         <https://ohmyposh.dev/docs/themes>. Because a theme
         is essentially a configuration file, this option is not used when a
         `configFile` is set.
+      '';
+    };
+
+    configFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a custom configuration path, can be json, yaml or toml.
       '';
     };
 
