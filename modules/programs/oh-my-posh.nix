@@ -59,7 +59,7 @@ in
       type = types.nullOr types.str;
       default = null;
       description = ''
-        Path to a custome config path, can be json, yaml or toml  
+        Path to a custome config path, can be json, yaml or toml
       '';
     };
 
