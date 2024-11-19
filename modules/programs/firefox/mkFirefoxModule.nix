@@ -682,6 +682,12 @@ in {
           };
 
         };
+
+        config = let profile = config;
+        in {
+          settings."toolkit.legacyUserProfileCustomizations.stylesheets" =
+            mkIf (profile.userChrome != "" || profile.userContent != "") true;
+        };
       }));
       default = { };
       description = "Attribute set of ${name} profiles.";
@@ -739,7 +745,25 @@ in {
       (mkNoDuplicateAssertion cfg.profiles "profile")
     ] ++ (mapAttrsToList
       (_: profile: mkNoDuplicateAssertion profile.containers "container")
-      cfg.profiles);
+      cfg.profiles) ++ (
+        # Assert "toolkit.legacyUserProfileCustomizations.stylesheets" is enabled if
+        # userChrome/userContent is used.
+        let
+
+          assertProfile = userChromeAttr: profile:
+            profile.${userChromeAttr} != ""
+            -> (profile.settings."toolkit.legacyUserProfileCustomizations.stylesheets"
+              != false);
+
+          mkAssertion = userChromeAttr: {
+            assertion =
+              all (assertProfile userChromeAttr) (attrValues cfg.profiles);
+            message = ''
+              `${userChromeAttr}` won't work with `settings."toolkit.legacyUserProfileCustomizations.stylesheets"` set to false.
+            '';
+          };
+
+        in [ (mkAssertion "userChrome") (mkAssertion "userContent") ]);
 
     warnings = optional (cfg.enableGnomeExtensions or false) ''
       Using '${moduleName}.enableGnomeExtensions' has been deprecated and
