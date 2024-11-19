@@ -10,7 +10,9 @@ global_vars:
 matches:
 - replace: It's {{currentdate}} {{currenttime}}
   trigger: :now
-- replace: "line1\nline2"
+- replace: 'line1
+
+    line2'
   trigger: :hello
 - regex: :hi(?P<person>.*)\.
   replace: Hi {{person}}!
