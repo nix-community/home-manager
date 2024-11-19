@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 let
@@ -7,14 +12,18 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  configArgument = if cfg.settings != { } then
-    "--config ${config.xdg.configHome}/oh-my-posh/config.json"
-  else if cfg.useTheme != null then
-    "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
-  else
-    "";
+  configArgument =
+    if cfg.settings != { } then
+      "--config ${config.xdg.configHome}/oh-my-posh/config.json"
+    else if cfg.useTheme != null then
+      "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
+    else if cfg.configFile != null then
+      "--config ${cfg.configFile}"
+    else
+      "";
 
-in {
+in
+{
   meta.maintainers = [ maintainers.arjan-s ];
 
   options.programs.oh-my-posh = {
@@ -25,8 +34,7 @@ in {
     settings = mkOption {
       type = jsonFormat.type;
       default = { };
-      example = literalExpression ''
-        builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
+      example = literalExpression ''builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/oh-my-posh/config.json`. See
@@ -44,6 +52,14 @@ in {
         <https://ohmyposh.dev/docs/themes>. Because a theme
         is essentially a configuration file, this option is not used when a
         `configFile` is set.
+      '';
+    };
+
+    configFile = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Path to a custome config path, can be json, yaml or toml  
       '';
     };
 
