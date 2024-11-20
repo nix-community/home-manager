@@ -28,7 +28,7 @@ in {
     programs.zsh.plugins = [{
       name = "zsh-abbr";
       src = pkgs.zsh-abbr;
-      file = "/share/zsh/zsh-abbr/abbr.plugin.zsh";
+      file = "share/zsh/zsh-abbr/zsh-abbr.plugin.zsh";
     }];
 
     xdg.configFile = {
