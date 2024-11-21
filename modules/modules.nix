@@ -42,6 +42,7 @@ let
     ./misc/uninstall.nix
     ./misc/version.nix
     ./misc/vte.nix
+    ./misc/xdg-autostart.nix
     ./misc/xdg-desktop-entries.nix
     ./misc/xdg-mime-apps.nix
     ./misc/xdg-mime.nix
