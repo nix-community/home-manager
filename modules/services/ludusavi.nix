@@ -74,7 +74,7 @@ in {
         } // lib.optionalAttrs cfg.backupNotification {
           ExecStartPost = "${
               getExe pkgs.libnotify
-            } 'Ludusavi' 'Backup completed' -i com.github.mtkennerly.ludusavi -a 'Ludusavi'";
+            } 'Ludusavi' 'Backup completed' -i ludusavi -a 'Ludusavi'";
         };
       };
       timers.ludusavi = {
