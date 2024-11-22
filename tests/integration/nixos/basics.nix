@@ -17,7 +17,7 @@
     };
 
     home-manager.users.alice = { ... }: {
-      home.stateVersion = "24.05";
+      home.stateVersion = "24.11";
       home.file.test.text = "testfile";
       # Enable a light-weight systemd service.
       services.pueue.enable = true;
