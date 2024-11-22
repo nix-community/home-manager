@@ -61,7 +61,7 @@ let
       Default = if profile.isDefault then 1 else 0;
     }) // {
       General = {
-        StartWithLastProfile = 1;
+        StartWithLastProfile = if cfg.startWithLastProfile then 1 else 0;
       } // lib.optionalAttrs (cfg.profileVersion != null) {
         Version = cfg.profileVersion;
       };
@@ -696,6 +696,17 @@ in {
         also need to set the NixOS option
         `services.gnome.gnome-browser-connector.enable` to
         `true`.
+      '';
+    };
+
+    startWithLastProfile = mkOption {
+      inherit visible;
+      type = types.bool;
+      default = true;
+      description = ''
+        Whether to automatically choose the last-used profile on startup.
+        Disabling this will result in Firefox asking for a profile selection
+        on every startup.
       '';
     };
   };
