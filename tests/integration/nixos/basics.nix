@@ -49,7 +49,7 @@
 
     start_all()
 
-    machine.wait_for_unit("home-manager-alice.service")
+    machine.wait_for_console_text("Finished Home Manager environment for alice.")
 
     with subtest("Home Manager file"):
       # The file should be linked with the expected content.
@@ -73,7 +73,7 @@
       fail_as_alice("pueue status")
 
       machine.systemctl("restart home-manager-alice.service")
-      machine.wait_for_unit("home-manager-alice.service")
+      machine.wait_for_console_text("Finished Home Manager environment for alice.")
 
       actual = succeed_as_alice("pueue status")
       expected = "running"
