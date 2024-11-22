@@ -268,8 +268,8 @@ function doInit() {
         withFlake=1
     fi
 
-    local homeManagerUrl="github:nix-community/home-manager"
-    local nixpkgsUrl="github:nixos/nixpkgs/nixos-unstable"
+    local homeManagerUrl="github:nix-community/home-manager/release-24.11"
+    local nixpkgsUrl="github:nixos/nixpkgs/nixos-24.11"
 
     while (( $# > 0 )); do
         local opt="$1"
