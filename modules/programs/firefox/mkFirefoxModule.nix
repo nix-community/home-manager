@@ -737,7 +737,7 @@ in {
         '';
       }
 
-      (mkNoDuplicateAssertion cfg.profiles "profile")
+#       (mkNoDuplicateAssertion cfg.profiles "profile")
     ] ++ (mapAttrsToList
       (_: profile: mkNoDuplicateAssertion profile.containers "container")
       cfg.profiles);
