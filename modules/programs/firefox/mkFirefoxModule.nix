@@ -716,16 +716,6 @@ in {
       (hm.assertions.assertPlatform moduleName pkgs supportedPlatforms)
 
       (let
-        defaults =
-          catAttrs "name" (filter (a: a.isDefault) (attrValues cfg.profiles));
-      in {
-        assertion = cfg.profiles == { } || length defaults == 1;
-        message = "Must have exactly one default ${cfg.name} profile but found "
-          + toString (length defaults) + optionalString (length defaults > 1)
-          (", namely " + concatStringsSep ", " defaults);
-      })
-
-      (let
         getContainers = profiles:
           flatten
           (mapAttrsToList (_: value: (attrValues value.containers)) profiles);
