@@ -63,8 +63,10 @@ in {
   buildConfigAsserts = quadletName: extraConfig:
     let
       configRules = {
+        Build = { ImageTag = (with types; listOf str); };
         Container = { ContainerName = types.enum [ quadletName ]; };
         Network = { NetworkName = types.enum [ quadletName ]; };
+        Volume = { VolumeName = types.enum [ quadletName ]; };
       };
 
       # Function to build assertions for a specific section and its attributes.
@@ -83,8 +85,35 @@ in {
         else
           [ ];
 
+      checkImageTag = extraConfig:
+        let
+          buildSection = if (builtins.hasAttr "Build" extraConfig) then
+            extraConfig.Build
+          else
+            { };
+          imageTags = if (builtins.hasAttr "ImageTag" buildSection) then
+            buildSection.ImageTag
+          else
+            [ ];
+          containsRequiredTag = (if builtins.length imageTags > 0 then
+            builtins.elemAt imageTags 0
+          else
+            "") == "homemanager/${quadletName}";
+        in if (containsRequiredTag || builtins.length imageTags == 0) then
+          [ ]
+        else [{
+          assertion = false;
+          message = ''
+            In '${quadletName}' config. Build.ImageTag: '[ "${
+              builtins.concatStringsSep ''" "'' imageTags
+            }" ]' does not have 'homemanager/${quadletName}' at index 0.'';
+        }];
+
       # Flatten assertions from all sections in `extraConfig`.
-    in flatten (mapAttrsToList buildSectionAsserts extraConfig);
+    in flatten (concatLists [
+      (mapAttrsToList buildSectionAsserts extraConfig)
+      (checkImageTag extraConfig)
+    ]);
 
   extraConfigType = with types;
     attrsOf (attrsOf (oneOf [ primitiveAttrs primitiveList primitive ]));
@@ -107,8 +136,11 @@ in {
           # specific logic for writing the unit name goes here. It should be
           #   identical to what `podman <resource> ls` shows
         in {
+          "build" = strippedName;
           "container" = strippedName;
+          "image" = strippedName;
           "network" = strippedName;
+          "volume" = strippedName;
         }."${quadlet.resourceType}";
     in if allQuadletsSameType then ''
       ${concatStringsSep "\n"
