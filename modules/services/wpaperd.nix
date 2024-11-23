@@ -3,12 +3,24 @@
 with lib;
 
 let
-  cfg = config.programs.wpaperd;
+  cfg = config.services.wpaperd;
   tomlFormat = pkgs.formats.toml { };
 in {
   meta.maintainers = [ hm.maintainers.Avimitin ];
 
-  options.programs.wpaperd = {
+  imports = [
+    (mkRenamedOptionModule # \
+      [ "programs" "wpaperd" "enable" ] # \
+      [ "services" "wpaperd" "enable" ])
+    (mkRenamedOptionModule # \
+      [ "programs" "wpaperd" "package" ] # \
+      [ "services" "wpaperd" "package" ])
+    (mkRenamedOptionModule # \
+      [ "programs" "wpaperd" "settings" ] # \
+      [ "services" "wpaperd" "settings" ])
+  ];
+
+  options.services.wpaperd = {
     enable = mkEnableOption "wpaperd";
 
     package = mkPackageOption pkgs "wpaperd" { };
@@ -38,11 +50,35 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.wpaperd" pkgs lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile = {
       "wpaperd/wallpaper.toml" = mkIf (cfg.settings != { }) {
         source = tomlFormat.generate "wpaperd-wallpaper" cfg.settings;
+      };
+    };
+
+
+    systemd.user.services.wpaperd = {
+      Install = { WantedBy = [ "graphical-session.target" ]; };
+
+      Unit = {
+        ConditionEnvironment = "WAYLAND_DISPLAY";
+        Description = "wpaperd";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+        X-Restart-Triggers =
+          [ "${config.xdg.configFile."wpaperd/wallpaper.toml".source}" ];
+      };
+
+      Service = {
+        ExecStart = "${getExe cfg.package}";
+        Restart = "always";
+        RestartSec = "10";
       };
     };
   };
