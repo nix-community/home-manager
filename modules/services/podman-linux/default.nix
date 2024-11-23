@@ -5,8 +5,15 @@ let
 in {
   meta.maintainers = with lib.hm.maintainers; [ bamhm182 n-hass ];
 
-  imports =
-    [ ./containers.nix ./install-quadlet.nix ./networks.nix ./services.nix ];
+  imports = [
+    ./builds.nix
+    ./containers.nix
+    ./images.nix
+    ./install-quadlet.nix
+    ./networks.nix
+    ./services.nix
+    ./volumes.nix
+  ];
 
   options.services.podman = {
     enable = lib.mkEnableOption "Podman, a daemonless container engine";
