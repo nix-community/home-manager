@@ -11,7 +11,7 @@ in {
   options.services.podman = {
     enable = lib.mkEnableOption "Podman, a daemonless container engine";
 
-    config = {
+    settings = {
       containers = lib.mkOption {
         type = toml.type;
         default = { };
@@ -77,23 +77,23 @@ in {
 
     home.packages = [ cfg.package ];
 
-    services.podman.config.storage = {
+    services.podman.settings.storage = {
       storage.driver = lib.mkDefault "overlay";
     };
 
     xdg.configFile = {
-      "containers/policy.json".source = if cfg.config.policy != { } then
-        pkgs.writeText "policy.json" (builtins.toJSON cfg.config.policy)
+      "containers/policy.json".source = if cfg.settings.policy != { } then
+        pkgs.writeText "policy.json" (builtins.toJSON cfg.settings.policy)
       else
         "${pkgs.skopeo.policy}/default-policy.json";
       "containers/registries.conf".source = toml.generate "registries.conf" {
         registries =
-          lib.mapAttrs (n: v: { registries = v; }) cfg.config.registries;
+          lib.mapAttrs (n: v: { registries = v; }) cfg.settings.registries;
       };
       "containers/storage.conf".source =
-        toml.generate "storage.conf" cfg.config.storage;
+        toml.generate "storage.conf" cfg.settings.storage;
       "containers/containers.conf".source =
-        toml.generate "containers.conf" cfg.config.containers;
+        toml.generate "containers.conf" cfg.settings.containers;
     };
   };
 }

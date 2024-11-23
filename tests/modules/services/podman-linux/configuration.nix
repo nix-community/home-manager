@@ -3,7 +3,7 @@
 {
   services.podman = {
     enable = true;
-    config = {
+    settings = {
       containers = {
         network = {
           default_subnet = "172.16.10.0/24";
