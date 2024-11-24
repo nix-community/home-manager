@@ -130,6 +130,7 @@ in {
 
       Service = {
         ExecStart = "${mopidyEnv}/bin/mopidy --config ${configFilePaths}";
+        Restart = "on-failure";
       };
 
       Install.WantedBy = [ "default.target" ];
