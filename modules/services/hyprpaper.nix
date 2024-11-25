@@ -75,7 +75,7 @@ in {
         Description = "hyprpaper";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers =
+        X-Restart-Triggers = mkIf (cfg.settings != { })
           [ "${config.xdg.configFile."hypr/hyprpaper.conf".source}" ];
       };
 

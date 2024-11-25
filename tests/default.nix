@@ -173,6 +173,7 @@ in import nmtSrc {
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
+    ./modules/services/emacs-darwin
     ./modules/services/espanso-darwin
     ./modules/services/git-sync-darwin
     ./modules/services/imapnotify-darwin
@@ -286,6 +287,7 @@ in import nmtSrc {
     ./modules/services/trayscale
     ./modules/services/twmn
     ./modules/services/udiskie
+    ./modules/services/volnoti
     ./modules/services/window-managers/bspwm
     ./modules/services/window-managers/herbstluftwm
     ./modules/services/window-managers/hyprland

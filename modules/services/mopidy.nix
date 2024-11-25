@@ -126,10 +126,13 @@ in {
         Description = "mopidy music player daemon";
         Documentation = [ "https://mopidy.com/" ];
         After = [ "network.target" "sound.target" ];
+        X-Restart-Triggers = mkIf (cfg.settings != { })
+          [ "${config.xdg.configFile."mopidy/mopidy.conf".source}" ];
       };
 
       Service = {
         ExecStart = "${mopidyEnv}/bin/mopidy --config ${configFilePaths}";
+        Restart = "on-failure";
       };
 
       Install.WantedBy = [ "default.target" ];

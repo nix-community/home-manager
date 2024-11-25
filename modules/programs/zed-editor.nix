@@ -22,6 +22,13 @@ in {
 
       package = mkPackageOption pkgs "zed-editor" { };
 
+      extraPackages = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExpression "[ pkgs.nixd ]";
+        description = "Extra packages available to Zed.";
+      };
+
       userSettings = mkOption {
         type = jsonFormat.type;
         default = { };
@@ -76,7 +83,22 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = if cfg.extraPackages != [ ] then
+      [
+        (pkgs.symlinkJoin {
+          name =
+            "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+          paths = [ cfg.package ];
+          preferLocalBuild = true;
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/zeditor \
+              --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+          '';
+        })
+      ]
+    else
+      [ cfg.package ];
 
     xdg.configFile."zed/settings.json" = (mkIf (mergedSettings != { }) {
       source = jsonFormat.generate "zed-user-settings" mergedSettings;
