@@ -214,8 +214,6 @@ in {
     home.file.".profile".source = writeBashScript "profile" ''
       . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
-      ${sessionVarsStr}
-
       ${cfg.profileExtra}
     '';
 
@@ -224,6 +222,8 @@ in {
 
       # Commands that should be applied only for interactive shells.
       [[ $- == *i* ]] || return
+
+      ${sessionVarsStr}
 
       ${historyControlStr}
 
