@@ -6,8 +6,9 @@
 # Whether to enable module type checking.
 , check ? true
 
-  # If disabled, the pkgs attribute passed to this function is used instead.
-, useNixpkgsModule ? true }:
+  # If enabled, the pkgs attribute passed to this function is used instead
+  # of re-importing Nixpkgs.
+, inheritGlobalPkgs ? false }:
 
 with lib;
 
@@ -415,6 +416,7 @@ let
     ./xresources.nix
     ./xsession.nix
     ./misc/nix.nix
+    ./misc/nixpkgs.nix
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
 
@@ -424,8 +426,7 @@ let
     (mkRemovedOptionModule [ "services" "keepassx" ] ''
       KeePassX is no longer maintained.
     '')
-  ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
-    ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
+  ];
 
   pkgsModule = { config, ... }: {
     config = {
@@ -435,11 +436,16 @@ let
           pkgs.path
         else
           <nixpkgs>);
-      _module.args.pkgs = lib.mkDefault pkgs;
+      _module.args.superPkgs = pkgs;
       _module.check = check;
       lib = lib.hm;
-    } // optionalAttrs useNixpkgsModule {
-      nixpkgs.system = mkDefault pkgs.stdenv.hostPlatform.system;
+      nixpkgs = {
+        inheritGlobalPkgs = mkDefault inheritGlobalPkgs;
+        system = mkDefault (if config.nixpkgs.inheritGlobalPkgs then
+          null
+        else
+          pkgs.stdenv.hostPlatform.system);
+      };
     };
   };
 
