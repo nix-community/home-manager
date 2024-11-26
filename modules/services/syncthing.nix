@@ -589,6 +589,15 @@ in {
                 description = "Syncthing tray command to use.";
               };
 
+              extraOptions = mkOption {
+                type = types.listOf types.str;
+                default = [ ];
+                example = [ "--wait" ];
+                description = ''
+                  Extra command-line arguments to pass to {command}`syncthingtray`.
+                '';
+              };
+
               package = mkOption {
                 type = package;
                 default = pkgs.syncthingtray-minimal;
@@ -701,7 +710,9 @@ in {
           };
 
           Service = {
-            ExecStart = "${cfg.tray.package}/bin/${cfg.tray.command}";
+            ExecStart = escapeShellArgs
+              ([ "${cfg.tray.package}/bin/${cfg.tray.command}" ]
+                ++ cfg.tray.extraOptions);
           };
 
           Install = { WantedBy = [ "graphical-session.target" ]; };
