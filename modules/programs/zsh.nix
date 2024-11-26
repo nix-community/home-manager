@@ -469,6 +469,12 @@ in
         description = "Commands that should be added to top of {file}`.zshrc`.";
       };
 
+      initExtraLast = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Commands that should be added to bottom of {file}`.zshrc`.";
+      };
+
       envExtra = mkOption {
         default = "";
         type = types.lines;
@@ -738,6 +744,10 @@ in
           }
         '')
 
+        cfg.initExtraLast
+
+        # zprof must place last after everything else, since it
+        # benchmarks the shell initialization.
         (optionalString cfg.zprof.enable
         ''
           zprof
