@@ -29945,6 +29945,36 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.kakoune.colorSchemePackage"></a><a class="term" href="options.xhtml#opt-programs.kakoune.colorSchemePackage"><code class="option">programs.kakoune.colorSchemePackage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A kakoune color schemes to add to your colors folder. This works
+because kakoune recursively checks
+<code class="filename">$XDG_CONFIG_HOME/kak/colors/</code>. To apply the color scheme use
+<code class="literal">programs.kakoune.config.colorScheme = &quot;theme&quot;</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.kakounePlugins.kakoune-catppuccin</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kakoune.nix" target="_top">
+&lt;home-manager/modules/programs/kakoune.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.kakoune.config"></a><a class="term" href="options.xhtml#opt-programs.kakoune.config"><code class="option">programs.kakoune.config</code>
   </a>
  </span>
