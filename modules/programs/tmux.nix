@@ -95,6 +95,7 @@ let
     ''}
 
     set  -g mouse             ${boolToStr cfg.mouse}
+    set  -g focus-events      ${boolToStr cfg.focusEvents}
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
     set  -s escape-time       ${toString cfg.escapeTime}
@@ -188,6 +189,15 @@ in {
         description = ''
           Additional configuration to add to
           {file}`tmux.conf`.
+        '';
+      };
+
+      focusEvents = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          On supported terminals, request focus events and pass them through to
+          applications running in tmux.
         '';
       };
 
