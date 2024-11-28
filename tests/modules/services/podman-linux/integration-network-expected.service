@@ -19,11 +19,14 @@ Environment=PATH=/run/wrappers/bin:/usr/bin:/bin:/usr/sbin:/sbin:/nix/store/0000
 ExecStartPre=/nix/store/00000000000000000000000000000000-await-podman-unshare
 RemainAfterExit=yes
 TimeoutStartSec=15
-ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman network create --ignore --subnet=192.168.123.0/24 --gateway=192.168.123.1 --label nix.home-manager.managed=true my-net
-Type=oneshot
+ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman network create --ignore --subnet 192.168.123.0/24 --gateway 192.168.123.1 --label nix.home-manager.managed=true my-net
 SyslogIdentifier=%N
+Type=oneshot
 
 [Unit]
+Wants=podman-user-wait-network-online.service
+After=podman-user-wait-network-online.service
 After=network.target
 Description=Service for network my-net
+SourcePath=/nix/store/00000000000000000000000000000000-home-network-podman-my-net/quadlets/podman-my-net.network
 RequiresMountsFor=%t/containers

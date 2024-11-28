@@ -28,11 +28,11 @@ Delegate=yes
 Type=notify
 NotifyAccess=all
 SyslogIdentifier=%N
-ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name=my-container --cidfile=%t/%N.cid --replace --rm --cgroups=split --network=my-net --network=externalnet --sdnotify=conmon -d --label nix.home-manager.managed=true docker.io/alpine:latest
+ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container --cidfile=%t/%N.cid --replace --rm --cgroups=split --network my-net --network externalnet --sdnotify=conmon -d --label nix.home-manager.managed=true docker.io/alpine:latest
 
 [Unit]
-Wants=network-online.target
-After=network-online.target
+Wants=podman-user-wait-network-online.service
+After=podman-user-wait-network-online.service
 After=network.target
 After=podman-my-net-network.service
 Description=Service for container my-container
