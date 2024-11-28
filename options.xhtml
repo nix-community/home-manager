@@ -8306,6 +8306,60 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-home.pointerCursor.hyprcursor.enable"></a><a class="term" href="options.xhtml#opt-home.pointerCursor.hyprcursor.enable"><code class="option">home.pointerCursor.hyprcursor.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable hyprcursor config generation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix" target="_top">
+&lt;home-manager/modules/config/home-cursor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-home.pointerCursor.hyprcursor.size"></a><a class="term" href="options.xhtml#opt-home.pointerCursor.hyprcursor.size"><code class="option">home.pointerCursor.hyprcursor.size</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The cursor size for hyprcursor.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">32</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix" target="_top">
+&lt;home-manager/modules/config/home-cursor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-home.pointerCursor.name"></a><a class="term" href="options.xhtml#opt-home.pointerCursor.name"><code class="option">home.pointerCursor.name</code>
   </a>
  </span>
@@ -55383,6 +55437,33 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.zed-editor.extraPackages"></a><a class="term" href="options.xhtml#opt-programs.zed-editor.extraPackages"><code class="option">programs.zed-editor.extraPackages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra packages available to Zed.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">[ pkgs.nixd ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zed-editor.nix" target="_top">
+&lt;home-manager/modules/programs/zed-editor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.zed-editor.userKeymaps"></a><a class="term" href="options.xhtml#opt-programs.zed-editor.userKeymaps"><code class="option">programs.zed-editor.userKeymaps</code>
   </a>
  </span>
@@ -71137,6 +71218,162 @@ null or string</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/networks.nix" target="_top">
 &lt;home-manager/modules/services/podman-linux/networks.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.settings.containers"></a><a class="term" href="options.xhtml#opt-services.podman.settings.containers"><code class="option">services.podman.settings.containers</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>containers.conf configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux" target="_top">
+&lt;home-manager/modules/services/podman-linux&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.settings.policy"></a><a class="term" href="options.xhtml#opt-services.podman.settings.policy"><code class="option">services.podman.settings.policy</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Signature verification policy file.
+If this option is empty the default policy file from
+<code class="literal">skopeo</code> will be used.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  default = [ { type = &quot;insecureAcceptAnything&quot;; } ];
+  transports = {
+    docker-daemon = {
+      &quot;&quot; = [ { type = &quot;insecureAcceptAnything&quot;; } ];
+    };
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux" target="_top">
+&lt;home-manager/modules/services/podman-linux&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.settings.registries.block"></a><a class="term" href="options.xhtml#opt-services.podman.settings.registries.block"><code class="option">services.podman.settings.registries.block</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of blocked repositories.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux" target="_top">
+&lt;home-manager/modules/services/podman-linux&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.settings.registries.insecure"></a><a class="term" href="options.xhtml#opt-services.podman.settings.registries.insecure"><code class="option">services.podman.settings.registries.insecure</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of insecure repositories.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux" target="_top">
+&lt;home-manager/modules/services/podman-linux&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.settings.registries.search"></a><a class="term" href="options.xhtml#opt-services.podman.settings.registries.search"><code class="option">services.podman.settings.registries.search</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of repositories to search.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;docker.io&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux" target="_top">
+&lt;home-manager/modules/services/podman-linux&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.settings.storage"></a><a class="term" href="options.xhtml#opt-services.podman.settings.storage"><code class="option">services.podman.settings.storage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>storage.conf configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux" target="_top">
+&lt;home-manager/modules/services/podman-linux&gt;
 </a></code>
 </td></tr>
 </table>
