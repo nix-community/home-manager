@@ -427,6 +427,9 @@ in
             - `match_prev_cmd`: Like `history`, but chooses the most recent match whose preceding history item matches
                 the most recently executed command. Note that this strategy won't work as expected with ZSH options that
                 don't preserve the history order such as `HIST_IGNORE_ALL_DUPS` or `HIST_EXPIRE_DUPS_FIRST`.
+
+            Setting the option to an empty list `[]` will make ZSH_AUTOSUGGESTION_STRATEGY not be set automatically,
+            allowing the variable to be declared in {option}`programs.zsh.localVariables` or {option}`programs.zsh.sessionVariables`
           '';
         };
       };
@@ -641,7 +644,10 @@ in
 
         (optionalString cfg.autosuggestion.enable ''
           source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-          ZSH_AUTOSUGGEST_STRATEGY=(${concatStringsSep " " cfg.autosuggestion.strategy})
+          ${optionalString (cfg.autosuggestion.strategy != []) ''
+            ZSH_AUTOSUGGEST_STRATEGY=(${concatStringsSep " " cfg.autosuggestion.strategy})
+          ''
+          }
         '')
         (optionalString (cfg.autosuggestion.enable && cfg.autosuggestion.highlight != null) ''
           ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="${cfg.autosuggestion.highlight}"
