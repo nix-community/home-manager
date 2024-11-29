@@ -1,0 +1,9 @@
+commandTemplates:
+  dockerCompose: docker compose
+gui:
+  theme:
+    activeBorderColor:
+    - red
+    - bold
+    inactiveBorderColor:
+    - blue
