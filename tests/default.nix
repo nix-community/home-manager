@@ -329,6 +329,7 @@ in import nmtSrc {
     ./modules/programs/kubecolor
     ./modules/programs/lapce
     ./modules/programs/ledger
+    ./modules/programs/lazydocker
     ./modules/programs/less
     ./modules/programs/lesspipe
     ./modules/programs/lf
