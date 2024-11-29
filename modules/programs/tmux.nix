@@ -1,12 +1,16 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cfg = config.programs.tmux;
 
-  pluginName = p: if types.package.check p then p.pname else p.plugin.pname;
+  pluginName = p:
+    if types.package.check p
+    then p.pname
+    else p.plugin.pname;
 
   pluginModule = types.submodule {
     options = {
@@ -29,7 +33,10 @@ let
   defaultTerminal = "screen";
   defaultShell = null;
 
-  boolToStr = value: if value then "on" else "off";
+  boolToStr = value:
+    if value
+    then "on"
+    else "off";
 
   tmuxConf = ''
     ${optionalString cfg.sensibleOnTop ''
@@ -57,37 +64,41 @@ let
     set -g mode-keys   ${cfg.keyMode}
 
     ${optionalString
-    (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
-      bind -N "Select pane to the left of the active pane" h select-pane -L
-      bind -N "Select pane below the active pane" j select-pane -D
-      bind -N "Select pane above the active pane" k select-pane -U
-      bind -N "Select pane to the right of the active pane" l select-pane -R
+      (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
+        bind -N "Select pane to the left of the active pane" h select-pane -L
+        bind -N "Select pane below the active pane" j select-pane -D
+        bind -N "Select pane above the active pane" k select-pane -U
+        bind -N "Select pane to the right of the active pane" l select-pane -R
 
-      bind -r -N "Resize the pane left by ${toString cfg.resizeAmount}" \
-        H resize-pane -L ${toString cfg.resizeAmount}
-      bind -r -N "Resize the pane down by ${toString cfg.resizeAmount}" \
-        J resize-pane -D ${toString cfg.resizeAmount}
-      bind -r -N "Resize the pane up by ${toString cfg.resizeAmount}" \
-        K resize-pane -U ${toString cfg.resizeAmount}
-      bind -r -N "Resize the pane right by ${toString cfg.resizeAmount}" \
-        L resize-pane -R ${toString cfg.resizeAmount}
-    ''}
-
-    ${if cfg.prefix != null then ''
-      # rebind main key: ${cfg.prefix}
-      unbind C-${defaultShortcut}
-      set -g prefix ${cfg.prefix}
-      bind -N "Send the prefix key through to the application" \
-        ${cfg.prefix} send-prefix
-    '' else
-      optionalString (cfg.shortcut != defaultShortcut) ''
-        # rebind main key: C-${cfg.shortcut}
-        unbind C-${defaultShortcut}
-        set -g prefix C-${cfg.shortcut}
-        bind -N "Send the prefix key through to the application" \
-          ${cfg.shortcut} send-prefix
-        bind C-${cfg.shortcut} last-window
+        bind -r -N "Resize the pane left by ${toString cfg.resizeAmount}" \
+          H resize-pane -L ${toString cfg.resizeAmount}
+        bind -r -N "Resize the pane down by ${toString cfg.resizeAmount}" \
+          J resize-pane -D ${toString cfg.resizeAmount}
+        bind -r -N "Resize the pane up by ${toString cfg.resizeAmount}" \
+          K resize-pane -U ${toString cfg.resizeAmount}
+        bind -r -N "Resize the pane right by ${toString cfg.resizeAmount}" \
+          L resize-pane -R ${toString cfg.resizeAmount}
       ''}
+
+    ${
+      if cfg.prefix != null
+      then ''
+        # rebind main key: ${cfg.prefix}
+        unbind C-${defaultShortcut}
+        set -g prefix ${cfg.prefix}
+        bind -N "Send the prefix key through to the application" \
+          ${cfg.prefix} send-prefix
+      ''
+      else
+        optionalString (cfg.shortcut != defaultShortcut) ''
+          # rebind main key: C-${cfg.shortcut}
+          unbind C-${defaultShortcut}
+          set -g prefix C-${cfg.shortcut}
+          bind -N "Send the prefix key through to the application" \
+            ${cfg.shortcut} send-prefix
+          bind C-${cfg.shortcut} last-window
+        ''
+    }
 
     ${optionalString cfg.disableConfirmationPrompt ''
       bind-key -N "Kill the current window" & kill-window
@@ -96,7 +107,11 @@ let
 
     set  -g mouse             ${boolToStr cfg.mouse}
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
-    setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
+    setw -g clock-mode-style  ${
+      if cfg.clock24
+      then "24"
+      else "12"
+    }
     set  -s escape-time       ${toString cfg.escapeTime}
     set  -g history-limit     ${toString cfg.historyLimit}
   '';
@@ -107,8 +122,9 @@ let
         hasBadPluginName = p: !(hasPrefix "tmuxplugin" (pluginName p));
         badPlugins = filter hasBadPluginName cfg.plugins;
       in {
-        assertion = badPlugins == [ ];
-        message = ''Invalid tmux plugin (not prefixed with "tmuxplugins"): ''
+        assertion = badPlugins == [];
+        message =
+          ''Invalid tmux plugin (not prefixed with "tmuxplugins"): ''
           + concatMapStringsSep ", " pluginName badPlugins;
       })
     ];
@@ -119,15 +135,19 @@ let
       # --------------------------------------------- #
 
       ${(concatMapStringsSep "\n\n" (p: ''
-        # ${pluginName p}
-        # ---------------------
-        ${p.extraConfig or ""}
-        run-shell ${if types.package.check p then p.rtp else p.plugin.rtp}
-      '') cfg.plugins)}
+          # ${pluginName p}
+          # ---------------------
+          ${p.extraConfig or ""}
+          run-shell ${
+            if types.package.check p
+            then p.rtp
+            else p.plugin.rtp
+          }
+        '')
+        cfg.plugins)}
       # ============================================= #
     '';
   };
-
 in {
   options = {
     programs.tmux = {
@@ -191,6 +211,15 @@ in {
         '';
       };
 
+      extraConfigBeforePlugins = mkOption {
+        type = types.lines;
+        default = "";
+        description = ''
+          Additional configuration to add to
+          {file}`tmux.conf` before the plugins.
+        '';
+      };
+
       historyLimit = mkOption {
         default = 2000;
         example = 5000;
@@ -201,7 +230,7 @@ in {
       keyMode = mkOption {
         default = defaultKeyMode;
         example = "vi";
-        type = types.enum [ "emacs" "vi" ];
+        type = types.enum ["emacs" "vi"];
         description = "VI or Emacs style shortcuts.";
       };
 
@@ -295,7 +324,8 @@ in {
 
       plugins = mkOption {
         type = with types;
-          listOf (either package pluginModule) // {
+          listOf (either package pluginModule)
+          // {
             description = "list of plugin packages or submodules";
           };
         description = ''
@@ -303,7 +333,7 @@ in {
           configuration. The sensible plugin, however, is defaulted to
           run at the top of your configuration.
         '';
-        default = [ ];
+        default = [];
         example = literalExpression ''
           with pkgs; [
             tmuxPlugins.cpu
@@ -324,15 +354,20 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge ([
+  config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ cfg.package ]
+      home.packages =
+        [cfg.package]
         ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
         ++ optional cfg.tmuxp.enable pkgs.tmuxp;
     }
 
-    { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
-    { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
+    {xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf;}
+    {xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig;}
+
+    {
+      # xdg.configFile."tmux/tmux.conf".text = mkIf (cfg.extraConfigBeforePlugins != "") (mkBefore cfg.extraConfigBeforePlugins);
+    }
 
     (mkIf cfg.secureSocket {
       home.sessionVariables = {
@@ -340,6 +375,6 @@ in {
       };
     })
 
-    (mkIf (cfg.plugins != [ ]) configPlugins)
-  ]));
+    (mkIf (cfg.plugins != []) configPlugins)
+  ]);
 }

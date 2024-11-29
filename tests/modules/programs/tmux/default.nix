@@ -8,4 +8,5 @@
   tmux-shortcut-without-prefix = ./shortcut-without-prefix.nix;
   tmux-prefix = ./prefix.nix;
   tmux-mouse-enabled = ./mouse-enabled.nix;
+  tmux-extra-config-before-plugins = ./extra-config-before-plugins.nix;
 }
