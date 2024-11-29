@@ -1827,6 +1827,17 @@ in {
           as systemd services.
         '';
       }
+
+      {
+        time = "2024-11-23T13:57:04+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wpaperd'.
+
+          This replaces the existing module, 'programs.wpaperd', and adds a
+          systemd service to ensure its execution.
+        '';
+      }
     ];
   };
 }

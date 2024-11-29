@@ -225,7 +225,6 @@ in import nmtSrc {
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi
-    ./modules/programs/wpaperd
     ./modules/programs/xmobar
     ./modules/programs/yambar
     ./modules/programs/yt-dlp
@@ -297,6 +296,7 @@ in import nmtSrc {
     ./modules/services/window-managers/sway
     ./modules/services/wlsunset
     ./modules/services/wob
+    ./modules/services/wpaperd
     ./modules/services/xsettingsd
     ./modules/systemd
     ./modules/targets-linux
