@@ -152,6 +152,7 @@ let
     ./programs/kodi.nix
     ./programs/kubecolor.nix
     ./programs/lapce.nix
+    ./programs/lazydocker.nix
     ./programs/lazygit.nix
     ./programs/ledger.nix
     ./programs/less.nix
