@@ -99,6 +99,7 @@ in import nmtSrc {
     ./modules/programs/khard
     ./modules/programs/kitty
     ./modules/programs/ledger
+    ./modules/programs/lazydocker
     ./modules/programs/less
     ./modules/programs/lf
     ./modules/programs/lsd
