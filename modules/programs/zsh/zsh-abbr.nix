@@ -9,6 +9,8 @@ in {
     enable =
       mkEnableOption "zsh-abbr - zsh manager for auto-expanding abbreviations";
 
+    package = mkPackageOption pkgs "zsh-abbr" { };
+
     abbreviations = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -27,7 +29,7 @@ in {
   config = mkIf cfg.enable {
     programs.zsh.plugins = [{
       name = "zsh-abbr";
-      src = pkgs.zsh-abbr;
+      src = cfg.package;
       file = "share/zsh/zsh-abbr/zsh-abbr.plugin.zsh";
     }];
 
