@@ -628,4 +628,10 @@
     keys =
       [{ fingerprint = "BC82 4BB5 1656 D144 285E  A0EC D382 C4AF EECE AA90"; }];
   };
+  kpbaks = {
+    name = "Kristoffer Plagborg Bak Sørensen";
+    email = "kristoffer.pbs@gmail.com";
+    github = "kpbaks";
+    githubId = 57013304;
+  };
 }

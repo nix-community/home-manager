@@ -11,7 +11,7 @@ let
   starshipCmd = "${config.home.profileDirectory}/bin/starship";
 
 in {
-  meta.maintainers = [ ];
+  meta.maintainers = [ maintainers.kpbaks ];
 
   options.programs.starship = {
     enable = mkEnableOption "starship";
@@ -21,6 +21,34 @@ in {
       default = pkgs.starship;
       defaultText = literalExpression "pkgs.starship";
       description = "The package to use for the starship binary.";
+    };
+
+    preset = mkOption {
+      # generated with `starship preset --list`
+      type = types.enum [
+        null
+        "bracketed-segments"
+        "gruvbox-rainbow"
+        "jetpack"
+        "nerd-font-symbols"
+        "no-empty-icons"
+        "no-nerd-font"
+        "no-runtime-versions"
+        "pastel-powerline"
+        "plain-text-symbols"
+        "pure-preset"
+        "tokyo-night"
+      ];
+      default = null;
+      example = "jetpack";
+      description = ''
+        The community-submitted configuration preset to use.
+
+        See <https://starship.rs/presets/#presets> for previews
+        of each preset.
+
+        Mutually exclusive with programs.starship.settings
+      '';
     };
 
     settings = mkOption {
@@ -48,6 +76,8 @@ in {
 
         See <https://starship.rs/config/> for the full list
         of options.
+
+        Mutually exclusive with programs.starship.preset
       '';
     };
 
@@ -88,9 +118,25 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."starship.toml" = mkIf (cfg.settings != { }) {
+    warnings = lib.optional (cfg.preset != null && cfg.settings != { })
+      "programs.starship.settings has no effect when programs.starship.preset != null";
+
+    xdg.configFile."starship.toml" = if cfg.preset != null then
+      let
+        starshipGithub = pkgs.fetchFromGitHub {
+          owner = "starship";
+          repo = "starship";
+          rev = "61c860e1293d446d515203ac44055f7bef77d14a";
+          hash = "sha256-pl3aW4zCM6CcYOL0dUwE56aTC7BJdvdRyo/GudvX7fQ=";
+        };
+      in {
+        text = builtins.readFile
+          "${starshipGithub}/docs/public/presets/toml/${cfg.preset}.toml";
+      }
+    else if cfg.settings != { } then {
       source = tomlFormat.generate "starship-config" cfg.settings;
-    };
+    } else
+      { };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" ]]; then
