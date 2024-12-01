@@ -54801,16 +54801,16 @@ TOML value</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  input.keymap = [
-    { exec = &quot;close&quot;; on = [ &quot;&lt;C-q&gt;&quot; ]; }
-    { exec = &quot;close --submit&quot;; on = [ &quot;&lt;Enter&gt;&quot; ]; }
-    { exec = &quot;escape&quot;; on = [ &quot;&lt;Esc&gt;&quot; ]; }
-    { exec = &quot;backspace&quot;; on = [ &quot;&lt;Backspace&gt;&quot; ]; }
+  input.prepend_keymap = [
+    { run = &quot;close&quot;; on = [ &quot;&lt;C-q&gt;&quot; ]; }
+    { run = &quot;close --submit&quot;; on = [ &quot;&lt;Enter&gt;&quot; ]; }
+    { run = &quot;escape&quot;; on = [ &quot;&lt;Esc&gt;&quot; ]; }
+    { run = &quot;backspace&quot;; on = [ &quot;&lt;Backspace&gt;&quot; ]; }
   ];
-  manager.keymap = [
-    { exec = &quot;escape&quot;; on = [ &quot;&lt;Esc&gt;&quot; ]; }
-    { exec = &quot;quit&quot;; on = [ &quot;q&quot; ]; }
-    { exec = &quot;close&quot;; on = [ &quot;&lt;C-q&gt;&quot; ]; }
+  manager.prepend_keymap = [
+    { run = &quot;escape&quot;; on = [ &quot;&lt;Esc&gt;&quot; ]; }
+    { run = &quot;quit&quot;; on = [ &quot;q&quot; ]; }
+    { run = &quot;close&quot;; on = [ &quot;&lt;C-q&gt;&quot; ]; }
   ];
 }
 
