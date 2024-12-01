@@ -39,6 +39,7 @@ in {
 
       nushell = mkIf cfg.enableNushellIntegration {
         extraEnv = ''
+          mkdir ${config.xdg.cacheHome}/nix-your-shell
           ${cfg.package}/bin/nix-your-shell nu | save --force ${config.xdg.cacheHome}/nix-your-shell/init.nu
         '';
 
