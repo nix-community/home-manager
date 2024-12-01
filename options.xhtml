@@ -32720,6 +32720,115 @@ null or attribute sets or lists of strings</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.kubecolor.enable"></a><a class="term" href="options.xhtml#opt-programs.kubecolor.enable"><code class="option">programs.kubecolor.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable kubecolor - Colorize your kubectl output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kubecolor.nix" target="_top">
+&lt;home-manager/modules/programs/kubecolor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.kubecolor.enableAlias"></a><a class="term" href="options.xhtml#opt-programs.kubecolor.enableAlias"><code class="option">programs.kubecolor.enableAlias</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When set to true, it will create an alias for kubectl pointing to
+kubecolor, thus making kubecolor the default kubectl client.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kubecolor.nix" target="_top">
+&lt;home-manager/modules/programs/kubecolor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.kubecolor.package"></a><a class="term" href="options.xhtml#opt-programs.kubecolor.package"><code class="option">programs.kubecolor.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The kubecolor package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.kubecolor</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kubecolor.nix" target="_top">
+&lt;home-manager/modules/programs/kubecolor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.kubecolor.settings"></a><a class="term" href="options.xhtml#opt-programs.kubecolor.settings"><code class="option">programs.kubecolor.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">~/.kube/color.yaml</code> (Linux)
+or <code class="filename">Library/Application Support/kube/color.yaml</code> (Darwin).
+See <a class="link" href="https://kubecolor.github.io/reference/config/"  target="_top">https://kubecolor.github.io/reference/config/</a> for supported
+values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">kubectl = lib.getExe pkgs.kubectl
+preset = &quot;dark&quot;;
+paging = &quot;auto&quot;;
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kubecolor.nix" target="_top">
+&lt;home-manager/modules/programs/kubecolor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.lazygit.enable"></a><a class="term" href="options.xhtml#opt-programs.lazygit.enable"><code class="option">programs.lazygit.enable</code>
   </a>
  </span>
