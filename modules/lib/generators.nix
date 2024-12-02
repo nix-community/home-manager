@@ -143,6 +143,102 @@
       ${concatStringsSep "\n" (mapAttrsToList convertAttributeToKDL attrs)}
     '';
 
+  # https://github.com/ron-rs/ron/blob/master/docs/grammar.md
+  toRON = { }:
+    let
+      inherit (lib)
+        filterAttrs concatStrings concatStringsSep mapAttrsToList boolToString
+        optionalString;
+      inherit (lib.strings) floatToString;
+      inherit (builtins) any hasAttr isAttrs toString typeOf;
+
+      tab = "    ";
+
+      serialize = indentLevel: input:
+        let
+          indent = lib.strings.replicate indentLevel tab;
+          indentNested = indent + tab;
+          serializeNested = v: serialize (indentLevel + 1) v;
+
+          name = input._name or "";
+          suffix = input._suffix or "";
+          value = if isAttrs input && any (attr: hasAttr attr input) [
+            "_name"
+            "_suffix"
+            "_type"
+            "_value"
+          ] then
+            input._value or null
+          else
+            input;
+
+          delimiter = {
+            apostrophe = {
+              open = "'";
+              close = "'";
+            };
+            brace = {
+              open = "{";
+              close = "}";
+            };
+            bracket = {
+              open = "[";
+              close = "]";
+            };
+            none = {
+              open = "";
+              close = "";
+            };
+            parenthesis = {
+              open = "(";
+              close = ")";
+            };
+            quote = {
+              open = ''"'';
+              close = ''"'';
+            };
+          }.${
+              {
+                char = "apostrophe";
+                enum = if isNull value then "none" else "parenthesis";
+                list = if name == "" then "bracket" else "parenthesis";
+                map = "brace";
+                set = if name == "" then "brace" else "parenthesis";
+                string = "quote";
+                struct = "parenthesis";
+                tuple = "parenthesis";
+              }.${input._type or (typeOf value)} or "none"
+            };
+
+          serializationRules = {
+            int = toString;
+            float = floatToString;
+            path = toString;
+            bool = boolToString;
+            string = toString;
+            null = _: "";
+            set = set:
+              lib.pipe set [
+                (mapAttrsToList
+                  (k: v: "${indentNested}${k}: ${serializeNested v}"))
+                (concatStringsSep ("," + "\n"))
+                (v:
+                  optionalString (v != "") "\n" + v
+                  + optionalString (v != "") ("\n" + indent))
+              ];
+            list = list:
+              lib.pipe list [
+                (map (v: "${indentNested}${serializeNested v}"))
+                (concatStringsSep ("," + "\n"))
+                (v:
+                  optionalString (v != "") "\n" + v
+                  + optionalString (v != "") ("\n" + indent))
+              ];
+          };
+        in name + delimiter.open + (serializationRules.${typeOf value} value)
+        + delimiter.close + suffix;
+    in serialize 0;
+
   toSCFG = { }:
     let
       inherit (lib) concatStringsSep mapAttrsToList any;

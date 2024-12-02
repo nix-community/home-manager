@@ -1,0 +1,88 @@
+[
+    {
+        byte: b'0',
+        float_exp: -1.000000e-16,
+        float_frac: .1,
+        float_int: 1000,
+        float_std: 1000.000000,
+        float_suffix: -.1f64,
+        integer: 0,
+        integer_suffix: i8,
+        unsigned_binary: 0b10,
+        unsigned_decimal: 10,
+        unsigned_hexadecimal: 0xFF,
+        unsigned_octal: 0o10
+    },
+    {
+        char: 'a'
+    },
+    {
+        byte_string_raw: br##"Hello, World!"##,
+        byte_string_std: b"Hello, World!",
+        string_escape_ascii: "\'",
+        string_escape_byte: "\x0A",
+        string_escape_unicode: "\u{0A0A}",
+        string_raw: r##"This is a "raw string".
+It can contain quotations or backslashes\!"##,
+        string_std: "Hello, World!"
+    },
+    {
+        boolean: true
+    },
+    {
+        enum_nested: Some(Some(10)),
+        option_none_explicit: None,
+        option_none_implicit: None,
+        option_some: Some(10)
+    },
+    {
+        list: [
+            1,
+            2,
+            3
+        ]
+    },
+    {
+        map_explicit: {
+            a: 1,
+            b: 2,
+            c: 3
+        },
+        map_implicit: {
+            a: 1,
+            b: 2,
+            c: 3
+        }
+    },
+    {
+        tuple: (
+            1,
+            2,
+            3
+        )
+    },
+    {
+        named_struct_explicit: NamedStruct(
+            a: 1,
+            b: 2,
+            c: 3
+        ),
+        named_struct_implicit: NamedStruct(
+            a: 1,
+            b: 2,
+            c: 3
+        ),
+        tuple_struct_explicit: TupleStruct(
+            1,
+            2,
+            3
+        ),
+        tuple_struct_implicit: TupleStruct(
+            1,
+            2,
+            3
+        ),
+        unit_struct: (),
+        unit_struct_ident: MyUnitStruct
+    }
+]
