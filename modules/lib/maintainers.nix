@@ -614,6 +614,12 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  michaelvanstraten = {
+    name = "Michael van Straten";
+    email = "michael@vanstraten.de";
+    github = "michaelvanstraten";
+    githubId = 50352631;
+  };
   joygnu = {
     name = "joygnu";
     email = "contact@joygnu.org";
