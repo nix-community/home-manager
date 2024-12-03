@@ -1,0 +1,62 @@
+name: Update Branches with Upstream
+
+on:
+  schedule:
+    # Runs twice a day: at 12:00 UTC and 00:00 UTC
+    - cron: "0 0,12 * * *"
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  update-release-24-11:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release-24.11 branch
+        uses: actions/checkout@v3
+        with:
+          ref: release-24.11
+
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+      - name: Fetch upstream branches
+        run: |
+          git remote add upstream https://github.com/nix-community/home-manager.git
+          git fetch upstream
+
+      - name: Rebase release-24.11 with upstream release-24.11
+        run: |
+          git checkout release-24.11
+          git rebase upstream/release-24.11
+
+      - name: Push changes to release-24.11
+        run: |
+          git push origin release-24.11 --force
+
+  update-master:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v3
+        with:
+          ref: master
+
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+      - name: Fetch upstream branches
+        run: |
+          git remote add upstream https://github.com/nix-community/home-manager.git
+          git fetch upstream
+
+      - name: Rebase master with upstream master
+        run: |
+          git checkout master
+          git rebase upstream/master
+
+      - name: Push changes to master
+        run: |
+          git push origin master --force
