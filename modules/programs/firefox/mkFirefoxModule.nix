@@ -59,6 +59,7 @@ let
       Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
       IsRelative = 1;
       Default = if profile.isDefault then 1 else 0;
+      ZenAvatarPath = profile.avatarPath;
     }) // {
       General = {
         StartWithLastProfile = 1;
@@ -680,7 +681,15 @@ in {
               [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
             '';
           };
-
+          avatarPath = mkOption {
+            type = types.str;
+            default = "chrome://browser/content/zen-avatars/avatar-56.svg";
+            description = ''
+              Sets ZenAvatarPath in {file}`profiles.ini` under the [Profile] section.
+              Used only by zen-browser. To find all the avatars you can check chrome://browser/content/zen-avatars
+            '';
+            example = "chrome://browser/content/zen-avatars/avatar-56.svg";
+          };
         };
       }));
       default = { };

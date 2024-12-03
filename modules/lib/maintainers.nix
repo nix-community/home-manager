@@ -7,6 +7,12 @@
 # [1] https://github.com/NixOS/nixpkgs/blob/fca0d6e093c82b31103dc0dacc48da2a9b06e24b/maintainers/maintainer-list.nix#LC1
 
 {
+  _0x006e = {
+    name = "Nithin S Varrier";
+    email = "me@ntsv.dev";
+    github = "0x006e";
+    githubId = 14817339;
+  };
   aabccd021 = {
     name = "Muhamad Abdurahman";
     email = "aabccd021@gmail.com";

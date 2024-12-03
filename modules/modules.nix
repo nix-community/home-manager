@@ -1,13 +1,13 @@
-{ pkgs
+{ pkgs,
 
 # Note, this should be "the standard library" + HM extensions.
-, lib
+lib,
 
 # Whether to enable module type checking.
-, check ? true
+check ? true,
 
-  # If disabled, the pkgs attribute passed to this function is used instead.
-, useNixpkgsModule ? true }:
+# If disabled, the pkgs attribute passed to this function is used instead.
+useNixpkgsModule ? true, }:
 
 with lib;
 
@@ -265,6 +265,7 @@ let
     ./programs/yt-dlp.nix
     ./programs/z-lua.nix
     ./programs/zathura.nix
+    ./programs/zen.nix
     ./programs/zed-editor.nix
     ./programs/zellij.nix
     ./programs/zk.nix
