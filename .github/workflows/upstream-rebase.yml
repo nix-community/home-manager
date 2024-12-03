@@ -2,6 +2,13 @@ name: Update Branches with Upstream
 
 on:
   push:
+    branches:
+    - master
+    - updator
+  pull_request:
+    branches:
+    - master
+    - updator
   schedule:
     # Runs twice a day: at 12:00 UTC and 00:00 UTC
     - cron: "0 0,12 * * *"
