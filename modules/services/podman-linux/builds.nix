@@ -15,7 +15,6 @@ let
           ImageTag = ([ "homemanager/${name}" ] ++ buildDef.tags);
           Label = (buildDef.labels // { "nix.home-manager.managed" = true; });
           PodmanArgs = buildDef.extraPodmanArgs;
-          Pull = buildDef.pull;
           SetWorkingDirectory = buildDef.workingDirectory;
           TLSVerify = buildDef.tlsVerify;
         };
@@ -140,13 +139,6 @@ in let
           some-label = "somelabel";
         };
         description = "The labels to apply to the build.";
-      };
-
-      pull = mkOption {
-        type = with types; nullOr str;
-        default = null;
-        description =
-          ''Pull image policy. ("always"|"missing"|"never"|"newer")'';
       };
 
       tlsVerify = mkOption {
