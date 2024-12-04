@@ -679,7 +679,8 @@ in {
     xdg.configFile = mkMerge [
       { "kak/kakrc".source = configFile; }
       (mkIf (cfg.colorSchemePackage != null) {
-        "kak/colors/${cfg.colorSchemePackage.name}" = cfg.colorSchemePackage;
+        "kak/colors/${cfg.colorSchemePackage.name}".source =
+          cfg.colorSchemePackage;
       })
     ];
   };
