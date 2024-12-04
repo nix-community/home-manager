@@ -99,6 +99,6 @@ in {
         '';
       };
 
-      xsession.initExtra = xrdbMerge;
+      xsession.profileExtra = xrdbMerge;
     };
 }
