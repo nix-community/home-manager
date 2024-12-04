@@ -56641,7 +56641,8 @@ null or string</p>
 The strategies in the array are tried successively until a suggestion is found.
 There are currently three built-in strategies to choose from:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><code class="literal">history</code>: Chooses the most recent match from history.</p></li><li class="listitem"><p><code class="literal">completion</code>: Chooses a suggestion based on what tab-completion would suggest. (requires <code class="literal">zpty</code> module)</p></li><li class="listitem"><p><code class="literal">match_prev_cmd</code>: Like <code class="literal">history</code>, but chooses the most recent match whose preceding history item matches
 the most recently executed command. Note that this strategy won’t work as expected with ZSH options that
-don’t preserve the history order such as <code class="literal">HIST_IGNORE_ALL_DUPS</code> or <code class="literal">HIST_EXPIRE_DUPS_FIRST</code>.</p></li></ul></div>
+don’t preserve the history order such as <code class="literal">HIST_IGNORE_ALL_DUPS</code> or <code class="literal">HIST_EXPIRE_DUPS_FIRST</code>.</p></li></ul></div><p>Setting the option to an empty list <code class="literal">[]</code> will make ZSH_AUTOSUGGESTION_STRATEGY not be set automatically,
+allowing the variable to be declared in <code class="option">programs.zsh.localVariables</code> or <code class="option">programs.zsh.sessionVariables</code></p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 list of (one of “history”, “completion”, “match_prev_cmd”)</p>
