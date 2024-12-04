@@ -18,6 +18,7 @@
       local manifestFile="${config.xdg.configHome}/podman/$2"
       local extraListCommands="''${3:-}"
       [[ $resourceType = "container" ]] && extraListCommands+=" -a"
+      [[ $resourceType = "volume" ]] && extraListCommands+=" --filter 'label=nix.home-manager.preserve=false'"
 
       [ ! -f "$manifestFile" ] && VERBOSE_ENABLED && echo "Manifest does not exist: $manifestFile" && return 0
 

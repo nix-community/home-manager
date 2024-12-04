@@ -13,7 +13,7 @@ Environment=PATH=/run/wrappers/bin:/usr/bin:/bin:/usr/sbin:/sbin:/nix/store/0000
 ExecStartPre=/nix/store/00000000000000000000000000000000-await-podman-unshare
 RemainAfterExit=yes
 TimeoutStartSec=15
-ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman volume create --ignore --opt copy --opt device=tmpfs --opt type=tmpfs --label nix.home-manager.managed=true my-vol
+ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman volume create --ignore --opt copy --opt device=tmpfs --opt type=tmpfs --label nix.home-manager.managed=true --label nix.home-manager.preserve=false my-vol
 SyslogIdentifier=%N
 Type=oneshot
 
@@ -28,5 +28,6 @@ RequiresMountsFor=%t/containers
 Copy=true
 Device=tmpfs
 Label=nix.home-manager.managed=true
+Label=nix.home-manager.preserve=false
 Type=tmpfs
 VolumeName=my-vol
