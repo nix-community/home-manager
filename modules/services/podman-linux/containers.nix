@@ -65,7 +65,7 @@ let
           if (builtins.hasAttr containerDef.image cfg.images) then
             cfg.images."${containerDef.image}".image
           else if (builtins.hasAttr containerDef.image cfg.builds) then
-            "homemanager/${containerDef.image}"
+            "localhost/homemanager/${containerDef.image}"
           else
             containerDef.image;
 
