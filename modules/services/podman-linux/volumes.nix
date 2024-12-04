@@ -46,7 +46,10 @@ let
           Driver = volumeDef.driver;
           Group = volumeDef.group;
           Image = volumeDef.image;
-          Label = volumeDef.labels // { "nix.home-manager.managed" = true; };
+          Label = volumeDef.labels // {
+            "nix.home-manager.managed" = true;
+            "nix.home-manager.preserve" = volumeDef.preserve;
+          };
           PodmanArgs = volumeDef.extraPodmanArgs;
           Type = volumeDef.type;
           User = volumeDef.user;
@@ -150,6 +153,15 @@ in let
           some-label = "somelabel";
         };
         description = "The labels to apply to the volume.";
+      };
+
+      preserve = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether the volume should be preserved if it is removed from the configuration.
+          Setting this to false will cause the volume to be deleted if the volume is removed from the configuration
+        '';
       };
 
       type = mkOption {

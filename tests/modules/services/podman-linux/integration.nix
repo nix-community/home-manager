@@ -25,6 +25,7 @@ in {
     };
     volumes."my-vol" = {
       device = "tmpfs";
+      preserve = false;
       type = "tmpfs";
     };
   };
