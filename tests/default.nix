@@ -98,6 +98,7 @@ in import nmtSrc {
     ./modules/programs/khal
     ./modules/programs/khard
     ./modules/programs/kitty
+    ./modules/programs/kubecolor
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lf
@@ -118,6 +119,7 @@ in import nmtSrc {
     ./modules/programs/newsboat
     ./modules/programs/nheko
     ./modules/programs/nix-index
+    ./modules/programs/nix-your-shell
     ./modules/programs/nnn
     ./modules/programs/nushell
     ./modules/programs/oh-my-posh

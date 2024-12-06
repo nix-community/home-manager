@@ -23,7 +23,8 @@ let
     name = "mopidy-with-extensions-${pkgs.mopidy.version}";
     paths = closePropagation cfg.extensionPackages;
     pathsToLink = [ "/${pkgs.mopidyPackages.python.sitePackages}" ];
-    buildInputs = [ pkgs.makeWrapper ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    ignoreCollisions = true;
     postBuild = ''
       makeWrapper ${pkgs.mopidy}/bin/mopidy $out/bin/mopidy \
         --prefix PYTHONPATH : $out/${pkgs.mopidyPackages.python.sitePackages}

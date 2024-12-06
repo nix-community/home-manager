@@ -1827,6 +1827,40 @@ in {
           as systemd services.
         '';
       }
+
+      {
+        time = "2024-12-01T19:17:40+00:00";
+        message = ''
+          A new module is available: 'programs.nix-your-shell'.
+
+          nix-your-shell is a wrapper for `nix develop` or `nix-shell` to retain
+          the same shell inside the new environment.
+        '';
+      }
+
+      {
+        time = "2024-12-01T19:34:04+00:00";
+        message = ''
+          A new module is available: 'programs.kubecolor'.
+
+          Kubecolor is a kubectl wrapper used to add colors to your kubectl
+          output.
+        '';
+      }
+
+      {
+        time = "2024-12-04T20:00:00+00:00";
+        condition = let
+          sCfg = config.programs.starship;
+          fCfg = config.programs.fish;
+        in sCfg.enable && sCfg.enableFishIntegration && fCfg.enable;
+        message = ''
+          A new option 'programs.starship.enableInteractive' is available for
+          the Fish shell that only enables starship if the shell is interactive.
+
+          Some plugins require this to be set to 'false' to function correctly.
+        '';
+      }
     ];
   };
 }

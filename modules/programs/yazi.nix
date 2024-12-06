@@ -77,16 +77,16 @@ in {
       default = { };
       example = literalExpression ''
         {
-          input.keymap = [
-            { exec = "close"; on = [ "<C-q>" ]; }
-            { exec = "close --submit"; on = [ "<Enter>" ]; }
-            { exec = "escape"; on = [ "<Esc>" ]; }
-            { exec = "backspace"; on = [ "<Backspace>" ]; }
+          input.prepend_keymap = [
+            { run = "close"; on = [ "<C-q>" ]; }
+            { run = "close --submit"; on = [ "<Enter>" ]; }
+            { run = "escape"; on = [ "<Esc>" ]; }
+            { run = "backspace"; on = [ "<Backspace>" ]; }
           ];
-          manager.keymap = [
-            { exec = "escape"; on = [ "<Esc>" ]; }
-            { exec = "quit"; on = [ "q" ]; }
-            { exec = "close"; on = [ "<C-q>" ]; }
+          manager.prepend_keymap = [
+            { run = "escape"; on = [ "<Esc>" ]; }
+            { run = "quit"; on = [ "q" ]; }
+            { run = "close"; on = [ "<C-q>" ]; }
           ];
         }
       '';

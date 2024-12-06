@@ -3,7 +3,7 @@
 {
   home.username = "alice";
   home.homeDirectory = "/home/alice";
-  home.stateVersion = "24.05";
+  home.stateVersion = "24.11";
   home.packages = [ pkgs.hello ];
   home.file.test.text = "test";
   home.sessionVariables.EDITOR = "emacs";
