@@ -9,13 +9,21 @@ with lib;
       font = "Droid Sans Mono 14";
       terminal = "/some/path";
       cycle = false;
+      modes = [
+        "drun"
+        "emoji"
+        "ssh"
+        {
+          name = "foo";
+          path = "bar";
+        }
+      ];
       window = {
         background = "background";
         border = "border";
         separator = "separator";
       };
       extraConfig = {
-        modi = "drun,emoji,ssh";
         kb-primary-paste = "Control+V,Shift+Insert";
         kb-secondary-paste = "Control+v,Insert";
       };
