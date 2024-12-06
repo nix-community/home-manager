@@ -475,6 +475,14 @@ in
       '';
     };
 
+    home.buildEnvWithNoChroot = mkEnableOption ''
+      Sets <code>__noChroot = true</code> on select <code>buildEnv</code>
+      derivations that assemble large numbers of paths, as well the activation
+      script derivations. This may be used to avoid sandbox failures on Darwin,
+      see https://github.com/NixOS/nix/issues/4119 and the <code>sandbox</code>
+      option in <command>man nix.conf</command>.
+    '';
+
     home.preferXdgDirectories = mkEnableOption "" // {
       description = ''
         Whether to make programs use XDG directories whenever supported.
@@ -702,7 +710,7 @@ in
         )
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
-        activationScript = pkgs.writeShellScript "activation-script" ''
+        activationScript = (pkgs.writeShellScript "activation-script" ''
           set -eu
           set -o pipefail
 
@@ -719,9 +727,11 @@ in
           fi
 
           ${activationCmds}
-        '';
+        '').overrideAttrs (old: {
+          __noChroot = cfg.buildEnvWithNoChroot;
+        });
       in
-        pkgs.runCommand
+        (pkgs.runCommand
           "home-manager-generation"
           {
             preferLocalBuild = true;
@@ -743,9 +753,11 @@ in
             ln -s ${cfg.path} $out/home-path
 
             ${cfg.extraBuilderCommands}
-          '';
+          '').overrideAttrs (old: {
+            __noChroot = cfg.buildEnvWithNoChroot;
+          });
 
-    home.path = pkgs.buildEnv {
+    home.path = (pkgs.buildEnv {
       name = "home-manager-path";
 
       paths = cfg.packages;
@@ -756,6 +768,8 @@ in
       meta = {
         description = "Environment of packages installed through home-manager";
       };
-    };
+    }).overrideAttrs (old: {
+      __noChroot = cfg.buildEnvWithNoChroot;
+    });
   };
 }
