@@ -39,7 +39,8 @@ let
       };
     });
 in {
-  meta.maintainers = [ maintainers.Philipp-M maintainers.joaquintrinanes ];
+  meta.maintainers =
+    [ maintainers.Philipp-M maintainers.joaquintrinanes maintainers.aidalgol ];
 
   imports = [
     (mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
@@ -134,6 +135,15 @@ in {
       '';
     };
 
+    plugins = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = lib.literalExpression "[ pkgs.nushellPlugins.formats ]";
+      description = ''
+        A list of nushell plugins to write to the plugin registry file.
+      '';
+    };
+
     shellAliases = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -202,6 +212,20 @@ in {
           (mkIf (cfg.loginFile != null) cfg.loginFile.text)
           cfg.extraLogin
         ];
+      })
+
+      (let
+        msgPackz = pkgs.runCommand "nushellMsgPackz" { } ''
+          mkdir -p "$out"
+          ${lib.getExe cfg.package} \
+            --plugin-config "$out/plugin.msgpackz" \
+            --commands '${
+              concatStringsSep "; "
+              (map (plugin: "plugin add ${lib.getExe plugin}") cfg.plugins)
+            }'
+        '';
+      in mkIf (cfg.plugins != [ ]) {
+        "${configDir}/plugin.msgpackz".source = "${msgPackz}/plugin.msgpackz";
       })
     ];
   };
