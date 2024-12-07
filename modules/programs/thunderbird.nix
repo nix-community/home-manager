@@ -71,6 +71,8 @@ let
       "mail.identity.id_${id}.openpgp_key_id" = account.gpg.key;
       "mail.identity.id_${id}.protectSubject" = true;
       "mail.identity.id_${id}.sign_mail" = account.gpg.signByDefault;
+    } // optionalAttrs (account.smtp != null) {
+      "mail.identity.id_${id}.smtpServer" = "smtp_${account.id}";
     } // account.thunderbird.perIdentitySettings id;
 
   toThunderbirdAccount = account: profile:
@@ -103,7 +105,6 @@ let
       "mail.server.server_${id}.type" = "imap";
       "mail.server.server_${id}.userName" = account.userName;
     } // optionalAttrs (account.smtp != null) {
-      "mail.identity.id_${id}.smtpServer" = "smtp_${id}";
       "mail.smtpserver.smtp_${id}.authMethod" = 3;
       "mail.smtpserver.smtp_${id}.hostname" = account.smtp.host;
       "mail.smtpserver.smtp_${id}.port" =
