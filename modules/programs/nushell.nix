@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
+  inherit (lib) types;
+  inherit (lib.hm.nushell) toNushell;
   cfg = config.programs.nushell;
 
   configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
@@ -14,13 +12,13 @@ let
   linesOrSource = name:
     types.submodule ({ config, ... }: {
       options = {
-        text = mkOption {
+        text = lib.mkOption {
           type = types.lines;
           default = if config.source != null then
             builtins.readFile config.source
           else
             "";
-          defaultText = literalExpression
+          defaultText = lib.literalExpression
             "if source is defined, the content of source, otherwise empty";
           description = ''
             Text of the nushell {file}`${name}` file.
@@ -28,7 +26,7 @@ let
           '';
         };
 
-        source = mkOption {
+        source = lib.mkOption {
           type = types.nullOr types.path;
           default = null;
           description = ''
@@ -39,11 +37,14 @@ let
       };
     });
 in {
-  meta.maintainers =
-    [ maintainers.Philipp-M maintainers.joaquintrinanes maintainers.aidalgol ];
+  meta.maintainers = with lib.maintainers; [
+    Philipp-M
+    joaquintrinanes
+    aidalgol
+  ];
 
   imports = [
-    (mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
+    (lib.mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
       Please use
 
         'programs.nushell.configFile' and 'programs.nushell.envFile'
@@ -53,19 +54,14 @@ in {
   ];
 
   options.programs.nushell = {
-    enable = mkEnableOption "nushell";
+    enable = lib.mkEnableOption "nushell";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.nushell;
-      defaultText = literalExpression "pkgs.nushell";
-      description = "The package to use for nushell.";
-    };
+    package = lib.mkPackageOption pkgs "nushell" { };
 
-    configFile = mkOption {
+    configFile = lib.mkOption {
       type = types.nullOr (linesOrSource "config.nu");
       default = null;
-      example = literalExpression ''
+      example = lib.literalExpression ''
         { text = '''
             let $config = {
               filesize_metric: false
@@ -82,7 +78,7 @@ in {
       '';
     };
 
-    envFile = mkOption {
+    envFile = lib.mkOption {
       type = types.nullOr (linesOrSource "env.nu");
       default = null;
       example = ''
@@ -95,7 +91,7 @@ in {
       '';
     };
 
-    loginFile = mkOption {
+    loginFile = lib.mkOption {
       type = types.nullOr (linesOrSource "login.nu");
       default = null;
       example = ''
@@ -111,7 +107,7 @@ in {
       '';
     };
 
-    extraConfig = mkOption {
+    extraConfig = lib.mkOption {
       type = types.lines;
       default = "";
       description = ''
@@ -119,7 +115,7 @@ in {
       '';
     };
 
-    extraEnv = mkOption {
+    extraEnv = lib.mkOption {
       type = types.lines;
       default = "";
       description = ''
@@ -127,7 +123,7 @@ in {
       '';
     };
 
-    extraLogin = mkOption {
+    extraLogin = lib.mkOption {
       type = types.lines;
       default = "";
       description = ''
@@ -135,7 +131,7 @@ in {
       '';
     };
 
-    plugins = mkOption {
+    plugins = lib.mkOption {
       type = types.listOf types.package;
       default = [ ];
       example = lib.literalExpression "[ pkgs.nushellPlugins.formats ]";
@@ -144,7 +140,7 @@ in {
       '';
     };
 
-    shellAliases = mkOption {
+    shellAliases = lib.mkOption {
       type = types.attrsOf types.str;
       default = { };
       example = { ll = "ls -l"; };
@@ -154,10 +150,10 @@ in {
       '';
     };
 
-    environmentVariables = mkOption {
-      type = types.attrsOf hm.types.nushellValue;
+    environmentVariables = lib.mkOption {
+      type = types.attrsOf lib.hm.types.nushellValue;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           FOO = "BAR";
           LIST_VALUE = [ "foo" "bar" ];
@@ -177,19 +173,19 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file = mkMerge [
+    home.file = lib.mkMerge [
       (let
         writeConfig = cfg.configFile != null || cfg.extraConfig != ""
           || aliasesStr != "";
 
-        aliasesStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
-      in mkIf writeConfig {
-        "${configDir}/config.nu".text = mkMerge [
-          (mkIf (cfg.configFile != null) cfg.configFile.text)
+        aliasesStr = lib.concatLines
+          (lib.mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
+      in lib.mkIf writeConfig {
+        "${configDir}/config.nu".text = lib.mkMerge [
+          (lib.mkIf (cfg.configFile != null) cfg.configFile.text)
           cfg.extraConfig
           aliasesStr
         ];
@@ -198,18 +194,18 @@ in {
       (let
         hasEnvVars = cfg.environmentVariables != { };
         envVarsStr = ''
-          load-env ${hm.nushell.toNushell { } cfg.environmentVariables}
+          load-env ${toNushell { } cfg.environmentVariables}
         '';
-      in mkIf (cfg.envFile != null || cfg.extraEnv != "" || hasEnvVars) {
-        "${configDir}/env.nu".text = mkMerge [
-          (mkIf (cfg.envFile != null) cfg.envFile.text)
+      in lib.mkIf (cfg.envFile != null || cfg.extraEnv != "" || hasEnvVars) {
+        "${configDir}/env.nu".text = lib.mkMerge [
+          (lib.mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
           envVarsStr
         ];
       })
-      (mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
-        "${configDir}/login.nu".text = mkMerge [
-          (mkIf (cfg.loginFile != null) cfg.loginFile.text)
+      (lib.mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
+        "${configDir}/login.nu".text = lib.mkMerge [
+          (lib.mkIf (cfg.loginFile != null) cfg.loginFile.text)
           cfg.extraLogin
         ];
       })
@@ -220,11 +216,11 @@ in {
           ${lib.getExe cfg.package} \
             --plugin-config "$out/plugin.msgpackz" \
             --commands '${
-              concatStringsSep "; "
+              lib.concatStringsSep "; "
               (map (plugin: "plugin add ${lib.getExe plugin}") cfg.plugins)
             }'
         '';
-      in mkIf (cfg.plugins != [ ]) {
+      in lib.mkIf (cfg.plugins != [ ]) {
         "${configDir}/plugin.msgpackz".source = "${msgPackz}/plugin.msgpackz";
       })
     ];
