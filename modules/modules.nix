@@ -402,6 +402,7 @@ let
     ./services/window-managers/i3-sway/swaynag.nix
     ./services/window-managers/river.nix
     ./services/window-managers/spectrwm.nix
+    ./services/window-managers/wayfire.nix
     ./services/window-managers/xmonad.nix
     ./services/wlsunset.nix
     ./services/wob.nix
