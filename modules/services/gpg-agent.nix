@@ -235,15 +235,12 @@ in {
         example = literalExpression "pkgs.pinentry-gnome3";
         default = null;
         description = ''
-          Which pinentry interface to use. If not
-          `null`, it sets
-          {option}`pinentry-program` in
-          {file}`gpg-agent.conf`. Beware that
-          `pinentry-gnome3` may not work on non-Gnome
-          systems. You can fix it by adding the following to your
-          system configuration:
+          Which pinentry interface to use. If not `null`, it sets
+          {option}`pinentry-program` in {file}`gpg-agent.conf`. Beware that
+          `pinentry-gnome3` may not work on non-GNOME systems. You can fix it by
+          adding the following to your configuration:
           ```nix
-          services.dbus.packages = [ pkgs.gcr ];
+          home.packages = [ pkgs.gcr ];
           ```
         '';
       };
