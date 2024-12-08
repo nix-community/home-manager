@@ -219,6 +219,9 @@ in {
           description = ''
             Enable the automatic {command}`git maintenance`.
 
+            If you have ssh remotes, set {option}`programs.git.package` to a
+            git version with SSH support (eg: `pkgs.gitFull`)
+
             See <https://git-scm.com/docs/git-maintenance>.
           '';
         };
