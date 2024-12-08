@@ -5,7 +5,7 @@
     enable = true;
 
     configFile.text = ''
-      let $config = {
+      let config = {
         filesize_metric: false
         table_mode: rounded
         use_ls_colors: true
@@ -28,6 +28,13 @@
     shellAliases = {
       "lsname" = "(ls | get name)";
       "ll" = "ls -a";
+    };
+
+    settings = {
+      show_banner = false;
+      display_errors.exit_code = false;
+      hooks.pre_execution =
+        [ (lib.hm.nushell.mkNushellInline ''{|| "pre_execution hook"}'') ];
     };
 
     environmentVariables = {
