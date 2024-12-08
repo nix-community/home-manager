@@ -55,6 +55,7 @@ in {
           }
         ];
         signing = {
+          gpgFormat = "ssh";
           gpgPath = "path-to-gpg";
           key = "00112233445566778899AABBCCDDEEFF";
           signByDefault = true;
