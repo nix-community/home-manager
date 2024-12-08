@@ -239,11 +239,11 @@ in {
           `null`, it sets
           {option}`pinentry-program` in
           {file}`gpg-agent.conf`. Beware that
-          `pinentry-gnome3` may not work on non-Gnome
-          systems. You can fix it by adding the following to your
-          system configuration:
+          `pinentry-gnome3` may not work on non-GNOME
+          systems. You can fix it by adding the following
+          to your configuration:
           ```nix
-          services.dbus.packages = [ pkgs.gcr ];
+          home.packages = [ pkgs.gcr ];
           ```
         '';
       };
