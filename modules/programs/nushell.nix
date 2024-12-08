@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   inherit (lib) types;
-  inherit (lib.hm.nushell) toNushell;
+  inherit (lib.hm.nushell) isNushellInline toNushell;
   cfg = config.programs.nushell;
 
   configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
@@ -41,16 +41,6 @@ in {
     Philipp-M
     joaquintrinanes
     aidalgol
-  ];
-
-  imports = [
-    (lib.mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
-      Please use
-
-        'programs.nushell.configFile' and 'programs.nushell.envFile'
-
-      instead.
-    '')
   ];
 
   options.programs.nushell = {
@@ -142,6 +132,35 @@ in {
       '';
     };
 
+    settings = lib.mkOption {
+      type = types.attrsOf lib.hm.types.nushellValue;
+      default = { };
+      example = {
+        show_banner = false;
+        history.format = "sqlite";
+      };
+      description = ''
+        Nushell settings. These will be flattened and assigned one by one to `$env.config` to avoid overwriting the default or existing options.
+
+        For example:
+        ```nix
+        {
+          show_banner = false;
+          completions.external = {
+            enable = true;
+            max_results = 200;
+          };
+        }
+        ```
+        becomes:
+        ```nushell
+        $env.config.completions.external.enable = true
+        $env.config.completions.external.max_results = 200
+        $env.config.show_banner = false
+        ```
+      '';
+    };
+
     shellAliases = lib.mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -180,12 +199,28 @@ in {
     home.file = lib.mkMerge [
       (let
         writeConfig = cfg.configFile != null || cfg.extraConfig != ""
-          || aliasesStr != "";
+          || aliasesStr != "" || cfg.settings != { };
 
         aliasesStr = lib.concatLines
           (lib.mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
       in lib.mkIf writeConfig {
         "${configDir}/config.nu".text = lib.mkMerge [
+          (let
+            flattenSettings = let
+              joinDot = a: b: "${if a == "" then "" else "${a}."}${b}";
+              unravel = prefix: value:
+                if lib.isAttrs value && !isNushellInline value then
+                  lib.concatMap (key: unravel (joinDot prefix key) value.${key})
+                  (builtins.attrNames value)
+                else
+                  [ (lib.nameValuePair prefix value) ];
+            in unravel "";
+            mkLine = { name, value }: ''
+              $env.config.${name} = ${toNushell { } value}
+            '';
+            settingsLines =
+              lib.concatMapStrings mkLine (flattenSettings cfg.settings);
+          in lib.mkIf (cfg.settings != { }) settingsLines)
           (lib.mkIf (cfg.configFile != null) cfg.configFile.text)
           cfg.extraConfig
           aliasesStr
