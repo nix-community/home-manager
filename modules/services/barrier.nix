@@ -63,7 +63,7 @@ in {
     systemd.user.services.barrierc = {
       Unit = {
         Description = "Barrier Client daemon";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
       Install.WantedBy = [ "graphical-session.target" ];

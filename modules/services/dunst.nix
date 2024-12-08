@@ -180,7 +180,7 @@ in {
       systemd.user.services.dunst = {
         Unit = {
           Description = "Dunst notification daemon";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 

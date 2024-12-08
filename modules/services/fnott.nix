@@ -88,7 +88,7 @@ in {
       Unit = {
         Description = "Fnott notification daemon";
         Documentation = "man:fnott(1)";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
