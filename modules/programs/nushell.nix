@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   inherit (lib) types;
-  inherit (lib.hm.nushell) toNushell;
+  inherit (lib.hm.nushell) isNushellInline toNushell;
   cfg = config.programs.nushell;
 
   configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
@@ -39,16 +39,6 @@ let
 in {
   meta.maintainers =
     [ lib.maintainers.Philipp-M lib.maintainers.joaquintrinanes ];
-
-  imports = [
-    (lib.mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
-      Please use
-
-        'programs.nushell.configFile' and 'programs.nushell.envFile'
-
-      instead.
-    '')
-  ];
 
   options.programs.nushell = {
     enable = lib.mkEnableOption "nushell";
@@ -128,6 +118,35 @@ in {
       '';
     };
 
+    settings = lib.mkOption {
+      type = types.attrsOf lib.hm.types.nushellValue;
+      default = { };
+      description = ''
+        Nushell settings. These will be flattened and assigned one by one to `$env.config` to avoid overwriting the default or existing options.
+
+        For example:
+        ```nix
+        {
+          show_banner = false;
+          completions.external = {
+            enable = true;
+            max_results = 200;
+          };
+        }
+        ```
+        becomes:
+        ```nushell
+        $env.config.completions.external.enable = true
+        $env.config.completions.external.max_results = 200
+        $env.config.show_banner = false
+        ```
+      '';
+      example = {
+        show_banner = false;
+        history.format = "sqlite";
+      };
+    };
+
     shellAliases = lib.mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -167,13 +186,29 @@ in {
     home.file = lib.mkMerge [
       (let
         writeConfig = cfg.configFile != null || cfg.extraConfig != ""
-          || aliasesStr != "";
+          || aliasesStr != "" || cfg.settings != { };
 
         aliasesStr = lib.concatLines
           (lib.mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
       in lib.mkIf writeConfig {
         "${configDir}/config.nu".text = lib.mkMerge [
           (lib.mkIf (cfg.configFile != null) cfg.configFile.text)
+          (let
+            flattenSettings = settings:
+              let
+                unravel = prefixes: value:
+                  if (lib.isAttrs value && !isNushellInline value) then
+                    lib.flatten
+                    (map (key: unravel (prefixes ++ [ key ]) value.${key})
+                      (builtins.attrNames value))
+                  else
+                    lib.nameValuePair (lib.concatStringsSep "." prefixes) value;
+              in lib.listToAttrs (unravel [ ] settings);
+
+            flattenedSettings = flattenSettings cfg.settings;
+          in lib.mkIf (cfg.settings != { }) (lib.concatLines (lib.mapAttrsToList
+            (key: value: "$env.config.${key} = ${toNushell { } value}")
+            flattenedSettings)))
           cfg.extraConfig
           aliasesStr
         ];
