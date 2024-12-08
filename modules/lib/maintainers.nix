@@ -79,12 +79,6 @@
     github = "considerate";
     githubId = 217918;
   };
-  cvoges12 = {
-    name = "Clayton Voges";
-    email = "38054771+cvoges12@users.noreply.github.com";
-    github = "cvoges12";
-    githubId = 38054771;
-  };
   danjujan = {
     name = "Jan Schmitz";
     email = "44864658+danjujan@users.noreply.github.com";
