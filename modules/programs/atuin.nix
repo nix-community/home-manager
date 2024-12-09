@@ -195,11 +195,16 @@ in {
           };
         };
 
-        systemd.user.sockets.atuin-daemon = {
+        systemd.user.sockets.atuin-daemon = let
+          socket_dir = if versionAtLeast cfg.package.version "18.4.0" then
+            "%t"
+          else
+            "%D/atuin";
+        in {
           Unit = { Description = "Atuin daemon socket"; };
           Install = { WantedBy = [ "sockets.target" ]; };
           Socket = {
-            ListenStream = "%D/atuin/atuin.sock";
+            ListenStream = "${socket_dir}/atuin.sock";
             SocketMode = "0600";
             RemoveOnStop = true;
           };
