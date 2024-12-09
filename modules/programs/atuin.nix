@@ -199,7 +199,7 @@ in {
           Unit = { Description = "Atuin daemon socket"; };
           Install = { WantedBy = [ "sockets.target" ]; };
           Socket = {
-            ListenStream = "%h/.local/share/atuin/atuin.sock";
+            ListenStream = "%D/atuin/atuin.sock";
             SocketMode = "0600";
             RemoveOnStop = true;
           };
