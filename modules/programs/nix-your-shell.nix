@@ -27,20 +27,29 @@ in {
     enableZshIntegration = mkEnableOption "Zsh integration" // {
       default = true;
     };
+
+    enableNom = mkEnableOption "nom (nix-output-monitor) integration";
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = [ cfg.package ]
+      ++ (optionals cfg.enableNom [ pkgs.nix-output-monitor ]);
 
-    programs = {
+    programs = let
+      argsForShell = shell:
+        concatStringsSep " "
+        ([ ] ++ (optional cfg.enableNom "--nom") ++ [ "${shell}" ]);
+    in {
       fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-        ${cfg.package}/bin/nix-your-shell fish | source
+        ${cfg.package}/bin/nix-your-shell ${argsForShell "fish"} | source
       '';
 
       nushell = mkIf cfg.enableNushellIntegration {
         extraEnv = ''
           mkdir ${config.xdg.cacheHome}/nix-your-shell
-          ${cfg.package}/bin/nix-your-shell nu | save --force ${config.xdg.cacheHome}/nix-your-shell/init.nu
+          ${cfg.package}/bin/nix-your-shell ${
+            argsForShell "nu"
+          } | save --force ${config.xdg.cacheHome}/nix-your-shell/init.nu
         '';
 
         extraConfig = ''
@@ -49,7 +58,9 @@ in {
       };
 
       zsh.initExtra = mkIf cfg.enableZshIntegration ''
-        ${cfg.package}/bin/nix-your-shell zsh | source /dev/stdin
+        ${cfg.package}/bin/nix-your-shell ${
+          argsForShell "zsh"
+        } | source /dev/stdin
       '';
     };
   };
