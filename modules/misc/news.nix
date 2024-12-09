@@ -103,6 +103,14 @@ in {
     #     date -u +'%Y-%m-%dT%H:%M:%S+00:00'
     news.entries = [
       {
+        time = "2024-12-07T06:13:54+00:00";
+        message = ''
+          The module 'programs.nushell' can now manage the Nushell plugin
+          registry with the option 'programs.nushell.plugins'.
+        '';
+      }
+
+      {
         time = "2021-06-02T04:24:10+00:00";
         condition = hostPlatform.isLinux;
         message = ''
