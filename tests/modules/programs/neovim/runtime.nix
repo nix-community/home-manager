@@ -20,6 +20,17 @@ with lib;
             };
           }
         ];
+        extraWrapperArgs = let buildDeps = with pkgs; [ stdenv.cc.cc zlib ];
+        in [
+          "--suffix"
+          "LIBRARY_PATH"
+          ":"
+          "${lib.makeLibraryPath buildDeps}"
+          "--suffix"
+          "PKG_CONFIG_PATH"
+          ":"
+          "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" buildDeps}"
+        ];
       }
       {
         extraPython3Packages = ps: with ps; [ jedi pynvim ];
@@ -33,7 +44,10 @@ with lib;
 
     nmt.script = ''
       ftplugin="home-files/.config/nvim/after/ftplugin/c.vim"
+      nvimbin="home-path/bin/nvim"
       assertFileExists "$ftplugin"
+      assertFileRegex "$nvimbin" 'LIBRARY_PATH'
+      assertFileRegex "$nvimbin" 'PKG_CONFIG_PATH'
     '';
   };
 }

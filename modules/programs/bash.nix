@@ -29,6 +29,8 @@ in {
     programs.bash = {
       enable = mkEnableOption "GNU Bourne-Again SHell";
 
+      package = mkPackageOption pkgs "bash" { default = "bashInteractive"; };
+
       enableCompletion = mkOption {
         type = types.bool;
         default = true;
@@ -67,8 +69,8 @@ in {
       };
 
       historyControl = mkOption {
-        type =
-          types.listOf (types.enum [ "erasedups" "ignoredups" "ignorespace" ]);
+        type = types.listOf
+          (types.enum [ "erasedups" "ignoredups" "ignorespace" "ignoreboth" ]);
         default = [ ];
         description = "Controlling how commands are saved on the history list.";
       };
@@ -190,6 +192,8 @@ in {
         HISTIGNORE = escapeShellArg (concatStringsSep ":" cfg.historyIgnore);
       }));
   in mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+
     home.file.".bash_profile".source = writeBashScript "bash_profile" ''
       # include .profile if it exists
       [[ -f ~/.profile ]] && . ~/.profile

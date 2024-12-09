@@ -1,6 +1,6 @@
 auto_create_new_mailboxes = true
 fqdn = "example.com"
-password_command = "'password-command'"
+password_command = "password-command"
 username = "home.manager"
 
 [tags]

@@ -9,6 +9,7 @@
   wayland.windowManager.sway = {
     enable = true;
     package = null;
+    checkConfig = false;
     config.menu = "${pkgs.dmenu}/bin/dmenu_run";
   };
 

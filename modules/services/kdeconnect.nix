@@ -5,7 +5,6 @@ with lib;
 let
 
   cfg = config.services.kdeconnect;
-  package = pkgs.plasma5Packages.kdeconnect-kde;
 
 in {
   meta.maintainers = [ maintainers.adisbladis ];
@@ -13,19 +12,24 @@ in {
   options = {
     services.kdeconnect = {
       enable = mkEnableOption "KDE connect";
+      package = mkOption {
+        type = types.package;
+        default = pkgs.kdePackages.kdeconnect-kde;
+        example = literalExpression "pkgs.plasma5Packages.kdeconnect-kde";
+        description = "The KDE connect package to use";
+      };
 
       indicator = mkOption {
         type = types.bool;
         default = false;
         description = "Whether to enable kdeconnect-indicator service.";
       };
-
     };
   };
 
   config = mkMerge [
     (mkIf cfg.enable {
-      home.packages = [ package ];
+      home.packages = [ cfg.package ];
 
       assertions = [
         (hm.assertions.assertPlatform "services.kdeconnect" pkgs
@@ -43,8 +47,13 @@ in {
         Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
-          Environment = "PATH=${config.home.profileDirectory}/bin";
-          ExecStart = "${package}/libexec/kdeconnectd";
+          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
+          ExecStart =
+            if strings.versionAtLeast (versions.majorMinor cfg.package.version)
+            "24.05" then
+              "${cfg.package}/bin/kdeconnectd"
+            else
+              "${cfg.package}/libexec/kdeconnectd";
           Restart = "on-abort";
         };
       };
@@ -66,17 +75,17 @@ in {
             "stalonetray.service"
           ];
           PartOf = [ "graphical-session.target" ];
+          Requires = [ "tray.target" ];
         };
 
         Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
-          Environment = "PATH=${config.home.profileDirectory}/bin";
-          ExecStart = "${package}/bin/kdeconnect-indicator";
+          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
+          ExecStart = "${cfg.package}/bin/kdeconnect-indicator";
           Restart = "on-abort";
         };
       };
     })
-
   ];
 }

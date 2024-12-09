@@ -47,6 +47,11 @@
       '';
     };
 
+    test.asserts.warnings.expected = [
+      "kanshi.profiles option is deprecated. Use kanshi.settings instead."
+      "kanshi.extraConfig option is deprecated. Use kanshi.settings instead."
+    ];
+
     nmt.script = ''
       serviceFile=home-files/.config/systemd/user/kanshi.service
       assertFileExists $serviceFile

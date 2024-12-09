@@ -9,6 +9,7 @@ environment:
   NIX_CONFIG: "experimental-features = nix-command flakes"
 packages:
   - nixos.cachix
+  - nixos.jq
 tasks:
   - setup: |
       cachix use rycee
@@ -26,7 +27,7 @@ tasks:
       if [[ $gitBranch == master ]]; then
         dirName="unstable"
       else
-        dirName="$(cat .release)"
+        dirName="$(jq -r .release < release.json)"
       fi
 
       rsync --delete -r --info=stats \

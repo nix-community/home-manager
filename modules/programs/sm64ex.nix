@@ -29,7 +29,7 @@ let
     in "${key} ${generatedValue}";
 
 in {
-  meta.maintainers = [ maintainers.ivar ];
+  meta.maintainers = [ ];
 
   options.programs.sm64ex = {
     enable = mkEnableOption "sm64ex";

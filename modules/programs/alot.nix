@@ -132,6 +132,8 @@ in {
         '';
       };
 
+      package = mkPackageOption pkgs "alot" { };
+
       hooks = mkOption {
         type = types.lines;
         default = "";
@@ -229,7 +231,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.alot ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."alot/config".text = configFile;
 

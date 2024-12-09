@@ -46,7 +46,6 @@ in {
 
           # Lower CPU and I/O priority:
           Nice = 19;
-          CPUSchedulingPolicy = "batch";
           IOSchedulingClass = "best-effort";
           IOSchedulingPriority = 7;
           IOWeight = 100;

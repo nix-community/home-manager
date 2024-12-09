@@ -55,17 +55,17 @@ in {
         ExecStop = "${dropboxCmd} stop";
         ExecStart = toString (pkgs.writeShellScript "dropbox-start" ''
           # ensure we have the dirs we need
-          $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p \
+          run ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p \
             ${homeBaseDir}/{.dropbox,.dropbox-dist,Dropbox}
 
           # symlink them as needed
           if [[ ! -d ${config.home.homeDirectory}/.dropbox ]]; then
-            $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
+            run ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
               ${homeBaseDir}/.dropbox ${config.home.homeDirectory}/.dropbox
           fi
 
           if [[ ! -d ${escapeShellArg cfg.path} ]]; then
-            $DRY_RUN_CMD ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
+            run ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
               ${homeBaseDir}/Dropbox ${escapeShellArg cfg.path}
           fi
 

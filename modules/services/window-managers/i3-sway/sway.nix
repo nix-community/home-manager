@@ -91,6 +91,7 @@ let
           "${cfg.config.modifier}+7" = "workspace number 7";
           "${cfg.config.modifier}+8" = "workspace number 8";
           "${cfg.config.modifier}+9" = "workspace number 9";
+          "${cfg.config.modifier}+0" = "workspace number 10";
 
           "${cfg.config.modifier}+Shift+1" =
             "move container to workspace number 1";
@@ -110,6 +111,8 @@ let
             "move container to workspace number 8";
           "${cfg.config.modifier}+Shift+9" =
             "move container to workspace number 9";
+          "${cfg.config.modifier}+Shift+0" =
+            "move container to workspace number 10";
 
           "${cfg.config.modifier}+Shift+minus" = "move scratchpad";
           "${cfg.config.modifier}+minus" = "scratchpad show";
@@ -246,76 +249,85 @@ let
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
     ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") attrs)}
+    (mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
     }
   '';
   inputStr = moduleStr "input";
   outputStr = moduleStr "output";
   seatStr = moduleStr "seat";
 
-  configFile = pkgs.writeText "sway.conf" (concatStringsSep "\n"
-    ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
-      ++ (if cfg.config != null then
-        with cfg.config;
-        ([
-          (fontConfigStr fonts)
-          "floating_modifier ${floating.modifier}"
-          (windowBorderString window floating)
-          "hide_edge_borders ${window.hideEdgeBorders}"
-          "focus_wrapping ${focus.wrapping}"
-          "focus_follows_mouse ${focus.followMouse}"
-          "focus_on_window_activation ${focus.newWindow}"
-          "mouse_warping ${
-            if builtins.isString (focus.mouseWarping) then
-              focus.mouseWarping
-            else if focus.mouseWarping then
-              "output"
-            else
-              "none"
-          }"
-          "workspace_layout ${workspaceLayout}"
-          "workspace_auto_back_and_forth ${
-            lib.hm.booleans.yesNo workspaceAutoBackAndForth
-          }"
-          "client.focused ${colorSetStr colors.focused}"
-          "client.focused_inactive ${colorSetStr colors.focusedInactive}"
-          "client.unfocused ${colorSetStr colors.unfocused}"
-          "client.urgent ${colorSetStr colors.urgent}"
-          "client.placeholder ${colorSetStr colors.placeholder}"
-          "client.background ${colors.background}"
-          (keybindingsStr {
-            keybindings = keybindingDefaultWorkspace;
-            bindsymArgs =
-              lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-          })
-          (keybindingsStr {
-            keybindings = keybindingsRest;
-            bindsymArgs =
-              lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-          })
-          (keycodebindingsStr keycodebindings)
-        ] ++ mapAttrsToList inputStr input
-          ++ mapAttrsToList outputStr output # outputs
-          ++ mapAttrsToList seatStr seat # seats
-          ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
-          ++ mapAttrsToList assignStr assigns # assigns
-          ++ map barStr bars # bars
-          ++ optional (gaps != null) gapsStr # gaps
-          ++ map floatingCriteriaStr floating.criteria # floating
-          ++ map windowCommandsStr window.commands # window commands
-          ++ map startupEntryStr startup # startup
-          ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
-        )
-      else
-        [ ]) ++ (optional cfg.systemd.enable ''
-          exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE; systemctl --user start sway-session.target"'')
-      ++ (optional (!cfg.xwayland) "xwayland disable") ++ [ cfg.extraConfig ]));
+  variables = concatStringsSep " " cfg.systemd.variables;
+  extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
+  systemdActivation = ''
+    exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
 
-  defaultSwayPackage = pkgs.sway.override {
-    extraSessionCommands = cfg.extraSessionCommands;
-    extraOptions = cfg.extraOptions;
-    withBaseWrapper = cfg.wrapperFeatures.base;
-    withGtkWrapper = cfg.wrapperFeatures.gtk;
+  configFile = pkgs.writeTextFile {
+    name = "sway.conf";
+
+    # Sway always does some init, see https://github.com/swaywm/sway/issues/4691
+    checkPhase = lib.optionalString cfg.checkConfig ''
+      export DBUS_SESSION_BUS_ADDRESS=/dev/null
+      export XDG_RUNTIME_DIR=$(mktemp -d)
+      ${pkgs.xvfb-run}/bin/xvfb-run ${cfg.package}/bin/sway --config "$target" --validate --unsupported-gpu
+    '';
+
+    text = concatStringsSep "\n"
+      ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
+        ++ (if cfg.config != null then
+          with cfg.config;
+          ([
+            (fontConfigStr fonts)
+            "floating_modifier ${floating.modifier}"
+            (windowBorderString window floating)
+            "hide_edge_borders ${window.hideEdgeBorders}"
+            "focus_wrapping ${focus.wrapping}"
+            "focus_follows_mouse ${focus.followMouse}"
+            "focus_on_window_activation ${focus.newWindow}"
+            "mouse_warping ${
+              if builtins.isString (focus.mouseWarping) then
+                focus.mouseWarping
+              else if focus.mouseWarping then
+                "output"
+              else
+                "none"
+            }"
+            "workspace_layout ${workspaceLayout}"
+            "workspace_auto_back_and_forth ${
+              lib.hm.booleans.yesNo workspaceAutoBackAndForth
+            }"
+            "client.focused ${colorSetStr colors.focused}"
+            "client.focused_inactive ${colorSetStr colors.focusedInactive}"
+            "client.unfocused ${colorSetStr colors.unfocused}"
+            "client.urgent ${colorSetStr colors.urgent}"
+            "client.placeholder ${colorSetStr colors.placeholder}"
+            "client.background ${colors.background}"
+            (keybindingsStr {
+              keybindings = keybindingDefaultWorkspace;
+              bindsymArgs =
+                lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+            })
+            (keybindingsStr {
+              keybindings = keybindingsRest;
+              bindsymArgs =
+                lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+            })
+            (keycodebindingsStr keycodebindings)
+          ] ++ mapAttrsToList inputStr input
+            ++ mapAttrsToList outputStr output # outputs
+            ++ mapAttrsToList seatStr seat # seats
+            ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
+            ++ mapAttrsToList assignStr assigns # assigns
+            ++ map barStr bars # bars
+            ++ optional (gaps != null) gapsStr # gaps
+            ++ map floatingCriteriaStr floating.criteria # floating
+            ++ map windowCommandsStr window.commands # window commands
+            ++ map startupEntryStr startup # startup
+            ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
+          )
+        else
+          [ ]) ++ (optional cfg.systemd.enable systemdActivation)
+        ++ (optional (!cfg.xwayland) "xwayland disable")
+        ++ [ cfg.extraConfig ]);
   };
 
 in {
@@ -323,7 +335,6 @@ in {
     Scrumplex
     alexarice
     sumnerevans
-    sebtm
     oxalica
   ];
 
@@ -338,14 +349,20 @@ in {
 
     package = mkOption {
       type = with types; nullOr package;
-      default = defaultSwayPackage;
+      default = pkgs.sway.override {
+        extraSessionCommands = cfg.extraSessionCommands;
+        extraOptions = cfg.extraOptions;
+        withBaseWrapper = cfg.wrapperFeatures.base;
+        withGtkWrapper = cfg.wrapperFeatures.gtk;
+      };
       defaultText = literalExpression "${pkgs.sway}";
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
         Set to `null` to not add any Sway package to your
         path. This should be done if you want to use the NixOS Sway
-        module to install Sway.
+        module to install Sway. Beware setting to `null` will also disable
+        reloading Sway when new config is activated.
       '';
     };
 
@@ -364,6 +381,42 @@ in {
           * {env}`WAYLAND_DISPLAY`
           * {env}`SWAYSOCK`
           * {env}`XDG_CURRENT_DESKTOP`
+          * {env}`XDG_SESSION_TYPE`
+          * {env}`NIXOS_OZONE_WL`
+          * {env}`XCURSOR_THEME`
+          * {env}`XCURSOR_SIZE`
+          You can extend this list using the `systemd.variables` option.
+        '';
+      };
+
+      variables = mkOption {
+        type = types.listOf types.str;
+        default = [
+          "DISPLAY"
+          "WAYLAND_DISPLAY"
+          "SWAYSOCK"
+          "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_TYPE"
+          "NIXOS_OZONE_WL"
+          "XCURSOR_THEME"
+          "XCURSOR_SIZE"
+        ];
+        example = [ "--all" ];
+        description = ''
+          Environment variables imported into the systemd and D-Bus user environment.
+        '';
+      };
+
+      extraCommands = mkOption {
+        type = types.listOf types.str;
+        default = [
+          "systemctl --user reset-failed"
+          "systemctl --user start sway-session.target"
+          "swaymsg -mt subscribe '[]' || true"
+          "systemctl --user stop sway-session.target"
+        ];
+        description = ''
+          Extra commands to run after D-Bus activation.
         '';
       };
 
@@ -428,6 +481,14 @@ in {
       description = "Sway configuration options.";
     };
 
+    checkConfig = mkOption {
+      type = types.bool;
+      default = cfg.package != null;
+      defaultText =
+        literalExpression "wayland.windowManager.sway.package != null";
+      description = "If enabled, validates the generated config file.";
+    };
+
     extraConfig = mkOption {
       type = types.lines;
       default = "";
@@ -460,19 +521,22 @@ in {
       assertions = [
         (hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs
           platforms.linux)
+        {
+          assertion = cfg.checkConfig -> cfg.package != null;
+          message =
+            "programs.sway.checkConfig requires non-null programs.sway.package";
+        }
       ];
 
       home.packages = optional (cfg.package != null) cfg.package
         ++ optional cfg.xwayland pkgs.xwayland;
 
-      xdg.configFile."sway/config" = let
-        swayPackage = if cfg.package == null then pkgs.sway else cfg.package;
-      in {
+      xdg.configFile."sway/config" = {
         source = configFile;
-        onChange = ''
+        onChange = lib.optionalString (cfg.package != null) ''
           swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
           if [ -S "$swaySocket" ]; then
-            ${swayPackage}/bin/swaymsg -s $swaySocket reload
+            ${cfg.package}/bin/swaymsg -s $swaySocket reload
           fi
         '';
       };

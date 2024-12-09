@@ -6,6 +6,7 @@
   wayland.windowManager.sway = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
+    checkConfig = false;
 
     config = {
       focus.followMouse = false;

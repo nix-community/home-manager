@@ -7,6 +7,7 @@ with lib;
 
   config = {
     accounts.email.accounts."hm@example.com".msmtp.enable = true;
+
     programs.git = {
       enable = true;
       package = pkgs.gitMinimal;
@@ -33,8 +34,8 @@ with lib;
       assertFileContent home-files/.config/git/config \
         ${./git-with-msmtp-expected.conf}
 
-      assertGitConfig "sendemail.hm@example.com.from" "hm@example.com"
-      assertGitConfig "sendemail.hm-account.from" "hm@example.org"
+      assertGitConfig "sendemail.hm@example.com.from" "H. M. Test <hm@example.com>"
+      assertGitConfig "sendemail.hm-account.from" "H. M. Test Jr. <hm@example.org>"
       assertGitConfig "sendemail.hm@example.com.smtpServer" "${pkgs.msmtp}/bin/msmtp"
       assertGitConfig "sendemail.hm@example.com.envelopeSender" "auto"
     '';

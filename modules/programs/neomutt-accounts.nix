@@ -17,6 +17,14 @@ let
         default = null;
         description = "Name to display";
       };
+
+      type = mkOption {
+        type = types.nullOr (types.enum [ "maildir" "imap" ]);
+        example = "imap";
+        default = null;
+        description =
+          "Whether this mailbox is a maildir folder or an IMAP mailbox";
+      };
     };
   };
 
@@ -68,11 +76,25 @@ in {
       '';
     };
 
+    showDefaultMailbox = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Show the default mailbox (INBOX)";
+    };
+
     mailboxName = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "==== <mailbox-name> ===";
       description = "Use a different name as mailbox name";
+    };
+
+    mailboxType = mkOption {
+      type = types.enum [ "maildir" "imap" ];
+      default = "maildir";
+      example = "imap";
+      description =
+        "Whether this account uses maildir folders or IMAP mailboxes";
     };
 
     extraMailboxes = mkOption {

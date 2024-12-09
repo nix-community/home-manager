@@ -3,7 +3,7 @@ WantedBy=graphical-session.target
 
 [Service]
 Environment=PATH=@paprefs@/bin:@pavucontrol@/bin
-ExecStart='@pasystray@/bin/pasystray' '-g'
+ExecStart=@pasystray@/bin/pasystray -g
 
 [Unit]
 After=graphical-session-pre.target

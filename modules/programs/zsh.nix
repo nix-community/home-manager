@@ -15,14 +15,14 @@ let
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
   aliasesStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}") cfg.shellAliases
+    mapAttrsToList (k: v: "alias -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.shellAliases
   );
 
   dirHashesStr = concatStringsSep "\n" (
     mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
   );
 
-  zdotdir = "$HOME/" + cfg.dotDir;
+  zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
 
   bindkeyCommands = {
     emacs = "bindkey -e";
@@ -34,6 +34,21 @@ let
 
   historyModule = types.submodule ({ config, ... }: {
     options = {
+      append = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          If set, zsh sessions will append their history list to the history
+          file, rather than replace it. Thus, multiple parallel zsh sessions
+          will all have the new entries from their history lists added to the
+          history file, in the order that they exit.
+
+          This file will still be periodically re-written to trim it when the
+          number of lines grows 20% beyond the value specified by
+          `programs.zsh.history.save`.
+        '';
+      };
+
       size = mkOption {
         type = types.int;
         default = 10000;
@@ -236,13 +251,23 @@ let
         '';
       };
 
+      patterns = mkOption {
+        type = types.attrsOf types.str;
+        default = {};
+        example = { "rm -rf *" = "fg=white,bold,bg=red"; };
+        description = ''
+          Custom syntax highlighting for user-defined patterns.
+          Reference: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/pattern.md>
+        '';
+      };
+
       styles = mkOption {
         type = types.attrsOf types.str;
         default = {};
         example = { comment = "fg=black,bold"; };
         description = ''
           Custom styles for syntax highlighting.
-          See each highlighter's options: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
+          See each highlighter style option: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md>
         '';
       };
     };
@@ -252,6 +277,7 @@ in
 
 {
   imports = [
+    (mkRenamedOptionModule [ "programs" "zsh" "enableAutosuggestions" ] [ "programs" "zsh" "autosuggestion" "enable" ])
     (mkRenamedOptionModule [ "programs" "zsh" "enableSyntaxHighlighting" ] [ "programs" "zsh" "syntaxHighlighting" "enable" ])
     (mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
   ];
@@ -352,11 +378,6 @@ in
         type = types.lines;
       };
 
-      enableAutosuggestions = mkOption {
-        default = false;
-        description = "Enable zsh autosuggestions";
-      };
-
       zprof.enable = mkOption {
         default = false;
         description = ''
@@ -374,6 +395,43 @@ in
         type = historySubstringSearchModule;
         default = {};
         description = "Options related to zsh-history-substring-search.";
+      };
+
+      autosuggestion = {
+        enable = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Enable zsh autosuggestions";
+        };
+
+        highlight = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          example = "fg=#ff00ff,bg=cyan,bold,underline";
+          description = ''
+            Custom styles for autosuggestion highlighting. See
+            {manpage}`zshzle(1)` for syntax.
+          '';
+        };
+
+        strategy = mkOption {
+          type = types.listOf (types.enum [ "history" "completion" "match_prev_cmd" ]);
+          default = [ "history" ];
+          description = ''
+            `ZSH_AUTOSUGGEST_STRATEGY` is an array that specifies how suggestions should be generated.
+            The strategies in the array are tried successively until a suggestion is found.
+            There are currently three built-in strategies to choose from:
+
+            - `history`: Chooses the most recent match from history.
+            - `completion`: Chooses a suggestion based on what tab-completion would suggest. (requires `zpty` module)
+            - `match_prev_cmd`: Like `history`, but chooses the most recent match whose preceding history item matches
+                the most recently executed command. Note that this strategy won't work as expected with ZSH options that
+                don't preserve the history order such as `HIST_IGNORE_ALL_DUPS` or `HIST_EXPIRE_DUPS_FIRST`.
+
+            Setting the option to an empty list `[]` will make ZSH_AUTOSUGGESTION_STRATEGY not be set automatically,
+            allowing the variable to be declared in {option}`programs.zsh.localVariables` or {option}`programs.zsh.sessionVariables`
+          '';
+        };
       };
 
       history = mkOption {
@@ -582,13 +640,20 @@ in
         # as all $fpath entries will be traversed again.
         ${optionalString (cfg.enableCompletion && !cfg.oh-my-zsh.enable && !cfg.prezto.enable)
           cfg.completionInit
-        }
+        }''
 
-        ${optionalString cfg.enableAutosuggestions
-          "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-        }
+        (optionalString cfg.autosuggestion.enable ''
+          source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+          ${optionalString (cfg.autosuggestion.strategy != []) ''
+            ZSH_AUTOSUGGEST_STRATEGY=(${concatStringsSep " " cfg.autosuggestion.strategy})
+          ''
+          }
+        '')
+        (optionalString (cfg.autosuggestion.enable && cfg.autosuggestion.highlight != null) ''
+          ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="${cfg.autosuggestion.highlight}"
+        '')
 
-        ${optionalString cfg.oh-my-zsh.enable ''
+        (optionalString cfg.oh-my-zsh.enable ''
             # oh-my-zsh extra settings for plugins
             ${cfg.oh-my-zsh.extraConfig}
             # oh-my-zsh configuration generated by NixOS
@@ -602,8 +667,9 @@ in
               "ZSH_THEME=\"${cfg.oh-my-zsh.theme}\""
             }
             source $ZSH/oh-my-zsh.sh
-        ''}
+        '')
 
+        ''
         ${optionalString cfg.prezto.enable
             (builtins.readFile "${pkgs.zsh-prezto}/share/zsh-prezto/runcoms/zshrc")}
 
@@ -624,6 +690,7 @@ in
         mkdir -p "$(dirname "$HISTFILE")"
 
         setopt HIST_FCNTL_LOCK
+        ${if cfg.history.append then "setopt" else "unsetopt"} APPEND_HISTORY
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
         ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
         ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
@@ -637,8 +704,8 @@ in
         # Aliases
         ${aliasesStr}
         ''
-      ] 
-      ++ (mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases) 
+      ]
+      ++ (mapAttrsToList (k: v: "alias -g -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.shellGlobalAliases)
       ++ [ (''
         # Named Directory Hashes
         ${dirHashesStr}
@@ -654,6 +721,11 @@ in
               lib.mapAttrsToList
                 (name: value: "ZSH_HIGHLIGHT_STYLES+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})")
                 cfg.syntaxHighlighting.styles
+          )}
+          ${lib.concatStringsSep "\n" (
+              lib.mapAttrsToList
+                (name: value: "ZSH_HIGHLIGHT_PATTERNS+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})")
+                cfg.syntaxHighlighting.patterns
           )}
         '')
 

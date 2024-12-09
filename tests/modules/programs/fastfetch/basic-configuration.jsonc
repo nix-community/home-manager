@@ -1,0 +1,28 @@
+{
+  "display": {
+    "binaryPrefix": "si",
+    "color": "blue",
+    "separator": "  "
+  },
+  "logo": {
+    "padding": {
+      "right": 1
+    },
+    "source": "nixos_small"
+  },
+  "modules": [
+    {
+      "format": "{1}-{3}-{11}",
+      "key": "Date",
+      "type": "datetime"
+    },
+    {
+      "format": "{14}:{17}:{20}",
+      "key": "Time",
+      "type": "datetime"
+    },
+    "break",
+    "player",
+    "media"
+  ]
+}

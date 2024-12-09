@@ -1,0 +1,1 @@
+{ river-configuration = ./configuration.nix; }

@@ -1,0 +1,32 @@
+[[actions]]
+action = "GoToArtist"
+key_sequence = "g A"
+
+[[actions]]
+action = "GoToAlbum"
+key_sequence = "g B"
+target = "PlayingTrack"
+
+[[actions]]
+action = "ToggleLiked"
+key_sequence = "C-l"
+
+[[keymaps]]
+command = "NextTrack"
+key_sequence = "g n"
+
+[[keymaps]]
+command = "PreviousTrack"
+key_sequence = "g p"
+
+[[keymaps]]
+command = "Search"
+key_sequence = "C-c C-x /"
+
+[[keymaps]]
+command = "ResumePause"
+key_sequence = "M-enter"
+
+[[keymaps]]
+command = "None"
+key_sequence = "q"

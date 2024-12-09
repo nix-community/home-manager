@@ -124,6 +124,7 @@ in {
               cfg.libFiles)
           })
           for key in "''${!libFiles[@]}"; do
+            mkdir -p "xmonad-config/lib/$(dirname "$key")"
             cp "''${libFiles[$key]}" "xmonad-config/lib/$key";
           done
 

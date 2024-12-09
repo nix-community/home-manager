@@ -45,6 +45,17 @@ let
           gtk config generation for {option}`home.pointerCursor`
         '';
       };
+
+      hyprcursor = {
+        enable = mkEnableOption "hyprcursor config generation";
+
+        size = mkOption {
+          type = types.nullOr types.int;
+          example = 32;
+          default = null;
+          description = "The cursor size for hyprcursor.";
+        };
+      };
     };
   };
 
@@ -67,7 +78,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.polykernel maintainers.league ];
+  meta.maintainers = [ maintainers.league ];
 
   imports = [
     (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
@@ -163,7 +174,7 @@ in {
     }
 
     (mkIf cfg.x11.enable {
-      xsession.initExtra = ''
+      xsession.profileExtra = ''
         ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${
           toString cfg.size
         }
@@ -177,6 +188,14 @@ in {
 
     (mkIf cfg.gtk.enable {
       gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
+    })
+
+    (mkIf cfg.hyprcursor.enable {
+      home.sessionVariables = {
+        HYPRCURSOR_THEME = cfg.name;
+        HYPRCURSOR_SIZE =
+          if cfg.hyprcursor.size != null then cfg.hyprcursor.size else cfg.size;
+      };
     })
   ]);
 }

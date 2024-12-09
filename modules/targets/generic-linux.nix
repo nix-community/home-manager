@@ -99,7 +99,11 @@ in {
         "/usr/share/terminfo" # package default, all distros
       ];
     in {
-      NIX_PATH = "$HOME/.nix-defexpr/channels\${NIX_PATH:+:}$NIX_PATH";
+      NIX_PATH = if config.nix.enable
+      && (config.nix.settings.use-xdg-base-directories or false) then
+        "${config.xdg.stateHome}/nix/defexpr/channels\${NIX_PATH:+:}$NIX_PATH"
+      else
+        "$HOME/.nix-defexpr/channels\${NIX_PATH:+:}$NIX_PATH";
       TERMINFO_DIRS =
         "${profileDirectory}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}${distroTerminfoDirs}";
     };

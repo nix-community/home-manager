@@ -70,12 +70,11 @@ in {
   config = {
     lib.test.mkStubPackage = mkStubPackage;
 
-    nixpkgs.overlays = mkIf (config.test.stubs != { }) [
-      (self: super:
+    nixpkgs.overlays = [ (self: super: { inherit mkStubPackage; }) ]
+      ++ optional (config.test.stubs != { }) (self: super:
         mapAttrs (n: v:
           mkStubPackage (v // optionalAttrs (v.version == null) {
             version = super.${n}.version or null;
-          })) config.test.stubs)
-    ];
+          })) config.test.stubs);
   };
 }

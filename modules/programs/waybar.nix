@@ -69,8 +69,8 @@ let
         };
 
         modules-left = mkOption {
-          type = listOf str;
-          default = [ ];
+          type = nullOr (listOf str);
+          default = null;
           description = "Modules that will be displayed on the left.";
           example = literalExpression ''
             [ "sway/workspaces" "sway/mode" "wlr/taskbar" ]
@@ -78,8 +78,8 @@ let
         };
 
         modules-center = mkOption {
-          type = listOf str;
-          default = [ ];
+          type = nullOr (listOf str);
+          default = null;
           description = "Modules that will be displayed in the center.";
           example = literalExpression ''
             [ "sway/window" ]
@@ -87,8 +87,8 @@ let
         };
 
         modules-right = mkOption {
-          type = listOf str;
-          default = [ ];
+          type = nullOr (listOf str);
+          default = null;
           description = "Modules that will be displayed on the right.";
           example = literalExpression ''
             [ "mpd" "custom/mymodule#with-css-id" "temperature" ]

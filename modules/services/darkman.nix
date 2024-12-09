@@ -52,6 +52,7 @@ in {
 
     settings = mkOption {
       type = types.submodule { freeformType = yamlFormat.type; };
+      default = { };
       example = literalExpression ''
         {
           lat = 52.3;
@@ -96,7 +97,7 @@ in {
         Documentation = "man:darkman(1)";
         PartOf = [ "graphical-session.target" ];
         BindsTo = [ "graphical-session.target" ];
-        X-Restart-Triggers =
+        X-Restart-Triggers = mkIf (cfg.settings != { })
           [ "${config.xdg.configFile."darkman/config.yaml".source}" ];
       };
 

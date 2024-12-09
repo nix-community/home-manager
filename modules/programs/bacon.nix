@@ -13,8 +13,11 @@ in {
   options.programs.bacon = {
     enable = mkEnableOption "bacon, a background rust code checker";
 
+    package = mkPackageOption pkgs "bacon" { };
+
     settings = mkOption {
       type = settingsFormat.type;
+      default = { };
       example = {
         jobs.default = {
           command = [ "cargo" "build" "--all-features" "--color" "always" ];
@@ -29,7 +32,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.bacon ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."bacon/prefs.toml".source =
       settingsFormat.generate "prefs.toml" cfg.settings;

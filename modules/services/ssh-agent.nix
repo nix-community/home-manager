@@ -5,7 +5,7 @@ let
   cfg = config.services.ssh-agent;
 
 in {
-  meta.maintainers = [ lib.maintainers.lheckemann ];
+  meta.maintainers = [ lib.hm.maintainers.lheckemann ];
 
   options = {
     services.ssh-agent = {
@@ -20,7 +20,7 @@ in {
     ];
 
     home.sessionVariablesExtra = ''
-      if [[ -z "$SSH_AUTH_SOCK" ]]; then
+      if [ -z "$SSH_AUTH_SOCK" ]; then
         export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent
       fi
     '';

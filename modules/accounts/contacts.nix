@@ -12,7 +12,8 @@ let
         path = mkOption {
           type = types.str;
           default = "${cfg.basePath}/${name}";
-          defaultText = "‹accounts.contact.basePath›/‹name›";
+          defaultText =
+            lib.literalExpression "‹accounts.contact.basePath›/‹name›";
           description = "The path of the storage.";
         };
 
@@ -126,6 +127,7 @@ in {
         contactOpts
         (import ../programs/vdirsyncer-accounts.nix)
         (import ../programs/khal-accounts.nix)
+        (import ../programs/khal-contact-accounts.nix)
       ]);
       default = { };
       description = "List of contacts.";

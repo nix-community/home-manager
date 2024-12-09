@@ -1,0 +1,1 @@
+{ neovide-program = ./neovide.nix; }

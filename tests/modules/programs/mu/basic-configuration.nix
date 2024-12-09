@@ -19,6 +19,6 @@
       'if [[ ! -d "/home/hm-user/.cache/mu" ]]; then'
 
     assertFileContains activate \
-      '$DRY_RUN_CMD @mu@/bin/mu init --maildir=/home/hm-user/Mail --my-address=hm@example.com --my-address=foo@example.com $VERBOSE_ARG;'
+      'run @mu@/bin/mu init --maildir=/home/hm-user/Mail --my-address=hm@example.com --my-address=foo@example.com $VERBOSE_ARG;'
   '';
 }

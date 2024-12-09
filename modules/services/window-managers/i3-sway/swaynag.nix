@@ -14,7 +14,7 @@ let
       };
     in attrsOf confAtom;
 in {
-  meta.maintainers = with maintainers; [ polykernel ];
+  meta.maintainers = [ ];
 
   options = {
     wayland.windowManager.sway.swaynag = {

@@ -31,7 +31,7 @@ let
       };
 
       size = mkOption {
-        type = types.float;
+        type = types.either types.float types.str;
         default = 8.0;
         description = ''
           The font size to use for window titles.

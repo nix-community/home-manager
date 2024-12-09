@@ -34,7 +34,7 @@ function systemdPostReload() {
     touch "$oldServiceFiles"
   else
     find "$oldUserServicePath" \
-      -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
+      -maxdepth 1 -name '*.service' \! -name '*@.service' -exec basename '{}' ';' \
       | sort \
       > "$oldServiceFiles"
   fi
@@ -43,7 +43,7 @@ function systemdPostReload() {
     touch "$newServiceFiles"
   else
     find "$newUserServicePath" \
-      -maxdepth 1 -name '*.service' -exec basename '{}' ';' \
+      -maxdepth 1 -name '*.service' \! -name '*@.service' -exec basename '{}' ';' \
       | sort \
       > "$newServiceFiles"
   fi
@@ -110,5 +110,10 @@ function systemdPostReload() {
 oldGenPath="$1"
 newGenPath="$2"
 
-$DRY_RUN_CMD systemctl --user daemon-reload
+if [[ -v DRY_RUN ]]; then
+    echo systemctl --user daemon-reload
+else
+    systemctl --user daemon-reload
+fi
+
 systemdPostReload

@@ -287,7 +287,7 @@ in {
       home.activation = mkIf (mbsyncAccounts != [ ]) {
         createMaildir =
           hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-            $DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG ${
+            run mkdir -m700 -p $VERBOSE_ARG ${
               concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
             }
           '';

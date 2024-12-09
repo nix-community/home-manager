@@ -1,5 +1,5 @@
 { runCommand, lib, bash, callPackage, coreutils, findutils, gettext, gnused, jq
-, less, ncurses, unixtools
+, less, ncurses, inetutils
 # used for pkgs.path for nixos-option
 , pkgs
 
@@ -38,7 +38,7 @@ in runCommand "home-manager" {
         less
         ncurses
         nixos-option
-        unixtools.hostname
+        inetutils # for `hostname`
       ]
     }" \
     --subst-var-by HOME_MANAGER_LIB '${../lib/bash/home-manager.sh}' \

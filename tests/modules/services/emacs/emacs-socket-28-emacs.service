@@ -1,5 +1,5 @@
 [Service]
-ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon='%t/emacs/server' '-f' 'exwm-enable'"
+ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon=%t/emacs/server -f exwm-enable"
 Restart=on-failure
 SuccessExitStatus=15
 Type=notify

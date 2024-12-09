@@ -41,7 +41,6 @@ let
   # to work without wrapping it.
   socketDir = "%t/emacs";
   socketPath = "${socketDir}/server";
-
 in {
   meta.maintainers = [ maintainers.tadfisher ];
 
@@ -112,12 +111,7 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "services.emacs" pkgs
-          lib.platforms.linux)
-      ];
-
+    (mkIf pkgs.stdenv.isLinux {
       systemd.user.services.emacs = {
         Unit = {
           Description = "Emacs text editor";
@@ -190,9 +184,9 @@ in {
             }/bin/emacsclient "''${@:---create-frame}"'');
         };
       };
-    }
+    })
 
-    (mkIf cfg.socketActivation.enable {
+    (mkIf (cfg.socketActivation.enable && pkgs.stdenv.isLinux) {
       systemd.user.sockets.emacs = {
         Unit = {
           Description = "Emacs text editor";
@@ -219,6 +213,21 @@ in {
           # started when the socket is stopped.
           # The socket unit is implicitly ordered before the service.
           RequiredBy = [ "emacs.service" ];
+        };
+      };
+    })
+
+    (mkIf pkgs.stdenv.isDarwin {
+      launchd.agents.emacs = {
+        enable = true;
+        config = {
+          ProgramArguments = [ "${cfg.package}/bin/emacs" "--fg-daemon" ]
+            ++ cfg.extraOptions;
+          RunAtLoad = true;
+          KeepAlive = {
+            Crashed = true;
+            SuccessfulExit = false;
+          };
         };
       };
     })

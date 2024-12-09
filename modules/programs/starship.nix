@@ -10,6 +10,8 @@ let
 
   starshipCmd = "${config.home.profileDirectory}/bin/starship";
 
+  initFish =
+    if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
 in {
   meta.maintainers = [ ];
 
@@ -24,14 +26,7 @@ in {
     };
 
     settings = mkOption {
-      type = with types;
-        let
-          prim = either bool (either int str);
-          primOrPrimAttrs = either prim (attrsOf prim);
-          entry = either prim (listOf primOrPrimAttrs);
-          entryOrAttrsOf = t: either entry (attrsOf t);
-          entries = entryOrAttrsOf (entryOrAttrsOf entry);
-        in attrsOf entries // { description = "Starship configuration"; };
+      type = tomlFormat.type;
       default = { };
       example = literalExpression ''
         {
@@ -78,6 +73,17 @@ in {
       default = true;
     };
 
+    enableInteractive = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Only enable starship when the shell is interactive. This option is only
+        valid for the Fish shell.
+
+        Some plugins require this to be set to `false` to function correctly.
+      '';
+    };
+
     enableTransience = mkOption {
       type = types.bool;
       default = false;
@@ -111,9 +117,9 @@ in {
       fi
     '';
 
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.${initFish} = mkIf cfg.enableFishIntegration ''
       if test "$TERM" != "dumb"
-        eval (${starshipCmd} init fish)
+        ${starshipCmd} init fish | source
         ${lib.optionalString cfg.enableTransience "enable_transience"}
       end
     '';

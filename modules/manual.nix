@@ -57,13 +57,6 @@ in {
       (mkIf cfg.manpages.enable [ docs.manPages ])
       (mkIf cfg.json.enable [ docs.options.json ])
     ];
-
-    # Whether a dependency on nmd should be introduced.
-    home.extraBuilderCommands =
-      mkIf (cfg.html.enable || cfg.manpages.enable || cfg.json.enable) ''
-        mkdir $out/lib
-        ln -s ${docs.nmdSrc} $out/lib/nmd
-      '';
   };
 
 }

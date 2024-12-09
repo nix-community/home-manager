@@ -10,7 +10,7 @@ let
     '') pluginNames)}");
 
   parseHashId = path:
-    elemAt (builtins.match "/nix/store/([a-zA-Z0-9]+)-.*" path) 0;
+    elemAt (builtins.match "${builtins.storeDir}/([a-zA-Z0-9]+)-.*" path) 0;
 in {
   meta.maintainers = [ maintainers.hitsmaxft ];
 

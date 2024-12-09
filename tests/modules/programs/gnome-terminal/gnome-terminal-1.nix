@@ -49,9 +49,7 @@ with lib;
     };
 
     nixpkgs.overlays = [
-      (self: super: {
-        gnome.gnome-terminal = config.lib.test.mkStubPackage { };
-      })
+      (self: super: { gnome-terminal = config.lib.test.mkStubPackage { }; })
     ];
 
     test.stubs.dconf = { };

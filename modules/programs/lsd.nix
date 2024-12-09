@@ -74,7 +74,15 @@ in {
 
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
 
-    programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
+    programs.fish = mkMerge [
+      (mkIf (!config.programs.fish.preferAbbrs) {
+        shellAliases = mkIf cfg.enableAliases aliases;
+      })
+
+      (mkIf config.programs.fish.preferAbbrs {
+        shellAbbrs = mkIf cfg.enableAliases aliases;
+      })
+    ];
 
     programs.lsd =
       mkIf (cfg.colors != { }) { settings.color.theme = "custom"; };

@@ -23,7 +23,8 @@ let
     name = "mopidy-with-extensions-${pkgs.mopidy.version}";
     paths = closePropagation cfg.extensionPackages;
     pathsToLink = [ "/${pkgs.mopidyPackages.python.sitePackages}" ];
-    buildInputs = [ pkgs.makeWrapper ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    ignoreCollisions = true;
     postBuild = ''
       makeWrapper ${pkgs.mopidy}/bin/mopidy $out/bin/mopidy \
         --prefix PYTHONPATH : $out/${pkgs.mopidyPackages.python.sitePackages}
@@ -47,6 +48,8 @@ let
 
   configFilePaths = concatStringsSep ":"
     ([ "${config.xdg.configHome}/mopidy/mopidy.conf" ] ++ cfg.extraConfigFiles);
+
+  hasMopidyLocal = builtins.elem pkgs.mopidy-local cfg.extensionPackages;
 
 in {
   meta.maintainers = [ hm.maintainers.foo-dogsquared ];
@@ -124,16 +127,19 @@ in {
         Description = "mopidy music player daemon";
         Documentation = [ "https://mopidy.com/" ];
         After = [ "network.target" "sound.target" ];
+        X-Restart-Triggers = mkIf (cfg.settings != { })
+          [ "${config.xdg.configFile."mopidy/mopidy.conf".source}" ];
       };
 
       Service = {
         ExecStart = "${mopidyEnv}/bin/mopidy --config ${configFilePaths}";
+        Restart = "on-failure";
       };
 
       Install.WantedBy = [ "default.target" ];
     };
 
-    systemd.user.services.mopidy-scan = {
+    systemd.user.services.mopidy-scan = mkIf hasMopidyLocal {
       Unit = {
         Description = "mopidy local files scanner";
         Documentation = [ "https://mopidy.com/" ];

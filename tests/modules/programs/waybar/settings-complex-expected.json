@@ -51,7 +51,6 @@
     "modules-left": [
       "sway/mode"
     ],
-    "modules-right": [],
     "output": [
       "!DP-1"
     ],

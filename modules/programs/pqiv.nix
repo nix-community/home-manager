@@ -3,12 +3,10 @@
 with lib;
 
 let
-
   cfg = config.programs.pqiv;
   iniFormat = pkgs.formats.ini { };
-
 in {
-  meta.maintainers = with lib.maintainers; [ donovanglover ];
+  meta.maintainers = with lib.maintainers; [ donovanglover iynaix ];
 
   options.programs.pqiv = {
     enable = mkEnableOption "pqiv image viewer";
@@ -24,21 +22,38 @@ in {
       type = iniFormat.type;
       default = { };
       description = ''
-        Configuration written to
-        <filename>$XDG_CONFIG_HOME/pqivrc</filename>. See <link
-        xlink:href="https://github.com/phillipberndt/pqiv/blob/master/pqiv.1"/>
-        for a list of available options. To set a boolean flag, set the value to 1.
+        Configuration written to {file}`$XDG_CONFIG_HOME/pqivrc`. See
+        {manpage}`pqiv(1)` for a list of available options.
       '';
       example = literalExpression ''
         {
           options = {
-            lazy-load = 1;
-            hide-info-box = 1;
+            lazy-load = true;
+            hide-info-box = true;
             background-pattern = "black";
             thumbnail-size = "256x256";
             command-1 = "thunar";
           };
         };
+      '';
+    };
+
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Extra lines to be added to {file}`$XDG_CONFIG_HOME/pqivrc`. See
+        {manpage}`pqiv(1)` for a list of available options.
+      '';
+      example = literalExpression ''
+        [actions]
+        set_cursor_auto_hide(1)
+
+        [keybindings]
+        t { montage_mode_enter() }
+        @MONTAGE {
+          t { montage_mode_return_cancel() }
+        }
       '';
     };
   };
@@ -49,8 +64,20 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."pqivrc" = mkIf (cfg.settings != { }) {
-      source = iniFormat.generate "pqivrc" cfg.settings;
-    };
+    xdg.configFile."pqivrc" =
+      mkIf (cfg.settings != { } && cfg.extraConfig != "") {
+        text = lib.concatLines [
+          (generators.toINI {
+            mkKeyValue = key: value:
+              let
+                value' = if isBool value then
+                  (if value then "1" else "0")
+                else
+                  toString value;
+              in "${key} = ${value'}";
+          } cfg.settings)
+          cfg.extraConfig
+        ];
+      };
   };
 }

@@ -1,0 +1,8 @@
+[addressbooks]
+[[forward]]
+path = /home/user/who/likes/forward/slashes/a/lot
+
+
+[general]
+default_action=list
+

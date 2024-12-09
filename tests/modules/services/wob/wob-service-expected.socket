@@ -1,0 +1,8 @@
+[Install]
+WantedBy=sockets.target
+
+[Socket]
+FlushPending=yes
+ListenFIFO=%t/wob.sock
+RemoveOnStop=yes
+SocketMode=0600

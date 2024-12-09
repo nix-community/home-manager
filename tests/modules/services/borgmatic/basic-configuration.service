@@ -1,5 +1,4 @@
 [Service]
-CPUSchedulingPolicy=batch
 ExecStart=/nix/store/00000000000000000000000000000000-systemd/bin/systemd-inhibit \
   --who="borgmatic" \
   --what="sleep:shutdown" \

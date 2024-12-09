@@ -7,7 +7,7 @@ let
   cfg = config.programs.bemenu;
 
 in {
-  meta.maintainers = [ hm.maintainers.omernaveedxyz ];
+  meta.maintainers = [ ];
 
   options.programs.bemenu = {
     enable = mkEnableOption "bemenu";
@@ -15,7 +15,7 @@ in {
     package = mkPackageOption pkgs "bemenu" { };
 
     settings = mkOption {
-      type = with types; attrsOf (oneOf [ str int bool ]);
+      type = with types; attrsOf (oneOf [ str number bool ]);
       default = { };
       example = literalExpression ''
         {
@@ -32,6 +32,7 @@ in {
           hf = "#f9e2af";
           af = "#cdd6f4";
           ab = "#1e1e2e";
+          width-factor = 0.3;
         }
       '';
       description =

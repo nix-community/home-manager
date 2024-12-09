@@ -202,7 +202,7 @@ let
     '';
 
 in {
-  meta.maintainers = with maintainers; [ sumnerevans sebtm ];
+  meta.maintainers = with maintainers; [ sumnerevans ];
 
   options = {
     xsession.windowManager.i3 = {

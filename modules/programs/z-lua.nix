@@ -77,16 +77,26 @@ in {
       })"
     '';
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      source (${pkgs.z-lua}/bin/z --init fish ${
-        concatStringsSep " " cfg.options
-      } | psub)
-    '';
-
     programs.bash.shellAliases = mkIf cfg.enableAliases aliases;
 
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
 
-    programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
+    programs.fish = mkMerge [
+      {
+        shellInit = mkIf cfg.enableFishIntegration ''
+          source (${pkgs.z-lua}/bin/z --init fish ${
+            concatStringsSep " " cfg.options
+          } | psub)
+        '';
+      }
+
+      (mkIf (!config.programs.fish.preferAbbrs) {
+        shellAliases = mkIf cfg.enableAliases aliases;
+      })
+
+      (mkIf config.programs.fish.preferAbbrs {
+        shellAbbrs = mkIf cfg.enableAliases aliases;
+      })
+    ];
   };
 }

@@ -1,6 +1,9 @@
-{ config, ... }:
+{ pkgs, config, ... }:
 
-{
+let
+  configDir =
+    if pkgs.stdenv.isDarwin then "Library/Application Support" else ".config";
+in {
   programs.jujutsu = {
     enable = true;
     package = config.lib.test.mkStubPackage { };
@@ -13,9 +16,8 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.jjconfig.toml
-    assertFileContent \
-      home-files/.jjconfig.toml \
+    assertFileExists 'home-files/${configDir}/jj/config.toml'
+    assertFileContent 'home-files/${configDir}/jj/config.toml' \
       ${
         builtins.toFile "expected.toml" ''
           [user]

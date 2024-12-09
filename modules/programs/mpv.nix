@@ -55,8 +55,10 @@ let
 
   mpvPackage = if cfg.scripts == [ ] then
     cfg.package
+  else if hasAttr "wrapMpv" pkgs then
+    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; }
   else
-    pkgs.wrapMpv pkgs.mpv-unwrapped { scripts = cfg.scripts; };
+    pkgs.mpv.override { scripts = cfg.scripts; };
 
 in {
   options = {
@@ -176,6 +178,20 @@ in {
           }
         '';
       };
+
+      extraInput = mkOption {
+        description = ''
+          Additional lines that are appended to {file}`$XDG_CONFIG_HOME/mpv/input.conf`.
+           See {manpage}`mpv(1)` for the full list of options.
+        '';
+        type = with types; lines;
+        default = "";
+        example = ''
+          esc         quit                        #! Quit
+          #           script-binding uosc/video   #! Video tracks
+          # additional comments
+        '';
+      };
     };
   };
 
@@ -199,8 +215,11 @@ in {
         ${optionalString (cfg.profiles != { }) (renderProfiles cfg.profiles)}
       '';
     })
-    (mkIf (cfg.bindings != { }) {
-      xdg.configFile."mpv/input.conf".text = renderBindings cfg.bindings;
+    (mkIf (cfg.bindings != { } || cfg.extraInput != "") {
+      xdg.configFile."mpv/input.conf".text = mkMerge [
+        (mkIf (cfg.bindings != { }) (renderBindings cfg.bindings))
+        (mkIf (cfg.extraInput != "") cfg.extraInput)
+      ];
     })
     {
       xdg.configFile = mapAttrs' (name: value:
@@ -210,5 +229,5 @@ in {
     }
   ]);
 
-  meta.maintainers = with maintainers; [ tadeokondrak thiagokokada chuangzhu ];
+  meta.maintainers = with maintainers; [ thiagokokada chuangzhu ];
 }

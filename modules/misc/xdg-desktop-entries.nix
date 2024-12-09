@@ -51,7 +51,7 @@ let
 
       terminal = mkOption {
         description = "Whether the program runs in a terminal window.";
-        type = types.bool;
+        type = types.nullOr types.bool;
         default = false;
       };
 

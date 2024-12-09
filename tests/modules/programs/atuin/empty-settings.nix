@@ -4,7 +4,7 @@
   programs.atuin.enable = true;
 
   test.stubs = {
-    atuin = { };
+    atuin = { name = "atuin"; };
     bash-preexec = { };
   };
 

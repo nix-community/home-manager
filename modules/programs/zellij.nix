@@ -6,6 +6,7 @@ let
 
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
+  zellijCmd = getExe cfg.package;
 
 in {
   meta.maintainers = [ hm.maintainers.mainrs ];
@@ -69,16 +70,16 @@ in {
       };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
-      eval "$(zellij setup --generate-auto-start bash)"
+      eval "$(${zellijCmd} setup --generate-auto-start bash)"
     '');
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
-      eval "$(zellij setup --generate-auto-start zsh)"
+      eval "$(${zellijCmd} setup --generate-auto-start zsh)"
     '');
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
       (mkOrder 200 ''
-        eval (zellij setup --generate-auto-start fish | string collect)
+        eval (${zellijCmd} setup --generate-auto-start fish | string collect)
       '');
   };
 }

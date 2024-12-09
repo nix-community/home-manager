@@ -11,10 +11,10 @@ then to generate and activate a basic configuration run the command
 $ nix run home-manager/master -- init --switch
 ```
 
-For Nixpkgs or NixOS version 23.11 run
+For Nixpkgs or NixOS version 24.11 run
 
 ``` shell
-$ nix run home-manager/release-23.11 -- init --switch
+$ nix run home-manager/release-24.11 -- init --switch
 ```
 
 This will generate a `flake.nix` and a `home.nix` file in
@@ -30,7 +30,7 @@ $ # Edit files in ~/.config/home-manager
 $ nix run home-manager/$branch -- init --switch
 ```
 
-Where `$branch` is one of `master` or `release-23.11`.
+Where `$branch` is one of `master` or `release-24.11`.
 
 After the initial activation has completed successfully then building
 and activating your flake-based configuration is as simple as
@@ -58,5 +58,5 @@ If you only want to update a single flake input, then the command
 You can also pass flake-related options such as `--recreate-lock-file`
 or `--update-input <input>` to `home-manager` when building or
 switching, and these options will be forwarded to `nix build`. See the
-[NixOS Wiki page](https://nixos.wiki/wiki/Flakes) for details.
+[NixOS Wiki page](https://wiki.nixos.org/wiki/Flakes) for details.
 :::

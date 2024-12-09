@@ -26,32 +26,33 @@ let
     filterAttrs (_: v: v != null)
     ((getAttrs [ "type" "fileExt" "encoding" ] a.local) // {
       path = a.local.path;
-      postHook = pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook
-        + "/bin/post-hook";
+      postHook = if a.vdirsyncer.postHook != null then
+        (pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook
+          + "/bin/post-hook")
+      else
+        null;
     });
 
   remoteStorage = a:
-    filterAttrs (_: v: v != null) ((getAttrs [
-      "type"
-      "url"
-      "userName"
-      #"userNameCommand"
-      "passwordCommand"
-    ] a.remote) // (if a.vdirsyncer == null then
-      { }
-    else
-      getAttrs [
-        "itemTypes"
-        "verify"
-        "verifyFingerprint"
-        "auth"
-        "authCert"
-        "userAgent"
-        "tokenFile"
-        "clientIdCommand"
-        "clientSecretCommand"
-        "timeRange"
-      ] a.vdirsyncer));
+    filterAttrs (_: v: v != null)
+    ((getAttrs [ "type" "url" "userName" "passwordCommand" ] a.remote)
+      // (if a.vdirsyncer == null then
+        { }
+      else
+        getAttrs [
+          "urlCommand"
+          "userNameCommand"
+          "itemTypes"
+          "verify"
+          "verifyFingerprint"
+          "auth"
+          "authCert"
+          "userAgent"
+          "tokenFile"
+          "clientIdCommand"
+          "clientSecretCommand"
+          "timeRange"
+        ] a.vdirsyncer));
 
   pair = a:
     with a.vdirsyncer;
@@ -76,6 +77,8 @@ let
       ''post_hook = "${v}"''
     else if (n == "url") then
       ''url = "${v}"''
+    else if (n == "urlCommand") then
+      "url.fetch = ${listString (map wrap ([ "command" ] ++ v))}"
     else if (n == "timeRange") then ''
       start_date = "${v.start}"
       end_date = "${v.end}"'' else if (n == "itemTypes") then
@@ -91,7 +94,7 @@ let
     else if (n == "passwordPrompt") then
       ''password.fetch = ["prompt", "${v}"]''
     else if (n == "verify") then
-      "verify = ${if v then "true" else "false"}"
+      ''verify = "${v}"''
     else if (n == "verifyFingerprint") then
       ''verify_fingerprint = "${v}"''
     else if (n == "auth") then
@@ -195,6 +198,9 @@ in {
   config = mkIf cfg.enable {
     assertions = let
 
+      mutuallyExclusiveOptions =
+        [ [ "url" "urlCommand" ] [ "userName" "userNameCommand" ] ];
+
       requiredOptions = t:
         if (t == "caldav" || t == "carddav" || t == "http") then
           [ "url" ]
@@ -212,6 +218,7 @@ in {
 
       allowedOptions = let
         remoteOptions = [
+          "urlCommand"
           "userName"
           "userNameCommand"
           "password"
@@ -263,7 +270,16 @@ in {
               Storage ${n} is of type ${v.type}, but required
               option ${a} is not set.
             '';
-          }]) required)) (removeAttrs v [ "type" "_module" ]);
+          }]) required) ++ map (attrs:
+            let
+              defined = attrNames (filterAttrs (n: v: v != null)
+                (genAttrs attrs (a: v.${a} or null)));
+            in {
+              assertion = length defined <= 1;
+              message = "Storage ${n} has mutually exclusive options: ${
+                  concatStringsSep ", " defined
+                }";
+            }) mutuallyExclusiveOptions) (removeAttrs v [ "type" "_module" ]);
 
       storageAssertions = flatten (mapAttrsToList assertStorage localStorages)
         ++ flatten (mapAttrsToList assertStorage remoteStorages);

@@ -111,8 +111,8 @@ in {
             --slurpfile new "$newState" \
             '($old[] - $new[])[]' \
           | while read -r key; do
-              $VERBOSE_ECHO "Resetting dconf key \"$key\""
-              $DRY_RUN_CMD $DCONF_DBUS_RUN_SESSION dconf reset "$key"
+              verboseEcho "Resetting dconf key \"$key\""
+              run $DCONF_DBUS_RUN_SESSION dconf reset "$key"
             done
       '';
     in ''
@@ -128,7 +128,7 @@ in {
           "$newGenPath/${statePath}"
       fi
 
-      $DRY_RUN_CMD $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
+      run $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
 
       unset DCONF_DBUS_RUN_SESSION
     '');

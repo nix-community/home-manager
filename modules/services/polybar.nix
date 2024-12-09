@@ -220,7 +220,7 @@ in {
 
       Service = {
         Type = "forking";
-        Environment = "PATH=${cfg.package}/bin:/run/wrappers/bin";
+        Environment = [ "PATH=${cfg.package}/bin:/run/wrappers/bin" ];
         ExecStart =
           let scriptPkg = pkgs.writeShellScriptBin "polybar-start" cfg.script;
           in "${scriptPkg}/bin/polybar-start";

@@ -1,5 +1,0 @@
-k9s:
-  enableMouse: true
-  headless: false
-  maxConnRetry: 5
-  refreshRate: 2

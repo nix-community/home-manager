@@ -12,18 +12,20 @@ let
         path = mkOption {
           type = types.str;
           default = "${cfg.basePath}/${name}";
-          defaultText = "‹accounts.calendar.basePath›/‹name›";
+          defaultText =
+            lib.literalExpression "‹accounts.calendar.basePath›/‹name›";
           description = "The path of the storage.";
         };
 
         type = mkOption {
           type = types.enum [ "filesystem" "singlefile" ];
+          default = "filesystem";
           description = "The type of the storage.";
         };
 
         fileExt = mkOption {
           type = types.nullOr types.str;
-          default = null;
+          default = ".ics";
           description = "The file extension to use.";
         };
 
@@ -57,15 +59,6 @@ let
         description = "User name for authentication.";
       };
 
-      # userNameCommand = mkOption {
-      #   type = types.nullOr (types.listOf types.str);
-      #   default = null;
-      #   example = [ "~/get-username.sh" ];
-      #   description = ''
-      #     A command that prints the user name to standard output.
-      #   '';
-      # };
-
       passwordCommand = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
@@ -98,7 +91,8 @@ let
       };
 
       primaryCollection = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
+        default = null;
         description = ''
           The primary collection of the account. Required when an
           account has multiple collections.
@@ -106,8 +100,8 @@ let
       };
 
       local = mkOption {
-        type = types.nullOr (localModule name);
-        default = null;
+        type = localModule name;
+        default = { };
         description = ''
           Local configuration for the calendar.
         '';
@@ -129,6 +123,7 @@ in {
   options.accounts.calendar = {
     basePath = mkOption {
       type = types.str;
+      example = ".calendar";
       apply = p:
         if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''

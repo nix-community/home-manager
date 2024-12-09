@@ -1,12 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, ... }:
 
 {
   config = {
     programs.alacritty = {
       enable = true;
-      package = config.lib.test.mkStubPackage { version = "0.13.0"; };
+      package = config.lib.test.mkStubPackage { };
 
       settings = {
         window.dimensions = {
@@ -17,7 +15,7 @@ with lib;
         keyboard.bindings = [{
           key = "K";
           mods = "Control";
-          chars = "\\x0c";
+          chars = "\\u000c";
         }];
       };
     };

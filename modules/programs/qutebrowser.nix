@@ -9,7 +9,7 @@ let
   formatLine = o: n: v:
     let
       formatValue = v:
-        if builtins.isNull v then
+        if v == null then
           "None"
         else if builtins.isBool v then
           (if v then "True" else "False")
@@ -29,7 +29,10 @@ let
   formatKeyBindings = m: b:
     let
       formatKeyBinding = m: k: c:
-        ''config.bind("${k}", "${escape [ ''"'' ] c}", mode="${m}")'';
+        if c == null then
+          ''config.unbind("${k}", mode="${m}")''
+        else
+          ''config.bind("${k}", "${escape [ ''"'' ] c}", mode="${m}")'';
     in concatStringsSep "\n" (mapAttrsToList (formatKeyBinding m) b);
 
   formatQuickmarks = n: s: "${n} ${s}";
@@ -81,7 +84,7 @@ in {
         {
           w = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
           aw = "https://wiki.archlinux.org/?search={}";
-          nw = "https://nixos.wiki/index.php?search={}";
+          nw = "https://wiki.nixos.org/index.php?search={}";
           g = "https://www.google.com/search?hl=en&q={}";
         }
       '';
@@ -131,7 +134,7 @@ in {
     };
 
     keyBindings = mkOption {
-      type = with types; attrsOf (attrsOf (separatedString " ;; "));
+      type = with types; attrsOf (attrsOf (nullOr (separatedString " ;; ")));
       default = { };
       description = ''
         Key bindings mapping keys to commands in different modes. This setting

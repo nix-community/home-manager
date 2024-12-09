@@ -18,7 +18,7 @@
     lib.mkForce (builtins.toFile "empty" "");
 
   test.stubs = {
-    atuin = { };
+    atuin = { name = "atuin"; };
     bash-preexec = { };
   };
 

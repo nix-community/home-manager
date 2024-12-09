@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-09-13 23:46+0200\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
 "PO-Revision-Date: 2023-12-08 12:04+0000\n"
 "Last-Translator: David Houdek <sarejnovec@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/home-manager/"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Weblate 5.3-dev\n"
 
-#: modules/files.nix:234
+#: modules/files.nix:191
 msgid "Creating home file links in %s"
 msgstr "Vytváření linků na domácí soubory v %s"
 
-#: modules/files.nix:247
+#: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
 msgstr "Čištění osiřelých linků z %s"
 
-#: modules/files.nix:263
+#: modules/files.nix:220
 msgid "Creating profile generation %s"
 msgstr "Vytvářím profil generace %s"
 
-#: modules/files.nix:280
+#: modules/files.nix:237
 msgid "No change so reusing latest profile generation %s"
 msgstr "Žádná změna, takže bude použita profil poslední generace %s"
 
-#: modules/home-environment.nix:640
+#: modules/home-environment.nix:634
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "Poté zkuste znova aktivovat vaši Home Manager konfiguraci."
 
-#: modules/home-environment.nix:673
+#: modules/home-environment.nix:667
 msgid "Activating %s"
 msgstr "Aktivuji %s"
 
@@ -71,15 +71,15 @@ msgstr "Aktivuji %s"
 msgid "Migrating profile from %s to %s"
 msgstr "Migruji profil z %s do %s"
 
-#: modules/lib-bash/activation-init.sh:53
+#: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "Nebyl nalezen vhodný adresář profilu, byly zkoušeny %s a %s"
 
-#: modules/lib-bash/activation-init.sh:81
+#: modules/lib-bash/activation-init.sh:83
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "Kontrola správnosti oldGenNum a oldGenPath"
 
-#: modules/lib-bash/activation-init.sh:84
+#: modules/lib-bash/activation-init.sh:86
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -107,34 +107,34 @@ msgstr ""
 "\n"
 "a zkusit přepínač home‐manager znova. Hodně štěstí!"
 
-#: modules/lib-bash/activation-init.sh:95
+#: modules/lib-bash/activation-init.sh:127
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 msgstr "Chyba: USER je nastaven na \"%s\", ale očekáváme \"%s\""
 
-#: modules/lib-bash/activation-init.sh:104
+#: modules/lib-bash/activation-init.sh:136
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
 msgstr "Chyba: HOME je nastaven na \"%s\", ale očekáváme \"%s\""
 
-#: modules/lib-bash/activation-init.sh:119
+#: modules/lib-bash/activation-init.sh:153
 msgid "Starting Home Manager activation"
 msgstr "Zapínám aktivaci Home Manager"
 
-#: modules/lib-bash/activation-init.sh:123
+#: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"
 msgstr "Kontrola správnosti Nix"
 
-#: modules/lib-bash/activation-init.sh:133
+#: modules/lib-bash/activation-init.sh:170
 msgid "This is a dry run"
 msgstr "Toto je zkušební běh"
 
-#: modules/lib-bash/activation-init.sh:137
+#: modules/lib-bash/activation-init.sh:174
 msgid "This is a live run"
 msgstr "Toto je běh na ostro"
 
-#: modules/lib-bash/activation-init.sh:143
+#: modules/lib-bash/activation-init.sh:180
 msgid "Using Nix version: %s"
 msgstr "Používám Nix verze: %s"
 
-#: modules/lib-bash/activation-init.sh:146
+#: modules/lib-bash/activation-init.sh:183
 msgid "Activation variables:"
 msgstr "Aktivační proměnné:"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2023-09-13 23:46+0200\n"
+"POT-Creation-Date: 2024-04-17 23:19+0200\n"
 "PO-Revision-Date: 2023-06-12 10:49+0000\n"
 "Last-Translator: Jeff Ames <jeff@anjefu.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.18-dev\n"
 
-#: modules/files.nix:234
+#: modules/files.nix:191
 msgid "Creating home file links in %s"
 msgstr "ホームファイルのリンクを %s に作っています"
 
-#: modules/files.nix:247
+#: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
 msgstr "%s から無効なリンクを消去しています"
 
-#: modules/files.nix:263
+#: modules/files.nix:220
 msgid "Creating profile generation %s"
 msgstr "世代 %s のプロファイルを生成しています"
 
-#: modules/files.nix:280
+#: modules/files.nix:237
 msgid "No change so reusing latest profile generation %s"
 msgstr "変更されていないので最新の世代 %s のプロファイルを再利用します"
 
-#: modules/home-environment.nix:640
+#: modules/home-environment.nix:634
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "で競合を解消し、再度Home Managerの設定を試してください。"
 
-#: modules/home-environment.nix:673
+#: modules/home-environment.nix:667
 msgid "Activating %s"
 msgstr "%s を有効化しています"
 
@@ -71,16 +71,16 @@ msgstr "%s を有効化しています"
 msgid "Migrating profile from %s to %s"
 msgstr "%s から %s にプロファイルを転送中"
 
-#: modules/lib-bash/activation-init.sh:53
+#: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
 "適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
 
-#: modules/lib-bash/activation-init.sh:81
+#: modules/lib-bash/activation-init.sh:83
 msgid "Sanity checking oldGenNum and oldGenPath"
 msgstr "oldGenNum と oldGenPath の健全性検査をしています"
 
-#: modules/lib-bash/activation-init.sh:84
+#: modules/lib-bash/activation-init.sh:86
 msgid ""
 "The previous generation number and path are in conflict! These\n"
 "must be either both empty or both set but are now set to\n"
@@ -108,35 +108,35 @@ msgstr ""
 "\n"
 "を実行して、home-manager switch を再び実行してみることでしょう。幸運を！"
 
-#: modules/lib-bash/activation-init.sh:95
+#: modules/lib-bash/activation-init.sh:127
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 msgstr "エラー: USER は \"%s\" に設定されていますが、\"%s\" が期待されています"
 
-#: modules/lib-bash/activation-init.sh:104
+#: modules/lib-bash/activation-init.sh:136
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
 msgstr "エラー: HOME は \"%s\" に設定されていますが、\"%s\" が期待されています"
 
-#: modules/lib-bash/activation-init.sh:119
+#: modules/lib-bash/activation-init.sh:153
 msgid "Starting Home Manager activation"
 msgstr "Home Managerの有効化を開始しました"
 
-#: modules/lib-bash/activation-init.sh:123
+#: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"
 msgstr "Nixの健全性検査中です"
 
-#: modules/lib-bash/activation-init.sh:133
+#: modules/lib-bash/activation-init.sh:170
 msgid "This is a dry run"
 msgstr "これは予行練習(dry run)です"
 
-#: modules/lib-bash/activation-init.sh:137
+#: modules/lib-bash/activation-init.sh:174
 msgid "This is a live run"
 msgstr "これは実際に実行されます"
 
-#: modules/lib-bash/activation-init.sh:143
+#: modules/lib-bash/activation-init.sh:180
 msgid "Using Nix version: %s"
 msgstr "Nix バージョン %s を使用しています"
 
-#: modules/lib-bash/activation-init.sh:146
+#: modules/lib-bash/activation-init.sh:183
 msgid "Activation variables:"
 msgstr "有効化変数:"
 

@@ -20,7 +20,7 @@
           [Service]
           Environment=PATH=@nix@/bin
           EnvironmentFile=/home/hm-user/.config/cachix-agent.token
-          ExecStart='@cachix-agent@/bin/cachix' 'deploy' 'agent' 'test-agent' 'home-manager'
+          ExecStart=@cachix-agent@/bin/cachix deploy agent test-agent home-manager
           KillMode=process
           Restart=on-failure
 

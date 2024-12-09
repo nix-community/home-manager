@@ -24,7 +24,7 @@ Home Manager can be used in three primary ways:
 :::{.note}
 In this chapter we describe how to install Home Manager in the standard
 way using channels. If you prefer to use [Nix
-Flakes](https://nixos.wiki/wiki/Flakes) then please see the instructions
+Flakes](https://wiki.nixos.org/wiki/Flakes) then please see the instructions
 in [nix flakes](#ch-nix-flakes).
 :::
 

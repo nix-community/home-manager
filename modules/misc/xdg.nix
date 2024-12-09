@@ -30,6 +30,8 @@ in {
       apply = toString;
       description = ''
         Absolute path to directory holding application caches.
+
+        Sets `XDG_CACHE_HOME` for the user if `xdg.enable` is set `true`.
       '';
     };
 
@@ -48,6 +50,8 @@ in {
       apply = toString;
       description = ''
         Absolute path to directory holding application configurations.
+
+        Sets `XDG_CONFIG_HOME` for the user if `xdg.enable` is set `true`.
       '';
     };
 
@@ -67,6 +71,18 @@ in {
       apply = toString;
       description = ''
         Absolute path to directory holding application data.
+
+        Sets `XDG_DATA_HOME` for the user if `xdg.enable` is set `true`.
+      '';
+    };
+
+    stateFile = mkOption {
+      type = fileType "xdg.stateFile" "<varname>xdg.stateHome</varname>"
+        cfg.stateHome;
+      default = { };
+      description = ''
+        Attribute set of files to link into the user's XDG
+        state home.
       '';
     };
 
@@ -76,6 +92,8 @@ in {
       apply = toString;
       description = ''
         Absolute path to directory holding application states.
+
+        Sets `XDG_STATE_HOME` for the user if `xdg.enable` is set `true`.
       '';
     };
   };
@@ -122,6 +140,8 @@ in {
           cfg.configFile)
         (mapAttrs' (name: file: nameValuePair "${cfg.dataHome}/${name}" file)
           cfg.dataFile)
+        (mapAttrs' (name: file: nameValuePair "${cfg.stateHome}/${name}" file)
+          cfg.stateFile)
         { "${cfg.cacheHome}/.keep".text = ""; }
       ];
     }

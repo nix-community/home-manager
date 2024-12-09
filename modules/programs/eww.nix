@@ -5,6 +5,7 @@ with lib;
 let
 
   cfg = config.programs.eww;
+  ewwCmd = "${cfg.package}/bin/eww";
 
 in {
   meta.maintainers = [ hm.maintainers.mainrs ];
@@ -30,10 +31,40 @@ in {
         {file}`$XDG_CONFIG_HOME/eww`.
       '';
     };
+
+    enableBashIntegration = mkEnableOption "Bash integration" // {
+      default = true;
+    };
+
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
+      default = true;
+    };
+
+    enableFishIntegration = mkEnableOption "Fish integration" // {
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
     xdg.configFile."eww".source = cfg.configDir;
+
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+      if [[ $TERM != "dumb" ]]; then
+        eval "$(${ewwCmd} shell-completions --shell bash)"
+      fi
+    '';
+
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      if [[ $TERM != "dumb" ]]; then
+        eval "$(${ewwCmd} shell-completions --shell zsh)"
+      fi
+    '';
+
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      if test "$TERM" != "dumb"
+        eval "$(${ewwCmd} shell-completions --shell fish)"
+      end
+    '';
   };
 }

@@ -68,8 +68,8 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    home.file.".inputrc".text = let
+  config = mkIf cfg.enable (let
+    finalConfig = let
       configStr = concatStringsSep "\n"
         (optional cfg.includeSystemConfig "$include /etc/inputrc"
           ++ mapAttrsToList mkSetVariableStr cfg.variables
@@ -80,5 +80,13 @@ in {
       ${configStr}
       ${cfg.extraConfig}
     '';
-  };
+  in mkMerge [
+    (mkIf (!config.home.preferXdgDirectories) {
+      home.file.".inputrc".text = finalConfig;
+    })
+    (mkIf config.home.preferXdgDirectories {
+      xdg.configFile.inputrc.text = finalConfig;
+      home.sessionVariables.INPUTRC = "${config.xdg.configHome}/inputrc";
+    })
+  ]);
 }

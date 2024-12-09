@@ -1,0 +1,8 @@
+{"_id":"allowDashAv1Formats","value":true}
+{"_id":"checkForBlogPosts","value":false}
+{"_id":"checkForUpdates","value":false}
+{"_id":"commentAutoLoadEnabled","value":true}
+{"_id":"defaultQuality","value":"1080"}
+{"_id":"hideHeaderLogo","value":true}
+{"_id":"listType","value":"list"}
+{"_id":"useRssFeeds","value":true}

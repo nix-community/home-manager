@@ -15,7 +15,7 @@ let
       modal = mkEnableOption "modal (vim) mode";
 
       verbs = mkOption {
-        type = with types; listOf (attrsOf (either bool str));
+        type = with types; listOf (attrsOf (oneOf [ bool str (listOf str) ]));
         default = [ ];
         example = literalExpression ''
           [
@@ -46,6 +46,9 @@ let
           `key` (optional)
           : a keyboard key triggering execution
 
+          `keys` (optional)
+          : multiple keyboard keys each triggering execution
+
           `shortcut` (optional)
           : an alternate way to call the verb (without
             the arguments part)
@@ -54,7 +57,7 @@ let
           : whether to quit broot on execution
             (default: `true`)
 
-          `from_shell` (optional)</term>
+          `from_shell` (optional)
           : whether the verb must be executed from the
             parent shell (default: `false`)
         '';

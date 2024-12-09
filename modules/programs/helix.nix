@@ -15,6 +15,7 @@ in {
       type = types.package;
       default = pkgs.helix;
       defaultText = literalExpression "pkgs.helix";
+      example = literalExpression "pkgs.evil-helix";
       description = "The package to use for helix.";
     };
 
@@ -75,7 +76,6 @@ in {
       default = { };
       example = literalExpression ''
         {
-          # the language-server option currently requires helix from the master branch at https://github.com/helix-editor/helix/
           language-server.typescript-language-server = with pkgs.nodePackages; {
             command = "''${typescript-language-server}/bin/typescript-language-server";
             args = [ "--stdio" "--tsserver-path=''${typescript}/lib/node_modules/typescript/lib" ];
@@ -93,6 +93,16 @@ in {
 
         See <https://docs.helix-editor.com/languages.html>
         for more information.
+      '';
+    };
+
+    ignores = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ ".build/" "!.gitignore" ];
+      description = ''
+        List of paths that should be globally ignored for file picker.
+        Supports the usual ignore and negative ignore (unignore) rules used in `.gitignore` files.
       '';
     };
 
@@ -178,7 +188,7 @@ in {
           nativeBuildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
             wrapProgram $out/bin/hx \
-              --prefix PATH : ${lib.makeBinPath cfg.extraPackages}
+              --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
           '';
         })
       ]
@@ -194,6 +204,9 @@ in {
         };
         "helix/languages.toml" = mkIf (cfg.languages != { }) {
           source = tomlFormat.generate "helix-languages-config" cfg.languages;
+        };
+        "helix/ignore" = mkIf (cfg.ignores != [ ]) {
+          text = concatStringsSep "\n" cfg.ignores + "\n";
         };
       };
 

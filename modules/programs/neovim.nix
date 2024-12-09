@@ -198,6 +198,28 @@ in {
         '';
       };
 
+      extraWrapperArgs = mkOption {
+        type = with types; listOf str;
+        default = [ ];
+        example = literalExpression ''
+          [
+            "--suffix"
+            "LIBRARY_PATH"
+            ":"
+            "''${lib.makeLibraryPath [ pkgs.stdenv.cc.cc pkgs.zlib ]}"
+            "--suffix"
+            "PKG_CONFIG_PATH"
+            ":"
+            "''${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.stdenv.cc.cc pkgs.zlib ]}"
+          ]
+        '';
+        description = ''
+          Extra arguments to be passed to the neovim wrapper.
+          This option sets environment variables required for building and running binaries
+          with external package managers like mason.nvim.
+        '';
+      };
+
       generatedConfigViml = mkOption {
         type = types.lines;
         visible = true;
@@ -376,6 +398,13 @@ in {
       customRC = cfg.extraConfig;
     };
 
+    wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package (neovimConfig // {
+      wrapperArgs =
+        (lib.escapeShellArgs (neovimConfig.wrapperArgs ++ cfg.extraWrapperArgs))
+        + " " + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
+        + extraMakeWrapperLuaArgs;
+      wrapRc = false;
+    });
   in mkIf cfg.enable {
 
     programs.neovim.generatedConfigViml = neovimConfig.neovimRcContent;
@@ -392,17 +421,18 @@ in {
 
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
 
+    home.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+
     xdg.configFile =
       let hasLuaConfig = hasAttr "lua" config.programs.neovim.generatedConfigs;
       in mkMerge (
         # writes runtime
         (map (x: x.runtime) pluginsNormalized) ++ [{
           "nvim/init.lua" = let
-            luaRcContent =
-              lib.optionalString (neovimConfig.neovimRcContent != "")
+            luaRcContent = lib.optionalString (wrappedNeovim'.initRc != "")
               "vim.cmd [[source ${
                 pkgs.writeText "nvim-init-home-manager.vim"
-                neovimConfig.neovimRcContent
+                wrappedNeovim'.initRc
               }]]" + config.programs.neovim.extraLuaConfig
               + lib.optionalString hasLuaConfig
               config.programs.neovim.generatedConfigs.lua;
@@ -413,16 +443,6 @@ in {
           };
         }]);
 
-    programs.neovim.finalPackage = pkgs.wrapNeovimUnstable cfg.package
-      (neovimConfig // {
-        wrapperArgs = (lib.escapeShellArgs neovimConfig.wrapperArgs) + " "
-          + extraMakeWrapperArgs + " " + extraMakeWrapperLuaCArgs + " "
-          + extraMakeWrapperLuaArgs;
-        wrapRc = false;
-      });
-
-    programs.bash.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-    programs.fish.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
-    programs.zsh.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
+    programs.neovim.finalPackage = wrappedNeovim';
   };
 }

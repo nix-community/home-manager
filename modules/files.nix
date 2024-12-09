@@ -79,59 +79,14 @@ in
             (mapAttrsToList (n: v: v.target)
             (filterAttrs (n: v: v.force) cfg));
 
-        check = pkgs.writeText "check" ''
-          ${config.lib.bash.initHomeManagerLib}
+        storeDir = escapeShellArg builtins.storeDir;
 
-          # A symbolic link whose target path matches this pattern will be
-          # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+        check = pkgs.substituteAll {
+          src = ./files/check-link-targets.sh;
 
-          forcedPaths=(${forcedPaths})
-
-          newGenFiles="$1"
-          shift
-          for sourcePath in "$@" ; do
-            relativePath="''${sourcePath#$newGenFiles/}"
-            targetPath="$HOME/$relativePath"
-
-            forced=""
-            for forcedPath in "''${forcedPaths[@]}"; do
-              if [[ $targetPath == $forcedPath* ]]; then
-                forced="yeah"
-                break
-              fi
-            done
-
-            if [[ -n $forced ]]; then
-              $VERBOSE_ECHO "Skipping collision check for $targetPath"
-            elif [[ -e "$targetPath" \
-                && ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
-              # The target file already exists and it isn't a symlink owned by Home Manager.
-              if cmp -s "$sourcePath" "$targetPath"; then
-                # First compare the files' content. If they're equal, we're fine.
-                warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be skipped since they are the same"
-              elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
-                # Next, try to move the file to a backup location if configured and possible
-                backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-                if [[ -e "$backup" ]]; then
-                  errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
-                  collision=1
-                else
-                  warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
-                fi
-              else
-                # Fail if nothing else works
-                errorEcho "Existing file '$targetPath' is in the way of '$sourcePath'"
-                collision=1
-              fi
-            fi
-          done
-
-          if [[ -v collision ]] ; then
-            errorEcho "Please move the above files and try again or use 'home-manager switch -b backup' to back up existing files automatically."
-            exit 1
-          fi
-        '';
+          inherit (config.lib.bash) initHomeManagerLib;
+          inherit forcedPaths storeDir;
+        };
       in
       ''
         function checkNewGenCollision() {
@@ -169,6 +124,8 @@ in
     home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (
       let
         link = pkgs.writeShellScript "link" ''
+          ${config.lib.bash.initHomeManagerLib}
+
           newGenFiles="$1"
           shift
           for sourcePath in "$@" ; do
@@ -177,17 +134,17 @@ in
             if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
               # The target exists, back it up
               backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-              $DRY_RUN_CMD mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
+              run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
             fi
 
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
               # The target exists but is identical – don't do anything.
-              $VERBOSE_ECHO "Skipping '$targetPath' as it is identical to '$sourcePath'"
+              verboseEcho "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
               # Place that symlink, --force
               # This can still fail if the target is a directory, in which case we bail out.
-              $DRY_RUN_CMD mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
-              $DRY_RUN_CMD ln -Tsf $VERBOSE_ARG "$sourcePath" "$targetPath" || exit 1
+              run mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
+              run ln -Tsf $VERBOSE_ARG "$sourcePath" "$targetPath" || exit 1
             fi
           done
         '';
@@ -204,12 +161,12 @@ in
           for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
-              $VERBOSE_ECHO "Checking $targetPath: exists"
+              verboseEcho "Checking $targetPath: exists"
             elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
-              $VERBOSE_ECHO "Checking $targetPath: gone (deleting)"
-              $DRY_RUN_CMD rm $VERBOSE_ARG "$targetPath"
+              verboseEcho "Checking $targetPath: gone (deleting)"
+              run rm $VERBOSE_ARG "$targetPath"
 
               # Recursively delete empty parent directories.
               targetDir="$(dirname "$relativePath")"
@@ -219,7 +176,7 @@ in
                 # Call rmdir with a relative path excluding $HOME.
                 # Otherwise, it might try to delete $HOME and exit
                 # with a permission error.
-                $DRY_RUN_CMD rmdir $VERBOSE_ARG \
+                run rmdir $VERBOSE_ARG \
                     -p --ignore-fail-on-non-empty \
                     "$targetDir"
 
@@ -266,15 +223,15 @@ in
               # `nix profile remove '.*' --profile "$genProfilePath"` was not working, so here is a workaround:
               nix profile list --profile "$genProfilePath" \
                 | cut -d ' ' -f 4 \
-                | xargs -t $DRY_RUN_CMD nix profile remove $VERBOSE_ARG --profile "$genProfilePath"
-              $DRY_RUN_CMD nix profile install $VERBOSE_ARG --profile "$genProfilePath" "$newGenPath"
+                | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG --profile "$genProfilePath"
+              run nix profile install $VERBOSE_ARG --profile "$genProfilePath" "$newGenPath"
             else
-              $DRY_RUN_CMD nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
+              run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
             fi
 
-            $DRY_RUN_CMD nix-store --realise "$newGenPath" --add-root "$newGenGcPath" > "$DRY_RUN_NULL"
+            run --quiet nix-store --realise "$newGenPath" --add-root "$newGenGcPath" --indirect
             if [[ -e "$legacyGenGcPath" ]]; then
-              $DRY_RUN_CMD rm $VERBOSE_ARG "$legacyGenGcPath"
+              run rm $VERBOSE_ARG "$legacyGenGcPath"
             fi
           else
             _i "No change so reusing latest profile generation %s" "$oldGenNum"

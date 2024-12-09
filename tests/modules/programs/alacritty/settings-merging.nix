@@ -1,12 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 {
   config = {
     programs.alacritty = {
       enable = true;
-      package = config.lib.test.mkStubPackage { version = "0.12.3"; };
+      package = config.lib.test.mkStubPackage { };
 
       settings = {
         window.dimensions = {
@@ -14,10 +12,10 @@ with lib;
           columns = 200;
         };
 
-        key_bindings = [{
+        keyboard.bindings = [{
           key = "K";
           mods = "Control";
-          chars = "\\x0c";
+          chars = "\\u000c";
         }];
 
         font = let
@@ -32,8 +30,8 @@ with lib;
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/alacritty/alacritty.yml \
-        ${./settings-merging-expected.yml}
+        home-files/.config/alacritty/alacritty.toml \
+        ${./settings-toml-expected.toml}
     '';
   };
 }

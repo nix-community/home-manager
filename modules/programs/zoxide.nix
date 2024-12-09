@@ -26,9 +26,9 @@ in {
     options = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "--no-aliases" ];
+      example = [ "--no-cmd" ];
       description = ''
-        List of options to pass to zoxide.
+        List of options to pass to zoxide init.
       '';
     };
 
@@ -68,9 +68,9 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 150 ''
       eval "$(${cfg.package}/bin/zoxide init bash ${cfgOptions})"
-    '';
+    '');
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/zoxide init zsh ${cfgOptions})"
@@ -87,7 +87,6 @@ in {
           mkdir $zoxide_cache
         }
         ${cfg.package}/bin/zoxide init nushell ${cfgOptions} |
-          str replace "def-env" "def --env" --all |  # https://github.com/ajeetdsouza/zoxide/pull/632
           save --force ${config.xdg.cacheHome}/zoxide/init.nu
       '';
       extraConfig = ''

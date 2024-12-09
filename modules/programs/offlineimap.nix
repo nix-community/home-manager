@@ -42,6 +42,7 @@ let
         starttls = imap.tls.useStartTls;
       } else {
         ssl = false;
+        starttls = false;
       };
 
       remotePassEval =

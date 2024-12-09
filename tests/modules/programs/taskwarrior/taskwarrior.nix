@@ -6,6 +6,7 @@ with lib;
   config = {
     programs.taskwarrior = {
       enable = true;
+      package = pkgs.taskwarrior3;
       colorTheme = "dark-violets-256";
       dataLocation = "/some/data/location";
       config = {
@@ -18,7 +19,7 @@ with lib;
       '';
     };
 
-    test.stubs.taskwarrior = { };
+    test.stubs.taskwarrior3 = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/task/home-manager-taskrc

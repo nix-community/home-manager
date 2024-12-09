@@ -37,8 +37,8 @@ in {
     # NOTE: just copy the files because symlinks won't be recognized by macOS
     home.activation.setCocoaKeybindings =
       hm.dag.entryAfter [ "writeBoundary" ] ''
-        $VERBOSE_ECHO "Configuring keybindings for the Cocoa Text System"
-        $DRY_RUN_CMD install -Dm644 $VERBOSE_ARG \
+        verboseEcho "Configuring keybindings for the Cocoa Text System"
+        run install -Dm644 $VERBOSE_ARG \
           "${confFile}" "${homeDir}/Library/KeyBindings/DefaultKeyBinding.dict"
       '';
   };

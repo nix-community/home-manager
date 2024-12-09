@@ -35,5 +35,10 @@ with lib;
     serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
     assertFileExists $serviceFile
     assertFileContent $serviceFileNormalized ${./imapnotify.service}
+
+    configFile="home-files/.config/imapnotify/imapnotify-hm-example.com-config.json"
+    configFileNormalized="$(normalizeStorePaths "$configFile")"
+    assertFileExists $configFile
+    assertFileContent $configFileNormalized ${./imapnotify-config.json}
   '';
 }

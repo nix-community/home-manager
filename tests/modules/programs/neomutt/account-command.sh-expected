@@ -1,0 +1,39 @@
+#!/nix/store/00000000000000000000000000000000-bash/bin/bash
+# Automatically set login variables based on the current account.
+# This requires NeoMutt >= 2022-05-16
+
+while [ ! -z "$1" ]; do
+  case "$1" in
+     --hostname)
+         shift
+         hostname="$1"
+         ;;
+     --username)
+         shift
+         username="$1@"
+         ;;
+     --type)
+        shift
+        type="$1"
+         ;;
+     *)
+        exit 1
+        ;;
+  esac
+shift
+done
+
+found=
+case "${username}${hostname}" in
+  home.manager@imap.example.com)
+    found=1
+    username="home.manager"
+    password="$(password-command)"
+    ;;
+esac
+
+if [ -n "$found" ]; then
+  echo "username: $username"
+  echo "password: $password"
+fi
+

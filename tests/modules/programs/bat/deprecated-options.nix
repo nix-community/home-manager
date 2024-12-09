@@ -45,7 +45,7 @@ with lib;
           --map-syntax='*.jenkinsfile:Groovy'
           --map-syntax='*.props:Java Properties'
           --pager='less -FR'
-          --theme='TwoDark'
+          --theme=TwoDark
         ''
       }
 

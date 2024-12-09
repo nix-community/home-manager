@@ -72,7 +72,7 @@ in {
       Install = { WantedBy = [ "default.target" ]; };
 
       Service = {
-        Environment = "PATH=${makeBinPath [ pkgs.mercurial pkgs.git ]}";
+        Environment = [ "PATH=${makeBinPath [ pkgs.mercurial pkgs.git ]}" ];
         ExecStart =
           "${pkgs.hound}/bin/houndd ${concatStringsSep " " houndOptions}";
       };

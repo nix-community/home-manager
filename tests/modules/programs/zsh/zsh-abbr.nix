@@ -12,6 +12,6 @@
     abbreviations=home-files/.config/zsh-abbr/user-abbreviations
 
     assertFileExists $abbreviations
-    assertFileContains $abbreviations "abbr 'ga'='git add'"
+    assertFileContains $abbreviations "abbr ga='git add'"
   '';
 }

@@ -10,6 +10,35 @@ let
     concatStringsSep ","
     (mapAttrsToList (name: value: "${name}:${value}") colors);
 
+  hasShellIntegrationEmbedded = lib.versionAtLeast cfg.package.version "0.48.0";
+
+  bashIntegration = if hasShellIntegrationEmbedded then ''
+    if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+      eval "$(${getExe cfg.package} --bash)"
+    fi
+  '' else ''
+    if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+      . ${cfg.package}/share/fzf/completion.bash
+      . ${cfg.package}/share/fzf/key-bindings.bash
+    fi
+  '';
+
+  zshIntegration = if hasShellIntegrationEmbedded then ''
+    if [[ $options[zle] = on ]]; then
+      eval "$(${getExe cfg.package} --zsh)"
+    fi
+  '' else ''
+    if [[ $options[zle] = on ]]; then
+      . ${cfg.package}/share/fzf/completion.zsh
+      . ${cfg.package}/share/fzf/key-bindings.zsh
+    fi
+  '';
+
+  fishIntegration = if hasShellIntegrationEmbedded then ''
+    ${getExe cfg.package} --fish | source
+  '' else ''
+    source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
+  '';
 in {
   imports = [
     (mkRemovedOptionModule [ "programs" "fzf" "historyWidgetCommand" ]
@@ -173,26 +202,16 @@ in {
     # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
     # initialization show up a bit earlier. This is to make initialization of
     # other history managers, like mcfly or atuin, take precedence.
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
-      if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-        . ${cfg.package}/share/fzf/completion.bash
-        . ${cfg.package}/share/fzf/key-bindings.bash
-      fi
-    '');
+    programs.bash.initExtra =
+      mkIf cfg.enableBashIntegration (mkOrder 200 bashIntegration);
 
     # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
     # initialization show up a bit earlier. This is to make initialization of
     # other history managers, like mcfly or atuin, take precedence.
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
-      if [[ $options[zle] = on ]]; then
-        . ${cfg.package}/share/fzf/completion.zsh
-        . ${cfg.package}/share/fzf/key-bindings.zsh
-      fi
-    '');
+    programs.zsh.initExtra =
+      mkIf cfg.enableZshIntegration (mkOrder 200 zshIntegration);
 
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
-      (mkOrder 200 ''
-        source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
-      '');
+    programs.fish.interactiveShellInit =
+      mkIf cfg.enableFishIntegration (mkOrder 200 fishIntegration);
   };
 }

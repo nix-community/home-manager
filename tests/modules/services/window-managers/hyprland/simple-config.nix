@@ -46,6 +46,11 @@
         "$mod ALT, mouse:272, resizewindow"
       ];
 
+      device = {
+        name = "some:device";
+        enable = true;
+      };
+
       plugin = {
         plugin1 = {
           dummy = "plugin setting";
