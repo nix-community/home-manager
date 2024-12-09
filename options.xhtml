@@ -4328,6 +4328,8 @@ attribute set of (string or signed integer or boolean or list of string)</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  TLSType = &quot;IMAP&quot;;
+  TLSVersions = [ &quot;+1.3&quot; &quot;+1.2&quot; &quot;-1.1&quot; ];
   PipelineDepth = 10;
   Timeout = 60;
 };
