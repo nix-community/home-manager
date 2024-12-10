@@ -53,7 +53,7 @@ in {
             lib.mapAttrsToList
             (group: value: toLine file (path ++ [ group ]) value) value
           else
-            "run test -f '${configHome}/${file}' && run ${pkgs.libsForQt5.kconfig}/bin/kwriteconfig5 --file '${configHome}/${file}' ${
+            "run touch '${configHome}/${file}' && run ${pkgs.libsForQt5.kconfig}/bin/kwriteconfig5 --file '${configHome}/${file}' ${
               lib.concatMapStringsSep " " (x: "--group ${x}")
               (lib.lists.init path)
             } --key '${lib.lists.last path}' ${toValue value}";
