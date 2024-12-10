@@ -24,7 +24,7 @@ let
 
       options = {
         layer = mkOption {
-          type = nullOr (enum [ "top" "bottom" ]);
+          type = nullOr (enum [ "top" "bottom" "overlay" ]);
           default = null;
           description = ''
             Decide if the bar is displayed in front (`"top"`)
