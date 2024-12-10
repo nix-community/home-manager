@@ -64501,13 +64501,10 @@ null or signed integer</p>
  </span>
 </dt>
 <dd>
-<p>Which pinentry interface to use. If not
-<code class="literal">null</code>, it sets
-<code class="option">pinentry-program</code> in
-<code class="filename">gpg-agent.conf</code>. Beware that
-<code class="literal">pinentry-gnome3</code> may not work on non-Gnome
-systems. You can fix it by adding the following to your
-system configuration:</p><pre><code class="programlisting nix">services.dbus.packages = [ pkgs.gcr ];
+<p>Which pinentry interface to use. If not <code class="literal">null</code>, it sets
+<code class="option">pinentry-program</code> in <code class="filename">gpg-agent.conf</code>. Beware that
+<code class="literal">pinentry-gnome3</code> may not work on non-GNOME systems. You can fix it by
+adding the following to your configuration:</p><pre><code class="programlisting nix">home.packages = [ pkgs.gcr ];
 </code></pre>
 
 <p><span class="emphasis"><em>Type:</em></span>
