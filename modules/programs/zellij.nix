@@ -8,18 +8,39 @@ let
   yamlFormat = pkgs.formats.yaml { };
   zellijCmd = getExe cfg.package;
 
+  autostartOnShellStartModule = types.submodule {
+    options = {
+      enable = mkEnableOption "" // {
+        description = ''
+          Whether to autostart Zellij session on shell creation.
+        '';
+      };
+
+      attachExistingSession = mkEnableOption "" // {
+        description = ''
+          Whether to attach to the default session after being autostarted if a Zellij session already exists.
+        '';
+      };
+
+      exitShellOnExit = mkEnableOption "" // {
+        description = ''
+          Whether to exit the shell when Zellij exits after being autostarted.
+        '';
+      };
+    };
+  };
 in {
-  meta.maintainers = [ hm.maintainers.mainrs ];
+  meta.maintainers = [ hm.maintainers.mainrs hm.maintainers.adda ];
 
   options.programs.zellij = {
-    enable = mkEnableOption "zellij";
+    enable = mkEnableOption "Zellij";
 
     package = mkOption {
       type = types.package;
       default = pkgs.zellij;
       defaultText = literalExpression "pkgs.zellij";
       description = ''
-        The zellij package to install.
+        The Zellij package to install.
       '';
     };
 
@@ -41,6 +62,23 @@ in {
       '';
     };
 
+    # Additional options.
+    enableShellCompletions = mkEnableOption
+      "Zellij shell completions (requires enable<Shell>Integration to work for the respective <Shell>)"
+      // {
+        default = true;
+      };
+
+    autostartOnShellStart = mkOption {
+      type = types.nullOr autostartOnShellStartModule;
+      default = null;
+      description = ''
+        Options related to autostarting Zellij on shell creation.
+        Requires enable<Shell>Integration to apply to the respective <Shell>.
+      '';
+    };
+
+    # Shell integration.
     enableBashIntegration = mkEnableOption "Bash integration" // {
       default = false;
     };
@@ -69,17 +107,44 @@ in {
         text = lib.hm.generators.toKDL { } cfg.settings;
       };
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
-      eval "$(${zellijCmd} setup --generate-auto-start bash)"
-    '');
+    programs.zsh.initExtra = mkIf (cfg.enableZshIntegration) (mkOrder 200
+      ((if cfg.autostartOnShellStart.enable then ''
+        eval "$(${zellijCmd} setup --generate-auto-start zsh)"
+      '' else
+        "") + (if cfg.enableShellCompletions then ''
+          # TMPFIX: Until Zellij fixes completions generation and functions creation, a workaround is necessary.
+          #  Used workaround: https://github.com/zellij-org/zellij/issues/1933#issuecomment-2274464004.
+          autoload -U +X compinit && compinit
+          source <(${zellijCmd} setup --generate-completion zsh | sed -Ee 's/^(_(zellij) ).*/compdef \1\2/')
+        '' else
+          "")));
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
-      eval "$(${zellijCmd} setup --generate-auto-start zsh)"
-    '');
-
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
-      (mkOrder 200 ''
+    programs.fish.interactiveShellInit = mkIf (cfg.enableFishIntegration)
+      (mkOrder 200 ((if cfg.autostartOnShellStart.enable then ''
         eval (${zellijCmd} setup --generate-auto-start fish | string collect)
-      '');
+      '' else
+        "") + (if cfg.enableShellCompletions then ''
+          eval (${zellijCmd} setup --generate-completion fish | string collect)
+        '' else
+          "")));
+
+    programs.bash.initExtra = mkIf (cfg.enableBashIntegration) (mkOrder 200
+      ((if cfg.autostartOnShellStart.enable then ''
+        eval "$(${zellijCmd} setup --generate-auto-start bash)"
+      '' else
+        "") + (if cfg.enableShellCompletions then ''
+          eval "$(${zellijCmd} setup --generate-completion bash)"
+        '' else
+          "")));
+
+    home.sessionVariables = mkIf cfg.autostartOnShellStart.enable {
+      ZELLIJ_AUTO_ATTACH =
+        if cfg.autostartOnShellStart.attachExistingSession then
+          "true"
+        else
+          "false";
+      ZELLIJ_AUTO_EXIT =
+        if cfg.autostartOnShellStart.exitShellOnExit then "true" else "false";
+    };
   };
 }
