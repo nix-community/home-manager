@@ -19,7 +19,8 @@ let
     # Construct list of lists containing email aliases, and flatten
     aliases = flatten (map (a: a.aliases) muAccounts);
     # Prefix --my-address= to each account's address AND all defined aliases
-    addMyAddress = map (addr: "--my-address=" + addr) (addrs ++ aliases);
+    addMyAddress = map (addr: "--my-address=" + addr) (addrs
+      ++ (map (a: if (builtins.isString a) then a else a.address) aliases));
   in concatStringsSep " " addMyAddress;
 
 in {
