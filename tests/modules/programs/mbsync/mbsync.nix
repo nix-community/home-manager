@@ -21,7 +21,7 @@ with lib;
     accounts.email.accounts = {
       "hm@example.com".mbsync = {
         enable = true;
-        extraConfig.account.SSLVersions = [ "TLSv1.3" "TLSv1.2" ];
+        extraConfig.account.TLSVersions = [ "+1.3" "+1.2" "-1.1" ];
         groups.inboxes = {
           channels = {
             inbox1 = {
@@ -79,8 +79,8 @@ with lib;
     test.stubs.isync = { };
 
     nmt.script = ''
-      assertFileExists home-files/.mbsyncrc
-      assertFileContent home-files/.mbsyncrc ${./mbsync-expected.conf}
+      assertFileExists home-files/.config/isyncrc
+      assertFileContent home-files/.config/isyncrc ${./mbsync-expected.conf}
     '';
   };
 }
