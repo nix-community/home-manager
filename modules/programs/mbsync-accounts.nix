@@ -225,6 +225,8 @@ in {
       default = { };
       example = literalExpression ''
         {
+          TLSType = "IMAP";
+          TLSVersions = [ "+1.3" "+1.2" "-1.1" ];
           PipelineDepth = 10;
           Timeout = 60;
         };
