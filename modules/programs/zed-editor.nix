@@ -6,10 +6,11 @@ let
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
 
-  mergedSettings = cfg.userSettings // {
-    # this part by @cmacrae
-    auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
-  };
+  mergedSettings = cfg.userSettings
+    // (lib.optionalAttrs (builtins.length cfg.extensions > 0) {
+      # this part by @cmacrae
+      auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
+    });
 in {
   meta.maintainers = [ hm.maintainers.libewa ];
 
