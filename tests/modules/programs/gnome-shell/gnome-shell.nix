@@ -36,11 +36,7 @@ let
 
 in {
   nixpkgs.overlays = [
-    (self: super: {
-      gnome = super.gnome.overrideScope (gself: gsuper: {
-        gnome-shell-extensions = dummy-gnome-shell-extensions;
-      });
-    })
+    (final: prev: { gnome-shell-extensions = dummy-gnome-shell-extensions; })
   ];
 
   programs.gnome-shell.enable = true;
