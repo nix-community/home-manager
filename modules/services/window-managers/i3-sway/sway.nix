@@ -43,12 +43,61 @@ let
         description = "Home row direction key for moving right.";
       };
 
+      layoutStacking = mkOption {
+        type = types.str;
+        default = "s";
+        description = "Key for stacking window layout.";
+      };
+
+      layoutTabbed = mkOption {
+        type = types.str;
+        default = "w";
+        description = "Key for tabbed window layout.";
+      };
+
+      layoutToggleSplit = mkOption {
+        type = types.str;
+        default = "e";
+        description = "Key for toggling window splitting.";
+      };
+
+      fullscreenToggle = mkOption {
+        type = types.str;
+        default = "f";
+        description = "Key for toggling fullscreen mode.";
+      };
+
+      splitH = mkOption {
+        type = types.str;
+        default = "b";
+        description = "Key for splitting horizontally.";
+      };
+
+      splitV = mkOption {
+        type = types.str;
+        default = "v";
+        description = "Key for splitting vertically.";
+      };
+
+      focusParent = mkOption {
+        type = types.str;
+        default = "a";
+        description = "Key for focussing the parent window.";
+      };
+
+      menuKey = mkOption {
+        type = types.str;
+        default = "d";
+        description = "Key for focussing the parent window.";
+      };
+
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
         default = mapAttrs (n: mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
-          "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";
+          "${cfg.config.modifier}+${cfg.config.menuKey}" =
+            "exec ${cfg.config.menu}";
 
           "${cfg.config.modifier}+${cfg.config.left}" = "focus left";
           "${cfg.config.modifier}+${cfg.config.down}" = "focus down";
@@ -70,14 +119,17 @@ let
           "${cfg.config.modifier}+Shift+Up" = "move up";
           "${cfg.config.modifier}+Shift+Right" = "move right";
 
-          "${cfg.config.modifier}+b" = "splith";
-          "${cfg.config.modifier}+v" = "splitv";
-          "${cfg.config.modifier}+f" = "fullscreen toggle";
-          "${cfg.config.modifier}+a" = "focus parent";
+          "${cfg.config.modifier}+${cfg.config.splitH}" = "splith";
+          "${cfg.config.modifier}+${cfg.config.splitV}" = "splitv";
+          "${cfg.config.modifier}+${cfg.config.fullscreenToggle}" =
+            "fullscreen toggle";
+          "${cfg.config.modifier}+${cfg.config.focusParent}" = "focus parent";
 
-          "${cfg.config.modifier}+s" = "layout stacking";
-          "${cfg.config.modifier}+w" = "layout tabbed";
-          "${cfg.config.modifier}+e" = "layout toggle split";
+          "${cfg.config.modifier}+${cfg.config.layoutStacking}" =
+            "layout stacking";
+          "${cfg.config.modifier}+${cfg.config.layoutTabbed}" = "layout tabbed";
+          "${cfg.config.modifier}+${cfg.config.layoutToggleSplit}" =
+            "layout toggle split";
 
           "${cfg.config.modifier}+Shift+space" = "floating toggle";
           "${cfg.config.modifier}+space" = "focus mode_toggle";
