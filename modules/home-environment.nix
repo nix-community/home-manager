@@ -113,10 +113,10 @@ let
     options = {
       layout = mkOption {
         type = with types; nullOr str;
-        default =
-          if versionAtLeast config.home.stateVersion "19.09"
-          then null
-          else "us";
+        default = if versionAtLeast config.home.stateVersion "19.09" then
+          null
+        else
+          "us";
         defaultText = literalExpression "null";
         description = ''
           Keyboard layout. If `null`, then the system
@@ -138,8 +138,8 @@ let
 
       options = mkOption {
         type = types.listOf types.str;
-        default = [];
-        example = ["grp:caps_toggle" "grp_led:scroll"];
+        default = [ ];
+        example = [ "grp:caps_toggle" "grp_led:scroll" ];
         description = ''
           X keyboard options; layout switching goes here.
         '';
@@ -148,9 +148,7 @@ let
       variant = mkOption {
         type = with types; nullOr str;
         default =
-          if versionAtLeast config.home.stateVersion "19.09"
-          then null
-          else "";
+          if versionAtLeast config.home.stateVersion "19.09" then null else "";
         defaultText = literalExpression "null";
         example = "colemak";
         description = ''
@@ -164,9 +162,7 @@ let
     };
   };
 
-in
-
-{
+in {
   meta.maintainers = [ maintainers.rycee ];
 
   imports = [
@@ -217,7 +213,7 @@ in
 
     home.language = mkOption {
       type = languageSubModule;
-      default = {};
+      default = { };
       description = "Language configuration.";
     };
 
@@ -255,9 +251,12 @@ in
     };
 
     home.sessionVariables = mkOption {
-      default = {};
+      default = { };
       type = with types; lazyAttrsOf (oneOf [ str path int float ]);
-      example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
+      example = {
+        EDITOR = "emacs";
+        GS_OPTIONS = "-sPAPERSIZE=a4";
+      };
       description = ''
         Environment variables to always set at login.
 
@@ -332,13 +331,13 @@ in
 
     home.packages = mkOption {
       type = types.listOf types.package;
-      default = [];
+      default = [ ];
       description = "The set of packages to appear in the user environment.";
     };
 
     home.extraOutputsToInstall = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       example = [ "doc" "info" "devdoc" ];
       description = ''
         List of additional package outputs of the packages
@@ -371,7 +370,7 @@ in
 
     home.activation = mkOption {
       type = hm.types.dagOf types.str;
-      default = {};
+      default = { };
       example = literalExpression ''
         {
           myActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] '''
@@ -494,77 +493,60 @@ in
       }
     ];
 
-    warnings =
-      let
-        hmRelease = config.home.version.release;
-        nixpkgsRelease = lib.trivial.release;
-        releaseMismatch =
-          config.home.enableNixpkgsReleaseCheck
-          && hmRelease != nixpkgsRelease;
-      in
-        optional releaseMismatch ''
-          You are using
+    warnings = let
+      hmRelease = config.home.version.release;
+      nixpkgsRelease = lib.trivial.release;
+      releaseMismatch = config.home.enableNixpkgsReleaseCheck && hmRelease
+        != nixpkgsRelease;
+    in optional releaseMismatch ''
+      You are using
 
-            Home Manager version ${hmRelease} and
-            Nixpkgs version ${nixpkgsRelease}.
+        Home Manager version ${hmRelease} and
+        Nixpkgs version ${nixpkgsRelease}.
 
-          Using mismatched versions is likely to cause errors and unexpected
-          behavior. It is therefore highly recommended to use a release of Home
-          Manager that corresponds with your chosen release of Nixpkgs.
+      Using mismatched versions is likely to cause errors and unexpected
+      behavior. It is therefore highly recommended to use a release of Home
+      Manager that corresponds with your chosen release of Nixpkgs.
 
-          If you insist then you can disable this warning by adding
+      If you insist then you can disable this warning by adding
 
-            home.enableNixpkgsReleaseCheck = false;
+        home.enableNixpkgsReleaseCheck = false;
 
-          to your configuration.
-        '';
+      to your configuration.
+    '';
 
-    home.username =
-      mkIf (versionOlder config.home.stateVersion "20.09")
-        (mkDefault (builtins.getEnv "USER"));
-    home.homeDirectory =
-      mkIf (versionOlder config.home.stateVersion "20.09")
-        (mkDefault (builtins.getEnv "HOME"));
+    home.username = mkIf (versionOlder config.home.stateVersion "20.09")
+      (mkDefault (builtins.getEnv "USER"));
+    home.homeDirectory = mkIf (versionOlder config.home.stateVersion "20.09")
+      (mkDefault (builtins.getEnv "HOME"));
 
-    home.profileDirectory =
-      if config.submoduleSupport.enable
-        && config.submoduleSupport.externalPackageInstall
-      then "/etc/profiles/per-user/${cfg.username}"
-      else if config.nix.enable && (config.nix.settings.use-xdg-base-directories or false)
-      then "${config.xdg.stateHome}/nix/profile"
-      else cfg.homeDirectory + "/.nix-profile";
+    home.profileDirectory = if config.submoduleSupport.enable
+    && config.submoduleSupport.externalPackageInstall then
+      "/etc/profiles/per-user/${cfg.username}"
+    else if config.nix.enable
+    && (config.nix.settings.use-xdg-base-directories or false) then
+      "${config.xdg.stateHome}/nix/profile"
+    else
+      cfg.homeDirectory + "/.nix-profile";
 
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
     programs.fish.shellAliases = cfg.shellAliases;
 
     home.sessionVariables =
-      let
-        maybeSet = n: v: optionalAttrs (v != null) { ${n} = v; };
-      in
-        (maybeSet "LANG" cfg.language.base)
-        //
-        (maybeSet "LC_CTYPE" cfg.language.ctype)
-        //
-        (maybeSet "LC_NUMERIC" cfg.language.numeric)
-        //
-        (maybeSet "LC_TIME" cfg.language.time)
-        //
-        (maybeSet "LC_COLLATE" cfg.language.collate)
-        //
-        (maybeSet "LC_MONETARY" cfg.language.monetary)
-        //
-        (maybeSet "LC_MESSAGES" cfg.language.messages)
-        //
-        (maybeSet "LC_PAPER" cfg.language.paper)
-        //
-        (maybeSet "LC_NAME" cfg.language.name)
-        //
-        (maybeSet "LC_ADDRESS" cfg.language.address)
-        //
-        (maybeSet "LC_TELEPHONE" cfg.language.telephone)
-        //
-        (maybeSet "LC_MEASUREMENT" cfg.language.measurement);
+      let maybeSet = n: v: optionalAttrs (v != null) { ${n} = v; };
+      in (maybeSet "LANG" cfg.language.base)
+      // (maybeSet "LC_CTYPE" cfg.language.ctype)
+      // (maybeSet "LC_NUMERIC" cfg.language.numeric)
+      // (maybeSet "LC_TIME" cfg.language.time)
+      // (maybeSet "LC_COLLATE" cfg.language.collate)
+      // (maybeSet "LC_MONETARY" cfg.language.monetary)
+      // (maybeSet "LC_MESSAGES" cfg.language.messages)
+      // (maybeSet "LC_PAPER" cfg.language.paper)
+      // (maybeSet "LC_NAME" cfg.language.name)
+      // (maybeSet "LC_ADDRESS" cfg.language.address)
+      // (maybeSet "LC_TELEPHONE" cfg.language.telephone)
+      // (maybeSet "LC_MEASUREMENT" cfg.language.measurement);
 
     # Provide a file holding all session variables.
     home.sessionVariablesPackage = pkgs.writeTextFile {
@@ -602,148 +584,129 @@ in
     # In case the user has moved from a user-install of Home Manager
     # to a submodule managed one we attempt to uninstall the
     # `home-manager-path` package if it is installed.
-    home.activation.installPackages = hm.dag.entryAfter ["writeBoundary"] (
-      if config.submoduleSupport.externalPackageInstall
-      then
-        ''
-          nixProfileRemove home-manager-path
-        ''
-      else
-        ''
-          function nixReplaceProfile() {
-            local oldNix="$(command -v nix)"
+    home.activation.installPackages = hm.dag.entryAfter [ "writeBoundary" ]
+      (if config.submoduleSupport.externalPackageInstall then ''
+        nixProfileRemove home-manager-path
+      '' else ''
+        function nixReplaceProfile() {
+          local oldNix="$(command -v nix)"
 
-            nixProfileRemove 'home-manager-path'
+          nixProfileRemove 'home-manager-path'
 
-            run $oldNix profile install $1
-          }
+          run $oldNix profile install $1
+        }
 
-          if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
-            INSTALL_CMD="nix profile install"
-            INSTALL_CMD_ACTUAL="nixReplaceProfile"
-            LIST_CMD="nix profile list"
-            REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
-          else
-            INSTALL_CMD="nix-env -i"
-            INSTALL_CMD_ACTUAL="run nix-env -i"
-            LIST_CMD="nix-env -q"
-            REMOVE_CMD_SYNTAX='nix-env -e {package name}'
-          fi
+        if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
+          INSTALL_CMD="nix profile install"
+          INSTALL_CMD_ACTUAL="nixReplaceProfile"
+          LIST_CMD="nix profile list"
+          REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
+        else
+          INSTALL_CMD="nix-env -i"
+          INSTALL_CMD_ACTUAL="run nix-env -i"
+          LIST_CMD="nix-env -q"
+          REMOVE_CMD_SYNTAX='nix-env -e {package name}'
+        fi
 
-          if ! $INSTALL_CMD_ACTUAL ${cfg.path} ; then
-            echo
-            _iError $'Oops, Nix failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"%s"? Try running\n\n    %s\n\nand if there is a conflicting package you can remove it with\n\n    %s\n\nThen try activating your Home Manager configuration again.' "$INSTALL_CMD" "$LIST_CMD" "$REMOVE_CMD_SYNTAX"
-            exit 1
-          fi
-          unset -f nixReplaceProfile
-          unset INSTALL_CMD INSTALL_CMD_ACTUAL LIST_CMD REMOVE_CMD_SYNTAX
-        ''
-    );
+        if ! $INSTALL_CMD_ACTUAL ${cfg.path} ; then
+          echo
+          _iError $'Oops, Nix failed to install your new Home Manager profile!\n\nPerhaps there is a conflict with a package that was installed using\n"%s"? Try running\n\n    %s\n\nand if there is a conflicting package you can remove it with\n\n    %s\n\nThen try activating your Home Manager configuration again.' "$INSTALL_CMD" "$LIST_CMD" "$REMOVE_CMD_SYNTAX"
+          exit 1
+        fi
+        unset -f nixReplaceProfile
+        unset INSTALL_CMD INSTALL_CMD_ACTUAL LIST_CMD REMOVE_CMD_SYNTAX
+      '');
 
     # Text containing Bash commands that will initialize the Home Manager Bash
     # library. Most importantly, this will prepare for using translated strings
     # in the `hm-modules` text domain.
-    lib.bash.initHomeManagerLib =
-      let
-        domainDir = pkgs.runCommand "hm-modules-messages" {
-          nativeBuildInputs = [ pkgs.buildPackages.gettext ];
-        } ''
-          for path in ${./po}/*.po; do
-            lang="''${path##*/}"
-            lang="''${lang%%.*}"
-            mkdir -p "$out/$lang/LC_MESSAGES"
-            msgfmt -o "$out/$lang/LC_MESSAGES/hm-modules.mo" "$path"
-          done
-        '';
-      in
-        ''
-          export TEXTDOMAIN=hm-modules
-          export TEXTDOMAINDIR=${domainDir}
-          source ${../lib/bash/home-manager.sh}
-        '';
+    lib.bash.initHomeManagerLib = let
+      domainDir = pkgs.runCommand "hm-modules-messages" {
+        nativeBuildInputs = [ pkgs.buildPackages.gettext ];
+      } ''
+        for path in ${./po}/*.po; do
+          lang="''${path##*/}"
+          lang="''${lang%%.*}"
+          mkdir -p "$out/$lang/LC_MESSAGES"
+          msgfmt -o "$out/$lang/LC_MESSAGES/hm-modules.mo" "$path"
+        done
+      '';
+    in ''
+      export TEXTDOMAIN=hm-modules
+      export TEXTDOMAINDIR=${domainDir}
+      source ${../lib/bash/home-manager.sh}
+    '';
 
-    home.activationPackage =
-      let
-        mkCmd = res: ''
-            _iNote "Activating %s" "${res.name}"
-            ${res.data}
-          '';
-        sortedCommands = hm.dag.topoSort cfg.activation;
-        activationCmds =
-          if sortedCommands ? result then
-            concatStringsSep "\n" (map mkCmd sortedCommands.result)
-          else
-            abort ("Dependency cycle in activation script: "
-              + builtins.toJSON sortedCommands);
+    home.activationPackage = let
+      mkCmd = res: ''
+        _iNote "Activating %s" "${res.name}"
+        ${res.data}
+      '';
+      sortedCommands = hm.dag.topoSort cfg.activation;
+      activationCmds = if sortedCommands ? result then
+        concatStringsSep "\n" (map mkCmd sortedCommands.result)
+      else
+        abort ("Dependency cycle in activation script: "
+          + builtins.toJSON sortedCommands);
 
-        # Programs that always should be available on the activation
-        # script's PATH.
-        activationBinPaths = lib.makeBinPath (
-          with pkgs; [
-            bash
-            coreutils
-            diffutils           # For `cmp` and `diff`.
-            findutils
-            gettext
-            gnugrep
-            gnused
-            jq
-            ncurses             # For `tput`.
-          ]
-          ++ config.home.extraActivationPath
-        )
-        + (
+      # Programs that always should be available on the activation
+      # script's PATH.
+      activationBinPaths = lib.makeBinPath (with pkgs;
+        [
+          bash
+          coreutils
+          diffutils # For `cmp` and `diff`.
+          findutils
+          gettext
+          gnugrep
+          gnused
+          jq
+          ncurses # For `tput`.
+        ] ++ config.home.extraActivationPath) + (
           # Add path of the Nix binaries, if a Nix package is configured, then
           # use that one, otherwise grab the path of the nix-env tool.
           if config.nix.enable && config.nix.package != null then
             ":${config.nix.package}/bin"
           else
-            ":$(${pkgs.coreutils}/bin/dirname $(${pkgs.coreutils}/bin/readlink -m $(type -p nix-env)))"
-        )
+            ":$(${pkgs.coreutils}/bin/dirname $(${pkgs.coreutils}/bin/readlink -m $(type -p nix-env)))")
         + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
-        activationScript = pkgs.writeShellScript "activation-script" ''
-          set -eu
-          set -o pipefail
+      activationScript = pkgs.writeShellScript "activation-script" ''
+        set -eu
+        set -o pipefail
 
-          cd $HOME
+        cd $HOME
 
-          export PATH="${activationBinPaths}"
-          ${config.lib.bash.initHomeManagerLib}
+        export PATH="${activationBinPaths}"
+        ${config.lib.bash.initHomeManagerLib}
 
-          ${builtins.readFile ./lib-bash/activation-init.sh}
+        ${builtins.readFile ./lib-bash/activation-init.sh}
 
-          if [[ ! -v SKIP_SANITY_CHECKS ]]; then
-            checkUsername ${escapeShellArg config.home.username}
-            checkHomeDirectory ${escapeShellArg config.home.homeDirectory}
-          fi
+        if [[ ! -v SKIP_SANITY_CHECKS ]]; then
+          checkUsername ${escapeShellArg config.home.username}
+          checkHomeDirectory ${escapeShellArg config.home.homeDirectory}
+        fi
 
-          ${activationCmds}
-        '';
-      in
-        pkgs.runCommand
-          "home-manager-generation"
-          {
-            preferLocalBuild = true;
-          }
-          ''
-            mkdir -p $out
+        ${activationCmds}
+      '';
+    in pkgs.runCommand "home-manager-generation" { preferLocalBuild = true; } ''
+      mkdir -p $out
 
-            echo "${config.home.version.full}" > $out/hm-version
+      echo "${config.home.version.full}" > $out/hm-version
 
-            cp ${activationScript} $out/activate
+      cp ${activationScript} $out/activate
 
-            mkdir $out/bin
-            ln -s $out/activate $out/bin/home-manager-generation
+      mkdir $out/bin
+      ln -s $out/activate $out/bin/home-manager-generation
 
-            substituteInPlace $out/activate \
-              --subst-var-by GENERATION_DIR $out
+      substituteInPlace $out/activate \
+        --subst-var-by GENERATION_DIR $out
 
-            ln -s ${config.home-files} $out/home-files
-            ln -s ${cfg.path} $out/home-path
+      ln -s ${config.home-files} $out/home-files
+      ln -s ${cfg.path} $out/home-path
 
-            ${cfg.extraBuilderCommands}
-          '';
+      ${cfg.extraBuilderCommands}
+    '';
 
     home.path = pkgs.buildEnv {
       name = "home-manager-path";

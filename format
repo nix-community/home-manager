@@ -23,23 +23,9 @@ for arg do
     esac
 done
 
-# The excludes are for files touched by open pull requests and we want
-# to avoid merge conflicts.
-excludes=(
-    modules/files.nix
-    modules/home-environment.nix
-    modules/programs/zsh.nix
-)
-
-exclude_args=()
-for e in "${excludes[@]}"; do
-    exclude_args+=(-e "$e")
-done
-
 git_root=$(git rev-parse --show-toplevel)
 
 git ls-files -z --cached --others --full-name -- "${files[@]}" |
     grep -z '\.nix$' |
-    grep -z -v "${exclude_args[@]}" |
     sed -z "s|^|$git_root/|" |
     xargs -0 nixfmt "${nixfmt_args[@]}"
