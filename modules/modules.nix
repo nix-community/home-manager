@@ -110,6 +110,7 @@ let
     ./programs/ghostty.nix
     ./programs/git-cliff.nix
     ./programs/git-credential-oauth.nix
+    ./programs/git-worktree-switcher.nix
     ./programs/git.nix
     ./programs/gitui.nix
     ./programs/gnome-shell.nix
