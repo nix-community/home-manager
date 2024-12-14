@@ -1899,6 +1899,17 @@ in {
           registry with the option 'programs.nushell.plugins'.
         '';
       }
+
+      {
+        time = "2024-12-14T20:35:07+00:00";
+        message = ''
+          A new module is available: 'programs.git-worktree-switcher'.
+
+          git-worktree-switcher allows you to quickly switch git worktrees.
+          It includes shell completions for Bash, Fish and Zsh.
+          See https://github.com/mateusauler/git-worktree-switcher for more.
+        '';
+      }
     ];
   };
 }
