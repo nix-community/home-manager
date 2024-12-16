@@ -340,10 +340,19 @@ in
 
     home.sessionVariablesFileName = mkOption {
       type = types.str;
-      default = "hm-session-vars.sh";
       internal = true;
+      default = "hm-session-vars.sh";
       description = ''
         The name of the file for the session variables.
+      '';
+    };
+
+    home.sessionVariablesGuardVar = mkOption {
+      type = types.str;
+      internal = true;
+      default = "__HM_SESS_VARS_SOURCED";
+      description = ''
+        The name of the variable to use to guard the session file
       '';
     };
 
@@ -606,8 +615,8 @@ in
       destination = "/etc/profile.d/${config.home.sessionVariablesFileName}";
       text = ''
         # Only source this once.
-        if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
-        export __HM_SESS_VARS_SOURCED=1
+        if [ -n "''$${config.home.sessionVariablesGuardVar}" ]; then return; fi
+        export ${config.home.sessionVariablesGuardVar}=1
 
         ${config.lib.shell.exportAll cfg.sessionVariables}
       '' + lib.optionalString (cfg.sessionPath != [ ]) ''
