@@ -191,6 +191,7 @@ let
     ./programs/pandoc.nix
     ./programs/papis.nix
     ./programs/password-store.nix
+    ./programs/pay-respects.nix
     ./programs/pazi.nix
     ./programs/pet.nix
     ./programs/pidgin.nix
