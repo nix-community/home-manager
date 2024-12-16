@@ -95,11 +95,11 @@ function nixProfileList() {
     # We attempt to use `--json` first (added in Nix 2.17). Otherwise attempt to
     # parse the legacy output format.
     {
-        nix profile list --json 2>/dev/null \
-            | jq -r --arg name "$1" '.elements[].storePaths[] | select(endswith($name))'
+	    nix profile list --profile $(readlink "$1") --json 2>/dev/null \
+            | jq -r --arg name "$2" '.elements[].storePaths[] | select(endswith($name))'
     } || {
-        nix profile list \
-            | { grep "$1\$" || test $? = 1; } \
+	    nix profile list --profile $(readlink "$1") \
+            | { grep "$2\$" || test $? = 1; } \
             | cut -d ' ' -f 4
     }
 }
@@ -110,12 +110,12 @@ function nixProfileRemove() {
     # We don't use `cfg.profileDirectory` here because it defaults to
     # `/etc/profiles/per-user/<user>` which is constructed by NixOS or
     # nix-darwin and won't require uninstalling `home-manager-path`.
-    if  [[ -e $HOME/.nix-profile/manifest.json \
+    if  [[ -e "$1"/manifest.json \
         || -e ${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json ]] ; then
-        nixProfileList "$1" | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+	    nixProfileList "$1" "$2" | xargs -rt $DRY_RUN_CMD nix profile remove --profile $(readlink "$1") $VERBOSE_ARG
     else
-        if nix-env -q | grep -q "^$1$"; then
-            run --quiet nix-env -e "$1"
+        if nix-env -q -p "$1" | grep -q "^$2$"; then
+            run --quiet nix-env -e "$2"
         fi
     fi
 }

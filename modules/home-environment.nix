@@ -227,7 +227,6 @@ in
         "''${home.homeDirectory}/.nix-profile"  or
         "/etc/profiles/per-user/''${home.username}"
       '';
-      readOnly = true;
       description = ''
         The profile directory where Home Manager generations are installed.
       '';
@@ -649,28 +648,28 @@ in
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          nixProfileRemove ${config.home.pathName}
+          nixProfileRemove ${config.home.profileDirectory} ${config.home.pathName}
         ''
       else
         ''
           function nixReplaceProfile() {
             local oldNix="$(command -v nix)"
 
-            nixProfileRemove '${config.home.pathName}'
+            nixProfileRemove ${config.home.profileDirectory} '${config.home.pathName}'
 
-            run $oldNix profile install $1
+            run $oldNix profile install --profile "$(readlink "${config.home.profileDirectory}")" $1
           }
 
           if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
-            INSTALL_CMD="nix profile install"
+            INSTALL_CMD="nix profile install --profile "$(readlink "${config.home.profileDirectory}")""
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
-            LIST_CMD="nix profile list"
-            REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
+            LIST_CMD="nix profile list --profile "$(readlink "${config.home.profileDirectory}")""
+            REMOVE_CMD_SYNTAX='nix profile remove --profile "$(readlink "${config.home.profileDirectory}")" {number | store path}'
           else
-            INSTALL_CMD="nix-env -i"
-            INSTALL_CMD_ACTUAL="run nix-env -i"
-            LIST_CMD="nix-env -q"
-            REMOVE_CMD_SYNTAX='nix-env -e {package name}'
+            INSTALL_CMD="nix-env -i -p "$(readlink "${config.home.profileDirectory}")""
+            INSTALL_CMD_ACTUAL="run nix-env -i -p "$(readlink "${config.home.profileDirectory}")""
+            LIST_CMD="nix-env -q -p "$(readlink "${config.home.profileDirectory}")""
+            REMOVE_CMD_SYNTAX='nix-env -e {package name} -p "$(readlink "${config.home.profileDirectory}")"'
           fi
 
           if ! $INSTALL_CMD_ACTUAL ${cfg.path} ; then
