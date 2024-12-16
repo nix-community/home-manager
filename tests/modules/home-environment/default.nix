@@ -4,6 +4,8 @@
   generation-link-name-prefix-custom = ./generation-link-name-prefix-custom.nix;
   generation-link-name-prefix-default =
     ./generation-link-name-prefix-default.nix;
+  home-path-drv-name-custom = ./home-path-drv-name-custom.nix;
+  home-path-drv-name-default = ./home-path-drv-name-default.nix;
   home-session-variables = ./session-variables.nix;
   home-session-path = ./session-path.nix;
 }
