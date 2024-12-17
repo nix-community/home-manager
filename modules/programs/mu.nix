@@ -55,14 +55,13 @@ in {
       maildirOption = genCmdMaildir config.accounts.email.maildirBasePath;
       dbLocation = config.xdg.cacheHome + "/mu";
       muExe = getExe cfg.package;
+      gawkExe = getExe pkgs.gawk;
     in hm.dag.entryAfter [ "writeBoundary" ] ''
       # If the database directory exists and registered personal addresses remain the same,
       # then `mu init` should NOT be run.
       # In theory, mu is the only thing that creates that directory, and it is
       # only created during the initial index.
-      MU_SORTED_ADDRS=$((${muExe} info store | ${
-        getExe pkgs.gawk
-      } '/personal-address/{print $4}' | LC_ALL=C sort | paste -sd ' ') || exit 0)
+      MU_SORTED_ADDRS=$((${muExe} info store | ${gawkExe} '/personal-address/{print $4}' | LC_ALL=C sort | paste -sd ' ') || exit 0)
       if [[ ! -d "${dbLocation}" || ! "$MU_SORTED_ADDRS" = "${
         concatStringsSep " " sortedAddresses
       }" ]]; then
