@@ -250,6 +250,7 @@ let
     ./programs/vifm.nix
     ./programs/vim-vint.nix
     ./programs/vim.nix
+    ./programs/vivid.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
