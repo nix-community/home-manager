@@ -73,6 +73,15 @@ in {
         for the documentation.
       '';
     };
+
+    systemdTarget = lib.mkOption {
+      type = lib.types.str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        Systemd target to bind to.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -95,9 +104,6 @@ in {
       Unit = {
         Description = "Swaync notification daemon";
         Documentation = "https://github.com/ErikReider/SwayNotificationCenter";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session-pre.target" ];
-        ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
       Service = {
@@ -107,7 +113,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install.WantedBy = [ "graphical-session.target" ];
+      Install.WantedBy = [ cfg.systemdTarget ];
     };
   };
 }
