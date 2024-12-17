@@ -11,6 +11,7 @@ let
 
   tests = {
     kitty = runTest ./standalone/kitty.nix;
+    mu = runTest ./standalone/mu;
     nixos-basics = runTest ./nixos/basics.nix;
     standalone-flake-basics = runTest ./standalone/flake-basics.nix;
     standalone-standard-basics = runTest ./standalone/standard-basics.nix;
