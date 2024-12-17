@@ -6,7 +6,7 @@
       enable = true;
       provider = "manual";
       latitude = 0.0;
-      longitude = "0.0";
+      longitude = "$XDG_RUNTIME_DIR/longitude";
       settings = {
         redshift = {
           adjustment-method = "randr";
@@ -19,6 +19,9 @@
     test.stubs.redshift = { };
 
     nmt.script = ''
+      export XDG_RUNTIME_DIR="$(mktemp --directory)"
+      echo 0.0 > "$XDG_RUNTIME_DIR/longitude"
+
       assertFileContent \
           home-files/.config/redshift/redshift.conf \
           ${./redshift-basic-configuration-file-expected.conf}
