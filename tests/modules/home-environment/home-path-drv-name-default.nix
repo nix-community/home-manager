@@ -7,7 +7,7 @@ with lib;
     nmt.script = ''
       assertFileExists activate
       assertFileRegex activate \
-        "nixProfileRemove 'home-manager-path'"
+        "nixProfileRemove /home/hm-user/.nix-profile 'home-manager-path'"
     '';
   };
 }

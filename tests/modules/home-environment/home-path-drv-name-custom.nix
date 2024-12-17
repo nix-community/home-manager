@@ -9,7 +9,7 @@ with lib;
     nmt.script = ''
       assertFileExists activate
       assertFileRegex activate \
-        "nixProfileRemove 'foo-bar-baz'"
+        "nixProfileRemove /home/hm-user/.nix-profile 'foo-bar-baz'"
     '';
   };
 }
