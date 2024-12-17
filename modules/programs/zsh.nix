@@ -584,7 +584,7 @@ in
     {
       home.file."${relToDotDir ".zshenv"}".text = ''
         # Environment variables
-        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+        . "${config.home.profileDirectory}/etc/profile.d/${config.home.sessionVariablesFileName}"
 
         # Only source this once
         if [[ -z "$__HM_ZSH_SESS_VARS_SOURCED" ]]; then
