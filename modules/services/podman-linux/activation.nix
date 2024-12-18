@@ -70,11 +70,11 @@
       commands=()
       case "$resourceType" in
         "container")
-          commands+="${config.services.podman.package}/bin/podman $resourceType stop $resource"
-          commands+="${config.services.podman.package}/bin/podman $resourceType rm -f $resource"
+          commands+=("${config.services.podman.package}/bin/podman $resourceType stop $resource")
+          commands+=("${config.services.podman.package}/bin/podman $resourceType rm -f $resource")
           ;;
         "image" | "network" | "volume")
-          commands+="${config.services.podman.package}/bin/podman $resourceType rm $resource"
+          commands+=("${config.services.podman.package}/bin/podman $resourceType rm $resource")
           ;;
       esac
       for command in "''${commands[@]}"; do
