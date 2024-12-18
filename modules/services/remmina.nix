@@ -39,7 +39,7 @@ in {
         Unit = {
           Description = "Remmina remote desktop client";
           Documentation = "man:remmina(1)";
-          Requires = [ "graphical-session-pre.target" ];
+          Requires = [ "graphical-session.target" ];
         };
 
         Service = {
