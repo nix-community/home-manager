@@ -1899,6 +1899,16 @@ in {
           registry with the option 'programs.nushell.plugins'.
         '';
       }
+
+      {
+        time = "2024-12-18T16:39:20+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.cavalier'.
+
+          Cavalier is a GUI wrapper around the Cava audio visualizer.
+        '';
+      }
     ];
   };
 }
