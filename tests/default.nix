@@ -126,6 +126,7 @@ in import nmtSrc {
     ./modules/programs/openstackclient
     ./modules/programs/pandoc
     ./modules/programs/papis
+    ./modules/programs/pay-respects
     ./modules/programs/pet
     ./modules/programs/pistol
     ./modules/programs/pls
