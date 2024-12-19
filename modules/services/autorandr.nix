@@ -36,7 +36,7 @@ in {
     systemd.user.services.autorandr = {
       Unit = {
         Description = "autorandr";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

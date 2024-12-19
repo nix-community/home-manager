@@ -96,7 +96,7 @@ in {
         Description = "Swaync notification daemon";
         Documentation = "https://github.com/ErikReider/SwayNotificationCenter";
         PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
