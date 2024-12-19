@@ -47,7 +47,9 @@ let
       else
         "d.${hash}/${dir}";
     in if pkgs.stdenv.isDarwin then
-      "/private/var/run/org.nix-community.home.gpg-agent/${subdir}"
+    # macOS GnuPG sockets always use the canonical path.
+    # See #3864
+      "${homedir}/${subdir}"
     else
       "%t/gnupg/${subdir}";
 
@@ -281,8 +283,11 @@ in {
           "pinentry-program ${lib.getExe cfg.pinentryPackage}"
           ++ [ cfg.extraConfig ]);
 
+      # Make sure we export GnuPG agent socket for SSH
+      # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Examples.html#Agent-Examples
       home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
-        if [[ -z "$SSH_AUTH_SOCK" ]]; then
+        unset SSH_AGENT_PID
+        if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
           export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
         fi
       '';
@@ -353,8 +358,10 @@ in {
         launchd.agents.gpg-agent = {
           enable = true;
           config = {
-            ProgramArguments = [ "${gpgPkg}/bin/gpg-agent" "--supervised" ]
-              ++ optional cfg.verbose "--verbose";
+            # macOS doesn't like the "--supervised" option
+            ProgramArguments =
+              [ "${gpgPkg}/bin/gpgconf" "--launch" "gpg-agent" ]
+              ++ optionals cfg.verbose [ "--verbose" ];
             EnvironmentVariables = { GNUPGHOME = homedir; };
             KeepAlive = {
               Crashed = true;
