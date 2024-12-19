@@ -1899,6 +1899,17 @@ in {
           registry with the option 'programs.nushell.plugins'.
         '';
       }
+
+      {
+        time = "2024-12-11T18:32+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          The Firefox module now provides a
+          `programs.firefox.profiles.<name>.preConfig` option that allows an
+          arbitrary string to be added to `user.js` *before* the options
+          specified in `programs.firefox.profiles.<name>.settings`.
+        '';
+      }
     ];
   };
 }
