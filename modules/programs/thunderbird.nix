@@ -32,7 +32,8 @@ let
   profilesIni = foldl recursiveUpdate {
     General = {
       StartWithLastProfile = 1;
-      Version = 2;
+    } // lib.optionalAttrs (cfg.profileVersion != null) {
+      Version = cfg.profileVersion;
     };
   } (flip map profilesWithId (profile: {
     "Profile${profile.id}" = {
@@ -143,6 +144,13 @@ in {
         defaultText = literalExpression "pkgs.thunderbird";
         example = literalExpression "pkgs.thunderbird-91";
         description = "The Thunderbird package to use.";
+      };
+
+      profileVersion = mkOption {
+        internal = true;
+        type = types.nullOr types.ints.unsigned;
+        default = if isDarwin then null else 2;
+        description = "profile version, set null for nix-darwin";
       };
 
       profiles = mkOption {
@@ -360,13 +368,6 @@ in {
       this module to manage your accounts and profiles by setting
       'programs.thunderbird.package' to a dummy value, for example using
       'pkgs.runCommand'.
-
-      Note that this module requires you to set the following environment
-      variables when using an installation of Thunderbird that is not provided
-      by Nix:
-
-          export MOZ_LEGACY_PROFILES=1
-          export MOZ_ALLOW_DOWNGRADE=1
     '';
 
     home.packages = [ cfg.package ]
