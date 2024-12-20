@@ -628,4 +628,10 @@
     keys =
       [{ fingerprint = "BC82 4BB5 1656 D144 285E  A0EC D382 C4AF EECE AA90"; }];
   };
+  folliehiyuki = {
+    name = "Hoang Nguyen";
+    email = "folliekazetani@protonmail.com";
+    github = "folliehiyuki";
+    githubId = 67634026;
+  };
 }
