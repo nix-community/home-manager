@@ -32,7 +32,7 @@ in {
     xresources.properties = mkOption {
       type = with types;
         let
-          prim = either bool (either int str);
+          prim = oneOf [ bool int float str ];
           entry = either prim (listOf prim);
         in nullOr (attrsOf entry);
       default = null;
