@@ -17297,6 +17297,145 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.cavalier.enable"></a><a class="term" href="options.xhtml#opt-programs.cavalier.enable"><code class="option">programs.cavalier.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Cava audio visualizer GUI.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cavalier.nix" target="_top">
+&lt;home-manager/modules/programs/cavalier.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.cavalier.package"></a><a class="term" href="options.xhtml#opt-programs.cavalier.package"><code class="option">programs.cavalier.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The cavalier package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.cavalier</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cavalier.nix" target="_top">
+&lt;home-manager/modules/programs/cavalier.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.cavalier.settings.cava"></a><a class="term" href="options.xhtml#opt-programs.cavalier.settings.cava"><code class="option">programs.cavalier.settings.cava</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings to be written to the underlying Cava configuration file. See
+<a class="link" href="https://github.com/karlstav/cava/blob/master/example_files/config"  target="_top">https://github.com/karlstav/cava/blob/master/example_files/config</a> for
+all available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  general.framerate = 60;
+  input.method = &quot;alsa&quot;;
+  smoothing.noise_reduction = 88;
+  color = {
+    background = &quot;&#x27;#000000&#x27;&quot;;
+    foreground = &quot;&#x27;#FFFFFF&#x27;&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cavalier.nix" target="_top">
+&lt;home-manager/modules/programs/cavalier.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.cavalier.settings.general"></a><a class="term" href="options.xhtml#opt-programs.cavalier.settings.general"><code class="option">programs.cavalier.settings.general</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings to be written to the Cavalier configuration file. See
+<a class="link" href="https://github.com/NickvisionApps/Cavalier/blob/main/NickvisionCavalier.Shared/Models/Configuration.cs"  target="_top">https://github.com/NickvisionApps/Cavalier/blob/main/NickvisionCavalier.Shared/Models/Configuration.cs</a>
+for all available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  ShowControls = true;
+  ColorProfiles = [
+    {
+      Name = &quot;Default&quot;;
+      FgColors = [
+        &quot;#ffed333b&quot;
+        &quot;#ffffa348&quot;
+        &quot;#fff8e45c&quot;
+        &quot;#ff57e389&quot;
+        &quot;#ff62a0ea&quot;
+        &quot;#ffc061cb&quot;
+      ];
+      BgColors = [
+        &quot;#ff1e1e2e&quot;
+      ];
+      Theme = 1;
+    }
+  ];
+  ActiveProfile = 0;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cavalier.nix" target="_top">
+&lt;home-manager/modules/programs/cavalier.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.chromium.enable"></a><a class="term" href="options.xhtml#opt-programs.chromium.enable"><code class="option">programs.chromium.enable</code>
   </a>
  </span>
