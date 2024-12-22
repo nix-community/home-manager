@@ -9,25 +9,25 @@ function migrateProfile() {
     declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
     declare -r globalProfilesDir="$globalNixStateDir/profiles/per-user/$USER"
 
-    if [[ -e $globalProfilesDir/home-manager ]]; then
+    if [[ -e $globalProfilesDir/@GEN_LINK_PREFIX@ ]]; then
         declare -r oldProfilesDir="$globalProfilesDir"
-    elif [[ -e $hmStateDir/profiles/home-manager ]]; then
+    elif [[ -e $hmStateDir/profiles/@GEN_LINK_PREFIX@ ]]; then
         declare -r oldProfilesDir="$hmStateDir/profiles"
     fi
 
     declare -r newProfilesDir="$userNixStateDir/profiles"
 
     if [[ -v oldProfilesDir && -e $newProfilesDir ]]; then
-        if [[ ! -e $newProfilesDir/home-manager ]]; then
+        if [[ ! -e $newProfilesDir/@GEN_LINK_PREFIX@ ]]; then
             _i 'Migrating profile from %s to %s' "$oldProfilesDir" "$newProfilesDir"
-            for p in "$oldProfilesDir"/home-manager-*; do
+            for p in "$oldProfilesDir"/@GEN_LINK_PREFIX@-*; do
                 declare name="${p##*/}"
                 nix-store --realise "$p" --add-root "$newProfilesDir/$name" > /dev/null
             done
             cp -P "$oldProfilesDir/home-manager" "$newProfilesDir"
         fi
 
-        rm "$oldProfilesDir/home-manager" "$oldProfilesDir"/home-manager-*
+        rm "$oldProfilesDir/home-manager" "$oldProfilesDir"/@GEN_LINK_PREFIX@-*
     fi
 }
 
@@ -57,10 +57,10 @@ function setupVars() {
     fi
 
     declare -gr hmDataPath="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
-    declare -gr genProfilePath="$profilesDir/home-manager"
+    declare -gr genProfilePath="$profilesDir/@GEN_LINK_PREFIX@"
     declare -gr newGenPath="@GENERATION_DIR@";
-    declare -gr newGenGcPath="$hmGcrootsDir/current-home"
-    declare -gr legacyGenGcPath="$globalGcrootsDir/current-home"
+    declare -gr newGenGcPath="$hmGcrootsDir/@GC_LINK_NAME@"
+    declare -gr legacyGenGcPath="$globalGcrootsDir/@GC_LINK_NAME@"
 
     declare greatestGenNum
     greatestGenNum=$( \
@@ -95,11 +95,11 @@ function nixProfileList() {
     # We attempt to use `--json` first (added in Nix 2.17). Otherwise attempt to
     # parse the legacy output format.
     {
-        nix profile list --json 2>/dev/null \
-            | jq -r --arg name "$1" '.elements[].storePaths[] | select(endswith($name))'
+	    nix profile list --profile $(readlink "$1") --json 2>/dev/null \
+            | jq -r --arg name "$2" '.elements[].storePaths[] | select(endswith($name))'
     } || {
-        nix profile list \
-            | { grep "$1\$" || test $? = 1; } \
+	    nix profile list --profile $(readlink "$1") \
+            | { grep "$2\$" || test $? = 1; } \
             | cut -d ' ' -f 4
     }
 }
@@ -110,12 +110,12 @@ function nixProfileRemove() {
     # We don't use `cfg.profileDirectory` here because it defaults to
     # `/etc/profiles/per-user/<user>` which is constructed by NixOS or
     # nix-darwin and won't require uninstalling `home-manager-path`.
-    if  [[ -e $HOME/.nix-profile/manifest.json \
+    if  [[ -e "$1"/manifest.json \
         || -e ${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json ]] ; then
-        nixProfileList "$1" | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG
+	    nixProfileList "$1" "$2" | xargs -rt $DRY_RUN_CMD nix profile remove --profile $(readlink "$1") $VERBOSE_ARG
     else
-        if nix-env -q | grep -q "^$1$"; then
-            run --quiet nix-env -e "$1"
+        if nix-env -q -p "$1" | grep -q "^$2$"; then
+            run --quiet nix-env -e "$2"
         fi
     fi
 }

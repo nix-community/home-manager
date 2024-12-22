@@ -175,13 +175,31 @@ in
       done automatically if the shell configuration is managed by Home
       Manager. If not, then you must source the
 
-        ${cfg.profileDirectory}/etc/profile.d/hm-session-vars.sh
+        ${cfg.profileDirectory}/etc/profile.d/${config.home.sessionVariablesFileName}
 
       file yourself.
     '')
   ];
 
   options = {
+    home.gcLinkName = mkOption {
+      type = types.str;
+      default = "current-home";
+      internal = true;
+      description = ''
+        The name of the link to create in the gcRoot.
+      '';
+    };
+
+    home.generationLinkNamePrefix = mkOption {
+      type = types.str;
+      default = "home-manager";
+      internal = true;
+      description = ''
+        The prefix of the link name of the generation.
+      '';
+    };
+
     home.username = mkOption {
       type = types.str;
       defaultText = literalExpression ''
@@ -209,7 +227,6 @@ in
         "''${home.homeDirectory}/.nix-profile"  or
         "/etc/profiles/per-user/''${home.username}"
       '';
-      readOnly = true;
       description = ''
         The profile directory where Home Manager generations are installed.
       '';
@@ -320,6 +337,24 @@ in
       '';
     };
 
+    home.sessionVariablesFileName = mkOption {
+      type = types.str;
+      internal = true;
+      default = "hm-session-vars.sh";
+      description = ''
+        The name of the file for the session variables.
+      '';
+    };
+
+    home.sessionVariablesGuardVar = mkOption {
+      type = types.str;
+      internal = true;
+      default = "__HM_SESS_VARS_SOURCED";
+      description = ''
+        The name of the variable to use to guard the session file
+      '';
+    };
+
     home.sessionVariablesExtra = mkOption {
       type = types.lines;
       default = "";
@@ -350,6 +385,13 @@ in
     home.path = mkOption {
       internal = true;
       description = "The derivation installing the user packages.";
+    };
+
+    home.pathName = mkOption {
+      type = types.str;
+      default = "home-manager-path";
+      internal = true;
+      description = "The name of the derivation installing the user packages.";
     };
 
     home.emptyActivationPath = mkOption {
@@ -568,12 +610,12 @@ in
 
     # Provide a file holding all session variables.
     home.sessionVariablesPackage = pkgs.writeTextFile {
-      name = "hm-session-vars.sh";
-      destination = "/etc/profile.d/hm-session-vars.sh";
+      name = config.home.sessionVariablesFileName;
+      destination = "/etc/profile.d/${config.home.sessionVariablesFileName}";
       text = ''
         # Only source this once.
-        if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
-        export __HM_SESS_VARS_SOURCED=1
+        if [ -n "''$${config.home.sessionVariablesGuardVar}" ]; then return; fi
+        export ${config.home.sessionVariablesGuardVar}=1
 
         ${config.lib.shell.exportAll cfg.sessionVariables}
       '' + lib.optionalString (cfg.sessionPath != [ ]) ''
@@ -601,33 +643,33 @@ in
     #
     # In case the user has moved from a user-install of Home Manager
     # to a submodule managed one we attempt to uninstall the
-    # `home-manager-path` package if it is installed.
+    # `${config.home.pathName}` package if it is installed.
     home.activation.installPackages = hm.dag.entryAfter ["writeBoundary"] (
       if config.submoduleSupport.externalPackageInstall
       then
         ''
-          nixProfileRemove home-manager-path
+          nixProfileRemove ${config.home.profileDirectory} ${config.home.pathName}
         ''
       else
         ''
           function nixReplaceProfile() {
             local oldNix="$(command -v nix)"
 
-            nixProfileRemove 'home-manager-path'
+            nixProfileRemove ${config.home.profileDirectory} '${config.home.pathName}'
 
-            run $oldNix profile install $1
+            run $oldNix profile install --profile "$(readlink "${config.home.profileDirectory}")" $1
           }
 
           if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
-            INSTALL_CMD="nix profile install"
+            INSTALL_CMD="nix profile install --profile "$(readlink "${config.home.profileDirectory}")""
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
-            LIST_CMD="nix profile list"
-            REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
+            LIST_CMD="nix profile list --profile "$(readlink "${config.home.profileDirectory}")""
+            REMOVE_CMD_SYNTAX='nix profile remove --profile "$(readlink "${config.home.profileDirectory}")" {number | store path}'
           else
-            INSTALL_CMD="nix-env -i"
-            INSTALL_CMD_ACTUAL="run nix-env -i"
-            LIST_CMD="nix-env -q"
-            REMOVE_CMD_SYNTAX='nix-env -e {package name}'
+            INSTALL_CMD="nix-env -i -p "$(readlink "${config.home.profileDirectory}")""
+            INSTALL_CMD_ACTUAL="run nix-env -i -p "$(readlink "${config.home.profileDirectory}")""
+            LIST_CMD="nix-env -q -p "$(readlink "${config.home.profileDirectory}")""
+            REMOVE_CMD_SYNTAX='nix-env -e {package name} -p "$(readlink "${config.home.profileDirectory}")"'
           fi
 
           if ! $INSTALL_CMD_ACTUAL ${cfg.path} ; then
@@ -737,6 +779,8 @@ in
             ln -s $out/activate $out/bin/home-manager-generation
 
             substituteInPlace $out/activate \
+              --subst-var-by GEN_LINK_PREFIX ${config.home.generationLinkNamePrefix} \
+              --subst-var-by GC_LINK_NAME ${config.home.gcLinkName} \
               --subst-var-by GENERATION_DIR $out
 
             ln -s ${config.home-files} $out/home-files
@@ -746,7 +790,7 @@ in
           '';
 
     home.path = pkgs.buildEnv {
-      name = "home-manager-path";
+      name = config.home.pathName;
 
       paths = cfg.packages;
       inherit (cfg) extraOutputsToInstall;
