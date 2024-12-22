@@ -87,26 +87,14 @@ in {
 
       checkImageTag = extraConfig:
         let
-          buildSection = if (builtins.hasAttr "Build" extraConfig) then
-            extraConfig.Build
-          else
-            { };
-          imageTags = if (builtins.hasAttr "ImageTag" buildSection) then
-            buildSection.ImageTag
-          else
-            [ ];
-          containsRequiredTag = (if builtins.length imageTags > 0 then
-            builtins.elemAt imageTags 0
-          else
-            "") == "homemanager/${quadletName}";
-        in if (containsRequiredTag || builtins.length imageTags == 0) then
-          [ ]
-        else [{
-          assertion = false;
+          imageTags = (extraConfig.Build or { }).ImageTag or [ ];
+          containsRequiredTag =
+            builtins.elem "homemanager/${quadletName}" imageTags;
+          imageTagsStr = concatMapStringsSep ''" "'' toString imageTags;
+        in [{
+          assertion = imageTags == [ ] || containsRequiredTag;
           message = ''
-            In '${quadletName}' config. Build.ImageTag: '[ "${
-              builtins.concatStringsSep ''" "'' imageTags
-            }" ]' does not have 'homemanager/${quadletName}' at index 0.'';
+            In '${quadletName}' config. Build.ImageTag: '[ "${imageTagsStr}" ]' does not contain 'homemanager/${quadletName}'.'';
         }];
 
       # Flatten assertions from all sections in `extraConfig`.

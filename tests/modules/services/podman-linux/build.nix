@@ -15,14 +15,16 @@ in {
 
       "my-bld-2" = {
         file = "https://www.github.com/././Containerfile";
-        extraConfig = { Build.ImageTag = [ "locahost/somethingelse" ]; };
+        extraConfig = {
+          Build.ImageTag = [ "locahost/somethingelse" "localhost/anothertag" ];
+        };
       };
     };
   };
 
   test.asserts.assertions.expected = [
     ''
-      In 'my-bld-2' config. Build.ImageTag: '[ "locahost/somethingelse" ]' does not have 'homemanager/my-bld-2' at index 0.''
+      In 'my-bld-2' config. Build.ImageTag: '[ "locahost/somethingelse" "localhost/anothertag" ]' does not contain 'homemanager/my-bld-2'.''
   ];
 
   nmt.script = ''
