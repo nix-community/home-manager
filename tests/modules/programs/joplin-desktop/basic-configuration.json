@@ -1,6 +1,20 @@
 {
+  "editor": "kate",
+  "editor.autoMatchingBraces": true,
+  "editor.codeView": true,
+  "imageResizing": "alwaysAsk",
+  "locale": "en_GB",
+  "markdown.plugin.fountain": false,
+  "markdown.plugin.softbreaks": true,
   "newNoteFocus": "title",
+  "newTodoFocus": "title",
   "richTextBannerDismissed": true,
+  "spellChecker.languages": [
+    "en-GB",
+    "de-DE",
+    "fr-FR"
+  ],
   "sync.interval": 600,
-  "sync.target": 7
+  "theme": 2,
+  "trackLocation": false
 }
