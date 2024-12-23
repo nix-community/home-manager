@@ -327,6 +327,7 @@ let
     ./services/kdeconnect.nix
     ./services/keybase.nix
     ./services/keynav.nix
+    ./services/librespot.nix
     ./services/lieer.nix
     ./services/listenbrainz-mpd.nix
     ./services/lorri.nix
