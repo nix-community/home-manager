@@ -75,6 +75,5 @@ in {
 
       # The default configuration creates this link on activation.
       machine.succeed("test -L '${pyHome}/.cache/.keep'")
-    succeed_as_alice("nix-shell \"<home-manager>\" -A install")
   '';
 }
