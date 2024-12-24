@@ -59,34 +59,13 @@ function setupVars() {
     declare -gr hmDataPath="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
     declare -gr genProfilePath="$profilesDir/home-manager"
     declare -gr newGenPath="@GENERATION_DIR@";
-    declare -gr newGenGcPath="$hmGcrootsDir/current-home"
+    declare -gr newGenGcPath="$hmGcrootsDir/new-home"
+    declare -gr currentGenGcPath="$hmGcrootsDir/current-home"
     declare -gr legacyGenGcPath="$globalGcrootsDir/current-home"
 
-    declare greatestGenNum
-    greatestGenNum=$( \
-        nix-env --list-generations --profile "$genProfilePath" \
-            | tail -1 \
-            | sed -E 's/ *([[:digit:]]+) .*/\1/')
-
-    if [[ -n $greatestGenNum ]] ; then
-        declare -gr oldGenNum=$greatestGenNum
-        declare -gr newGenNum=$((oldGenNum + 1))
-    else
-        declare -gr newGenNum=1
-    fi
-
-    if [[ -e $genProfilePath ]] ; then
+    if [[ -e $currentGenGcPath ]] ; then
         declare -g oldGenPath
-        oldGenPath="$(readlink -e "$genProfilePath")"
-    fi
-
-    _iVerbose "Sanity checking oldGenNum and oldGenPath"
-    if [[ -v oldGenNum && ! -v oldGenPath
-            || ! -v oldGenNum && -v oldGenPath ]]; then
-        _i $'The previous generation number and path are in conflict! These\nmust be either both empty or both set but are now set to\n\n    \'%s\' and \'%s\'\n\nIf you don\'t mind losing previous profile generations then\nthe easiest solution is probably to run\n\n   rm %s/home-manager*\n   rm %s/current-home\n\nand trying home-manager switch again. Good luck!' \
-           "${oldGenNum:-}" "${oldGenPath:-}" \
-           "$profilesDir" "$hmGcrootsDir"
-        exit 1
+        oldGenPath="$(readlink -e "$currentGenGcPath")"
     fi
 }
 
@@ -181,15 +160,13 @@ if [[ -v VERBOSE ]]; then
 fi
 
 _iVerbose "Activation variables:"
-if [[ -v oldGenNum ]] ; then
-    verboseEcho "  oldGenNum=$oldGenNum"
+if [[ -v oldGenPath ]] ; then
     verboseEcho "  oldGenPath=$oldGenPath"
 else
-    verboseEcho "  oldGenNum undefined (first run?)"
     verboseEcho "  oldGenPath undefined (first run?)"
 fi
 verboseEcho "  newGenPath=$newGenPath"
-verboseEcho "  newGenNum=$newGenNum"
 verboseEcho "  genProfilePath=$genProfilePath"
 verboseEcho "  newGenGcPath=$newGenGcPath"
+verboseEcho "  currentGenGcPath=$currentGenGcPath"
 verboseEcho "  legacyGenGcPath=$legacyGenGcPath"
