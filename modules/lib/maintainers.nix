@@ -19,6 +19,12 @@
     github = "abayomi185";
     githubId = 21103047;
   };
+  adda = {
+    name = "David Chocholatý";
+    email = "chocholaty.david@protonmail.com";
+    github = "Adda0";
+    githubId = 52529234;
+  };
   afresquet = {
     name = "Alvaro Fresquet";
     email = "alvarofresquet@gmail.com";
