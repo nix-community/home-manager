@@ -9,19 +9,66 @@ let
 
   createQuadletSource = name: containerDef:
     let
-      mapHmNetworks = network:
-        if builtins.hasAttr network cfg.networks then
-          "podman-${network}-network.service"
-        else
-          null;
+      makeServiceName = name: type:
+        let
+          typeName = (if lib.strings.hasSuffix "s" type then
+            (lib.strings.substring 0 (builtins.stringLength type - 1) type)
+          else
+            type);
+        in "podman-${name}-${typeName}.service";
+
+      extractVolumeName = resource: builtins.head (builtins.split ":" resource);
+
+      standardizeResource = res:
+        let
+          lst = if lib.isList res then
+            res
+          else if res != null then
+            [ res ]
+          else
+            [ ];
+        in map extractVolumeName lst;
+
+      filterManagedResources = resource: definedResources:
+        builtins.filter (x: builtins.elem x definedResources)
+        (standardizeResource resource);
+
+      getDefinedResourceNames = type:
+        let
+          typeName =
+            if lib.strings.hasSuffix "s" type then type else "${type}s";
+        in builtins.attrNames cfg."${typeName}";
+
+      findDefinedImageType = if (builtins.elem containerDef.image
+        (getDefinedResourceNames "builds")) then
+        "builds"
+      else
+        "images";
+
+      getManagedResourceNames = type:
+        let
+          resourceType = if type == "image" then findDefinedImageType else type;
+        in (filterManagedResources (builtins.getAttr type containerDef)
+          (getDefinedResourceNames resourceType));
+
+      getServiceNames = type:
+        let
+          resourceType = if type == "image" then findDefinedImageType else type;
+        in map (name: makeServiceName name resourceType)
+        (getManagedResourceNames type);
 
       finalConfig = let
-        managedNetworks = if lib.isList containerDef.network then
-          map mapHmNetworks containerDef.network
-        else if containerDef.network != null then
-          map mapHmNetworks [ containerDef.network ]
-        else
-          [ ];
+        managedServices = builtins.concatLists
+          (map (type: getServiceNames type) [ "image" "network" "volumes" ]);
+
+        getActualImage =
+          if (builtins.hasAttr containerDef.image cfg.images) then
+            cfg.images."${containerDef.image}".image
+          else if (builtins.hasAttr containerDef.image cfg.builds) then
+            "localhost/homemanager/${containerDef.image}"
+          else
+            containerDef.image;
+
       in (podman-lib.deepMerge {
         Container = {
           AddCapability = containerDef.addCapabilities;
@@ -34,7 +81,7 @@ let
           EnvironmentFile = containerDef.environmentFile;
           Exec = containerDef.exec;
           Group = containerDef.group;
-          Image = containerDef.image;
+          Image = getActualImage;
           IP = containerDef.ip4;
           IP6 = containerDef.ip6;
           Label =
@@ -66,8 +113,8 @@ let
           TimeoutStopSec = 30;
         };
         Unit = {
-          After = [ "network.target" ] ++ managedNetworks;
-          Requires = managedNetworks;
+          After = [ "network.target" ] ++ managedServices;
+          Requires = managedServices;
           Description = (if (builtins.isString containerDef.description) then
             containerDef.description
           else
