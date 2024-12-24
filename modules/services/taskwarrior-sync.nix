@@ -7,7 +7,7 @@ let
   cfg = config.services.taskwarrior-sync;
 
 in {
-  meta.maintainers = with maintainers; [ minijackson pacien ];
+  meta.maintainers = with maintainers; [ euxane minijackson ];
 
   options.services.taskwarrior-sync = {
     enable = mkEnableOption "Taskwarrior periodic sync";
