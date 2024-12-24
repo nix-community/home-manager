@@ -24,7 +24,7 @@
 
   testScript = ''
     start_all()
-    machine.wait_for_unit("network-online.target")
+    machine.wait_for_unit("network.target")
     machine.wait_for_unit("multi-user.target")
 
     def login_as_alice():
