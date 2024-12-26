@@ -79,6 +79,7 @@ in import nmtSrc {
     ./modules/programs/gallery-dl
     ./modules/programs/gh
     ./modules/programs/gh-dash
+    ./modules/programs/ghostty
     ./modules/programs/git
     ./modules/programs/git-cliff
     ./modules/programs/git-credential-oauth
