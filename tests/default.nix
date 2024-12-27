@@ -101,6 +101,7 @@ in import nmtSrc {
     ./modules/programs/kubecolor
     ./modules/programs/ledger
     ./modules/programs/less
+    ./modules/programs/lesspipe
     ./modules/programs/lf
     ./modules/programs/lsd
     ./modules/programs/lieer
