@@ -63,6 +63,19 @@ in {
         List of prefix of attributes to source at the top of the config.
       '';
     };
+
+    systemd.target = mkOption {
+      type = types.str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        The systemd target that will automatically start the Waybar service.
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
+        otherwise the service may never be started.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -79,8 +92,8 @@ in {
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hypridle";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+        After = [ cfg.systemd.target ];
+        PartOf = [ cfg.systemd.target ];
         X-Restart-Triggers = mkIf (cfg.settings != { })
           [ "${config.xdg.configFile."hypr/hypridle.conf".source}" ];
       };
