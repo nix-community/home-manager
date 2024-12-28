@@ -29,4 +29,19 @@ with lib;
       '';
     };
   };
+
+  config = {
+    # To make it easier for the end user to override the values in the
+    # configuration depending on the installation method, we set default values
+    # for the arguments that are defined in the NixOS/nix-darwin modules.
+    #
+    # Without these defaults, these attributes would simply not exist, and the
+    # module system can not inform modules about their non-existence; see
+    # https://github.com/NixOS/nixpkgs/issues/311709#issuecomment-2110861842
+    _module.args = {
+      osConfig = mkDefault null;
+      nixosConfig = mkDefault null;
+      darwinConfig = mkDefault null;
+    };
+  };
 }

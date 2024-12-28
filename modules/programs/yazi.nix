@@ -56,29 +56,37 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration";
+    enableBashIntegration = mkEnableOption "Bash integration" // {
+      default = true;
+    };
 
-    enableZshIntegration = mkEnableOption "Zsh integration";
+    enableZshIntegration = mkEnableOption "Zsh integration" // {
+      default = true;
+    };
 
-    enableFishIntegration = mkEnableOption "Fish integration";
+    enableFishIntegration = mkEnableOption "Fish integration" // {
+      default = true;
+    };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration";
+    enableNushellIntegration = mkEnableOption "Nushell integration" // {
+      default = true;
+    };
 
     keymap = mkOption {
       type = tomlFormat.type;
       default = { };
       example = literalExpression ''
         {
-          input.keymap = [
-            { exec = "close"; on = [ "<C-q>" ]; }
-            { exec = "close --submit"; on = [ "<Enter>" ]; }
-            { exec = "escape"; on = [ "<Esc>" ]; }
-            { exec = "backspace"; on = [ "<Backspace>" ]; }
+          input.prepend_keymap = [
+            { run = "close"; on = [ "<C-q>" ]; }
+            { run = "close --submit"; on = [ "<Enter>" ]; }
+            { run = "escape"; on = [ "<Esc>" ]; }
+            { run = "backspace"; on = [ "<Backspace>" ]; }
           ];
-          manager.keymap = [
-            { exec = "escape"; on = [ "<Esc>" ]; }
-            { exec = "quit"; on = [ "q" ]; }
-            { exec = "close"; on = [ "<C-q>" ]; }
+          manager.prepend_keymap = [
+            { run = "escape"; on = [ "<Esc>" ]; }
+            { run = "quit"; on = [ "q" ]; }
+            { run = "close"; on = [ "<C-q>" ]; }
           ];
         }
       '';
@@ -101,7 +109,7 @@ in {
           };
           manager = {
             show_hidden = false;
-            sort_by = "modified";
+            sort_by = "mtime";
             sort_dir_first = true;
             sort_reverse = true;
           };
@@ -126,7 +134,7 @@ in {
               { fg = "#7AD9E5"; mime = "image/*"; }
               { fg = "#F3D398"; mime = "video/*"; }
               { fg = "#F3D398"; mime = "audio/*"; }
-              { fg = "#CD9EFC"; mime = "application/x-bzip"; }
+              { fg = "#CD9EFC"; mime = "application/bzip"; }
             ];
           };
         }

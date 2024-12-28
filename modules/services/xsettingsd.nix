@@ -82,7 +82,7 @@ in {
       Install.WantedBy = [ "graphical-session.target" ];
 
       Service = {
-        Environment = "PATH=${config.home.profileDirectory}/bin";
+        Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
         ExecStart = "${cfg.package}/bin/xsettingsd"
           + optionalString (cfg.configFile != null)
           " -c ${escapeShellArg cfg.configFile}";

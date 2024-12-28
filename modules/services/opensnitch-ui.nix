@@ -28,7 +28,7 @@ in {
       };
 
       Service = {
-        Environment = "PATH=${config.home.profileDirectory}/bin";
+        Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
         ExecStart = "${pkgs.opensnitch-ui}/bin/opensnitch-ui";
       };
 

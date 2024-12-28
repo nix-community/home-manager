@@ -7,7 +7,7 @@ let
   cfg = config.programs.bemenu;
 
 in {
-  meta.maintainers = [ hm.maintainers.omernaveedxyz ];
+  meta.maintainers = [ ];
 
   options.programs.bemenu = {
     enable = mkEnableOption "bemenu";

@@ -7,10 +7,13 @@ let
   cfg = config.services.taskwarrior-sync;
 
 in {
-  meta.maintainers = with maintainers; [ minijackson pacien ];
+  meta.maintainers = with maintainers; [ euxane minijackson ];
 
   options.services.taskwarrior-sync = {
     enable = mkEnableOption "Taskwarrior periodic sync";
+
+    package =
+      mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
 
     frequency = mkOption {
       type = types.str;
@@ -36,7 +39,7 @@ in {
       Service = {
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
-        ExecStart = "${pkgs.taskwarrior}/bin/task synchronize";
+        ExecStart = "${cfg.package}/bin/task synchronize";
       };
     };
 

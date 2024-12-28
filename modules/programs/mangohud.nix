@@ -68,7 +68,7 @@ in {
           {
             mpv = {
               no_display = true;
-            }
+            };
           }
         '';
         description = ''

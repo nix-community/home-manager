@@ -15,18 +15,18 @@ herbstclient mouseunbind --all
 herbstclient unrule --all
 
 herbstclient set always_show_frame true
-herbstclient set default_frame_layout 'max'
+herbstclient set default_frame_layout max
 herbstclient set frame_bg_active_color '#000000'
-herbstclient set frame_gap '12'
-herbstclient set frame_padding '-12'
+herbstclient set frame_gap 12
+herbstclient set frame_padding -12
 
-for tag in '1' 'with space' 'wə1rd#ch@rs'\'''; do
+for tag in 1 'with space' 'wə1rd#ch@rs'\'''; do
   herbstclient add "$tag"
 done
 
 if @herbstluftwm@/bin/herbstclient object_tree tags.by-name.default &>/dev/null; then
-  herbstclient use '1'
-  herbstclient merge_tag default '1'
+  herbstclient use 1
+  herbstclient merge_tag default 1
 fi
 
 

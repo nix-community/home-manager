@@ -34,6 +34,21 @@ let
 
   historyModule = types.submodule ({ config, ... }: {
     options = {
+      append = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          If set, zsh sessions will append their history list to the history
+          file, rather than replace it. Thus, multiple parallel zsh sessions
+          will all have the new entries from their history lists added to the
+          history file, in the order that they exit.
+
+          This file will still be periodically re-written to trim it when the
+          number of lines grows 20% beyond the value specified by
+          `programs.zsh.history.save`.
+        '';
+      };
+
       size = mkOption {
         type = types.int;
         default = 10000;
@@ -398,6 +413,25 @@ in
             {manpage}`zshzle(1)` for syntax.
           '';
         };
+
+        strategy = mkOption {
+          type = types.listOf (types.enum [ "history" "completion" "match_prev_cmd" ]);
+          default = [ "history" ];
+          description = ''
+            `ZSH_AUTOSUGGEST_STRATEGY` is an array that specifies how suggestions should be generated.
+            The strategies in the array are tried successively until a suggestion is found.
+            There are currently three built-in strategies to choose from:
+
+            - `history`: Chooses the most recent match from history.
+            - `completion`: Chooses a suggestion based on what tab-completion would suggest. (requires `zpty` module)
+            - `match_prev_cmd`: Like `history`, but chooses the most recent match whose preceding history item matches
+                the most recently executed command. Note that this strategy won't work as expected with ZSH options that
+                don't preserve the history order such as `HIST_IGNORE_ALL_DUPS` or `HIST_EXPIRE_DUPS_FIRST`.
+
+            Setting the option to an empty list `[]` will make ZSH_AUTOSUGGESTION_STRATEGY not be set automatically,
+            allowing the variable to be declared in {option}`programs.zsh.localVariables` or {option}`programs.zsh.sessionVariables`
+          '';
+        };
       };
 
       history = mkOption {
@@ -610,6 +644,10 @@ in
 
         (optionalString cfg.autosuggestion.enable ''
           source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+          ${optionalString (cfg.autosuggestion.strategy != []) ''
+            ZSH_AUTOSUGGEST_STRATEGY=(${concatStringsSep " " cfg.autosuggestion.strategy})
+          ''
+          }
         '')
         (optionalString (cfg.autosuggestion.enable && cfg.autosuggestion.highlight != null) ''
           ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="${cfg.autosuggestion.highlight}"
@@ -652,6 +690,7 @@ in
         mkdir -p "$(dirname "$HISTFILE")"
 
         setopt HIST_FCNTL_LOCK
+        ${if cfg.history.append then "setopt" else "unsetopt"} APPEND_HISTORY
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
         ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
         ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE

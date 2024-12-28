@@ -8,29 +8,32 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-09-02 17:09+0000\n"
+"Last-Translator: Ferenci Ákos <synthetace@gmail.com>\n"
+"Language-Team: Hungarian <https://hosted.weblate.org/projects/home-manager/"
+"modules/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: modules/files.nix:191
 msgid "Creating home file links in %s"
-msgstr ""
+msgstr "Hivatkozások létrehozása itt: %s"
 
 #: modules/files.nix:204
 msgid "Cleaning up orphan links from %s"
-msgstr ""
+msgstr "Árva hivatkozások kitakarítása innen: %s"
 
 #: modules/files.nix:220
 msgid "Creating profile generation %s"
-msgstr ""
+msgstr "%s. profil generáció létrehozása"
 
 #: modules/files.nix:237
 msgid "No change so reusing latest profile generation %s"
-msgstr ""
+msgstr "Nincs változás, legutóbbi %s. generáció lesz használva"
 
 #: modules/home-environment.nix:634
 msgid ""
@@ -59,6 +62,7 @@ msgstr ""
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
+"Nem található megfelelő profil mappa, %s és %s útvonalak lettek kipróbálva."
 
 #: modules/lib-bash/activation-init.sh:83
 msgid "Sanity checking oldGenNum and oldGenPath"
@@ -94,7 +98,7 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Nix épségének ellenőrzése"
 
 #: modules/lib-bash/activation-init.sh:170
 msgid "This is a dry run"

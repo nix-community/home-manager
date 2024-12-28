@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-05-31 17:09+0000\n"
-"Last-Translator: jarre johansson <jarre@johansson.today>\n"
+"PO-Revision-Date: 2024-12-03 13:00+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/home-manager/cli/"
 "fi/>\n"
 "Language: fi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -26,7 +26,7 @@ msgstr "%s: puuttuva argumentti kohteelle %s"
 
 #: home-manager/home-manager:64
 msgid "No configuration file found at %s"
-msgstr "Konfiguraatiotiedostoa ei löytynyt sijainnista %s"
+msgstr "Kokoonpanotiedostoa ei löydy %s:sta"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
@@ -36,10 +36,12 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Home Managerin %s pitäminen %s:ssa on vanhentunut.\n"
+"ole hyvä ja siirrä se %s:een"
 
 #: home-manager/home-manager:92
 msgid "No configuration file found. Please create one at %s"
-msgstr "Konfiguraatiotiedostoa ei löytynyt. Luo sellainen sijaintiin %s"
+msgstr "Kokoonpanotiedostoa ei löytynyt. Luo sellainen %s:lla"
 
 #: home-manager/home-manager:107
 msgid "Home Manager not found at %s."

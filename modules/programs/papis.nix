@@ -19,6 +19,8 @@ in {
   options.programs.papis = {
     enable = mkEnableOption "papis";
 
+    package = mkPackageOption pkgs "papis" { };
+
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool int str ]);
       default = { };
@@ -84,7 +86,7 @@ in {
         (", namely " + concatStringsSep "," defaultLibraries);
     }];
 
-    home.packages = [ pkgs.papis ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."papis/config" =
       mkIf (cfg.libraries != { }) { text = generators.toINI { } settingsIni; };

@@ -188,7 +188,7 @@ in {
       };
 
       Service = {
-        Environment = "PATH=${config.home.profileDirectory}/bin";
+        Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
         ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf} ${
             escapeShellArgs cfg.extraArgs
           }";

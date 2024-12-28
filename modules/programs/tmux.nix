@@ -95,6 +95,7 @@ let
     ''}
 
     set  -g mouse             ${boolToStr cfg.mouse}
+    set  -g focus-events      ${boolToStr cfg.focusEvents}
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
     set  -s escape-time       ${toString cfg.escapeTime}
@@ -191,6 +192,15 @@ in {
         '';
       };
 
+      focusEvents = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          On supported terminals, request focus events and pass them through to
+          applications running in tmux.
+        '';
+      };
+
       historyLimit = mkOption {
         default = 2000;
         example = 5000;
@@ -239,7 +249,7 @@ in {
 
       sensibleOnTop = mkOption {
         type = types.bool;
-        default = true;
+        default = false;
         description = ''
           Run the sensible plugin at the top of the configuration. It
           is possible to override the sensible settings using the

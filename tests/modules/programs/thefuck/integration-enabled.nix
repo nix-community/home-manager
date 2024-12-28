@@ -15,7 +15,7 @@
     assertFileExists home-files/.bashrc
     assertFileContains \
       home-files/.bashrc \
-      'eval "$(@thefuck@/bin/thefuck '"'"'--alias'"'"')"'
+      'eval "$(@thefuck@/bin/thefuck --alias)"'
 
     assertFileExists home-files/.config/fish/functions/fuck.fish
     assertFileContains \
@@ -33,7 +33,7 @@
     assertFileExists home-files/.zshrc
     assertFileContains \
       home-files/.zshrc \
-      'eval "$(@thefuck@/bin/thefuck '"'"'--alias'"'"')"'
+      'eval "$(@thefuck@/bin/thefuck --alias)"'
 
     assertFileExists home-files/.config/nushell/config.nu
     assertFileContains \
