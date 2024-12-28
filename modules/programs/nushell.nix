@@ -206,6 +206,12 @@ in {
       in lib.mkIf writeConfig {
         "${configDir}/config.nu".text = lib.mkMerge [
           (let
+            hasEnvVars = cfg.environmentVariables != { };
+            envVarsStr = ''
+              load-env ${toNushell { } cfg.environmentVariables}
+            '';
+          in lib.mkIf hasEnvVars envVarsStr)
+          (let
             flattenSettings = let
               joinDot = a: b: "${if a == "" then "" else "${a}."}${b}";
               unravel = prefix: value:
@@ -220,6 +226,7 @@ in {
             '';
             settingsLines =
               lib.concatMapStrings mkLine (flattenSettings cfg.settings);
+
           in lib.mkIf (cfg.settings != { }) settingsLines)
           (lib.mkIf (cfg.configFile != null) cfg.configFile.text)
           cfg.extraConfig
@@ -227,16 +234,10 @@ in {
         ];
       })
 
-      (let
-        hasEnvVars = cfg.environmentVariables != { };
-        envVarsStr = ''
-          load-env ${toNushell { } cfg.environmentVariables}
-        '';
-      in lib.mkIf (cfg.envFile != null || cfg.extraEnv != "" || hasEnvVars) {
+      (lib.mkIf (cfg.envFile != null || cfg.extraEnv != "") {
         "${configDir}/env.nu".text = lib.mkMerge [
           (lib.mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
-          envVarsStr
         ];
       })
       (lib.mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
