@@ -340,6 +340,7 @@ in {
 
       systemd.user.services.kanshi = {
         Unit = {
+          ConditionEnvironment = "WAYLAND_DISPLAY";
           Description = "Dynamic output configuration";
           Documentation = "man:kanshi(1)";
           PartOf = cfg.systemdTarget;
