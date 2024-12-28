@@ -1,0 +1,11 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@copyq@/bin/copyq
+Restart=on-failure
+
+[Unit]
+After=graphical-session.target
+Description=CopyQ clipboard management daemon
+PartOf=graphical-session.target
