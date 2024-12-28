@@ -57,6 +57,19 @@ in {
         List of prefix of attributes to source at the top of the config.
       '';
     };
+
+    systemd.target = mkOption {
+      type = types.str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        The systemd target that will automatically start the Waybar service.
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
+        otherwise the service may never be started.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -68,13 +81,13 @@ in {
     };
 
     systemd.user.services.hyprpaper = {
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = { WantedBy = [ cfg.systemd.target ]; };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hyprpaper";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+        PartOf = [ cfg.systemd.target ];
+        After = [ cfg.systemd.target ];
         X-Restart-Triggers = mkIf (cfg.settings != { })
           [ "${config.xdg.configFile."hypr/hyprpaper.conf".source}" ];
       };
