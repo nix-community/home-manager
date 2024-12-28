@@ -1919,6 +1919,17 @@ in {
           Cavalier is a GUI wrapper around the Cava audio visualizer.
         '';
       }
+
+      {
+        time = "2024-12-27T16:56:33+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          The Firefox module now provides a
+          `programs.firefox.profiles.<name>.preConfig` option that allows an
+          arbitrary string to be added to `user.js` *before* the options
+          specified in `programs.firefox.profiles.<name>.settings`.
+        '';
+      }
     ];
   };
 }
