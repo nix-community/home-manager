@@ -73,6 +73,19 @@ in {
         for the documentation.
       '';
     };
+
+    systemd.target = lib.mkOption {
+      type = lib.types.str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        The systemd target that will automatically start the Waybar service.
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
+        otherwise the service may never be started.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -95,8 +108,8 @@ in {
       Unit = {
         Description = "Swaync notification daemon";
         Documentation = "https://github.com/ErikReider/SwayNotificationCenter";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session-pre.target" ];
+        PartOf = [ cfg.systemd.target ];
+        After = [ cfg.systemd.target ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
@@ -107,7 +120,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install.WantedBy = [ "graphical-session.target" ];
+      Install.WantedBy = [ cfg.systemd.target ];
     };
   };
 }
