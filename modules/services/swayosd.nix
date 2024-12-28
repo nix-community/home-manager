@@ -43,6 +43,19 @@ in {
         X display to use.
       '';
     };
+
+    systemd.target = mkOption {
+      type = types.str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        The systemd target that will automatically start the Waybar service.
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
+        otherwise the service may never be started.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -56,8 +69,8 @@ in {
       services.swayosd = {
         Unit = {
           Description = "Volume/backlight OSD indicator";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+          PartOf = [ cfg.systemd.target ];
+          After = [ cfg.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           Documentation = "man:swayosd(1)";
           StartLimitBurst = 5;
@@ -76,7 +89,7 @@ in {
           RestartSec = "2s";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ cfg.systemd.target ]; };
       };
     };
   };
