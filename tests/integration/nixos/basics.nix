@@ -9,6 +9,8 @@
 
     virtualisation.memorySize = 2048;
 
+    system.stateVersion = "25.05";
+
     users.users.alice = {
       isNormalUser = true;
       description = "Alice Foobar";
@@ -16,14 +18,21 @@
       uid = 1000;
     };
 
-    home-manager.users.alice = { ... }: {
-      home.stateVersion = "24.11";
-      home.file.test.text = "testfile";
-      # Enable a light-weight systemd service.
-      services.pueue.enable = true;
-      # We focus on sd-switch since that hopefully will become the default in
-      # the future.
-      systemd.user.startServices = "sd-switch";
+    home-manager = {
+      # Assert that we expect the option to default to false due to the Home
+      # Manager state version setup.
+      enableLegacyProfileManagement = pkgs.lib.mkOptionDefault false;
+
+      users.alice = { ... }: {
+        home.stateVersion = "25.05";
+        home.file.test.text = "testfile";
+
+        # Enable a light-weight systemd service.
+        services.pueue.enable = true;
+        # We focus on sd-switch since that hopefully will become the default in
+        # the future.
+        systemd.user.startServices = "sd-switch";
+      };
     };
   };
 
@@ -81,17 +90,13 @@
 
       logout_alice()
 
-    with subtest("GC root and profile"):
-      # There should be a GC root and Home Manager profile and they should point
-      # to the same path in the Nix store.
-      gcroot = "/home/alice/.local/state/home-manager/gcroots/current-home"
-      gcrootTarget = machine.succeed(f"readlink {gcroot}")
+    with subtest("no GC root and profile"):
+      # There should be no GC root and Home Manager profile since we are not
+      # using legacy profile management.
+      hmState = "/home/alice/.local/state/home-manager"
+      machine.succeed(f"test ! -e {hmState}")
 
-      profile = "/home/alice/.local/state/nix/profiles"
-      profileTarget = machine.succeed(f"readlink {profile}/home-manager")
-      profile1Target = machine.succeed(f"readlink {profile}/{profileTarget}")
-
-      assert gcrootTarget == profile1Target, \
-        f"expected GC root and profile to point to same, but pointed to {gcrootTarget} and {profile1Target}"
+      hmProfile = "/home/alice/.local/state/nix/profiles/home-manager"
+      machine.succeed(f"test ! -e {hmProfile}")
   '';
 }

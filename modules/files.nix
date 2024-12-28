@@ -105,10 +105,7 @@ in
     # 1. Remove files from the old generation that are not in the new
     #    generation.
     #
-    # 2. Switch over the Home Manager gcroot and current profile
-    #    links.
-    #
-    # 3. Symlink files from the new generation into $HOME.
+    # 2. Symlink files from the new generation into $HOME.
     #
     # This order is needed to ensure that we always know which links
     # belong to which generation. Specifically, if we're moving from
@@ -215,28 +212,6 @@ in
           }
 
           cleanOldGen
-
-          if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
-            _i "Creating profile generation %s" $newGenNum
-            if [[ -e "$genProfilePath"/manifest.json ]] ; then
-              # Remove all packages from "$genProfilePath"
-              # `nix profile remove '.*' --profile "$genProfilePath"` was not working, so here is a workaround:
-              nix profile list --profile "$genProfilePath" \
-                | cut -d ' ' -f 4 \
-                | xargs -rt $DRY_RUN_CMD nix profile remove $VERBOSE_ARG --profile "$genProfilePath"
-              run nix profile install $VERBOSE_ARG --profile "$genProfilePath" "$newGenPath"
-            else
-              run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
-            fi
-
-            run --quiet nix-store --realise "$newGenPath" --add-root "$newGenGcPath" --indirect
-            if [[ -e "$legacyGenGcPath" ]]; then
-              run rm $VERBOSE_ARG "$legacyGenGcPath"
-            fi
-          else
-            _i "No change so reusing latest profile generation %s" "$oldGenNum"
-          fi
-
           linkNewGen
         ''
     );
