@@ -37,6 +37,19 @@ in {
 
     systemd = mkEnableOption "systemd service and socket for wob"
       // mkOption { default = true; };
+
+    systemdTarget = mkOption {
+      type = lib.types.str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        The systemd target that will automatically start the Waybar service.
+
+        When setting this value to `"sway-session.target"`,
+        make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
+        otherwise the service may never be started.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -50,8 +63,8 @@ in {
           Description =
             "A lightweight overlay volume/backlight/progress/anything bar for Wayland";
           Documentation = "man:wob(1)";
-          PartOf = "graphical-session.target";
-          After = "graphical-session.target";
+          PartOf = [ cfg.systemdTarget ];
+          After = [ cfg.systemdTarget ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
         };
         Service = {
@@ -59,7 +72,7 @@ in {
           ExecStart = builtins.concatStringsSep " " ([ (getExe cfg.package) ]
             ++ optional (cfg.settings != { }) "--config ${configFile}");
         };
-        Install.WantedBy = [ "graphical-session.target" ];
+        Install.WantedBy = [ cfg.systemdTarget ];
       };
 
       sockets.wob = {
