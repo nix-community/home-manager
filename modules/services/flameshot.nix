@@ -61,7 +61,7 @@ in {
         X-Restart-Triggers = mkIf (cfg.settings != { }) [ "${iniFile}" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = { WantedBy = [ "tray.target" ]; };
 
       Service = {
         Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
