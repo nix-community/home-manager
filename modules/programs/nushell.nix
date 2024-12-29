@@ -39,7 +39,8 @@ let
       };
     });
 in {
-  meta.maintainers = [ maintainers.Philipp-M ];
+  meta.maintainers =
+    [ maintainers.Philipp-M maintainers.joaquintrinanes maintainers.aidalgol ];
 
   imports = [
     (mkRemovedOptionModule [ "programs" "nushell" "settings" ] ''
@@ -134,6 +135,15 @@ in {
       '';
     };
 
+    plugins = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = lib.literalExpression "[ pkgs.nushellPlugins.formats ]";
+      description = ''
+        A list of nushell plugins to write to the plugin registry file.
+      '';
+    };
+
     shellAliases = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -145,11 +155,24 @@ in {
     };
 
     environmentVariables = mkOption {
-      type = types.attrsOf types.str;
+      type = types.attrsOf hm.types.nushellValue;
       default = { };
-      example = { FOO = "BAR"; };
+      example = literalExpression ''
+        {
+          FOO = "BAR";
+          LIST_VALUE = [ "foo" "bar" ];
+          NU_LIB_DIRS = lib.concatStringsSep ":" [ ./scripts ];
+          PROMPT_COMMAND = lib.hm.nushell.mkNushellInline '''{|| "> "}''';
+          ENV_CONVERSIONS.PATH = {
+            from_string = lib.hm.nushell.mkNushellInline "{|s| $s | split row (char esep) }";
+            to_string = lib.hm.nushell.mkNushellInline "{|v| $v | str join (char esep) }";
+          };
+        }
+      '';
       description = ''
-        An attribute set that maps an environment variable to a shell interpreted string.
+        Environment variables to be set.
+
+        Inline values can be set with `lib.hm.nushell.mkNushellInline`.
       '';
     };
   };
@@ -173,9 +196,11 @@ in {
       })
 
       (let
-        envVarsStr = concatStringsSep "\n"
-          (mapAttrsToList (k: v: "$env.${k} = ${v}") cfg.environmentVariables);
-      in mkIf (cfg.envFile != null || cfg.extraEnv != "" || envVarsStr != "") {
+        hasEnvVars = cfg.environmentVariables != { };
+        envVarsStr = ''
+          load-env ${hm.nushell.toNushell { } cfg.environmentVariables}
+        '';
+      in mkIf (cfg.envFile != null || cfg.extraEnv != "" || hasEnvVars) {
         "${configDir}/env.nu".text = mkMerge [
           (mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
@@ -187,6 +212,20 @@ in {
           (mkIf (cfg.loginFile != null) cfg.loginFile.text)
           cfg.extraLogin
         ];
+      })
+
+      (let
+        msgPackz = pkgs.runCommand "nushellMsgPackz" { } ''
+          mkdir -p "$out"
+          ${lib.getExe cfg.package} \
+            --plugin-config "$out/plugin.msgpackz" \
+            --commands '${
+              concatStringsSep "; "
+              (map (plugin: "plugin add ${lib.getExe plugin}") cfg.plugins)
+            }'
+        '';
+      in mkIf (cfg.plugins != [ ]) {
+        "${configDir}/plugin.msgpackz".source = "${msgPackz}/plugin.msgpackz";
       })
     ];
   };

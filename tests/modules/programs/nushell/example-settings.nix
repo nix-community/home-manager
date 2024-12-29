@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 {
   programs.nushell = {
@@ -23,15 +23,25 @@
       }
     '';
 
+    plugins = [ pkgs.nushellPlugins.formats ];
+
     shellAliases = {
       "lsname" = "(ls | get name)";
       "ll" = "ls -a";
     };
 
-    environmentVariables = { BAR = "$'(echo BAZ)'"; };
+    environmentVariables = {
+      FOO = "BAR";
+      LIST_VALUE = [ "foo" "bar" ];
+      PROMPT_COMMAND = lib.hm.nushell.mkNushellInline ''{|| "> "}'';
+      ENV_CONVERSIONS.PATH = {
+        from_string =
+          lib.hm.nushell.mkNushellInline "{|s| $s | split row (char esep) }";
+        to_string =
+          lib.hm.nushell.mkNushellInline "{|v| $v | str join (char esep) }";
+      };
+    };
   };
-
-  test.stubs.nushell = { };
 
   nmt.script = let
     configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
@@ -48,5 +58,7 @@
     assertFileContent \
       "${configDir}/login.nu" \
       ${./login-expected.nu}
+    assertFileExists \
+      "${configDir}/plugin.msgpackz"
   '';
 }

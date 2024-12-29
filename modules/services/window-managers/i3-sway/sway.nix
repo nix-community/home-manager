@@ -249,7 +249,7 @@ let
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
     ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") attrs)}
+    (mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
     }
   '';
   inputStr = moduleStr "input";
@@ -258,7 +258,6 @@ let
 
   variables = concatStringsSep " " cfg.systemd.variables;
   extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
-  swayPackage = if cfg.package == null then pkgs.sway else cfg.package;
   systemdActivation = ''
     exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
 
@@ -269,7 +268,7 @@ let
     checkPhase = lib.optionalString cfg.checkConfig ''
       export DBUS_SESSION_BUS_ADDRESS=/dev/null
       export XDG_RUNTIME_DIR=$(mktemp -d)
-      ${pkgs.xvfb-run}/bin/xvfb-run ${swayPackage}/bin/sway --config "$target" --validate --unsupported-gpu
+      ${pkgs.xvfb-run}/bin/xvfb-run ${cfg.package}/bin/sway --config "$target" --validate --unsupported-gpu
     '';
 
     text = concatStringsSep "\n"
@@ -331,13 +330,6 @@ let
         ++ [ cfg.extraConfig ]);
   };
 
-  defaultSwayPackage = pkgs.sway.override {
-    extraSessionCommands = cfg.extraSessionCommands;
-    extraOptions = cfg.extraOptions;
-    withBaseWrapper = cfg.wrapperFeatures.base;
-    withGtkWrapper = cfg.wrapperFeatures.gtk;
-  };
-
 in {
   meta.maintainers = with maintainers; [
     Scrumplex
@@ -357,14 +349,20 @@ in {
 
     package = mkOption {
       type = with types; nullOr package;
-      default = defaultSwayPackage;
+      default = pkgs.sway.override {
+        extraSessionCommands = cfg.extraSessionCommands;
+        extraOptions = cfg.extraOptions;
+        withBaseWrapper = cfg.wrapperFeatures.base;
+        withGtkWrapper = cfg.wrapperFeatures.gtk;
+      };
       defaultText = literalExpression "${pkgs.sway}";
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
         Set to `null` to not add any Sway package to your
         path. This should be done if you want to use the NixOS Sway
-        module to install Sway.
+        module to install Sway. Beware setting to `null` will also disable
+        reloading Sway when new config is activated.
       '';
     };
 
@@ -485,9 +483,10 @@ in {
 
     checkConfig = mkOption {
       type = types.bool;
-      default = true;
-      description =
-        "If enabled (the default), validates the generated config file.";
+      default = cfg.package != null;
+      defaultText =
+        literalExpression "wayland.windowManager.sway.package != null";
+      description = "If enabled, validates the generated config file.";
     };
 
     extraConfig = mkOption {
@@ -522,6 +521,11 @@ in {
       assertions = [
         (hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs
           platforms.linux)
+        {
+          assertion = cfg.checkConfig -> cfg.package != null;
+          message =
+            "programs.sway.checkConfig requires non-null programs.sway.package";
+        }
       ];
 
       home.packages = optional (cfg.package != null) cfg.package
@@ -529,10 +533,10 @@ in {
 
       xdg.configFile."sway/config" = {
         source = configFile;
-        onChange = ''
+        onChange = lib.optionalString (cfg.package != null) ''
           swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
           if [ -S "$swaySocket" ]; then
-            ${swayPackage}/bin/swaymsg -s $swaySocket reload
+            ${cfg.package}/bin/swaymsg -s $swaySocket reload
           fi
         '';
       };

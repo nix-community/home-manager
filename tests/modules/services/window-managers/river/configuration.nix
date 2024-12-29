@@ -79,7 +79,6 @@
   };
 
   test.stubs = {
-    dbus = { };
     river = { };
     xwayland = { };
   };

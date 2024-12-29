@@ -1,0 +1,77 @@
+{
+  "engines": [
+    {
+      "_definedAliases": [
+        "@np"
+      ],
+      "_iconURL": "file:///run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg",
+      "_isAppProvided": false,
+      "_loadPath": "[home-manager]/programs.@name@.profiles.search.search.engines.\"Nix Packages\"",
+      "_metaData": {
+        "order": 1
+      },
+      "_name": "Nix Packages",
+      "_urls": [
+        {
+          "params": [
+            {
+              "name": "type",
+              "value": "packages"
+            },
+            {
+              "name": "query",
+              "value": "{searchTerms}"
+            }
+          ],
+          "template": "https://search.nixos.org/packages"
+        }
+      ]
+    },
+    {
+      "_definedAliases": [
+        "@nw"
+      ],
+      "_iconURL": "https://wiki.nixos.org/favicon.png",
+      "_iconUpdateURL": "https://wiki.nixos.org/favicon.png",
+      "_isAppProvided": false,
+      "_loadPath": "[home-manager]/programs.@name@.profiles.search.search.engines.\"NixOS Wiki\"",
+      "_metaData": {
+        "order": 2
+      },
+      "_name": "NixOS Wiki",
+      "_updateInterval": 86400000,
+      "_urls": [
+        {
+          "template": "https://wiki.nixos.org/index.php?search={searchTerms}"
+        }
+      ]
+    },
+    {
+      "_isAppProvided": true,
+      "_metaData": {
+        "hidden": true
+      },
+      "_name": "Bing"
+    },
+    {
+      "_isAppProvided": true,
+      "_metaData": {},
+      "_name": "DuckDuckGo"
+    },
+    {
+      "_isAppProvided": true,
+      "_metaData": {
+        "alias": "@g"
+      },
+      "_name": "Google"
+    }
+  ],
+  "metaData": {
+    "current": "Google",
+    "hash": null,
+    "private": "DuckDuckGo",
+    "privateHash": null,
+    "useSavedOrder": true
+  },
+  "version": 6
+}

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2024-04-17 23:19+0200\n"
-"PO-Revision-Date: 2024-06-02 08:12+0000\n"
+"PO-Revision-Date: 2024-08-01 04:09+0000\n"
 "Last-Translator: goatastronaut0212 <goatastronaut0212@proton.me>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/home-manager/"
 "modules/vi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #: modules/files.nix:191
 msgid "Creating home file links in %s"
@@ -53,11 +53,11 @@ msgstr ""
 
 #: modules/home-environment.nix:667
 msgid "Activating %s"
-msgstr ""
+msgstr "Đang khởi động %s"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "Chuyển đổi hồ sơ từ %s tới %s"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -85,11 +85,11 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:127
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Lỗi: USER được đặt thành \"%s\" nhưng chúng tôi kỳ vọng \"%s\""
 
 #: modules/lib-bash/activation-init.sh:136
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Lỗi: HOME được đặt thành \"%s\" nhưng chúng tôi kỳ vọng \"%s\""
 
 #: modules/lib-bash/activation-init.sh:153
 msgid "Starting Home Manager activation"
@@ -97,7 +97,7 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:157
 msgid "Sanity checking Nix"
-msgstr "Kiểm tra độ hợp lệ của Nix"
+msgstr "Kiểm tra hợp lệ của Nix"
 
 #: modules/lib-bash/activation-init.sh:170
 msgid "This is a dry run"

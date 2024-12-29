@@ -7,7 +7,7 @@ let
   cfg = config.programs.password-store;
 
 in {
-  meta.maintainers = with maintainers; [ pacien ];
+  meta.maintainers = with maintainers; [ euxane ];
 
   options.programs.password-store = {
     enable = mkEnableOption "Password store";

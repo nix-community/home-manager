@@ -41,7 +41,7 @@ in with lib; {
       Service = {
         Restart = "always";
         RestartSec = "3";
-        ExecStart = toString ([ "${pkgs.conky}/bin/conky" ]
+        ExecStart = toString ([ "${cfg.package}/bin/conky" ]
           ++ optional (cfg.extraConfig != "")
           "--config ${pkgs.writeText "conky.conf" cfg.extraConfig}");
       };

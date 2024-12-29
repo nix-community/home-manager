@@ -17,4 +17,4 @@ while [ -n "$(systemctl --user --no-legend --state=deactivating list-units)" ]; 
   sleep 0.5
 done
 
-systemctl --user unset-environment 'DBUS_SESSION_BUS_ADDRESS' 'DISPLAY' 'SSH_AUTH_SOCK' 'XAUTHORITY' 'XDG_DATA_DIRS' 'XDG_RUNTIME_DIR' 'XDG_SESSION_ID' 'EXTRA_IMPORTED_VARIABLE'
+systemctl --user unset-environment DBUS_SESSION_BUS_ADDRESS DISPLAY SSH_AUTH_SOCK XAUTHORITY XDG_DATA_DIRS XDG_RUNTIME_DIR XDG_SESSION_ID EXTRA_IMPORTED_VARIABLE

@@ -7,7 +7,7 @@ let
   cfg = config.services.volnoti;
 
 in {
-  meta.maintainers = [ maintainers.imalison ];
+  meta.maintainers = with maintainers; [ imalison tomodachi94 ];
 
   options = {
     services.volnoti = {
@@ -37,7 +37,7 @@ in {
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
 
-      Service = { ExecStart = "${pkgs.volnoti}/bin/volnoti -v -n"; };
+      Service = { ExecStart = "${lib.getExe cfg.package} -v -n"; };
     };
   };
 }

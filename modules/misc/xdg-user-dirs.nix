@@ -7,7 +7,7 @@ let
   cfg = config.xdg.userDirs;
 
 in {
-  meta.maintainers = with maintainers; [ pacien ];
+  meta.maintainers = with maintainers; [ euxane ];
 
   imports = [
     (mkRenamedOptionModule [ "xdg" "userDirs" "publishShare" ] [

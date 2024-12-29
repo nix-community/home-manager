@@ -49,7 +49,7 @@ in {
           args = concatStringsSep " " ([ "--start" "--foreground" ]
             ++ optional (cfg.components != [ ])
             ("--components=" + concatStringsSep "," cfg.components));
-        in "${pkgs.gnome.gnome-keyring}/bin/gnome-keyring-daemon ${args}";
+        in "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon ${args}";
         Restart = "on-abort";
       };
 

@@ -87,6 +87,22 @@
         key_sequence = "q";
       }
     ];
+
+    actions = [
+      {
+        action = "GoToArtist";
+        key_sequence = "g A";
+      }
+      {
+        action = "GoToAlbum";
+        key_sequence = "g B";
+        target = "PlayingTrack";
+      }
+      {
+        action = "ToggleLiked";
+        key_sequence = "C-l";
+      }
+    ];
   };
 
   test.stubs.spotify-player = { };

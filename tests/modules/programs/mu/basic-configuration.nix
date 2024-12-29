@@ -16,9 +16,9 @@
 
   nmt.script = ''
     assertFileContains activate \
-      'if [[ ! -d "/home/hm-user/.cache/mu" ]]; then'
+      'if [[ ! -d "/home/hm-user/.cache/mu" || ! "$MU_SORTED_ADDRS" = "foo@example.com hm@example.com" ]]; then'
 
     assertFileContains activate \
-      'run @mu@/bin/mu init --maildir=/home/hm-user/Mail --my-address=hm@example.com --my-address=foo@example.com $VERBOSE_ARG;'
+      'run @mu@/bin/mu init --maildir=/home/hm-user/Mail --my-address=foo@example.com --my-address=hm@example.com $VERBOSE_ARG;'
   '';
 }

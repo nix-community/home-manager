@@ -14,8 +14,8 @@ in {
       enable = mkEnableOption "KDE connect";
       package = mkOption {
         type = types.package;
-        default = pkgs.plasma5Packages.kdeconnect-kde;
-        example = literalExpression "pkgs.kdePackages.kdeconnect-kde";
+        default = pkgs.kdePackages.kdeconnect-kde;
+        example = literalExpression "pkgs.plasma5Packages.kdeconnect-kde";
         description = "The KDE connect package to use";
       };
 
@@ -47,7 +47,7 @@ in {
         Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
-          Environment = "PATH=${config.home.profileDirectory}/bin";
+          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
           ExecStart =
             if strings.versionAtLeast (versions.majorMinor cfg.package.version)
             "24.05" then
@@ -81,7 +81,7 @@ in {
         Install = { WantedBy = [ "graphical-session.target" ]; };
 
         Service = {
-          Environment = "PATH=${config.home.profileDirectory}/bin";
+          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
           ExecStart = "${cfg.package}/bin/kdeconnect-indicator";
           Restart = "on-abort";
         };

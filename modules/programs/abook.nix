@@ -27,9 +27,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "programs.abook" pkgs platforms.linux) ];
-
     home.packages = [ pkgs.abook ];
 
     xdg.configFile."abook/abookrc" = mkIf (cfg.extraConfig != "") {

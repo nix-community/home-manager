@@ -58,6 +58,7 @@ in {
               optionalString (cfg.storePath != null) "--path ${cfg.storePath}"
             }";
           BusName = busName;
+          Environment = [ "GNUPGHOME=${config.programs.gpg.homedir}" ];
         };
 
         Install.WantedBy = [ "default.target" ];
