@@ -7,11 +7,11 @@
   inherit (lib) mkIf mkEnableOption mkOption mkPackageOption;
   cfg = config.services.polkit-gnome;
 in {
-  meta.maintainers = []; # TODO: add maintainer
+  meta.maintainers = [];
 
   options.services.polkit-gnome = {
     enable = mkEnableOption "polkit-gnome";
-    package = mkPackageOption pkgs "polkit_gnome"; # TODO: make it global
+    package = mkPackageOption pkgs "polkit_gnome";
     systemd = mkEnableOption "systemd service for polkit-gnome" // mkOption {default = true;};
   };
 
