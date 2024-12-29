@@ -28,7 +28,7 @@ in {
 
     home.activation.uninstall =
       lib.hm.dag.entryAfter [ "installPackages" "linkGeneration" ] ''
-        nixProfileRemove home-manager-path
+        nixProfileRemove ${config.home.pathName}
 
         if [[ -e $hmDataPath ]]; then
             run rm $VERBOSE_ARG -r "$hmDataPath"

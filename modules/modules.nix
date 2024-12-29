@@ -50,6 +50,7 @@ let
     ./misc/xdg-user-dirs.nix
     ./misc/xdg.nix
     ./misc/xfconf.nix
+    ./named-profile.nix
     ./programs/abook.nix
     ./programs/aerc.nix
     ./programs/afew.nix
