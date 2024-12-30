@@ -384,6 +384,7 @@ in import nmtSrc {
     ./modules/programs/starship
     ./modules/programs/taskwarrior
     ./modules/programs/tealdeer
+    ./modules/programs/tex-fmt
     ./modules/programs/texlive
     ./modules/programs/thefuck
     ./modules/programs/thunderbird

@@ -246,6 +246,7 @@ let
     ./programs/tealdeer.nix
     ./programs/terminator.nix
     ./programs/termite.nix
+    ./programs/tex-fmt.nix
     ./programs/texlive.nix
     ./programs/thefuck.nix
     ./programs/thunderbird.nix
