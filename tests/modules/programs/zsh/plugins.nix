@@ -23,9 +23,9 @@ in
     test.stubs.zsh = { };
 
     nmt.script = ''
-      assertFileRegex home-files/.zshrc '^path+="$HOME/.zsh/plugins/mockPlugin"$'
-      assertFileRegex home-files/.zshrc '^fpath+="$HOME/.zsh/plugins/mockPlugin"$'
-      assertFileRegex home-files/.zshrc '^fpath+=("$HOME/.zsh/plugins/mockPlugin/share/zsh/site-functions" "$HOME/.zsh/plugins/mockPlugin/share/zsh/vendor-completions")$'
+      assertFileRegex home-files/.zshrc '^path+="/home/hm-user/.zsh/plugins/mockPlugin"$'
+      assertFileRegex home-files/.zshrc '^fpath+="/home/hm-user/.zsh/plugins/mockPlugin"$'
+      assertFileRegex home-files/.zshrc '^fpath+=("/home/hm-user/.zsh/plugins/mockPlugin/share/zsh/site-functions" "/home/hm-user/.zsh/plugins/mockPlugin/share/zsh/vendor-completions")$'
     '';
   };
 }

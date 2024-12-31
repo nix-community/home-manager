@@ -6,6 +6,7 @@
   };
 
   nmt.script = ''
-    assertFileRegex home-files/.zshrc '^HISTFILE="$HOME/some/directory/zsh_history"$'
+    assertFileRegex home-files/.zshrc \
+      '^HISTFILE="${config.home.homeDirectory}/some/directory/zsh_history"$'
   '';
 }
