@@ -1,28 +1,29 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
 let
-
+  homeDir = config.home.homeDirectory;
   cfg = config.programs.zsh;
 
-  relToDotDir = file:
-    (optionalString (cfg.dotDir != null) (cfg.dotDir + "/")) + file;
+  # If a relative path is provided, convert to absolute by prepending home dir.
+  # Also remove trailing slash + escape for shell.
+  dotDirAbs = escapeShellArg (removeSuffix "/"
+    ((optionalString (!hasPrefix "/" cfg.dotDir) "${homeDir}/") + cfg.dotDir));
 
-  pluginsDir =
-    if cfg.dotDir != null then relToDotDir "plugins" else ".zsh/plugins";
+  # dotDir relative path (to home dir)
+  dotDirRel = removePrefix "${homeDir}/" dotDirAbs;
+
+  pluginsDir = dotDirAbs + (optionalString homeDir == dotDirAbs "/.zsh")
+    + "/plugins";
 
   envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
-  aliasesStr = concatStringsSep "\n" (mapAttrsToList
-    (k: v: "alias -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}")
-    cfg.shellAliases);
+  aliasesStr = concatStringsSep "\n"
+    (mapAttrsToList (k: v: "alias -- ${escapeShellArg k}=${escapeShellArg v}")
+      cfg.shellAliases);
 
   dirHashesStr = concatStringsSep "\n"
     (mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes);
-
-  zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
 
   bindkeyCommands = {
     emacs = "bindkey -e";
@@ -65,16 +66,19 @@ let
       path = mkOption {
         type = types.str;
         default = if versionAtLeast stateVersion "20.03" then
-          "$HOME/.zsh_history"
+          "${homeDir}/.zsh_history"
         else
-          relToDotDir ".zsh_history";
+          ".zsh_history";
         defaultText = literalExpression ''
-          "$HOME/.zsh_history" if state version ≥ 20.03,
-          "$ZDOTDIR/.zsh_history" otherwise
+          `''${config.home.homeDirectory}/.zsh_history` if state version ≥ 20.03,
+          `''${config.programs.zsh.dotDir}/.zsh_history` otherwise
         '';
         example =
           literalExpression ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
-        description = "History file location";
+        description = ''
+          History file location. If state version is < 20.03, input will be
+          prepended with `''${config.home.homeDirectory}/`.
+        '';
       };
 
       ignorePatterns = mkOption {
@@ -183,7 +187,7 @@ let
       custom = mkOption {
         default = "";
         type = types.str;
-        example = "$HOME/my_customizations";
+        example = "\${config.home.homeDirectory}/my_customizations";
         description = ''
           Path to a custom oh-my-zsh package to override config of
           oh-my-zsh. See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization>
@@ -319,14 +323,17 @@ in {
       };
 
       dotDir = mkOption {
-        default = null;
-        example = ".config/zsh";
+        default = homeDir;
+        defaultText = "`config.home.homeDirectory`";
+        example = "`\${config.xdg.configHome}/zsh`";
         description = ''
-          Directory where the zsh configuration and more should be located,
-          relative to the users home directory. The default is the home
-          directory.
+          Custom directory for zsh configuration and data. If unset, .z* files
+          (.zshrc, .zshenv, etc.) are stored in `config.home.homeDirectory`,
+          while plugins and other data are stored in
+          `''${config.home.homeDirectory}/.zsh`. This option accepts absolute
+          paths and paths relative to the user's home directory.
         '';
-        type = types.nullOr types.str;
+        type = types.str;
       };
 
       shellAliases = mkOption {
@@ -363,9 +370,9 @@ in {
         default = { };
         example = literalExpression ''
           {
-            docs  = "$HOME/Documents";
-            vids  = "$HOME/Videos";
-            dl    = "$HOME/Downloads";
+            docs  = "''${config.home.homeDirectory}/Documents";
+            vids  = "''${config.home.homeDirectory}/Videos";
+            dl    = "''${config.home.homeDirectory)/Downloads";
           }
         '';
         description = ''
@@ -564,31 +571,31 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     (mkIf (cfg.envExtra != "") {
-      home.file."${relToDotDir ".zshenv"}".text = cfg.envExtra;
+      home.file."${dotDirRel}/.zshenv".text = cfg.envExtra;
     })
 
     (mkIf (cfg.profileExtra != "") {
-      home.file."${relToDotDir ".zprofile"}".text = cfg.profileExtra;
+      home.file."${dotDirRel}/.zprofile".text = cfg.profileExtra;
     })
 
     (mkIf (cfg.loginExtra != "") {
-      home.file."${relToDotDir ".zlogin"}".text = cfg.loginExtra;
+      home.file."${dotDirRel}/.zlogin".text = cfg.loginExtra;
     })
 
     (mkIf (cfg.logoutExtra != "") {
-      home.file."${relToDotDir ".zlogout"}".text = cfg.logoutExtra;
+      home.file."${dotDirRel}/.zlogout".text = cfg.logoutExtra;
     })
 
     (mkIf cfg.oh-my-zsh.enable {
-      home.file."${relToDotDir ".zshenv"}".text = ''
+      home.file."${dotDirRel}/.zshenv".text = ''
         ZSH="${cfg.oh-my-zsh.package}/share/oh-my-zsh";
         ZSH_CACHE_DIR="${config.xdg.cacheHome}/oh-my-zsh";
       '';
     })
 
-    (mkIf (cfg.dotDir != null) {
-      home.file."${relToDotDir ".zshenv"}".text = ''
-        export ZDOTDIR=${zdotdir}
+    (mkIf (dotDirAbs != homeDir) {
+      home.file."${dotDirRel}/.zshenv".text = ''
+        export ZDOTDIR=${dotDirAbs}
       '';
 
       # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
@@ -596,12 +603,12 @@ in {
       # already set correctly (by e.g. spawning a zsh inside a zsh), all env
       # vars still get exported
       home.file.".zshenv".text = ''
-        source ${zdotdir}/.zshenv
+        source ${dotDirAbs}/.zshenv
       '';
     })
 
     {
-      home.file."${relToDotDir ".zshenv"}".text = ''
+      home.file."${dotDirRel}/.zshenv".text = ''
         # Environment variables
         . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
@@ -618,7 +625,7 @@ in {
         ++ optional cfg.enableCompletion pkgs.nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
-      home.file."${relToDotDir ".zshrc"}".text = concatStringsSep "\n" ([
+      home.file."${dotDirRel}/.zshrc".text = concatStringsSep "\n" ([
         # zprof must be loaded before everything else, since it
         # benchmarks the shell initialization.
         (optionalString cfg.zprof.enable ''
@@ -703,13 +710,13 @@ in {
           SAVEHIST="${toString cfg.history.save}"
           ${optionalString (cfg.history.ignorePatterns != [ ])
           "HISTORY_IGNORE=${
-            lib.escapeShellArg
-            "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"
+            escapeShellArg
+            "(${concatStringsSep "|" cfg.history.ignorePatterns})"
           }"}
           ${if versionAtLeast config.home.stateVersion "20.03" then
             ''HISTFILE="${cfg.history.path}"''
           else
-            ''HISTFILE="$HOME/${cfg.history.path}"''}
+            ''HISTFILE="${homeDir}/${cfg.history.path}"''}
           mkdir -p "$(dirname "$HISTFILE")"
 
           setopt HIST_FCNTL_LOCK
@@ -741,7 +748,7 @@ in {
           ${aliasesStr}
         ''
       ] ++ (mapAttrsToList
-        (k: v: "alias -g -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}")
+        (k: v: "alias -g -- ${escapeShellArg k}=${escapeShellArg v}")
         cfg.shellGlobalAliases) ++ [
           (''
             # Named Directory Hashes
@@ -772,12 +779,12 @@ in {
           # https://github.com/zsh-users/zsh-history-substring-search#usage
             ''
               source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-              ${lib.concatMapStringsSep "\n"
+              ${concatMapStringsSep "\n"
               (upKey: ''bindkey "${upKey}" history-substring-search-up'')
-              (lib.toList cfg.historySubstringSearch.searchUpKey)}
-              ${lib.concatMapStringsSep "\n"
+              (toList cfg.historySubstringSearch.searchUpKey)}
+              ${concatMapStringsSep "\n"
               (downKey: ''bindkey "${downKey}" history-substring-search-down'')
-              (lib.toList cfg.historySubstringSearch.searchDownKey)}
+              (toList cfg.historySubstringSearch.searchDownKey)}
             '')
 
           (optionalString cfg.zprof.enable ''
@@ -803,3 +810,4 @@ in {
     })
   ]);
 }
+

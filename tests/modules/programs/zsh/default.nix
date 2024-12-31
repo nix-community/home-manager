@@ -1,4 +1,7 @@
 {
+  zsh-dotdir-absolute = import ./dotdir.nix "absolute";
+  zsh-dotdir-default = import ./dotdir.nix "default";
+  zsh-dotdir-relative = import ./dotdir.nix "relative";
   zsh-session-variables = ./session-variables.nix;
   zsh-history-path-new-default = ./history-path-new-default.nix;
   zsh-history-path-new-custom = ./history-path-new-custom.nix;
