@@ -8,7 +8,7 @@ let
 
   cfg = config.programs.zsh;
 
-  relToDotDir = file: (lib.optionalString (cfg.dotDir != null) (cfg.dotDir + "/")) + file;
+  inherit (import ../lib.nix { inherit config lib; }) pluginsDir;
 in
 {
   imports = [
@@ -88,49 +88,45 @@ in
       };
     };
 
-  config =
-    let
-      pluginsDir = if cfg.dotDir != null then relToDotDir "plugins" else ".zsh/plugins";
-    in
-    lib.mkIf (cfg.plugins != [ ]) {
-      home.file = lib.foldl' (a: b: a // b) { } (
-        map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; }) cfg.plugins
-      );
+  config = lib.mkIf (cfg.plugins != [ ]) {
+    home.file = lib.foldl' (a: b: a // b) { } (
+      map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; }) cfg.plugins
+    );
 
-      programs.zsh = {
-        # Many plugins require compinit to be called
-        # but allow the user to opt out.
-        enableCompletion = lib.mkDefault true;
+    programs.zsh = {
+      # Many plugins require compinit to be called
+      # but allow the user to opt out.
+      enableCompletion = lib.mkDefault true;
 
-        initContent = lib.mkMerge [
-          (lib.mkOrder 560 (
-            lib.concatStrings (
-              map (plugin: ''
-                path+="$HOME/${pluginsDir}/${plugin.name}"
-                fpath+="$HOME/${pluginsDir}/${plugin.name}"
-                ${
-                  (lib.optionalString (plugin.completions != [ ]) ''
-                    fpath+=(${
-                      lib.concatMapStringsSep " " (
-                        completion: "\"$HOME/${pluginsDir}/${plugin.name}/${completion}\""
-                      ) plugin.completions
-                    })
-                  '')
-                }
-              '') cfg.plugins
-            )
-          ))
+      initContent = lib.mkMerge [
+        (lib.mkOrder 560 (
+          lib.concatStrings (
+            map (plugin: ''
+              path+="${pluginsDir}/${plugin.name}"
+              fpath+="${pluginsDir}/${plugin.name}"
+              ${
+                (lib.optionalString (plugin.completions != [ ]) ''
+                  fpath+=(${
+                    lib.concatMapStringsSep " " (
+                      completion: "\"${pluginsDir}/${plugin.name}/${completion}\""
+                    ) plugin.completions
+                  })
+                '')
+              }
+            '') cfg.plugins
+          )
+        ))
 
-          (lib.mkOrder 900 (
-            lib.concatStrings (
-              map (plugin: ''
-                if [[ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
-                  source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
-                fi
-              '') cfg.plugins
-            )
-          ))
-        ];
-      };
+        (lib.mkOrder 900 (
+          lib.concatStrings (
+            map (plugin: ''
+              if [[ -f "${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
+                source "${pluginsDir}/${plugin.name}/${plugin.file}"
+              fi
+            '') cfg.plugins
+          )
+        ))
+      ];
     };
+  };
 }
