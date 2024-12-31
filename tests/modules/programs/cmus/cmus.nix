@@ -7,6 +7,8 @@
     extraConfig = "test";
   };
 
+  test.stubs.cmus = { };
+
   nmt.script = ''
     assertFileContent \
       home-files/.config/cmus/rc \

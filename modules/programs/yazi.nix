@@ -109,7 +109,7 @@ in {
           };
           manager = {
             show_hidden = false;
-            sort_by = "modified";
+            sort_by = "mtime";
             sort_dir_first = true;
             sort_reverse = true;
           };
@@ -134,7 +134,7 @@ in {
               { fg = "#7AD9E5"; mime = "image/*"; }
               { fg = "#F3D398"; mime = "video/*"; }
               { fg = "#F3D398"; mime = "audio/*"; }
-              { fg = "#CD9EFC"; mime = "application/x-bzip"; }
+              { fg = "#CD9EFC"; mime = "application/bzip"; }
             ];
           };
         }

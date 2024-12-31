@@ -12,6 +12,11 @@ let
       "Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)";
   };
 
+  # The extensions path shared by all profiles.
+  extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
+
+  moduleName = "programs.thunderbird";
+
   enabledAccounts = attrValues
     (filterAttrs (_: a: a.thunderbird.enable) config.accounts.email.accounts);
 
@@ -32,7 +37,8 @@ let
   profilesIni = foldl recursiveUpdate {
     General = {
       StartWithLastProfile = 1;
-      Version = 2;
+    } // lib.optionalAttrs (cfg.profileVersion != null) {
+      Version = cfg.profileVersion;
     };
   } (flip map profilesWithId (profile: {
     "Profile${profile.id}" = {
@@ -71,6 +77,8 @@ let
       "mail.identity.id_${id}.openpgp_key_id" = account.gpg.key;
       "mail.identity.id_${id}.protectSubject" = true;
       "mail.identity.id_${id}.sign_mail" = account.gpg.signByDefault;
+    } // optionalAttrs (account.smtp != null) {
+      "mail.identity.id_${id}.smtpServer" = "smtp_${account.id}";
     } // account.thunderbird.perIdentitySettings id;
 
   toThunderbirdAccount = account: profile:
@@ -103,7 +111,6 @@ let
       "mail.server.server_${id}.type" = "imap";
       "mail.server.server_${id}.userName" = account.userName;
     } // optionalAttrs (account.smtp != null) {
-      "mail.identity.id_${id}.smtpServer" = "smtp_${id}";
       "mail.smtpserver.smtp_${id}.authMethod" = 3;
       "mail.smtpserver.smtp_${id}.hostname" = account.smtp.host;
       "mail.smtpserver.smtp_${id}.port" =
@@ -142,6 +149,13 @@ in {
         defaultText = literalExpression "pkgs.thunderbird";
         example = literalExpression "pkgs.thunderbird-91";
         description = "The Thunderbird package to use.";
+      };
+
+      profileVersion = mkOption {
+        internal = true;
+        type = types.nullOr types.ints.unsigned;
+        default = if isDarwin then null else 2;
+        description = "profile version, set null for nix-darwin";
       };
 
       profiles = mkOption {
@@ -239,6 +253,27 @@ in {
                   });
                 default = { };
                 description = "Declarative search engine configuration.";
+              };
+
+              extensions = mkOption {
+                type = types.listOf types.package;
+                default = [ ];
+                example = literalExpression ''
+                  [
+                    pkgs.some-thunderbird-extension
+                  ]
+                '';
+                description = ''
+                  List of ${name} add-on packages to install for this profile.
+
+                  Note that it is necessary to manually enable extensions
+                  inside ${name} after the first installation.
+
+                  To automatically enable extensions add
+                  `"extensions.autoDisableScopes" = 0;`
+                  to
+                  [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
+                '';
               };
             };
           }));
@@ -359,13 +394,6 @@ in {
       this module to manage your accounts and profiles by setting
       'programs.thunderbird.package' to a dummy value, for example using
       'pkgs.runCommand'.
-
-      Note that this module requires you to set the following environment
-      variables when using an installation of Thunderbird that is not provided
-      by Nix:
-
-          export MOZ_LEGACY_PROFILES=1
-          export MOZ_ALLOW_DOWNGRADE=1
     '';
 
     home.packages = [ cfg.package ]
@@ -414,6 +442,18 @@ in {
           enable = profile.search.enable;
           force = profile.search.force;
           source = profile.search.file;
+        };
+
+      "${thunderbirdProfilesPath}/${name}/extensions" =
+        mkIf (profile.extensions != [ ]) {
+          source = let
+            extensionsEnvPkg = pkgs.buildEnv {
+              name = "hm-thunderbird-extensions";
+              paths = profile.extensions;
+            };
+          in "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+          recursive = true;
+          force = true;
         };
     }));
   };

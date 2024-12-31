@@ -2,7 +2,8 @@
 
 let
   inherit (lib)
-    all filterAttrs hasAttr isStorePath literalExpression optionalAttrs types;
+    all filterAttrs hasAttr isStorePath literalExpression optional optionalAttrs
+    types;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkMerge;
 
@@ -310,6 +311,10 @@ in {
           Documentation = "https://github.com/Alexays/Waybar/wiki";
           PartOf = [ "graphical-session.target" ];
           After = [ "graphical-session-pre.target" ];
+          X-Restart-Triggers = optional (settings != [ ])
+            "${config.xdg.configFile."waybar/config".source}"
+            ++ optional (cfg.style != null)
+            "${config.xdg.configFile."waybar/style.css".source}";
         };
 
         Service = {

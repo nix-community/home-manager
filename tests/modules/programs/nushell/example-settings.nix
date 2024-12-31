@@ -23,6 +23,8 @@
       }
     '';
 
+    plugins = [ pkgs.nushellPlugins.formats ];
+
     shellAliases = {
       "lsname" = "(ls | get name)";
       "ll" = "ls -a";
@@ -41,8 +43,6 @@
     };
   };
 
-  test.stubs.nushell = { };
-
   nmt.script = let
     configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
       "home-files/Library/Application Support/nushell"
@@ -58,5 +58,7 @@
     assertFileContent \
       "${configDir}/login.nu" \
       ${./login-expected.nu}
+    assertFileExists \
+      "${configDir}/plugin.msgpackz"
   '';
 }

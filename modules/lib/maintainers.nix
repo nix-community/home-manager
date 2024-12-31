@@ -628,4 +628,10 @@
     keys =
       [{ fingerprint = "BC82 4BB5 1656 D144 285E  A0EC D382 C4AF EECE AA90"; }];
   };
+  ALameLlama = {
+    name = "Nicholas Ciechanowski";
+    email = "NicholasACiechanowski@gmail.com";
+    github = "ALameLlama";
+    githubId = 55490546;
+  };
 }

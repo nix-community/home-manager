@@ -101,6 +101,7 @@ in import nmtSrc {
     ./modules/programs/kubecolor
     ./modules/programs/ledger
     ./modules/programs/less
+    ./modules/programs/lesspipe
     ./modules/programs/lf
     ./modules/programs/lsd
     ./modules/programs/lieer
@@ -126,6 +127,7 @@ in import nmtSrc {
     ./modules/programs/openstackclient
     ./modules/programs/pandoc
     ./modules/programs/papis
+    ./modules/programs/pay-respects
     ./modules/programs/pet
     ./modules/programs/pistol
     ./modules/programs/pls
@@ -198,6 +200,7 @@ in import nmtSrc {
     ./modules/programs/beets # One test relies on services.mpd
     ./modules/programs/bemenu
     ./modules/programs/boxxy
+    ./modules/programs/cavalier
     ./modules/programs/firefox/firefox.nix
     ./modules/programs/firefox/floorp.nix
     ./modules/programs/foot
@@ -239,6 +242,7 @@ in import nmtSrc {
     ./modules/services/cliphist
     ./modules/services/clipman
     ./modules/services/comodoro
+    ./modules/services/copyq
     ./modules/services/conky
     ./modules/services/darkman
     ./modules/services/devilspie2

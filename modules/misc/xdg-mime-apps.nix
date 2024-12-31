@@ -10,7 +10,7 @@ let
     coercedTo (either (listOf str) str) toList (listOf str);
 
 in {
-  meta.maintainers = with maintainers; [ pacien ];
+  meta.maintainers = with maintainers; [ euxane ];
 
   options.xdg.mimeApps = {
     enable = mkOption {

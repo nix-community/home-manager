@@ -1849,7 +1849,79 @@ in {
       }
 
       {
-        time = "2024-12-03T15:06:55+00:00";
+        time = "2024-12-04T20:00:00+00:00";
+        condition = let
+          sCfg = config.programs.starship;
+          fCfg = config.programs.fish;
+        in sCfg.enable && sCfg.enableFishIntegration && fCfg.enable;
+        message = ''
+          A new option 'programs.starship.enableInteractive' is available for
+          the Fish shell that only enables starship if the shell is interactive.
+
+          Some plugins require this to be set to 'false' to function correctly.
+        '';
+      }
+
+      {
+        time = "2024-12-08T17:22:13+00:00";
+        condition = let
+          usingMbsync = any (a: a.mbsync.enable)
+            (attrValues config.accounts.email.accounts);
+        in usingMbsync;
+        message = ''
+          isync/mbsync 1.5.0 has changed several things.
+
+          isync gained support for using $XDG_CONFIG_HOME, and now places
+          its config file in '$XDG_CONFIG_HOME/isyncrc'.
+
+          isync changed the configuration options SSLType and SSLVersion to
+          TLSType and TLSVersion respectively.
+
+          All instances of
+          'accounts.email.accounts.<account-name>.mbsync.extraConfig.account'
+          that use 'SSLType' or 'SSLVersion' should be replaced with 'TLSType'
+          or 'TLSVersion', respectively.
+
+          TLSType options are unchanged.
+
+          TLSVersions has a new syntax, requiring a change to the Nix syntax.
+          Old Syntax: SSLVersions = [ "TLSv1.3" "TLSv1.2" ];
+          New Syntax: TLSVersions = [ "+1.3" "+1.2" "-1.1" ];
+          NOTE: The minus symbol means to NOT use that particular TLS version.
+        '';
+      }
+
+      {
+        time = "2024-12-10T22:20:10+00:00";
+        condition = config.programs.nushell.enable;
+        message = ''
+          The module 'programs.nushell' can now manage the Nushell plugin
+          registry with the option 'programs.nushell.plugins'.
+        '';
+      }
+
+      {
+        time = "2024-12-21T17:07:49+00:00";
+        message = ''
+          A new module is available: 'programs.pay-respects'.
+
+          Pay Respects is a shell command suggestions tool and command-not-found
+          and thefuck replacement written in Rust.
+        '';
+      }
+
+      {
+        time = "2024-12-22T08:24:29+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.cavalier'.
+
+          Cavalier is a GUI wrapper around the Cava audio visualizer.
+        '';
+      }
+      
+      {
+        time = "2024-12-31T06:44:46+00:00";
         condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.wpaperd'.

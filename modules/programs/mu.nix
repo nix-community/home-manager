@@ -9,17 +9,22 @@ let
   # Used to generate command line arguments that mu can operate with.
   genCmdMaildir = path: "--maildir=" + path;
 
-  # Takes the list of accounts with mu.enable = true, and generates a
-  # command-line flag for initializing the mu database.
-  myAddresses = let
+  # Sorted list of personal email addresses to register
+  sortedAddresses = let
     # Set of email account sets where mu.enable = true.
     muAccounts =
       filter (a: a.mu.enable) (attrValues config.accounts.email.accounts);
     addrs = map (a: a.address) muAccounts;
     # Construct list of lists containing email aliases, and flatten
     aliases = flatten (map (a: a.aliases) muAccounts);
-    # Prefix --my-address= to each account's address AND all defined aliases
-    addMyAddress = map (addr: "--my-address=" + addr) (addrs ++ aliases);
+    # Sort the list
+  in sort lessThan (addrs ++ aliases);
+
+  # Takes the list of accounts with mu.enable = true, and generates a
+  # command-line flag for initializing the mu database.
+  myAddresses = let
+    # Prefix --my-address= to each account's address and all defined aliases
+    addMyAddress = map (addr: "--my-address=" + addr) sortedAddresses;
   in concatStringsSep " " addMyAddress;
 
 in {
@@ -49,14 +54,18 @@ in {
     home.activation.runMuInit = let
       maildirOption = genCmdMaildir config.accounts.email.maildirBasePath;
       dbLocation = config.xdg.cacheHome + "/mu";
+      muExe = getExe cfg.package;
+      gawkExe = getExe pkgs.gawk;
     in hm.dag.entryAfter [ "writeBoundary" ] ''
-      # If the database directory exists, then `mu init` should NOT be run.
+      # If the database directory exists and registered personal addresses remain the same,
+      # then `mu init` should NOT be run.
       # In theory, mu is the only thing that creates that directory, and it is
       # only created during the initial index.
-      if [[ ! -d "${dbLocation}" ]]; then
-        run ${
-          getExe cfg.package
-        } init ${maildirOption} ${myAddresses} $VERBOSE_ARG;
+      MU_SORTED_ADDRS=$((${muExe} info store | ${gawkExe} '/personal-address/{print $4}' | LC_ALL=C sort | paste -sd ' ') || exit 0)
+      if [[ ! -d "${dbLocation}" || ! "$MU_SORTED_ADDRS" = "${
+        concatStringsSep " " sortedAddresses
+      }" ]]; then
+        run ${muExe} init ${maildirOption} ${myAddresses} $VERBOSE_ARG;
       fi
     '';
   };
