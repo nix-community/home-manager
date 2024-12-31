@@ -7,6 +7,12 @@ let
   cfg = config.programs.bacon;
 
   settingsFormat = pkgs.formats.toml { };
+
+  configDir = if pkgs.stdenv.isDarwin then
+    "Library/Application Support/org.dystroy.bacon"
+  else
+    "${config.xdg.configHome}/bacon";
+
 in {
   meta.maintainers = [ hm.maintainers.shimunn ];
 
@@ -34,7 +40,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."bacon/prefs.toml".source =
-      settingsFormat.generate "prefs.toml" cfg.settings;
+    home.file."${configDir}/prefs.toml" = mkIf (cfg.settings != { }) {
+      source = settingsFormat.generate "prefs.toml" cfg.settings;
+    };
   };
 }
