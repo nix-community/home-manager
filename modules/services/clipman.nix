@@ -11,7 +11,8 @@ in {
 
     systemdTarget = mkOption {
       type = types.str;
-      default = "graphical-session.target";
+      default = config.wayland.systemd.target;
+      defaultText = literalExpression "config.wayland.systemd.target";
       example = "sway-session.target";
       description = ''
         The systemd target that will automatically start the clipman service.
@@ -34,8 +35,9 @@ in {
     systemd.user.services.clipman = {
       Unit = {
         Description = "Clipboard management daemon";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
+        PartOf = [ cfg.systemdTarget ];
+        After = [ cfg.systemdTarget ];
+        ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
       Service = {
