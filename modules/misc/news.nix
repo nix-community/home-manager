@@ -1919,6 +1919,17 @@ in {
           Cavalier is a GUI wrapper around the Cava audio visualizer.
         '';
       }
+
+      {
+        time = "2024-12-31T06:58:51+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wpaperd'.
+
+          This replaces the existing module, 'programs.wpaperd', and adds a
+          systemd service to ensure its execution.
+        '';
+      }
     ];
   };
 }
