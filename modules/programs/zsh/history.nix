@@ -8,9 +8,8 @@ let
   cfg = config.programs.zsh;
 
   inherit (lib) literalExpression mkOption types;
-  inherit (config.home) stateVersion;
 
-  relToDotDir = file: (lib.optionalString (cfg.dotDir != null) (cfg.dotDir + "/")) + file;
+  inherit (import ./lib.nix { inherit config lib; }) dotDirAbs mkAbsPathStr;
 in
 {
   options =
@@ -49,16 +48,9 @@ in
 
             path = mkOption {
               type = types.str;
-              default =
-                if lib.versionAtLeast stateVersion "20.03" then
-                  "$HOME/.zsh_history"
-                else
-                  relToDotDir ".zsh_history";
-              defaultText = literalExpression ''
-                "$HOME/.zsh_history" if state version ≥ 20.03,
-                "$ZDOTDIR/.zsh_history" otherwise
-              '';
-              example = literalExpression ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
+              default = "${dotDirAbs}/.zsh_history";
+              defaultText = "`\${config.programs.zsh.dotDir}/.zsh_history`";
+              example = "`\${config.xdg.dataHome}/zsh/zsh_history`";
               description = "History file location";
             };
 
@@ -188,12 +180,7 @@ in
         ${lib.optionalString (
           cfg.history.ignorePatterns != [ ]
         ) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
-        ${
-          if lib.versionAtLeast stateVersion "20.03" then
-            ''HISTFILE="${cfg.history.path}"''
-          else
-            ''HISTFILE="$HOME/${cfg.history.path}"''
-        }
+        HISTFILE="${mkAbsPathStr cfg.history.path}"
         mkdir -p "$(dirname "$HISTFILE")"
 
         setopt HIST_FCNTL_LOCK
