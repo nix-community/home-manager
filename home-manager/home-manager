@@ -807,23 +807,23 @@ function doShowNews() {
     local readIdsFile
     readIdsFile="$(newsReadIdsFile)"
 
-    local news
+    local newsAttr
 
-    # shellcheck disable=2154,2046
     case $1 in
         --all)
-            news="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).news.all")"
+            newsAttr="all"
             ;;
         --unread)
-            news="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).news.unread")"
+            newsAttr="unread"
             ;;
         *)
             _i 'Unknown argument %s' "$1"
             return 1
     esac
 
-    # Prints the news without surrounding quotes.
-    echo -e "${news:1:-1}" | ${PAGER:-less}
+    nix-instantiate --quiet --eval --json --expr "(import ${newsNixFile}).news.$newsAttr" \
+        | jq -r . \
+        | ${PAGER:-less}
 
     local allIds
     allIds="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).meta.ids")"
