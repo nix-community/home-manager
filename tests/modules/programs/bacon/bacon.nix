@@ -1,4 +1,10 @@
-{ ... }: {
+{ pkgs, ... }:
+let
+  configDir = if pkgs.stdenv.isDarwin then
+    "Library/Application Support/org.dystroy.bacon"
+  else
+    ".config/bacon";
+in {
   programs.bacon = {
     enable = true;
     settings = {
@@ -17,7 +23,7 @@
   };
   test.stubs.bacon = { };
   nmt.script = ''
-    assertFileExists home-files/.config/bacon/prefs.toml
-    assertFileContent home-files/.config/bacon/prefs.toml ${./expected.toml}
+    assertFileExists 'home-files/${configDir}/prefs.toml'
+    assertFileContent 'home-files/${configDir}/prefs.toml' ${./expected.toml}
   '';
 }
