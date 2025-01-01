@@ -4,14 +4,43 @@ let
   homeDir = config.home.homeDirectory;
   cfg = config.programs.zsh;
 
-  # If a relative path is provided, convert to absolute by prepending home dir.
-  # Also remove trailing slash + escape for shell.
-  dotDirAbs = escapeShellArg (removeSuffix "/"
-    ((optionalString (!hasPrefix "/" cfg.dotDir) "${homeDir}/") + cfg.dotDir));
+  # escapes for shell and cleans trailing slashes that can mess with test regex
+  cleanPathStr = pathStr: escapeShellArg (removeSuffix "/" pathStr);
 
-  # dotDir relative path (to home dir)
-  dotDirRel = removePrefix "${homeDir}/" dotDirAbs;
+  # strips home directory prefix from absolute path.
+  mkRelPathStr = pathStr:
+    # is already a relative path
+    if (!hasPrefix "/" pathStr) then
+      cleanPathStr pathStr
 
+      # is an absolute path within home dir
+    else if (hasPrefix homeDir pathStr) then
+      cleanPathStr (removePrefix "${homeDir}/" pathStr)
+
+      # is an absolute path not in home dir
+    else
+      throw ''
+        Attempted to convert an absolute path not within home directory to a
+        home-relative path.
+
+        Conversion attempted on:
+          ${pathStr}
+
+        ...which does not start with:
+          ${homeDir}
+      '';
+
+  # given a relative (or unknown) path, returns absolute by prepending home dir
+  # if path doesn't begin with "/"
+  mkAbsPathStr = pathStr:
+    cleanPathStr
+    ((optionalString (!hasPrefix "/" pathStr) "${homeDir}/") + pathStr);
+
+  dotDirAbs = mkAbsPathStr cfg.dotDir;
+  dotDirRel = mkRelPathStr cfg.dotDir;
+
+  # If dotDir is default (i.e., the user's home dir) plugins are stored in
+  # ~/.zsh/plugins -- otherwise, in `programs.zsh.dotDir`/plugins
   pluginsDir = dotDirAbs + (optionalString homeDir == dotDirAbs "/.zsh")
     + "/plugins";
 
@@ -65,20 +94,10 @@ let
 
       path = mkOption {
         type = types.str;
-        default = if versionAtLeast stateVersion "20.03" then
-          "${homeDir}/.zsh_history"
-        else
-          ".zsh_history";
-        defaultText = literalExpression ''
-          `''${config.home.homeDirectory}/.zsh_history` if state version ≥ 20.03,
-          `''${config.programs.zsh.dotDir}/.zsh_history` otherwise
-        '';
-        example =
-          literalExpression ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
-        description = ''
-          History file location. If state version is < 20.03, input will be
-          prepended with `''${config.home.homeDirectory}/`.
-        '';
+        default = "${dotDirAbs}/.zsh_history";
+        defaultText = "`\${config.programs.zsh.dotDir}/.zsh_history`";
+        example = "`\${config.xdg.dataHome}/zsh/zsh_history`";
+        description = "History file location";
       };
 
       ignorePatterns = mkOption {
@@ -329,7 +348,7 @@ in {
         description = ''
           Custom directory for zsh configuration and data. If unset, .z* files
           (.zshrc, .zshenv, etc.) are stored in `config.home.homeDirectory`,
-          while plugins and other data are stored in
+          while plugins (and potentially other data) are stored in
           `''${config.home.homeDirectory}/.zsh`. This option accepts absolute
           paths and paths relative to the user's home directory.
         '';
@@ -713,10 +732,8 @@ in {
             escapeShellArg
             "(${concatStringsSep "|" cfg.history.ignorePatterns})"
           }"}
-          ${if versionAtLeast config.home.stateVersion "20.03" then
-            ''HISTFILE="${cfg.history.path}"''
-          else
-            ''HISTFILE="${homeDir}/${cfg.history.path}"''}
+
+          HISTFILE="${mkAbsPathStr cfg.history.path}"
           mkdir -p "$(dirname "$HISTFILE")"
 
           setopt HIST_FCNTL_LOCK
