@@ -361,6 +361,7 @@ let
     ./services/mopidy.nix
     ./services/mpd.nix
     ./services/mpdris2.nix
+    ./services/mpdscribble.nix
     ./services/mpd-discord-rpc.nix
     ./services/mpd-mpris.nix
     ./services/mpris-proxy.nix
