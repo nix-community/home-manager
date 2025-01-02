@@ -502,6 +502,12 @@
     github = "shimunn";
     githubId = 41011289;
   };
+  rapiteanu = {
+    name = "Viorel-Cătălin Răpițeanu";
+    email = "rapiteanu.catalin@gmail.com";
+    github = "Steinhagen";
+    githubId = 4029937;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";
