@@ -35,7 +35,7 @@ let
         email = account.address;
         display-name = account.realName;
         default = account.primary;
-        folder.alias = {
+        folder.aliases = {
           inbox = account.folders.inbox;
           sent = account.folders.sent;
           drafts = account.folders.drafts;
@@ -46,43 +46,48 @@ let
       signatureConfig =
         lib.optionalAttrs (account.signature.showSignature == "append") {
           # TODO: signature cannot be attached yet
-          # https://todo.sr.ht/~soywod/pimalaya/27
+          # https://github.com/pimalaya/himalaya/issues/534
           signature = account.signature.text;
           signature-delim = account.signature.delimiter;
         };
 
       imapConfig = lib.optionalAttrs imapEnabled (compactAttrs {
-        backend = "imap";
-        imap.host = account.imap.host;
-        imap.port = account.imap.port;
-        imap.encryption = mkEncryptionConfig account.imap.tls;
-        imap.login = account.userName;
-        imap.passwd.cmd = builtins.concatStringsSep " " account.passwordCommand;
+        backend.type = "imap";
+        backend.host = account.imap.host;
+        backend.port = account.imap.port;
+        backend.encryption.type = mkEncryptionConfig account.imap.tls;
+        backend.login = account.userName;
+        backend.auth.type = "password";
+        backend.auth.cmd =
+          builtins.concatStringsSep " " account.passwordCommand;
       });
 
       maildirConfig = lib.optionalAttrs maildirEnabled (compactAttrs {
-        backend = "maildir";
-        maildir.root-dir = account.maildir.absPath;
+        backend.type = "maildir";
+        backend.root-dir = account.maildir.absPath;
       });
 
       notmuchConfig = lib.optionalAttrs notmuchEnabled (compactAttrs {
-        backend = "notmuch";
-        notmuch.database-path = maildirBasePath;
+        backend.type = "notmuch";
+        backend.db-path = maildirBasePath;
       });
 
       smtpConfig = lib.optionalAttrs (!isNull account.smtp) (compactAttrs {
-        message.send.backend = "smtp";
-        smtp.host = account.smtp.host;
-        smtp.port = account.smtp.port;
-        smtp.encryption = mkEncryptionConfig account.smtp.tls;
-        smtp.login = account.userName;
-        smtp.passwd.cmd = builtins.concatStringsSep " " account.passwordCommand;
+        message.send.backend.type = "smtp";
+        message.send.backend.host = account.smtp.host;
+        message.send.backend.port = account.smtp.port;
+        message.send.backend.encryption.type =
+          mkEncryptionConfig account.smtp.tls;
+        message.send.backend.login = account.userName;
+        message.send.backend.auth.type = "password";
+        message.send.backend.auth.cmd =
+          builtins.concatStringsSep " " account.passwordCommand;
       });
 
       sendmailConfig =
         lib.optionalAttrs (isNull account.smtp && !isNull account.msmtp) {
-          sender = "sendmail";
-          sendmail.cmd = lib.getExe pkgs.msmtp;
+          message.send.backend.type = "sendmail";
+          message.send.backend.cmd = lib.getExe pkgs.msmtp;
         };
 
       config = lib.attrsets.mergeAttrsList [
@@ -100,6 +105,18 @@ let
 in {
   meta.maintainers = with lib.hm.maintainers; [ soywod toastal ];
 
+  imports = [
+    (mkRemovedOptionModule [ "services" "himalaya-watch" "enable" ] ''
+      services.himalaya-watch has been removed.
+
+      The watch feature moved away from Himalaya scope, and resides
+      now in its own project called Mirador. Once the v1 released, the
+      service will land back in nixpkgs and home-manager.
+
+      See <https://github.com/pimalaya/mirador>.
+    '')
+  ];
+
   options = {
     programs.himalaya = {
       enable = lib.mkEnableOption "the email client Himalaya CLI";
@@ -109,25 +126,7 @@ in {
         default = { };
         description = ''
           Himalaya CLI global configuration.
-          See <https://pimalaya.org/himalaya/cli/latest/configuration/index.html#global-configuration> for supported values.
-        '';
-      };
-    };
-
-    services.himalaya-watch = {
-      enable = lib.mkEnableOption
-        "the email client Himalaya CLI envelopes watcher service";
-
-      environment = lib.mkOption {
-        type = with lib.types; attrsOf str;
-        default = { };
-        example = lib.literalExpression ''
-          {
-            "PASSWORD_STORE_DIR" = "~/.password-store";
-          }
-        '';
-        description = ''
-          Extra environment variables to be exported in the service.
+          See <https://github.com/pimalaya/himalaya/blob/master/config.sample.toml> for supported values.
         '';
       };
     };
@@ -143,7 +142,7 @@ in {
             default = { };
             description = ''
               Himalaya CLI configuration for this email account.
-              See <https://pimalaya.org/himalaya/cli/latest/configuration/index.html#account-configuration> for supported values.
+              See <https://github.com/pimalaya/himalaya/blob/master/config.sample.toml> for supported values.
             '';
           };
         };
@@ -161,7 +160,7 @@ in {
         accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
         globalConfig = compactAttrs himalaya.settings;
         allConfig = globalConfig // { accounts = accountsConfig; };
-      in tomlFormat.generate "himalaya-config.toml" allConfig;
+      in tomlFormat.generate "himalaya.config.toml" allConfig;
 
       desktopEntries.himalaya = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
         type = "Application";
@@ -175,24 +174,5 @@ in {
         settings = { Keywords = "email"; };
       };
     };
-
-    systemd.user.services."himalaya-watch@" =
-      let inherit (config.services.himalaya-watch) enable environment;
-      in lib.mkIf enable {
-        Unit = {
-          Description = "Email client Himalaya CLI envelopes watcher service";
-          After = [ "network.target" ];
-        };
-        Install = { WantedBy = [ "default.target" ]; };
-        Service = {
-          ExecStart =
-            "${lib.getExe himalaya.package} envelopes watch --account %I";
-          ExecSearchPath = "/bin";
-          Environment =
-            lib.mapAttrsToList (key: val: "${key}=${val}") environment;
-          Restart = "always";
-          RestartSec = 10;
-        };
-      };
   };
 }
