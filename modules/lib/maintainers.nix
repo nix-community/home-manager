@@ -276,6 +276,12 @@
     github = "mifom";
     githubId = 23462908;
   };
+  msyds = {
+    name = "Madeleine Sydney Ślaga";
+    email = "65362461+msyds@users.noreply.github.com";
+    github = "msyds";
+    githubId = 65362461;
+  };
   nikp123 = {
     name = "nikp123";
     email = "nikp123@users.noreply.github.com";
