@@ -130,7 +130,11 @@ let
       key = mkOption {
         type = types.str;
         example = "<left>";
-        description = "The key to bind.";
+        description = ''
+          The key to bind.
+
+          If you want to bind '\Cp' for example, which would be Ctrl + 'p', you need to escape twice: '\\Cp'!
+        '';
       };
 
       action = mkOption {
