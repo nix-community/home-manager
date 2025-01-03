@@ -81,13 +81,16 @@ in {
     home.packages = [ cfg.package pkgs.at-spi2-core ];
 
     xdg.configFile = {
-      "swaync/config.json".source =
-        jsonFormat.generate "config.json" cfg.settings;
+      "swaync/config.json" = {
+        source = jsonFormat.generate "config.json" cfg.settings;
+        onChange = "${cfg.package}/bin/swaync-client --reload-config";
+      };
       "swaync/style.css" = lib.mkIf (cfg.style != null) {
         source = if builtins.isPath cfg.style || lib.isStorePath cfg.style then
           cfg.style
         else
           pkgs.writeText "swaync/style.css" cfg.style;
+        onChange = "${cfg.package}/bin/swaync-client --reload-css";
       };
     };
 
