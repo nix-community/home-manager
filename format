@@ -33,7 +33,6 @@ done
 excludes=(
     modules/files.nix
     modules/home-environment.nix
-    modules/programs/zsh.nix
 )
 
 exclude_args=()
