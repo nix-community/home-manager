@@ -37,8 +37,9 @@ let
     in {
       name = catAttrs "realName" primary;
       primary_email = catAttrs "address" primary;
-      other_email = catAttrs "aliases" primary ++ catAttrs "address" secondaries
-        ++ catAttrs "aliases" secondaries;
+      other_email = map (email: email.address or email) (flatten
+        (catAttrs "aliases" primary ++ catAttrs "address" secondaries
+          ++ catAttrs "aliases" secondaries));
     };
 
     search = { exclude_tags = cfg.search.excludeTags; };
