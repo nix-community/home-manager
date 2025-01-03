@@ -140,7 +140,8 @@ in {
           src = cfg.package;
           file = "share/bat/syntaxes/ghostty.sublime-syntax";
         };
-        config.map-syntax = [ "*/ghostty/config:Ghostty Config" ];
+        config.map-syntax =
+          [ "${config.xdg.configHome}/ghostty/config:Ghostty Config" ];
       };
     })
 
