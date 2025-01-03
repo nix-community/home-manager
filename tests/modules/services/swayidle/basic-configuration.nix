@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, ... }:
 
 {
   services.swayidle = {
@@ -50,6 +50,7 @@
         Type=simple
 
         [Unit]
+        After=graphical-session.target
         ConditionEnvironment=WAYLAND_DISPLAY
         Description=Idle manager for Wayland
         Documentation=man:swayidle(1)
