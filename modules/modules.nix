@@ -249,6 +249,7 @@ let
     ./programs/topgrade.nix
     ./programs/translate-shell.nix
     ./programs/urxvt.nix
+    ./programs/uv.nix
     ./programs/vdirsyncer.nix
     ./programs/vifm.nix
     ./programs/vim-vint.nix
