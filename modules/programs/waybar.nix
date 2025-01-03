@@ -198,7 +198,7 @@ in {
     systemd.enable = mkEnableOption "Waybar systemd integration";
 
     systemd.target = mkOption {
-      type = str;
+      type = nullOr str;
       default = "graphical-session.target";
       example = "sway-session.target";
       description = ''
@@ -324,7 +324,8 @@ in {
           KillMode = "mixed";
         };
 
-        Install = { WantedBy = [ cfg.systemd.target ]; };
+        Install.WantedBy =
+          lib.optional (cfg.systemd.target != null) cfg.systemd.target;
       };
     })
   ]);
