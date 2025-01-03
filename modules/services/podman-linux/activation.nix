@@ -18,6 +18,7 @@
       local manifestFile="${config.xdg.configHome}/podman/$2"
       local extraListCommands="''${3:-}"
       [[ $resourceType = "container" ]] && extraListCommands+=" -a"
+      [[ $resourceType = "volume" ]] && extraListCommands+=" --filter label=nix.home-manager.preserve=false"
 
       [ ! -f "$manifestFile" ] && VERBOSE_ENABLED && echo "Manifest does not exist: $manifestFile" && return 0
 
@@ -69,19 +70,20 @@
       commands=()
       case "$resourceType" in
         "container")
-          commands+="${config.services.podman.package}/bin/podman $resourceType stop $resource"
-          commands+="${config.services.podman.package}/bin/podman $resourceType rm -f $resource"
+          commands+=("${config.services.podman.package}/bin/podman $resourceType stop $resource")
+          commands+=("${config.services.podman.package}/bin/podman $resourceType rm -f $resource")
           ;;
-        "network")
-          commands+="${config.services.podman.package}/bin/podman $resourceType rm $resource"
+        "image" | "network" | "volume")
+          commands+=("${config.services.podman.package}/bin/podman $resourceType rm $resource")
           ;;
       esac
       for command in "''${commands[@]}"; do
         command=$(echo $command | tr -d ';&|`')
         DRYRUN_ENABLED && echo "Would run: $command" && continue || true
         VERBOSE_ENABLED && echo "Running: $command" || true
-        if [[ "$(eval "$command")" != "$resource" ]]; then
+        if [[ "$(eval "$command")" != *"$resource" ]]; then
           echo -e "\tCommand failed: ''${command}"
+          [ "$resourceType" == "image" ] && resourceType="ancestor"
           usedByContainers=$(${config.services.podman.package}/bin/podman container ls -a --filter "$resourceType=$resource" --format "{{.Names}}")
           echo -e "\t$resource in use by containers: $usedByContainers"
         fi
@@ -92,7 +94,7 @@
     [[ "$@" == *"--verbose"* ]] && VERBOSE="true"
     [[ "$@" == *"--dry-run"* ]] && DRY_RUN="true"
 
-    for type in "container" "network"; do
+    for type in "container" "image" "network" "volume"; do
       cleanup "$type" "''${type}s.manifest"
     done
   '';
