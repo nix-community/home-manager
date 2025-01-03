@@ -120,7 +120,7 @@ in {
         {
           "ghostty/config" = lib.mkIf (cfg.settings != { }) {
             source = keyValue.generate "ghostty-config" cfg.settings;
-            onChange = "${cfg.package}/bin/ghostty +validate-config";
+            onChange = "${lib.getExe cfg.package} +validate-config";
           };
         }
 
