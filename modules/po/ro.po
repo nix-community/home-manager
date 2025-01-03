@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"POT-Creation-Date: 2025-01-03 09:09+0100\n"
 "PO-Revision-Date: 2024-10-13 22:15+0000\n"
 "Last-Translator: AtomicDude <vasilescutoma4@gmail.com>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/home-manager/"
@@ -20,23 +20,23 @@ msgstr ""
 "20)) ? 1 : 2;\n"
 "X-Generator: Weblate 5.8-dev\n"
 
-#: modules/files.nix:191
+#: modules/files.nix:188
 msgid "Creating home file links in %s"
 msgstr "Se creează legături ale fișierelor personale în %s"
 
-#: modules/files.nix:204
+#: modules/files.nix:201
 msgid "Cleaning up orphan links from %s"
 msgstr "Se curăță legăturile orfane din %s"
 
-#: modules/files.nix:220
-msgid "Creating profile generation %s"
-msgstr "Se creează generația %s a profilului"
+#: modules/home-environment.nix:591
+msgid "Creating new profile generation"
+msgstr ""
 
-#: modules/files.nix:237
-msgid "No change so reusing latest profile generation %s"
-msgstr "Nicio schimbare, se reutilizează ultimul profil generat %s"
+#: modules/home-environment.nix:594
+msgid "No change so reusing latest profile generation"
+msgstr ""
 
-#: modules/home-environment.nix:634
+#: modules/home-environment.nix:643
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -64,7 +64,7 @@ msgstr ""
 "\n"
 "Apoi încearcă să activați configurația ta Home Manager din nou."
 
-#: modules/home-environment.nix:667
+#: modules/home-environment.nix:676
 msgid "Activating %s"
 msgstr "Se activează %s"
 
@@ -77,67 +77,71 @@ msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
 "Nu s-a putut găsi un director cu un profil potrivit, s-a încercat %s și %s"
 
-#: modules/lib-bash/activation-init.sh:83
-msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr "Se verifică corectitudinea oldGenNum și oldGenPath"
-
-#: modules/lib-bash/activation-init.sh:86
-msgid ""
-"The previous generation number and path are in conflict! These\n"
-"must be either both empty or both set but are now set to\n"
-"\n"
-"    '%s' and '%s'\n"
-"\n"
-"If you don't mind losing previous profile generations then\n"
-"the easiest solution is probably to run\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"and trying home-manager switch again. Good luck!"
-msgstr ""
-"Numărul generației anterioare și calea sunt în conflict! Acestea\n"
-"trebuie să fie ambele goale sau ambele setate, dar acum sunt setate la\n"
-"\n"
-"        '%s' și '%s'\n"
-"\n"
-"Dacă nu vă deranjează pierderea generațiilor anterioare de profiluri, "
-"atunci\n"
-"cea mai ușoară soluție ar fi să rulezi\n"
-"\n"
-"    rm %s/home-manager*\n"
-"    rm %s/current-home\n"
-"\n"
-"și să încerci să rulezi home-manager switch din nou. Mult noroc!"
-
-#: modules/lib-bash/activation-init.sh:127
+#: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 msgstr "Eroare: USER este setat la \"%s\", dar noi ne așteptam la \"%s\""
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
 msgstr "Eroare: HOME este setat la \"%s\", dar noi ne așteptam la \"%s\""
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
 msgstr "Se pornește activarea Home Managerului"
 
-#: modules/lib-bash/activation-init.sh:157
+#: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
 msgstr "Se verifică corectitudinea Nix"
 
-#: modules/lib-bash/activation-init.sh:170
+#: modules/lib-bash/activation-init.sh:149
 msgid "This is a dry run"
 msgstr "Aceasta este o rulare simulată"
 
-#: modules/lib-bash/activation-init.sh:174
+#: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
 msgstr "Aceasta este o rulare directă"
 
-#: modules/lib-bash/activation-init.sh:180
+#: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
 msgstr "Folosind versiunea Nix: %s"
 
-#: modules/lib-bash/activation-init.sh:183
+#: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"
 msgstr "Variabile de activație:"
+
+#~ msgid "Creating profile generation %s"
+#~ msgstr "Se creează generația %s a profilului"
+
+#~ msgid "No change so reusing latest profile generation %s"
+#~ msgstr "Nicio schimbare, se reutilizează ultimul profil generat %s"
+
+#~ msgid "Sanity checking oldGenNum and oldGenPath"
+#~ msgstr "Se verifică corectitudinea oldGenNum și oldGenPath"
+
+#~ msgid ""
+#~ "The previous generation number and path are in conflict! These\n"
+#~ "must be either both empty or both set but are now set to\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "If you don't mind losing previous profile generations then\n"
+#~ "the easiest solution is probably to run\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "and trying home-manager switch again. Good luck!"
+#~ msgstr ""
+#~ "Numărul generației anterioare și calea sunt în conflict! Acestea\n"
+#~ "trebuie să fie ambele goale sau ambele setate, dar acum sunt setate la\n"
+#~ "\n"
+#~ "        '%s' și '%s'\n"
+#~ "\n"
+#~ "Dacă nu vă deranjează pierderea generațiilor anterioare de profiluri, "
+#~ "atunci\n"
+#~ "cea mai ușoară soluție ar fi să rulezi\n"
+#~ "\n"
+#~ "    rm %s/home-manager*\n"
+#~ "    rm %s/current-home\n"
+#~ "\n"
+#~ "și să încerci să rulezi home-manager switch din nou. Mult noroc!"
