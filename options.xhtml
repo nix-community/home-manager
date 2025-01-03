@@ -44352,7 +44352,7 @@ boolean</p>
 package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&lt;derivation rofi-1.7.5&gt;</code></p>
+<code class="literal">&lt;derivation rofi-1.7.6&gt;</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
 
@@ -46729,7 +46729,7 @@ boolean</p>
 package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&lt;derivation sm64ex-unstable-2022-12-19&gt;</code></p>
+<code class="literal">&lt;derivation sm64ex-0-unstable-2024-07-04&gt;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -54572,7 +54572,7 @@ otherwise the service may never be started.</p>
 string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;graphical-session.target&quot;</code></p>
+<code class="literal">config.wayland.systemd.target</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">&quot;sway-session.target&quot;</code></p>
@@ -61993,7 +61993,7 @@ otherwise the service may never be started.</p>
 string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;graphical-session.target&quot;</code></p>
+<code class="literal">config.wayland.systemd.target</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">&quot;sway-session.target&quot;</code></p>
@@ -67220,7 +67220,7 @@ null or one of “normal”, “90”, “180”, “270”, “flipped”, “f
 string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;sway-session.target&quot;</code></p>
+<code class="literal">config.wayland.systemd.target</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -74811,7 +74811,7 @@ list of string</p>
 string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;graphical-session.target&quot;</code></p>
+<code class="literal">config.wayland.systemd.target</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">&quot;sway-session.target&quot;</code></p>
@@ -81939,6 +81939,37 @@ boolean</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/uninstall.nix" target="_top">
 &lt;home-manager/modules/misc/uninstall.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.systemd.target"></a><a class="term" href="options.xhtml#opt-wayland.systemd.target"><code class="option">wayland.systemd.target</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The systemd target that will automatically start the graphical Wayland services.
+This option is a generalization of individual <code class="literal">systemd.target</code> or <code class="literal">systemdTarget</code>,
+and affect all Wayland services by default.</p><p>When setting this value to <code class="literal">&quot;sway-session.target&quot;</code>,
+make sure to also enable <code class="option">wayland.windowManager.sway.systemd.enable</code>,
+otherwise the service may never be started.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;graphical-session.target&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;sway-session.target&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/wayland.nix" target="_top">
+&lt;home-manager/modules/wayland.nix&gt;
 </a></code>
 </td></tr>
 </table>
