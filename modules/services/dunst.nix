@@ -64,6 +64,15 @@ in {
         description = "Package providing {command}`dunst`.";
       };
 
+      systemdTarget = mkOption {
+        type = types.str;
+        default = "graphical-session.target";
+        example = "sway-session.target";
+        description = ''
+          Systemd target to bind to.
+        '';
+      };
+
       configFile = mkOption {
         type = with types; nullOr (either str path);
         default = null;
@@ -193,6 +202,8 @@ in {
           Environment = optionalString (cfg.waylandDisplay != "")
             "WAYLAND_DISPLAY=${cfg.waylandDisplay}";
         };
+
+        Install.WantedBy = [ cfg.systemdTarget ];
       };
     }
 
