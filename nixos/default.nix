@@ -48,27 +48,27 @@ in {
               lib.mkDefault (!cfg.useUserService);
           };
         }];
-
-        systemd.services = mapAttrs' (_:
-          { home, programs, ... }:
-          let inherit (home) username homeDirectory;
-          in nameValuePair "ssh_config-${utils.escapeSystemdPath username}" {
-            enable = with programs.ssh; enable && !internallyManaged;
-            description = "Linking ${username}' ssh config";
-            wantedBy = [ "multi-user.target" ];
-            before = [ "systemd-user-sessions.service" ];
-
-            unitConfig.RequiresMountsFor = homeDirectory;
-            stopIfChanged = false;
-            serviceConfig = (baseService username) // {
-              User = username;
-              ExecStart = [
-                "${pkgs.coreutils}/bin/mkdir -p ${homeDirectory}/.ssh"
-                "${pkgs.coreutils}/bin/ln -s ${programs.ssh.configPath} ${homeDirectory}/.ssh/config"
-              ];
-            };
-          }) cfg.users;
       };
+
+      systemd.services = mapAttrs' (_:
+        { home, programs, ... }:
+        let inherit (home) username homeDirectory;
+        in nameValuePair "ssh_config-${utils.escapeSystemdPath username}" {
+          enable = with programs.ssh; enable && !internallyManaged;
+          description = "Linking ${username}' ssh config";
+          wantedBy = [ "multi-user.target" ];
+          before = [ "systemd-user-sessions.service" ];
+
+          unitConfig.RequiresMountsFor = homeDirectory;
+          stopIfChanged = false;
+          serviceConfig = (baseService username) // {
+            User = username;
+            ExecStart = [
+              "${pkgs.coreutils}/bin/mkdir -p ${homeDirectory}/.ssh"
+              "${pkgs.coreutils}/bin/ln -s ${programs.ssh.configPath} ${homeDirectory}/.ssh/config"
+            ];
+          };
+        }) cfg.users;
     }
     (mkIf (cfg.users != { } && !cfg.useUserService) {
       systemd.services = mapAttrs' (_: usercfg:
