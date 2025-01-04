@@ -15,6 +15,7 @@ jobs:
     - uses: cachix/install-nix-action@v30
       with:
         nix_path: nixpkgs=channel:nixos-unstable
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
     - run: |
         if grep -R --exclude stdlib-extended.nix literalExample modules ; then
           echo "Error: literalExample should be replaced by literalExpression" > /dev/stderr
