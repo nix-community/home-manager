@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-01-03 09:09+0100\n"
-"PO-Revision-Date: 2024-10-15 21:37+0000\n"
-"Last-Translator: Viktor Illmer <accounts@viktor.im>\n"
+"PO-Revision-Date: 2025-01-05 15:00+0000\n"
+"Last-Translator: programmerlexi <lexi@reyer.name>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/"
 "modules/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-rc\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: modules/files.nix:188
 msgid "Creating home file links in %s"
@@ -29,11 +29,11 @@ msgstr "Bereinige verwaiste Links unter %s"
 
 #: modules/home-environment.nix:591
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "Erstelle neue Profilgeneration"
 
 #: modules/home-environment.nix:594
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Keine Änderung, verwende letzte Profilgeneration"
 
 #: modules/home-environment.nix:643
 msgid ""
@@ -80,11 +80,11 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr "Fehler: USER ist auf \"%s\" gesetzt, aber wir erwarten \"%s\""
+msgstr "Fehler: USER ist auf \"%s\" gesetzt, aber es wird \"%s\" erwartet"
 
 #: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr "Fehler: HOME ist auf \"%s\" gesetzt, aber wir erwarten \"%s\""
+msgstr "Fehler: HOME ist auf \"%s\" gesetzt, aber es wird \"%s\" erwartet"
 
 #: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
