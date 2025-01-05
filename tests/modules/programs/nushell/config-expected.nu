@@ -26,5 +26,6 @@ let config = {
 }
 
 
-alias ll = ls -a
-alias lsname = (ls | get name)
+alias "ll" = ls -a
+alias "multi word alias" = cd -
+alias "z" = __zoxide_z

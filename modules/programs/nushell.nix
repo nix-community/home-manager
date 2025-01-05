@@ -164,7 +164,10 @@ in {
     shellAliases = lib.mkOption {
       type = types.attrsOf types.str;
       default = { };
-      example = { ll = "ls -l"; };
+      example = {
+        ll = "ls -l";
+        g = "git";
+      };
       description = ''
         An attribute set that maps aliases (the top level attribute names in
         this option) to command strings or directly to build outputs.
@@ -202,7 +205,8 @@ in {
           || aliasesStr != "" || cfg.settings != { };
 
         aliasesStr = lib.concatLines
-          (lib.mapAttrsToList (k: v: "alias ${k} = ${v}") cfg.shellAliases);
+          (lib.mapAttrsToList (k: v: "alias ${toNushell { } k} = ${v}")
+            cfg.shellAliases);
       in lib.mkIf writeConfig {
         "${configDir}/config.nu".text = lib.mkMerge [
           (let
