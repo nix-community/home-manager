@@ -26,8 +26,9 @@
     plugins = [ pkgs.nushellPlugins.formats ];
 
     shellAliases = {
-      "lsname" = "(ls | get name)";
       "ll" = "ls -a";
+      "multi word alias" = "cd -";
+      "z" = "__zoxide_z";
     };
 
     settings = {
