@@ -487,6 +487,7 @@ in import nmtSrc {
     ./modules/services/darkman
     ./modules/services/devilspie2
     ./modules/services/dropbox
+    ./modules/services/easyeffects
     ./modules/services/emacs
     ./modules/services/espanso
     ./modules/services/flameshot
