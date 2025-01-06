@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>GNUPGHOME</key>
+		<string>/home/hm-user/.gnupg</string>
+	</dict>
+	<key>KeepAlive</key>
+	<dict>
+		<key>Crashed</key>
+		<true/>
+		<key>SuccessfulExit</key>
+		<false/>
+	</dict>
+	<key>Label</key>
+	<string>org.nix-community.home.gpg-agent</string>
+	<key>ProcessType</key>
+	<string>Background</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@gpg@/bin/gpgconf</string>
+		<string>--launch</string>
+		<string>gpg-agent</string>
+	</array>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>Sockets</key>
+	<dict>
+		<key>Agent</key>
+		<dict>
+			<key>SockPathMode</key>
+			<integer>384</integer>
+			<key>SockPathName</key>
+			<string>/home/hm-user/.gnupg/S.gpg-agent</string>
+			<key>SockType</key>
+			<string>stream</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

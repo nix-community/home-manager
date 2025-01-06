@@ -2,19 +2,31 @@
 
 with lib;
 
-mkIf pkgs.stdenv.isLinux {
+let inherit (pkgs.stdenv) isDarwin;
+in {
   config = {
     services.gpg-agent.enable = true;
-    services.gpg-agent.pinentryPackage = pkgs.pinentry-gnome3;
-    programs.gpg.enable = true;
+    services.gpg-agent.pinentryPackage =
+      if isDarwin then pkgs.pinentry_mac else pkgs.pinentry-gnome3;
+    programs.gpg = {
+      enable = true;
+      package = config.lib.test.mkStubPackage { outPath = "@gpg@"; };
+    };
 
     test.stubs = {
       gnupg = { };
       systemd = { }; # depends on gnupg.override
       pinentry-gnome3 = { };
+      pinentry_mac = { };
     };
 
-    nmt.script = ''
+    nmt.script = if isDarwin then ''
+      serviceFile=LaunchAgents/org.nix-community.home.gpg-agent.plist
+      assertFileExists "$serviceFile"
+      assertFileContent "$serviceFile" ${./default-homedir-expected-agent.plist}
+      configFile=home-files/.gnupg/gpg-agent.conf
+      assertFileRegex $configFile "pinentry-program @pinentry_mac@/bin/dummy"
+    '' else ''
       in="${config.systemd.user.sockets.gpg-agent.Socket.ListenStream}"
       if [[ $in != "%t/gnupg/S.gpg-agent" ]]
       then

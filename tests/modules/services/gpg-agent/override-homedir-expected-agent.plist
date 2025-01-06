@@ -20,8 +20,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@gpg@/bin/gpg-agent</string>
-		<string>--supervised</string>
+		<string>@gpg@/bin/gpgconf</string>
+		<string>--launch</string>
+		<string>gpg-agent</string>
 	</array>
 	<key>RunAtLoad</key>
 	<false/>
@@ -32,7 +33,7 @@
 			<key>SockPathMode</key>
 			<integer>384</integer>
 			<key>SockPathName</key>
-			<string>/private/var/run/org.nix-community.home.gpg-agent/d.wp4h7ks5zxy4dodqadgpbbpz/S.gpg-agent</string>
+			<string>/path/to/hash/d.wp4h7ks5zxy4dodqadgpbbpz/S.gpg-agent</string>
 			<key>SockType</key>
 			<string>stream</string>
 		</dict>
