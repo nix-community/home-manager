@@ -18,6 +18,8 @@
 		<string>@syncthing@/bin/syncthing</string>
 		<string>-no-browser</string>
 		<string>-no-restart</string>
+		<string>-no-upgrade</string>
+		<string>-gui-address=127.0.0.1:8384</string>
 		<string>-logflags=0</string>
 		<string>-foo</string>
 		<string>-bar "baz"</string>
