@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, ... }:
 
 {
+  imports = [ ./zsh-stubs.nix ];
+
   config = {
     programs.zsh = {
       enable = true;
@@ -12,8 +12,6 @@ with lib;
         V2 = "v2-${config.programs.zsh.sessionVariables.V1}";
       };
     };
-
-    test.stubs.zsh = { };
 
     nmt.script = ''
       assertFileExists home-files/.zshenv

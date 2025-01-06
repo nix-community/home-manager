@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ ... }:
 
 {
+  imports = [ ./zsh-stubs.nix ];
+
   config = {
     programs.zsh = {
       enable = true;
@@ -12,8 +12,6 @@ with lib;
         searchUpKey = [ "^[[A" "\\eOA" ];
       };
     };
-
-    test.stubs.zsh = { };
 
     # Written with regex to ensure we don't end up missing newlines in the future
     nmt.script = ''
