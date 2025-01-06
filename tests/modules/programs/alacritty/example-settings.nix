@@ -20,6 +20,8 @@
       };
     };
 
+    test.stubs = { alacritty = { }; };
+
     nmt.script = ''
       assertFileContent \
         home-files/.config/alacritty/alacritty.toml \
