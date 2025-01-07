@@ -371,9 +371,13 @@ in {
 
       sort = mkOption {
         # allow users to choose any option from sortOptions, or any option prefixed with "reverse-"
-        type = types.enum (options: prefix:
-          builtins.concatMap (_pre: map (_opt: _pre + _opt) options) prefix)
-          sortOptions [ "" "reverse-" "last-" "reverse-last-" ];
+        type = types.enum
+          (builtins.concatMap (_pre: map (_opt: _pre + _opt) sortOptions) [
+            ""
+            "reverse-"
+            "last-"
+            "reverse-last-"
+          ]);
         default = "threads";
         description = "Sorting method on messages.";
       };
