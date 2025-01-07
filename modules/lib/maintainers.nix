@@ -628,4 +628,10 @@
     github = "ALameLlama";
     githubId = 55490546;
   };
+  folliehiyuki = {
+    name = "Hoang Nguyen";
+    email = "folliekazetani@protonmail.com";
+    github = "folliehiyuki";
+    githubId = 67634026;
+  };
 }
