@@ -25,7 +25,7 @@ let
 
   zshIntegration = if hasShellIntegrationEmbedded then ''
     if [[ $options[zle] = on ]]; then
-      eval "$(${getExe cfg.package} --zsh)"
+      source < (${getExe cfg.package} --zsh)
     fi
   '' else ''
     if [[ $options[zle] = on ]]; then
