@@ -13,7 +13,11 @@ in {
   options.programs.ghostty = {
     enable = lib.mkEnableOption "Ghostty";
 
-    package = lib.mkPackageOption pkgs "ghostty" { };
+    package = lib.mkPackageOption pkgs "ghostty" {
+      nullable = true;
+      extraDescription =
+        "On darwin set this to null to manage ghostty config while ghostty is not present in nixpkgs.";
+    };
 
     settings = lib.mkOption {
       inherit (keyValue) type;
@@ -78,7 +82,9 @@ in {
     installBatSyntax =
       lib.mkEnableOption "installation of Ghostty configuration syntax for bat"
       // {
-        default = true;
+        default = cfg.package != null;
+        defaultText =
+          "Enabled by default when programs.ghostty.package is not null.";
       };
 
     enableBashIntegration = lib.mkEnableOption ''
@@ -108,7 +114,7 @@ in {
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      home.packages = [ cfg.package ];
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
       programs.ghostty.settings = lib.mkIf cfg.clearDefaultKeybinds {
         keybind = lib.mkBefore [ "clear" ];
@@ -116,27 +122,47 @@ in {
 
       # MacOS also supports XDG configuration directory, so we use it for both
       # Linux and macOS to reduce complexity
-      xdg.configFile = lib.mkMerge [
+      xdg.configFile = let
+        validate = file:
+          lib.mkIf (cfg.package != null) "${
+            lib.getExe cfg.package
+          } +validate-config --config-file=${config.xdg.configHome}/ghostty/${file}";
+      in lib.mkMerge [
         {
           "ghostty/config" = lib.mkIf (cfg.settings != { }) {
             source = keyValue.generate "ghostty-config" cfg.settings;
-            onChange = "${lib.getExe cfg.package} +validate-config";
+            onChange = validate "config";
           };
         }
 
         (lib.mkIf (cfg.themes != { }) (lib.mapAttrs' (name: value: {
           name = "ghostty/themes/${name}";
-          value.source = keyValue.generate "ghostty-${name}-theme" value;
+          value = {
+            source = keyValue.generate "ghostty-${name}-theme" value;
+            onChange = validate "themes/${name}";
+          };
         }) cfg.themes))
       ];
     }
 
     (lib.mkIf cfg.installVimSyntax {
-      programs.vim.plugins = [ cfg.package.vim ];
+      assertions = [{
+        assertion = lib.elem "vim" cfg.package.outputs or [ ];
+        message =
+          "programs.ghostty.package does not have a vim output or is null.";
+      }];
+
+      programs.vim.plugins = lib.mkIf (cfg.package != null) [ cfg.package.vim ];
     })
 
     (lib.mkIf cfg.installBatSyntax {
-      programs.bat = {
+      assertions = [{
+        assertion = cfg.package != null;
+        message =
+          "Cannot install bat syntax when programs.ghostty.package is null.";
+      }];
+
+      programs.bat = lib.mkIf (cfg.package != null) {
         syntaxes.ghostty = {
           src = cfg.package;
           file = "share/bat/syntaxes/ghostty.sublime-syntax";
