@@ -11,7 +11,7 @@ in {
 
   options = {
     services.network-manager-applet = {
-      enable = mkEnableOption "the Network Manager applet";
+      enable = mkEnableOption "the Network Manager applet (nm-applet)";
     };
   };
 
