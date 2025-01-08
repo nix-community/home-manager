@@ -1947,6 +1947,15 @@ in {
           speed, features, or native UIs. Ghostty provides all three.
         '';
       }
+
+      {
+        time = "2025-01-08T06:54:09+00:00";
+        message = ''
+          A new module is available: 'programs.helm'.
+
+          Helm is a package manager for Kubernetes.
+        '';
+      }
     ];
   };
 }

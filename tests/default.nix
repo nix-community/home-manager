@@ -87,6 +87,7 @@ in import nmtSrc {
     ./modules/programs/gradle
     ./modules/programs/granted
     ./modules/programs/helix
+    ./modules/programs/helm
     ./modules/programs/himalaya
     ./modules/programs/htop
     ./modules/programs/hyfetch

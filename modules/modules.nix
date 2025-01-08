@@ -117,6 +117,7 @@ let
     ./programs/granted.nix
     ./programs/havoc.nix
     ./programs/helix.nix
+    ./programs/helm.nix
     ./programs/hexchat.nix
     ./programs/himalaya.nix
     ./programs/home-manager.nix
