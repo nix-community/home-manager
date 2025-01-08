@@ -85588,6 +85588,350 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.enable"><code class="option">wayland.windowManager.wayfire.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Wayfire, a wayland compositor based on wlroots.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.package"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.package"><code class="option">wayland.windowManager.wayfire.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The wayfire package to use. Set to <code class="literal">null</code> to not add any wayfire package to your path.
+This should be done if you want to use the NixOS wayfire module to install wayfire.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.wayfire</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.plugins"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.plugins"><code class="option">wayland.windowManager.wayfire.plugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Additional plugins to use with wayfire</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">with pkgs.wayfirePlugins; [ wf-shell ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">with pkgs.wayfirePlugins; [
+  wcm
+  wf-shell
+  wayfire-plugins-extra
+];
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.settings"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.settings"><code class="option">wayland.windowManager.wayfire.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Wayfire configuration written in Nix.</p><p>See <a class="link" href="https://github.com/WayfireWM/wayfire/wiki/Configuration"  target="_top">https://github.com/WayfireWM/wayfire/wiki/Configuration</a></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (string or boolean or signed integer or floating point number)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  core.plugins = &quot;command expo cube&quot;;
+  command = {
+    binding_terminal = &quot;alacritty&quot;;
+    command_terminal = &quot;alacritty&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.settings.core.plugins"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.settings.core.plugins"><code class="option">wayland.windowManager.wayfire.settings.core.plugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Load the specified plugins</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with &quot; &quot;</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.systemd.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.systemd.enable"><code class="option">wayland.windowManager.wayfire.systemd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable <code class="filename">wayfire-session.target</code> on
+wayfire startup. This links to <code class="filename">graphical-session.target</code>}.
+Some important environment variables will be imported to systemd
+and D-Bus user environment before reaching the target, including</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><code class="literal">DISPLAY</code></p></li><li class="listitem"><p><code class="literal">WAYLAND_DISPLAY</code></p></li><li class="listitem"><p><code class="literal">XDG_CURRENT_DESKTOP</code></p></li><li class="listitem"><p><code class="literal">NIXOS_OZONE_WL</code></p></li><li class="listitem"><p><code class="literal">XCURSOR_THEME</code></p></li><li class="listitem"><p><code class="literal">XCURSOR_SIZE</code></p></li></ul></div>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.systemd.extraCommands"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.systemd.extraCommands"><code class="option">wayland.windowManager.wayfire.systemd.extraCommands</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra commands to be run after D-Bus activation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;systemctl --user stop wayfire-session.target&quot;
+  &quot;systemctl --user start wayfire-session.target&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.systemd.variables"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.systemd.variables"><code class="option">wayland.windowManager.wayfire.systemd.variables</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Environment variables to be imported in the systemd &amp; D-Bus user
+environment.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;DISPLAY&quot;
+  &quot;WAYLAND_DISPLAY&quot;
+  &quot;XDG_CURRENT_DESKTOP&quot;
+  &quot;NIXOS_OZONE_WL&quot;
+  &quot;XCURSOR_THEME&quot;
+  &quot;XCURSOR_SIZE&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;-all&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.wf-shell.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.wf-shell.enable"><code class="option">wayland.windowManager.wayfire.wf-shell.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Manage wf-shell Configuration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.wf-shell.package"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.wf-shell.package"><code class="option">wayland.windowManager.wayfire.wf-shell.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The wf-shell package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.wf-shell</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.wf-shell.settings"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.wf-shell.settings"><code class="option">wayland.windowManager.wayfire.wf-shell.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Wf-shell configuration written in Nix.</p><p>See <a class="link" href="https://github.com/WayfireWM/wf-shell/blob/master/wf-shell.ini.example"  target="_top">https://github.com/WayfireWM/wf-shell/blob/master/wf-shell.ini.example</a></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (string or boolean or signed integer or floating point number)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  panel = {
+    widgets_left = &quot;menu spacing4 launchers window-list&quot;;
+    autohide = true;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.wayfire.xwayland.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.wayfire.xwayland.enable"><code class="option">wayland.windowManager.wayfire.xwayland.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable XWayland.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-xdg.enable"></a><a class="term" href="options.xhtml#opt-xdg.enable"><code class="option">xdg.enable</code>
   </a>
  </span>
