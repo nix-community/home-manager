@@ -1947,6 +1947,16 @@ in {
           speed, features, or native UIs. Ghostty provides all three.
         '';
       }
+
+      {
+        time = "2025-01-04T04:16:57+00:00";
+        message = ''
+          A new module is available: 'programs.streamlink'.
+
+          Streamlink is a CLI utility which pipes video streams from various
+          services into a video player.
+        '';
+      }
     ];
   };
 }
