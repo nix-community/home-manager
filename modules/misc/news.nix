@@ -1947,6 +1947,16 @@ in {
           speed, features, or native UIs. Ghostty provides all three.
         '';
       }
+
+      {
+        time = "2025-01-04T16:53:20+00:00";
+        message = ''
+          A new module is available: 'programs.earthly'.
+
+          Earthly is a build configuration framework utilizing buildkit and
+          Dockerfile-like syntax for fast builds and simplicity.
+        '';
+      }
     ];
   };
 }
