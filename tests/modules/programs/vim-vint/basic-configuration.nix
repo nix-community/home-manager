@@ -1,4 +1,4 @@
-{ config, pkgs, lib, xdg, ... }:
+{ ... }:
 
 {
   programs.vim-vint = {
@@ -18,6 +18,8 @@
       };
     };
   };
+
+  test.stubs = { vim-vint = { }; };
 
   nmt.script = ''
     assertFileContent home-files/.config/.vintrc.yaml ${
