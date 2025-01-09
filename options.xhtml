@@ -52628,6 +52628,94 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.todoman.enable"></a><a class="term" href="options.xhtml#opt-programs.todoman.enable"><code class="option">programs.todoman.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable todoman.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/todoman.nix" target="_top">
+&lt;home-manager/modules/programs/todoman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.todoman.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.todoman.extraConfig"><code class="option">programs.todoman.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Text for configuration of todoman.
+The syntax is Python.</p><p>See <a class="link" href="%60https://todoman.readthedocs.io/en/stable/man.html#id5%60"  target="_top">docs</a>.
+for the full list of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  date_format = &quot;%Y-%m-%d&quot;;
+  time_format = &quot;%H:%M&quot;;
+  default_list = &quot;Personal&quot;;
+  default_due = 48;
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/todoman.nix" target="_top">
+&lt;home-manager/modules/programs/todoman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.todoman.glob"></a><a class="term" href="options.xhtml#opt-programs.todoman.glob"><code class="option">programs.todoman.glob</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The glob expansion which matches all directories relevant.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;*&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;*/*&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/todoman.nix" target="_top">
+&lt;home-manager/modules/programs/todoman.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.tofi.enable"></a><a class="term" href="options.xhtml#opt-programs.tofi.enable"><code class="option">programs.tofi.enable</code>
   </a>
  </span>
