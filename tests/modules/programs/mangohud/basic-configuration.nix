@@ -26,6 +26,21 @@
           no_display = true;
         };
       };
+      extraConfig = ''
+
+        ### Display the current GPU information
+        gpu_stats
+        gpu_temp
+        gpu_core_clock
+        gpu_mem_clock
+        gpu_power
+
+        # gpu_text=GPU
+        # gpu_load_change
+        # gpu_load_value=60,90
+        # gpu_load_color=39F900,FDFD09,B22222
+
+      '';
     };
 
     nmt.script = ''
