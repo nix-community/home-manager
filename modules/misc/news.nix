@@ -1861,7 +1861,6 @@ in {
           Some plugins require this to be set to 'false' to function correctly.
         '';
       }
-
       {
         time = "2024-12-08T17:22:13+00:00";
         condition = let
@@ -1955,6 +1954,21 @@ in {
 
           A MPD client which submits information about tracks being played to a
           scrobbler (e.g. last.fm)
+        '';
+      }
+
+      {
+        time = "2025-01-04T15:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.wayfire'.
+
+          Wayfire is a 3D Wayland compositor, inspired by Compiz and based on
+          wlroots. It aims to create a customizable, extendable and lightweight
+          environment without sacrificing its appearance.
+
+          This Home Manager module allows you to configure both wayfire itself,
+          as well as wf-shell.
         '';
       }
     ];

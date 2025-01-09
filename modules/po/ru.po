@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"POT-Creation-Date: 2025-01-03 09:09+0100\n"
 "PO-Revision-Date: 2023-12-11 16:06+0000\n"
 "Last-Translator: Blezz Rot <markus.jenya04@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/home-manager/"
@@ -20,23 +20,23 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.3-dev\n"
 
-#: modules/files.nix:191
+#: modules/files.nix:188
 msgid "Creating home file links in %s"
 msgstr "Создаю ссылки в домашней директории %s"
 
-#: modules/files.nix:204
+#: modules/files.nix:201
 msgid "Cleaning up orphan links from %s"
 msgstr "Удаляю устаревшие ссылки из %s"
 
-#: modules/files.nix:220
-msgid "Creating profile generation %s"
-msgstr "Создаю профиль в поколении %s"
+#: modules/home-environment.nix:591
+msgid "Creating new profile generation"
+msgstr ""
 
-#: modules/files.nix:237
-msgid "No change so reusing latest profile generation %s"
-msgstr "Изменений нет, переиспользую профиль в последнем поколении %s"
+#: modules/home-environment.nix:594
+msgid "No change so reusing latest profile generation"
+msgstr ""
 
-#: modules/home-environment.nix:634
+#: modules/home-environment.nix:643
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -64,7 +64,7 @@ msgstr ""
 "\n"
 "После попробуйте активировать конфигурацию снова."
 
-#: modules/home-environment.nix:667
+#: modules/home-environment.nix:676
 msgid "Activating %s"
 msgstr "Активирую %s"
 
@@ -76,70 +76,74 @@ msgstr "Переношу профиль из %s в %s"
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "Не найдена подходящая директория профиля, пробовали %s и %s"
 
-#: modules/lib-bash/activation-init.sh:83
-msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr "Проверка oldGenNum и oldGenPath"
-
-#: modules/lib-bash/activation-init.sh:86
-msgid ""
-"The previous generation number and path are in conflict! These\n"
-"must be either both empty or both set but are now set to\n"
-"\n"
-"    '%s' and '%s'\n"
-"\n"
-"If you don't mind losing previous profile generations then\n"
-"the easiest solution is probably to run\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"and trying home-manager switch again. Good luck!"
-msgstr ""
-"Обнаружен конфликт между номером и расположением предыдущего поколения!\n"
-"Обе переменные должны иметь значения либо быть пустыми, но следующие "
-"значения:\n"
-"\n"
-"    '%s' and '%s'\n"
-"\n"
-"Если вы не возражаете потерять предыдущие поколения профиля,\n"
-"наиболее простым решением будет выполнение\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"и повторный запуск 'home-manager switch'. Удачи!"
-
-#: modules/lib-bash/activation-init.sh:127
+#: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 msgstr "Ошибка: USER установлена в \"%s\", но ожидается \"%s\""
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
 msgstr "Ошибка: HOME установлена в \"%s\", но ожидается \"%s\""
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
 msgstr "Начинаю активацию Home Manager"
 
-#: modules/lib-bash/activation-init.sh:157
+#: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
 msgstr "Проверка работоспособности Nix"
 
-#: modules/lib-bash/activation-init.sh:170
+#: modules/lib-bash/activation-init.sh:149
 msgid "This is a dry run"
 msgstr "Это пробный запуск"
 
-#: modules/lib-bash/activation-init.sh:174
+#: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
 msgstr "Это реальный запуск"
 
-#: modules/lib-bash/activation-init.sh:180
+#: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
 msgstr "Использую Nix версии: %s"
 
-#: modules/lib-bash/activation-init.sh:183
+#: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"
 msgstr "Переменные для активации:"
+
+#~ msgid "Creating profile generation %s"
+#~ msgstr "Создаю профиль в поколении %s"
+
+#~ msgid "No change so reusing latest profile generation %s"
+#~ msgstr "Изменений нет, переиспользую профиль в последнем поколении %s"
+
+#~ msgid "Sanity checking oldGenNum and oldGenPath"
+#~ msgstr "Проверка oldGenNum и oldGenPath"
+
+#~ msgid ""
+#~ "The previous generation number and path are in conflict! These\n"
+#~ "must be either both empty or both set but are now set to\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "If you don't mind losing previous profile generations then\n"
+#~ "the easiest solution is probably to run\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "and trying home-manager switch again. Good luck!"
+#~ msgstr ""
+#~ "Обнаружен конфликт между номером и расположением предыдущего поколения!\n"
+#~ "Обе переменные должны иметь значения либо быть пустыми, но следующие "
+#~ "значения:\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "Если вы не возражаете потерять предыдущие поколения профиля,\n"
+#~ "наиболее простым решением будет выполнение\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "и повторный запуск 'home-manager switch'. Удачи!"
 
 #~ msgid ""
 #~ "Oops, nix-env failed to install your new Home Manager profile!\n"

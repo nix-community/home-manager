@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"POT-Creation-Date: 2025-01-03 09:09+0100\n"
 "PO-Revision-Date: 2023-05-27 12:11+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.18-dev\n"
 
-#: modules/files.nix:191
+#: modules/files.nix:188
 msgid "Creating home file links in %s"
 msgstr "Skapar hemfil-länkar i %s"
 
-#: modules/files.nix:204
+#: modules/files.nix:201
 msgid "Cleaning up orphan links from %s"
 msgstr "Rensar bort överflödiga länkar från %s"
 
-#: modules/files.nix:220
-msgid "Creating profile generation %s"
-msgstr "Skapar profil för generation %s"
+#: modules/home-environment.nix:591
+msgid "Creating new profile generation"
+msgstr ""
 
-#: modules/files.nix:237
-msgid "No change so reusing latest profile generation %s"
-msgstr "Ingen förändring, återanvänder därför profil-generation %s"
+#: modules/home-environment.nix:594
+msgid "No change so reusing latest profile generation"
+msgstr ""
 
-#: modules/home-environment.nix:634
+#: modules/home-environment.nix:643
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "Prova sedan att aktivera din Home Manager-konfiguration igen."
 
-#: modules/home-environment.nix:667
+#: modules/home-environment.nix:676
 msgid "Activating %s"
 msgstr "Aktiverar %s"
 
@@ -75,69 +75,73 @@ msgstr "Migrerar profil från %s till %s"
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "Kunde inte hitta lämplig profil-katalog, försökte med %s och %s"
 
-#: modules/lib-bash/activation-init.sh:83
-msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr "Kontrollerar värdena på oldGenNum och oldGenPath"
-
-#: modules/lib-bash/activation-init.sh:86
-msgid ""
-"The previous generation number and path are in conflict! These\n"
-"must be either both empty or both set but are now set to\n"
-"\n"
-"    '%s' and '%s'\n"
-"\n"
-"If you don't mind losing previous profile generations then\n"
-"the easiest solution is probably to run\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"and trying home-manager switch again. Good luck!"
-msgstr ""
-"Föregående generationsnummer och sökväg motsäger varandra! Dessa måste\n"
-"antingen båda vara tomma eller båda vara satta men de har nu värdena\n"
-"\n"
-"    '%s' and '%s'\n"
-"\n"
-"Om du inte har något emot att förlora tidigare profilgenerationer så\n"
-"är den enklaste lösningen antagligen att köra\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"och prova 'home-manager switch' igen. Lycka till!"
-
-#: modules/lib-bash/activation-init.sh:127
+#: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 msgstr "Fel: USER är satt till \"%s\" men \"%s\" förväntades"
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
 msgstr "Fel: HOME är satt till \"%s\" men \"%s\" förväntades"
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
 msgstr "Startar Home Manager-aktivering"
 
-#: modules/lib-bash/activation-init.sh:157
+#: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
 msgstr "Kontrollerar att Nix funkar"
 
-#: modules/lib-bash/activation-init.sh:170
+#: modules/lib-bash/activation-init.sh:149
 msgid "This is a dry run"
 msgstr "Detta är en simulerad körning"
 
-#: modules/lib-bash/activation-init.sh:174
+#: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
 msgstr "Detta är en verklig körning"
 
-#: modules/lib-bash/activation-init.sh:180
+#: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
 msgstr "Använder Nix-version: %s"
 
-#: modules/lib-bash/activation-init.sh:183
+#: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"
 msgstr "Aktiveringsvariabler:"
+
+#~ msgid "Creating profile generation %s"
+#~ msgstr "Skapar profil för generation %s"
+
+#~ msgid "No change so reusing latest profile generation %s"
+#~ msgstr "Ingen förändring, återanvänder därför profil-generation %s"
+
+#~ msgid "Sanity checking oldGenNum and oldGenPath"
+#~ msgstr "Kontrollerar värdena på oldGenNum och oldGenPath"
+
+#~ msgid ""
+#~ "The previous generation number and path are in conflict! These\n"
+#~ "must be either both empty or both set but are now set to\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "If you don't mind losing previous profile generations then\n"
+#~ "the easiest solution is probably to run\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "and trying home-manager switch again. Good luck!"
+#~ msgstr ""
+#~ "Föregående generationsnummer och sökväg motsäger varandra! Dessa måste\n"
+#~ "antingen båda vara tomma eller båda vara satta men de har nu värdena\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "Om du inte har något emot att förlora tidigare profilgenerationer så\n"
+#~ "är den enklaste lösningen antagligen att köra\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "och prova 'home-manager switch' igen. Lycka till!"
 
 #~ msgid "Migrating profiles from %s to %s"
 #~ msgstr "Migrerar profiler från %s till %s"

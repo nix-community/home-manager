@@ -6,6 +6,8 @@ let
 
   cfg = config.programs.go;
 
+  modeFileContent = "${cfg.telemetry.mode} ${cfg.telemetry.date}";
+
 in {
   meta.maintainers = [ maintainers.rvolosatovs ];
 
@@ -71,6 +73,31 @@ in {
           or checksum database.
         '';
       };
+
+      telemetry = mkOption {
+        type = types.submodule {
+          options = {
+            mode = mkOption {
+              type = with types; nullOr (enum [ "off" "local" "on" ]);
+              default = null;
+              description = "Go telemetry mode to be set.";
+            };
+
+            date = mkOption {
+              type = types.str;
+              default = "1970-01-01";
+              description = ''
+                The date indicating the date at which the modefile
+                was updated, in YYYY-MM-DD format. It's used to
+                reset the timeout before the next telemetry report
+                is uploaded when telemetry mode is set to "on".
+              '';
+            };
+          };
+        };
+        default = { };
+        description = "Options to configure Go telemetry mode.";
+      };
     };
   };
 
@@ -97,6 +124,18 @@ in {
 
     (mkIf (cfg.goPrivate != [ ]) {
       home.sessionVariables.GOPRIVATE = concatStringsSep "," cfg.goPrivate;
+    })
+
+    (mkIf (cfg.telemetry.mode != null) {
+      home.file."Library/Application Support/go/telemetry/mode" = {
+        enable = pkgs.stdenv.hostPlatform.isDarwin;
+        text = modeFileContent;
+      };
+
+      xdg.configFile."go/telemetry/mode" = {
+        enable = !pkgs.stdenv.hostPlatform.isDarwin;
+        text = modeFileContent;
+      };
     })
   ]);
 }

@@ -83,6 +83,7 @@ in import nmtSrc {
     ./modules/programs/git
     ./modules/programs/git-cliff
     ./modules/programs/git-credential-oauth
+    ./modules/programs/go
     ./modules/programs/gpg
     ./modules/programs/gradle
     ./modules/programs/granted
@@ -303,6 +304,7 @@ in import nmtSrc {
     ./modules/services/window-managers/river
     ./modules/services/window-managers/spectrwm
     ./modules/services/window-managers/sway
+    ./modules/services/window-managers/wayfire
     ./modules/services/wlsunset
     ./modules/services/wob
     ./modules/services/xsettingsd

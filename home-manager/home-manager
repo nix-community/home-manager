@@ -191,7 +191,7 @@ function setFlakeAttribute() {
         fi
 
         if [[ -v configFlake ]]; then
-            FLAKE_ARG="path:$(dirname "$(readlink -f "$configFlake")")"
+            FLAKE_ARG="$(dirname "$(readlink -f "$configFlake")")"
         fi
     fi
 

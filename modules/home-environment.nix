@@ -583,9 +583,17 @@ in
 
     home.packages = [ config.home.sessionVariablesPackage ];
 
-    # A dummy entry acting as a boundary between the activation
-    # script's "check" and the "write" phases.
-    home.activation.writeBoundary = hm.dag.entryAnywhere "";
+    # The entry acting as a boundary between the activation script's "check" and
+    # the "write" phases. This is where we commit to attempting to actually
+    # activate the configuration.
+    home.activation.writeBoundary = hm.dag.entryAnywhere ''
+      if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
+        _i "Creating new profile generation"
+        run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
+      else
+        _i "No change so reusing latest profile generation"
+      fi
+    '';
 
     # Install packages to the user environment.
     #
@@ -718,7 +726,20 @@ in
             checkHomeDirectory ${escapeShellArg config.home.homeDirectory}
           fi
 
+          # Create a temporary GC root to prevent collection during activation.
+          trap 'run rm -f $VERBOSE_ARG "$newGenGcPath"' EXIT
+          run --silence nix-store --realise "$newGenPath" --add-root "$newGenGcPath"
+
           ${activationCmds}
+
+          ${optionalString (!config.uninstall) ''
+            # Create the "current generation" GC root.
+            run --silence nix-store --realise "$newGenPath" --add-root "$currentGenGcPath"
+
+            if [[ -e "$legacyGenGcPath" ]]; then
+              run rm $VERBOSE_ARG "$legacyGenGcPath"
+            fi
+          ''}
         '';
       in
         pkgs.runCommand

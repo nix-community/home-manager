@@ -88,7 +88,8 @@ in {
 
     systemdTarget = mkOption {
       type = types.str;
-      default = "graphical-session.target";
+      default = config.wayland.systemd.target;
+      defaultText = literalExpression "config.wayland.systemd.target";
       example = "sway-session.target";
       description = ''
         Systemd target to bind to.
@@ -107,7 +108,8 @@ in {
         Description = "Idle manager for Wayland";
         Documentation = "man:swayidle(1)";
         ConditionEnvironment = "WAYLAND_DISPLAY";
-        PartOf = [ "graphical-session.target" ];
+        PartOf = [ cfg.systemdTarget ];
+        After = [ cfg.systemdTarget ];
       };
 
       Service = {

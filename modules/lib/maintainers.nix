@@ -79,12 +79,6 @@
     github = "considerate";
     githubId = 217918;
   };
-  cvoges12 = {
-    name = "Clayton Voges";
-    email = "38054771+cvoges12@users.noreply.github.com";
-    github = "cvoges12";
-    githubId = 38054771;
-  };
   danjujan = {
     name = "Jan Schmitz";
     email = "44864658+danjujan@users.noreply.github.com";
@@ -489,6 +483,12 @@
     email = "5113257+mainrs@users.noreply.github.com";
     github = "mainrs";
     githubId = 5113257;
+  };
+  mikilio = {
+    name = "mikilio";
+    email = "official.mikilio+dev@gmail.com";
+    github = "mikilio";
+    githubId = 86004375;
   };
   kmaasrud = {
     name = "Knut Magnus Aasrud";

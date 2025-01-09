@@ -286,7 +286,8 @@ in {
 
     systemdTarget = mkOption {
       type = types.str;
-      default = "sway-session.target";
+      default = config.wayland.systemd.target;
+      defaultText = literalExpression "config.wayland.systemd.target";
       description = ''
         Systemd target to bind to.
       '';
@@ -342,6 +343,7 @@ in {
         Unit = {
           Description = "Dynamic output configuration";
           Documentation = "man:kanshi(1)";
+          ConditionEnvironment = "WAYLAND_DISPLAY";
           PartOf = cfg.systemdTarget;
           Requires = cfg.systemdTarget;
           After = cfg.systemdTarget;

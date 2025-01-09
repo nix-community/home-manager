@@ -180,8 +180,8 @@ in {
       systemd.user.services.dunst = {
         Unit = {
           Description = "Dunst notification daemon";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
+          After = [ config.wayland.systemd.target ];
+          PartOf = [ config.wayland.systemd.target ];
         };
 
         Service = {

@@ -246,6 +246,7 @@ let
     ./programs/tmate.nix
     ./programs/tmux.nix
     ./programs/tofi.nix
+    ./programs/todoman.nix
     ./programs/topgrade.nix
     ./programs/translate-shell.nix
     ./programs/urxvt.nix
@@ -406,6 +407,7 @@ let
     ./services/window-managers/i3-sway/swaynag.nix
     ./services/window-managers/river.nix
     ./services/window-managers/spectrwm.nix
+    ./services/window-managers/wayfire.nix
     ./services/window-managers/xmonad.nix
     ./services/wlsunset.nix
     ./services/wob.nix
@@ -418,6 +420,7 @@ let
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix
+    ./wayland.nix
     ./xresources.nix
     ./xsession.nix
     ./misc/nix.nix

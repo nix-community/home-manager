@@ -31,6 +31,8 @@
     ];
   };
 
+  test.stubs = { ranger = { }; };
+
   nmt.script = ''
     assertFileExists home-files/.config/ranger/rc.conf
     assertFileContent home-files/.config/ranger/rc.conf \

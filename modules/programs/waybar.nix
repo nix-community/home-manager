@@ -199,7 +199,8 @@ in {
 
     systemd.target = mkOption {
       type = str;
-      default = "graphical-session.target";
+      default = config.wayland.systemd.target;
+      defaultText = literalExpression "config.wayland.systemd.target";
       example = "sway-session.target";
       description = ''
         The systemd target that will automatically start the Waybar service.
@@ -309,8 +310,9 @@ in {
           Description =
             "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
           Documentation = "https://github.com/Alexays/Waybar/wiki";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session-pre.target" ];
+          PartOf = [ cfg.systemd.target ];
+          After = [ cfg.systemd.target ];
+          ConditionEnvironment = "WAYLAND_DISPLAY";
           X-Restart-Triggers = optional (settings != [ ])
             "${config.xdg.configFile."waybar/config".source}"
             ++ optional (cfg.style != null)
