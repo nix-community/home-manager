@@ -4,7 +4,7 @@ font: "Droid Sans Mono 14";
 kb-primary-paste: "Control+V,Shift+Insert";
 kb-secondary-paste: "Control+v,Insert";
 location: 0;
-modi: "drun,emoji,ssh";
+modes: [ "drun","emoji","ssh","foo:bar" ];
 terminal: "/some/path";
 xoffset: 0;
 yoffset: 0;
