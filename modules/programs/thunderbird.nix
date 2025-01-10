@@ -132,11 +132,12 @@ in {
       enable = mkEnableOption "Thunderbird";
 
       package = mkOption {
-        type = types.package;
+        type = with types; nullOr package;
         default = pkgs.thunderbird;
         defaultText = literalExpression "pkgs.thunderbird";
         example = literalExpression "pkgs.thunderbird";
-        description = "The Thunderbird package to use.";
+        description =
+          "The Thunderbird package to use. Set to `null` to disable installing Thunderbird.";
       };
 
       profiles = mkOption {
