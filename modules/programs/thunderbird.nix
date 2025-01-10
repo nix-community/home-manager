@@ -135,7 +135,7 @@ in {
         type = types.package;
         default = pkgs.thunderbird;
         defaultText = literalExpression "pkgs.thunderbird";
-        example = literalExpression "pkgs.thunderbird-91";
+        example = literalExpression "pkgs.thunderbird";
         description = "The Thunderbird package to use.";
       };
 
