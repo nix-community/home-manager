@@ -13,7 +13,7 @@ in {
   options.programs.ghostty = {
     enable = lib.mkEnableOption "Ghostty";
 
-    package = lib.mkPackageOption pkgs "ghostty" { };
+    package = lib.mkPackageOption pkgs "Ghostty" { default = [ "ghostty" ]; };
 
     settings = lib.mkOption {
       inherit (keyValue) type;
@@ -108,7 +108,9 @@ in {
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      home.packages = [ cfg.package ];
+      # TODO: Install on darwin after it is supported.
+      home.packages =
+        lib.optionals pkgs.stdenv.hostPlatform.isLinux [ cfg.package ];
 
       programs.ghostty.settings = lib.mkIf cfg.clearDefaultKeybinds {
         keybind = lib.mkBefore [ "clear" ];
