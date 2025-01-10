@@ -1960,6 +1960,16 @@ in {
           as well as wf-shell.
         '';
       }
+      {
+        time = "2025-01-10T23:11:24+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wpaperd'.
+
+          This replaces the existing module, 'programs.wpaperd', and adds a
+          systemd service to ensure its execution.
+        '';
+      }
     ];
   };
 }
