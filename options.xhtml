@@ -70150,6 +70150,171 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.ollama.enable"></a><a class="term" href="options.xhtml#opt-services.ollama.enable"><code class="option">services.ollama.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable ollama server for local large language models.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ollama.nix" target="_top">
+&lt;home-manager/modules/services/ollama.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ollama.package"></a><a class="term" href="options.xhtml#opt-services.ollama.package"><code class="option">services.ollama.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The ollama package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.ollama</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ollama.nix" target="_top">
+&lt;home-manager/modules/services/ollama.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ollama.acceleration"></a><a class="term" href="options.xhtml#opt-services.ollama.acceleration"><code class="option">services.ollama.acceleration</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>What interface to use for hardware acceleration.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><code class="literal">null</code>: default behavior</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p>if <code class="literal">nixpkgs.config.rocmSupport</code> is enabled, uses <code class="literal">&quot;rocm&quot;</code></p></li><li class="listitem"><p>if <code class="literal">nixpkgs.config.cudaSupport</code> is enabled, uses <code class="literal">&quot;cuda&quot;</code></p></li><li class="listitem"><p>otherwise defaults to <code class="literal">false</code></p></li></ul></div></li><li class="listitem"><p><code class="literal">false</code>: disable GPU, only use CPU</p></li><li class="listitem"><p><code class="literal">&quot;rocm&quot;</code>: supported by most modern AMD GPUs</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p>may require overriding gpu type with <code class="literal">services.ollama.rocmOverrideGfx</code>
+if rocm doesn’t detect your AMD gpu</p></li></ul></div></li><li class="listitem"><p><code class="literal">&quot;cuda&quot;</code>: supported by most modern NVIDIA GPUs</p></li></ul></div>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or one of false, “rocm”, “cuda”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;rocm&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ollama.nix" target="_top">
+&lt;home-manager/modules/services/ollama.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ollama.environmentVariables"></a><a class="term" href="options.xhtml#opt-services.ollama.environmentVariables"><code class="option">services.ollama.environmentVariables</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Set arbitrary environment variables for the ollama service.</p><p>Be aware that these are only seen by the ollama server (systemd service),
+not normal invocations like <code class="literal">ollama run</code>.
+Since <code class="literal">ollama run</code> is mostly a shell around the ollama server, this is usually sufficient.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  HIP_VISIBLE_DEVICES = &quot;0,1&quot;;
+  OLLAMA_LLM_LIBRARY = &quot;cpu&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ollama.nix" target="_top">
+&lt;home-manager/modules/services/ollama.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ollama.host"></a><a class="term" href="options.xhtml#opt-services.ollama.host"><code class="option">services.ollama.host</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The host address which the ollama server HTTP interface listens to.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;127.0.0.1&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;[::]&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ollama.nix" target="_top">
+&lt;home-manager/modules/services/ollama.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ollama.port"></a><a class="term" href="options.xhtml#opt-services.ollama.port"><code class="option">services.ollama.port</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Which port the ollama server listens to.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">11434</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">11111</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ollama.nix" target="_top">
+&lt;home-manager/modules/services/ollama.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.opensnitch-ui.enable"></a><a class="term" href="options.xhtml#opt-services.opensnitch-ui.enable"><code class="option">services.opensnitch-ui.enable</code>
   </a>
  </span>
