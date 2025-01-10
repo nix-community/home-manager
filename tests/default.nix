@@ -270,6 +270,7 @@ in import nmtSrc {
     ./modules/services/mpd-mpris
     ./modules/services/mpdris2
     ./modules/services/nix-gc
+    ./modules/services/ollama
     ./modules/services/osmscout-server
     ./modules/services/pantalaimon
     ./modules/services/parcellite
