@@ -133,7 +133,8 @@ in {
 
       package = mkOption {
         type = with types; nullOr package;
-        default = pkgs.thunderbird;
+        default =
+          if isDarwin then pkgs.thunderbird-unwrapped else pkgs.thunderbird;
         defaultText = literalExpression "pkgs.thunderbird";
         example = literalExpression "pkgs.thunderbird";
         description =
