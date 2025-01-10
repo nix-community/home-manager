@@ -13,11 +13,7 @@ in {
   options.programs.ghostty = {
     enable = lib.mkEnableOption "Ghostty";
 
-    package = lib.mkPackageOption pkgs "ghostty" {
-      nullable = true;
-      extraDescription =
-        "On darwin set this to null to manage ghostty config while ghostty is not present in nixpkgs.";
-    };
+    package = lib.mkPackageOption pkgs "ghostty" { };
 
     settings = lib.mkOption {
       inherit (keyValue) type;
@@ -82,9 +78,9 @@ in {
     installBatSyntax =
       lib.mkEnableOption "installation of Ghostty configuration syntax for bat"
       // {
-        default = cfg.package != null;
+        default = pkgs.stdenv.hostPlatform.isLinux;
         defaultText =
-          "Enabled by default when programs.ghostty.package is not null.";
+          lib.literalMD "`true` if host platform is Linux, if not, `false`";
       };
 
     enableBashIntegration = lib.mkEnableOption ''
@@ -114,7 +110,8 @@ in {
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      home.packages =
+        lib.optionals pkgs.stdenv.hostPlatform.isLinux [ cfg.package ];
 
       programs.ghostty.settings = lib.mkIf cfg.clearDefaultKeybinds {
         keybind = lib.mkBefore [ "clear" ];
@@ -124,7 +121,7 @@ in {
       # Linux and macOS to reduce complexity
       xdg.configFile = let
         validate = file:
-          lib.mkIf (cfg.package != null) "${
+          lib.mkIf pkgs.stdenv.hostPlatform.isLinux "${
             lib.getExe cfg.package
           } +validate-config --config-file=${config.xdg.configHome}/ghostty/${file}";
       in lib.mkMerge [
@@ -147,22 +144,21 @@ in {
 
     (lib.mkIf cfg.installVimSyntax {
       assertions = [{
-        assertion = lib.elem "vim" cfg.package.outputs or [ ];
+        assertion = cfg.installVimSyntax -> pkgs.stdenv.hostPlatform.isLinux;
         message =
-          "programs.ghostty.package does not have a vim output or is null.";
+          "programs.ghostty.installVimSyntax cannot be enabled on darwin as it depends on the package";
       }];
-
-      programs.vim.plugins = lib.mkIf (cfg.package != null) [ cfg.package.vim ];
+      programs.vim.plugins =
+        lib.optionals pkgs.stdenv.hostPlatform.isLinux [ cfg.package.vim ];
     })
 
     (lib.mkIf cfg.installBatSyntax {
       assertions = [{
-        assertion = cfg.package != null;
+        assertion = cfg.installBatSyntax -> pkgs.stdenv.hostPlatform.isLinux;
         message =
-          "Cannot install bat syntax when programs.ghostty.package is null.";
+          "programs.ghostty.installBatSyntax cannot be enabled on darwin as it depends on the package";
       }];
-
-      programs.bat = lib.mkIf (cfg.package != null) {
+      programs.bat = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
         syntaxes.ghostty = {
           src = cfg.package;
           file = "share/bat/syntaxes/ghostty.sublime-syntax";
