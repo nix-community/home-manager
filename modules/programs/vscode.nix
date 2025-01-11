@@ -20,7 +20,8 @@ let
 
   extensionDir = {
     "vscode" = "vscode";
-    "vscode-insiders" = "vscode-insiders";
+    "vscode-insiders" =
+      if pkgs.stdenv.hostPlatform.isDarwin then "vscode" else "vscode-insiders";
     "vscodium" = "vscode-oss";
     "openvscode-server" = "openvscode-server";
   }.${vscodePname};
