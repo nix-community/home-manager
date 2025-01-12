@@ -180,7 +180,7 @@ in {
 
     sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
 
-    historyControlStr = concatStringsSep "\n"
+    historyControlStr = (concatStringsSep "\n"
       (mapAttrsToList (n: v: "${n}=${v}") ({
         HISTFILESIZE = toString cfg.historyFileSize;
         HISTSIZE = toString cfg.historySize;
@@ -190,7 +190,8 @@ in {
         HISTCONTROL = concatStringsSep ":" cfg.historyControl;
       } // optionalAttrs (cfg.historyIgnore != [ ]) {
         HISTIGNORE = escapeShellArg (concatStringsSep ":" cfg.historyIgnore);
-      }));
+      }) ++ optional (cfg.historyFile != null)
+        ''mkdir -p "$(dirname "$HISTFILE")"''));
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
