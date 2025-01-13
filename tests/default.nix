@@ -91,6 +91,7 @@ in import nmtSrc {
     ./modules/programs/htop
     ./modules/programs/hyfetch
     ./modules/programs/i3status
+    ./modules/programs/inori
     ./modules/programs/irssi
     ./modules/programs/jujutsu
     ./modules/programs/joplin-desktop

@@ -628,4 +628,10 @@
     github = "ALameLlama";
     githubId = 55490546;
   };
+  lunahd = {
+    name = "Miku B";
+    email = "lunab08@proton.me";
+    github = "miku4k";
+    githubId = 89653242;
+  };
 }
