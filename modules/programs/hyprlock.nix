@@ -102,9 +102,9 @@ in {
 
     importantPrefixes = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [ "$" "monitor" "size" ]
+      default = [ "$" "bezier" "monitor" "size" ]
         ++ lib.optionals cfg.sourceFirst [ "source" ];
-      example = [ "$" "monitor" "size" ];
+      example = [ "$" "bezier" "monitor" "size" ];
       description = ''
         List of prefix of attributes to source at the top of the config.
       '';
