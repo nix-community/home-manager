@@ -1,27 +1,18 @@
-{ ... }:
+{ config, ... }:
 
-let
-  shellIntegration = ''
-    function yy
-      set tmp (mktemp -t "yazi-cwd.XXXXX")
-      yazi $argv --cwd-file="$tmp"
-      if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-        builtin cd -- "$cwd"
-      end
-      rm -f -- "$tmp"
-    end
-  '';
-in {
+{
   programs.fish.enable = true;
 
   programs.yazi = {
     enable = true;
+    shellWrapperName = "yy";
     enableFishIntegration = true;
   };
 
   test.stubs.yazi = { };
 
   nmt.script = ''
-    assertFileContains home-files/.config/fish/config.fish '${shellIntegration}'
+    assertFileContent home-files/.config/fish/functions/${config.programs.yazi.shellWrapperName}.fish \
+      ${./fish-integration-expected.fish}
   '';
 }
