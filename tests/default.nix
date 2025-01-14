@@ -135,6 +135,7 @@ in import nmtSrc {
     ./modules/programs/pls
     ./modules/programs/poetry
     ./modules/programs/powerline-go
+    ./modules/programs/prismlauncher
     ./modules/programs/pubs
     ./modules/programs/pyenv
     ./modules/programs/qcal
