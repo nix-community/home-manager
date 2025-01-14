@@ -1,15 +1,12 @@
 { config, lib, pkgs, ... }:
-with lib;
-let
-
-  cfg = config.services.hypridle;
+let cfg = config.services.hypridle;
 in {
-  meta.maintainers = [ maintainers.khaneliman maintainers.fufexan ];
+  meta.maintainers = with lib.maintainers; [ khaneliman fufexan ];
 
   options.services.hypridle = {
-    enable = mkEnableOption "Hypridle, Hyprland's idle daemon";
+    enable = lib.mkEnableOption "Hypridle, Hyprland's idle daemon";
 
-    package = mkPackageOption pkgs "hypridle" { };
+    package = lib.mkPackageOption pkgs "hypridle" { };
 
     settings = lib.mkOption {
       type = with lib.types;
@@ -65,8 +62,8 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    xdg.configFile."hypr/hypridle.conf" = mkIf (cfg.settings != { }) {
+  config = lib.mkIf cfg.enable {
+    xdg.configFile."hypr/hypridle.conf" = lib.mkIf (cfg.settings != { }) {
       text = lib.hm.generators.toHyprconf {
         attrs = cfg.settings;
         inherit (cfg) importantPrefixes;
@@ -81,12 +78,12 @@ in {
         Description = "hypridle";
         After = [ config.wayland.systemd.target ];
         PartOf = [ config.wayland.systemd.target ];
-        X-Restart-Triggers = mkIf (cfg.settings != { })
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { })
           [ "${config.xdg.configFile."hypr/hypridle.conf".source}" ];
       };
 
       Service = {
-        ExecStart = "${getExe cfg.package}";
+        ExecStart = "${lib.getExe cfg.package}";
         Restart = "always";
         RestartSec = "10";
       };
