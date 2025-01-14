@@ -104,6 +104,23 @@ let
         '';
       };
 
+      saveNoDups = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Do not write duplicate entries into the history file.
+        '';
+      };
+
+      findNoDups = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Do not display a line previously found in the history
+          file.
+        '';
+      };
+
       ignoreSpace = mkOption {
         type = types.bool;
         default = true;
@@ -693,6 +710,8 @@ in
         ${if cfg.history.append then "setopt" else "unsetopt"} APPEND_HISTORY
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
         ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
+        ${if cfg.history.saveNoDups then "setopt" else "unsetopt"} HIST_SAVE_NO_DUPS
+        ${if cfg.history.findNoDups then "setopt" else "unsetopt"} HIST_FIND_NO_DUPS
         ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
