@@ -203,6 +203,23 @@ in {
                 '';
               };
 
+              accountsOrder = mkOption {
+                type = types.listOf types.str;
+                default = [ ];
+                description = ''
+                  Custom ordering of accounts in Thunderbird's folder pane.
+                  Enabled accounts that aren't listed here appear in an arbitrary
+                  order after the ordered accounts.
+                '';
+                example = ''
+                  [
+                    "account1"
+                    "account2"
+                    /* Other accounts in arbitrary order */
+                  ]
+                '';
+              };
+
               withExternalGnupg = mkOption {
                 type = types.bool;
                 default = false;
@@ -415,14 +432,24 @@ in {
           a.thunderbird.profiles == [ ]
           || any (p: p == name) a.thunderbird.profiles) enabledAccountsWithId;
 
+        orderedAccountsIds = let
+          accountsOrderIds =
+            map (a: builtins.hashString "sha256" a) profile.accountsOrder;
+          enabledAccountsIds = map (a: a.id) accounts;
+        in (lists.intersectLists enabledAccountsIds accountsOrderIds)
+        ++ (lists.subtractLists accountsOrderIds enabledAccountsIds);
+
         smtp = filter (a: a.smtp != null) accounts;
       in {
         text = mkUserJs (builtins.foldl' (a: b: a // b) { } ([
           cfg.settings
 
-          (optionalAttrs (length accounts != 0) {
-            "mail.accountmanager.accounts" =
-              concatStringsSep "," (map (a: "account_${a.id}") accounts);
+          (optionalAttrs (length orderedAccountsIds != 0) {
+            # Append the default local folder name "account1".
+            # See https://github.com/nix-community/home-manager/issues/5031.
+            "mail.accountmanager.accounts" = concatStringsSep ","
+              ((map (id: "account_${id}") orderedAccountsIds)
+                ++ [ "account1" ]);
           })
 
           (optionalAttrs (length smtp != 0) {
