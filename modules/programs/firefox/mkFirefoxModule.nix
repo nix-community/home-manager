@@ -19,7 +19,7 @@ let
   supportedPlatforms = flatten (attrVals (attrNames platforms) lib.platforms);
 
   isWrapped = versionAtLeast config.home.stateVersion "19.09"
-    && wrappedPackageName != null;
+    && wrappedPackageName != null && !isDarwin;
 
   defaultPackageName =
     if isWrapped then wrappedPackageName else unwrappedPackageName;

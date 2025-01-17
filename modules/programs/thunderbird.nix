@@ -144,11 +144,13 @@ in {
       enable = mkEnableOption "Thunderbird";
 
       package = mkOption {
-        type = types.package;
-        default = pkgs.thunderbird;
+        type = with types; nullOr package;
+        default =
+          if isDarwin then pkgs.thunderbird-unwrapped else pkgs.thunderbird;
         defaultText = literalExpression "pkgs.thunderbird";
-        example = literalExpression "pkgs.thunderbird-91";
-        description = "The Thunderbird package to use.";
+        example = literalExpression "pkgs.thunderbird";
+        description =
+          "The Thunderbird package to use. Set to `null` to disable installing Thunderbird.";
       };
 
       profileVersion = mkOption {
