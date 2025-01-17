@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 {
   meta.maintainers = [ lib.maintainers.thiagokokada ];
@@ -18,6 +18,15 @@
           make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
           otherwise the service may never be started.
         '';
+      };
+    };
+  };
+
+  config = lib.mkIf (!config.xsession.enable) {
+    systemd.user.targets.tray = {
+      Unit = {
+        Description = "Home Manager System Tray";
+        Requires = [ "graphical-session-pre.target" ];
       };
     };
   };
