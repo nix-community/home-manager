@@ -726,7 +726,8 @@ in {
           };
 
           Service = {
-            ExecStart = "${pkgs.syncthingtray-minimal}/bin/syncthingtray";
+            ExecStart =
+              "${pkgs.syncthingtray-minimal}/bin/syncthingtray --wait";
           };
 
           Install = { WantedBy = [ "graphical-session.target" ]; };
