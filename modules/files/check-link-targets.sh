@@ -33,12 +33,16 @@ for sourcePath in "$@" ; do
     elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
       # Next, try to move the file to a backup location if configured and possible
       backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-      if [[ -e "$backup" ]]; then
-        errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
-        collision=1
-      else
-        warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
-      fi
+
+      # Check for backup existence and iterate until finding an available filename
+      counter=1
+      while [[ -e "$backup" ]]; do
+        backup="$targetPath.$HOME_MANAGER_BACKUP_EXT.$counter"
+        counter=$((counter + 1))
+      done
+
+      warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
+      mv "$targetPath" "$backup"
     else
       # Fail if nothing else works
       errorEcho "Existing file '$targetPath' is in the way of '$sourcePath'"
