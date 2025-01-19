@@ -15,6 +15,8 @@ let
     mu = runTest ./standalone/mu;
     nh = runTest ./standalone/nh.nix;
     nixos-basics = runTest ./nixos/basics.nix;
+    nixos-legacy-profile-management =
+      runTest ./nixos/legacy-profile-management.nix;
     standalone-flake-basics = runTest ./standalone/flake-basics.nix;
     standalone-standard-basics = runTest ./standalone/standard-basics.nix;
   };
