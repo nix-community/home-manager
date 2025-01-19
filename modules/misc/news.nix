@@ -1946,6 +1946,7 @@ in {
           speed, features, or native UIs. Ghostty provides all three.
         '';
       }
+
       {
         time = "2025-01-04T15:00:00+00:00";
         condition = hostPlatform.isLinux;
@@ -1958,6 +1959,17 @@ in {
 
           This Home Manager module allows you to configure both wayfire itself,
           as well as wf-shell.
+        '';
+      }
+
+      {
+        time = "2025-01-06T19:11:20+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'programs.aerospace'.
+
+          AeroSpace is an i3-like tiling window manager for macOS.
+          See https://github.com/nikitabobko/AeroSpace for more.
         '';
       }
     ];
