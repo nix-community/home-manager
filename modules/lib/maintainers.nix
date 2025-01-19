@@ -658,4 +658,10 @@
     github = "ckgxrg-salt";
     githubId = 165614491;
   };
+  ipsavitsky = {
+    name = "Ilya Savitsky";
+    email = "ipsavitsky234@gmail.com";
+    github = "ipsavitsky";
+    githubId = 33558632;
+  };
 }
