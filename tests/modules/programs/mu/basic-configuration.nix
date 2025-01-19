@@ -19,6 +19,6 @@
       'if [[ ! -d "/home/hm-user/.cache/mu" || ! "$MU_SORTED_ADDRS" = "foo@example.com hm@example.com" ]]; then'
 
     assertFileContains activate \
-      'run @mu@/bin/mu init --maildir=/home/hm-user/Mail --my-address=foo@example.com --my-address=hm@example.com $VERBOSE_ARG;'
+      'run @mu@/bin/mu init --maildir=/home/hm-user/Mail --muhome "/home/hm-user/.cache/mu" --my-address=foo@example.com --my-address=hm@example.com $VERBOSE_ARG;'
   '';
 }

@@ -36,6 +36,16 @@ in {
 
       package = mkPackageOption pkgs "mu" { };
 
+      home = mkOption {
+        type = types.path;
+        default = config.xdg.cacheHome + "/mu";
+        defaultText = literalExpression ''config.xdg.cacheHome + "/mu"'';
+        example = "\${config.home.homeDirectory}/Maildir/.mu";
+        description = ''
+          Directory to store Mu's database.
+        '';
+      };
+
       # No options/config file present for mu, and program author will not be
       # adding one soon. See https://github.com/djcb/mu/issues/882 for more
       # information about this.
@@ -51,9 +61,10 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
+    home.sessionVariables.MUHOME = cfg.home;
+
     home.activation.runMuInit = let
       maildirOption = genCmdMaildir config.accounts.email.maildirBasePath;
-      dbLocation = config.xdg.cacheHome + "/mu";
       muExe = getExe cfg.package;
       gawkExe = getExe pkgs.gawk;
     in hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -62,10 +73,12 @@ in {
       # In theory, mu is the only thing that creates that directory, and it is
       # only created during the initial index.
       MU_SORTED_ADDRS=$((${muExe} info store | ${gawkExe} '/personal-address/{print $4}' | LC_ALL=C sort | paste -sd ' ') || exit 0)
-      if [[ ! -d "${dbLocation}" || ! "$MU_SORTED_ADDRS" = "${
+      if [[ ! -d "${cfg.home}" || ! "$MU_SORTED_ADDRS" = "${
         concatStringsSep " " sortedAddresses
       }" ]]; then
-        run ${muExe} init ${maildirOption} ${myAddresses} $VERBOSE_ARG;
+        run ${muExe} init ${maildirOption} --muhome "${
+          escapeShellArg cfg.home
+        }" ${myAddresses} $VERBOSE_ARG;
       fi
     '';
   };
