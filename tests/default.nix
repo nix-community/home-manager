@@ -269,6 +269,7 @@ in import nmtSrc {
     ./modules/services/mpd
     ./modules/services/mpd-mpris
     ./modules/services/mpdris2
+    ./modules/services/mpdscribble
     ./modules/services/nix-gc
     ./modules/services/ollama
     ./modules/services/osmscout-server
