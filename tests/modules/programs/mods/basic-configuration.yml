@@ -1,0 +1,7 @@
+apis:
+  ollama:
+    base-url: http://localhost:11434/api
+    models:
+      llama3.2:
+        max-input-chars: 650000
+default-model: llama3.2
