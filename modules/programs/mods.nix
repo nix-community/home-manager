@@ -5,7 +5,7 @@ let
   cfg = config.programs.mods;
   yamlFormat = pkgs.formats.yaml { };
 in {
-  meta.maintainers = [ ];
+  meta.maintainers = [ hm.maintainers.ipsavitsky ];
 
   options.programs.mods = {
     enable = mkEnableOption "mods";
