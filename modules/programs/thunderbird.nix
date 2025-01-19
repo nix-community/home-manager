@@ -37,8 +37,7 @@ let
   profilesIni = foldl recursiveUpdate {
     General = {
       StartWithLastProfile = 1;
-    } // lib.optionalAttrs (cfg.profileVersion != null) {
-      Version = cfg.profileVersion;
+      Version = 2;
     };
   } (flip map profilesWithId (profile: {
     "Profile${profile.id}" = {
@@ -149,13 +148,6 @@ in {
         defaultText = literalExpression "pkgs.thunderbird";
         example = literalExpression "pkgs.thunderbird-91";
         description = "The Thunderbird package to use.";
-      };
-
-      profileVersion = mkOption {
-        internal = true;
-        type = types.nullOr types.ints.unsigned;
-        default = if isDarwin then null else 2;
-        description = "profile version, set null for nix-darwin";
       };
 
       profiles = mkOption {
@@ -299,11 +291,11 @@ in {
         type = types.bool;
         default = true;
         example = false;
-        visible = isDarwin;
+        visible = false;
         readOnly = !isDarwin;
         description = ''
-          Warn to set environment variables before using this module. Only
-          relevant on Darwin.
+          Using programs.thunderbird.darwinSetupWarning is deprecated. The
+          module is compatible with all Thunderbird installations.
         '';
       };
     };
@@ -389,13 +381,6 @@ in {
       })
     ];
 
-    warnings = optional (isDarwin && cfg.darwinSetupWarning) ''
-      Thunderbird packages are not yet supported on Darwin. You can still use
-      this module to manage your accounts and profiles by setting
-      'programs.thunderbird.package' to a dummy value, for example using
-      'pkgs.runCommand'.
-    '';
-
     home.packages = [ cfg.package ]
       ++ optional (any (p: p.withExternalGnupg) (attrValues cfg.profiles))
       pkgs.gpgme;
@@ -456,5 +441,11 @@ in {
           force = true;
         };
     }));
+
+    # Mimic nixpkgs package environment for read-only profiles.ini management
+    home.sessionVariables = {
+      MOZ_LEGACY_PROFILES = 1;
+      MOZ_ALLOW_DOWNGRADE = 1;
+    };
   };
 }
