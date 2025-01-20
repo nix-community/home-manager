@@ -1946,6 +1946,7 @@ in {
           speed, features, or native UIs. Ghostty provides all three.
         '';
       }
+
       {
         time = "2025-01-04T15:00:00+00:00";
         condition = hostPlatform.isLinux;
@@ -1958,6 +1959,15 @@ in {
 
           This Home Manager module allows you to configure both wayfire itself,
           as well as wf-shell.
+        '';
+      }
+
+      {
+        time = "2025-01-08T15:43:53+00:00";
+        message = ''
+          A new module is available: 'programs.inori'.
+
+          inori is a client for the Music Player Daemon (MPD)
         '';
       }
     ];
