@@ -61,7 +61,7 @@ let
       Default = if profile.isDefault then 1 else 0;
     }) // {
       General = {
-        StartWithLastProfile = 1;
+        StartWithLastProfile = 0;
       } // lib.optionalAttrs (cfg.profileVersion != null) {
         Version = cfg.profileVersion;
       };
