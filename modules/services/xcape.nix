@@ -60,11 +60,11 @@ in {
       Unit = mkMerge [
         {
           Description = "xcape";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         }
         (mkIf (config.home.keyboard != null && config.home.keyboard != { }) {
-          After = [ "graphical-session-pre.target" "setxkbmap.service" ];
+          After = [ "graphical-session.target" "setxkbmap.service" ];
         })
       ];
 

@@ -36,7 +36,7 @@ in {
     systemd.user.services.nextcloud-client = {
       Unit = {
         Description = "Nextcloud Client";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
