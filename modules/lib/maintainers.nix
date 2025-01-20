@@ -634,4 +634,10 @@
     github = "ALameLlama";
     githubId = 55490546;
   };
+  ipsavitsky = {
+    name = "Ilya Savitsky";
+    email = "ipsavitsky234@gmail.com";
+    github = "ipsavitsky";
+    githubId = 33558632;
+  };
 }
