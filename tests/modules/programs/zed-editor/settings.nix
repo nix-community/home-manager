@@ -31,5 +31,6 @@
   in ''
     assertFileExists "home-files/${settingsPath}"
     assertFileContent "home-files/${settingsPath}" "${expectedContent}"
+    assertFileExists "home-files/.zed_server/zed-remote-server-stable-${config.programs.zed-editor.package.version}"
   '';
 }

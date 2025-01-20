@@ -80,26 +80,49 @@ in {
           Use the name of a repository in the [extension list](https://github.com/zed-industries/extensions/tree/main/extensions).
         '';
       };
+
+      installRemoteServer = mkOption {
+        type = types.bool;
+        default = true;
+        example = false;
+        description = ''
+          Whether to symlink the Zed's remote server binary to the expected location.
+          This allows remotely connecting to this system from a distant Zed client.
+
+          For more information, consult [this section of the wiki](https://wiki.nixos.org/wiki/Zed#Remote_Server).
+        '';
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = if cfg.extraPackages != [ ] then
-      [
-        (pkgs.symlinkJoin {
-          name =
-            "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
-          paths = [ cfg.package ];
-          preferLocalBuild = true;
-          nativeBuildInputs = [ pkgs.makeWrapper ];
-          postBuild = ''
-            wrapProgram $out/bin/zeditor \
-              --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
-          '';
-        })
-      ]
-    else
-      [ cfg.package ];
+    home = {
+      packages = if cfg.extraPackages != [ ] then
+        [
+          (pkgs.symlinkJoin {
+            name = "${lib.getName cfg.package}-wrapped-${
+                lib.getVersion cfg.package
+              }";
+            paths = [ cfg.package ];
+            preferLocalBuild = true;
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/zeditor \
+                --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+            '';
+          })
+        ]
+      else
+        [ cfg.package ];
+
+      file = lib.optionalAttrs (cfg.installRemoteServer) (let
+        inherit (cfg.package) version remote_server;
+        binary_name = "zed-remote-server-stable-${version}";
+      in {
+        ".zed_server/${binary_name}".source =
+          lib.getExe' remote_server binary_name;
+      });
+    };
 
     xdg.configFile."zed/settings.json" = (mkIf (mergedSettings != { }) {
       source = jsonFormat.generate "zed-user-settings" mergedSettings;
