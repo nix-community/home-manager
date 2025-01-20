@@ -274,13 +274,52 @@ in {
               Evaluated value: `${value}`
             '';
           }) cfg.${opt};
-    in (mkAsserts "flavors" [
+
+        allCustomKeybinds = pipe cfg.keymap [ (collect isList) (concatLists)];
+        seqKeysStructured = remainingKeybinds: with lib; let
+          currentKeys = pipe remainingKeybinds [
+            (catAttrs "remainingSequence")
+            (filter (x: x != []))
+            (map head)
+          ];
+          hasMatchingKey = key: keybind:
+            keybind.remainingSequence != [] &&
+            head keybind.remainingSequence == key;        
+          hasNoRemainingKeys= keybind:
+            keybind.remainingSequence == [];        
+          dropCurrentKey = key: drop 1;
+        in
+          # Keybinds which have yet more keys in the sequence
+          (genAttrs currentKeys (key: pipe remainingKeybinds [
+          (filter (hasMatchingKey key))
+          (map (dropCurrentKey key))
+          seqKeysStructured
+        ])) // {
+          # If any keybinds end here, put all remaining keybinds as conflicting
+          "_" = optionals (any hasNoRemainingKeys remainingKeybinds) remainingKeybinds;
+        };
+        # list of (list of keybinds with identical sequence)
+        # e.g. [ [["a" "b"] ["a" "b"]] ["c"] ] has one conflict for "a" then "b" but no conflict for "c"
+        potentialConflicts = collect isList (seqKeysStructured allCustomBoundKeySequences);
+        conflicts = filter (x: length x != 1) potentialConflicts;
+    in concatLists [
+      (mkAsserts "flavors" [
       "flavor.toml"
       "tmtheme.xml"
       "README.md"
       "preview.png"
       "LICENSE"
       "LICENSE-tmtheme"
-    ]) ++ (mkAsserts "plugins" [ "init.lua" ]);
+    ])
+    (mkAsserts "plugins" [ "init.lua" ])
+    {
+      assertion = conflicts == [];
+      message = ''
+        There are conflicting keybinds!
+
+        ${toString conflicts}
+      '';
+    }
+    ];
   };
 }
