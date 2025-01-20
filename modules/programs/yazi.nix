@@ -274,13 +274,58 @@ in {
               Evaluated value: `${value}`
             '';
           }) cfg.${opt};
-    in (mkAsserts "flavors" [
+
+        mkAssertNoConflictedKeybinds = keymapSection: let
+        allCustomKeybinds = pipe keymapSection [
+          (collect isList)
+          (concatLists)
+          (map (x: setAttr x "remainingSequence" x.on))
+        ];
+        seqKeysStructured = remainingKeybinds: with lib; let
+          currentKeys = pipe remainingKeybinds [
+            (catAttrs "remainingSequence")
+            (filter (x: x != []))
+            (map head)
+          ];
+          hasMatchingKey = key: keybind:
+            keybind.remainingSequence != [] &&
+            head keybind.remainingSequence == key;
+          hasNoRemainingKeys= keybind:
+            keybind.remainingSequence == [];
+          dropCurrentKey = keybind: setAttr keybind "remainingSequence" (drop 1 keybind.remainingSequence);
+        in
+          # Keybinds which have yet more keys in the sequence
+          (genAttrs currentKeys (key: pipe remainingKeybinds [
+          (filter (hasMatchingKey key))
+          (map dropCurrentKey)
+          seqKeysStructured
+        ])) // {
+          # If any keybinds end here, put all remaining keybinds as conflicting
+          "_" = optionals (any hasNoRemainingKeys remainingKeybinds) remainingKeybinds;
+        };
+        # list of (list of keybinds with identical sequence)
+        # e.g. [ [["a" "b"] ["a" "b"]] ["c"] ] has one conflict for "a" then "b" but no conflict for "c"
+        potentialConflicts = collect isList (seqKeysStructured allCustomKeybinds);
+        conflicts = filter (x: length x != 1) potentialConflicts;
+      in {
+      assertion = conflicts == [];
+      message = ''
+        There are conflicting keybinds!
+        ${lib.trace conflicts ""}
+      '';
+    };
+    in concatLists [
+      (mkAsserts "flavors" [
       "flavor.toml"
       "tmtheme.xml"
       "README.md"
       "preview.png"
       "LICENSE"
       "LICENSE-tmtheme"
-    ]) ++ (mkAsserts "plugins" [ "init.lua" ]);
+    ])
+    (mkAsserts "plugins" [ "init.lua" ])
+    # Assert uniqueness for each layer independently
+    (mapAttrsToList (_: mkAssertNoConflictedKeybinds) cfg.keymap)
+    ];
   };
 }
