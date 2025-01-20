@@ -275,7 +275,12 @@ in {
             '';
           }) cfg.${opt};
 
-        allCustomKeybinds = pipe cfg.keymap [ (collect isList) (concatLists)];
+        mkAssertNoConflictedKeybinds = keymapSection: let
+        allCustomKeybinds = pipe keymapSection [
+          (collect isList)
+          (concatLists)
+          (map (x: setAttr x "remainingSequence" x.on))
+        ];
         seqKeysStructured = remainingKeybinds: with lib; let
           currentKeys = pipe remainingKeybinds [
             (catAttrs "remainingSequence")
@@ -284,15 +289,15 @@ in {
           ];
           hasMatchingKey = key: keybind:
             keybind.remainingSequence != [] &&
-            head keybind.remainingSequence == key;        
+            head keybind.remainingSequence == key;
           hasNoRemainingKeys= keybind:
-            keybind.remainingSequence == [];        
-          dropCurrentKey = key: drop 1;
+            keybind.remainingSequence == [];
+          dropCurrentKey = keybind: setAttr keybind "remainingSequence" (drop 1 keybind.remainingSequence);
         in
           # Keybinds which have yet more keys in the sequence
           (genAttrs currentKeys (key: pipe remainingKeybinds [
           (filter (hasMatchingKey key))
-          (map (dropCurrentKey key))
+          (map dropCurrentKey)
           seqKeysStructured
         ])) // {
           # If any keybinds end here, put all remaining keybinds as conflicting
@@ -300,8 +305,15 @@ in {
         };
         # list of (list of keybinds with identical sequence)
         # e.g. [ [["a" "b"] ["a" "b"]] ["c"] ] has one conflict for "a" then "b" but no conflict for "c"
-        potentialConflicts = collect isList (seqKeysStructured allCustomBoundKeySequences);
+        potentialConflicts = collect isList (seqKeysStructured allCustomKeybinds);
         conflicts = filter (x: length x != 1) potentialConflicts;
+      in {
+      assertion = conflicts == [];
+      message = ''
+        There are conflicting keybinds!
+        ${lib.trace conflicts ""}
+      '';
+    };
     in concatLists [
       (mkAsserts "flavors" [
       "flavor.toml"
@@ -312,14 +324,8 @@ in {
       "LICENSE-tmtheme"
     ])
     (mkAsserts "plugins" [ "init.lua" ])
-    {
-      assertion = conflicts == [];
-      message = ''
-        There are conflicting keybinds!
-
-        ${toString conflicts}
-      '';
-    }
+    # Assert uniqueness for each layer independently
+    (mapAttrsToList (_: mkAssertNoConflictedKeybinds) cfg.keymap)
     ];
   };
 }
