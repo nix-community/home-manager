@@ -132,6 +132,15 @@
     github = "Janik-Haag";
     githubId = 80165193;
   };
+  jess = {
+    name = "Jessica";
+    email = "jess+nix@jessie.cafe";
+    githubId = 43591752;
+    keys = [{
+      longkeyid = "rsa3072/0xBA3350686C918606";
+      fingerprint = "8092 3BD1 ECD0 E436 671D  C8E9 BA33 5068 6C91 8606";
+    }];
+  };
   jkarlson = {
     email = "jekarlson@gmail.com";
     github = "jkarlson";
