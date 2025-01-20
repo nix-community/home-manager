@@ -5,11 +5,18 @@ with lib;
 let
   im = config.i18n.inputMethod;
   cfg = im.fcitx5;
-  fcitx5Package =
-    pkgs.libsForQt5.fcitx5-with-addons.override { inherit (cfg) addons; };
+  fcitx5Package = cfg.fcitx5-with-addons.override { inherit (cfg) addons; };
 in {
   options = {
     i18n.inputMethod.fcitx5 = {
+      fcitx5-with-addons = mkOption {
+        type = types.package;
+        default = pkgs.libsForQt5.fcitx5-with-addons;
+        example = literalExpression "pkgs.kdePackages.fcitx5-with-addons";
+        description = ''
+          The fcitx5 package to use.
+        '';
+      };
       addons = mkOption {
         type = with types; listOf package;
         default = [ ];
