@@ -26,6 +26,20 @@ with lib;
           large = "dark_yellow";
         };
       };
+      icons = {
+        name = {
+          ".trash" = "";
+          ".cargo" = "";
+        };
+        extension = {
+          "go" = "";
+          "hs" = "";
+        };
+        filetype = {
+          "dir" = "📂";
+          "file" = "📄";
+        };
+      };
     };
 
     test.stubs.lsd = { };
@@ -33,12 +47,16 @@ with lib;
     nmt.script = ''
       assertFileExists home-files/.config/lsd/config.yaml
       assertFileExists home-files/.config/lsd/colors.yaml
+      assertFileExists home-files/.config/lsd/icons.yaml
       assertFileContent \
         home-files/.config/lsd/config.yaml \
         ${./example-settings-expected.yaml}
       assertFileContent \
         home-files/.config/lsd/colors.yaml \
         ${./example-colors-expected.yaml}
+      assertFileContent \
+        home-files/.config/lsd/icons.yaml \
+        ${./example-icons-expected.yaml}
     '';
   };
 }
