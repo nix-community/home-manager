@@ -1960,6 +1960,18 @@ in {
           as well as wf-shell.
         '';
       }
+      {
+        time = "2025-01-21T01:00:00+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          The Firefox module now provides a
+          `programs.firefox.profiles.<name>.preConfig` option.
+
+          It allows extra prefernces to be added to `user.js` *before* the options
+          specified in `programs.firefox.profiles.<name>.settings`, so that
+          they can be overwritten.
+        '';
+      }
     ];
   };
 }
