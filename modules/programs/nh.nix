@@ -70,9 +70,7 @@ in {
         Service = {
           Type = "oneshot";
           ExecStart =
-            "exec ${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
-          Environment =
-            [ "PATH=$PATH:${lib.makeBinPath [ config.nix.package ]}" ];
+            "${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
         };
       };
 
