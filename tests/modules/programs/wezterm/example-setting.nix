@@ -69,9 +69,27 @@
     '';
     expectedColorScheme = builtins.toFile "test.toml" ''
       [colors]
-      ansi = ["#222222", "#D14949", "#48874F", "#AFA75A", "#599797", "#8F6089", "#5C9FA8", "#8C8C8C"]
+      ansi = [
+          "#222222",
+          "#D14949",
+          "#48874F",
+          "#AFA75A",
+          "#599797",
+          "#8F6089",
+          "#5C9FA8",
+          "#8C8C8C",
+      ]
       background = "#1B1B1B"
-      brights = ["#444444", "#FF6D6D", "#89FF95", "#FFF484", "#97DDFF", "#FDAAF2", "#85F5DA", "#E9E9E9"]
+      brights = [
+          "#444444",
+          "#FF6D6D",
+          "#89FF95",
+          "#FFF484",
+          "#97DDFF",
+          "#FDAAF2",
+          "#85F5DA",
+          "#E9E9E9",
+      ]
       cursor_bg = "#BEAF8A"
       cursor_border = "#BEAF8A"
       cursor_fg = "#1B1B1B"
