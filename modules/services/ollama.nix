@@ -76,7 +76,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    systemd.user.services.ollama = {
+    systemd.user.services.ollama = mkIf pkgs.stdenv.isLinux {
       Unit = {
         Description = "Server for local large language models";
         After = [ "network.target" ];
@@ -90,6 +90,21 @@ in {
       };
 
       Install = { WantedBy = [ "default.target" ]; };
+    };
+
+    launchd.agents.ollama = mkIf pkgs.stdenv.isDarwin {
+      enable = true;
+      config = {
+        ProgramArguments = [ "${getExe ollamaPackage}" "serve" ];
+        EnvironmentVariables = cfg.environmentVariables // {
+          OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
+        };
+        KeepAlive = {
+          Crashed = true;
+          SuccessfulExit = false;
+        };
+        ProcessType = "Background";
+      };
     };
 
     home.packages = [ ollamaPackage ];
