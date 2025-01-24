@@ -52,31 +52,36 @@ let
         };
 
       imapConfig = lib.optionalAttrs imapEnabled (compactAttrs {
-        backend = "imap";
-        imap.host = account.imap.host;
-        imap.port = account.imap.port;
-        imap.encryption = mkEncryptionConfig account.imap.tls;
-        imap.login = account.userName;
-        imap.passwd.cmd = builtins.concatStringsSep " " account.passwordCommand;
+        backend.type = "imap";
+        backend.host = account.imap.host;
+        backend.port = account.imap.port;
+        backend.encryption.type = mkEncryptionConfig account.imap.tls;
+        backend.login = account.userName;
+        backend.auth.type = "password";
+        backend.auth.cmd =
+          builtins.concatStringsSep " " account.passwordCommand;
       });
 
       maildirConfig = lib.optionalAttrs maildirEnabled (compactAttrs {
-        backend = "maildir";
+        backend.type = "maildir";
         maildir.root-dir = account.maildir.absPath;
       });
 
       notmuchConfig = lib.optionalAttrs notmuchEnabled (compactAttrs {
-        backend = "notmuch";
+        backend.type = "notmuch";
         notmuch.database-path = maildirBasePath;
       });
 
       smtpConfig = lib.optionalAttrs (!isNull account.smtp) (compactAttrs {
-        message.send.backend = "smtp";
-        smtp.host = account.smtp.host;
-        smtp.port = account.smtp.port;
-        smtp.encryption = mkEncryptionConfig account.smtp.tls;
-        smtp.login = account.userName;
-        smtp.passwd.cmd = builtins.concatStringsSep " " account.passwordCommand;
+        message.send.backend.type = "smtp";
+        message.send.backend.host = account.smtp.host;
+        message.send.backend.port = account.smtp.port;
+        message.send.backend.encryption.type =
+          mkEncryptionConfig account.smtp.tls;
+        message.send.backend.auth.type = "password";
+        message.send.backend.login = account.userName;
+        message.send.backend.auth.cmd =
+          builtins.concatStringsSep " " account.passwordCommand;
       });
 
       sendmailConfig =
