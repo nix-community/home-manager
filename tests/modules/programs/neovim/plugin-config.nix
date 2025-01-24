@@ -25,7 +25,7 @@ with lib;
       vimout=$(mktemp)
       echo "redir >> /dev/stdout | echo g:hmExtraConfig | echo g:hmPlugins | redir END" \
         | ${pkgs.neovim}/bin/nvim -es -u "$TESTED/home-files/.config/nvim/init.lua" \
-        > "$vimout"
+        > "$vimout" || true
       assertFileContains "$vimout" "HM_EXTRA_CONFIG"
       assertFileContains "$vimout" "HM_PLUGINS_CONFIG"
     '';
