@@ -29,10 +29,16 @@ through
 $ nix-shell --pure tests -A run.alacritty-empty-settings
 ```
 
-However, those invocations will impurely source the system's nixpkgs,
-and may cause failures. To run against the nixpkgs from the flake.lock,
+However, those invocations will impurely source the system's Nixpkgs,
+and may cause failures. To run against the Nixpkgs from the `flake.lock` file,
 use instead e.g.
 
 ``` shell
-$ nix develop --ignore-environment .#all
+$ nix build --reference-lock-file flake.lock ./tests#test-all
+```
+
+or
+
+``` shell
+$ nix build --reference-lock-file flake.lock ./tests#test-alacritty-empty-settings
 ```
