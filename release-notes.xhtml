@@ -30,7 +30,10 @@ section is therefore not final.</p><div class="section"> <div class="titlepage">
 <code class="literal">true</code>, meaning that services will automatically be restarted as
 needed when activating a configuration.</p><p>Further, the <code class="literal">&quot;legacy&quot;</code> alternative has been removed and will now
 result in an evaluation error if used.</p><p>The <code class="literal">&quot;suggest&quot;</code> alternative will remain for a while longer but may
-also be deprecated for removal in the future.</p></li></ul></div>
+also be deprecated for removal in the future.</p></li><li class="listitem"><p>The Home Manager test suite has been removed from the main Nix Flake
+since it caused unnecessary evaluations and downloads. Instead the
+tests are available through a Nix Flake file inside the <code class="literal">tests</code>
+directory. See <a class="xref" href="index.xhtml#sec-tests" title="Tests" >the section called “Tests”</a> for example commands.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.05-state-version-changes" class="title" style="clear: both">State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
 &quot;25.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>No changes.</p></li></ul></div>

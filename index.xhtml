@@ -879,9 +879,10 @@ functions available in test scripts, you can look at NMT’s
 </code></pre><p>in the project root. List all test cases through</p><pre><code class="programlisting  shell">$ nix-shell --pure tests -A list
 </code></pre><p>and run an individual test, for example <code class="literal">alacritty-empty-settings</code>,
 through</p><pre><code class="programlisting  shell">$ nix-shell --pure tests -A run.alacritty-empty-settings
-</code></pre><p>However, those invocations will impurely source the system’s nixpkgs,
-and may cause failures. To run against the nixpkgs from the flake.lock,
-use instead e.g.</p><pre><code class="programlisting  shell">$ nix develop --ignore-environment .#all
+</code></pre><p>However, those invocations will impurely source the system’s Nixpkgs,
+and may cause failures. To run against the Nixpkgs from the <code class="literal">flake.lock</code> file,
+use instead e.g.</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock ./tests#test-all
+</code></pre><p>or</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock ./tests#test-alacritty-empty-settings
 </code></pre>
 </div>
 </div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 id="ch-3rd-party" class="title" >Third-Party Tools and Extensions   </h1>  </div> </div></div><div class="partintro"><p>Here is a collection of tools and extensions that relate to Home
