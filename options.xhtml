@@ -3401,7 +3401,7 @@ boolean</p>
 </dt>
 <dd>
 <p>Himalaya CLI configuration for this email account.
-See <a class="link" href="https://pimalaya.org/himalaya/cli/latest/configuration/index.html#account-configuration"  target="_top">https://pimalaya.org/himalaya/cli/latest/configuration/index.html#account-configuration</a> for supported values.</p>
+See <a class="link" href="https://github.com/pimalaya/himalaya/blob/master/config.sample.toml"  target="_top">https://github.com/pimalaya/himalaya/blob/master/config.sample.toml</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 TOML value</p>
@@ -27715,7 +27715,7 @@ package</p>
 </dt>
 <dd>
 <p>Himalaya CLI global configuration.
-See <a class="link" href="https://pimalaya.org/himalaya/cli/latest/configuration/index.html#global-configuration"  target="_top">https://pimalaya.org/himalaya/cli/latest/configuration/index.html#global-configuration</a> for supported values.</p>
+See <a class="link" href="https://github.com/pimalaya/himalaya/blob/master/config.sample.toml"  target="_top">https://github.com/pimalaya/himalaya/blob/master/config.sample.toml</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 TOML value</p>
@@ -66059,91 +66059,6 @@ null or string or (positive integer, meaning &gt;0)</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/gromit-mpx.nix" target="_top">
 &lt;home-manager/modules/services/gromit-mpx.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.himalaya-watch.enable"></a><a class="term" href="options.xhtml#opt-services.himalaya-watch.enable"><code class="option">services.himalaya-watch.enable</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether to enable the email client Himalaya CLI envelopes watcher service.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix" target="_top">
-&lt;home-manager/modules/programs/himalaya.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.himalaya-watch.environment"></a><a class="term" href="options.xhtml#opt-services.himalaya-watch.environment"><code class="option">services.himalaya-watch.environment</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Extra environment variables to be exported in the service.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-attribute set of string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">{ }</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  &quot;PASSWORD_STORE_DIR&quot; = &quot;~/.password-store&quot;;
-}
-
-</code></pre>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix" target="_top">
-&lt;home-manager/modules/programs/himalaya.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.himalaya-watch.settings.account"></a><a class="term" href="options.xhtml#opt-services.himalaya-watch.settings.account"><code class="option">services.himalaya-watch.settings.account</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Name of the account the watcher should be started for.
-If no account is given, the default one is used.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;personal&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix" target="_top">
-&lt;home-manager/modules/programs/himalaya.nix&gt;
 </a></code>
 </td></tr>
 </table>
