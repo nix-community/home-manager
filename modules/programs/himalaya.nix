@@ -1,12 +1,14 @@
 { config, lib, pkgs, ... }:
 
+with lib;
+
 let
   # aliases
   inherit (config.programs) himalaya;
   tomlFormat = pkgs.formats.toml { };
 
   # attrs util that removes entries containing a null value
-  compactAttrs = lib.filterAttrs (_: val: !isNull val);
+  compactAttrs = filterAttrs (_: val: !isNull val);
 
   # needed for notmuch config, because the DB is here, and not in each
   # account's dir
@@ -35,7 +37,7 @@ let
         email = account.address;
         display-name = account.realName;
         default = account.primary;
-        folder.alias = {
+        folder.aliases = {
           inbox = account.folders.inbox;
           sent = account.folders.sent;
           drafts = account.folders.drafts;
@@ -44,48 +46,53 @@ let
       };
 
       signatureConfig =
-        lib.optionalAttrs (account.signature.showSignature == "append") {
+        optionalAttrs (account.signature.showSignature == "append") {
           # TODO: signature cannot be attached yet
-          # https://todo.sr.ht/~soywod/pimalaya/27
+          # https://github.com/pimalaya/himalaya/issues/534
           signature = account.signature.text;
           signature-delim = account.signature.delimiter;
         };
 
-      imapConfig = lib.optionalAttrs imapEnabled (compactAttrs {
-        backend = "imap";
-        imap.host = account.imap.host;
-        imap.port = account.imap.port;
-        imap.encryption = mkEncryptionConfig account.imap.tls;
-        imap.login = account.userName;
-        imap.passwd.cmd = builtins.concatStringsSep " " account.passwordCommand;
+      imapConfig = optionalAttrs imapEnabled (compactAttrs {
+        backend.type = "imap";
+        backend.host = account.imap.host;
+        backend.port = account.imap.port;
+        backend.encryption.type = mkEncryptionConfig account.imap.tls;
+        backend.login = account.userName;
+        backend.auth.type = "password";
+        backend.auth.cmd =
+          builtins.concatStringsSep " " account.passwordCommand;
       });
 
-      maildirConfig = lib.optionalAttrs maildirEnabled (compactAttrs {
-        backend = "maildir";
-        maildir.root-dir = account.maildir.absPath;
+      maildirConfig = optionalAttrs maildirEnabled (compactAttrs {
+        backend.type = "maildir";
+        backend.root-dir = account.maildir.absPath;
       });
 
-      notmuchConfig = lib.optionalAttrs notmuchEnabled (compactAttrs {
-        backend = "notmuch";
-        notmuch.database-path = maildirBasePath;
+      notmuchConfig = optionalAttrs notmuchEnabled (compactAttrs {
+        backend.type = "notmuch";
+        backend.db-path = maildirBasePath;
       });
 
-      smtpConfig = lib.optionalAttrs (!isNull account.smtp) (compactAttrs {
-        message.send.backend = "smtp";
-        smtp.host = account.smtp.host;
-        smtp.port = account.smtp.port;
-        smtp.encryption = mkEncryptionConfig account.smtp.tls;
-        smtp.login = account.userName;
-        smtp.passwd.cmd = builtins.concatStringsSep " " account.passwordCommand;
+      smtpConfig = optionalAttrs (!isNull account.smtp) (compactAttrs {
+        message.send.backend.type = "smtp";
+        message.send.backend.host = account.smtp.host;
+        message.send.backend.port = account.smtp.port;
+        message.send.backend.encryption.type =
+          mkEncryptionConfig account.smtp.tls;
+        message.send.backend.login = account.userName;
+        message.send.backend.auth.type = "password";
+        message.send.backend.auth.cmd =
+          builtins.concatStringsSep " " account.passwordCommand;
       });
 
       sendmailConfig =
-        lib.optionalAttrs (isNull account.smtp && !isNull account.msmtp) {
-          sender = "sendmail";
-          sendmail.cmd = "${pkgs.msmtp}/bin/msmtp";
+        optionalAttrs (isNull account.smtp && !isNull account.msmtp) {
+          message.send.backend.type = "sendmail";
+          message.send.backend.cmd = getExe pkgs.msmtp;
         };
 
-      config = lib.attrsets.mergeAttrsList [
+      config = attrsets.mergeAttrsList [
         globalConfig
         signatureConfig
         imapConfig
@@ -95,65 +102,49 @@ let
         sendmailConfig
       ];
 
-    in lib.recursiveUpdate config account.himalaya.settings;
+    in recursiveUpdate config account.himalaya.settings;
 
 in {
-  meta.maintainers = with lib.hm.maintainers; [ soywod toastal ];
+  meta.maintainers = with hm.maintainers; [ soywod toastal ];
+
+  imports = [
+    (mkRemovedOptionModule [ "services" "himalaya-watch" "enable" ] ''
+      services.himalaya-watch has been removed.
+
+      The watch feature moved away from Himalaya scope, and resides
+      now in its own project called Mirador. Once the v1 released, the
+      service will land back in nixpkgs and home-manager.
+
+      See <https://github.com/pimalaya/mirador>.
+    '')
+  ];
 
   options = {
     programs.himalaya = {
-      enable = lib.mkEnableOption "the email client Himalaya CLI";
-      package = lib.mkPackageOption pkgs "himalaya" { };
-      settings = lib.mkOption {
-        type = lib.types.submodule { freeformType = tomlFormat.type; };
+      enable = mkEnableOption "the email client Himalaya CLI";
+      package = mkPackageOption pkgs "himalaya" { };
+      settings = mkOption {
+        type = types.submodule { freeformType = tomlFormat.type; };
         default = { };
         description = ''
           Himalaya CLI global configuration.
-          See <https://pimalaya.org/himalaya/cli/latest/configuration/index.html#global-configuration> for supported values.
+          See <https://github.com/pimalaya/himalaya/blob/master/config.sample.toml> for supported values.
         '';
       };
     };
 
-    services.himalaya-watch = {
-      enable = lib.mkEnableOption
-        "the email client Himalaya CLI envelopes watcher service";
-
-      environment = lib.mkOption {
-        type = with lib.types; attrsOf str;
-        default = { };
-        example = lib.literalExpression ''
-          {
-            "PASSWORD_STORE_DIR" = "~/.password-store";
-          }
-        '';
-        description = ''
-          Extra environment variables to be exported in the service.
-        '';
-      };
-
-      settings.account = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        example = "personal";
-        description = ''
-          Name of the account the watcher should be started for.
-          If no account is given, the default one is used.
-        '';
-      };
-    };
-
-    accounts.email.accounts = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.submodule {
+    accounts.email.accounts = mkOption {
+      type = types.attrsOf (types.submodule {
         options.himalaya = {
-          enable = lib.mkEnableOption
+          enable = mkEnableOption
             "the email client Himalaya CLI for this email account";
 
-          settings = lib.mkOption {
-            type = lib.types.submodule { freeformType = tomlFormat.type; };
+          settings = mkOption {
+            type = types.submodule { freeformType = tomlFormat.type; };
             default = { };
             description = ''
               Himalaya CLI configuration for this email account.
-              See <https://pimalaya.org/himalaya/cli/latest/configuration/index.html#account-configuration> for supported values.
+              See <https://github.com/pimalaya/himalaya/blob/master/config.sample.toml> for supported values.
             '';
           };
         };
@@ -161,40 +152,28 @@ in {
     };
   };
 
-  config = lib.mkIf himalaya.enable {
+  config = mkIf himalaya.enable {
     home.packages = [ himalaya.package ];
 
-    xdg.configFile."himalaya/config.toml".source = let
-      enabledAccounts = lib.filterAttrs (_: account: account.himalaya.enable)
-        config.accounts.email.accounts;
-      accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
-      globalConfig = compactAttrs himalaya.settings;
-      allConfig = globalConfig // { accounts = accountsConfig; };
-    in tomlFormat.generate "himalaya-config.toml" allConfig;
-    systemd.user.services = let
-      inherit (config.services.himalaya-watch) enable environment settings;
-      optionalArg = key:
-        if (key ? settings && !isNull settings."${key}") then
-          [ "--${key} ${settings."${key}"}" ]
-        else
-          [ ];
-    in {
-      himalaya-watch = lib.mkIf enable {
-        Unit = {
-          Description = "Email client Himalaya CLI envelopes watcher service";
-          After = [ "network.target" ];
-        };
-        Install = { WantedBy = [ "default.target" ]; };
-        Service = {
-          ExecStart = lib.concatStringsSep " "
-            ([ "${himalaya.package}/bin/himalaya" "envelopes" "watch" ]
-              ++ optionalArg "account");
-          ExecSearchPath = "/bin";
-          Environment =
-            lib.mapAttrsToList (key: val: "${key}=${val}") environment;
-          Restart = "always";
-          RestartSec = 10;
-        };
+    xdg = {
+      configFile."himalaya/config.toml".source = let
+        enabledAccounts = filterAttrs (_: account: account.himalaya.enable)
+          config.accounts.email.accounts;
+        accountsConfig = mapAttrs mkAccountConfig enabledAccounts;
+        globalConfig = compactAttrs himalaya.settings;
+        allConfig = globalConfig // { accounts = accountsConfig; };
+      in tomlFormat.generate "himalaya.config.toml" allConfig;
+
+      desktopEntries.himalaya = mkIf pkgs.stdenv.hostPlatform.isLinux {
+        type = "Application";
+        name = "himalaya";
+        genericName = "Email Client";
+        comment = "CLI to manage emails";
+        terminal = true;
+        exec = "himalaya %u";
+        categories = [ "Network" ];
+        mimeType = [ "x-scheme-handler/mailto" "message/rfc822" ];
+        settings = { Keywords = "email"; };
       };
     };
   };
