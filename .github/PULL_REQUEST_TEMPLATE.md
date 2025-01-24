@@ -23,7 +23,8 @@ Also make sure to read the guidelines found at
 
 - [ ] Code formatted with `./format`.
 
-- [ ] Code tested through `nix-shell --pure tests -A run.all` or `nix develop --ignore-environment .#all` using Flakes.
+- [ ] Code tested through `nix-shell --pure tests -A run.all`
+    or `nix build --reference-lock-file flake.lock ./tests#test-all` using Flakes.
 
 - [ ] Test cases updated/added. See [example](https://github.com/nix-community/home-manager/commit/f3fbb50b68df20da47f9b0def5607857fcc0d021#diff-b61a6d542f9036550ba9c401c80f00ef).
 
