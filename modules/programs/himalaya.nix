@@ -1,12 +1,14 @@
 { config, lib, pkgs, ... }:
 
+with lib;
+
 let
   # aliases
   inherit (config.programs) himalaya;
   tomlFormat = pkgs.formats.toml { };
 
   # attrs util that removes entries containing a null value
-  compactAttrs = lib.filterAttrs (_: val: !isNull val);
+  compactAttrs = filterAttrs (_: val: !isNull val);
 
   # needed for notmuch config, because the DB is here, and not in each
   # account's dir
@@ -44,14 +46,14 @@ let
       };
 
       signatureConfig =
-        lib.optionalAttrs (account.signature.showSignature == "append") {
+        optionalAttrs (account.signature.showSignature == "append") {
           # TODO: signature cannot be attached yet
           # https://github.com/pimalaya/himalaya/issues/534
           signature = account.signature.text;
           signature-delim = account.signature.delimiter;
         };
 
-      imapConfig = lib.optionalAttrs imapEnabled (compactAttrs {
+      imapConfig = optionalAttrs imapEnabled (compactAttrs {
         backend.type = "imap";
         backend.host = account.imap.host;
         backend.port = account.imap.port;
@@ -62,17 +64,17 @@ let
           builtins.concatStringsSep " " account.passwordCommand;
       });
 
-      maildirConfig = lib.optionalAttrs maildirEnabled (compactAttrs {
+      maildirConfig = optionalAttrs maildirEnabled (compactAttrs {
         backend.type = "maildir";
         backend.root-dir = account.maildir.absPath;
       });
 
-      notmuchConfig = lib.optionalAttrs notmuchEnabled (compactAttrs {
+      notmuchConfig = optionalAttrs notmuchEnabled (compactAttrs {
         backend.type = "notmuch";
         backend.db-path = maildirBasePath;
       });
 
-      smtpConfig = lib.optionalAttrs (!isNull account.smtp) (compactAttrs {
+      smtpConfig = optionalAttrs (!isNull account.smtp) (compactAttrs {
         message.send.backend.type = "smtp";
         message.send.backend.host = account.smtp.host;
         message.send.backend.port = account.smtp.port;
@@ -85,12 +87,12 @@ let
       });
 
       sendmailConfig =
-        lib.optionalAttrs (isNull account.smtp && !isNull account.msmtp) {
+        optionalAttrs (isNull account.smtp && !isNull account.msmtp) {
           message.send.backend.type = "sendmail";
-          message.send.backend.cmd = lib.getExe pkgs.msmtp;
+          message.send.backend.cmd = getExe pkgs.msmtp;
         };
 
-      config = lib.attrsets.mergeAttrsList [
+      config = attrsets.mergeAttrsList [
         globalConfig
         signatureConfig
         imapConfig
@@ -100,10 +102,10 @@ let
         sendmailConfig
       ];
 
-    in lib.recursiveUpdate config account.himalaya.settings;
+    in recursiveUpdate config account.himalaya.settings;
 
 in {
-  meta.maintainers = with lib.hm.maintainers; [ soywod toastal ];
+  meta.maintainers = with hm.maintainers; [ soywod toastal ];
 
   imports = [
     (mkRemovedOptionModule [ "services" "himalaya-watch" "enable" ] ''
@@ -119,10 +121,10 @@ in {
 
   options = {
     programs.himalaya = {
-      enable = lib.mkEnableOption "the email client Himalaya CLI";
-      package = lib.mkPackageOption pkgs "himalaya" { };
-      settings = lib.mkOption {
-        type = lib.types.submodule { freeformType = tomlFormat.type; };
+      enable = mkEnableOption "the email client Himalaya CLI";
+      package = mkPackageOption pkgs "himalaya" { };
+      settings = mkOption {
+        type = types.submodule { freeformType = tomlFormat.type; };
         default = { };
         description = ''
           Himalaya CLI global configuration.
@@ -131,14 +133,14 @@ in {
       };
     };
 
-    accounts.email.accounts = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.submodule {
+    accounts.email.accounts = mkOption {
+      type = types.attrsOf (types.submodule {
         options.himalaya = {
-          enable = lib.mkEnableOption
+          enable = mkEnableOption
             "the email client Himalaya CLI for this email account";
 
-          settings = lib.mkOption {
-            type = lib.types.submodule { freeformType = tomlFormat.type; };
+          settings = mkOption {
+            type = types.submodule { freeformType = tomlFormat.type; };
             default = { };
             description = ''
               Himalaya CLI configuration for this email account.
@@ -150,19 +152,19 @@ in {
     };
   };
 
-  config = lib.mkIf himalaya.enable {
+  config = mkIf himalaya.enable {
     home.packages = [ himalaya.package ];
 
     xdg = {
       configFile."himalaya/config.toml".source = let
-        enabledAccounts = lib.filterAttrs (_: account: account.himalaya.enable)
+        enabledAccounts = filterAttrs (_: account: account.himalaya.enable)
           config.accounts.email.accounts;
-        accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
+        accountsConfig = mapAttrs mkAccountConfig enabledAccounts;
         globalConfig = compactAttrs himalaya.settings;
         allConfig = globalConfig // { accounts = accountsConfig; };
       in tomlFormat.generate "himalaya.config.toml" allConfig;
 
-      desktopEntries.himalaya = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      desktopEntries.himalaya = mkIf pkgs.stdenv.hostPlatform.isLinux {
         type = "Application";
         name = "himalaya";
         genericName = "Email Client";
