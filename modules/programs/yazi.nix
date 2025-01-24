@@ -275,13 +275,13 @@ in {
             '';
           }) cfg.${opt};
 
-        mkAssertNoConflictedKeybinds = keymapSection: let
+      mkAssertNoConflictedKeybinds = keymapSectionName: keymapSection: let
         allCustomKeybinds = pipe keymapSection [
           (collect isList)
           (concatLists)
           (map (x: setAttr x "remainingSequence" x.on))
         ];
-        seqKeysStructured = remainingKeybinds: with lib; let
+        seqKeysStructured = remainingKeybinds: let
           currentKeys = pipe remainingKeybinds [
             (catAttrs "remainingSequence")
             (filter (x: x != []))
@@ -300,18 +300,42 @@ in {
           (map dropCurrentKey)
           seqKeysStructured
         ])) // {
-          # If any keybinds end here, put all remaining keybinds as conflicting
+          # If any keybinds end here, put all keybinds which have this one as a prefix as conflicting
           "_" = optionals (any hasNoRemainingKeys remainingKeybinds) remainingKeybinds;
         };
-        # list of (list of keybinds with identical sequence)
-        # e.g. [ [["a" "b"] ["a" "b"]] ["c"] ] has one conflict for "a" then "b" but no conflict for "c"
+        # potentialConflicts :: list of (list of keybinds with identical sequence)
+        # The following example has one conflict for keys "a" followed by "b"
+        # and a conflict for keys "c" only and keys "c" followed by "d"
+        # but no conflict for key "e"
+        # [
+        #   # First attrset of seqKeysStructured
+        #   [
+        #     { remainingSequence = []; on = ["a" "b"]; run = "escape"; ... }
+        #     { remainingSequence = []; on = ["a" "b"]; run = "quit"; ... }
+        #   ]
+        #   [
+        #     { remainingSequence = []; on = ["c"]; run = "open"; ...}
+        #   ]
+        #   # Generated in second attrset of seqKeysStructured, see "_" = ...
+        #   [
+        #     { remainingSequence = []; on = ["c" "d"]; run = "escape"; ... }
+        #     { remainingSequence = []; on = ["c"]; run = "quit"; ... }
+        #   ]
+        # ]
         potentialConflicts = collect isList (seqKeysStructured allCustomKeybinds);
-        conflicts = filter (x: length x != 1) potentialConflicts;
+        conflicts = filter (x: length x > 1) potentialConflicts;
+
+        listConflictingKeybinds = conflict: concatMapStrings (keybind: ''
+          ┃ ${builtins.toJSON (removeAttrs keybind ["remainingSequence"])}
+        '') conflict;
+        conflictsMessages = concatMapStringsSep "│\n" (c: ''
+          ┢ Conflict between:
+          ${listConflictingKeybinds c}'') conflicts; # Lack of newline intended
       in {
       assertion = conflicts == [];
-      message = ''
-        There are conflicting keybinds!
-        ${lib.trace conflicts ""}
+      message = lib.trace conflicts ''
+        There are conflicting keybinds in: `programs.yazi.keymap.${keymapSectionName}`
+        ${conflictsMessages}
       '';
     };
     in concatLists [
@@ -325,7 +349,7 @@ in {
     ])
     (mkAsserts "plugins" [ "init.lua" ])
     # Assert uniqueness for each layer independently
-    (mapAttrsToList (_: mkAssertNoConflictedKeybinds) cfg.keymap)
+    (mapAttrsToList (mkAssertNoConflictedKeybinds) cfg.keymap)
     ];
   };
 }
