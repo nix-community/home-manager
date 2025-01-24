@@ -21,6 +21,7 @@ in {
     "enableBashIntegration"
     "enableZshIntegration"
     "enableFishIntegration"
+    "enableNushellIntegration"
     "settings"
   ];
 
@@ -39,6 +40,10 @@ in {
       };
 
       enableFishIntegration = mkEnableOption "Fish Integration" // {
+        default = true;
+      };
+
+      enableNushellIntegration = mkEnableOption "Nushell Integration" // {
         default = true;
       };
 
@@ -106,6 +111,16 @@ in {
       fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
         ${getExe cfg.package} activate fish | source
       '';
+
+      nushell = mkIf cfg.enableNushellIntegration {
+        extraEnv = ''
+          let mise_path = $nu.default-config-dir | path join mise.nu
+          ^mise activate nu | save $mise_path --force
+        '';
+        extraConfig = ''
+          use ($nu.default-config-dir | path join mise.nu)
+        '';
+      };
     };
   };
 }
