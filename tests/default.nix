@@ -267,6 +267,7 @@ in import nmtSrc {
     ./modules/services/imapnotify
     ./modules/services/kanshi
     ./modules/services/lieer
+    ./modules/services/linux-wallpaperengine
     ./modules/services/mopidy
     ./modules/services/mpd
     ./modules/services/mpd-mpris

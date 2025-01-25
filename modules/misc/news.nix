@@ -1997,6 +1997,17 @@ in {
           See https://github.com/nikitabobko/AeroSpace for more.
         '';
       }
+
+      {
+        time = "2025-01-30T09:18:55+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.linux-wallpaperengine'.
+
+          Reproduce the background functionality of Wallpaper Engine on Linux
+          systems.
+        '';
+      }
     ];
   };
 }
