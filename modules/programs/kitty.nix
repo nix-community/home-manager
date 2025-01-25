@@ -50,13 +50,14 @@ let
     '';
   };
 
-  shellIntegrationDefaultOpt = {
-    default =
-      !(lib.elem "disabled" (lib.splitString " " cfg.shellIntegration.mode));
-    defaultText = literalExpression ''
-      !(elem "disabled" (splitString " " config.programs.kitty.shellIntegration.mode))
-    '';
-  };
+  mkShellIntegrationOption = option:
+    option // {
+      default =
+        !(lib.elem "disabled" (lib.splitString " " cfg.shellIntegration.mode));
+      defaultText = literalExpression ''
+        !(elem "disabled" (splitString " " config.programs.kitty.shellIntegration.mode))
+      '';
+    };
 in {
   imports = [
     (lib.mkChangedOptionModule [ "programs" "kitty" "theme" ] [
@@ -184,14 +185,14 @@ in {
         '';
       };
 
-      enableBashIntegration = mkEnableOption "Kitty Bash integration"
-        // shellIntegrationDefaultOpt;
+      enableBashIntegration = mkShellIntegrationOption
+        (lib.hm.shell.mkBashIntegrationOption { inherit config; });
 
-      enableFishIntegration = mkEnableOption "Kitty fish integration"
-        // shellIntegrationDefaultOpt;
+      enableFishIntegration = mkShellIntegrationOption
+        (lib.hm.shell.mkFishIntegrationOption { inherit config; });
 
-      enableZshIntegration = mkEnableOption "Kitty Z Shell integration"
-        // shellIntegrationDefaultOpt;
+      enableZshIntegration = mkShellIntegrationOption
+        (lib.hm.shell.mkZshIntegrationOption { inherit config; });
     };
 
     extraConfig = mkOption {

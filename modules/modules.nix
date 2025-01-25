@@ -36,6 +36,7 @@ let
     ./misc/pam.nix
     ./misc/qt.nix
     ./misc/qt/kconfig.nix
+    ./misc/shell.nix
     ./misc/specialisation.nix
     ./misc/submodule-support.nix
     ./misc/tmpfiles.nix
