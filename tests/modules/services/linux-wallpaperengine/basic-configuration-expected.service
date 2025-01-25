@@ -1,0 +1,11 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@linux-wallpaperengine@/bin/dummy --assets-dir /some/path/to/assets --clamping border --fps 6 --scaling fit --screen-root HDMI-1 --bg 12345678 --no-audio-processing --noautomute --screen-root DP-1 --silent --scaling fill --fps 12 --bg 87654321
+Restart=on-failure
+
+[Unit]
+After=graphical-session.target
+Description=Implementation of Wallpaper Engine on Linux
+PartOf=graphical-session.target
