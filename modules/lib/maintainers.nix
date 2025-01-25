@@ -640,4 +640,10 @@
     github = "ALameLlama";
     githubId = 55490546;
   };
+  ckgxrg = {
+    name = "ckgxrg";
+    email = "ckgxrg@ckgxrg.io";
+    github = "ckgxrg-salt";
+    githubId = 165614491;
+  };
 }
