@@ -39686,7 +39686,7 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>The package to use for nushell.</p>
+<p>The nushell package to use.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 package</p>
@@ -39718,12 +39718,14 @@ null or (submodule)</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{ text = &#x27;&#x27;
-    let $config = {
-      filesize_metric: false
-      table_mode: rounded
-      use_ls_colors: true
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  text = &#x27;&#x27;
+    const NU_LIB_DIRS = $NU_LIB_DIRS ++ ${
+      lib.hm.nushell.toNushell (lib.concatStringsSep &quot;:&quot; [ ./scripts ])
     }
+    $env.config.filesize_metric = false
+    $env.config.table_mode = &#x27;rounded&#x27;
+    $env.config.use_ls_colors = true
   &#x27;&#x27;;
 }
 
@@ -39885,7 +39887,6 @@ attribute set of (null or (Nushell inline value) or boolean or signed integer or
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   FOO = &quot;BAR&quot;;
   LIST_VALUE = [ &quot;foo&quot; &quot;bar&quot; ];
-  NU_LIB_DIRS = lib.concatStringsSep &quot;:&quot; [ ./scripts ];
   PROMPT_COMMAND = lib.hm.nushell.mkNushellInline &#x27;&#x27;{|| &quot;&gt; &quot;}&#x27;&#x27;;
   ENV_CONVERSIONS.PATH = {
     from_string = lib.hm.nushell.mkNushellInline &quot;{|s| $s | split row (char esep) }&quot;;
@@ -40087,6 +40088,48 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.nushell.settings"></a><a class="term" href="options.xhtml#opt-programs.nushell.settings"><code class="option">programs.nushell.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Nushell settings. These will be flattened and assigned one by one to <code class="literal">$env.config</code> to avoid overwriting the default or existing options.</p><p>For example:</p><pre><code class="programlisting nix">{
+  show_banner = false;
+  completions.external = {
+    enable = true;
+    max_results = 200;
+  };
+}
+</code></pre><p>becomes:</p><pre><code class="programlisting nushell">$env.config.completions.external.enable = true
+$env.config.completions.external.max_results = 200
+$env.config.show_banner = false
+</code></pre>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (null or (Nushell inline value) or boolean or signed integer or floating point number or string or path or (attribute set of Nushell values) or (list of Nushell values))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  history = {
+    format = &quot;sqlite&quot;;
+  };
+  show_banner = false;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix" target="_top">
+&lt;home-manager/modules/programs/nushell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.nushell.shellAliases"></a><a class="term" href="options.xhtml#opt-programs.nushell.shellAliases"><code class="option">programs.nushell.shellAliases</code>
   </a>
  </span>
@@ -40102,6 +40145,7 @@ attribute set of string</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  g = &quot;git&quot;;
   ll = &quot;ls -l&quot;;
 }
 </code></pre>
