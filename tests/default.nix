@@ -180,6 +180,7 @@ in import nmtSrc {
     ./modules/xresources
   ] ++ lib.optionals isDarwin [
     ./modules/launchd
+    ./modules/programs/aerospace
     ./modules/services/emacs-darwin
     ./modules/services/espanso-darwin
     ./modules/services/git-sync-darwin
