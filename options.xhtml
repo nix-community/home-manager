@@ -23354,10 +23354,10 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>The ghostty package to use.</p>
+<p>The ghostty package to use. Set programs.ghostty.package to null on platfroms where ghostty is not available or marked broken</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-package</p>
+null or package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.ghostty</code></p>
@@ -23411,7 +23411,7 @@ boolean</p>
 boolean</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
+<code class="literal">true</code> if programs.ghostty.package is not null</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">true</code></p>
