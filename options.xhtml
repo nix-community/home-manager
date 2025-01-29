@@ -12339,6 +12339,684 @@ attribute set of strings concatenated with “\n”</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.aerospace.enable"></a><a class="term" href="options.xhtml#opt-programs.aerospace.enable"><code class="option">programs.aerospace.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Whether to enable AeroSpace window manager…</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.package"></a><a class="term" href="options.xhtml#opt-programs.aerospace.package"><code class="option">programs.aerospace.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The aerospace package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.aerospace</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings"><code class="option">programs.aerospace.userSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>AeroSpace configuration, see
+&lt;link xlink:href=“https://nikitabobko.github.io/AeroSpace/guide#configuring-aerospace”/&gt;
+for supported values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  gaps = {
+    outer.left = 8;
+    outer.bottom = 8;
+    outer.top = 8;
+    outer.right = 8;
+  };
+  mode.main.binding = {
+    alt-h = &quot;focus left&quot;;
+    alt-j = &quot;focus down&quot;;
+    alt-k = &quot;focus up&quot;;
+    alt-l = &quot;focus right&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.enable-normalization-flatten-containers"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.enable-normalization-flatten-containers"><code class="option">programs.aerospace.userSettings.enable-normalization-flatten-containers</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Containers that have only one child are “flattened”.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.enable-normalization-opposite-orientation-for-nested-containers"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.enable-normalization-opposite-orientation-for-nested-containers"><code class="option">programs.aerospace.userSettings.enable-normalization-opposite-orientation-for-nested-containers</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Containers that nest into each other must have opposite orientations.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.accordion-padding"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.accordion-padding"><code class="option">programs.aerospace.userSettings.accordion-padding</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Padding between windows in an accordion container.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">30</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.after-login-command"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.after-login-command"><code class="option">programs.aerospace.userSettings.after-login-command</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>You can use it to add commands that run after login to macOS user session.
+‘start-at-login’ needs to be ‘true’ for ‘after-login-command’ to work.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.after-startup-command"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.after-startup-command"><code class="option">programs.aerospace.userSettings.after-startup-command</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>You can use it to add commands that run after AeroSpace startup.
+‘after-startup-command’ is run after ‘after-login-command’</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;layout tiles&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.default-root-container-layout"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.default-root-container-layout"><code class="option">programs.aerospace.userSettings.default-root-container-layout</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Default layout for the root container.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “tiles”, “accordion”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;tiles&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.default-root-container-orientation"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.default-root-container-orientation"><code class="option">programs.aerospace.userSettings.default-root-container-orientation</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Default orientation for the root container.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “horizontal”, “vertical”, “auto”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;auto&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.exec-on-workspace-change"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.exec-on-workspace-change"><code class="option">programs.aerospace.userSettings.exec-on-workspace-change</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to run every time workspace changes.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;/bin/bash&quot;
+  &quot;-c&quot;
+  &quot;sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.key-mapping.preset"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.key-mapping.preset"><code class="option">programs.aerospace.userSettings.key-mapping.preset</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Keymapping preset.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “qwerty”, “dvorak”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;qwerty&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-focus-changed"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-focus-changed"><code class="option">programs.aerospace.userSettings.on-focus-changed</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to run every time focused window or workspace changes.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;move-mouse monitor-lazy-center&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-focused-monitor-changed"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-focused-monitor-changed"><code class="option">programs.aerospace.userSettings.on-focused-monitor-changed</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to run every time focused monitor changes.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;move-mouse monitor-lazy-center&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected"><code class="option">programs.aerospace.userSettings.on-window-detected</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to run every time a new window is detected with optional conditions.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    check-further-callbacks = false;
+    if = {
+      app-id = &quot;Another.Cool.App&quot;;
+      app-name-regex-substring = &quot;CoolApp&quot;;
+      during-aerospace-startup = false;
+      window-title-regex-substring = &quot;Title&quot;;
+      workspace = &quot;cool-workspace&quot;;
+    };
+    run = [
+      &quot;move-node-to-workspace m&quot;
+      &quot;resize-node&quot;
+    ];
+  }
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected._.check-further-callbacks"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected._.check-further-callbacks"><code class="option">programs.aerospace.userSettings.on-window-detected.*.check-further-callbacks</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to check further callbacks after this rule (optional).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected._.if"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected._.if"><code class="option">programs.aerospace.userSettings.on-window-detected.*.if</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Conditions for detecting a window.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected._.if.app-id"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected._.if.app-id"><code class="option">programs.aerospace.userSettings.on-window-detected.*.if.app-id</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The application ID to match (optional).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected._.if.app-name-regex-substring"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected._.if.app-name-regex-substring"><code class="option">programs.aerospace.userSettings.on-window-detected.*.if.app-name-regex-substring</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Regex substring to match the app name (optional).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected._.if.during-aerospace-startup"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected._.if.during-aerospace-startup"><code class="option">programs.aerospace.userSettings.on-window-detected.*.if.during-aerospace-startup</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to match during aerospace startup (optional).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected._.if.window-title-regex-substring"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected._.if.window-title-regex-substring"><code class="option">programs.aerospace.userSettings.on-window-detected.*.if.window-title-regex-substring</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Substring to match in the window title (optional).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected._.if.workspace"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected._.if.workspace"><code class="option">programs.aerospace.userSettings.on-window-detected.*.if.workspace</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The workspace name to match (optional).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.on-window-detected._.run"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.on-window-detected._.run"><code class="option">programs.aerospace.userSettings.on-window-detected.*.run</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to execute when the conditions match (required).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string or list of string</p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;move-node-to-workspace m&quot;
+  &quot;resize-node&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.start-at-login"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.start-at-login"><code class="option">programs.aerospace.userSettings.start-at-login</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Start AeroSpace at login.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.userSettings.workspace-to-monitor-force-assignment"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.workspace-to-monitor-force-assignment"><code class="option">programs.aerospace.userSettings.workspace-to-monitor-force-assignment</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Map workspaces to specific monitors.
+Left-hand side is the workspace name, and right-hand side is the monitor pattern.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (signed integer or string or list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;1&quot; = 1;
+  &quot;2&quot; = &quot;main&quot;;
+  &quot;3&quot; = &quot;secondary&quot;;
+  &quot;4&quot; = &quot;built-in&quot;;
+  &quot;5&quot; = &quot;^built-in retina display$&quot;;
+  &quot;6&quot; = [
+    &quot;secondary&quot;
+    &quot;dell&quot;
+  ];
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.afew.enable"></a><a class="term" href="options.xhtml#opt-programs.afew.enable"><code class="option">programs.afew.enable</code>
   </a>
  </span>
