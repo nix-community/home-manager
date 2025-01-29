@@ -62307,20 +62307,22 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-services.cliphist.systemdTarget"></a><a class="term" href="options.xhtml#opt-services.cliphist.systemdTarget"><code class="option">services.cliphist.systemdTarget</code>
+ <a id="opt-services.cliphist.systemdTargets"></a><a class="term" href="options.xhtml#opt-services.cliphist.systemdTargets"><code class="option">services.cliphist.systemdTargets</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>The systemd target that will automatically start the cliphist service.</p><p>When setting this value to <code class="literal">&quot;sway-session.target&quot;</code>,
+<p>The systemd targets that will automatically start the cliphist service.</p><p>When setting this value to <code class="literal">[&quot;sway-session.target&quot;]</code>,
 make sure to also enable <code class="option">wayland.windowManager.sway.systemd.enable</code>,
-otherwise the service may never be started.</p>
+otherwise the service may never be started.</p><p>Note: A single string value is deprecated, please use a list.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string</p>
+(list of string) or string</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;graphical-session.target&quot;</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;graphical-session.target&quot;
+]
+</code></pre>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">&quot;sway-session.target&quot;</code></p>
