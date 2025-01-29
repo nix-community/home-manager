@@ -30,10 +30,16 @@ with lib;
       description = "IMAP folders to watch.";
     };
 
+    extraArgs = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "-wait 1" ];
+      description = "Extra arguments to pass to goimapnotify.";
+    };
+
     extraConfig = mkOption {
       type = let jsonFormat = pkgs.formats.json { }; in jsonFormat.type;
       default = { };
-      example = { wait = 10; };
       description = "Additional configuration to add for this account.";
     };
   };
