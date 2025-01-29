@@ -23,7 +23,10 @@ let
         Service = {
           # Use the nix store path for config to ensure service restarts when it changes
           ExecStart =
-            "${getExe cfg.package} -conf '${genAccountConfig account}'";
+            "${getExe cfg.package} -conf '${genAccountConfig account}'" + " ${
+               lib.optionalString (account.imapnotify.extraArgs != [ ])
+               (toString account.imapnotify.extraArgs)
+             }";
           Restart = "always";
           RestartSec = 30;
           Type = "simple";
