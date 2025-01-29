@@ -1946,6 +1946,7 @@ in {
           speed, features, or native UIs. Ghostty provides all three.
         '';
       }
+
       {
         time = "2025-01-04T15:00:00+00:00";
         condition = hostPlatform.isLinux;
@@ -1983,6 +1984,17 @@ in {
           It allows extra preferences to be added to 'user.js' before the
           options specified in 'programs.firefox.profiles.<name>.settings', so
           that they can be overwritten.
+        '';
+      }
+
+      {
+        time = "2025-01-29T19:11:20+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'programs.aerospace'.
+
+          AeroSpace is an i3-like tiling window manager for macOS.
+          See https://github.com/nikitabobko/AeroSpace for more.
         '';
       }
     ];
