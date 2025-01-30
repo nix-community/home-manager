@@ -12,7 +12,7 @@ let
   '';
 
 in {
-  meta.maintainers = [ hm.maintainers.blmhemu ];
+  meta.maintainers = [ lib.hm.maintainers.blmhemu lib.maintainers.khaneliman ];
 
   options.programs.wezterm = {
     enable = mkEnableOption "wezterm";
