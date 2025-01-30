@@ -1,7 +1,7 @@
 # flake-parts module {#sec-flakes-flake-parts-module}
 
 When using [flake-parts](https://flake.parts)
-you may wish to import home-manager's flake module,
+you may wish to import Home Manager's flake module,
 `flakeModules.home-manager`.
 
 ``` nix
@@ -37,4 +37,3 @@ modules.
 If you are only defining `homeModules` and/or `homeConfigurations` once in a
 single module, flake-parts should work fine without importing
 `flakeModules.home-manager`.
-

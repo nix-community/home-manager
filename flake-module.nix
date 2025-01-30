@@ -7,7 +7,7 @@ in {
         type = types.lazyAttrsOf types.raw;
         default = { };
         description = ''
-          Instantiated Home-Manager configurations.
+          Instantiated Home Manager configurations.
 
           `homeConfigurations` is for specific installations. If you want to expose
           reusable configurations, add them to `homeModules` in the form of modules, so
@@ -22,7 +22,7 @@ in {
           imports = [ v ];
         });
         description = ''
-          Home-Manager modules.
+          Home Manager modules.
 
           You may use this for reusable pieces of configuration, service modules, etc.
         '';
