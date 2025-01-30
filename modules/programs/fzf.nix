@@ -45,6 +45,8 @@ in {
       "This option is no longer supported by fzf.")
   ];
 
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
+
   options.programs.fzf = {
     enable = mkEnableOption "fzf - a command-line fuzzy finder";
 
