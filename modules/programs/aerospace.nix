@@ -5,27 +5,29 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
-  filterAttrsRecursive = pred: set:
+  # filterAttrsRecursive supporting lists, as well.
+  filterListAndAttrsRecursive = pred: set:
     lib.listToAttrs (lib.concatMap (name:
       let v = set.${name};
       in if pred v then
         [
           (lib.nameValuePair name (if lib.isAttrs v then
-            filterAttrsRecursive pred v
+            filterListAndAttrsRecursive pred v
           else if lib.isList v then
-            (map (i: if lib.isAttrs i then filterAttrsRecursive pred i else i)
+            (map (i:
+              if lib.isAttrs i then filterListAndAttrsRecursive pred i else i)
               (lib.filter pred v))
           else
             v))
         ]
       else
         [ ]) (lib.attrNames set));
-  filterNulls = filterAttrsRecursive (v: v != null);
+  filterNulls = filterListAndAttrsRecursive (v: v != null);
 in {
   meta.maintainers = with lib.hm.maintainers; [ damidoug ];
 
   options.programs.aerospace = {
-    enable = lib.mkEnableOption "Whether to enable AeroSpace window manager.";
+    enable = lib.mkEnableOption "enable AeroSpace window manager";
 
     package = lib.mkPackageOption pkgs "aerospace" { };
 
@@ -216,16 +218,22 @@ in {
       '';
       description = ''
         AeroSpace configuration, see
-        <link xlink:href="https://nikitabobko.github.io/AeroSpace/guide#configuring-aerospace"/>
+        <https://nikitabobko.github.io/AeroSpace/guide#configuring-aerospace>
         for supported values.
       '';
     };
   };
 
-  config.home = lib.mkIf cfg.enable {
-    packages = [ cfg.package ];
-    file.".config/aerospace/aerospace.toml".source =
-      tomlFormat.generate "aerospace" (filterNulls cfg.userSettings);
-  };
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.aerospace" pkgs
+        lib.platforms.darwin)
+    ];
 
+    home = {
+      packages = [ cfg.package ];
+      file.".config/aerospace/aerospace.toml".source =
+        tomlFormat.generate "aerospace" (filterNulls cfg.userSettings);
+    };
+  };
 }
