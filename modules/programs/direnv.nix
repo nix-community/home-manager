@@ -19,7 +19,7 @@ in {
       "Flake support is now always enabled.")
   ];
 
-  meta.maintainers = [ lib.maintainers.rycee lib.maintainers.shikanime ];
+  meta.maintainers = with lib.maintainers; [ khaneliman rycee shikanime ];
 
   options.programs.direnv = {
     enable = mkEnableOption "direnv, the environment switcher";
