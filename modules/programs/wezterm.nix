@@ -1,16 +1,15 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkEnableOption mkOption types;
 
   cfg = config.programs.wezterm;
+
   tomlFormat = pkgs.formats.toml { };
 
   shellIntegrationStr = ''
     source "${cfg.package}/etc/profile.d/wezterm.sh"
   '';
-
 in {
   meta.maintainers = [ lib.hm.maintainers.blmhemu lib.maintainers.khaneliman ];
 
@@ -104,8 +103,8 @@ in {
 
         ${cfg.extraConfig}
       '';
-    } // mapAttrs' (name: value:
-      nameValuePair "wezterm/colors/${name}.toml" {
+    } // lib.mapAttrs' (name: value:
+      lib.nameValuePair "wezterm/colors/${name}.toml" {
         source = tomlFormat.generate "${name}.toml" { colors = value; };
       }) cfg.colorSchemes;
 
