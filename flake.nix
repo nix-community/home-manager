@@ -104,7 +104,7 @@
             inherit pkgs;
             inherit (releaseInfo) release isReleaseBranch;
           };
-          hmPkg = pkgs.callPackage ./home-manager { path = "${./.}"; };
+          hmPkg = pkgs.callPackage ./home-manager { path = "${self}"; };
         in {
           default = hmPkg;
           home-manager = hmPkg;
