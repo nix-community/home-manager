@@ -557,7 +557,7 @@ to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><
 command here may be <code class="literal">darwin-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">~/.config/darwin</code> by</p><pre><code class="programlisting  shell">$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
 </code></pre>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-flake-parts-module" class="title" style="clear: both">flake-parts module   </h2>  </div> </div></div><p>When using <a class="link" href="https://flake.parts"  target="_top">flake-parts</a>
-you may wish to import home-manager’s flake module,
+you may wish to import Home Manager’s flake module,
 <code class="literal">flakeModules.home-manager</code>.</p><pre><code class="programlisting  nix">{
   description = &quot;flake-parts configuration&quot;;
 
