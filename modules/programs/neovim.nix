@@ -95,6 +95,8 @@ in {
     '')
   ];
 
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
+
   options = {
     programs.neovim = {
       enable = mkEnableOption "Neovim";
