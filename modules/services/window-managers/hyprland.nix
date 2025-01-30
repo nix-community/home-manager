@@ -62,12 +62,17 @@ in {
         "Set this to null if you use the NixOS module to install Hyprland.";
     };
 
-    portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" { };
+    portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" {
+      nullable = true;
+    };
 
     finalPackage = lib.mkOption {
-      type = lib.types.package;
+      type = with lib.types; nullOr package;
       readOnly = true;
-      default = cfg.package.override { enableXWayland = cfg.xwayland.enable; };
+      default = if cfg.package != null then
+        cfg.package.override { enableXWayland = cfg.xwayland.enable; }
+      else
+        null;
       defaultText = lib.literalMD
         "`wayland.windowManager.hyprland.package` with applied configuration";
       description = ''
@@ -76,9 +81,15 @@ in {
     };
 
     finalPortalPackage = lib.mkOption {
-      type = lib.types.package;
+      type = with lib.types; nullOr package;
       readOnly = true;
-      default = cfg.portalPackage.override { hyprland = cfg.finalPackage; };
+      default = if (cfg.portalPackage != null) then
+        if cfg.finalPackage != null then
+          cfg.portalPackage.override { hyprland = cfg.finalPackage; }
+        else
+          cfg.portalPackage
+      else
+        null;
       defaultText = lib.literalMD ''
         `wayland.windowManager.hyprland.portalPackage` with
                 `wayland.windowManager.hyprland.finalPackage` override'';
@@ -281,9 +292,11 @@ in {
     };
 
     xdg.portal = {
-      enable = true;
-      extraPortals = [ cfg.finalPortalPackage ];
-      configPackages = lib.mkDefault [ cfg.finalPackage ];
+      enable = cfg.finalPortalPackage != null;
+      extraPortals =
+        lib.mkIf (cfg.finalPortalPackage != null) [ cfg.finalPortalPackage ];
+      configPackages = lib.mkIf (cfg.finalPackage != null)
+        (lib.mkDefault [ cfg.finalPackage ]);
     };
 
     systemd.user.targets.hyprland-session = lib.mkIf cfg.systemd.enable {
