@@ -30,6 +30,7 @@ nix-flakes/prerequisites.md
 nix-flakes/standalone.md
 nix-flakes/nixos.md
 nix-flakes/nix-darwin.md
+nix-flakes/flake-parts.md
 ```
 
 
