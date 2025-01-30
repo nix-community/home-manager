@@ -97,7 +97,7 @@ let
   });
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with lib.maintainers; [ khaneliman rycee ];
 
   options = {
     programs.git = {
