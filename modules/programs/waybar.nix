@@ -143,7 +143,7 @@ let
       };
     };
 in {
-  meta.maintainers = with lib.maintainers; [ berbiche ];
+  meta.maintainers = with lib.maintainers; [ berbiche khaneliman ];
 
   options.programs.waybar = with lib.types; {
     enable = mkEnableOption "Waybar";
