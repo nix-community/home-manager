@@ -87268,6 +87268,63 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-xdg.autostart.enable"></a><a class="term" href="options.xhtml#opt-xdg.autostart.enable"><code class="option">xdg.autostart.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable creation of XDG autostart entries.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-autostart.nix" target="_top">
+&lt;home-manager/modules/misc/xdg-autostart.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.autostart.entries"></a><a class="term" href="options.xhtml#opt-xdg.autostart.entries"><code class="option">xdg.autostart.entries</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Paths to desktop files that should be linked to <code class="literal">XDG_CONFIG_HOME/autostart</code></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;${pkgs.evolution}/share/applications/org.gnome.Evolution.desktop&quot;
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-autostart.nix" target="_top">
+&lt;home-manager/modules/misc/xdg-autostart.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-xdg.cacheHome"></a><a class="term" href="options.xhtml#opt-xdg.cacheHome"><code class="option">xdg.cacheHome</code>
   </a>
  </span>
