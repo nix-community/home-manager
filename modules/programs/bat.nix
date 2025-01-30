@@ -22,7 +22,7 @@ let
     in keyValuePairs + switches;
 
 in {
-  meta.maintainers = [ ];
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
 
   options.programs.bat = {
     enable = mkEnableOption "bat, a cat clone with wings";
