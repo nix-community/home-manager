@@ -76,6 +76,8 @@ in {
         null))
   ];
 
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
+
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
 
