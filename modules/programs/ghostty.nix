@@ -8,7 +8,7 @@ let
   };
   keyValue = pkgs.formats.keyValue keyValueSettings;
 in {
-  meta.maintainers = [ lib.maintainers.HeitorAugustoLN ];
+  meta.maintainers = with lib.maintainers; [ HeitorAugustoLN khaneliman ];
 
   options.programs.ghostty = {
     enable = lib.mkEnableOption "Ghostty";
