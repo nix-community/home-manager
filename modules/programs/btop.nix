@@ -25,7 +25,7 @@ let
   '';
 
 in {
-  meta.maintainers = [ hm.maintainers.GaetanLepage ];
+  meta.maintainers = with lib.maintainers; [ GaetanLepage khaneliman ];
 
   options.programs.btop = {
     enable = mkEnableOption "btop";
