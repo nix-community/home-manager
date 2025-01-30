@@ -1701,6 +1701,16 @@ in {
       }
 
       {
+        time = "2024-08-18T11:42:08+00:00";
+        message = ''
+          A new module is available: 'programs.lapce'.
+
+          Lightning-fast and Powerful Code Editor written in Rust.
+          See https://lapce.dev/ for more.
+        '';
+      }
+
+      {
         time = "2024-09-13T08:58:17+00:00";
         condition = hostPlatform.isLinux;
         message = ''

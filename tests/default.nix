@@ -101,6 +101,7 @@ in import nmtSrc {
     ./modules/programs/khard
     ./modules/programs/kitty
     ./modules/programs/kubecolor
+    ./modules/programs/lapce
     ./modules/programs/ledger
     ./modules/programs/less
     ./modules/programs/lesspipe
