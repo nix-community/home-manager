@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let cfg = config.services.cliphist;
 in {
-  meta.maintainers = [ lib.hm.maintainers.janik ];
+  meta.maintainers = [ lib.hm.maintainers.janik lib.maintainers.khaneliman ];
 
   imports = [
     (lib.mkRenamedOptionModule [ "services" "cliphist" "systemdTarget" ] [
