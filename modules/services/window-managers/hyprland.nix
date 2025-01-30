@@ -56,7 +56,11 @@ in {
       '';
     };
 
-    package = lib.mkPackageOption pkgs "hyprland" { };
+    package = lib.mkPackageOption pkgs "hyprland" {
+      nullable = true;
+      extraDescription =
+        "Set this to null if you use the NixOS module to install Hyprland.";
+    };
 
     portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" { };
 
@@ -234,10 +238,8 @@ in {
         "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake.";
     in lib.optional inconsistent warning;
 
-    home.packages = lib.concatLists [
-      (lib.optional (cfg.package != null) cfg.finalPackage)
-      (lib.optional (cfg.xwayland.enable) pkgs.xwayland)
-    ];
+    home.packages = lib.mkIf (cfg.package != null)
+      ([ cfg.finalPackage ] ++ lib.optional cfg.xwayland.enable pkgs.xwayland);
 
     xdg.configFile."hypr/hyprland.conf" = let
       shouldGenerate = cfg.systemd.enable || cfg.extraConfig != ""
