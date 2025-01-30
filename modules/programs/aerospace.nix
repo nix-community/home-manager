@@ -27,7 +27,7 @@ in {
   meta.maintainers = with lib.hm.maintainers; [ damidoug ];
 
   options.programs.aerospace = {
-    enable = lib.mkEnableOption "enable AeroSpace window manager";
+    enable = lib.mkEnableOption "AeroSpace window manager";
 
     package = lib.mkPackageOption pkgs "aerospace" { };
 
