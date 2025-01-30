@@ -1,7 +1,8 @@
 { config, lib, pkgs, ... }:
 let cfg = config.programs.nix-index;
 in {
-  meta.maintainers = with lib.hm.maintainers; [ ambroisie ];
+  meta.maintainers =
+    [ lib.hm.maintainers.ambroisie lib.maintainers.khaneliman ];
 
   options.programs.nix-index = with lib; {
     enable = mkEnableOption "nix-index, a file database for nixpkgs";
