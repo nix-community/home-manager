@@ -1,6 +1,12 @@
 { pkgs ? import <nixpkgs> { } }:
 
-rec {
+let
+  path = builtins.path {
+    path = ./.;
+    name = "home-manager-source";
+  };
+
+in rec {
   docs = let releaseInfo = pkgs.lib.importJSON ./release.json;
   in with import ./docs {
     inherit pkgs;
@@ -12,12 +18,12 @@ rec {
     jsonModuleMaintainers = jsonModuleMaintainers; # Unstable, mainly for CI.
   };
 
-  home-manager = pkgs.callPackage ./home-manager { path = toString ./.; };
+  home-manager = pkgs.callPackage ./home-manager { inherit path; };
 
   install =
     pkgs.callPackage ./home-manager/install.nix { inherit home-manager; };
 
   nixos = import ./nixos;
 
-  path = ./.;
+  inherit path;
 }
