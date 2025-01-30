@@ -19,6 +19,11 @@
       # unofficial; deprecated in Nix 2.8
       darwinModule = self.darwinModules.default;
 
+      flakeModules = rec {
+        home-manager = import ./flake-module.nix;
+        default = home-manager;
+      };
+
       templates = {
         standalone = {
           path = ./templates/standalone;
