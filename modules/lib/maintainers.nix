@@ -5,7 +5,6 @@
 # are expected to be follow the same format as described in [1].
 #
 # [1] https://github.com/NixOS/nixpkgs/blob/fca0d6e093c82b31103dc0dacc48da2a9b06e24b/maintainers/maintainer-list.nix#LC1
-
 {
   aabccd021 = {
     name = "Muhamad Abdurahman";
@@ -657,5 +656,15 @@
     email = "ckgxrg@ckgxrg.io";
     github = "ckgxrg-salt";
     githubId = 165614491;
+  };
+  HPsaucii = {
+    name = "Holly Powell";
+    email = "me@hpsaucii.dev";
+    github = "HPsaucii";
+    githubId = 126502193;
+    keys = [{
+      longkeyid = "rsa4096/0xEDB2C634166AE6AD";
+      fingerprint = "AD32 73D4 5E0E 9478 E826  543F EDB2 C634 166A E6AD";
+    }];
   };
 }
