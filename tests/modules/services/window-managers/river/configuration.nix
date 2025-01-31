@@ -1,6 +1,8 @@
 { ... }:
 
 {
+  imports = [ ./river-stubs.nix ];
+
   wayland.windowManager.river = {
     enable = true;
     xwayland.enable = true;
