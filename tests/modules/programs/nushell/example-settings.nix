@@ -1,8 +1,9 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, realPkgs, config, lib, ... }:
 
 {
   programs.nushell = {
     enable = true;
+    package = realPkgs.nushell;
 
     configFile.text = ''
       let config = {
@@ -23,7 +24,7 @@
       }
     '';
 
-    plugins = [ pkgs.nushellPlugins.formats ];
+    plugins = [ realPkgs.nushellPlugins.formats ];
 
     shellAliases = {
       "ll" = "ls -a";

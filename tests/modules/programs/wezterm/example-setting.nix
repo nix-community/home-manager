@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.wezterm = {
     enable = true;
@@ -45,8 +43,6 @@
       selection_fg = "#E9E9E9";
     };
   };
-
-  test.stubs.wezterm = { };
 
   nmt.script = let
     expectedConfig = builtins.toFile "wezterm.lua" ''

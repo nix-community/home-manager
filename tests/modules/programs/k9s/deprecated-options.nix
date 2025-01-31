@@ -1,4 +1,6 @@
-{ config, lib, options, ... }: {
+{ lib, options, ... }:
+
+{
   programs.k9s = {
     enable = true;
     skin = {
@@ -15,8 +17,6 @@
       };
     };
   };
-
-  test.stubs.k9s = { };
 
   test.asserts.warnings.enable = true;
   test.asserts.warnings.expected = [

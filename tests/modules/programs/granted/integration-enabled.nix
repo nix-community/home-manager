@@ -1,12 +1,8 @@
-{ pkgs, ... }:
-
 {
   programs = {
     granted.enable = true;
     zsh.enable = true;
   };
-
-  test.stubs.granted = { };
 
   nmt.script = ''
     assertFileExists home-files/.zshrc

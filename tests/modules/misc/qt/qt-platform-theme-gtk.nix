@@ -1,6 +1,6 @@
-{
-  imports = [ ../../i18n/input-method/fcitx5-stubs.nix ];
+{ config, ... }:
 
+{
   qt = {
     enable = true;
     platformTheme.name = "gtk";
@@ -11,11 +11,11 @@
   nixpkgs.overlays = [
     (final: prev: {
       libsForQt5 = prev.libsForQt5.overrideScope (qt5final: qt5prev: {
-        qtstyleplugins = prev.mkStubPackage { outPath = null; };
+        qtstyleplugins = config.lib.test.mkStubPackage { outPath = null; };
       });
 
       qt6Packages = prev.qt6Packages.overrideScope (qt6final: qt6prev: {
-        qt6gtk2 = prev.mkStubPackage { outPath = null; };
+        qt6gtk2 = config.lib.test.mkStubPackage { outPath = null; };
       });
     })
   ];

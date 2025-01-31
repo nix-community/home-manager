@@ -1,6 +1,4 @@
-{ ... }: {
-  imports = [ ./wayfire-stubs.nix ];
-
+{
   wayland.windowManager.wayfire = {
     enable = true;
     package = null;
@@ -17,8 +15,6 @@
     wayfireConfig=home-files/.config/wayfire.ini
 
     assertFileExists "$wayfireConfig"
-
-    normalizedConfig=$(normalizeStorePaths "$wayfireConfig")
-    assertFileContent "$normalizedConfig" "${./configuration.ini}"
+    assertFileContent "$wayfireConfig" "${./configuration.ini}"
   '';
 }

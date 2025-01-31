@@ -26,8 +26,6 @@
     ];
   };
 
-  test.stubs.topgrade = { };
-
   nmt.script = ''
     assertFileContent \
       home-files/.config/topgrade.toml \

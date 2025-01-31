@@ -68,8 +68,6 @@
     };
   };
 
-  test.stubs.thunderbird = { };
-
   nmt.script = let
     isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
     configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";

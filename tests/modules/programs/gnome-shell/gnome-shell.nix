@@ -79,8 +79,6 @@ in {
     }
   ];
 
-  test.stubs.dconf = { };
-
   nmt.script = ''
     assertFileExists home-path/share/gnome-shell/extensions/dummy-package/test
     assertFileExists home-path/share/gnome-shell/extensions/test-extension/test

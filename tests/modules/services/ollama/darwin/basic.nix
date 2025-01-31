@@ -11,8 +11,6 @@ lib.mkMerge [
         HIP_VISIBLE_DEVICES = "0,1";
       };
     };
-
-    test.stubs.ollama = { };
   }
   (lib.mkIf pkgs.stdenv.isDarwin {
     nmt.script = ''

@@ -3,7 +3,7 @@ WantedBy=sway-session.target
 
 [Service]
 Environment=QT_QPA_PLATFORM=xcb
-ExecStart=@copyq@/bin/copyq
+ExecStart=@CopyQ@/bin/copyq
 Restart=on-failure
 
 [Unit]

@@ -1,15 +1,13 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, realPkgs, ... }:
 
-with lib;
+lib.mkIf config.test.enableBig {
+  home.packages = [ pkgs.comic-relief ];
 
-{
-  config = {
-    home.packages = [ pkgs.comic-relief ];
+  fonts.fontconfig.enable = true;
 
-    fonts.fontconfig.enable = true;
+  _module.args.pkgs = lib.mkForce realPkgs;
 
-    nmt.script = ''
-      assertDirectoryNotEmpty home-path/lib/fontconfig/cache
-    '';
-  };
+  nmt.script = ''
+    assertDirectoryNotEmpty home-path/lib/fontconfig/cache
+  '';
 }

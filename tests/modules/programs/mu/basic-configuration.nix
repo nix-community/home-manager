@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
@@ -11,8 +9,6 @@
   };
 
   programs.mu.enable = true;
-
-  test.stubs.mu = { name = "mu"; };
 
   nmt.script = ''
     assertFileContains activate \

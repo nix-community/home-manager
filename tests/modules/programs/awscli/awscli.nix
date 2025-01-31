@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs = {
     awscli = {
@@ -13,8 +11,6 @@
       credentials = { iam = { credential_process = "pass show aws"; }; };
     };
   };
-
-  test.stubs.awscli2 = { };
 
   nmt.script = ''
     assertFileExists home-files/.aws/config

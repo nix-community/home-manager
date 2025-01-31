@@ -8,8 +8,6 @@ let
 in {
   programs.nheko.enable = true;
 
-  test.stubs.nheko = { };
-
   nmt.script = ''
     assertPathNotExists "${configDir}/nheko/nheko.conf"
   '';

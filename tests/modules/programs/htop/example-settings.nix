@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, ... }:
 
 {
   config = {
@@ -35,8 +33,6 @@ with lib;
           (text "Uptime")
           (text "Systemd")
         ]);
-
-    test.stubs.htop = { };
 
     nmt.script = ''
       htoprc=home-files/.config/htop/htoprc

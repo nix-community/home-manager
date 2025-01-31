@@ -1,13 +1,9 @@
-{ ... }:
-
 {
   programs.cmus = {
     enable = true;
     theme = "gruvbox";
     extraConfig = "test";
   };
-
-  test.stubs.cmus = { };
 
   nmt.script = ''
     assertFileContent \
