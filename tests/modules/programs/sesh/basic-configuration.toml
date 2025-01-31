@@ -1,0 +1,12 @@
+[default_session]
+startup_command = "nvim -c ':Telescope find_files'"
+
+[[session]]
+name = "Downloads 📥"
+path = "~/Downloads"
+startup_command = "ls"
+
+[[session]]
+name = "tmux config"
+path = "~/c/dotfiles/.config/tmux"
+startup_command = "nvim tmux.conf"
