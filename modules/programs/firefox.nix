@@ -1,15 +1,11 @@
 { lib, ... }:
-
 with lib;
-
 let
-
   modulePath = [ "programs" "firefox" ];
 
   moduleName = concatStringsSep "." modulePath;
 
   mkFirefoxModule = import ./firefox/mkFirefoxModule.nix;
-
 in {
   meta.maintainers = [ maintainers.rycee hm.maintainers.bricked ];
 
@@ -32,14 +28,13 @@ in {
     })
 
     (mkRemovedOptionModule (modulePath ++ [ "extensions" ]) ''
-
       Extensions are now managed per-profile. That is, change from
 
         ${moduleName}.extensions = [ foo bar ];
 
       to
 
-        ${moduleName}.profiles.myprofile.extensions = [ foo bar ];'')
+        ${moduleName}.profiles.myprofile.extensions.packages = [ foo bar ];'')
     (mkRemovedOptionModule (modulePath ++ [ "enableAdobeFlash" ])
       "Support for this option has been removed.")
     (mkRemovedOptionModule (modulePath ++ [ "enableGoogleTalk" ])
