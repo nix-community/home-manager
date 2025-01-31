@@ -218,6 +218,21 @@ in {
         '';
       };
 
+      noAllowExternalCache = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Tell Pinentry not to enable features which use an external cache for
+          passphrases.
+
+          Some desktop environments prefer to unlock all credentials with one
+          master password and may have installed a Pinentry which employs an
+          additional external cache to implement such a policy. By using this
+          option the Pinentry is advised not to make use of such a cache and
+          instead always ask the user for the requested passphrase.
+        '';
+      };
+
       extraConfig = mkOption {
         type = types.lines;
         default = "";
@@ -269,6 +284,7 @@ in {
         (optional (cfg.enableSshSupport) "enable-ssh-support"
           ++ optional cfg.grabKeyboardAndMouse "grab"
           ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
+          ++ optional (cfg.noAllowExternalCache) "no-allow-external-cache"
           ++ optional (cfg.defaultCacheTtl != null)
           "default-cache-ttl ${toString cfg.defaultCacheTtl}"
           ++ optional (cfg.defaultCacheTtlSsh != null)
