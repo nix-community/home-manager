@@ -1,6 +1,9 @@
-{ ... }: {
+{
+  imports = [ ./hyprland-stubs.nix ];
+
   wayland.windowManager.hyprland = {
     enable = true;
+
     portalPackage = null;
 
     settings = {
