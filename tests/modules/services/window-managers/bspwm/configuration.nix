@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  imports = [ ./bspwm-stubs.nix ];
+
   xsession.windowManager.bspwm = {
     enable = true;
     monitors.focused = [ "desktop 1" "d'esk top" ]; # pathological desktop names
