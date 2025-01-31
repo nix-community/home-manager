@@ -1,4 +1,6 @@
-{ ... }: {
+{
+  imports = [ ./hyprland-stubs.nix ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = null;
