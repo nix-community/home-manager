@@ -1,6 +1,8 @@
 { ... }:
 
 {
+  imports = [ ./spectrwm-stubs.nix ];
+
   xsession.windowManager.spectrwm = {
     enable = true;
     settings = {
