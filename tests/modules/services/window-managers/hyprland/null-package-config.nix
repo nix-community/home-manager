@@ -1,7 +1,12 @@
-{ ... }: {
+{ config, lib, ... }: {
+  imports = [ ./hyprland-stubs.nix ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = null;
+    portalPackage = lib.makeOverridable (_:
+      config.lib.test.mkStubPackage { name = "xdg-desktop-portal-hyprland"; })
+      { };
     settings = {
       cursor = {
         enable_hyprcursor = true;

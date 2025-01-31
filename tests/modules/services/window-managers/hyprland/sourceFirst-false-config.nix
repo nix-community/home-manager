@@ -1,10 +1,15 @@
 { config, lib, ... }:
 
 {
+  imports = [ ./hyprland-stubs.nix ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = lib.makeOverridable
       (attrs: config.lib.test.mkStubPackage { name = "hyprland"; }) { };
+    portalPackage = lib.makeOverridable (_:
+      config.lib.test.mkStubPackage { name = "xdg-desktop-portal-hyprland"; })
+      { };
     settings = {
       source = [ "sourced.conf" ];
 
