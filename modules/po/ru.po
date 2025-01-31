@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-01-03 09:09+0100\n"
-"PO-Revision-Date: 2023-12-11 16:06+0000\n"
-"Last-Translator: Blezz Rot <markus.jenya04@yandex.ru>\n"
+"PO-Revision-Date: 2025-01-31 17:29+0000\n"
+"Last-Translator: Vladimir <kirillov.vladimir@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/home-manager/"
 "modules/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: modules/files.nix:188
 msgid "Creating home file links in %s"
@@ -30,11 +30,11 @@ msgstr "Удаляю устаревшие ссылки из %s"
 
 #: modules/home-environment.nix:591
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "Создание нового поколения профиля"
 
 #: modules/home-environment.nix:594
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Изменений нет, повторно исползуем последнее поколение профиля"
 
 #: modules/home-environment.nix:643
 msgid ""
