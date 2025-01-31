@@ -9,15 +9,11 @@
         home-manager = ./nixos;
         default = home-manager;
       };
-      # deprecated in Nix 2.8
-      nixosModule = self.nixosModules.default;
 
       darwinModules = rec {
         home-manager = ./nix-darwin;
         default = home-manager;
       };
-      # unofficial; deprecated in Nix 2.8
-      darwinModule = self.darwinModules.default;
 
       flakeModules = rec {
         home-manager = ./flake-module.nix;
@@ -25,10 +21,7 @@
       };
 
       templates = {
-        standalone = {
-          path = ./templates/standalone;
-          description = "Standalone setup";
-        };
+        default = self.templates.standalone;
         nixos = {
           path = ./templates/nixos;
           description = "Home Manager as a NixOS module,";
@@ -37,9 +30,11 @@
           path = ./templates/nix-darwin;
           description = "Home Manager as a nix-darwin module,";
         };
+        standalone = {
+          path = ./templates/standalone;
+          description = "Standalone setup";
+        };
       };
-
-      defaultTemplate = self.templates.standalone;
 
       lib = import ./lib { inherit (nixpkgs) lib; };
     } // (let
@@ -69,7 +64,5 @@
           docs-json = docs.options.json;
           docs-manpages = docs.manPages;
         });
-
-      defaultPackage = forAllSystems (system: self.packages.${system}.default);
     });
 }
