@@ -1,4 +1,6 @@
 { ... }: {
+  imports = [ ./wayfire-stubs.nix ];
+
   wayland.windowManager.wayfire = {
     enable = true;
     package = null;
