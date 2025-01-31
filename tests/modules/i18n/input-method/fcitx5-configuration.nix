@@ -1,12 +1,12 @@
-{ config, pkgs, ... }:
+{ config, lib, realPkgs, ... }:
 
-{
-  imports = [ ./fcitx5-stubs.nix ];
-
+lib.mkIf config.test.enableBig {
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5.waylandFrontend = true;
   };
+
+  _module.args.pkgs = lib.mkForce realPkgs;
 
   nmt.script = ''
     assertFileExists home-files/.config/systemd/user/fcitx5-daemon.service

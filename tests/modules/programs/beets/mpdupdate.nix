@@ -1,11 +1,8 @@
-{ config, ... }:
-
 {
   home.stateVersion = "23.05";
 
   programs.beets = {
     enable = true;
-    package = config.lib.test.mkStubPackage { outPath = "@beets@"; };
     mpdIntegration.enableUpdate = true;
   };
 

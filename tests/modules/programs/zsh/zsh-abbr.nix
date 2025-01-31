@@ -1,8 +1,4 @@
-{ ... }:
-
 {
-  imports = [ ./zsh-stubs.nix ];
-
   programs.zsh.zsh-abbr = {
     enable = true;
     abbreviations = { ga = "git add"; };

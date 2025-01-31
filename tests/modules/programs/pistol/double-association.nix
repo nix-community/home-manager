@@ -9,8 +9,6 @@
     }];
   };
 
-  test.stubs.pistol = { };
-
   test.asserts.assertions.expected = [''
     Each entry in programs.pistol.associations must contain exactly one
     of fpath or mime.

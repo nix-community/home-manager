@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./mpv-stubs.nix ];
-
   programs.mpv = {
     enable = true;
 

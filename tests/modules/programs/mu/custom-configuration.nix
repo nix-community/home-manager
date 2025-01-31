@@ -13,8 +13,6 @@
     home = config.xdg.dataHome + "/mu";
   };
 
-  test.stubs.mu = { name = "mu"; };
-
   nmt.script = ''
     assertFileContains activate \
       'if [[ ! -d "/home/hm-user/.local/share/mu" || ! "$MU_SORTED_ADDRS" = "foo@example.com hm@example.com" ]]; then'

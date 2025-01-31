@@ -1,4 +1,4 @@
-{ ... }: {
+{
   programs = {
     pay-respects.enable = true;
     pay-respects.enableBashIntegration = false;
@@ -11,12 +11,10 @@
     nushell.enable = true;
   };
 
-  test.stubs.pay-respects = { };
-
   nmt.script = ''
-    assertFileNotRegex home-files/.bashrc '@pay-respects@/bin/dummy'
-    assertFileNotRegex home-files/.zshrc '@pay-respects@/bin/dummy'
-    assertFileNotRegex home-files/.config/fish/config.fish '@pay-respects@/bin/dummy'
-    assertFileNotRegex home-files/.config/nushell/config.nu '@pay-respects@/bin/dummy'
+    assertFileNotRegex home-files/.bashrc '@pay-respects@/bin/pay-respects'
+    assertFileNotRegex home-files/.zshrc '@pay-respects@/bin/pay-respects'
+    assertFileNotRegex home-files/.config/fish/config.fish '@pay-respects@/bin/pay-respects'
+    assertFileNotRegex home-files/.config/nushell/config.nu '@pay-respects@/bin/pay-respects'
   '';
 }

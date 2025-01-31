@@ -13,12 +13,6 @@
     zsh.enable = true;
   };
 
-  test.stubs = {
-    nix-your-shell = { };
-    nushell = { };
-    zsh = { };
-  };
-
   nmt.script = let
     nushellConfigDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
       "home-files/Library/Application Support/nushell"

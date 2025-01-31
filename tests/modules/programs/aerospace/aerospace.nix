@@ -17,8 +17,6 @@
     };
   };
 
-  test.stubs.aerospace = { };
-
   nmt.script = ''
     assertFileContent home-files/.config/aerospace/aerospace.toml ${
       ./settings-expected.toml

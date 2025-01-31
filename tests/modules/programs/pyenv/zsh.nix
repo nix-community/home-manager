@@ -1,12 +1,8 @@
-{ ... }:
-
 {
   programs = {
     zsh.enable = true;
     pyenv.enable = true;
   };
-
-  test.stubs.pyenv = { name = "pyenv"; };
 
   nmt.script = ''
     assertFileExists home-files/.zshrc

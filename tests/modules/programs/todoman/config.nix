@@ -10,8 +10,6 @@
 
   accounts.calendar.basePath = "base/path/calendar";
 
-  test.stubs = { todoman = { }; };
-
   nmt.script = ''
     configFile=home-files/.config/todoman/config.py
     assertFileExists $configFile

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.zsh.enable = true;
 
@@ -7,9 +5,6 @@
     enable = true;
     enableZshIntegration = false;
   };
-
-  test.stubs.wezterm = { };
-  test.stubs.zsh = { };
 
   nmt.script = ''
     assertFileNotRegex home-files/.zshrc 'source "@wezterm@/etc/profile.d/wezterm.sh"'

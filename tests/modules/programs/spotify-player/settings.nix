@@ -105,8 +105,6 @@
     ];
   };
 
-  test.stubs.spotify-player = { };
-
   nmt.script = ''
     assertFileContent home-files/.config/spotify-player/app.toml ${./app.toml}
     assertFileContent home-files/.config/spotify-player/theme.toml ${

@@ -1,5 +1,3 @@
-{ config, lib, pkgs, ... }:
-
 {
   programs.pubs = {
     enable = true;
@@ -26,8 +24,6 @@
       force_color = False
     '';
   };
-
-  test.stubs.pubs = { };
 
   nmt.script = ''
     assertFileContent \
