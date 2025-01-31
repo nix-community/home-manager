@@ -1,6 +1,8 @@
 { lib, pkgs, ... }:
 
 {
+  imports = [ ./herbstluftwm-stubs.nix ];
+
   xsession.windowManager.herbstluftwm = { enable = true; };
 
   test.stubs.herbstluftwm = { };
