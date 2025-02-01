@@ -34218,6 +34218,295 @@ paging = &quot;auto&quot;;
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.lapce.enable"></a><a class="term" href="options.xhtml#opt-programs.lapce.enable"><code class="option">programs.lapce.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable lapce.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.package"></a><a class="term" href="options.xhtml#opt-programs.lapce.package"><code class="option">programs.lapce.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The lapce package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.lapce</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.channel"></a><a class="term" href="options.xhtml#opt-programs.lapce.channel"><code class="option">programs.lapce.channel</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Lapce channel to configure.
+Should correspond to the package channel.
+This is used to determine the correct configuration and data directories.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “stable”, “nightly”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;stable&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.keymaps"></a><a class="term" href="options.xhtml#opt-programs.lapce.keymaps"><code class="option">programs.lapce.keymaps</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Keymaps written to <code class="filename">$XDG_CONFIG_HOME/lapce/keymaps.toml</code>.
+See <a class="link" href="https://github.com/lapce/lapce/blob/master/defaults/keymaps-common.toml"  target="_top">https://github.com/lapce/lapce/blob/master/defaults/keymaps-common.toml</a> for examples.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    command = &quot;open_log_file&quot;;
+    key = &quot;Ctrl+Shift+L&quot;;
+  }
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.plugins"></a><a class="term" href="options.xhtml#opt-programs.lapce.plugins"><code class="option">programs.lapce.plugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Plugins to install.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    author = &quot;MrFoxPro&quot;;
+    name = &quot;lapce-nix&quot;;
+    version = &quot;0.0.1&quot;;
+    hash = &quot;sha256-...&quot;;
+  }
+  {
+    author = &quot;dzhou121&quot;;
+    name = &quot;lapce-rust&quot;;
+    version = &quot;0.3.1932&quot;;
+    hash = &quot;sha256-...&quot;;
+  }
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.plugins._.author"></a><a class="term" href="options.xhtml#opt-programs.lapce.plugins._.author"><code class="option">programs.lapce.plugins.*.author</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Author of the plugin.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.plugins._.hash"></a><a class="term" href="options.xhtml#opt-programs.lapce.plugins._.hash"><code class="option">programs.lapce.plugins.*.hash</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Hash of the plugin tarball.
+To find the hash leave this empty, rebuild and copy the hash from the error message.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.plugins._.name"></a><a class="term" href="options.xhtml#opt-programs.lapce.plugins._.name"><code class="option">programs.lapce.plugins.*.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Name of the plugin.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.plugins._.version"></a><a class="term" href="options.xhtml#opt-programs.lapce.plugins._.version"><code class="option">programs.lapce.plugins.*.version</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Version of the plugin.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lapce.settings"></a><a class="term" href="options.xhtml#opt-programs.lapce.settings"><code class="option">programs.lapce.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/lapce/settings.toml</code>.
+See <a class="link" href="https://github.com/lapce/lapce/blob/master/extra/schemas/settings.json"  target="_top">https://github.com/lapce/lapce/blob/master/extra/schemas/settings.json</a> for schema.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  core = {
+    custom-titlebar = false;
+    color-theme = &quot;Custom&quot;;
+    icon-theme = &quot;Material Icons&quot;;
+  };
+  editor = {
+    font-family = &quot;FiraCode Nerd Bold Font, monospace&quot;;
+    font-size = 22;
+    tab-width = 2;
+    cursor-surrounding-lines = 4;
+    render-whitespace = &quot;all&quot;;
+    bracket-pair-colorization = true;
+    highlight-matching-brackets = true;
+  };
+  ui = {
+    font-size = 20;
+    open-editors-visible = false;
+  };
+  lapce-nix.lsp-path = &quot;$\{pkgs.nil\}/bin/nil&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lapce.nix" target="_top">
+&lt;home-manager/modules/programs/lapce.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.lazygit.enable"></a><a class="term" href="options.xhtml#opt-programs.lazygit.enable"><code class="option">programs.lazygit.enable</code>
   </a>
  </span>
