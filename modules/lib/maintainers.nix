@@ -454,6 +454,12 @@
     githubId = 25278;
     name = "Otavio Salvador";
   };
+  oughie = {
+    name = "Oughie";
+    email = "oughery@gmail.com";
+    github = "Oughie";
+    githubId = 123173954;
+  };
   pltanton = {
     name = "pltanton";
     email = "plotnikovanton@gmail.com";
