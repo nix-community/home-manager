@@ -210,8 +210,8 @@ let
       };
     };
   };
-  defaultProfile = (filterAttrs (n: v: n == "default") cfg.profiles).default;
-  allProfilesExceptDefault = (removeAttrs cfg.profiles [ "default" ]);
+  defaultProfile = if cfg.profiles ? default then cfg.profiles.default else { };
+  allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in {
   imports = [
     (mkChangedOptionModule [ "programs" "vscode" "immutableExtensionsDir" ] [
@@ -297,7 +297,7 @@ in {
           file="${userDir}/globalStorage/storage.json"
 
           if [ -f "$file" ]; then
-            existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' $file)
+            existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
             file_write=""
             profiles=(${
               escapeShellArgs
@@ -314,12 +314,12 @@ in {
               file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
             done
 
-            echo "{}" > $file
+            echo "{}" > "$file"
           fi
 
           if [ "$file_write" != "" ]; then
-            userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split("...") | map({ name: ., location: . })')" $file)
-            echo $userDataProfiles > $file
+            userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split("...") | map({ name: ., location: . })')" "$file")
+            echo $userDataProfiles > "$file"
           fi
         '';
     in modifyGlobalStorage.outPath);
