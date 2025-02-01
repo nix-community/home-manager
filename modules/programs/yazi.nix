@@ -263,8 +263,12 @@ in {
                 toString missingFiles
               }";
             singularOpt = removeSuffix "s" opt;
+            isPluginValid = opt == "plugins"
+              && (any (file: pathExists "${value}/${file}") requiredFiles);
+            isValid =
+              if opt == "plugins" then isPluginValid else missingFiles == [ ];
           in {
-            assertion = isDir && missingFiles == [ ];
+            assertion = isDir && isValid;
             message = ''
               Value at `programs.yazi.${opt}.${name}` is not a valid yazi ${singularOpt}.
               ${msgNotDir}
@@ -279,6 +283,6 @@ in {
       "preview.png"
       "LICENSE"
       "LICENSE-tmtheme"
-    ]) ++ (mkAsserts "plugins" [ "init.lua" ]);
+    ]) ++ (mkAsserts "plugins" [ "init.lua" "main.lua" ]);
   };
 }
