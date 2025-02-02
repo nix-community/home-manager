@@ -1,5 +1,4 @@
 { config, lib, pkgs, ... }:
-
 let
   inherit (lib)
     literalExpression mapAttrsToList mkEnableOption mkIf mkOption optionalString
@@ -7,38 +6,6 @@ let
 
   cfg = config.programs.yazi;
   tomlFormat = pkgs.formats.toml { };
-
-  bashIntegration = ''
-    function ${cfg.shellWrapperName}() {
-      local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-      yazi "$@" --cwd-file="$tmp"
-      if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        builtin cd -- "$cwd"
-      fi
-      rm -f -- "$tmp"
-    }
-  '';
-
-  fishIntegration = ''
-    set -l tmp (mktemp -t "yazi-cwd.XXXXX")
-    command yazi $argv --cwd-file="$tmp"
-    if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-      builtin cd -- "$cwd"
-    end
-    rm -f -- "$tmp"
-  '';
-
-  nushellIntegration = ''
-    def --env ${cfg.shellWrapperName} [...args] {
-      let tmp = (mktemp -t "yazi-cwd.XXXXX")
-      yazi ...$args --cwd-file $tmp
-      let cwd = (open $tmp)
-      if $cwd != "" and $cwd != $env.PWD {
-        cd $cwd
-      }
-      rm -fp $tmp
-    }
-  '';
 in {
   meta.maintainers = with lib.maintainers; [ eljamm khaneliman xyenon ];
 
@@ -194,15 +161,49 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
+    programs = let
+      bashIntegration = ''
+        function ${cfg.shellWrapperName}() {
+          local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+          yazi "$@" --cwd-file="$tmp"
+          if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+            builtin cd -- "$cwd"
+          fi
+          rm -f -- "$tmp"
+        }
+      '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration bashIntegration;
+      fishIntegration = ''
+        set -l tmp (mktemp -t "yazi-cwd.XXXXX")
+        command yazi $argv --cwd-file="$tmp"
+        if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+          builtin cd -- "$cwd"
+        end
+        rm -f -- "$tmp"
+      '';
 
-    programs.fish.functions.${cfg.shellWrapperName} =
-      mkIf cfg.enableFishIntegration fishIntegration;
+      nushellIntegration = ''
+        def --env ${cfg.shellWrapperName} [...args] {
+          let tmp = (mktemp -t "yazi-cwd.XXXXX")
+          yazi ...$args --cwd-file $tmp
+          let cwd = (open $tmp)
+          if $cwd != "" and $cwd != $env.PWD {
+            cd $cwd
+          }
+          rm -fp $tmp
+        }
+      '';
+    in {
+      bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
-    programs.nushell.extraConfig =
-      mkIf cfg.enableNushellIntegration nushellIntegration;
+      zsh.initExtra = mkIf cfg.enableZshIntegration bashIntegration;
+
+      fish.functions.${cfg.shellWrapperName} =
+        mkIf cfg.enableFishIntegration fishIntegration;
+
+      nushell.extraConfig =
+        mkIf cfg.enableNushellIntegration nushellIntegration;
+    };
 
     xdg.configFile = {
       "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
