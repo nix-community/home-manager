@@ -1,8 +1,10 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib)
+    literalExpression mapAttrsToList mkEnableOption mkIf mkOption optionalString
+    types;
+
   cfg = config.programs.yazi;
   tomlFormat = pkgs.formats.toml { };
 
@@ -43,9 +45,9 @@ in {
   options.programs.yazi = {
     enable = mkEnableOption "yazi";
 
-    package = mkPackageOption pkgs "yazi" { };
+    package = lib.mkPackageOption pkgs "yazi" { };
 
-    shellWrapperName = mkOption {
+    shellWrapperName = lib.mkOption {
       type = types.str;
       default = "yy";
       example = "y";
@@ -218,27 +220,27 @@ in {
         } else {
           text = cfg.initLua;
         });
-    } // (mapAttrs' (name: value:
-      nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
-      cfg.flavors) // (mapAttrs' (name: value:
-        nameValuePair "yazi/plugins/${name}.yazi" { source = value; })
+    } // (lib.mapAttrs' (name: value:
+      lib.nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
+      cfg.flavors) // (lib.mapAttrs' (name: value:
+        lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value; })
         cfg.plugins);
 
-    warnings = filter (s: s != "") (concatLists [
-      (mapAttrsToList (name: value:
-        optionalString (hasSuffix ".yazi" name) ''
+    warnings = lib.filter (s: s != "") (lib.concatLists [
+      (mapAttrsToList (name: _value:
+        optionalString (lib.hasSuffix ".yazi" name) ''
           Flavors like `programs.yazi.flavors."${name}"` should no longer have the suffix ".yazi" in their attribute name.
           The flavor will be linked to `$XDG_CONFIG_HOME/yazi/flavors/${name}.yazi`.
           You probably want to rename it to `programs.yazi.flavors."${
-            removeSuffix ".yazi" name
+            lib.removeSuffix ".yazi" name
           }"`.
         '') cfg.flavors)
-      (mapAttrsToList (name: value:
-        optionalString (hasSuffix ".yazi" name) ''
+      (mapAttrsToList (name: _value:
+        optionalString (lib.hasSuffix ".yazi" name) ''
           Plugins like `programs.yazi.plugins."${name}"` should no longer have the suffix ".yazi" in their attribute name.
           The plugin will be linked to `$XDG_CONFIG_HOME/yazi/plugins/${name}.yazi`.
           You probably want to rename it to `programs.yazi.plugins."${
-            removeSuffix ".yazi" name
+            lib.removeSuffix ".yazi" name
           }"`.
         '') cfg.plugins)
     ]);
@@ -247,20 +249,21 @@ in {
       mkAsserts = opt: requiredFiles:
         mapAttrsToList (name: value:
           let
-            isDir = pathIsDirectory "${value}";
+            isDir = lib.pathIsDirectory "${value}";
             msgNotDir = optionalString (!isDir)
               "The path or package should be a directory, not a single file.";
             isFileMissing = file:
-              !(pathExists "${value}/${file}")
-              || pathIsDirectory "${value}/${file}";
-            missingFiles = filter isFileMissing requiredFiles;
+              !(lib.pathExists "${value}/${file}")
+              || lib.pathIsDirectory "${value}/${file}";
+            missingFiles = lib.filter isFileMissing requiredFiles;
             msgFilesMissing = optionalString (missingFiles != [ ])
               "The ${singularOpt} is missing these files: ${
                 toString missingFiles
               }";
-            singularOpt = removeSuffix "s" opt;
+            singularOpt = lib.removeSuffix "s" opt;
             isPluginValid = opt == "plugins"
-              && (any (file: pathExists "${value}/${file}") requiredFiles);
+              && (lib.any (file: lib.pathExists "${value}/${file}")
+                requiredFiles);
             isValid =
               if opt == "plugins" then isPluginValid else missingFiles == [ ];
           in {
