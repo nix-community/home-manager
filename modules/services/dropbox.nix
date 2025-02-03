@@ -10,7 +10,7 @@ let
   homeBaseDir = "${config.home.homeDirectory}/${baseDir}";
 
 in {
-  meta.maintainers = [ maintainers.tph5595 ];
+  meta.maintainers = [ hm.maintainers.tph5595 ];
 
   options = {
     services.dropbox = {

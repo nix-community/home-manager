@@ -593,6 +593,12 @@
     github = "zorrobert";
     githubId = 118135271;
   };
+  tph5595 = {
+    name = "Taylor Henderson";
+    email = "nix.contort160@simplelogin.com";
+    github = "tph5595";
+    githubId = 6002071;
+  };
   callumio = {
     name = "Callum Leslie";
     email = "git+nix@cleslie.uk";
