@@ -44,17 +44,16 @@ with lib;
 
           --
         '' config.warnings;
+        "asserts/warnings.expected".text = concatStringsSep ''
+
+          --
+        '' config.test.asserts.warnings.expected;
       };
 
       nmt.script = ''
         assertFileContent \
           home-files/asserts/warnings.actual \
-          ${
-            pkgs.writeText "warnings.expected" (concatStringsSep ''
-
-              --
-            '' config.test.asserts.warnings.expected)
-          }
+          "$TESTED/home-files/asserts/warnings.expected"
       '';
     })
 
@@ -64,17 +63,16 @@ with lib;
 
           --
         '' (map (x: x.message) (filter (x: !x.assertion) config.assertions));
+        "asserts/assertions.expected".text = concatStringsSep ''
+
+          --
+        '' config.test.asserts.assertions.expected;
       };
 
       nmt.script = ''
         assertFileContent \
           home-files/asserts/assertions.actual \
-          ${
-            pkgs.writeText "assertions.expected" (concatStringsSep ''
-
-              --
-            '' config.test.asserts.assertions.expected)
-          }
+          "$TESTED/home-files/asserts/assertions.expected"
       '';
     })
   ];
