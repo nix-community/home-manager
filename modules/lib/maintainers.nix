@@ -609,7 +609,7 @@
     email = "nix.contort160@simplelogin.com";
     github = "tph5595";
     githubId = 6002071;
-    };
+  };
   joygnu = {
     name = "joygnu";
     email = "contact@joygnu.org";
