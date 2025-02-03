@@ -7,6 +7,12 @@
 # [1] https://github.com/NixOS/nixpkgs/blob/fca0d6e093c82b31103dc0dacc48da2a9b06e24b/maintainers/maintainer-list.nix#LC1
 
 {
+  aabccd021 = {
+    name = "Muhamad Abdurahman";
+    email = "aabccd021@gmail.com";
+    github = "aabccd021";
+    githubId = 33031950;
+  };
   abayomi185 = {
     name = "Yomi";
     email = "yomi+nix@yomitosh.com";
@@ -343,6 +349,11 @@
     githubId = 12465195;
     name = "Bruno BELANYI";
   };
+  libewa = {
+    email = "libewa-git@icloud.com";
+    github = "libewa";
+    githubId = 67926131;
+  };
   malvo = {
     email = "malte@malvo.org";
     github = "malte-v";
@@ -598,6 +609,11 @@
     email = "nix.contort160@simplelogin.com";
     github = "tph5595";
     githubId = 6002071;
+  joygnu = {
+    name = "joygnu";
+    email = "contact@joygnu.org";
+    github = "joygnu";
+    githubId = 152063003;
   };
   callumio = {
     name = "Callum Leslie";

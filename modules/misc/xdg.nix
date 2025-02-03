@@ -30,6 +30,8 @@ in {
       apply = toString;
       description = ''
         Absolute path to directory holding application caches.
+
+        Sets `XDG_CACHE_HOME` for the user if `xdg.enable` is set `true`.
       '';
     };
 
@@ -48,6 +50,8 @@ in {
       apply = toString;
       description = ''
         Absolute path to directory holding application configurations.
+
+        Sets `XDG_CONFIG_HOME` for the user if `xdg.enable` is set `true`.
       '';
     };
 
@@ -67,6 +71,8 @@ in {
       apply = toString;
       description = ''
         Absolute path to directory holding application data.
+
+        Sets `XDG_DATA_HOME` for the user if `xdg.enable` is set `true`.
       '';
     };
 
@@ -86,6 +92,8 @@ in {
       apply = toString;
       description = ''
         Absolute path to directory holding application states.
+
+        Sets `XDG_STATE_HOME` for the user if `xdg.enable` is set `true`.
       '';
     };
   };

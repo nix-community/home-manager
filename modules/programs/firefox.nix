@@ -11,8 +11,7 @@ let
   mkFirefoxModule = import ./firefox/mkFirefoxModule.nix;
 
 in {
-  meta.maintainers =
-    [ maintainers.rycee maintainers.kira-bruneau hm.maintainers.bricked ];
+  meta.maintainers = [ maintainers.rycee hm.maintainers.bricked ];
 
   imports = [
     (mkFirefoxModule {

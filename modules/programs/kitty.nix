@@ -5,7 +5,7 @@ with lib;
 let
   cfg = config.programs.kitty;
 
-  eitherStrBoolInt = with types; either str (either bool int);
+  settingsValueType = with types; oneOf [ str bool int float ];
 
   optionalPackage = opt:
     optional (opt != null && opt.package != null) opt.package;
@@ -102,7 +102,7 @@ in {
     };
 
     settings = mkOption {
-      type = types.attrsOf eitherStrBoolInt;
+      type = types.attrsOf settingsValueType;
       default = { };
       example = literalExpression ''
         {

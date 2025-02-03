@@ -9,6 +9,12 @@ let
 
   firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
 
+  withName = path:
+    pkgs.substituteAll {
+      src = path;
+      name = cfg.wrappedPackageName;
+    };
+
 in {
   imports = [ firefoxMockOverlay ];
 
@@ -162,7 +168,27 @@ in {
     };
   } // {
 
-    nmt.script = ''
+    nmt.script = let
+
+      noHashQuery = ''
+        'def walk(f):
+             . as $in
+             | if type == "object" then
+                 reduce keys[] as $key
+                 ( {}; . + { ($key): ($in[$key] | walk(f)) } | f )
+               elif type == "array" then
+                 map( walk(f) )
+               else
+                 f
+               end;
+             walk(if type == "object" then
+                     if has("hash") then .hash = null else . end |
+                     if has("privateHash") then .privateHash = null else . end
+                  else
+                     .
+                  end)' '';
+
+    in ''
       assertFileRegex \
         home-path/bin/${cfg.wrappedPackageName} \
         MOZ_APP_LAUNCHER
@@ -171,18 +197,18 @@ in {
 
       assertFileContent \
         home-files/${cfg.configPath}/test/user.js \
-        ${./profile-settings-expected-user.js}
+        ${withName ./profile-settings-expected-user.js}
 
       assertFileContent \
         home-files/${cfg.configPath}/containers/containers.json \
-        ${./profile-settings-expected-containers.json}
+        ${withName ./profile-settings-expected-containers.json}
 
       bookmarksUserJs=$(normalizeStorePaths \
         home-files/${cfg.configPath}/bookmarks/user.js)
 
       assertFileContent \
         $bookmarksUserJs \
-        ${./profile-settings-expected-bookmarks-user.js}
+        ${withName ./profile-settings-expected-bookmarks-user.js}
 
       bookmarksFile="$(sed -n \
         '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \
@@ -190,13 +216,13 @@ in {
 
       assertFileContent \
         $bookmarksFile \
-        ${./profile-settings-expected-bookmarks.html}
+        ${withName ./profile-settings-expected-bookmarks.html}
 
       function assertFirefoxSearchContent() {
         compressedSearch=$(normalizeStorePaths "$1")
 
         decompressedSearch=$(dirname $compressedSearch)/search.json
-        ${pkgs.mozlz4a}/bin/mozlz4a -d "$compressedSearch" >(${pkgs.jq}/bin/jq . > "$decompressedSearch")
+        ${pkgs.mozlz4a}/bin/mozlz4a -d "$compressedSearch" >(${pkgs.jq}/bin/jq ${noHashQuery} > "$decompressedSearch")
 
         assertFileContent \
           $decompressedSearch \
@@ -205,11 +231,11 @@ in {
 
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/search/search.json.mozlz4 \
-        ${./profile-settings-expected-search.json}
+        ${withName ./profile-settings-expected-search.json}
 
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
-        ${./profile-settings-expected-search-without-default.json}
+        ${withName ./profile-settings-expected-search-without-default.json}
     '';
   });
 }

@@ -60,12 +60,14 @@ in import nmtSrc {
     ./modules/programs/bacon
     ./modules/programs/bash
     ./modules/programs/bat
+    ./modules/programs/borgmatic
     ./modules/programs/bottom
     ./modules/programs/broot
     ./modules/programs/browserpass
     ./modules/programs/btop
     ./modules/programs/carapace
     ./modules/programs/cava
+    ./modules/programs/cmus
     ./modules/programs/comodoro
     ./modules/programs/darcs
     ./modules/programs/dircolors
@@ -154,11 +156,13 @@ in import nmtSrc {
     ./modules/programs/tmux
     ./modules/programs/topgrade
     ./modules/programs/translate-shell
+    ./modules/programs/vifm
     ./modules/programs/vim-vint
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
     ./modules/programs/yazi
+    ./modules/programs/zed-editor
     ./modules/programs/zellij
     ./modules/programs/zk
     ./modules/programs/zplug
@@ -189,9 +193,9 @@ in import nmtSrc {
     ./modules/programs/awscli
     ./modules/programs/beets # One test relies on services.mpd
     ./modules/programs/bemenu
-    ./modules/programs/borgmatic
     ./modules/programs/boxxy
     ./modules/programs/firefox/firefox.nix
+    ./modules/programs/firefox/floorp.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel
@@ -270,6 +274,7 @@ in import nmtSrc {
     ./modules/services/remmina
     ./modules/services/screen-locker
     ./modules/services/signaturepdf
+    ./modules/services/snixembed
     ./modules/services/swayidle
     ./modules/services/swaync
     ./modules/services/swayosd
