@@ -228,9 +228,9 @@ in {
 
     programs.broot.settings = builtins.fromJSON (builtins.readFile
       (pkgs.runCommand "default-conf.json" {
-        nativeBuildInputs = [ pkgs.hjson ];
+        nativeBuildInputs = [ pkgs.hjson-go ];
       }
-        "hjson -c ${cfg.package.src}/resources/default-conf/conf.hjson > $out"));
+        "hjson-cli -c ${cfg.package.src}/resources/default-conf/conf.hjson > $out"));
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
 
