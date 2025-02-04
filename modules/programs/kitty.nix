@@ -204,6 +204,15 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [{
+      assertion = !(cfg.shellIntegration.mode == null
+        && (cfg.shellIntegration.enableBashIntegration
+          || cfg.shellIntegration.enableFishIntegration
+          || cfg.shellIntegration.enableZshIntegration));
+      message =
+        "Cannot enable shell integration when `programs.kitty.shellIntegration.mode` is `null`";
+    }];
+
     home.packages = [ cfg.package ] ++ optionalPackage cfg.font;
 
     xdg.configFile."kitty/kitty.conf" = {
