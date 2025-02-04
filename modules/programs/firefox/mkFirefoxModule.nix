@@ -303,12 +303,6 @@ in {
     profiles = mkOption {
       inherit visible;
       type = types.attrsOf (types.submodule ({ config, name, ... }: {
-        imports = lib.optional enableBookmarks
-          (mkAliasOptionModule [ "bookmarks" ] [
-            "bookmarksSubmodule"
-            "settings"
-          ]);
-
         options = {
           name = mkOption {
             type = types.str;
@@ -404,11 +398,32 @@ in {
             '';
           };
 
-          bookmarksSubmodule = mkOption {
-            type = types.submodule ({ config, ... }:
-              import ./profiles/bookmarks.nix { inherit config lib pkgs; });
+          bookmarks = mkOption {
+            type = (with types;
+              coercedTo (listOf anything) (bookmarks:
+                warn ''
+                  ${cfg.name} bookmarks have been refactored into a submodule that needs to be explicitly enabled.
 
-            internal = true;
+                  Replace:
+
+                  ${moduleName}.profiles.${name}.bookmarks = [ ... ];
+
+                  With:
+
+                  ${moduleName}.profiles.${name}.bookmarks = {
+                    enable = true;
+                    settings = [ ... ];
+                  };
+                '' {
+                  enable = true;
+                  settings = bookmarks;
+                }) (submodule ({ config, ... }:
+                  import ./profiles/bookmarks.nix {
+                    inherit config lib pkgs;
+                  })));
+            default = { };
+            internal = !enableBookmarks;
+            description = "Declarative bookmarks.";
           };
 
           path = mkOption {
@@ -645,9 +660,9 @@ in {
 
       "${profilesPath}/${profile.path}/user.js" = mkIf (profile.preConfig != ""
         || profile.settings != { } || profile.extraConfig != ""
-        || profile.bookmarksSubmodule.enable) {
+        || profile.bookmarks.enable) {
           text = mkUserJs profile.preConfig profile.settings profile.extraConfig
-            profile.bookmarksSubmodule.configFile;
+            profile.bookmarks.configFile;
         };
 
       "${profilesPath}/${profile.path}/containers.json" =

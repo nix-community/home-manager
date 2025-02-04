@@ -16,52 +16,56 @@ in {
     enable = true;
     profiles.bookmarks = {
       settings = { "general.smoothScroll" = false; };
-      bookmarks = [
-        {
-          toolbar = true;
-          bookmarks = [{
-            name = "Home Manager";
-            url = "https://wiki.nixos.org/wiki/Home_Manager";
-          }];
-        }
-        {
-          name = "wikipedia";
-          tags = [ "wiki" ];
-          keyword = "wiki";
-          url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
-        }
-        {
-          name = "kernel.org";
-          url = "https://www.kernel.org";
-        }
-        {
-          name = "Nix sites";
-          bookmarks = [
-            {
-              name = "homepage";
-              url = "https://nixos.org/";
-            }
-            {
-              name = "wiki";
-              tags = [ "wiki" "nix" ];
-              url = "https://wiki.nixos.org/";
-            }
-            {
-              name = "Nix sites";
-              bookmarks = [
-                {
-                  name = "homepage";
-                  url = "https://nixos.org/";
-                }
-                {
-                  name = "wiki";
-                  url = "https://wiki.nixos.org/";
-                }
-              ];
-            }
-          ];
-        }
-      ];
+      bookmarks = {
+        enable = true;
+        settings = [
+          {
+            toolbar = true;
+            bookmarks = [{
+              name = "Home Manager";
+              url = "https://wiki.nixos.org/wiki/Home_Manager";
+            }];
+          }
+          {
+            name = "wikipedia";
+            tags = [ "wiki" ];
+            keyword = "wiki";
+            url =
+              "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
+          }
+          {
+            name = "kernel.org";
+            url = "https://www.kernel.org";
+          }
+          {
+            name = "Nix sites";
+            bookmarks = [
+              {
+                name = "homepage";
+                url = "https://nixos.org/";
+              }
+              {
+                name = "wiki";
+                tags = [ "wiki" "nix" ];
+                url = "https://wiki.nixos.org/";
+              }
+              {
+                name = "Nix sites";
+                bookmarks = [
+                  {
+                    name = "homepage";
+                    url = "https://nixos.org/";
+                  }
+                  {
+                    name = "wiki";
+                    url = "https://wiki.nixos.org/";
+                  }
+                ];
+              }
+            ];
+          }
+        ];
+      };
     };
   } // {
     nmt.script = ''
