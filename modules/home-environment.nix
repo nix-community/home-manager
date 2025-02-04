@@ -530,7 +530,7 @@ in
       if config.submoduleSupport.enable
         && config.submoduleSupport.externalPackageInstall
       then "/etc/profiles/per-user/${cfg.username}"
-      else if config.nix.enable && (config.nix.settings.use-xdg-base-directories or false)
+      else if config.nix.enable || (config.nix.settings.use-xdg-base-directories or false)
       then "${config.xdg.stateHome}/nix/profile"
       else cfg.homeDirectory + "/.nix-profile";
 
