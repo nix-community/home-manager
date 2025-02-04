@@ -388,7 +388,7 @@ in {
           settings = mkOption {
             type = types.attrsOf (jsonFormat.type // {
               description =
-                "${name} preference (int, bool, string, and also attrs, list, float as a JSON string)";
+                "${cfg.name} preference (int, bool, string, and also attrs, list, float as a JSON string)";
             });
             default = { };
             example = literalExpression ''
@@ -406,9 +406,9 @@ in {
               }
             '';
             description = ''
-              Attribute set of ${name} preferences.
+              Attribute set of ${cfg.name} preferences.
 
-              ${name} only supports int, bool, and string types for
+              ${cfg.name} only supports int, bool, and string types for
               preferences, but home-manager will automatically
               convert all other JSON-compatible values into strings.
             '';
@@ -425,7 +425,7 @@ in {
           userChrome = mkOption {
             type = types.lines;
             default = "";
-            description = "Custom ${name} user chrome CSS.";
+            description = "Custom ${cfg.name} user chrome CSS.";
             example = ''
               /* Hide tab bar in FF Quantum */
               @-moz-document url(chrome://browser/content/browser.xul), url(chrome://browser/content/browser.xhtml) {
@@ -444,7 +444,7 @@ in {
           userContent = mkOption {
             type = types.lines;
             default = "";
-            description = "Custom ${name} user content CSS.";
+            description = "Custom ${cfg.name} user content CSS.";
             example = ''
               /* Hide scrollbar in FF Quantum */
               *{scrollbar-width:none !important}
@@ -676,7 +676,7 @@ in {
               ]
             '';
             description = ''
-              List of ${name} add-on packages to install for this profile.
+              List of ${cfg.name} add-on packages to install for this profile.
               Some pre-packaged add-ons are accessible from the
               [Nix User Repository](https://github.com/nix-community/NUR).
               Once you have NUR installed run
@@ -685,10 +685,10 @@ in {
               $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
               ```
 
-              to list the available ${name} add-ons.
+              to list the available ${cfg.name} add-ons.
 
               Note that it is necessary to manually enable these extensions
-              inside ${name} after the first installation.
+              inside ${cfg.name} after the first installation.
 
               To automatically enable extensions add
               `"extensions.autoDisableScopes" = 0;`
@@ -700,7 +700,7 @@ in {
         };
       }));
       default = { };
-      description = "Attribute set of ${name} profiles.";
+      description = "Attribute set of ${cfg.name} profiles.";
     };
 
     enableGnomeExtensions = mkOption {
