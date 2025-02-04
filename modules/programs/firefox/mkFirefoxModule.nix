@@ -201,7 +201,7 @@ let
     in {
       assertion = duplicates == { };
       message = ''
-        Must not have a ${name} ${entityKind} with an existing ID but
+        Must not have a ${cfg.name} ${entityKind} with an existing ID but
       '' + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
     });
 
@@ -236,7 +236,7 @@ in {
       default = false;
       example = true;
       description = ''
-        Whether to enable ${name}.${
+        Whether to enable ${cfg.name}.${
           optionalString (description != null) " ${description}"
         }
         ${optionalString (!visible)
@@ -261,10 +261,10 @@ in {
         }
       '';
       description = ''
-        The ${name} package to use. If state version ≥ 19.09 then
-        this should be a wrapped ${name} package. For earlier state
-        versions it should be an unwrapped ${name} package.
-        Set to `null` to disable installing ${name}.
+        The ${cfg.name} package to use. If state version ≥ 19.09 then
+        this should be a wrapped ${cfg.name} package. For earlier state
+        versions it should be an unwrapped ${cfg.name} package.
+        Set to `null` to disable installing ${cfg.name}.
       '';
     };
 
@@ -275,7 +275,7 @@ in {
         The language packs to install. Available language codes can be found
         on the releases page:
         `https://releases.mozilla.org/pub/firefox/releases/''${version}/linux-x86_64/xpi/`,
-        replacing `''${version}` with the version of Firefox you have.
+        replacing `''${version}` with the version of ${cfg.name} you have.
       '';
       example = [ "en-GB" "de" ];
     };
@@ -314,7 +314,7 @@ in {
       default = with platforms;
         if isDarwin then darwin.configPath else linux.configPath;
       example = ".mozilla/firefox";
-      description = "Directory containing the ${name} configuration files.";
+      description = "Directory containing the ${cfg.name} configuration files.";
     };
 
     nativeMessagingHosts = optionalAttrs (cfg.vendorPath != null) (mkOption {
@@ -323,7 +323,7 @@ in {
       default = [ ];
       description = ''
         Additional packages containing native messaging hosts that should be
-        made available to ${name} extensions.
+        made available to ${cfg.name} extensions.
       '';
     });
 
@@ -584,7 +584,7 @@ in {
             default = false;
             description = ''
               Whether to force replace the existing containers configuration.
-              This is recommended since Firefox will replace the symlink on
+              This is recommended since ${cfg.name} will replace the symlink on
               every launch, but note that you'll lose any existing configuration
               by enabling this.
             '';
