@@ -16,6 +16,8 @@
       #           script-binding uosc/video                   #! Video tracks
     '';
 
+    includes = [ "manual.conf" ];
+
     config = {
       force-window = true;
       ytdl-format = "bestvideo+bestaudio";
