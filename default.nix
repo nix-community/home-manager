@@ -24,6 +24,7 @@ in rec {
     pkgs.callPackage ./home-manager/install.nix { inherit home-manager; };
 
   nixos = import ./nixos;
+  lib = import ./lib { inherit (pkgs) lib; };
 
   inherit path;
 }
