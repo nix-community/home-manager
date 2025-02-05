@@ -33,15 +33,18 @@ let
       modulesPath = builtins.toString ../modules;
     }
     // cfg.extraSpecialArgs;
+
     modules = [
       (
         { name, ... }:
         {
-          imports = import ../modules/modules.nix {
-            inherit pkgs;
-            lib = extendedLib;
-            useNixpkgsModule = !cfg.useGlobalPkgs;
-          };
+          imports =
+            import ../modules/modules.nix {
+              inherit pkgs;
+              lib = extendedLib;
+              useNixpkgsModule = !cfg.useGlobalPkgs;
+            }
+            ++ cfg.sharedModules;
 
           config = {
             submoduleSupport.enable = true;
@@ -63,8 +66,7 @@ let
           };
         }
       )
-    ]
-    ++ cfg.sharedModules;
+    ];
   };
 
 in
