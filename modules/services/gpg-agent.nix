@@ -18,6 +18,10 @@ let
     export GPG_TTY
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
+  gpgZshInitStr = ''
+    export GPG_TTY=$TTY
+  '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
+
   gpgFishInitStr = ''
     set -gx GPG_TTY (tty)
   '' + optionalString cfg.enableSshSupport gpgSshSupportStr;
@@ -214,6 +218,21 @@ in {
         '';
       };
 
+      noAllowExternalCache = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Tell Pinentry not to enable features which use an external cache for
+          passphrases.
+
+          Some desktop environments prefer to unlock all credentials with one
+          master password and may have installed a Pinentry which employs an
+          additional external cache to implement such a policy. By using this
+          option the Pinentry is advised not to make use of such a cache and
+          instead always ask the user for the requested passphrase.
+        '';
+      };
+
       extraConfig = mkOption {
         type = types.lines;
         default = "";
@@ -231,15 +250,12 @@ in {
         example = literalExpression "pkgs.pinentry-gnome3";
         default = null;
         description = ''
-          Which pinentry interface to use. If not
-          `null`, it sets
-          {option}`pinentry-program` in
-          {file}`gpg-agent.conf`. Beware that
-          `pinentry-gnome3` may not work on non-Gnome
-          systems. You can fix it by adding the following to your
-          system configuration:
+          Which pinentry interface to use. If not `null`, it sets
+          {option}`pinentry-program` in {file}`gpg-agent.conf`. Beware that
+          `pinentry-gnome3` may not work on non-GNOME systems. You can fix it by
+          adding the following to your configuration:
           ```nix
-          services.dbus.packages = [ pkgs.gcr ];
+          home.packages = [ pkgs.gcr ];
           ```
         '';
       };
@@ -268,6 +284,7 @@ in {
         (optional (cfg.enableSshSupport) "enable-ssh-support"
           ++ optional cfg.grabKeyboardAndMouse "grab"
           ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
+          ++ optional (cfg.noAllowExternalCache) "no-allow-external-cache"
           ++ optional (cfg.defaultCacheTtl != null)
           "default-cache-ttl ${toString cfg.defaultCacheTtl}"
           ++ optional (cfg.defaultCacheTtlSsh != null)
@@ -281,13 +298,13 @@ in {
           ++ [ cfg.extraConfig ]);
 
       home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
-        if [[ -z "$SSH_AUTH_SOCK" ]]; then
+        if [ -z "$SSH_AUTH_SOCK" ]; then
           export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
         fi
       '';
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
-      programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgInitStr;
+      programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgZshInitStr;
       programs.fish.interactiveShellInit =
         mkIf cfg.enableFishIntegration gpgFishInitStr;
 

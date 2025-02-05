@@ -17,10 +17,10 @@ $ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/m
 $ sudo nix-channel --update
 ```
 
-and if you follow a Nixpkgs version 24.05 channel, you can run
+and if you follow a Nixpkgs version 24.11 channel, you can run
 
 ``` shell
-$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz home-manager
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz home-manager
 $ sudo nix-channel --update
 ```
 
@@ -44,7 +44,7 @@ home-manager.users.eve = { pkgs, ... }: {
 
   # The state version is required and should stay at the version you
   # originally installed.
-  home.stateVersion = "24.05";
+  home.stateVersion = "24.11";
 };
 ```
 

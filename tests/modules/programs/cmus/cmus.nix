@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.cmus = {
     enable = true;

@@ -52,8 +52,8 @@ in {
   };
 
   config = {
-    warnings = lib.optionals (!(cfg.clean.enable -> !osConfig.nix.gc.automatic))
-      [
+    warnings = lib.optionals
+      (osConfig != null && !(cfg.clean.enable -> !osConfig.nix.gc.automatic)) [
         "programs.nh.clean.enable and nix.gc.automatic (system-wide in configuration.nix) are both enabled. Please use one or the other to avoid conflict."
       ];
 
@@ -74,8 +74,7 @@ in {
         Service = {
           Type = "oneshot";
           ExecStart =
-            "exec ${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
-          Environment = "PATH=$PATH:${config.nix.package}";
+            "${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
         };
       };
 

@@ -8,7 +8,11 @@ let
     gnome = [ qgnomeplatform qgnomeplatform-qt6 ];
     adwaita = [ qadwaitadecorations qadwaitadecorations-qt6 ];
     gtk = [ libsForQt5.qtstyleplugins qt6Packages.qt6gtk2 ];
-    kde = [ libsForQt5.plasma-integration libsForQt5.systemsettings ];
+    kde = [
+      libsForQt5.kio
+      libsForQt5.plasma-integration
+      libsForQt5.systemsettings
+    ];
     lxqt = [ lxqt.lxqt-qtplugin lxqt.lxqt-config ];
     qtct = [ libsForQt5.qt5ct qt6Packages.qt6ct ];
   };

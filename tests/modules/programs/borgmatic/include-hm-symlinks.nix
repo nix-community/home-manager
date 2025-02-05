@@ -1,8 +1,7 @@
-{ config, pkgs, ... }:
+{ realPkgs, ... }:
 
 let
 
-  backups = config.programs.borgmatic.backups;
   excludeFile = builtins.toFile "excludeFile.txt" "/foo/bar";
 
 in {
@@ -20,8 +19,6 @@ in {
     };
   };
 
-  test.stubs.borgmatic = { };
-
   nmt.script = ''
     config_file=$TESTED/home-files/.config/borgmatic.d/main.yaml
     assertFileExists $config_file
@@ -30,7 +27,7 @@ in {
 
     expectations[exclude_from[0]]="${excludeFile}"
 
-    yq=${pkgs.yq-go}/bin/yq
+    yq=${realPkgs.yq-go}/bin/yq
 
     for filter in "''${!expectations[@]}"; do
       expected_value="''${expectations[$filter]}"

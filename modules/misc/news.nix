@@ -1701,6 +1701,16 @@ in {
       }
 
       {
+        time = "2024-08-18T11:42:08+00:00";
+        message = ''
+          A new module is available: 'programs.lapce'.
+
+          Lightning-fast and Powerful Code Editor written in Rust.
+          See https://lapce.dev/ for more.
+        '';
+      }
+
+      {
         time = "2024-09-13T08:58:17+00:00";
         condition = hostPlatform.isLinux;
         message = ''
@@ -1801,6 +1811,214 @@ in {
           itself.
         '';
       }
+
+      {
+        time = "2024-10-25T08:18:30+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'nixGL'.
+
+          NixGL solve the "OpenGL" problem with nix. The 'nixGL' module provides
+          integration of NixGL into Home Manager. See the "GPU on non-NixOS
+          systems" section in the Home Manager manual for more.
+        '';
+      }
+
+      {
+        time = "2024-11-01T19:44:59+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.podman'.
+
+          Podman is a daemonless container engine that lets you manage
+          containers, pods, and images.
+
+          This Home Manager module allows you to define containers that will run
+          as systemd services.
+        '';
+      }
+
+      {
+        time = "2024-12-01T19:17:40+00:00";
+        message = ''
+          A new module is available: 'programs.nix-your-shell'.
+
+          nix-your-shell is a wrapper for `nix develop` or `nix-shell` to retain
+          the same shell inside the new environment.
+        '';
+      }
+
+      {
+        time = "2024-12-01T19:34:04+00:00";
+        message = ''
+          A new module is available: 'programs.kubecolor'.
+
+          Kubecolor is a kubectl wrapper used to add colors to your kubectl
+          output.
+        '';
+      }
+
+      {
+        time = "2024-12-04T20:00:00+00:00";
+        condition = let
+          sCfg = config.programs.starship;
+          fCfg = config.programs.fish;
+        in sCfg.enable && sCfg.enableFishIntegration && fCfg.enable;
+        message = ''
+          A new option 'programs.starship.enableInteractive' is available for
+          the Fish shell that only enables starship if the shell is interactive.
+
+          Some plugins require this to be set to 'false' to function correctly.
+        '';
+      }
+      {
+        time = "2024-12-08T17:22:13+00:00";
+        condition = let
+          usingMbsync = any (a: a.mbsync.enable)
+            (attrValues config.accounts.email.accounts);
+        in usingMbsync;
+        message = ''
+          isync/mbsync 1.5.0 has changed several things.
+
+          isync gained support for using $XDG_CONFIG_HOME, and now places
+          its config file in '$XDG_CONFIG_HOME/isyncrc'.
+
+          isync changed the configuration options SSLType and SSLVersion to
+          TLSType and TLSVersion respectively.
+
+          All instances of
+          'accounts.email.accounts.<account-name>.mbsync.extraConfig.account'
+          that use 'SSLType' or 'SSLVersion' should be replaced with 'TLSType'
+          or 'TLSVersion', respectively.
+
+          TLSType options are unchanged.
+
+          TLSVersions has a new syntax, requiring a change to the Nix syntax.
+          Old Syntax: SSLVersions = [ "TLSv1.3" "TLSv1.2" ];
+          New Syntax: TLSVersions = [ "+1.3" "+1.2" "-1.1" ];
+          NOTE: The minus symbol means to NOT use that particular TLS version.
+        '';
+      }
+
+      {
+        time = "2024-12-10T22:20:10+00:00";
+        condition = config.programs.nushell.enable;
+        message = ''
+          The module 'programs.nushell' can now manage the Nushell plugin
+          registry with the option 'programs.nushell.plugins'.
+        '';
+      }
+
+      {
+        time = "2024-12-21T17:07:49+00:00";
+        message = ''
+          A new module is available: 'programs.pay-respects'.
+
+          Pay Respects is a shell command suggestions tool and command-not-found
+          and thefuck replacement written in Rust.
+        '';
+      }
+
+      {
+        time = "2024-12-22T08:24:29+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.cavalier'.
+
+          Cavalier is a GUI wrapper around the Cava audio visualizer.
+        '';
+      }
+
+      {
+        time = "2025-01-01T15:31:15+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The 'systemd.user.startServices' option now defaults to 'true',
+          meaning that services will automatically be restarted as needed when
+          activating a configuration.
+
+          Further, the "legacy" alternative has been removed and will now result
+          in an evaluation error if used.
+
+          The "suggest" alternative will remain for a while longer but may also
+          be deprecated for removal in the future.
+        '';
+      }
+
+      {
+        time = "2025-01-01T23:16:35+00:00";
+        message = ''
+          A new module is available: 'programs.ghostty'.
+
+          Ghostty is a terminal emulator that differentiates itself by being
+          fast, feature-rich, and native. While there are many excellent
+          terminal emulators available, they all force you to choose between
+          speed, features, or native UIs. Ghostty provides all three.
+        '';
+      }
+
+      {
+        time = "2025-01-04T15:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.wayfire'.
+
+          Wayfire is a 3D Wayland compositor, inspired by Compiz and based on
+          wlroots. It aims to create a customizable, extendable and lightweight
+          environment without sacrificing its appearance.
+
+          This Home Manager module allows you to configure both wayfire itself,
+          as well as wf-shell.
+        '';
+      }
+
+      {
+        time = "2025-01-21T17:28:13+00:00";
+        condition = with config.programs.yazi; enable && enableFishIntegration;
+        message = ''
+          Yazi's fish shell integration wrapper now calls the 'yazi' executable
+          directly, ignoring any shell aliases with the same name.
+
+          Your configuration may break if you rely on the wrapper calling a
+          'yazi' alias.
+        '';
+      }
+
+      {
+        time = "2025-01-29T17:34:53+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          The Firefox module now provides a
+          'programs.firefox.profiles.<name>.preConfig' option.
+
+          It allows extra preferences to be added to 'user.js' before the
+          options specified in 'programs.firefox.profiles.<name>.settings', so
+          that they can be overwritten.
+        '';
+      }
+
+      {
+        time = "2025-01-29T19:11:20+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'programs.aerospace'.
+
+          AeroSpace is an i3-like tiling window manager for macOS.
+          See https://github.com/nikitabobko/AeroSpace for more.
+        '';
+      }
+
+      {
+        time = "2025-01-30T09:18:55+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.linux-wallpaperengine'.
+
+          Reproduce the background functionality of Wallpaper Engine on Linux
+          systems.
+        '';
+      }
     ];
   };
 }
+

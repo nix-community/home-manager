@@ -6,7 +6,8 @@ let
   cfg = config.programs.ripgrep;
   configPath = "${config.xdg.configHome}/ripgrep/ripgreprc";
 in {
-  meta.maintainers = [ hm.maintainers.pedorich-n ];
+  meta.maintainers =
+    [ lib.maintainers.khaneliman lib.hm.maintainers.pedorich-n ];
 
   options = {
     programs.ripgrep = {

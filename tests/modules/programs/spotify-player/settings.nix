@@ -87,9 +87,23 @@
         key_sequence = "q";
       }
     ];
-  };
 
-  test.stubs.spotify-player = { };
+    actions = [
+      {
+        action = "GoToArtist";
+        key_sequence = "g A";
+      }
+      {
+        action = "GoToAlbum";
+        key_sequence = "g B";
+        target = "PlayingTrack";
+      }
+      {
+        action = "ToggleLiked";
+        key_sequence = "C-l";
+      }
+    ];
+  };
 
   nmt.script = ''
     assertFileContent home-files/.config/spotify-player/app.toml ${./app.toml}

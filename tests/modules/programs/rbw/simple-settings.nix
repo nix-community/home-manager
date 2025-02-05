@@ -8,7 +8,7 @@ let
   else
     ".config/rbw/config.json";
 
-  expected = pkgs.writeText "rbw-expected.json" ''
+  expected = builtins.toFile "rbw-expected.json" ''
     {
       "base_url": null,
       "email": "name@example.com",
@@ -18,8 +18,6 @@ let
     }
   '';
 in {
-  imports = [ ./rbw-stubs.nix ];
-
   programs.rbw = {
     enable = true;
     settings = { email = "name@example.com"; };

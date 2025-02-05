@@ -15,8 +15,6 @@ with lib;
       context = [ "/home/test_user/your_project_repo" ];
     }];
 
-    test.stubs.boxxy = { };
-
     nmt.script = ''
       boxxyyaml=home-files/.config/boxxy/boxxy.yaml
       assertFileExists $boxxyyaml

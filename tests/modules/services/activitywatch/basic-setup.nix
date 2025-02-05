@@ -5,7 +5,6 @@ let stubPackage = config.lib.test.mkStubPackage { };
 in {
   services.activitywatch = {
     enable = true;
-    package = stubPackage;
     settings = {
       port = 3012;
       custom_static = { custom-watcher = stubPackage; };

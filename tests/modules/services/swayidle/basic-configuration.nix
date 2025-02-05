@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, ... }:
 
 {
   services.swayidle = {
@@ -44,12 +44,13 @@
         WantedBy=graphical-session.target
 
         [Service]
-        Environment=PATH=/nix/store/00000000000000000000000000000000-bash/bin
+        Environment=PATH=@bash@/bin
         ExecStart=@swayidle@/bin/dummy -w timeout 50 'notify-send -t 10000 -- "Screen lock in 10 seconds"' timeout 60 'swaylock -fF' timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock -fF' lock 'swaylock -fF'
         Restart=always
         Type=simple
 
         [Unit]
+        After=graphical-session.target
         ConditionEnvironment=WAYLAND_DISPLAY
         Description=Idle manager for Wayland
         Documentation=man:swayidle(1)

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, appName, modulePath, profilePath }:
+{ config, lib, pkgs, appName, package, modulePath, profilePath }:
 
 with lib;
 
@@ -108,10 +108,10 @@ let
   # a claim by Mozilla to remove this would be very anti-user, and
   # is unlikely to be an issue for our use case.
   disclaimer = "By modifying this file, I agree that I am doing so "
-    + "only within ${appName} itself, using official, user-driven search "
+    + "only within @appName@ itself, using official, user-driven search "
     + "engine selection processes, and in a way which does not circumvent "
     + "user consent. I acknowledge that any attempt to change this file "
-    + "from outside of ${appName} is a malicious act, and will be responded "
+    + "from outside of @appName@ is a malicious act, and will be responded "
     + "to accordingly.";
 
   salt = if config.default != null then
@@ -124,11 +124,29 @@ let
   else
     null;
 
+  appNameVariable = if package == null then
+    "appName=${lib.escapeShellArg appName}"
+  else ''
+    applicationIni="$(find ${lib.escapeShellArg package} -maxdepth 3 -path ${
+      lib.escapeShellArg package
+    }'/lib/*/application.ini' -print -quit)"
+    if test -n "$applicationIni"; then
+      appName="$(sed -n 's/^Name=\(.*\)$/\1/p' "$applicationIni" | head -n1)"
+    else
+      appName=${lib.escapeShellArg appName}
+    fi
+  '';
+
   file = pkgs.runCommand "search.json.mozlz4" {
     nativeBuildInputs = with pkgs; [ mozlz4a openssl ];
     json = builtins.toJSON settings;
     inherit salt privateSalt;
   } ''
+    ${appNameVariable}
+
+    salt=''${salt//@appName@/"$appName"}
+    privateSalt=''${privateSalt//@appName@/"$appName"}
+
     if [[ -n $salt ]]; then
       export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
       export privateHash=$(echo -n "$privateSalt" | openssl dgst -sha256 -binary | base64)

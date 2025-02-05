@@ -1,10 +1,6 @@
-{ config, ... }:
-
 {
   programs.yambar = {
     enable = true;
-    package = config.lib.test.mkStubPackage { };
-
     settings = {
       bar = {
         location = "top";

@@ -28,8 +28,6 @@ with lib;
       '';
     };
 
-    test.stubs.abook = { };
-
     nmt.script = ''
       assertFileExists home-files/.config/abook/abookrc
       assertFileContent home-files/.config/abook/abookrc ${./with-settings.cfg}

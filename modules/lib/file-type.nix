@@ -99,7 +99,6 @@ in {
         force = mkOption {
           type = types.bool;
           default = false;
-          visible = false;
           description = ''
             Whether the target path should be unconditionally replaced
             by the managed file source. Warning, this will silently

@@ -104,6 +104,23 @@ let
         '';
       };
 
+      saveNoDups = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Do not write duplicate entries into the history file.
+        '';
+      };
+
+      findNoDups = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Do not display a line previously found in the history
+          file.
+        '';
+      };
+
       ignoreSpace = mkOption {
         type = types.bool;
         default = true;
@@ -427,6 +444,9 @@ in
             - `match_prev_cmd`: Like `history`, but chooses the most recent match whose preceding history item matches
                 the most recently executed command. Note that this strategy won't work as expected with ZSH options that
                 don't preserve the history order such as `HIST_IGNORE_ALL_DUPS` or `HIST_EXPIRE_DUPS_FIRST`.
+
+            Setting the option to an empty list `[]` will make ZSH_AUTOSUGGESTION_STRATEGY not be set automatically,
+            allowing the variable to be declared in {option}`programs.zsh.localVariables` or {option}`programs.zsh.sessionVariables`
           '';
         };
       };
@@ -641,7 +661,10 @@ in
 
         (optionalString cfg.autosuggestion.enable ''
           source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-          ZSH_AUTOSUGGEST_STRATEGY=(${concatStringsSep " " cfg.autosuggestion.strategy})
+          ${optionalString (cfg.autosuggestion.strategy != []) ''
+            ZSH_AUTOSUGGEST_STRATEGY=(${concatStringsSep " " cfg.autosuggestion.strategy})
+          ''
+          }
         '')
         (optionalString (cfg.autosuggestion.enable && cfg.autosuggestion.highlight != null) ''
           ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="${cfg.autosuggestion.highlight}"
@@ -665,7 +688,7 @@ in
 
         ''
         ${optionalString cfg.prezto.enable
-            (builtins.readFile "${pkgs.zsh-prezto}/share/zsh-prezto/runcoms/zshrc")}
+            (builtins.readFile "${cfg.prezto.package}/share/zsh-prezto/runcoms/zshrc")}
 
         ${concatStrings (map (plugin: ''
           if [[ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
@@ -687,6 +710,8 @@ in
         ${if cfg.history.append then "setopt" else "unsetopt"} APPEND_HISTORY
         ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
         ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
+        ${if cfg.history.saveNoDups then "setopt" else "unsetopt"} HIST_SAVE_NO_DUPS
+        ${if cfg.history.findNoDups then "setopt" else "unsetopt"} HIST_FIND_NO_DUPS
         ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY

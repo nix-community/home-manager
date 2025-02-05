@@ -7,7 +7,8 @@ let
   jsonFormat = pkgs.formats.json { };
 
 in {
-  meta.maintainers = [ lib.hm.maintainers.abayomi185 ];
+  meta.maintainers =
+    [ lib.hm.maintainers.abayomi185 lib.maintainers.khaneliman ];
 
   options.services.swaync = {
     enable = lib.mkEnableOption "Swaync notification daemon";
@@ -95,8 +96,8 @@ in {
       Unit = {
         Description = "Swaync notification daemon";
         Documentation = "https://github.com/ErikReider/SwayNotificationCenter";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session-pre.target" ];
+        PartOf = [ config.wayland.systemd.target ];
+        After = [ config.wayland.systemd.target ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
@@ -107,7 +108,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install.WantedBy = [ "graphical-session.target" ];
+      Install.WantedBy = [ config.wayland.systemd.target ];
     };
   };
 }

@@ -36,11 +36,7 @@ let
 
 in {
   nixpkgs.overlays = [
-    (self: super: {
-      gnome = super.gnome.overrideScope (gself: gsuper: {
-        gnome-shell-extensions = dummy-gnome-shell-extensions;
-      });
-    })
+    (final: prev: { gnome-shell-extensions = dummy-gnome-shell-extensions; })
   ];
 
   programs.gnome-shell.enable = true;
@@ -82,8 +78,6 @@ in {
       message = "Expected extensions/user-theme/name to be 'Test'.";
     }
   ];
-
-  test.stubs.dconf = { };
 
   nmt.script = ''
     assertFileExists home-path/share/gnome-shell/extensions/dummy-package/test

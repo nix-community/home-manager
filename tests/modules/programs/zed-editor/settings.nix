@@ -17,7 +17,6 @@
   nmt.script = let
     expectedContent = builtins.toFile "expected.json" ''
       {
-        "auto_install_extensions": {},
         "buffer_font_size": 16,
         "features": {
           "copilot": false

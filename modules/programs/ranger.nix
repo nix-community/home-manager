@@ -142,7 +142,7 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       programs.ranger.finalPackage = cfg.package.overrideAttrs (oldAttrs: {
-        propagatedBuildInputs = oldAttrs.propagatedBuildInputs
+        propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or [ ])
           ++ cfg.extraPackages;
       });
 

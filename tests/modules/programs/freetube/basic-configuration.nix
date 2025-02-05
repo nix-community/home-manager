@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   programs.freetube = {
     enable = true;
@@ -16,8 +14,6 @@
       defaultQuality = "1080";
     };
   };
-
-  test.stubs.freetube = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/FreeTube/hm_settings.db

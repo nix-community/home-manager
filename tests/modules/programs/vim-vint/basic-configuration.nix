@@ -1,5 +1,3 @@
-{ config, pkgs, lib, xdg, ... }:
-
 {
   programs.vim-vint = {
     enable = true;

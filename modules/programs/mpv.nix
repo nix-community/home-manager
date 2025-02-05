@@ -130,6 +130,19 @@ in {
         '';
       };
 
+      includes = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = literalExpression ''
+          [
+            "~/path/to/config.inc";
+            "~/path/to/conditional.inc";
+          ]
+        '';
+        description =
+          "List of configuration files to include at the end of mpv.conf.";
+      };
+
       profiles = mkOption {
         description = ''
           Sub-configuration options for specific profiles written to
@@ -207,6 +220,14 @@ in {
       home.packages = [ mpvPackage ];
       programs.mpv.finalPackage = mpvPackage;
     }
+
+    (mkIf (cfg.includes != [ ]) {
+      xdg.configFile."mpv/mpv.conf" = {
+        text = lib.mkAfter
+          (concatMapStringsSep "\n" (x: "include=${x}") cfg.includes);
+      };
+    })
+
     (mkIf (cfg.config != { } || cfg.profiles != { }) {
       xdg.configFile."mpv/mpv.conf".text = ''
         ${optionalString (cfg.defaultProfiles != [ ])

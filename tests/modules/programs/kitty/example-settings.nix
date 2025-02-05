@@ -31,8 +31,6 @@ with lib;
       environment = { LS_COLORS = "1"; };
     };
 
-    test.stubs.kitty = { };
-
     nmt.script = ''
       assertFileExists home-files/.config/kitty/kitty.conf
       assertFileContent \

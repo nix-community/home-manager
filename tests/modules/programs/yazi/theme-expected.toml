@@ -12,4 +12,4 @@ mime = "audio/*"
 
 [[filetype.rules]]
 fg = "#CD9EFC"
-mime = "application/x-bzip"
+mime = "application/bzip"
