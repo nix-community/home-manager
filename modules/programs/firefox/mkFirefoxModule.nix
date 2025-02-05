@@ -201,7 +201,7 @@ let
     in {
       assertion = duplicates == { };
       message = ''
-        Must not have a ${name} ${entityKind} with an existing ID but
+        Must not have a ${cfg.name} ${entityKind} with an existing ID but
       '' + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
     });
 
@@ -236,7 +236,7 @@ in {
       default = false;
       example = true;
       description = ''
-        Whether to enable ${name}.${
+        Whether to enable ${cfg.name}.${
           optionalString (description != null) " ${description}"
         }
         ${optionalString (!visible)
@@ -261,10 +261,10 @@ in {
         }
       '';
       description = ''
-        The ${name} package to use. If state version ≥ 19.09 then
-        this should be a wrapped ${name} package. For earlier state
-        versions it should be an unwrapped ${name} package.
-        Set to `null` to disable installing ${name}.
+        The ${cfg.name} package to use. If state version ≥ 19.09 then
+        this should be a wrapped ${cfg.name} package. For earlier state
+        versions it should be an unwrapped ${cfg.name} package.
+        Set to `null` to disable installing ${cfg.name}.
       '';
     };
 
@@ -275,7 +275,7 @@ in {
         The language packs to install. Available language codes can be found
         on the releases page:
         `https://releases.mozilla.org/pub/firefox/releases/''${version}/linux-x86_64/xpi/`,
-        replacing `''${version}` with the version of Firefox you have.
+        replacing `''${version}` with the version of ${cfg.name} you have.
       '';
       example = [ "en-GB" "de" ];
     };
@@ -314,7 +314,7 @@ in {
       default = with platforms;
         if isDarwin then darwin.configPath else linux.configPath;
       example = ".mozilla/firefox";
-      description = "Directory containing the ${name} configuration files.";
+      description = "Directory containing the ${cfg.name} configuration files.";
     };
 
     nativeMessagingHosts = optionalAttrs (cfg.vendorPath != null) (mkOption {
@@ -323,7 +323,7 @@ in {
       default = [ ];
       description = ''
         Additional packages containing native messaging hosts that should be
-        made available to ${name} extensions.
+        made available to ${cfg.name} extensions.
       '';
     });
 
@@ -388,7 +388,7 @@ in {
           settings = mkOption {
             type = types.attrsOf (jsonFormat.type // {
               description =
-                "${name} preference (int, bool, string, and also attrs, list, float as a JSON string)";
+                "${cfg.name} preference (int, bool, string, and also attrs, list, float as a JSON string)";
             });
             default = { };
             example = literalExpression ''
@@ -406,9 +406,9 @@ in {
               }
             '';
             description = ''
-              Attribute set of ${name} preferences.
+              Attribute set of ${cfg.name} preferences.
 
-              ${name} only supports int, bool, and string types for
+              ${cfg.name} only supports int, bool, and string types for
               preferences, but home-manager will automatically
               convert all other JSON-compatible values into strings.
             '';
@@ -425,7 +425,7 @@ in {
           userChrome = mkOption {
             type = types.lines;
             default = "";
-            description = "Custom ${name} user chrome CSS.";
+            description = "Custom ${cfg.name} user chrome CSS.";
             example = ''
               /* Hide tab bar in FF Quantum */
               @-moz-document url(chrome://browser/content/browser.xul), url(chrome://browser/content/browser.xhtml) {
@@ -444,7 +444,7 @@ in {
           userContent = mkOption {
             type = types.lines;
             default = "";
-            description = "Custom ${name} user content CSS.";
+            description = "Custom ${cfg.name} user content CSS.";
             example = ''
               /* Hide scrollbar in FF Quantum */
               *{scrollbar-width:none !important}
@@ -584,7 +584,7 @@ in {
             default = false;
             description = ''
               Whether to force replace the existing containers configuration.
-              This is recommended since Firefox will replace the symlink on
+              This is recommended since ${cfg.name} will replace the symlink on
               every launch, but note that you'll lose any existing configuration
               by enabling this.
             '';
@@ -676,7 +676,7 @@ in {
               ]
             '';
             description = ''
-              List of ${name} add-on packages to install for this profile.
+              List of ${cfg.name} add-on packages to install for this profile.
               Some pre-packaged add-ons are accessible from the
               [Nix User Repository](https://github.com/nix-community/NUR).
               Once you have NUR installed run
@@ -685,10 +685,10 @@ in {
               $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
               ```
 
-              to list the available ${name} add-ons.
+              to list the available ${cfg.name} add-ons.
 
               Note that it is necessary to manually enable these extensions
-              inside ${name} after the first installation.
+              inside ${cfg.name} after the first installation.
 
               To automatically enable extensions add
               `"extensions.autoDisableScopes" = 0;`
@@ -700,7 +700,7 @@ in {
         };
       }));
       default = { };
-      description = "Attribute set of ${name} profiles.";
+      description = "Attribute set of ${cfg.name} profiles.";
     };
 
     enableGnomeExtensions = mkOption {
