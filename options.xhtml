@@ -20970,12 +20970,12 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>List of ‹name› add-on packages to install for this profile.
+<p>List of Firefox add-on packages to install for this profile.
 Some pre-packaged add-ons are accessible from the
 <a class="link" href="https://github.com/nix-community/NUR"  target="_top">Nix User Repository</a>.
 Once you have NUR installed run</p><pre><code class="programlisting console">$ nix-env -f &#x27;&lt;nixpkgs&gt;&#x27; -qaP -A nur.repos.rycee.firefox-addons
-</code></pre><p>to list the available ‹name› add-ons.</p><p>Note that it is necessary to manually enable these extensions
-inside ‹name› after the first installation.</p><p>To automatically enable extensions add
+</code></pre><p>to list the available Firefox add-ons.</p><p>Note that it is necessary to manually enable these extensions
+inside Firefox after the first installation.</p><p>To automatically enable extensions add
 <code class="literal">&quot;extensions.autoDisableScopes&quot; = 0;</code>
 to
 <a class="link" href="options.xhtml#opt-programs.firefox.profiles._name_.settings"  ><code class="option">programs.firefox.profiles.&lt;profile&gt;.settings</code></a></p>
@@ -21353,12 +21353,12 @@ null or string</p>
  </span>
 </dt>
 <dd>
-<p>Attribute set of ‹name› preferences.</p><p>‹name› only supports int, bool, and string types for
+<p>Attribute set of Firefox preferences.</p><p>Firefox only supports int, bool, and string types for
 preferences, but home-manager will automatically
 convert all other JSON-compatible values into strings.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (‹name› preference (int, bool, string, and also attrs, list, float as a JSON string))</p>
+attribute set of (Firefox preference (int, bool, string, and also attrs, list, float as a JSON string))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -21394,7 +21394,7 @@ attribute set of (‹name› preference (int, bool, string, and also attrs, list
  </span>
 </dt>
 <dd>
-<p>Custom ‹name› user chrome CSS.</p>
+<p>Custom Firefox user chrome CSS.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 strings concatenated with “\n”</p>
@@ -21433,7 +21433,7 @@ strings concatenated with “\n”</p>
  </span>
 </dt>
 <dd>
-<p>Custom ‹name› user content CSS.</p>
+<p>Custom Firefox user content CSS.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 strings concatenated with “\n”</p>
@@ -21987,7 +21987,7 @@ null or package <span class="emphasis"><em>(read only)</em></span></p>
 <p>The language packs to install. Available language codes can be found
 on the releases page:
 <code class="literal">https://releases.mozilla.org/pub/firefox/releases/${version}/linux-x86_64/xpi/</code>,
-replacing <code class="literal">${version}</code> with the version of Firefox you have.</p>
+replacing <code class="literal">${version}</code> with the version of Floorp you have.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 list of string</p>
@@ -22289,7 +22289,7 @@ string</p>
 </dt>
 <dd>
 <p>Whether to force replace the existing containers configuration.
-This is recommended since Firefox will replace the symlink on
+This is recommended since Floorp will replace the symlink on
 every launch, but note that you’ll lose any existing configuration
 by enabling this.</p>
 
@@ -22315,12 +22315,12 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>List of ‹name› add-on packages to install for this profile.
+<p>List of Floorp add-on packages to install for this profile.
 Some pre-packaged add-ons are accessible from the
 <a class="link" href="https://github.com/nix-community/NUR"  target="_top">Nix User Repository</a>.
 Once you have NUR installed run</p><pre><code class="programlisting console">$ nix-env -f &#x27;&lt;nixpkgs&gt;&#x27; -qaP -A nur.repos.rycee.firefox-addons
-</code></pre><p>to list the available ‹name› add-ons.</p><p>Note that it is necessary to manually enable these extensions
-inside ‹name› after the first installation.</p><p>To automatically enable extensions add
+</code></pre><p>to list the available Floorp add-ons.</p><p>Note that it is necessary to manually enable these extensions
+inside Floorp after the first installation.</p><p>To automatically enable extensions add
 <code class="literal">&quot;extensions.autoDisableScopes&quot; = 0;</code>
 to
 <a class="link" href="options.xhtml#opt-programs.floorp.profiles._name_.settings"  ><code class="option">programs.floorp.profiles.&lt;profile&gt;.settings</code></a></p>
@@ -22698,12 +22698,12 @@ null or string</p>
  </span>
 </dt>
 <dd>
-<p>Attribute set of ‹name› preferences.</p><p>‹name› only supports int, bool, and string types for
+<p>Attribute set of Floorp preferences.</p><p>Floorp only supports int, bool, and string types for
 preferences, but home-manager will automatically
 convert all other JSON-compatible values into strings.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (‹name› preference (int, bool, string, and also attrs, list, float as a JSON string))</p>
+attribute set of (Floorp preference (int, bool, string, and also attrs, list, float as a JSON string))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -22739,7 +22739,7 @@ attribute set of (‹name› preference (int, bool, string, and also attrs, list
  </span>
 </dt>
 <dd>
-<p>Custom ‹name› user chrome CSS.</p>
+<p>Custom Floorp user chrome CSS.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 strings concatenated with “\n”</p>
@@ -22778,7 +22778,7 @@ strings concatenated with “\n”</p>
  </span>
 </dt>
 <dd>
-<p>Custom ‹name› user content CSS.</p>
+<p>Custom Floorp user content CSS.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 strings concatenated with “\n”</p>
@@ -35145,7 +35145,7 @@ boolean</p>
 <p>The language packs to install. Available language codes can be found
 on the releases page:
 <code class="literal">https://releases.mozilla.org/pub/firefox/releases/${version}/linux-x86_64/xpi/</code>,
-replacing <code class="literal">${version}</code> with the version of Firefox you have.</p>
+replacing <code class="literal">${version}</code> with the version of LibreWolf you have.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 list of string</p>
