@@ -10,6 +10,8 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
+  appName = name;
+
   moduleName = concatStringsSep "." modulePath;
 
   cfg = getAttrFromPath modulePath config;
@@ -201,7 +203,7 @@ let
     in {
       assertion = duplicates == { };
       message = ''
-        Must not have a ${cfg.name} ${entityKind} with an existing ID but
+        Must not have a ${appName} ${entityKind} with an existing ID but
       '' + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
     });
 
@@ -236,7 +238,7 @@ in {
       default = false;
       example = true;
       description = ''
-        Whether to enable ${cfg.name}.${
+        Whether to enable ${appName}.${
           optionalString (description != null) " ${description}"
         }
         ${optionalString (!visible)
@@ -261,10 +263,10 @@ in {
         }
       '';
       description = ''
-        The ${cfg.name} package to use. If state version ≥ 19.09 then
-        this should be a wrapped ${cfg.name} package. For earlier state
-        versions it should be an unwrapped ${cfg.name} package.
-        Set to `null` to disable installing ${cfg.name}.
+        The ${appName} package to use. If state version ≥ 19.09 then
+        this should be a wrapped ${appName} package. For earlier state
+        versions it should be an unwrapped ${appName} package.
+        Set to `null` to disable installing ${appName}.
       '';
     };
 
@@ -275,7 +277,7 @@ in {
         The language packs to install. Available language codes can be found
         on the releases page:
         `https://releases.mozilla.org/pub/firefox/releases/''${version}/linux-x86_64/xpi/`,
-        replacing `''${version}` with the version of ${cfg.name} you have.
+        replacing `''${version}` with the version of ${appName} you have.
       '';
       example = [ "en-GB" "de" ];
     };
@@ -314,7 +316,7 @@ in {
       default = with platforms;
         if isDarwin then darwin.configPath else linux.configPath;
       example = ".mozilla/firefox";
-      description = "Directory containing the ${cfg.name} configuration files.";
+      description = "Directory containing the ${appName} configuration files.";
     };
 
     nativeMessagingHosts = optionalAttrs (cfg.vendorPath != null) (mkOption {
@@ -323,7 +325,7 @@ in {
       default = [ ];
       description = ''
         Additional packages containing native messaging hosts that should be
-        made available to ${cfg.name} extensions.
+        made available to ${appName} extensions.
       '';
     });
 
@@ -331,7 +333,7 @@ in {
       inherit visible;
       type = with types; nullOr package;
       readOnly = true;
-      description = "Resulting ${cfg.name} package.";
+      description = "Resulting ${appName} package.";
     };
 
     policies = optionalAttrs (wrappedPackageName != null) (mkOption {
@@ -388,7 +390,7 @@ in {
           settings = mkOption {
             type = types.attrsOf (jsonFormat.type // {
               description =
-                "${cfg.name} preference (int, bool, string, and also attrs, list, float as a JSON string)";
+                "${appName} preference (int, bool, string, and also attrs, list, float as a JSON string)";
             });
             default = { };
             example = literalExpression ''
@@ -406,9 +408,9 @@ in {
               }
             '';
             description = ''
-              Attribute set of ${cfg.name} preferences.
+              Attribute set of ${appName} preferences.
 
-              ${cfg.name} only supports int, bool, and string types for
+              ${appName} only supports int, bool, and string types for
               preferences, but home-manager will automatically
               convert all other JSON-compatible values into strings.
             '';
@@ -425,7 +427,7 @@ in {
           userChrome = mkOption {
             type = types.lines;
             default = "";
-            description = "Custom ${cfg.name} user chrome CSS.";
+            description = "Custom ${appName} user chrome CSS.";
             example = ''
               /* Hide tab bar in FF Quantum */
               @-moz-document url(chrome://browser/content/browser.xul), url(chrome://browser/content/browser.xhtml) {
@@ -444,7 +446,7 @@ in {
           userContent = mkOption {
             type = types.lines;
             default = "";
-            description = "Custom ${cfg.name} user content CSS.";
+            description = "Custom ${appName} user content CSS.";
             example = ''
               /* Hide scrollbar in FF Quantum */
               *{scrollbar-width:none !important}
@@ -569,8 +571,7 @@ in {
             type = types.submodule (args:
               import ./profiles/search.nix {
                 inherit (args) config;
-                inherit lib pkgs;
-                appName = cfg.name;
+                inherit lib pkgs appName;
                 package = cfg.finalPackage;
                 modulePath = modulePath ++ [ "profiles" name "search" ];
                 profilePath = config.path;
@@ -584,7 +585,7 @@ in {
             default = false;
             description = ''
               Whether to force replace the existing containers configuration.
-              This is recommended since ${cfg.name} will replace the symlink on
+              This is recommended since ${appName} will replace the symlink on
               every launch, but note that you'll lose any existing configuration
               by enabling this.
             '';
@@ -676,7 +677,7 @@ in {
               ]
             '';
             description = ''
-              List of ${cfg.name} add-on packages to install for this profile.
+              List of ${appName} add-on packages to install for this profile.
               Some pre-packaged add-ons are accessible from the
               [Nix User Repository](https://github.com/nix-community/NUR).
               Once you have NUR installed run
@@ -685,10 +686,10 @@ in {
               $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
               ```
 
-              to list the available ${cfg.name} add-ons.
+              to list the available ${appName} add-ons.
 
               Note that it is necessary to manually enable these extensions
-              inside ${cfg.name} after the first installation.
+              inside ${appName} after the first installation.
 
               To automatically enable extensions add
               `"extensions.autoDisableScopes" = 0;`
@@ -700,7 +701,7 @@ in {
         };
       }));
       default = { };
-      description = "Attribute set of ${cfg.name} profiles.";
+      description = "Attribute set of ${appName} profiles.";
     };
 
     enableGnomeExtensions = mkOption {
@@ -725,7 +726,7 @@ in {
           catAttrs "name" (filter (a: a.isDefault) (attrValues cfg.profiles));
       in {
         assertion = cfg.profiles == { } || length defaults == 1;
-        message = "Must have exactly one default ${cfg.name} profile but found "
+        message = "Must have exactly one default ${appName} profile but found "
           + toString (length defaults) + optionalString (length defaults > 1)
           (", namely " + concatStringsSep ", " defaults);
       })
