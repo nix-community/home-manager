@@ -21,10 +21,9 @@ lib.mkIf config.test.enableBig {
   _module.args.pkgs = lib.mkForce realPkgs;
 
   nmt.script = ''
-    vimout=$(mktemp)
-    echo "redir >> /dev/stdout | echo g:hmExtraConfig | echo g:hmPlugins | redir END" \
-      | ${pkgs.neovim}/bin/nvim -es -u "$TESTED/home-files/.config/nvim/init.lua" \
-      > "$vimout" || true
+    vimout=$out/nvim-output
+    export HOME=$TESTED/home-files
+    ${pkgs.neovim-unwrapped}/bin/nvim -i NONE -V3$out/log.txt +"redir >> $vimout | echo g:hmExtraConfig | echo g:hmPlugins | redir END" +'exit'
     assertFileContains "$vimout" "HM_EXTRA_CONFIG"
     assertFileContains "$vimout" "HM_PLUGINS_CONFIG"
   '';
