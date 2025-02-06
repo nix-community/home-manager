@@ -13,17 +13,6 @@ in {
 
     package = mkPackageOption pkgs "process-compose" { };
 
-    configDir = mkOption {
-      type = types.str;
-      default = if (pkgs.stdenv.targetPlatform.isDarwin) then
-        "Library/Application Support/process-compose/"
-      else
-        "$XDG_CONFIG_HOME/process-compose/";
-      description = ''
-        The path to the config directory.
-      '';
-    };
-
     settings = mkOption {
       type = settingsFormat.type;
       default = null;
@@ -55,19 +44,24 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = let
+    configDir = if (pkgs.stdenv.targetPlatform.isDarwin) then
+      "Library/Application Support/process-compose/"
+    else
+      "$XDG_CONFIG_HOME/process-compose/";
+  in mkIf cfg.enable {
     home = {
       packages = [ cfg.package ];
 
       file.process-compose-settings = {
         enable = !builtins.isNull cfg.settings;
-        target = "${cfg.configDir}/settings.yaml";
+        target = "${configDir}/settings.yaml";
         source = settingsFormat.generate "settings.yaml" cfg.settings;
       };
 
       file.process-compose-shortcuts = {
         enable = !builtins.isNull cfg.shortcuts;
-        target = "${cfg.configDir}/shortcuts.yaml";
+        target = "${configDir}/shortcuts.yaml";
         source = settingsFormat.generate "shortcuts.yaml" {
           shortcuts = cfg.shortcuts;
         };
@@ -75,7 +69,7 @@ in {
 
       file.process-compose-theme = {
         enable = !builtins.isNull cfg.theme;
-        target = "${cfg.configDir}/theme.yaml";
+        target = "${configDir}/theme.yaml";
         source = settingsFormat.generate "theme.yaml" cfg.theme;
       };
     };
