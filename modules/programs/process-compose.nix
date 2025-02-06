@@ -19,7 +19,7 @@ in {
       description = ''
         Specify the configuration for process-compose.
 
-        See https://f1bonacc1.github.io/process-compose/tui/#tui-state-settings for available options.
+        Check [the documentation](https://f1bonacc1.github.io/process-compose/tui/#tui-state-settings) for available options.
       '';
     };
 
@@ -29,7 +29,7 @@ in {
       description = ''
         Specify shortcuts for process-compose.
 
-        See https://f1bonacc1.github.io/process-compose/tui/#shortcuts-configuration for available options.
+        Check [the documentation](https://f1bonacc1.github.io/process-compose/tui/#shortcuts-configuration) for available options.
       '';
     };
 
@@ -39,7 +39,7 @@ in {
       description = ''
         Specify a theme for process-compose.
 
-        See https://f1bonacc1.github.io/process-compose/tui/#tui-themes for available options.
+        Check [the documentation](https://f1bonacc1.github.io/process-compose/tui/#tui-themes) for available options.
       '';
     };
   };
