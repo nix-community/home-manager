@@ -54,13 +54,13 @@ in {
       packages = [ cfg.package ];
 
       file.process-compose-settings = {
-        enable = !builtins.isNull cfg.settings;
+        enable = cfg.settings != null;
         target = "${configDir}/settings.yaml";
         source = settingsFormat.generate "settings.yaml" cfg.settings;
       };
 
       file.process-compose-shortcuts = {
-        enable = !builtins.isNull cfg.shortcuts;
+        enable = cfg.shortcuts != null;
         target = "${configDir}/shortcuts.yaml";
         source = settingsFormat.generate "shortcuts.yaml" {
           shortcuts = cfg.shortcuts;
@@ -68,7 +68,7 @@ in {
       };
 
       file.process-compose-theme = {
-        enable = !builtins.isNull cfg.theme;
+        enable = cfg.theme != null;
         target = "${configDir}/theme.yaml";
         source = settingsFormat.generate "theme.yaml" cfg.theme;
       };
