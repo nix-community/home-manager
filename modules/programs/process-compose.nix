@@ -48,7 +48,7 @@ in {
     configDir = if (pkgs.stdenv.targetPlatform.isDarwin) then
       "Library/Application Support/process-compose/"
     else
-      "$XDG_CONFIG_HOME/process-compose/";
+      "${config.xdg.configHome}/process-compose/";
   in mkIf cfg.enable {
     home = {
       packages = [ cfg.package ];
