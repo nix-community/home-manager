@@ -155,6 +155,15 @@ in {
       example = literalExpression "./init.lua";
     };
 
+    mainLua = mkOption {
+      type = with types; nullOr (either path lines);
+      default = null;
+      description = ''
+        The main.lua for Yazi itself.
+      '';
+      example = literalExpression "./main.lua";
+    };
+
     plugins = mkOption {
       type = with types; attrsOf (oneOf [ path package ]);
       default = { };
@@ -222,6 +231,12 @@ in {
         } else {
           text = cfg.initLua;
         });
+      "yazi/main.lua" = mkIf (cfg.mainLua != null)
+        (if builtins.isPath cfg.mainLua then {
+          source = cfg.mainLua;
+        } else {
+          text = cfg.mainLua;
+        });
     } // (mapAttrs' (name: value:
       nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
       cfg.flavors) // (mapAttrs' (name: value:
@@ -245,6 +260,9 @@ in {
             removeSuffix ".yazi" name
           }"`.
         '') cfg.plugins)
+      (optionalString (cfg.initLua != null) [''
+        `programs.yazi.initLua` has been deprecated in favor of `programs.yazi.mainLua`.
+      ''])
     ]);
 
     assertions = let
@@ -283,6 +301,10 @@ in {
       "preview.png"
       "LICENSE"
       "LICENSE-tmtheme"
-    ]) ++ (mkAsserts "plugins" [ "init.lua" "main.lua" ]);
+    ]) ++ (mkAsserts "plugins" [ "init.lua" "main.lua" ]) ++ [{
+      assertion = cfg.mainLua != null -> cfg.initLua == null;
+      message =
+        "(Home-Manager): Please choose either `initLua` or `mainLua` for `yazi`, not both.";
+    }];
   };
 }
