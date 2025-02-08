@@ -1,4 +1,7 @@
-{
+{ lib, ... }:
+
+# Currently broken due to a change in Nixpkgs.
+lib.mkIf false {
   imports = [ ./stubs.nix ];
 
   programs.neovim = {
