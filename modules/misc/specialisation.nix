@@ -71,10 +71,16 @@ with lib;
   };
 
   config = mkIf (config.specialisation != { }) {
+    assertions = map (n: {
+      assertion = !lib.hasInfix "/" n;
+      message =
+        "<name> in specialisation.<name> cannot contain a forward slash.";
+    }) (attrNames config.specialisation);
+
     home.extraBuilderCommands = let
       link = n: v:
         let pkg = v.configuration.home.activationPackage;
-        in "ln -s ${pkg} $out/specialisation/${n}";
+        in "ln -s ${pkg} $out/specialisation/${escapeShellArg n}";
     in ''
       mkdir $out/specialisation
       ${concatStringsSep "\n" (mapAttrsToList link config.specialisation)}
