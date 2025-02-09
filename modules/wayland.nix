@@ -23,6 +23,6 @@
   };
 
   config = lib.mkIf (!config.xsession.enable) {
-    systemd.user.targets.tray = config.xsession.trayTarget;
+    systemd.user.targets.tray = lib.mkDefault config.xsession.trayTarget;
   };
 }
