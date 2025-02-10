@@ -34,10 +34,32 @@ in {
       '';
       description = ''
         Configuration written to
-        {file}`$XDG_CONFIG_HOME/zellij/config.yaml`.
+        {file}`$XDG_CONFIG_HOME/zellij/config.kdl`.
 
-        See <https://zellij.dev/documentation> for the full
+        See <https://zellij.dev/documentation/options> for the full
         list of options.
+
+        KDL is generated from YAML with the ``toKDL`` generator.
+        To create KDL with arguments like needed among others by ``keybinds``:
+        ```kdl
+        keybinds {
+          shared_except "move" "locked" {
+            bind "Ctrl m" { SwitchToMode "move"; }
+          }
+        }
+        ```
+        use the following:
+        ```yaml
+        keybinds = {
+          shared_except = {
+            _args = [ "move" "locked" ];
+            bind = {
+              _args = [ "Ctrl m" ];
+              SwitchToMode = "move";
+            };
+          };
+        };
+        ``` 
       '';
     };
 
