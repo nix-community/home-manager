@@ -394,6 +394,7 @@ let
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
     ./services/taskwarrior-sync.nix
+    ./services/tldr-update.nix
     ./services/trayer.nix
     ./services/trayscale.nix
     ./services/twmn.nix

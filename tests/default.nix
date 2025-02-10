@@ -370,6 +370,7 @@ in import nmtSrc {
     ./modules/services/swayosd
     ./modules/services/sxhkd
     ./modules/services/syncthing/linux
+    ./modules/services/tldr-update
     ./modules/services/trayer
     ./modules/services/trayscale
     ./modules/services/twmn
