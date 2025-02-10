@@ -50959,6 +50959,33 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.tealdeer.enableAutoUpdates"></a><a class="term" href="options.xhtml#opt-programs.tealdeer.enableAutoUpdates"><code class="option">programs.tealdeer.enableAutoUpdates</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Auto updates.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tealdeer.nix" target="_top">
+&lt;home-manager/modules/programs/tealdeer.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.tealdeer.settings"></a><a class="term" href="options.xhtml#opt-programs.tealdeer.settings"><code class="option">programs.tealdeer.settings</code>
   </a>
  </span>
@@ -78729,6 +78756,85 @@ string</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/taskwarrior-sync.nix" target="_top">
 &lt;home-manager/modules/services/taskwarrior-sync.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.tldr-update.enable"></a><a class="term" href="options.xhtml#opt-services.tldr-update.enable"><code class="option">services.tldr-update.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Automatic updates for the tldr CLI
+.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/tldr-update.nix" target="_top">
+&lt;home-manager/modules/services/tldr-update.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.tldr-update.package"></a><a class="term" href="options.xhtml#opt-services.tldr-update.package"><code class="option">services.tldr-update.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The tldr package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.tldr</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">tlrc</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/tldr-update.nix" target="_top">
+&lt;home-manager/modules/services/tldr-update.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.tldr-update.period"></a><a class="term" href="options.xhtml#opt-services.tldr-update.period"><code class="option">services.tldr-update.period</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Systemd timer period to create for scheduled <span class="command"><strong>tldr --update</strong></span>.</p><p>The format is described in <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;weekly&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/tldr-update.nix" target="_top">
+&lt;home-manager/modules/services/tldr-update.nix&gt;
 </a></code>
 </td></tr>
 </table>
