@@ -34038,7 +34038,8 @@ attribute set of (string or boolean or signed integer or floating point number)<
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">!(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">(cfg.shellIntegration.mode != null)
+&amp;&amp; !(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
 
 </code></pre>
 
@@ -34066,7 +34067,8 @@ boolean</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">!(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">(cfg.shellIntegration.mode != null)
+&amp;&amp; !(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
 
 </code></pre>
 
@@ -34094,7 +34096,8 @@ boolean</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">!(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">(cfg.shellIntegration.mode != null)
+&amp;&amp; !(elem &quot;disabled&quot; (splitString &quot; &quot; config.programs.kitty.shellIntegration.mode))
 
 </code></pre>
 
@@ -34119,12 +34122,12 @@ boolean</p>
 <dd>
 <p>Set the mode of the shell integration. This accepts the same options
 as the <code class="literal">shell_integration</code> option of Kitty. Note that
-<code class="literal">no-rc</code> is always implied. See
+<code class="literal">no-rc</code> is always implied, unless this set to <code class="literal">null</code>. See
 <a class="link" href="https://sw.kovidgoyal.net/kitty/shell-integration"  target="_top">https://sw.kovidgoyal.net/kitty/shell-integration</a>
 for more details.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string</p>
+null or string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;no-rc&quot;</code></p>
