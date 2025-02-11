@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 
 let
-  inherit (lib) mkEnableOption mkOption mkPackageOption optionalString;
+  inherit (lib) mkEnableOption mkPackageOption optionalString;
 
   cfg = config.programs.git-worktree-switcher;
 
@@ -17,27 +17,14 @@ in {
   options.programs.git-worktree-switcher = {
     enable = mkEnableOption "git-worktree-switcher";
     package = mkPackageOption pkgs "git-worktree-switcher" { };
-    enableBashIntegration = mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether to enable git-worktree-switcher's Bash integration.
-      '';
-    };
-    enableFishIntegration = mkOption {
-      type = lib.types.bool;
-      default = config.programs.fish.enable;
-      description = ''
-        Whether to enable git-worktree-switcher's Fish integration.
-      '';
-    };
-    enableZshIntegration = mkOption {
-      type = lib.types.bool;
-      default = config.programs.zsh.enable;
-      description = ''
-        Whether to enable git-worktree-switcher's Zsh integration.
-      '';
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
