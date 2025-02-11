@@ -136,7 +136,7 @@ in {
     })
     {
       home.packages = [ cfg.package ] ++ cfg.extraPackages;
-      home.sessionVariables = { MANPAGER = "bat -p -lman"; };
+      home.sessionVariables = { MANPAGER = lib.mkDefault "bat -p -lman"; };
 
       xdg.configFile = lib.mkMerge ([{
         "bat/config" =
