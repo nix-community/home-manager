@@ -247,6 +247,7 @@ let
           "fastmail.com"
           "yandex.com"
           "outlook.office365.com"
+          "migadu.com"
         ];
         default = "plain";
         description = ''
@@ -447,6 +448,20 @@ let
         jmap = {
           host = "fastmail.com";
           sessionUrl = "https://jmap.fastmail.com/.well-known/jmap";
+        };
+      })
+
+      (mkIf (config.flavor == "migadu.com") {
+        userName = mkDefault config.address;
+
+        imap = {
+          host = "imap.migadu.com";
+          port = 993;
+        };
+
+        smtp = {
+          host = "smtp.migadu.com";
+          port = 465;
         };
       })
 
