@@ -24,7 +24,8 @@ in {
     };
 
     configDir = mkOption {
-      type = types.path;
+      type = types.nullOr types.path;
+      default = null;
       example = literalExpression "./eww-config-dir";
       description = ''
         The directory that gets symlinked to
@@ -44,7 +45,8 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    xdg.configFile."eww".source = cfg.configDir;
+    xdg.configFile."eww".source =
+      mkIf (!types.isNull cfg.configDir) cfg.configDir;
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" ]]; then
