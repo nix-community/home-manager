@@ -45,8 +45,7 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    xdg.configFile."eww".source =
-      mkIf (!types.isNull cfg.configDir) cfg.configDir;
+    xdg.configFile."eww".source = mkIf (cfg.configDir != null) cfg.configDir;
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" ]]; then
