@@ -11,6 +11,13 @@ let
         description = "List of Nix type assertions.";
       };
 
+      dependencies = lib.mkOption {
+        type = with lib.types; listOf package;
+        default = [ ];
+        internal = true;
+        description = "List of systemd service dependencies.";
+      };
+
       resourceType = lib.mkOption {
         type = lib.types.str;
         default = "";
@@ -33,11 +40,19 @@ let
   };
 in {
   options.services.podman = {
-    internal.quadletDefinitions = lib.mkOption {
-      type = lib.types.listOf quadletInternalType;
-      default = { };
-      internal = true;
-      description = "List of quadlet source file content and service names.";
+    internal = {
+      quadletDefinitions = lib.mkOption {
+        type = lib.types.listOf quadletInternalType;
+        default = { };
+        internal = true;
+        description = "List of quadlet source file content and service names.";
+      };
+      builtQuadlets = lib.mkOption {
+        type = with lib.types; attrsOf package;
+        default = { };
+        internal = true;
+        description = "All built quadlets.";
+      };
     };
 
     package = lib.mkOption {
