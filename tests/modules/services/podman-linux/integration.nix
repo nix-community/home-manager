@@ -17,9 +17,9 @@
     };
     containers = {
       "my-container" = {
-        image = "my-img";
-        network = [ "my-net" "externalnet" ];
-        volumes = [ "my-vol:/data" ];
+        image = "my-img.image";
+        network = [ "my-net.network" "externalnet" ];
+        volumes = [ "my-vol.volume:/data" ];
       };
       "my-container-bld" = { image = "my-bld"; };
     };
