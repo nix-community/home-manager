@@ -2045,7 +2045,7 @@ in {
           See https://github.com/mateusauler/git-worktree-switcher for more.
         '';
       }
-      
+
       {
         time = "2025-02-13T16:11:59+00:00";
         message = ''
