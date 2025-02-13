@@ -36,6 +36,7 @@ let
     ./misc/pam.nix
     ./misc/qt.nix
     ./misc/qt/kconfig.nix
+    ./misc/shell.nix
     ./misc/specialisation.nix
     ./misc/submodule-support.nix
     ./misc/tmpfiles.nix
@@ -110,6 +111,7 @@ let
     ./programs/ghostty.nix
     ./programs/git-cliff.nix
     ./programs/git-credential-oauth.nix
+    ./programs/git-worktree-switcher.nix
     ./programs/git.nix
     ./programs/gitui.nix
     ./programs/gnome-shell.nix
@@ -394,6 +396,7 @@ let
     ./services/taffybar.nix
     ./services/tahoe-lafs.nix
     ./services/taskwarrior-sync.nix
+    ./services/tldr-update.nix
     ./services/trayer.nix
     ./services/trayscale.nix
     ./services/twmn.nix

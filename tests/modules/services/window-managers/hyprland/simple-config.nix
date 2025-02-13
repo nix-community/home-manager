@@ -1,6 +1,6 @@
-{ config, ... }: {
-  imports = [ ./hyprland-stubs.nix ];
+{ config, ... }:
 
+{
   wayland.windowManager.hyprland = {
     enable = true;
     plugins =

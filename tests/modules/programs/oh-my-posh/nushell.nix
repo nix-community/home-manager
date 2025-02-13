@@ -10,11 +10,6 @@
     };
   };
 
-  test.stubs = {
-    oh-my-posh = { };
-    nushell = { };
-  };
-
   nmt.script = let
     configFile = if pkgs.stdenv.isDarwin && !config.xdg.enable then
       "home-files/Library/Application Support/nushell/config.nu"

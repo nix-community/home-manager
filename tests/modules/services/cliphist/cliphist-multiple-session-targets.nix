@@ -1,15 +1,8 @@
-{ ... }:
-
 {
   services.cliphist = {
     enable = true;
 
     systemdTargets = [ "sway-session.target" "hyprland-session.target" ];
-  };
-
-  test.stubs = {
-    cliphist = { };
-    wl-clipboard = { };
   };
 
   nmt.script = ''

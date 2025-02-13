@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
 
 {
   programs.git = {
@@ -8,7 +8,7 @@
 
   nmt.script = ''
     function getGitConfig() {
-      ${pkgs.gitMinimal}/bin/git config \
+      ${realPkgs.gitMinimal}/bin/git config \
         --file $TESTED/home-files/.config/git/config \
         --get $1
     }

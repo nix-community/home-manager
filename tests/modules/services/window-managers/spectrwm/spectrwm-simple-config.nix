@@ -1,8 +1,4 @@
-{ ... }:
-
 {
-  imports = [ ./spectrwm-stubs.nix ];
-
   xsession.windowManager.spectrwm = {
     enable = true;
     settings = {
@@ -15,8 +11,6 @@
     bindings = { term = "MOD+Shift+Return"; };
     unbindings = [ "MOD+Return" ];
   };
-
-  test.stubs.spectrwm = { };
 
   nmt.script = ''
     assertFileContent \

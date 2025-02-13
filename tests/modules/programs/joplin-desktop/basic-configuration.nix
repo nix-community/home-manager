@@ -11,8 +11,6 @@
     };
   };
 
-  test.stubs.joplin-desktop = { };
-
   nmt.script = ''
     assertFileContains activate \
       '/home/hm-user/.config/joplin-desktop/settings.json'

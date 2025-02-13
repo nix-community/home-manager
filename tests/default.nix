@@ -9,31 +9,105 @@ let
     sha256 = "0qhn7nnwdwzh910ss78ga2d00v42b0lspfd7ybl61mpfgz3lmdcj";
   };
 
+  # Recursively replace each derivation in the given attribute set with the same
+  # derivation but with the `outPath` attribute set to the string
+  # `"@package-name@"`. This allows the tests to refer to derivations through
+  # their values without establishing an actual dependency on the derivation
+  # output.
+  scrubDerivations = attrs:
+    let
+      scrubDerivation = name: value:
+        let
+          scrubbedValue = scrubDerivations value;
+
+          newDrvAttrs = {
+            buildScript = abort "no build allowed";
+
+            outPath = builtins.traceVerbose ("${name} - got out path")
+              "@${lib.getName value}@";
+
+            # Prevent getOutput from descending into outputs
+            outputSpecified = true;
+
+            # Allow the original package to be used in derivation inputs
+            __spliced = {
+              buildHost = value;
+              hostTarget = value;
+            };
+          };
+        in if lib.isAttrs value then
+          if lib.isDerivation value then
+            scrubbedValue // newDrvAttrs
+          else
+            scrubbedValue
+        else
+          value;
+    in lib.mapAttrs scrubDerivation attrs;
+
+  # Globally unscrub a few selected packages that are used by a wide selection of tests.
+  whitelist = let
+    inner = self: super: {
+      inherit (pkgs)
+        coreutils jq desktop-file-utils diffutils findutils glibcLocales gettext
+        gnugrep gnused shared-mime-info emptyDirectory
+        # Needed by pretty much all tests that have anything to do with fish.
+        babelfish fish;
+
+      xorg =
+        super.xorg.overrideScope (self: super: { inherit (pkgs.xorg) lndir; });
+    };
+
+    outer = self: super:
+      inner self super // {
+        buildPackages = super.buildPackages.extend inner;
+      };
+  in outer;
+
+  scrubbedPkgs =
+    let rawScrubbedPkgs = lib.makeExtensible (final: scrubDerivations pkgs);
+    in builtins.traceVerbose "eval scrubbed nixpkgs"
+    (rawScrubbedPkgs.extend whitelist);
+
   modules = import ../modules/modules.nix {
     inherit lib pkgs;
     check = false;
-  } ++ [{
-    # Bypass <nixpkgs> reference inside modules/modules.nix to make the test
-    # suite more pure.
-    _module.args.pkgsPath = pkgs.path;
+  } ++ [
+    ({ config, ... }: {
+      _module.args = {
+        # Prevent the nixpkgs module from working. We want to minimize the number
+        # of evaluations of Nixpkgs.
+        pkgsPath = abort "pkgs path is unavailable in tests";
+        realPkgs = pkgs;
+        pkgs = let
+          overlays = config.test.stubOverlays ++ lib.optionals
+            (config.nixpkgs.overlays != null && config.nixpkgs.overlays != [ ])
+            config.nixpkgs.overlays;
+          stubbedPkgs = if overlays == [ ] then
+            scrubbedPkgs
+          else
+            builtins.traceVerbose "eval overlayed nixpkgs"
+            (lib.foldr (o: p: p.extend o) scrubbedPkgs overlays);
+        in lib.mkImageMediaOverride stubbedPkgs;
+      };
 
-    # Fix impurities. Without these some of the user's environment
-    # will leak into the tests through `builtins.getEnv`.
-    xdg.enable = true;
-    home = {
-      username = "hm-user";
-      homeDirectory = "/home/hm-user";
-      stateVersion = lib.mkDefault "18.09";
-    };
+      # Fix impurities. Without these some of the user's environment
+      # will leak into the tests through `builtins.getEnv`.
+      xdg.enable = true;
+      home = {
+        username = "hm-user";
+        homeDirectory = "/home/hm-user";
+        stateVersion = lib.mkDefault "18.09";
+      };
 
-    # Avoid including documentation since this will cause
-    # unnecessary rebuilds of the tests.
-    manual.manpages.enable = lib.mkDefault false;
+      # Avoid including documentation since this will cause
+      # unnecessary rebuilds of the tests.
+      manual.manpages.enable = lib.mkDefault false;
 
-    imports = [ ./asserts.nix ./big-test.nix ./stubs.nix ];
+      imports = [ ./asserts.nix ./big-test.nix ./stubs.nix ];
 
-    test.enableBig = enableBig;
-  }];
+      test.enableBig = enableBig;
+    })
+  ];
 
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   isLinux = pkgs.stdenv.hostPlatform.isLinux;
@@ -84,6 +158,7 @@ in import nmtSrc {
     ./modules/programs/git
     ./modules/programs/git-cliff
     ./modules/programs/git-credential-oauth
+    ./modules/programs/git-worktree-switcher
     ./modules/programs/go
     ./modules/programs/gpg
     ./modules/programs/gradle
@@ -208,6 +283,7 @@ in import nmtSrc {
     ./modules/programs/bemenu
     ./modules/programs/boxxy
     ./modules/programs/cavalier
+    ./modules/programs/eww
     ./modules/programs/firefox/firefox.nix
     ./modules/programs/firefox/floorp.nix
     ./modules/programs/foot
@@ -297,6 +373,7 @@ in import nmtSrc {
     ./modules/services/swayosd
     ./modules/services/sxhkd
     ./modules/services/syncthing/linux
+    ./modules/services/tldr-update
     ./modules/services/trayer
     ./modules/services/trayscale
     ./modules/services/twmn

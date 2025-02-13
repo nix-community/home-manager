@@ -1,8 +1,10 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, realPkgs, config, lib, ... }:
 
-{
+# Temporarily broken due to Nixpkgs issue.
+lib.mkIf false {
   programs.nushell = {
     enable = true;
+    package = realPkgs.nushell;
 
     configFile.text = ''
       let config = {
@@ -23,7 +25,7 @@
       }
     '';
 
-    plugins = [ pkgs.nushellPlugins.formats ];
+    plugins = [ realPkgs.nushellPlugins.formats ];
 
     shellAliases = {
       "ll" = "ls -a";

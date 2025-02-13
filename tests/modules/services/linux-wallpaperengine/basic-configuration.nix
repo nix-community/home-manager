@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   services.linux-wallpaperengine = {
     enable = true;
@@ -24,8 +22,6 @@
       }
     ];
   };
-
-  test.stubs.linux-wallpaperengine = { };
 
   nmt.script = ''
     assertFileContent \

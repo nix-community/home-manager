@@ -1,25 +1,21 @@
 modulePath:
-{ config, lib, pkgs, ... }:
+{ config, lib, realPkgs, ... }:
 
 let
 
   cfg = lib.getAttrFromPath modulePath config;
 
-  firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
+in lib.mkIf config.test.enableBig
+(lib.setAttrByPath modulePath { enable = true; } // {
+  home.stateVersion = "19.09";
 
-in {
-  imports = [ firefoxMockOverlay ];
+  _module.args.pkgs = lib.mkForce realPkgs;
 
-  config = lib.mkIf config.test.enableBig
-    (lib.setAttrByPath modulePath { enable = true; } // {
-      home.stateVersion = "19.09";
-
-      nmt.script = ''
-        package=${cfg.package}
-        finalPackage=${cfg.finalPackage}
-        if [[ $package != $finalPackage ]]; then
-          fail "Expected finalPackage ($finalPackage) to equal package ($package)"
-        fi
-      '';
-    });
-}
+  nmt.script = ''
+    package=${cfg.package}
+    finalPackage=${cfg.finalPackage}
+    if [[ $package != $finalPackage ]]; then
+      fail "Expected finalPackage ($finalPackage) to equal package ($package)"
+    fi
+  '';
+})

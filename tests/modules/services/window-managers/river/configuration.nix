@@ -1,8 +1,4 @@
-{ ... }:
-
 {
-  imports = [ ./river-stubs.nix ];
-
   wayland.windowManager.river = {
     enable = true;
     xwayland.enable = true;
@@ -78,11 +74,6 @@
       some
       extra config
     '';
-  };
-
-  test.stubs = {
-    river = { };
-    xwayland = { };
   };
 
   nmt.script = ''

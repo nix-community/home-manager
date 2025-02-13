@@ -1,5 +1,3 @@
-{ pkgs, lib, ... }:
-
 {
   programs.qcal = {
     enable = true;
@@ -14,8 +12,6 @@
       passwordCommand = [ "pass" "show" "calendar" ];
     };
   };
-
-  test.stubs = { qcal = { }; };
 
   nmt.script = ''
     assertFileExists home-files/.config/qcal/config.json

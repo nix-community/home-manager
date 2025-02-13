@@ -4,7 +4,7 @@ in {
   options = {
     flake = flake-parts-lib.mkSubmoduleOptions {
       homeConfigurations = mkOption {
-        type = types.lazyAttrsOf types.raw;
+        type = types.lazyAttrsOf types.deferredModule;
         default = { };
         description = ''
           Instantiated Home Manager configurations.
@@ -14,11 +14,11 @@ in {
           that you can reference them in this or another flake's `homeConfigurations`.
         '';
       };
-      homeModules = mkOption {
+      homeManagerModules = mkOption {
         type = types.lazyAttrsOf types.unspecified;
         default = { };
         apply = mapAttrs (k: v: {
-          _file = "${toString moduleLocation}#homeModules.${k}";
+          _file = "${toString moduleLocation}#homeManagerModules.${k}";
           imports = [ v ];
         });
         description = ''

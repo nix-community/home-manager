@@ -50,13 +50,15 @@ let
     '';
   };
 
-  shellIntegrationDefaultOpt = {
-    default =
-      !(lib.elem "disabled" (lib.splitString " " cfg.shellIntegration.mode));
-    defaultText = literalExpression ''
-      !(elem "disabled" (splitString " " config.programs.kitty.shellIntegration.mode))
-    '';
-  };
+  mkShellIntegrationOption = option:
+    option // {
+      default = (cfg.shellIntegration.mode != null) && !(lib.elem "disabled"
+        (lib.splitString " " cfg.shellIntegration.mode));
+      defaultText = literalExpression ''
+        (cfg.shellIntegration.mode != null)
+        && !(elem "disabled" (splitString " " config.programs.kitty.shellIntegration.mode))
+      '';
+    };
 in {
   imports = [
     (lib.mkChangedOptionModule [ "programs" "kitty" "theme" ] [
@@ -166,32 +168,32 @@ in {
 
     shellIntegration = {
       mode = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         default = "no-rc";
         example = "no-cursor";
-        apply = o:
+        apply = lib.mapNullable (o:
           let
             modes = lib.splitString " " o;
             filtered = lib.filter (m: m != "no-rc") modes;
           in lib.concatStringsSep " "
-          (lib.concatLists [ [ "no-rc" ] filtered ]);
+          (lib.concatLists [ [ "no-rc" ] filtered ]));
         description = ''
           Set the mode of the shell integration. This accepts the same options
           as the `shell_integration` option of Kitty. Note that
-          `no-rc` is always implied. See
+          `no-rc` is always implied, unless this set to `null`. See
           <https://sw.kovidgoyal.net/kitty/shell-integration>
           for more details.
         '';
       };
 
-      enableBashIntegration = mkEnableOption "Kitty Bash integration"
-        // shellIntegrationDefaultOpt;
+      enableBashIntegration = mkShellIntegrationOption
+        (lib.hm.shell.mkBashIntegrationOption { inherit config; });
 
-      enableFishIntegration = mkEnableOption "Kitty fish integration"
-        // shellIntegrationDefaultOpt;
+      enableFishIntegration = mkShellIntegrationOption
+        (lib.hm.shell.mkFishIntegrationOption { inherit config; });
 
-      enableZshIntegration = mkEnableOption "Kitty Z Shell integration"
-        // shellIntegrationDefaultOpt;
+      enableZshIntegration = mkShellIntegrationOption
+        (lib.hm.shell.mkZshIntegrationOption { inherit config; });
     };
 
     extraConfig = mkOption {
@@ -202,6 +204,15 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [{
+      assertion = !(cfg.shellIntegration.mode == null
+        && (cfg.shellIntegration.enableBashIntegration
+          || cfg.shellIntegration.enableFishIntegration
+          || cfg.shellIntegration.enableZshIntegration));
+      message =
+        "Cannot enable shell integration when `programs.kitty.shellIntegration.mode` is `null`";
+    }];
+
     home.packages = [ cfg.package ] ++ optionalPackage cfg.font;
 
     xdg.configFile."kitty/kitty.conf" = {
@@ -218,10 +229,10 @@ in {
         (optionalString (cfg.themeFile != null) ''
           include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.themeFile}.conf
         '')
-        ''
+        (optionalString (cfg.shellIntegration.mode != null) ''
           # Shell integration is sourced and configured manually
           shell_integration ${cfg.shellIntegration.mode}
-        ''
+        '')
         (toKittyConfig cfg.settings)
         (toKittyKeybindings cfg.keybindings)
         (toKittyEnv cfg.environment)

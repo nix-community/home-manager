@@ -2018,8 +2018,36 @@ in {
           systems.
         '';
       }
+
       {
-        time = "2025-02-01T21:17:12+00:00";
+        time = "2025-02-07T22:31:45+00:00";
+        message = ''
+          All 'programs.<PROGRAM>.enable<SHELL>Integration' values now default
+          to the new 'home.shell.enable<SHELL>Integration' options, which
+          inherit from the new the 'home.shell.enableShellIntegration' option.
+
+          The following inconsistent default values change from 'false' to
+          'true':
+
+          - programs.zellij.enableBashIntegration
+          - programs.zellij.enableFishIntegration
+          - programs.zellij.enableZshIntegration
+        '';
+      }
+
+      {
+        time = "2025-02-11T15:25:26+00:00";
+        message = ''
+          A new module is available: 'programs.git-worktree-switcher'.
+
+          git-worktree-switcher allows you to quickly switch git worktrees.
+          It includes shell completions for Bash, Fish and Zsh.
+          See https://github.com/mateusauler/git-worktree-switcher for more.
+        '';
+      }
+      
+      {
+        time = "2025-02-13T16:11:59+00:00";
         message = ''
           A new module is available: 'programs.clock-rs'.
 
@@ -2029,4 +2057,3 @@ in {
     ];
   };
 }
-

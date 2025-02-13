@@ -9,11 +9,6 @@
     };
   };
 
-  test.stubs = {
-    go = { };
-    systemd = { };
-  };
-
   nm.script = let
     modeFileDir = if !pkgs.stdenv.isDarwin then
       ".config/go/telemetry"
