@@ -38,13 +38,13 @@ let
           device) folder.devices;
     }) (filterAttrs (_: folder: folder.enable) cfg.settings.folders);
 
-  jq = "${pkgs.jq}/bin/jq";
-  sleep = "${pkgs.coreutils}/bin/sleep";
-  printf = "${pkgs.coreutils}/bin/printf";
-  cat = "${pkgs.coreutils}/bin/cat";
-  curl = "${pkgs.curl}/bin/curl";
-  install = "${pkgs.coreutils}/bin/install";
-  syncthing = "${pkgs.syncthing}/bin/syncthing";
+  jq = lib.getExe pkgs.jq;
+  sleep = lib.getExe' pkgs.coreutils "sleep";
+  printf = lib.getExe' pkgs.coreutils "printf";
+  cat = lib.getExe' pkgs.coreutils "cat";
+  curl = lib.getExe pkgs.curl;
+  install = lib.getExe' pkgs.coreutils "install";
+  syncthing = lib.getExe cfg.package;
 
   updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (''
     set -efu
@@ -606,7 +606,7 @@ in {
 
   config = mkMerge [
     (mkIf cfg.enable {
-      home.packages = [ (getOutput "man" pkgs.syncthing) ];
+      home.packages = [ (getOutput "man" cfg.package) ];
 
       systemd.user.services = {
         syncthing = {
