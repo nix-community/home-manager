@@ -25,5 +25,3 @@ alt-h = "focus left"
 alt-j = "focus down"
 alt-k = "focus up"
 alt-l = "focus right"
-
-[workspace-to-monitor-force-assignment]
