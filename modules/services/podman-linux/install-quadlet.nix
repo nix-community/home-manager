@@ -15,13 +15,13 @@ let
     pkgs.stdenv.mkDerivation {
       name = "home-${quadlet.resourceType}-${quadlet.serviceName}";
 
-      buildInputs = [ cfg.package ];
-
-      # dontUnpack = true;
+      buildInputs = [ cfg.package ] ++ quadlet.dependencies;
 
       unpackPhase = ''
         mkdir -p $out/quadlets
-        ${concatStringsSep "\n" (map (v: "cp ${v.out}/quadlets/${v.quadletData.serviceName}.${v.quadletData.resourceType} $out/quadlets") quadlet.dependencies)}
+        ${concatStringsSep "\n" (map (v:
+          "ln -s ${v.out}/quadlets/${v.quadletData.serviceName}.${v.quadletData.resourceType} $out/quadlets")
+          quadlet.dependencies)}
       '';
 
       installPhase = ''
@@ -42,7 +42,6 @@ let
       };
     };
 
-  # Create a derivation for each quadlet spec
   builtQuadlets = map buildPodmanQuadlet cfg.internal.quadletDefinitions;
 
   accumulateUnitFiles = prefix: path: quadlet:
@@ -87,6 +86,9 @@ in {
       lib.mkIf (lib.length builtQuadlets >= 1)
       (lib.hm.dag.entryAfter [ "reloadSystemd" ] activationCleanupScript);
 
-    services.podman.internal.builtQuadlets = listToAttrs (map (pkg: { name = removePrefix "podman-" pkg.passthru.quadletData.serviceName; value = pkg; }) builtQuadlets);
+    services.podman.internal.builtQuadlets = listToAttrs (map (pkg: {
+      name = removePrefix "podman-" pkg.passthru.quadletData.serviceName;
+      value = pkg;
+    }) builtQuadlets);
   };
 }

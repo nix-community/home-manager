@@ -7,11 +7,11 @@
 [X-Container]
 ContainerName=my-container
 Environment=
-Image=docker.io/alpine:latest
+Image=podman-my-img.image
 Label=nix.home-manager.managed=true
-Network=my-net
+Network=podman-my-net.network
 Network=externalnet
-Volume=my-vol:/data
+Volume=podman-my-vol.volume:/data
 
 [Install]
 WantedBy=default.target
@@ -34,12 +34,12 @@ ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --na
 [Unit]
 Wants=podman-user-wait-network-online.service
 After=podman-user-wait-network-online.service
-After=podman-my-img-image.service
-After=podman-my-net-network.service
-After=podman-my-vol-volume.service
 Description=Service for container my-container
-Requires=podman-my-img-image.service
-Requires=podman-my-net-network.service
-Requires=podman-my-vol-volume.service
 SourcePath=/nix/store/00000000000000000000000000000000-home-container-podman-my-container/quadlets/podman-my-container.container
+Requires=podman-my-img-image.service
+After=podman-my-img-image.service
 RequiresMountsFor=%t/containers
+Requires=podman-my-net-network.service
+After=podman-my-net-network.service
+Requires=podman-my-vol-volume.service
+After=podman-my-vol-volume.service
