@@ -126,7 +126,6 @@ in {
         in {
           "build" = "localhost/homemanager/${strippedName}";
           "container" = strippedName;
-          "image" = strippedName;
           "network" = strippedName;
           "volume" = strippedName;
         }."${quadlet.resourceType}";
