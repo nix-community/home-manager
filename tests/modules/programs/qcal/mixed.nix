@@ -8,8 +8,8 @@
     webdav-test = {
       remote = {
         url = "https://cal.example.com/anton/work";
-        userName = "anton";
-        passwordCommand = [ "pass" "show" "calendar" ];
+        auth.userName = "anton";
+        auth.passwordCommand = [ "pass" "show" "calendar" ];
       };
       qcal.enable = true;
     };

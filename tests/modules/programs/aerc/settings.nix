@@ -94,7 +94,7 @@ with lib;
       basics = {
         aerc = { enable = true; };
         realName = "Foo Bar";
-        userName = "foobar";
+        auth.userName = "foobar";
         address = "addr@mail.invalid";
         folders = {
           drafts = "";
@@ -104,7 +104,7 @@ with lib;
         };
       };
     in {
-      primary = basics // {
+      primary = recursiveUpdate basics {
         primary = true;
         imap = {
           host = "imap.host.invalid";
@@ -113,7 +113,7 @@ with lib;
           tls.useStartTls = true;
         };
       };
-      a_imap-nopasscmd-tls-starttls-folders = basics // {
+      a_imap-nopasscmd-tls-starttls-folders = recursiveUpdate basics {
         imap = {
           host = "imap.host.invalid";
           port = 1337;
@@ -126,8 +126,8 @@ with lib;
           sent = "aercSent";
         };
       };
-      b_imap-passcmd-tls-nostarttls-extraAccounts = basics // {
-        passwordCommand = "echo PaSsWorD!";
+      b_imap-passcmd-tls-nostarttls-extraAccounts = recursiveUpdate basics {
+        auth.passwordCommand = "echo PaSsWorD!";
         imap = {
           host = "imap.host.invalid";
           port = 1337;
@@ -139,8 +139,8 @@ with lib;
           extraAccounts = { connection-timeout = "42s"; };
         };
       };
-      c_imap-passcmd-notls-nostarttls-extraConfig = basics // {
-        passwordCommand = "echo PaSsWorD!";
+      c_imap-passcmd-notls-nostarttls-extraConfig = recursiveUpdate basics {
+        auth.passwordCommand = "echo PaSsWorD!";
         aerc = {
           enable = true;
           extraConfig = { ui.index-format = "%42.1337n"; };
@@ -152,8 +152,8 @@ with lib;
           tls.useStartTls = false;
         };
       };
-      d_imap-passcmd-notls-starttls-extraBinds = basics // {
-        passwordCommand = "echo PaSsWorD!";
+      d_imap-passcmd-notls-starttls-extraBinds = recursiveUpdate basics {
+        auth.passwordCommand = "echo PaSsWorD!";
         imap = {
           host = "imap.host.invalid";
           port = 1337;
@@ -165,7 +165,7 @@ with lib;
           extraBinds = { messages = { d = ":move Trash<Enter>"; }; };
         };
       };
-      e_smtp-nopasscmd-tls-starttls = basics // {
+      e_smtp-nopasscmd-tls-starttls = recursiveUpdate basics {
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -173,8 +173,8 @@ with lib;
           tls.useStartTls = true;
         };
       };
-      f_smtp-passcmd-tls-nostarttls = basics // {
-        passwordCommand = "echo PaSsWorD!";
+      f_smtp-passcmd-tls-nostarttls = recursiveUpdate basics {
+        auth.passwordCommand = "echo PaSsWorD!";
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -182,8 +182,8 @@ with lib;
           tls.useStartTls = false;
         };
       };
-      g_smtp-passcmd-notls-nostarttls = basics // {
-        passwordCommand = "echo PaSsWorD!";
+      g_smtp-passcmd-notls-nostarttls = recursiveUpdate basics {
+        auth.passwordCommand = "echo PaSsWorD!";
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -191,8 +191,8 @@ with lib;
           tls.useStartTls = false;
         };
       };
-      h_smtp-passcmd-notls-starttls = basics // {
-        passwordCommand = "echo PaSsWorD!";
+      h_smtp-passcmd-notls-starttls = recursiveUpdate basics {
+        auth.passwordCommand = "echo PaSsWorD!";
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -200,19 +200,20 @@ with lib;
           tls.useStartTls = true;
         };
       };
-      i1_maildir-mbsync = basics // { mbsync.enable = true; };
-      i2_maildirpp-mbsync = basics // {
+      i1_maildir-mbsync = recursiveUpdate basics { mbsync.enable = true; };
+      i2_maildirpp-mbsync = recursiveUpdate basics {
         mbsync.enable = true;
         mbsync.subFolders = "Maildir++";
       };
-      i3_maildir_flatten-mbsync = basics // {
+      i3_maildir_flatten-mbsync = recursiveUpdate basics {
         mbsync.enable = true;
         mbsync.subFolders = "Maildir++";
         mbsync.flatten = ".";
       };
-      j_maildir-offlineimap = basics // { offlineimap.enable = true; };
-      k_notEnabled = basics // { aerc.enable = false; };
-      l_smtp-auth-none = basics // {
+      j_maildir-offlineimap =
+        recursiveUpdate basics { offlineimap.enable = true; };
+      k_notEnabled = recursiveUpdate basics { aerc.enable = false; };
+      l_smtp-auth-none = recursiveUpdate basics {
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -222,7 +223,7 @@ with lib;
           smtpAuth = "none";
         };
       };
-      m_smtp-auth-plain = basics // {
+      m_smtp-auth-plain = recursiveUpdate basics {
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -232,7 +233,7 @@ with lib;
           smtpAuth = "plain";
         };
       };
-      n_smtp-auth-login = basics // {
+      n_smtp-auth-login = recursiveUpdate basics {
         smtp = {
           host = "smtp.host.invalid";
           port = 42;
@@ -242,8 +243,8 @@ with lib;
           smtpAuth = "login";
         };
       };
-      o_msmtp = basics // { msmtp = { enable = true; }; };
-      p_overwrite_defaults = basics // {
+      o_msmtp = recursiveUpdate basics { msmtp = { enable = true; }; };
+      p_overwrite_defaults = recursiveUpdate basics {
         smtp.host = "should.be.overwritten.invalid";
         imap.host = "should.be.overwritten.invalid";
         aerc = {

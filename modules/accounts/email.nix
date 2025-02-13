@@ -220,6 +220,10 @@ let
   });
 
   mailAccountOpts = { name, config, ... }: {
+    imports = [
+      (mkRenamedOptionModule [ "passwordCommand" ] [ "auth" "passwordCommand" ])
+      (mkRenamedOptionModule [ "userName" ] [ "auth" "userName" ])
+    ];
     options = {
       name = mkOption {
         type = types.str;
@@ -280,24 +284,33 @@ let
         description = "Name displayed when sending mails.";
       };
 
-      userName = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = ''
-          The server username of this account. This will be used as
-          the SMTP, IMAP, and JMAP user name.
-        '';
-      };
+      auth = mkOption {
+        type = types.submodule {
+          options = {
+            userName = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = ''
+                The server username of this account. This will be used as
+                the SMTP, IMAP, and JMAP user name.
+              '';
+            };
 
-      passwordCommand = mkOption {
-        type = types.nullOr (types.either types.str (types.listOf types.str));
-        default = null;
-        apply = p: if isString p then splitString " " p else p;
-        example = "secret-tool lookup email me@example.org";
-        description = ''
-          A command, which when run writes the account password on
-          standard output.
-        '';
+            passwordCommand = mkOption {
+              type =
+                types.nullOr (types.either types.str (types.listOf types.str));
+              default = null;
+              apply = p: if isString p then splitString " " p else p;
+              example = "secret-tool lookup email me@example.org";
+              description = ''
+                A command, which when run writes the account password on
+                standard output.
+              '';
+            };
+          };
+        };
+        default = { };
+        description = "Authentication with the server.";
       };
 
       folders = mkOption {
@@ -398,7 +411,7 @@ let
       }
 
       (mkIf (config.flavor == "yandex.com") {
-        userName = mkDefault config.address;
+        auth.userName = mkDefault config.address;
 
         imap = {
           host = "imap.yandex.com";
@@ -414,7 +427,7 @@ let
       })
 
       (mkIf (config.flavor == "outlook.office365.com") {
-        userName = mkDefault config.address;
+        auth.userName = mkDefault config.address;
 
         imap = {
           host = "outlook.office365.com";
@@ -433,7 +446,7 @@ let
       })
 
       (mkIf (config.flavor == "fastmail.com") {
-        userName = mkDefault config.address;
+        auth.userName = mkDefault config.address;
 
         imap = {
           host = "imap.fastmail.com";
@@ -452,7 +465,7 @@ let
       })
 
       (mkIf (config.flavor == "migadu.com") {
-        userName = mkDefault config.address;
+        auth.userName = mkDefault config.address;
 
         imap = {
           host = "imap.migadu.com";
@@ -466,7 +479,7 @@ let
       })
 
       (mkIf (config.flavor == "gmail.com") {
-        userName = mkDefault config.address;
+        auth.userName = mkDefault config.address;
 
         imap = {
           host = "imap.gmail.com";
