@@ -5,7 +5,7 @@
     userEmail = "user@example.org";
 
     signing = {
-      gpgPath = "path-to-gpg";
+      signer = "path-to-gpg";
       key = null;
       signByDefault = true;
     };

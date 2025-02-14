@@ -7,7 +7,10 @@
     };
   };
 
-  programs.git.enable = true;
+  programs.git = {
+    enable = true;
+    signing.signer = "path-to-gpg";
+  };
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config
