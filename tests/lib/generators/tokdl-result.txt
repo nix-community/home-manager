@@ -27,15 +27,11 @@ listInAttrsInList {
 		}
 	}
 	list2 {
-		- {
-			a 8
-		}
+		a 8
 	}
 }
-nested {
-	- 1 2
-	- true false
-	- 
-	- null
-}
+repeated 1 2
+repeated true false
+repeated 
+repeated null
 unsafeString " \" \n 	 "
