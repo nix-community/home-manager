@@ -218,6 +218,7 @@ let
     ./programs/readline.nix
     ./programs/rio.nix
     ./programs/ripgrep.nix
+    ./programs/ripgrep-all.nix
     ./programs/rofi-pass.nix
     ./programs/rofi.nix
     ./programs/rtorrent.nix
