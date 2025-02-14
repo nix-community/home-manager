@@ -34,7 +34,7 @@ in {
     systemd.user.services.xembed-sni-proxy = {
       Unit = {
         Description = "XEmbed SNI Proxy";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
