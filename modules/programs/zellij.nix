@@ -3,32 +3,8 @@
 with lib;
 
 let
-
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
-  zellijCmd = getExe cfg.package;
-
-  autostartOnShellStartModule = types.submodule {
-    options = {
-      enable = mkEnableOption "" // {
-        description = ''
-          Whether to autostart Zellij session on shell creation.
-        '';
-      };
-
-      attachExistingSession = mkEnableOption "" // {
-        description = ''
-          Whether to attach to the default session after being autostarted if a Zellij session already exists.
-        '';
-      };
-
-      exitShellOnExit = mkEnableOption "" // {
-        description = ''
-          Whether to exit the shell when Zellij exits after being autostarted.
-        '';
-      };
-    };
-  };
 in {
   meta.maintainers = [ hm.maintainers.mainrs ];
 
@@ -65,12 +41,23 @@ in {
       '';
     };
 
-    autostartOnShellStart = mkOption {
-      type = types.nullOr autostartOnShellStartModule;
-      default = null;
+    attachExistingSession = mkOption {
+      type = types.bool;
+      default = false;
       description = ''
-        Options related to autostarting Zellij on shell creation.
-        Requires enable<Shell>Integration to apply to the respective <Shell>.
+        Whether to attach to the default session after being autostarted if a Zellij session already exists.
+
+        Variable is checked in `auto-start` script. Requires shell integration to be enabled to have effect.
+      '';
+    };
+
+    exitShellOnExit = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to exit the shell when Zellij exits after being autostarted.
+
+        Variable is checked in `auto-start` script. Requires shell integration to be enabled to have effect.
       '';
     };
 
@@ -84,7 +71,10 @@ in {
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
-  config = mkIf cfg.enable {
+  config = let
+    shellIntegrationEnabled = (cfg.enableBashIntegration
+      || cfg.enableZshIntegration || cfg.enableFishIntegration);
+  in mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     # Zellij switched from yaml to KDL in version 0.32.0:
@@ -99,32 +89,33 @@ in {
         text = lib.hm.generators.toKDL { } cfg.settings;
       };
 
-    programs.zsh.initExtra = mkIf (cfg.enableZshIntegration)
-      (if cfg.autostartOnShellStart.enable then (mkOrder 200 ''
-        eval "$(${zellijCmd} setup --generate-auto-start zsh)"
-      '') else
-        "");
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+      eval "$(${getExe cfg.package} setup --generate-auto-start bash)"
+    '';
 
-    programs.fish.interactiveShellInit = mkIf (cfg.enableFishIntegration)
-      (if cfg.autostartOnShellStart.enable then ''
-        eval (${zellijCmd} setup --generate-auto-start fish | string collect)
-      '' else
-        "");
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200''
+      eval "$(${getExe cfg.package} setup --generate-auto-start zsh)"
+    '');
 
-    programs.bash.initExtra = mkIf (cfg.enableBashIntegration)
-      (if cfg.autostartOnShellStart.enable then ''
-        eval "$(${zellijCmd} setup --generate-auto-start bash)"
-      '' else
-        "");
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      eval (${
+        getExe cfg.package
+      } setup --generate-auto-start fish | string collect)
+    '';
 
-    home.sessionVariables = mkIf cfg.autostartOnShellStart.enable {
+    home.sessionVariables = mkIf shellIntegrationEnabled {
       ZELLIJ_AUTO_ATTACH =
-        if cfg.autostartOnShellStart.attachExistingSession then
-          "true"
-        else
-          "false";
-      ZELLIJ_AUTO_EXIT =
-        if cfg.autostartOnShellStart.exitShellOnExit then "true" else "false";
+        if cfg.attachExistingSession then "true" else "false";
+      ZELLIJ_AUTO_EXIT = if cfg.exitShellOnExit then "true" else "false";
     };
+
+    warnings =
+      optional (cfg.attachExistingSession && !shellIntegrationEnabled) ''
+        You have enabled `programs.zellij.attachExistingSession`, but none of the shell integrations are enabled.
+        This option will have no effect.
+      '' ++ optional (cfg.exitShellOnExit && !shellIntegrationEnabled) ''
+        You have enabled `programs.zellij.exitShellOnExit`, but none of the shell integrations are enabled.
+        This option will have no effect.
+      '';
   };
 }
