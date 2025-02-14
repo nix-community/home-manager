@@ -25438,42 +25438,21 @@ attribute set of string</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.git.signing"></a><a class="term" href="options.xhtml#opt-programs.git.signing"><code class="option">programs.git.signing</code>
+ <a id="opt-programs.git.signing.format"></a><a class="term" href="options.xhtml#opt-programs.git.signing.format"><code class="option">programs.git.signing.format</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Options related to signing commits using GnuPG.</p>
+<p>The signing method to use when signing commits and tags.
+Valid values are <code class="literal">openpgp</code> (OpenPGP/GnuPG), <code class="literal">ssh</code> (SSH), and <code class="literal">x509</code> (X.509 certificates).</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (submodule)</p>
+one of “openpgp”, “ssh”, “x509”</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">&quot;openpgp&quot; for state version &lt; 24.11,
+undefined for state version ≥ 24.11
 
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix" target="_top">
-&lt;home-manager/modules/programs/git.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.git.signing.gpgPath"></a><a class="term" href="options.xhtml#opt-programs.git.signing.gpgPath"><code class="option">programs.git.signing.gpgPath</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Path to GnuPG binary to use.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;\${pkgs.gnupg}/bin/gpg2&quot;</code></p>
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -25491,7 +25470,7 @@ string</p>
  </span>
 </dt>
 <dd>
-<p>The default GPG signing key fingerprint.</p><p>Set to <code class="literal">null</code> to let GnuPG decide what signing key
+<p>The default signing key fingerprint.</p><p>Set to <code class="literal">null</code> to let the signer decide what signing key
 to use depending on commit’s author.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
@@ -25523,6 +25502,27 @@ boolean</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix" target="_top">
+&lt;home-manager/modules/programs/git.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.git.signing.signer"></a><a class="term" href="options.xhtml#opt-programs.git.signing.signer"><code class="option">programs.git.signing.signer</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to signer binary to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
