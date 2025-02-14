@@ -5,11 +5,8 @@
     zellij = {
       enable = true;
 
-      autostartOnShellStart = {
-        enable = true;
-        attachExistingSession = true;
-        exitShellOnExit = true;
-      };
+      attachExistingSession = true;
+      exitShellOnExit = true;
 
       enableZshIntegration = true;
       enableFishIntegration = true;
