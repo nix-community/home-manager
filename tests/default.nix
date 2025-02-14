@@ -263,6 +263,7 @@ in import nmtSrc {
     ./modules/services/imapnotify-darwin
     ./modules/services/nix-gc-darwin
     ./modules/services/ollama/darwin
+    ./modules/services/yubikey-agent-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n
@@ -389,6 +390,7 @@ in import nmtSrc {
     ./modules/services/wlsunset
     ./modules/services/wob
     ./modules/services/xsettingsd
+    ./modules/services/yubikey-agent
     ./modules/systemd
     ./modules/targets-linux
   ]);
