@@ -41,15 +41,12 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    xdg.desktopEntries = {
-      signaturepdf = {
-        name = "SignaturePDF";
-        exec = "${pkgs.xdg-utils}/bin/xdg-open http://localhost:${
-            toString cfg.port
-          }";
-        terminal = false;
-        icon = "${cfg.package}/share/signaturepdf/public/favicon.ico";
-      };
+    xdg.desktopEntries.signaturepdf = {
+      name = "SignaturePDF";
+      exec =
+        "${pkgs.xdg-utils}/bin/xdg-open http://localhost:${toString cfg.port}";
+      terminal = false;
+      icon = "${cfg.package}/share/signaturepdf/public/favicon.ico";
     };
 
     systemd.user.services.signaturepdf = {
