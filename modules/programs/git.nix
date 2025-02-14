@@ -120,8 +120,8 @@ in {
         format = mkOption {
           type = types.enum [ "openpgp" "ssh" "x509" ];
           defaultText = literalExpression ''
-            "openpgp" for state version < 24.11,
-            undefined for state version ≥ 24.11
+            "openpgp" for state version < 25.05,
+            undefined for state version ≥ 25.05
           '';
           description = ''
             The signing method to use when signing commits and tags.
@@ -490,7 +490,7 @@ in {
     (mkIf (cfg.signing != { }) {
       programs.git = {
         signing = {
-          format = mkIf (versionOlder config.home.stateVersion "24.11")
+          format = mkIf (versionOlder config.home.stateVersion "25.05")
             (mkOptionDefault "openpgp");
           signer = mkIf (cfg.signing.format != null) (mkOptionDefault {
             openpgp = getExe config.programs.gpg.package;
