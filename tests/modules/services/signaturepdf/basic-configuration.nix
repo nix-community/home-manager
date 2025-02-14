@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   services.signaturepdf = {
     enable = true;
@@ -7,10 +5,7 @@
     extraConfig = { upload_max_filesize = "24M"; };
   };
 
-  test.stubs = {
-    signaturepdf = { outPath = "/signaturepdf"; };
-    xdg-utils = { };
-  };
+  test.stubs.signaturepdf = { outPath = "/signaturepdf"; };
 
   nmt.script = ''
     assertFileContent \

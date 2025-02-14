@@ -2,7 +2,8 @@
 
 let
   inherit (lib)
-    all filterAttrs hasAttr isStorePath literalExpression optionalAttrs types;
+    all filterAttrs hasAttr isStorePath literalExpression optional optionalAttrs
+    types;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkMerge;
 
@@ -24,7 +25,7 @@ let
 
       options = {
         layer = mkOption {
-          type = nullOr (enum [ "top" "bottom" ]);
+          type = nullOr (enum [ "top" "bottom" "overlay" ]);
           default = null;
           description = ''
             Decide if the bar is displayed in front (`"top"`)
@@ -142,7 +143,7 @@ let
       };
     };
 in {
-  meta.maintainers = with lib.maintainers; [ berbiche ];
+  meta.maintainers = with lib.maintainers; [ berbiche khaneliman ];
 
   options.programs.waybar = with lib.types; {
     enable = mkEnableOption "Waybar";
@@ -197,8 +198,9 @@ in {
     systemd.enable = mkEnableOption "Waybar systemd integration";
 
     systemd.target = mkOption {
-      type = str;
-      default = "graphical-session.target";
+      type = nullOr str;
+      default = config.wayland.systemd.target;
+      defaultText = literalExpression "config.wayland.systemd.target";
       example = "sway-session.target";
       description = ''
         The systemd target that will automatically start the Waybar service.
@@ -308,8 +310,13 @@ in {
           Description =
             "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
           Documentation = "https://github.com/Alexays/Waybar/wiki";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session-pre.target" ];
+          PartOf = [ cfg.systemd.target ];
+          After = [ cfg.systemd.target ];
+          ConditionEnvironment = "WAYLAND_DISPLAY";
+          X-Restart-Triggers = optional (settings != [ ])
+            "${config.xdg.configFile."waybar/config".source}"
+            ++ optional (cfg.style != null)
+            "${config.xdg.configFile."waybar/style.css".source}";
         };
 
         Service = {
@@ -319,7 +326,8 @@ in {
           KillMode = "mixed";
         };
 
-        Install = { WantedBy = [ cfg.systemd.target ]; };
+        Install.WantedBy =
+          lib.optional (cfg.systemd.target != null) cfg.systemd.target;
       };
     })
   ]);

@@ -81,6 +81,18 @@ in {
         '';
       };
 
+      randomizedDelaySec = lib.mkOption {
+        default = "0";
+        type = lib.types.singleLineStr;
+        example = "45min";
+        description = ''
+          Add a randomized delay before each garbage collection.
+          The delay will be chosen between zero and this value.
+          This value must be a time span in the format specified by
+          {manpage}`systemd.time(7)`
+        '';
+      };
+
       options = mkOption {
         type = types.nullOr types.str;
         default = null;
@@ -121,6 +133,7 @@ in {
         Unit = { Description = "Nix Garbage Collector"; };
         Timer = {
           OnCalendar = "${cfg.frequency}";
+          RandomizedDelaySec = cfg.randomizedDelaySec;
           Persistent = cfg.persistent;
           Unit = "nix-gc.service";
         };

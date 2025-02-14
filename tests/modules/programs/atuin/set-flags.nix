@@ -16,21 +16,16 @@
   xdg.dataFile."fish/home-manager_generated_completions".source =
     lib.mkForce (builtins.toFile "empty" "");
 
-  test.stubs = {
-    atuin = { name = "atuin"; };
-    bash-preexec = { };
-  };
-
   nmt.script = ''
     assertFileExists home-files/.bashrc
     assertFileContains \
       home-files/.bashrc \
-      "eval \"\$(@atuin@/bin/atuin init bash '--disable-ctrl-r' '--disable-up-arrow')\""
+      "eval \"\$(@atuin@/bin/atuin init bash --disable-ctrl-r --disable-up-arrow)\""
 
     assertFileExists home-files/.zshrc
     assertFileContains \
       home-files/.zshrc \
-      "eval \"\$(@atuin@/bin/atuin init zsh '--disable-ctrl-r' '--disable-up-arrow')\""
+      "eval \"\$(@atuin@/bin/atuin init zsh --disable-ctrl-r --disable-up-arrow)\""
     assertFileExists home-files/.config/fish/config.fish
     assertFileContains \
       home-files/.config/fish/config.fish \

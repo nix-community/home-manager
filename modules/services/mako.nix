@@ -75,12 +75,14 @@ in {
           "bottom-right"
           "bottom-center"
           "bottom-left"
+          "center-right"
+          "center-left"
           "center"
         ]);
         description = ''
           Show notifications at the specified position on the output.
           Supported values are top-right, top-center, top-left, bottom-right,
-          bottom-center, bottom-left, and center.
+          bottom-center, bottom-left, center-right, center-left and center.
         '';
       };
 

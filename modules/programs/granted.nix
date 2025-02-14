@@ -13,13 +13,8 @@ in {
   options.programs.granted = {
     enable = mkEnableOption "granted";
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -28,7 +23,7 @@ in {
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       function assume() {
         export GRANTED_ALIAS_CONFIGURED="true"
-        source ${package}/bin/.assume-wrapped "$@"
+        source ${package}/bin/assume "$@"
         unset GRANTED_ALIAS_CONFIGURED
       }
     '';

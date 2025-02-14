@@ -11,7 +11,7 @@ let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
 in {
-  meta.maintainers = [ hm.maintainers.kalhauge ];
+  meta.maintainers = [ lib.hm.maintainers.kalhauge lib.maintainers.khaneliman ];
 
   options.programs.lazygit = {
     enable = mkEnableOption "lazygit, a simple terminal UI for git commands";

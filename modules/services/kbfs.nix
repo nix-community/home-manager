@@ -46,7 +46,7 @@ in {
 
       Service = let mountPoint = ''"%h/${cfg.mountPoint}"'';
       in {
-        Environment = "PATH=/run/wrappers/bin KEYBASE_SYSTEMD=1";
+        Environment = [ "PATH=/run/wrappers/bin" "KEYBASE_SYSTEMD=1" ];
         ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mountPoint}";
         ExecStart =
           "${pkgs.kbfs}/bin/kbfsfuse ${toString cfg.extraFlags} ${mountPoint}";

@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   home.stateVersion = "23.05";
 
@@ -12,11 +10,6 @@
   programs.beets = {
     enable = true;
     mpdIntegration.enableStats = true;
-  };
-
-  test.stubs = {
-    beets = { };
-    mpd = { };
   };
 
   nmt.script = ''

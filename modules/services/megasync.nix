@@ -28,7 +28,7 @@ in {
     systemd.user.services.megasync = {
       Unit = {
         Description = "megasync";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

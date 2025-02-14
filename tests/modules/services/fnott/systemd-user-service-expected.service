@@ -1,10 +1,11 @@
 [Service]
 BusName=org.freedesktop.Notifications
-ExecStart=@fnott@/bin/fnott -c '/home/hm-user/.config/fnott/fnott.ini'
+ExecStart=@fnott@/bin/fnott -c /home/hm-user/.config/fnott/fnott.ini
 Type=dbus
 
 [Unit]
-After=graphical-session-pre.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
 Description=Fnott notification daemon
 Documentation=man:fnott(1)
 PartOf=graphical-session.target

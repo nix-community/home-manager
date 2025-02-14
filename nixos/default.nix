@@ -19,13 +19,17 @@ in {
         extraSpecialArgs.nixosConfig = config;
 
         sharedModules = [{
-          # The per-user directory inside /etc/profiles is not known by
-          # fontconfig by default.
-          fonts.fontconfig.enable = lib.mkDefault
-            (cfg.useUserPackages && config.fonts.fontconfig.enable);
+          key = "home-manager#nixos-shared-module";
 
-          # Inherit glibcLocales setting from NixOS.
-          i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
+          config = {
+            # The per-user directory inside /etc/profiles is not known by
+            # fontconfig by default.
+            fonts.fontconfig.enable = lib.mkDefault
+              (cfg.useUserPackages && config.fonts.fontconfig.enable);
+
+            # Inherit glibcLocales setting from NixOS.
+            i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
+          };
         }];
       };
     }
@@ -48,7 +52,6 @@ in {
           serviceConfig = {
             User = usercfg.home.username;
             Type = "oneshot";
-            RemainAfterExit = "yes";
             TimeoutStartSec = "5m";
             SyslogIdentifier = "hm-activate-${username}";
 

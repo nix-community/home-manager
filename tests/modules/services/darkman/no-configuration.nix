@@ -1,11 +1,6 @@
 {
   services.darkman.enable = true;
 
-  test.stubs = {
-    python = { };
-    darkman = { };
-  };
-
   nmt.script = ''
     serviceFile=$(normalizeStorePaths home-files/.config/systemd/user/darkman.service)
 
@@ -17,7 +12,7 @@
 
         [Service]
         BusName=nl.whynothugo.darkman
-        ExecStart=@darkman@/bin/dummy run
+        ExecStart=@darkman@/bin/darkman run
         Restart=on-failure
         Slice=background.slice
         TimeoutStopSec=15

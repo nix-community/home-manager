@@ -17,7 +17,7 @@
 
     assertFileExists $serviceFile
     assertFileRegex $serviceFile 'ExecStart=.*/bin/dummy'
-    assertFileRegex $serviceFile "dummy '--icon' '--enable-extra-hardening'"
+    assertFileRegex $serviceFile "dummy --icon --enable-extra-hardening"
 
     mimetypeFile='./home-files/.local/share/mime/packages/application-x-rdp.xml'
 

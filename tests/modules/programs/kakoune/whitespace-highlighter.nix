@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ lib, ... }:
 
 {
   imports = [ ./stubs.nix ];

@@ -26,51 +26,31 @@ in {
     options = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "--no-aliases" ];
+      example = [ "--no-cmd" ];
       description = ''
-        List of options to pass to zoxide.
+        List of options to pass to zoxide init.
       '';
     };
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableNushellIntegration =
+      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Nushell integration.
-      '';
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 150 ''
       eval "$(${cfg.package}/bin/zoxide init bash ${cfgOptions})"
-    '';
+    '');
 
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/zoxide init zsh ${cfgOptions})"

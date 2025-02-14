@@ -31,7 +31,7 @@ in {
 
     options = mkOption {
       default = { };
-      type = with types; attrsOf (either str (either bool int));
+      type = with types; attrsOf (oneOf [ str bool int float ]);
       description = ''
         Add {option}`:set` command options to zathura and make
         them permanent. See

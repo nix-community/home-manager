@@ -9,7 +9,7 @@ let
   aliases = {
     ls = "${cfg.package}/bin/pls";
     ll =
-      "${cfg.package}/bin/pls -d perms -d user -d group -d size -d mtime -d git";
+      "${cfg.package}/bin/pls -d perm -d user -d group -d size -d mtime -d git";
   };
 
 in {
@@ -28,7 +28,15 @@ in {
 
     programs.bash.shellAliases = mkIf cfg.enableAliases aliases;
 
-    programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
+    programs.fish = mkMerge [
+      (mkIf (!config.programs.fish.preferAbbrs) {
+        shellAliases = mkIf cfg.enableAliases aliases;
+      })
+
+      (mkIf config.programs.fish.preferAbbrs {
+        shellAbbrs = mkIf cfg.enableAliases aliases;
+      })
+    ];
 
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
   };

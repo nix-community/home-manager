@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, realPkgs, ... }:
 
 let
 
@@ -61,8 +61,6 @@ in {
     };
   };
 
-  test.stubs.borgmatic = { };
-
   nmt.script = ''
     config_file=$TESTED/home-files/.config/borgmatic.d/main.yaml
     assertFileExists $config_file
@@ -120,7 +118,7 @@ in {
       builtins.elemAt backups.main.hooks.extraConfig.before_actions 0
     }"
 
-    yq=${pkgs.yq-go}/bin/yq
+    yq=${realPkgs.yq-go}/bin/yq
 
     for filter in "''${!expectations[@]}"; do
       expected_value="''${expectations[$filter]}"

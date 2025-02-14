@@ -29,29 +29,14 @@ in {
       '';
     };
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     enableAliases = mkOption {
       default = false;
@@ -77,16 +62,26 @@ in {
       })"
     '';
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      source (${pkgs.z-lua}/bin/z --init fish ${
-        concatStringsSep " " cfg.options
-      } | psub)
-    '';
-
     programs.bash.shellAliases = mkIf cfg.enableAliases aliases;
 
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
 
-    programs.fish.shellAliases = mkIf cfg.enableAliases aliases;
+    programs.fish = mkMerge [
+      {
+        shellInit = mkIf cfg.enableFishIntegration ''
+          source (${pkgs.z-lua}/bin/z --init fish ${
+            concatStringsSep " " cfg.options
+          } | psub)
+        '';
+      }
+
+      (mkIf (!config.programs.fish.preferAbbrs) {
+        shellAliases = mkIf cfg.enableAliases aliases;
+      })
+
+      (mkIf config.programs.fish.preferAbbrs {
+        shellAbbrs = mkIf cfg.enableAliases aliases;
+      })
+    ];
   };
 }

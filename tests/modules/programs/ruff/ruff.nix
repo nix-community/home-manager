@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.ruff = {
     enable = true;
@@ -13,8 +11,6 @@
       };
     };
   };
-
-  test.stubs.ruff = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/ruff/ruff.toml

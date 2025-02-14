@@ -12,11 +12,6 @@
     };
   };
 
-  test.stubs = {
-    atuin = { name = "atuin"; };
-    bash-preexec = { };
-  };
-
   nmt.script = ''
     assertFileContent \
       home-files/.config/atuin/config.toml \

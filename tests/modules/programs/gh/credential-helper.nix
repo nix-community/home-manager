@@ -1,5 +1,3 @@
-{ config, lib, pkgs, ... }:
-
 {
   programs.gh = {
     enable = true;
@@ -13,8 +11,6 @@
     enable = true;
     signing.signer = "path-to-gpg";
   };
-
-  test.stubs.gh = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config

@@ -9,11 +9,7 @@ let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
 in {
-  meta.maintainers = with maintainers; [
-    katexochen
-    liyangau
-    hm.maintainers.LucasWagler
-  ];
+  meta.maintainers = with maintainers; [ liyangau hm.maintainers.LucasWagler ];
 
   imports = [
     (mkRenamedOptionModule [ "programs" "k9s" "skin" ] [
@@ -46,7 +42,7 @@ in {
     };
 
     skins = mkOption {
-      type = types.attrsOf yamlFormat.type;
+      type = with types; attrsOf (either yamlFormat.type path);
       default = { };
       description = ''
         Skin files written to {file}`$XDG_CONFIG_HOME/k9s/skins/` (linux)
@@ -54,13 +50,16 @@ in {
         <https://k9scli.io/topics/skins/> for supported values.
       '';
       example = literalExpression ''
-        my_blue_skin = {
-          k9s = {
-            body = {
-              fgColor = "dodgerblue";
+        {
+          my_blue_skin = {
+            k9s = {
+              body = {
+                fgColor = "dodgerblue";
+              };
             };
           };
-        };
+          my_red_skin = ./red_skin.yaml;
+        }
       '';
     };
 
@@ -174,7 +173,10 @@ in {
         "k9s/skins/${name}.yaml"
       else
         "Library/Application Support/k9s/skins/${name}.yaml") {
-          source = yamlFormat.generate "k9s-skin-${name}.yaml" value;
+          source = if lib.types.path.check value then
+            value
+          else
+            yamlFormat.generate "k9s-skin-${name}.yaml" value;
         }) cfg.skins;
 
     enableXdgConfig = !isDarwin || config.xdg.enable;
