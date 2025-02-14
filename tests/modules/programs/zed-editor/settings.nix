@@ -1,7 +1,5 @@
-# Test custom keymap functionality
-{ config, ... }:
-
-{
+# Test custom settings functionality
+{ config, ... }: {
   programs.zed-editor = {
     enable = true;
     package = config.lib.test.mkStubPackage { };

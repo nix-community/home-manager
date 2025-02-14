@@ -1,22 +1,25 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
 let
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
 
   mergedSettings = cfg.userSettings
     // (lib.optionalAttrs (builtins.length cfg.extensions > 0) {
-      # this part by @cmacrae
+      # by @cmacrae
       auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
     });
+
+  buildThemes = themes:
+    lib.listToAttrs (map (theme: {
+      name = "zed/themes/${theme.name}.json";
+      value = { source = jsonFormat.generate "zed-theme-${theme.name}" theme; };
+    }) themes);
 in {
   meta.maintainers = [ hm.maintainers.libewa ];
 
   options = {
-    # TODO: add vscode option parity (installing extensions, configuring
-    # keybinds with nix etc.)
+    # TODO: add vscode option parity (installing extensions, configuring, keybinds with nix etc.)
     programs.zed-editor = {
       enable = mkEnableOption
         "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
@@ -61,11 +64,37 @@ in {
               bindings = {
                 ctrl-shift-t = "workspace::NewTerminal";
               };
-            };
+            }
           ]
         '';
         description = ''
           Configuration written to Zed's {file}`keymap.json`.
+        '';
+      };
+
+      userThemes = mkOption {
+        type = types.listOf jsonFormat.type;
+        default = [ ];
+        example = literalExpression ''
+          [
+            {
+              name = "example 1";
+              author = "user";
+              themes = [
+                {
+                  name = "example 1";
+                  appearance = "dark";
+                  style = {
+                    background = "#000000";
+                  };
+                }
+              ];
+            }
+          ];
+        '';
+        description = ''
+          Local themes written to {file}`$XDG_CONFIG_HOME/zed/themes`.
+          See <https://zed.dev/docs/extensions/themes> for more information.
         '';
       };
 
@@ -122,15 +151,19 @@ in {
         binaryName = "zed-remote-server-stable-${version}";
       in {
         ".zed_server/${binaryName}".source =
-          lib.getExe' remote_server binaryName;
+        lib.getExe' remote_server binaryName;
       });
 
-    xdg.configFile."zed/settings.json" = (mkIf (mergedSettings != { }) {
-      source = jsonFormat.generate "zed-user-settings" mergedSettings;
-    });
-
-    xdg.configFile."zed/keymap.json" = (mkIf (cfg.userKeymaps != { }) {
-      source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
-    });
+    xdg.configFile = mkMerge [
+      {
+        "zed/settings.json" = mkIf (mergedSettings != { }) {
+          source = jsonFormat.generate "zed-user-settings" mergedSettings;
+        };
+        "zed/keymap.json" = mkIf (cfg.userKeymaps != { }) {
+          source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
+        };
+      }
+      (lib.mkIf (cfg.userThemes != [ ]) (buildThemes cfg.userThemes))
+    ];
   };
 }
