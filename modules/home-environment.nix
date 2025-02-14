@@ -714,6 +714,8 @@ in
           set -eu
           set -o pipefail
 
+          : ''${SKIP_SANITY_CHECKS:=${ if pkgs.stdenvNoCC.isDarwin then "true" else "" }}
+
           cd $HOME
 
           export PATH="${activationBinPaths}"
@@ -721,7 +723,7 @@ in
 
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
-          if [[ ! -v SKIP_SANITY_CHECKS ]]; then
+          if [[ -z SKIP_SANITY_CHECKS ]]; then
             checkUsername ${escapeShellArg config.home.username}
             checkHomeDirectory ${escapeShellArg config.home.homeDirectory}
           fi
