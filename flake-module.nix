@@ -14,11 +14,11 @@ in {
           that you can reference them in this or another flake's `homeConfigurations`.
         '';
       };
-      homeManagerModules = mkOption {
+      homeModules = mkOption {
         type = types.lazyAttrsOf types.unspecified;
         default = { };
         apply = mapAttrs (k: v: {
-          _file = "${toString moduleLocation}#homeManagerModules.${k}";
+          _file = "${toString moduleLocation}#homeModules.${k}";
           imports = [ v ];
         });
         description = ''
