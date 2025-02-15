@@ -122,6 +122,16 @@
       machine.succeed("test ! -e /home/alice/.local/state/home-manager")
       machine.succeed("test ! -e /home/alice/.local/state/nix/profiles/home-manager")
 
+    with subtest("Home Manager Installation with preexisting dotfile"):
+      succeed_as_alice("touch /home/alice/.profile")
+
+      succeed_as_alice("cp ${
+        ./alice-home-dotprofile.nix
+      } /home/alice/.config/home-manager/home.nix")
+
+      succeed_as_alice("nix-shell ${./override-install.nix}")
+      succeed_as_alice("test -e /home/alice/.profile.backup")
+
     logout_alice()
   '';
 }
