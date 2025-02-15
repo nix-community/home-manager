@@ -208,6 +208,7 @@ let
     ./programs/poetry.nix
     ./programs/powerline-go.nix
     ./programs/pqiv.nix
+    ./programs/process-compose.nix
     ./programs/pubs.nix
     ./programs/pyenv.nix
     ./programs/pylint.nix
