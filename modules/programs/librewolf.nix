@@ -35,7 +35,7 @@ in {
       };
       platforms.darwin = {
         configPath = "Library/Application Support/LibreWolf";
-        vendorPash = "Library/Application Support/Mozilla";
+        vendorPath = "Library/Application Support/Mozilla";
       };
 
       enableBookmarks = false;

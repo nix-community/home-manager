@@ -25,7 +25,7 @@ in {
       };
       platforms.darwin = {
         configPath = "Library/Application Support/Floorp";
-        vendorPash = "Library/Application Support/Mozilla";
+        vendorPath = "Library/Application Support/Mozilla";
       };
     })
   ];
