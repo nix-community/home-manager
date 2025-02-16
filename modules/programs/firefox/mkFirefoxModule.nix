@@ -30,23 +30,6 @@ let
   profilesPath =
     if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
 
-  nativeMessagingHostsPath = if isDarwin then
-    "${cfg.vendorPath}/NativeMessagingHosts"
-  else
-    "${cfg.vendorPath}/native-messaging-hosts";
-
-  nativeMessagingHostsJoined = pkgs.symlinkJoin {
-    name = "ff_native-messaging-hosts";
-    paths = [
-      # Link a .keep file to keep the directory around
-      (pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/.keep" "")
-      # Link package configured native messaging hosts (entire browser actually)
-      cfg.finalPackage
-    ]
-    # Link user configured native messaging hosts
-      ++ cfg.nativeMessagingHosts;
-  };
-
   # The extensions path shared by all profiles; will not be supported
   # by future browser versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
@@ -864,16 +847,14 @@ in {
 
     home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
+    mozilla.firefoxNativeMessagingHosts = [
+      cfg.finalPackage # package configured native messaging hosts (entire browser actually)
+    ] ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
+
     home.file = mkMerge ([{
       "${cfg.configPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
-    }] ++ optional (cfg.vendorPath != null) {
-      "${nativeMessagingHostsPath}" = {
-        source =
-          "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
-        recursive = true;
-      };
-    } ++ flip mapAttrsToList cfg.profiles (_: profile:
+    }] ++ flip mapAttrsToList cfg.profiles (_: profile:
       # Merge the regular profile settings with extension settings
       mkMerge ([{
         "${profilesPath}/${profile.path}/.keep".text = "";

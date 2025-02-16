@@ -37,14 +37,18 @@
     };
   };
 
+  # Confirm that both Firefox and Thunderbird can be configured at the same time.
+  programs.firefox = { enable = true; };
+
   programs.thunderbird = {
     enable = true;
 
     # Disable warning so that platforms' behavior is the same
     darwinSetupWarning = false;
 
-    # Darwin doesn't support wrapped Thunderbird, using unwrapped instead
-    package = realPkgs.thunderbird-unwrapped;
+    # Darwin doesn't support wrapped Thunderbird, using unwrapped instead;
+    # using -latest- because ESR is currently broken on Darwin
+    package = realPkgs.thunderbird-latest-unwrapped;
 
     profiles = {
       first = {
