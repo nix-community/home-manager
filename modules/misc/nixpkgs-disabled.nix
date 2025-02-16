@@ -64,7 +64,7 @@ in {
 
   config = {
     assertions = [{
-      assertion = cfg.config == null || cfg.overlays == null;
+      assertion = cfg.config == null && cfg.overlays == null;
       message = ''
         `nixpkgs` options are disabled when `home-manager.useGlobalPkgs` is enabled.
       '';
