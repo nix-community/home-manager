@@ -18,6 +18,7 @@ in {
         type = types.lazyAttrsOf types.unspecified;
         default = { };
         apply = mapAttrs (k: v: {
+          _class = "homeManager";
           _file = "${toString moduleLocation}#homeManagerModules.${k}";
           imports = [ v ];
         });
