@@ -508,7 +508,7 @@ in {
           commit.gpgSign = mkDefault cfg.signing.signByDefault;
           tag.gpgSign = mkDefault cfg.signing.signByDefault;
           gpg = {
-            inherit format;
+            format = mkDefault format;
             ${format}.program = cfg.signing.signer;
           };
         };
