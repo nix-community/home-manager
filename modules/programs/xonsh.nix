@@ -36,12 +36,20 @@ in {
         this option) to commands
       '';
     };
-    extraPackages = mkOption {
-      type = with types; functionTo (listOf package);
-      default = _: [ ];
-      defaultText = "_: []";
+    extraPackages = lib.mkOption {
+      default = (ps: [ ]);
+      type = with lib.types;
+        coercedTo (listOf lib.types.package) (v: (_: v))
+        (functionTo (listOf lib.types.package));
       description = ''
-        List of python packages and xontrib to make avaiable
+        Add the specified extra packages to the xonsh package.
+        Preferred over using `programs.xonsh.package` as it composes with `pkgs.xonsh.xontribs`.
+        Take care in using this option along with manually defining the package
+        option above, as the two can result in conflicting sets of build dependencies.
+        This option assumes that the package option has an overridable argument
+        called `extraPackages`, so if you override the package option but also
+        intend to use this option as in the case of many enableXonshIntegration options,
+        be sure that your resulting package still honors the necessary option.
       '';
     };
   };
