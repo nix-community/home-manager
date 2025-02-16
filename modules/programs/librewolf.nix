@@ -30,12 +30,12 @@ in {
       unwrappedPackageName = "librewolf-unwrapped";
 
       platforms.linux = {
-        vendorPath = ".librewolf";
         configPath = ".librewolf";
+        vendorPath = ".mozilla";
       };
       platforms.darwin = {
-        vendorPath = "Library/Application Support/LibreWolf";
         configPath = "Library/Application Support/LibreWolf";
+        vendorPath = "Library/Application Support/Mozilla";
       };
 
       enableBookmarks = false;
