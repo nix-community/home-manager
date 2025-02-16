@@ -41,18 +41,17 @@ let
   '';
 
   xonshIntegration = ''
-    def __yazi_init():
-      def yy(args):
-        tmp = $(mktemp -t "yazi-cwd.XXXXX").strip()
-        $[yazi @(args) @(f"--cwd-file={tmp}")]
-        cwd = fp"{tmp}".read_text()
-        if cwd != "" and cwd != $PWD:
-          xonsh.dirstack.cd((cwd,))
-        $[rm -f -- @(tmp)]
+    def _y(args):
+        tmp = $(mktemp -t "yazi-cwd.XXXXXX")
+        args.append(f"--cwd-file={tmp}")
+        $[yazi @(args)]
+        with open(tmp) as f:
+            cwd = f.read().strip()
+        if cwd != $PWD:
+            cd @(cwd)
+        rm -f -- @(tmp)
 
-      aliases['yy'] = yy
-    __yazi_init()
-    del __yazi_init
+    aliases["y"] = _y
   '';
 in {
   meta.maintainers = with maintainers; [ xyenon eljamm ];
