@@ -53,7 +53,7 @@ in {
 
   config = {
     warnings = (lib.optional
-      (osConfig != null && !(cfg.clean.enable -> !osConfig.nix.gc.automatic))
+      (cfg.clean.enable && osConfig != null && osConfig.nix.gc.automatic)
       "programs.nh.clean.enable and nix.gc.automatic (system-wide in configuration.nix) are both enabled. Please use one or the other to avoid conflict.")
       ++ (lib.optional (cfg.clean.enable && config.nix.gc.automatic)
         "programs.nh.clean.enable and nix.gc.automatic (Home-Manager) are both enabled. Please use one or the other to avoid conflict.");
