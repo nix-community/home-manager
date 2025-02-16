@@ -136,24 +136,6 @@ let
     '') prefs)}
     ${extraPrefs}
   '';
-
-  nativeMessagingHostsPath = if isDarwin then
-    "${cfg.vendorPath}/NativeMessagingHosts"
-  else
-    "${cfg.vendorPath}/native-messaging-hosts";
-
-  nativeMessagingHostsJoined = pkgs.symlinkJoin {
-    name = "th_native-messaging-hosts";
-    paths = [
-      # Link a .keep file to keep the directory around
-      (pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/.keep" "")
-      # Link package configured native messaging hosts (entire mail app actually)
-      cfg.package
-    ]
-    # Link user configured native messaging hosts
-      ++ cfg.nativeMessagingHosts;
-  };
-
 in {
   meta.maintainers = with hm.maintainers; [ d-dervishi jkarlson ];
 
@@ -176,20 +158,7 @@ in {
         description = "profile version, set null for nix-darwin";
       };
 
-      vendorPath = mkOption {
-        internal = true;
-        type = with types; nullOr str;
-        # Thunderbird doesn't look in `Application Support` on macOS for user
-        # config (in contrast to global settings that are the same for Firefox
-        # and Thunderbird):
-        # https://developer.thunderbird.net/add-ons/mailextensions/supported-webextension-api
-        default = if isDarwin then "Library/Mozilla" else ".mozilla";
-        example = ".mozilla";
-        description =
-          "Directory containing the native messaging hosts directory.";
-      };
-
-      nativeMessagingHosts = optionalAttrs (cfg.vendorPath != null) (mkOption {
+      nativeMessagingHosts = mkOption {
         visible = true;
         type = types.listOf types.package;
         default = [ ];
@@ -197,7 +166,7 @@ in {
           Additional packages containing native messaging hosts that should be
           made available to Thunderbird extensions.
         '';
-      });
+      };
 
       profiles = mkOption {
         type = with types;
@@ -441,16 +410,14 @@ in {
       ++ optional (any (p: p.withExternalGnupg) (attrValues cfg.profiles))
       pkgs.gpgme;
 
+    mozilla.thunderbirdNativeMessagingHosts = [
+      cfg.package # package configured native messaging hosts (entire mail app actually)
+    ] ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
+
     home.file = mkMerge ([{
       "${thunderbirdConfigPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = generators.toINI { } profilesIni; };
-    }] ++ optional (cfg.vendorPath != null) {
-      "${nativeMessagingHostsPath}" = {
-        source =
-          "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
-        recursive = true;
-      };
-    } ++ flip mapAttrsToList cfg.profiles (name: profile: {
+    }] ++ flip mapAttrsToList cfg.profiles (name: profile: {
       "${thunderbirdProfilesPath}/${name}/chrome/userChrome.css" =
         mkIf (profile.userChrome != "") { text = profile.userChrome; };
 

@@ -37,6 +37,9 @@
     };
   };
 
+  # Confirm that both Firefox and Thunderbird can be configured at the same time.
+  programs.firefox = { enable = true; };
+
   programs.thunderbird = {
     enable = true;
 
