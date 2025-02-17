@@ -7,7 +7,8 @@ let
 
   mkFirefoxModule = import ./firefox/mkFirefoxModule.nix;
 in {
-  meta.maintainers = [ maintainers.rycee hm.maintainers.bricked ];
+  meta.maintainers =
+    [ maintainers.rycee hm.maintainers.bricked hm.maintainers.HPsaucii ];
 
   imports = [
     (mkFirefoxModule {
