@@ -57,8 +57,8 @@ in {
       services.avizo = {
         Unit = {
           Description = "Volume/backlight OSD indicator";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+          PartOf = [ config.wayland.systemd.target ];
+          After = [ config.wayland.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           Documentation = "man:avizo(1)";
         };
@@ -69,7 +69,7 @@ in {
           Restart = "always";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ config.wayland.systemd.target ]; };
       };
     };
   };
