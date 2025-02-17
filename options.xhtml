@@ -21191,12 +21191,52 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>List of Firefox add-on packages to install for this profile.
-Some pre-packaged add-ons are accessible from the
-<a class="link" href="https://github.com/nix-community/NUR"  target="_top">Nix User Repository</a>.
+<p>Submodule for installing and configuring extensions.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+(submodule) or (list of package) convertible to it</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  packages = with pkgs.nur.repos.rycee.firefox-addons; [
+    ublock-origin
+  ];
+  settings.&quot;uBlock0@raymondhill.net&quot;.settings = {
+    selectedFilterLists = [
+      &quot;ublock-filters&quot;
+      &quot;ublock-badware&quot;
+      &quot;ublock-privacy&quot;
+      &quot;ublock-unbreak&quot;
+      &quot;ublock-quick-fixes&quot;
+    ];
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.firefox.profiles._name_.extensions.packages"></a><a class="term" href="options.xhtml#opt-programs.firefox.profiles._name_.extensions.packages"><code class="option">programs.firefox.profiles.&lt;name&gt;.extensions.packages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of ‹name› add-on packages to install for this profile.
+Some pre-packaged add-ons are accessible from the Nix User Repository.
 Once you have NUR installed run</p><pre><code class="programlisting console">$ nix-env -f &#x27;&lt;nixpkgs&gt;&#x27; -qaP -A nur.repos.rycee.firefox-addons
-</code></pre><p>to list the available Firefox add-ons.</p><p>Note that it is necessary to manually enable these extensions
-inside Firefox after the first installation.</p><p>To automatically enable extensions add
+</code></pre><p>to list the available ‹name› add-ons.</p><p>Note that it is necessary to manually enable these extensions
+inside ‹name› after the first installation.</p><p>To automatically enable extensions add
 <code class="literal">&quot;extensions.autoDisableScopes&quot; = 0;</code>
 to
 <a class="link" href="options.xhtml#opt-programs.firefox.profiles._name_.settings"  ><code class="option">programs.firefox.profiles.&lt;profile&gt;.settings</code></a></p>
@@ -21212,6 +21252,101 @@ list of package</p>
 ]
 
 </code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.firefox.profiles._name_.extensions.settings"></a><a class="term" href="options.xhtml#opt-programs.firefox.profiles._name_.extensions.settings"><code class="option">programs.firefox.profiles.&lt;name&gt;.extensions.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of options for each extension.
+The keys of the attribute set consist of the ID of the extension
+or its UUID wrapped in curly braces.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  # Example with uBlock origin&#x27;s extensionID
+  &quot;uBlock0@raymondhill.net&quot;.settings = {
+    selectedFilterLists = [
+      &quot;ublock-filters&quot;
+      &quot;ublock-badware&quot;
+      &quot;ublock-privacy&quot;
+      &quot;ublock-unbreak&quot;
+      &quot;ublock-quick-fixes&quot;
+    ];
+  };
+
+  # Example with Stylus&#x27; UUID-form extensionID
+  &quot;{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}&quot;.settings = {
+    dbInChromeStorage = true; # required for Stylus
+  }
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.firefox.profiles._name_.extensions.settings._name_.force"></a><a class="term" href="options.xhtml#opt-programs.firefox.profiles._name_.extensions.settings._name_.force"><code class="option">programs.firefox.profiles.&lt;name&gt;.extensions.settings.&lt;name&gt;.force</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Forcibly override any existing configuration for
+this extension.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix" target="_top">
+&lt;home-manager/modules/programs/firefox.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.firefox.profiles._name_.extensions.settings._name_.settings"></a><a class="term" href="options.xhtml#opt-programs.firefox.profiles._name_.extensions.settings._name_.settings"><code class="option">programs.firefox.profiles.&lt;name&gt;.extensions.settings.&lt;name&gt;.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Json formatted options for the specified extensionID</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (JSON value)</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -22536,12 +22671,52 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>List of Floorp add-on packages to install for this profile.
-Some pre-packaged add-ons are accessible from the
-<a class="link" href="https://github.com/nix-community/NUR"  target="_top">Nix User Repository</a>.
+<p>Submodule for installing and configuring extensions.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+(submodule) or (list of package) convertible to it</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  packages = with pkgs.nur.repos.rycee.firefox-addons; [
+    ublock-origin
+  ];
+  settings.&quot;uBlock0@raymondhill.net&quot;.settings = {
+    selectedFilterLists = [
+      &quot;ublock-filters&quot;
+      &quot;ublock-badware&quot;
+      &quot;ublock-privacy&quot;
+      &quot;ublock-unbreak&quot;
+      &quot;ublock-quick-fixes&quot;
+    ];
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/floorp.nix" target="_top">
+&lt;home-manager/modules/programs/floorp.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.floorp.profiles._name_.extensions.packages"></a><a class="term" href="options.xhtml#opt-programs.floorp.profiles._name_.extensions.packages"><code class="option">programs.floorp.profiles.&lt;name&gt;.extensions.packages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of ‹name› add-on packages to install for this profile.
+Some pre-packaged add-ons are accessible from the Nix User Repository.
 Once you have NUR installed run</p><pre><code class="programlisting console">$ nix-env -f &#x27;&lt;nixpkgs&gt;&#x27; -qaP -A nur.repos.rycee.firefox-addons
-</code></pre><p>to list the available Floorp add-ons.</p><p>Note that it is necessary to manually enable these extensions
-inside Floorp after the first installation.</p><p>To automatically enable extensions add
+</code></pre><p>to list the available ‹name› add-ons.</p><p>Note that it is necessary to manually enable these extensions
+inside ‹name› after the first installation.</p><p>To automatically enable extensions add
 <code class="literal">&quot;extensions.autoDisableScopes&quot; = 0;</code>
 to
 <a class="link" href="options.xhtml#opt-programs.floorp.profiles._name_.settings"  ><code class="option">programs.floorp.profiles.&lt;profile&gt;.settings</code></a></p>
@@ -22557,6 +22732,101 @@ list of package</p>
 ]
 
 </code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/floorp.nix" target="_top">
+&lt;home-manager/modules/programs/floorp.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.floorp.profiles._name_.extensions.settings"></a><a class="term" href="options.xhtml#opt-programs.floorp.profiles._name_.extensions.settings"><code class="option">programs.floorp.profiles.&lt;name&gt;.extensions.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of options for each extension.
+The keys of the attribute set consist of the ID of the extension
+or its UUID wrapped in curly braces.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  # Example with uBlock origin&#x27;s extensionID
+  &quot;uBlock0@raymondhill.net&quot;.settings = {
+    selectedFilterLists = [
+      &quot;ublock-filters&quot;
+      &quot;ublock-badware&quot;
+      &quot;ublock-privacy&quot;
+      &quot;ublock-unbreak&quot;
+      &quot;ublock-quick-fixes&quot;
+    ];
+  };
+
+  # Example with Stylus&#x27; UUID-form extensionID
+  &quot;{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}&quot;.settings = {
+    dbInChromeStorage = true; # required for Stylus
+  }
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/floorp.nix" target="_top">
+&lt;home-manager/modules/programs/floorp.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.floorp.profiles._name_.extensions.settings._name_.force"></a><a class="term" href="options.xhtml#opt-programs.floorp.profiles._name_.extensions.settings._name_.force"><code class="option">programs.floorp.profiles.&lt;name&gt;.extensions.settings.&lt;name&gt;.force</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Forcibly override any existing configuration for
+this extension.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/floorp.nix" target="_top">
+&lt;home-manager/modules/programs/floorp.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.floorp.profiles._name_.extensions.settings._name_.settings"></a><a class="term" href="options.xhtml#opt-programs.floorp.profiles._name_.extensions.settings._name_.settings"><code class="option">programs.floorp.profiles.&lt;name&gt;.extensions.settings.&lt;name&gt;.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Json formatted options for the specified extensionID</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (JSON value)</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -35499,7 +35769,7 @@ attribute set of (string or signed integer or list of (string or signed integer)
 </dt>
 <dd>
 <p>Whether to enable LibreWolf. LibreWolf is a privacy enhanced Firefox fork.
-See <code class="literal">programs.firefox</code> for more configuration options.</p>
+See <code class="literal">programs.librewolf</code> for more configuration options.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
