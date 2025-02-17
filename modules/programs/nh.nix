@@ -13,7 +13,7 @@ in {
     package = lib.mkPackageOption pkgs "nh" { };
 
     flake = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
+      type = lib.types.nullOr lib.types.singleLineStr;
       default = null;
       description = ''
         The path that will be used for the {env}`FLAKE` environment variable.
