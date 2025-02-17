@@ -496,7 +496,7 @@ in {
           format = if (versionOlder config.home.stateVersion "25.05") then
             (mkOptionDefault "openpgp")
           else
-            null;
+            (mkOptionDefault null);
           signer = let
             defaultSigners = {
               openpgp = getExe config.programs.gpg.package;
