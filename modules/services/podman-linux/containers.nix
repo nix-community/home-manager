@@ -32,20 +32,32 @@ let
         ++ (withResolverFor "volume" containerDef.volumes);
 
       checkQuadletReference = types: value:
-        if builtins.isList value then
+        let baseName = t: elemAt (splitString ".${t}" value) 0;
+        in if builtins.isList value then
           builtins.concatLists (map (checkQuadletReference types) value)
         else
           let type = findFirst (t: hasInfix ".${t}" value) null types;
           in if (type != null) then
             let
-              baseName = elemAt (splitString ".${type}" value) 0;
+              quadletBaseName = baseName type;
               quadletsOfType =
                 filterAttrs (n: v: v.quadletData.resourceType == type)
                 cfg.internal.builtQuadlets;
-            in if (hasAttr baseName quadletsOfType) then
-              [ (replaceStrings [ baseName ] [ "podman-${baseName}" ] value) ]
+            in if (hasAttr quadletBaseName quadletsOfType) then
+              [
+                (replaceStrings [ quadletBaseName ]
+                  [ "podman-${quadletBaseName}" ] value)
+              ]
             else
               [ value ]
+          else if ((hasInfix "/nix/store" value) == false
+            && hasAttr value cfg.internal.builtQuadlets) then
+            lib.warn ''
+              A value for Podman container '${name}' might use a reference to another quadlet: ${value}. 
+              Append the type '.${
+                cfg.internal.builtQuadlets.${value}.quadletData.resourceType
+              }' to '${baseName value}' if this is intended.
+            '' [ value ]
           else
             [ value ];
 
