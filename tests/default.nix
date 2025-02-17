@@ -263,6 +263,7 @@ in import nmtSrc {
     ./modules/services/imapnotify-darwin
     ./modules/services/nix-gc-darwin
     ./modules/services/ollama/darwin
+    ./modules/services/yubikey-agent-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
     ./modules/config/i18n
@@ -282,6 +283,7 @@ in import nmtSrc {
     ./modules/programs/bemenu
     ./modules/programs/boxxy
     ./modules/programs/cavalier
+    ./modules/programs/eww
     ./modules/programs/firefox/firefox.nix
     ./modules/programs/firefox/floorp.nix
     ./modules/programs/foot
@@ -388,6 +390,7 @@ in import nmtSrc {
     ./modules/services/wlsunset
     ./modules/services/wob
     ./modules/services/xsettingsd
+    ./modules/services/yubikey-agent
     ./modules/systemd
     ./modules/targets-linux
   ]);

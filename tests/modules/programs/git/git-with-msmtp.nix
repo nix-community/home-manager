@@ -7,6 +7,7 @@
 
   programs.git = {
     enable = true;
+    signing.signer = "path-to-gpg";
     userEmail = "hm@example.com";
     userName = "H. M. Test";
   };

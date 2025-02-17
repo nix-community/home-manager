@@ -154,8 +154,9 @@ in {
               "Commands to run every time a new window is detected with optional conditions.";
           };
           workspace-to-monitor-force-assignment = mkOption {
-            type = with types; attrsOf (oneOf [ int str (listOf str) ]);
-            default = { };
+            type = with types;
+              nullOr (attrsOf (oneOf [ int str (listOf str) ]));
+            default = null;
             description = ''
               Map workspaces to specific monitors.
               Left-hand side is the workspace name, and right-hand side is the monitor pattern.

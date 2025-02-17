@@ -180,7 +180,7 @@ in {
     services.podman.internal.quadletDefinitions = volumeQuadlets;
     assertions = flatten (map (volume: volume.assertions) volumeQuadlets);
 
-    xdg.configFile."podman/volumes.manifest".text = 
+    xdg.configFile."podman/volumes.manifest".text =
       podman-lib.generateManifestText volumeQuadlets;
   };
 }

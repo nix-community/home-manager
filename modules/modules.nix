@@ -424,6 +424,7 @@ let
     ./services/xscreensaver.nix
     ./services/xsettingsd.nix
     ./services/xsuspender.nix
+    ./services/yubikey-agent.nix
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix

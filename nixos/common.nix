@@ -34,6 +34,14 @@ let
           home.username = config.users.users.${name}.name;
           home.homeDirectory = config.users.users.${name}.home;
 
+          # Forward `nix.enable` from the OS configuration. The
+          # conditional is to check whether nix-darwin is new enough
+          # to have the `nix.enable` option; it was previously a
+          # `mkRemovedOptionModule` error, which we can crudely detect
+          # by `visible` being set to `false`.
+          nix.enable =
+            mkIf (options.nix.enable.visible or true) config.nix.enable;
+
           # Make activation script use same version of Nix as system as a whole.
           # This avoids problems with Nix not being in PATH.
           nix.package = config.nix.package;

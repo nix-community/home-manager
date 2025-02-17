@@ -1,6 +1,7 @@
 {
   programs.git = {
     enable = true;
+    signing.signer = "path-to-gpg";
     extraConfig = ''
       This can be anything.
     '';

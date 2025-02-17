@@ -34,7 +34,10 @@ in {
       '';
       description = ''
         Configuration written to
-        {file}`$XDG_CONFIG_HOME/zellij/config.yaml`.
+        {file}`$XDG_CONFIG_HOME/zellij/config.kdl`.
+
+        If `programs.zellij.package.version` is older than 0.32.0, then
+        the configuration is written to {file}`$XDG_CONFIG_HOME/zellij/config.yaml`.
 
         See <https://zellij.dev/documentation> for the full
         list of options.
