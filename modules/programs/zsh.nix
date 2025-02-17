@@ -489,6 +489,15 @@ in
         description = "Commands that should be added to top of {file}`.zshrc`.";
       };
 
+      initExtraLast = mkOption {
+        default = "";
+        type = types.lines;
+        description = ''
+          Shell script code called during interactive zsh shell
+          initialisation, this will be the last thing executed in zsh startup.
+        '';
+      };
+
       envExtra = mkOption {
         default = "";
         type = types.lines;
@@ -767,6 +776,8 @@ in
         ''
           zprof
         '')
+
+        cfg.initExtraLast
       ]);
     }
 
