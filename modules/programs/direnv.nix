@@ -170,7 +170,7 @@ in {
 
     programs.xonsh = mkIf cfg.enableXonshIntegration {
       xonshrc = "xontrib load direnv";
-      extraPackages = ps: [ pkgs.xonsh.xontrib.xonsh-direnv ];
+      extraPackages = ps: [ pkgs.xonsh.xontribs.xonsh-direnv ];
     };
 
     home.sessionVariables = lib.mkIf cfg.silent { DIRENV_LOG_FORMAT = ""; };
