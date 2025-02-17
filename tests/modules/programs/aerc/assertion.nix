@@ -36,11 +36,11 @@ with lib;
 
     accounts.email.accounts.Test2 = {
       address = "addr@mail.invalid";
-      userName = "addr@mail.invalid";
       realName = "Foo Bar";
       primary = true;
       imap.host = "imap.host.invalid";
-      passwordCommand = "echo PaSsWorD!";
+      auth.userName = "addr@mail.invalid";
+      auth.passwordCommand = "echo PaSsWorD!";
       aerc = {
         enable = true;
         extraConfig.general.pgp-provider = "internal";
