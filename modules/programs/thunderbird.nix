@@ -158,6 +158,16 @@ in {
         description = "profile version, set null for nix-darwin";
       };
 
+      nativeMessagingHosts = mkOption {
+        visible = true;
+        type = types.listOf types.package;
+        default = [ ];
+        description = ''
+          Additional packages containing native messaging hosts that should be
+          made available to Thunderbird extensions.
+        '';
+      };
+
       profiles = mkOption {
         type = with types;
           attrsOf (submodule ({ config, name, ... }: {
@@ -399,6 +409,10 @@ in {
     home.packages = [ cfg.package ]
       ++ optional (any (p: p.withExternalGnupg) (attrValues cfg.profiles))
       pkgs.gpgme;
+
+    mozilla.thunderbirdNativeMessagingHosts = [
+      cfg.package # package configured native messaging hosts (entire mail app actually)
+    ] ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
 
     home.file = mkMerge ([{
       "${thunderbirdConfigPath}/profiles.ini" =

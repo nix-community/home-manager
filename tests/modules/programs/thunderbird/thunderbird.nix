@@ -1,5 +1,7 @@
-{ pkgs, ... }: {
+{ lib, realPkgs, ... }: {
   imports = [ ../../accounts/email-test-accounts.nix ];
+
+  _module.args.pkgs = lib.mkForce realPkgs;
 
   accounts.email.accounts = {
     "hm@example.com" = {
@@ -35,11 +37,17 @@
     };
   };
 
+  # Confirm that both Firefox and Thunderbird can be configured at the same time.
+  programs.firefox = { enable = true; };
+
   programs.thunderbird = {
     enable = true;
 
     # Disable warning so that platforms' behavior is the same
     darwinSetupWarning = false;
+
+    # Darwin doesn't support wrapped Thunderbird, using unwrapped instead
+    package = realPkgs.thunderbird-unwrapped;
 
     profiles = {
       first = {
@@ -62,6 +70,17 @@
       };
     };
 
+    nativeMessagingHosts = with realPkgs;
+      [
+        # NOTE: this is not a real Thunderbird native host module but Firefox; no
+        # native hosts are currently packaged for nixpkgs or elsewhere, so we
+        # have to improvise. Packaging wise, Firefox and Thunderbird native hosts
+        # are identical though. Good news is that the test will still pass as
+        # long as we don't attempt to run the mail client itself with the host.
+        # (Which we don't.)
+        browserpass
+      ];
+
     settings = {
       "general.useragent.override" = "";
       "privacy.donottrackheader.enabled" = true;
@@ -69,9 +88,13 @@
   };
 
   nmt.script = let
-    isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+    isDarwin = realPkgs.stdenv.hostPlatform.isDarwin;
     configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";
     profilesDir = if isDarwin then "${configDir}/Profiles" else "${configDir}";
+    nativeHostsDir = if isDarwin then
+      "Library/Mozilla/NativeMessagingHosts"
+    else
+      ".mozilla/native-messaging-hosts";
     platform = if isDarwin then "darwin" else "linux";
   in ''
     assertFileExists home-files/${configDir}/profiles.ini
@@ -93,5 +116,7 @@
     assertFileExists home-files/${profilesDir}/first/chrome/userContent.css
     assertFileContent home-files/${profilesDir}/first/chrome/userContent.css \
       <(echo "* { color: red !important; }")
+
+    assertFileExists home-files/${nativeHostsDir}/com.github.browserpass.native.json
   '';
 }
