@@ -417,6 +417,7 @@ let
     ./services/window-managers/wayfire.nix
     ./services/window-managers/xmonad.nix
     ./services/wlsunset.nix
+    ./services/wluma.nix
     ./services/wob.nix
     ./services/xcape.nix
     ./services/xembed-sni-proxy.nix
