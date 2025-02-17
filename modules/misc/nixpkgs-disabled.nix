@@ -63,11 +63,19 @@ in {
   };
 
   config = {
-    assertions = [{
-      assertion = cfg.config == null && cfg.overlays == null;
-      message = ''
-        `nixpkgs` options are disabled when `home-manager.useGlobalPkgs` is enabled.
-      '';
-    }];
+    assertions = [
+      # TODO: Re-enable assertion after 25.05 (&&)
+      {
+        assertion = cfg.config == null || cfg.overlays == null;
+        message = ''
+          `nixpkgs` options are disabled when `home-manager.useGlobalPkgs` is enabled.
+        '';
+      }
+    ];
+
+    warnings = optional ((cfg.config != null) || (cfg.overlays != null)) ''
+      You have set either `nixpkgs.config` or `nixpkgs.overlays` while using `home-manager.useGlobalPkgs`.
+      This will soon not be possible. Please remove all `nixpkgs` options when using `home-manager.useGlobalPkgs`.
+    '';
   };
 }
