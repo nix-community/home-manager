@@ -19,3 +19,6 @@ indent_style = tab
 
 [*.md]
 trim_trailing_whitespace = false
+
+[*.plist]
+insert_final_newline = false

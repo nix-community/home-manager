@@ -13,7 +13,7 @@ let
       int = toString option;
       float = int;
       path = int;
-      bool = "false";
+      bool = "0"; # "on/off" opts are disabled with `=0`
       string = option;
       list = concatStringsSep "," (lists.forEach option (x: toString x));
     }.${builtins.typeOf option};
@@ -68,7 +68,7 @@ in {
           {
             mpv = {
               no_display = true;
-            }
+            };
           }
         '';
         description = ''

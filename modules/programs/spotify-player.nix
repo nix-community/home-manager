@@ -1,12 +1,12 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (lib)
-    mkEnableOption mkPackageOption mkOption types literalExpression mkIf;
+  inherit (lib) mkEnableOption mkPackageOption mkOption literalExpression mkIf;
+  inherit (lib.types) listOf;
 
   cfg = config.programs.spotify-player;
   tomlFormat = pkgs.formats.toml { };
-
+  tomlType = tomlFormat.type;
 in {
   meta.maintainers = with lib.hm.maintainers; [ diniamo ];
 
@@ -16,7 +16,7 @@ in {
     package = mkPackageOption pkgs "spotify-player" { };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      type = tomlType;
       default = { };
       example = literalExpression ''
         {
@@ -43,7 +43,7 @@ in {
     };
 
     themes = mkOption {
-      type = types.listOf tomlFormat.type;
+      type = listOf tomlType;
       default = [ ];
       example = literalExpression ''
         [
@@ -94,7 +94,7 @@ in {
     };
 
     keymaps = mkOption {
-      type = types.listOf tomlFormat.type;
+      type = listOf tomlType;
       default = [ ];
       example = literalExpression ''
         [
@@ -129,6 +129,36 @@ in {
         for the full list of options.
       '';
     };
+
+    actions = mkOption {
+      type = listOf tomlType;
+      default = [ ];
+      example = literalExpression ''
+        [
+          {
+            action = "GoToArtist";
+            key_sequence = "g A";
+          }
+          {
+            action = "GoToAlbum";
+            key_sequence = "g B";
+            target = "PlayingTrack";
+          }
+          {
+            action = "ToggleLiked";
+            key_sequence = "C-l";
+          }
+        ]
+      '';
+      description = ''
+        Configuration written to the `actions` field of
+        {file}`$XDG_CONFIG_HOME/spotify-player/keymap.toml`.
+
+        See
+        <https://github.com/aome510/spotify-player/blob/master/docs/config.md#actions>
+        for the full list of options.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -146,7 +176,7 @@ in {
 
       "spotify-player/keymap.toml" = mkIf (cfg.keymaps != [ ]) {
         source = tomlFormat.generate "spotify-player-keymap" {
-          inherit (cfg) keymaps;
+          inherit (cfg) keymaps actions;
         };
       };
     };

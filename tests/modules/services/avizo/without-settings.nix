@@ -1,9 +1,5 @@
-{ ... }:
-
 {
   services.avizo.enable = true;
-
-  test.stubs.avizo = { };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/avizo.service

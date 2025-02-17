@@ -60,7 +60,7 @@ in {
 
       Service = {
         ExecStart = "${cfg.package}/bin/xscreensaver -no-splash";
-        Environment = "PATH=${makeBinPath [ cfg.package ]}";
+        Environment = [ "PATH=${makeBinPath [ cfg.package ]}" ];
       };
 
       Install = { WantedBy = [ "graphical-session.target" ]; };

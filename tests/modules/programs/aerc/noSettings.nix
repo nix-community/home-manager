@@ -12,7 +12,5 @@ with lib;
       assertPathNotExists ${dir}/stylesets
     '';
     programs.aerc.enable = true;
-
-    test.stubs.aerc = { };
   };
 }

@@ -147,7 +147,7 @@ in {
       substitute \
         ${hmOptionsDocs.optionsJSON}/nix-support/hydra-build-products \
         $out/nix-support/hydra-build-products \
-        --replace \
+        --replace-fail \
           '${hmOptionsDocs.optionsJSON}/share/doc/nixos' \
           "$out/share/doc/home-manager"
     '';

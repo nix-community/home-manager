@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.papis = {
     enable = true;
@@ -22,8 +20,6 @@
       };
     };
   };
-
-  test.stubs.papis = { };
 
   nmt.script = ''
     assertFileContent home-files/.config/papis/config \

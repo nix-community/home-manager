@@ -1,9 +1,6 @@
-{ pkgs, ... }:
-
 {
   services.hypridle = {
     enable = true;
-    package = pkgs.hypridle;
 
     settings = {
       general = {
@@ -25,8 +22,6 @@
       ];
     };
   };
-
-  test.stubs.hypridle = { };
 
   nmt.script = ''
     config=home-files/.config/hypr/hypridle.conf

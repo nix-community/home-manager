@@ -9,8 +9,6 @@
     };
   };
 
-  test.stubs.pistol = { };
-
   test.asserts.assertions.expected = [
     (let offendingFile = toString ./config.nix;
     in ''

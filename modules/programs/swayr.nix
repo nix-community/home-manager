@@ -6,8 +6,10 @@ let
   cfg = config.programs.swayr;
   tomlFormat = pkgs.formats.toml { };
   configFile = tomlFormat.generate "config.toml" cfg.settings;
-  finalConfig = pkgs.writeText "swayr.toml"
-    ((builtins.readFile configFile) + cfg.extraConfig);
+  extraConfigFile = pkgs.writeText "extra-config.toml" cfg.extraConfig;
+  finalConfig = pkgs.runCommand "swayr.toml" { } ''
+    cat ${configFile} ${extraConfigFile} > $out
+  '';
 in {
   meta.maintainers = [ lib.hm.maintainers."9p4" ];
 

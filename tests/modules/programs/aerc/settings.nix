@@ -19,8 +19,6 @@ with lib;
       assertFileContent   ${dir}/stylesets/asLines ${./stylesets.expected}
     '';
 
-    test.stubs.aerc = { };
-
     programs.aerc = {
       enable = true;
 

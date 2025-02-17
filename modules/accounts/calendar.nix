@@ -12,7 +12,8 @@ let
         path = mkOption {
           type = types.str;
           default = "${cfg.basePath}/${name}";
-          defaultText = "‹accounts.calendar.basePath›/‹name›";
+          defaultText =
+            lib.literalExpression "‹accounts.calendar.basePath›/‹name›";
           description = "The path of the storage.";
         };
 

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   wayland.windowManager.river = {
     enable = true;
@@ -76,12 +74,6 @@
       some
       extra config
     '';
-  };
-
-  test.stubs = {
-    dbus = { };
-    river = { };
-    xwayland = { };
   };
 
   nmt.script = ''

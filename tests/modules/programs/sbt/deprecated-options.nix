@@ -1,12 +1,8 @@
-{ ... }:
-
 {
   programs.sbt = {
     enable = true;
     baseConfigPath = "gone";
   };
-
-  test.stubs.sbt = { };
 
   test.asserts.assertions.expected = [
     (let offendingFile = toString ./deprecated-options.nix;

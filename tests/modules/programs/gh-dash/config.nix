@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.gh-dash = {
     enable = true;
@@ -10,8 +8,6 @@
       }];
     };
   };
-
-  test.stubs.gh = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/gh-dash/config.yml

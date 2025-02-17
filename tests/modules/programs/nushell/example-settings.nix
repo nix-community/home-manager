@@ -1,11 +1,13 @@
-{ pkgs, config, ... }:
+{ pkgs, realPkgs, config, lib, ... }:
 
-{
+# Temporarily broken due to Nixpkgs issue.
+lib.mkIf false {
   programs.nushell = {
     enable = true;
+    package = realPkgs.nushell;
 
     configFile.text = ''
-      let $config = {
+      let config = {
         filesize_metric: false
         table_mode: rounded
         use_ls_colors: true
@@ -23,15 +25,33 @@
       }
     '';
 
+    plugins = [ realPkgs.nushellPlugins.formats ];
+
     shellAliases = {
-      "lsname" = "(ls | get name)";
       "ll" = "ls -a";
+      "multi word alias" = "cd -";
+      "z" = "__zoxide_z";
     };
 
-    environmentVariables = { BAR = "$'(echo BAZ)'"; };
-  };
+    settings = {
+      show_banner = false;
+      display_errors.exit_code = false;
+      hooks.pre_execution =
+        [ (lib.hm.nushell.mkNushellInline ''{|| "pre_execution hook"}'') ];
+    };
 
-  test.stubs.nushell = { };
+    environmentVariables = {
+      FOO = "BAR";
+      LIST_VALUE = [ "foo" "bar" ];
+      PROMPT_COMMAND = lib.hm.nushell.mkNushellInline ''{|| "> "}'';
+      ENV_CONVERSIONS.PATH = {
+        from_string =
+          lib.hm.nushell.mkNushellInline "{|s| $s | split row (char esep) }";
+        to_string =
+          lib.hm.nushell.mkNushellInline "{|v| $v | str join (char esep) }";
+      };
+    };
+  };
 
   nmt.script = let
     configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
@@ -48,5 +68,7 @@
     assertFileContent \
       "${configDir}/login.nu" \
       ${./login-expected.nu}
+    assertFileExists \
+      "${configDir}/plugin.msgpackz"
   '';
 }

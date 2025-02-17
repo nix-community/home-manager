@@ -19,29 +19,14 @@ in {
       '';
     };
 
-    enableBashIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     settings = mkOption {
       type = with types; attrsOf str;

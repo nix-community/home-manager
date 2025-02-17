@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs = {
     thefuck.enable = true;
@@ -11,8 +9,6 @@
     zsh.enable = true;
     nushell.enable = true;
   };
-
-  test.stubs.thefuck = { };
 
   nmt.script = ''
     assertFileNotRegex home-files/.bashrc '@thefuck@/bin/thefuck'

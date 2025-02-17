@@ -88,8 +88,9 @@ in {
       Unit = {
         Description = "Fnott notification daemon";
         Documentation = "man:fnott(1)";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+        After = [ config.wayland.systemd.target ];
+        PartOf = [ config.wayland.systemd.target ];
+        ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
       Service = {

@@ -29,6 +29,8 @@ in {
     programs.bash = {
       enable = mkEnableOption "GNU Bourne-Again SHell";
 
+      package = mkPackageOption pkgs "bash" { default = "bashInteractive"; };
+
       enableCompletion = mkOption {
         type = types.bool;
         default = true;
@@ -49,7 +51,7 @@ in {
       };
 
       historySize = mkOption {
-        type = types.int;
+        type = types.nullOr types.int;
         default = 10000;
         description = "Number of history lines to keep in memory.";
       };
@@ -61,7 +63,7 @@ in {
       };
 
       historyFileSize = mkOption {
-        type = types.int;
+        type = types.nullOr types.int;
         default = 100000;
         description = "Number of history lines to keep on file.";
       };
@@ -178,19 +180,22 @@ in {
 
     sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
 
-    historyControlStr = concatStringsSep "\n"
-      (mapAttrsToList (n: v: "${n}=${v}") ({
-        HISTFILESIZE = toString cfg.historyFileSize;
-        HISTSIZE = toString cfg.historySize;
-      } // optionalAttrs (cfg.historyFile != null) {
-        HISTFILE = ''"${cfg.historyFile}"'';
-      } // optionalAttrs (cfg.historyControl != [ ]) {
-        HISTCONTROL = concatStringsSep ":" cfg.historyControl;
-      } // optionalAttrs (cfg.historyIgnore != [ ]) {
-        HISTIGNORE = escapeShellArg (concatStringsSep ":" cfg.historyIgnore);
-      }));
+    historyControlStr = (concatStringsSep "\n"
+      (mapAttrsToList (n: v: "${n}=${v}")
+        (optionalAttrs (cfg.historyFileSize != null) {
+          HISTFILESIZE = toString cfg.historyFileSize;
+        } // optionalAttrs (cfg.historySize != null) {
+          HISTSIZE = toString cfg.historySize;
+        } // optionalAttrs (cfg.historyFile != null) {
+          HISTFILE = ''"${cfg.historyFile}"'';
+        } // optionalAttrs (cfg.historyControl != [ ]) {
+          HISTCONTROL = concatStringsSep ":" cfg.historyControl;
+        } // optionalAttrs (cfg.historyIgnore != [ ]) {
+          HISTIGNORE = escapeShellArg (concatStringsSep ":" cfg.historyIgnore);
+        }) ++ optional (cfg.historyFile != null)
+        ''mkdir -p "$(dirname "$HISTFILE")"''));
   in mkIf cfg.enable {
-    home.packages = [ pkgs.bashInteractive ];
+    home.packages = [ cfg.package ];
 
     home.file.".bash_profile".source = writeBashScript "bash_profile" ''
       # include .profile if it exists

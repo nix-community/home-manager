@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, pkgs, ... }:
 
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
@@ -27,8 +25,6 @@ with lib;
       outPath = "@goimapnotify@";
     });
   };
-
-  test.stubs.notmuch = { };
 
   nmt.script = ''
     serviceFile="home-files/.config/systemd/user/imapnotify-hm-example.com.service"

@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   services.mpd = {
     enable = true;
@@ -11,8 +7,6 @@ with lib;
   xdg.userDirs.enable = true;
 
   home.stateVersion = "22.11";
-
-  test.stubs.mpd = { };
 
   nmt.script = ''
     serviceFile=$(normalizeStorePaths home-files/.config/systemd/user/mpd.service)

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
@@ -15,8 +13,6 @@
       notmuch.enable = true;
     };
   };
-
-  test.stubs.lieer = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/systemd/user/lieer-hm-example-com.service

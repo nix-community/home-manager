@@ -2,9 +2,9 @@
 WantedBy=default.target
 
 [Service]
-ExecStart=@espanso@/bin/espanso daemon
+ExecStart=@espanso@/bin/espanso launcher
 Restart=on-failure
-Type=exec
+RestartSec=3
 
 [Unit]
 Description=Espanso: cross platform text expander in Rust

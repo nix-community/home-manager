@@ -41,7 +41,7 @@ in {
       Install = { WantedBy = [ "graphical-session.target" ]; };
 
       Service = {
-        Environment = "PATH=${config.home.profileDirectory}/bin";
+        Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
         ExecStart = "${cfg.package}/bin/xembedsniproxy";
         Restart = "on-abort";
       };
