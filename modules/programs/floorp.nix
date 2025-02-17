@@ -21,12 +21,9 @@ in {
 
       platforms.linux = {
         configPath = ".floorp";
-        vendorPath = ".mozilla";
+        vendorPath = ".floorp";
       };
-      platforms.darwin = {
-        configPath = "Library/Application Support/Floorp";
-        vendorPath = "Library/Application Support/Mozilla";
-      };
+      platforms.darwin = { configPath = "Library/Application Support/Floorp"; };
     })
   ];
 }
