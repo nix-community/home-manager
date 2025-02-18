@@ -76,6 +76,13 @@ in {
         '';
       };
 
+      extraPackages = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExpression "[ pkgs.nil ]";
+        description = "Extra packages available to hx.";
+      };
+
       enableUpdateCheck = mkOption {
         type = types.bool;
         default = true;
@@ -225,7 +232,22 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = if cfg.extraPackages != [ ] then
+      [
+        (pkgs.symlinkJoin {
+          name =
+            "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+          paths = [ cfg.package ];
+          preferLocalBuild = true;
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/code \
+              --prefix PATH : ${lib.makeBinPath cfg.extraPackages}
+          '';
+        })
+      ]
+    else
+      [ cfg.package ];
 
     home.file = mkMerge [
       (mkIf (mergedUserSettings != { }) {
