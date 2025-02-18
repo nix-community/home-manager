@@ -58,6 +58,14 @@ let
         '';
       };
 
+      dotIcons = {
+        enable = mkEnableOption ''
+          `.icons` config generation for {option}`home.pointerCursor`
+        '' // {
+          default = true;
+        };
+      };
+
       hyprcursor = {
         enable = mkEnableOption "hyprcursor config generation";
 
@@ -175,7 +183,9 @@ in {
           "${defaultIndexThemePackage}/share/icons/default/index.theme";
         xdg.dataFile."icons/${cfg.name}".source =
           "${cfg.package}/share/icons/${cfg.name}";
+      }
 
+      (mkIf cfg.dotIcons.enable {
         # Add symlink of cursor icon directory to $HOME/.icons, needed for
         # backwards compatibility with some applications. See:
         # https://specifications.freedesktop.org/icon-theme-spec/latest/ar01s03.html
@@ -183,7 +193,7 @@ in {
           "${defaultIndexThemePackage}/share/icons/default/index.theme";
         home.file.".icons/${cfg.name}".source =
           "${cfg.package}/share/icons/${cfg.name}";
-      }
+      })
 
       (mkIf cfg.x11.enable {
         xsession.profileExtra = ''
