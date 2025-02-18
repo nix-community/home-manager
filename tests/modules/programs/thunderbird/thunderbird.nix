@@ -1,8 +1,6 @@
 { lib, realPkgs, ... }: {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
-  _module.args.pkgs = lib.mkForce realPkgs;
-
   accounts.email.accounts = {
     "hm@example.com" = {
       thunderbird = {
