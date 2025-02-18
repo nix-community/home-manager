@@ -6,21 +6,21 @@
   outputs = { self, nixpkgs, ... }:
     {
       nixosModules = rec {
-        home-manager = import ./nixos;
+        home-manager = ./nixos;
         default = home-manager;
       };
       # deprecated in Nix 2.8
       nixosModule = self.nixosModules.default;
 
       darwinModules = rec {
-        home-manager = import ./nix-darwin;
+        home-manager = ./nix-darwin;
         default = home-manager;
       };
       # unofficial; deprecated in Nix 2.8
       darwinModule = self.darwinModules.default;
 
       flakeModules = rec {
-        home-manager = import ./flake-module.nix;
+        home-manager = ./flake-module.nix;
         default = home-manager;
       };
 
