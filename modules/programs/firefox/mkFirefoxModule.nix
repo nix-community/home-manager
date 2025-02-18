@@ -703,6 +703,17 @@ in {
                   '';
                 };
 
+                force = mkOption {
+                  description = ''
+                    Whether to override all previous firefox settings.
+
+                    This is required when using `settings`.
+                  '';
+                  default = false;
+                  example = true;
+                  type = types.bool;
+                };
+
                 settings = mkOption {
                   default = { };
                   example = literalExpression ''
@@ -829,7 +840,20 @@ in {
       (mkNoDuplicateAssertion cfg.profiles "profile")
     ] ++ (mapAttrsToList
       (_: profile: mkNoDuplicateAssertion profile.containers "container")
-      cfg.profiles);
+      cfg.profiles) ++ (mapAttrsToList (profileName: profile: {
+        assertion = profile.extensions.settings == { }
+          || profile.extensions.force;
+        message = ''
+          Using '${
+            lib.showAttrPath
+            (modulePath ++ [ "profiles" profileName "extensions" "settings" ])
+          }' will override all previous extensions settings.
+          Enable '${
+            lib.showAttrPath
+            (modulePath ++ [ "profiles" profileName "extensions" "force" ])
+          }' to acknowledge this.
+        '';
+      }) cfg.profiles);
 
     warnings = optional (cfg.enableGnomeExtensions or false) ''
       Using '${moduleName}.enableGnomeExtensions' has been deprecated and
