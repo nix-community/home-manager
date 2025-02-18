@@ -6,7 +6,9 @@ let
 
   cfg = config.home-manager;
 
-  serviceEnvironment = optionalAttrs (cfg.backupFileExtension != null) {
+  serviceEnvironment = optionalAttrs cfg.overwriteBackups {
+    HOME_MANAGER_OVERWRITE_BACKUPS = "true";
+  } // optionalAttrs (cfg.backupFileExtension != null) {
     HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
   } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
 

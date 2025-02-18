@@ -33,7 +33,7 @@ for sourcePath in "$@" ; do
     elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
       # Next, try to move the file to a backup location if configured and possible
       backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-      if [[ -e "$backup" ]]; then
+      if [[ -e "$backup" && "${HOME_MANAGER_OVERWRITE_BACKUPS:-false}" != "true" ]]; then
         errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
         collision=1
       else

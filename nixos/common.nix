@@ -71,6 +71,11 @@ in {
       '';
     };
 
+    overwriteBackups = mkEnableOption ''
+      overwriting existing backups when activating a new
+      generation and detecting an existing backup
+    '';
+
     extraSpecialArgs = mkOption {
       type = types.attrs;
       default = { };
