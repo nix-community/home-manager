@@ -8,8 +8,19 @@ let
 
   cfg = config.home.pointerCursor;
 
+  enable = if (lib.versionOlder config.home.stateVersion "25.05") then
+  # respect .enable if it is declared
+    if (any (x: x ? enable) options.home.pointerCursor.definitions) then
+      cfg.enable
+    else
+      cfg != null
+  else
+    (cfg ? enable) && cfg.enable;
+
   pointerCursorModule = types.submodule {
     options = {
+      enable = mkEnableOption "cursor config generation";
+
       package = mkOption {
         type = types.package;
         example = literalExpression "pkgs.vanilla-dmz";
@@ -109,25 +120,17 @@ in {
       "x11"
       "defaultCursor"
     ])
-
-    ({ ... }: {
-      warnings = optional (any (x:
-        getAttrFromPath
-        ([ "xsession" "pointerCursor" ] ++ [ x ] ++ [ "isDefined" ])
-        options) [ "package" "name" "size" "defaultCursor" ]) ''
-          The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
-          in the future. Please change to set `home.pointerCursor` directly and enable `home.pointerCursor.x11.enable`
-          to generate x11 specific cursor configurations. You can refer to the documentation for more details.
-        '';
-    })
   ];
 
   options = {
     home.pointerCursor = mkOption {
       type = types.nullOr pointerCursorModule;
-      default = null;
+      default = if (lib.versionOlder config.home.stateVersion "25.05") then
+        null
+      else
+        { };
       description = ''
-        Cursor configuration. Set to `null` to disable.
+        Cursor configuration.
 
         Top-level options declared under this submodule are backend independent
         options. Options declared under namespaces such as `x11`
@@ -146,25 +149,26 @@ in {
     };
   };
 
-  config = mkIf (cfg != null) (mkMerge [
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "home.pointerCursor" pkgs
-          lib.platforms.linux)
-      ];
+  config = mkMerge [
+    (mkIf enable (mkMerge [
+      {
+        assertions = [
+          (hm.assertions.assertPlatform "home.pointerCursor" pkgs
+            lib.platforms.linux)
+        ];
 
-      home.packages = [ cfg.package defaultIndexThemePackage ];
+        home.packages = [ cfg.package defaultIndexThemePackage ];
 
-      # Set directory to look for cursors in, needed for some applications
-      # that are unable to find cursors otherwise. See:
-      # https://github.com/nix-community/home-manager/issues/2812
-      # https://wiki.archlinux.org/title/Cursor_themes#Environment_variable
-      home.sessionVariables = {
-        XCURSOR_PATH = mkDefault ("$XCURSOR_PATH\${XCURSOR_PATH:+:}"
-          + "${config.home.profileDirectory}/share/icons");
-        XCURSOR_SIZE = mkDefault cfg.size;
-        XCURSOR_THEME = mkDefault cfg.name;
-      };
+        # Set directory to look for cursors in, needed for some applications
+        # that are unable to find cursors otherwise. See:
+        # https://github.com/nix-community/home-manager/issues/2812
+        # https://wiki.archlinux.org/title/Cursor_themes#Environment_variable
+        home.sessionVariables = {
+          XCURSOR_PATH = mkDefault ("$XCURSOR_PATH\${XCURSOR_PATH:+:}"
+            + "${config.home.profileDirectory}/share/icons");
+          XCURSOR_SIZE = mkDefault cfg.size;
+          XCURSOR_THEME = mkDefault cfg.name;
+        };
 
       # Add symlink of cursor icon directory to $HOME/.icons, needed for
       # backwards compatibility with some applications. See:
@@ -181,42 +185,62 @@ in {
         "${cfg.package}/share/icons/${cfg.name}";
     }
 
-    (mkIf cfg.x11.enable {
-      xsession.profileExtra = ''
-        ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${
-          toString cfg.size
-        }
-      '';
+      (mkIf cfg.x11.enable {
+        xsession.profileExtra = ''
+          ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${
+            toString cfg.size
+          }
+        '';
 
-      xresources.properties = {
-        "Xcursor.theme" = cfg.name;
-        "Xcursor.size" = cfg.size;
-      };
-    })
+        xresources.properties = {
+          "Xcursor.theme" = cfg.name;
+          "Xcursor.size" = cfg.size;
+        };
+      })
 
-    (mkIf cfg.gtk.enable {
-      gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
-    })
+      (mkIf cfg.gtk.enable {
+        gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
+      })
 
-    (mkIf cfg.hyprcursor.enable {
-      home.sessionVariables = {
-        HYPRCURSOR_THEME = cfg.name;
-        HYPRCURSOR_SIZE =
-          if cfg.hyprcursor.size != null then cfg.hyprcursor.size else cfg.size;
-      };
-    })
+      (mkIf cfg.hyprcursor.enable {
+        home.sessionVariables = {
+          HYPRCURSOR_THEME = cfg.name;
+          HYPRCURSOR_SIZE = if cfg.hyprcursor.size != null then
+            cfg.hyprcursor.size
+          else
+            cfg.size;
+        };
+      })
 
-    (mkIf cfg.sway.enable {
-      wayland.windowManager.sway = {
-        config = {
-          seat = {
-            "*" = {
-              xcursor_theme =
-                "${cfg.name} ${toString config.gtk.cursorTheme.size}";
+      (mkIf cfg.sway.enable {
+        wayland.windowManager.sway = {
+          config = {
+            seat = {
+              "*" = {
+                xcursor_theme =
+                  "${cfg.name} ${toString config.gtk.cursorTheme.size}";
+              };
             };
           };
         };
-      };
-    })
-  ]);
+      })
+    ]))
+
+    {
+      warnings = (optional (any (x:
+        getAttrFromPath
+        ([ "xsession" "pointerCursor" ] ++ [ x ] ++ [ "isDefined" ])
+        options) [ "package" "name" "size" "defaultCursor" ]) ''
+          The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
+          in the future. Please change to set `home.pointerCursor` directly and enable `home.pointerCursor.x10.enable`
+          to generate x10 specific cursor configurations. You can refer to the documentation for more details.
+        '') ++ (optional ((lib.versionAtLeast config.home.stateVersion "25.05")
+          && (cfg == null)) ''
+            Setting home.pointerCursor to null is deprecated.
+            Please update your configuration so that
+
+              home.pointerCursor.enable = false;
+          '');
+    }
+  ];
 }
