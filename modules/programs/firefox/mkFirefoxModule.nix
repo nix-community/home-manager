@@ -847,13 +847,11 @@ in {
           Using '${
             lib.showAttrPath
             (modulePath ++ [ "profiles" profileName "extensions" "settings" ])
-          }'
-          will override all previous extensions settings.
-          '${
+          }' will override all previous extensions settings.
+          Enable '${
             lib.showAttrPath
             (modulePath ++ [ "profiles" profileName "extensions" "force" ])
-          }'
-          needs to be enabled to acknowledge this.
+          }' to acknowledge this.
         '';
       }) cfg.profiles);
 
