@@ -58,17 +58,19 @@ in {
             paths = defaultPaths ++ cfg.thunderbirdNativeMessagingHosts;
           };
         in {
-          "${thunderbirdNativeMessagingHostsPath}" = {
-            source =
-              "${thunderbirdNativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
-            recursive = true;
-          };
+          "${thunderbirdNativeMessagingHostsPath}" =
+            mkIf (cfg.thunderbirdNativeMessagingHosts != [ ]) {
+              source =
+                "${thunderbirdNativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
+              recursive = true;
+            };
 
-          "${firefoxNativeMessagingHostsPath}" = {
-            source =
-              "${firefoxNativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
-            recursive = true;
-          };
+          "${firefoxNativeMessagingHostsPath}" =
+            mkIf (cfg.firefoxNativeMessagingHosts != [ ]) {
+              source =
+                "${firefoxNativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
+              recursive = true;
+            };
         }
       else
         let
