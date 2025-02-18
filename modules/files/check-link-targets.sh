@@ -35,7 +35,7 @@ for sourcePath in "$@" ; do
       backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
       if [[ -e "$backup" && "${HOME_MANAGER_OVERWRITE_BACKUPS:-false}" != "true" ]]; then
         errorEcho "Existing file '$backup' would be clobbered by backing up '$targetPath'"
-        collision=1
+        backupcollision=1
       else
         warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
       fi
@@ -55,5 +55,14 @@ if [[ -v collision ]] ; then
 - When used as a NixOS or nix-darwin module, set
     'home-manager.backupFileExtension'
   to, for example, 'backup' and rebuild."
+  exit 1
+fi
+
+if [[ -v backupcollision ]] ; then
+  errorEcho "Please do one of the following:
+- Move or remove the above files and try again.
+- When used as a NixOS or nix-darwin module, set
+    'home-manager.overwriteBackups'
+  to 'true' and rebuild."
   exit 1
 fi
