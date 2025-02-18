@@ -1,8 +1,10 @@
 { config, options, lib, pkgs, ... }:
 
-with lib;
-
 let
+
+  inherit (lib)
+    mkEnableOption mkOption mkIf mkMerge mkDefault mkAliasOptionModule types
+    literalExpression escapeShellArg hm getAttrFromPath any optional;
 
   cfg = config.home.pointerCursor;
 
@@ -83,7 +85,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.league ];
+  meta.maintainers = [ lib.maintainers.league ];
 
   imports = [
     (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
@@ -147,7 +149,8 @@ in {
   config = mkIf (cfg != null) (mkMerge [
     {
       assertions = [
-        (hm.assertions.assertPlatform "home.pointerCursor" pkgs platforms.linux)
+        (hm.assertions.assertPlatform "home.pointerCursor" pkgs
+          lib.platforms.linux)
       ];
 
       home.packages = [ cfg.package defaultIndexThemePackage ];
