@@ -1,7 +1,9 @@
 { config, options, lib, pkgs, ... }:
 
 let
-  inherit (lib) mkDefault mkEnableOption mkOption types;
+  inherit (lib)
+    mkEnableOption mkOption mkIf mkMerge mkDefault mkAliasOptionModule types
+    literalExpression escapeShellArg hm getAttrFromPath any optional;
 
   cfg = config.home.pointerCursor;
 
@@ -9,7 +11,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = lib.literalExpression "pkgs.vanilla-dmz";
+        example = literalExpression "pkgs.vanilla-dmz";
         description = "Package providing the cursor theme.";
       };
 
@@ -64,8 +66,8 @@ let
   };
 
   cursorPath =
-    "${cfg.package}/share/icons/${lib.escapeShellArg cfg.name}/cursors/${
-      lib.escapeShellArg cfg.x11.defaultCursor
+    "${cfg.package}/share/icons/${escapeShellArg cfg.name}/cursors/${
+      escapeShellArg cfg.x11.defaultCursor
     }";
 
   defaultIndexThemePackage = pkgs.writeTextFile {
@@ -86,22 +88,22 @@ in {
   meta.maintainers = [ lib.maintainers.league ];
 
   imports = [
-    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
       "home"
       "pointerCursor"
       "package"
     ])
-    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
       "home"
       "pointerCursor"
       "name"
     ])
-    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
       "home"
       "pointerCursor"
       "size"
     ])
-    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
+    (mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
       "home"
       "pointerCursor"
       "x11"
