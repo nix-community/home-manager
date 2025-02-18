@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   inherit (pkgs.stdenv) isDarwin;
 
@@ -22,22 +20,25 @@ let
   else
     ".mozilla/native-messaging-hosts";
 in {
-  meta.maintainers =
-    [ maintainers.booxter maintainers.rycee hm.maintainers.bricked ];
+  meta.maintainers = with lib.maintainers; [
+    booxter
+    rycee
+    lib.hm.maintainers.bricked
+  ];
 
   options.mozilla = {
-    firefoxNativeMessagingHosts = mkOption {
+    firefoxNativeMessagingHosts = lib.mkOption {
       internal = true;
-      type = with types; listOf package;
+      type = with lib.types; listOf package;
       default = [ ];
       description = ''
         List of Firefox native messaging hosts to configure.
       '';
     };
 
-    thunderbirdNativeMessagingHosts = mkOption {
+    thunderbirdNativeMessagingHosts = lib.mkOption {
       internal = true;
-      type = with types; listOf package;
+      type = with lib.types; listOf package;
       default = [ ];
       description = ''
         List of Thunderbird native messaging hosts to configure.
@@ -45,7 +46,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.firefoxNativeMessagingHosts != [ ]
+  config = lib.mkIf (cfg.firefoxNativeMessagingHosts != [ ]
     || cfg.thunderbirdNativeMessagingHosts != [ ]) {
       home.file = if isDarwin then
         let
@@ -59,14 +60,14 @@ in {
           };
         in {
           "${thunderbirdNativeMessagingHostsPath}" =
-            mkIf (cfg.thunderbirdNativeMessagingHosts != [ ]) {
+            lib.mkIf (cfg.thunderbirdNativeMessagingHosts != [ ]) {
               source =
                 "${thunderbirdNativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
               recursive = true;
             };
 
           "${firefoxNativeMessagingHostsPath}" =
-            mkIf (cfg.firefoxNativeMessagingHosts != [ ]) {
+            lib.mkIf (cfg.firefoxNativeMessagingHosts != [ ]) {
               source =
                 "${firefoxNativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
               recursive = true;
