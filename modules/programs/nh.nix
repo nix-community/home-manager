@@ -16,10 +16,11 @@ in {
       type = lib.types.nullOr lib.types.singleLineStr;
       default = null;
       description = ''
-        The path that will be used for the {env}`FLAKE` environment variable.
+        The path that will be used for the {env}`NH_FLAKE`
+        ({env}`FLAKE` if < 4.0.0-beta.1) environment variable.
 
-        {env}`FLAKE` is used by nh as the default flake for performing actions,
-        like {command}`nh os switch`.
+        {env}`NH_FLAKE` and {env}`FLAKE` are used by nh as the default flake for
+        performing actions, like {command}`nh os switch`.
       '';
     };
 
@@ -60,7 +61,15 @@ in {
 
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
-      sessionVariables = lib.mkIf (cfg.flake != null) { FLAKE = cfg.flake; };
+      sessionVariables = lib.mkIf (cfg.flake != null) {
+        # Includes 4.0.0 beta versions
+        ${
+          if lib.versionAtLeast cfg.package.version "4.0.0" then
+            "NH_FLAKE"
+          else
+            "FLAKE"
+        } = cfg.flake;
+      };
     };
 
     systemd.user = lib.mkIf cfg.clean.enable {
