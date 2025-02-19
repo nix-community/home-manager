@@ -2062,6 +2062,23 @@ in {
           See https://github.com/mateusauler/git-worktree-switcher for more.
         '';
       }
+
+      {
+        time = "2025-02-19T15:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new option 'home.pointerCursor.enable' has been added.
+          Starting with state version 25.05 this option defaults to
+          false. For earlier versions it defaults to false if
+          'home.pointerCursor' is null.
+
+          It is recommended to explicitly add
+
+              home.pointerCursor.enable = false;
+
+          to your configuration.
+        '';
+      }
     ];
   };
 }
