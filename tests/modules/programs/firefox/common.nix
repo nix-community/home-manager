@@ -1,6 +1,7 @@
 name:
 builtins.mapAttrs (test: module: import module [ "programs" name ]) {
   "${name}-deprecated-native-messenger" = ./deprecated-native-messenger.nix;
+  "${name}-null-package" = ./null-package.nix;
   "${name}-final-package" = ./final-package.nix;
   "${name}-policies" = ./policies.nix;
   "${name}-profiles-bookmarks" = ./profiles/bookmarks;

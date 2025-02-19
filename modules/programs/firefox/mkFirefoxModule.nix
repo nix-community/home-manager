@@ -847,9 +847,9 @@ in {
 
     home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
-    mozilla.firefoxNativeMessagingHosts = [
-      cfg.finalPackage # package configured native messaging hosts (entire browser actually)
-    ] ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
+    mozilla.firefoxNativeMessagingHosts = cfg.nativeMessagingHosts
+      # package configured native messaging hosts (entire browser actually)
+      ++ (lib.optional (cfg.finalPackage != null) cfg.finalPackage);
 
     home.file = mkMerge ([{
       "${cfg.configPath}/profiles.ini" =
