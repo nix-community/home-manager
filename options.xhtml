@@ -1115,7 +1115,7 @@ null or (list of string)</p>
 <p>Null or path to certificate to verify SSL against</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -2175,7 +2175,7 @@ null or (list of string)</p>
 <p>Null or path to certificate to verify SSL against</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -3555,7 +3555,7 @@ be used to validate the connection authenticity. If
 Note, if set then the system default may still be accepted.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;config.accounts.email.certificatesFile&quot;</code></p>
@@ -6025,7 +6025,7 @@ submodule</p>
 <p>A command that generates a signature.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -6265,7 +6265,7 @@ be used to validate the connection authenticity. If
 Note, if set then the system default may still be accepted.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;config.accounts.email.certificatesFile&quot;</code></p>
@@ -6462,7 +6462,7 @@ should be used to validate the connection authenticity. This
 path may be overridden on a per-account basis.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;/etc/ssl/certs/ca-certificates.crt&quot;</code></p>
@@ -6991,7 +6991,7 @@ null or signed integer or floating point number</p>
 <p>The location to put the GTK configuration file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/.gtkrc-2.0&quot;</code></p>
@@ -7679,7 +7679,7 @@ is non-null then this option will automatically point to a file
 containing that text.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -7750,7 +7750,7 @@ null or strings concatenated with “\n”</p>
 <p>The user’s home directory. Must be an absolute path.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">&quot;$HOME&quot;   for state version &lt; 20.09,
 undefined for state version ≥ 20.09
@@ -8503,7 +8503,7 @@ boolean</p>
 <p>The profile directory where Home Manager generations are installed.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path <span class="emphasis"><em>(read only)</em></span></p>
+absolute path <span class="emphasis"><em>(read only)</em></span></p>
 
 <p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">&quot;${home.homeDirectory}/.nix-profile&quot;  or
 &quot;/etc/profiles/per-user/${home.username}&quot;
@@ -8584,7 +8584,7 @@ The above example then becomes</p><pre><code class="programlisting nix">home.ses
 </code></pre>
 
 <p><span class="emphasis"><em>Type:</em></span>
-lazy attribute set of (string or path or signed integer or floating point number)</p>
+lazy attribute set of (string or absolute path or signed integer or floating point number)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -8874,7 +8874,7 @@ will be set to <code class="varname">i18n.glibcLocales</code> from the
 system configuration.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.glibcLocales</code></p>
@@ -8968,7 +8968,7 @@ list of package</p>
 package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&lt;derivation fcitx5-with-addons-5.1.11&gt;</code></p>
+<code class="literal">&lt;derivation fcitx5-with-addons-5.1.12&gt;</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">pkgs.kdePackages.fcitx5-with-addons</code></p>
@@ -10075,7 +10075,7 @@ the array of strings provided to the ProgramArguments will be used instead.  Thi
 the absence of the ProgramArguments key.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -10406,7 +10406,7 @@ null or signed integer</p>
 <code class="literal">bind(2)</code> to.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -10753,7 +10753,7 @@ null or signed integer</p>
 <p>This optional key specifies what file should be used for data being sent to stderr when using <code class="literal">stdio(3)</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -10778,7 +10778,7 @@ null or path</p>
 <code class="literal">stdio(3)</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -10802,7 +10802,7 @@ null or path</p>
 <p>This optional key specifies what file should be used for data being sent to stdout when using <code class="literal">stdio(3)</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -11158,7 +11158,7 @@ null or boolean</p>
 <p>This optional key causes the job to be started if any one of the listed paths are modified.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (list of path)</p>
+null or (list of absolute path)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -18529,7 +18529,7 @@ list of ((submodule) or string convertible to it)</p>
 <p>Path to the extension’s crx file. Linux only.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -18739,7 +18739,7 @@ default this file will be provided by your channel
 (nixexprs.tar.xz).</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite&quot;</code></p>
@@ -19997,7 +19997,7 @@ package</p>
 <code class="filename">$XDG_CONFIG_HOME/eww</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -22088,7 +22088,7 @@ the completion path. The <code class="filename">init.fish</code> and
 they exist.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -25433,7 +25433,7 @@ See <a class="link" href="https://git-scm.com/docs/githooks"  target="_top">http
 for reference.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of path</p>
+attribute set of absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -25616,7 +25616,7 @@ attribute set of anything</p>
 <p>Path of the configuration file to include.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string or path</p>
+string or absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -26263,7 +26263,7 @@ package</p>
 <code class="filename">$XDG_CONFIG_HOME/gitui/key_config.ron</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path or strings concatenated with “\n”</p>
+absolute path or strings concatenated with “\n”</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;&quot;</code></p>
@@ -26295,7 +26295,7 @@ path or strings concatenated with “\n”</p>
 <code class="filename">$XDG_CONFIG_HOME/gitui/theme.ron</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path or strings concatenated with “\n”</p>
+absolute path or strings concatenated with “\n”</p>
 
 <p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
   (
@@ -27316,7 +27316,7 @@ package</p>
 <p>Packages to add to GOPATH.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of path</p>
+attribute set of absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -27596,7 +27596,7 @@ package</p>
 <p>Directory to store keychains and configuration.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/.gnupg&quot;</code></p>
@@ -27710,7 +27710,7 @@ list of (submodule)</p>
 <p>Path of an OpenPGP public key file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -27963,7 +27963,7 @@ attribute set of (submodule)</p>
 to a file containing that text.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -30993,7 +30993,7 @@ boolean</p>
 client authentication to the server.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -31905,7 +31905,7 @@ or <code class="filename">Library/Application Support/k9s/skins/</code> (darwin)
 <a class="link" href="https://k9scli.io/topics/skins/"  target="_top">https://k9scli.io/topics/skins/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (YAML value or path)</p>
+attribute set of (YAML value or absolute path)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -34730,7 +34730,7 @@ null or (attribute set of attribute set of string)</p>
 <p>Directory to store configuration and metadata.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/.kodi&quot;</code></p>
@@ -35748,7 +35748,7 @@ null or string</p>
 <code class="varname">previewer</code> option.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -36393,7 +36393,7 @@ package</p>
 for the default configuration.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (boolean or signed integer or floating point number or string or path or list of (signed integer or string))</p>
+attribute set of (boolean or signed integer or floating point number or string or absolute path or list of (signed integer or string))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -36428,7 +36428,7 @@ Configuration written to
 for the default configuration.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of attribute set of (boolean or signed integer or floating point number or string or path or list of (signed integer or string))</p>
+attribute set of attribute set of (boolean or signed integer or floating point number or string or absolute path or list of (signed integer or string))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -38014,7 +38014,7 @@ package</p>
 <p>Directory to store Mu’s database.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">config.xdg.cacheHome + &quot;/mu&quot;</code></p>
@@ -38401,7 +38401,7 @@ default if <code class="varname">services.mpd.enable</code> is
 <code class="literal">true</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">if pkgs.stdenv.hostPlatform.isLinux &amp;&amp; config.services.mpd.enable then
   config.services.mpd.musicDirectory
@@ -41061,7 +41061,7 @@ attribute set of string</p>
 <p>Path to the plugin folder.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -41525,7 +41525,7 @@ null or (submodule)</p>
 If the text option is set, it will be preferred.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -41604,7 +41604,7 @@ null or (submodule)</p>
 If the text option is set, it will be preferred.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -41653,7 +41653,7 @@ strings concatenated with “\n”</p>
 <p>Environment variables to be set.</p><p>Inline values can be set with <code class="literal">lib.hm.nushell.mkNushellInline</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (null or (Nushell inline value) or boolean or signed integer or floating point number or string or path or (attribute set of Nushell values) or (list of Nushell values))</p>
+attribute set of (null or (Nushell inline value) or boolean or signed integer or floating point number or string or absolute path or (attribute set of Nushell values) or (list of Nushell values))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -41794,7 +41794,7 @@ null or (submodule)</p>
 If the text option is set, it will be preferred.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -41880,7 +41880,7 @@ $env.config.show_banner = false
 </code></pre>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (null or (Nushell inline value) or boolean or signed integer or floating point number or string or path or (attribute set of Nushell values) or (list of Nushell values))</p>
+attribute set of (null or (Nushell inline value) or boolean or signed integer or floating point number or string or absolute path or (attribute set of Nushell values) or (list of Nushell values))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -42812,7 +42812,7 @@ package</p>
 <p>List of .csl files to install.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-list of path</p>
+list of absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
@@ -42875,7 +42875,7 @@ JSON value</p>
 <p>Resulting defaults file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path <span class="emphasis"><em>(read only)</em></span></p>
+absolute path <span class="emphasis"><em>(read only)</em></span></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -42917,7 +42917,7 @@ package <span class="emphasis"><em>(read only)</em></span></p>
 <p>Custom templates.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of path</p>
+attribute set of absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -44737,7 +44737,7 @@ The default path in Home Manager is set according to the XDG
 base directory specification.</p></div>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;\${config.xdg.dataHome}/pyenv&quot;</code></p>
@@ -45560,7 +45560,7 @@ string</p>
 <p>The plugin file or directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -45877,7 +45877,7 @@ string</p>
 <p>Path to the plugin folder.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -46786,7 +46786,7 @@ theme configuration. Available named themes can be viewed using the
 <span class="command"><strong>rofi-theme-selector</strong></span> tool.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or string or path or attribute set of ((attribute set of (string or signed integer or boolean or (Rasi literal string) or list of (string or signed integer or boolean or (Rasi literal string)))) or string)</p>
+null or string or absolute path or attribute set of ((attribute set of (string or signed integer or boolean or (Rasi literal string) or list of (string or signed integer or boolean or (Rasi literal string)))) or string)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -48889,7 +48889,7 @@ package</p>
 <p>The path to the Super Mario 64 baserom to extract assets from.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -50557,7 +50557,7 @@ signed integer</p>
 <p>Environment variables and their value to send to the server.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (string or path or signed integer or floating point number)</p>
+attribute set of (string or absolute path or signed integer or floating point number)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -51317,7 +51317,7 @@ package</p>
 path to a theme configuration file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or string or path</p>
+null or string or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -56172,7 +56172,7 @@ overlay or set this option. Example overlay configuration:</p><pre><code class="
 </code></pre>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${pkgs.hie-nix.hies}/bin/hie-wrapper&quot;</code></p>
@@ -56763,7 +56763,7 @@ for supported values.</p>
 for the documentation.</p><p>If the value is set to a path literal, then the path will be used as the css file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path or strings concatenated with “\n”</p>
+null or absolute path or strings concatenated with “\n”</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -57144,7 +57144,7 @@ list of (JSON value)</p>
 <p>Command to execute when clicked.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path or string</p>
+absolute path or string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;&quot;</code></p>
@@ -57334,7 +57334,7 @@ null or integer or floating point number between 0 and 1 (both inclusive)</p>
 for the documentation.</p><p>If the value is set to a path literal, then the path will be used as the css file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path or string</p>
+null or absolute path or string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -58056,7 +58056,7 @@ Values should be a package or path containing the required files.
 Will be linked to <code class="filename">$XDG_CONFIG_HOME/yazi/flavors/&lt;name&gt;.yazi</code>.</p><p>See <a class="link" href="https://yazi-rs.github.io/docs/flavors/overview/"  target="_top">https://yazi-rs.github.io/docs/flavors/overview/</a> for documentation.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (path or package)</p>
+attribute set of (absolute path or package)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -58087,7 +58087,7 @@ attribute set of (path or package)</p>
 <p>The init.lua for Yazi itself.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path or strings concatenated with “\n”</p>
+null or absolute path or strings concatenated with “\n”</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -58159,7 +58159,7 @@ Will be linked to <code class="filename">$XDG_CONFIG_HOME/yazi/plugins/&lt;name&
 for documentation.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (path or package)</p>
+attribute set of (absolute path or package)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -60759,7 +60759,7 @@ string</p>
 <p>Path to the plugin folder.</p><p>Will be added to <code class="envar">fpath</code> and <code class="envar">PATH</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -61293,7 +61293,7 @@ null or string</p>
 <p>Add additional directories to load prezto modules from.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-list of path</p>
+list of absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
@@ -62326,7 +62326,7 @@ list of string</p>
 <p>Path to zplug home directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;~/.zplug&quot;</code></p>
@@ -63807,7 +63807,7 @@ package</p>
 <code class="literal">CACHIX_AGENT_TOKEN=...</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.xdg.configHome}/cachix-agent.token&quot;</code></p>
@@ -64848,7 +64848,7 @@ package</p>
 not required.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (path or strings concatenated with “\n”)</p>
+attribute set of (absolute path or strings concatenated with “\n”)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -64885,7 +64885,7 @@ attribute set of (path or strings concatenated with “\n”)</p>
 not required.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (path or strings concatenated with “\n”)</p>
+attribute set of (absolute path or strings concatenated with “\n”)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -65040,7 +65040,7 @@ boolean</p>
 <p>Where to put the Dropbox directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Dropbox&quot;</code></p>
@@ -65119,7 +65119,7 @@ from the immutable one, useful in scenarios where live reloading is
 desired.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or string or path</p>
+null or string or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -66152,7 +66152,7 @@ list of string</p>
 <p>The soundfont file to use, in SoundFont 2 format.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;\${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2&quot;</code></p>
@@ -66259,7 +66259,7 @@ regardless of this option. This allows using a mutable configuration file
 generated from the immutable one, useful in scenarios where live reloading is desired.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string or path</p>
+string or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;$XDG_CONFIG_HOME/fnott/fnott.ini&quot;</code></p>
@@ -66992,7 +66992,7 @@ signed integer</p>
 <p>The path at which to sync the repository</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -68256,7 +68256,7 @@ boolean</p>
 <p>The Hound database path.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;$XDG_DATA_HOME/hound&quot;</code></p>
@@ -69868,7 +69868,7 @@ package</p>
 <p>Path to the assets directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -71116,7 +71116,7 @@ package</p>
 the default file (<code class="filename">~/.mbsyncrc</code>).</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -71354,7 +71354,7 @@ Later files in the list override earlier configuration files and
 structured settings.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-list of path</p>
+list of absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
@@ -71479,7 +71479,7 @@ package</p>
 playlists etc.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;$XDG_DATA_HOME/mpd&quot;</code></p>
@@ -71588,7 +71588,7 @@ strings concatenated with “\n”</p>
 Otherwise, you must explicitly specify a value.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path or string</p>
+absolute path or string</p>
 
 <p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">${home.homeDirectory}/music    if state version &lt; 22.11
 ${xdg.userDirs.music}          if xdg.userDirs.enable == true
@@ -71691,7 +71691,7 @@ boolean</p>
 <p>The directory where mpd stores playlists.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;\${dataDir}/playlists&quot;</code></p>
@@ -72058,7 +72058,7 @@ string</p>
 <p>If set, mpDris2 will use this directory to access music artwork.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;config.services.mpd.musicDirectory&quot;</code></p>
@@ -74499,7 +74499,7 @@ null or string</p>
 <p>Environment variables to set in the container.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (null or boolean or signed integer or string or path or list of (null or boolean or signed integer or string or path))</p>
+attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -74588,7 +74588,7 @@ null or string</p>
 <p>INI sections and values to populate the Container Quadlet.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or path or list of (null or boolean or signed integer or string or path))) or list of (null or boolean or signed integer or string or path) or null or boolean or signed integer or string or path)</p>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -75051,7 +75051,7 @@ null or string</p>
 <p>INI sections and values to populate the Network Quadlet</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or path or list of (null or boolean or signed integer or string or path))) or list of (null or boolean or signed integer or string or path) or null or boolean or signed integer or string or path)</p>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -75442,7 +75442,7 @@ that will be used to create the final configuration.
 See also <code class="option">services.polybar.settings</code> for a more nix-friendly format.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-(attribute set of attribute set of (string or boolean or signed integer or list of string)) or path convertible to it</p>
+(attribute set of attribute set of (string or boolean or signed integer or list of string)) or absolute path convertible to it</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -77866,7 +77866,7 @@ JSON value</p>
 for the documentation.</p><p>If the value is set to a path literal, then the path will be used as the CSS file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path or strings concatenated with “\n”</p>
+null or absolute path or strings concatenated with “\n”</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -77989,7 +77989,7 @@ null or string</p>
 <p>Use a custom Stylesheet file instead of looking for one.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -78150,7 +78150,7 @@ list of string</p>
 <p>An attribute set that assigns hotkeys to commands.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (null or string or path)</p>
+attribute set of (null or string or absolute path)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -78421,7 +78421,7 @@ boolean</p>
 <p>Path to the gui password file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -79641,7 +79641,7 @@ string</p>
 <p>Path to the critical notifications’ icon.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -79665,7 +79665,7 @@ null or path</p>
 <p>Path to the informative notifications’ icon.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -79689,7 +79689,7 @@ null or path</p>
 <p>Path to the warning notifications’ icon.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -80796,7 +80796,7 @@ list of string of length 2</p>
 <p>Unison state directory to use.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;$XDG_DATA_HOME/unison&quot;</code></p>
@@ -80875,7 +80875,7 @@ package</p>
 the default file (<code class="filename">$XDG_CONFIG_HOME/vdirsyncer/config</code>).</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -83179,7 +83179,7 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 <p>Configures environment variables passed to all executed processes.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (null or string or path or package)</p>
+attribute set of (null or string or absolute path or package)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -83209,7 +83209,7 @@ attribute set of (null or string or path or package)</p>
 <p>Sets environment variables just for the manager process itself.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (null or string or path or package)</p>
+attribute set of (null or string or absolute path or package)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -85119,7 +85119,7 @@ list of string</p>
 absolute plugin paths.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-list of (package or path)</p>
+list of (package or absolute path)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
@@ -89003,7 +89003,7 @@ boolean</p>
 <p>Paths to desktop files that should be linked to <code class="literal">XDG_CONFIG_HOME/autostart</code></p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-list of path</p>
+list of absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
@@ -89033,7 +89033,7 @@ list of path</p>
 <p>Absolute path to directory holding application caches.</p><p>Sets <code class="literal">XDG_CACHE_HOME</code> for the user if <code class="literal">xdg.enable</code> is set <code class="literal">true</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;~/.cache&quot;</code></p>
@@ -89222,7 +89222,7 @@ is non-null then this option will automatically point to a file
 containing that text.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -89293,7 +89293,7 @@ null or strings concatenated with “\n”</p>
 <p>Absolute path to directory holding application configurations.</p><p>Sets <code class="literal">XDG_CONFIG_HOME</code> for the user if <code class="literal">xdg.enable</code> is set <code class="literal">true</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;~/.config&quot;</code></p>
@@ -89482,7 +89482,7 @@ is non-null then this option will automatically point to a file
 containing that text.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -89553,7 +89553,7 @@ null or strings concatenated with “\n”</p>
 <p>Absolute path to directory holding application data.</p><p>Sets <code class="literal">XDG_DATA_HOME</code> for the user if <code class="literal">xdg.enable</code> is set <code class="literal">true</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;~/.local/share&quot;</code></p>
@@ -89670,7 +89670,7 @@ null or string</p>
 <p>Icon to display in file manager, menus, etc.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or string or path</p>
+null or string or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -89814,7 +89814,7 @@ null or string</p>
 <p>Icon to display in file manager, menus, etc.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or string or path</p>
+null or string or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -90570,7 +90570,7 @@ is non-null then this option will automatically point to a file
 containing that text.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -90641,7 +90641,7 @@ null or strings concatenated with “\n”</p>
 <p>Absolute path to directory holding application states.</p><p>Sets <code class="literal">XDG_STATE_HOME</code> for the user if <code class="literal">xdg.enable</code> is set <code class="literal">true</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-path</p>
+absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;~/.local/state&quot;</code></p>
@@ -90772,7 +90772,7 @@ boolean</p>
 <p>The Desktop directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Desktop&quot;</code></p>
@@ -90796,7 +90796,7 @@ null or (string or path convertible to it)</p>
 <p>The Documents directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Documents&quot;</code></p>
@@ -90820,7 +90820,7 @@ null or (string or path convertible to it)</p>
 <p>The Downloads directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Downloads&quot;</code></p>
@@ -90844,7 +90844,7 @@ null or (string or path convertible to it)</p>
 <p>Other user directories.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (string or path convertible to it)</p>
+attribute set of (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -90874,7 +90874,7 @@ attribute set of (string or path convertible to it)</p>
 <p>The Music directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Music&quot;</code></p>
@@ -90898,7 +90898,7 @@ null or (string or path convertible to it)</p>
 <p>The Pictures directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Pictures&quot;</code></p>
@@ -90922,7 +90922,7 @@ null or (string or path convertible to it)</p>
 <p>The Public share directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Public&quot;</code></p>
@@ -90946,7 +90946,7 @@ null or (string or path convertible to it)</p>
 <p>The Templates directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Templates&quot;</code></p>
@@ -90970,7 +90970,7 @@ null or (string or path convertible to it)</p>
 <p>The Videos directory.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (string or path convertible to it)</p>
+null or (string or absolute path convertible to it)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;${config.home.homeDirectory}/Videos&quot;</code></p>
@@ -95361,7 +95361,7 @@ recompilation of xmonad outside of Home Manager (e.g. via
 <span class="command"><strong>xmonad --recompile</strong></span>) will fail.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or path</p>
+null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -95463,7 +95463,7 @@ build. The keys are the file names while the values are paths to the
 contents of the files.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of path</p>
+attribute set of absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
