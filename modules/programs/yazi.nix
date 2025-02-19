@@ -223,8 +223,6 @@ in {
         mkIf cfg.enableNushellIntegration nushellIntegration;
     };
 
-    programs.xonsh.xonshrc = mkIf cfg.enableXonshIntegration xonshIntegration;
-
     xdg.configFile = {
       "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
         source = tomlFormat.generate "yazi-keymap" cfg.keymap;
