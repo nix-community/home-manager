@@ -66,16 +66,6 @@
       };
     };
 
-    nativeMessagingHosts = with realPkgs;
-      [
-        # NOTE: this is not a real Thunderbird native host module but Firefox; no
-        # native hosts are currently packaged for nixpkgs or elsewhere, so we
-        # have to improvise. Packaging wise, Firefox and Thunderbird native hosts
-        # are identical though. The test doesn't care if the host was meant for
-        # either as long as the right paths are present in the package.
-        browserpass
-      ];
-
     settings = {
       "general.useragent.override" = "";
       "privacy.donottrackheader.enabled" = true;
@@ -86,10 +76,6 @@
     isDarwin = realPkgs.stdenv.hostPlatform.isDarwin;
     configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";
     profilesDir = if isDarwin then "${configDir}/Profiles" else "${configDir}";
-    nativeHostsDir = if isDarwin then
-      "Library/Mozilla/NativeMessagingHosts"
-    else
-      ".mozilla/native-messaging-hosts";
     platform = if isDarwin then "darwin" else "linux";
   in ''
     assertFileExists home-files/${configDir}/profiles.ini
@@ -111,7 +97,5 @@
     assertFileExists home-files/${profilesDir}/first/chrome/userContent.css
     assertFileContent home-files/${profilesDir}/first/chrome/userContent.css \
       <(echo "* { color: red !important; }")
-
-    assertFileExists home-files/${nativeHostsDir}/com.github.browserpass.native.json
   '';
 }
