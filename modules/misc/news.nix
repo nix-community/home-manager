@@ -2062,6 +2062,15 @@ in {
           See https://github.com/mateusauler/git-worktree-switcher for more.
         '';
       }
+
+      {
+        time = "2025-02-13T16:11:59+00:00";
+        message = ''
+          A new module is available: 'programs.clock-rs'.
+
+          clock-rs is a modern, digital clock that effortlessly runs in your terminal.
+        '';
+      }
     ];
   };
 }
