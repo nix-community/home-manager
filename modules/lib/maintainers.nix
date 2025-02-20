@@ -112,6 +112,12 @@
     github = "diniamo";
     githubId = 55629891;
   };
+  dsoverlord = {
+    name = "Kirill Zakharov";
+    email = "dsoverlord@vk.com";
+    github = "dsoverlord";
+    githubId = 78819443;
+  };
   dwagenk = {
     email = "dwagenk@mailbox.org";
     github = "dwagenk";

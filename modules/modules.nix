@@ -301,6 +301,7 @@ let
     ./services/cliphist.nix
     ./services/clipman.nix
     ./services/clipmenu.nix
+    ./services/clipse.nix
     ./services/comodoro.nix
     ./services/conky.nix
     ./services/copyq.nix
