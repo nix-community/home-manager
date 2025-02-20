@@ -187,6 +187,7 @@ in import nmtSrc {
     ./modules/programs/mbsync
     ./modules/programs/micro
     ./modules/programs/mise
+    ./modules/programs/mods
     ./modules/programs/mpv
     ./modules/programs/mu
     ./modules/programs/mujmap
