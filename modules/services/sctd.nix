@@ -30,7 +30,7 @@ with lib;
       Unit = {
         Description =
           "Dynamically adjust the screen color temperature twice every minute";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

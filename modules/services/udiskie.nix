@@ -116,7 +116,7 @@ in {
       Unit = {
         Description = "udiskie mount daemon";
         Requires = lib.optional (cfg.tray != "never") "tray.target";
-        After = [ "graphical-session-pre.target" ]
+        After = [ "graphical-session.target" ]
           ++ lib.optional (cfg.tray != "never") "tray.target";
         PartOf = [ "graphical-session.target" ];
       };
