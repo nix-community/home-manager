@@ -301,6 +301,7 @@ in {
           darwin.vendorPath or null
         else
           linux.vendorPath or null;
+      defaultText = literalExpression "platform specific vendor path";
       example = ".mozilla";
       description =
         "Directory containing the native messaging hosts directory.";
@@ -315,7 +316,7 @@ in {
       description = "Directory containing the ${appName} configuration files.";
     };
 
-    nativeMessagingHosts = optionalAttrs (cfg.vendorPath != null) (mkOption {
+    nativeMessagingHosts = mkOption {
       inherit visible;
       type = types.listOf types.package;
       default = [ ];
@@ -323,7 +324,7 @@ in {
         Additional packages containing native messaging hosts that should be
         made available to ${appName} extensions.
       '';
-    });
+    };
 
     finalPackage = mkOption {
       inherit visible;

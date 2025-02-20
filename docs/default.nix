@@ -35,12 +35,10 @@ let
   # Make sure the used package is scrubbed to avoid actually
   # instantiating derivations.
   scrubbedPkgsModule = {
-    imports = [{
-      _module.args = {
-        pkgs = lib.mkForce (scrubDerivations "pkgs" pkgs);
-        pkgs_i686 = lib.mkForce { };
-      };
-    }];
+    _module.args = {
+      pkgs = lib.mkForce (scrubDerivations "pkgs" pkgs);
+      pkgs_i686 = lib.mkForce { };
+    };
   };
 
   dontCheckDefinitions = { _module.check = false; };
@@ -56,8 +54,21 @@ let
 
   buildOptionsDocs = args@{ modules, includeModuleSystemOptions ? true, ... }:
     let
+      # We poison all attributes in the configuration (except the _module one)
+      # to discourage references from option descriptions and defaults.
+      poisonModule = let
+        poisonAttr = n: {
+          name = n;
+          value = abort
+            "error: the option documentation has a dependency on the configuration";
+        };
+      in { options, extendModules, ... }: {
+        config = lib.listToAttrs (map poisonAttr
+          (lib.filter (n: n != "_module") (lib.attrNames options)));
+      };
+
       options = (lib.evalModules {
-        inherit modules;
+        modules = modules ++ [ poisonModule ];
         class = "homeManager";
       }).options;
     in pkgs.buildPackages.nixosOptionsDoc ({

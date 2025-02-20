@@ -135,9 +135,9 @@ let
           let
             modifier = config.wayland.windowManager.sway.config.modifier;
           in lib.mkOptionDefault {
-            "''${modifier}+Return" = "exec ${cfg.config.terminal}";
+            "''${modifier}+Return" = "exec alacritty";
             "''${modifier}+Shift+q" = "kill";
-            "''${modifier}+d" = "exec ${cfg.config.menu}";
+            "''${modifier}+d" = "exec bemenu-run";
           }
         '';
       };
@@ -200,6 +200,22 @@ let
             "Return" = "mode default";
           };
         };
+        defaultText = literalExpression ''
+          {
+            resize = {
+              "''${config.left}" = "resize shrink width 10 px";
+              "''${config.down}" = "resize grow height 10 px";
+              "''${config.up}" = "resize shrink height 10 px";
+              "''${config.right}" = "resize grow width 10 px";
+              "Left" = "resize shrink width 10 px";
+              "Down" = "resize grow height 10 px";
+              "Up" = "resize shrink height 10 px";
+              "Right" = "resize grow width 10 px";
+              "Escape" = "mode default";
+              "Return" = "mode default";
+            };
+          }
+        '';
         description = ''
           An attribute set that defines binding modes and keybindings
           inside them
