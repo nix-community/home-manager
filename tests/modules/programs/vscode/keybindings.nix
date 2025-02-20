@@ -1,5 +1,5 @@
 # Test that keybindings.json is created correctly.
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   bindings = [
@@ -25,15 +25,25 @@ let
     }
   ];
 
-  keybindingsPath = if pkgs.stdenv.hostPlatform.isDarwin then
-    "Library/Application Support/Code/User/keybindings.json"
-  else
-    ".config/Code/User/keybindings.json";
+  keybindingsPath = name:
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "Library/Application Support/Code/User/${
+        lib.optionalString (name != "default") "profiles/${name}/"
+      }keybindings.json"
+    else
+      ".config/Code/User/${
+        lib.optionalString (name != "default") "profiles/${name}/"
+      }keybindings.json";
 
-  settingsPath = if pkgs.stdenv.hostPlatform.isDarwin then
-    "Library/Application Support/Code/User/settings.json"
-  else
-    ".config/Code/User/settings.json";
+  settingsPath = name:
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "Library/Application Support/Code/User/${
+        lib.optionalString (name != "default") "profiles/${name}/"
+      }settings.json"
+    else
+      ".config/Code/User/${
+        lib.optionalString (name != "default") "profiles/${name}/"
+      }settings.json";
 
   expectedKeybindings = pkgs.writeText "expected.json" ''
     [
@@ -65,14 +75,29 @@ let
 in {
   programs.vscode = {
     enable = true;
-    keybindings = bindings;
-    package = pkgs.writeScriptBin "vscode" "" // { pname = "vscode"; };
+    profiles = {
+      default.keybindings = bindings;
+      test.keybindings = bindings;
+    };
+    package = pkgs.writeScriptBin "vscode" "" // {
+      pname = "vscode";
+      version = "1.75.0";
+    };
   };
 
   nmt.script = ''
-    assertFileExists "home-files/${keybindingsPath}"
-    assertFileContent "home-files/${keybindingsPath}" "${expectedKeybindings}"
+    assertFileExists "home-files/${keybindingsPath "default"}"
+    assertFileContent "home-files/${
+      keybindingsPath "default"
+    }" "${expectedKeybindings}"
 
-    assertPathNotExists "home-files/${settingsPath}"
+    assertPathNotExists "home-files/${settingsPath "default"}"
+
+    assertFileExists "home-files/${keybindingsPath "test"}"
+    assertFileContent "home-files/${
+      keybindingsPath "test"
+    }" "${expectedKeybindings}"
+
+    assertPathNotExists "home-files/${settingsPath "test"}"
   '';
 }
