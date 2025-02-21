@@ -55942,6 +55942,99 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.vinegar.enable"></a><a class="term" href="options.xhtml#opt-programs.vinegar.enable"><code class="option">programs.vinegar.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Vinegar.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vinegar.nix" target="_top">
+&lt;home-manager/modules/programs/vinegar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vinegar.package"></a><a class="term" href="options.xhtml#opt-programs.vinegar.package"><code class="option">programs.vinegar.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The vinegar package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.vinegar</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vinegar.nix" target="_top">
+&lt;home-manager/modules/programs/vinegar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vinegar.settings"></a><a class="term" href="options.xhtml#opt-programs.vinegar.settings"><code class="option">programs.vinegar.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/vinegar/config.toml</code>.</p><p>See <a class="link" href="https://vinegarhq.org/Configuration/"  target="_top">https://vinegarhq.org/Configuration/</a> for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (TOML value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  env = {
+    WINEFSYNC = &quot;1&quot;;
+  };
+  studio = {
+    dxvk = false;
+    env = {
+      DXVK_HUD = &quot;0&quot;;
+      MANGOHUD = &quot;1&quot;;
+    };
+    fflags = {
+      DFIntTaskSchedulerTargetFps = 144;
+    };
+    renderer = &quot;Vulkan&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vinegar.nix" target="_top">
+&lt;home-manager/modules/programs/vinegar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.vscode.enable"></a><a class="term" href="options.xhtml#opt-programs.vscode.enable"><code class="option">programs.vscode.enable</code>
   </a>
  </span>
