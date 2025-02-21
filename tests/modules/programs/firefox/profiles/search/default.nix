@@ -23,6 +23,84 @@ in {
         id = 0;
         search = {
           force = true;
+          default = "google";
+          privateDefault = "ddg";
+          order = [ "nix-packages" "nixos-wiki" ];
+          engines = {
+            nix-packages = {
+              name = "Nix Packages";
+
+              urls = [{
+                template = "https://search.nixos.org/packages";
+                params = [
+                  {
+                    name = "type";
+                    value = "packages";
+                  }
+                  {
+                    name = "query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }];
+
+              icon =
+                "/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+
+              definedAliases = [ "@np" ];
+            };
+
+            nixos-wiki = {
+              name = "NixOS Wiki";
+
+              urls = [{
+                template =
+                  "https://wiki.nixos.org/index.php?search={searchTerms}";
+              }];
+              iconUpdateURL = "https://wiki.nixos.org/favicon.png";
+              updateInterval = 24 * 60 * 60 * 1000;
+              definedAliases = [ "@nw" ];
+            };
+
+            bing.metaData.hidden = true;
+            google.metaData.alias = "@g";
+          };
+        };
+      };
+
+      searchWithoutDefault = {
+        id = 1;
+        search = {
+          force = true;
+          order = [ "google" "nix-packages" ];
+          engines = {
+            nix-packages = {
+              name = "Nix Packages";
+
+              urls = [{
+                template = "https://search.nixos.org/packages";
+                params = [
+                  {
+                    name = "type";
+                    value = "packages";
+                  }
+                  {
+                    name = "query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }];
+
+              definedAliases = [ "@np" ];
+            };
+          };
+        };
+      };
+
+      migrateSearchV7 = {
+        id = 2;
+        search = {
+          force = true;
           default = "Google";
           privateDefault = "DuckDuckGo";
           order = [ "Nix Packages" "NixOS Wiki" ];
@@ -53,7 +131,7 @@ in {
                 template =
                   "https://wiki.nixos.org/index.php?search={searchTerms}";
               }];
-              iconUpdateURL = "https://wiki.nixos.org/favicon.png";
+              iconUpdateURL = "https://wiki.nixos.org/favicon.ico";
               updateInterval = 24 * 60 * 60 * 1000;
               definedAliases = [ "@nw" ];
             };
@@ -64,32 +142,6 @@ in {
         };
       };
 
-      searchWithoutDefault = {
-        id = 1;
-        search = {
-          force = true;
-          order = [ "Google" "Nix Packages" ];
-          engines = {
-            "Nix Packages" = {
-              urls = [{
-                template = "https://search.nixos.org/packages";
-                params = [
-                  {
-                    name = "type";
-                    value = "packages";
-                  }
-                  {
-                    name = "query";
-                    value = "{searchTerms}";
-                  }
-                ];
-              }];
-
-              definedAliases = [ "@np" ];
-            };
-          };
-        };
-      };
     };
   } // {
     nmt.script = let
@@ -106,8 +158,8 @@ in {
                  f
                end;
              walk(if type == "object" then
-                     if has("hash") then .hash = null else . end |
-                     if has("privateHash") then .privateHash = null else . end
+                     if has("defaultEngineIdHash") then .defaultEngineIdHash = "@hash@" else . end |
+                     if has("privateDefaultEngineIdHash") then .privateDefaultEngineIdHash = "@privateHash@" else . end
                   else
                      .
                   end)' '';
@@ -131,6 +183,10 @@ in {
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
         ${withName ./expected-search-without-default.json}
+
+      assertFirefoxSearchContent \
+        home-files/${cfg.configPath}/migrateSearchV7/search.json.mozlz4 \
+        ${withName ./expected-migrate-search-v7.json}
     '';
   });
 }
