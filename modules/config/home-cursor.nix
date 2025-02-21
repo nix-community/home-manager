@@ -56,6 +56,11 @@ let
           description = "The cursor size for hyprcursor.";
         };
       };
+
+      sway = {
+        enable = mkEnableOption
+          "sway config generation for {option}`home.pointerCursor`";
+      };
     };
   };
 
@@ -195,6 +200,19 @@ in {
         HYPRCURSOR_THEME = cfg.name;
         HYPRCURSOR_SIZE =
           if cfg.hyprcursor.size != null then cfg.hyprcursor.size else cfg.size;
+      };
+    })
+
+    (mkIf cfg.sway.enable {
+      wayland.windowManager.sway = {
+        config = {
+          seat = {
+            "*" = {
+              xcursor_theme =
+                "${cfg.name} ${toString config.gtk.cursorTheme.size}";
+            };
+          };
+        };
       };
     })
   ]);
