@@ -13,6 +13,11 @@ let
       libsForQt5.plasma-integration
       libsForQt5.systemsettings
     ];
+    kde6 = [
+      kdePackages.kio
+      kdePackages.plasma-integration
+      kdePackages.systemsettings
+    ];
     lxqt = [ lxqt.lxqt-qtplugin lxqt.lxqt-config ];
     qtct = [ libsForQt5.qt5ct qt6Packages.qt6ct ];
   };
@@ -75,6 +80,8 @@ in {
               [ "libsForQt5" "qt5ct" ]
               [ "libsForQt5" "qtstyleplugins" ]
               [ "libsForQt5" "systemsettings" ]
+              [ "kdePackages" "plasma-integration" ]
+              [ "kdePackages" "systemsettings" ]
               [ "lxqt" "lxqt-config" ]
               [ "lxqt" "lxqt-qtplugin" ]
               [ "qt6Packages" "qt6ct" ]
@@ -114,7 +121,10 @@ in {
                 applications
 
               `kde`
-              : Use Qt settings from Plasma
+              : Use Qt settings from Plasma 5
+
+              `kde6`
+              : Use Qt settings from Plasma 6
             '';
           };
           package = lib.mkOption {
@@ -131,8 +141,8 @@ in {
         };
       in lib.mkOption {
         type = with lib.types;
-          nullOr
-          (either (enum [ "gtk" "gtk3" "gnome" "adwaita" "lxqt" "qtct" "kde" ])
+          nullOr (either
+            (enum [ "gtk" "gtk3" "gnome" "adwaita" "lxqt" "qtct" "kde" "kde6" ])
             (lib.types.submodule { options = newOption; }));
         default = null;
         description = ''
