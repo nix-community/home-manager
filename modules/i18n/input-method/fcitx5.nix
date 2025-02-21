@@ -54,6 +54,7 @@ in {
       Unit = {
         Description = "Fcitx5 input method editor";
         PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
       Service.ExecStart = "${fcitx5Package}/bin/fcitx5";
       Install.WantedBy = [ "graphical-session.target" ];
