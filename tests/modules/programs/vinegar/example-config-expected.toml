@@ -1,0 +1,13 @@
+[env]
+WINEFSYNC = "1"
+
+[studio]
+dxvk = false
+renderer = "Vulkan"
+
+[studio.env]
+DXVK_HUD = "0"
+MANGOHUD = "1"
+
+[studio.fflags]
+DFIntTaskSchedulerTargetFps = 144

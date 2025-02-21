@@ -242,6 +242,7 @@ in import nmtSrc {
     ./modules/programs/translate-shell
     ./modules/programs/vifm
     ./modules/programs/vim-vint
+    ./modules/programs/vinegar
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
