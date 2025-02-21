@@ -1,7 +1,7 @@
 # This module is the common base for the NixOS and nix-darwin modules.
 # For OS-specific configuration, please edit nixos/default.nix or nix-darwin/default.nix instead.
 
-{ config, lib, pkgs, ... }:
+{ options, config, lib, pkgs, ... }:
 
 with lib;
 

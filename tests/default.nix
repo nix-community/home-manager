@@ -266,6 +266,7 @@ in import nmtSrc {
     ./modules/services/yubikey-agent-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
+    ./modules/config/home-cursor
     ./modules/config/i18n
     ./modules/i18n/input-method
     ./modules/misc/debug
