@@ -5,14 +5,14 @@
       "_metaData": {
         "order": 1
       },
-      "_name": "Google"
+      "id": "google"
     },
     {
       "_definedAliases": [
         "@np"
       ],
       "_isAppProvided": false,
-      "_loadPath": "[home-manager]/programs.@name@.profiles.searchWithoutDefault.search.engines.\"Nix Packages\"",
+      "_loadPath": "[home-manager]/programs.@name@.profiles.searchWithoutDefault.search.engines.nix-packages",
       "_metaData": {
         "order": 2
       },
@@ -31,11 +31,12 @@
           ],
           "template": "https://search.nixos.org/packages"
         }
-      ]
+      ],
+      "id": "nix-packages"
     }
   ],
   "metaData": {
     "useSavedOrder": true
   },
-  "version": 6
+  "version": 7
 }

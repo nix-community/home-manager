@@ -27,7 +27,9 @@ let
   };
 
   processCustomEngineInput = input:
-    (removeAttrs input [ "icon" ]) // optionalAttrs (input ? icon) {
+    {
+      name = input.id;
+    } // (removeAttrs input [ "icon" ]) // optionalAttrs (input ? icon) {
       # Convenience to specify absolute path to icon
       iconURL = "file://${input.icon}";
     } // (optionalAttrs (input ? iconUpdateURL) {
@@ -40,14 +42,14 @@ let
       # like: [source]/path/to/engine.xml
       loadPath = "[home-manager]/${
           concatStringsSep "." (map strings.escapeNixIdentifier
-            (modulePath ++ [ "engines" input.name ]))
+            (modulePath ++ [ "engines" input.id ]))
         }";
     });
 
-  processEngineInput = name: input:
+  processEngineInput = id: input:
     let
       requiredInput = {
-        inherit name;
+        inherit id;
         isAppProvided =
           input.isAppProvided or (removeAttrs input [ "metaData" ] == { });
         metaData = input.metaData or { };
@@ -65,10 +67,10 @@ let
 
   sortEngineConfigs = configs:
     let
-      buildEngineConfigWithOrder = order: name:
+      buildEngineConfigWithOrder = order: id:
         let
-          config = configs.${name} or {
-            _name = name;
+          config = configs.${id} or {
+            inherit id;
             _isAppProvided = true;
             _metaData = { };
           };
@@ -89,15 +91,15 @@ let
   };
 
   settings = {
-    version = 6;
+    version = 7;
     engines = sortEngineConfigs (mapAttrs buildEngineConfig engineInput);
 
     metaData = optionalAttrs (config.default != null) {
-      current = config.default;
-      hash = "@hash@";
+      defaultEngineId = config.default;
+      defaultEngineIdHash = "@hash@";
     } // optionalAttrs (config.privateDefault != null) {
-      private = config.privateDefault;
-      privateHash = "@privateHash@";
+      privateDefaultEngineId = config.privateDefault;
+      privateDefaultEngineIdHash = "@privateHash@";
     } // {
       useSavedOrder = config.order != [ ];
     };
@@ -155,6 +157,172 @@ let
       mozlz4a <(echo "$json") "$out"
     fi
   '';
+
+  engineNameToId = {
+    # Derived from https://searchfox.org/mozilla-central/rev/e3f42ec9320748b2aab3d474d1e47075def9000c/services/settings/dumps/main/search-config-v2.json
+    "1&1 Suche" = "1und1";
+    "Allegro" = "allegro-pl";
+    "Amazon.co.jp" = "amazon-jp";
+    "Amazon.com" = "amazondotcom-us";
+    "Azerdict" = "azerdict";
+    "百度" = "baidu";
+    "Bing" = "bing";
+    "Ordbok" = "bok-NO";
+    "Ceneje.si" = "ceneji";
+    "Cốc Cốc" = "coccoc";
+    "다음" = "daum-kr";
+    "DuckDuckGo" = "ddg";
+    "eBay" = "ebay";
+    "Ecosia" = "ecosia";
+    "EUdict Eng->Cro" = "eudict";
+    "Am Faclair Beag" = "faclair-beag";
+    "GMX Suche" = "gmx-de";
+    "GMX Search" = "gmx-en-GB";
+    "GMX - Búsqueda web" = "gmx-es";
+    "GMX - Recherche web" = "gmx-fr";
+    "GMX Shopping" = "gmx-shopping";
+    "Google" = "google";
+    "Gule sider" = "gulesider-NO";
+    "LEO Eng-Deu" = "leo_ende_de";
+    "พจนานุกรม ลองดู" = "longdo";
+    "mail.com search" = "mailcom";
+    "Mapy.cz" = "mapy-cz";
+    "MercadoLibre Argentina" = "mercadolibre-ar";
+    "MercadoLibre Chile" = "mercadolibre-cl";
+    "MercadoLibre Mexico" = "mercadolibre-mx";
+    "MercadoLivre" = "mercadolivre";
+    "네이버" = "naver-kr";
+    "Odpiralni Časi" = "odpiralni";
+    "Pazaruvaj" = "pazaruvaj";
+    "Priberam" = "priberam";
+    "Prisjakt" = "prisjakt-sv-SE";
+    "Qwant" = "qwant";
+    "Qwant Junior" = "qwantjr";
+    "楽天市場" = "rakuten";
+    "Readmoo 讀墨電子書" = "readmoo";
+    "Reddit" = "reddit";
+    "Salidzini.lv" = "salidzinilv";
+    "Seznam" = "seznam-cz";
+    "Tyda.se" = "tyda-sv-SE";
+    "Vatera.hu" = "vatera";
+    "WEB.DE Suche" = "webde";
+    "Wikipedia (en)" = "wikipedia";
+    "Wikipedia (nn)" = "wikipedia-NN";
+    "Wikipedia (nb)" = "wikipedia-NO";
+    "Wikipedia (af)" = "wikipedia-af";
+    "Biquipedia (an)" = "wikipedia-an";
+    "ويكيبيديا (ar)" = "wikipedia-ar";
+    "Wikipedia (ast)" = "wikipedia-ast";
+    "Vikipediya (az)" = "wikipedia-az";
+    "Вікіпедыя (be)" = "wikipedia-be";
+    "Вікіпэдыя (be-tarask)" = "wikipedia-be-tarask";
+    "Уикипедия (bg)" = "wikipedia-bg";
+    "উইকিপিডিয়া (bn)" = "wikipedia-bn";
+    "Wikipedia (br)" = "wikipedia-br";
+    "Wikipedia (bs)" = "wikipedia-bs";
+    "Viquipèdia (ca)" = "wikipedia-ca";
+    "Wicipedia (cy)" = "wikipedia-cy";
+    "Wikipedie (cs)" = "wikipedia-cz";
+    "Wikipedia (da)" = "wikipedia-da";
+    "Wikipedia (de)" = "wikipedia-de";
+    "Wikipedija (dsb)" = "wikipedia-dsb";
+    "Βικιπαίδεια (el)" = "wikipedia-el";
+    "Vikipedio (eo)" = "wikipedia-eo";
+    "Wikipedia (es)" = "wikipedia-es";
+    "Vikipeedia (et)" = "wikipedia-et";
+    "Wikipedia (eu)" = "wikipedia-eu";
+    "ویکی‌پدیا (fa)" = "wikipedia-fa";
+    "Wikipedia (fi)" = "wikipedia-fi";
+    "Wikipédia (fr)" = "wikipedia-fr";
+    "Wikipedy (fy)" = "wikipedia-fy-NL";
+    "Vicipéid (ga)" = "wikipedia-ga-IE";
+    "Uicipeid (gd)" = "wikipedia-gd";
+    "Wikipedia (gl)" = "wikipedia-gl";
+    "Vikipetã (gn)" = "wikipedia-gn";
+    "વિકિપીડિયા (gu)" = "wikipedia-gu";
+    "ויקיפדיה" = "wikipedia-he";
+    "विकिपीडिया (hi)" = "wikipedia-hi";
+    "Wikipedija (hr)" = "wikipedia-hr";
+    "Wikipedija (hsb)" = "wikipedia-hsb";
+    "Wikipédia (hu)" = "wikipedia-hu";
+    "Վիքիպեդիա (hy)" = "wikipedia-hy";
+    "Wikipedia (ia)" = "wikipedia-ia";
+    "Wikipedia (id)" = "wikipedia-id";
+    "Wikipedia (is)" = "wikipedia-is";
+    "Wikipedia (it)" = "wikipedia-it";
+    "Wikipedia (ja)" = "wikipedia-ja";
+    "ვიკიპედია (ka)" = "wikipedia-ka";
+    "Wikipedia (kab)" = "wikipedia-kab";
+    "Уикипедия (kk)" = "wikipedia-kk";
+    "វិគីភីឌា (km)" = "wikipedia-km";
+    "ವಿಕಿಪೀಡಿಯ (kn)" = "wikipedia-kn";
+    "위키백과 (ko)" = "wikipedia-kr";
+    "Wikipedia (lij)" = "wikipedia-lij";
+    "ວິກິພີເດຍ (lo)" = "wikipedia-lo";
+    "Vikipedija (lt)" = "wikipedia-lt";
+    "Vikipedeja (ltg)" = "wikipedia-ltg";
+    "Vikipēdija (lv)" = "wikipedia-lv";
+    "Википедија (mk)" = "wikipedia-mk";
+    "विकिपीडिया (mr)" = "wikipedia-mr";
+    "Wikipedia (ms)" = "wikipedia-ms";
+    "ဝီကီပီးဒီးယား (my)" = "wikipedia-my";
+    "विकिपिडिया (ne)" = "wikipedia-ne";
+    "Wikipedia (nl)" = "wikipedia-nl";
+    "Wikipèdia (oc)" = "wikipedia-oc";
+    "ਵਿਕੀਪੀਡੀਆ (pa)" = "wikipedia-pa";
+    "Wikipedia (pl)" = "wikipedia-pl";
+    "Wikipédia (pt)" = "wikipedia-pt";
+    "Wikipedia (rm)" = "wikipedia-rm";
+    "Wikipedia (ro)" = "wikipedia-ro";
+    "Википедия (ru)" = "wikipedia-ru";
+    "විකිපීඩියා (si)" = "wikipedia-si";
+    "Wikipédia (sk)" = "wikipedia-sk";
+    "Wikipedija (sl)" = "wikipedia-sl";
+    "Wikipedia (sq)" = "wikipedia-sq";
+    "Википедија (sr)" = "wikipedia-sr";
+    "Wikipedia (sv)" = "wikipedia-sv-SE";
+    "விக்கிப்பீடியா (ta)" = "wikipedia-ta";
+    "వికీపీడియా (te)" = "wikipedia-te";
+    "วิกิพีเดีย" = "wikipedia-th";
+    "Wikipedia (tl)" = "wikipedia-tl";
+    "Vikipedi (tr)" = "wikipedia-tr";
+    "Вікіпедія (uk)" = "wikipedia-uk";
+    "ویکیپیڈیا (ur)" = "wikipedia-ur";
+    "Vikipediya (uz)" = "wikipedia-uz";
+    "Wikipedia (vi)" = "wikipedia-vi";
+    "Wikipedia (wo)" = "wikipedia-wo";
+    "维基百科" = "wikipedia-zh-CN";
+    "Wikipedia (zh)" = "wikipedia-zh-TW";
+    "ವಿಕ್ಷನರಿ (kn)" = "wiktionary-kn";
+    "Wikiccionari (oc)" = "wiktionary-oc";
+    "விக்சனரி (ta)" = "wiktionary-ta";
+    "విక్షనరీ (te)" = "wiktionary-te";
+    "Wolne Lektury" = "wolnelektury-pl";
+    "Yahoo! JAPAN" = "yahoo-jp";
+    "Yahoo!オークション" = "yahoo-jp-auctions";
+    "YouTube" = "youtube";
+
+    # Derived from https://searchfox.org/mozilla-central/rev/e3f42ec9320748b2aab3d474d1e47075def9000c/toolkit/components/search/SearchSettings.sys.mjs#32-44
+    "Wikipedia (hy)" = "wikipedia-hy";
+    "Wikipedia (kn)" = "wikipedia-kn";
+    "Vikipēdija" = "wikipedia-lv";
+    "Wikipedia (no)" = "wikipedia-NO";
+    "Wikipedia (el)" = "wikipedia-el";
+    "Wikipedia (lt)" = "wikipedia-lt";
+    "Wikipedia (my)" = "wikipedia-my";
+    "Wikipedia (pa)" = "wikipedia-pa";
+    "Wikipedia (pt)" = "wikipedia-pt";
+    "Wikipedia (si)" = "wikipedia-si";
+    "Wikipedia (tr)" = "wikipedia-tr";
+  };
+
+  migrateEngineNameToIdV7 = engine:
+    if builtins.hasAttr engine engineNameToId then
+      warn "Search engines are now referenced by id instead of by name, use '${
+        engineNameToId.${engine}
+      }' instead of '${engine}'" engineNameToId.${engine}
+    else
+      engine;
 in {
   imports = [ (pkgs.path + "/nixos/modules/misc/meta.nix") ];
 
@@ -182,8 +350,10 @@ in {
 
     default = mkOption {
       type = with types; nullOr str;
+      apply = engine:
+        if engine != null then migrateEngineNameToIdV7 engine else null;
       default = null;
-      example = "DuckDuckGo";
+      example = "ddg";
       description = ''
         The default search engine used in the address bar and search
         bar.
@@ -192,8 +362,10 @@ in {
 
     privateDefault = mkOption {
       type = with types; nullOr str;
+      apply = engine:
+        if engine != null then migrateEngineNameToIdV7 engine else null;
       default = null;
-      example = "DuckDuckGo";
+      example = "ddg";
       description = ''
         The default search engine used in the Private Browsing.
       '';
@@ -201,8 +373,9 @@ in {
 
     order = mkOption {
       type = with types; uniq (listOf str);
+      apply = builtins.map migrateEngineNameToIdV7;
       default = [ ];
-      example = [ "DuckDuckGo" "Google" ];
+      example = [ "ddg" "google" ];
       description = ''
         The order the search engines are listed in. Any engines that
         aren't included in this list will be listed after these in an
@@ -212,10 +385,17 @@ in {
 
     engines = mkOption {
       type = with types; attrsOf (attrsOf jsonFormat.type);
+
+      apply = mapAttrs' (name: value: {
+        name = migrateEngineNameToIdV7 name;
+        inherit value;
+      });
+
       default = { };
       example = literalExpression ''
         {
-          "Nix Packages" = {
+          nix-packages = {
+            name = "Nix Packages";
             urls = [{
               template = "https://search.nixos.org/packages";
               params = [
@@ -228,15 +408,16 @@ in {
             definedAliases = [ "@np" ];
           };
 
-          "NixOS Wiki" = {
+          nixos-wiki = {
+            name = "NixOS Wiki";
             urls = [{ template = "https://wiki.nixos.org/index.php?search={searchTerms}"; }];
             iconUpdateURL = "https://wiki.nixos.org/favicon.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             definedAliases = [ "@nw" ];
           };
 
-          "Bing".metaData.hidden = true;
-          "Google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
+          bing.metaData.hidden = true;
+          google.metaData.alias = "@g"; # builtin engines only support specifying one additional alias
         }
       '';
 
