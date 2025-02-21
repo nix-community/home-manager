@@ -30,11 +30,11 @@ in {
         };
         search = {
           force = true;
-          default = "Google";
-          privateDefault = "DuckDuckGo";
+          default = "google";
+          privateDefault = "ddg";
           engines = {
-            "Bing".metaData.hidden = true;
-            "Google".metaData.alias = "@g";
+            bing.metaData.hidden = true;
+            google.metaData.alias = "@g";
           };
         };
         settings = {
