@@ -12,11 +12,8 @@ let
     "name"
     "isAppProvided"
     "loadPath"
-    "hasPreferredIcon"
     "updateInterval"
     "updateURL"
-    "iconUpdateURL"
-    "iconURL"
     "iconMapObj"
     "metaData"
     "orderHint"
@@ -26,15 +23,17 @@ let
     searchForm = "__searchForm";
   };
 
+  # Convenience to specify absolute path to icon
+  iconUrl = icon: if hasPrefix "/" icon then "file://${icon}" else icon;
+
   processCustomEngineInput = input:
-    (removeAttrs input [ "icon" ]) // optionalAttrs (input ? icon) {
-      # Convenience to specify absolute path to icon
-      iconURL = "file://${input.icon}";
-    } // (optionalAttrs (input ? iconUpdateURL) {
-      # Convenience to default iconURL to iconUpdateURL so
-      # the icon is immediately downloaded from the URL
-      iconURL = input.iconURL or input.iconUpdateURL;
-    } // {
+    let
+      iconMapObj = mapAttrs (name: iconUrl) (optionalAttrs (input ? icon) {
+        # Convenience to specify single icon instead of map
+        "16" = input.icon;
+      } // (input.iconMapObj or { }));
+    in (removeAttrs input [ "icon" "iconMapObj" ])
+    // optionalAttrs (iconMapObj != { }) { inherit iconMapObj; } // {
       # Required for custom engine configurations, loadPaths
       # are unique identifiers that are generally formatted
       # like: [source]/path/to/engine.xml
@@ -42,7 +41,7 @@ let
           concatStringsSep "." (map strings.escapeNixIdentifier
             (modulePath ++ [ "engines" input.name ]))
         }";
-    });
+    };
 
   processEngineInput = name: input:
     let
@@ -55,7 +54,11 @@ let
     in if requiredInput.isAppProvided then
       requiredInput
     else
-      processCustomEngineInput (input // requiredInput);
+      pipe (input // requiredInput) [
+        migrateEngineToV11
+        migrateEngineToV12
+        processCustomEngineInput
+      ];
 
   buildEngineConfig = name: input:
     mapAttrs' (name: value: {
@@ -89,7 +92,7 @@ let
   };
 
   settings = {
-    version = 6;
+    version = 12;
     engines = sortEngineConfigs (mapAttrs buildEngineConfig engineInput);
 
     metaData = optionalAttrs (config.default != null) {
@@ -155,6 +158,37 @@ let
       mozlz4a <(echo "$json") "$out"
     fi
   '';
+
+  migrateEngineToV11 = engine:
+    engine // {
+      iconMapObj = mapAttrs' (name: value:
+        let nameToIntResult = builtins.tryEval (toInt name);
+        in {
+          name = if nameToIntResult.success then
+            name
+          else
+            let size = toString (builtins.fromJSON name).width;
+            in warn
+            "JSON object names for iconMapObj are deprecated, use ${size} instead of ${name}"
+            size;
+
+          inherit value;
+        }) (engine.iconMapObj or { });
+    };
+
+  migrateEngineToV12 = engine:
+    throwIf (engine ? hasPreferredIcon) "hasPreferredIcon has been removed"
+    (removeAttrs engine [ "iconURL" "iconUpdateURL" ]) // {
+      iconMapObj = optionalAttrs (engine ? iconURL) {
+        "16" = warn "iconURL is deprecated, use icon = ${
+            strings.escapeNixString engine.iconURL
+          } instead" engine.iconURL;
+      } // optionalAttrs (engine ? iconUpdateURL) {
+        "16" = warn "iconUpdateURL is deprecated, use icon = ${
+            strings.escapeNixString engine.iconUpdateURL
+          } instead" engine.iconUpdateURL;
+      } // (engine.iconMapObj or { });
+    };
 in {
   imports = [ (pkgs.path + "/nixos/modules/misc/meta.nix") ];
 
@@ -229,8 +263,8 @@ in {
           };
 
           "NixOS Wiki" = {
-            urls = [{ template = "https://wiki.nixos.org/index.php?search={searchTerms}"; }];
-            iconUpdateURL = "https://wiki.nixos.org/favicon.png";
+            urls = [{ template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; }];
+            iconMapObj."16" = "https://wiki.nixos.org/favicon.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             definedAliases = [ "@nw" ];
           };
@@ -245,7 +279,7 @@ in {
         only have {var}`metaData` specified will be treated as builtin
         to ${appName}.
 
-        See [SearchEngine.jsm](https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177)
+        See [SearchEngine.jsm](https://searchfox.org/mozilla-central/rev/e3f42ec9320748b2aab3d474d1e47075def9000c/toolkit/components/search/SearchEngine.sys.mjs#890-923)
         in ${appName}'s source for available options. We maintain a
         mapping to let you specify all options in the referenced link
         without underscores, but it may fall out of date with future
