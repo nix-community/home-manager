@@ -25,9 +25,11 @@
 
 { config, lib, ... }:
 
-with lib;
+let
+  inherit (lib) types mkOption; # added by Home Manager
 
-{
+  launchdTypes = import ./types.nix { inherit config lib; };
+in {
   freeformType = with types; attrsOf anything; # added by Home Manager
 
   options = {
@@ -118,7 +120,7 @@ with lib;
     };
 
     LimitLoadToSessionType = mkOption {
-      type = types.nullOr types.str;
+      type = types.nullOr (types.oneOf [ types.str (types.listOf types.str) ]);
       default = null;
       description = ''
         This configuration file only applies to sessions of the type specified. This key is used in concert
@@ -369,60 +371,26 @@ with lib;
 
     StartCalendarInterval = mkOption {
       default = null;
-      example = {
+      example = [{
         Hour = 2;
         Minute = 30;
-      };
+      }];
       description = ''
-        This optional key causes the job to be started every calendar interval as specified. Missing arguments
-        are considered to be wildcard. The semantics are much like `crontab(5)`.  Unlike cron which skips job
-        invocations when the computer is asleep, launchd will start the job the next time the computer wakes
+        This optional key causes the job to be started every calendar interval as specified. The semantics are
+        much like {manpage}`crontab(5)`: Missing attributes are considered to be wildcard. Unlike cron which skips
+        job invocations when the computer is asleep, launchd will start the job the next time the computer wakes
         up.  If multiple intervals transpire before the computer is woken, those events will be coalesced into
-        one event upon wake from sleep.
+        one event upon waking from sleep.
+
+        ::: {.important}
+        The list must not be empty and must not contain duplicate entries (attrsets which compare equally).
+        :::
+
+        ::: {.caution}
+        Since missing attrs become wildcards, an empty attrset effectively means "every minute".
+        :::
       '';
-      type = types.nullOr (types.listOf (types.submodule {
-        options = {
-          Minute = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The minute on which this job will be run.
-            '';
-          };
-
-          Hour = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The hour on which this job will be run.
-            '';
-          };
-
-          Day = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The day on which this job will be run.
-            '';
-          };
-
-          Weekday = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The weekday on which this job will be run (0 and 7 are Sunday).
-            '';
-          };
-
-          Month = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The month on which this job will be run.
-            '';
-          };
-        };
-      }));
+      type = types.nullOr launchdTypes.StartCalendarInterval;
     };
 
     StandardInPath = mkOption {
@@ -669,22 +637,22 @@ with lib;
         resource limits based on what kind of job it is. If left unspecified, the system will apply light
         resource limits to the job, throttling its CPU usage and I/O bandwidth. The following are valid values:
 
-           Background
-           : Background jobs are generally processes that do work that was not directly requested by the user.
-             The resource limits applied to Background jobs are intended to prevent them from disrupting the
-             user experience.
+        Background
+        : Background jobs are generally processes that do work that was not directly requested by the user.
+          The resource limits applied to Background jobs are intended to prevent them from disrupting the
+          user experience.
 
-           Standard
-           :  Standard jobs are equivalent to no ProcessType being set.
+        Standard
+        : Standard jobs are equivalent to no ProcessType being set.
 
-           Adaptive
-           :  Adaptive jobs move between the Background and Interactive classifications based on activity over
-              XPC connections. See {manpage}`xpc_transaction_begin(3)` for details.
+        Adaptive
+        : Adaptive jobs move between the Background and Interactive classifications based on activity over
+          XPC connections. See `xpc_transaction_begin(3)` for details.
 
-           Interactive
-           :  Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
-              jobs are critical to maintaining a responsive user experience, and this key should only be
-              used if an app's ability to be responsive depends on it, and cannot be made Adaptive.
+        Interactive
+        : Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
+          jobs are critical to maintaining a responsive user experience, and this key should only be
+          used if an app's ability to be responsive depends on it, and cannot be made Adaptive.
       '';
     };
 
@@ -706,6 +674,15 @@ with lib;
       '';
     };
 
+    LowPriorityBackgroundIO = mkOption {
+      type = types.nullOr types.bool;
+      default = null;
+      description = ''
+        This optional key specifies whether the kernel should consider this daemon to be low priority when
+        doing file system I/O when the process is throttled with the Darwin-background classification.
+      '';
+    };
+
     LaunchOnlyOnce = mkOption {
       type = types.nullOr types.bool;
       default = null;
@@ -717,7 +694,7 @@ with lib;
 
     MachServices = mkOption {
       default = null;
-      example = { ResetAtClose = true; };
+      example = { "org.nixos.service" = { ResetAtClose = true; }; };
       description = ''
         This optional key is used to specify Mach services to be registered with the Mach bootstrap sub-system.
         Each key in this dictionary should be the name of service to be advertised. The value of the key must
@@ -726,31 +703,32 @@ with lib;
         Finally, for the job itself, the values will be replaced with Mach ports at the time of check-in with
         launchd.
       '';
-      type = types.nullOr (types.submodule {
-        options = {
-          ResetAtClose = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              If this boolean is false, the port is recycled, thus leaving clients to remain oblivious to the
-              demand nature of job. If the value is set to true, clients receive port death notifications when
-              the job lets go of the receive right. The port will be recreated atomically with respect to bootstrap_look_up()
-              calls, so that clients can trust that after receiving a port death notification,
-              the new port will have already been recreated. Setting the value to true should be done with
-              care. Not all clients may be able to handle this behavior. The default value is false.
-            '';
-          };
+      type = types.nullOr (types.attrsOf (types.either types.bool
+        (types.submodule {
+          options = {
+            ResetAtClose = mkOption {
+              type = types.nullOr types.bool;
+              default = null;
+              description = ''
+                If this boolean is false, the port is recycled, thus leaving clients to remain oblivious to the
+                demand nature of job. If the value is set to true, clients receive port death notifications when
+                the job lets go of the receive right. The port will be recreated atomically with respect to bootstrap_look_up()
+                calls, so that clients can trust that after receiving a port death notification,
+                the new port will have already been recreated. Setting the value to true should be done with
+                care. Not all clients may be able to handle this behavior. The default value is false.
+              '';
+            };
 
-          HideUntilCheckIn = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              Reserve the name in the namespace, but cause bootstrap_look_up() to fail until the job has
-              checked in with launchd.
-            '';
+            HideUntilCheckIn = mkOption {
+              type = types.nullOr types.bool;
+              default = null;
+              description = ''
+                Reserve the name in the namespace, but cause bootstrap_look_up() to fail until the job has
+                checked in with launchd.
+              '';
+            };
           };
-        };
-      });
+        })));
     };
 
     LaunchEvents = mkOption {
@@ -776,6 +754,26 @@ with lib;
           };
         };
       };
+    };
+
+    ServiceIPC = mkOption {
+      type = types.nullOr types.bool;
+      default = null;
+      description = ''
+        This optional key specifies whether the job participates in advanced
+        communication with launchd. The default is false. This flag is
+        incompatible with the inetdCompatibility key.
+      '';
+    };
+
+    SessionCreate = mkOption {
+      type = types.nullOr types.bool;
+      default = null;
+      description = ''
+        This key specifies that the job should be spawned into a new security
+        audit session rather than the default session for the context is belongs
+        to. See auditon(2) for details.
+      '';
     };
 
     Sockets = mkOption {
