@@ -307,6 +307,7 @@ in import nmtSrc {
     ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
+    ./modules/programs/swayimg
     ./modules/programs/swaylock
     ./modules/programs/swayr
     ./modules/programs/terminator
