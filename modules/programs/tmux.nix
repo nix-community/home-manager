@@ -183,13 +183,20 @@ in {
         '';
       };
 
-      extraConfig = mkOption {
-        type = types.lines;
+      extraConfigBeforePlugins = mkOption {
         default = "";
         description = ''
-          Additional configuration to add to
-          {file}`tmux.conf`.
+          Additional contents of /etc/tmux.conf, to be run before sourcing plugins.
         '';
+        type = types.lines;
+      };
+
+      extraConfig = mkOption {
+        default = "";
+        description = ''
+          Additional contents of /etc/tmux.conf, to be run after sourcing plugins.
+        '';
+        type = types.lines;
       };
 
       focusEvents = mkOption {
@@ -342,6 +349,10 @@ in {
     }
 
     { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
+    {
+      xdg.configFile."tmux/tmux.conf".text =
+        mkAfter cfg.extraConfigBeforePlugins;
+    }
     { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
 
     (mkIf cfg.secureSocket {
