@@ -1,5 +1,3 @@
-_:
-
 {
   programs.earthly = {
     enable = true;
