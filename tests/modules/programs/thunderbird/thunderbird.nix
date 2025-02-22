@@ -58,6 +58,8 @@
         extraConfig = ''
           user_pref("mail.html_compose", false);
         '';
+
+        feedAccounts.rss = { };
       };
 
       second.settings = {
