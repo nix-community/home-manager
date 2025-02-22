@@ -15,16 +15,15 @@
   nmt.script =
     (import ./basic-configuration.nix { inherit config pkgs; }).nmt.script;
 
-  test.asserts.warnings.expected = with lib;
-    let
-      renamed = {
-        xssLockExtraOptions = "xss-lock.extraOptions";
-        xautolockExtraOptions = "xautolock.extraOptions";
-        enableDetectSleep = "xautolock.detectSleep";
-      };
-    in mapAttrsToList (old: new:
-      builtins.replaceStrings [ "\n" ] [ " " ] ''
-        The option `services.screen-locker.${old}' defined in
-        ${showFiles options.services.screen-locker.${old}.files}
-        has been renamed to `services.screen-locker.${new}'.'') renamed;
+  test.asserts.warnings.expected = let
+    renamed = {
+      xssLockExtraOptions = "xss-lock.extraOptions";
+      xautolockExtraOptions = "xautolock.extraOptions";
+      enableDetectSleep = "xautolock.detectSleep";
+    };
+  in mapAttrsToList (old: new:
+    builtins.replaceStrings [ "\n" ] [ " " ] ''
+      The option `services.screen-locker.${old}' defined in
+      ${showFiles options.services.screen-locker.${old}.files}
+      has been renamed to `services.screen-locker.${new}'.'') renamed;
 }

@@ -1,18 +1,15 @@
 modulePath:
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ config, lib, ... }:
 let
 
-  cfg = getAttrFromPath modulePath config;
+  cfg = lib.getAttrFromPath modulePath config;
 
   firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 
 in {
   imports = [ firefoxMockOverlay ];
 
-  config = mkIf config.test.enableBig (setAttrByPath modulePath {
+  config = lib.mkIf config.test.enableBig (lib.setAttrByPath modulePath {
     enable = true;
     profiles.containers = {
       containers = {
