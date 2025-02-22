@@ -1,29 +1,30 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
+  inherit (lib) literalExpression mkOption optionalAttrs types;
 
   cfg = config.gtk;
   cfg2 = config.gtk.gtk2;
   cfg3 = config.gtk.gtk3;
   cfg4 = config.gtk.gtk4;
 
-  toGtk3Ini = generators.toINI {
+  toGtk3Ini = lib.generators.toINI {
     mkKeyValue = key: value:
-      let value' = if isBool value then boolToString value else toString value;
-      in "${escape [ "=" ] key}=${value'}";
+      let
+        value' =
+          if lib.isBool value then lib.boolToString value else toString value;
+      in "${lib.escape [ "=" ] key}=${value'}";
   };
 
   formatGtk2Option = n: v:
     let
-      v' = if isBool v then
-        boolToString value
-      else if isString v then
+      v' = if lib.isBool v then
+        lib.boolToString lib.value
+      else if lib.isString v then
         ''"${v}"''
       else
         toString v;
-    in "${escape [ "=" ] n} = ${v'}";
+    in "${lib.escape [ "=" ] n} = ${v'}";
 
   themeType = types.submodule {
     options = {
@@ -100,20 +101,20 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (mkRemovedOptionModule [ "gtk" "gtk3" "waylandSupport" ] ''
+    (lib.mkRemovedOptionModule [ "gtk" "gtk3" "waylandSupport" ] ''
       This options is not longer needed and can be removed.
     '')
   ];
 
   options = {
     gtk = {
-      enable = mkEnableOption "GTK 2/3 configuration";
+      enable = lib.mkEnableOption "GTK 2/3 configuration";
 
       font = mkOption {
-        type = types.nullOr hm.types.fontType;
+        type = types.nullOr lib.hm.types.fontType;
         default = null;
         description = ''
           The font to use in GTK+ 2/3 applications.
@@ -219,7 +220,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (let
+  config = lib.mkIf cfg.enable (let
     gtkIni = optionalAttrs (cfg.font != null) {
       gtk-font-name =
         let fontSize = if cfg.font.size != null then cfg.font.size else 10;
@@ -258,18 +259,17 @@ in {
       };
 
     optionalPackage = opt:
-      optional (opt != null && opt.package != null) opt.package;
+      lib.optional (opt != null && opt.package != null) opt.package;
   in {
-    home.packages = concatMap optionalPackage [
+    home.packages = lib.concatMap optionalPackage [
       cfg.font
       cfg.theme
       cfg.iconTheme
       cfg.cursorTheme
     ];
 
-    home.file.${cfg2.configLocation}.text =
-      concatMapStrings (l: l + "\n") (mapAttrsToList formatGtk2Option gtkIni)
-      + cfg2.extraConfig + "\n";
+    home.file.${cfg2.configLocation}.text = lib.concatMapStrings (l: l + "\n")
+      (lib.mapAttrsToList formatGtk2Option gtkIni) + cfg2.extraConfig + "\n";
 
     home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
@@ -277,16 +277,17 @@ in {
       toGtk3Ini { Settings = gtkIni // cfg3.extraConfig; };
 
     xdg.configFile."gtk-3.0/gtk.css" =
-      mkIf (cfg3.extraCss != "") { text = cfg3.extraCss; };
+      lib.mkIf (cfg3.extraCss != "") { text = cfg3.extraCss; };
 
-    xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != [ ]) {
-      text = concatMapStrings (l: l + "\n") cfg3.bookmarks;
+    xdg.configFile."gtk-3.0/bookmarks" = lib.mkIf (cfg3.bookmarks != [ ]) {
+      text = lib.concatMapStrings (l: l + "\n") cfg3.bookmarks;
     };
 
     xdg.configFile."gtk-4.0/settings.ini".text =
       toGtk3Ini { Settings = gtkIni // cfg4.extraConfig; };
 
-    xdg.configFile."gtk-4.0/gtk.css" = mkIf (gtk4Css != "") { text = gtk4Css; };
+    xdg.configFile."gtk-4.0/gtk.css" =
+      lib.mkIf (gtk4Css != "") { text = gtk4Css; };
 
     dconf.settings."org/gnome/desktop/interface" = dconfIni;
   });
