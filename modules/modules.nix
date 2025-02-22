@@ -30,6 +30,7 @@ let
     ./misc/fontconfig.nix
     ./misc/gtk.nix
     ./misc/lib.nix
+    ./misc/mozilla-messaging-hosts.nix
     ./misc/news.nix
     ./misc/nixgl.nix
     ./misc/numlock.nix
@@ -90,6 +91,7 @@ let
     ./programs/dircolors.nix
     ./programs/direnv.nix
     ./programs/discocss.nix
+    ./programs/earthly.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/eww.nix
@@ -237,6 +239,7 @@ let
     ./programs/sqls.nix
     ./programs/ssh.nix
     ./programs/starship.nix
+    ./programs/swayimg.nix
     ./programs/swaylock.nix
     ./programs/swayr.nix
     ./programs/taskwarrior.nix
@@ -260,6 +263,7 @@ let
     ./programs/vifm.nix
     ./programs/vim-vint.nix
     ./programs/vim.nix
+    ./programs/vinegar.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
@@ -418,6 +422,7 @@ let
     ./services/window-managers/wayfire.nix
     ./services/window-managers/xmonad.nix
     ./services/wlsunset.nix
+    ./services/wluma.nix
     ./services/wob.nix
     ./services/xcape.nix
     ./services/xembed-sni-proxy.nix
@@ -425,6 +430,7 @@ let
     ./services/xscreensaver.nix
     ./services/xsettingsd.nix
     ./services/xsuspender.nix
+    ./services/yubikey-agent.nix
     ./systemd.nix
     ./targets/darwin
     ./targets/generic-linux.nix

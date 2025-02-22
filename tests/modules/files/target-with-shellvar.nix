@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   home.file."$HOME/$FOO/bar baz".text = "blah";
 

@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ lib, realPkgs, ... }: {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   accounts.email.accounts = {
@@ -41,6 +41,10 @@
     # Disable warning so that platforms' behavior is the same
     darwinSetupWarning = false;
 
+    # Darwin doesn't support wrapped Thunderbird, using unwrapped instead;
+    # using -latest- because ESR is currently broken on Darwin
+    package = realPkgs.thunderbird-latest-unwrapped;
+
     profiles = {
       first = {
         isDefault = true;
@@ -69,7 +73,7 @@
   };
 
   nmt.script = let
-    isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+    isDarwin = realPkgs.stdenv.hostPlatform.isDarwin;
     configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";
     profilesDir = if isDarwin then "${configDir}/Profiles" else "${configDir}";
     platform = if isDarwin then "darwin" else "linux";

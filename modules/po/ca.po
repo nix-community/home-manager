@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-01-03 09:09+0100\n"
-"PO-Revision-Date: 2023-12-10 15:58+0000\n"
-"Last-Translator: Nara Díaz Viñolas <rdvdev2@gmail.com>\n"
+"PO-Revision-Date: 2025-02-19 21:00+0000\n"
+"Last-Translator: Alejandro Masó Bonilla <alejandrobonilla2001@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/home-manager/"
 "modules/ca/>\n"
 "Language: ca\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.10.1-dev\n"
 
 #: modules/files.nix:188
 msgid "Creating home file links in %s"
@@ -29,11 +29,11 @@ msgstr "Netejant enllaços orfes de %s"
 
 #: modules/home-environment.nix:591
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "Creant una nova generació per al nou perfil"
 
 #: modules/home-environment.nix:594
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "No hi ha canvis llavors s'utilitzarà la generació anterior"
 
 #: modules/home-environment.nix:643
 msgid ""
@@ -55,13 +55,13 @@ msgstr ""
 "Potser hi ha un conflicte amb un paquet instal·lat mitjançant\n"
 "\"%s\"? Prova d'executar\n"
 "\n"
-"    %s\n"
+". . . . %s\n"
 "\n"
 "i si hi ha un paquet conflictiu el pots eliminar amb\n"
 "\n"
-"    %s\n"
+". . . . %s\n"
 "\n"
-"i després provar d'activar la teva configuració de Home Manager de nou."
+"Després provar d'activar la teva configuració de Home Manager de nou."
 
 #: modules/home-environment.nix:676
 msgid "Activating %s"
@@ -86,7 +86,7 @@ msgstr "Error: HOME està configurat a \"%s\", però s'esperava \"%s\""
 
 #: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
-msgstr "Començant activació de Home Manager"
+msgstr "Començant l'activació de Home Manager"
 
 #: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
@@ -102,7 +102,7 @@ msgstr "Execució en viu"
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
-msgstr "Utilitzant versió de Nix: %s"
+msgstr "Utilitzant la versió de Nix: %s"
 
 #: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"

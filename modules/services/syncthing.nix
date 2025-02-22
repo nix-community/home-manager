@@ -1,15 +1,21 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption mkEnableOption mkPackageOption types;
 
   cfg = config.services.syncthing;
+
   settingsFormat = pkgs.formats.json { };
   cleanedConfig =
-    converge (filterAttrsRecursive (_: v: v != null && v != { })) cfg.settings;
+    lib.converge (lib.filterAttrsRecursive (_: v: v != null && v != { }))
+    cfg.settings;
 
   isUnixGui = (builtins.substring 0 1 cfg.guiAddress) == "/";
+
+  # syncthing's configuration directory (see https://docs.syncthing.net/users/config.html)
+  syncthing_dir = if pkgs.stdenv.isDarwin then
+    "$HOME/Library/Application Support/Syncthing"
+  else
+    "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
 
   # Syncthing supports serving the GUI over Unix sockets. If that happens, the
   # API is served over the Unix socket as well.  This function returns the correct
@@ -26,38 +32,48 @@ let
     else
       "${cfg.guiAddress}${path}";
 
-  devices = mapAttrsToList (_: device: device // { deviceID = device.id; })
+  devices = lib.mapAttrsToList (_: device: device // { deviceID = device.id; })
     cfg.settings.devices;
 
-  folders = mapAttrsToList (_: folder:
+  folders = lib.mapAttrsToList (_: folder:
     folder // {
       devices = map (device:
         if builtins.isString device then {
           deviceId = cfg.settings.devices.${device}.id;
         } else
           device) folder.devices;
-    }) (filterAttrs (_: folder: folder.enable) cfg.settings.folders);
+    }) (lib.filterAttrs (_: folder: folder.enable) cfg.settings.folders);
 
-  jq = "${pkgs.jq}/bin/jq";
-  sleep = "${pkgs.coreutils}/bin/sleep";
-  printf = "${pkgs.coreutils}/bin/printf";
-  cat = "${pkgs.coreutils}/bin/cat";
-  curl = "${pkgs.curl}/bin/curl";
-  install = "${pkgs.coreutils}/bin/install";
-  syncthing = "${pkgs.syncthing}/bin/syncthing";
+  jq = lib.getExe pkgs.jq;
+  sleep = lib.getExe' pkgs.coreutils "sleep";
+  printf = lib.getExe' pkgs.coreutils "printf";
+  cat = lib.getExe' pkgs.coreutils "cat";
+  curl = lib.getExe pkgs.curl;
+  install = lib.getExe' pkgs.coreutils "install";
+  mktemp = lib.getExe' pkgs.coreutils "mktemp";
+  syncthing = lib.getExe cfg.package;
 
-  updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (''
-    set -efu
+  copyKeys = pkgs.writers.writeBash "syncthing-copy-keys" ''
+    ${install} -dm700 "${syncthing_dir}"
+    ${lib.optionalString (cfg.cert != null) ''
+      ${install} -Dm400 ${toString cfg.cert} "${syncthing_dir}/cert.pem"
+    ''}
+    ${lib.optionalString (cfg.key != null) ''
+      ${install} -Dm400 ${toString cfg.key} "${syncthing_dir}/key.pem"
+    ''}
+  '';
 
-    # be careful not to leak secrets in the filesystem or in process listings
-    umask 0077
+  curlShellFunction = ''
+    # systemd sets and creates RUNTIME_DIRECTORY on Linux
+    # on Darwin, we create it manually via mktemp
+    RUNTIME_DIRECTORY="''${RUNTIME_DIRECTORY:=$(${mktemp} -d)}"
 
     curl() {
         # get the api key by parsing the config.xml
         while
             ! ${pkgs.libxml2}/bin/xmllint \
                 --xpath 'string(configuration/gui/apikey)' \
-                ''${XDG_STATE_HOME:-$HOME/.local/state}/syncthing/config.xml \
+                "${syncthing_dir}/config.xml" \
                 >"$RUNTIME_DIRECTORY/api_key"
         do ${sleep} 1; done
         (${printf} "X-API-Key: "; ${cat} "$RUNTIME_DIRECTORY/api_key") >"$RUNTIME_DIRECTORY/headers"
@@ -65,6 +81,15 @@ let
             --retry 1000 --retry-delay 1 --retry-all-errors \
             "$@"
     }
+  '';
+
+  updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (''
+    set -efu
+
+    # be careful not to leak secrets in the filesystem or in process listings
+    umask 0077
+
+    ${curlShellFunction}
   '' +
 
     /* Syncthing's rest API for the folders and devices is almost identical.
@@ -91,7 +116,7 @@ let
     } [
       # Now for each of these attributes, write the curl commands that are
       # identical to both folders and devices.
-      (mapAttrs (conf_type: s:
+      (lib.mapAttrs (conf_type: s:
         # We iterate the `conf` list now, and run a curl -X POST command for each, that
         # should update that device/folder only.
         lib.pipe s.conf [
@@ -167,17 +192,16 @@ let
 
   syncthingArgs = defaultSyncthingArgs ++ cfg.extraOptions;
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
-  options = with types; {
+  options = {
     services.syncthing = {
       enable = mkEnableOption ''
         Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.
-        Further declarative configuration options only supported on Linux devices.
       '';
 
       cert = mkOption {
-        type = nullOr str;
+        type = with types; nullOr str;
         default = null;
         description = ''
           Path to the `cert.pem` file, which will be copied into Syncthing's
@@ -186,7 +210,7 @@ in {
       };
 
       key = mkOption {
-        type = nullOr str;
+        type = with types; nullOr str;
         default = null;
         description = ''
           Path to the `key.pem` file, which will be copied into Syncthing's
@@ -195,7 +219,7 @@ in {
       };
 
       passwordFile = mkOption {
-        type = nullOr path;
+        type = with types; nullOr path;
         default = null;
         description = ''
           Path to the gui password file.
@@ -203,7 +227,7 @@ in {
       };
 
       overrideDevices = mkOption {
-        type = bool;
+        type = types.bool;
         default = true;
         description = ''
           Whether to delete the devices which are not configured via the
@@ -214,7 +238,7 @@ in {
       };
 
       overrideFolders = mkOption {
-        type = bool;
+        type = types.bool;
         default = true;
         description = ''
           Whether to delete the folders which are not configured via the
@@ -225,7 +249,7 @@ in {
       };
 
       settings = mkOption {
-        type = submodule {
+        type = types.submodule {
           freeformType = settingsFormat.type;
           options = {
             # global options
@@ -234,11 +258,11 @@ in {
               description = ''
                 The options element contains all other global configuration options
               '';
-              type = submodule ({ name, ... }: {
+              type = types.submodule {
                 freeformType = settingsFormat.type;
                 options = {
                   localAnnounceEnabled = mkOption {
-                    type = nullOr bool;
+                    type = with types; nullOr bool;
                     default = null;
                     description = ''
                       Whether to send announcements to the local LAN, also use such announcements to find other devices.
@@ -246,7 +270,7 @@ in {
                   };
 
                   localAnnouncePort = mkOption {
-                    type = nullOr int;
+                    type = with types; nullOr int;
                     default = null;
                     description = ''
                       The port on which to listen and send IPv4 broadcast announcements to.
@@ -254,7 +278,7 @@ in {
                   };
 
                   relaysEnabled = mkOption {
-                    type = nullOr bool;
+                    type = with types; nullOr bool;
                     default = null;
                     description = ''
                       When true, relays will be connected to and potentially used for device to device connections.
@@ -262,7 +286,7 @@ in {
                   };
 
                   urAccepted = mkOption {
-                    type = nullOr int;
+                    type = with types; nullOr int;
                     default = null;
                     description = ''
                       Whether the user has accepted to submit anonymous usage data.
@@ -272,7 +296,7 @@ in {
                   };
 
                   limitBandwidthInLan = mkOption {
-                    type = nullOr bool;
+                    type = with types; nullOr bool;
                     default = null;
                     description = ''
                       Whether to apply bandwidth limits to devices in the same broadcast domain as the local device.
@@ -280,7 +304,7 @@ in {
                   };
 
                   maxFolderConcurrency = mkOption {
-                    type = nullOr int;
+                    type = with types; nullOr int;
                     default = null;
                     description = ''
                       This option controls how many folders may concurrently be in I/O-intensive operations such as syncing or scanning.
@@ -288,7 +312,7 @@ in {
                     '';
                   };
                 };
-              });
+              };
             };
 
             # device settings
@@ -308,12 +332,12 @@ in {
                   addresses = [ "tcp://192.168.0.10:51820" ];
                 };
               };
-              type = attrsOf (submodule ({ name, ... }: {
+              type = types.attrsOf (types.submodule ({ name, ... }: {
                 freeformType = settingsFormat.type;
                 options = {
 
                   name = mkOption {
-                    type = str;
+                    type = types.str;
                     default = name;
                     description = ''
                       The name of the device.
@@ -321,14 +345,14 @@ in {
                   };
 
                   id = mkOption {
-                    type = str;
+                    type = types.str;
                     description = ''
                       The device ID. See <https://docs.syncthing.net/dev/device-ids.html>.
                     '';
                   };
 
                   autoAcceptFolders = mkOption {
-                    type = bool;
+                    type = types.bool;
                     default = false;
                     description = ''
                       Automatically create or share folders that this device advertises at the default path.
@@ -358,12 +382,12 @@ in {
                   };
                 }
               '';
-              type = attrsOf (submodule ({ name, ... }: {
+              type = types.attrsOf (types.submodule ({ name, ... }: {
                 freeformType = settingsFormat.type;
                 options = {
 
                   enable = mkOption {
-                    type = bool;
+                    type = types.bool;
                     default = true;
                     description = ''
                       Whether to share this folder.
@@ -373,11 +397,12 @@ in {
                   };
 
                   path = mkOption {
-                    type = str // {
+                    type = types.str // {
                       check = x:
-                        str.check x
-                        && (substring 0 1 x == "/" || substring 0 2 x == "~/");
-                      description = str.description + " starting with / or ~/";
+                        types.str.check x && (lib.substring 0 1 x == "/"
+                          || lib.substring 0 2 x == "~/");
+                      description = types.str.description
+                        + " starting with / or ~/";
                     };
                     default = name;
                     description = ''
@@ -388,7 +413,7 @@ in {
                   };
 
                   id = mkOption {
-                    type = str;
+                    type = types.str;
                     default = name;
                     description = ''
                       The ID of the folder. Must be the same on all devices.
@@ -396,7 +421,7 @@ in {
                   };
 
                   label = mkOption {
-                    type = str;
+                    type = types.str;
                     default = name;
                     description = ''
                       The label of the folder.
@@ -404,7 +429,7 @@ in {
                   };
 
                   type = mkOption {
-                    type = enum [
+                    type = types.enum [
                       "sendreceive"
                       "sendonly"
                       "receiveonly"
@@ -418,7 +443,7 @@ in {
                   };
 
                   devices = mkOption {
-                    type = listOf str;
+                    type = with types; listOf str;
                     default = [ ];
                     description = ''
                       The devices this folder should be shared with. Each device must
@@ -490,7 +515,7 @@ in {
                   };
 
                   copyOwnershipFromParent = mkOption {
-                    type = bool;
+                    type = types.bool;
                     default = false;
                     description = ''
                       On Unix systems, tries to copy file/folder ownership from
@@ -541,7 +566,7 @@ in {
       };
 
       guiAddress = mkOption {
-        type = str;
+        type = types.str;
         default = "127.0.0.1:8384";
         description = ''
           The address to serve the web interface at.
@@ -561,7 +586,7 @@ in {
       };
 
       extraOptions = mkOption {
-        type = listOf str;
+        type = with types; listOf str;
         default = [ ];
         example = [ "--reset-deltas" ];
         description = ''
@@ -604,9 +629,9 @@ in {
     };
   };
 
-  config = mkMerge [
-    (mkIf cfg.enable {
-      home.packages = [ (getOutput "man" pkgs.syncthing) ];
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
+      home.packages = [ (lib.getOutput "man" cfg.package) ];
 
       systemd.user.services = {
         syncthing = {
@@ -618,28 +643,14 @@ in {
           };
 
           Service = {
-            ExecStartPre = mkIf (cfg.cert != null || cfg.key != null) "+${
-                pkgs.writers.writeBash "syncthing-copy-keys" ''
-                  syncthing_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/syncthing"
-                  ${install} -dm700 "$syncthing_dir"
-                  ${optionalString (cfg.cert != null) ''
-                    ${install} -Dm400 ${
-                      toString cfg.cert
-                    } "$syncthing_dir/cert.pem"
-                  ''}
-                  ${optionalString (cfg.key != null) ''
-                    ${install} -Dm400 ${
-                      toString cfg.key
-                    } "$syncthing_dir/key.pem"
-                  ''}
-                ''
-              }";
-            ExecStart = escapeShellArgs syncthingArgs;
+            ExecStartPre =
+              lib.mkIf (cfg.cert != null || cfg.key != null) "+${copyKeys}";
+            ExecStart = lib.escapeShellArgs syncthingArgs;
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
             RestartForceExitStatus = [ 3 4 ];
             Environment =
-              mkIf (cfg.allProxy != null) { all_proxy = cfg.allProxy; };
+              lib.mkIf (cfg.allProxy != null) { all_proxy = cfg.allProxy; };
 
             # Sandboxing.
             LockPersonality = true;
@@ -654,7 +665,7 @@ in {
           Install = { WantedBy = [ "default.target" ]; };
         };
 
-        syncthing-init = mkIf (cleanedConfig != { }) {
+        syncthing-init = lib.mkIf (cleanedConfig != { }) {
           Unit = {
             Description = "Syncthing configuration updater";
             Requires = [ "syncthing.service" ];
@@ -672,23 +683,44 @@ in {
         };
       };
 
-      launchd.agents.syncthing = {
-        enable = true;
-        config = {
-          ProgramArguments = syncthingArgs;
-          KeepAlive = {
-            Crashed = true;
-            SuccessfulExit = false;
+      launchd.agents = let
+        # agent `syncthing` uses `${syncthing_dir}/${watch_file}` to notify agent `syncthing-init`
+        watch_file = ".launchd_update_config";
+      in {
+        syncthing = {
+          enable = true;
+          config = {
+            ProgramArguments = [
+              "${pkgs.writers.writeBash "syncthing-wrapper" ''
+                ${copyKeys}                               # simulate systemd's `syncthing-init.Service.ExecStartPre`
+                touch "${syncthing_dir}/${watch_file}"    # notify syncthing-init agent
+                exec ${lib.escapeShellArgs syncthingArgs}
+              ''}"
+            ];
+            KeepAlive = {
+              Crashed = true;
+              SuccessfulExit = false;
+            };
+            ProcessType = "Background";
           };
-          ProcessType = "Background";
+        };
+
+        syncthing-init = {
+          enable = true;
+          config = {
+            ProgramArguments = [ "${updateConfig}" ];
+            WatchPaths = [
+              "${config.home.homeDirectory}/Library/Application Support/Syncthing/${watch_file}"
+            ];
+          };
         };
       };
     })
 
-    (mkIf (isAttrs cfg.tray && cfg.tray.enable) {
+    (lib.mkIf (lib.isAttrs cfg.tray && cfg.tray.enable) {
       assertions = [
-        (hm.assertions.assertPlatform "services.syncthing.tray" pkgs
-          platforms.linux)
+        (lib.hm.assertions.assertPlatform "services.syncthing.tray" pkgs
+          lib.platforms.linux)
       ];
 
       systemd.user.services = {
@@ -710,10 +742,10 @@ in {
     })
 
     # deprecated
-    (mkIf (isBool cfg.tray && cfg.tray) {
+    (lib.mkIf (lib.isBool cfg.tray && cfg.tray) {
       assertions = [
-        (hm.assertions.assertPlatform "services.syncthing.tray" pkgs
-          platforms.linux)
+        (lib.hm.assertions.assertPlatform "services.syncthing.tray" pkgs
+          lib.platforms.linux)
       ];
 
       systemd.user.services = {

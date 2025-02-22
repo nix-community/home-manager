@@ -147,6 +147,7 @@ in import nmtSrc {
     ./modules/programs/darcs
     ./modules/programs/dircolors
     ./modules/programs/direnv
+    ./modules/programs/earthly
     ./modules/programs/emacs
     ./modules/programs/fastfetch
     ./modules/programs/feh
@@ -243,6 +244,7 @@ in import nmtSrc {
     ./modules/programs/translate-shell
     ./modules/programs/vifm
     ./modules/programs/vim-vint
+    ./modules/programs/vinegar
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
@@ -264,8 +266,10 @@ in import nmtSrc {
     ./modules/services/imapnotify-darwin
     ./modules/services/nix-gc-darwin
     ./modules/services/ollama/darwin
+    ./modules/services/yubikey-agent-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
+    ./modules/config/home-cursor
     ./modules/config/i18n
     ./modules/i18n/input-method
     ./modules/misc/debug
@@ -305,6 +309,7 @@ in import nmtSrc {
     ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
+    ./modules/programs/swayimg
     ./modules/programs/swaylock
     ./modules/programs/swayr
     ./modules/programs/terminator
@@ -390,6 +395,7 @@ in import nmtSrc {
     ./modules/services/wlsunset
     ./modules/services/wob
     ./modules/services/xsettingsd
+    ./modules/services/yubikey-agent
     ./modules/systemd
     ./modules/targets-linux
   ]);

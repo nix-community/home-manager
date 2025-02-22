@@ -14,34 +14,6 @@ let
       supersectionType = attrsOf (either multipleType sectionType);
     in attrsOf supersectionType;
 
-  signModule = types.submodule {
-    options = {
-      key = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = ''
-          The default GPG signing key fingerprint.
-
-          Set to `null` to let GnuPG decide what signing key
-          to use depending on commit’s author.
-        '';
-      };
-
-      signByDefault = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether commits and tags should be signed by default.";
-      };
-
-      gpgPath = mkOption {
-        type = types.str;
-        default = "${pkgs.gnupg}/bin/gpg2";
-        defaultText = "\${pkgs.gnupg}/bin/gpg2";
-        description = "Path to GnuPG binary to use.";
-      };
-    };
-  };
-
   includeModule = types.submodule ({ config, ... }: {
     options = {
       condition = mkOption {
@@ -133,10 +105,40 @@ in {
         description = "Git aliases to define.";
       };
 
-      signing = mkOption {
-        type = types.nullOr signModule;
-        default = null;
-        description = "Options related to signing commits using GnuPG.";
+      signing = {
+        key = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            The default signing key fingerprint.
+
+            Set to `null` to let the signer decide what signing key
+            to use depending on commit’s author.
+          '';
+        };
+
+        format = mkOption {
+          type = types.nullOr (types.enum [ "openpgp" "ssh" "x509" ]);
+          defaultText = literalExpression ''
+            "openpgp" for state version < 25.05,
+            undefined for state version ≥ 25.05
+          '';
+          description = ''
+            The signing method to use when signing commits and tags.
+            Valid values are `openpgp` (OpenPGP/GnuPG), `ssh` (SSH), and `x509` (X.509 certificates).
+          '';
+        };
+
+        signByDefault = mkOption {
+          type = types.nullOr types.bool;
+          default = null;
+          description = "Whether commits and tags should be signed by default.";
+        };
+
+        signer = mkOption {
+          type = types.nullOr types.str;
+          description = "Path to signer binary to use.";
+        };
       };
 
       extraConfig = mkOption {
@@ -219,6 +221,9 @@ in {
         enable = mkEnableOption "" // {
           description = ''
             Enable the automatic {command}`git maintenance`.
+
+            If you have SSH remotes, set {option}`programs.git.package` to a
+            git version with SSH support (eg: `pkgs.gitFull`).
 
             See <https://git-scm.com/docs/git-maintenance>.
           '';
@@ -409,9 +414,19 @@ in {
     };
   };
 
+  imports = [
+    (mkRenamedOptionModule [ "programs" "git" "signing" "gpgPath" ] [
+      "programs"
+      "git"
+      "signing"
+      "signer"
+    ])
+  ];
+
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [ cfg.package ];
+
       assertions = [{
         assertion = let
           enabled = [
@@ -475,12 +490,38 @@ in {
       (filterAttrs hasSmtp config.accounts.email.accounts);
     }
 
-    (mkIf (cfg.signing != null) {
-      programs.git.iniContent = {
-        user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
-        commit.gpgSign = mkDefault cfg.signing.signByDefault;
-        tag.gpgSign = mkDefault cfg.signing.signByDefault;
-        gpg.program = cfg.signing.gpgPath;
+    (mkIf (cfg.signing != { }) {
+      programs.git = {
+        signing = {
+          format = if (versionOlder config.home.stateVersion "25.05") then
+            (mkOptionDefault "openpgp")
+          else
+            (mkOptionDefault null);
+          signer = let
+            defaultSigners = {
+              openpgp = getExe config.programs.gpg.package;
+              ssh = getExe' pkgs.openssh "ssh-keygen";
+              x509 = getExe' config.programs.gpg.package "gpgsm";
+            };
+          in mkIf (cfg.signing.format != null)
+          (mkOptionDefault defaultSigners.${cfg.signing.format});
+        };
+
+        iniContent = mkMerge [
+          (mkIf (cfg.signing.key != null) {
+            user.signingKey = mkDefault cfg.signing.key;
+          })
+          (mkIf (cfg.signing.signByDefault != null) {
+            commit.gpgSign = mkDefault cfg.signing.signByDefault;
+            tag.gpgSign = mkDefault cfg.signing.signByDefault;
+          })
+          (mkIf (cfg.signing.format != null) {
+            gpg = {
+              format = mkDefault cfg.signing.format;
+              ${cfg.signing.format}.program = mkDefault cfg.signing.signer;
+            };
+          })
+        ];
       };
     })
 
