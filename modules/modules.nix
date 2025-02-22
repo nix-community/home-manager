@@ -273,7 +273,6 @@ let
     ./programs/wezterm.nix
     ./programs/wlogout.nix
     ./programs/wofi.nix
-    ./programs/wpaperd.nix
     ./programs/xmobar.nix
     ./programs/xplr.nix
     ./programs/xonsh.nix
@@ -426,6 +425,7 @@ let
     ./services/wlsunset.nix
     ./services/wluma.nix
     ./services/wob.nix
+    ./services/wpaperd.nix
     ./services/xcape.nix
     ./services/xembed-sni-proxy.nix
     ./services/xidlehook.nix

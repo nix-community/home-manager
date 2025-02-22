@@ -679,4 +679,10 @@
     github = "folliehiyuki";
     githubId = 67634026;
   };
+  "3ulalia" = {
+    name = "Eulalia del Sol";
+    email = "3ulalia@proton.me";
+    github = "3ulalia";
+    githubId = "179992797";
+  };
 }
