@@ -31776,6 +31776,91 @@ submodule</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.jqp.enable"></a><a class="term" href="options.xhtml#opt-programs.jqp.enable"><code class="option">programs.jqp.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable jqp, jq playground.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/jqp.nix" target="_top">
+&lt;home-manager/modules/programs/jqp.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.jqp.package"></a><a class="term" href="options.xhtml#opt-programs.jqp.package"><code class="option">programs.jqp.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The jqp package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.jqp</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/jqp.nix" target="_top">
+&lt;home-manager/modules/programs/jqp.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.jqp.settings"></a><a class="term" href="options.xhtml#opt-programs.jqp.settings"><code class="option">programs.jqp.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Jqp configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  theme = {
+    chromaStyleOverrides = {
+      kc = &quot;#009900 underline&quot;;
+    };
+    name = &quot;monokai&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/jqp.nix" target="_top">
+&lt;home-manager/modules/programs/jqp.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.jujutsu.enable"></a><a class="term" href="options.xhtml#opt-programs.jujutsu.enable"><code class="option">programs.jujutsu.enable</code>
   </a>
  </span>
