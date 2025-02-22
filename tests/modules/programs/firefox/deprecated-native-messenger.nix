@@ -1,18 +1,13 @@
 modulePath:
 { config, lib, ... }:
-
-with lib;
-
 let
-
-  moduleName = concatStringsSep "." modulePath;
+  moduleName = lib.concatStringsSep "." modulePath;
 
   firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
-
 in {
   imports = [ firefoxMockOverlay ];
 
-  config = mkIf config.test.enableBig (setAttrByPath modulePath {
+  config = lib.mkIf config.test.enableBig (lib.setAttrByPath modulePath {
     enable = true;
     enableGnomeExtensions = true;
   } // {

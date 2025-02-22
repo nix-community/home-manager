@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ lib, pkgs, ... }: {
   config = {
     programs.kitty = {
       enable = true;

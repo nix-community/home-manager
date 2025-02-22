@@ -1,8 +1,4 @@
-{ config, lib, ... }:
-
-with lib;
-
-{
+{ config, ... }: {
   config = {
     pam.sessionVariables = {
       V1 = "v1";

@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   config = {
     nmt.script = let dir = "home-files/.config/aerc";
