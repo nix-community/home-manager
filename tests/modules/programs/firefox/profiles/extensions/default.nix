@@ -1,5 +1,5 @@
 modulePath:
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 with lib;
 let
   cfg = getAttrFromPath modulePath config;
@@ -11,20 +11,25 @@ in {
   config = mkIf config.test.enableBig (setAttrByPath modulePath {
     enable = true;
     profiles.extensions = {
-      extensions.settings."uBlock0@raymondhill.net".settings = {
-        selectedFilterLists = [
-          "ublock-filters"
-          "ublock-badware"
-          "ublock-privacy"
-          "ublock-unbreak"
-          "ublock-quick-fixes"
-        ];
+      extensions = {
+        force = true;
+        settings = {
+          "uBlock0@raymondhill.net".settings = {
+            selectedFilterLists = [
+              "ublock-filters"
+              "ublock-badware"
+              "ublock-privacy"
+              "ublock-unbreak"
+              "ublock-quick-fixes"
+            ];
+          };
+        };
       };
     };
   } // {
     nmt.script = ''
       assertFileContent \
-        home-files/${cfg.configPath}/extensions/uBlock0@raymondhill.net/storage.js \
+        home-files/${cfg.configPath}/extensions/browser-extension-data/uBlock0@raymondhill.net/storage.js \
         ${./expected-storage.js}
     '';
   });
