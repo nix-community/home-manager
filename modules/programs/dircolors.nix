@@ -54,7 +54,16 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = let
+    dircolorsPath = if config.home.preferXdgDirectories then
+      "${config.xdg.configHome}/dir_colors"
+    else
+      "~/.dir_colors";
+
+    dircolorsConfig = concatStringsSep "\n" ([ ]
+      ++ mapAttrsToList formatLine cfg.settings ++ [ "" ]
+      ++ optional (cfg.extraConfig != "") cfg.extraConfig);
+  in mkIf cfg.enable (mkMerge [
     {
       # Add default settings from `dircolors --print-database`.
       programs.dircolors.settings = {
@@ -188,43 +197,25 @@ in {
         ".spx" = mkDefault "00;36";
         ".xspf" = mkDefault "00;36";
       };
-    }
-
-    (mkIf (!config.home.preferXdgDirectories) {
-      home.file.".dir_colors".text = concatStringsSep "\n" ([ ]
-        ++ mapAttrsToList formatLine cfg.settings ++ [ "" ]
-        ++ optional (cfg.extraConfig != "") cfg.extraConfig);
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        eval $(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)
+        eval $(${pkgs.coreutils}/bin/dircolors -b ${dircolorsPath})
       '';
 
       programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-        eval (${pkgs.coreutils}/bin/dircolors -c ~/.dir_colors)
+        eval (${pkgs.coreutils}/bin/dircolors -c ${dircolorsPath})
       '';
 
       # Set `LS_COLORS` before Oh My Zsh and `initExtra`.
       programs.zsh.initExtraBeforeCompInit = mkIf cfg.enableZshIntegration ''
-        eval $(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)
+        eval $(${pkgs.coreutils}/bin/dircolors -b ${dircolorsPath})
       '';
+    }
+    (mkIf (!config.home.preferXdgDirectories) {
+      home.file.".dir_colors".text = dircolorsConfig;
     })
     (mkIf config.home.preferXdgDirectories {
-      xdg.configFile.dir_colors.text = concatStringsSep "\n" ([ ]
-        ++ mapAttrsToList formatLine cfg.settings ++ [ "" ]
-        ++ optional (cfg.extraConfig != "") cfg.extraConfig);
-
-      programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        eval $(${pkgs.coreutils}/bin/dircolors -b ${config.xdg.configHome}/dir_colors)
-      '';
-
-      programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-        eval (${pkgs.coreutils}/bin/dircolors -c ${config.xdg.configHome}/dir_colors)
-      '';
-
-      # Set `LS_COLORS` before Oh My Zsh and `initExtra`.
-      programs.zsh.initExtraBeforeCompInit = mkIf cfg.enableZshIntegration ''
-        eval $(${pkgs.coreutils}/bin/dircolors -b ${config.xdg.configHome}/dir_colors)
-      '';
+      xdg.configFile.dir_colors.text = dircolorsConfig;
     })
   ]);
 }
