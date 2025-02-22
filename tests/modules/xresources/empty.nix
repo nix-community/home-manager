@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   xresources.properties = { };
 

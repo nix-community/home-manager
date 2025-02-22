@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   home.preferXdgDirectories = true;
 
