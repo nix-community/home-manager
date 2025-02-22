@@ -1,4 +1,4 @@
-{ ... }: {
+{
   config = {
     launchd.agents."test-service" = {
       enable = true;
