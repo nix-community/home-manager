@@ -2094,6 +2094,15 @@ in {
           Dockerfile-like syntax for fast builds and simplicity.
         '';
       }
+
+      {
+        time = "2025-02-22T16:53:20+00:00";
+        message = ''
+          A new module is available: 'programs.jqp'.
+
+          A TUI playground for experimentingn with `jq`.
+        '';
+      }
     ];
   };
 }

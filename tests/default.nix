@@ -171,6 +171,7 @@ in import nmtSrc {
     ./modules/programs/irssi
     ./modules/programs/jujutsu
     ./modules/programs/joplin-desktop
+    ./modules/programs/jqp
     ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/khal

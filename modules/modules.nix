@@ -140,6 +140,7 @@ let
     ./programs/java.nix
     ./programs/jetbrains-remote.nix
     ./programs/jq.nix
+    ./programs/jqp.nix
     ./programs/jujutsu.nix
     ./programs/joshuto.nix
     ./programs/joplin-desktop.nix
