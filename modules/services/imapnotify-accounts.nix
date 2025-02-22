@@ -1,10 +1,8 @@
 { pkgs, lib, ... }:
-
-with lib;
-
-{
+let inherit (lib) mkOption types;
+in {
   options.imapnotify = {
-    enable = mkEnableOption "imapnotify";
+    enable = lib.mkEnableOption "imapnotify";
 
     onNotify = mkOption {
       type = with types; either str (attrsOf str);
