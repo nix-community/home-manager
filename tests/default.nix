@@ -286,6 +286,7 @@ in import nmtSrc {
     ./modules/programs/boxxy
     ./modules/programs/cavalier
     ./modules/programs/eww
+    ./modules/programs/firefox
     ./modules/programs/firefox/firefox.nix
     ./modules/programs/firefox/floorp.nix
     ./modules/programs/foot
