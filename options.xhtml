@@ -56487,54 +56487,6 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.enableExtensionUpdateCheck"></a><a class="term" href="options.xhtml#opt-programs.vscode.enableExtensionUpdateCheck"><code class="option">programs.vscode.enableExtensionUpdateCheck</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether to enable update notifications for extensions.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.vscode.enableUpdateCheck"></a><a class="term" href="options.xhtml#opt-programs.vscode.enableUpdateCheck"><code class="option">programs.vscode.enableUpdateCheck</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether to enable update checks/notifications.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
  <a id="opt-programs.vscode.package"></a><a class="term" href="options.xhtml#opt-programs.vscode.package"><code class="option">programs.vscode.package</code>
   </a>
  </span>
@@ -56550,70 +56502,6 @@ package</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">pkgs.vscodium</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.vscode.extensions"></a><a class="term" href="options.xhtml#opt-programs.vscode.extensions"><code class="option">programs.vscode.extensions</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The extensions Visual Studio Code should be started with.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-list of package</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">[ ]</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">[ pkgs.vscode-extensions.bbenoist.nix ]</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.vscode.globalSnippets"></a><a class="term" href="options.xhtml#opt-programs.vscode.globalSnippets"><code class="option">programs.vscode.globalSnippets</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Defines global user snippets.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-JSON value</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">{ }</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  fixme = {
-    body = [
-      &quot;$LINE_COMMENT FIXME: $0&quot;
-    ];
-    description = &quot;Insert a FIXME remark&quot;;
-    prefix = [
-      &quot;fixme&quot;
-    ];
-  };
-}
-</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -56710,7 +56598,177 @@ absolute path</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.keybindings"></a><a class="term" href="options.xhtml#opt-programs.vscode.keybindings"><code class="option">programs.vscode.keybindings</code>
+ <a id="opt-programs.vscode.mutableExtensionsDir"></a><a class="term" href="options.xhtml#opt-programs.vscode.mutableExtensionsDir"><code class="option">programs.vscode.mutableExtensionsDir</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether extensions can be installed or updated manually
+or by Visual Studio Code. Mutually exclusive to
+programs.vscode.profiles.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
+&lt;home-manager/modules/programs/vscode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vscode.profiles"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles"><code class="option">programs.vscode.profiles</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A list of all VSCode profiles. Mutually exclusive
+to programs.vscode.mutableExtensionsDir</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
+&lt;home-manager/modules/programs/vscode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vscode.profiles._name_.enableExtensionUpdateCheck"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.enableExtensionUpdateCheck"><code class="option">programs.vscode.profiles.&lt;name&gt;.enableExtensionUpdateCheck</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable update notifications for extensions.
+Can only be set for the default profile, but
+it applies to all profiles.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
+&lt;home-manager/modules/programs/vscode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vscode.profiles._name_.enableUpdateCheck"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.enableUpdateCheck"><code class="option">programs.vscode.profiles.&lt;name&gt;.enableUpdateCheck</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable update checks/notifications.
+Can only be set for the default profile, but
+it applies to all profiles.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
+&lt;home-manager/modules/programs/vscode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vscode.profiles._name_.extensions"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.extensions"><code class="option">programs.vscode.profiles.&lt;name&gt;.extensions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The extensions Visual Studio Code should be started with.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">[ pkgs.vscode-extensions.bbenoist.nix ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
+&lt;home-manager/modules/programs/vscode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vscode.profiles._name_.globalSnippets"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.globalSnippets"><code class="option">programs.vscode.profiles.&lt;name&gt;.globalSnippets</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Defines global user snippets.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  fixme = {
+    body = [
+      &quot;$LINE_COMMENT FIXME: $0&quot;
+    ];
+    description = &quot;Insert a FIXME remark&quot;;
+    prefix = [
+      &quot;fixme&quot;
+    ];
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
+&lt;home-manager/modules/programs/vscode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vscode.profiles._name_.keybindings"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings</code>
   </a>
  </span>
 </dt>
@@ -56745,7 +56803,7 @@ list of (submodule)</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.keybindings._.args"></a><a class="term" href="options.xhtml#opt-programs.vscode.keybindings._.args"><code class="option">programs.vscode.keybindings.*.args</code>
+ <a id="opt-programs.vscode.profiles._name_.keybindings._.args"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings._.args"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings.*.args</code>
   </a>
  </span>
 </dt>
@@ -56774,7 +56832,7 @@ null or JSON value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.keybindings._.command"></a><a class="term" href="options.xhtml#opt-programs.vscode.keybindings._.command"><code class="option">programs.vscode.keybindings.*.command</code>
+ <a id="opt-programs.vscode.profiles._name_.keybindings._.command"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings._.command"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings.*.command</code>
   </a>
  </span>
 </dt>
@@ -56798,7 +56856,7 @@ string</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.keybindings._.key"></a><a class="term" href="options.xhtml#opt-programs.vscode.keybindings._.key"><code class="option">programs.vscode.keybindings.*.key</code>
+ <a id="opt-programs.vscode.profiles._name_.keybindings._.key"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings._.key"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings.*.key</code>
   </a>
  </span>
 </dt>
@@ -56822,7 +56880,7 @@ string</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.keybindings._.when"></a><a class="term" href="options.xhtml#opt-programs.vscode.keybindings._.when"><code class="option">programs.vscode.keybindings.*.when</code>
+ <a id="opt-programs.vscode.profiles._name_.keybindings._.when"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings._.when"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings.*.when</code>
   </a>
  </span>
 </dt>
@@ -56849,7 +56907,7 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.languageSnippets"></a><a class="term" href="options.xhtml#opt-programs.vscode.languageSnippets"><code class="option">programs.vscode.languageSnippets</code>
+ <a id="opt-programs.vscode.profiles._name_.languageSnippets"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.languageSnippets"><code class="option">programs.vscode.profiles.&lt;name&gt;.languageSnippets</code>
   </a>
  </span>
 </dt>
@@ -56888,35 +56946,7 @@ JSON value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.mutableExtensionsDir"></a><a class="term" href="options.xhtml#opt-programs.vscode.mutableExtensionsDir"><code class="option">programs.vscode.mutableExtensionsDir</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether extensions can be installed or updated manually
-or by Visual Studio Code.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">false</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.vscode.userSettings"></a><a class="term" href="options.xhtml#opt-programs.vscode.userSettings"><code class="option">programs.vscode.userSettings</code>
+ <a id="opt-programs.vscode.profiles._name_.userSettings"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.userSettings"><code class="option">programs.vscode.profiles.&lt;name&gt;.userSettings</code>
   </a>
  </span>
 </dt>
@@ -56948,7 +56978,7 @@ JSON value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.vscode.userTasks"></a><a class="term" href="options.xhtml#opt-programs.vscode.userTasks"><code class="option">programs.vscode.userTasks</code>
+ <a id="opt-programs.vscode.profiles._name_.userTasks"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.userTasks"><code class="option">programs.vscode.profiles.&lt;name&gt;.userTasks</code>
   </a>
  </span>
 </dt>
