@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
 
   cfg = config.editorconfig;
@@ -9,12 +7,12 @@ let
   iniFormat = pkgs.formats.ini { };
 
 in {
-  meta.maintainers = with maintainers; [ loicreynier ];
+  meta.maintainers = with lib.maintainers; [ loicreynier ];
 
   options.editorconfig = {
-    enable = mkEnableOption "EditorConfig home configuration file";
+    enable = lib.mkEnableOption "EditorConfig home configuration file";
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = iniFormat.type;
       default = { };
       description = ''
@@ -23,7 +21,7 @@ in {
         it must not be added here.
         See <https://editorconfig.org> for documentation.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           "*" = {
             charset = "utf-8";
@@ -39,9 +37,9 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.settings != { }) {
+  config = lib.mkIf (cfg.enable && cfg.settings != { }) {
     home.file.".editorconfig".text = let
-      renderedSettings = generators.toINIWithGlobalSection { } {
+      renderedSettings = lib.generators.toINIWithGlobalSection { } {
         globalSection = { root = true; };
         sections = cfg.settings;
       };
