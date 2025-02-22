@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ ... }: {
   config = {
     launchd.agents."test-service" = {
       enable = true;

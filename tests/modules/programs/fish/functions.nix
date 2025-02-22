@@ -1,7 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ lib, pkgs, ... }:
 let
 
   func = pkgs.writeText "func.fish" ''
