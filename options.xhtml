@@ -3652,6 +3652,35 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-accounts.email.accounts._name_.imapnotify.extraArgs"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.imapnotify.extraArgs"><code class="option">accounts.email.accounts.&lt;name&gt;.imapnotify.extraArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra arguments to pass to goimapnotify.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;-wait 1&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/imapnotify.nix" target="_top">
+&lt;home-manager/modules/services/imapnotify.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-accounts.email.accounts._name_.imapnotify.extraConfig"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.imapnotify.extraConfig"><code class="option">accounts.email.accounts.&lt;name&gt;.imapnotify.extraConfig</code>
   </a>
  </span>
@@ -3664,11 +3693,6 @@ JSON value</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  wait = 10;
-}
-</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
