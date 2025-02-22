@@ -1,8 +1,6 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ config, lib, ... }:
 let
+  inherit (lib) mkOption types;
 
   cfg = config.accounts.calendar;
 
@@ -70,7 +68,7 @@ let
     };
   };
 
-  calendarOpts = { name, config, ... }: {
+  calendarOpts = { name, ... }: {
     options = {
       name = mkOption {
         type = types.str;
@@ -125,7 +123,7 @@ in {
       type = types.str;
       example = ".calendar";
       apply = p:
-        if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
+        if lib.hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory in which to save calendars. May be a
         relative path, in which case it is relative the home
@@ -144,15 +142,15 @@ in {
       description = "List of calendars.";
     };
   };
-  config = mkIf (cfg.accounts != { }) {
+  config = lib.mkIf (cfg.accounts != { }) {
     assertions = let
-      primaries =
-        catAttrs "name" (filter (a: a.primary) (attrValues cfg.accounts));
+      primaries = lib.catAttrs "name"
+        (lib.filter (a: a.primary) (lib.attrValues cfg.accounts));
     in [{
-      assertion = length primaries <= 1;
+      assertion = lib.length primaries <= 1;
       message = "Must have at most one primary calendar account but found "
-        + toString (length primaries) + ", namely "
-        + concatStringsSep ", " primaries;
+        + toString (lib.length primaries) + ", namely "
+        + lib.concatStringsSep ", " primaries;
     }];
   };
 }
