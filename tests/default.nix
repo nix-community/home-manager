@@ -289,6 +289,7 @@ in import nmtSrc {
     ./modules/programs/firefox
     ./modules/programs/firefox/firefox.nix
     ./modules/programs/firefox/floorp.nix
+    ./modules/programs/firefox/librewolf.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel
