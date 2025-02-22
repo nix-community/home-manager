@@ -2,16 +2,13 @@
 let
   cfg = config.services.clipse;
   jsonFormat = pkgs.formats.json { };
-
-in with lib;
-
-{
-  meta.maintainers = [ lib.maintainers.dsoverlord ];
+in {
+  meta.maintainers = [ lib.hm.maintainers.dsoverlord ];
 
   options.services.clipse = {
-    enable = mkEnableOption "Enable clipse clipboard manager";
+    enable = lib.mkEnableOption "Enable clipse clipboard manager";
 
-    package = mkPackageOption pkgs "clipse" { };
+    package = lib.mkPackageOption pkgs "clipse" { };
 
     systemdTarget = lib.mkOption {
       type = lib.types.str;
@@ -26,24 +23,24 @@ in with lib;
       '';
     };
 
-    allowDuplicates = mkOption {
-      type = types.bool;
+    allowDuplicates = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       description = "Allow duplicates";
     };
 
-    historySize = mkOption {
-      type = types.int;
+    historySize = lib.mkOption {
+      type = lib.types.int;
       default = 100;
       description = "Number of history lines to keep.";
     };
 
-    theme = mkOption {
+    theme = lib.mkOption {
       type = jsonFormat.type;
 
       default = { useCustomTheme = false; };
 
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           useCustomTheme = true;
           DimmedDesc = "#ffffff";
@@ -69,7 +66,7 @@ in with lib;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.clipse" pkgs
         lib.platforms.linux)
@@ -90,7 +87,7 @@ in with lib;
     xdg.configFile."clipse/custom_theme.json".source =
       jsonFormat.generate "theme" cfg.theme;
 
-    systemd.user.services.clipse = {
+    systemd.user.services.clipse = lib.mkIf pkgs.stdenv.isLinux {
       Unit = {
         Description = "Clipse listener";
         PartOf = [ "graphical-session.target" ];
