@@ -81515,6 +81515,153 @@ signed integer</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.wluma.enable"></a><a class="term" href="options.xhtml#opt-services.wluma.enable"><code class="option">services.wluma.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Enable wluma, a service for automatic brightness adjustment.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wluma.nix" target="_top">
+&lt;home-manager/modules/services/wluma.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wluma.package"></a><a class="term" href="options.xhtml#opt-services.wluma.package"><code class="option">services.wluma.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Package providing <span class="command"><strong>wluma</strong></span>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.wluma</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wluma.nix" target="_top">
+&lt;home-manager/modules/services/wluma.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wluma.settings"></a><a class="term" href="options.xhtml#opt-services.wluma.settings"><code class="option">services.wluma.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration to use for wluma. See
+<a class="link" href="https://github.com/maximbaz/wluma/blob/main/config.toml"  target="_top">https://github.com/maximbaz/wluma/blob/main/config.toml</a>
+for available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  als = {
+    iio = {
+      path = &quot;&quot;;
+      thresholds = {
+        &quot;0&quot; = &quot;night&quot;;
+        &quot;20&quot; = &quot;dark&quot;;
+        &quot;250&quot; = &quot;normal&quot;;
+        &quot;500&quot; = &quot;bright&quot;;
+        &quot;80&quot; = &quot;dim&quot;;
+        &quot;800&quot; = &quot;outdoors&quot;;
+      };
+    };
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wluma.nix" target="_top">
+&lt;home-manager/modules/services/wluma.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wluma.systemd.enable"></a><a class="term" href="options.xhtml#opt-services.wluma.systemd.enable"><code class="option">services.wluma.systemd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Wluma systemd integration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wluma.nix" target="_top">
+&lt;home-manager/modules/services/wluma.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wluma.systemd.target"></a><a class="term" href="options.xhtml#opt-services.wluma.systemd.target"><code class="option">services.wluma.systemd.target</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The systemd target that will automatically start the Wluma service.</p><p>When setting this value to <code class="literal">&quot;sway-session.target&quot;</code>,
+make sure to also enable <code class="option">wayland.windowManager.sway.systemd.enable</code>,
+otherwise the service may never be started.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">config.wayland.systemd.target</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;sway-session.target&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wluma.nix" target="_top">
+&lt;home-manager/modules/services/wluma.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.wob.enable"></a><a class="term" href="options.xhtml#opt-services.wob.enable"><code class="option">services.wob.enable</code>
   </a>
  </span>
