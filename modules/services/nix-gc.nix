@@ -8,65 +8,6 @@ let
   inherit (lib) mkOption types;
 
   cfg = config.nix.gc;
-  darwinIntervals = [
-    "hourly"
-    "daily"
-    "weekly"
-    "monthly"
-    "semiannually"
-    "annually"
-  ];
-
-  mkCalendarInterval =
-    frequency:
-    let
-      freq = {
-        "hourly" = [ { Minute = 0; } ];
-        "daily" = [
-          {
-            Hour = 0;
-            Minute = 0;
-          }
-        ];
-        "weekly" = [
-          {
-            Weekday = 1;
-            Hour = 0;
-            Minute = 0;
-          }
-        ];
-        "monthly" = [
-          {
-            Day = 1;
-            Hour = 0;
-            Minute = 0;
-          }
-        ];
-        "semiannually" = [
-          {
-            Month = 1;
-            Day = 1;
-            Hour = 0;
-            Minute = 0;
-          }
-          {
-            Month = 7;
-            Day = 1;
-            Hour = 0;
-            Minute = 0;
-          }
-        ];
-        "annually" = [
-          {
-            Month = 1;
-            Day = 1;
-            Hour = 0;
-            Minute = 0;
-          }
-        ];
-      };
-    in
-    freq.${frequency} or null;
 
   nixPackage =
     if config.nix.enable && config.nix.package != null then config.nix.package else pkgs.nix;
@@ -95,8 +36,7 @@ in
 
           On Linux this is a string as defined by {manpage}`systemd.time(7)`.
 
-          On Darwin it must be one of: ${lib.concatStringsSep ", " darwinIntervals}, which are
-          implemented as defined in the manual page above.
+          $lib.hm.darwin.{intervalDocumentation}
         '';
       };
 
@@ -170,10 +110,7 @@ in
 
       (lib.mkIf pkgs.stdenv.isDarwin {
         assertions = [
-          {
-            assertion = lib.elem cfg.frequency darwinIntervals;
-            message = "On Darwin nix.gc.frequency must be one of: ${lib.concatStringsSep ", " darwinIntervals}.";
-          }
+          (lib.hm.darwin.assertInterval "nix.gc.frequency" cfg.frequency pkgs)
         ];
 
         launchd.agents.nix-gc = {
@@ -182,7 +119,7 @@ in
             ProgramArguments = [
               "${nixPackage}/bin/nix-collect-garbage"
             ] ++ lib.optional (cfg.options != null) cfg.options;
-            StartCalendarInterval = mkCalendarInterval cfg.frequency;
+            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
           };
         };
       })
