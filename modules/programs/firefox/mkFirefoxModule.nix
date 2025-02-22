@@ -207,6 +207,7 @@ let
       package.override (old: {
         cfg = old.cfg or { } // fcfg;
         extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+        pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
       })
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
@@ -780,6 +781,14 @@ in {
         also need to set the NixOS option
         `services.gnome.gnome-browser-connector.enable` to
         `true`.
+      '';
+    };
+
+    pkcs11Modules = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      description = ''
+        Additional packages to be loaded as PKCS #11 modules in Firefox.
       '';
     };
   };
