@@ -64912,6 +64912,180 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.clipse.enable"></a><a class="term" href="options.xhtml#opt-services.clipse.enable"><code class="option">services.clipse.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Enable clipse clipboard manager.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.package"></a><a class="term" href="options.xhtml#opt-services.clipse.package"><code class="option">services.clipse.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The clipse package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.clipse</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.allowDuplicates"></a><a class="term" href="options.xhtml#opt-services.clipse.allowDuplicates"><code class="option">services.clipse.allowDuplicates</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Allow duplicates</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.historySize"></a><a class="term" href="options.xhtml#opt-services.clipse.historySize"><code class="option">services.clipse.historySize</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Number of history lines to keep.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">100</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.systemdTarget"></a><a class="term" href="options.xhtml#opt-services.clipse.systemdTarget"><code class="option">services.clipse.systemdTarget</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The systemd target that will automatically start the clipse service.</p><p>When setting this value to <code class="literal">&quot;sway-session.target&quot;</code>,
+make sure to also enable <code class="option">wayland.windowManager.sway.systemd.enable</code>,
+otherwise the service may never be started.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;graphical-session.target&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;sway-session.target&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.theme"></a><a class="term" href="options.xhtml#opt-services.clipse.theme"><code class="option">services.clipse.theme</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/clipse/custom_theme.json</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  useCustomTheme = false;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  useCustomTheme = true;
+  DimmedDesc = &quot;#ffffff&quot;;
+  DimmedTitle = &quot;#ffffff&quot;;
+  FilteredMatch = &quot;#ffffff&quot;;
+  NormalDesc = &quot;#ffffff&quot;;
+  NormalTitle = &quot;#ffffff&quot;;
+  SelectedDesc = &quot;#ffffff&quot;;
+  SelectedTitle = &quot;#ffffff&quot;;
+  SelectedBorder = &quot;#ffffff&quot;;
+  SelectedDescBorder = &quot;#ffffff&quot;;
+  TitleFore = &quot;#ffffff&quot;;
+  Titleback = &quot;#434C5E&quot;;
+  StatusMsg = &quot;#ffffff&quot;;
+  PinIndicatorColor = &quot;#ff0000&quot;;
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.comodoro.enable"></a><a class="term" href="options.xhtml#opt-services.comodoro.enable"><code class="option">services.comodoro.enable</code>
   </a>
  </span>
