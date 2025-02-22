@@ -137,6 +137,18 @@ let
           List of ${name} dictionaries to install.
         '';
       };
+      nativeMessagingHosts = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression ''
+          [
+            pkgs.kdePackages.plasma-browser-integration
+          ]
+        '';
+        description = ''
+          List of ${name} native messaging hosts to install.
+        '';
+      };
     };
 
   browserConfig = cfg:
@@ -178,6 +190,11 @@ let
         value.source = pkg;
       };
 
+      nativeMessagingHostsJoined = pkgs.symlinkJoin {
+        name = "${drvName}-native-messaging-hosts";
+        paths = cfg.nativeMessagingHosts;
+      };
+
       package = if cfg.commandLineArgs != [ ] then
         cfg.package.override {
           commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
@@ -189,7 +206,13 @@ let
       home.packages = [ package ];
       home.file = optionalAttrs (!isProprietaryChrome) (listToAttrs
         ((map extensionJson cfg.extensions)
-          ++ (map dictionary cfg.dictionaries)));
+          ++ (map dictionary cfg.dictionaries)) // {
+            "${configDir}/NativeMessagingHosts" = {
+              source =
+                "${nativeMessagingHostsJoined}/etc/chromium/native-messaging-hosts";
+              recursive = true;
+            };
+          });
     };
 
 in {
