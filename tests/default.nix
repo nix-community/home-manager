@@ -146,6 +146,7 @@ in import nmtSrc {
     ./modules/programs/darcs
     ./modules/programs/dircolors
     ./modules/programs/direnv
+    ./modules/programs/earthly
     ./modules/programs/emacs
     ./modules/programs/fastfetch
     ./modules/programs/feh

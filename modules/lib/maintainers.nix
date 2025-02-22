@@ -667,4 +667,10 @@
       fingerprint = "AD32 73D4 5E0E 9478 E826  543F EDB2 C634 166A E6AD";
     }];
   };
+  folliehiyuki = {
+    name = "Hoang Nguyen";
+    email = "folliekazetani@protonmail.com";
+    github = "folliehiyuki";
+    githubId = 67634026;
+  };
 }
