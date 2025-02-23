@@ -25,6 +25,15 @@
     - modules/programs/neovim.nix
     - tests/modules/programs/neovim/**/*
 
+"program: firefox":
+  - changed-files:
+    - any-glob-to-any-file:
+      - modules/programs/firefox/**/*
+      - tests/modules/programs/firefox/**/*
+      - modules/misc/mozilla-messaging-hosts.nix
+      - modules/programs/floorp.nix
+      - modules/programs/librewolf.nix
+
 "shell":
 - changed-files:
   - any-glob-to-any-file:
