@@ -21,9 +21,9 @@
       xautolockExtraOptions = "xautolock.extraOptions";
       enableDetectSleep = "xautolock.detectSleep";
     };
-  in mapAttrsToList (old: new:
+  in lib.mapAttrsToList (old: new:
     builtins.replaceStrings [ "\n" ] [ " " ] ''
       The option `services.screen-locker.${old}' defined in
-      ${showFiles options.services.screen-locker.${old}.files}
+      ${lib.showFiles options.services.screen-locker.${old}.files}
       has been renamed to `services.screen-locker.${new}'.'') renamed;
 }
