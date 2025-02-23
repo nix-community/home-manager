@@ -139,6 +139,14 @@ in {
       };
 
       gtk2 = {
+        force = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Whether to force replace the existing configuration.
+          '';
+        };
+
         extraConfig = mkOption {
           type = types.lines;
           default = "";
@@ -267,9 +275,12 @@ in {
       cfg.cursorTheme
     ];
 
-    home.file.${cfg2.configLocation}.text =
-      concatMapStrings (l: l + "\n") (mapAttrsToList formatGtk2Option gtkIni)
-      + cfg2.extraConfig + "\n";
+    home.file.${cfg2.configLocation} = {
+      force = cfg2.force;
+      text =
+        concatMapStrings (l: l + "\n") (mapAttrsToList formatGtk2Option gtkIni)
+        + cfg2.extraConfig + "\n";
+    };
 
     home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
