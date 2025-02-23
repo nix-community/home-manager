@@ -2113,6 +2113,7 @@ in {
           This replaces the existing module, 'programs.wpaperd', and adds a
           systemd service to ensure its execution.
         '';
+      }
 
       {
         time = "2025-02-13T16:11:59+00:00";
