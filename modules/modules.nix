@@ -212,6 +212,7 @@ let
     ./programs/powerline-go.nix
     ./programs/pqiv.nix
     ./programs/pubs.nix
+    ./programs/pwninit.nix
     ./programs/pyenv.nix
     ./programs/pylint.nix
     ./programs/qcal.nix
