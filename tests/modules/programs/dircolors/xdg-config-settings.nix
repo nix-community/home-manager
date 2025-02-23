@@ -1,5 +1,7 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   config = {
+    home.preferXdgDirectories = true;
+
     programs.zsh.enable = true;
 
     programs.dircolors = {
@@ -18,13 +20,12 @@
 
     nmt.script = ''
       assertFileContent \
-        home-files/.dir_colors \
+        home-files/.config/dir_colors \
         ${./settings-expected.conf}
-
 
       assertFileRegex  \
         home-files/.zshrc \
-        "eval \$(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)"
+        "eval \$(${pkgs.coreutils}/bin/dircolors -b ${config.xdg.configHome}/dir_colors)"
     '';
   };
 }

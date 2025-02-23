@@ -2096,6 +2096,25 @@ in {
       }
 
       {
+        time = "2025-02-22T16:53:20+00:00";
+        message = ''
+          A new module is available: 'programs.jqp'.
+
+          A TUI playground for experimenting with `jq`.
+        '';
+      }
+
+      {
+        time = "2025-02-22T16:46:56+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wpaperd'.
+
+          This replaces the existing module, 'programs.wpaperd', and adds a
+          systemd service to ensure its execution.
+        '';
+
+      {
         time = "2025-02-13T16:11:59+00:00";
         message = ''
           A new module is available: 'programs.clock-rs'.

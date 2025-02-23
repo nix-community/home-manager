@@ -172,6 +172,7 @@ in import nmtSrc {
     ./modules/programs/irssi
     ./modules/programs/jujutsu
     ./modules/programs/joplin-desktop
+    ./modules/programs/jqp
     ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/khal
@@ -288,8 +289,10 @@ in import nmtSrc {
     ./modules/programs/boxxy
     ./modules/programs/cavalier
     ./modules/programs/eww
+    ./modules/programs/firefox
     ./modules/programs/firefox/firefox.nix
     ./modules/programs/firefox/floorp.nix
+    ./modules/programs/firefox/librewolf.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel
@@ -317,7 +320,6 @@ in import nmtSrc {
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi
-    ./modules/programs/wpaperd
     ./modules/programs/xmobar
     ./modules/programs/yambar
     ./modules/programs/yt-dlp
@@ -329,6 +331,7 @@ in import nmtSrc {
     ./modules/services/cachix-agent
     ./modules/services/cliphist
     ./modules/services/clipman
+    ./modules/services/clipse
     ./modules/services/comodoro
     ./modules/services/copyq
     ./modules/services/conky
@@ -394,6 +397,7 @@ in import nmtSrc {
     ./modules/services/window-managers/wayfire
     ./modules/services/wlsunset
     ./modules/services/wob
+    ./modules/services/wpaperd
     ./modules/services/xsettingsd
     ./modules/services/yubikey-agent
     ./modules/systemd
