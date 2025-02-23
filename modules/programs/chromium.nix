@@ -207,11 +207,12 @@ let
       home.file = optionalAttrs (!isProprietaryChrome) (listToAttrs
         ((map extensionJson cfg.extensions)
           ++ (map dictionary cfg.dictionaries)) // {
-            "${configDir}/NativeMessagingHosts" = {
-              source =
-                "${nativeMessagingHostsJoined}/etc/chromium/native-messaging-hosts";
-              recursive = true;
-            };
+            "${configDir}/NativeMessagingHosts" =
+              lib.mkIf (cfg.nativeMessagingHosts != [ ]) {
+                source =
+                  "${nativeMessagingHostsJoined}/etc/chromium/native-messaging-hosts";
+                recursive = true;
+              };
           });
     };
 
