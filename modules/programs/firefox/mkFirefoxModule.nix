@@ -280,11 +280,7 @@ in {
     vendorPath = mkOption {
       internal = true;
       type = with types; nullOr str;
-      default = with platforms;
-        if isDarwin then
-          darwin.vendorPath or null
-        else
-          linux.vendorPath or null;
+      default = null;
       example = ".mozilla";
       description =
         "Directory containing the native messaging hosts directory.";
@@ -299,7 +295,7 @@ in {
       description = "Directory containing the ${appName} configuration files.";
     };
 
-    nativeMessagingHosts = optionalAttrs (cfg.vendorPath != null) (mkOption {
+    nativeMessagingHosts = mkOption {
       inherit visible;
       type = types.listOf types.package;
       default = [ ];
@@ -307,7 +303,7 @@ in {
         Additional packages containing native messaging hosts that should be
         made available to ${appName} extensions.
       '';
-    });
+    };
 
     finalPackage = mkOption {
       inherit visible;
@@ -852,6 +848,9 @@ in {
       will be removed in the future. Please change to overriding the package
       configuration using '${moduleName}.package' instead. You can refer to
       its example for how to do this.
+    '' ++ optional (cfg.vendorPath != null) ''
+      Using '${moduleName}.vendorPath' has been deprecated and
+      will be removed in the future. Native messaging hosts will function normally without specifying this path.
     '';
 
     home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
