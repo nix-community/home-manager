@@ -227,8 +227,7 @@ in {
 
     importantPrefixes = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [ "$" "bezier" "name" ]
-        ++ lib.optionals cfg.sourceFirst [ "source" ];
+      default = [ "$" "bezier" "name" ];
       example = [ "$" "bezier" ];
       description = ''
         List of prefix of attributes to source at the top of the config.
@@ -256,6 +255,9 @@ in {
       shouldGenerate = cfg.systemd.enable || cfg.extraConfig != ""
         || cfg.settings != { } || cfg.plugins != [ ];
 
+      importantPrefixes = cfg.importantPrefixes
+        ++ lib.optional cfg.sourceFirst "source";
+
       pluginsToHyprconf = plugins:
         lib.hm.generators.toHyprconf {
           attrs = {
@@ -267,7 +269,7 @@ in {
                   entry;
             in map mkEntry cfg.plugins;
           };
-          inherit (cfg) importantPrefixes;
+          inherit importantPrefixes;
         };
     in lib.mkIf shouldGenerate {
       text = lib.optionalString cfg.systemd.enable systemdActivation
@@ -276,7 +278,7 @@ in {
         + lib.optionalString (cfg.settings != { })
         (lib.hm.generators.toHyprconf {
           attrs = cfg.settings;
-          inherit (cfg) importantPrefixes;
+          inherit importantPrefixes;
         }) + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
       onChange = lib.mkIf (cfg.package != null) ''

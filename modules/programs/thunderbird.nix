@@ -174,6 +174,7 @@ in {
         internal = true;
         type = types.nullOr types.ints.unsigned;
         default = if isDarwin then null else 2;
+        defaultText = literalExpression "if isDarwin then null else 2";
         description = "profile version, set null for nix-darwin";
       };
 
@@ -347,8 +348,6 @@ in {
         type = types.bool;
         default = true;
         example = false;
-        visible = isDarwin;
-        readOnly = !isDarwin;
         description = ''
           Warn to set environment variables before using this module. Only
           relevant on Darwin.

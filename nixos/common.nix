@@ -21,11 +21,11 @@ let
     } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
-        imports = import ../modules/modules.nix {
+        imports = (import ../modules/modules.nix {
           inherit pkgs;
           lib = extendedLib;
           useNixpkgsModule = !cfg.useGlobalPkgs;
-        };
+        }) ++ cfg.sharedModules;
 
         config = {
           submoduleSupport.enable = true;
@@ -47,7 +47,7 @@ let
           nix.package = config.nix.package;
         };
       })
-    ] ++ cfg.sharedModules;
+    ];
   };
 
 in {
