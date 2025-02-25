@@ -65263,6 +65263,150 @@ signed integer</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.clipse.imageDisplay.heightCut"></a><a class="term" href="options.xhtml#opt-services.clipse.imageDisplay.heightCut"><code class="option">services.clipse.imageDisplay.heightCut</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Height cut</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">2</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.imageDisplay.scaleX"></a><a class="term" href="options.xhtml#opt-services.clipse.imageDisplay.scaleX"><code class="option">services.clipse.imageDisplay.scaleX</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Image scaling factor X</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">9</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.imageDisplay.scaleY"></a><a class="term" href="options.xhtml#opt-services.clipse.imageDisplay.scaleY"><code class="option">services.clipse.imageDisplay.scaleY</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Image scaling factor Y</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">9</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.imageDisplay.type"></a><a class="term" href="options.xhtml#opt-services.clipse.imageDisplay.type"><code class="option">services.clipse.imageDisplay.type</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Preview image method</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “basic”, “kitty”, “sixel”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;basic&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipse.keyBindings"></a><a class="term" href="options.xhtml#opt-services.clipse.keyBindings"><code class="option">services.clipse.keyBindings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Custom key bindings</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting"> {
+   &quot;choose&quot;: &quot;enter&quot;,
+   &quot;clearSelected&quot;: &quot;S&quot;,
+   &quot;down&quot;: &quot;down&quot;,
+   &quot;end&quot;: &quot;end&quot;,
+   &quot;filter&quot;: &quot;/&quot;,
+   &quot;home&quot;: &quot;home&quot;,
+   &quot;more&quot;: &quot;?&quot;,
+   &quot;nextPage&quot;: &quot;right&quot;,
+   &quot;prevPage&quot;: &quot;left&quot;,
+   &quot;preview&quot;: &quot;t&quot;,
+   &quot;quit&quot;: &quot;q&quot;,
+   &quot;remove&quot;: &quot;x&quot;,
+   &quot;selectDown&quot;: &quot;ctrl+down&quot;,
+   &quot;selectSingle&quot;: &quot;s&quot;,
+   &quot;selectUp&quot;: &quot;ctrl+up&quot;,
+   &quot;togglePin&quot;: &quot;p&quot;,
+   &quot;togglePinned&quot;: &quot;tab&quot;,
+   &quot;up&quot;: &quot;up&quot;,
+   &quot;yankFilter&quot;: &quot;ctrl+s&quot;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipse.nix" target="_top">
+&lt;home-manager/modules/services/clipse.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.clipse.systemdTarget"></a><a class="term" href="options.xhtml#opt-services.clipse.systemdTarget"><code class="option">services.clipse.systemdTarget</code>
   </a>
  </span>
