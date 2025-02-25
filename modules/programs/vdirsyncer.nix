@@ -34,8 +34,12 @@ let
     });
 
   remoteStorage = a:
-    filterAttrs (_: v: v != null)
-    ((getAttrs [ "type" "url" "userName" "passwordCommand" ] a.remote)
+    let
+      remoteArgs = mapAttrs (
+        # rename to avoid conflict with vdirsyncer's auth
+        n: v: if n == "auth" then { "remoteAuth" = v; } else { ${n} = v; })
+        (getAttrs [ "type" "url" "auth" ] a.remote);
+    in filterAttrs (_: v: v != null) (remoteArgs
       // (if a.vdirsyncer == null then
         { }
       else
@@ -224,6 +228,7 @@ in {
           "password"
           "passwordCommand"
           "passwordPrompt"
+          "remoteAuth"
           "verify"
           "verifyFingerprint"
           "auth"

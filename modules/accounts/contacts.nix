@@ -40,6 +40,10 @@ let
     };
 
   remoteModule = types.submodule {
+    imports = [
+      (mkRenamedOptionModule [ "passwordCommand" ] [ "auth" "passwordCommand" ])
+      (mkRenamedOptionModule [ "userName" ] [ "auth" "userName" ])
+    ];
     options = {
       type = mkOption {
         type = types.enum [ "carddav" "http" "google_contacts" ];
@@ -52,12 +56,6 @@ let
         description = "The URL of the storage.";
       };
 
-      userName = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "User name for authentication.";
-      };
-
       # userNameCommand = mkOption {
       #   type = types.nullOr (types.listOf types.str);
       #   default = null;
@@ -66,15 +64,32 @@ let
       #     A command that prints the user name to standard output.
       #   '';
       # };
+      auth = mkOption {
+        type = types.submodule {
+          options = {
+            userName = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = "User name for authentication.";
+            };
 
-      passwordCommand = mkOption {
-        type = types.nullOr (types.listOf types.str);
-        default = null;
-        example = [ "pass" "caldav" ];
-        description = ''
-          A command that prints the password to standard output.
-        '';
+            passwordCommand = mkOption {
+              type =
+                types.nullOr (types.either types.str (types.listOf types.str));
+              default = null;
+              apply = p: if isString p then splitString " " p else p;
+              example = "pass caldav";
+              description = ''
+                A command, which when run writes the account password on
+                standard output.
+              '';
+            };
+          };
+        };
+        default = { };
+        description = "Authentication with the storage.";
       };
+
     };
   };
 

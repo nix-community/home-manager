@@ -147,7 +147,7 @@ let
         Username for basic HTTP authentication.
 
         If `null`, defaults to
-        [](#opt-accounts.email.accounts._name_.userName).
+        [](#opt-accounts.email.accounts._name_.auth.userName).
       '';
     };
 
@@ -161,7 +161,7 @@ let
         authentication.
 
         If `null`, defaults to
-        [](#opt-accounts.email.accounts._name_.passwordCommand).
+        [](#opt-accounts.email.accounts._name_.auth.passwordCommand).
       '';
     };
 
