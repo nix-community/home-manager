@@ -35,6 +35,64 @@ in {
       description = "Number of history lines to keep.";
     };
 
+    imageDisplay = {
+      type = lib.mkOption {
+        type = lib.types.enum [ "basic" "kitty" "sixel" ];
+        default = "basic";
+        description = "Preview image method";
+      };
+
+      scaleX = lib.mkOption {
+        type = lib.types.int;
+        default = 9;
+        description = "Image scaling factor X";
+      };
+
+      scaleY = lib.mkOption {
+        type = lib.types.int;
+        default = 9;
+        description = "Image scaling factor Y";
+      };
+
+      heightCut = lib.mkOption {
+        type = lib.types.int;
+        default = 2;
+        description = "Height cut";
+      };
+    };
+
+    keyBindings = lib.mkOption {
+      type = jsonFormat.type;
+
+      default = { };
+
+      example = lib.literalExpression ''
+         {
+           "choose": "enter",
+           "clearSelected": "S",
+           "down": "down",
+           "end": "end",
+           "filter": "/",
+           "home": "home",
+           "more": "?",
+           "nextPage": "right",
+           "prevPage": "left",
+           "preview": "t",
+           "quit": "q",
+           "remove": "x",
+           "selectDown": "ctrl+down",
+           "selectSingle": "s",
+           "selectUp": "ctrl+up",
+           "togglePin": "p",
+           "togglePinned": "tab",
+           "up": "up",
+           "yankFilter": "ctrl+s"
+        }
+      '';
+
+      description = "Custom key bindings";
+    };
+
     theme = lib.mkOption {
       type = jsonFormat.type;
 
@@ -82,6 +140,8 @@ in {
         logFile = "clipse.log";
         themeFile = "custom_theme.json";
         tempDir = "tmp_files";
+        keyBindings = cfg.keyBindings;
+        imageDisplay = cfg.imageDisplay;
       };
 
     xdg.configFile."clipse/custom_theme.json".source =
