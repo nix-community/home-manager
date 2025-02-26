@@ -127,6 +127,7 @@ in {
           ExecStart = concatStringsSep " "
             ([ "${cfg.xss-lock.package}/bin/xss-lock" "-s \${XDG_SESSION_ID}" ]
               ++ cfg.xss-lock.extraOptions ++ [ "-- ${cfg.lockCmd}" ]);
+          Restart = "always";
         };
       };
     }
@@ -153,6 +154,7 @@ in {
             "-locker '${pkgs.systemd}/bin/loginctl lock-session \${XDG_SESSION_ID}'"
           ] ++ optional cfg.xautolock.detectSleep "-detectsleep"
             ++ cfg.xautolock.extraOptions);
+          Restart = "always";
         };
       };
     })
