@@ -18,12 +18,8 @@ in {
       unwrappedPackageName = "firefox-unwrapped";
       visible = true;
 
-      platforms.linux = rec {
-        vendorPath = ".mozilla";
-        configPath = "${vendorPath}/firefox";
-      };
+      platforms.linux = rec { configPath = ".mozilla/firefox"; };
       platforms.darwin = {
-        vendorPath = "Library/Application Support/Mozilla";
         configPath = "Library/Application Support/Firefox";
       };
     })
