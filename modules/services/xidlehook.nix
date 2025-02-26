@@ -153,6 +153,6 @@ in {
         ExecStart = "${script}";
       };
       Install.WantedBy = [ "graphical-session.target" ];
-    };
+    } // pkgs.lib.optionalAttrs (!cfg.once) { Restart = "always"; };
   };
 }
