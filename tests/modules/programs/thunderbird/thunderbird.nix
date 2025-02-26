@@ -64,9 +64,6 @@
       name = "thunderbird";
     };
 
-    # Disable warning so that platforms' behavior is the same
-    darwinSetupWarning = false;
-
     profiles = {
       first = {
         isDefault = true;
