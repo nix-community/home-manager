@@ -86,7 +86,7 @@ let
     modules = import ../modules/modules.nix {
       inherit lib pkgs;
       check = false;
-    } ++ [ scrubbedPkgsModule ];
+    } ++ [ scrubbedPkgsModule { home.stateVersion = release; } ];
     variablelistId = "home-manager-options";
   };
 
