@@ -29,13 +29,9 @@ in {
       wrappedPackageName = "librewolf";
       unwrappedPackageName = "librewolf-unwrapped";
 
-      platforms.linux = {
-        configPath = ".librewolf";
-        vendorPath = ".mozilla";
-      };
+      platforms.linux = { configPath = ".librewolf"; };
       platforms.darwin = {
         configPath = "Library/Application Support/LibreWolf";
-        vendorPath = "Library/Application Support/Mozilla";
       };
 
       enableBookmarks = false;
