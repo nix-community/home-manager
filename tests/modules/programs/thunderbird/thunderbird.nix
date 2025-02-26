@@ -38,9 +38,7 @@
   programs.thunderbird = {
     enable = true;
 
-    # Darwin doesn't support wrapped Thunderbird, using unwrapped instead;
-    # using -latest- because ESR is currently broken on Darwin
-    package = realPkgs.thunderbird-latest-unwrapped;
+    package = realPkgs.thunderbird;
 
     profiles = {
       first = {
