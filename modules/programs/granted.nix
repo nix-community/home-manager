@@ -5,7 +5,7 @@ with lib;
 let
 
   cfg = config.programs.granted;
-  package = pkgs.granted;
+  package = pkgs.granted.override { withFish = cfg.enableFishIntegration; };
 
 in {
   meta.maintainers = [ hm.maintainers.wcarlsen ];
@@ -15,6 +15,9 @@ in {
 
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -26,6 +29,12 @@ in {
         source ${package}/bin/assume "$@"
         unset GRANTED_ALIAS_CONFIGURED
       }
+    '';
+
+    programs.fish.functions.assume = mkIf cfg.enableFishIntegration ''
+      set -x GRANTED_ALIAS_CONFIGURED "true"
+      source ${package}/share/assume.fish
+      set -e GRANTED_ALIAS_CONFIGURED
     '';
   };
 }
