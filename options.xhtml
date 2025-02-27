@@ -9905,7 +9905,32 @@ null or (list of string)</p>
 with the -S flag to <span class="command"><strong>launchctl</strong></span>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
+null or string or list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
+&lt;home-manager/modules/launchd/default.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-launchd.agents._name_.config.LowPriorityBackgroundIO"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.LowPriorityBackgroundIO"><code class="option">launchd.agents.&lt;name&gt;.config.LowPriorityBackgroundIO</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>This optional key specifies whether the kernel should consider this daemon to be low priority when
+doing file system I/O when the process is throttled with the Darwin-background classification.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
@@ -9957,69 +9982,17 @@ be a boolean and set to true.  Alternatively, a dictionary can be used instead o
 launchd.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (submodule)</p>
+null or (attribute set of (boolean or (submodule)))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  ResetAtClose = true;
+  &quot;org.nixos.service&quot; = {
+    ResetAtClose = true;
+  };
 }
 </code></pre>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
-&lt;home-manager/modules/launchd/default.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-launchd.agents._name_.config.MachServices.HideUntilCheckIn"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.MachServices.HideUntilCheckIn"><code class="option">launchd.agents.&lt;name&gt;.config.MachServices.HideUntilCheckIn</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Reserve the name in the namespace, but cause bootstrap_look_up() to fail until the job has
-checked in with launchd.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
-&lt;home-manager/modules/launchd/default.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-launchd.agents._name_.config.MachServices.ResetAtClose"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.MachServices.ResetAtClose"><code class="option">launchd.agents.&lt;name&gt;.config.MachServices.ResetAtClose</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>If this boolean is false, the port is recycled, thus leaving clients to remain oblivious to the
-demand nature of job. If the value is set to true, clients receive port death notifications when
-the job lets go of the receive right. The port will be recreated atomically with respect to bootstrap_look_up()
-calls, so that clients can trust that after receiving a port death notification,
-the new port will have already been recreated. Setting the value to true should be done with
-care. Not all clients may be able to handle this behavior. The default value is false.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -10092,7 +10065,7 @@ resource limits based on what kind of job it is. If left unspecified, the system
 resource limits to the job, throttling its CPU usage and I/O bandwidth. The following are valid values:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">Background</span></dt><dd><p>Background jobs are generally processes that do work that was not directly requested by the user.
 The resource limits applied to Background jobs are intended to prevent them from disrupting the
 user experience.</p></dd><dt><span class="term">Standard</span></dt><dd><p>Standard jobs are equivalent to no ProcessType being set.</p></dd><dt><span class="term">Adaptive</span></dt><dd><p>Adaptive jobs move between the Background and Interactive classifications based on activity over
-XPC connections. See <span class="citerefentry"><span class="refentrytitle">xpc_transaction_begin</span>(3)</span> for details.</p></dd><dt><span class="term">Interactive</span></dt><dd><p>Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
+XPC connections. See <code class="literal">xpc_transaction_begin(3)</code> for details.</p></dd><dt><span class="term">Interactive</span></dt><dd><p>Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
 jobs are critical to maintaining a responsive user experience, and this key should only be
 used if an app’s ability to be responsive depends on it, and cannot be made Adaptive.</p></dd></dl></div>
 
@@ -10223,6 +10196,58 @@ null or string</p>
 <dd>
 <p>This optional key is used to control whether your job is launched once at the time the job is loaded.
 The default is false.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
+&lt;home-manager/modules/launchd/default.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-launchd.agents._name_.config.ServiceIPC"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.ServiceIPC"><code class="option">launchd.agents.&lt;name&gt;.config.ServiceIPC</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>This optional key specifies whether the job participates in advanced
+communication with launchd. The default is false. This flag is
+incompatible with the inetdCompatibility key.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
+&lt;home-manager/modules/launchd/default.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-launchd.agents._name_.config.SessionCreate"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.SessionCreate"><code class="option">launchd.agents.&lt;name&gt;.config.SessionCreate</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>This key specifies that the job should be spawned into a new security
+audit session rather than the default session for the context is belongs
+to. See auditon(2) for details.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 null or boolean</p>
@@ -10874,143 +10899,25 @@ null or absolute path</p>
  </span>
 </dt>
 <dd>
-<p>This optional key causes the job to be started every calendar interval as specified. Missing arguments
-are considered to be wildcard. The semantics are much like <code class="literal">crontab(5)</code>.  Unlike cron which skips job
-invocations when the computer is asleep, launchd will start the job the next time the computer wakes
+<p>This optional key causes the job to be started every calendar interval as specified. The semantics are
+much like <span class="citerefentry"><span class="refentrytitle">crontab</span>(5)</span>: Missing attributes are considered to be wildcard. Unlike cron which skips
+job invocations when the computer is asleep, launchd will start the job the next time the computer wakes
 up.  If multiple intervals transpire before the computer is woken, those events will be coalesced into
-one event upon wake from sleep.</p>
+one event upon waking from sleep.</p><div class="important"><h3 class="title">Important</h3><p>The list must not be empty and must not contain duplicate entries (attrsets which compare equally).</p></div><div class="caution"><h3 class="title">Caution</h3><p>Since missing attrs become wildcards, an empty attrset effectively means “every minute”.</p></div>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or (list of (submodule))</p>
+null or (submodule) or unique (non-empty (list of (submodule)))</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  Hour = 2;
-  Minute = 30;
-}
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    Hour = 2;
+    Minute = 30;
+  }
+]
 </code></pre>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
-&lt;home-manager/modules/launchd/default.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-launchd.agents._name_.config.StartCalendarInterval._.Day"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.StartCalendarInterval._.Day"><code class="option">launchd.agents.&lt;name&gt;.config.StartCalendarInterval.*.Day</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The day on which this job will be run.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
-&lt;home-manager/modules/launchd/default.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-launchd.agents._name_.config.StartCalendarInterval._.Hour"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.StartCalendarInterval._.Hour"><code class="option">launchd.agents.&lt;name&gt;.config.StartCalendarInterval.*.Hour</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The hour on which this job will be run.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
-&lt;home-manager/modules/launchd/default.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-launchd.agents._name_.config.StartCalendarInterval._.Minute"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.StartCalendarInterval._.Minute"><code class="option">launchd.agents.&lt;name&gt;.config.StartCalendarInterval.*.Minute</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The minute on which this job will be run.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
-&lt;home-manager/modules/launchd/default.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-launchd.agents._name_.config.StartCalendarInterval._.Month"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.StartCalendarInterval._.Month"><code class="option">launchd.agents.&lt;name&gt;.config.StartCalendarInterval.*.Month</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The month on which this job will be run.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix" target="_top">
-&lt;home-manager/modules/launchd/default.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-launchd.agents._name_.config.StartCalendarInterval._.Weekday"></a><a class="term" href="options.xhtml#opt-launchd.agents._name_.config.StartCalendarInterval._.Weekday"><code class="option">launchd.agents.&lt;name&gt;.config.StartCalendarInterval.*.Weekday</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The weekday on which this job will be run (0 and 7 are Sunday).</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
