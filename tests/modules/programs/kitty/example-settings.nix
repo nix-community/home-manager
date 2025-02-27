@@ -24,6 +24,11 @@
         "ctrl+f>2" = "set_font_size 20";
       };
 
+      actionAliases = {
+        "launch_tab" = "launch --cwd=current --type=tab";
+        "launch_window" = "launch --cwd=current --type=os-window";
+      };
+
       environment = { LS_COLORS = "1"; };
     };
 
