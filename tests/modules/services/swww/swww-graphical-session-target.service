@@ -1,0 +1,13 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@swww@/bin/swww-daemon
+Restart=always
+RestartSec=10
+
+[Unit]
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+Description=swww-daemon
+PartOf=graphical-session.target
