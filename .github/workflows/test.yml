@@ -9,23 +9,40 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
+        test-type: [lint, docs, install-test, unit-tests]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v31
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
-        extra_nix_config: |
-          experimental-features = nix-command flakes
-    - run: |
-        if grep -R --exclude stdlib-extended.nix literalExample modules ; then
-          echo "Error: literalExample should be replaced by literalExpression" > /dev/stderr
-          exit 1
-        fi
-    - run: nix-build --show-trace -A docs.jsonModuleMaintainers
-    - run: ./format --ci
-    - run: nix-shell --show-trace . -A install
-    - run: yes | home-manager -I home-manager=. uninstall
-    - run: nix-shell -j auto --show-trace --arg enableBig false --pure tests -A run.all
-      env:
-        GC_INITIAL_HEAP_SIZE: 4294967296
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+          # Lint checks
+      - name: Check for literalExample usage
+        if: matrix.test-type == 'lint'
+        run: |
+          if grep -R --exclude stdlib-extended.nix literalExample modules ; then
+            echo "Error: literalExample should be replaced by literalExpression" > /dev/stderr
+            exit 1
+          fi
+      - name: Run format check
+        if: matrix.test-type == 'lint'
+        run: ./format --ci
+      # Documentation checks
+      - name: Build documentation
+        if: matrix.test-type == 'docs'
+        run: nix-build -j auto --show-trace -A docs.jsonModuleMaintainers
+      # Installation tests
+      - name: Run installation test
+        if: matrix.test-type == 'install-test'
+        run: nix-shell -j auto --show-trace . -A install
+      - name: Run uninstallation test
+        if: matrix.test-type == 'install-test'
+        run: yes | home-manager -I home-manager=. uninstall
+      # Unit tests
+      - name: Run unit tests
+        if: matrix.test-type == 'unit-tests'
+        run: nix-shell -j auto --show-trace --arg enableBig false --pure tests -A run.all
+        env:
+          GC_INITIAL_HEAP_SIZE: 4294967296
