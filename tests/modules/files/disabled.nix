@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   home.file."disabled" = {
     enable = false;

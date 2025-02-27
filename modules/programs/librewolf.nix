@@ -29,12 +29,8 @@ in {
       wrappedPackageName = "librewolf";
       unwrappedPackageName = "librewolf-unwrapped";
 
-      platforms.linux = {
-        vendorPath = ".librewolf";
-        configPath = ".librewolf";
-      };
+      platforms.linux = { configPath = ".librewolf"; };
       platforms.darwin = {
-        vendorPath = "Library/Application Support/LibreWolf";
         configPath = "Library/Application Support/LibreWolf";
       };
 

@@ -143,6 +143,7 @@ in {
         (mapAttrs' (name: file: nameValuePair "${cfg.stateHome}/${name}" file)
           cfg.stateFile)
         { "${cfg.cacheHome}/.keep".text = ""; }
+        { "${cfg.stateHome}/.keep".text = ""; }
       ];
     }
   ];

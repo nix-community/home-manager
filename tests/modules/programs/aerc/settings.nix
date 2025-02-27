@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config, pkgs, ... }: {
   config = {
     nmt.script = let
       dir = if (pkgs.stdenv.isDarwin && !config.xdg.enable) then

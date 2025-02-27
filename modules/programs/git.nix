@@ -118,7 +118,7 @@ in {
         };
 
         format = mkOption {
-          type = types.enum [ "openpgp" "ssh" "x509" ];
+          type = types.nullOr (types.enum [ "openpgp" "ssh" "x509" ]);
           defaultText = literalExpression ''
             "openpgp" for state version < 25.05,
             undefined for state version ≥ 25.05
@@ -130,13 +130,13 @@ in {
         };
 
         signByDefault = mkOption {
-          type = types.bool;
-          default = false;
+          type = types.nullOr types.bool;
+          default = null;
           description = "Whether commits and tags should be signed by default.";
         };
 
         signer = mkOption {
-          type = types.str;
+          type = types.nullOr types.str;
           description = "Path to signer binary to use.";
         };
       };
@@ -221,6 +221,9 @@ in {
         enable = mkEnableOption "" // {
           description = ''
             Enable the automatic {command}`git maintenance`.
+
+            If you have SSH remotes, set {option}`programs.git.package` to a
+            git version with SSH support (eg: `pkgs.gitFull`).
 
             See <https://git-scm.com/docs/git-maintenance>.
           '';
@@ -408,6 +411,29 @@ in {
           '';
         };
       };
+
+      riff = {
+        enable = mkEnableOption "" // {
+          description = ''
+            Enable the <command>riff</command> diff highlighter.
+            See <link xlink:href="https://github.com/walles/riff" />.
+          '';
+        };
+
+        package = mkPackageOption pkgs "riffdiff" { };
+
+        commandLineOptions = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = literalExpression ''[ "--no-adds-only-special" ]'';
+          apply = concatStringsSep " ";
+          description = ''
+            Command line arguments to include in the <command>RIFF</command> environment variable.
+
+            Run <command>riff --help</command> for a full list of options
+          '';
+        };
+      };
     };
   };
 
@@ -431,6 +457,7 @@ in {
             cfg.diff-so-fancy.enable
             cfg.difftastic.enable
             cfg.diff-highlight.enable
+            cfg.riff.enable
           ];
         in count id enabled <= 1;
         message =
@@ -490,25 +517,35 @@ in {
     (mkIf (cfg.signing != { }) {
       programs.git = {
         signing = {
-          format = mkIf (versionOlder config.home.stateVersion "25.05")
-            (mkOptionDefault "openpgp");
-          signer = mkIf (cfg.signing.format != null) (mkOptionDefault {
-            openpgp = getExe config.programs.gpg.package;
-            ssh = getExe' pkgs.openssh "ssh-keygen";
-            x509 = getExe' config.programs.gpg.package "gpgsm";
-          }.${cfg.signing.format});
+          format = if (versionOlder config.home.stateVersion "25.05") then
+            (mkOptionDefault "openpgp")
+          else
+            (mkOptionDefault null);
+          signer = let
+            defaultSigners = {
+              openpgp = getExe config.programs.gpg.package;
+              ssh = getExe' pkgs.openssh "ssh-keygen";
+              x509 = getExe' config.programs.gpg.package "gpgsm";
+            };
+          in mkIf (cfg.signing.format != null)
+          (mkOptionDefault defaultSigners.${cfg.signing.format});
         };
 
-        iniContent = let inherit (cfg.signing) format;
-        in {
-          user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
-          commit.gpgSign = mkDefault cfg.signing.signByDefault;
-          tag.gpgSign = mkDefault cfg.signing.signByDefault;
-          gpg = {
-            inherit format;
-            ${format}.program = cfg.signing.signer;
-          };
-        };
+        iniContent = mkMerge [
+          (mkIf (cfg.signing.key != null) {
+            user.signingKey = mkDefault cfg.signing.key;
+          })
+          (mkIf (cfg.signing.signByDefault != null) {
+            commit.gpgSign = mkDefault cfg.signing.signByDefault;
+            tag.gpgSign = mkDefault cfg.signing.signByDefault;
+          })
+          (mkIf (cfg.signing.format != null) {
+            gpg = {
+              format = mkDefault cfg.signing.format;
+              ${cfg.signing.format}.program = mkDefault cfg.signing.signer;
+            };
+          })
+        ];
       };
     })
 
@@ -664,6 +701,26 @@ in {
               (cfg.diff-so-fancy.rulerWidth);
           };
         };
+    })
+
+    (let riffExe = baseNameOf (getExe cfg.riff.package);
+    in mkIf cfg.riff.enable {
+      home.packages = [ cfg.riff.package ];
+
+      # https://github.com/walles/riff/blob/b17e6f17ce807c8652bc59cd46758661d23ce358/README.md#usage
+      programs.git.iniContent = {
+        pager = {
+          diff = riffExe;
+          log = riffExe;
+          show = riffExe;
+        };
+
+        interactive.diffFilter = "${riffExe} --color=on";
+      };
+    })
+
+    (mkIf (cfg.riff.enable && cfg.riff.commandLineOptions != "") {
+      home.sessionVariables.RIFF = cfg.riff.commandLineOptions;
     })
   ]);
 }

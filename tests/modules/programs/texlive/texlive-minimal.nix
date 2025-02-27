@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ lib, pkgs, ... }: {
   config = {
     programs.texlive.enable = true;
 
@@ -14,7 +10,7 @@ with lib;
           combine = tpkgs:
             pkgs.symlinkJoin {
               name = "dummy-texlive-combine";
-              paths = attrValues tpkgs;
+              paths = lib.attrValues tpkgs;
             };
         };
       })

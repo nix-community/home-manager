@@ -44,7 +44,7 @@
         WantedBy=graphical-session.target
 
         [Service]
-        Environment=PATH=@bash@/bin
+        Environment=PATH=@bash-interactive@/bin
         ExecStart=@swayidle@/bin/dummy -w timeout 50 'notify-send -t 10000 -- "Screen lock in 10 seconds"' timeout 60 'swaylock -fF' timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock -fF' lock 'swaylock -fF'
         Restart=always
         Type=simple

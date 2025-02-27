@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ pkgs, ... }: {
   config = {
     home.packages = [ pkgs.comic-relief pkgs.unifont ];
 

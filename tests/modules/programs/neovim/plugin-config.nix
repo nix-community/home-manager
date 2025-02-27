@@ -15,7 +15,7 @@ lib.mkIf config.test.enableBig {
         '';
       }
     ];
-    extraLuaPackages = [ pkgs.lua51Packages.luautf8 ];
+    extraLuaPackages = ps: [ ps.luautf8 ];
   };
 
   _module.args.pkgs = lib.mkForce realPkgs;

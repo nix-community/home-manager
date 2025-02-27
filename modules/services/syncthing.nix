@@ -11,6 +11,12 @@ let
 
   isUnixGui = (builtins.substring 0 1 cfg.guiAddress) == "/";
 
+  # syncthing's configuration directory (see https://docs.syncthing.net/users/config.html)
+  syncthing_dir = if pkgs.stdenv.isDarwin then
+    "$HOME/Library/Application Support/Syncthing"
+  else
+    "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
+
   # Syncthing supports serving the GUI over Unix sockets. If that happens, the
   # API is served over the Unix socket as well.  This function returns the correct
   # curl arguments for the address portion of the curl command for both network
@@ -44,20 +50,30 @@ let
   cat = lib.getExe' pkgs.coreutils "cat";
   curl = lib.getExe pkgs.curl;
   install = lib.getExe' pkgs.coreutils "install";
+  mktemp = lib.getExe' pkgs.coreutils "mktemp";
   syncthing = lib.getExe cfg.package;
 
-  updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (''
-    set -efu
+  copyKeys = pkgs.writers.writeBash "syncthing-copy-keys" ''
+    ${install} -dm700 "${syncthing_dir}"
+    ${lib.optionalString (cfg.cert != null) ''
+      ${install} -Dm400 ${toString cfg.cert} "${syncthing_dir}/cert.pem"
+    ''}
+    ${lib.optionalString (cfg.key != null) ''
+      ${install} -Dm400 ${toString cfg.key} "${syncthing_dir}/key.pem"
+    ''}
+  '';
 
-    # be careful not to leak secrets in the filesystem or in process listings
-    umask 0077
+  curlShellFunction = ''
+    # systemd sets and creates RUNTIME_DIRECTORY on Linux
+    # on Darwin, we create it manually via mktemp
+    RUNTIME_DIRECTORY="''${RUNTIME_DIRECTORY:=$(${mktemp} -d)}"
 
     curl() {
         # get the api key by parsing the config.xml
         while
             ! ${pkgs.libxml2}/bin/xmllint \
                 --xpath 'string(configuration/gui/apikey)' \
-                ''${XDG_STATE_HOME:-$HOME/.local/state}/syncthing/config.xml \
+                "${syncthing_dir}/config.xml" \
                 >"$RUNTIME_DIRECTORY/api_key"
         do ${sleep} 1; done
         (${printf} "X-API-Key: "; ${cat} "$RUNTIME_DIRECTORY/api_key") >"$RUNTIME_DIRECTORY/headers"
@@ -65,6 +81,15 @@ let
             --retry 1000 --retry-delay 1 --retry-all-errors \
             "$@"
     }
+  '';
+
+  updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (''
+    set -efu
+
+    # be careful not to leak secrets in the filesystem or in process listings
+    umask 0077
+
+    ${curlShellFunction}
   '' +
 
     /* Syncthing's rest API for the folders and devices is almost identical.
@@ -173,7 +198,6 @@ in {
     services.syncthing = {
       enable = mkEnableOption ''
         Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.
-        Further declarative configuration options only supported on Linux devices.
       '';
 
       cert = mkOption {
@@ -619,22 +643,8 @@ in {
           };
 
           Service = {
-            ExecStartPre = lib.mkIf (cfg.cert != null || cfg.key != null) "+${
-                pkgs.writers.writeBash "syncthing-copy-keys" ''
-                  syncthing_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/syncthing"
-                  ${install} -dm700 "$syncthing_dir"
-                  ${lib.optionalString (cfg.cert != null) ''
-                    ${install} -Dm400 ${
-                      toString cfg.cert
-                    } "$syncthing_dir/cert.pem"
-                  ''}
-                  ${lib.optionalString (cfg.key != null) ''
-                    ${install} -Dm400 ${
-                      toString cfg.key
-                    } "$syncthing_dir/key.pem"
-                  ''}
-                ''
-              }";
+            ExecStartPre =
+              lib.mkIf (cfg.cert != null || cfg.key != null) "+${copyKeys}";
             ExecStart = lib.escapeShellArgs syncthingArgs;
             Restart = "on-failure";
             SuccessExitStatus = [ 3 4 ];
@@ -673,15 +683,36 @@ in {
         };
       };
 
-      launchd.agents.syncthing = {
-        enable = true;
-        config = {
-          ProgramArguments = syncthingArgs;
-          KeepAlive = {
-            Crashed = true;
-            SuccessfulExit = false;
+      launchd.agents = let
+        # agent `syncthing` uses `${syncthing_dir}/${watch_file}` to notify agent `syncthing-init`
+        watch_file = ".launchd_update_config";
+      in {
+        syncthing = {
+          enable = true;
+          config = {
+            ProgramArguments = [
+              "${pkgs.writers.writeBash "syncthing-wrapper" ''
+                ${copyKeys}                               # simulate systemd's `syncthing-init.Service.ExecStartPre`
+                touch "${syncthing_dir}/${watch_file}"    # notify syncthing-init agent
+                exec ${lib.escapeShellArgs syncthingArgs}
+              ''}"
+            ];
+            KeepAlive = {
+              Crashed = true;
+              SuccessfulExit = false;
+            };
+            ProcessType = "Background";
           };
-          ProcessType = "Background";
+        };
+
+        syncthing-init = {
+          enable = true;
+          config = {
+            ProgramArguments = [ "${updateConfig}" ];
+            WatchPaths = [
+              "${config.home.homeDirectory}/Library/Application Support/Syncthing/${watch_file}"
+            ];
+          };
         };
       };
     })

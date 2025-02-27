@@ -30,6 +30,7 @@ let
     ./misc/fontconfig.nix
     ./misc/gtk.nix
     ./misc/lib.nix
+    ./misc/mozilla-messaging-hosts.nix
     ./misc/news.nix
     ./misc/nixgl.nix
     ./misc/numlock.nix
@@ -89,6 +90,7 @@ let
     ./programs/dircolors.nix
     ./programs/direnv.nix
     ./programs/discocss.nix
+    ./programs/earthly.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/eww.nix
@@ -138,6 +140,7 @@ let
     ./programs/java.nix
     ./programs/jetbrains-remote.nix
     ./programs/jq.nix
+    ./programs/jqp.nix
     ./programs/jujutsu.nix
     ./programs/joshuto.nix
     ./programs/joplin-desktop.nix
@@ -236,6 +239,7 @@ let
     ./programs/sqls.nix
     ./programs/ssh.nix
     ./programs/starship.nix
+    ./programs/swayimg.nix
     ./programs/swaylock.nix
     ./programs/swayr.nix
     ./programs/taskwarrior.nix
@@ -259,6 +263,7 @@ let
     ./programs/vifm.nix
     ./programs/vim-vint.nix
     ./programs/vim.nix
+    ./programs/vinegar.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
@@ -268,7 +273,6 @@ let
     ./programs/wezterm.nix
     ./programs/wlogout.nix
     ./programs/wofi.nix
-    ./programs/wpaperd.nix
     ./programs/xmobar.nix
     ./programs/xplr.nix
     ./programs/yambar.nix
@@ -301,6 +305,7 @@ let
     ./services/cliphist.nix
     ./services/clipman.nix
     ./services/clipmenu.nix
+    ./services/clipse.nix
     ./services/comodoro.nix
     ./services/conky.nix
     ./services/copyq.nix
@@ -417,7 +422,9 @@ let
     ./services/window-managers/wayfire.nix
     ./services/window-managers/xmonad.nix
     ./services/wlsunset.nix
+    ./services/wluma.nix
     ./services/wob.nix
+    ./services/wpaperd.nix
     ./services/xcape.nix
     ./services/xembed-sni-proxy.nix
     ./services/xidlehook.nix
