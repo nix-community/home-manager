@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
 
   cfg = config.home-manager;
@@ -9,11 +7,11 @@ let
 in {
   imports = [ ../nixos/common.nix ];
 
-  config = mkMerge [
+  config = lib.mkMerge [
     { home-manager.extraSpecialArgs.darwinConfig = config; }
-    (mkIf (cfg.users != { }) {
-      system.activationScripts.postActivation.text = concatStringsSep "\n"
-        (mapAttrsToList (username: usercfg: ''
+    (lib.mkIf (cfg.users != { }) {
+      system.activationScripts.postActivation.text = lib.concatStringsSep "\n"
+        (lib.mapAttrsToList (username: usercfg: ''
           echo Activating home-manager configuration for ${username}
           sudo -u ${username} --set-home ${
             pkgs.writeShellScript "activation-${username}" ''

@@ -1,8 +1,7 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
+  inherit (lib) mkDefault mkIf mkOption types;
 
   cfg = config.accounts.email;
 
@@ -49,7 +48,7 @@ let
         default = ''
           --
         '';
-        example = literalExpression ''
+        example = lib.literalExpression ''
           ~*~*~*~*~*~*~*~*~*~*~*~
         '';
         description = ''
@@ -60,7 +59,7 @@ let
       command = mkOption {
         type = with types; nullOr path;
         default = null;
-        example = literalExpression ''
+        example = lib.literalExpression ''
           pkgs.writeScript "signature" "echo This is my signature"
         '';
         description = "A command that generates a signature.";
@@ -308,7 +307,7 @@ let
       passwordCommand = mkOption {
         type = types.nullOr (types.either types.str (types.listOf types.str));
         default = null;
-        apply = p: if isString p then splitString " " p else p;
+        apply = p: if lib.isString p then lib.splitString " " p else p;
         example = "secret-tool lookup email me@example.org";
         description = ''
           A command, which when run writes the account password on
@@ -407,10 +406,10 @@ let
       };
     };
 
-    config = mkMerge [
+    config = lib.mkMerge [
       {
         name = name;
-        maildir = mkOptionDefault { path = "${name}"; };
+        maildir = lib.mkOptionDefault { path = "${name}"; };
       }
 
       (mkIf (config.flavor == "yandex.com") {
@@ -526,7 +525,7 @@ in {
       default = "${config.home.homeDirectory}/Maildir";
       defaultText = "Maildir";
       apply = p:
-        if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
+        if lib.hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory for account maildir directories. May be a
         relative path (e.g. the user setting this value as "MyMaildir"),
@@ -545,13 +544,14 @@ in {
   config = mkIf (cfg.accounts != { }) {
     assertions = [
       (let
-        primaries =
-          catAttrs "name" (filter (a: a.primary) (attrValues cfg.accounts));
+        primaries = lib.catAttrs "name"
+          (lib.filter (a: a.primary) (lib.attrValues cfg.accounts));
       in {
-        assertion = length primaries == 1;
+        assertion = lib.length primaries == 1;
         message = "Must have exactly one primary mail account but found "
-          + toString (length primaries) + optionalString (length primaries > 1)
-          (", namely " + concatStringsSep ", " primaries);
+          + toString (lib.length primaries)
+          + lib.optionalString (lib.length primaries > 1)
+          (", namely " + lib.concatStringsSep ", " primaries);
       })
     ];
   };

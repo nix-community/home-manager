@@ -1,10 +1,8 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 {
   options.home = {
-    enableDebugInfo = mkEnableOption "" // {
+    enableDebugInfo = lib.mkEnableOption "" // {
       description = ''
         Some Nix packages provide debug symbols for
         {command}`gdb` in the `debug` output.
@@ -15,7 +13,7 @@ with lib;
     };
   };
 
-  config = mkIf config.home.enableDebugInfo {
+  config = lib.mkIf config.home.enableDebugInfo {
     home.extraOutputsToInstall = [ "debug" ];
 
     home.sessionVariables = {
