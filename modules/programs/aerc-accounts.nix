@@ -134,8 +134,9 @@ in {
 
       oauthParams = { auth, params }:
         if useOauth auth && params != null && params != { } then
-          "?" + builtins.concatStringsSep "&" lib.attrsets.mapAttrsToList
-          (k: v: k + "=" + lib.strings.escapeURL v) params
+          "?" + builtins.concatStringsSep "&"
+          (lib.attrsets.mapAttrsToList (k: v: k + "=" + lib.strings.escapeURL v)
+            (lib.attrsets.filterAttrs (k: v: v != null) params))
         else
           "";
 

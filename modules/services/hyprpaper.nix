@@ -1,15 +1,12 @@
 { config, lib, pkgs, ... }:
-with lib;
-let
-
-  cfg = config.services.hyprpaper;
+let cfg = config.services.hyprpaper;
 in {
-  meta.maintainers = [ maintainers.khaneliman maintainers.fufexan ];
+  meta.maintainers = with lib.maintainers; [ khaneliman fufexan ];
 
   options.services.hyprpaper = {
-    enable = mkEnableOption "Hyprpaper, Hyprland's wallpaper daemon";
+    enable = lib.mkEnableOption "Hyprpaper, Hyprland's wallpaper daemon";
 
-    package = mkPackageOption pkgs "hyprpaper" { };
+    package = lib.mkPackageOption pkgs "hyprpaper" { };
 
     settings = lib.mkOption {
       type = with lib.types;
@@ -59,8 +56,8 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    xdg.configFile."hypr/hyprpaper.conf" = mkIf (cfg.settings != { }) {
+  config = lib.mkIf cfg.enable {
+    xdg.configFile."hypr/hyprpaper.conf" = lib.mkIf (cfg.settings != { }) {
       text = lib.hm.generators.toHyprconf {
         attrs = cfg.settings;
         inherit (cfg) importantPrefixes;
@@ -68,19 +65,19 @@ in {
     };
 
     systemd.user.services.hyprpaper = {
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = { WantedBy = [ config.wayland.systemd.target ]; };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hyprpaper";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers = mkIf (cfg.settings != { })
+        After = [ config.wayland.systemd.target ];
+        PartOf = [ config.wayland.systemd.target ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { })
           [ "${config.xdg.configFile."hypr/hyprpaper.conf".source}" ];
       };
 
       Service = {
-        ExecStart = "${getExe cfg.package}";
+        ExecStart = "${lib.getExe cfg.package}";
         Restart = "always";
         RestartSec = "10";
       };

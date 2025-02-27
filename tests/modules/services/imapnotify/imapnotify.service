@@ -4,7 +4,7 @@ WantedBy=default.target
 [Service]
 Environment=PATH=
 Environment=NOTMUCH_CONFIG=/home/hm-user/.config/notmuch/default/config
-ExecStart=@goimapnotify@/bin/goimapnotify -conf '/nix/store/00000000000000000000000000000000-imapnotify-hm-example.com-config.json'
+ExecStart=@goimapnotify@/bin/goimapnotify -conf '/nix/store/00000000000000000000000000000000-imapnotify-hm-example.com-config.json' --wait 1
 Restart=always
 RestartSec=30
 Type=simple

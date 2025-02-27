@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   systemd.user.timers.test-timer = {
     Unit = { Description = "A basic test timer"; };

@@ -1,10 +1,12 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
+  imports = [ ./fusuma-stubs.nix ];
+
   services.fusuma = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@fusuma@"; };
-    extraPackages = [ (config.lib.test.mkStubPackage { }) ];
+    extraPackages = [ pkgs.xdotool ];
 
     settings = {
       threshold = { swipe = 1; };

@@ -1654,6 +1654,23 @@ in {
       }
 
       {
+        time = "2024-05-21T20:22:57+00:00";
+        condition = config.programs.git.signing != { };
+        message = ''
+          The Git module now supports signing via SSH and X.509 keys, in addition to OpenPGP/GnuPG,
+          via the `programs.git.signing.format` option.
+
+          The format defaults to `openpgp` for now, due to backwards compatibility reasons — this is
+          not guaranteed to last! GPG users should manually set `programs.git.signing.format` to
+          `openpgp` as soon as possible.
+
+          Accordingly, `programs.git.signing.gpgPath` has been renamed to the more generic option
+          `programs.git.signing.signer` as not everyone uses GPG.
+          Please migrate to the new option to suppress the generated warning.
+        '';
+      }
+
+      {
         time = "2024-05-25T14:36:03+00:00";
         message = ''
           Multiple new options are available:
@@ -1697,6 +1714,16 @@ in {
 
           Glance is a self-hosted dashboard that puts all your feeds in
           one place. See https://github.com/glanceapp/glance for more.
+        '';
+      }
+
+      {
+        time = "2024-08-18T11:42:08+00:00";
+        message = ''
+          A new module is available: 'programs.lapce'.
+
+          Lightning-fast and Powerful Code Editor written in Rust.
+          See https://lapce.dev/ for more.
         '';
       }
 
@@ -1861,7 +1888,6 @@ in {
           Some plugins require this to be set to 'false' to function correctly.
         '';
       }
-
       {
         time = "2024-12-08T17:22:13+00:00";
         condition = let
@@ -1917,6 +1943,175 @@ in {
           A new module is available: 'programs.cavalier'.
 
           Cavalier is a GUI wrapper around the Cava audio visualizer.
+        '';
+      }
+
+      {
+        time = "2025-01-01T15:31:15+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The 'systemd.user.startServices' option now defaults to 'true',
+          meaning that services will automatically be restarted as needed when
+          activating a configuration.
+
+          Further, the "legacy" alternative has been removed and will now result
+          in an evaluation error if used.
+
+          The "suggest" alternative will remain for a while longer but may also
+          be deprecated for removal in the future.
+        '';
+      }
+
+      {
+        time = "2025-01-01T23:16:35+00:00";
+        message = ''
+          A new module is available: 'programs.ghostty'.
+
+          Ghostty is a terminal emulator that differentiates itself by being
+          fast, feature-rich, and native. While there are many excellent
+          terminal emulators available, they all force you to choose between
+          speed, features, or native UIs. Ghostty provides all three.
+        '';
+      }
+
+      {
+        time = "2025-01-04T15:00:00+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.wayfire'.
+
+          Wayfire is a 3D Wayland compositor, inspired by Compiz and based on
+          wlroots. It aims to create a customizable, extendable and lightweight
+          environment without sacrificing its appearance.
+
+          This Home Manager module allows you to configure both wayfire itself,
+          as well as wf-shell.
+        '';
+      }
+
+      {
+        time = "2025-01-21T17:28:13+00:00";
+        condition = with config.programs.yazi; enable && enableFishIntegration;
+        message = ''
+          Yazi's fish shell integration wrapper now calls the 'yazi' executable
+          directly, ignoring any shell aliases with the same name.
+
+          Your configuration may break if you rely on the wrapper calling a
+          'yazi' alias.
+        '';
+      }
+
+      {
+        time = "2025-01-29T17:34:53+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          The Firefox module now provides a
+          'programs.firefox.profiles.<name>.preConfig' option.
+
+          It allows extra preferences to be added to 'user.js' before the
+          options specified in 'programs.firefox.profiles.<name>.settings', so
+          that they can be overwritten.
+        '';
+      }
+
+      {
+        time = "2025-01-29T19:11:20+00:00";
+        condition = hostPlatform.isDarwin;
+        message = ''
+          A new module is available: 'programs.aerospace'.
+
+          AeroSpace is an i3-like tiling window manager for macOS.
+          See https://github.com/nikitabobko/AeroSpace for more.
+        '';
+      }
+
+      {
+        time = "2025-01-30T09:18:55+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.linux-wallpaperengine'.
+
+          Reproduce the background functionality of Wallpaper Engine on Linux
+          systems.
+        '';
+      }
+
+      {
+        time = "2025-02-07T22:31:45+00:00";
+        message = ''
+          All 'programs.<PROGRAM>.enable<SHELL>Integration' values now default
+          to the new 'home.shell.enable<SHELL>Integration' options, which
+          inherit from the new the 'home.shell.enableShellIntegration' option.
+
+          The following inconsistent default values change from 'false' to
+          'true':
+
+          - programs.zellij.enableBashIntegration
+          - programs.zellij.enableFishIntegration
+          - programs.zellij.enableZshIntegration
+        '';
+      }
+
+      {
+        time = "2025-02-11T15:25:26+00:00";
+        message = ''
+          A new module is available: 'programs.git-worktree-switcher'.
+
+          git-worktree-switcher allows you to quickly switch git worktrees.
+          It includes shell completions for Bash, Fish and Zsh.
+          See https://github.com/mateusauler/git-worktree-switcher for more.
+        '';
+      }
+
+      {
+        time = "2025-02-20T18:39:31+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.swayimg'.
+
+          swayimg is a fully customizable and lightweight image viewer for
+          Wayland based display servers.
+          See https://github.com/artemsen/swayimg for more.
+        '';
+      }
+
+      {
+        time = "2025-02-16T17:00:00+00:00";
+        message = ''
+          A new module is available: 'services.wluma'.
+
+          Wluma is a tool for Wayland compositors to automatically adjust
+          screen brightness based on the screen contents and amount of ambient light around you.
+        '';
+      }
+
+      {
+        time = "2025-02-21T16:53:20+00:00";
+        message = ''
+          A new module is available: 'programs.earthly'.
+
+          Earthly is a build configuration framework utilizing buildkit and
+          Dockerfile-like syntax for fast builds and simplicity.
+        '';
+      }
+
+      {
+        time = "2025-02-22T16:53:20+00:00";
+        message = ''
+          A new module is available: 'programs.jqp'.
+
+          A TUI playground for experimenting with `jq`.
+        '';
+      }
+
+      {
+        time = "2025-02-22T16:46:56+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.wpaperd'.
+
+          This replaces the existing module, 'programs.wpaperd', and adds a
+          systemd service to ensure its execution.
         '';
       }
     ];

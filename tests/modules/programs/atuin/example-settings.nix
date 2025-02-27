@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.atuin = {
     enable = true;
@@ -10,11 +8,6 @@
       auto_sync = true;
       search-mode = "fulltext";
     };
-  };
-
-  test.stubs = {
-    atuin = { name = "atuin"; };
-    bash-preexec = { };
   };
 
   nmt.script = ''

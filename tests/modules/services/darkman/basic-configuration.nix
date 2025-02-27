@@ -23,8 +23,6 @@
     '';
   };
 
-  test.stubs.python = { };
-
   nmt.script = ''
     serviceFile=$(normalizeStorePaths home-files/.config/systemd/user/darkman.service)
     darkModeScriptFile=$(normalizeStorePaths home-files/.local/share/dark-mode.d/color-scheme-dark)

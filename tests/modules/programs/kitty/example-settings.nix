@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ lib, pkgs, ... }: {
   config = {
     programs.kitty = {
       enable = true;
@@ -30,8 +26,6 @@ with lib;
 
       environment = { LS_COLORS = "1"; };
     };
-
-    test.stubs.kitty = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/kitty/kitty.conf

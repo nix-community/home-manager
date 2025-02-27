@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@glance@/bin/dummy --config /home/hm-user/.config/glance/glance.yml
+ExecStart=@glance@/bin/glance --config /home/hm-user/.config/glance/glance.yml
 
 [Unit]
 Description=Glance feed dashboard server

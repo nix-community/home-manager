@@ -1,8 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ config, ... }:
 
 {
-  imports = [ ./sway-stubs.nix ];
-
   wayland.windowManager.sway = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
@@ -13,7 +11,7 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/sway/config
-    assertFileContent $(normalizeStorePaths home-files/.config/sway/config) \
-      ${pkgs.writeText "expected" ""}
+    assertFileContent home-files/.config/sway/config \
+      ${builtins.toFile "expected" ""}
   '';
 }

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.neovide = {
     enable = true;
@@ -24,8 +22,6 @@
       };
     };
   };
-
-  test.stubs.neovide = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/neovide/config.toml

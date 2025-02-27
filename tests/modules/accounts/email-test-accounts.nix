@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   accounts.email = {
     maildirBasePath = "Mail";

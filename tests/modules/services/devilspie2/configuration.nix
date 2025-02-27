@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.devilspie2 = {
     enable = true;
@@ -18,8 +16,6 @@
       end
     '';
   };
-
-  test.stubs.devilspie2 = { };
 
   nmt.script = ''
     configlua=home-files/.config/devilspie2/config.lua

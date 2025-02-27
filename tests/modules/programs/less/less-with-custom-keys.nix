@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   programs.less = {
     enable = true;
@@ -11,8 +7,6 @@ with lib;
       t        forw-line
     '';
   };
-
-  test.stubs.less = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/lesskey

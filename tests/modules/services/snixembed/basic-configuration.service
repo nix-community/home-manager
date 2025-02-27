@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=/snixembed/bin/dummy
+ExecStart=@snixembed@/bin/snixembed
 Restart=on-failure
 RestartSec=3
 

@@ -1,0 +1,3 @@
+path = "/home/hm-user/base/path/calendar/*/*"
+date_format = "%d.%m.%Y"
+default_list = "test"

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.mpdris2 = {
     enable = true;
@@ -11,8 +9,6 @@
   };
 
   services.mpd.musicDirectory = "/home/hm-user/music";
-
-  test.stubs.mpdris2 = { };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/mpdris2.service

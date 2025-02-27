@@ -1,13 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ pkgs, ... }:
 
 {
   imports = [ ./stubs.nix ];
 
   programs.kakoune = {
     enable = true;
-    plugins = [ pkgs.kakounePlugins.prelude-kak ];
+    plugins = [ pkgs.kakoune-test-plugin ];
   };
 
   nmt.script = ''

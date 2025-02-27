@@ -247,6 +247,7 @@ let
           "fastmail.com"
           "yandex.com"
           "outlook.office365.com"
+          "migadu.com"
         ];
         default = "plain";
         description = ''
@@ -267,10 +268,26 @@ let
       };
 
       aliases = mkOption {
-        type = types.listOf (types.strMatching ".*@.*");
+        description = "Alternative identities of this account.";
         default = [ ];
         example = [ "webmaster@example.org" "admin@example.org" ];
-        description = "Alternative email addresses of this account.";
+        type = types.listOf (types.oneOf [
+          (types.strMatching ".*@.*")
+          (types.submodule {
+            options = {
+              realName = mkOption {
+                type = types.str;
+                example = "Jane Doe";
+                description = "Name displayed when sending mails.";
+              };
+              address = mkOption {
+                type = types.strMatching ".*@.*";
+                example = "jane.doe@example.org";
+                description = "The email address of this identity.";
+              };
+            };
+          })
+        ]);
       };
 
       realName = mkOption {
@@ -447,6 +464,20 @@ let
         jmap = {
           host = "fastmail.com";
           sessionUrl = "https://jmap.fastmail.com/.well-known/jmap";
+        };
+      })
+
+      (mkIf (config.flavor == "migadu.com") {
+        userName = mkDefault config.address;
+
+        imap = {
+          host = "imap.migadu.com";
+          port = 993;
+        };
+
+        smtp = {
+          host = "smtp.migadu.com";
+          port = 465;
         };
       })
 

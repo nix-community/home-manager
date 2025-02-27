@@ -1,11 +1,12 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, realPkgs, config, lib, ... }:
 
 {
   programs.nushell = {
     enable = true;
+    package = realPkgs.nushell;
 
     configFile.text = ''
-      let $config = {
+      let config = {
         filesize_metric: false
         table_mode: rounded
         use_ls_colors: true
@@ -23,11 +24,19 @@
       }
     '';
 
-    plugins = [ pkgs.nushellPlugins.formats ];
+    plugins = [ realPkgs.nushellPlugins.formats ];
 
     shellAliases = {
-      "lsname" = "(ls | get name)";
       "ll" = "ls -a";
+      "multi word alias" = "cd -";
+      "z" = "__zoxide_z";
+    };
+
+    settings = {
+      show_banner = false;
+      display_errors.exit_code = false;
+      hooks.pre_execution =
+        [ (lib.hm.nushell.mkNushellInline ''{|| "pre_execution hook"}'') ];
     };
 
     environmentVariables = {

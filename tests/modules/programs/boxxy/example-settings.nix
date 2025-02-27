@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   config = {
     programs.boxxy.enable = true;
@@ -14,8 +10,6 @@ with lib;
       env = { "ENVIRONMENT_THING" = "some value"; };
       context = [ "/home/test_user/your_project_repo" ];
     }];
-
-    test.stubs.boxxy = { };
 
     nmt.script = ''
       boxxyyaml=home-files/.config/boxxy/boxxy.yaml
