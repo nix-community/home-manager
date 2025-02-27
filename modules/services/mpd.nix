@@ -14,6 +14,9 @@ let
     ${lib.optionalString (cfg.dbFile != null) ''
       db_file             "${cfg.dbFile}"
     ''}
+    ${lib.optionalString (pkgs.stdenv.hostPlatform.isDarwin) ''
+      log_file             "${config.home.homeDirectory}/Library/Logs/mpd/log.txt"
+    ''}
     state_file          "${cfg.dataDir}/state"
     sticker_file        "${cfg.dataDir}/sticker.sql"
 
@@ -114,7 +117,7 @@ in {
           type = types.bool;
           default = false;
           description = ''
-            Enable systemd socket activation.
+            Enable systemd socket activation. This is only supported on Linux.
           '';
         };
 
@@ -155,10 +158,6 @@ in {
   ###### implementation
 
   config = mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.mpd" pkgs lib.platforms.linux)
-    ];
-
     services.mpd = mkMerge [
       (mkIf (versionAtLeast config.home.stateVersion "22.11"
         && config.xdg.userDirs.enable) {
@@ -170,7 +169,7 @@ in {
       })
     ];
 
-    systemd.user.services.mpd = {
+    systemd.user.services.mpd = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
       Unit = mkMerge [
         {
           Description = "Music Player Daemon";
@@ -214,7 +213,17 @@ in {
       Install = { WantedBy = [ "sockets.target" ]; };
     };
 
+    launchd.agents.mpd = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      enable = true;
+      config = {
+        ProgramArguments =
+          [ (lib.getExe cfg.package) "--no-daemon" "${mpdConf}" ]
+          ++ cfg.extraArgs;
+        KeepAlive = true;
+        ProcessType = "Interactive";
+      };
+    };
+
     home.packages = [ cfg.package ];
   };
-
 }
