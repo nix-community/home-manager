@@ -369,6 +369,7 @@ in import nmtSrc {
     ./modules/services/playerctld
     ./modules/services/podman-linux
     ./modules/services/polybar
+    ./modules/services/radicle
     ./modules/services/recoll
     ./modules/services/redshift-gammastep
     ./modules/services/remmina
