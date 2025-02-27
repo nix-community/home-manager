@@ -131,6 +131,7 @@ let
     ./programs/i3blocks.nix
     ./programs/i3status-rust.nix
     ./programs/i3status.nix
+    ./programs/iamb.nix
     ./programs/imv.nix
     ./programs/info.nix
     ./programs/ion.nix
