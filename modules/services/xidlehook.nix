@@ -151,8 +151,8 @@ in {
       Service = {
         Type = if cfg.once then "oneshot" else "simple";
         ExecStart = "${script}";
-      };
+      } // lib.optionalAttrs (!cfg.once) { Restart = "always"; };
       Install.WantedBy = [ "graphical-session.target" ];
-    } // pkgs.lib.optionalAttrs (!cfg.once) { Restart = "always"; };
+    };
   };
 }
