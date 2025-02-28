@@ -61,10 +61,71 @@ let
       };
   in outer;
 
+  darwinBlacklist = let
+    # List of packages that need to be scrubbed on Darwin
+    # Packages are scrubbed in linux and expected in test output
+    packagesToScrub = [
+      "alot"
+      "antidote"
+      "atuin"
+      "bash-completion"
+      "carapace"
+      "delta"
+      "direnv"
+      "espanso"
+      "gh"
+      "ghostty"
+      "gnupg"
+      "granted"
+      "i3status"
+      "kitty"
+      "lesspipe"
+      "mu"
+      "msmtp"
+      "nheko"
+      "nix"
+      "nix-index"
+      "nix-your-shell"
+      "ollama"
+      "openstackclient"
+      "papis"
+      "pay-respects"
+      "pls"
+      "pyenv"
+      "sagemath"
+      "scmpuff"
+      "sm64ex"
+      "thefuck"
+      "wezterm"
+      "yubikey-agent"
+      "zellij"
+      "zplug"
+    ];
+
+    inner = self: super:
+      lib.mapAttrs (name: value:
+        if lib.elem name packagesToScrub then
+        # Apply scrubbing to this specific package
+          scrubDerivation name value
+        else
+          value) super;
+
+    outer = self: super:
+      inner self super // {
+        buildPackages = super.buildPackages.extend inner;
+      };
+  in outer;
+
   scrubbedPkgs =
-    let rawScrubbedPkgs = lib.makeExtensible (final: scrubDerivations pkgs);
-    in builtins.traceVerbose "eval scrubbed nixpkgs"
-    (rawScrubbedPkgs.extend whitelist);
+    # TODO: fix darwin stdenv stubbing
+    if isDarwin then
+      let rawPkgs = lib.makeExtensible (final: pkgs);
+      in builtins.traceVerbose "eval scrubbed darwin nixpkgs"
+      (rawPkgs.extend darwinBlacklist)
+    else
+      let rawScrubbedPkgs = lib.makeExtensible (final: scrubDerivations pkgs);
+      in builtins.traceVerbose "eval scrubbed nixpkgs"
+      (rawScrubbedPkgs.extend whitelist);
 
   modules = import ../modules/modules.nix {
     inherit lib pkgs;
