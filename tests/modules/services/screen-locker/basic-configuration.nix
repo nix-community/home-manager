@@ -19,7 +19,9 @@
 
     assertFileExists $xssService
     assertFileRegex $xssService 'ExecStart=.*/bin/xss-lock.*-test.*i3lock -n -c AA0000'
+    assertFileRegex $xssService 'Restart=always'
     assertFileExists $xautolockService
     assertFileRegex $xautolockService 'ExecStart=.*/bin/xautolock.*-time 5.*-detectsleep.*-test.*'
+    assertFileRegex $xautolockService 'Restart=always'
   '';
 }

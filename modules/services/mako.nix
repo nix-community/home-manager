@@ -33,6 +33,15 @@ in {
         '';
       };
 
+      maxHistory = mkOption {
+        default = 5;
+        type = types.nullOr types.int;
+        description = ''
+          Set maximum number of expired notifications to keep in the history
+          buffer. Set 0 to disable history.
+        '';
+      };
+
       sort = mkOption {
         default = "-time";
         type =
@@ -315,6 +324,7 @@ in {
       '';
       text = ''
         ${optionalInteger "max-visible" cfg.maxVisible}
+        ${optionalInteger "max-history" cfg.maxHistory}
         ${optionalString "sort" cfg.sort}
         ${optionalString "output" cfg.output}
         ${optionalString "layer" cfg.layer}

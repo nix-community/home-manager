@@ -16,7 +16,8 @@ let
       filter (a: a.mu.enable) (attrValues config.accounts.email.accounts);
     addrs = map (a: a.address) muAccounts;
     # Construct list of lists containing email aliases, and flatten
-    aliases = flatten (map (a: a.aliases) muAccounts);
+    aliases = map (alias: alias.address or alias)
+      (flatten (map (a: a.aliases) muAccounts));
     # Sort the list
   in sort lessThan (addrs ++ aliases);
 

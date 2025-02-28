@@ -146,6 +146,7 @@ in import nmtSrc {
     ./modules/programs/darcs
     ./modules/programs/dircolors
     ./modules/programs/direnv
+    ./modules/programs/earthly
     ./modules/programs/emacs
     ./modules/programs/fastfetch
     ./modules/programs/feh
@@ -170,6 +171,7 @@ in import nmtSrc {
     ./modules/programs/irssi
     ./modules/programs/jujutsu
     ./modules/programs/joplin-desktop
+    ./modules/programs/jqp
     ./modules/programs/k9s
     ./modules/programs/kakoune
     ./modules/programs/khal
@@ -243,6 +245,7 @@ in import nmtSrc {
     ./modules/programs/translate-shell
     ./modules/programs/vifm
     ./modules/programs/vim-vint
+    ./modules/programs/vinegar
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
@@ -267,6 +270,7 @@ in import nmtSrc {
     ./modules/services/yubikey-agent-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
+    ./modules/config/home-cursor
     ./modules/config/i18n
     ./modules/i18n/input-method
     ./modules/misc/debug
@@ -285,8 +289,10 @@ in import nmtSrc {
     ./modules/programs/boxxy
     ./modules/programs/cavalier
     ./modules/programs/eww
+    ./modules/programs/firefox
     ./modules/programs/firefox/firefox.nix
     ./modules/programs/firefox/floorp.nix
+    ./modules/programs/firefox/librewolf.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel
@@ -306,6 +312,7 @@ in import nmtSrc {
     ./modules/programs/rbw
     ./modules/programs/rofi
     ./modules/programs/rofi-pass
+    ./modules/programs/swayimg
     ./modules/programs/swaylock
     ./modules/programs/swayr
     ./modules/programs/terminator
@@ -313,7 +320,6 @@ in import nmtSrc {
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi
-    ./modules/programs/wpaperd
     ./modules/programs/xmobar
     ./modules/programs/yambar
     ./modules/programs/yt-dlp
@@ -325,6 +331,7 @@ in import nmtSrc {
     ./modules/services/cachix-agent
     ./modules/services/cliphist
     ./modules/services/clipman
+    ./modules/services/clipse
     ./modules/services/comodoro
     ./modules/services/copyq
     ./modules/services/conky
@@ -390,6 +397,7 @@ in import nmtSrc {
     ./modules/services/window-managers/wayfire
     ./modules/services/wlsunset
     ./modules/services/wob
+    ./modules/services/wpaperd
     ./modules/services/xsettingsd
     ./modules/services/yubikey-agent
     ./modules/systemd

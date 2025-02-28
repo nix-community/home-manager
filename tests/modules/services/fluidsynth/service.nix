@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.fluidsynth.enable = true;
   services.fluidsynth.soundService = "pipewire-pulse";

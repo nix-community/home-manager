@@ -1,5 +1,5 @@
 {
-  programs.wpaperd = {
+  services.wpaperd = {
     enable = true;
     settings = {
       eDP-1 = {
@@ -9,6 +9,7 @@
       DP-2 = {
         path = "/home/foo/Pictures/Anime";
         sorting = "descending";
+
       };
     };
   };
