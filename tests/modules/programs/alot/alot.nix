@@ -1,4 +1,4 @@
-{
+{ lib, pkgs, ... }: {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   accounts.email.accounts = {
@@ -16,7 +16,10 @@
     };
   };
 
-  programs.alot = { enable = true; };
+  programs.alot = {
+    enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
+  };
 
   nmt.script = ''
     assertFileExists home-files/.config/alot/config
