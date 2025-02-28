@@ -6,6 +6,6 @@ Environment=PATH=@coreutils@/bin:@xdotool@/bin:@xorg.xprop@/bin
 ExecStart=@fusuma@/bin/fusuma
 
 [Unit]
-After=graphical-session-pre.target
+After=graphical-session.target
 Description=Fusuma services
 PartOf=graphical-session.target

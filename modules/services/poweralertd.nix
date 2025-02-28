@@ -44,7 +44,7 @@ in {
       Unit = {
         Description = "UPower-powered power alerter";
         Documentation = "man:poweralertd(1)";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
