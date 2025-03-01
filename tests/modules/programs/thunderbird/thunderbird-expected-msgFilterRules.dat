@@ -1,0 +1,7 @@
+version="9"
+logging="no"
+name="Mark as Read on Archive"
+enabled="yes"
+type="128"
+action="Mark read"
+condition="ALL"
