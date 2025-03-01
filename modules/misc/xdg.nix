@@ -24,6 +24,15 @@ in {
   options.xdg = {
     enable = mkEnableOption "management of XDG base directories";
 
+    cacheFile = mkOption {
+      type = fileType "xdg.cacheFile" "{var}`xdg.cacheHome`" cfg.cacheHome;
+      default = { };
+      description = ''
+        Attribute set of files to link into the user's XDG
+        cache home.
+      '';
+    };
+
     cacheHome = mkOption {
       type = types.path;
       defaultText = "~/.cache";
@@ -136,6 +145,8 @@ in {
 
     {
       home.file = mkMerge [
+        (mapAttrs' (name: file: nameValuePair "${cfg.cacheHome}/${name}" file)
+          cfg.cacheFile)
         (mapAttrs' (name: file: nameValuePair "${cfg.configHome}/${name}" file)
           cfg.configFile)
         (mapAttrs' (name: file: nameValuePair "${cfg.dataHome}/${name}" file)
