@@ -90335,6 +90335,242 @@ list of absolute path</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-xdg.cacheFile"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile"><code class="option">xdg.cacheFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of files to link into the user’s XDG
+cache home.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.cacheFile._name_.enable"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.enable"><code class="option">xdg.cacheFile.&lt;name&gt;.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether this file should be generated. This option allows specific
+files to be disabled.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.cacheFile._name_.executable"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.executable"><code class="option">xdg.cacheFile.&lt;name&gt;.executable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Set the execute bit. If <code class="literal">null</code>, defaults to the mode
+of the <code class="varname">source</code> file or to <code class="literal">false</code>
+for files created through the <code class="varname">text</code> option.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.cacheFile._name_.force"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.force"><code class="option">xdg.cacheFile.&lt;name&gt;.force</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether the target path should be unconditionally replaced
+by the managed file source. Warning, this will silently
+delete the target regardless of whether it is a file or
+link.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.cacheFile._name_.onChange"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.onChange"><code class="option">xdg.cacheFile.&lt;name&gt;.onChange</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Shell commands to run when file has changed between
+generations. The script will be run
+<span class="emphasis"><em>after</em></span> the new files have been linked
+into place.</p><p>Note, this code is always run when <code class="literal">recursive</code> is
+enabled.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.cacheFile._name_.recursive"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.recursive"><code class="option">xdg.cacheFile.&lt;name&gt;.recursive</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>If the file source is a directory, then this option
+determines whether the directory should be recursively
+linked to the target location. This option has no effect
+if the source is a file.</p><p>If <code class="literal">false</code> (the default) then the target
+will be a symbolic link to the source directory. If
+<code class="literal">true</code> then the target will be a
+directory structure matching the source’s but whose leafs
+are symbolic links to the files of the source directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.cacheFile._name_.source"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.source"><code class="option">xdg.cacheFile.&lt;name&gt;.source</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path of the source file or directory. If
+<a class="xref" href="options.xhtml#opt-xdg.cacheFile._name_.text"  ><code class="option">xdg.cacheFile.&lt;name&gt;.text</code></a>
+is non-null then this option will automatically point to a file
+containing that text.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+absolute path</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.cacheFile._name_.target"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.target"><code class="option">xdg.cacheFile.&lt;name&gt;.target</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to target file relative to <code class="varname">xdg.cacheHome</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">name</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.cacheFile._name_.text"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.text"><code class="option">xdg.cacheFile.&lt;name&gt;.text</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Text of the file. If this option is null then
+<a class="xref" href="options.xhtml#opt-xdg.cacheFile._name_.source"  ><code class="option">xdg.cacheFile.&lt;name&gt;.source</code></a>
+must be set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-xdg.cacheHome"></a><a class="term" href="options.xhtml#opt-xdg.cacheHome"><code class="option">xdg.cacheHome</code>
   </a>
  </span>
