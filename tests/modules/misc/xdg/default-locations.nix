@@ -1,7 +1,7 @@
 { config, lib, ... }: {
   config = {
     # Test fallback behavior for stateVersion >= 20.09, which is pure.
-    xdg.enable = lib.mkForce false;
+    xdg.enable = false;
     home.stateVersion = "20.09";
 
     xdg.configFile.test.text = "config";
