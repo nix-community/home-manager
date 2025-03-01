@@ -92,7 +92,7 @@ let
 
       # Fix impurities. Without these some of the user's environment
       # will leak into the tests through `builtins.getEnv`.
-      xdg.enable = true;
+      xdg.enable = lib.mkDefault true;
       home = {
         username = "hm-user";
         homeDirectory = "/home/hm-user";
