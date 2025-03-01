@@ -53,9 +53,9 @@ in {
             "NixOS Wiki" = {
               urls = [{
                 template =
-                  "https://wiki.nixos.org/index.php?search={searchTerms}";
+                  "https://wiki.nixos.org/w/index.php?search={searchTerms}";
               }];
-              iconUpdateURL = "https://wiki.nixos.org/favicon.png";
+              iconMapObj."16" = "https://wiki.nixos.org/favicon.png";
               updateInterval = 24 * 60 * 60 * 1000;
               definedAliases = [ "@nw" ];
             };
@@ -91,6 +91,46 @@ in {
             };
           };
         };
+      };
+
+      migrateIcons = {
+        id = 2;
+        search = {
+          force = true;
+          engines = {
+            "Nix Packages" = {
+              urls = [{
+                template = "https://search.nixos.org/packages";
+                params = [
+                  {
+                    name = "type";
+                    value = "packages";
+                  }
+                  {
+                    name = "query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }];
+
+              iconURL = "https://search.nixos.org/favicon.png";
+              iconUpdateURL = "https://search.nixos.org/favicon.png";
+              definedAliases = [ "@np" ];
+            };
+
+            "NixOS Wiki" = {
+              urls = [{
+                template =
+                  "https://wiki.nixos.org/w/index.php?search={searchTerms}";
+              }];
+              iconMapObj."{\"width\":16,\"height\":16}" =
+                "https://wiki.nixos.org/favicon.png";
+              updateInterval = 24 * 60 * 60 * 1000;
+              definedAliases = [ "@nw" ];
+            };
+          };
+        };
+
       };
     };
   } // {
@@ -133,6 +173,10 @@ in {
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
         ${withName ./expected-search-without-default.json}
+
+      assertFirefoxSearchContent \
+        home-files/${cfg.configPath}/migrateIcons/search.json.mozlz4 \
+        ${withName ./expected-migrate-icons.json}
     '';
   });
 }
