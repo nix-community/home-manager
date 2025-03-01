@@ -116,10 +116,10 @@ in {
         XDG_STATE_HOME = cfg.stateHome;
       };
     in mkIf cfg.enable {
-      xdg.cacheHome = mkDefault defaultCacheHome;
-      xdg.configHome = mkDefault defaultConfigHome;
-      xdg.dataHome = mkDefault defaultDataHome;
-      xdg.stateHome = mkDefault defaultStateHome;
+      xdg.cacheHome = mkOptionDefault defaultCacheHome;
+      xdg.configHome = mkOptionDefault defaultConfigHome;
+      xdg.dataHome = mkOptionDefault defaultDataHome;
+      xdg.stateHome = mkOptionDefault defaultStateHome;
 
       home.sessionVariables = variables;
       systemd.user.sessionVariables =
@@ -129,20 +129,21 @@ in {
     # Legacy non-deterministic setup.
     (mkIf (!cfg.enable && versionOlder config.home.stateVersion "20.09") {
       xdg.cacheHome =
-        mkDefault (getEnvFallback "XDG_CACHE_HOME" defaultCacheHome);
+        mkOptionDefault (getEnvFallback "XDG_CACHE_HOME" defaultCacheHome);
       xdg.configHome =
-        mkDefault (getEnvFallback "XDG_CONFIG_HOME" defaultConfigHome);
-      xdg.dataHome = mkDefault (getEnvFallback "XDG_DATA_HOME" defaultDataHome);
+        mkOptionDefault (getEnvFallback "XDG_CONFIG_HOME" defaultConfigHome);
+      xdg.dataHome =
+        mkOptionDefault (getEnvFallback "XDG_DATA_HOME" defaultDataHome);
       xdg.stateHome =
-        mkDefault (getEnvFallback "XDG_STATE_HOME" defaultStateHome);
+        mkOptionDefault (getEnvFallback "XDG_STATE_HOME" defaultStateHome);
     })
 
     # "Modern" deterministic setup.
     (mkIf (!cfg.enable && versionAtLeast config.home.stateVersion "20.09") {
-      xdg.cacheHome = mkDefault defaultCacheHome;
-      xdg.configHome = mkDefault defaultConfigHome;
-      xdg.dataHome = mkDefault defaultDataHome;
-      xdg.stateHome = mkDefault defaultStateHome;
+      xdg.cacheHome = mkOptionDefault defaultCacheHome;
+      xdg.configHome = mkOptionDefault defaultConfigHome;
+      xdg.dataHome = mkOptionDefault defaultDataHome;
+      xdg.stateHome = mkOptionDefault defaultStateHome;
     })
 
     {
