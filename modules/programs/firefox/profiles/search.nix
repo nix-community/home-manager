@@ -48,8 +48,8 @@ let
     let
       requiredInput = {
         inherit name;
-        isAppProvided = input.isAppProvided or removeAttrs input [ "metaData" ]
-          == { };
+        isAppProvided =
+          input.isAppProvided or (removeAttrs input [ "metaData" ] == { });
         metaData = input.metaData or { };
       };
     in if requiredInput.isAppProvided then
