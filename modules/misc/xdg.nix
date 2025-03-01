@@ -133,6 +133,8 @@ in {
       xdg.configHome =
         mkDefault (getEnvFallback "XDG_CONFIG_HOME" defaultConfigHome);
       xdg.dataHome = mkDefault (getEnvFallback "XDG_DATA_HOME" defaultDataHome);
+      xdg.stateHome =
+        mkDefault (getEnvFallback "XDG_STATE_HOME" defaultStateHome);
     })
 
     # "Modern" deterministic setup.
