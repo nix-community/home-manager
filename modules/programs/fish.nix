@@ -434,92 +434,103 @@ in
     lib.mkMerge [
       { home.packages = [ cfg.package ]; }
 
-      (mkIf cfg.generateCompletions {
-        # Support completion for `man` by building a cache for `apropos`.
-        programs.man.generateCaches = lib.mkDefault true;
-
-        xdg.dataFile."fish/home-manager_generated_completions".source =
-          let
-            # Paths later in the list will overwrite those already linked
-            destructiveSymlinkJoin =
-              args_@{
-                name,
-                paths,
-                preferLocalBuild ? true,
-                allowSubstitutes ? false,
-                postBuild ? "",
-                ...
-              }:
-              let
-                args =
-                  removeAttrs args_ [
-                    "name"
-                    "postBuild"
-                  ]
-                  // {
-                    # pass the defaults
-                    inherit preferLocalBuild allowSubstitutes;
-                  };
-              in
-              pkgs.runCommand name args ''
+      (mkIf cfg.generateCompletions (
+        let
+          generateCompletions =
+            let
+              getName =
+                attrs: attrs.name or "${attrs.pname or "«pname-missing»"}-${attrs.version or "«version-missing»"}";
+            in
+            package:
+            pkgs.runCommand "${getName package}-fish-completions"
+              {
+                srcs =
+                  [ package ]
+                  ++ lib.filter (p: p != null) (
+                    builtins.map (outName: package.${outName} or null) config.home.extraOutputsToInstall
+                  );
+                nativeBuildInputs = [ pkgs.python3 ];
+                buildInputs = [ cfg.package ];
+                preferLocalBuild = true;
+              }
+              ''
                 mkdir -p $out
-                for i in $paths; do
-                  if [ -z "$(find $i -prune -empty)" ]; then
-                    cp -srf $i/* $out
+                for src in $srcs; do
+                  if [ -d $src/share/man ]; then
+                    find -L $src/share/man -type f \
+                      -exec python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out {} + \
+                      > /dev/null
                   fi
                 done
-                ${postBuild}
               '';
 
-            generateCompletions =
-              let
-                getName =
-                  attrs: attrs.name or "${attrs.pname or "«pname-missing»"}-${attrs.version or "«version-missing»"}";
-              in
-              package:
-              pkgs.runCommand "${getName package}-fish-completions"
-                {
-                  srcs =
-                    [ package ]
-                    ++ lib.filter (p: p != null) (
-                      builtins.map (outName: package.${outName} or null) config.home.extraOutputsToInstall
-                    );
-                  nativeBuildInputs = [ pkgs.python3 ];
-                  buildInputs = [ cfg.package ];
-                  preferLocalBuild = true;
-                }
-                ''
+          allCompletions =
+            let
+              cmp = (a: b: (a.meta.priority or 0) > (b.meta.priority or 0));
+            in
+            map generateCompletions (lib.sort cmp config.home.packages);
+        in
+        {
+          # Support completion for `man` by building a cache for `apropos`.
+          programs.man.generateCaches = lib.mkDefault true;
+
+          xdg.dataFile."fish/home-manager_generated_completions".source =
+            let
+              # Paths later in the list will overwrite those already linked
+              destructiveSymlinkJoin =
+                args_@{
+                  name,
+                  paths,
+                  preferLocalBuild ? true,
+                  allowSubstitutes ? false,
+                  postBuild ? "",
+                  ...
+                }:
+                let
+                  args =
+                    removeAttrs args_ [
+                      "name"
+                      "postBuild"
+                    ]
+                    // {
+                      # pass the defaults
+                      inherit preferLocalBuild allowSubstitutes;
+                    };
+                in
+                pkgs.runCommand name args ''
                   mkdir -p $out
-                  for src in $srcs; do
-                    if [ -d $src/share/man ]; then
-                      find -L $src/share/man -type f \
-                        -exec python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out {} + \
-                        > /dev/null
+                  for i in $paths; do
+                    if [ -z "$(find $i -prune -empty)" ]; then
+                      cp -srf $i/* $out
                     fi
                   done
+                  ${postBuild}
                 '';
-          in
-          destructiveSymlinkJoin {
-            name = "${config.home.username}-fish-completions";
-            paths =
-              let
-                cmp = (a: b: (a.meta.priority or 0) > (b.meta.priority or 0));
-              in
-              map generateCompletions (lib.sort cmp config.home.packages);
-          };
 
-        programs.fish.interactiveShellInit = ''
-          # add completions generated by Home Manager to $fish_complete_path
-          begin
-            set -l joined (string join " " $fish_complete_path)
-            set -l prev_joined (string replace --regex "[^\s]*generated_completions.*" "" $joined)
-            set -l post_joined (string replace $prev_joined "" $joined)
-            set -l prev (string split " " (string trim $prev_joined))
-            set -l post (string split " " (string trim $post_joined))
-            set fish_complete_path $prev "${config.xdg.dataHome}/fish/home-manager_generated_completions" $post
-          end
-        '';
-      })
+            in
+            destructiveSymlinkJoin {
+              name = "${config.home.username}-fish-completions";
+              paths = allCompletions;
+            };
+
+          # For packages with no Fish completions, generateCompletions will build an empty directory,
+          # which means they will not be in our runtime closure. Force a dependency so these do not get
+          # constantly rebuilt.
+          home.extraDependencies = allCompletions;
+
+          programs.fish.interactiveShellInit = ''
+            # add completions generated by Home Manager to $fish_complete_path
+            begin
+              set -l joined (string join " " $fish_complete_path)
+              set -l prev_joined (string replace --regex "[^\s]*generated_completions.*" "" $joined)
+              set -l post_joined (string replace $prev_joined "" $joined)
+              set -l prev (string split " " (string trim $prev_joined))
+              set -l post (string split " " (string trim $post_joined))
+              set fish_complete_path $prev "${config.xdg.dataHome}/fish/home-manager_generated_completions" $post
+            end
+          '';
+        }
+      ))
 
       {
         xdg.configFile."fish/config.fish".source = fishIndent "config.fish" ''
