@@ -142,6 +142,7 @@ in import nmtSrc {
     ./modules/programs/btop
     ./modules/programs/carapace
     ./modules/programs/cava
+    ./modules/programs/clock-rs
     ./modules/programs/cmus
     ./modules/programs/comodoro
     ./modules/programs/darcs
