@@ -25,6 +25,12 @@
     - modules/programs/neovim.nix
     - tests/modules/programs/neovim/**/*
 
+"program: firefox":
+  - changed-files:
+    - any-glob-to-any-file:
+      - modules/programs/firefox/**/*
+      - tests/modules/programs/firefox/**/*
+
 "shell":
 - changed-files:
   - any-glob-to-any-file:
