@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ pkgs, lib, config, ... }:
 
 with lib;
 
@@ -63,8 +63,10 @@ in {
   buildConfigAsserts = quadletName: extraConfig:
     let
       configRules = {
+        Build = { ImageTag = (with types; listOf str); };
         Container = { ContainerName = types.enum [ quadletName ]; };
         Network = { NetworkName = types.enum [ quadletName ]; };
+        Volume = { VolumeName = types.enum [ quadletName ]; };
       };
 
       # Function to build assertions for a specific section and its attributes.
@@ -83,8 +85,23 @@ in {
         else
           [ ];
 
+      checkImageTag = extraConfig:
+        let
+          imageTags = (extraConfig.Build or { }).ImageTag or [ ];
+          containsRequiredTag =
+            builtins.elem "homemanager/${quadletName}" imageTags;
+          imageTagsStr = concatMapStringsSep ''" "'' toString imageTags;
+        in [{
+          assertion = imageTags == [ ] || containsRequiredTag;
+          message = ''
+            In '${quadletName}' config. Build.ImageTag: '[ "${imageTagsStr}" ]' does not contain 'homemanager/${quadletName}'.'';
+        }];
+
       # Flatten assertions from all sections in `extraConfig`.
-    in flatten (mapAttrsToList buildSectionAsserts extraConfig);
+    in flatten (concatLists [
+      (mapAttrsToList buildSectionAsserts extraConfig)
+      (checkImageTag extraConfig)
+    ]);
 
   extraConfigType = with types;
     attrsOf (attrsOf (oneOf [ primitiveAttrs primitiveList primitive ]));
@@ -107,8 +124,10 @@ in {
           # specific logic for writing the unit name goes here. It should be
           #   identical to what `podman <resource> ls` shows
         in {
+          "build" = "localhost/homemanager/${strippedName}";
           "container" = strippedName;
           "network" = strippedName;
+          "volume" = strippedName;
         }."${quadlet.resourceType}";
     in if allQuadletsSameType then ''
       ${concatStringsSep "\n"
@@ -133,4 +152,10 @@ in {
       lines = splitString "\n" text;
       nonEmptyLines = filter (line: line != "") lines;
     in concatStringsSep "\n" nonEmptyLines;
+
+  awaitPodmanUnshare = pkgs.writeShellScript "await-podman-unshare" ''
+    until ${config.services.podman.package}/bin/podman unshare ${pkgs.coreutils}/bin/true; do
+      ${pkgs.coreutils}/bin/sleep 1
+    done
+  '';
 }
