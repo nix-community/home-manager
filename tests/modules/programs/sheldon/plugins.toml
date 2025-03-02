@@ -1,0 +1,7 @@
+shell = "zsh"
+[plugins.zsh-syntax-highlighting]
+apply = ["defer"]
+github = "zsh-users/zsh-syntax-highlighting"
+
+[templates]
+defer = "{{ hooks | get: \"pre\" | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks | get: \"post\" | nl }}"
