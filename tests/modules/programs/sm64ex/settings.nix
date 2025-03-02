@@ -1,6 +1,7 @@
-{
+{ lib, pkgs, ... }: {
   programs.sm64ex = {
     enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
 
     settings = {
       fullscreen = true;
