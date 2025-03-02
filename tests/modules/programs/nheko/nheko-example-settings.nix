@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   configDir = if pkgs.stdenv.isDarwin then
@@ -8,6 +8,7 @@ let
 in {
   programs.nheko = {
     enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
 
     settings = {
       general = { disableCertificateValidation = false; };

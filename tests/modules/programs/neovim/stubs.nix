@@ -13,6 +13,7 @@
         chmod +x $out/bin/nvim
       '';
       extraAttrs = {
+        # TODO: stub `withPackages`
         lua = pkgs.writeTextDir "nix-support/utils.sh" ''
           function _addToLuaPath() {
             return 0

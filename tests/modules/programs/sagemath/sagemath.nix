@@ -1,8 +1,9 @@
-{ config, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   programs.sagemath = {
     enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
     configDir = "${config.xdg.configHome}/sage";
     dataDir = "${config.xdg.dataHome}/sage";
     initScript = ''

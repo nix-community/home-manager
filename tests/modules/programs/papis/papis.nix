@@ -1,6 +1,7 @@
-{
+{ lib, pkgs, ... }: {
   programs.papis = {
     enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
     settings = {
       picktool = "fzf";
       file-browser = "ranger";

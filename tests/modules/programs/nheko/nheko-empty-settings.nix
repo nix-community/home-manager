@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   configDir = if pkgs.stdenv.isDarwin then
@@ -6,7 +6,10 @@ let
   else
     "home-files/.config";
 in {
-  programs.nheko.enable = true;
+  programs.nheko = {
+    enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
+  };
 
   nmt.script = ''
     assertPathNotExists "${configDir}/nheko/nheko.conf"

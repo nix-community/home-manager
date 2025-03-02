@@ -64,9 +64,13 @@ let
   in outer;
 
   scrubbedPkgs =
-    let rawScrubbedPkgs = lib.makeExtensible (final: scrubDerivations pkgs);
-    in builtins.traceVerbose "eval scrubbed nixpkgs"
-    (rawScrubbedPkgs.extend whitelist);
+    # TODO: fix darwin stdenv stubbing
+    if isDarwin then
+      pkgs
+    else
+      let rawScrubbedPkgs = lib.makeExtensible (final: scrubDerivations pkgs);
+      in builtins.traceVerbose "eval scrubbed nixpkgs"
+      (rawScrubbedPkgs.extend whitelist);
 
   modules = import ../modules/modules.nix {
     inherit lib pkgs;
@@ -245,7 +249,6 @@ in import nmtSrc {
     ./modules/programs/translate-shell
     ./modules/programs/vifm
     ./modules/programs/vim-vint
-    ./modules/programs/vinegar
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
@@ -317,6 +320,7 @@ in import nmtSrc {
     ./modules/programs/swayr
     ./modules/programs/terminator
     ./modules/programs/tofi
+    ./modules/programs/vinegar
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi

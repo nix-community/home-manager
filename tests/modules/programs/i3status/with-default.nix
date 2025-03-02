@@ -1,7 +1,9 @@
-{
+{ config, ... }: {
   programs.i3status = {
     enable = true;
     enableDefault = true;
+
+    package = config.lib.test.mkStubPackage { };
   };
 
   nmt.script = ''
