@@ -22,6 +22,10 @@ let
     mkKeyValue = key: command: "map ${key} ${command}";
   };
 
+  toKittyActionAliases = lib.generators.toKeyValue {
+    mkKeyValue = alias_name: action: "action_alias ${alias_name} ${action}";
+  };
+
   toKittyEnv = lib.generators.toKeyValue {
     mkKeyValue = name: value: "env ${name}=${value}";
   };
@@ -143,6 +147,18 @@ in {
       description = "The font to use.";
     };
 
+    actionAliases = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = "Define action aliases.";
+      example = literalExpression ''
+        {
+          "launch_tab" = "launch --cwd=current --type=tab";
+          "launch_window" = "launch --cwd=current --type=os-window";
+        }
+      '';
+    };
+
     keybindings = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -234,6 +250,7 @@ in {
           shell_integration ${cfg.shellIntegration.mode}
         '')
         (toKittyConfig cfg.settings)
+        (toKittyActionAliases cfg.actionAliases)
         (toKittyKeybindings cfg.keybindings)
         (toKittyEnv cfg.environment)
         cfg.extraConfig
