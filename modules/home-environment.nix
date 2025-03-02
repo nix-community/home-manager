@@ -383,6 +383,15 @@ in
       '';
     };
 
+    home.extraDependencies = mkOption {
+      type = types.listOf types.pathInStore;
+      default = [ ];
+      description = ''
+        A list of paths that should be included in the home
+        closure but generally not visible.
+      '';
+    };
+
     home.path = mkOption {
       internal = true;
       description = "The derivation installing the user packages.";
@@ -780,6 +789,8 @@ in
       pkgs.runCommand "home-manager-generation"
         {
           preferLocalBuild = true;
+          passAsFile = [ "extraDependencies" ];
+          inherit (config.home) extraDependencies;
         }
         ''
           mkdir -p $out
@@ -796,6 +807,8 @@ in
 
           ln -s ${config.home-files} $out/home-files
           ln -s ${cfg.path} $out/home-path
+
+          cp "$extraDependenciesPath" "$out/extra-dependencies"
 
           ${cfg.extraBuilderCommands}
         '';
