@@ -1,6 +1,7 @@
-{
+{ lib, pkgs, ... }: {
   programs.openstackclient = {
     enable = true;
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
     clouds = {
       my-infra = {
         cloud = "example-cloud";
