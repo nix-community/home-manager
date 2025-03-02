@@ -1,7 +1,10 @@
-{ pkgs, ... }:
+{ lib, pkgs, realPkgs, ... }:
 
 {
   imports = [ ./stubs.nix ];
+
+  # TODO: remove after stubbing `withPackages`
+  _module.args.pkgs = lib.mkForce realPkgs;
 
   programs.neovim = {
     enable = true;
