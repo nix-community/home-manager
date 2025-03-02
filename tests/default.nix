@@ -245,7 +245,6 @@ in import nmtSrc {
     ./modules/programs/translate-shell
     ./modules/programs/vifm
     ./modules/programs/vim-vint
-    ./modules/programs/vinegar
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
@@ -317,6 +316,7 @@ in import nmtSrc {
     ./modules/programs/swayr
     ./modules/programs/terminator
     ./modules/programs/tofi
+    ./modules/programs/vinegar
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi
