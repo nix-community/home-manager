@@ -392,7 +392,7 @@ in
       '';
     };
 
-    userConfigFile = mkOption {
+    configDirectory = mkOption {
       type = types.str;
       default = ".ssh/config";
       description = ''
