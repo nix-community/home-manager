@@ -489,7 +489,7 @@ in {
         genIdentity = name: account:
           with account;
           nameValuePair "sendemail.${name}" (if account.msmtp.enable then {
-            smtpServer = "${pkgs.msmtp}/bin/msmtp";
+            sendmailCmd = "${pkgs.msmtp}/bin/msmtp";
             envelopeSender = "auto";
             from = "${realName} <${address}>";
           } else
