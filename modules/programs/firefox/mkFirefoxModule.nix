@@ -911,7 +911,7 @@ in {
           (name: settingConfig: {
             "${profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" =
               {
-                force = settingConfig.force;
+                force = settingConfig.force || profile.extensions.force;
                 text = generators.toJSON { } settingConfig.settings;
               };
           }) profile.extensions.settings)))));
