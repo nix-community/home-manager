@@ -525,7 +525,7 @@ in
       }
     ];
 
-    home.file.${cfg.userConfigFile}.text =
+    home.file.${cfg.configDirectory}.text =
       let
         sortedMatchBlocks = hm.dag.topoSort cfg.matchBlocks;
         sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
