@@ -396,14 +396,15 @@ in
       type = types.str;
       default = ".ssh/config";
       description = ''
-      tells Home-Manager where in your home you want your ssh config to be.
-      Example: <filename>.ssh/config<filename> will put it into 
-      <filename>~/.ssh/config<filename>
-      while <filename>.config/ssh/config<filename> will put it into 
-      <filename>~/.config/ssh/config<filename>
-      file is put into <filename>~/.ssh/config</filename> by default.
-      can be paired with a alias 'ssh = "ssh -F"' to declutter your 
-      home folder.
+        Set ssh config directory.
+
+        Example: `.ssh/config` will put it into `~/.ssh/config`
+        while `.config/ssh/config` will put it into `~/.config/ssh/config`.
+
+        File is put into `~/.ssh/config` by default.
+
+        Can be paired with an alias `ssh = "ssh -F"` to declutter your
+        home folder.
       '';
     };
 
