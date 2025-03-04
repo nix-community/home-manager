@@ -1,0 +1,104 @@
+archives:
+  font-style: bold
+  foreground: red
+colors:
+  base01: '#AAAAAA'
+  black: '#000000'
+  blue: '#0000FF'
+  cyan: '#00FFFF'
+  green: '#00FF00'
+  orange: '#FFA500'
+  purple: '#FF00FF'
+  red: '#FF0000'
+  white: '#FFFFFF'
+  yellow: '#FFFF00'
+core:
+  block_device:
+    background: black
+    font-style: bold
+    foreground: yellow
+  broken_symlink:
+    background: black
+    font-style: bold
+    foreground: red
+  character_device:
+    background: black
+    font-style: bold
+    foreground: yellow
+  directory:
+    foreground: purple
+  door:
+    background: black
+    font-style: bold
+    foreground: blue
+  executable_file:
+    foreground: green
+  fifo:
+    background: black
+    foreground: yellow
+  file_with_capability: {}
+  missing_symlink_target:
+    background: black
+    foreground: red
+  multi_hard_link: {}
+  normal_text:
+    foreground: white
+  other_writable:
+    background: green
+    foreground: purple
+  regular_file:
+    foreground: white
+  reset_to_normal:
+    foreground: orange
+  setgid:
+    background: yellow
+    foreground: black
+  setuid:
+    background: red
+    foreground: white
+  socket:
+    background: black
+    font-style: bold
+    foreground: blue
+  sticky:
+    background: purple
+    foreground: white
+  sticky_other_writable:
+    background: green
+    foreground: black
+  symlink:
+    foreground: cyan
+executable:
+  foreground: green
+markup:
+  foreground: orange
+media:
+  3d:
+    foreground: blue
+  audio:
+    foreground: cyan
+  fonts:
+    foreground: orange
+  image:
+    foreground: blue
+  video:
+    font-style: bold
+    foreground: orange
+office:
+  foreground: orange
+programming:
+  foreground: orange
+text:
+  configuration:
+    foreground: orange
+  licenses:
+    foreground: orange
+  other:
+    foreground: orange
+  special:
+    foreground: orange
+  todo:
+    font-style: bold
+    foreground: orange
+unimportant:
+  foreground: base01
