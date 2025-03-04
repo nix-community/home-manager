@@ -31,7 +31,7 @@
 
     assertGitConfig "sendemail.hm@example.com.from" "H. M. Test <hm@example.com>"
     assertGitConfig "sendemail.hm-account.from" "H. M. Test Jr. <hm@example.org>"
-    assertGitConfig "sendemail.hm@example.com.smtpServer" "${pkgs.msmtp}/bin/msmtp"
+    assertGitConfig "sendemail.hm@example.com.sendmailCmd" "${pkgs.msmtp}/bin/msmtp"
     assertGitConfig "sendemail.hm@example.com.envelopeSender" "auto"
   '';
 }
