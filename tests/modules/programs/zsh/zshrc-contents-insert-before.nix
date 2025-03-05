@@ -1,7 +1,7 @@
 { lib, ... }: {
   programs.zsh = {
     enable = true;
-    initContents = lib.mkBefore ''
+    initExtra = lib.mkBefore ''
       # Custom contents
       echo "Custom contents"
     '';

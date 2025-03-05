@@ -471,12 +471,6 @@ in
         description = "Environment variables that will be set for zsh session.";
       };
 
-      initContents = mkOption {
-        default = "";
-        type = types.lines;
-        description = "Content to be added to {file}`.zshrc`.";
-      };
-
       initExtraBeforeCompInit = mkOption {
         default = "";
         type = types.lines;
@@ -622,7 +616,7 @@ in
         ++ optional cfg.enableCompletion pkgs.nix-zsh-completions
         ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
-      programs.zsh.initContents = mkMerge [
+      programs.zsh.initExtra = mkMerge [
         # zprof must be loaded before everything else, since it
         # benchmarks the shell initialization.
         (mkOrder 500 (optionalString cfg.zprof.enable ''
@@ -727,8 +721,6 @@ in
           ${if cfg.autocd != null then "${if cfg.autocd then "setopt" else "unsetopt"} autocd" else ""}
         '')
 
-        (mkOrder 1200 cfg.initExtra)
-
         # Aliases
         (mkOrder 1250 aliasesStr)
         (mkOrder 1250 (concatStringsSep "\n" (mapAttrsToList
@@ -777,7 +769,7 @@ in
         ''))
       ];
 
-      home.file."${relToDotDir ".zshrc"}".text = cfg.initContents;
+      home.file."${relToDotDir ".zshrc"}".text = cfg.initExtra;
     }
 
     (mkIf cfg.oh-my-zsh.enable {
