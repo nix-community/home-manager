@@ -129,6 +129,7 @@ in {
       Unit = {
         Description = "Day/night gamma adjustments for Wayland compositors.";
         PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
 
       Service = {
