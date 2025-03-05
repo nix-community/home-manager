@@ -118,6 +118,7 @@ let
     ./programs/gnome-shell.nix
     ./programs/gnome-terminal.nix
     ./programs/go.nix
+    ./programs/godot.nix
     ./programs/gpg.nix
     ./programs/gradle.nix
     ./programs/granted.nix
