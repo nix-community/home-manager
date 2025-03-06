@@ -12,9 +12,9 @@
     assertFileContains \
       home-files/.zshrc \
       'export GRANTED_ALIAS_CONFIGURED="true"'
-    assertFileRegex \
+    assertFileContains \
       home-files/.zshrc \
-      'source /nix/store/.*granted.*/bin/assume "$@"'
+      'source @granted@/bin/assume "$@"'
     assertFileContains \
       home-files/.zshrc \
       'unset GRANTED_ALIAS_CONFIGURED'
