@@ -899,6 +899,8 @@ in {
         if isSway then "sway" else "i3"
       } is launched.
       This must to correspond to the value of the keybinding of the default workspace.
+      Alternatively you can specify a priority for any keybinding, default
+      priority is 1000, keybinding matching defaultWorkspace priority is 100.
     '';
     example = "workspace number 9";
   };
