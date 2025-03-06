@@ -5,7 +5,7 @@ with lib;
 let
 
   cfg = config.programs.granted;
-  package = pkgs.granted.override { withFish = cfg.enableFishIntegration; };
+  package = pkgs.granted;
 
 in {
   meta.maintainers = [ hm.maintainers.wcarlsen ];
