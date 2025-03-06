@@ -619,7 +619,7 @@ in
       programs.zsh.initExtra = mkMerge [
         # zprof must be loaded before everything else, since it
         # benchmarks the shell initialization.
-        (mkOrder 500 (optionalString cfg.zprof.enable ''
+        (mkOrder 400 (optionalString cfg.zprof.enable ''
           zmodload zsh/zprof
         ''))
 
