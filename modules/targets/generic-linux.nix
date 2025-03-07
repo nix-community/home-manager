@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
 
   cfg = config.targets.genericLinux;
@@ -12,7 +10,7 @@ let
 
 in {
   imports = [
-    (mkRenamedOptionModule [ "targets" "genericLinux" "extraXdgDataDirs" ] [
+    (lib.mkRenamedOptionModule [ "targets" "genericLinux" "extraXdgDataDirs" ] [
       "xdg"
       "systemDirs"
       "data"
@@ -20,7 +18,7 @@ in {
   ];
 
   options.targets.genericLinux = {
-    enable = mkEnableOption "" // {
+    enable = lib.mkEnableOption "" // {
       description = ''
         Whether to enable settings that make Home Manager work better on
         GNU/Linux distributions other than NixOS.
@@ -28,9 +26,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "targets.genericLinux" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "targets.genericLinux" pkgs
+        lib.platforms.linux)
     ];
 
     xdg.systemDirs.data = [
@@ -49,11 +48,12 @@ in {
     # resolving to the Nix store.
     # https://github.com/nix-community/home-manager/pull/2891#issuecomment-1101064521
     home.sessionVariables = {
-      XCURSOR_PATH = "$XCURSOR_PATH\${XCURSOR_PATH:+:}" + concatStringsSep ":" [
-        "${config.home.profileDirectory}/share/icons"
-        "/usr/share/icons"
-        "/usr/share/pixmaps"
-      ];
+      XCURSOR_PATH = "$XCURSOR_PATH\${XCURSOR_PATH:+:}"
+        + lib.concatStringsSep ":" [
+          "${config.home.profileDirectory}/share/icons"
+          "/usr/share/icons"
+          "/usr/share/pixmaps"
+        ];
     };
 
     home.sessionVariablesExtra = ''
@@ -93,7 +93,7 @@ in {
       # https://salsa.debian.org/debian/ncurses/-/blob/master/debian/rules
       # https://src.fedoraproject.org/rpms/ncurses/blob/main/f/ncurses.spec
       # https://gitweb.gentoo.org/repo/gentoo.git/tree/sys-libs/ncurses/ncurses-6.2-r1.ebuild
-      distroTerminfoDirs = concatStringsSep ":" [
+      distroTerminfoDirs = lib.concatStringsSep ":" [
         "/etc/terminfo" # debian, fedora, gentoo
         "/lib/terminfo" # debian
         "/usr/share/terminfo" # package default, all distros

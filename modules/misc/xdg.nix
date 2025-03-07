@@ -1,8 +1,7 @@
-{ options, config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, pkgs, ... }:
 
 let
+  inherit (lib) mkOptionDefault mkIf mkOption types;
 
   cfg = config.xdg;
 
@@ -22,7 +21,7 @@ let
 
 in {
   options.xdg = {
-    enable = mkEnableOption "management of XDG base directories";
+    enable = lib.mkEnableOption "management of XDG base directories";
 
     cacheFile = mkOption {
       type = fileType "xdg.cacheFile" "{var}`xdg.cacheHome`" cfg.cacheHome;
@@ -107,7 +106,7 @@ in {
     };
   };
 
-  config = mkMerge [
+  config = lib.mkMerge [
     (let
       variables = {
         XDG_CACHE_HOME = cfg.cacheHome;
@@ -127,7 +126,7 @@ in {
     })
 
     # Legacy non-deterministic setup.
-    (mkIf (!cfg.enable && versionOlder config.home.stateVersion "20.09") {
+    (mkIf (!cfg.enable && lib.versionOlder config.home.stateVersion "20.09") {
       xdg.cacheHome =
         mkOptionDefault (getEnvFallback "XDG_CACHE_HOME" defaultCacheHome);
       xdg.configHome =
@@ -139,7 +138,7 @@ in {
     })
 
     # "Modern" deterministic setup.
-    (mkIf (!cfg.enable && versionAtLeast config.home.stateVersion "20.09") {
+    (mkIf (!cfg.enable && lib.versionAtLeast config.home.stateVersion "20.09") {
       xdg.cacheHome = mkOptionDefault defaultCacheHome;
       xdg.configHome = mkOptionDefault defaultConfigHome;
       xdg.dataHome = mkOptionDefault defaultDataHome;
@@ -147,14 +146,18 @@ in {
     })
 
     {
-      home.file = mkMerge [
-        (mapAttrs' (name: file: nameValuePair "${cfg.cacheHome}/${name}" file)
+      home.file = lib.mkMerge [
+        (lib.mapAttrs'
+          (name: file: lib.nameValuePair "${cfg.cacheHome}/${name}" file)
           cfg.cacheFile)
-        (mapAttrs' (name: file: nameValuePair "${cfg.configHome}/${name}" file)
+        (lib.mapAttrs'
+          (name: file: lib.nameValuePair "${cfg.configHome}/${name}" file)
           cfg.configFile)
-        (mapAttrs' (name: file: nameValuePair "${cfg.dataHome}/${name}" file)
+        (lib.mapAttrs'
+          (name: file: lib.nameValuePair "${cfg.dataHome}/${name}" file)
           cfg.dataFile)
-        (mapAttrs' (name: file: nameValuePair "${cfg.stateHome}/${name}" file)
+        (lib.mapAttrs'
+          (name: file: lib.nameValuePair "${cfg.stateHome}/${name}" file)
           cfg.stateFile)
         { "${cfg.cacheHome}/.keep".text = ""; }
         { "${cfg.stateHome}/.keep".text = ""; }

@@ -1,22 +1,20 @@
 modulePath:
 { config, lib, ... }:
 
-with lib;
-
 let
 
-  cfg = getAttrFromPath modulePath config;
+  cfg = lib.getAttrFromPath modulePath config;
 
   firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 
 in {
   imports = [ firefoxMockOverlay ];
 
-  config = mkIf config.test.enableBig ({
+  config = lib.mkIf config.test.enableBig ({
     test.asserts.assertions.expected = [''
       Must not have a ${cfg.name} container with an existing ID but
         - ID 9 is used by dangerous, shopping''];
-  } // setAttrByPath modulePath {
+  } // lib.setAttrByPath modulePath {
     enable = true;
 
     profiles = {

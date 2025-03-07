@@ -1,10 +1,8 @@
 { pkgs, config, lib, ... }:
 
-with lib;
-
 let
 
-  cfg = filterAttrs (n: f: f.enable) config.home.file;
+  cfg = lib.filterAttrs (n: f: f.enable) config.home.file;
 
   homeDirectory = config.home.homeDirectory;
 
@@ -25,14 +23,14 @@ in
 
 {
   options = {
-    home.file = mkOption {
+    home.file = lib.mkOption {
       description = "Attribute set of files to link into the user home.";
       default = {};
       type = fileType "home.file" "{env}`HOME`" homeDirectory;
     };
 
-    home-files = mkOption {
-      type = types.package;
+    home-files = lib.mkOption {
+      type = lib.types.package;
       internal = true;
       description = "Package to contain all home files";
     };
@@ -42,11 +40,11 @@ in
     assertions = [(
       let
         dups =
-          attrNames
-            (filterAttrs (n: v: v > 1)
-            (foldAttrs (acc: v: acc + v) 0
-            (mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)));
-        dupsStr = concatStringsSep ", " dups;
+          lib.attrNames
+            (lib.filterAttrs (n: v: v > 1)
+            (lib.foldAttrs (acc: v: acc + v) 0
+            (lib.mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)));
+        dupsStr = lib.concatStringsSep ", " dups;
       in {
         assertion = dups == [];
         message = ''
@@ -64,22 +62,22 @@ in
     lib.file.mkOutOfStoreSymlink = path:
       let
         pathStr = toString path;
-        name = hm.strings.storeFileName (baseNameOf pathStr);
+        name = lib.hm.strings.storeFileName (baseNameOf pathStr);
       in
-        pkgs.runCommandLocal name {} ''ln -s ${escapeShellArg pathStr} $out'';
+        pkgs.runCommandLocal name {} ''ln -s ${lib.escapeShellArg pathStr} $out'';
 
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
-    home.activation.checkLinkTargets = hm.dag.entryBefore ["writeBoundary"] (
+    home.activation.checkLinkTargets = lib.hm.dag.entryBefore ["writeBoundary"] (
       let
         # Paths that should be forcibly overwritten by Home Manager.
         # Caveat emptor!
         forcedPaths =
-          concatMapStringsSep " " (p: ''"$HOME"/${escapeShellArg p}'')
-            (mapAttrsToList (n: v: v.target)
-            (filterAttrs (n: v: v.force) cfg));
+          lib.concatMapStringsSep " " (p: ''"$HOME"/${lib.escapeShellArg p}'')
+            (lib.mapAttrsToList (n: v: v.target)
+            (lib.filterAttrs (n: v: v.force) cfg));
 
-        storeDir = escapeShellArg builtins.storeDir;
+        storeDir = lib.escapeShellArg builtins.storeDir;
 
         check = pkgs.substituteAll {
           src = ./files/check-link-targets.sh;
@@ -118,7 +116,7 @@ in
     # and a failure during the intermediate state FA ∩ FB will not
     # result in lost links because this set of links are in both the
     # source and target generation.
-    home.activation.linkGeneration = hm.dag.entryAfter ["writeBoundary"] (
+    home.activation.linkGeneration = lib.hm.dag.entryAfter ["writeBoundary"] (
       let
         link = pkgs.writeShellScript "link" ''
           ${config.lib.bash.initHomeManagerLib}
@@ -151,7 +149,7 @@ in
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+          homeFilePattern="$(readlink -e ${lib.escapeShellArg builtins.storeDir})/*-home-manager-files/*"
 
           newGenFiles="$1"
           shift 1
@@ -216,9 +214,9 @@ in
         ''
     );
 
-    home.activation.checkFilesChanged = hm.dag.entryBefore ["linkGeneration"] (
+    home.activation.checkFilesChanged = lib.hm.dag.entryBefore ["linkGeneration"] (
       let
-        homeDirArg = escapeShellArg homeDirectory;
+        homeDirArg = lib.escapeShellArg homeDirectory;
       in ''
         function _cmp() {
           if [[ -d $1 && -d $2 ]]; then
@@ -228,31 +226,31 @@ in
           fi
         }
         declare -A changedFiles
-      '' + concatMapStrings (v:
+      '' + lib.concatMapStrings (v:
         let
-          sourceArg = escapeShellArg (sourceStorePath v);
-          targetArg = escapeShellArg v.target;
+          sourceArg = lib.escapeShellArg (sourceStorePath v);
+          targetArg = lib.escapeShellArg v.target;
         in ''
           _cmp ${sourceArg} ${homeDirArg}/${targetArg} \
             && changedFiles[${targetArg}]=0 \
             || changedFiles[${targetArg}]=1
-        '') (filter (v: v.onChange != "") (attrValues cfg))
+        '') (lib.filter (v: v.onChange != "") (lib.attrValues cfg))
       + ''
         unset -f _cmp
       ''
     );
 
-    home.activation.onFilesChange = hm.dag.entryAfter ["linkGeneration"] (
-      concatMapStrings (v: ''
-        if (( ''${changedFiles[${escapeShellArg v.target}]} == 1 )); then
+    home.activation.onFilesChange = lib.hm.dag.entryAfter ["linkGeneration"] (
+      lib.concatMapStrings (v: ''
+        if (( ''${changedFiles[${lib.escapeShellArg v.target}]} == 1 )); then
           if [[ -v DRY_RUN || -v VERBOSE ]]; then
-            echo "Running onChange hook for" ${escapeShellArg v.target}
+            echo "Running onChange hook for" ${lib.escapeShellArg v.target}
           fi
           if [[ ! -v DRY_RUN ]]; then
             ${v.onChange}
           fi
         fi
-      '') (filter (v: v.onChange != "") (attrValues cfg))
+      '') (lib.filter (v: v.onChange != "") (lib.attrValues cfg))
     );
 
     # Symlink directories and files that have the right execute bit.
@@ -324,10 +322,10 @@ in
             fi
           fi
         }
-      '' + concatStrings (
-        mapAttrsToList (n: v: ''
+      '' + lib.concatStrings (
+        lib.mapAttrsToList (n: v: ''
           insertFile ${
-            escapeShellArgs [
+            lib.escapeShellArgs [
               (sourceStorePath v)
               v.target
               (if v.executable == null
