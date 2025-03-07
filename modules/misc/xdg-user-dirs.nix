@@ -1,16 +1,15 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   cfg = config.xdg.userDirs;
 
 in {
-  meta.maintainers = with maintainers; [ euxane ];
+  meta.maintainers = with lib.maintainers; [ euxane ];
 
   imports = [
-    (mkRenamedOptionModule [ "xdg" "userDirs" "publishShare" ] [
+    (lib.mkRenamedOptionModule [ "xdg" "userDirs" "publishShare" ] [
       "xdg"
       "userDirs"
       "publicShare"
@@ -108,11 +107,11 @@ in {
     };
 
     createDirectories =
-      mkEnableOption "automatic creation of the XDG user directories";
+      lib.mkEnableOption "automatic creation of the XDG user directories";
   };
 
   config = let
-    directories = (filterAttrs (n: v: !isNull v) {
+    directories = (lib.filterAttrs (n: v: !isNull v) {
       XDG_DESKTOP_DIR = cfg.desktop;
       XDG_DOCUMENTS_DIR = cfg.documents;
       XDG_DOWNLOAD_DIR = cfg.download;
@@ -122,24 +121,26 @@ in {
       XDG_TEMPLATES_DIR = cfg.templates;
       XDG_VIDEOS_DIR = cfg.videos;
     }) // cfg.extraConfig;
-  in mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "xdg.userDirs" pkgs platforms.linux) ];
+  in lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "xdg.userDirs" pkgs lib.platforms.linux)
+    ];
 
     xdg.configFile."user-dirs.dirs".text = let
       # For some reason, these need to be wrapped with quotes to be valid.
-      wrapped = mapAttrs (_: value: ''"${value}"'') directories;
-    in generators.toKeyValue { } wrapped;
+      wrapped = lib.mapAttrs (_: value: ''"${value}"'') directories;
+    in lib.generators.toKeyValue { } wrapped;
 
     xdg.configFile."user-dirs.conf".text = "enabled=False";
 
     home.sessionVariables = directories;
 
-    home.activation.createXdgUserDirectories = mkIf cfg.createDirectories (let
-      directoriesList = attrValues directories;
-      mkdir =
-        (dir: ''[[ -L "${dir}" ]] || run mkdir -p $VERBOSE_ARG "${dir}"'');
-    in lib.hm.dag.entryAfter [ "linkGeneration" ]
-    (strings.concatMapStringsSep "\n" mkdir directoriesList));
+    home.activation.createXdgUserDirectories = lib.mkIf cfg.createDirectories
+      (let
+        directoriesList = lib.attrValues directories;
+        mkdir =
+          (dir: ''[[ -L "${dir}" ]] || run mkdir -p $VERBOSE_ARG "${dir}"'');
+      in lib.hm.dag.entryAfter [ "linkGeneration" ]
+      (lib.strings.concatMapStringsSep "\n" mkdir directoriesList));
   };
 }
