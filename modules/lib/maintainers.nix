@@ -685,4 +685,10 @@
     github = "3ulalia";
     githubId = "179992797";
   };
+  michaelvanstraten = {
+    name = "Michael van Straten";
+    email = "michael@vanstraten.de";
+    github = "michaelvanstraten";
+    githubId = 50352631;
+  };
 }
