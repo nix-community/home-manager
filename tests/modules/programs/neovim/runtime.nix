@@ -34,8 +34,8 @@ lib.mkIf config.test.enableBig {
       extraLuaPackages = ps: with ps; [ luacheck ];
     }
     {
-      extraPython3Packages = with pkgs.python3Packages; [ jedi pynvim ];
-      extraLuaPackages = with pkgs.lua51Packages; [ luacheck ];
+      extraPython3Packages = ps: with ps; [ jedi pynvim ];
+      extraLuaPackages = ps: with ps; [ luacheck ];
     }
   ];
 
