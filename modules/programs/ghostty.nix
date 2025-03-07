@@ -8,12 +8,31 @@ let
   };
   keyValue = pkgs.formats.keyValue keyValueSettings;
 in {
-  meta.maintainers = [ lib.maintainers.HeitorAugustoLN ];
+  meta.maintainers = with lib.maintainers; [ HeitorAugustoLN khaneliman ];
 
-  options.programs.ghostty = {
+  options.programs.ghostty = let
+    mkShellIntegrationOption = option:
+      option // {
+        description = ''
+          ${option.description}
+
+          This ensures that shell integration works in more scenarios, such as
+          switching shells within Ghostty. But it is not needed to have shell
+          integration.
+
+          See
+          <https://ghostty.org/docs/features/shell-integration#manual-shell-integration-setup>
+          for more information.
+        '';
+      };
+  in {
     enable = lib.mkEnableOption "Ghostty";
 
-    package = lib.mkPackageOption pkgs "ghostty" { };
+    package = lib.mkPackageOption pkgs "ghostty" {
+      nullable = true;
+      extraDescription =
+        "Set programs.ghostty.package to null on platforms where ghostty is not available or marked broken";
+    };
 
     settings = lib.mkOption {
       inherit (keyValue) type;
@@ -22,6 +41,10 @@ in {
         {
           theme = "catppuccin-mocha";
           font-size = 10;
+          keybind = [
+            "ctrl+h=goto_split:left"
+            "ctrl+l=goto_split:right"
+          ];
         }
       '';
       description = ''
@@ -78,37 +101,24 @@ in {
     installBatSyntax =
       lib.mkEnableOption "installation of Ghostty configuration syntax for bat"
       // {
-        default = true;
+        default = cfg.package != null;
+        defaultText =
+          lib.literalMD "`true` if programs.ghostty.package is not null";
       };
 
-    enableBashIntegration = lib.mkEnableOption ''
-      bash shell integration.
+    enableBashIntegration = mkShellIntegrationOption
+      (lib.hm.shell.mkBashIntegrationOption { inherit config; });
 
-      This is ensures that shell integration works in more scenarios, such as switching shells within Ghostty.
-      But it is not needed to have shell integration.
-      See <https://ghostty.org/docs/features/shell-integration#manual-shell-integration-setup> for more information
-    '';
+    enableFishIntegration = mkShellIntegrationOption
+      (lib.hm.shell.mkFishIntegrationOption { inherit config; });
 
-    enableFishIntegration = lib.mkEnableOption ''
-      fish shell integration.
-
-      This is ensures that shell integration works in more scenarios, such as switching shells within Ghostty.
-      But it is not needed to have shell integration.
-      See <https://ghostty.org/docs/features/shell-integration#manual-shell-integration-setup> for more information
-    '';
-
-    enableZshIntegration = lib.mkEnableOption ''
-      zsh shell integration.
-
-      This is ensures that shell integration works in more scenarios, such as switching shells within Ghostty.
-      But it is not needed to have shell integration.
-      See <https://ghostty.org/docs/features/shell-integration#manual-shell-integration-setup> for more information
-    '';
+    enableZshIntegration = mkShellIntegrationOption
+      (lib.hm.shell.mkZshIntegrationOption { inherit config; });
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      home.packages = [ cfg.package ];
+      home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
       programs.ghostty.settings = lib.mkIf cfg.clearDefaultKeybinds {
         keybind = lib.mkBefore [ "clear" ];
@@ -116,27 +126,46 @@ in {
 
       # MacOS also supports XDG configuration directory, so we use it for both
       # Linux and macOS to reduce complexity
-      xdg.configFile = lib.mkMerge [
+      xdg.configFile = let
+        validate = file:
+          lib.mkIf (cfg.package != null) "${
+            lib.getExe cfg.package
+          } +validate-config --config-file=${config.xdg.configHome}/ghostty/${file}";
+      in lib.mkMerge [
         {
           "ghostty/config" = lib.mkIf (cfg.settings != { }) {
             source = keyValue.generate "ghostty-config" cfg.settings;
-            onChange = "${lib.getExe cfg.package} +validate-config";
+            onChange = validate "config";
           };
         }
 
         (lib.mkIf (cfg.themes != { }) (lib.mapAttrs' (name: value: {
           name = "ghostty/themes/${name}";
-          value.source = keyValue.generate "ghostty-${name}-theme" value;
+          value = {
+            source = keyValue.generate "ghostty-${name}-theme" value;
+            onChange = validate "themes/${name}";
+          };
         }) cfg.themes))
       ];
     }
 
     (lib.mkIf cfg.installVimSyntax {
-      programs.vim.plugins = [ cfg.package.vim ];
+      assertions = [{
+        assertion = cfg.installVimSyntax -> cfg.package != null;
+        message =
+          "programs.ghostty.installVimSyntax cannot be enabled when programs.ghostty.package is null";
+      }];
+      programs.vim.plugins =
+        lib.optionals (cfg.package != null) [ cfg.package.vim ];
     })
 
     (lib.mkIf cfg.installBatSyntax {
-      programs.bat = {
+      assertions = [{
+        assertion = cfg.installBatSyntax -> cfg.package != null;
+        message =
+          "programs.ghostty.installBatSyntax cannot be enabled when programs.ghostty.package is null";
+      }];
+      programs.bat = lib.mkIf (cfg.package != null) {
         syntaxes.ghostty = {
           src = cfg.package;
           file = "share/bat/syntaxes/ghostty.sublime-syntax";

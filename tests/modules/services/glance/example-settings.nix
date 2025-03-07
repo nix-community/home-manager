@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.glance = {
     enable = true;
@@ -20,8 +18,6 @@
       }];
     };
   };
-
-  test.stubs.glance = { };
 
   nmt.script = ''
     configFile=home-files/.config/glance/glance.yml

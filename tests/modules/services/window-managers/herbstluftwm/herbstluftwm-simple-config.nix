@@ -1,5 +1,3 @@
-{ lib, pkgs, ... }:
-
 {
   xsession.windowManager.herbstluftwm = {
     enable = true;
@@ -30,8 +28,6 @@
       herbstclient use 1
     '';
   };
-
-  test.stubs.herbstluftwm = { };
 
   nmt.script = ''
     autostart=home-files/.config/herbstluftwm/autostart

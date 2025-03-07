@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   services.picom = {
     enable = true;
@@ -21,8 +19,6 @@
     };
     extraArgs = [ "--legacy-backends" ];
   };
-
-  test.stubs.picom = { };
 
   nmt.script = ''
     assertFileContent \

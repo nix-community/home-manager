@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs = {
     zsh.enable = true;
@@ -8,11 +6,6 @@
       enable = true;
       useTheme = "jandedobbeleer";
     };
-  };
-
-  test.stubs = {
-    oh-my-posh = { };
-    zsh = { };
   };
 
   nmt.script = ''

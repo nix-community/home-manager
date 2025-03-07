@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 let
   pvScript = builtins.toFile "pv.sh" "cat $1";
   expected = builtins.toFile "settings-expected" ''
@@ -33,53 +29,49 @@ let
 
   '';
 in {
-  config = {
-    programs.lf = {
-      enable = true;
+  programs.lf = {
+    enable = true;
 
-      cmdKeybindings = {
-        "<c-a>" = "should-be-added";
-        "<c-b>" = null;
-      };
-
-      commands = {
-        added = '':echo "foo"'';
-        removed = null;
-        multiline = ''
-          :{{
-            push gg
-            echo "bar"
-            push i
-          }}'';
-      };
-
-      extraConfig = ''
-        # More config...
-      '';
-
-      keybindings = {
-        aa = "should-be-added";
-        ab = null;
-      };
-
-      previewer = {
-        keybinding = "i";
-        source = pvScript;
-      };
-
-      settings = {
-        ignorecase = false;
-        icons = true;
-        tabstop = 4;
-        ratios = [ 2 2 3 ];
-      };
+    cmdKeybindings = {
+      "<c-a>" = "should-be-added";
+      "<c-b>" = null;
     };
 
-    test.stubs.lf = { };
+    commands = {
+      added = '':echo "foo"'';
+      removed = null;
+      multiline = ''
+        :{{
+          push gg
+          echo "bar"
+          push i
+        }}'';
+    };
 
-    nmt.script = ''
-      assertFileExists home-files/.config/lf/lfrc
-      assertFileContent home-files/.config/lf/lfrc ${expected}
+    extraConfig = ''
+      # More config...
     '';
+
+    keybindings = {
+      aa = "should-be-added";
+      ab = null;
+    };
+
+    previewer = {
+      keybinding = "i";
+      source = pvScript;
+    };
+
+    settings = {
+      ignorecase = false;
+      icons = true;
+      tabstop = 4;
+      ratios = [ 2 2 3 ];
+    };
   };
+
+  nmt.script = ''
+    assertFileExists home-files/.config/lf/lfrc
+    assertFileContent home-files/.config/lf/lfrc ${expected}
+  '';
 }

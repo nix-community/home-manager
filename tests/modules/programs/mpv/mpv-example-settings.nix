@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./mpv-stubs.nix ];
-
   programs.mpv = {
     enable = true;
 
@@ -15,6 +13,8 @@
     extraInput = ''
       #           script-binding uosc/video                   #! Video tracks
     '';
+
+    includes = [ "manual.conf" ];
 
     config = {
       force-window = true;

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs = {
     scmpuff = {
@@ -8,8 +6,6 @@
     };
     bash.enable = true;
   };
-
-  test.stubs.scmpuff = { };
 
   nmt.script = ''
     assertFileNotRegex home-files/.bashrc '@scmpuff@'

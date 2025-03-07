@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.flameshot = {
     enable = true;
@@ -11,8 +9,6 @@
       };
     };
   };
-
-  test.stubs.flameshot = { };
 
   nmt.script = ''
     assertFileContent \

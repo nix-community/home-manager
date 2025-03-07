@@ -1,8 +1,6 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config, lib, ... }:
+let inherit (lib) concatStringsSep mkOption types;
+in {
   options.test.asserts = {
     warnings = {
       enable = mkOption {
@@ -37,44 +35,43 @@ with lib;
     };
   };
 
-  config = mkMerge [
-    (mkIf config.test.asserts.warnings.enable {
+  config = lib.mkMerge [
+    (lib.mkIf config.test.asserts.warnings.enable {
       home.file = {
         "asserts/warnings.actual".text = concatStringsSep ''
 
           --
         '' config.warnings;
+        "asserts/warnings.expected".text = concatStringsSep ''
+
+          --
+        '' config.test.asserts.warnings.expected;
       };
 
       nmt.script = ''
         assertFileContent \
           home-files/asserts/warnings.actual \
-          ${
-            pkgs.writeText "warnings.expected" (concatStringsSep ''
-
-              --
-            '' config.test.asserts.warnings.expected)
-          }
+          "$TESTED/home-files/asserts/warnings.expected"
       '';
     })
 
-    (mkIf config.test.asserts.assertions.enable {
+    (lib.mkIf config.test.asserts.assertions.enable {
       home.file = {
         "asserts/assertions.actual".text = concatStringsSep ''
 
           --
-        '' (map (x: x.message) (filter (x: !x.assertion) config.assertions));
+        ''
+          (map (x: x.message) (lib.filter (x: !x.assertion) config.assertions));
+        "asserts/assertions.expected".text = concatStringsSep ''
+
+          --
+        '' config.test.asserts.assertions.expected;
       };
 
       nmt.script = ''
         assertFileContent \
           home-files/asserts/assertions.actual \
-          ${
-            pkgs.writeText "assertions.expected" (concatStringsSep ''
-
-              --
-            '' config.test.asserts.assertions.expected)
-          }
+          "$TESTED/home-files/asserts/assertions.expected"
       '';
     })
   ];

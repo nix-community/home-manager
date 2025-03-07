@@ -77,8 +77,13 @@ in {
         Configuration written to
         {file}`$XDG_CONFIG_HOME/tealdeer/config.toml` on Linux or
         {file}`$HOME/Library/Application Support/tealdeer/config.toml` on Darwin.
-        See <https://dbrgn.github.io/tealdeer/config.html> for more information.
+        See <https://tealdeer-rs.github.io/tealdeer/config.html> for more information.
       '';
+    };
+
+    enableAutoUpdates = mkEnableOption "Auto updates" // {
+      default = true;
+      example = false;
     };
   };
 
@@ -89,5 +94,10 @@ in {
       mkIf (cfg.settings != null && cfg.settings != { }) {
         source = tomlFormat.generate "tealdeer-config" cfg.settings;
       };
+
+    services.tldr-update = mkIf cfg.enableAutoUpdates {
+      enable = true;
+      package = pkgs.tealdeer;
+    };
   };
 }

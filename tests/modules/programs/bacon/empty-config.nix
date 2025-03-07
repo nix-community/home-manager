@@ -7,8 +7,6 @@ let
 in {
   programs.bacon.enable = true;
 
-  test.stubs.bacon = { };
-
   nmt.script = ''
     assertPathNotExists 'home-files/${configDir}/prefs.toml'
   '';

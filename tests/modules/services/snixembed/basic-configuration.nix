@@ -1,12 +1,8 @@
-{ ... }:
-
 {
   services.snixembed = {
     enable = true;
     beforeUnits = [ "safeeyes.service" ];
   };
-
-  test.stubs = { snixembed = { outPath = "/snixembed"; }; };
 
   nmt.script = ''
     assertFileContent \

@@ -1,14 +1,10 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.btop;
 
   finalConfig = let
-    toKeyValue = generators.toKeyValue {
-      mkKeyValue = generators.mkKeyValueDefault {
+    toKeyValue = lib.generators.toKeyValue {
+      mkKeyValue = lib.generators.mkKeyValueDefault {
         mkValueString = v:
           with builtins;
           if isBool v then
@@ -21,19 +17,18 @@ let
     };
   in ''
     ${toKeyValue cfg.settings}
-    ${optionalString (cfg.extraConfig != "") cfg.extraConfig}
+    ${lib.optionalString (cfg.extraConfig != "") cfg.extraConfig}
   '';
-
 in {
-  meta.maintainers = [ hm.maintainers.GaetanLepage ];
+  meta.maintainers = with lib.maintainers; [ GaetanLepage khaneliman ];
 
   options.programs.btop = {
-    enable = mkEnableOption "btop";
+    enable = lib.mkEnableOption "btop";
 
-    package = mkPackageOption pkgs "btop" { };
+    package = lib.mkPackageOption pkgs "btop" { };
 
-    settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool float int str ]);
+    settings = lib.mkOption {
+      type = with lib.types; attrsOf (oneOf [ bool float int str ]);
       default = { };
       example = {
         color_theme = "Default";
@@ -46,8 +41,8 @@ in {
       '';
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       description = ''
         Extra lines added to the {file}`btop.conf` file.
@@ -55,10 +50,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xdg.configFile."btop/btop.conf" =
-      mkIf (cfg.settings != { }) { text = finalConfig; };
+      lib.mkIf (cfg.settings != { }) { text = finalConfig; };
   };
 }

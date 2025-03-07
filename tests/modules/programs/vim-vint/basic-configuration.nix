@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.vim-vint = {
     enable = true;
@@ -18,8 +16,6 @@
       };
     };
   };
-
-  test.stubs = { vim-vint = { }; };
 
   nmt.script = ''
     assertFileContent home-files/.config/.vintrc.yaml ${

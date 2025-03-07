@@ -1,15 +1,7 @@
-{ ... }:
-
 {
   services.pasystray = {
     enable = true;
     extraOptions = [ "-g" ];
-  };
-
-  test.stubs = {
-    pasystray = { };
-    paprefs = { };
-    pavucontrol = { };
   };
 
   nmt.script = ''

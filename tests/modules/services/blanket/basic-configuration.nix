@@ -1,9 +1,5 @@
-{ ... }:
-
 {
-  services.blanket = { enable = true; };
-
-  test.stubs.blanket = { };
+  services.blanket.enable = true;
 
   nmt.script = ''
     clientServiceFile=home-files/.config/systemd/user/blanket.service

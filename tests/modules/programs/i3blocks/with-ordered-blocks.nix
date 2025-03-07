@@ -1,9 +1,7 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
-  expectedConfig = pkgs.writeText "i3blocks-expected-config" ''
+  expectedConfig = builtins.toFile "i3blocks-expected-config" ''
     [block1first]
     command=echo first
     interval=1
@@ -21,17 +19,17 @@ in {
     programs.i3blocks = {
       enable = true;
       package = config.lib.test.mkStubPackage { };
-      bars = with lib; {
+      bars = {
         bar1 = {
           block1first = {
             command = "echo first";
             interval = 1;
           };
-          block2third = hm.dag.entryAfter [ "block3second" ] {
+          block2third = lib.hm.dag.entryAfter [ "block3second" ] {
             command = "echo third";
             interval = 3;
           };
-          block3second = hm.dag.entryAfter [ "block1first" ] {
+          block3second = lib.hm.dag.entryAfter [ "block1first" ] {
             command = "echo second";
             interval = 2;
           };
@@ -41,19 +39,17 @@ in {
             command = "echo first";
             interval = 1;
           };
-          block2third = hm.dag.entryAfter [ "block3second" ] {
+          block2third = lib.hm.dag.entryAfter [ "block3second" ] {
             command = "echo third";
             interval = 3;
           };
-          block3second = hm.dag.entryAfter [ "block1first" ] {
+          block3second = lib.hm.dag.entryAfter [ "block1first" ] {
             command = "echo second";
             interval = 2;
           };
         };
       };
     };
-
-    test.stubs.i3blocks = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/i3blocks/bar1

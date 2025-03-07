@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   programs.gnome-terminal = {
     enable = true;
@@ -12,11 +10,6 @@
       another-bad-name = { visibleName = "c"; };
     };
   };
-
-  nixpkgs.overlays =
-    [ (self: super: { gnome-terminal = config.lib.test.mkStubPackage { }; }) ];
-
-  test.stubs.dconf = { };
 
   test.asserts.assertions.expected = [''
     The attribute name of a Gnome Terminal profile must be a UUID.

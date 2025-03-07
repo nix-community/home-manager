@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ pkgs, ... }:
 
 let
 
@@ -18,8 +16,6 @@ in {
     enable = true;
     greasemonkey = [ greasemonkeyScript ];
   };
-
-  test.stubs.qutebrowser = { };
 
   nmt.script = let
     scriptDir = if pkgs.stdenv.hostPlatform.isDarwin then

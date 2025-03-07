@@ -19,11 +19,6 @@
     };
   };
 
-  test.stubs = {
-    zplug = { };
-    zsh = { };
-  };
-
   nmt.script = ''
     assertFileContains home-files/.zshrc \
       'source @zplug@/share/zplug/init.zsh'

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.khal = {
     enable = true;
@@ -8,8 +6,8 @@
       view.agenda_event_format =
         "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
     };
-
   };
+
   accounts.calendar = {
     basePath = "$XDG_CONFIG_HOME/cal";
     accounts = {
@@ -90,8 +88,6 @@
       };
     };
   };
-
-  test.stubs = { khal = { }; };
 
   nmt.script = ''
     configFile=home-files/.config/khal/config

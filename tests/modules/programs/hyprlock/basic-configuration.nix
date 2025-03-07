@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.hyprlock = {
     enable = true;
@@ -34,8 +32,6 @@
       }];
     };
   };
-
-  test.stubs.hyprlock = { };
 
   nmt.script = ''
     assertFileContent \

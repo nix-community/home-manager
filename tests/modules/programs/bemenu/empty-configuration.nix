@@ -1,7 +1,5 @@
 {
-  programs.bemenu = { enable = true; };
-
-  test.stubs.bemenu = { };
+  programs.bemenu.enable = true;
 
   nmt.script = ''
     assertFileExists home-path/etc/profile.d/hm-session-vars.sh

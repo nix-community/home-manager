@@ -1,53 +1,20 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    literalExpression mapAttrsToList mkEnableOption mkIf mkOption optionalString
+    types;
+
   cfg = config.programs.yazi;
   tomlFormat = pkgs.formats.toml { };
-
-  bashIntegration = ''
-    function ${cfg.shellWrapperName}() {
-      local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-      yazi "$@" --cwd-file="$tmp"
-      if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        builtin cd -- "$cwd"
-      fi
-      rm -f -- "$tmp"
-    }
-  '';
-
-  fishIntegration = ''
-    function ${cfg.shellWrapperName}
-      set tmp (mktemp -t "yazi-cwd.XXXXX")
-      yazi $argv --cwd-file="$tmp"
-      if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-        builtin cd -- "$cwd"
-      end
-      rm -f -- "$tmp"
-    end
-  '';
-
-  nushellIntegration = ''
-    def --env ${cfg.shellWrapperName} [...args] {
-      let tmp = (mktemp -t "yazi-cwd.XXXXX")
-      yazi ...$args --cwd-file $tmp
-      let cwd = (open $tmp)
-      if $cwd != "" and $cwd != $env.PWD {
-        cd $cwd
-      }
-      rm -fp $tmp
-    }
-  '';
 in {
-  meta.maintainers = with maintainers; [ xyenon eljamm ];
+  meta.maintainers = with lib.maintainers; [ eljamm khaneliman xyenon ];
 
   options.programs.yazi = {
     enable = mkEnableOption "yazi";
 
-    package = mkPackageOption pkgs "yazi" { };
+    package = lib.mkPackageOption pkgs "yazi" { };
 
-    shellWrapperName = mkOption {
+    shellWrapperName = lib.mkOption {
       type = types.str;
       default = "yy";
       example = "y";
@@ -56,21 +23,17 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableNushellIntegration =
+      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration" // {
-      default = true;
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     keymap = mkOption {
       type = tomlFormat.type;
@@ -198,15 +161,49 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
+    programs = let
+      bashIntegration = ''
+        function ${cfg.shellWrapperName}() {
+          local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+          yazi "$@" --cwd-file="$tmp"
+          if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+            builtin cd -- "$cwd"
+          fi
+          rm -f -- "$tmp"
+        }
+      '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration bashIntegration;
+      fishIntegration = ''
+        set -l tmp (mktemp -t "yazi-cwd.XXXXX")
+        command yazi $argv --cwd-file="$tmp"
+        if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+          builtin cd -- "$cwd"
+        end
+        rm -f -- "$tmp"
+      '';
 
-    programs.fish.interactiveShellInit =
-      mkIf cfg.enableFishIntegration fishIntegration;
+      nushellIntegration = ''
+        def --env ${cfg.shellWrapperName} [...args] {
+          let tmp = (mktemp -t "yazi-cwd.XXXXX")
+          yazi ...$args --cwd-file $tmp
+          let cwd = (open $tmp)
+          if $cwd != "" and $cwd != $env.PWD {
+            cd $cwd
+          }
+          rm -fp $tmp
+        }
+      '';
+    in {
+      bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
-    programs.nushell.extraConfig =
-      mkIf cfg.enableNushellIntegration nushellIntegration;
+      zsh.initExtra = mkIf cfg.enableZshIntegration bashIntegration;
+
+      fish.functions.${cfg.shellWrapperName} =
+        mkIf cfg.enableFishIntegration fishIntegration;
+
+      nushell.extraConfig =
+        mkIf cfg.enableNushellIntegration nushellIntegration;
+    };
 
     xdg.configFile = {
       "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
@@ -224,27 +221,27 @@ in {
         } else {
           text = cfg.initLua;
         });
-    } // (mapAttrs' (name: value:
-      nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
-      cfg.flavors) // (mapAttrs' (name: value:
-        nameValuePair "yazi/plugins/${name}.yazi" { source = value; })
+    } // (lib.mapAttrs' (name: value:
+      lib.nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
+      cfg.flavors) // (lib.mapAttrs' (name: value:
+        lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value; })
         cfg.plugins);
 
-    warnings = filter (s: s != "") (concatLists [
-      (mapAttrsToList (name: value:
-        optionalString (hasSuffix ".yazi" name) ''
+    warnings = lib.filter (s: s != "") (lib.concatLists [
+      (mapAttrsToList (name: _value:
+        optionalString (lib.hasSuffix ".yazi" name) ''
           Flavors like `programs.yazi.flavors."${name}"` should no longer have the suffix ".yazi" in their attribute name.
           The flavor will be linked to `$XDG_CONFIG_HOME/yazi/flavors/${name}.yazi`.
           You probably want to rename it to `programs.yazi.flavors."${
-            removeSuffix ".yazi" name
+            lib.removeSuffix ".yazi" name
           }"`.
         '') cfg.flavors)
-      (mapAttrsToList (name: value:
-        optionalString (hasSuffix ".yazi" name) ''
+      (mapAttrsToList (name: _value:
+        optionalString (lib.hasSuffix ".yazi" name) ''
           Plugins like `programs.yazi.plugins."${name}"` should no longer have the suffix ".yazi" in their attribute name.
           The plugin will be linked to `$XDG_CONFIG_HOME/yazi/plugins/${name}.yazi`.
           You probably want to rename it to `programs.yazi.plugins."${
-            removeSuffix ".yazi" name
+            lib.removeSuffix ".yazi" name
           }"`.
         '') cfg.plugins)
     ]);
@@ -253,20 +250,25 @@ in {
       mkAsserts = opt: requiredFiles:
         mapAttrsToList (name: value:
           let
-            isDir = pathIsDirectory "${value}";
+            isDir = lib.pathIsDirectory "${value}";
             msgNotDir = optionalString (!isDir)
               "The path or package should be a directory, not a single file.";
             isFileMissing = file:
-              !(pathExists "${value}/${file}")
-              || pathIsDirectory "${value}/${file}";
-            missingFiles = filter isFileMissing requiredFiles;
+              !(lib.pathExists "${value}/${file}")
+              || lib.pathIsDirectory "${value}/${file}";
+            missingFiles = lib.filter isFileMissing requiredFiles;
             msgFilesMissing = optionalString (missingFiles != [ ])
               "The ${singularOpt} is missing these files: ${
                 toString missingFiles
               }";
-            singularOpt = removeSuffix "s" opt;
+            singularOpt = lib.removeSuffix "s" opt;
+            isPluginValid = opt == "plugins"
+              && (lib.any (file: lib.pathExists "${value}/${file}")
+                requiredFiles);
+            isValid =
+              if opt == "plugins" then isPluginValid else missingFiles == [ ];
           in {
-            assertion = isDir && missingFiles == [ ];
+            assertion = isDir && isValid;
             message = ''
               Value at `programs.yazi.${opt}.${name}` is not a valid yazi ${singularOpt}.
               ${msgNotDir}
@@ -281,6 +283,6 @@ in {
       "preview.png"
       "LICENSE"
       "LICENSE-tmtheme"
-    ]) ++ (mkAsserts "plugins" [ "init.lua" ]);
+    ]) ++ (mkAsserts "plugins" [ "init.lua" "main.lua" ]);
   };
 }

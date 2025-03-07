@@ -421,7 +421,13 @@ in {
         };
 
         hideEdgeBorders = mkOption {
-          type = types.enum [ "none" "vertical" "horizontal" "both" "smart" ];
+          type = let
+            i3Options = [ "none" "vertical" "horizontal" "both" "smart" ];
+            swayOptions = i3Options ++ [ "smart_no_gaps" ];
+          in if isI3 then
+            types.enum i3Options
+          else
+            types.enum (swayOptions ++ (map (e: "--i3 ${e}") swayOptions));
           default = "none";
           description = "Hide window borders adjacent to the screen edges.";
         };

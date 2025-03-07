@@ -1,5 +1,3 @@
-{ config, lib, pkgs, ... }:
-
 {
   programs.gpg = {
     enable = true;
@@ -12,9 +10,6 @@
       { source = builtins.toFile "key2" "key2"; }
     ];
   };
-
-  test.stubs.gnupg = { };
-  test.stubs.systemd = { }; # depends on gnupg.override
 
   nmt.script = ''
     assertFileContains activate "export GNUPGHOME=/home/hm-user/.gnupg"

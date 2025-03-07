@@ -3,7 +3,7 @@ WantedBy=default.target
 
 [Service]
 BusName=org.mpris.MediaPlayer2.mpd
-ExecStart=@mpdris2@/bin/mpDris2
+ExecStart=@mpDris2@/bin/mpDris2
 Restart=on-failure
 RestartSec=5s
 Type=simple

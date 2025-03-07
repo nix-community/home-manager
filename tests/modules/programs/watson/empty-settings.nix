@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config, pkgs, ... }: {
   programs.watson = {
     enable = true;
     package = config.lib.test.mkStubPackage { };

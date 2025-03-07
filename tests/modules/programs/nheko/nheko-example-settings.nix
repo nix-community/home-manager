@@ -74,8 +74,6 @@ in {
     };
   };
 
-  test.stubs.nheko = { };
-
   nmt.script = ''
     assertFileContent \
       "${configDir}/nheko/nheko.conf" \

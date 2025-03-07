@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.yazi = {
     enable = true;
@@ -87,8 +85,6 @@
       #empty-dir-flavor = ./empty;
     };
   };
-
-  test.stubs.yazi = { };
 
   nmt.script = ''
     assertFileContent home-files/.config/yazi/keymap.toml \

@@ -25,7 +25,7 @@ let
 
       options = {
         layer = mkOption {
-          type = nullOr (enum [ "top" "bottom" ]);
+          type = nullOr (enum [ "top" "bottom" "overlay" ]);
           default = null;
           description = ''
             Decide if the bar is displayed in front (`"top"`)
@@ -143,7 +143,7 @@ let
       };
     };
 in {
-  meta.maintainers = with lib.maintainers; [ berbiche ];
+  meta.maintainers = with lib.maintainers; [ berbiche khaneliman ];
 
   options.programs.waybar = with lib.types; {
     enable = mkEnableOption "Waybar";
@@ -198,7 +198,7 @@ in {
     systemd.enable = mkEnableOption "Waybar systemd integration";
 
     systemd.target = mkOption {
-      type = str;
+      type = nullOr str;
       default = config.wayland.systemd.target;
       defaultText = literalExpression "config.wayland.systemd.target";
       example = "sway-session.target";
@@ -208,6 +208,17 @@ in {
         When setting this value to `"sway-session.target"`,
         make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
         otherwise the service may never be started.
+      '';
+    };
+
+    systemd.enableInspect = mkOption {
+      type = bool;
+      default = false;
+      example = true;
+      description = ''
+        Inspect objects and find their CSS classes, experiment with live CSS styles, and lookup the current value of CSS properties.
+
+        See <https://developer.gnome.org/documentation/tools/inspector.html>
       '';
     };
 
@@ -324,9 +335,12 @@ in {
           ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
           Restart = "on-failure";
           KillMode = "mixed";
+        } // optionalAttrs cfg.systemd.enableInspect {
+          Environment = [ "GTK_DEBUG=interactive" ];
         };
 
-        Install = { WantedBy = [ cfg.systemd.target ]; };
+        Install.WantedBy =
+          lib.optional (cfg.systemd.target != null) cfg.systemd.target;
       };
     })
   ]);

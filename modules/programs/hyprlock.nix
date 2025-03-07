@@ -1,16 +1,14 @@
 { config, pkgs, lib, ... }:
 
-with lib;
-
 let
 
   cfg = config.programs.hyprlock;
 
 in {
-  meta.maintainers = [ maintainers.khaneliman maintainers.fufexan ];
+  meta.maintainers = with lib.maintainers; [ khaneliman fufexan ];
 
   options.programs.hyprlock = {
-    enable = mkEnableOption "" // {
+    enable = lib.mkEnableOption "" // {
       description = ''
         Whether to enable Hyprlock, Hyprland's GPU-accelerated lock screen
         utility.
@@ -27,7 +25,7 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "hyprlock" { };
+    package = lib.mkPackageOption pkgs "hyprlock" { };
 
     settings = lib.mkOption {
       type = with lib.types;
@@ -102,21 +100,21 @@ in {
 
     importantPrefixes = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [ "$" "monitor" "size" ]
+      default = [ "$" "bezier" "monitor" "size" ]
         ++ lib.optionals cfg.sourceFirst [ "source" ];
-      example = [ "$" "monitor" "size" ];
+      example = [ "$" "bezier" "monitor" "size" ];
       description = ''
         List of prefix of attributes to source at the top of the config.
       '';
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xdg.configFile."hypr/hyprlock.conf" =
       let shouldGenerate = cfg.extraConfig != "" || cfg.settings != { };
-      in mkIf shouldGenerate {
+      in lib.mkIf shouldGenerate {
         text = lib.optionalString (cfg.settings != { })
           (lib.hm.generators.toHyprconf {
             attrs = cfg.settings;

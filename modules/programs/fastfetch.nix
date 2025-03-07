@@ -7,7 +7,8 @@ let
 
   jsonFormat = pkgs.formats.json { };
 in {
-  meta.maintainers = with lib.hm.maintainers; [ afresquet ];
+  meta.maintainers =
+    [ lib.hm.maintainers.afresquet lib.maintainers.khaneliman ];
 
   options.programs.fastfetch = {
     enable = mkEnableOption "Fastfetch";

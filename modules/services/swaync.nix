@@ -7,7 +7,8 @@ let
   jsonFormat = pkgs.formats.json { };
 
 in {
-  meta.maintainers = [ lib.hm.maintainers.abayomi185 ];
+  meta.maintainers =
+    [ lib.hm.maintainers.abayomi185 lib.maintainers.khaneliman ];
 
   options.services.swaync = {
     enable = lib.mkEnableOption "Swaync notification daemon";

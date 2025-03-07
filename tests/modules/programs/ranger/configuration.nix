@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.ranger = {
     enable = true;
@@ -30,8 +28,6 @@
       }
     ];
   };
-
-  test.stubs = { ranger = { }; };
 
   nmt.script = ''
     assertFileExists home-files/.config/ranger/rc.conf

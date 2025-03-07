@@ -36,7 +36,7 @@ let
   overlayType = mkOptionType {
     name = "nixpkgs-overlay";
     description = "nixpkgs overlay";
-    check = builtins.isFunction;
+    check = lib.isFunction;
     merge = lib.mergeOneOption;
   };
 

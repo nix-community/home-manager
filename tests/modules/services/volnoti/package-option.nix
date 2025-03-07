@@ -9,8 +9,6 @@
     };
   };
 
-  test.stubs.volnoti = { };
-
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/volnoti.service
     assertFileExists $serviceFile

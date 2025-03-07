@@ -123,7 +123,7 @@ let
             "smime"
           ];
         in with types; either (enum menus) (listOf (enum menus));
-        default = "index";
+        default = [ "index" ];
         description = "Select the menu to bind the command to.";
       };
 
