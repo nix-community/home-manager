@@ -13,7 +13,7 @@ in {
     xsession.windowManager.fluxbox = {
       enable = mkEnableOption "Fluxbox window manager";
 
-      package = mkPackageOption pkgs "fluxbox" { };
+      package = mkPackageOption pkgs "fluxbox" { nullable = true; };
 
       init = mkOption {
         type = types.lines;
@@ -95,7 +95,7 @@ in {
         platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file = {
       ".fluxbox/init" = mkIf (cfg.init != "") { text = cfg.init; };

@@ -23,9 +23,6 @@ let
 
   formatPair = key: value:
     if isAttrs value then formatSet key value else formatLine key value;
-
-  homeConf = "${config.xdg.configHome}/task/home-manager-taskrc";
-  userConf = "${config.xdg.configHome}/task/taskrc";
 in {
   options = {
     programs.taskwarrior = {
@@ -85,13 +82,18 @@ in {
         '';
       };
 
-      package =
-        mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
+      package = mkPackageOption pkgs "taskwarrior" {
+        nullable = true;
+        example = "pkgs.taskwarrior3";
+      };
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config = let
+    homeConf = "${config.xdg.configHome}/task/home-manager-taskrc";
+    userConf = "${config.xdg.configHome}/task/taskrc";
+  in mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${homeConf}".text = ''
       data.location=${cfg.dataLocation}

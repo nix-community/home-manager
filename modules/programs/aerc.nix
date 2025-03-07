@@ -38,7 +38,7 @@ in {
 
     enable = mkEnableOption "aerc";
 
-    package = mkPackageOption pkgs "aerc" { };
+    package = mkPackageOption pkgs "aerc" { nullable = true; };
 
     extraAccounts = mkOption {
       type = sectionsOrLines;
@@ -193,7 +193,7 @@ in {
       '';
     }];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file = {
       "${configDir}/accounts.conf" = mkIf genAccountsConf {

@@ -6,7 +6,7 @@ in {
   options.services.hyprpaper = {
     enable = lib.mkEnableOption "Hyprpaper, Hyprland's wallpaper daemon";
 
-    package = lib.mkPackageOption pkgs "hyprpaper" { };
+    package = lib.mkPackageOption pkgs "hyprpaper" { nullable = true; };
 
     settings = lib.mkOption {
       type = with lib.types;
@@ -64,7 +64,7 @@ in {
       };
     };
 
-    systemd.user.services.hyprpaper = {
+    systemd.user.services.hyprpaper = lib.mkIf (cfg.package != null) {
       Install = { WantedBy = [ config.wayland.systemd.target ]; };
 
       Unit = {

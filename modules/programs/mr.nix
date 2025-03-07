@@ -17,7 +17,7 @@ in {
     enable = mkEnableOption
       "mr, a tool to manage all your version control repositories";
 
-    package = mkPackageOption pkgs "mr" { };
+    package = mkPackageOption pkgs "mr" { nullable = true; };
 
     settings = mkOption {
       type = iniFormat.type;
@@ -42,7 +42,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     home.file.".mrconfig".source = iniFormat.generate ".mrconfig" cfg.settings;
   };
 }

@@ -72,7 +72,7 @@ with lib;
       '';
     };
 
-    package = mkPackageOption pkgs "eza" { };
+    package = mkPackageOption pkgs "eza" { nullable = true; };
   };
 
   config = let
@@ -105,7 +105,7 @@ with lib;
 
         programs.eza.icons = ${if cfg.icons then ''"auto"'' else "null"}'';
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs.bash.shellAliases = optionsAlias
       // optionalAttrs cfg.enableBashIntegration aliases;

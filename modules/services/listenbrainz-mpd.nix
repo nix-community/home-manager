@@ -15,7 +15,7 @@ in {
   options.services.listenbrainz-mpd = {
     enable = mkEnableOption "listenbrainz-mpd";
 
-    package = mkPackageOption pkgs "listenbrainz-mpd" { };
+    package = mkPackageOption pkgs "listenbrainz-mpd" { nullable = true; };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -29,7 +29,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    systemd.user.services."listenbrainz-mpd" = {
+    systemd.user.services."listenbrainz-mpd" = lib.mkIf (cfg.package != null) {
       Unit = {
         Description = "ListenBrainz submission client for MPD";
         Documentation = "https://codeberg.org/elomatreb/listenbrainz-mpd";

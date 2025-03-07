@@ -12,7 +12,7 @@ in {
   options.programs.earthly = {
     enable = lib.mkEnableOption "earthly";
 
-    package = lib.mkPackageOption pkgs "earthly" { };
+    package = lib.mkPackageOption pkgs "earthly" { nullable = true; };
 
     settings = lib.mkOption {
       type = yamlFormat.type;
@@ -31,7 +31,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file.".earthly/config.yml" = lib.mkIf (cfg.settings != { }) {
       source = yamlFormat.generate "earthly-config" cfg.settings;

@@ -34,11 +34,7 @@ in {
   options.programs.sm64ex = {
     enable = mkEnableOption "sm64ex";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.sm64ex;
-      description = "The sm64ex package to use.";
-    };
+    package = lib.mkPackageOption pkgs "sm64ex" { nullable = true; };
 
     region = mkOption {
       type = types.nullOr (types.enum [ "us" "eu" "jp" ]);
@@ -120,7 +116,7 @@ in {
     configFile = optionals (cfg.settings != null)
       (concatStringsSep "\n" ((mapAttrsToList mkConfig cfg.settings)));
   in mkIf cfg.enable {
-    home.packages = [ package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.dataFile."sm64pc/sm64config.txt" =
       mkIf (cfg.settings != null) { text = configFile; };

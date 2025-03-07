@@ -130,7 +130,7 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "i3status" { };
+    package = mkPackageOption pkgs "i3status" { nullable = true; };
   };
 
   config = mkIf cfg.enable {
@@ -190,7 +190,7 @@ in {
       };
     };
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."i3status/config".text = concatStringsSep "\n" ([ ]
       ++ optional (cfg.general != { }) (formatModule "general" cfg.general)

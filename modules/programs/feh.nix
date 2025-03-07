@@ -33,7 +33,7 @@ in {
   options.programs.feh = {
     enable = mkEnableOption "feh - a fast and light image viewer";
 
-    package = mkPackageOption pkgs "feh" { };
+    package = mkPackageOption pkgs "feh" { nullable = true; };
 
     buttons = mkOption {
       default = { };
@@ -104,7 +104,7 @@ in {
         "To disable a keybinding, use `null` instead of an empty string.";
     }];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."feh/buttons" =
       mkIf (cfg.buttons != { }) { text = renderBindings cfg.buttons + "\n"; };
