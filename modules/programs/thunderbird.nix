@@ -358,7 +358,17 @@ in {
 
     accounts.email.accounts = mkOption {
       type = with types;
-        attrsOf (submodule {
+        attrsOf (submodule ({ config, ... }: {
+          config.thunderbird = {
+            settings = lib.mkIf (config.flavor == "gmail.com") (id: {
+              "mail.server.server_${id}.authMethod" =
+                mkOptionDefault 10; # 10 = OAuth2
+              "mail.server.server_${id}.socketType" =
+                mkOptionDefault 3; # SSL/TLS
+              "mail.server.server_${id}.is_gmail" =
+                mkOptionDefault true; # handle labels, trash, etc
+            });
+          };
           options.thunderbird = {
             enable =
               mkEnableOption "the Thunderbird mail client for this account";
@@ -409,7 +419,7 @@ in {
               '';
             };
           };
-        });
+        }));
     };
   };
 
