@@ -738,7 +738,7 @@ in
           ZSH_HIGHLIGHT_HIGHLIGHTERS+=(${lib.concatStringsSep " " (map lib.escapeShellArg cfg.syntaxHighlighting.highlighters)})
           ${lib.concatStringsSep "\n" (
               lib.mapAttrsToList
-                (name: value: "ZSH_HIGHLIGHT_STYLES+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})")
+		(name: value: "ZSH_HIGHLIGHT_STYLES[${lib.escapeShellArg name}]=${lib.escapeShellArg value}")
                 cfg.syntaxHighlighting.styles
           )}
           ${lib.concatStringsSep "\n" (
