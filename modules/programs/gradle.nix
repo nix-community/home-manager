@@ -50,7 +50,10 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "gradle" { example = "pkgs.gradle_7"; };
+    package = mkPackageOption pkgs "gradle" {
+      nullable = true;
+      example = "pkgs.gradle_7";
+    };
 
     settings = mkOption {
       type = types.submodule { freeformType = settingsFormat.type; };
@@ -95,7 +98,7 @@ in {
 
   config = let gradleHome = "${config.home.homeDirectory}/${cfg.home}";
   in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file = mkMerge ([{
       "${cfg.home}/gradle.properties" = mkIf (cfg.settings != { }) {

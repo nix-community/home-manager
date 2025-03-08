@@ -30,7 +30,7 @@ with lib; {
       '';
     };
 
-    package = mkPackageOption pkgs "fd" { };
+    package = mkPackageOption pkgs "fd" { nullable = true; };
   };
 
   config = let
@@ -40,7 +40,7 @@ with lib; {
 
     optionsAlias = optionalAttrs (args != "") { fd = "fd ${args}"; };
   in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs.bash.shellAliases = optionsAlias;
 

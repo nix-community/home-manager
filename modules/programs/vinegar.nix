@@ -6,7 +6,7 @@ in {
   options.programs.vinegar = {
     enable = lib.mkEnableOption "Vinegar";
 
-    package = lib.mkPackageOption pkgs "vinegar" { };
+    package = lib.mkPackageOption pkgs "vinegar" { nullable = true; };
 
     settings = lib.mkOption {
       type = lib.types.attrsOf toml.type;
@@ -41,7 +41,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."vinegar/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = toml.generate "vinegar-config.toml" cfg.settings;

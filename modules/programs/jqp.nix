@@ -7,7 +7,7 @@ in {
   options.programs.jqp = {
     enable = lib.mkEnableOption "jqp, jq playground";
 
-    package = lib.mkPackageOption pkgs "jqp" { };
+    package = lib.mkPackageOption pkgs "jqp" { nullable = true; };
 
     settings = lib.mkOption {
       type = yamlFormat.type;
@@ -23,7 +23,7 @@ in {
   };
   config = lib.mkIf cfg.enable {
     home = {
-      packages = [ cfg.package ];
+      packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
       file.".jqp.yaml" = lib.mkIf (cfg.settings != { }) {
         source = yamlFormat.generate "jqp-config" cfg.settings;

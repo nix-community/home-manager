@@ -46,7 +46,7 @@ in {
   options.programs.nushell = {
     enable = lib.mkEnableOption "nushell";
 
-    package = lib.mkPackageOption pkgs "nushell" { };
+    package = lib.mkPackageOption pkgs "nushell" { nullable = true; };
 
     configFile = lib.mkOption {
       type = types.nullOr (linesOrSource "config.nu");
@@ -197,7 +197,13 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings = lib.optional (cfg.package == null && cfg.plugins != [ ]) ''
+      You have configured `plugins` for `nushell` but have not set `package`.
+
+      The listed plugins will not be installed.
+    '';
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file = lib.mkMerge [
       (let
@@ -261,7 +267,7 @@ in {
               (map (plugin: "plugin add ${lib.getExe plugin}") cfg.plugins)
             }'
         '';
-      in lib.mkIf (cfg.plugins != [ ]) {
+      in lib.mkIf ((cfg.package != null) && (cfg.plugins != [ ])) {
         "${configDir}/plugin.msgpackz".source = "${msgPackz}/plugin.msgpackz";
       })
     ];

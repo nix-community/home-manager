@@ -622,7 +622,7 @@ in {
     programs.kakoune = {
       enable = mkEnableOption "the kakoune text editor";
 
-      package = mkPackageOption pkgs "kakoune-unwrapped" { };
+      package = mkPackageOption pkgs "kakoune-unwrapped" { nullable = true; };
 
       config = mkOption {
         type = types.nullOr configModule;
@@ -656,6 +656,8 @@ in {
           List of kakoune plugins to install. To get a list of
           supported plugins run:
           {command}`nix-env -f '<nixpkgs>' -qaP -A kakounePlugins`.
+
+          Requires `package` to not be set to have effect.
         '';
       };
 
@@ -674,7 +676,13 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ kakouneWithPlugins ];
+    warnings = optional (cfg.package == null && cfg.plugins != [ ]) ''
+      You have configured `plugins` for `kakoune` but have not set `package`.
+
+      The listed plugins will not be installed.
+    '';
+
+    home.packages = lib.mkIf (cfg.package != null) [ kakouneWithPlugins ];
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "kak"; };
     xdg.configFile = mkMerge [
       { "kak/kakrc".source = configFile; }

@@ -72,7 +72,7 @@ in {
   options.programs.wlogout = with lib.types; {
     enable = mkEnableOption "wlogout";
 
-    package = mkPackageOption pkgs "wlogout" { };
+    package = mkPackageOption pkgs "wlogout" { nullable = true; };
 
     layout = mkOption {
       type = listOf wlogoutLayoutConfig;
@@ -132,7 +132,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."wlogout/layout" = mkIf (cfg.layout != [ ]) {
       source = pkgs.writeText "wlogout/layout" layoutContent;

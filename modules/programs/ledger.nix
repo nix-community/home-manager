@@ -21,7 +21,7 @@ in {
   options.programs.ledger = {
     enable = mkEnableOption "ledger, a double-entry accounting system";
 
-    package = mkPackageOption pkgs "ledger" { };
+    package = mkPackageOption pkgs "ledger" { nullable = true; };
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool int str (listOf str) ]);
@@ -59,7 +59,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."ledger/ledgerrc" =
       mkIf (cfg.settings != { } || cfg.extraConfig != "") {

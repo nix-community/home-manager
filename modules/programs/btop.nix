@@ -25,7 +25,7 @@ in {
   options.programs.btop = {
     enable = lib.mkEnableOption "btop";
 
-    package = lib.mkPackageOption pkgs "btop" { };
+    package = lib.mkPackageOption pkgs "btop" { nullable = true; };
 
     settings = lib.mkOption {
       type = with lib.types; attrsOf (oneOf [ bool float int str ]);
@@ -51,7 +51,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."btop/btop.conf" =
       lib.mkIf (cfg.settings != { }) { text = finalConfig; };
