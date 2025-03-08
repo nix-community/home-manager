@@ -15,8 +15,8 @@ in {
 
       package = mkOption {
         type = types.package;
-        default = pkgs.plasma-workspace;
-        defaultText = literalExpression "pkgs.plasma-workspace";
+        default = pkgs.kdePackages.plasma-workspace;
+        defaultText = literalExpression "pkgs.kdePackages.plasma-workspace";
         description = ''
           Package containing the {command}`xembedsniproxy`
           program.
