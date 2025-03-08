@@ -65,7 +65,9 @@ in {
       xdg.configFile."systemd/user/podman-user-wait-network-online.service.d/50-exec-search-path.conf".text =
         ''
           [Service]
-          ExecSearchPath=${pkgs.bashInteractive}/bin:${pkgs.systemd}/bin:/bin
+          ExecSearchPath=${
+            makeBinPath (with pkgs; [ bashInteractive systemd coreutils ])
+          }:/bin
         '';
     })
   ]);
