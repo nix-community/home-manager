@@ -246,6 +246,7 @@ in import nmtSrc {
     ./modules/programs/vifm
     ./modules/programs/vim-vint
     ./modules/programs/vinegar
+    ./modules/programs/vivid
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm

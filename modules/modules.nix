@@ -262,6 +262,7 @@ let
     ./programs/vim-vint.nix
     ./programs/vim.nix
     ./programs/vinegar.nix
+    ./programs/vivid.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
