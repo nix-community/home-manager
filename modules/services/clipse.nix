@@ -8,7 +8,7 @@ in {
   options.services.clipse = {
     enable = lib.mkEnableOption "Enable clipse clipboard manager";
 
-    package = lib.mkPackageOption pkgs "clipse" { };
+    package = lib.mkPackageOption pkgs "clipse" { nullable = true; };
 
     systemdTarget = lib.mkOption {
       type = lib.types.str;
@@ -130,7 +130,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."clipse/config.json".source =
       jsonFormat.generate "settings" {
@@ -147,20 +147,21 @@ in {
     xdg.configFile."clipse/custom_theme.json".source =
       jsonFormat.generate "theme" cfg.theme;
 
-    systemd.user.services.clipse = lib.mkIf pkgs.stdenv.isLinux {
-      Unit = {
-        Description = "Clipse listener";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
-      };
+    systemd.user.services.clipse =
+      lib.mkIf (pkgs.stdenv.isLinux && (cfg.package != null)) {
+        Unit = {
+          Description = "Clipse listener";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+        };
 
-      Service = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${cfg.package}/bin/clipse -listen";
-      };
+        Service = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = "${cfg.package}/bin/clipse -listen";
+        };
 
-      Install = { WantedBy = [ cfg.systemdTarget ]; };
-    };
+        Install = { WantedBy = [ cfg.systemdTarget ]; };
+      };
   };
 }

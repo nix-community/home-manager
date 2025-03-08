@@ -59,11 +59,11 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."glance/glance.yml".source = settingsFile;
 
-    systemd.user.services.glance = {
+    systemd.user.services.glance = lib.mkIf (cfg.package != null) {
       Unit = {
         Description = "Glance feed dashboard server";
         PartOf = [ "graphical-session.target" ];

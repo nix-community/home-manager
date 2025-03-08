@@ -7,7 +7,7 @@ let
 
   options = {
     enable = mkEnableOption "lapce";
-    package = mkPackageOption pkgs "lapce" { };
+    package = mkPackageOption pkgs "lapce" { nullable = true; };
     channel = mkOption {
       type = types.enum [ "stable" "nightly" ];
       default = "stable";
@@ -171,7 +171,7 @@ in {
   options.programs.lapce = options;
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg = let dir = "lapce-${cfg.channel}";
     in {

@@ -243,7 +243,7 @@ in {
     programs.borgmatic = {
       enable = mkEnableOption "Borgmatic";
 
-      package = mkPackageOption pkgs "borgmatic" { };
+      package = mkPackageOption pkgs "borgmatic" { nullable = true; };
 
       backups = mkOption {
         type = types.attrsOf configModule;
@@ -292,6 +292,6 @@ in {
           text = writeConfig config;
         }) cfg.backups;
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
   };
 }

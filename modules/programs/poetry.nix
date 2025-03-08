@@ -20,6 +20,7 @@ in {
     enable = mkEnableOption "poetry";
 
     package = mkPackageOption pkgs "poetry" {
+      nullable = true;
       example = "pkgs.poetry.withPlugins (ps: with ps; [ poetry-plugin-up ])";
       extraDescription = "May be used to install custom poetry plugins.";
     };
@@ -45,7 +46,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${configDir}/pypoetry/config.toml" =
       lib.mkIf (cfg.settings != { }) {

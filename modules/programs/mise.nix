@@ -29,7 +29,7 @@ in {
     programs.mise = {
       enable = mkEnableOption "mise";
 
-      package = mkPackageOption pkgs "mise" { };
+      package = mkPackageOption pkgs "mise" { nullable = true; };
 
       enableBashIntegration =
         lib.hm.shell.mkBashIntegrationOption { inherit config; };
@@ -83,7 +83,15 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings = optional (cfg.package == null && (cfg.enableBashIntegration
+      || cfg.enableZshIntegration || cfg.enableFishIntegration
+      || cfg.enableNushellIntegration)) ''
+        You have enabled shell integration for `mise` but have not set `package`.
+
+        The shell integration will not be added.
+      '';
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "mise/config.toml" = mkIf (cfg.globalConfig != { }) {

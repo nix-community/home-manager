@@ -19,7 +19,7 @@ in {
   options.programs.bacon = {
     enable = mkEnableOption "bacon, a background rust code checker";
 
-    package = mkPackageOption pkgs "bacon" { };
+    package = mkPackageOption pkgs "bacon" { nullable = true; };
 
     settings = mkOption {
       type = settingsFormat.type;
@@ -38,7 +38,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${configDir}/prefs.toml" = mkIf (cfg.settings != { }) {
       source = settingsFormat.generate "prefs.toml" cfg.settings;

@@ -13,7 +13,7 @@ in {
   options.programs.spotify-player = {
     enable = mkEnableOption "spotify-player";
 
-    package = mkPackageOption pkgs "spotify-player" { };
+    package = mkPackageOption pkgs "spotify-player" { nullable = true; };
 
     settings = mkOption {
       type = tomlType;
@@ -162,7 +162,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "spotify-player/app.toml" = mkIf (cfg.settings != { }) {

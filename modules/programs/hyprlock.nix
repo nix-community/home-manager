@@ -25,7 +25,7 @@ in {
       '';
     };
 
-    package = lib.mkPackageOption pkgs "hyprlock" { };
+    package = lib.mkPackageOption pkgs "hyprlock" { nullable = true; };
 
     settings = lib.mkOption {
       type = with lib.types;
@@ -110,7 +110,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."hypr/hyprlock.conf" =
       let shouldGenerate = cfg.extraConfig != "" || cfg.settings != { };

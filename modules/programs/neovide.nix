@@ -11,7 +11,7 @@ in {
   options.programs.neovide = {
     enable = lib.mkEnableOption "Neovide, No Nonsense Neovim Client in Rust";
 
-    package = lib.mkPackageOption pkgs "neovide" { };
+    package = lib.mkPackageOption pkgs "neovide" { nullable = true; };
 
     settings = lib.mkOption {
       type = settingsFormat.type;
@@ -45,7 +45,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     xdg.configFile."neovide/config.toml".source =
       settingsFormat.generate "config.toml" cfg.settings;
   };

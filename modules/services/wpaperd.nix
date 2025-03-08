@@ -22,7 +22,7 @@ in {
   options.services.wpaperd = {
     enable = lib.mkEnableOption "wpaperd";
 
-    package = lib.mkPackageOption pkgs "wpaperd" { };
+    package = lib.mkPackageOption pkgs "wpaperd" { nullable = true; };
 
     settings = lib.mkOption {
       type = tomlFormat.type;
@@ -54,7 +54,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "wpaperd/wallpaper.toml" = mkIf (cfg.settings != { }) {
@@ -62,7 +62,7 @@ in {
       };
     };
 
-    systemd.user.services.wpaperd = {
+    systemd.user.services.wpaperd = lib.mkIf (cfg.package != null) {
       Install = { WantedBy = [ config.wayland.systemd.target ]; };
 
       Unit = {

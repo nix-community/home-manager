@@ -122,7 +122,7 @@ in {
   options = {
     programs.himalaya = {
       enable = mkEnableOption "the email client Himalaya CLI";
-      package = mkPackageOption pkgs "himalaya" { };
+      package = mkPackageOption pkgs "himalaya" { nullable = true; };
       settings = mkOption {
         type = types.submodule { freeformType = tomlFormat.type; };
         default = { };
@@ -153,7 +153,7 @@ in {
   };
 
   config = mkIf himalaya.enable {
-    home.packages = [ himalaya.package ];
+    home.packages = lib.mkIf (himalaya.package != null) [ himalaya.package ];
 
     xdg = {
       configFile."himalaya/config.toml".source = let
@@ -164,17 +164,18 @@ in {
         allConfig = globalConfig // { accounts = accountsConfig; };
       in tomlFormat.generate "himalaya.config.toml" allConfig;
 
-      desktopEntries.himalaya = mkIf pkgs.stdenv.hostPlatform.isLinux {
-        type = "Application";
-        name = "himalaya";
-        genericName = "Email Client";
-        comment = "CLI to manage emails";
-        terminal = true;
-        exec = "himalaya %u";
-        categories = [ "Network" ];
-        mimeType = [ "x-scheme-handler/mailto" "message/rfc822" ];
-        settings = { Keywords = "email"; };
-      };
+      desktopEntries.himalaya =
+        mkIf (pkgs.stdenv.hostPlatform.isLinux && (himalaya.package != null)) {
+          type = "Application";
+          name = "himalaya";
+          genericName = "Email Client";
+          comment = "CLI to manage emails";
+          terminal = true;
+          exec = "himalaya %u";
+          categories = [ "Network" ];
+          mimeType = [ "x-scheme-handler/mailto" "message/rfc822" ];
+          settings = { Keywords = "email"; };
+        };
     };
   };
 }
