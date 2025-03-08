@@ -1,11 +1,14 @@
 {
-  programs.gh-dash = {
-    enable = true;
-    settings = {
-      prSections = [{
-        title = "My Pull Requests";
-        filters = "is:open author:@me";
-      }];
+  programs = {
+    gh.enable = true;
+    gh-dash = {
+      enable = true;
+      settings = {
+        prSections = [{
+          title = "My Pull Requests";
+          filters = "is:open author:@me";
+        }];
+      };
     };
   };
 
