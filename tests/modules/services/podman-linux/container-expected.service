@@ -43,7 +43,6 @@ ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --na
 [Unit]
 Wants=podman-user-wait-network-online.service
 After=podman-user-wait-network-online.service
-After=network.target
 Before=fake.target
 Description=home-manager test
 SourcePath=/nix/store/00000000000000000000000000000000-home-container-podman-my-container/quadlets/podman-my-container.container
