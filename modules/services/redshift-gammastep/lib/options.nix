@@ -189,7 +189,7 @@ in {
       in {
         Description = "${programName} colour temperature adjuster";
         Documentation = serviceDocumentation;
-        After = [ "graphical-session-pre.target" ] ++ geoclueAgentService;
+        After = [ "graphical-session.target" ] ++ geoclueAgentService;
         Wants = geoclueAgentService;
         PartOf = [ "graphical-session.target" ];
       };

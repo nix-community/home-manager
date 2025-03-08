@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  xdg.enable = lib.mkIf pkgs.stdenv.isDarwin (lib.mkForce false);
+  xdg.enable = lib.mkIf pkgs.stdenv.isDarwin false;
 
   programs.k9s = {
     enable = true;

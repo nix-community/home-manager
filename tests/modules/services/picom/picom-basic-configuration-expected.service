@@ -7,6 +7,6 @@ Restart=always
 RestartSec=3
 
 [Unit]
-After=graphical-session-pre.target
+After=graphical-session.target
 Description=Picom X11 compositor
 PartOf=graphical-session.target

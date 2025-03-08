@@ -11,7 +11,7 @@ in {
   options.programs.looking-glass-client = {
     enable = mkEnableOption "looking-glass-client";
 
-    package = mkPackageOption pkgs "looking-glass-client" { };
+    package = mkPackageOption pkgs "looking-glass-client" { nullable = true; };
 
     settings = mkOption {
       type = settingsFormat.type;
@@ -50,7 +50,7 @@ in {
         platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."looking-glass/client.ini" = mkIf (cfg.settings != { }) {
       source =

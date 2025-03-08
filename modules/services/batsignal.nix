@@ -32,7 +32,7 @@ in {
     systemd.user.services.batsignal = {
       Unit = {
         Description = "batsignal - battery monitor daemon";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

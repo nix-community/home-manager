@@ -310,7 +310,7 @@ in {
     systemd.user.services.picom = {
       Unit = {
         Description = "Picom X11 compositor";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

@@ -1,7 +1,5 @@
 { config, pkgs, lib, ... }:
 
-with lib;
-
 let
   im = config.i18n.inputMethod;
   cfg = im.fcitx5;
@@ -9,25 +7,25 @@ let
 in {
   options = {
     i18n.inputMethod.fcitx5 = {
-      fcitx5-with-addons = mkOption {
-        type = types.package;
+      fcitx5-with-addons = lib.mkOption {
+        type = lib.types.package;
         default = pkgs.libsForQt5.fcitx5-with-addons;
-        example = literalExpression "pkgs.kdePackages.fcitx5-with-addons";
+        example = lib.literalExpression "pkgs.kdePackages.fcitx5-with-addons";
         description = ''
           The fcitx5 package to use.
         '';
       };
-      addons = mkOption {
-        type = with types; listOf package;
+      addons = lib.mkOption {
+        type = with lib.types; listOf package;
         default = [ ];
-        example = literalExpression "with pkgs; [ fcitx5-rime ]";
+        example = lib.literalExpression "with pkgs; [ fcitx5-rime ]";
         description = ''
           Enabled Fcitx5 addons.
         '';
       };
 
-      waylandFrontend = mkOption {
-        type = types.bool;
+      waylandFrontend = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         description = ''
           Use the Wayland input method frontend.
@@ -37,7 +35,7 @@ in {
     };
   };
 
-  config = mkIf (im.enabled == "fcitx5") {
+  config = lib.mkIf (im.enabled == "fcitx5") {
     i18n.inputMethod.package = fcitx5Package;
 
     home.sessionVariables = {

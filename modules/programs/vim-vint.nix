@@ -14,7 +14,7 @@ in {
   options = {
     programs.vim-vint = {
       enable = mkEnableOption "the Vint linter for Vimscript";
-      package = mkPackageOption pkgs "vim-vint" { };
+      package = mkPackageOption pkgs "vim-vint" { nullable = true; };
 
       settings = mkOption {
         type = yamlFormat.type;
@@ -28,7 +28,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile.".vintrc.yaml".source =
       yamlFormat.generate "vim-vint-config" cfg.settings;

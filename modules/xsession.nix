@@ -1,17 +1,16 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.xsession;
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     xsession = {
-      enable = mkEnableOption "X Session";
+      enable = lib.mkEnableOption "X Session";
 
       trayTarget = mkOption {
         readOnly = true;
@@ -49,7 +48,7 @@ in {
 
       windowManager.command = mkOption {
         type = types.str;
-        example = literalExpression ''
+        example = lib.literalExpression ''
           let
             xmonad = pkgs.xmonad-with-packages.override {
               packages = self: [ self.xmonad-contrib self.taffybar ];
@@ -92,7 +91,7 @@ in {
 
       importedVariables = mkOption {
         type = types.listOf (types.strMatching "[a-zA-Z_][a-zA-Z0-9_]*");
-        apply = unique;
+        apply = lib.unique;
         example = [ "GDK_PIXBUF_ICON_LOADER" ];
         visible = false;
         description = ''
@@ -104,9 +103,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "xsession" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "xsession" pkgs lib.platforms.linux)
+    ];
 
     xsession.importedVariables = [
       "DBUS_SESSION_BUS_ADDRESS"
@@ -119,7 +119,7 @@ in {
     ];
 
     systemd.user = {
-      services = mkIf (config.home.keyboard != null) {
+      services = lib.mkIf (config.home.keyboard != null) {
         setxkbmap = {
           Unit = {
             Description = "Set up keyboard in X";
@@ -134,9 +134,9 @@ in {
             RemainAfterExit = true;
             ExecStart = with config.home.keyboard;
               let
-                args = optional (layout != null) "-layout '${layout}'"
-                  ++ optional (variant != null) "-variant '${variant}'"
-                  ++ optional (model != null) "-model '${model}'"
+                args = lib.optional (layout != null) "-layout '${layout}'"
+                  ++ lib.optional (variant != null) "-variant '${variant}'"
+                  ++ lib.optional (model != null) "-model '${model}'"
                   ++ [ "-option ''" ] ++ map (v: "-option '${v}'") options;
               in "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
           };
@@ -193,9 +193,9 @@ in {
       # script starts up graphical-session.target.
       systemctl --user stop graphical-session.target graphical-session-pre.target
 
-      ${optionalString (cfg.importedVariables != [ ])
+      ${lib.optionalString (cfg.importedVariables != [ ])
       ("systemctl --user import-environment "
-        + escapeShellArgs cfg.importedVariables)}
+        + lib.escapeShellArgs cfg.importedVariables)}
 
       ${cfg.profileExtra}
 
@@ -224,9 +224,9 @@ in {
           sleep 0.5
         done
 
-        ${optionalString (cfg.importedVariables != [ ])
+        ${lib.optionalString (cfg.importedVariables != [ ])
         ("systemctl --user unset-environment "
-          + escapeShellArgs cfg.importedVariables)}
+          + lib.escapeShellArgs cfg.importedVariables)}
       '';
     };
   };

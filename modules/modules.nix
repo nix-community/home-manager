@@ -9,8 +9,6 @@
   # If disabled, the pkgs attribute passed to this function is used instead.
 , useNixpkgsModule ? true }:
 
-with lib;
-
 let
 
   modules = [
@@ -442,28 +440,28 @@ let
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
 
-    (mkRemovedOptionModule [ "services" "password-store-sync" ] ''
+    (lib.mkRemovedOptionModule [ "services" "password-store-sync" ] ''
       Use services.git-sync instead.
     '')
-    (mkRemovedOptionModule [ "services" "keepassx" ] ''
+    (lib.mkRemovedOptionModule [ "services" "keepassx" ] ''
       KeePassX is no longer maintained.
     '')
-  ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
-    ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
+  ] ++ lib.optional useNixpkgsModule ./misc/nixpkgs.nix
+    ++ lib.optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
 
   pkgsModule = { config, ... }: {
     config = {
       _module.args.baseModules = modules;
       _module.args.pkgsPath = lib.mkDefault
-        (if versionAtLeast config.home.stateVersion "20.09" then
+        (if lib.versionAtLeast config.home.stateVersion "20.09" then
           pkgs.path
         else
           <nixpkgs>);
       _module.args.pkgs = lib.mkDefault pkgs;
       _module.check = check;
       lib = lib.hm;
-    } // optionalAttrs useNixpkgsModule {
-      nixpkgs.system = mkDefault pkgs.stdenv.hostPlatform.system;
+    } // lib.optionalAttrs useNixpkgsModule {
+      nixpkgs.system = lib.mkDefault pkgs.stdenv.hostPlatform.system;
     };
   };
 

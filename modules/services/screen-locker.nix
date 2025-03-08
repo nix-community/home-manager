@@ -117,7 +117,7 @@ in {
       systemd.user.services.xss-lock = {
         Unit = {
           Description = "xss-lock, session locker service";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
@@ -141,7 +141,7 @@ in {
       systemd.user.services.xautolock-session = {
         Unit = {
           Description = "xautolock, session locker service";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 

@@ -6,7 +6,7 @@ in {
   options.services.hypridle = {
     enable = lib.mkEnableOption "Hypridle, Hyprland's idle daemon";
 
-    package = lib.mkPackageOption pkgs "hypridle" { };
+    package = lib.mkPackageOption pkgs "hypridle" { nullable = true; };
 
     settings = lib.mkOption {
       type = with lib.types;
@@ -70,7 +70,7 @@ in {
       };
     };
 
-    systemd.user.services.hypridle = {
+    systemd.user.services.hypridle = lib.mkIf (cfg.package != null) {
       Install = { WantedBy = [ config.wayland.systemd.target ]; };
 
       Unit = {

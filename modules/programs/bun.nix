@@ -9,7 +9,7 @@ in {
   options.programs.bun = {
     enable = lib.mkEnableOption "Bun JavaScript runtime";
 
-    package = lib.mkPackageOption pkgs "bun" { };
+    package = lib.mkPackageOption pkgs "bun" { nullable = true; };
 
     settings = lib.mkOption {
       type = tomlFormat.type;
@@ -42,7 +42,13 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings = lib.optional (cfg.package == null && cfg.enableGitIntegration) ''
+      You have enabled git integration for `bun` but have not set `package`.
+
+      Git integration will not be configured.
+    '';
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile.".bunfig.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "bun-config" cfg.settings;
@@ -50,10 +56,12 @@ in {
 
     # https://bun.sh/docs/install/lockfile#how-do-i-git-diff-bun-s-lockfile
     programs.git.attributes =
-      lib.mkIf cfg.enableGitIntegration [ "*.lockb binary diff=lockb" ];
-    programs.git.extraConfig.diff.lockb = lib.mkIf cfg.enableGitIntegration {
-      textconv = lib.getExe cfg.package;
-      binary = true;
-    };
+      lib.mkIf (cfg.enableGitIntegration && (cfg.package != null))
+      [ "*.lockb binary diff=lockb" ];
+    programs.git.extraConfig.diff.lockb =
+      lib.mkIf (cfg.enableGitIntegration && (cfg.package != null)) {
+        textconv = lib.getExe cfg.package;
+        binary = true;
+      };
   };
 }

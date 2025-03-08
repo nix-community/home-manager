@@ -24,7 +24,7 @@ in {
     systemd.user.services.owncloud-client = {
       Unit = {
         Description = "Owncloud Client";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

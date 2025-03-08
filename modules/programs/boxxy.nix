@@ -84,7 +84,7 @@ in {
   options.programs.boxxy = {
     enable = mkEnableOption "boxxy: Boxes in badly behaving applications";
 
-    package = mkPackageOption pkgs "boxxy" { };
+    package = mkPackageOption pkgs "boxxy" { nullable = true; };
 
     rules = mkOption {
       type = types.listOf boxxyRulesOpts;
@@ -102,7 +102,7 @@ in {
         settingsFormat.generate "boxxy-config.yaml" { rules = cfg.rules; };
     };
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
   };
 
   meta.maintainers = with lib.hm.maintainers; [ nikp123 ];

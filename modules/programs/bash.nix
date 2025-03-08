@@ -29,7 +29,10 @@ in {
     programs.bash = {
       enable = mkEnableOption "GNU Bourne-Again SHell";
 
-      package = mkPackageOption pkgs "bash" { default = "bashInteractive"; };
+      package = mkPackageOption pkgs "bash" {
+        nullable = true;
+        default = "bashInteractive";
+      };
 
       enableCompletion = mkOption {
         type = types.bool;
@@ -195,7 +198,7 @@ in {
         }) ++ optional (cfg.historyFile != null)
         ''mkdir -p "$(dirname "$HISTFILE")"''));
   in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file.".bash_profile".source = writeBashScript "bash_profile" ''
       # include .profile if it exists

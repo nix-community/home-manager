@@ -16,7 +16,7 @@ in {
   options.programs.cavalier = {
     enable = mkEnableOption "Cava audio visualizer GUI";
 
-    package = mkPackageOption pkgs "cavalier" { };
+    package = mkPackageOption pkgs "cavalier" { nullable = true; };
 
     settings = {
       general = mkOption {
@@ -81,7 +81,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "Nickvision Cavalier/config.json" = mkIf (cfg.settings.general != { }) {

@@ -50,7 +50,7 @@ in {
     systemd.user.services.xscreensaver = {
       Unit = {
         Description = "XScreenSaver";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
 
         # Make sure the service is restarted if the settings change.

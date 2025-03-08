@@ -29,7 +29,7 @@ in {
   options.programs.aerospace = {
     enable = lib.mkEnableOption "AeroSpace window manager";
 
-    package = lib.mkPackageOption pkgs "aerospace" { };
+    package = lib.mkPackageOption pkgs "aerospace" { nullable = true; };
 
     userSettings = mkOption {
       type = types.submodule {
@@ -232,7 +232,7 @@ in {
     ];
 
     home = {
-      packages = [ cfg.package ];
+      packages = lib.mkIf (cfg.package != null) [ cfg.package ];
       file.".config/aerospace/aerospace.toml".source =
         tomlFormat.generate "aerospace" (filterNulls cfg.userSettings);
     };

@@ -7,7 +7,7 @@ Restart=on-failure
 RestartSec=3
 
 [Unit]
-After=graphical-session-pre.target
+After=graphical-session.target
 Description=Gammastep colour temperature adjuster
 Documentation=https://gitlab.com/chinstrap/gammastep/
 PartOf=graphical-session.target

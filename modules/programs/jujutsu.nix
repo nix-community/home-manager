@@ -25,7 +25,7 @@ in {
     enable =
       mkEnableOption "a Git-compatible DVCS that is both simple and powerful";
 
-    package = mkPackageOption pkgs "jujutsu" { };
+    package = mkPackageOption pkgs "jujutsu" { nullable = true; };
 
     ediff = mkOption {
       type = types.bool;
@@ -54,7 +54,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${configDir}/jj/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "jujutsu-config" (cfg.settings

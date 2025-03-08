@@ -1,8 +1,7 @@
 { config, options, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) mkDefault mkEnableOption mkOption types;
 
   cfg = config.home.pointerCursor;
 
@@ -10,7 +9,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = literalExpression "pkgs.vanilla-dmz";
+        example = lib.literalExpression "pkgs.vanilla-dmz";
         description = "Package providing the cursor theme.";
       };
 
@@ -64,8 +63,9 @@ let
     };
   };
 
-  cursorPath = "${cfg.package}/share/icons/${escapeShellArg cfg.name}/cursors/${
-      escapeShellArg cfg.x11.defaultCursor
+  cursorPath =
+    "${cfg.package}/share/icons/${lib.escapeShellArg cfg.name}/cursors/${
+      lib.escapeShellArg cfg.x11.defaultCursor
     }";
 
   defaultIndexThemePackage = pkgs.writeTextFile {
@@ -83,25 +83,25 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.league ];
+  meta.maintainers = [ lib.maintainers.league ];
 
   imports = [
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
+    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
       "home"
       "pointerCursor"
       "package"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
+    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
       "home"
       "pointerCursor"
       "name"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
+    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
       "home"
       "pointerCursor"
       "size"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
+    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
       "home"
       "pointerCursor"
       "x11"
@@ -109,8 +109,8 @@ in {
     ])
 
     ({ ... }: {
-      warnings = optional (any (x:
-        getAttrFromPath
+      warnings = lib.optional (lib.any (x:
+        lib.getAttrFromPath
         ([ "xsession" "pointerCursor" ] ++ [ x ] ++ [ "isDefined" ])
         options) [ "package" "name" "size" "defaultCursor" ]) ''
           The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
@@ -144,10 +144,11 @@ in {
     };
   };
 
-  config = mkIf (cfg != null) (mkMerge [
+  config = lib.mkIf (cfg != null) (lib.mkMerge [
     {
       assertions = [
-        (hm.assertions.assertPlatform "home.pointerCursor" pkgs platforms.linux)
+        (lib.hm.assertions.assertPlatform "home.pointerCursor" pkgs
+          lib.platforms.linux)
       ];
 
       home.packages = [ cfg.package defaultIndexThemePackage ];
@@ -178,7 +179,7 @@ in {
         "${cfg.package}/share/icons/${cfg.name}";
     }
 
-    (mkIf cfg.x11.enable {
+    (lib.mkIf cfg.x11.enable {
       xsession.profileExtra = ''
         ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${
           toString cfg.size
@@ -191,11 +192,11 @@ in {
       };
     })
 
-    (mkIf cfg.gtk.enable {
+    (lib.mkIf cfg.gtk.enable {
       gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
     })
 
-    (mkIf cfg.hyprcursor.enable {
+    (lib.mkIf cfg.hyprcursor.enable {
       home.sessionVariables = {
         HYPRCURSOR_THEME = cfg.name;
         HYPRCURSOR_SIZE =
@@ -203,7 +204,7 @@ in {
       };
     })
 
-    (mkIf cfg.sway.enable {
+    (lib.mkIf cfg.sway.enable {
       wayland.windowManager.sway = {
         config = {
           seat = {

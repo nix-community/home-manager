@@ -14,7 +14,7 @@ in {
   options.programs.gallery-dl = {
     enable = mkEnableOption "gallery-dl";
 
-    package = mkPackageOption pkgs "gallery-dl" { };
+    package = mkPackageOption pkgs "gallery-dl" { nullable = true; };
 
     settings = mkOption {
       type = jsonFormat.type;
@@ -34,7 +34,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."gallery-dl/config.json" = mkIf (cfg.settings != { }) {
       source = jsonFormat.generate "gallery-dl-settings" cfg.settings;

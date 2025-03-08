@@ -28,7 +28,7 @@ in {
         Description =
           "An unofficial GUI wrapper around the Tailscale CLI client";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session-pre.target" "tray.target" ];
+        After = [ "graphical-session.target" "tray.target" ];
         PartOf = [ "graphical-session.target" ];
       };
       Install = { WantedBy = [ "graphical-session.target" ]; };

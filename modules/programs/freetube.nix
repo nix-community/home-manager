@@ -21,7 +21,7 @@ in {
   options.programs.freetube = {
     enable = mkEnableOption "FreeTube, a YT client for Windows, Mac, and Linux";
 
-    package = mkPackageOption pkgs "freetube" { };
+    package = mkPackageOption pkgs "freetube" { nullable = true; };
 
     settings = mkOption {
       type = lib.types.attrs;
@@ -44,7 +44,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."FreeTube/hm_settings.db" = {
       source = pkgs.writeText "hm_settings.db" (settings cfg.settings);

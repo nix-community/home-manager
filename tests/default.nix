@@ -92,7 +92,7 @@ let
 
       # Fix impurities. Without these some of the user's environment
       # will leak into the tests through `builtins.getEnv`.
-      xdg.enable = true;
+      xdg.enable = lib.mkDefault true;
       home = {
         username = "hm-user";
         homeDirectory = "/home/hm-user";
@@ -124,6 +124,7 @@ in import nmtSrc {
     ./modules/misc/manual
     ./modules/misc/nix
     ./modules/misc/specialisation
+    ./modules/misc/xdg
     ./modules/programs/aerc
     ./modules/programs/alacritty
     ./modules/programs/alot
@@ -244,7 +245,6 @@ in import nmtSrc {
     ./modules/programs/translate-shell
     ./modules/programs/vifm
     ./modules/programs/vim-vint
-    ./modules/programs/vinegar
     ./modules/programs/vscode
     ./modules/programs/watson
     ./modules/programs/wezterm
@@ -269,6 +269,7 @@ in import nmtSrc {
     ./modules/services/yubikey-agent-darwin
     ./modules/targets-darwin
   ] ++ lib.optionals isLinux [
+    ./modules/misc/xdg/linux.nix
     ./modules/config/home-cursor
     ./modules/config/i18n
     ./modules/i18n/input-method
@@ -278,7 +279,6 @@ in import nmtSrc {
     ./modules/misc/numlock
     ./modules/misc/pam
     ./modules/misc/qt
-    ./modules/misc/xdg
     ./modules/misc/xsession
     ./modules/programs/abook
     ./modules/programs/autorandr
@@ -316,6 +316,7 @@ in import nmtSrc {
     ./modules/programs/swayr
     ./modules/programs/terminator
     ./modules/programs/tofi
+    ./modules/programs/vinegar
     ./modules/programs/waybar
     ./modules/programs/wlogout
     ./modules/programs/wofi

@@ -2,8 +2,6 @@
 
 { config, lib, pkgs, pkgsPath, ... }:
 
-with lib;
-
 let
 
   isConfig = x: builtins.isAttrs x || builtins.isFunction x;
@@ -14,40 +12,40 @@ let
     let
       lhs = optCall lhs_ { inherit pkgs; };
       rhs = optCall rhs_ { inherit pkgs; };
-    in lhs // rhs // optionalAttrs (lhs ? packageOverrides) {
+    in lhs // rhs // lib.optionalAttrs (lhs ? packageOverrides) {
       packageOverrides = pkgs:
         optCall lhs.packageOverrides pkgs
-        // optCall (attrByPath [ "packageOverrides" ] ({ }) rhs) pkgs;
-    } // optionalAttrs (lhs ? perlPackageOverrides) {
+        // optCall (lib.attrByPath [ "packageOverrides" ] { } rhs) pkgs;
+    } // lib.optionalAttrs (lhs ? perlPackageOverrides) {
       perlPackageOverrides = pkgs:
         optCall lhs.perlPackageOverrides pkgs
-        // optCall (attrByPath [ "perlPackageOverrides" ] ({ }) rhs) pkgs;
+        // optCall (lib.attrByPath [ "perlPackageOverrides" ] { } rhs) pkgs;
     };
 
-  configType = mkOptionType {
+  configType = lib.mkOptionType {
     name = "nixpkgs-config";
     description = "nixpkgs config";
     check = x:
       let traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
       in traceXIfNot isConfig;
-    merge = args: fold (def: mergeConfig def.value) { };
+    merge = args: lib.fold (def: mergeConfig def.value) { };
   };
 
-  overlayType = mkOptionType {
+  overlayType = lib.mkOptionType {
     name = "nixpkgs-overlay";
     description = "nixpkgs overlay";
     check = lib.isFunction;
     merge = lib.mergeOneOption;
   };
 
-  _pkgs = import pkgsPath (filterAttrs (n: v: v != null) config.nixpkgs);
+  _pkgs = import pkgsPath (lib.filterAttrs (n: v: v != null) config.nixpkgs);
 
 in {
   options.nixpkgs = {
-    config = mkOption {
+    config = lib.mkOption {
       default = null;
       example = { allowBroken = true; };
-      type = types.nullOr configType;
+      type = lib.types.nullOr configType;
       description = ''
         The configuration of the Nix Packages collection. (For
         details, see the Nixpkgs documentation.) It allows you to set
@@ -72,9 +70,9 @@ in {
       '';
     };
 
-    overlays = mkOption {
+    overlays = lib.mkOption {
       default = null;
-      example = literalExpression ''
+      example = lib.literalExpression ''
         [
           (final: prev: {
             openssh = prev.openssh.override {
@@ -85,7 +83,7 @@ in {
           })
         ]
       '';
-      type = types.nullOr (types.listOf overlayType);
+      type = lib.types.nullOr (lib.types.listOf overlayType);
       description = ''
         List of overlays to use with the Nix Packages collection. (For
         details, see the Nixpkgs documentation.) It allows you to
@@ -105,8 +103,8 @@ in {
       '';
     };
 
-    system = mkOption {
-      type = types.str;
+    system = lib.mkOption {
+      type = lib.types.str;
       example = "i686-linux";
       internal = true;
       description = ''
@@ -123,7 +121,7 @@ in {
     _module.args = {
       # We use a no-op override to make sure that the option can be merged without evaluating
       # `_pkgs`, see https://github.com/nix-community/home-manager/pull/993
-      pkgs = mkOverride modules.defaultOverridePriority _pkgs;
+      pkgs = lib.mkOverride lib.modules.defaultOverridePriority _pkgs;
       pkgs_i686 =
         if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86 then
           _pkgs.pkgsi686Linux
