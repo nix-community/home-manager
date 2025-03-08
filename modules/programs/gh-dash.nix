@@ -34,7 +34,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    programs.gh.extensions = (cfg.package != null) [ cfg.package ];
+    programs.gh.extensions = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."gh-dash/config.yml".source =
       yamlFormat.generate "gh-dash-config.yml" cfg.settings;
