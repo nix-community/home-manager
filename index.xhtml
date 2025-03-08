@@ -575,15 +575,15 @@ you may wish to import Home Manager’s flake module,
         inputs.home-manager.flakeModules.home-manager
       ];
       flake = {
-        # Define `homeManagerModules`, `homeConfigurations`,
+        # Define `homeModules`, `homeConfigurations`,
         # `nixosConfigurations`, etc here
       };
       # See flake.parts for more features, such as `perSystem`
     };
 }
-</code></pre><p>The flake module defines the <code class="literal">flake.homeManagerModules</code> and <code class="literal">flake.homeConfigurations</code>
+</code></pre><p>The flake module defines the <code class="literal">flake.homeModules</code> and <code class="literal">flake.homeConfigurations</code>
 options, allowing them to be properly merged if they are defined in multiple
-modules.</p><p>If you are only defining <code class="literal">homeManagerModules</code> and/or <code class="literal">homeConfigurations</code> once in a
+modules.</p><p>If you are only defining <code class="literal">homeModules</code> and/or <code class="literal">homeConfigurations</code> once in a
 single module, flake-parts should work fine without importing
 <code class="literal">flakeModules.home-manager</code>.</p>
 </div>
