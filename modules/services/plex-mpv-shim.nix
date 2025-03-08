@@ -58,7 +58,7 @@ in {
     systemd.user.services.plex-mpv-shim = {
       Unit = {
         Description = "Plex mpv shim";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

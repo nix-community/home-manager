@@ -51,7 +51,7 @@ in {
       Unit = {
         Description = "Easyeffects daemon";
         Requires = [ "dbus.service" ];
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" "pipewire.service" ];
       };
 

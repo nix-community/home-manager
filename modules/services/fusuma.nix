@@ -119,7 +119,7 @@ in {
     systemd.user.services.fusuma = {
       Unit = {
         Description = "Fusuma services";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

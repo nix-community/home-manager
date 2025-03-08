@@ -18,7 +18,7 @@ in {
     systemd.user.services.numlockx = {
       Unit = {
         Description = "NumLockX";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
