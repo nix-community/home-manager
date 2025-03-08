@@ -23,7 +23,7 @@ in {
     systemd.user.services.opensnitch-ui = {
       Unit = {
         Description = "Opensnitch ui";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

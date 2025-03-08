@@ -183,7 +183,7 @@ in {
     systemd.user.services.xsuspender = {
       Unit = {
         Description = "XSuspender";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
         X-Restart-Triggers =
           [ "${config.xdg.configFile."xsuspender.conf".source}" ];

@@ -40,7 +40,7 @@ in {
         Unit = {
           Description =
             "Adds communication between your desktop and your smartphone";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
@@ -69,7 +69,7 @@ in {
         Unit = {
           Description = "kdeconnect-indicator";
           After = [
-            "graphical-session-pre.target"
+            "graphical-session.target"
             "polybar.service"
             "taffybar.service"
             "stalonetray.service"
