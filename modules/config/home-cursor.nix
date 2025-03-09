@@ -153,16 +153,17 @@ in {
 
       home.packages = [ cfg.package defaultIndexThemePackage ];
 
+      home.sessionVariables = {
+        XCURSOR_SIZE = mkDefault cfg.size;
+        XCURSOR_THEME = mkDefault cfg.name;
+      };
+
       # Set directory to look for cursors in, needed for some applications
       # that are unable to find cursors otherwise. See:
       # https://github.com/nix-community/home-manager/issues/2812
       # https://wiki.archlinux.org/title/Cursor_themes#Environment_variable
-      home.sessionVariables = {
-        XCURSOR_PATH = mkDefault ("$XCURSOR_PATH\${XCURSOR_PATH:+:}"
-          + "${config.home.profileDirectory}/share/icons");
-        XCURSOR_SIZE = mkDefault cfg.size;
-        XCURSOR_THEME = mkDefault cfg.name;
-      };
+      home.sessionSearchVariables.XCURSOR_PATH =
+        [ "${config.home.profileDirectory}/share/icons" ];
 
       # Add symlink of cursor icon directory to $HOME/.icons, needed for
       # backwards compatibility with some applications. See:
