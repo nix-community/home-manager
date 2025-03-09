@@ -5,4 +5,6 @@
   nix-keep-old-nix-path = ./keep-old-nix-path.nix;
   nix-example-channels = ./example-channels.nix;
   nix-example-channels-xdg = ./example-channels-xdg.nix;
+  nix-skip-check-settings = ./skip-check-settings.nix;
+  nix-allow-unknown-settings = ./allow-unknown-settings.nix;
 }
