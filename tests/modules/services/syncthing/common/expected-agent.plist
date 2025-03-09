@@ -15,12 +15,7 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@syncthing@/bin/syncthing</string>
-		<string>-no-browser</string>
-		<string>-no-restart</string>
-		<string>-logflags=0</string>
-		<string>-foo</string>
-		<string>-bar "baz"</string>
+		<string>@syncthing-wrapper@</string>
 	</array>
 </dict>
 </plist>
