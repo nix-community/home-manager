@@ -253,12 +253,26 @@ in
       '';
     };
 
+    home.sessionVariablesOnce = mkOption {
+      default = {};
+      type = with types; lazyAttrsOf (oneOf [ str path int float ]);
+      example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
+      description = ''
+        Environment variables to set once at login.
+        See description of `sessionVariables` for more info.
+      '';
+    };
+
     home.sessionVariables = mkOption {
       default = {};
       type = with types; lazyAttrsOf (oneOf [ str path int float ]);
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = ''
         Environment variables to always set at login.
+
+        For variables that should only be set once at the beggining of the
+        session, like recursive variables such as `PATH = "$PATH:/my/bin";`,
+        use the alternative variable `sessionVariablesOnce`.
 
         The values may refer to other environment variables using
         POSIX.2 style variable references. For example, a variable
@@ -570,11 +584,13 @@ in
       name = "hm-session-vars.sh";
       destination = "/etc/profile.d/hm-session-vars.sh";
       text = ''
+        ${config.lib.shell.exportAll cfg.sessionVariables}
+
         # Only source this once.
         if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
         export __HM_SESS_VARS_SOURCED=1
 
-        ${config.lib.shell.exportAll cfg.sessionVariables}
+        ${config.lib.shell.exportAll cfg.sessionVariablesOnce}
       '' + lib.optionalString (cfg.sessionPath != [ ]) ''
         export PATH="$PATH''${PATH:+:}${lib.concatStringsSep ":" cfg.sessionPath}"
       '' + cfg.sessionVariablesExtra;
