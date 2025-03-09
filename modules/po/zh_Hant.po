@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-01-03 09:09+0100\n"
-"PO-Revision-Date: 2023-01-08 11:50+0000\n"
-"Last-Translator: Eric Ho <eric913@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
-"home-manager/modules/zh_Hant/>\n"
+"PO-Revision-Date: 2025-03-07 18:58+0000\n"
+"Last-Translator: 807 <s10855168@gmail.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
+"projects/home-manager/modules/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 5.10.3-dev\n"
 
 #: modules/files.nix:188
 msgid "Creating home file links in %s"
@@ -29,11 +29,11 @@ msgstr "正在從 %s 清理孤立連結"
 
 #: modules/home-environment.nix:591
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "正在建立新一代的配置文件中"
 
 #: modules/home-environment.nix:594
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "為發生改變，請重新使用新一代的配置文件"
 
 #: modules/home-environment.nix:643
 msgid ""
@@ -69,19 +69,19 @@ msgstr "正在啟用 %s"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "正在從 %S 配置文件轉移到 %s 中"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "找不到合適的 profile 目錄，已經嘗試 %s 和 %s"
 
 #: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "錯誤：USER 被設定為 「%s」但我們希望是 「%s」"
 
 #: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "錯誤：HOME 被設定為 「%s」但我們預期得到 「%s」"
 
 #: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
