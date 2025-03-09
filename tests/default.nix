@@ -14,35 +14,33 @@ let
   # `"@package-name@"`. This allows the tests to refer to derivations through
   # their values without establishing an actual dependency on the derivation
   # output.
-  scrubDerivations = attrs:
+  scrubDerivation = name: value:
     let
-      scrubDerivation = name: value:
-        let
-          scrubbedValue = scrubDerivations value;
+      scrubbedValue = scrubDerivations value;
 
-          newDrvAttrs = {
-            buildScript = abort "no build allowed";
+      newDrvAttrs = {
+        buildScript = abort "no build allowed";
 
-            outPath = builtins.traceVerbose ("${name} - got out path")
-              "@${lib.getName value}@";
+        outPath = builtins.traceVerbose "${name} - got out path"
+          "@${lib.getName value}@";
 
-            # Prevent getOutput from descending into outputs
-            outputSpecified = true;
+        # Prevent getOutput from descending into outputs
+        outputSpecified = true;
 
-            # Allow the original package to be used in derivation inputs
-            __spliced = {
-              buildHost = value;
-              hostTarget = value;
-            };
-          };
-        in if lib.isAttrs value then
-          if lib.isDerivation value then
-            scrubbedValue // newDrvAttrs
-          else
-            scrubbedValue
-        else
-          value;
-    in lib.mapAttrs scrubDerivation attrs;
+        # Allow the original package to be used in derivation inputs
+        __spliced = {
+          buildHost = value;
+          hostTarget = value;
+        };
+      };
+    in if lib.isAttrs value then
+      if lib.isDerivation value then
+        scrubbedValue // newDrvAttrs
+      else
+        scrubbedValue
+    else
+      value;
+  scrubDerivations = attrs: let in lib.mapAttrs scrubDerivation attrs;
 
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
   whitelist = let
