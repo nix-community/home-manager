@@ -17,8 +17,7 @@
     home.extraOutputsToInstall = [ "debug" ];
 
     home.sessionSearchVariables = {
-      NIX_DEBUG_INFO_DIRS =
-        "$NIX_DEBUG_INFO_DIRS\${NIX_DEBUG_INFO_DIRS:+:}${config.home.profileDirectory}/lib/debug";
+      NIX_DEBUG_INFO_DIRS = [ "${config.home.profileDirectory}/lib/debug" ];
     };
   };
 }
