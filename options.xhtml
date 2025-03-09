@@ -8577,7 +8577,7 @@ absolute path <span class="emphasis"><em>(read only)</em></span></p>
  </span>
 </dt>
 <dd>
-<p>Extra directories to add to <code class="envar">PATH</code>.</p><p>These directories are added to the <code class="envar">PATH</code> variable in a
+<p>Extra directories to prepend to <code class="envar">PATH</code>.</p><p>These directories are added to the <code class="envar">PATH</code> variable in a
 double-quoted context, so expressions like <code class="literal">$HOME</code> are
 expanded by the shell. However, since expressions like <code class="literal">~</code> or
 <code class="literal">*</code> are escaped, they will end up in the <code class="envar">PATH</code>
@@ -8594,6 +8594,45 @@ list of string</p>
   &quot;\${xdg.configHome}/emacs/bin&quot;
   &quot;.git/safe/../../bin&quot;
 ]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix" target="_top">
+&lt;home-manager/modules/home-environment.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-home.sessionSearchVariables"></a><a class="term" href="options.xhtml#opt-home.sessionSearchVariables"><code class="option">home.sessionSearchVariables</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra directories to prepend to arbitrary PATH-like
+environment variables (e.g.: <code class="envar">MANPATH</code>). The values
+will be concatenated by <code class="literal">:</code>.
+These directories are added to the environment variable in a
+double-quoted context, so expressions like <code class="literal">$HOME</code> are
+expanded by the shell. However, since expressions like <code class="literal">~</code> or
+<code class="literal">*</code> are escaped, they will end up in the environment
+verbatim.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  MANPATH = [
+    &quot;$HOME/.npm-packages/man&quot;
+    &quot;\${xdg.configHome}/.local/share/man&quot;
+  ];
+}
 </code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
