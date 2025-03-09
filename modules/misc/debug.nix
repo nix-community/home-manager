@@ -16,7 +16,7 @@
   config = lib.mkIf config.home.enableDebugInfo {
     home.extraOutputsToInstall = [ "debug" ];
 
-    home.sessionVariables = {
+    home.sessionSearchVariables = {
       NIX_DEBUG_INFO_DIRS =
         "$NIX_DEBUG_INFO_DIRS\${NIX_DEBUG_INFO_DIRS:+:}${config.home.profileDirectory}/lib/debug";
     };
