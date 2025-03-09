@@ -31,6 +31,14 @@ in {
       example = "\${pkgs.i3lock}/bin/i3lock -n -c 000000";
     };
 
+    lockCmdEnv = lib.mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "XSECURELOCK_PAM_SERVICE=xsecurelock" ];
+      description =
+        "Environment variables to source a with the locker command (lockCmd).";
+    };
+
     inactiveInterval = mkOption {
       type = types.int;
       default = 10;
@@ -127,6 +135,7 @@ in {
           ExecStart = concatStringsSep " "
             ([ "${cfg.xss-lock.package}/bin/xss-lock" "-s \${XDG_SESSION_ID}" ]
               ++ cfg.xss-lock.extraOptions ++ [ "-- ${cfg.lockCmd}" ]);
+          Environment = cfg.lockCmdEnv;
           Restart = "always";
         };
       };
