@@ -110,12 +110,21 @@ in {
         '';
       };
 
+      sessionVariablesOnce = mkOption {
+        default = { };
+        type = types.attrs;
+        example = { MAILCHECK = 30; };
+        description = ''
+          Environment variables that will be set once at the start of the Bash session.
+        '';
+      };
+
       sessionVariables = mkOption {
         default = { };
         type = types.attrs;
         example = { MAILCHECK = 30; };
         description = ''
-          Environment variables that will be set for the Bash session.
+          Environment variables that will be set for each Bash session.
         '';
       };
 
@@ -182,6 +191,7 @@ in {
     (map (v: "shopt ${switch v} ${removePrefix "-" v}") cfg.shellOptions);
 
     sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
+    sessionVarsOnceStr = config.lib.shell.exportAll cfg.sessionVariablesOnce;
 
     historyControlStr = (concatStringsSep "\n"
       (mapAttrsToList (n: v: "${n}=${v}")
@@ -221,6 +231,12 @@ in {
       . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
       ${sessionVarsStr}
+
+      # Only source these once
+      if [[ -z "$__HM_BASH_SESS_VARS_SOURCED" ]]; then
+        export __HM_BASH_SESS_VARS_SOURCED=1
+        ${sessionVarsOnceStr}
+      fi
 
       ${cfg.profileExtra}
     '';
