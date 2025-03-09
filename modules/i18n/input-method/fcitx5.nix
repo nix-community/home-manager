@@ -38,14 +38,17 @@ in {
   config = lib.mkIf (im.enabled == "fcitx5") {
     i18n.inputMethod.package = fcitx5Package;
 
-    home.sessionVariables = {
-      GLFW_IM_MODULE = "ibus"; # IME support in kitty
-      XMODIFIERS = "@im=fcitx";
-      QT_PLUGIN_PATH =
-        "$QT_PLUGIN_PATH\${QT_PLUGIN_PATH:+:}${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}";
-    } // lib.optionalAttrs (!cfg.waylandFrontend) {
-      GTK_IM_MODULE = "fcitx";
-      QT_IM_MODULE = "fcitx";
+    home = {
+      sessionVariables = {
+        GLFW_IM_MODULE = "ibus"; # IME support in kitty
+        XMODIFIERS = "@im=fcitx";
+      } // lib.optionalAttrs (!cfg.waylandFrontend) {
+        GTK_IM_MODULE = "fcitx";
+        QT_IM_MODULE = "fcitx";
+      };
+
+      sessionSearchVariables.QT_PLUGIN_PATH =
+        [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
     };
 
     systemd.user.services.fcitx5-daemon = {
