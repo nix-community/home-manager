@@ -2,6 +2,10 @@
 
 lib.mkMerge [
   {
+    test.stubs.writers = {
+      extraAttrs.writeBash = (name: fn: "@syncthing-wrapper@");
+    };
+
     services.syncthing = {
       enable = true;
       extraOptions = [ "-foo" ''-bar "baz"'' ];
