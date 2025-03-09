@@ -4,7 +4,7 @@ let
 
   snippetsDir = name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/Code/User${
+      "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }/snippets"
     else
