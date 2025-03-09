@@ -42,12 +42,15 @@ home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
 
-  # This value determines the Home Manager release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. The state version is required and should
-  # stay at the version you originally installed. More documentation for
-  # this option is available at https://nixos.org/nixos/options.html.
-  home.stateVersion = "24.05";
+  # This value determines the Home Manager release that your configuration is 
+  # compatible with. This helps avoid breakage when a new Home Manager release 
+  # introduces backwards incompatible changes. 
+  #
+  # You should not change this value, even if you update Home Manager. If you do 
+  # want to update the value, then make sure to first check the Home Manager 
+  # release notes. 
+  home.stateVersion = "24.05"; # Please read the comment before changing. 
+
 };
 ```
 
