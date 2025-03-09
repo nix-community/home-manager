@@ -685,4 +685,10 @@
     github = "3ulalia";
     githubId = "179992797";
   };
+  ipsavitsky = {
+    name = "Ilya Savitsky";
+    email = "ipsavitsky234@gmail.com";
+    github = "ipsavitsky";
+    githubId = 33558632;
+  };
 }
