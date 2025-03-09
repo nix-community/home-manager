@@ -12,6 +12,7 @@ let
     relToDotDir "plugins" else ".zsh/plugins";
 
   envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
+  envVarsOnceStr = config.lib.zsh.exportAll cfg.sessionVariablesOnce;
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
   aliasesStr = concatStringsSep "\n" (
@@ -464,11 +465,18 @@ in
         description = "The default base keymap to use.";
       };
 
+      sessionVariablesOnce = mkOption {
+        default = {};
+        type = types.attrs;
+        example = { MAILCHECK = 30; };
+        description = "Environment variables that will be set once at the start of a zsh session.";
+      };
+
       sessionVariables = mkOption {
         default = {};
         type = types.attrs;
         example = { MAILCHECK = 30; };
-        description = "Environment variables that will be set for zsh session.";
+        description = "Environment variables that will be set for each zsh session.";
       };
 
       initExtraBeforeCompInit = mkOption {
@@ -603,10 +611,12 @@ in
         # Environment variables
         . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
+        ${envVarsStr}
+
         # Only source this once
         if [[ -z "$__HM_ZSH_SESS_VARS_SOURCED" ]]; then
           export __HM_ZSH_SESS_VARS_SOURCED=1
-          ${envVarsStr}
+          ${envVarsOnceStr}
         fi
       '';
     }
