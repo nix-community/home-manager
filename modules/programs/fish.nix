@@ -220,13 +220,16 @@ let
       passAsFile = [ "text" ];
     } "env HOME=$(mktemp -d) fish_indent < $textPath > $out";
 
+  profileDir = "/etc/profile.d";
+  translatedSessionVarsFile = "hm-session-vars.fish";
   translatedSessionVariables =
-    pkgs.runCommandLocal "hm-session-vars.fish" { } ''
+    pkgs.runCommandLocal translatedSessionVarsFile { } ''
+      mkdir -p $out/${profileDir}
       (echo "function setup_hm_session_vars;"
       ${pkgs.buildPackages.babelfish}/bin/babelfish \
-      <${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh
+        <${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh
       echo "end"
-      echo "setup_hm_session_vars") > $out
+      echo "setup_hm_session_vars") > $out/${profileDir}/${translatedSessionVarsFile}
     '';
 
 in {
@@ -393,11 +396,24 @@ in {
         <https://fishshell.com/docs/current/cmds/function.html>.
       '';
     };
+
+    # TODO: maybe this makes more sense as `programs.fish.sessionVariablesPackage`?
+    # if `programs.fish.sessionVariables` were added, would that need its own
+    # separate package, or would they just go in config.fish directly?
+    home.fishSessionVariablesPackage = mkOption {
+      type = types.package;
+      internal = true;
+      description = ''
+        The package containing the translated {file}`hm-session-vars.fish` file.
+      '';
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
-    { home.packages = [ cfg.package ]; }
-
+    {
+      home.fishSessionVariablesPackage = translatedSessionVariables;
+      home.packages = [ cfg.package config.home.fishSessionVariablesPackage ];
+    }
     (mkIf cfg.generateCompletions {
       # Support completion for `man` by building a cache for `apropos`.
       programs.man.generateCaches = mkDefault true;
@@ -473,7 +489,7 @@ in {
         set -q __fish_home_manager_config_sourced; and exit
         set -g __fish_home_manager_config_sourced 1
 
-        source ${translatedSessionVariables}
+        source ${config.home.fishSessionVariablesPackage}/${profileDir}/${translatedSessionVarsFile}
 
         ${cfg.shellInit}
 
