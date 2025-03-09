@@ -3,7 +3,6 @@
 lib.recursiveUpdate (import ./thunderbird.nix { inherit lib realPkgs; }) {
   programs.firefox = {
     enable = true;
-    # Darwin doesn't support wrapped Firefox, using unwrapped instead
-    package = realPkgs.firefox-unwrapped;
+    package = realPkgs.firefox;
   };
 }
