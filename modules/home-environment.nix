@@ -601,7 +601,7 @@ in
           (env: values: config.lib.shell.export
             env
             (config.lib.shell.prependToVar ":" env values))
-          cfg.sessionSearchVariables)
+          cfg.sessionSearchVariables) + "\n"
         + cfg.sessionVariablesExtra;
     };
 
