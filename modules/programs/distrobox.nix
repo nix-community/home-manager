@@ -196,6 +196,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.distrobox" pkgs lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."distrobox/containers.ini".source =
