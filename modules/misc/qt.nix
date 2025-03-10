@@ -26,6 +26,7 @@ let
   styleNames = {
     gtk = "gtk2";
     qtct = "qt5ct";
+    kde6 = "kde";
   };
 
   # Maps known lowercase style names to style packages. Non-exhaustive.
