@@ -56,7 +56,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 150 ''
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 2000 ''
       eval "$(${cfg.package}/bin/zoxide init bash ${cfgOptions})"
     '');
 
