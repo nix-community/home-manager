@@ -63,15 +63,19 @@ in {
       if [[ -w $out/share/mime && -w $out/share/mime/packages && -d $out/share/mime/packages ]]; then
         XDG_DATA_DIRS=$out/share \
         PKGSYSTEM_ENABLE_FSYNC=0 \
-        ${getExe cfg.sharedMimeInfoPackage} \
-          -V $out/share/mime > /dev/null
+        ${
+          getExe
+          (cfg.sharedMimeInfoPackage.__spliced.buildHost or cfg.sharedMimeInfoPackage)
+        } -V $out/share/mime > /dev/null
       fi
 
       if [[ -w $out/share/applications ]]; then
-        ${getExe' cfg.desktopFileUtilsPackage "update-desktop-database"} \
-          $out/share/applications
+        ${
+          getExe'
+          (cfg.desktopFileUtilsPackage.__spliced.buildHost or cfg.desktopFileUtilsPackage)
+          "update-desktop-database"
+        } $out/share/applications
       fi
     '';
   };
-
 }
