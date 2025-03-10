@@ -116,10 +116,10 @@
     assertFileContent home-files/${profilesDir}/first/chrome/userContent.css \
       <(echo "* { color: red !important; }")
 
-    assertFileExists home-files/${configDir}/first/ImapMail/${
+    assertFileExists home-files/${profilesDir}/first/ImapMail/${
       builtins.hashString "sha256" "hm@example.com"
     }/msgFilterRules.dat
-    assertFileContent home-files/${configDir}/first/ImapMail/${
+    assertFileContent home-files/${profilesDir}/first/ImapMail/${
       builtins.hashString "sha256" "hm@example.com"
     }/msgFilterRules.dat \
       ${./thunderbird-expected-msgFilterRules.dat}

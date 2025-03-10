@@ -620,7 +620,7 @@ in {
             (getEmailAccountsForProfile name enabledAccountsWithId));
       in (builtins.listToAttrs (map (a: {
         name =
-          "${thunderbirdConfigPath}/${name}/ImapMail/${a.id}/msgFilterRules.dat";
+          "${thunderbirdProfilesPath}/${name}/ImapMail/${a.id}/msgFilterRules.dat";
         value = { text = mkFilterListToIni a.thunderbird.messageFilters; };
       }) emailAccountsWithFilters))) cfg.profiles));
   };
