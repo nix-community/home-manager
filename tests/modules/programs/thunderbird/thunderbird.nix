@@ -6,13 +6,22 @@
       thunderbird = {
         enable = true;
         profiles = [ "first" ];
-        messageFilters = [{
-          name = "Mark as Read on Archive";
-          enabled = true;
-          type = "128";
-          action = "Mark read";
-          condition = "ALL";
-        }];
+        messageFilters = [
+          {
+            name = "Should be first";
+            enabled = true;
+            type = "128";
+            action = "Cry";
+            condition = "ALL";
+          }
+          {
+            name = "Mark as Read on Archive";
+            enabled = true;
+            type = "128";
+            action = "Mark read";
+            condition = "ALL";
+          }
+        ];
       };
 
       aliases = [ "home-manager@example.com" ];
