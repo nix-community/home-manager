@@ -9,54 +9,57 @@ let
 
   createQuadletSource = name: containerDef:
     let
-      formatServiceNameForType = type: name:
-        {
-          image = "podman-${name}-image.service";
-          build = "podman-${name}-build.service";
-          network = "podman-${name}-network.service";
-          volume = "podman-${name}-volume.service";
-        }."${type}";
-
-      dependencyByHomeManagerQuadlet = type: name:
-        let
-          definitionsOfType =
-            filter (q: q.resourceType == type) cfg.internal.quadletDefinitions;
-          matchingName =
-            filter (q: q.serviceName == "podman-${name}") definitionsOfType;
-        in if ((length matchingName) == 1) then
-          [ (formatServiceNameForType type name) ]
+      dependencyBySuffix = type: name:
+        if (hasInfix ".${type}" name) then
+          let baseName = elemAt (splitString ".${type}" name) 0;
+          in if (hasAttr baseName cfg.internal.builtQuadlets) then
+            [ (cfg.internal.builtQuadlets.${baseName}) ]
+          else
+            [ ]
         else
           [ ];
 
-      forEachValue = type: value:
-        let resolve = v: dependencyByHomeManagerQuadlet type v;
-        in if isList value then
-          concatLists (map resolve value)
+      withResolverFor = type: value:
+        let resolve = v: dependencyBySuffix type v;
+        in if builtins.isList value then
+          builtins.concatLists (map resolve value) # Flatten list of lists
         else
           resolve value;
-
-      withResolverFor = type: value:
-        {
-          "image" = forEachValue "image" value;
-          "build" = forEachValue "build" value;
-          "network" = forEachValue "network" value;
-          "volume" = let
-            a = if isList value then value else [ value ];
-            volumes = map (v: elemAt (splitString ":" v) 0) a;
-          in forEachValue "volume" volumes;
-        }.${type};
 
       dependencyServices = (withResolverFor "image" containerDef.image)
         ++ (withResolverFor "build" containerDef.image)
         ++ (withResolverFor "network" containerDef.network)
         ++ (withResolverFor "volume" containerDef.volumes);
 
-      resolvedImage = if (builtins.hasAttr containerDef.image cfg.images) then
-        cfg.images."${containerDef.image}".image
-      else if (builtins.hasAttr containerDef.image cfg.builds) then
-        "localhost/homemanager/${containerDef.image}"
-      else
-        containerDef.image;
+      checkQuadletReference = types: value:
+        let baseName = t: elemAt (splitString ".${t}" value) 0;
+        in if builtins.isList value then
+          builtins.concatLists (map (checkQuadletReference types) value)
+        else
+          let type = findFirst (t: hasInfix ".${t}" value) null types;
+          in if (type != null) then
+            let
+              quadletBaseName = baseName type;
+              quadletsOfType =
+                filterAttrs (n: v: v.quadletData.resourceType == type)
+                cfg.internal.builtQuadlets;
+            in if (hasAttr quadletBaseName quadletsOfType) then
+              [
+                (replaceStrings [ quadletBaseName ]
+                  [ "podman-${quadletBaseName}" ] value)
+              ]
+            else
+              [ value ]
+          else if ((hasInfix "/nix/store" value) == false
+            && hasAttr value cfg.internal.builtQuadlets) then
+            lib.warn ''
+              A value for Podman container '${name}' might use a reference to another quadlet: ${value}. 
+              Append the type '.${
+                cfg.internal.builtQuadlets.${value}.quadletData.resourceType
+              }' to '${baseName value}' if this is intended.
+            '' [ value ]
+          else
+            [ value ];
 
       quadlet = (podman-lib.deepMerge {
         Container = {
@@ -70,18 +73,18 @@ let
           EnvironmentFile = containerDef.environmentFile;
           Exec = containerDef.exec;
           Group = containerDef.group;
-          Image = resolvedImage;
+          Image = checkQuadletReference [ "build" "image" ] containerDef.image;
           IP = containerDef.ip4;
           IP6 = containerDef.ip6;
           Label =
             (containerDef.labels // { "nix.home-manager.managed" = true; });
-          Network = containerDef.network;
+          Network = checkQuadletReference [ "network" ] containerDef.network;
           NetworkAlias = containerDef.networkAlias;
           PodmanArgs = containerDef.extraPodmanArgs;
           PublishPort = containerDef.ports;
           UserNS = containerDef.userNS;
           User = containerDef.user;
-          Volume = containerDef.volumes;
+          Volume = checkQuadletReference [ "volume" ] containerDef.volumes;
         };
         Install = {
           WantedBy = optionals containerDef.autoStart [
@@ -101,30 +104,34 @@ let
           TimeoutStopSec = 30;
         };
         Unit = {
-          After = dependencyServices;
-          Requires = dependencyServices;
           Description = (if (builtins.isString containerDef.description) then
             containerDef.description
           else
             "Service for container ${name}");
         };
       } containerDef.extraConfig);
-    in ''
-      # Automatically generated by home-manager podman container configuration
-      # DO NOT EDIT THIS FILE DIRECTLY
-      #
-      # ${name}.container
-      ${podman-lib.toQuadletIni quadlet}
-    '';
+    in {
+      dependencies = dependencyServices;
+      attrs = quadlet;
+      text = ''
+        # Automatically generated by home-manager podman container configuration
+        # DO NOT EDIT THIS FILE DIRECTLY
+        #
+        # ${name}.container
+        ${podman-lib.toQuadletIni quadlet}
+      '';
+    };
 
-  toQuadletInternal = name: containerDef: {
-    assertions = podman-lib.buildConfigAsserts name containerDef.extraConfig;
-    resourceType = "container";
-    serviceName =
-      "podman-${name}"; # quadlet service name: 'podman-<name>.service'
-    source =
-      podman-lib.removeBlankLines (createQuadletSource name containerDef);
-  };
+  toQuadletInternal = name: containerDef:
+    let src = createQuadletSource name containerDef;
+    in {
+      assertions = podman-lib.buildConfigAsserts name containerDef.extraConfig;
+      dependencies = src.dependencies;
+      resourceType = "container";
+      serviceName =
+        "podman-${src.attrs.Container.ContainerName}"; # generated service name: 'podman-<name>.service'
+      source = podman-lib.removeBlankLines src.text;
+    };
 
   # Define the container user type as the user interface
   containerDefinitionType = types.submodule {

@@ -15,14 +15,16 @@ let
     pkgs.stdenv.mkDerivation {
       name = "home-${quadlet.resourceType}-${quadlet.serviceName}";
 
-      buildInputs = [ cfg.package ];
+      buildInputs = [ cfg.package ] ++ quadlet.dependencies;
 
-      dontUnpack = true;
+      unpackPhase = ''
+        mkdir -p $out/quadlets
+        ${concatStringsSep "\n" (map (v:
+          "ln -s ${v.out}/quadlets/${v.quadletData.serviceName}.${v.quadletData.resourceType} $out/quadlets")
+          quadlet.dependencies)}
+      '';
 
       installPhase = ''
-        mkdir $out
-        # Directory for the quadlet file
-        mkdir -p $out/quadlets
         # Directory for systemd unit files
         mkdir -p $out/units
 
@@ -40,7 +42,6 @@ let
       };
     };
 
-  # Create a derivation for each quadlet spec
   builtQuadlets = map buildPodmanQuadlet cfg.internal.quadletDefinitions;
 
   accumulateUnitFiles = prefix: path: quadlet:
@@ -84,5 +85,10 @@ in {
     home.activation.podmanQuadletCleanup =
       lib.mkIf (lib.length builtQuadlets >= 1)
       (lib.hm.dag.entryAfter [ "reloadSystemd" ] activationCleanupScript);
+
+    services.podman.internal.builtQuadlets = listToAttrs (map (pkg: {
+      name = removePrefix "podman-" pkg.passthru.quadletData.serviceName;
+      value = pkg;
+    }) builtQuadlets);
   };
 }
