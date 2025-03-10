@@ -88,6 +88,7 @@ let
     ./programs/dircolors.nix
     ./programs/direnv.nix
     ./programs/discocss.nix
+    ./programs/distrobox.nix
     ./programs/earthly.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
