@@ -1,0 +1,9 @@
+[Install]
+WantedBy=timers.target
+
+[Timer]
+OnCalendar=monthly
+Persistent=true
+
+[Unit]
+Description=Update tldr CLI cache

@@ -1,7 +1,3 @@
-{ config, lib, ... }:
-
-with lib;
-
 {
   config = {
     programs.tmux = { enable = false; };

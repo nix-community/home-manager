@@ -24,7 +24,8 @@ in {
     };
 
     configDir = mkOption {
-      type = types.path;
+      type = types.nullOr types.path;
+      default = null;
       example = literalExpression "./eww-config-dir";
       description = ''
         The directory that gets symlinked to
@@ -32,22 +33,20 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    xdg.configFile."eww".source = cfg.configDir;
+    xdg =
+      mkIf (cfg.configDir != null) { configFile."eww".source = cfg.configDir; };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" ]]; then

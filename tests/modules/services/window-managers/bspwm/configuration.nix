@@ -29,8 +29,6 @@
     startupPrograms = [ "foo" "bar || qux" ];
   };
 
-  test.stubs.bspwm = { };
-
   nmt.script = ''
     bspwmrc=home-files/.config/bspwm/bspwmrc
     assertFileExists "$bspwmrc"

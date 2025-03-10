@@ -1,7 +1,4 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
   dummy-gnome-shell-extensions = pkgs.runCommand "dummy-package" { } ''
     mkdir -p $out/share/gnome-shell/extensions/dummy-package
@@ -31,16 +28,12 @@ let
     "test-extension-uuid"
   ];
 
-  actualEnabledExtensions = catAttrs "value"
+  actualEnabledExtensions = lib.catAttrs "value"
     config.dconf.settings."org/gnome/shell".enabled-extensions.value;
 
 in {
   nixpkgs.overlays = [
-    (self: super: {
-      gnome = super.gnome.overrideScope (gself: gsuper: {
-        gnome-shell-extensions = dummy-gnome-shell-extensions;
-      });
-    })
+    (final: prev: { gnome-shell-extensions = dummy-gnome-shell-extensions; })
   ];
 
   programs.gnome-shell.enable = true;
@@ -66,8 +59,8 @@ in {
       message = "Expected disable-user-extensions to be false.";
     }
     {
-      assertion =
-        all (e: elem e actualEnabledExtensions) expectedEnabledExtensions;
+      assertion = lib.all (e: lib.elem e actualEnabledExtensions)
+        expectedEnabledExtensions;
       message = ''
         Expected enabled-extensions to contain all of:
           ${toString expectedEnabledExtensions}
@@ -82,8 +75,6 @@ in {
       message = "Expected extensions/user-theme/name to be 'Test'.";
     }
   ];
-
-  test.stubs.dconf = { };
 
   nmt.script = ''
     assertFileExists home-path/share/gnome-shell/extensions/dummy-package/test

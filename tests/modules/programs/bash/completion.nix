@@ -1,11 +1,5 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   programs.bash.enable = true;
-
-  test.stubs.bash-completion = { };
 
   nmt.script = ''
     assertFileExists home-files/.bashrc

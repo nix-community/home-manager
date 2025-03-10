@@ -19,10 +19,7 @@ in {
       unwrappedPackageName = "floorp-unwrapped";
       visible = true;
 
-      platforms.linux = {
-        configPath = ".floorp";
-        vendorPath = ".floorp";
-      };
+      platforms.linux = { configPath = ".floorp"; };
       platforms.darwin = { configPath = "Library/Application Support/Floorp"; };
     })
   ];

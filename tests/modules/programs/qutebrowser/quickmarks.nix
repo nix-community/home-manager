@@ -10,8 +10,6 @@
     };
   };
 
-  test.stubs.qutebrowser = { };
-
   nmt.script = let
     quickmarksFile = if pkgs.stdenv.hostPlatform.isDarwin then
       ".qutebrowser/quickmarks"
@@ -21,7 +19,7 @@
     assertFileContent \
       home-files/${quickmarksFile} \
       ${
-        pkgs.writeText "qutebrowser-expected-quickmarks" ''
+        builtins.toFile "qutebrowser-expected-quickmarks" ''
           home-manager https://github.com/nix-community/home-manager
           nixpkgs https://github.com/NixOS/nixpkgs''
       }

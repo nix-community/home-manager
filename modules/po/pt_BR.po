@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"POT-Creation-Date: 2025-01-03 09:09+0100\n"
 "PO-Revision-Date: 2024-04-19 17:07+0000\n"
 "Last-Translator: Felipe Silva <hey@felipeqq2.rocks>\n"
-"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
-"home-manager/modules/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/home-"
+"manager/modules/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.5-dev\n"
 
-#: modules/files.nix:191
+#: modules/files.nix:188
 msgid "Creating home file links in %s"
 msgstr "Criando links simbólicos em %s"
 
-#: modules/files.nix:204
+#: modules/files.nix:201
 msgid "Cleaning up orphan links from %s"
 msgstr "Limpando links órfãos de %s"
 
-#: modules/files.nix:220
-msgid "Creating profile generation %s"
-msgstr "Criando perfil de geração %s"
+#: modules/home-environment.nix:591
+msgid "Creating new profile generation"
+msgstr ""
 
-#: modules/files.nix:237
-msgid "No change so reusing latest profile generation %s"
-msgstr "Nenhuma mudança, portanto reusando a última geração %s para o perfil"
+#: modules/home-environment.nix:594
+msgid "No change so reusing latest profile generation"
+msgstr ""
 
-#: modules/home-environment.nix:634
+#: modules/home-environment.nix:643
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "E então tente novamente ativar a sua configuração do Home Manager."
 
-#: modules/home-environment.nix:667
+#: modules/home-environment.nix:676
 msgid "Activating %s"
 msgstr "Ativando %s"
 
@@ -76,66 +76,71 @@ msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
 "Não foi possível encontrar um diretório de perfil apropriado, tentou %s e %s"
 
-#: modules/lib-bash/activation-init.sh:83
-msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr "Revalidando oldGenNum e oldGenPath"
-
-#: modules/lib-bash/activation-init.sh:86
-msgid ""
-"The previous generation number and path are in conflict! These\n"
-"must be either both empty or both set but are now set to\n"
-"\n"
-"    '%s' and '%s'\n"
-"\n"
-"If you don't mind losing previous profile generations then\n"
-"the easiest solution is probably to run\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"and trying home-manager switch again. Good luck!"
-msgstr ""
-"O número da geração anterior e o caminho não batem! Ambos\n"
-"precisam estar ou vazios ou definidos, mas estão definidos como\n"
-"\n"
-"    '%s' e '%s'\n"
-"\n"
-"Se você não se importa de perder gerações de perfis anteriores, então\n"
-"a solução mais rápida é provavelmente rodar\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"e tentar rodar \"home-manager switch\" de novo. Boa sorte!"
-
-#: modules/lib-bash/activation-init.sh:127
+#: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 msgstr "Erro: USER está definido como \"%s\" mas o esperado é \"%s\""
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
 msgstr "Erro: HOME está definido como \"%s\" mas o esperado é \"%s\""
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
 msgstr "Iniciando ativação do Home Manager"
 
-#: modules/lib-bash/activation-init.sh:157
+#: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
 msgstr "Revalidando Nix"
 
-#: modules/lib-bash/activation-init.sh:170
+#: modules/lib-bash/activation-init.sh:149
 msgid "This is a dry run"
 msgstr "Essa é uma execução de teste"
 
-#: modules/lib-bash/activation-init.sh:174
+#: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
 msgstr "Essa é uma execução de fato"
 
-#: modules/lib-bash/activation-init.sh:180
+#: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
 msgstr "Usando versão do Nix: %s"
 
-#: modules/lib-bash/activation-init.sh:183
+#: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"
 msgstr "Variáveis durante ativação:"
+
+#~ msgid "Creating profile generation %s"
+#~ msgstr "Criando perfil de geração %s"
+
+#~ msgid "No change so reusing latest profile generation %s"
+#~ msgstr ""
+#~ "Nenhuma mudança, portanto reusando a última geração %s para o perfil"
+
+#~ msgid "Sanity checking oldGenNum and oldGenPath"
+#~ msgstr "Revalidando oldGenNum e oldGenPath"
+
+#~ msgid ""
+#~ "The previous generation number and path are in conflict! These\n"
+#~ "must be either both empty or both set but are now set to\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "If you don't mind losing previous profile generations then\n"
+#~ "the easiest solution is probably to run\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "and trying home-manager switch again. Good luck!"
+#~ msgstr ""
+#~ "O número da geração anterior e o caminho não batem! Ambos\n"
+#~ "precisam estar ou vazios ou definidos, mas estão definidos como\n"
+#~ "\n"
+#~ "    '%s' e '%s'\n"
+#~ "\n"
+#~ "Se você não se importa de perder gerações de perfis anteriores, então\n"
+#~ "a solução mais rápida é provavelmente rodar\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "e tentar rodar \"home-manager switch\" de novo. Boa sorte!"

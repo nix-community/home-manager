@@ -56,8 +56,8 @@ in {
       services.swayosd = {
         Unit = {
           Description = "Volume/backlight OSD indicator";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+          PartOf = [ config.wayland.systemd.target ];
+          After = [ config.wayland.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           Documentation = "man:swayosd(1)";
           StartLimitBurst = 5;
@@ -76,7 +76,7 @@ in {
           RestartSec = "2s";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ config.wayland.systemd.target ]; };
       };
     };
   };

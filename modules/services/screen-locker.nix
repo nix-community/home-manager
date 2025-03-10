@@ -117,7 +117,7 @@ in {
       systemd.user.services.xss-lock = {
         Unit = {
           Description = "xss-lock, session locker service";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
@@ -127,6 +127,7 @@ in {
           ExecStart = concatStringsSep " "
             ([ "${cfg.xss-lock.package}/bin/xss-lock" "-s \${XDG_SESSION_ID}" ]
               ++ cfg.xss-lock.extraOptions ++ [ "-- ${cfg.lockCmd}" ]);
+          Restart = "always";
         };
       };
     }
@@ -140,7 +141,7 @@ in {
       systemd.user.services.xautolock-session = {
         Unit = {
           Description = "xautolock, session locker service";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
@@ -153,6 +154,7 @@ in {
             "-locker '${pkgs.systemd}/bin/loginctl lock-session \${XDG_SESSION_ID}'"
           ] ++ optional cfg.xautolock.detectSleep "-detectsleep"
             ++ cfg.xautolock.extraOptions);
+          Restart = "always";
         };
       };
     })

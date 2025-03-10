@@ -13,13 +13,11 @@ in {
   options.programs.granted = {
     enable = mkEnableOption "granted";
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -31,6 +29,12 @@ in {
         source ${package}/bin/assume "$@"
         unset GRANTED_ALIAS_CONFIGURED
       }
+    '';
+
+    programs.fish.functions.assume = mkIf cfg.enableFishIntegration ''
+      set -x GRANTED_ALIAS_CONFIGURED "true"
+      source ${package}/share/assume.fish
+      set -e GRANTED_ALIAS_CONFIGURED
     '';
   };
 }

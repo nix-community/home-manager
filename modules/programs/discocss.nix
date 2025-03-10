@@ -11,9 +11,9 @@ in {
       enable = mkEnableOption
         "discocss, a tiny Discord CSS injector for Linux and MacOS";
 
-      package = mkPackageOption pkgs "discocss" { };
+      package = mkPackageOption pkgs "discocss" { nullable = true; };
 
-      discordPackage = mkPackageOption pkgs "discord" { };
+      discordPackage = mkPackageOption pkgs "discord" { nullable = true; };
 
       discordAlias = mkOption {
         type = types.bool;
@@ -37,10 +37,10 @@ in {
         "To use discocss with discordAlias you have to remove discord from home.packages, or set discordAlias to false.";
     }];
 
-    home.packages = [
+    home.packages = lib.mkIf (cfg.package != null) [
       (cfg.package.override {
         discordAlias = cfg.discordAlias;
-        discord = cfg.discordPackage;
+        discord = lib.mkIf (cfg.discordPackage != null) cfg.discordPackage;
       })
     ];
 

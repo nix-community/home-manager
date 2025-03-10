@@ -16,7 +16,7 @@ in {
     enable = mkEnableOption
       "imv: a command line image viewer intended for use with tiling window managers";
 
-    package = mkPackageOption pkgs "imv" { };
+    package = mkPackageOption pkgs "imv" { nullable = true; };
 
     settings = mkOption {
       default = { };
@@ -38,7 +38,7 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "programs.imv" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile =
       mkIf (cfg.settings != { }) { "imv/config".text = toConfig cfg.settings; };

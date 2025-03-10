@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./sway-stubs.nix ];
-
   # Enables the default bar configuration
   home.stateVersion = "20.09";
 

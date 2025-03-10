@@ -17,8 +17,6 @@
 
 { lib, pkgs, config, ... }:
 
-with lib;
-
 let
   inherit (config.i18n) glibcLocales;
 
@@ -27,19 +25,19 @@ let
   archivePath = "${glibcLocales}/lib/locale/locale-archive";
 
   # lookup the version of glibcLocales and set the appropriate environment vars
-  localeVars = if versionAtLeast version "2.27" then {
+  localeVars = if lib.versionAtLeast version "2.27" then {
     LOCALE_ARCHIVE_2_27 = archivePath;
-  } else if versionAtLeast version "2.11" then {
+  } else if lib.versionAtLeast version "2.11" then {
     LOCALE_ARCHIVE_2_11 = archivePath;
   } else
     { };
 
 in {
-  meta.maintainers = with maintainers; [ midchildan ];
+  meta.maintainers = with lib.maintainers; [ midchildan ];
 
   options = {
-    i18n.glibcLocales = mkOption {
-      type = types.path;
+    i18n.glibcLocales = lib.mkOption {
+      type = lib.types.path;
       description = ''
         Customized `glibcLocales` package providing
         the `LOCALE_ARCHIVE_*` environment variable.
@@ -50,7 +48,7 @@ in {
         will be set to {var}`i18n.glibcLocales` from the
         system configuration.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         pkgs.glibcLocales.override {
           allLocales = false;
           locales = [ "en_US.UTF-8/UTF-8" ];
@@ -58,11 +56,11 @@ in {
       '';
       # NB. See nixos/default.nix for NixOS default.
       default = pkgs.glibcLocales;
-      defaultText = literalExpression "pkgs.glibcLocales";
+      defaultText = lib.literalExpression "pkgs.glibcLocales";
     };
   };
 
-  config = mkIf pkgs.stdenv.hostPlatform.isLinux {
+  config = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     # For shell sessions.
     home.sessionVariables = localeVars;
 

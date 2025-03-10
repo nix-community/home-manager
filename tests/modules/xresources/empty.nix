@@ -1,13 +1,7 @@
-{ config, lib, ... }:
-
-with lib;
-
 {
-  config = {
-    xresources.properties = { };
+  xresources.properties = { };
 
-    nmt.script = ''
-      assertPathNotExists home-files/.Xresources
-    '';
-  };
+  nmt.script = ''
+    assertPathNotExists home-files/.Xresources
+  '';
 }

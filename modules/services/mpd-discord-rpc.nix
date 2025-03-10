@@ -50,7 +50,7 @@ in {
       Unit = {
         Description = "Discord Rich Presence for MPD";
         Documentation = "https://github.com/JakeStanger/mpd-discord-rpc";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
       Service = {

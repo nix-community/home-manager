@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ lib, pkgs, ... }: {
   config = {
     programs.kitty = {
       enable = true;
@@ -28,10 +24,13 @@ with lib;
         "ctrl+f>2" = "set_font_size 20";
       };
 
+      actionAliases = {
+        "launch_tab" = "launch --cwd=current --type=tab";
+        "launch_window" = "launch --cwd=current --type=os-window";
+      };
+
       environment = { LS_COLORS = "1"; };
     };
-
-    test.stubs.kitty = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/kitty/kitty.conf

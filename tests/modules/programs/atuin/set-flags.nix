@@ -16,11 +16,6 @@
   xdg.dataFile."fish/home-manager_generated_completions".source =
     lib.mkForce (builtins.toFile "empty" "");
 
-  test.stubs = {
-    atuin = { name = "atuin"; };
-    bash-preexec = { };
-  };
-
   nmt.script = ''
     assertFileExists home-files/.bashrc
     assertFileContains \

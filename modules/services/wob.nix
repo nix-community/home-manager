@@ -14,7 +14,7 @@ in {
 
   options.services.wob = {
     enable = mkEnableOption "wob";
-    package = mkPackageOption pkgs "wob" { };
+    package = mkPackageOption pkgs "wob" { nullable = true; };
 
     settings = mkOption {
       type = settingsFormat.type;
@@ -44,14 +44,14 @@ in {
       (lib.hm.assertions.assertPlatform "services.wob" pkgs lib.platforms.linux)
     ];
 
-    systemd.user = mkIf cfg.systemd {
+    systemd.user = mkIf (cfg.systemd && (cfg.package != null)) {
       services.wob = {
         Unit = {
           Description =
             "A lightweight overlay volume/backlight/progress/anything bar for Wayland";
           Documentation = "man:wob(1)";
-          PartOf = "graphical-session.target";
-          After = "graphical-session.target";
+          PartOf = [ config.wayland.systemd.target ];
+          After = [ config.wayland.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
         };
         Service = {
@@ -59,7 +59,7 @@ in {
           ExecStart = builtins.concatStringsSep " " ([ (getExe cfg.package) ]
             ++ optional (cfg.settings != { }) "--config ${configFile}");
         };
-        Install.WantedBy = [ "graphical-session.target" ];
+        Install.WantedBy = [ config.wayland.systemd.target ];
       };
 
       sockets.wob = {

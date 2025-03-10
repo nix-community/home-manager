@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.translate-shell = {
     enable = true;
@@ -11,8 +9,6 @@
       tl = [ "de" "fr" ];
     };
   };
-
-  test.stubs.translate-shell = { };
 
   nmt.script = ''
     assertFileContent home-files/.config/translate-shell/init.trans \

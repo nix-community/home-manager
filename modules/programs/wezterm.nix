@@ -1,18 +1,17 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkEnableOption mkOption types;
 
   cfg = config.programs.wezterm;
+
   tomlFormat = pkgs.formats.toml { };
 
   shellIntegrationStr = ''
     source "${cfg.package}/etc/profile.d/wezterm.sh"
   '';
-
 in {
-  meta.maintainers = [ hm.maintainers.blmhemu ];
+  meta.maintainers = [ lib.hm.maintainers.blmhemu lib.maintainers.khaneliman ];
 
   options.programs.wezterm = {
     enable = mkEnableOption "wezterm";
@@ -83,13 +82,11 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "WezTerm's Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "WezTerm's Zsh integration" // {
-      default = true;
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -104,8 +101,8 @@ in {
 
         ${cfg.extraConfig}
       '';
-    } // mapAttrs' (name: value:
-      nameValuePair "wezterm/colors/${name}.toml" {
+    } // lib.mapAttrs' (name: value:
+      lib.nameValuePair "wezterm/colors/${name}.toml" {
         source = tomlFormat.generate "${name}.toml" { colors = value; };
       }) cfg.colorSchemes;
 

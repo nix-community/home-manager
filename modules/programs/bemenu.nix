@@ -12,7 +12,7 @@ in {
   options.programs.bemenu = {
     enable = mkEnableOption "bemenu";
 
-    package = mkPackageOption pkgs "bemenu" { };
+    package = mkPackageOption pkgs "bemenu" { nullable = true; };
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ str number bool ]);
@@ -44,7 +44,7 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "programs.bemenu" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.sessionVariables = mkIf (cfg.settings != { }) {
       BEMENU_OPTS = cli.toGNUCommandLineShell { } cfg.settings;

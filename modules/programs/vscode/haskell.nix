@@ -52,12 +52,12 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.vscode.userSettings = mkIf cfg.hie.enable {
+    programs.vscode.profiles.default.userSettings = mkIf cfg.hie.enable {
       "languageServerHaskell.enableHIE" = true;
       "languageServerHaskell.hieExecutablePath" = cfg.hie.executablePath;
     };
 
-    programs.vscode.extensions =
+    programs.vscode.profiles.default.extensions =
       [ pkgs.vscode-extensions.justusadam.language-haskell ]
       ++ lib.optional cfg.hie.enable
       pkgs.vscode-extensions.alanz.vscode-hie-server;

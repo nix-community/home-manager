@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.espanso = {
     enable = true;
@@ -37,8 +35,6 @@
       };
     };
   };
-
-  test.stubs.espanso = { };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/espanso.service

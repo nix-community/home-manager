@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   home.file."using-text".text = ''
     This is the

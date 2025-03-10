@@ -38,9 +38,7 @@ let
     else
       throw "Unknown tags ${attrNames x}";
 
-  directivesStr = ''
-    ${concatStringsSep "\n" (map tagToStr cfg.settings)}
-  '';
+  directivesStr = concatStringsSep "\n" (map tagToStr cfg.settings);
 
   oldDirectivesStr = ''
     ${concatStringsSep "\n"
@@ -288,7 +286,8 @@ in {
 
     systemdTarget = mkOption {
       type = types.str;
-      default = "sway-session.target";
+      default = config.wayland.systemd.target;
+      defaultText = literalExpression "config.wayland.systemd.target";
       description = ''
         Systemd target to bind to.
       '';
@@ -332,16 +331,19 @@ in {
     {
       home.packages = [ cfg.package ];
 
-      xdg.configFile."kanshi/config".text =
-        if cfg.profiles == { } && cfg.extraConfig == "" then
-          directivesStr
-        else
-          oldDirectivesStr;
+      xdg.configFile."kanshi/config" = let
+        generatedConfigStr =
+          if cfg.profiles == { } && cfg.extraConfig == "" then
+            directivesStr
+          else
+            oldDirectivesStr;
+      in mkIf (generatedConfigStr != "") { text = generatedConfigStr; };
 
       systemd.user.services.kanshi = {
         Unit = {
           Description = "Dynamic output configuration";
           Documentation = "man:kanshi(1)";
+          ConditionEnvironment = "WAYLAND_DISPLAY";
           PartOf = cfg.systemdTarget;
           Requires = cfg.systemdTarget;
           After = cfg.systemdTarget;

@@ -1,8 +1,7 @@
 { config, options, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) mkDefault mkEnableOption mkOption types;
 
   cfg = config.home.pointerCursor;
 
@@ -10,7 +9,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = literalExpression "pkgs.vanilla-dmz";
+        example = lib.literalExpression "pkgs.vanilla-dmz";
         description = "Package providing the cursor theme.";
       };
 
@@ -45,11 +44,28 @@ let
           gtk config generation for {option}`home.pointerCursor`
         '';
       };
+
+      hyprcursor = {
+        enable = mkEnableOption "hyprcursor config generation";
+
+        size = mkOption {
+          type = types.nullOr types.int;
+          example = 32;
+          default = null;
+          description = "The cursor size for hyprcursor.";
+        };
+      };
+
+      sway = {
+        enable = mkEnableOption
+          "sway config generation for {option}`home.pointerCursor`";
+      };
     };
   };
 
-  cursorPath = "${cfg.package}/share/icons/${escapeShellArg cfg.name}/cursors/${
-      escapeShellArg cfg.x11.defaultCursor
+  cursorPath =
+    "${cfg.package}/share/icons/${lib.escapeShellArg cfg.name}/cursors/${
+      lib.escapeShellArg cfg.x11.defaultCursor
     }";
 
   defaultIndexThemePackage = pkgs.writeTextFile {
@@ -67,25 +83,25 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.league ];
+  meta.maintainers = [ lib.maintainers.league ];
 
   imports = [
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
+    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "package" ] [
       "home"
       "pointerCursor"
       "package"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
+    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "name" ] [
       "home"
       "pointerCursor"
       "name"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
+    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "size" ] [
       "home"
       "pointerCursor"
       "size"
     ])
-    (mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
+    (lib.mkAliasOptionModule [ "xsession" "pointerCursor" "defaultCursor" ] [
       "home"
       "pointerCursor"
       "x11"
@@ -93,8 +109,8 @@ in {
     ])
 
     ({ ... }: {
-      warnings = optional (any (x:
-        getAttrFromPath
+      warnings = lib.optional (lib.any (x:
+        lib.getAttrFromPath
         ([ "xsession" "pointerCursor" ] ++ [ x ] ++ [ "isDefined" ])
         options) [ "package" "name" "size" "defaultCursor" ]) ''
           The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
@@ -128,24 +144,26 @@ in {
     };
   };
 
-  config = mkIf (cfg != null) (mkMerge [
+  config = lib.mkIf (cfg != null) (lib.mkMerge [
     {
       assertions = [
-        (hm.assertions.assertPlatform "home.pointerCursor" pkgs platforms.linux)
+        (lib.hm.assertions.assertPlatform "home.pointerCursor" pkgs
+          lib.platforms.linux)
       ];
 
       home.packages = [ cfg.package defaultIndexThemePackage ];
+
+      home.sessionVariables = {
+        XCURSOR_SIZE = mkDefault cfg.size;
+        XCURSOR_THEME = mkDefault cfg.name;
+      };
 
       # Set directory to look for cursors in, needed for some applications
       # that are unable to find cursors otherwise. See:
       # https://github.com/nix-community/home-manager/issues/2812
       # https://wiki.archlinux.org/title/Cursor_themes#Environment_variable
-      home.sessionVariables = {
-        XCURSOR_PATH = mkDefault ("$XCURSOR_PATH\${XCURSOR_PATH:+:}"
-          + "${config.home.profileDirectory}/share/icons");
-        XCURSOR_SIZE = mkDefault cfg.size;
-        XCURSOR_THEME = mkDefault cfg.name;
-      };
+      home.sessionSearchVariables.XCURSOR_PATH =
+        [ "${config.home.profileDirectory}/share/icons" ];
 
       # Add symlink of cursor icon directory to $HOME/.icons, needed for
       # backwards compatibility with some applications. See:
@@ -162,8 +180,8 @@ in {
         "${cfg.package}/share/icons/${cfg.name}";
     }
 
-    (mkIf cfg.x11.enable {
-      xsession.initExtra = ''
+    (lib.mkIf cfg.x11.enable {
+      xsession.profileExtra = ''
         ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${
           toString cfg.size
         }
@@ -175,8 +193,29 @@ in {
       };
     })
 
-    (mkIf cfg.gtk.enable {
+    (lib.mkIf cfg.gtk.enable {
       gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
+    })
+
+    (lib.mkIf cfg.hyprcursor.enable {
+      home.sessionVariables = {
+        HYPRCURSOR_THEME = cfg.name;
+        HYPRCURSOR_SIZE =
+          if cfg.hyprcursor.size != null then cfg.hyprcursor.size else cfg.size;
+      };
+    })
+
+    (lib.mkIf cfg.sway.enable {
+      wayland.windowManager.sway = {
+        config = {
+          seat = {
+            "*" = {
+              xcursor_theme =
+                "${cfg.name} ${toString config.gtk.cursorTheme.size}";
+            };
+          };
+        };
+      };
     })
   ]);
 }

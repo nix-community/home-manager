@@ -13,7 +13,7 @@ in {
   options.programs.git-cliff = {
     enable = mkEnableOption "git-cliff changelog generator";
 
-    package = mkPackageOption pkgs "git-cliff" { };
+    package = mkPackageOption pkgs "git-cliff" { nullable = true; };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -34,7 +34,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "git-cliff/cliff.toml" = mkIf (cfg.settings != { }) {

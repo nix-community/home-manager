@@ -1,13 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ pkgs, ... }:
 
 {
   config = {
     programs.htop.enable = true;
     programs.htop.settings = { color_scheme = 6; };
-
-    test.stubs.htop = { };
 
     # Test that the 'fields' key is written in addition to the customized
     # settings or htop won't read the options.

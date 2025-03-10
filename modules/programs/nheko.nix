@@ -24,7 +24,7 @@ in {
   options.programs.nheko = {
     enable = mkEnableOption "Qt desktop client for Matrix";
 
-    package = mkPackageOption pkgs "nheko" { };
+    package = mkPackageOption pkgs "nheko" { nullable = true; };
 
     settings = mkOption {
       type = iniFmt.type;
@@ -64,7 +64,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${configDir}/nheko/nheko.conf" = mkIf (cfg.settings != { }) {
       text = ''

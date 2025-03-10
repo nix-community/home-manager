@@ -72,7 +72,7 @@ let
     cfg.pairs;
 
 in {
-  meta.maintainers = with maintainers; [ pacien ];
+  meta.maintainers = with maintainers; [ euxane ];
 
   options.services.unison = {
     enable = mkEnableOption "Unison synchronisation";

@@ -73,7 +73,7 @@ in {
     enable = mkEnableOption
       "sftpman, an application that handles sshfs/sftp file systems mounting";
 
-    package = mkPackageOption pkgs "sftpman" { };
+    package = mkPackageOption pkgs "sftpman" { nullable = true; };
 
     defaultSshKey = mkOption {
       type = types.nullOr types.str;
@@ -107,7 +107,7 @@ in {
       })
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = mapAttrs' (name: value:
       nameValuePair "sftpman/mounts/${name}.json" {

@@ -79,7 +79,7 @@ in {
     systemd.user.services.grobi = {
       Unit = {
         Description = "grobi display auto config daemon";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

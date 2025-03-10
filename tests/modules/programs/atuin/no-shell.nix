@@ -17,11 +17,6 @@
   xdg.dataFile."fish/home-manager_generated_completions".source =
     lib.mkForce (builtins.toFile "empty" "");
 
-  test.stubs = {
-    atuin = { name = "atuin"; };
-    bash-preexec = { };
-  };
-
   nmt.script = ''
     assertFileNotRegex home-files/.zshrc 'atuin init zsh'
     assertFileNotRegex home-files/.bashrc 'atuin init bash'

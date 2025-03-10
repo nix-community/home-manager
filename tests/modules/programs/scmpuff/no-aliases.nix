@@ -13,8 +13,6 @@
   xdg.dataFile."fish/home-manager_generated_completions".source =
     lib.mkForce (builtins.toFile "empty" "");
 
-  test.stubs.scmpuff = { };
-
   nmt.script = ''
     assertFileExists home-files/.bashrc
     assertFileContains \

@@ -14,8 +14,8 @@ in {
       enable = mkEnableOption "KDE connect";
       package = mkOption {
         type = types.package;
-        default = pkgs.plasma5Packages.kdeconnect-kde;
-        example = literalExpression "pkgs.kdePackages.kdeconnect-kde";
+        default = pkgs.kdePackages.kdeconnect-kde;
+        example = literalExpression "pkgs.plasma5Packages.kdeconnect-kde";
         description = "The KDE connect package to use";
       };
 
@@ -40,7 +40,7 @@ in {
         Unit = {
           Description =
             "Adds communication between your desktop and your smartphone";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
@@ -69,7 +69,7 @@ in {
         Unit = {
           Description = "kdeconnect-indicator";
           After = [
-            "graphical-session-pre.target"
+            "graphical-session.target"
             "polybar.service"
             "taffybar.service"
             "stalonetray.service"
