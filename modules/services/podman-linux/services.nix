@@ -42,8 +42,8 @@ in {
                 "${config.home.homeDirectory}/.nix-profile/bin"
               ]
             }";
-          ExecStart = "${pkgs.podman}/bin/podman auto-update";
-          ExecStartPost = "${pkgs.podman}/bin/podman image prune -f";
+          ExecStart = "${cfg.package}/bin/podman auto-update";
+          ExecStartPost = "${cfg.package}/bin/podman image prune -f";
           TimeoutStartSec = "300s";
           TimeoutStopSec = "10s";
         };

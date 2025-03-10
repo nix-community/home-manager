@@ -5,13 +5,7 @@ with lib;
 let
   cfg = config.services.podman;
 
-  podman-lib = import ./podman-lib.nix { inherit lib config; };
-
-  awaitPodmanUnshare = pkgs.writeShellScript "await-podman-unshare" ''
-    until ${cfg.package}/bin/podman unshare ${pkgs.coreutils}/bin/true; do
-      sleep 1;
-    done
-  '';
+  podman-lib = import ./podman-lib.nix { inherit pkgs lib config; };
 
   createQuadletSource = name: networkDef:
     let
@@ -39,7 +33,7 @@ let
               "${makeBinPath [ pkgs.su pkgs.coreutils ]}"
             ]);
           };
-          ExecStartPre = [ "${awaitPodmanUnshare}" ];
+          ExecStartPre = [ "${podman-lib.awaitPodmanUnshare}" ];
           TimeoutStartSec = 15;
           RemainAfterExit = "yes";
         };
@@ -162,7 +156,7 @@ in {
     services.podman.internal.quadletDefinitions = networkQuadlets;
     assertions = flatten (map (network: network.assertions) networkQuadlets);
 
-    home.file."${config.xdg.configHome}/podman/networks.manifest".text =
+    xdg.configFile."podman/networks.manifest".text =
       podman-lib.generateManifestText networkQuadlets;
   };
 }
