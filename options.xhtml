@@ -75280,6 +75280,331 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.podman.builds"></a><a class="term" href="options.xhtml#opt-services.podman.builds"><code class="option">services.podman.builds</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Defines Podman build quadlet configurations.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.authFile"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.authFile"><code class="option">services.podman.builds.&lt;name&gt;.authFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path of the authentication file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.autoStart"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.autoStart"><code class="option">services.podman.builds.&lt;name&gt;.autoStart</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to start the build on boot. Requires user lingering.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.description"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.description"><code class="option">services.podman.builds.&lt;name&gt;.description</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The description of the build.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;Service for build \${name}&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;My Build&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.environment"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.environment"><code class="option">services.podman.builds.&lt;name&gt;.environment</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Environment variables to set in the build.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  VAR1 = &quot;0:100&quot;;
+  VAR2 = true;
+  VAR3 = 5;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.extraConfig"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.extraConfig"><code class="option">services.podman.builds.&lt;name&gt;.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>INI sections and values to populate the Build Quadlet.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  Build = {
+    Arch = &quot;aarch64&quot;;
+  };
+  Service = {
+    TimeoutStartSec = 15;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.extraPodmanArgs"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.extraPodmanArgs"><code class="option">services.podman.builds.&lt;name&gt;.extraPodmanArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra arguments to pass to the podman build command.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--retries 5&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.file"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.file"><code class="option">services.podman.builds.&lt;name&gt;.file</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to a Containerfile which contains instructions to build the image.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">`&quot;xdg.configFile.&quot;containerfiles/my-img/Containerfile&quot;`
+or
+`&quot;https://github.com/.../my-img/Containerfile&quot;`
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.labels"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.labels"><code class="option">services.podman.builds.&lt;name&gt;.labels</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The labels to apply to the build.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  app = &quot;myapp&quot;;
+  some-label = &quot;somelabel&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.tags"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.tags"><code class="option">services.podman.builds.&lt;name&gt;.tags</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Name associated with the build.
+First tag will always be “homemanager/&lt;name&gt;”.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.tlsVerify"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.tlsVerify"><code class="option">services.podman.builds.&lt;name&gt;.tlsVerify</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Require HTTPS and verification of certificates when contacting registries.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.builds._name_.workingDirectory"></a><a class="term" href="options.xhtml#opt-services.podman.builds._name_.workingDirectory"><code class="option">services.podman.builds.&lt;name&gt;.workingDirectory</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>WorkingDirectory of the systemd unit file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/builds.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/builds.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.podman.containers"></a><a class="term" href="options.xhtml#opt-services.podman.containers"><code class="option">services.podman.containers</code>
   </a>
  </span>
@@ -75948,6 +76273,343 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.podman.images"></a><a class="term" href="options.xhtml#opt-services.podman.images"><code class="option">services.podman.images</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Defines Podman image quadlet configurations.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.authFile"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.authFile"><code class="option">services.podman.images.&lt;name&gt;.authFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path of the authentication file used to connect to registry.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.autoStart"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.autoStart"><code class="option">services.podman.images.&lt;name&gt;.autoStart</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to pull the image on boot. Requires user lingering.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.certDir"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.certDir"><code class="option">services.podman.images.&lt;name&gt;.certDir</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path of certificates (*.{crt,cert,key}) used to connect to registry.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.decryptionKeyFile"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.decryptionKeyFile"><code class="option">services.podman.images.&lt;name&gt;.decryptionKeyFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to key used for decrpytion of images.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.description"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.description"><code class="option">services.podman.images.&lt;name&gt;.description</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The description of the image.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;Service for image \${name}&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;My Image&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.extraConfig"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.extraConfig"><code class="option">services.podman.images.&lt;name&gt;.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>INI sections and values to populate the Image Quadlet.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  Image = {
+    ContainersConfModule = &quot;/etc/nvd.conf&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.extraPodmanArgs"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.extraPodmanArgs"><code class="option">services.podman.images.&lt;name&gt;.extraPodmanArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra arguments to pass to the podman image pull command.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--os=linux&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.image"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.image"><code class="option">services.podman.images.&lt;name&gt;.image</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Image to pull.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;quay.io/centos/centos:latest&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.password"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.password"><code class="option">services.podman.images.&lt;name&gt;.password</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Password used to connect to registry. (Will be visible in nix store)</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;P@ssw0rd&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.tag"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.tag"><code class="option">services.podman.images.&lt;name&gt;.tag</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>FQIN of referenced Image when source is a file or directory archive.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;quay.io/centos/centos:latest&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.tlsVerify"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.tlsVerify"><code class="option">services.podman.images.&lt;name&gt;.tlsVerify</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Require HTTPS and verification of certificates when contacting registries.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.images._name_.username"></a><a class="term" href="options.xhtml#opt-services.podman.images._name_.username"><code class="option">services.podman.images.&lt;name&gt;.username</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Username used to connect to registry.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;bob&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/images.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/images.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.podman.networks"></a><a class="term" href="options.xhtml#opt-services.podman.networks"><code class="option">services.podman.networks</code>
   </a>
  </span>
@@ -76373,6 +77035,377 @@ TOML value</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux" target="_top">
 &lt;home-manager/modules/services/podman-linux&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes"></a><a class="term" href="options.xhtml#opt-services.podman.volumes"><code class="option">services.podman.volumes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Defines Podman volume quadlet configurations.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.autoStart"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.autoStart"><code class="option">services.podman.volumes.&lt;name&gt;.autoStart</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to create the volume on boot.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.copy"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.copy"><code class="option">services.podman.volumes.&lt;name&gt;.copy</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Copy content of the image located at the mountpoint of the volume on first run.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.description"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.description"><code class="option">services.podman.volumes.&lt;name&gt;.description</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The description of the volume.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;Service for volume \${name}&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;My Volume&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.device"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.device"><code class="option">services.podman.volumes.&lt;name&gt;.device</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The path of a device which is mounted for the volume.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;tmpfs&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.driver"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.driver"><code class="option">services.podman.volumes.&lt;name&gt;.driver</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The volume driver to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;image&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.extraConfig"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.extraConfig"><code class="option">services.podman.volumes.&lt;name&gt;.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>INI sections and values to populate the Volume Quadlet.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  Volume = {
+    ContainerConfModule = &quot;/etc/nvd.conf&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.extraPodmanArgs"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.extraPodmanArgs"><code class="option">services.podman.volumes.&lt;name&gt;.extraPodmanArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra arguments to pass to the podman volume create command.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--opt copy&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.group"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.group"><code class="option">services.podman.volumes.&lt;name&gt;.group</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The group ID owning the volume inside the container.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.image"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.image"><code class="option">services.podman.volumes.&lt;name&gt;.image</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Specifies the image the volume is based on when Driver is set to the image.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;quay.io/centos/centos:latest&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.labels"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.labels"><code class="option">services.podman.volumes.&lt;name&gt;.labels</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The labels to apply to the volume.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  app = &quot;myapp&quot;;
+  some-label = &quot;somelabel&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.preserve"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.preserve"><code class="option">services.podman.volumes.&lt;name&gt;.preserve</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether the volume should be preserved if it is removed from the configuration.
+Setting this to false will cause the volume to be deleted if the volume is removed from the configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.type"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.type"><code class="option">services.podman.volumes.&lt;name&gt;.type</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Filesystem type of Device. (used as -t in mount commands)</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;tmpfs&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.podman.volumes._name_.user"></a><a class="term" href="options.xhtml#opt-services.podman.volumes._name_.user"><code class="option">services.podman.volumes.&lt;name&gt;.user</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The user ID owning the volume inside the container.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman-linux/volumes.nix" target="_top">
+&lt;home-manager/modules/services/podman-linux/volumes.nix&gt;
 </a></code>
 </td></tr>
 </table>
