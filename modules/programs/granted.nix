@@ -33,7 +33,7 @@ in {
 
     programs.fish.functions.assume = mkIf cfg.enableFishIntegration ''
       set -x GRANTED_ALIAS_CONFIGURED "true"
-      source ${package}/share/assume.fish
+      source ${package}/share/assume.fish $argv
       set -e GRANTED_ALIAS_CONFIGURED
     '';
   };
