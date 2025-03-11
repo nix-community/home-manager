@@ -342,6 +342,7 @@ let
     ./services/linux-wallpaperengine.nix
     ./services/listenbrainz-mpd.nix
     ./services/lorri.nix
+    ./services/macos-remap-keys
     ./services/mako.nix
     ./services/mbsync.nix
     ./services/megasync.nix
