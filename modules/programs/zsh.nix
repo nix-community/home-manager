@@ -474,7 +474,10 @@ in
       initContent = mkOption {
         default = "";
         type = types.lines;
-        description = "Content to be added to {file}`.zshrc`.";
+        example = lib.mkOrder 1000 ''
+          echo "Hello, initContent!"
+        '';
+        description = "Content to be added to {file}`.zshrc`. To specify the order, use `lib.mkOrder`.";
       };
 
       initExtraBeforeCompInit = mkOption {
