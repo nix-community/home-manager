@@ -9,8 +9,5 @@
   zsh-prezto = ./prezto.nix;
   zsh-syntax-highlighting = ./syntax-highlighting.nix;
   zsh-abbr = ./zsh-abbr.nix;
-  zshrc-contents-init-zprof = ./zshrc-contents-init-zprof.nix;
-  zshrc-contents-insert = ./zshrc-contents-insert.nix;
-  zshrc-contents-insert-before = ./zshrc-contents-insert-before.nix;
-  zshrc-contents-insert-after = ./zshrc-contents-insert-after.nix;
+  zshrc-contents-priorities = ./zshrc-content-priorities.nix;
 }
