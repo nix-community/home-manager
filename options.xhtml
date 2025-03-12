@@ -8251,7 +8251,7 @@ null or string</p>
  </span>
 </dt>
 <dd>
-<p>Cursor configuration. Set to <code class="literal">null</code> to disable.</p><p>Top-level options declared under this submodule are backend independent
+<p>Cursor configuration.</p><p>Top-level options declared under this submodule are backend independent
 options. Options declared under namespaces such as <code class="literal">x11</code>
 are backend specific options. By default, only backend independent cursor
 configurations are generated. If you need configurations for specific
@@ -8280,6 +8280,33 @@ null or (submodule)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-home.pointerCursor.enable"></a><a class="term" href="options.xhtml#opt-home.pointerCursor.enable"><code class="option">home.pointerCursor.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable cursor config generation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix" target="_top">
+&lt;home-manager/modules/config/home-cursor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-home.pointerCursor.package"></a><a class="term" href="options.xhtml#opt-home.pointerCursor.package"><code class="option">home.pointerCursor.package</code>
   </a>
  </span>
@@ -8292,6 +8319,34 @@ package</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">pkgs.vanilla-dmz</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix" target="_top">
+&lt;home-manager/modules/config/home-cursor.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-home.pointerCursor.dotIcons.enable"></a><a class="term" href="options.xhtml#opt-home.pointerCursor.dotIcons.enable"><code class="option">home.pointerCursor.dotIcons.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable <code class="literal">.icons</code> config generation for <code class="option">home.pointerCursor</code>
+.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
