@@ -5,6 +5,7 @@
     enable = true;
     inactiveInterval = 5;
     lockCmd = "${pkgs.i3lock}/bin/i3lock -n -c AA0000";
+    lockCmdEnv = [ "DISPLAY=:0" "XAUTHORITY=/custom/path/.Xauthority" ];
     xssLockExtraOptions = [ "-test" ];
     xautolockExtraOptions = [ "-test" ];
     enableDetectSleep = true;
