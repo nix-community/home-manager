@@ -36,7 +36,7 @@ in {
     package = mkPackageOption pkgs "swaylock" { nullable = true; };
 
     settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool float int str ]);
+      type = with types; attrsOf (oneOf [ bool float int path str ]);
       default = { };
       description = ''
         Default arguments to {command}`swaylock`. An empty set
