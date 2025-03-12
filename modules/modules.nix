@@ -252,6 +252,7 @@ let
       ./programs/ssh.nix
       ./programs/starship.nix
       ./programs/streamlink.nix
+      ./programs/superfile.nix
       ./programs/swayimg.nix
       ./programs/swaylock.nix
       ./programs/swayr.nix
