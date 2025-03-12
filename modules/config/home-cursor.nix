@@ -6,15 +6,7 @@ let
     literalExpression escapeShellArg hm getAttrFromPath any optional;
 
   cfg = config.home.pointerCursor;
-
-  enable = if (lib.versionOlder config.home.stateVersion "25.05") then
-  # respect .enable if it is declared
-    if (any (x: x ? enable) options.home.pointerCursor.definitions) then
-      cfg.enable
-    else
-      cfg != null
-  else
-    (cfg ? enable) && cfg.enable;
+  opts = options.home.pointerCursor;
 
   pointerCursorModule = types.submodule {
     options = {
@@ -132,10 +124,7 @@ in {
   options = {
     home.pointerCursor = mkOption {
       type = types.nullOr pointerCursorModule;
-      default = if (lib.versionOlder config.home.stateVersion "25.05") then
-        null
-      else
-        { };
+      default = null;
       description = ''
         Cursor configuration.
 
@@ -156,7 +145,13 @@ in {
     };
   };
 
-  config = mkMerge [
+  config = let
+    # Check if enable option was explicitly defined by the user
+    enableDefined = any (x: x ? enable) opts.definitions;
+
+    # Determine if cursor configuration should be enabled
+    enable = if enableDefined then cfg.enable else cfg != null;
+  in mkMerge [
     (mkIf enable (mkMerge [
       {
         assertions = [
@@ -242,12 +237,12 @@ in {
         ([ "xsession" "pointerCursor" ] ++ [ x ] ++ [ "isDefined" ])
         options) [ "package" "name" "size" "defaultCursor" ]) ''
           The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
-          in the future. Please change to set `home.pointerCursor` directly and enable `home.pointerCursor.x10.enable`
-          to generate x10 specific cursor configurations. You can refer to the documentation for more details.
-        '') ++ (optional ((lib.versionAtLeast config.home.stateVersion "25.05")
-          && (cfg == null)) ''
+          in the future. Please change to set `home.pointerCursor` directly and enable `home.pointerCursor.x11.enable`
+          to generate x11 specific cursor configurations. You can refer to the documentation for more details.
+        '') ++ (optional (opts.highestPrio != (lib.mkOptionDefault { }).priority
+          && cfg == null) ''
             Setting home.pointerCursor to null is deprecated.
-            Please update your configuration so that
+            Please update your configuration to explicitly set:
 
               home.pointerCursor.enable = false;
           '');

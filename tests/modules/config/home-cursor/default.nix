@@ -32,11 +32,11 @@
     config = {
       home.pointerCursor = null;
 
-      home.stateVersion = "25.05";
+      home.stateVersion = "24.11";
 
       test.asserts.warnings.expected = [''
         Setting home.pointerCursor to null is deprecated.
-        Please update your configuration so that
+        Please update your configuration to explicitly set:
 
           home.pointerCursor.enable = false;
       ''];
