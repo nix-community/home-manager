@@ -52,9 +52,9 @@ in {
       eval "$(${cfg.package}/bin/zoxide init bash ${cfgOptions})"
     '');
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 2000 ''
       eval "$(${cfg.package}/bin/zoxide init zsh ${cfgOptions})"
-    '';
+    '');
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       ${cfg.package}/bin/zoxide init fish ${cfgOptions} | source
