@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{ lib, pkgs, ... }: {
   programs.zsh = {
     enable = true;
 
@@ -22,15 +22,53 @@
     zprof.enable = true;
   };
 
-  nmt.script = ''
+  nmt.script = let
+    expectedFile = pkgs.writeTextFile {
+      name = ".zshrc";
+      text = ''
+        zmodload zsh/zprof
+
+        # High priority (mkBefore)
+        echo "High priority content"
+
+        typeset -U path cdpath fpath manpath
+        for profile in ''${(z)NIX_PROFILES}; do
+          fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
+        done
+
+        HELPDIR="@zsh@/share/zsh/$ZSH_VERSION/help"
+
+        autoload -U compinit && compinit
+        # Default priority
+        echo "Default priority content"
+
+        # History options should be set in .zshrc and after oh-my-zsh sourcing.
+        # See https://github.com/nix-community/home-manager/issues/177.
+        HISTSIZE="10000"
+        SAVEHIST="10000"
+
+        HISTFILE="$HOME/.zsh_history"
+        mkdir -p "$(dirname "$HISTFILE")"
+
+        setopt HIST_FCNTL_LOCK
+        unsetopt APPEND_HISTORY
+        setopt HIST_IGNORE_DUPS
+        unsetopt HIST_IGNORE_ALL_DUPS
+        unsetopt HIST_SAVE_NO_DUPS
+        unsetopt HIST_FIND_NO_DUPS
+        setopt HIST_IGNORE_SPACE
+        unsetopt HIST_EXPIRE_DUPS_FIRST
+        setopt SHARE_HISTORY
+        unsetopt EXTENDED_HISTORY
+
+
+        zprof
+        # Low priority (mkAfter)
+        echo "Low priority content"
+      '';
+    };
+  in ''
     assertFileExists home-files/.zshrc
-
-    assertFileContains home-files/.zshrc "zmodload zsh/zprof"
-    assertFileContains home-files/.zshrc "High priority content"
-    assertFileContains home-files/.zshrc "Default priority content"
-    assertFileContains home-files/.zshrc "Low priority content"
-
-    assertFileRegex home-files/.zshrc '^zmodload zsh/zprof'
-    assertFileRegex home-files/.zshrc 'echo "Low priority content"$'
+    assertFileContent home-files/.zshrc ${expectedFile}
   '';
 }
