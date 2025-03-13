@@ -6,270 +6,12 @@ let
 
   relToDotDir = file: (optionalString (cfg.dotDir != null) (cfg.dotDir + "/")) + file;
 
+  stateVersion = config.home.stateVersion;
+
   bindkeyCommands = {
     emacs = "bindkey -e";
     viins = "bindkey -v";
     vicmd = "bindkey -a";
-  };
-
-  stateVersion = config.home.stateVersion;
-
-  historyModule = types.submodule ({ config, ... }: {
-    options = {
-      append = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          If set, zsh sessions will append their history list to the history
-          file, rather than replace it. Thus, multiple parallel zsh sessions
-          will all have the new entries from their history lists added to the
-          history file, in the order that they exit.
-
-          This file will still be periodically re-written to trim it when the
-          number of lines grows 20% beyond the value specified by
-          `programs.zsh.history.save`.
-        '';
-      };
-
-      size = mkOption {
-        type = types.int;
-        default = 10000;
-        description = "Number of history lines to keep.";
-      };
-
-      save = mkOption {
-        type = types.int;
-        defaultText = 10000;
-        default = config.size;
-        description = "Number of history lines to save.";
-      };
-
-      path = mkOption {
-        type = types.str;
-        default = if lib.versionAtLeast stateVersion "20.03"
-          then "$HOME/.zsh_history"
-          else relToDotDir ".zsh_history";
-        defaultText = literalExpression ''
-          "$HOME/.zsh_history" if state version ≥ 20.03,
-          "$ZDOTDIR/.zsh_history" otherwise
-        '';
-        example = literalExpression ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
-        description = "History file location";
-      };
-
-      ignorePatterns = mkOption {
-        type = types.listOf types.str;
-        default = [];
-        example = literalExpression ''[ "rm *" "pkill *" ]'';
-        description = ''
-          Do not enter command lines into the history list
-          if they match any one of the given shell patterns.
-        '';
-      };
-
-      ignoreDups = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Do not enter command lines into the history list
-          if they are duplicates of the previous event.
-        '';
-      };
-
-      ignoreAllDups = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          If a new command line being added to the history list
-          duplicates an older one, the older command is removed
-          from the list (even if it is not the previous event).
-        '';
-      };
-
-      saveNoDups = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Do not write duplicate entries into the history file.
-        '';
-      };
-
-      findNoDups = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Do not display a line previously found in the history
-          file.
-        '';
-      };
-
-      ignoreSpace = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Do not enter command lines into the history list
-          if the first character is a space.
-        '';
-      };
-
-      expireDuplicatesFirst = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Expire duplicates first.";
-      };
-
-      extended = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Save timestamp into the history file.";
-      };
-
-      share = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Share command history between zsh sessions.";
-      };
-    };
-  });
-
-  pluginModule = types.submodule ({ config, ... }: {
-    options = {
-      src = mkOption {
-        type = types.path;
-        description = ''
-          Path to the plugin folder.
-
-          Will be added to {env}`fpath` and {env}`PATH`.
-        '';
-      };
-
-      name = mkOption {
-        type = types.str;
-        description = ''
-          The name of the plugin.
-
-          Don't forget to add {option}`file`
-          if the script name does not follow convention.
-        '';
-      };
-
-      file = mkOption {
-        type = types.str;
-        description = "The plugin script to source.";
-      };
-    };
-
-    config.file = lib.mkDefault "${config.name}.plugin.zsh";
-  });
-
-  ohMyZshModule = types.submodule {
-    options = {
-      enable = mkEnableOption "oh-my-zsh";
-
-      package = lib.mkPackageOption pkgs "oh-my-zsh" { };
-
-      plugins = mkOption {
-        default = [];
-        example = [ "git" "sudo" ];
-        type = types.listOf types.str;
-        description = ''
-          List of oh-my-zsh plugins
-        '';
-      };
-
-      custom = mkOption {
-        default = "";
-        type = types.str;
-        example = "$HOME/my_customizations";
-        description = ''
-          Path to a custom oh-my-zsh package to override config of
-          oh-my-zsh. See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization>
-          for more information.
-        '';
-      };
-
-      theme = mkOption {
-        default = "";
-        example = "robbyrussell";
-        type = types.str;
-        description = ''
-          Name of the theme to be used by oh-my-zsh.
-        '';
-      };
-
-      extraConfig = mkOption {
-        default = "";
-        example = ''
-          zstyle :omz:plugins:ssh-agent identities id_rsa id_rsa2 id_github
-        '';
-        type = types.lines;
-        description = ''
-          Extra settings for plugins.
-        '';
-      };
-    };
-  };
-
-  historySubstringSearchModule = types.submodule {
-    options = {
-      enable = mkEnableOption "history substring search";
-      searchUpKey = mkOption {
-        type = with types; either (listOf str) str ;
-        default = [ "^[[A" ];
-        description = ''
-          The key codes to be used when searching up.
-          The default of `^[[A` may correspond to the UP key -- if not, try
-          `$terminfo[kcuu1]`.
-        '';
-      };
-      searchDownKey = mkOption {
-        type = with types; either (listOf str) str ;
-        default = [ "^[[B" ];
-        description = ''
-          The key codes to be used when searching down.
-          The default of `^[[B` may correspond to the DOWN key -- if not, try
-          `$terminfo[kcud1]`.
-        '';
-      };
-    };
-  };
-
-  syntaxHighlightingModule = types.submodule {
-    options = {
-      enable = mkEnableOption "zsh syntax highlighting";
-
-      package = lib.mkPackageOption pkgs "zsh-syntax-highlighting" { };
-
-      highlighters = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = [ "brackets" ];
-        description = ''
-          Highlighters to enable
-          See the list of highlighters: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
-        '';
-      };
-
-      patterns = mkOption {
-        type = types.attrsOf types.str;
-        default = {};
-        example = { "rm -rf *" = "fg=white,bold,bg=red"; };
-        description = ''
-          Custom syntax highlighting for user-defined patterns.
-          Reference: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/pattern.md>
-        '';
-      };
-
-      styles = mkOption {
-        type = types.attrsOf types.str;
-        default = {};
-        example = { comment = "fg=black,bold"; };
-        description = ''
-          Custom styles for syntax highlighting.
-          See each highlighter style option: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md>
-        '';
-      };
-    };
   };
 in
 {
@@ -279,7 +21,266 @@ in
     (lib.mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
   ];
 
-  options = {
+  options =
+    let
+      historyModule = types.submodule ({ config, ... }: {
+        options = {
+          append = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              If set, zsh sessions will append their history list to the history
+              file, rather than replace it. Thus, multiple parallel zsh sessions
+              will all have the new entries from their history lists added to the
+              history file, in the order that they exit.
+
+              This file will still be periodically re-written to trim it when the
+              number of lines grows 20% beyond the value specified by
+              `programs.zsh.history.save`.
+            '';
+          };
+
+          size = mkOption {
+            type = types.int;
+            default = 10000;
+            description = "Number of history lines to keep.";
+          };
+
+          save = mkOption {
+            type = types.int;
+            defaultText = 10000;
+            default = config.size;
+            description = "Number of history lines to save.";
+          };
+
+          path = mkOption {
+            type = types.str;
+            default = if lib.versionAtLeast stateVersion "20.03"
+              then "$HOME/.zsh_history"
+              else relToDotDir ".zsh_history";
+            defaultText = literalExpression ''
+              "$HOME/.zsh_history" if state version ≥ 20.03,
+              "$ZDOTDIR/.zsh_history" otherwise
+            '';
+            example = literalExpression ''"''${config.xdg.dataHome}/zsh/zsh_history"'';
+            description = "History file location";
+          };
+
+          ignorePatterns = mkOption {
+            type = types.listOf types.str;
+            default = [];
+            example = literalExpression ''[ "rm *" "pkill *" ]'';
+            description = ''
+              Do not enter command lines into the history list
+              if they match any one of the given shell patterns.
+            '';
+          };
+
+          ignoreDups = mkOption {
+            type = types.bool;
+            default = true;
+            description = ''
+              Do not enter command lines into the history list
+              if they are duplicates of the previous event.
+            '';
+          };
+
+          ignoreAllDups = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              If a new command line being added to the history list
+              duplicates an older one, the older command is removed
+              from the list (even if it is not the previous event).
+            '';
+          };
+
+          saveNoDups = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Do not write duplicate entries into the history file.
+            '';
+          };
+
+          findNoDups = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Do not display a line previously found in the history
+              file.
+            '';
+          };
+
+          ignoreSpace = mkOption {
+            type = types.bool;
+            default = true;
+            description = ''
+              Do not enter command lines into the history list
+              if the first character is a space.
+            '';
+          };
+
+          expireDuplicatesFirst = mkOption {
+            type = types.bool;
+            default = false;
+            description = "Expire duplicates first.";
+          };
+
+          extended = mkOption {
+            type = types.bool;
+            default = false;
+            description = "Save timestamp into the history file.";
+          };
+
+          share = mkOption {
+            type = types.bool;
+            default = true;
+            description = "Share command history between zsh sessions.";
+          };
+        };
+      });
+
+      pluginModule = types.submodule ({ config, ... }: {
+        options = {
+          src = mkOption {
+            type = types.path;
+            description = ''
+              Path to the plugin folder.
+
+              Will be added to {env}`fpath` and {env}`PATH`.
+            '';
+          };
+
+          name = mkOption {
+            type = types.str;
+            description = ''
+              The name of the plugin.
+
+              Don't forget to add {option}`file`
+              if the script name does not follow convention.
+            '';
+          };
+
+          file = mkOption {
+            type = types.str;
+            description = "The plugin script to source.";
+          };
+        };
+
+        config.file = lib.mkDefault "${config.name}.plugin.zsh";
+      });
+
+      ohMyZshModule = types.submodule {
+        options = {
+          enable = mkEnableOption "oh-my-zsh";
+
+          package = lib.mkPackageOption pkgs "oh-my-zsh" { };
+
+          plugins = mkOption {
+            default = [];
+            example = [ "git" "sudo" ];
+            type = types.listOf types.str;
+            description = ''
+              List of oh-my-zsh plugins
+            '';
+          };
+
+          custom = mkOption {
+            default = "";
+            type = types.str;
+            example = "$HOME/my_customizations";
+            description = ''
+              Path to a custom oh-my-zsh package to override config of
+              oh-my-zsh. See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization>
+              for more information.
+            '';
+          };
+
+          theme = mkOption {
+            default = "";
+            example = "robbyrussell";
+            type = types.str;
+            description = ''
+              Name of the theme to be used by oh-my-zsh.
+            '';
+          };
+
+          extraConfig = mkOption {
+            default = "";
+            example = ''
+              zstyle :omz:plugins:ssh-agent identities id_rsa id_rsa2 id_github
+            '';
+            type = types.lines;
+            description = ''
+              Extra settings for plugins.
+            '';
+          };
+        };
+      };
+
+      historySubstringSearchModule = types.submodule {
+        options = {
+          enable = mkEnableOption "history substring search";
+          searchUpKey = mkOption {
+            type = with types; either (listOf str) str ;
+            default = [ "^[[A" ];
+            description = ''
+              The key codes to be used when searching up.
+              The default of `^[[A` may correspond to the UP key -- if not, try
+              `$terminfo[kcuu1]`.
+            '';
+          };
+          searchDownKey = mkOption {
+            type = with types; either (listOf str) str ;
+            default = [ "^[[B" ];
+            description = ''
+              The key codes to be used when searching down.
+              The default of `^[[B` may correspond to the DOWN key -- if not, try
+              `$terminfo[kcud1]`.
+            '';
+          };
+        };
+      };
+
+      syntaxHighlightingModule = types.submodule {
+        options = {
+          enable = mkEnableOption "zsh syntax highlighting";
+
+          package = lib.mkPackageOption pkgs "zsh-syntax-highlighting" { };
+
+          highlighters = mkOption {
+            type = types.listOf types.str;
+            default = [ ];
+            example = [ "brackets" ];
+            description = ''
+              Highlighters to enable
+              See the list of highlighters: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
+            '';
+          };
+
+          patterns = mkOption {
+            type = types.attrsOf types.str;
+            default = {};
+            example = { "rm -rf *" = "fg=white,bold,bg=red"; };
+            description = ''
+              Custom syntax highlighting for user-defined patterns.
+              Reference: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/pattern.md>
+            '';
+          };
+
+          styles = mkOption {
+            type = types.attrsOf types.str;
+            default = {};
+            example = { comment = "fg=black,bold"; };
+            description = ''
+              Custom styles for syntax highlighting.
+              See each highlighter style option: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md>
+            '';
+          };
+        };
+      };
+    in {
     programs.zsh = {
       enable = mkEnableOption "Z shell (Zsh)";
 
@@ -709,7 +710,7 @@ in
             lib.escapeShellArg
             "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"
           }"}
-          ${if lib.versionAtLeast config.home.stateVersion "20.03" then
+          ${if lib.versionAtLeast stateVersion "20.03" then
             ''HISTFILE="${cfg.history.path}"''
           else
             ''HISTFILE="$HOME/${cfg.history.path}"''}
