@@ -124,9 +124,15 @@ home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
 
-  # The state version is required and should stay at the version you
-  # originally installed.
-  home.stateVersion = &quot;24.11&quot;;
+  # This value determines the Home Manager release that your configuration is 
+  # compatible with. This helps avoid breakage when a new Home Manager release 
+  # introduces backwards incompatible changes. 
+  #
+  # You should not change this value, even if you update Home Manager. If you do 
+  # want to update the value, then make sure to first check the Home Manager 
+  # release notes. 
+  home.stateVersion = &quot;24.05&quot;; # Please read the comment before changing. 
+
 };
 </code></pre><p>and after a <code class="literal">sudo nixos-rebuild switch</code> the user eve’s environment
 should include a basic Bash configuration and the packages atool and
