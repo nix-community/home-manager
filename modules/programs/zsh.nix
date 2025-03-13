@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) concatStringsSep literalExpression mkEnableOption mkIf mkOption mkOrder optionalString types;
 
   cfg = config.programs.zsh;
 
@@ -15,11 +13,11 @@ let
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
   aliasesStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: "alias -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.shellAliases
+    lib.mapAttrsToList (k: v: "alias -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.shellAliases
   );
 
   dirHashesStr = concatStringsSep "\n" (
-    mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
+    lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
   );
 
   zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
@@ -64,7 +62,7 @@ let
 
       path = mkOption {
         type = types.str;
-        default = if versionAtLeast stateVersion "20.03"
+        default = if lib.versionAtLeast stateVersion "20.03"
           then "$HOME/.zsh_history"
           else relToDotDir ".zsh_history";
         defaultText = literalExpression ''
@@ -177,14 +175,14 @@ let
       };
     };
 
-    config.file = mkDefault "${config.name}.plugin.zsh";
+    config.file = lib.mkDefault "${config.name}.plugin.zsh";
   });
 
   ohMyZshModule = types.submodule {
     options = {
       enable = mkEnableOption "oh-my-zsh";
 
-      package = mkPackageOption pkgs "oh-my-zsh" { };
+      package = lib.mkPackageOption pkgs "oh-my-zsh" { };
 
       plugins = mkOption {
         default = [];
@@ -256,7 +254,7 @@ let
     options = {
       enable = mkEnableOption "zsh syntax highlighting";
 
-      package = mkPackageOption pkgs "zsh-syntax-highlighting" { };
+      package = lib.mkPackageOption pkgs "zsh-syntax-highlighting" { };
 
       highlighters = mkOption {
         type = types.listOf types.str;
@@ -294,16 +292,16 @@ in
 
 {
   imports = [
-    (mkRenamedOptionModule [ "programs" "zsh" "enableAutosuggestions" ] [ "programs" "zsh" "autosuggestion" "enable" ])
-    (mkRenamedOptionModule [ "programs" "zsh" "enableSyntaxHighlighting" ] [ "programs" "zsh" "syntaxHighlighting" "enable" ])
-    (mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
+    (lib.mkRenamedOptionModule [ "programs" "zsh" "enableAutosuggestions" ] [ "programs" "zsh" "autosuggestion" "enable" ])
+    (lib.mkRenamedOptionModule [ "programs" "zsh" "enableSyntaxHighlighting" ] [ "programs" "zsh" "syntaxHighlighting" "enable" ])
+    (lib.mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
   ];
 
   options = {
     programs.zsh = {
       enable = mkEnableOption "Z shell (Zsh)";
 
-      package = mkPackageOption pkgs "zsh" { };
+      package = lib.mkPackageOption pkgs "zsh" { };
 
       autocd = mkOption {
         default = null;
@@ -458,7 +456,7 @@ in
       };
 
       defaultKeymap = mkOption {
-        type = types.nullOr (types.enum (attrNames bindkeyCommands));
+        type = types.nullOr (types.enum (lib.attrNames bindkeyCommands));
         default = null;
         example = "emacs";
         description = "The default base keymap to use.";
@@ -569,7 +567,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     (mkIf (cfg.envExtra != "") {
       home.file."${relToDotDir ".zshenv"}".text = cfg.envExtra;
     })
@@ -622,10 +620,10 @@ in
 
     {
       home.packages = [ cfg.package ]
-        ++ optional cfg.enableCompletion pkgs.nix-zsh-completions
-        ++ optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
+        ++ lib.optional cfg.enableCompletion pkgs.nix-zsh-completions
+        ++ lib.optional cfg.oh-my-zsh.enable cfg.oh-my-zsh.package;
 
-      programs.zsh.initContent = mkMerge [
+      programs.zsh.initContent = lib.mkMerge [
         # zprof must be loaded before everything else, since it
         # benchmarks the shell initialization.
         (mkOrder 400 (optionalString cfg.zprof.enable ''
@@ -648,13 +646,13 @@ in
 
         (mkOrder 750 (optionalString (cfg.defaultKeymap != null) ''
           # Use ${cfg.defaultKeymap} keymap as the default.
-          ${getAttr cfg.defaultKeymap bindkeyCommands}
+          ${lib.getAttr cfg.defaultKeymap bindkeyCommands}
         ''))
 
         (mkOrder 800 localVarsStr)
         (mkOrder 850 cfg.initExtraBeforeCompInit)
 
-        (mkOrder 900 (concatStrings (map (plugin: ''
+        (mkOrder 900 (lib.concatStrings (map (plugin: ''
           path+="$HOME/${pluginsDir}/${plugin.name}"
           fpath+="$HOME/${pluginsDir}/${plugin.name}"
         '') cfg.plugins)))
@@ -696,7 +694,7 @@ in
           ${optionalString cfg.prezto.enable (builtins.readFile
             "${cfg.prezto.package}/share/zsh-prezto/runcoms/zshrc")}
 
-          ${concatStrings (map (plugin: ''
+          ${lib.concatStrings (map (plugin: ''
             if [[ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
               source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
             fi
@@ -711,7 +709,7 @@ in
             lib.escapeShellArg
             "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"
           }"}
-          ${if versionAtLeast config.home.stateVersion "20.03" then
+          ${if lib.versionAtLeast config.home.stateVersion "20.03" then
             ''HISTFILE="${cfg.history.path}"''
           else
             ''HISTFILE="$HOME/${cfg.history.path}"''}
@@ -734,7 +732,7 @@ in
 
         # Aliases
         (mkOrder 1250 aliasesStr)
-        (mkOrder 1250 (concatStringsSep "\n" (mapAttrsToList
+        (mkOrder 1250 (concatStringsSep "\n" (lib.mapAttrsToList
           (k: v: "alias -g -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}")
           cfg.shellGlobalAliases)))
         (mkOrder 1300 ''
@@ -791,10 +789,10 @@ in
     (mkIf (cfg.plugins != []) {
       # Many plugins require compinit to be called
       # but allow the user to opt out.
-      programs.zsh.enableCompletion = mkDefault true;
+      programs.zsh.enableCompletion = lib.mkDefault true;
 
       home.file =
-        foldl' (a: b: a // b) {}
+        lib.foldl' (a: b: a // b) {}
         (map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; })
         cfg.plugins);
     })
