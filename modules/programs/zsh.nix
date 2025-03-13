@@ -6,22 +6,6 @@ let
 
   relToDotDir = file: (optionalString (cfg.dotDir != null) (cfg.dotDir + "/")) + file;
 
-  pluginsDir = if cfg.dotDir != null then
-    relToDotDir "plugins" else ".zsh/plugins";
-
-  envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
-  localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
-
-  aliasesStr = concatStringsSep "\n" (
-    lib.mapAttrsToList (k: v: "alias -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.shellAliases
-  );
-
-  dirHashesStr = concatStringsSep "\n" (
-    lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
-  );
-
-  zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
-
   bindkeyCommands = {
     emacs = "bindkey -e";
     viins = "bindkey -v";
@@ -287,9 +271,7 @@ let
       };
     };
   };
-
 in
-
 {
   imports = [
     (lib.mkRenamedOptionModule [ "programs" "zsh" "enableAutosuggestions" ] [ "programs" "zsh" "autosuggestion" "enable" ])
@@ -567,7 +549,25 @@ in
     };
   };
 
-  config = mkIf cfg.enable (lib.mkMerge [
+  config =
+    let
+      pluginsDir = if cfg.dotDir != null then
+        relToDotDir "plugins" else ".zsh/plugins";
+
+      envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
+      localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
+
+      aliasesStr = concatStringsSep "\n" (
+        lib.mapAttrsToList (k: v: "alias -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.shellAliases
+      );
+
+      dirHashesStr = concatStringsSep "\n" (
+        lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
+      );
+
+      zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
+    in
+    mkIf cfg.enable (lib.mkMerge [
     (mkIf (cfg.envExtra != "") {
       home.file."${relToDotDir ".zshenv"}".text = cfg.envExtra;
     })
