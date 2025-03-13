@@ -101,6 +101,7 @@ let
       "yubikey-agent"
       "zellij"
       "zplug"
+      "zsh"
     ];
 
     inner = self: super:
