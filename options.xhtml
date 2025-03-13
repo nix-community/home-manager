@@ -71573,6 +71573,93 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.macos-remap-keys.enable"></a><a class="term" href="options.xhtml#opt-services.macos-remap-keys.enable"><code class="option">services.macos-remap-keys.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable macOS key remapping service.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/macos-remap-keys" target="_top">
+&lt;home-manager/modules/services/macos-remap-keys&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.macos-remap-keys.keyboard"></a><a class="term" href="options.xhtml#opt-services.macos-remap-keys.keyboard"><code class="option">services.macos-remap-keys.keyboard</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Mapping of keyboard keys to remap</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  Capslock = &quot;Escape&quot;;
+  SquareBracketOpen = &quot;SquareBracketClose&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/macos-remap-keys" target="_top">
+&lt;home-manager/modules/services/macos-remap-keys&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.macos-remap-keys.keypad"></a><a class="term" href="options.xhtml#opt-services.macos-remap-keys.keypad"><code class="option">services.macos-remap-keys.keypad</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Mapping of keypad keys to remap</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  Enter = &quot;Equal&quot;;
+  Plus = &quot;Minus&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/macos-remap-keys" target="_top">
+&lt;home-manager/modules/services/macos-remap-keys&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.mako.enable"></a><a class="term" href="options.xhtml#opt-services.mako.enable"><code class="option">services.mako.enable</code>
   </a>
  </span>
