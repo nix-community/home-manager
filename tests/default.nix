@@ -93,6 +93,7 @@ let
       "pls"
       "pyenv"
       "sagemath"
+      "sapling"
       "scmpuff"
       "sm64ex"
       "thefuck"
