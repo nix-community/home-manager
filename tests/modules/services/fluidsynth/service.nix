@@ -1,12 +1,8 @@
-{ ... }:
-
 {
   services.fluidsynth.enable = true;
   services.fluidsynth.soundService = "pipewire-pulse";
   services.fluidsynth.soundFont = "/path/to/soundFont";
   services.fluidsynth.extraOptions = [ "--sample-rate 96000" ];
-
-  test.stubs.fluidsynth = { };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/fluidsynth.service

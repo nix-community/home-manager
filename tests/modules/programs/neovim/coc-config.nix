@@ -1,27 +1,23 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-  config = {
-    programs.neovim = {
+  imports = [ ./stubs.nix ];
+
+  programs.neovim = {
+    enable = true;
+    coc = {
       enable = true;
-      coc = {
-        enable = true;
-        settings = {
-          # my variable
-          foo = "bar";
-        };
+      settings = {
+        # my variable
+        foo = "bar";
       };
     };
-
-    nmt.script = ''
-      cocSettings="$TESTED/home-files/.config/nvim/coc-settings.json"
-      cocSettingsNormalized="$(normalizeStorePaths "$cocSettings")"
-
-      assertFileExists "$cocSettings"
-      assertFileContent "$cocSettingsNormalized" "${./coc-config.expected}"
-    '';
   };
+
+  nmt.script = ''
+    cocSettings="$TESTED/home-files/.config/nvim/coc-settings.json"
+    cocSettingsNormalized="$(normalizeStorePaths "$cocSettings")"
+
+    assertFileExists "$cocSettings"
+    assertFileContent "$cocSettingsNormalized" "${./coc-config.expected}"
+  '';
 }
 

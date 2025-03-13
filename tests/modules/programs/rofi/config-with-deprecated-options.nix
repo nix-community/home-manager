@@ -1,12 +1,9 @@
-{ ... }:
-
 {
   programs.rofi = {
     enable = true;
     colors = { };
   };
 
-  test.stubs.rofi = { };
   test.asserts.assertions.expected = [
     (let offendingFile = toString ./config-with-deprecated-options.nix;
     in ''

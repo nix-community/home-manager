@@ -30,7 +30,7 @@ in {
       Unit = {
         Description = "PulseAudio system tray";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session-pre.target" "tray.target" ];
+        After = [ "graphical-session.target" "tray.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

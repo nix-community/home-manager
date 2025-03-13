@@ -1,7 +1,9 @@
 { lib }: rec {
   mkNushellInline = expr: lib.setType "nushell-inline" { inherit expr; };
 
-  toNushell = { indent ? "", multiline ? true, asBindings ? false }@args:
+  isNushellInline = lib.isType "nushell-inline";
+
+  toNushell = { indent ? "", multiline ? true, asBindings ? false, }@args:
     v:
     let
       innerIndent = "${indent}    ";
@@ -18,7 +20,6 @@
         asBindings = false;
       };
       concatItems = lib.concatStringsSep introSpace;
-      isNushellInline = lib.isType "nushell-inline";
 
       generatedBindings = assert lib.assertMsg (badVarNames == [ ])
         "Bad Nushell variable names: ${

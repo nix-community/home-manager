@@ -1,30 +1,25 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.zoxide;
 
-  cfgOptions = concatStringsSep " " cfg.options;
-
+  cfgOptions = lib.concatStringsSep " " cfg.options;
 in {
   meta.maintainers = [ ];
 
   options.programs.zoxide = {
-    enable = mkEnableOption "zoxide";
+    enable = lib.mkEnableOption "zoxide";
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.zoxide;
-      defaultText = literalExpression "pkgs.zoxide";
+      defaultText = lib.literalExpression "pkgs.zoxide";
       description = ''
         Zoxide package to install.
       '';
     };
 
-    options = mkOption {
-      type = types.listOf types.str;
+    options = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
       default = [ ];
       example = [ "--no-cmd" ];
       description = ''
@@ -32,55 +27,37 @@ in {
       '';
     };
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableNushellIntegration =
+      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Nushell integration.
-      '';
-    };
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 150 ''
-      eval "$(${cfg.package}/bin/zoxide init bash ${cfgOptions})"
-    '');
+    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration
+      (lib.mkOrder 2000 ''
+        eval "$(${cfg.package}/bin/zoxide init bash ${cfgOptions})"
+      '');
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${cfg.package}/bin/zoxide init zsh ${cfgOptions})"
-    '';
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration
+      (lib.mkOrder 2000 ''
+        eval "$(${cfg.package}/bin/zoxide init zsh ${cfgOptions})"
+      '');
 
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
       ${cfg.package}/bin/zoxide init fish ${cfgOptions} | source
     '';
 
-    programs.nushell = mkIf cfg.enableNushellIntegration {
+    programs.nushell = lib.mkIf cfg.enableNushellIntegration {
       extraEnv = ''
         let zoxide_cache = "${config.xdg.cacheHome}/zoxide"
         if not ($zoxide_cache | path exists) {

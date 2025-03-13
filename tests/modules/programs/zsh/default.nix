@@ -9,4 +9,5 @@
   zsh-prezto = ./prezto.nix;
   zsh-syntax-highlighting = ./syntax-highlighting.nix;
   zsh-abbr = ./zsh-abbr.nix;
+  zshrc-contents-priorities = ./zshrc-content-priorities.nix;
 }

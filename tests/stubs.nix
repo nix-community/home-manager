@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   stubType = types.submodule ({ name, ... }: {
     options = {
@@ -15,18 +13,23 @@ let
       outPath = mkOption {
         type = types.nullOr types.str;
         default = "@${name}@";
-        defaultText = literalExpression ''"@''${name}@"'';
+        defaultText = lib.literalExpression ''"@''${name}@"'';
       };
 
       version = mkOption {
         type = types.nullOr types.str;
         default = null;
-        defaultText = literalExpression "pkgs.\${name}.version or null";
+        defaultText = lib.literalExpression "pkgs.\${name}.version or null";
       };
 
       buildScript = mkOption {
         type = types.str;
         default = defaultBuildScript;
+      };
+
+      extraAttrs = mkOption {
+        type = types.attrsOf types.anything;
+        default = { };
       };
     };
   });
@@ -37,7 +40,7 @@ let
     defaultBuildScript;
 
   mkStubPackage = { name ? "dummy", outPath ? null, version ? null
-    , buildScript ? defaultBuildScript }:
+    , buildScript ? defaultBuildScript, extraAttrs ? { } }:
     let
       pkg = if name == "dummy" && buildScript == defaultBuildScript then
         dummyPackage
@@ -46,35 +49,52 @@ let
           pname = name;
           meta.mainProgram = name;
         } buildScript;
-    in pkg // optionalAttrs (outPath != null) {
-      inherit outPath;
 
-      # Prevent getOutput from descending into outputs
-      outputSpecified = true;
+      stubbedPkg = pkg // lib.optionalAttrs (outPath != null) {
+        inherit outPath;
 
-      # Allow the original package to be used in derivation inputs
-      __spliced = {
-        buildHost = pkg;
-        hostTarget = pkg;
-      };
-    } // optionalAttrs (version != null) { inherit version; };
+        # Prevent getOutput from descending into outputs
+        outputSpecified = true;
+
+        # Allow the original package to be used in derivation inputs
+        __spliced = {
+          buildHost = pkg;
+          hostTarget = pkg;
+        };
+      } // lib.optionalAttrs (version != null) { inherit version; }
+        // extraAttrs;
+    in stubbedPkg;
 
 in {
-  options.test.stubs = mkOption {
-    type = types.attrsOf stubType;
-    default = { };
-    description =
-      "Package attributes that should be replaced by a stub package.";
+  options.test = {
+    stubs = mkOption {
+      type = types.attrsOf stubType;
+      default = { };
+      description =
+        "Package attributes that should be replaced by a stub package.";
+    };
+
+    stubOverlays = mkOption {
+      type = types.anything;
+      default = [ ];
+      internal = true;
+    };
+
+    unstubs = mkOption {
+      type = types.listOf types.anything;
+      default = [ ];
+    };
   };
 
   config = {
     lib.test.mkStubPackage = mkStubPackage;
 
-    nixpkgs.overlays = [ (self: super: { inherit mkStubPackage; }) ]
-      ++ optional (config.test.stubs != { }) (self: super:
-        mapAttrs (n: v:
-          mkStubPackage (v // optionalAttrs (v.version == null) {
-            version = super.${n}.version or null;
-          })) config.test.stubs);
+    test.stubOverlays = [ ] ++ lib.optional (config.test.stubs != { })
+      (self: super:
+        lib.mapAttrs (n: v:
+          builtins.traceVerbose "${n} - stubbed" (mkStubPackage (v
+            // lib.optionalAttrs (v.version == null) {
+              version = super.${n}.version or null;
+            }))) config.test.stubs) ++ config.test.unstubs;
   };
 }

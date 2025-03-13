@@ -288,7 +288,8 @@ in {
         createMaildir =
           hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
             run mkdir -m700 -p $VERBOSE_ARG ${
-              concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
+              concatMapStringsSep " " (a: escapeShellArg a.maildir.absPath)
+              mbsyncAccounts
             }
           '';
       };

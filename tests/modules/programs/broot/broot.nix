@@ -1,4 +1,4 @@
-{ ... }:
+{ realPkgs, ... }:
 
 {
   programs.broot = {
@@ -6,10 +6,7 @@
     settings.modal = true;
   };
 
-  tests.stubs = {
-    broot = { };
-    hjson = { };
-  };
+  nixpkgs.overlays = [ (self: super: { inherit (realPkgs) broot hjson-go; }) ];
 
   nmt.script = ''
     assertFileExists home-files/.config/broot/conf.toml

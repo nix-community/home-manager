@@ -11,3 +11,5 @@ vo=%5%vdpau
 alang=%2%en
 profile-desc=%26%profile for dvd:// streams
 
+
+include=manual.conf

@@ -1,10 +1,6 @@
-{ config, lib, ... }:
-
-{
+{ config, ... }: {
   wayland.windowManager.hyprland = {
     enable = true;
-    package = lib.makeOverridable
-      (attrs: config.lib.test.mkStubPackage { name = "hyprland"; }) { };
     plugins =
       [ "/path/to/plugin1" (config.lib.test.mkStubPackage { name = "foo"; }) ];
   };

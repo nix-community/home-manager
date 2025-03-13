@@ -1,20 +1,15 @@
 modulePath:
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
-  cfg = getAttrFromPath modulePath config;
+  cfg = lib.getAttrFromPath modulePath config;
 
   firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
-
 in {
   imports = [ firefoxMockOverlay ];
 
-  config = mkIf config.test.enableBig ({
+  config = lib.mkIf config.test.enableBig ({
     home.stateVersion = "23.05";
-  } // setAttrByPath modulePath {
+  } // lib.setAttrByPath modulePath {
     enable = true;
     policies = { BlockAboutConfig = true; };
     package = pkgs.${cfg.wrappedPackageName}.override {

@@ -12,8 +12,10 @@ in {
   options.programs.rofi.pass = {
     enable = mkEnableOption "rofi integration with password-store";
 
-    package =
-      mkPackageOption pkgs "rofi-pass" { example = "pkgs.rofi-pass-wayland"; };
+    package = mkPackageOption pkgs "rofi-pass" {
+      nullable = true;
+      example = "pkgs.rofi-pass-wayland";
+    };
 
     stores = mkOption {
       type = types.listOf types.str;
@@ -40,7 +42,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."rofi-pass/config".text = optionalString (cfg.stores != [ ])
       ("root=" + (concatStringsSep ":" cfg.stores) + "\n") + cfg.extraConfig

@@ -23,33 +23,26 @@ in {
       description = "The package to use for atuin.";
     };
 
-    enableBashIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Atuin's Bash integration. This will bind
-        `ctrl-r` to open the Atuin history.
-      '';
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption {
+      inherit config;
+      extraDescription =
+        "If enabled, this will bind `ctrl-r` to open the Atuin history.";
     };
 
-    enableZshIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Atuin's Zsh integration.
-
-        If enabled, this will bind `ctrl-r` and the up-arrow
-        key to open the Atuin history.
-      '';
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption {
+      inherit config;
+      extraDescription =
+        "If enabled, this will bind the up-arrow key to open the Atuin history.";
     };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Atuin's Fish integration.
+    enableNushellIntegration =
+      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-        If enabled, this will bind the up-arrow key to open the Atuin history.
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption {
+      inherit config;
+      extraDescription = ''
+        If enabled, this will bind `ctrl-r` and the up-arrow key to open the
+        Atuin history.
       '';
     };
 
@@ -86,14 +79,6 @@ in {
 
         See <https://atuin.sh/docs/config/> for the full list
         of options.
-      '';
-    };
-
-    enableNushellIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Nushell integration.
       '';
     };
 
@@ -211,6 +196,13 @@ in {
         };
       })
       (mkIf isDarwin {
+        programs.atuin.settings = {
+          daemon = {
+            socket_path =
+              lib.mkDefault "${config.xdg.dataHome}/atuin/daemon.sock";
+          };
+        };
+
         launchd.agents.atuin-daemon = {
           enable = true;
           config = {

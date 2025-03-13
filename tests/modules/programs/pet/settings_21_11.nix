@@ -1,12 +1,7 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   home.stateVersion = "21.11";
   programs.pet = {
     enable = true;
-    selectcmdPackage = config.lib.test.mkStubPackage { };
     settings = {
       General = {
         backend = "Gitlab";
@@ -19,8 +14,6 @@ with lib;
       };
     };
   };
-
-  test.stubs.pet = { };
 
   nmt.script = ''
     assertFileContent home-files/.config/pet/config.toml \

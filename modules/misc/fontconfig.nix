@@ -4,8 +4,6 @@
 
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
 
   cfg = config.fonts.fontconfig;
@@ -13,10 +11,10 @@ let
   profileDirectory = config.home.profileDirectory;
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (mkRenamedOptionModule [ "fonts" "fontconfig" "enableProfileFonts" ] [
+    (lib.mkRenamedOptionModule [ "fonts" "fontconfig" "enableProfileFonts" ] [
       "fonts"
       "fontconfig"
       "enable"
@@ -25,8 +23,8 @@ in {
 
   options = {
     fonts.fontconfig = {
-      enable = mkOption {
-        type = types.bool;
+      enable = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         description = ''
           Whether to enable fontconfig configuration. This will, for
@@ -38,8 +36,8 @@ in {
       };
 
       defaultFonts = {
-        monospace = mkOption {
-          type = with types; listOf str;
+        monospace = lib.mkOption {
+          type = with lib.types; listOf str;
           default = [ ];
           description = ''
             Per-user default monospace font(s). Multiple fonts may be listed in
@@ -47,8 +45,8 @@ in {
           '';
         };
 
-        sansSerif = mkOption {
-          type = with types; listOf str;
+        sansSerif = lib.mkOption {
+          type = with lib.types; listOf str;
           default = [ ];
           description = ''
             Per-user default sans serif font(s). Multiple fonts may be listed
@@ -56,8 +54,8 @@ in {
           '';
         };
 
-        serif = mkOption {
-          type = with types; listOf str;
+        serif = lib.mkOption {
+          type = with lib.types; listOf str;
           default = [ ];
           description = ''
             Per-user default serif font(s). Multiple fonts may be listed in
@@ -65,8 +63,8 @@ in {
           '';
         };
 
-        emoji = mkOption {
-          type = with types; listOf str;
+        emoji = lib.mkOption {
+          type = with lib.types; listOf str;
           default = [ ];
           description = ''
             Per-user default emoji font(s). Multiple fonts may be listed in
@@ -83,7 +81,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [
       # Make sure that buildEnv creates a real directory path so that we avoid
       # trying to write to a read-only location.
@@ -105,7 +103,7 @@ in {
       </fontconfig>
       EOF
 
-        ${getBin pkgs.fontconfig}/bin/fc-cache -f
+        ${lib.getBin pkgs.fontconfig}/bin/fc-cache -f
         rm -f $out/lib/fontconfig/cache/CACHEDIR.TAG
         rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig/cache
 
@@ -147,12 +145,12 @@ in {
 
       "fontconfig/conf.d/52-hm-default-fonts.conf".text = let
         genDefault = fonts: name:
-          optionalString (fonts != [ ]) ''
+          lib.optionalString (fonts != [ ]) ''
             <alias binding="same">
               <family>${name}</family>
               <prefer>
               ${
-                concatStringsSep "" (map (font: ''
+                lib.concatStringsSep "" (map (font: ''
                   <family>${font}</family>
                 '') fonts)
               }

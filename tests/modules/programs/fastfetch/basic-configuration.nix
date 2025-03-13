@@ -29,8 +29,6 @@
     };
   };
 
-  test.stubs.fastfetch = { };
-
   nmt.script = let configFile = "home-files/.config/fastfetch/config.jsonc";
   in ''
     assertFileExists "${configFile}"

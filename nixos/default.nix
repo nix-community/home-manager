@@ -1,19 +1,17 @@
 { config, lib, pkgs, utils, ... }:
 
-with lib;
-
 let
 
   cfg = config.home-manager;
 
-  serviceEnvironment = optionalAttrs (cfg.backupFileExtension != null) {
+  serviceEnvironment = lib.optionalAttrs (cfg.backupFileExtension != null) {
     HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
-  } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
+  } // lib.optionalAttrs cfg.verbose { VERBOSE = "1"; };
 
 in {
   imports = [ ./common.nix ];
 
-  config = mkMerge [
+  config = lib.mkMerge [
     {
       home-manager = {
         extraSpecialArgs.nixosConfig = config;
@@ -33,10 +31,11 @@ in {
         }];
       };
     }
-    (mkIf (cfg.users != { }) {
-      systemd.services = mapAttrs' (_: usercfg:
+    (lib.mkIf (cfg.users != { }) {
+      systemd.services = lib.mapAttrs' (_: usercfg:
         let username = usercfg.home.username;
-        in nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
+        in lib.nameValuePair
+        "home-manager-${utils.escapeSystemdPath username}" {
           description = "Home Manager environment for ${username}";
           wantedBy = [ "multi-user.target" ];
           wants = [ "nix-daemon.socket" ];
@@ -61,7 +60,7 @@ in {
 
               sed = "${pkgs.gnused}/bin/sed";
 
-              exportedSystemdVariables = concatStringsSep "|" [
+              exportedSystemdVariables = lib.concatStringsSep "|" [
                 "DBUS_SESSION_BUS_ADDRESS"
                 "DISPLAY"
                 "WAYLAND_DISPLAY"

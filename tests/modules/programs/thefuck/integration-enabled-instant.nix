@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs = {
     thefuck = {
@@ -9,8 +7,6 @@
     bash.enable = true;
     zsh.enable = true;
   };
-
-  test.stubs.thefuck = { };
 
   nmt.script = ''
     assertFileExists home-files/.bashrc

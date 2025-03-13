@@ -1,16 +1,14 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
 
   cfg = config.systemd.user.tmpfiles;
 
 in {
-  meta.maintainers = [ maintainers.dawidsowa ];
+  meta.maintainers = [ lib.maintainers.dawidsowa ];
 
-  options.systemd.user.tmpfiles.rules = mkOption {
-    type = types.listOf types.str;
+  options.systemd.user.tmpfiles.rules = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
     default = [ ];
     example = [ "L /home/user/Documents - - - - /mnt/data/Documents" ];
     description = ''
@@ -21,10 +19,10 @@ in {
     '';
   };
 
-  config = mkIf (cfg.rules != [ ]) {
+  config = lib.mkIf (cfg.rules != [ ]) {
     assertions = [
-      (hm.assertions.assertPlatform "systemd.user.tmpfiles" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "systemd.user.tmpfiles" pkgs
+        lib.platforms.linux)
     ];
 
     xdg.configFile = {
@@ -32,7 +30,7 @@ in {
         text = ''
           # This file is created automatically and should not be modified.
           # Please change the option ‘systemd.user.tmpfiles.rules’ instead.
-          ${concatStringsSep "\n" cfg.rules}
+          ${lib.concatStringsSep "\n" cfg.rules}
         '';
         onChange = "${pkgs.systemd}/bin/systemd-tmpfiles --user --create";
       };

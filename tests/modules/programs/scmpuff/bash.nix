@@ -1,12 +1,8 @@
-{ ... }:
-
 {
   programs = {
     scmpuff.enable = true;
     bash.enable = true;
   };
-
-  test.stubs.scmpuff = { };
 
   nmt.script = ''
     assertFileExists home-files/.bashrc

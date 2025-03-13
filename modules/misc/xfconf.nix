@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.xfconf;
 
@@ -51,12 +50,12 @@ let
       "-s"
       v
     ] else if builtins.isList v then
-      [ "-a" ] ++ concatMap withType v
+      [ "-a" ] ++ lib.concatMap withType v
     else
       throw "unexpected xfconf type: ${builtins.typeOf v}";
 
 in {
-  meta.maintainers = [ maintainers.chuangzhu ];
+  meta.maintainers = [ lib.maintainers.chuangzhu ];
 
   options.xfconf = {
     enable = mkOption {
@@ -81,7 +80,7 @@ in {
           description = "xfconf settings";
         };
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           xfce4-session = {
             "startup/ssh-agent/enabled" = false;
@@ -99,16 +98,16 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.settings != { }) {
+  config = lib.mkIf (cfg.enable && cfg.settings != { }) {
     assertions =
-      [ (hm.assertions.assertPlatform "xfconf" pkgs platforms.linux) ];
+      [ (lib.hm.assertions.assertPlatform "xfconf" pkgs lib.platforms.linux) ];
 
-    home.activation.xfconfSettings = hm.dag.entryAfter [ "installPackages" ]
+    home.activation.xfconfSettings = lib.hm.dag.entryAfter [ "installPackages" ]
       (let
         mkCommand = channel: property: value: ''
           run ${pkgs.xfce.xfconf}/bin/xfconf-query \
             ${
-              escapeShellArgs ([ "-c" channel "-p" "/${property}" ]
+              lib.escapeShellArgs ([ "-c" channel "-p" "/${property}" ]
                 ++ (if value == null then
                   [ "-r" ]
                 else
@@ -116,13 +115,12 @@ in {
             }
         '';
 
-        commands = mapAttrsToList
-          (channel: properties: mapAttrsToList (mkCommand channel) properties)
-          cfg.settings;
+        commands = lib.mapAttrsToList (channel: properties:
+          lib.mapAttrsToList (mkCommand channel) properties) cfg.settings;
 
         load = pkgs.writeShellScript "load-xfconf" ''
           ${config.lib.bash.initHomeManagerLib}
-          ${concatMapStrings concatStrings commands}
+          ${lib.concatMapStrings lib.concatStrings commands}
         '';
       in ''
         if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then

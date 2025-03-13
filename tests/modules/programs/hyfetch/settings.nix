@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.hyfetch = {
     enable = true;
@@ -16,8 +14,6 @@
       };
     };
   };
-
-  test.stubs.hyfetch = { };
 
   nmt.script = ''
     assertFileContent home-files/.config/hyfetch.json ${./hyfetch.json}

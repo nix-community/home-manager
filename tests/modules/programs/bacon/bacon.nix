@@ -21,7 +21,7 @@ in {
       };
     };
   };
-  test.stubs.bacon = { };
+
   nmt.script = ''
     assertFileExists 'home-files/${configDir}/prefs.toml'
     assertFileContent 'home-files/${configDir}/prefs.toml' ${./expected.toml}

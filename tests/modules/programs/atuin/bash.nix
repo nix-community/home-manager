@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs = {
     atuin.enable = true;
@@ -7,11 +5,6 @@
       enable = true;
       enableCompletion = false;
     };
-  };
-
-  test.stubs = {
-    atuin = { name = "atuin"; };
-    bash-preexec = { };
   };
 
   nmt.script = ''

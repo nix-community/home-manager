@@ -76,7 +76,7 @@ in {
       systemd.user.services.random-background = {
         Unit = {
           Description = "Set random desktop background using feh";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 

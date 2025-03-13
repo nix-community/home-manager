@@ -1,12 +1,13 @@
 { config, lib, ... }:
 
-with lib;
+let
+  inherit (lib) types;
 
-let releaseInfo = lib.importJSON ../../release.json;
+  releaseInfo = lib.importJSON ../../release.json;
 
 in {
   options = {
-    home.stateVersion = mkOption {
+    home.stateVersion = lib.mkOption {
       type = types.enum [
         "18.09"
         "19.03"
@@ -39,20 +40,20 @@ in {
     };
 
     home.version = {
-      full = mkOption {
+      full = lib.mkOption {
         internal = true;
         readOnly = true;
         type = types.str;
         default = let
           inherit (config.home.version) release revision;
-          suffix =
-            optionalString (revision != null) "+${substring 0 8 revision}";
+          suffix = lib.optionalString (revision != null)
+            "+${lib.substring 0 8 revision}";
         in "${release}${suffix}";
         example = "22.11+213a0629";
         description = "The full Home Manager version.";
       };
 
-      release = mkOption {
+      release = lib.mkOption {
         internal = true;
         readOnly = true;
         type = types.str;
@@ -61,7 +62,7 @@ in {
         description = "The Home Manager release.";
       };
 
-      isReleaseBranch = mkOption {
+      isReleaseBranch = lib.mkOption {
         internal = true;
         readOnly = true;
         type = types.bool;
@@ -72,11 +73,14 @@ in {
         '';
       };
 
-      revision = mkOption {
+      revision = lib.mkOption {
         internal = true;
         type = types.nullOr types.str;
         default = let gitRepo = "${toString ./../..}/.git";
-        in if pathIsGitRepo gitRepo then commitIdFromGitRepo gitRepo else null;
+        in if lib.pathIsGitRepo gitRepo then
+          lib.commitIdFromGitRepo gitRepo
+        else
+          null;
         description = ''
           The Git revision from which this Home Manager configuration was built.
         '';

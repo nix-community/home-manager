@@ -6,7 +6,7 @@ Environment=PATH=@paprefs@/bin:@pavucontrol@/bin
 ExecStart=@pasystray@/bin/pasystray -g
 
 [Unit]
-After=graphical-session-pre.target
+After=graphical-session.target
 After=tray.target
 Description=PulseAudio system tray
 PartOf=graphical-session.target

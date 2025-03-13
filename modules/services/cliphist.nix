@@ -1,7 +1,15 @@
 { config, lib, pkgs, ... }:
 let cfg = config.services.cliphist;
 in {
-  meta.maintainers = [ lib.hm.maintainers.janik ];
+  meta.maintainers = [ lib.hm.maintainers.janik lib.maintainers.khaneliman ];
+
+  imports = [
+    (lib.mkRenamedOptionModule [ "services" "cliphist" "systemdTarget" ] [
+      "services"
+      "cliphist"
+      "systemdTargets"
+    ])
+  ];
 
   options.services.cliphist = {
     enable =
@@ -25,16 +33,18 @@ in {
       '';
     };
 
-    systemdTarget = lib.mkOption {
-      type = lib.types.str;
-      default = "graphical-session.target";
+    systemdTargets = lib.mkOption {
+      type = with lib.types; either (listOf str) str;
+      default = [ "graphical-session.target" ];
       example = "sway-session.target";
       description = ''
-        The systemd target that will automatically start the cliphist service.
+        The systemd targets that will automatically start the cliphist service.
 
-        When setting this value to `"sway-session.target"`,
+        When setting this value to `["sway-session.target"]`,
         make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
         otherwise the service may never be started.
+
+        Note: A single string value is deprecated, please use a list.
       '';
     };
   };
@@ -61,7 +71,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install = { WantedBy = [ cfg.systemdTarget ]; };
+      Install = { WantedBy = lib.toList cfg.systemdTargets; };
     };
 
     systemd.user.services.cliphist-images = lib.mkIf cfg.allowImages {
@@ -77,7 +87,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install = { WantedBy = [ cfg.systemdTarget ]; };
+      Install = { WantedBy = lib.toList cfg.systemdTargets; };
     };
   };
 }

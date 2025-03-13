@@ -1,18 +1,16 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
 
   cfg = config.pam;
 
 in {
-  meta.maintainers = with maintainers; [ rycee veehaitch ];
+  meta.maintainers = with lib.maintainers; [ rycee veehaitch ];
 
   options = {
-    pam.sessionVariables = mkOption {
+    pam.sessionVariables = lib.mkOption {
       default = { };
-      type = types.attrs;
+      type = lib.types.attrs;
       example = { EDITOR = "vim"; };
       description = ''
         Environment variables that will be set for the PAM session.
@@ -25,10 +23,10 @@ in {
     };
 
     pam.yubico.authorizedYubiKeys = {
-      ids = mkOption {
-        type = with types;
+      ids = lib.mkOption {
+        type = with lib.types;
           let
-            yubiKeyId = addCheck str (s: stringLength s == 12) // {
+            yubiKeyId = addCheck str (s: lib.stringLength s == 12) // {
               name = "yubiKeyId";
               description = "string of length 12";
             };
@@ -41,8 +39,8 @@ in {
         '';
       };
 
-      path = mkOption {
-        type = types.str;
+      path = lib.mkOption {
+        type = lib.types.str;
         default = ".yubico/authorized_yubikeys";
         description = ''
           File path to write the authorized YubiKeys,
@@ -52,16 +50,16 @@ in {
     };
   };
 
-  config = mkMerge [
-    (mkIf (cfg.sessionVariables != { }) {
-      home.file.".pam_environment".text = concatStringsSep "\n"
-        (mapAttrsToList (n: v: ''${n} OVERRIDE="${toString v}"'')
+  config = lib.mkMerge [
+    (lib.mkIf (cfg.sessionVariables != { }) {
+      home.file.".pam_environment".text = lib.concatStringsSep "\n"
+        (lib.mapAttrsToList (n: v: ''${n} OVERRIDE="${toString v}"'')
           cfg.sessionVariables) + "\n";
     })
 
-    (mkIf (cfg.yubico.authorizedYubiKeys.ids != [ ]) {
+    (lib.mkIf (cfg.yubico.authorizedYubiKeys.ids != [ ]) {
       home.file.${cfg.yubico.authorizedYubiKeys.path}.text =
-        concatStringsSep ":"
+        lib.concatStringsSep ":"
         ([ config.home.username ] ++ cfg.yubico.authorizedYubiKeys.ids);
     })
   ];

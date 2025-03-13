@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   inherit (config.home) stateVersion;
 
@@ -114,7 +113,7 @@ let
       layout = mkOption {
         type = with types; nullOr str;
         default =
-          if versionAtLeast config.home.stateVersion "19.09"
+          if lib.versionAtLeast config.home.stateVersion "19.09"
           then null
           else "us";
         defaultText = literalExpression "null";
@@ -148,7 +147,7 @@ let
       variant = mkOption {
         type = with types; nullOr str;
         default =
-          if versionAtLeast config.home.stateVersion "19.09"
+          if lib.versionAtLeast config.home.stateVersion "19.09"
           then null
           else "";
         defaultText = literalExpression "null";
@@ -167,10 +166,10 @@ let
 in
 
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (mkRemovedOptionModule [ "home" "sessionVariableSetter" ] ''
+    (lib.mkRemovedOptionModule [ "home" "sessionVariableSetter" ] ''
       Session variables are now always set through the shell. This is
       done automatically if the shell configuration is managed by Home
       Manager. If not, then you must source the
@@ -223,7 +222,7 @@ in
 
     home.keyboard = mkOption {
       type = types.nullOr keyboardSubModule;
-      default = if versionAtLeast stateVersion "21.11" then null else { };
+      default = if lib.versionAtLeast stateVersion "21.11" then null else { };
       defaultText = literalExpression ''
         "{ }"  for state version < 21.11,
         "null" for state version ≥ 21.11
@@ -310,12 +309,33 @@ in
         ".git/safe/../../bin"
       ];
       description = ''
-        Extra directories to add to {env}`PATH`.
+        Extra directories to prepend to {env}`PATH`.
 
         These directories are added to the {env}`PATH` variable in a
         double-quoted context, so expressions like `$HOME` are
         expanded by the shell. However, since expressions like `~` or
         `*` are escaped, they will end up in the {env}`PATH`
+        verbatim.
+      '';
+    };
+
+    home.sessionSearchVariables = mkOption {
+      default = { };
+      type = with types; attrsOf (listOf str);
+      example = {
+        MANPATH = [
+          "$HOME/.npm-packages/man"
+          "\${xdg.configHome}/.local/share/man"
+        ];
+      };
+      description = ''
+        Extra directories to prepend to arbitrary PATH-like
+        environment variables (e.g.: {env}`MANPATH`). The values
+        will be concatenated by `:`.
+        These directories are added to the environment variable in a
+        double-quoted context, so expressions like `$HOME` are
+        expanded by the shell. However, since expressions like `~` or
+        `*` are escaped, they will end up in the environment
         verbatim.
       '';
     };
@@ -355,7 +375,7 @@ in
     home.emptyActivationPath = mkOption {
       internal = true;
       type = types.bool;
-      default = versionAtLeast stateVersion "22.11";
+      default = lib.versionAtLeast stateVersion "22.11";
       defaultText = literalExpression ''
         false   for state version < 22.11,
         true    for state version ≥ 22.11
@@ -370,7 +390,7 @@ in
     };
 
     home.activation = mkOption {
-      type = hm.types.dagOf types.str;
+      type = lib.hm.types.dagOf types.str;
       default = {};
       example = literalExpression ''
         {
@@ -475,7 +495,7 @@ in
       '';
     };
 
-    home.preferXdgDirectories = mkEnableOption "" // {
+    home.preferXdgDirectories = lib.mkEnableOption "" // {
       description = ''
         Whether to make programs use XDG directories whenever supported.
       '';
@@ -502,7 +522,7 @@ in
           config.home.enableNixpkgsReleaseCheck
           && hmRelease != nixpkgsRelease;
       in
-        optional releaseMismatch ''
+        lib.optional releaseMismatch ''
           You are using
 
             Home Manager version ${hmRelease} and
@@ -520,11 +540,11 @@ in
         '';
 
     home.username =
-      mkIf (versionOlder config.home.stateVersion "20.09")
-        (mkDefault (builtins.getEnv "USER"));
+      lib.mkIf (lib.versionOlder config.home.stateVersion "20.09")
+        (lib.mkDefault (builtins.getEnv "USER"));
     home.homeDirectory =
-      mkIf (versionOlder config.home.stateVersion "20.09")
-        (mkDefault (builtins.getEnv "HOME"));
+      lib.mkIf (lib.versionOlder config.home.stateVersion "20.09")
+        (lib.mkDefault (builtins.getEnv "HOME"));
 
     home.profileDirectory =
       if config.submoduleSupport.enable
@@ -540,7 +560,7 @@ in
 
     home.sessionVariables =
       let
-        maybeSet = n: v: optionalAttrs (v != null) { ${n} = v; };
+        maybeSet = n: v: lib.optionalAttrs (v != null) { ${n} = v; };
       in
         (maybeSet "LANG" cfg.language.base)
         //
@@ -576,17 +596,24 @@ in
         export __HM_SESS_VARS_SOURCED=1
 
         ${config.lib.shell.exportAll cfg.sessionVariables}
-      '' + lib.optionalString (cfg.sessionPath != [ ]) ''
-        export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
-      '' + cfg.sessionVariablesExtra;
+      '' + lib.concatStringsSep "\n"
+        (lib.mapAttrsToList
+          (env: values: config.lib.shell.export
+            env
+            (config.lib.shell.prependToVar ":" env values))
+          cfg.sessionSearchVariables) + "\n"
+        + cfg.sessionVariablesExtra;
     };
+
+    home.sessionSearchVariables.PATH =
+      lib.mkIf (cfg.sessionPath != [ ]) cfg.sessionPath;
 
     home.packages = [ config.home.sessionVariablesPackage ];
 
     # The entry acting as a boundary between the activation script's "check" and
     # the "write" phases. This is where we commit to attempting to actually
     # activate the configuration.
-    home.activation.writeBoundary = hm.dag.entryAnywhere ''
+    home.activation.writeBoundary = lib.hm.dag.entryAnywhere ''
       if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
         _i "Creating new profile generation"
         run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
@@ -610,7 +637,7 @@ in
     # In case the user has moved from a user-install of Home Manager
     # to a submodule managed one we attempt to uninstall the
     # `home-manager-path` package if it is installed.
-    home.activation.installPackages = hm.dag.entryAfter ["writeBoundary"] (
+    home.activation.installPackages = lib.hm.dag.entryAfter ["writeBoundary"] (
       if config.submoduleSupport.externalPackageInstall
       then
         ''
@@ -676,10 +703,10 @@ in
             _iNote "Activating %s" "${res.name}"
             ${res.data}
           '';
-        sortedCommands = hm.dag.topoSort cfg.activation;
+        sortedCommands = lib.hm.dag.topoSort cfg.activation;
         activationCmds =
           if sortedCommands ? result then
-            concatStringsSep "\n" (map mkCmd sortedCommands.result)
+            lib.concatStringsSep "\n" (map mkCmd sortedCommands.result)
           else
             abort ("Dependency cycle in activation script: "
               + builtins.toJSON sortedCommands);
@@ -708,7 +735,7 @@ in
           else
             ":$(${pkgs.coreutils}/bin/dirname $(${pkgs.coreutils}/bin/readlink -m $(type -p nix-env)))"
         )
-        + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
+        + lib.optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
         activationScript = pkgs.writeShellScript "activation-script" ''
           set -eu
@@ -722,8 +749,8 @@ in
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
           if [[ ! -v SKIP_SANITY_CHECKS ]]; then
-            checkUsername ${escapeShellArg config.home.username}
-            checkHomeDirectory ${escapeShellArg config.home.homeDirectory}
+            checkUsername ${lib.escapeShellArg config.home.username}
+            checkHomeDirectory ${lib.escapeShellArg config.home.homeDirectory}
           fi
 
           # Create a temporary GC root to prevent collection during activation.
@@ -732,7 +759,7 @@ in
 
           ${activationCmds}
 
-          ${optionalString (!config.uninstall) ''
+          ${lib.optionalString (!config.uninstall) ''
             # Create the "current generation" GC root.
             run --silence nix-store --realise "$newGenPath" --add-root "$currentGenGcPath"
 

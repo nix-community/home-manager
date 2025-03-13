@@ -36,7 +36,7 @@ in {
       Service.ExecStart = "${pkgs.devilspie2}/bin/devilspie2";
       Unit = {
         Description = "devilspie2";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
       Install.WantedBy = [ "graphical-session.target" ];
