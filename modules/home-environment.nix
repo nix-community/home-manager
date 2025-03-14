@@ -480,7 +480,7 @@ in
       '';
     };
 
-    home.forceNixProfiles = mkEnableOption ''
+    home.forceNixProfiles = lib.mkEnableOption ''
       forcing home-manager to use `nix profile` instead of
       `nix-env` for activating the environment.'';
 
