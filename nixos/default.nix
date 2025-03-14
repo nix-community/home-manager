@@ -1,38 +1,41 @@
 { config, lib, pkgs, utils, ... }:
 
-with lib;
-
 let
 
   cfg = config.home-manager;
 
-  serviceEnvironment = optionalAttrs (cfg.backupFileExtension != null) {
+  serviceEnvironment = lib.optionalAttrs (cfg.backupFileExtension != null) {
     HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
-  } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
+  } // lib.optionalAttrs cfg.verbose { VERBOSE = "1"; };
 
 in {
   imports = [ ./common.nix ];
 
-  config = mkMerge [
+  config = lib.mkMerge [
     {
       home-manager = {
         extraSpecialArgs.nixosConfig = config;
 
         sharedModules = [{
-          # The per-user directory inside /etc/profiles is not known by
-          # fontconfig by default.
-          fonts.fontconfig.enable = lib.mkDefault
-            (cfg.useUserPackages && config.fonts.fontconfig.enable);
+          key = "home-manager#nixos-shared-module";
 
-          # Inherit glibcLocales setting from NixOS.
-          i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
+          config = {
+            # The per-user directory inside /etc/profiles is not known by
+            # fontconfig by default.
+            fonts.fontconfig.enable = lib.mkDefault
+              (cfg.useUserPackages && config.fonts.fontconfig.enable);
+
+            # Inherit glibcLocales setting from NixOS.
+            i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
+          };
         }];
       };
     }
-    (mkIf (cfg.users != { }) {
-      systemd.services = mapAttrs' (_: usercfg:
+    (lib.mkIf (cfg.users != { }) {
+      systemd.services = lib.mapAttrs' (_: usercfg:
         let username = usercfg.home.username;
-        in nameValuePair ("home-manager-${utils.escapeSystemdPath username}") {
+        in lib.nameValuePair
+        "home-manager-${utils.escapeSystemdPath username}" {
           description = "Home Manager environment for ${username}";
           wantedBy = [ "multi-user.target" ];
           wants = [ "nix-daemon.socket" ];
@@ -48,7 +51,6 @@ in {
           serviceConfig = {
             User = usercfg.home.username;
             Type = "oneshot";
-            RemainAfterExit = "yes";
             TimeoutStartSec = "5m";
             SyslogIdentifier = "hm-activate-${username}";
 
@@ -58,7 +60,7 @@ in {
 
               sed = "${pkgs.gnused}/bin/sed";
 
-              exportedSystemdVariables = concatStringsSep "|" [
+              exportedSystemdVariables = lib.concatStringsSep "|" [
                 "DBUS_SESSION_BUS_ADDRESS"
                 "DISPLAY"
                 "WAYLAND_DISPLAY"

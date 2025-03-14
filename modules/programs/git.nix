@@ -14,33 +14,6 @@ let
       supersectionType = attrsOf (either multipleType sectionType);
     in attrsOf supersectionType;
 
-  signModule = types.submodule {
-    options = {
-      key = mkOption {
-        type = types.nullOr types.str;
-        description = ''
-          The default GPG signing key fingerprint.
-
-          Set to `null` to let GnuPG decide what signing key
-          to use depending on commit’s author.
-        '';
-      };
-
-      signByDefault = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether commits and tags should be signed by default.";
-      };
-
-      gpgPath = mkOption {
-        type = types.str;
-        default = "${pkgs.gnupg}/bin/gpg2";
-        defaultText = "\${pkgs.gnupg}/bin/gpg2";
-        description = "Path to GnuPG binary to use.";
-      };
-    };
-  };
-
   includeModule = types.submodule ({ config, ... }: {
     options = {
       condition = mkOption {
@@ -97,7 +70,7 @@ let
   });
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = with lib.maintainers; [ khaneliman rycee ];
 
   options = {
     programs.git = {
@@ -132,10 +105,40 @@ in {
         description = "Git aliases to define.";
       };
 
-      signing = mkOption {
-        type = types.nullOr signModule;
-        default = null;
-        description = "Options related to signing commits using GnuPG.";
+      signing = {
+        key = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            The default signing key fingerprint.
+
+            Set to `null` to let the signer decide what signing key
+            to use depending on commit’s author.
+          '';
+        };
+
+        format = mkOption {
+          type = types.nullOr (types.enum [ "openpgp" "ssh" "x509" ]);
+          defaultText = literalExpression ''
+            "openpgp" for state version < 25.05,
+            undefined for state version ≥ 25.05
+          '';
+          description = ''
+            The signing method to use when signing commits and tags.
+            Valid values are `openpgp` (OpenPGP/GnuPG), `ssh` (SSH), and `x509` (X.509 certificates).
+          '';
+        };
+
+        signByDefault = mkOption {
+          type = types.nullOr types.bool;
+          default = null;
+          description = "Whether commits and tags should be signed by default.";
+        };
+
+        signer = mkOption {
+          type = types.nullOr types.str;
+          description = "Path to signer binary to use.";
+        };
       };
 
       extraConfig = mkOption {
@@ -210,6 +213,44 @@ in {
             Skip automatic downloading of objects on clone or pull.
             This requires a manual {command}`git lfs pull`
             every time a new commit is checked out on your repository.
+          '';
+        };
+      };
+
+      maintenance = {
+        enable = mkEnableOption "" // {
+          description = ''
+            Enable the automatic {command}`git maintenance`.
+
+            If you have SSH remotes, set {option}`programs.git.package` to a
+            git version with SSH support (eg: `pkgs.gitFull`).
+
+            See <https://git-scm.com/docs/git-maintenance>.
+          '';
+        };
+
+        repositories = mkOption {
+          type = with types; listOf str;
+          default = [ ];
+          description = ''
+            Repositories on which {command}`git maintenance` should run.
+
+            Should be a list of absolute paths.
+          '';
+        };
+
+        timers = mkOption {
+          type = types.attrsOf types.str;
+          default = {
+            hourly = "*-*-* 1..23:53:00";
+            daily = "Tue..Sun *-*-* 0:53:00";
+            weekly = "Mon 0:53:00";
+          };
+          description = ''
+            Systemd timers to create for scheduled {command}`git maintenance`.
+
+            Key is passed to `--schedule` argument in {command}`git maintenance run`
+            and value is passed to `Timer.OnCalendar` in `systemd.user.timers`.
           '';
         };
       };
@@ -370,12 +411,45 @@ in {
           '';
         };
       };
+
+      riff = {
+        enable = mkEnableOption "" // {
+          description = ''
+            Enable the <command>riff</command> diff highlighter.
+            See <link xlink:href="https://github.com/walles/riff" />.
+          '';
+        };
+
+        package = mkPackageOption pkgs "riffdiff" { };
+
+        commandLineOptions = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = literalExpression ''[ "--no-adds-only-special" ]'';
+          apply = concatStringsSep " ";
+          description = ''
+            Command line arguments to include in the <command>RIFF</command> environment variable.
+
+            Run <command>riff --help</command> for a full list of options
+          '';
+        };
+      };
     };
   };
+
+  imports = [
+    (mkRenamedOptionModule [ "programs" "git" "signing" "gpgPath" ] [
+      "programs"
+      "git"
+      "signing"
+      "signer"
+    ])
+  ];
 
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [ cfg.package ];
+
       assertions = [{
         assertion = let
           enabled = [
@@ -383,6 +457,7 @@ in {
             cfg.diff-so-fancy.enable
             cfg.difftastic.enable
             cfg.diff-highlight.enable
+            cfg.riff.enable
           ];
         in count id enabled <= 1;
         message =
@@ -414,7 +489,7 @@ in {
         genIdentity = name: account:
           with account;
           nameValuePair "sendemail.${name}" (if account.msmtp.enable then {
-            smtpServer = "${pkgs.msmtp}/bin/msmtp";
+            sendmailCmd = "${pkgs.msmtp}/bin/msmtp";
             envelopeSender = "auto";
             from = "${realName} <${address}>";
           } else
@@ -439,12 +514,38 @@ in {
       (filterAttrs hasSmtp config.accounts.email.accounts);
     }
 
-    (mkIf (cfg.signing != null) {
-      programs.git.iniContent = {
-        user.signingKey = mkIf (cfg.signing.key != null) cfg.signing.key;
-        commit.gpgSign = mkDefault cfg.signing.signByDefault;
-        tag.gpgSign = mkDefault cfg.signing.signByDefault;
-        gpg.program = cfg.signing.gpgPath;
+    (mkIf (cfg.signing != { }) {
+      programs.git = {
+        signing = {
+          format = if (versionOlder config.home.stateVersion "25.05") then
+            (mkOptionDefault "openpgp")
+          else
+            (mkOptionDefault null);
+          signer = let
+            defaultSigners = {
+              openpgp = getExe config.programs.gpg.package;
+              ssh = getExe' pkgs.openssh "ssh-keygen";
+              x509 = getExe' config.programs.gpg.package "gpgsm";
+            };
+          in mkIf (cfg.signing.format != null)
+          (mkOptionDefault defaultSigners.${cfg.signing.format});
+        };
+
+        iniContent = mkMerge [
+          (mkIf (cfg.signing.key != null) {
+            user.signingKey = mkDefault cfg.signing.key;
+          })
+          (mkIf (cfg.signing.signByDefault != null) {
+            commit.gpgSign = mkDefault cfg.signing.signByDefault;
+            tag.gpgSign = mkDefault cfg.signing.signByDefault;
+          })
+          (mkIf (cfg.signing.format != null) {
+            gpg = {
+              format = mkDefault cfg.signing.format;
+              ${cfg.signing.format}.program = mkDefault cfg.signing.signer;
+            };
+          })
+        ];
       };
     })
 
@@ -499,6 +600,48 @@ in {
           smudge = concatStringsSep " "
             ([ "git-lfs" "smudge" ] ++ skipArg ++ [ "--" "%f" ]);
         };
+    })
+
+    (mkIf cfg.maintenance.enable {
+      programs.git.iniContent.maintenance.repo = cfg.maintenance.repositories;
+
+      systemd.user.services."git-maintenance@" = {
+        Unit = {
+          Description = "Optimize Git repositories data";
+          Documentation = [ "man:git-maintenance(1)" ];
+        };
+
+        Service = {
+          Type = "oneshot";
+          ExecStart = let exe = lib.getExe cfg.package;
+          in ''
+            "${exe}" for-each-repo --keep-going --config=maintenance.repo maintenance run --schedule=%i
+          '';
+          LockPersonality = "yes";
+          MemoryDenyWriteExecute = "yes";
+          NoNewPrivileges = "yes";
+          RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_VSOCK";
+          RestrictNamespaces = "yes";
+          RestrictRealtime = "yes";
+          RestrictSUIDSGID = "yes";
+          SystemCallArchitectures = "native";
+          SystemCallFilter = "@system-service";
+        };
+      };
+
+      systemd.user.timers = let
+        toSystemdTimer = name: time:
+          lib.attrsets.nameValuePair "git-maintenance@${name}" {
+            Unit.Description = "Optimize Git repositories data";
+
+            Timer = {
+              OnCalendar = time;
+              Persistent = true;
+            };
+
+            Install.WantedBy = [ "timers.target" ];
+          };
+      in lib.attrsets.mapAttrs' toSystemdTimer cfg.maintenance.timers;
     })
 
     (mkIf cfg.diff-highlight.enable {
@@ -558,6 +701,26 @@ in {
               (cfg.diff-so-fancy.rulerWidth);
           };
         };
+    })
+
+    (let riffExe = baseNameOf (getExe cfg.riff.package);
+    in mkIf cfg.riff.enable {
+      home.packages = [ cfg.riff.package ];
+
+      # https://github.com/walles/riff/blob/b17e6f17ce807c8652bc59cd46758661d23ce358/README.md#usage
+      programs.git.iniContent = {
+        pager = {
+          diff = riffExe;
+          log = riffExe;
+          show = riffExe;
+        };
+
+        interactive.diffFilter = "${riffExe} --color=on";
+      };
+    })
+
+    (mkIf (cfg.riff.enable && cfg.riff.commandLineOptions != "") {
+      home.sessionVariables.RIFF = cfg.riff.commandLineOptions;
     })
   ]);
 }

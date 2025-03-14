@@ -1,9 +1,6 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ lib, pkgs, ... }:
 let
-  expectedXdgDataDirs = concatStringsSep ":" [
+  expectedXdgDataDirs = lib.concatStringsSep ":" [
     "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default/share"
     "/home/hm-user/.nix-profile/share"
     "/usr/share/ubuntu"
@@ -12,7 +9,6 @@ let
     "/var/lib/snapd/desktop"
     "/foo"
   ];
-
 in {
   config = {
     targets.genericLinux.enable = true;

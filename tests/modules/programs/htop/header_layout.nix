@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, pkgs, ... }:
 
 {
   config = with config.lib.htop; {
@@ -12,8 +10,6 @@ with lib;
       column_meters_1 = [ "Tasks" "LoadAverage" "Uptime" "Systemd" ];
       column_meters_modes_1 = [ modes.Text modes.Text modes.Text modes.Text ];
     };
-
-    test.stubs.htop = { };
 
     # Test that the 'fields' key is written in addition to the customized
     # settings or htop won't read the options.

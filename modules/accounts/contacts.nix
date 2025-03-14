@@ -1,8 +1,7 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
+  inherit (lib) mkOption types;
 
   cfg = config.accounts.contact;
 
@@ -12,7 +11,8 @@ let
         path = mkOption {
           type = types.str;
           default = "${cfg.basePath}/${name}";
-          defaultText = "‹accounts.contact.basePath›/‹name›";
+          defaultText =
+            lib.literalExpression "‹accounts.contact.basePath›/‹name›";
           description = "The path of the storage.";
         };
 
@@ -77,7 +77,7 @@ let
     };
   };
 
-  contactOpts = { name, config, ... }: {
+  contactOpts = { name, ... }: {
     options = {
       name = mkOption {
         type = types.str;
@@ -113,7 +113,7 @@ in {
     basePath = mkOption {
       type = types.str;
       apply = p:
-        if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
+        if lib.hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory in which to save contacts. May be a
         relative path, in which case it is relative the home

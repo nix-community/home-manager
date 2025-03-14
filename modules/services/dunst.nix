@@ -25,7 +25,7 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        example = literalExpression "pkgs.gnome.adwaita-icon-theme";
+        example = literalExpression "pkgs.adwaita-icon-theme";
         description = "Package providing the theme.";
       };
 
@@ -180,8 +180,8 @@ in {
       systemd.user.services.dunst = {
         Unit = {
           Description = "Dunst notification daemon";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
+          After = [ config.wayland.systemd.target ];
+          PartOf = [ config.wayland.systemd.target ];
         };
 
         Service = {

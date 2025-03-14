@@ -1,13 +1,8 @@
-{ config, ... }:
-
 {
   services.cachix-agent = {
     enable = true;
-    package = config.lib.test.mkStubPackage { outPath = "@cachix-agent@"; };
     name = "test-agent";
   };
-
-  test.stubs.nix = { };
 
   nmt.script = ''
     assertFileContent \
@@ -20,7 +15,7 @@
           [Service]
           Environment=PATH=@nix@/bin
           EnvironmentFile=/home/hm-user/.config/cachix-agent.token
-          ExecStart=@cachix-agent@/bin/cachix deploy agent test-agent home-manager
+          ExecStart=@cachix@/bin/cachix deploy agent test-agent home-manager
           KillMode=process
           Restart=on-failure
 

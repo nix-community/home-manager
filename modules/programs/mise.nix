@@ -21,6 +21,7 @@ in {
     "enableBashIntegration"
     "enableZshIntegration"
     "enableFishIntegration"
+    "enableNushellIntegration"
     "settings"
   ];
 
@@ -28,19 +29,19 @@ in {
     programs.mise = {
       enable = mkEnableOption "mise";
 
-      package = mkPackageOption pkgs "mise" { };
+      package = mkPackageOption pkgs "mise" { nullable = true; };
 
-      enableBashIntegration = mkEnableOption "Bash Integration" // {
-        default = true;
-      };
+      enableBashIntegration =
+        lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-      enableZshIntegration = mkEnableOption "Zsh Integration" // {
-        default = true;
-      };
+      enableFishIntegration =
+        lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-      enableFishIntegration = mkEnableOption "Fish Integration" // {
-        default = true;
-      };
+      enableZshIntegration =
+        lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+      enableNushellIntegration =
+        lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
       globalConfig = mkOption {
         type = tomlFormat.type;
@@ -82,7 +83,15 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings = optional (cfg.package == null && (cfg.enableBashIntegration
+      || cfg.enableZshIntegration || cfg.enableFishIntegration
+      || cfg.enableNushellIntegration)) ''
+        You have enabled shell integration for `mise` but have not set `package`.
+
+        The shell integration will not be added.
+      '';
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "mise/config.toml" = mkIf (cfg.globalConfig != { }) {
@@ -106,6 +115,16 @@ in {
       fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
         ${getExe cfg.package} activate fish | source
       '';
+
+      nushell = mkIf cfg.enableNushellIntegration {
+        extraEnv = ''
+          let mise_path = $nu.default-config-dir | path join mise.nu
+          ^mise activate nu | save $mise_path --force
+        '';
+        extraConfig = ''
+          use ($nu.default-config-dir | path join mise.nu)
+        '';
+      };
     };
   };
 }

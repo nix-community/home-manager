@@ -1,7 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ pkgs, ... }:
 let
 
   substituteExpected = path:

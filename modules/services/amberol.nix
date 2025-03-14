@@ -54,7 +54,7 @@ in {
       Unit = {
         Description = "Amberol music player daemon";
         Requires = [ "dbus.service" ];
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

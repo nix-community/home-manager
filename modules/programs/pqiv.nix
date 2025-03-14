@@ -65,7 +65,7 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."pqivrc" =
-      mkIf (cfg.settings != { } && cfg.extraConfig != "") {
+      mkIf (cfg.settings != { } || cfg.extraConfig != "") {
         text = lib.concatLines [
           (generators.toINI {
             mkKeyValue = key: value:

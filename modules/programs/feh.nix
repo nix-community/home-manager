@@ -8,6 +8,12 @@ let
 
   bindingsOf = t: with types; attrsOf (nullOr (either t (listOf t)));
 
+  renderThemes = options:
+    let
+      render =
+        mapAttrsToList (theme: options: "${theme} ${escapeShellArgs options}");
+    in concatStringsSep "\n" (render options);
+
   renderBindings = bindings:
     let
       enabled = filterAttrs (n: v: v != null) bindings;
@@ -27,7 +33,7 @@ in {
   options.programs.feh = {
     enable = mkEnableOption "feh - a fast and light image viewer";
 
-    package = mkPackageOption pkgs "feh" { };
+    package = mkPackageOption pkgs "feh" { nullable = true; };
 
     buttons = mkOption {
       default = { };
@@ -41,7 +47,7 @@ in {
         Override feh's default mouse button mapping. If you want to disable an
         action, set its value to null. If you want to bind multiple buttons to
         an action, set its value to a list.
-        See <https://man.finalrewind.org/1/feh/#x425554544f4e53> for
+        See <https://man.finalrewind.org/1/feh/#BUTTONS_CONFIG_SYNTAX> for
         default bindings and available commands.
       '';
     };
@@ -58,10 +64,37 @@ in {
         Override feh's default keybindings. If you want to disable a keybinding
         set its value to null. If you want to bind multiple keys to an action,
         set its value to a list.
-        See <https://man.finalrewind.org/1/feh/#x4b455953> for
+        See <https://man.finalrewind.org/1/feh/#KEYS_CONFIG_SYNTAX> for
         default bindings and available commands.
       '';
     };
+
+    themes = mkOption {
+      default = { };
+      type = with types; attrsOf (listOf str);
+      example = {
+        feh = [ "--image-bg" "black" ];
+        webcam = [ "--multiwindow" "--reload" "20" ];
+        present = [ "--full-screen" "--sort" "name" "--hide-pointer" ];
+        booth = [ "--full-screen" "--hide-pointer" "--slideshow-delay" "20" ];
+        imagemap = [
+          "-rVq"
+          "--thumb-width"
+          "40"
+          "--thumb-height"
+          "30"
+          "--index-info"
+          "%n\\n%wx%h"
+        ];
+        example = [ "--info" "foo bar" ];
+      };
+      description = ''
+        Define themes for feh.
+        See <https://man.finalrewind.org/1/feh/#THEMES_CONFIG_SYNTAX> for
+        important guidelines and limitations related to theme configuration.
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -71,7 +104,7 @@ in {
         "To disable a keybinding, use `null` instead of an empty string.";
     }];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."feh/buttons" =
       mkIf (cfg.buttons != { }) { text = renderBindings cfg.buttons + "\n"; };
@@ -79,5 +112,8 @@ in {
     xdg.configFile."feh/keys" = mkIf (cfg.keybindings != { }) {
       text = renderBindings cfg.keybindings + "\n";
     };
+
+    xdg.configFile."feh/themes" =
+      mkIf (cfg.themes != { }) { text = renderThemes cfg.themes + "\n"; };
   };
 }

@@ -59,5 +59,7 @@ in stdenv.mkDerivation {
     echo "doc manual $dest index.html" >> $out/nix-support/hydra-build-products
   '';
 
+  passthru = { inherit home-manager-options; };
+
   meta = { maintainers = [ lib.maintainers.considerate ]; };
 }

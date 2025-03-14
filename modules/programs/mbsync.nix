@@ -30,7 +30,7 @@ let
 
   genTlsConfig = tls:
     {
-      SSLType = if !tls.enable then
+      TLSType = if !tls.enable then
         "None"
       else if tls.useStartTls then
         "STARTTLS"
@@ -267,7 +267,7 @@ in {
 
       programs.notmuch.new.ignore = [ ".uidvalidity" ".mbsyncstate" ];
 
-      home.file.".mbsyncrc".text = let
+      xdg.configFile."isyncrc".text = let
         accountsConfig = map genAccountConfig mbsyncAccounts;
         # Only generate this kind of Group configuration if there are ANY accounts
         # that do NOT have a per-account groups/channels option(s) specified.
@@ -288,7 +288,8 @@ in {
         createMaildir =
           hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
             run mkdir -m700 -p $VERBOSE_ARG ${
-              concatMapStringsSep " " (a: a.maildir.absPath) mbsyncAccounts
+              concatMapStringsSep " " (a: escapeShellArg a.maildir.absPath)
+              mbsyncAccounts
             }
           '';
       };

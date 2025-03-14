@@ -12,8 +12,6 @@
     };
   };
 
-  test.stubs.gallery-dl = { };
-
   nmt.script = ''
     assertFileContent home-files/.config/gallery-dl/config.json \
     ${builtins.toFile "gallery-dl-expected-settings.json" ''

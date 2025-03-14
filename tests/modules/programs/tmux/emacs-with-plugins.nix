@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ pkgs, ... }: {
   config = {
     programs.tmux = {
       aggressiveResize = true;

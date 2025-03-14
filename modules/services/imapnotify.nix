@@ -23,12 +23,15 @@ let
         Service = {
           # Use the nix store path for config to ensure service restarts when it changes
           ExecStart =
-            "${getExe cfg.package} -conf '${genAccountConfig account}'";
+            "${getExe cfg.package} -conf '${genAccountConfig account}'" + " ${
+               lib.optionalString (account.imapnotify.extraArgs != [ ])
+               (toString account.imapnotify.extraArgs)
+             }";
           Restart = "always";
           RestartSec = 30;
           Type = "simple";
-        } // optionalAttrs account.notmuch.enable {
-          Environment =
+          Environment = [ "PATH=${cfg.path}" ]
+            ++ optional account.notmuch.enable
             "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
         };
 
@@ -97,6 +100,17 @@ in {
         example = literalExpression "pkgs.imapnotify";
         description = "The imapnotify package to use";
       };
+
+      path = mkOption {
+        type = types.listOf types.package;
+        apply = lib.makeBinPath;
+        default = [ ];
+        description = ''
+          List of packages to provide in PATH for the imapnotify service.
+
+          Note, this does not apply to the Darwin launchd service.
+        '';
+      };
     };
 
     accounts.email.accounts = mkOption {
@@ -120,6 +134,12 @@ in {
       (checkAccounts (a: a.imap == null) "IMAP configuration")
       (checkAccounts (a: a.passwordCommand == null) "password command")
       (checkAccounts (a: a.userName == null) "username")
+    ];
+
+    services.imapnotify.path = lib.mkMerge [
+      (lib.mkIf config.programs.notmuch.enable [ pkgs.notmuch ])
+      (lib.mkIf config.programs.mbsync.enable
+        [ config.programs.mbsync.package ])
     ];
 
     systemd.user.services = listToAttrs (map genAccountUnit imapnotifyAccounts);

@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   services.conky = {
     enable = true;
@@ -13,8 +11,6 @@
       ]]
     '';
   };
-
-  test.stubs.conky = { };
 
   nmt.script = ''
     serviceFile="$TESTED/home-files/.config/systemd/user/conky.service"

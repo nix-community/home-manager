@@ -25,7 +25,7 @@ in {
 
     serverUrl = mkOption {
       type = types.str;
-      default = "https://api.etesync.com/";
+      default = "https://api.etebase.com/partner/etesync/";
       description = "The URL to the etesync server.";
     };
 

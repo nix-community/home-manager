@@ -1,10 +1,12 @@
-{ ... }:
+{ config, lib, realPkgs, ... }:
 
-{
+lib.mkIf config.test.enableBig {
   programs = {
     carapace.enable = true;
     fish.enable = true;
   };
+
+  nixpkgs.overlays = [ (self: super: { inherit (realPkgs) carapace; }) ];
 
   nmt.script = ''
     assertFileExists home-files/.config/fish/config.fish

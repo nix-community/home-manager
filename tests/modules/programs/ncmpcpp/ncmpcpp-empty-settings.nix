@@ -1,15 +1,9 @@
-{ pkgs, ... }:
-
 {
-  config = {
-    programs.ncmpcpp.enable = true;
+  programs.ncmpcpp.enable = true;
 
-    test.stubs.ncmpcpp = { };
+  nmt.script = ''
+    assertPathNotExists home-files/.config/ncmpcpp/config
 
-    nmt.script = ''
-      assertPathNotExists home-files/.config/ncmpcpp/config
-
-      assertPathNotExists home-files/.config/ncmpcpp/bindings
-    '';
-  };
+    assertPathNotExists home-files/.config/ncmpcpp/bindings
+  '';
 }

@@ -10,6 +10,8 @@ let
 
   starshipCmd = "${config.home.profileDirectory}/bin/starship";
 
+  initFish =
+    if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
 in {
   meta.maintainers = [ ];
 
@@ -51,24 +53,30 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableIonIntegration =
+      lib.hm.shell.mkIonIntegrationOption { inherit config; };
 
-    enableIonIntegration = mkEnableOption "Ion integration" // {
-      default = true;
-    };
+    enableNushellIntegration =
+      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration" // {
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableInteractive = mkOption {
+      type = types.bool;
       default = true;
+      description = ''
+        Only enable starship when the shell is interactive. This option is only
+        valid for the Fish shell.
+
+        Some plugins require this to be set to `false` to function correctly.
+      '';
     };
 
     enableTransience = mkOption {
@@ -104,9 +112,9 @@ in {
       fi
     '';
 
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.${initFish} = mkIf cfg.enableFishIntegration ''
       if test "$TERM" != "dumb"
-        eval (${starshipCmd} init fish)
+        ${starshipCmd} init fish | source
         ${lib.optionalString cfg.enableTransience "enable_transience"}
       end
     '';

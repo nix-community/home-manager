@@ -1,7 +1,6 @@
 [[themes]]
 name = "default2"
 
-[themes.component_style]
 [themes.component_style.block_title]
 fg = "Magenta"
 

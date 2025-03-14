@@ -1,5 +1,3 @@
-{ config, lib, pkgs, ... }:
-
 {
   programs.tmate = {
     enable = true;
@@ -7,8 +5,6 @@
     dsaFingerprint = "SHA256:1111111111111111111111111111111111111111111";
     extraConfig = ''set tmate-session-name "session-name"'';
   };
-
-  test.stubs.tmate = { };
 
   nmt.script = let
     expectedConfig = ''

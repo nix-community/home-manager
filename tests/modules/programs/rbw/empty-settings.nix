@@ -8,8 +8,6 @@ let
   else
     ".config/rbw/config.json";
 in {
-  imports = [ ./rbw-stubs.nix ];
-
   programs.rbw.enable = true;
 
   nmt.script = ''

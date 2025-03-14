@@ -14,20 +14,31 @@ let
     '') prefs)}
   '';
 
+  modulePath = [ "programs" "librewolf" ];
+
+  mkFirefoxModule = import ./firefox/mkFirefoxModule.nix;
+
 in {
-  meta.maintainers = [ maintainers.onny ];
+  meta.maintainers = [ maintainers.chayleaf maintainers.onny ];
+
+  imports = [
+    (mkFirefoxModule {
+      inherit modulePath;
+      name = "LibreWolf";
+      description = "LibreWolf is a privacy enhanced Firefox fork.";
+      wrappedPackageName = "librewolf";
+      unwrappedPackageName = "librewolf-unwrapped";
+
+      platforms.linux = { configPath = ".librewolf"; };
+      platforms.darwin = {
+        configPath = "Library/Application Support/LibreWolf";
+      };
+
+      enableBookmarks = false;
+    })
+  ];
 
   options.programs.librewolf = {
-    enable =
-      mkEnableOption "Librewolf browser, a privacy enhanced Firefox fork";
-
-    package = mkOption {
-      type = types.package;
-      default = pkgs.librewolf;
-      defaultText = literalExpression "pkgs.librewolf";
-      description = "The LibreWolf package to use.";
-    };
-
     settings = mkOption {
       type = with types; attrsOf (either bool (either int str));
       default = { };
@@ -38,7 +49,7 @@ in {
         }
       '';
       description = ''
-        Attribute set of LibreWolf settings and overrides. Refer to
+        Attribute set of global LibreWolf settings and overrides. Refer to
         <https://librewolf.net/docs/settings/>
         for details on supported values.
       '';
@@ -46,14 +57,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "programs.librewolf" pkgs
-        lib.platforms.linux)
-    ];
-
-    home.packages = [ cfg.package ];
-
-    home.file.".librewolf/librewolf.overrides.cfg".text =
-      mkOverridesFile cfg.settings;
+    home.file.".librewolf/librewolf.overrides.cfg" =
+      lib.mkIf (cfg.settings != { }) { text = mkOverridesFile cfg.settings; };
   };
 }

@@ -1,9 +1,5 @@
-{ ... }:
-
 {
   programs.wezterm = { enable = true; };
-
-  test.stubs.wezterm = { };
 
   nmt.script = let
     expected = builtins.toFile "wezterm.lua" ''

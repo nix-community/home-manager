@@ -7,11 +7,11 @@ let
   cfg = config.services.network-manager-applet;
 
 in {
-  meta.maintainers = [ maintainers.rycee hm.maintainers.cvoges12 ];
+  meta.maintainers = [ maintainers.rycee maintainers.midirhee12 ];
 
   options = {
     services.network-manager-applet = {
-      enable = mkEnableOption "the Network Manager applet";
+      enable = mkEnableOption "the Network Manager applet (nm-applet)";
     };
   };
 
@@ -28,7 +28,7 @@ in {
       Unit = {
         Description = "Network Manager applet";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session-pre.target" "tray.target" ];
+        After = [ "graphical-session.target" "tray.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

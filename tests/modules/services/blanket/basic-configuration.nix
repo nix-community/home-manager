@@ -1,9 +1,5 @@
-{ ... }:
-
 {
-  services.blanket = { enable = true; };
-
-  test.stubs.blanket = { };
+  services.blanket.enable = true;
 
   nmt.script = ''
     clientServiceFile=home-files/.config/systemd/user/blanket.service
@@ -20,7 +16,7 @@
         RestartSec=5
 
         [Unit]
-        After=graphical-session-pre.target
+        After=graphical-session.target
         Description=Blanket daemon
         PartOf=graphical-session.target
         PartOf=pipewire.service

@@ -13,7 +13,7 @@ in {
   options.programs.havoc = {
     enable = mkEnableOption "Havoc terminal";
 
-    package = mkPackageOption pkgs "havoc" { };
+    package = mkPackageOption pkgs "havoc" { nullable = true; };
 
     settings = mkOption {
       type = iniFormat.type;
@@ -54,7 +54,7 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "programs.havoc" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."havoc.cfg" = mkIf (cfg.settings != { }) {
       source = iniFormat.generate "havoc.cfg" cfg.settings;

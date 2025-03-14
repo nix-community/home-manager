@@ -21,23 +21,20 @@ with lib;
   options.programs.eza = {
     enable = mkEnableOption "eza, a modern replacement for {command}`ls`";
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableIonIntegration =
+      lib.hm.shell.mkIonIntegrationOption { inherit config; };
 
-    enableIonIntegration = mkEnableOption "Ion integration" // {
-      default = true;
-    };
+    enableNushellIntegration =
+      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration";
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     extraOptions = mkOption {
       type = types.listOf types.str;
@@ -49,10 +46,21 @@ with lib;
     };
 
     icons = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.enum [ null true false "auto" "always" "never" ];
+      default = null;
       description = ''
         Display icons next to file names ({option}`--icons` argument).
+
+        Note, the support for Boolean values is deprecated.
+        Setting this option to `true` corresponds to `--icons=auto`.
+      '';
+    };
+
+    colors = mkOption {
+      type = types.enum [ null "auto" "always" "never" ];
+      default = null;
+      description = ''
+        Use terminal colors in output ({option}`--color` argument).
       '';
     };
 
@@ -64,13 +72,21 @@ with lib;
       '';
     };
 
-    package = mkPackageOption pkgs "eza" { };
+    package = mkPackageOption pkgs "eza" { nullable = true; };
   };
 
   config = let
     cfg = config.programs.eza;
 
-    args = escapeShellArgs (optional cfg.icons "--icons"
+    iconsOption = let
+      v = if isBool cfg.icons then
+        (if cfg.icons then "auto" else null)
+      else
+        cfg.icons;
+    in optionals (v != null) [ "--icons" v ];
+
+    args = escapeShellArgs (iconsOption
+      ++ optionals (cfg.colors != null) [ "--color" cfg.colors ]
       ++ optional cfg.git "--git" ++ cfg.extraOptions);
 
     optionsAlias = optionalAttrs (args != "") { eza = "eza ${args}"; };
@@ -83,7 +99,13 @@ with lib;
       lla = "eza -la";
     };
   in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings = optional (isBool cfg.icons) ''
+      Setting programs.eza.icons to a Boolean is deprecated.
+      Please update your configuration so that
+
+        programs.eza.icons = ${if cfg.icons then ''"auto"'' else "null"}'';
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs.bash.shellAliases = optionsAlias
       // optionalAttrs cfg.enableBashIntegration aliases;

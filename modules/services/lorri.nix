@@ -59,7 +59,6 @@ in {
             "%C/lorri"
             # Needs %C/nix/fetcher-cache-v1.sqlite
             "%C/nix"
-            "/nix/var/nix/gcroots/per-user/%u"
           ];
           CacheDirectory = [ "lorri" ];
           Restart = "on-failure";

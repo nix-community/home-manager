@@ -1,5 +1,3 @@
-{ pkgs, ... }:
-
 {
   services.hyprpaper = {
     enable = true;
@@ -17,8 +15,6 @@
       ];
     };
   };
-
-  test.stubs.hyprpaper = { };
 
   nmt.script = ''
     config=home-files/.config/hypr/hyprpaper.conf

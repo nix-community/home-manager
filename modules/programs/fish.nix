@@ -66,7 +66,7 @@ let
       };
 
       onEvent = mkOption {
-        type = with types; nullOr str;
+        type = with types; nullOr (either str (listOf str));
         default = null;
         description = ''
           Tells fish to run this function when the specified named event is
@@ -253,6 +253,12 @@ in {
         '';
       };
 
+      generateCompletions = mkEnableOption
+        "the automatic generation of completions based upon installed man pages"
+        // {
+          default = true;
+        };
+
       shellAliases = mkOption {
         type = with types; attrsOf str;
         default = { };
@@ -390,9 +396,9 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    {
-      home.packages = [ cfg.package ];
+    { home.packages = [ cfg.package ]; }
 
+    (mkIf cfg.generateCompletions {
       # Support completion for `man` by building a cache for `apropos`.
       programs.man.generateCaches = mkDefault true;
 
@@ -456,7 +462,9 @@ in {
           set fish_complete_path $prev "${config.xdg.dataHome}/fish/home-manager_generated_completions" $post
         end
       '';
+    })
 
+    {
       xdg.configFile."fish/config.fish".source = fishIndent "config.fish" ''
         # ~/.config/fish/config.fish: DO NOT EDIT -- this file has been generated
         # automatically by home-manager.
@@ -503,7 +511,7 @@ in {
 
             mods = with def;
               modifierStr "description" description ++ modifierStr "wraps" wraps
-              ++ modifierStr "on-event" onEvent
+              ++ lib.concatMap (modifierStr "on-event") (lib.toList onEvent)
               ++ modifierStr "on-variable" onVariable
               ++ modifierStr "on-job-exit" onJobExit
               ++ modifierStr "on-process-exit" onProcessExit

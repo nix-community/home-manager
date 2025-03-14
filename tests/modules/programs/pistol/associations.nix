@@ -20,8 +20,6 @@
     ];
   };
 
-  test.stubs.pistol = { };
-
   nmt.script = let
     expected = builtins.toFile "config-expected" ''
       application/json bat %pistol-filename%
