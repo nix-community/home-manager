@@ -706,7 +706,7 @@ in {
         };
 
         syncthing-init = {
-          enable = true;
+          enable = cleanedConfig != { };
           config = {
             ProgramArguments = [ "${updateConfig}" ];
             WatchPaths = [
