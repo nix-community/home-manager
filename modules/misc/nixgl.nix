@@ -217,7 +217,10 @@ in
           # Wrap the package's binaries with nixGL, while preserving the rest of
           # the outputs and derivation attributes.
           (pkg.overrideAttrs (old: {
-            name = "nixGL-${pkg.name}";
+            # Leave the name unchanged and rely on the hash to differentiate
+            # from the original package. Some modules rely on the package name
+            # to e.g. compute config directory paths.
+            name = pkg.name;
 
             # Make sure this is false for the wrapper derivation, so nix doesn't expect
             # a new debug output to be produced. We won't be producing any debug info
