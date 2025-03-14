@@ -511,6 +511,7 @@ in import nmtSrc {
     ./modules/services/kanshi
     ./modules/services/lieer
     ./modules/services/linux-wallpaperengine
+    ./modules/services/lxqt-policykit-agent
     ./modules/services/mopidy
     ./modules/services/mpd
     ./modules/services/mpd-mpris
