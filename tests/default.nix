@@ -413,10 +413,12 @@ in import nmtSrc {
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/hypridle
     ./modules/services/hyprpaper
+    ./modules/services/hyprpolkitagent
     ./modules/services/imapnotify
     ./modules/services/kanshi
     ./modules/services/lieer
     ./modules/services/linux-wallpaperengine
+    ./modules/services/lxqt-policykit-agent
     ./modules/services/mopidy
     ./modules/services/mpd
     ./modules/services/mpd-mpris
@@ -432,6 +434,7 @@ in import nmtSrc {
     ./modules/services/picom
     ./modules/services/playerctld
     ./modules/services/podman-linux
+    ./modules/services/polkit-gnome
     ./modules/services/polybar
     ./modules/services/recoll
     ./modules/services/redshift-gammastep

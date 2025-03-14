@@ -332,6 +332,7 @@ let
     ./services/hound.nix
     ./services/hypridle.nix
     ./services/hyprpaper.nix
+    ./services/hyprpolkitagent.nix
     ./services/imapnotify.nix
     ./services/kanshi.nix
     ./services/kbfs.nix
@@ -342,6 +343,7 @@ let
     ./services/linux-wallpaperengine.nix
     ./services/listenbrainz-mpd.nix
     ./services/lorri.nix
+    ./services/lxqt-policykit-agent.nix
     ./services/macos-remap-keys
     ./services/mako.nix
     ./services/mbsync.nix
@@ -371,6 +373,7 @@ let
     ./services/playerctld.nix
     ./services/plex-mpv-shim.nix
     ./services/podman-linux
+    ./services/polkit-gnome.nix
     ./services/polybar.nix
     ./services/poweralertd.nix
     ./services/psd.nix
