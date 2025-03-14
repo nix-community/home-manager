@@ -25,6 +25,9 @@ in {
       '';
     };
 
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
@@ -90,5 +93,8 @@ in {
     home.shellAliases = lib.mkIf (cfg.enableAlias && (cfg.package != null)) {
       kubectl = lib.getExe cfg.package;
     };
+
+    programs.zsh.initContent =
+      lib.mkIf cfg.enableZshIntegration "compdef kubecolor=kubectl";
   };
 }
