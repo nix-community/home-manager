@@ -92,6 +92,7 @@ in {
 
     home.shellAliases = lib.mkIf (cfg.enableAlias && (cfg.package != null)) {
       kubectl = lib.getExe cfg.package;
+      oc = lib.mkIf (builtins.elem pkgs.openshift config.home.packages) "env KUBECTL_COMMAND=${lib.getExe pkgs.openshift} ${lib.getExe cfg.package}";
     };
 
     programs.zsh.initContent =
