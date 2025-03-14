@@ -2140,6 +2140,15 @@ in {
           you can use `lib.mkOrder` to specify the order of the content you want to insert.
         '';
       }
+
+      {
+        time = "2025-03-";
+        message = ''
+          A new module is available: 'programs.wallust'.
+
+          Wallust generates colors from an images, similar to pywal.
+        ''; 
+      }
     ];
   };
 }
