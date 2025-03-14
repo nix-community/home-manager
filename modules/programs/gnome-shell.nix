@@ -17,7 +17,7 @@ let
 
       package = mkOption {
         type = types.package;
-        example = "pkgs.gnome.gnome-shell-extensions";
+        example = "pkgs.gnome-shell-extensions";
         description = ''
           Package providing a GNOME Shell extension in
           `$out/share/gnome-shell/extensions/''${id}`.
@@ -66,7 +66,7 @@ in {
           { package = pkgs.gnomeExtensions.dash-to-panel; }
           {
             id = "user-theme@gnome-shell-extensions.gcampax.github.com";
-            package = pkgs.gnome.gnome-shell-extensions;
+            package = pkgs.gnome-shell-extensions;
           }
         ]
       '';
@@ -106,7 +106,7 @@ in {
 
       programs.gnome-shell.extensions = [{
         id = "user-theme@gnome-shell-extensions.gcampax.github.com";
-        package = pkgs.gnome.gnome-shell-extensions;
+        package = pkgs.gnome-shell-extensions;
       }];
 
       home.packages = [ cfg.theme.package ];

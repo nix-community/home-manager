@@ -55,7 +55,13 @@ in {
       "kube/color.yaml";
 
   in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings = optional (cfg.package == null && cfg.plugins != [ ]) ''
+      You have configured `enableAlias` for `kubecolor` but have not set `package`.
+
+      The alias will not be created.
+    '';
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.sessionVariables = if preferXdgDirectories then {
       KUBECOLOR_CONFIG = "${config.xdg.configHome}/${configPathSuffix}";
@@ -81,7 +87,8 @@ in {
       };
     };
 
-    home.shellAliases =
-      lib.mkIf cfg.enableAlias { kubectl = lib.getExe cfg.package; };
+    home.shellAliases = lib.mkIf (cfg.enableAlias && (cfg.package != null)) {
+      kubectl = lib.getExe cfg.package;
+    };
   };
 }

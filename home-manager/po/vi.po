@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"POT-Creation-Date: 2025-01-03 09:09+0100\n"
 "PO-Revision-Date: 2024-08-01 04:09+0000\n"
 "Last-Translator: goatastronaut0212 <goatastronaut0212@proton.me>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/home-manager/"
@@ -24,14 +24,14 @@ msgstr ""
 msgid "%s: missing argument for %s"
 msgstr "%s: bị thiếu đối số cho %s"
 
-#: home-manager/home-manager:64
+#: home-manager/home-manager:69
 msgid "No configuration file found at %s"
 msgstr "Không tìm thấy tập tin cấu hình tại %s"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
-#: home-manager/home-manager:81 home-manager/home-manager:85
-#: home-manager/home-manager:184
+#: home-manager/home-manager:86 home-manager/home-manager:90
+#: home-manager/home-manager:189
 msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
@@ -39,16 +39,16 @@ msgstr ""
 "Giữ Home Manager của bạn %s ở %s đã không còn phù hợp,\n"
 "hãy chuyển nó tới %s"
 
-#: home-manager/home-manager:92
+#: home-manager/home-manager:97
 msgid "No configuration file found. Please create one at %s"
 msgstr "Không tìm thấy tệp cấu hình. Vui lòng tạo một cái tại %s"
 
-#: home-manager/home-manager:107
+#: home-manager/home-manager:112
 msgid "Home Manager not found at %s."
 msgstr "Không tìm thấy Home Manager ở %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:115
+#: home-manager/home-manager:120
 msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
@@ -57,7 +57,7 @@ msgstr ""
 "đuợc tìm thấy ở đó."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-#: home-manager/home-manager:118
+#: home-manager/home-manager:123
 msgid ""
 "To remove this warning, do one of the following.\n"
 "\n"
@@ -95,42 +95,42 @@ msgstr ""
 "\n"
 "     $ rm -r \"%s\""
 
-#: home-manager/home-manager:146
+#: home-manager/home-manager:151
 msgid "Sanity checking Nix"
 msgstr "Kiểm tra hợp lệ của Nix"
 
-#: home-manager/home-manager:166
+#: home-manager/home-manager:171
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "Không thể tìm thấy thư mục hồ sơ phù hợp, đã thử %s và %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:221
+#: home-manager/home-manager:226
 msgid "Can't inspect options of a flake configuration"
 msgstr "Không thể kiểm tra tùy chọn của cấu hình flake"
 
-#: home-manager/home-manager:296 home-manager/home-manager:319
-#: home-manager/home-manager:1051
+#: home-manager/home-manager:301 home-manager/home-manager:324
+#: home-manager/home-manager:1061
 msgid "%s: unknown option '%s'"
 msgstr "%s: tùy chọn không xác định '%s'"
 
-#: home-manager/home-manager:301 home-manager/home-manager:1052
+#: home-manager/home-manager:306 home-manager/home-manager:1062
 msgid "Run '%s --help' for usage help"
 msgstr "Chạy '%s --help' để được trợ giúp sử dụng"
 
-#: home-manager/home-manager:327 home-manager/home-manager:431
+#: home-manager/home-manager:332 home-manager/home-manager:437
 msgid "The file %s already exists, leaving it unchanged..."
 msgstr "Tệp %s đã tồn tại, để nguyên nó không thay đổi..."
 
-#: home-manager/home-manager:329 home-manager/home-manager:433
+#: home-manager/home-manager:334 home-manager/home-manager:439
 msgid "Creating %s..."
 msgstr "Đang tạo %s..."
 
-#: home-manager/home-manager:475
+#: home-manager/home-manager:481
 msgid "Creating initial Home Manager generation..."
 msgstr "Khởi tạo thế hệ Home Manager ban đầu..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/home-manager:480
+#: home-manager/home-manager:486
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -148,7 +148,7 @@ msgstr ""
 "xem toàn bộ tùy chọn có sẵn."
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/home-manager:485
+#: home-manager/home-manager:491
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -163,11 +163,11 @@ msgstr ""
 "nếu như lỗi đó thuộc về Home Manager."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:496
+#: home-manager/home-manager:502
 msgid "Can't instantiate a flake configuration"
 msgstr "Không thể khởi tạo cấu hình flake"
 
-#: home-manager/home-manager:572
+#: home-manager/home-manager:578
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -178,74 +178,74 @@ msgstr[0] ""
 "Có %d tin tức liên quan và chưa được đọc.\n"
 "Để đọc nó hãy chạy lệnh \"%s news\"."
 
-#: home-manager/home-manager:586
+#: home-manager/home-manager:592
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Không tồn tại \"news.display\" cấu hình \"%s\"."
 
-#: home-manager/home-manager:594
+#: home-manager/home-manager:600
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
 msgstr "Vui lòng đặt biến môi trường $EDITOR hoặc $VISUAL"
 
-#: home-manager/home-manager:612
+#: home-manager/home-manager:618
 msgid "Cannot run build in read-only directory"
 msgstr "Không thể chạy lệnh xây dựng trong thư mục chỉ cho phép đọc"
 
-#: home-manager/home-manager:693
+#: home-manager/home-manager:699
 msgid "No generation with ID %s"
 msgstr "Không có thế hệ với ID %s"
 
-#: home-manager/home-manager:695
+#: home-manager/home-manager:701
 msgid "Cannot remove the current generation %s"
 msgstr "Không thể xóa thể hệ hiện tại %s"
 
-#: home-manager/home-manager:697
+#: home-manager/home-manager:703
 msgid "Removing generation %s"
 msgstr "Đang xóa thế hệ %s"
 
-#: home-manager/home-manager:718
+#: home-manager/home-manager:724
 msgid "No generations to expire"
 msgstr "Không có bất kỳ thế hệ nào hết hạn"
 
-#: home-manager/home-manager:729
+#: home-manager/home-manager:735
 msgid "No home-manager packages seem to be installed."
 msgstr "Không có bất kỳ gói home-manager nào được cài đặt."
 
-#: home-manager/home-manager:811
+#: home-manager/home-manager:820
 msgid "Unknown argument %s"
 msgstr "Không tồn tại đối số %s"
 
-#: home-manager/home-manager:835
+#: home-manager/home-manager:845
 msgid "This will remove Home Manager from your system."
 msgstr "Việc này sẽ xóa Home Manager khỏi hệ thống của bạn."
 
-#: home-manager/home-manager:838
+#: home-manager/home-manager:848
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Đây là chạy thử nghiệm, sẽ không có bất cư thứ gì được gỡ cài đặt."
 
-#: home-manager/home-manager:842
+#: home-manager/home-manager:852
 msgid "Really uninstall Home Manager?"
 msgstr "Bạn có muốn gỡ Home Manager không?"
 
-#: home-manager/home-manager:848
+#: home-manager/home-manager:858
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Chuyển đổi sang cấu hình Home Manager trống..."
 
-#: home-manager/home-manager:863
+#: home-manager/home-manager:873
 msgid "Yay!"
 msgstr "Tuyệt vời!"
 
-#: home-manager/home-manager:868
+#: home-manager/home-manager:878
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
 "Home Manager đã được gỡ cài đặt nhưng home.nix của bạn sẽ được giữ nguyên "
 "vẹn."
 
-#: home-manager/home-manager:1091
+#: home-manager/home-manager:1101
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations kỳ vọng 1 đối số, có %d."
 
-#: home-manager/home-manager:1113
+#: home-manager/home-manager:1123
 msgid "Unknown command: %s"
 msgstr "Không tồn tại câu lệnh: %s"
 

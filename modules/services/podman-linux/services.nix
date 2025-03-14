@@ -42,8 +42,8 @@ in {
                 "${config.home.homeDirectory}/.nix-profile/bin"
               ]
             }";
-          ExecStart = "${pkgs.podman}/bin/podman auto-update";
-          ExecStartPost = "${pkgs.podman}/bin/podman image prune -f";
+          ExecStart = "${cfg.package}/bin/podman auto-update";
+          ExecStartPost = "${cfg.package}/bin/podman image prune -f";
           TimeoutStartSec = "300s";
           TimeoutStopSec = "10s";
         };
@@ -65,7 +65,9 @@ in {
       xdg.configFile."systemd/user/podman-user-wait-network-online.service.d/50-exec-search-path.conf".text =
         ''
           [Service]
-          ExecSearchPath=${pkgs.bashInteractive}/bin:${pkgs.systemd}/bin:/bin
+          ExecSearchPath=${
+            makeBinPath (with pkgs; [ bashInteractive systemd coreutils ])
+          }:/bin
         '';
     })
   ]);

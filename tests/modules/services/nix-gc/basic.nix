@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   nix.gc = {
     automatic = true;
@@ -7,8 +5,6 @@
     randomizedDelaySec = "42min";
     options = "--delete-older-than 30d --max-freed $((64 * 1024**3))";
   };
-
-  test.stubs.nix = { name = "nix"; };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/nix-gc.service

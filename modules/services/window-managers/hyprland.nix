@@ -56,16 +56,45 @@ in {
       '';
     };
 
-    package = lib.mkPackageOption pkgs "hyprland" { };
+    package = lib.mkPackageOption pkgs "hyprland" {
+      nullable = true;
+      extraDescription =
+        "Set this to null if you use the NixOS module to install Hyprland.";
+    };
+
+    portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" {
+      nullable = true;
+    };
 
     finalPackage = lib.mkOption {
-      type = lib.types.package;
+      type = with lib.types; nullOr package;
       readOnly = true;
-      default = cfg.package.override { enableXWayland = cfg.xwayland.enable; };
+      default = if cfg.package != null then
+        cfg.package.override { enableXWayland = cfg.xwayland.enable; }
+      else
+        null;
       defaultText = lib.literalMD
         "`wayland.windowManager.hyprland.package` with applied configuration";
       description = ''
         The Hyprland package after applying configuration.
+      '';
+    };
+
+    finalPortalPackage = lib.mkOption {
+      type = with lib.types; nullOr package;
+      readOnly = true;
+      default = if (cfg.portalPackage != null) then
+        if cfg.finalPackage != null then
+          cfg.portalPackage.override { hyprland = cfg.finalPackage; }
+        else
+          cfg.portalPackage
+      else
+        null;
+      defaultText = lib.literalMD ''
+        `wayland.windowManager.hyprland.portalPackage` with
+                `wayland.windowManager.hyprland.finalPackage` override'';
+      description = ''
+        The xdg-desktop-portal-hyprland package after overriding its hyprland input.
       '';
     };
 
@@ -220,10 +249,8 @@ in {
         "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake.";
     in lib.optional inconsistent warning;
 
-    home.packages = lib.concatLists [
-      (lib.optional (cfg.package != null) cfg.finalPackage)
-      (lib.optional (cfg.xwayland.enable) pkgs.xwayland)
-    ];
+    home.packages = lib.mkIf (cfg.package != null)
+      ([ cfg.finalPackage ] ++ lib.optional cfg.xwayland.enable pkgs.xwayland);
 
     xdg.configFile."hypr/hyprland.conf" = let
       shouldGenerate = cfg.systemd.enable || cfg.extraConfig != ""
@@ -264,6 +291,14 @@ in {
       '';
     };
 
+    xdg.portal = {
+      enable = cfg.finalPortalPackage != null;
+      extraPortals =
+        lib.mkIf (cfg.finalPortalPackage != null) [ cfg.finalPortalPackage ];
+      configPackages = lib.mkIf (cfg.finalPackage != null)
+        (lib.mkDefault [ cfg.finalPackage ]);
+    };
+
     systemd.user.targets.hyprland-session = lib.mkIf cfg.systemd.enable {
       Unit = {
         Description = "Hyprland compositor session";
@@ -275,13 +310,6 @@ in {
         After = [ "graphical-session-pre.target" ];
         Before = lib.mkIf cfg.systemd.enableXdgAutostart
           [ "xdg-desktop-autostart.target" ];
-      };
-    };
-
-    systemd.user.targets.tray = {
-      Unit = {
-        Description = "Home Manager System Tray";
-        Requires = [ "graphical-session-pre.target" ];
       };
     };
   };

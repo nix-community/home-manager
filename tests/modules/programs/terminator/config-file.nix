@@ -1,5 +1,3 @@
-{ pkgs, ... }:
-
 {
   programs.terminator = {
     enable = true;
@@ -9,11 +7,9 @@
     };
   };
 
-  test.stubs.terminator = { };
-
   nmt.script = ''
     assertFileContent home-files/.config/terminator/config ${
-      pkgs.writeText "expected" ''
+      builtins.toFile "expected" ''
         [global_config]
         borderless = True
         [profiles]

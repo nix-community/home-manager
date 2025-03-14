@@ -1,10 +1,4 @@
-{ config, pkgs, ... }:
-
-let
-
-  backups = config.programs.borgmatic.backups;
-
-in {
+{
   programs.borgmatic = {
     enable = true;
     backups = {
@@ -17,8 +11,6 @@ in {
       };
     };
   };
-
-  test.stubs.borgmatic = { };
 
   test.asserts.assertions.expected = [''
     Borgmatic backup configuration "main" cannot specify both 'location.sourceDirectories' and 'location.patterns'.

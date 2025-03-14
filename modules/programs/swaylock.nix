@@ -33,10 +33,10 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "swaylock" { };
+    package = mkPackageOption pkgs "swaylock" { nullable = true; };
 
     settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool float int str ]);
+      type = with types; attrsOf (oneOf [ bool float int path str ]);
       default = { };
       description = ''
         Default arguments to {command}`swaylock`. An empty set
@@ -59,7 +59,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."swaylock/config" = mkIf (cfg.settings != { }) {
       text = concatStrings (mapAttrsToList (n: v:

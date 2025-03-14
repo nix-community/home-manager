@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config, pkgs, ... }: {
   config = {
     nmt.script = let
       dir = if (pkgs.stdenv.isDarwin && !config.xdg.enable) then
@@ -18,8 +14,6 @@ with lib;
       assertFileContent   ${dir}/stylesets/default ${./stylesets.expected}
       assertFileContent   ${dir}/stylesets/asLines ${./stylesets.expected}
     '';
-
-    test.stubs.aerc = { };
 
     programs.aerc = {
       enable = true;

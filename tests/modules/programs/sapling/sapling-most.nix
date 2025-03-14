@@ -17,8 +17,6 @@
     };
   };
 
-  test.stubs.sapling = { };
-
   nmt.script = let
     configfile = if pkgs.stdenv.isDarwin then
       "Library/Preferences/sapling/sapling.conf"

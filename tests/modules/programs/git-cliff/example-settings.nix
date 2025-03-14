@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   programs.git-cliff = {
     enable = true;
@@ -12,8 +8,6 @@ with lib;
       trim = true;
     };
   };
-
-  test.stubs.git-cliff = { };
 
   nmt.script = ''
     assertFileContent \

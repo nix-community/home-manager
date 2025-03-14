@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   xresources = {
     properties = {
@@ -7,6 +5,7 @@
       "Test*boolean1" = true;
       "Test*boolean2" = false;
       "Test*int" = 10;
+      "Test*float" = 12.3;
       "Test*list" = [ "list-str" true false 10 ];
     };
   };

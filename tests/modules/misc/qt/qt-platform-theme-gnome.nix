@@ -6,13 +6,6 @@
     style.name = "adwaita";
   };
 
-  test.stubs = {
-    qgnomeplatform = { };
-    qgnomeplatform-qt6 = { };
-    adwaita-qt = { };
-    adwaita-qt6 = { };
-  };
-
   nmt.script = ''
     assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
       'QT_QPA_PLATFORMTHEME="gnome"'

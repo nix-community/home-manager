@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.zk = {
     enable = true;
@@ -20,8 +18,6 @@
       notebook = { dir = "~/notebook"; };
     };
   };
-
-  test.stubs.zk = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/zk/config.toml

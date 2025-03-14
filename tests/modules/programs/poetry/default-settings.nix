@@ -3,8 +3,6 @@
 {
   programs.poetry = { enable = true; };
 
-  test.stubs.poetry = { };
-
   nmt.script = let
     expectedConfDir =
       if pkgs.stdenv.isDarwin then "Library/Application Support" else ".config";

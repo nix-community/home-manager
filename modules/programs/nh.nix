@@ -13,7 +13,7 @@ in {
     package = lib.mkPackageOption pkgs "nh" { };
 
     flake = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
+      type = lib.types.nullOr lib.types.singleLineStr;
       default = null;
       description = ''
         The path that will be used for the {env}`FLAKE` environment variable.
@@ -52,15 +52,11 @@ in {
   };
 
   config = {
-    warnings = lib.optionals (!(cfg.clean.enable -> !osConfig.nix.gc.automatic))
-      [
-        "programs.nh.clean.enable and nix.gc.automatic (system-wide in configuration.nix) are both enabled. Please use one or the other to avoid conflict."
-      ];
-
-    assertions = [{
-      assertion = (cfg.flake != null) -> !(lib.hasSuffix ".nix" cfg.flake);
-      message = "nh.flake must be a directory, not a nix file";
-    }];
+    warnings = (lib.optional
+      (cfg.clean.enable && osConfig != null && osConfig.nix.gc.automatic)
+      "programs.nh.clean.enable and nix.gc.automatic (system-wide in configuration.nix) are both enabled. Please use one or the other to avoid conflict.")
+      ++ (lib.optional (cfg.clean.enable && config.nix.gc.automatic)
+        "programs.nh.clean.enable and nix.gc.automatic (Home-Manager) are both enabled. Please use one or the other to avoid conflict.");
 
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
@@ -74,8 +70,7 @@ in {
         Service = {
           Type = "oneshot";
           ExecStart =
-            "exec ${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
-          Environment = "PATH=$PATH:${config.nix.package}";
+            "${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
         };
       };
 

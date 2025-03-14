@@ -12,7 +12,7 @@ in {
       '';
     };
 
-    package = lib.mkPackageOption pkgs "rio" { };
+    package = lib.mkPackageOption pkgs "rio" { nullable = true; };
 
     settings = lib.mkOption {
       type = settingsFormat.type;
@@ -27,7 +27,7 @@ in {
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      home.packages = [ cfg.package ];
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     }
 
     # Only manage configuration if not empty

@@ -31,6 +31,14 @@ in {
       example = "\${pkgs.i3lock}/bin/i3lock -n -c 000000";
     };
 
+    lockCmdEnv = lib.mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "XSECURELOCK_PAM_SERVICE=xsecurelock" ];
+      description =
+        "Environment variables to source a with the locker command (lockCmd).";
+    };
+
     inactiveInterval = mkOption {
       type = types.int;
       default = 10;
@@ -117,7 +125,7 @@ in {
       systemd.user.services.xss-lock = {
         Unit = {
           Description = "xss-lock, session locker service";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
@@ -127,6 +135,8 @@ in {
           ExecStart = concatStringsSep " "
             ([ "${cfg.xss-lock.package}/bin/xss-lock" "-s \${XDG_SESSION_ID}" ]
               ++ cfg.xss-lock.extraOptions ++ [ "-- ${cfg.lockCmd}" ]);
+          Environment = cfg.lockCmdEnv;
+          Restart = "always";
         };
       };
     }
@@ -140,7 +150,7 @@ in {
       systemd.user.services.xautolock-session = {
         Unit = {
           Description = "xautolock, session locker service";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
@@ -153,6 +163,7 @@ in {
             "-locker '${pkgs.systemd}/bin/loginctl lock-session \${XDG_SESSION_ID}'"
           ] ++ optional cfg.xautolock.detectSleep "-detectsleep"
             ++ cfg.xautolock.extraOptions);
+          Restart = "always";
         };
       };
     })

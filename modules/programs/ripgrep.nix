@@ -2,17 +2,16 @@
 
 with lib;
 
-let
-  cfg = config.programs.ripgrep;
-  configPath = "${config.xdg.configHome}/ripgrep/ripgreprc";
+let cfg = config.programs.ripgrep;
 in {
-  meta.maintainers = [ hm.maintainers.pedorich-n ];
+  meta.maintainers =
+    [ lib.maintainers.khaneliman lib.hm.maintainers.pedorich-n ];
 
   options = {
     programs.ripgrep = {
       enable = mkEnableOption "Ripgrep";
 
-      package = mkPackageOption pkgs "ripgrep" { };
+      package = mkPackageOption pkgs "ripgrep" { nullable = true; };
 
       arguments = mkOption {
         type = with types; listOf str;
@@ -30,8 +29,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home = mkMerge [
-      { packages = [ cfg.package ]; }
+    home = let configPath = "${config.xdg.configHome}/ripgrep/ripgreprc";
+    in mkMerge [
+      { packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
       (mkIf (cfg.arguments != [ ]) {
         file."${configPath}".text = lib.concatLines cfg.arguments;
 

@@ -1,5 +1,3 @@
-{ ... }:
-
 let
   shellIntegration = ''
     function yy() {
@@ -18,8 +16,6 @@ in {
     enable = true;
     enableBashIntegration = true;
   };
-
-  test.stubs.yazi = { };
 
   nmt.script = ''
     assertFileContains home-files/.zshrc '${shellIntegration}'

@@ -1,4 +1,4 @@
-{
+{ lib, realPkgs, ... }: {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   accounts.email.accounts = {
@@ -38,6 +38,13 @@
   programs.thunderbird = {
     enable = true;
 
+    # Disable warning so that platforms' behavior is the same
+    darwinSetupWarning = false;
+
+    # Darwin doesn't support wrapped Thunderbird, using unwrapped instead;
+    # using -latest- because ESR is currently broken on Darwin
+    package = realPkgs.thunderbird-latest-unwrapped;
+
     profiles = {
       first = {
         isDefault = true;
@@ -51,6 +58,8 @@
         extraConfig = ''
           user_pref("mail.html_compose", false);
         '';
+
+        feedAccounts.rss = { };
       };
 
       second.settings = {
@@ -65,27 +74,30 @@
     };
   };
 
-  test.stubs.thunderbird = { };
+  nmt.script = let
+    isDarwin = realPkgs.stdenv.hostPlatform.isDarwin;
+    configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";
+    profilesDir = if isDarwin then "${configDir}/Profiles" else "${configDir}";
+    platform = if isDarwin then "darwin" else "linux";
+  in ''
+    assertFileExists home-files/${configDir}/profiles.ini
+    assertFileContent home-files/${configDir}/profiles.ini \
+      ${./thunderbird-expected-profiles-${platform}.ini}
 
-  nmt.script = ''
-    assertFileExists home-files/.thunderbird/profiles.ini
-    assertFileContent home-files/.thunderbird/profiles.ini \
-      ${./thunderbird-expected-profiles.ini}
+    assertFileExists home-files/${profilesDir}/first/user.js
+    assertFileContent home-files/${profilesDir}/first/user.js \
+      ${./thunderbird-expected-first-${platform}.js}
 
-    assertFileExists home-files/.thunderbird/first/user.js
-    assertFileContent home-files/.thunderbird/first/user.js \
-      ${./thunderbird-expected-first.js}
+    assertFileExists home-files/${profilesDir}/second/user.js
+    assertFileContent home-files/${profilesDir}/second/user.js \
+      ${./thunderbird-expected-second-${platform}.js}
 
-    assertFileExists home-files/.thunderbird/second/user.js
-    assertFileContent home-files/.thunderbird/second/user.js \
-      ${./thunderbird-expected-second.js}
-
-    assertFileExists home-files/.thunderbird/first/chrome/userChrome.css
-    assertFileContent home-files/.thunderbird/first/chrome/userChrome.css \
+    assertFileExists home-files/${profilesDir}/first/chrome/userChrome.css
+    assertFileContent home-files/${profilesDir}/first/chrome/userChrome.css \
       <(echo "* { color: blue !important; }")
 
-    assertFileExists home-files/.thunderbird/first/chrome/userContent.css
-    assertFileContent home-files/.thunderbird/first/chrome/userContent.css \
+    assertFileExists home-files/${profilesDir}/first/chrome/userContent.css
+    assertFileContent home-files/${profilesDir}/first/chrome/userContent.css \
       <(echo "* { color: red !important; }")
   '';
 }

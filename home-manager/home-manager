@@ -52,6 +52,11 @@ function hasFlakeSupport() {
             | grep -q nix-command
 }
 
+# Escape string for use in Nix files.
+function escapeForNix() {
+    printf %s "$1" | sed 's/["$\\]/\\\0/g'
+}
+
 # Attempts to set the HOME_MANAGER_CONFIG global variable.
 #
 # If no configuration file can be found then this function will print
@@ -186,7 +191,7 @@ function setFlakeAttribute() {
         fi
 
         if [[ -v configFlake ]]; then
-            FLAKE_ARG="path:$(dirname "$(readlink -f "$configFlake")")"
+            FLAKE_ARG="$(dirname "$(readlink -f "$configFlake")")"
         fi
     fi
 
@@ -201,7 +206,7 @@ function setFlakeAttribute() {
                 # Check FQDN, long, and short hostnames; long first to preserve
                 # pre-existing behaviour in case both happen to be defined.
                 for n in "$USER@$(hostname -f)" "$USER@$(hostname)" "$USER@$(hostname -s)"; do
-                    if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$n\"")" == "true" ]]; then
+                    if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$(escapeForNix "$n")\"")" == "true" ]]; then
                         name="$n"
                         if [[ -v VERBOSE ]]; then
                             echo "Using flake homeConfiguration for $name"
@@ -210,7 +215,7 @@ function setFlakeAttribute() {
                 done
                 ;;
         esac
-        export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
+        export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$(printf %s "$name" | jq -sRr @uri)\""
     fi
 }
 
@@ -349,8 +354,8 @@ function doInit() {
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "$USER";
-  home.homeDirectory = "$HOME";
+  home.username = "$(escapeForNix "$USER")";
+  home.homeDirectory = "$(escapeForNix "$HOME")";
 $xdgVars
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -439,7 +444,7 @@ EOF
             mkdir -p "$confDir"
             cat > "$flakeFile" <<EOF
 {
-  description = "Home Manager configuration of $USER";
+  description = "Home Manager configuration of $(escapeForNix "$USER")";
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
@@ -455,7 +460,7 @@ EOF
       system = "$nixSystem";
       pkgs = nixpkgs.legacyPackages.\${system};
     in {
-      homeConfigurations."$USER" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."$(escapeForNix "$USER")" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,
@@ -786,8 +791,8 @@ function buildNews() {
     nix-instantiate \
         --no-build-output --strict \
         --eval '<home-manager/home-manager/build-news.nix>' \
-        --arg newsJsonFile "$newsJsonFile" \
-        --arg newsReadIdsFile "$readIdsFile" \
+        --arg newsJsonFile "\"$(escapeForNix "$newsJsonFile")\"" \
+        --arg newsReadIdsFile "\"$(escapeForNix "$readIdsFile")\"" \
         "${extraArgs[@]}" \
         > "$newsNixFile"
 }
@@ -802,23 +807,23 @@ function doShowNews() {
     local readIdsFile
     readIdsFile="$(newsReadIdsFile)"
 
-    local news
+    local newsAttr
 
-    # shellcheck disable=2154,2046
     case $1 in
         --all)
-            news="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).news.all")"
+            newsAttr="all"
             ;;
         --unread)
-            news="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).news.unread")"
+            newsAttr="unread"
             ;;
         *)
             _i 'Unknown argument %s' "$1"
             return 1
     esac
 
-    # Prints the news without surrounding quotes.
-    echo -e "${news:1:-1}" | ${PAGER:-less}
+    nix-instantiate --quiet --eval --json --expr "(import ${newsNixFile}).news.$newsAttr" \
+        | jq -r . \
+        | ${PAGER:-less}
 
     local allIds
     allIds="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).meta.ids")"
@@ -855,8 +860,8 @@ function doUninstall() {
             cat > "$HOME_MANAGER_CONFIG" <<EOF
 {
   uninstall = true;
-  home.username = "$USER";
-  home.homeDirectory = "$HOME";
+  home.username = "$(escapeForNix "$USER")";
+  home.homeDirectory = "$(escapeForNix "$HOME")";
   home.stateVersion = "24.11";
 }
 EOF

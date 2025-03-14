@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   config = {
     test.asserts.assertions.expected = [''
@@ -18,8 +14,6 @@ with lib;
       Therefore, please set `programs.aerc.extraConfig.general.unsafe-accounts-conf = true`.
       This option is safe; if `passwordCommand` is properly set, no credentials will be written to the nix store.
     ''];
-
-    test.stubs.aerc = { };
 
     programs.aerc = {
       enable = true;

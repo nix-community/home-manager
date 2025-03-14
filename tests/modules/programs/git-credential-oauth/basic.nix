@@ -1,11 +1,9 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
   programs.git-credential-oauth = { enable = true; };
 
   programs.git = { enable = true; };
-
-  test.stubs.git-credential-oauth = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config

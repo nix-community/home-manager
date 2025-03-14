@@ -6,10 +6,11 @@ let
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
 
-  mergedSettings = cfg.userSettings // {
-    # this part by @cmacrae
-    auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
-  };
+  mergedSettings = cfg.userSettings
+    // (lib.optionalAttrs (builtins.length cfg.extensions > 0) {
+      # this part by @cmacrae
+      auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
+    });
 in {
   meta.maintainers = [ hm.maintainers.libewa ];
 
@@ -79,6 +80,21 @@ in {
           Use the name of a repository in the [extension list](https://github.com/zed-industries/extensions/tree/main/extensions).
         '';
       };
+
+      installRemoteServer = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether to symlink the Zed's remote server binary to the expected
+          location. This allows remotely connecting to this system from a
+          distant Zed client.
+
+          For more information, consult the
+          ["Remote Server" section](https://wiki.nixos.org/wiki/Zed#Remote_Server)
+          in the wiki.
+        '';
+      };
     };
   };
 
@@ -99,6 +115,15 @@ in {
       ]
     else
       [ cfg.package ];
+
+    home.file = mkIf (cfg.installRemoteServer && (cfg.package ? remote_server))
+      (let
+        inherit (cfg.package) version remote_server;
+        binaryName = "zed-remote-server-stable-${version}";
+      in {
+        ".zed_server/${binaryName}".source =
+          lib.getExe' remote_server binaryName;
+      });
 
     xdg.configFile."zed/settings.json" = (mkIf (mergedSettings != { }) {
       source = jsonFormat.generate "zed-user-settings" mergedSettings;

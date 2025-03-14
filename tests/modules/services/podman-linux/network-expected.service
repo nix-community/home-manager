@@ -19,7 +19,7 @@ PodmanArgs=--log-level=debug
 Subnet=192.168.1.0/24
 
 [Service]
-Environment=PATH=/run/wrappers/bin:/usr/bin:/bin:/usr/sbin:/sbin:/nix/store/00000000000000000000000000000000-shadow/bin:/nix/store/00000000000000000000000000000000-coreutils/bin
+Environment=PATH=/run/wrappers/bin:/usr/bin:/bin:/usr/sbin:/sbin:@shadow@/bin:/nix/store/00000000000000000000000000000000-coreutils/bin
 ExecStartPre=/nix/store/00000000000000000000000000000000-await-podman-unshare
 RemainAfterExit=yes
 TimeoutStartSec=15

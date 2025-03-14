@@ -168,7 +168,7 @@ in {
   options.programs.khal = {
     enable = mkEnableOption "khal, a CLI calendar application";
 
-    package = mkPackageOption pkgs "khal" { };
+    package = mkPackageOption pkgs "khal" { nullable = true; };
 
     locale = mkOption {
       type = lib.types.submodule { options = localeOptions; };
@@ -199,7 +199,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."khal/config".text = concatStringsSep "\n" ([ "[calendars]" ]
       ++ mapAttrsToList genCalendarStr khalAccounts ++ [

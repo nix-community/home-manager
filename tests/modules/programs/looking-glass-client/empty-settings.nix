@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config, ... }: {
   config = {
     programs.looking-glass-client = {
       enable = true;

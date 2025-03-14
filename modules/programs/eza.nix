@@ -21,23 +21,20 @@ with lib;
   options.programs.eza = {
     enable = mkEnableOption "eza, a modern replacement for {command}`ls`";
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration =
+      lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableIonIntegration =
+      lib.hm.shell.mkIonIntegrationOption { inherit config; };
 
-    enableIonIntegration = mkEnableOption "Ion integration" // {
-      default = true;
-    };
+    enableNushellIntegration =
+      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration";
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     extraOptions = mkOption {
       type = types.listOf types.str;
@@ -75,7 +72,7 @@ with lib;
       '';
     };
 
-    package = mkPackageOption pkgs "eza" { };
+    package = mkPackageOption pkgs "eza" { nullable = true; };
   };
 
   config = let
@@ -108,7 +105,7 @@ with lib;
 
         programs.eza.icons = ${if cfg.icons then ''"auto"'' else "null"}'';
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs.bash.shellAliases = optionsAlias
       // optionalAttrs cfg.enableBashIntegration aliases;

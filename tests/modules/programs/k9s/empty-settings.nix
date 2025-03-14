@@ -1,10 +1,9 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
 
+{
   programs.k9s.enable = true;
 
-  xdg.enable = lib.mkIf pkgs.stdenv.isDarwin (lib.mkForce false);
-
-  test.stubs.k9s = { };
+  xdg.enable = lib.mkIf pkgs.stdenv.isDarwin false;
 
   nmt.script = let
     configDir = if !pkgs.stdenv.isDarwin then

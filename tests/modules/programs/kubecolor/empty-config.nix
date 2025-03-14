@@ -12,8 +12,6 @@ in {
     };
   };
 
-  test.stubs.kubecolor = { };
-
   nmt.script = ''
     assertPathNotExists 'home-files/${configDir}/kube/color.yaml'
   '';

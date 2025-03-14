@@ -21,8 +21,6 @@
     };
   };
 
-  test.stubs.qutebrowser = { };
-
   nmt.script = let
     qutebrowserConfig = if pkgs.stdenv.hostPlatform.isDarwin then
       ".qutebrowser/config.py"
@@ -32,7 +30,7 @@
     assertFileContent \
       home-files/${qutebrowserConfig} \
       ${
-        pkgs.writeText "qutebrowser-expected-config.py" ''
+        builtins.toFile "qutebrowser-expected-config.py" ''
           config.load_autoconfig(False)
           c.bindings.default = {}
           config.bind(",l", "config-cycle spellcheck.languages [\"en-GB\"] [\"en-US\"]", mode="normal")

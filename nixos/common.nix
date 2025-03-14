@@ -1,11 +1,10 @@
 # This module is the common base for the NixOS and nix-darwin modules.
 # For OS-specific configuration, please edit nixos/default.nix or nix-darwin/default.nix instead.
 
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ options, config, lib, pkgs, ... }:
 
 let
+  inherit (lib) flip mkOption mkEnableOption mkIf types;
 
   cfg = config.home-manager;
 
@@ -33,6 +32,14 @@ let
 
           home.username = config.users.users.${name}.name;
           home.homeDirectory = config.users.users.${name}.home;
+
+          # Forward `nix.enable` from the OS configuration. The
+          # conditional is to check whether nix-darwin is new enough
+          # to have the `nix.enable` option; it was previously a
+          # `mkRemovedOptionModule` error, which we can crudely detect
+          # by `visible` being set to `false`.
+          nix.enable =
+            mkIf (options.nix.enable.visible or true) config.nix.enable;
 
           # Make activation script use same version of Nix as system as a whole.
           # This avoids problems with Nix not being in PATH.
@@ -66,7 +73,7 @@ in {
     extraSpecialArgs = mkOption {
       type = types.attrs;
       default = { };
-      example = literalExpression "{ inherit emacs-overlay; }";
+      example = lib.literalExpression "{ inherit emacs-overlay; }";
       description = ''
         Extra `specialArgs` passed to Home Manager. This
         option can be used to pass additional arguments to all modules.
@@ -76,7 +83,8 @@ in {
     sharedModules = mkOption {
       type = with types; listOf raw;
       default = [ ];
-      example = literalExpression "[ { home.packages = [ nixpkgs-fmt ]; } ]";
+      example =
+        lib.literalExpression "[ { home.packages = [ nixpkgs-fmt ]; } ]";
       description = ''
         Extra modules added to all users.
       '';
@@ -95,19 +103,18 @@ in {
     };
   };
 
-  config = (mkMerge [
+  config = (lib.mkMerge [
     # Fix potential recursion when configuring home-manager users based on values in users.users #594
     (mkIf (cfg.useUserPackages && cfg.users != { }) {
-      users.users =
-        (mapAttrs (username: usercfg: { packages = [ usercfg.home.path ]; })
-          cfg.users);
+      users.users = (lib.mapAttrs
+        (_username: usercfg: { packages = [ usercfg.home.path ]; }) cfg.users);
       environment.pathsToLink = [ "/etc/profile.d" ];
     })
     (mkIf (cfg.users != { }) {
-      warnings = flatten (flip mapAttrsToList cfg.users (user: config:
+      warnings = lib.flatten (flip lib.mapAttrsToList cfg.users (user: config:
         flip map config.warnings (warning: "${user} profile: ${warning}")));
 
-      assertions = flatten (flip mapAttrsToList cfg.users (user: config:
+      assertions = lib.flatten (flip lib.mapAttrsToList cfg.users (user: config:
         flip map config.assertions (assertion: {
           inherit (assertion) assertion;
           message = "${user} profile: ${assertion.message}";

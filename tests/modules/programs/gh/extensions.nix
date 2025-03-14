@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   programs.gh = {
@@ -7,7 +7,6 @@
   };
 
   test.stubs = {
-    gh = { };
     gh-eco = {
       name = "gh-eco";
       buildScript = ''

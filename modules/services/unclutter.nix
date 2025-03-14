@@ -45,7 +45,7 @@ in {
     systemd.user.services.unclutter = {
       Unit = {
         Description = "unclutter";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

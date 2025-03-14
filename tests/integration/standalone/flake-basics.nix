@@ -24,7 +24,7 @@
 
   testScript = ''
     start_all()
-    machine.wait_for_unit("network-online.target")
+    machine.wait_for_unit("network.target")
     machine.wait_for_unit("multi-user.target")
 
     def login_as_alice():
@@ -48,6 +48,12 @@
 
     # Create a persistent login so that Alice has a systemd session.
     login_as_alice()
+
+    # Make sure that Alice has a "nix profile" compatible profile.
+    if True:
+      succeed_as_alice("nix profile install nixpkgs#cowsay")
+      result = succeed_as_alice("cowsay Hello")
+      machine.log(f"\n{result}")
 
     with subtest("Home Manager installation"):
       succeed_as_alice("nix run home-manager -- init --home-manager-url home-manager --nixpkgs-url nixpkgs --switch")

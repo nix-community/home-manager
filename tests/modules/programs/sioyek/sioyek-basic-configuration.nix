@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   programs.sioyek = {
     enable = true;
@@ -16,8 +14,6 @@
       "dark_mode_contrast" = "0.8";
     };
   };
-
-  test.stubs.sioyek = { };
 
   nmt = {
     description = "Sioyek basic setup with sample configuration";

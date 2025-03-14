@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   services.mopidy = {
@@ -16,8 +16,6 @@
         chmod +x $out/bin/mopidy
       '';
     };
-
-    mopidy-local = { };
   };
 
   nmt.script = ''

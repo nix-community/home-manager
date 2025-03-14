@@ -1,8 +1,8 @@
 {
-  debug = { pkgs, config, lib, ... }:
+  debug = { realPkgs, config, lib, ... }:
     lib.mkIf config.test.enableBig {
       home.enableDebugInfo = true;
-      home.packages = with pkgs; [ curl gdb ];
+      home.packages = with realPkgs; [ curl gdb ];
 
       nmt.script = ''
         [ -L $TESTED/home-path/lib/debug/curl ] \

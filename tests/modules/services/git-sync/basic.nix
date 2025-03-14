@@ -10,21 +10,18 @@
     };
   };
 
-  test.stubs.openssh = { name = "openssh"; };
-
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/git-sync-test.service
 
     assertFileExists $serviceFile
 
-    serviceFile=$(normalizeStorePaths $serviceFile)
     assertFileContent $serviceFile ${
       builtins.toFile "expected" ''
         [Install]
         WantedBy=default.target
 
         [Service]
-        Environment=PATH=@openssh@/bin:/nix/store/00000000000000000000000000000000-git/bin
+        Environment=PATH=@openssh@/bin:@git@/bin
         Environment=GIT_SYNC_DIRECTORY=/a/path
         Environment=GIT_SYNC_COMMAND=@git-sync@/bin/git-sync
         Environment=GIT_SYNC_REPOSITORY='git+ssh://user@example.com:/~user/path/to/repo.git'

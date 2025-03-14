@@ -7,13 +7,19 @@ let
   cfg = config.programs.bacon;
 
   settingsFormat = pkgs.formats.toml { };
+
+  configDir = if pkgs.stdenv.isDarwin then
+    "Library/Application Support/org.dystroy.bacon"
+  else
+    "${config.xdg.configHome}/bacon";
+
 in {
   meta.maintainers = [ hm.maintainers.shimunn ];
 
   options.programs.bacon = {
     enable = mkEnableOption "bacon, a background rust code checker";
 
-    package = mkPackageOption pkgs "bacon" { };
+    package = mkPackageOption pkgs "bacon" { nullable = true; };
 
     settings = mkOption {
       type = settingsFormat.type;
@@ -32,9 +38,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."bacon/prefs.toml".source =
-      settingsFormat.generate "prefs.toml" cfg.settings;
+    home.file."${configDir}/prefs.toml" = mkIf (cfg.settings != { }) {
+      source = settingsFormat.generate "prefs.toml" cfg.settings;
+    };
   };
 }

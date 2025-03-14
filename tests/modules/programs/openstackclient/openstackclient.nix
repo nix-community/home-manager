@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.openstackclient = {
     enable = true;
@@ -21,8 +19,6 @@
     };
 
   };
-
-  test.stubs.openstackclient = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/openstack/clouds.yaml

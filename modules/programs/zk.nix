@@ -11,7 +11,7 @@ in {
   options.programs.zk = {
     enable = lib.mkEnableOption "zk";
 
-    package = lib.mkPackageOption pkgs "zk" { };
+    package = lib.mkPackageOption pkgs "zk" { nullable = true; };
 
     settings = lib.mkOption {
       type = tomlFormat.type;
@@ -43,7 +43,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."zk/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "config.toml" cfg.settings;

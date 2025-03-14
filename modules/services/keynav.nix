@@ -18,7 +18,7 @@ in {
     systemd.user.services.keynav = {
       Unit = {
         Description = "keynav";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

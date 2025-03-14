@@ -17,7 +17,7 @@ in {
     enable = mkEnableOption
       "wofi: a launcher/menu program for wlroots based wayland compositors such as sway";
 
-    package = mkPackageOption pkgs "wofi" { };
+    package = mkPackageOption pkgs "wofi" { nullable = true; };
 
     settings = mkOption {
       default = { };
@@ -58,7 +58,7 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "programs.wofi" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = mkMerge [
       (mkIf (cfg.settings != { }) {

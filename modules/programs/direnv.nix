@@ -19,7 +19,7 @@ in {
       "Flake support is now always enabled.")
   ];
 
-  meta.maintainers = [ lib.maintainers.rycee lib.maintainers.shikanime ];
+  meta.maintainers = with lib.maintainers; [ khaneliman rycee shikanime ];
 
   options.programs.direnv = {
     enable = mkEnableOption "direnv, the environment switcher";
@@ -48,44 +48,32 @@ in {
       '';
     };
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration =
+      lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption {
+      inherit config;
+      extraDescription = ''
+        Note, enabling the direnv module will always active its functionality
+        for Fish since the direnv package automatically gets loaded in Fish.
+        If this is not the case try adding
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      readOnly = true;
-      description = ''
-        Whether to enable Fish integration. Note, enabling the direnv module
-        will always active its functionality for Fish since the direnv package
-        automatically gets loaded in Fish. If this is not the case try adding
         ```nix
-          environment.pathsToLink = [ "/share/fish" ];
+        environment.pathsToLink = [ "/share/fish" ];
         ```
+
         to the system configuration.
       '';
+    } // {
+      default = true;
+      readOnly = true;
     };
 
-    enableNushellIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Nushell integration.
-      '';
-    };
+    enableNushellIntegration =
+      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     nix-direnv = {
       enable = mkEnableOption ''

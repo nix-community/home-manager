@@ -123,14 +123,18 @@ let
             "smime"
           ];
         in with types; either (enum menus) (listOf (enum menus));
-        default = "index";
+        default = [ "index" ];
         description = "Select the menu to bind the command to.";
       };
 
       key = mkOption {
         type = types.str;
         example = "<left>";
-        description = "The key to bind.";
+        description = ''
+          The key to bind.
+
+          If you want to bind '\Cp' for example, which would be Ctrl + 'p', you need to escape twice: '\\Cp'!
+        '';
       };
 
       action = mkOption {
@@ -368,7 +372,12 @@ in {
       sort = mkOption {
         # allow users to choose any option from sortOptions, or any option prefixed with "reverse-"
         type = types.enum
-          (sortOptions ++ (map (option: "reverse-" + option) sortOptions));
+          (builtins.concatMap (_pre: map (_opt: _pre + _opt) sortOptions) [
+            ""
+            "reverse-"
+            "last-"
+            "reverse-last-"
+          ]);
         default = "threads";
         description = "Sorting method on messages.";
       };

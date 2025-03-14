@@ -25,6 +25,13 @@ in {
         otherwise the service may never be started.
       '';
     };
+
+    forceXWayland = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      example = false;
+      description = "Force the CopyQ to use the X backend on wayland";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -45,7 +52,7 @@ in {
       Service = {
         ExecStart = "${cfg.package}/bin/copyq";
         Restart = "on-failure";
-        Environment = [ "QT_QPA_PLATFORM=xcb" ];
+        Environment = lib.optional cfg.forceXWayland "QT_QPA_PLATFORM=xcb";
       };
 
       Install = { WantedBy = [ cfg.systemdTarget ]; };

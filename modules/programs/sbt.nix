@@ -130,6 +130,20 @@ in {
       '';
     };
 
+    pluginsExtra = mkOption {
+      type = types.listOf (types.str);
+      default = [ ];
+      example = literalExpression ''
+        [
+          "addDependencyTreePlugin"
+        ]
+      '';
+      description = ''
+        A list of extra commands to put in plugins conf file.
+        Use it in last resort when you can't use the `plugins` option.
+      '';
+    };
+
     credentials = mkOption {
       type = types.listOf (sbtTypes.credential);
       default = [ ];
@@ -183,9 +197,10 @@ in {
   config = mkIf cfg.enable (mkMerge [
     { home.packages = [ cfg.package ]; }
 
-    (mkIf (cfg.plugins != [ ]) {
+    (mkIf (cfg.plugins != [ ] || cfg.pluginsExtra != [ ]) {
       home.file."${cfg.baseUserConfigPath}/1.0/plugins/plugins.sbt".text =
-        concatStrings (map renderPlugin cfg.plugins);
+        concatStrings (map renderPlugin cfg.plugins)
+        + concatStringsSep "\n" cfg.pluginsExtra + "\n";
     })
 
     (mkIf (cfg.credentials != [ ]) {

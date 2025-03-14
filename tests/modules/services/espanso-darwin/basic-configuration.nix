@@ -1,4 +1,4 @@
-{ ... }: {
+{
   services.espanso = {
     enable = true;
     configs = { default = { show_notifications = false; }; };
@@ -35,8 +35,6 @@
       };
     };
   };
-
-  test.stubs.espanso = { };
 
   nmt.script = ''
     serviceFile="LaunchAgents/org.nix-community.home.espanso.plist"

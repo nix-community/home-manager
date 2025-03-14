@@ -66,7 +66,7 @@ let
       };
 
       onEvent = mkOption {
-        type = with types; nullOr str;
+        type = with types; nullOr (either str (listOf str));
         default = null;
         description = ''
           Tells fish to run this function when the specified named event is
@@ -511,7 +511,7 @@ in {
 
             mods = with def;
               modifierStr "description" description ++ modifierStr "wraps" wraps
-              ++ modifierStr "on-event" onEvent
+              ++ lib.concatMap (modifierStr "on-event") (lib.toList onEvent)
               ++ modifierStr "on-variable" onVariable
               ++ modifierStr "on-job-exit" onJobExit
               ++ modifierStr "on-process-exit" onProcessExit
