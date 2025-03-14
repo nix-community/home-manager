@@ -1,0 +1,5 @@
+code_syntax_highlight = "catppuccin-frappe"
+file_panel_border = "#202020"
+footer_border = "#202022"
+gradient_color = ["#202023", "#202024"]
+sidebar_border = "#202021"
