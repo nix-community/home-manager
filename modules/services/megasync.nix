@@ -8,6 +8,13 @@ in {
       enable = lib.mkEnableOption "Megasync client";
 
       package = lib.mkPackageOption pkgs "megasync" { };
+
+      forceWayland = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        example = true;
+        description = "Force Megasync to run on wayland";
+      };
     };
   };
 
@@ -28,7 +35,11 @@ in {
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
 
-      Service = { ExecStart = "${cfg.package}/bin/megasync"; };
+      Service = {
+        Environment =
+          lib.optionals cfg.forceWayland [ "DO_NOT_UNSET_XDG_SESSION_TYPE=1" ];
+        ExecStart = lib.getExe' cfg.package "megasync";
+      };
     };
   };
 }
