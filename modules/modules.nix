@@ -338,6 +338,7 @@ let
     ./services/hound.nix
     ./services/hypridle.nix
     ./services/hyprpaper.nix
+    ./services/hyprpolkitagent.nix
     ./services/imapnotify.nix
     ./services/kanshi.nix
     ./services/kbfs.nix
