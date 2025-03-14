@@ -413,6 +413,7 @@ in import nmtSrc {
     ./modules/services/home-manager-auto-upgrade
     ./modules/services/hypridle
     ./modules/services/hyprpaper
+    ./modules/services/hyprpolkitagent
     ./modules/services/imapnotify
     ./modules/services/kanshi
     ./modules/services/lieer
