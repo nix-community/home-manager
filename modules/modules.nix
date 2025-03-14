@@ -349,6 +349,7 @@ let
     ./services/linux-wallpaperengine.nix
     ./services/listenbrainz-mpd.nix
     ./services/lorri.nix
+    ./services/lxqt-policykit-agent.nix
     ./services/macos-remap-keys
     ./services/mako.nix
     ./services/mbsync.nix
