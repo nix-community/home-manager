@@ -442,6 +442,7 @@ in import nmtSrc {
     ./modules/services/swayidle
     ./modules/services/swaync
     ./modules/services/swayosd
+    ./modules/services/swww
     ./modules/services/sxhkd
     ./modules/services/syncthing/linux
     ./modules/services/tldr-update
