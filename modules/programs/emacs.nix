@@ -6,12 +6,9 @@ let
 
   cfg = config.programs.emacs;
 
-  # Copied from all-packages.nix, with modifications to support
-  # overrides.
-  emacsPackages = let epkgs = pkgs.emacsPackagesFor cfg.package;
-  in epkgs.overrideScope cfg.overrides;
-
-  emacsWithPackages = emacsPackages.emacsWithPackages;
+  # Get the packages from the supplied emacs rather than the nixpkgs to ensure a
+  # separate emacs pin also carries with it the packages from that pin.
+  inherit (cfg.package.pkgs.overrideScope cfg.overrides) emacsWithPackages;
 
   extraPackages = epkgs:
     let
