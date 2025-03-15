@@ -4,6 +4,10 @@
 <dict>
 	<key>KeepAlive</key>
 	<dict>
+		<key>PATH</key>
+		<string>/home/hm-user/.nix-profile/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+	</dict>
+	<dict>
 		<key>Crashed</key>
 		<true/>
 		<key>SuccessfulExit</key>

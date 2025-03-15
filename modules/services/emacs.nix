@@ -221,8 +221,10 @@ in {
       launchd.agents.emacs = {
         enable = true;
         config = {
-          ProgramArguments = [ "${cfg.package}/bin/emacs" "--fg-daemon" ]
+          ProgramArguments = [ "${emacsBinPath}/emacs" "--fg-daemon" ]
             ++ cfg.extraOptions;
+          EnvironmentVariables.PATH =
+            "${config.home.profileDirectory}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
           RunAtLoad = true;
           KeepAlive = {
             Crashed = true;
