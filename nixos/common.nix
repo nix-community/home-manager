@@ -23,6 +23,10 @@ let
 
   extendedLib = import ../modules/lib/stdlib-extended.nix lib;
 
+  usersUsingUserPackages = lib.filterAttrs (
+    _username: usercfg: usercfg.home.useUserPackages
+  ) cfg.users;
+
   # `defaultOverridePriority` (and its legacy counterpart `defaultPriority`)
   # represents the priority of option definitions that do not explicity specify
   # a priority; that is, definitions of the form `{ foo = "bar"; }`.
@@ -50,7 +54,7 @@ let
     } // cfg.extraSpecialArgs;
     modules = [
       (
-        { name, ... }:
+        { name, ... }@usercfg:
         {
           imports = import ../modules/modules.nix {
             inherit pkgs;
@@ -60,7 +64,7 @@ let
 
           config = {
             submoduleSupport.enable = true;
-            submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+            submoduleSupport.externalPackageInstall = usercfg.config.home.useUserPackages;
 
             home.username = mkUserDefault config.users.users.${name}.name;
             home.homeDirectory = mkUserDefault config.users.users.${name}.home;
@@ -85,8 +89,8 @@ in
 {
   options.home-manager = {
     useUserPackages = mkEnableOption ''
-      installation of user packages through the
-      {option}`users.users.<name>.packages` option'';
+      the per-user option {option}`home-manager.users.<name>.useUserPackages`
+      by default'';
 
     useGlobalPkgs = mkEnableOption ''
       using the system configuration's `pkgs`
@@ -138,8 +142,10 @@ in
   config = (
     lib.mkMerge [
       # Fix potential recursion when configuring home-manager users based on values in users.users #594
-      (mkIf (cfg.useUserPackages && cfg.users != { }) {
-        users.users = (lib.mapAttrs (_username: usercfg: { packages = [ usercfg.home.path ]; }) cfg.users);
+      (mkIf (usersUsingUserPackages != { }) {
+        users.users = (
+          lib.mapAttrs (_username: usercfg: { packages = [ usercfg.home.path ]; }) usersUsingUserPackages
+        );
         environment.pathsToLink = [ "/etc/profile.d" ];
       })
       (mkIf (cfg.users != { }) {
