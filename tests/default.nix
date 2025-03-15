@@ -308,6 +308,7 @@ in import nmtSrc {
     ./modules/programs/vifm
     ./modules/programs/vim-vint
     ./modules/programs/vscode
+    ./modules/programs/wallust
     ./modules/programs/watson
     ./modules/programs/wezterm
     ./modules/programs/yazi

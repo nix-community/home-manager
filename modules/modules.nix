@@ -267,6 +267,7 @@ let
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
     ./programs/rbenv.nix
+    ./programs/wallust.nix
     ./programs/watson.nix
     ./programs/waybar.nix
     ./programs/wezterm.nix
