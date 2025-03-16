@@ -5,7 +5,7 @@
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
   nodes.machine =
-    { config, ... }:
+    { config, pkgs, ... }:
     let
       inherit (config.home-manager.users) bob;
     in
@@ -45,11 +45,14 @@
         uid = 1000;
       };
 
+      home-manager.useUserPackages = true;
+
       home-manager.users =
         let
           common = {
             home.stateVersion = "24.11";
             home.file.test.text = "testfile";
+            home.packages = [ pkgs.hello ];
             # Enable a light-weight systemd service.
             services.pueue.enable = true;
           };
@@ -65,6 +68,7 @@
               home.stateVersion = "24.11";
               home.username = lib.mkForce name;
               home.homeDirectory = lib.mkForce "/var/tmp/hm/home/bob";
+              home.useUserPackages = false;
             };
         };
     };
@@ -154,6 +158,9 @@
           actual = machine.succeed(f"cat {path}")
           expected = "testfile"
           assert actual == expected, f"expected {path} to contain {expected}, but got {actual}"
+
+        with subtest(f"Command from `home.packages` (user {user})"):
+          succeed_as_user(user, "hello")
 
         with subtest(f"Pueue service (user {user})"):
           with user_login(machine, user, "${password}"):
