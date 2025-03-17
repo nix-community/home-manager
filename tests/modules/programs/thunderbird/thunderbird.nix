@@ -6,6 +6,22 @@
       thunderbird = {
         enable = true;
         profiles = [ "first" ];
+        messageFilters = [
+          {
+            name = "Should be first";
+            enabled = true;
+            type = "128";
+            action = "Cry";
+            condition = "ALL";
+          }
+          {
+            name = "Mark as Read on Archive";
+            enabled = true;
+            type = "128";
+            action = "Mark read";
+            condition = "ALL";
+          }
+        ];
       };
 
       aliases = [ "home-manager@example.com" ];
@@ -99,5 +115,13 @@
     assertFileExists home-files/${profilesDir}/first/chrome/userContent.css
     assertFileContent home-files/${profilesDir}/first/chrome/userContent.css \
       <(echo "* { color: red !important; }")
+
+    assertFileExists home-files/${profilesDir}/first/ImapMail/${
+      builtins.hashString "sha256" "hm@example.com"
+    }/msgFilterRules.dat
+    assertFileContent home-files/${profilesDir}/first/ImapMail/${
+      builtins.hashString "sha256" "hm@example.com"
+    }/msgFilterRules.dat \
+      ${./thunderbird-expected-msgFilterRules.dat}
   '';
 }
