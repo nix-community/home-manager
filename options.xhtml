@@ -6356,6 +6356,224 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of message filters to add to this Thunderbird account
+configuration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    name = &quot;Mark as Read on Archive&quot;;
+    enabled = true;
+    type = &quot;128&quot;;
+    action = &quot;Mark read&quot;;
+    condition = &quot;ALL&quot;;
+  }
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters._.enabled"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters._.enabled"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters.*.enabled</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether this filter is currently active.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters._.action"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters._.action"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters.*.action</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Action to perform on matched messages.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters._.actionValue"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters._.actionValue"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters.*.actionValue</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Argument passed to the filter action, e.g. a folder path.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters._.condition"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters._.condition"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters.*.condition</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Condition to match messages against.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters._.extraConfig"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters._.extraConfig"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters.*.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra settings to apply to the filter</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters._.name"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters._.name"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters.*.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Name for the filter.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters._.text"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters._.text"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters.*.text</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The raw text of the filter.
+Note that this will override all other options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.thunderbird.messageFilters._.type"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.messageFilters._.type"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.messageFilters.*.type</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Type for this filter.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-accounts.email.accounts._name_.thunderbird.perIdentitySettings"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.thunderbird.perIdentitySettings"><code class="option">accounts.email.accounts.&lt;name&gt;.thunderbird.perIdentitySettings</code>
   </a>
  </span>
