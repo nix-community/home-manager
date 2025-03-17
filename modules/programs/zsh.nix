@@ -455,8 +455,10 @@ in
       initContent = mkOption {
         default = "";
         type = types.lines;
-        example = lib.mkOrder 1000 ''
-          echo "Hello, initContent!"
+        example = lib.literalExpression ''
+          lib.mkOrder 1000 ''''
+            echo "Hello zsh initContent!"
+          '''';
         '';
         description = "Content to be added to {file}`.zshrc`. To specify the order, use `lib.mkOrder`.";
       };
