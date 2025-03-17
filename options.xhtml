@@ -61276,13 +61276,10 @@ strings concatenated with “\n”</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;&quot;</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  _type = &quot;order&quot;;
-  content = &#x27;&#x27;
-    echo &quot;Hello, initContent!&quot;
-  &#x27;&#x27;;
-  priority = 1000;
-}
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">lib.mkOrder 1000 &#x27;&#x27;&#x27;
+  echo &quot;Hello zsh initContent!&quot;
+&#x27;&#x27;&#x27;;
+
 </code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
