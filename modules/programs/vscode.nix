@@ -299,14 +299,14 @@ in {
         pkgs.writeShellScript "vscode-global-storage-modify" ''
           PATH=${makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
           file="${userDir}/globalStorage/storage.json"
+          file_write=""
+          profiles=(${
+            escapeShellArgs
+            (flatten (mapAttrsToList (n: v: n) allProfilesExceptDefault))
+          })
 
           if [ -f "$file" ]; then
             existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
-            file_write=""
-            profiles=(${
-              escapeShellArgs
-              (flatten (mapAttrsToList (n: v: n) allProfilesExceptDefault))
-            })
 
             for profile in "''${profiles[@]}"; do
               if [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile $profile '.[$profile]')" != "\"$profile\"" ]]; then
@@ -318,6 +318,7 @@ in {
               file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
             done
 
+            mkdir -p $(dirname "$file")
             echo "{}" > "$file"
           fi
 
