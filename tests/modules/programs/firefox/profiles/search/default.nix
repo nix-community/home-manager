@@ -142,6 +142,27 @@ in {
         };
       };
 
+      migrateIconsV11 = {
+        id = 3;
+        search = {
+          force = true;
+          engines = {
+            nixos-wiki = {
+              name = "NixOS Wiki";
+
+              urls = [{
+                template =
+                  "https://wiki.nixos.org/w/index.php?search={searchTerms}";
+              }];
+
+              iconMapObj."{\"width\":16,\"height\":16}" =
+                "https://wiki.nixos.org/favicon.ico";
+
+              definedAliases = [ "@nw" ];
+            };
+          };
+        };
+      };
     };
   } // {
     nmt.script = let
@@ -187,6 +208,10 @@ in {
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/migrateSearchV7/search.json.mozlz4 \
         ${withName ./expected-migrate-search-v7.json}
+
+      assertFirefoxSearchContent \
+        home-files/${cfg.configPath}/migrateIconsV11/search.json.mozlz4 \
+        ${withName ./expected-migrate-icons-v11.json}
     '';
   });
 }

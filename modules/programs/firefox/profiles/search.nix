@@ -57,7 +57,10 @@ let
     in if requiredInput.isAppProvided then
       requiredInput
     else
-      processCustomEngineInput (input // requiredInput);
+      pipe (input // requiredInput) [
+        migrateEngineToV11
+        processCustomEngineInput
+      ];
 
   buildEngineConfig = name: input:
     mapAttrs' (name: value: {
@@ -91,7 +94,7 @@ let
   };
 
   settings = {
-    version = 7;
+    version = 11;
     engines = sortEngineConfigs (mapAttrs buildEngineConfig engineInput);
 
     metaData = optionalAttrs (config.default != null) {
@@ -323,6 +326,23 @@ let
       }' instead of '${engine}'" engineNameToId.${engine}
     else
       engine;
+
+  migrateEngineToV11 = engine:
+    engine // lib.optionalAttrs (engine ? iconMapObj) {
+      iconMapObj = mapAttrs' (name: value:
+        let nameToIntResult = builtins.tryEval (toInt name);
+        in {
+          name = if nameToIntResult.success then
+            name
+          else
+            let size = toString (builtins.fromJSON name).width;
+            in warn
+            "JSON object names for 'iconMapObj' are deprecated, use '${size}' instead of '${name}'"
+            size;
+
+          inherit value;
+        }) engine.iconMapObj;
+    };
 in {
   imports = [ (pkgs.path + "/nixos/modules/misc/meta.nix") ];
 
