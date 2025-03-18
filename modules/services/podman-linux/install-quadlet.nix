@@ -20,7 +20,7 @@ let
       unpackPhase = ''
         mkdir -p $out/quadlets
         ${concatStringsSep "\n" (map (v:
-          "ln -s ${v.out}/quadlets/${v.quadletData.serviceName}.${v.quadletData.resourceType} $out/quadlets")
+          "echo 'linking ${v.quadletData.serviceName}.${v.quadletData.resourceType}'; ln -s ${v.out}/quadlets/${v.quadletData.serviceName}.${v.quadletData.resourceType} $out/quadlets")
           quadlet.dependencies)}
       '';
 
@@ -87,7 +87,8 @@ in {
       (lib.hm.dag.entryAfter [ "reloadSystemd" ] activationCleanupScript);
 
     services.podman.internal.builtQuadlets = listToAttrs (map (pkg: {
-      name = removePrefix "podman-" pkg.passthru.quadletData.serviceName;
+      name = (removePrefix "podman-" pkg.passthru.quadletData.serviceName) + "."
+        + pkg.passthru.quadletData.resourceType;
       value = pkg;
     }) builtQuadlets);
   };
