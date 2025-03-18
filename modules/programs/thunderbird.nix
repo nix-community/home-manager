@@ -155,6 +155,32 @@ let
     '') prefs)}
     ${extraPrefs}
   '';
+
+  mkFilterToIniString = f:
+    if f.text == null then
+      ''
+        name="${f.name}"
+        enabled="${if f.enabled then "yes" else "no"}"
+        type="${f.type}"
+        action="${f.action}"
+      '' + optionalString (f.actionValue != null) ''
+        actionValue="${f.actionValue}"
+      '' + ''
+        condition="${f.condition}"
+      '' + optionalString (f.extraConfig != null) f.extraConfig
+    else
+      f.text;
+
+  mkFilterListToIni = filters:
+    ''
+      version="9"
+      logging="no"
+    '' + concatStrings (map (f: mkFilterToIniString f) filters);
+
+  getEmailAccountsForProfile = profileName: accounts:
+    (filter (a:
+      a.thunderbird.profiles == [ ]
+      || any (p: p == profileName) a.thunderbird.profiles) accounts);
 in {
   meta.maintainers = with hm.maintainers; [ d-dervishi jkarlson ];
 
@@ -418,6 +444,71 @@ in {
                 argument is an automatically generated identifier.
               '';
             };
+
+            messageFilters = mkOption {
+              type = with types;
+                listOf (submodule {
+                  options = {
+                    name = mkOption {
+                      type = str;
+                      description = "Name for the filter.";
+                    };
+                    enabled = mkOption {
+                      type = bool;
+                      default = true;
+                      description = "Whether this filter is currently active.";
+                    };
+                    type = mkOption {
+                      type = str;
+                      description = "Type for this filter.";
+                    };
+                    action = mkOption {
+                      type = str;
+                      description = "Action to perform on matched messages.";
+                    };
+                    actionValue = mkOption {
+                      type = nullOr str;
+                      default = null;
+                      description =
+                        "Argument passed to the filter action, e.g. a folder path.";
+                    };
+                    condition = mkOption {
+                      type = str;
+                      description = "Condition to match messages against.";
+                    };
+                    extraConfig = mkOption {
+                      type = nullOr str;
+                      default = null;
+                      description = "Extra settings to apply to the filter";
+                    };
+                    text = mkOption {
+                      type = nullOr str;
+                      default = null;
+                      description = ''
+                        The raw text of the filter.
+                        Note that this will override all other options.
+                      '';
+                    };
+                  };
+                });
+              default = [ ];
+              defaultText = literalExpression "[ ]";
+              example = literalExpression ''
+                [
+                  {
+                    name = "Mark as Read on Archive";
+                    enabled = true;
+                    type = "128";
+                    action = "Mark read";
+                    condition = "ALL";
+                  }
+                ]
+              '';
+              description = ''
+                List of message filters to add to this Thunderbird account
+                configuration.
+              '';
+            };
           };
         }));
     };
@@ -473,9 +564,7 @@ in {
         mkIf (profile.userContent != "") { text = profile.userContent; };
 
       "${thunderbirdProfilesPath}/${name}/user.js" = let
-        emailAccounts = filter (a:
-          a.thunderbird.profiles == [ ]
-          || any (p: p == name) a.thunderbird.profiles) enabledAccountsWithId;
+        emailAccounts = getEmailAccountsForProfile name enabledAccountsWithId;
 
         smtp = filter (a: a.smtp != null) emailAccounts;
 
@@ -524,6 +613,15 @@ in {
           recursive = true;
           force = true;
         };
-    }));
+    }) ++ (mapAttrsToList (name: profile:
+      let
+        emailAccountsWithFilters =
+          (filter (a: a.thunderbird.messageFilters != [ ])
+            (getEmailAccountsForProfile name enabledAccountsWithId));
+      in (builtins.listToAttrs (map (a: {
+        name =
+          "${thunderbirdProfilesPath}/${name}/ImapMail/${a.id}/msgFilterRules.dat";
+        value = { text = mkFilterListToIni a.thunderbird.messageFilters; };
+      }) emailAccountsWithFilters))) cfg.profiles));
   };
 }
