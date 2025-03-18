@@ -394,6 +394,7 @@ let
     ./services/swayidle.nix
     ./services/swaync.nix
     ./services/swayosd.nix
+    ./services/swww.nix
     ./services/sxhkd.nix
     ./services/syncthing.nix
     ./services/systembus-notify.nix

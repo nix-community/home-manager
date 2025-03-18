@@ -130,6 +130,14 @@
     githubId = "56848082";
     name = "Henri Sota";
   };
+  hey2022 = {
+    name = "Yiheng He";
+    email = "yiheng.he@proton.me";
+    matrix = "@hey2022:matrix.org";
+    github = "hey2022";
+    keys =
+      [{ fingerprint = "128E 09C0 6F73 D678 6BB5  E551 5EA5 3C75 F7BE 3EDE"; }];
+  };
   jack5079 = {
     name = "Jack W.";
     email = "nix@jack.cab";
