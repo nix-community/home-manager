@@ -395,6 +395,12 @@
     githubId = 56614642;
     name = "Ilan Joselevich";
   };
+  kiara = {
+    name = "kiara";
+    email = "cinereal@riseup.net";
+    github = "KiaraGrouwstra";
+    githubId = 3059397;
+  };
   mager = {
     email = "andreas@mager.eu";
     github = "AndreasMager";
