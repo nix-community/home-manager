@@ -95,6 +95,7 @@ let
               "/run/wrappers/bin"
               "/run/current-system/sw/bin"
               "${config.home.homeDirectory}/.nix-profile/bin"
+              "${pkgs.systemd}/bin"
             ]);
           };
           Restart = "always";
