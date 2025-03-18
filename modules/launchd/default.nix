@@ -90,44 +90,6 @@ in {
         ln -s "${agentsDrv}" $out/LaunchAgents
       '';
 
-      home.activation.checkLaunchAgents =
-        hm.dag.entryBefore [ "writeBoundary" ] ''
-          checkLaunchAgents() {
-            local oldDir newDir dstDir err
-            oldDir=""
-            err=0
-            if [[ -n "''${oldGenPath:-}" ]]; then
-              oldDir="$(readlink -m "$oldGenPath/LaunchAgents")" || err=$?
-              if (( err )); then
-                oldDir=""
-              fi
-            fi
-            newDir=${escapeShellArg agentsDrv}
-            dstDir=${escapeShellArg dstDir}
-
-            local oldSrcPath newSrcPath dstPath agentFile agentName
-
-            find -L "$newDir" -maxdepth 1 -name '*.plist' -type f -print0 \
-                | while IFS= read -rd "" newSrcPath; do
-              agentFile="''${newSrcPath##*/}"
-              agentName="''${agentFile%.plist}"
-              dstPath="$dstDir/$agentFile"
-              oldSrcPath="$oldDir/$agentFile"
-
-              if [[ ! -e "$dstPath" ]]; then
-                continue
-              fi
-
-              if ! cmp --quiet "$oldSrcPath" "$dstPath"; then
-                errorEcho "Existing file '$dstPath' is in the way of '$newSrcPath'"
-                exit 1
-              fi
-            done
-          }
-
-          checkLaunchAgents
-        '';
-
       # NOTE: Launch Agent configurations can't be symlinked from the Nix store
       # because it needs to be owned by the user running it.
       home.activation.setupLaunchAgents =
