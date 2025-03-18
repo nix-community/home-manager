@@ -9,9 +9,9 @@ ContainerName=my-container
 Environment=
 Image=podman-my-img.image
 Label=nix.home-manager.managed=true
-Network=podman-my-net.network
+Network=podman-my-app.network
 Network=externalnet
-Volume=podman-my-vol.volume:/data
+Volume=podman-my-app.volume:/data
 
 [Install]
 WantedBy=default.target
@@ -29,7 +29,7 @@ Delegate=yes
 Type=notify
 NotifyAccess=all
 SyslogIdentifier=%N
-ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container --cidfile=%t/%N.cid --replace --rm --cgroups=split --network my-net --network externalnet --sdnotify=conmon -d -v my-vol:/data --label nix.home-manager.managed=true docker.io/alpine:latest
+ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container --cidfile=%t/%N.cid --replace --rm --cgroups=split --network my-app --network externalnet --sdnotify=conmon -d -v my-app:/data --label nix.home-manager.managed=true docker.io/alpine:latest
 
 [Unit]
 Wants=podman-user-wait-network-online.service
@@ -39,7 +39,7 @@ SourcePath=/nix/store/00000000000000000000000000000000-home-container-podman-my-
 Requires=podman-my-img-image.service
 After=podman-my-img-image.service
 RequiresMountsFor=%t/containers
-Requires=podman-my-net-network.service
-After=podman-my-net-network.service
-Requires=podman-my-vol-volume.service
-After=podman-my-vol-volume.service
+Requires=podman-my-app-network.service
+After=podman-my-app-network.service
+Requires=podman-my-app-volume.service
+After=podman-my-app-volume.service

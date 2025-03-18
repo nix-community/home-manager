@@ -9,11 +9,17 @@ let
 
   createQuadletSource = name: containerDef:
     let
-      dependencyBySuffix = type: name:
-        if (hasInfix ".${type}" name) then
-          let baseName = elemAt (splitString ".${type}" name) 0;
-          in if (hasAttr baseName cfg.internal.builtQuadlets) then
-            [ (cfg.internal.builtQuadlets.${baseName}) ]
+      extractQuadletReference = type: value:
+        let
+          regex = "([a-zA-Z0-9_-]+\\." + type + ").*";
+          parts = builtins.match regex value;
+        in if parts == null then value else builtins.elemAt parts 0;
+
+      dependencyBySuffix = type: value:
+        if (hasInfix ".${type}" value) then
+          let name = extractQuadletReference type value;
+          in if (hasAttr name cfg.internal.builtQuadlets) then
+            [ (cfg.internal.builtQuadlets.${name}) ]
           else
             [ ]
         else
@@ -32,28 +38,27 @@ let
         ++ (withResolverFor "volume" containerDef.volumes);
 
       checkQuadletReference = types: value:
-        let baseName = t: elemAt (splitString ".${t}" value) 0;
-        in if builtins.isList value then
+        if builtins.isList value then
           builtins.concatLists (map (checkQuadletReference types) value)
         else
           let type = findFirst (t: hasInfix ".${t}" value) null types;
           in if (type != null) then
             let
-              quadletBaseName = baseName type;
+              quadletName = extractQuadletReference type value;
               quadletsOfType =
                 filterAttrs (n: v: v.quadletData.resourceType == type)
                 cfg.internal.builtQuadlets;
-            in if (hasAttr quadletBaseName quadletsOfType) then
+            in if (hasAttr quadletName quadletsOfType) then
               [
-                (replaceStrings [ quadletBaseName ]
-                  [ "podman-${quadletBaseName}" ] value)
+                (replaceStrings [ quadletName ] [ "podman-${quadletName}" ]
+                  value)
               ]
             else
               [ value ]
           else if ((hasInfix "/nix/store" value) == false
             && hasAttr value cfg.internal.builtQuadlets) then
             lib.warn ''
-              A value for Podman container '${name}' might use a reference to another quadlet: ${value}. 
+              A value for Podman container '${name}' might use a reference to another quadlet: ${value}.
               Append the type '.${
                 cfg.internal.builtQuadlets.${value}.quadletData.resourceType
               }' to '${baseName value}' if this is intended.
