@@ -45,6 +45,7 @@
 .Op Fl -keep-failed
 .Op Fl -keep-going
 .Op Bro Fl L | Fl -print-build-logs Brc
+.Op Fl -log-format
 .Op Fl -show-trace
 .Op Fl -(no-)substitute
 .Op Fl -no-out-link
@@ -332,6 +333,13 @@ Passed on to
 Passed on to
 \fBnix build\fR()
 when building from a flake\&.
+.RE
+.Pp
+
+.It Cm Fl -log-format Ar format
+.RS 4
+Passed on to
+\fBnix-build\fR(1)\&.
 .RE
 .Pp
 
