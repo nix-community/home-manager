@@ -55,10 +55,10 @@ in {
 
               urls = [{
                 template =
-                  "https://wiki.nixos.org/index.php?search={searchTerms}";
+                  "https://wiki.nixos.org/w/index.php?search={searchTerms}";
               }];
-              iconUpdateURL = "https://wiki.nixos.org/favicon.png";
-              updateInterval = 24 * 60 * 60 * 1000;
+
+              iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
               definedAliases = [ "@nw" ];
             };
 
@@ -163,6 +163,36 @@ in {
           };
         };
       };
+
+      migrateIconsV12 = {
+        id = 4;
+        search = {
+          force = true;
+          engines = {
+            nix-packages = {
+              name = "Nix Packages";
+
+              urls = [{
+                template = "https://search.nixos.org/packages";
+                params = [
+                  {
+                    name = "type";
+                    value = "packages";
+                  }
+                  {
+                    name = "query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }];
+
+              iconURL = "https://search.nixos.org/favicon.ico";
+              iconUpdateURL = "https://search.nixos.org/favicon.ico";
+              definedAliases = [ "@np" ];
+            };
+          };
+        };
+      };
     };
   } // {
     nmt.script = let
@@ -212,6 +242,10 @@ in {
       assertFirefoxSearchContent \
         home-files/${cfg.configPath}/migrateIconsV11/search.json.mozlz4 \
         ${withName ./expected-migrate-icons-v11.json}
+
+      assertFirefoxSearchContent \
+        home-files/${cfg.configPath}/migrateIconsV12/search.json.mozlz4 \
+        ${withName ./expected-migrate-icons-v12.json}
     '';
   });
 }
