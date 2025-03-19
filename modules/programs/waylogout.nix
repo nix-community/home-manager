@@ -16,7 +16,7 @@ in {
     package = lib.mkPackageOption pkgs "waylogout" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types; attrsOf (oneOf [ bool float int str ]);
+      type = with lib.types; attrsOf (oneOf [ bool float int path str ]);
       default = { };
       description = ''
         Default arguments to {command}`waylogout`. An empty set
