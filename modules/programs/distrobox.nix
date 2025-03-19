@@ -26,6 +26,8 @@ let
   getContainersConfig = set:
     (concatStringsSep "\n\n" (mapAttrsToList setToContainer set)) + "\n";
 in {
+  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
+
   options.programs.distrobox = {
     enable = mkEnableOption "distrobox";
 
@@ -65,9 +67,9 @@ in {
         }
       '';
       description = ''
-        A set of containers and all its respective configurations. Each option cat be either a 
+        A set of containers and all its respective configurations. Each option cat be either a
         bool, string or a list of strings. If passed a list, the option will be repeated for each element.
-        See common-debian in the example config. All the available options for the containers can be found 
+        See common-debian in the example config. All the available options for the containers can be found
         in the distrobox-assemble documentation at <https://github.com/89luca89/distrobox/blob/main/docs/usage/distrobox-assemble.md>.
       '';
     };
@@ -98,7 +100,7 @@ in {
 
         if [[ -f $prev_hash_file ]]; then
           prev_hash=$(cat $prev_hash_file)
-        else 
+        else
           prev_hash=0
         fi
 
