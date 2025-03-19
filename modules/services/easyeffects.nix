@@ -54,7 +54,7 @@ let
     '';
   };
 in {
-  meta.maintainers = [ maintainers.fufexan ];
+  meta.maintainers = with maintainers; [ fufexan hausken ];
 
   options.services.easyeffects = {
     enable = mkEnableOption ''
