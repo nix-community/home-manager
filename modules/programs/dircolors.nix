@@ -207,9 +207,9 @@ in {
       '';
 
       # Set `LS_COLORS` before Oh My Zsh and `initExtra`.
-      programs.zsh.initExtraBeforeCompInit = mkIf cfg.enableZshIntegration ''
+      programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 550 ''
         eval $(${pkgs.coreutils}/bin/dircolors -b ${dircolorsPath})
-      '';
+      '');
     }
     (mkIf (!config.home.preferXdgDirectories) {
       home.file.".dir_colors".text = dircolorsConfig;

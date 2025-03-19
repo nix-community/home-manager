@@ -44,7 +44,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ pkgs.zplug ];
 
-    programs.zsh.initExtraBeforeCompInit = ''
+    programs.zsh.initContent = mkOrder 550 ''
       export ZPLUG_HOME=${cfg.zplugHome}
 
       source ${pkgs.zplug}/share/zplug/init.zsh
