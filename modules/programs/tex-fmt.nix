@@ -18,7 +18,7 @@ in {
   options.programs.tex-fmt = {
     enable = mkEnableOption "tex-fmt";
 
-    package = mkPackageOption pkgs "tex-fmt" { };
+    package = mkPackageOption pkgs "tex-fmt" { nullable = true; };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -43,7 +43,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${configDir}/tex-fmt/tex-fmt.toml" =
       lib.mkIf (cfg.settings != { }) {
