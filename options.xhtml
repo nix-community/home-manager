@@ -47162,6 +47162,204 @@ null or package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.rclone.enable"></a><a class="term" href="options.xhtml#opt-programs.rclone.enable"><code class="option">programs.rclone.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable rclone.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rclone.package"></a><a class="term" href="options.xhtml#opt-programs.rclone.package"><code class="option">programs.rclone.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The rclone package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.rclone</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rclone.remotes"></a><a class="term" href="options.xhtml#opt-programs.rclone.remotes"><code class="option">programs.rclone.remotes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>An attribute set of remote configurations. Each remote consists of regular
+configuration options and optional secrets.</p><p>See <a class="link" href="https://rclone.org/docs/"  target="_top">https://rclone.org/docs/</a> for more information on configuring specific
+remotes.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  b2 = {
+    config = {
+      type = &quot;b2&quot;;
+      hard_delete = true;
+    };
+    secrets = {
+      # using sops
+      account = config.sops.secrets.b2-acc-id.path;
+      # using agenix
+      key = config.age.secrets.b2-key.path;
+    };
+  };
+
+  server.config = {
+    type = &quot;sftp&quot;;
+    host = &quot;server&quot;;
+    user = &quot;backup&quot;;
+    key_file = &quot;${home.homeDirectory}/.ssh/id_ed25519&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rclone.remotes._name_.config"></a><a class="term" href="options.xhtml#opt-programs.rclone.remotes._name_.config"><code class="option">programs.rclone.remotes.&lt;name&gt;.config</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Regular configuration options as described in rclone’s documentation
+<a class="link" href="https://rclone.org/docs/"  target="_top">https://rclone.org/docs/</a>. When specifying options follow the formatting
+process outlined here <a class="link" href="https://rclone.org/docs/#config-config-file"  target="_top">https://rclone.org/docs/#config-config-file</a>, namley:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Remove the leading double-dash (–) from the rclone option name</p></li><li class="listitem"><p>Replace hyphens (-) with underscores (_)</p></li><li class="listitem"><p>Convert to lowercase</p></li><li class="listitem"><p>Use the resulting string as your configuration key</p></li></ul></div><p>For example, the rclone option “–mega-hard-delete” would use “hard_delete”
+as the config key.</p><p>Security Note: Always use the <code class="option">secrets</code> option for sensitive data
+instead of the <code class="option">config</code> option to prevent exposing credentials to
+the world-readable Nix store.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (null or boolean or signed integer or floating point number or string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  type = &quot;mega&quot;; # Required - specifies the remote type
+  user = &quot;you@example.com&quot;;
+  hard_delete = true;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rclone.remotes._name_.secrets"></a><a class="term" href="options.xhtml#opt-programs.rclone.remotes._name_.secrets"><code class="option">programs.rclone.remotes.&lt;name&gt;.secrets</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Sensitive configuration values such as passwords, API keys, and tokens. These
+must be provided as file paths to the secrets, which will be read at activation
+time.</p><p>Note: If using secret management solutions like agenix or sops-nix with
+home-manager, you need to ensure their services are activated before switching
+to this home-manager generation. Consider setting
+<code class="option">systemd.user.startServices</code> to <code class="literal">&quot;sd-switch&quot;</code> for automatic service
+startup.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  password = &quot;/run/secrets/password&quot;;
+  api_key = config.age.secrets.api-key.path;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rclone.writeAfter"></a><a class="term" href="options.xhtml#opt-programs.rclone.writeAfter"><code class="option">programs.rclone.writeAfter</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Controls when the rclone configuration is written during Home Manager activation.
+You should not need to change this unless you have very specific activation order
+requirements.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;reloadSystemd&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.readline.enable"></a><a class="term" href="options.xhtml#opt-programs.readline.enable"><code class="option">programs.readline.enable</code>
   </a>
  </span>
