@@ -14,7 +14,7 @@ in {
   options.programs.zoxide = {
     enable = mkEnableOption "zoxide";
 
-    package = mkOption {
+    package = lib.mkOption {
       type = types.package;
       default = pkgs.zoxide;
       defaultText = literalExpression "pkgs.zoxide";
@@ -23,7 +23,7 @@ in {
       '';
     };
 
-    options = mkOption {
+    options = lib.mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "--no-cmd" ];
@@ -44,7 +44,7 @@ in {
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableXonshIntegration = mkOption {
+    enableXonshIntegration = lib.mkOption {
       default = true;
       type = types.bool;
       description = ''
