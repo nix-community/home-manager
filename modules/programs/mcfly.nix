@@ -141,7 +141,7 @@ in {
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
-      programs.zsh.initExtra = mkIf cfg.enableZshIntegration zshIntegration;
+      programs.zsh.initContent = mkIf cfg.enableZshIntegration zshIntegration;
 
       programs.fish.shellInit = mkIf cfg.enableFishIntegration fishIntegration;
 

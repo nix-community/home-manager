@@ -108,7 +108,7 @@ in {
         eval "$(${getExe cfg.package} activate bash)"
       '';
 
-      zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      zsh.initContent = mkIf cfg.enableZshIntegration ''
         eval "$(${getExe cfg.package} activate zsh)"
       '';
 

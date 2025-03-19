@@ -282,7 +282,7 @@ in {
     programs.fish.interactiveShellInit =
       mkIf cfg.shellIntegration.enableFishIntegration shellIntegrationInit.fish;
 
-    programs.zsh.initExtra =
+    programs.zsh.initContent =
       mkIf cfg.shellIntegration.enableZshIntegration shellIntegrationInit.zsh;
   };
 }

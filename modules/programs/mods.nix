@@ -65,7 +65,7 @@ in {
       source <(${cfg.package}/bin/mods completion bash)
     '');
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 200 ''
       source <(${cfg.package}/bin/mods completion zsh)
     '');
 

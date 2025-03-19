@@ -45,7 +45,7 @@
     })
 
     (lib.mkIf config.programs.zsh.enableVteIntegration {
-      programs.zsh.initExtra = ''
+      programs.zsh.initContent = ''
         . ${pkgs.vte}/etc/profile.d/vte.sh
       '';
     })

@@ -47,7 +47,6 @@ in {
 
   config = mkIf cfg.enable {
     programs.bash.initExtra = shInit "command_not_found_handle";
-    programs.zsh.initExtra = shInit "command_not_found_handler";
     programs.xonsh.xonshrc = ''
       @events.on_command_not_found
       def _command_not_found_nix(cmd):
