@@ -21,6 +21,7 @@ _arguments \
   '--option[option]:NAME VALUE:()' \
   '--builders[builders]:SPEC:()' \
   '(-L --print-build-logs)'{--print-build-logs,-L}'[print build logs]' \
+  '--log-format[log format]:FORMAT:()' \
   '--show-trace[show trace]' \
   '--override-input[override flake input]:NAME VALUE:()' \
   '--update-input[update flake input]:NAME:()' \
@@ -63,6 +64,7 @@ case "$state" in
           '--no-out-link[no out link]' \
           '--no-substitute[no substitute]' \
           '--option[option]:NAME VALUE:()' \
+          '--log-format[log format]:FORMAT:()' \
           '--show-trace[show trace]' \
           '--substitute[substitute]' \
           '--builders[builders]:SPEC:()' \
