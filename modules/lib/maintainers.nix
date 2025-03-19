@@ -708,4 +708,10 @@
     github = "ipsavitsky";
     githubId = 33558632;
   };
+  noodlez = {
+    name = "Nathaniel Barragan";
+    email = "contact@nathanielbarragan.xyz";
+    github = "Noodlez1232";
+    githubId = 12480453;
+  };
 }
