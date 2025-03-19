@@ -58446,6 +58446,92 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.waylogout.enable"></a><a class="term" href="options.xhtml#opt-programs.waylogout.enable"><code class="option">programs.waylogout.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether or not to enable waylogout.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waylogout.nix" target="_top">
+&lt;home-manager/modules/programs/waylogout.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.waylogout.package"></a><a class="term" href="options.xhtml#opt-programs.waylogout.package"><code class="option">programs.waylogout.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The waylogout package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.waylogout</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waylogout.nix" target="_top">
+&lt;home-manager/modules/programs/waylogout.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.waylogout.settings"></a><a class="term" href="options.xhtml#opt-programs.waylogout.settings"><code class="option">programs.waylogout.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Default arguments to <span class="command"><strong>waylogout</strong></span>. An empty set
+disables configuration generation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (boolean or floating point number or signed integer or absolute path or string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  color = &quot;808080&quot;;
+  effect-blur = &quot;7x4&quot;;
+  poweroff-command = &quot;systemctl poweroff&quot;;
+  reboot-command = &quot;systemctl reboot&quot;;
+  scaling = &quot;fit&quot;;
+  screenshots = true;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waylogout.nix" target="_top">
+&lt;home-manager/modules/programs/waylogout.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.wezterm.enable"></a><a class="term" href="options.xhtml#opt-programs.wezterm.enable"><code class="option">programs.wezterm.enable</code>
   </a>
  </span>
