@@ -22081,7 +22081,7 @@ null or string</p>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;DuckDuckGo&quot;</code></p>
+<code class="literal">&quot;ddg&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -22101,7 +22101,7 @@ null or string</p>
 <dd>
 <p>Attribute set of search engine configurations. Engines that
 only have <code class="varname">metaData</code> specified will be treated as builtin
-to Firefox.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177"  target="_top">SearchEngine.jsm</a>
+to Firefox.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/e3f42ec9320748b2aab3d474d1e47075def9000c/toolkit/components/search/SearchEngine.sys.mjs#890-923"  target="_top">SearchEngine.jsm</a>
 in Firefox’s source for available options. We maintain a
 mapping to let you specify all options in the referenced link
 without underscores, but it may fall out of date with future
@@ -22115,7 +22115,8 @@ attribute set of attribute set of (JSON value)</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  &quot;Nix Packages&quot; = {
+  nix-packages = {
+    name = &quot;Nix Packages&quot;;
     urls = [{
       template = &quot;https://search.nixos.org/packages&quot;;
       params = [
@@ -22128,15 +22129,15 @@ attribute set of attribute set of (JSON value)</p>
     definedAliases = [ &quot;@np&quot; ];
   };
 
-  &quot;NixOS Wiki&quot; = {
-    urls = [{ template = &quot;https://wiki.nixos.org/index.php?search={searchTerms}&quot;; }];
-    iconUpdateURL = &quot;https://wiki.nixos.org/favicon.png&quot;;
-    updateInterval = 24 * 60 * 60 * 1000; # every day
+  nixos-wiki = {
+    name = &quot;NixOS Wiki&quot;;
+    urls = [{ template = &quot;https://wiki.nixos.org/w/index.php?search={searchTerms}&quot;; }];
+    iconMapObj.&quot;16&quot; = &quot;https://wiki.nixos.org/favicon.ico&quot;;
     definedAliases = [ &quot;@nw&quot; ];
   };
 
-  &quot;Bing&quot;.metaData.hidden = true;
-  &quot;Google&quot;.metaData.alias = &quot;@g&quot;; # builtin engines only support specifying one additional alias
+  bing.metaData.hidden = true;
+  google.metaData.alias = &quot;@g&quot;; # builtin engines only support specifying one additional alias
 }
 
 </code></pre>
@@ -22196,8 +22197,8 @@ list of string</p>
 <code class="literal">[ ]</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
-  &quot;DuckDuckGo&quot;
-  &quot;Google&quot;
+  &quot;ddg&quot;
+  &quot;google&quot;
 ]
 </code></pre>
 
@@ -22226,7 +22227,7 @@ null or string</p>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;DuckDuckGo&quot;</code></p>
+<code class="literal">&quot;ddg&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -23683,7 +23684,7 @@ null or string</p>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;DuckDuckGo&quot;</code></p>
+<code class="literal">&quot;ddg&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -23703,7 +23704,7 @@ null or string</p>
 <dd>
 <p>Attribute set of search engine configurations. Engines that
 only have <code class="varname">metaData</code> specified will be treated as builtin
-to Floorp.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177"  target="_top">SearchEngine.jsm</a>
+to Floorp.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/e3f42ec9320748b2aab3d474d1e47075def9000c/toolkit/components/search/SearchEngine.sys.mjs#890-923"  target="_top">SearchEngine.jsm</a>
 in Floorp’s source for available options. We maintain a
 mapping to let you specify all options in the referenced link
 without underscores, but it may fall out of date with future
@@ -23717,7 +23718,8 @@ attribute set of attribute set of (JSON value)</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  &quot;Nix Packages&quot; = {
+  nix-packages = {
+    name = &quot;Nix Packages&quot;;
     urls = [{
       template = &quot;https://search.nixos.org/packages&quot;;
       params = [
@@ -23730,15 +23732,15 @@ attribute set of attribute set of (JSON value)</p>
     definedAliases = [ &quot;@np&quot; ];
   };
 
-  &quot;NixOS Wiki&quot; = {
-    urls = [{ template = &quot;https://wiki.nixos.org/index.php?search={searchTerms}&quot;; }];
-    iconUpdateURL = &quot;https://wiki.nixos.org/favicon.png&quot;;
-    updateInterval = 24 * 60 * 60 * 1000; # every day
+  nixos-wiki = {
+    name = &quot;NixOS Wiki&quot;;
+    urls = [{ template = &quot;https://wiki.nixos.org/w/index.php?search={searchTerms}&quot;; }];
+    iconMapObj.&quot;16&quot; = &quot;https://wiki.nixos.org/favicon.ico&quot;;
     definedAliases = [ &quot;@nw&quot; ];
   };
 
-  &quot;Bing&quot;.metaData.hidden = true;
-  &quot;Google&quot;.metaData.alias = &quot;@g&quot;; # builtin engines only support specifying one additional alias
+  bing.metaData.hidden = true;
+  google.metaData.alias = &quot;@g&quot;; # builtin engines only support specifying one additional alias
 }
 
 </code></pre>
@@ -23798,8 +23800,8 @@ list of string</p>
 <code class="literal">[ ]</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
-  &quot;DuckDuckGo&quot;
-  &quot;Google&quot;
+  &quot;ddg&quot;
+  &quot;google&quot;
 ]
 </code></pre>
 
@@ -23828,7 +23830,7 @@ null or string</p>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;DuckDuckGo&quot;</code></p>
+<code class="literal">&quot;ddg&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -54689,7 +54691,7 @@ null or string</p>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;DuckDuckGo&quot;</code></p>
+<code class="literal">&quot;ddg&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -54709,7 +54711,7 @@ null or string</p>
 <dd>
 <p>Attribute set of search engine configurations. Engines that
 only have <code class="varname">metaData</code> specified will be treated as builtin
-to Thunderbird.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177"  target="_top">SearchEngine.jsm</a>
+to Thunderbird.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/e3f42ec9320748b2aab3d474d1e47075def9000c/toolkit/components/search/SearchEngine.sys.mjs#890-923"  target="_top">SearchEngine.jsm</a>
 in Thunderbird’s source for available options. We maintain a
 mapping to let you specify all options in the referenced link
 without underscores, but it may fall out of date with future
@@ -54723,7 +54725,8 @@ attribute set of attribute set of (JSON value)</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  &quot;Nix Packages&quot; = {
+  nix-packages = {
+    name = &quot;Nix Packages&quot;;
     urls = [{
       template = &quot;https://search.nixos.org/packages&quot;;
       params = [
@@ -54736,15 +54739,15 @@ attribute set of attribute set of (JSON value)</p>
     definedAliases = [ &quot;@np&quot; ];
   };
 
-  &quot;NixOS Wiki&quot; = {
-    urls = [{ template = &quot;https://wiki.nixos.org/index.php?search={searchTerms}&quot;; }];
-    iconUpdateURL = &quot;https://wiki.nixos.org/favicon.png&quot;;
-    updateInterval = 24 * 60 * 60 * 1000; # every day
+  nixos-wiki = {
+    name = &quot;NixOS Wiki&quot;;
+    urls = [{ template = &quot;https://wiki.nixos.org/w/index.php?search={searchTerms}&quot;; }];
+    iconMapObj.&quot;16&quot; = &quot;https://wiki.nixos.org/favicon.ico&quot;;
     definedAliases = [ &quot;@nw&quot; ];
   };
 
-  &quot;Bing&quot;.metaData.hidden = true;
-  &quot;Google&quot;.metaData.alias = &quot;@g&quot;; # builtin engines only support specifying one additional alias
+  bing.metaData.hidden = true;
+  google.metaData.alias = &quot;@g&quot;; # builtin engines only support specifying one additional alias
 }
 
 </code></pre>
@@ -54804,8 +54807,8 @@ list of string</p>
 <code class="literal">[ ]</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
-  &quot;DuckDuckGo&quot;
-  &quot;Google&quot;
+  &quot;ddg&quot;
+  &quot;google&quot;
 ]
 </code></pre>
 
@@ -54834,7 +54837,7 @@ null or string</p>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;DuckDuckGo&quot;</code></p>
+<code class="literal">&quot;ddg&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
