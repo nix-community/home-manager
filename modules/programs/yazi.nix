@@ -197,20 +197,19 @@ in {
         }
       '';
 
+      xonshIntegration = ''
+        def _y(args):
+            tmp = $(mktemp -t "yazi-cwd.XXXXXX")
+            args.append(f"--cwd-file={tmp}")
+            $[yazi @(args)]
+            with open(tmp) as f:
+                cwd = f.read().strip()
+            if cwd != $PWD:
+                cd @(cwd)
+            rm -f -- @(tmp)
 
-    xonshIntegration = ''
-      def _y(args):
-          tmp = $(mktemp -t "yazi-cwd.XXXXXX")
-          args.append(f"--cwd-file={tmp}")
-          $[yazi @(args)]
-          with open(tmp) as f:
-              cwd = f.read().strip()
-          if cwd != $PWD:
-              cd @(cwd)
-          rm -f -- @(tmp)
-
-      aliases["${cfg.shellWrapperName}"] = _y
-    '';
+        aliases["${cfg.shellWrapperName}"] = _y
+      '';
     in {
       bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 

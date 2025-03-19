@@ -76,7 +76,6 @@ in {
       '';
     };
 
-
     enableNushellIntegration =
       lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
