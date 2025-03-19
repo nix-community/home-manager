@@ -24,6 +24,12 @@
     github = "afresquet";
     githubId = 29437693;
   };
+  aguirre-matteo = {
+    name = "aguirre-matteo";
+    email = "aguirre.matteo.nix@gmail.com";
+    github = "aguirre-matteo";
+    githubId = 158215792;
+  };
   amesgen = {
     name = "amesgen";
     email = "amesgen@amesgen.de";
