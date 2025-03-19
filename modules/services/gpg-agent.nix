@@ -300,7 +300,7 @@ in {
       '';
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
-      programs.zsh.initExtra = mkIf cfg.enableZshIntegration gpgZshInitStr;
+      programs.zsh.initContent = mkIf cfg.enableZshIntegration gpgZshInitStr;
       programs.fish.interactiveShellInit =
         mkIf cfg.enableFishIntegration gpgFishInitStr;
 

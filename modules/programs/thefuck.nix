@@ -57,7 +57,7 @@ with lib;
       };
     };
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration shEvalCmd;
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration shEvalCmd;
 
     programs.nushell = mkIf cfg.enableNushellIntegration {
       extraConfig = ''

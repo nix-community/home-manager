@@ -106,7 +106,7 @@ in {
       fi
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       if [[ $TERM != "dumb" ]]; then
         eval "$(${starshipCmd} init zsh)"
       fi

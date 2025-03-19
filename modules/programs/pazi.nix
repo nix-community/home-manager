@@ -29,7 +29,7 @@ in {
       eval "$(${pkgs.pazi}/bin/pazi init bash)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${pkgs.pazi}/bin/pazi init zsh)"
     '';
 

@@ -30,7 +30,7 @@ in {
       eval "$(${cfg.package}/bin/hstr --show-configuration)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/hstr --show-zsh-configuration)"
     '';
   };

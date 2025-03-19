@@ -71,7 +71,7 @@ in {
       eval "$(${cfg.package}/bin/oh-my-posh init bash ${configArgument})"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/oh-my-posh init zsh ${configArgument})"
     '';
 
