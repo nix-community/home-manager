@@ -38,7 +38,7 @@ in {
       Service = {
         Environment =
           lib.optionals cfg.forceWayland [ "DO_NOT_UNSET_XDG_SESSION_TYPE=1" ];
-        ExecStart = lib.getExe' cfg.package "megasync";
+        ExecStart = lib.getExe cfg.package;
       };
     };
   };
