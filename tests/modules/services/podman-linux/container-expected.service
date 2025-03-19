@@ -27,7 +27,7 @@ WantedBy=default.target
 WantedBy=multi-user.target
 
 [Service]
-Environment=PATH=/run/wrappers/bin:/run/current-system/sw/bin:/home/hm-user/.nix-profile/bin
+Environment=PATH=/run/wrappers/bin:/run/current-system/sw/bin:/home/hm-user/.nix-profile/bin:@systemd@/bin
 Restart=on-failure
 TimeoutStopSec=30
 Environment=PODMAN_SYSTEMD_UNIT=%n
