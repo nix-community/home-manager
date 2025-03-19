@@ -80,7 +80,7 @@ in {
       source ${cfg.package}/share/bash-completion/completions/watson
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       source ${cfg.package}/share/zsh/site-functions/_watson
     '';
 

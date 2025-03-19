@@ -45,7 +45,7 @@ in {
         '';
       };
 
-      zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      zsh.initContent = mkIf cfg.enableZshIntegration ''
         ${cfg.package}/bin/nix-your-shell zsh | source /dev/stdin
       '';
     };

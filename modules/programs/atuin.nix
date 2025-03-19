@@ -114,7 +114,7 @@ in {
         fi
       '';
 
-      programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
         if [[ $options[zle] = on ]]; then
           eval "$(${lib.getExe cfg.package} init zsh ${flagsStr})"
         fi

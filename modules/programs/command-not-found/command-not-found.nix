@@ -47,7 +47,7 @@ in {
 
   config = mkIf cfg.enable {
     programs.bash.initExtra = shInit "command_not_found_handle";
-    programs.zsh.initExtra = shInit "command_not_found_handler";
+    programs.zsh.initContent = shInit "command_not_found_handler";
 
     home.packages = [ commandNotFound ];
   };

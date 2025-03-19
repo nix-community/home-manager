@@ -35,7 +35,7 @@ in {
         ''}
       '';
 
-      zsh.initExtra = ''
+      zsh.initContent = ''
         ${optionalString cfg.enableZshIntegration ''
           eval "$(${payRespectsCmd} zsh --alias)"
         ''}

@@ -30,7 +30,7 @@ in {
       . ${package}/share/autojump/autojump.bash
     '');
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       . ${package}/share/autojump/autojump.zsh
     '';
 

@@ -73,7 +73,7 @@ in {
       eval "$(${zellijCmd} setup --generate-auto-start bash)"
     '');
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 200 ''
       eval "$(${zellijCmd} setup --generate-auto-start zsh)"
     '');
 

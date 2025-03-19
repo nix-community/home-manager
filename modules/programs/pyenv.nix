@@ -54,7 +54,7 @@ in {
       eval "$(${lib.getExe cfg.package} init - bash)"
     '';
 
-    programs.zsh.initExtra = lib.mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
       export PYENV_ROOT="${cfg.rootDirectory}"
       eval "$(${lib.getExe cfg.package} init - zsh)"
     '';

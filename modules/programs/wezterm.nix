@@ -108,6 +108,7 @@ in {
 
     programs.bash.initExtra =
       mkIf cfg.enableBashIntegration shellIntegrationStr;
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration shellIntegrationStr;
+    programs.zsh.initContent =
+      mkIf cfg.enableZshIntegration shellIntegrationStr;
   };
 }

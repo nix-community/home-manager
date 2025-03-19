@@ -33,7 +33,7 @@ in {
       optionalString cfg.enableBashIntegration (initScript "bash");
     programs.fish.interactiveShellInit =
       optionalString cfg.enableFishIntegration (initScript "fish");
-    programs.zsh.initExtra =
+    programs.zsh.initContent =
       optionalString cfg.enableZshIntegration (initScript "zsh");
   };
 }

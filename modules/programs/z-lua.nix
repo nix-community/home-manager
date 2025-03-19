@@ -56,7 +56,7 @@ in {
       })"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${pkgs.z-lua}/bin/z --init zsh ${
         concatStringsSep " " cfg.options
       })"

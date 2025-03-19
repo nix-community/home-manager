@@ -36,7 +36,7 @@ in {
       eval "$(${cfg.package}/bin/opam env --shell=bash)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/opam env --shell=zsh)"
     '';
 
