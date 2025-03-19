@@ -54106,6 +54106,95 @@ null or boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.tex-fmt.enable"></a><a class="term" href="options.xhtml#opt-programs.tex-fmt.enable"><code class="option">programs.tex-fmt.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable tex-fmt.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tex-fmt.nix" target="_top">
+&lt;home-manager/modules/programs/tex-fmt.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.tex-fmt.package"></a><a class="term" href="options.xhtml#opt-programs.tex-fmt.package"><code class="option">programs.tex-fmt.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The tex-fmt package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.tex-fmt</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tex-fmt.nix" target="_top">
+&lt;home-manager/modules/programs/tex-fmt.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.tex-fmt.settings"></a><a class="term" href="options.xhtml#opt-programs.tex-fmt.settings"><code class="option">programs.tex-fmt.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/tex-fmt/tex-fmt.toml</code> on Linux or
+<code class="filename">$HOME/Library/Application Support/tex-fmt/tex-fmt.toml</code> on Darwin.
+See <a class="link" href="https://github.com/WGUNDERWOOD/tex-fmt"  target="_top">https://github.com/WGUNDERWOOD/tex-fmt</a> and
+<a class="link" href="https://github.com/WGUNDERWOOD/tex-fmt/blob/master/tex-fmt.toml"  target="_top">https://github.com/WGUNDERWOOD/tex-fmt/blob/master/tex-fmt.toml</a>
+for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  wrap = true;
+  tabsize = 2;
+  tabchar = &quot;space&quot;;
+  lists = [];
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tex-fmt.nix" target="_top">
+&lt;home-manager/modules/programs/tex-fmt.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.texlive.enable"></a><a class="term" href="options.xhtml#opt-programs.texlive.enable"><code class="option">programs.texlive.enable</code>
   </a>
  </span>
