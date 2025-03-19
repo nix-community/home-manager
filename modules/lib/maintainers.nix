@@ -699,4 +699,14 @@
     github = "ipsavitsky";
     githubId = 33558632;
   };
+  karaolidis = {
+    name = "Nikolaos Karaolidis";
+    email = "nick@karaolidis.com";
+    github = "karaolidis";
+    githubId = 46189100;
+    keys = [{
+      longKeyId = "rsa4096/0xF8549CDF32F178F7";
+      fingerprint = "E3E3 0A72 EBB3 4375 414B  23FD F854 9CDF 32F1 78F7";
+    }];
+  };
 }
