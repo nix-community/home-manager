@@ -67431,6 +67431,58 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.easyeffects.extraPresets"></a><a class="term" href="options.xhtml#opt-services.easyeffects.extraPresets"><code class="option">services.easyeffects.extraPresets</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of presets to import to easyeffects.
+Presets are written to input and output folder in <code class="literal">$XDG_CONFIG_HOME/easyeffects</code>.
+Top level block (input/output) determines the folder the file is written to.</p><p>See community presets at:
+https://github.com/wwmm/easyeffects/wiki/Community-Presets</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (attribute set of EasyEffects input or output JSON preset)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  my-preset = {
+    input = {
+      blocklist = [
+
+      ];
+      &quot;plugins_order&quot; = [
+        &quot;rnnoise#0&quot;
+      ];
+      &quot;rnnoise#0&quot; = {
+        bypass = false;
+        &quot;enable-vad&quot; = false;
+        &quot;input-gain&quot; = 0.0;
+        &quot;model-path&quot; = &quot;&quot;;
+        &quot;output-gain&quot; = 0.0;
+        release = 20.0;
+        &quot;vad-thres&quot; = 50.0;
+        wet = 0.0;
+      };
+    };
+  };
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/easyeffects.nix" target="_top">
+&lt;home-manager/modules/services/easyeffects.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.easyeffects.preset"></a><a class="term" href="options.xhtml#opt-services.easyeffects.preset"><code class="option">services.easyeffects.preset</code>
   </a>
  </span>
