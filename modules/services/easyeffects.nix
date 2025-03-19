@@ -1,19 +1,19 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   cfg = config.services.easyeffects;
 
-  presetOpts = optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
+  presetOpts =
+    lib.optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
 
   jsonFormat = pkgs.formats.json { };
 
   presetType = let baseType = types.attrsOf jsonFormat.type;
   in baseType // {
     check = v:
-      baseType.check v && elem (head (attrNames v)) [ "input" "output" ];
+      baseType.check v
+      && lib.elem (lib.head (lib.attrNames v)) [ "input" "output" ];
     description = "EasyEffects input or output JSON preset";
   };
 
@@ -54,10 +54,10 @@ let
     '';
   };
 in {
-  meta.maintainers = with maintainers; [ fufexan hausken ];
+  meta.maintainers = with lib.maintainers; [ fufexan hausken ];
 
   options.services.easyeffects = {
-    enable = mkEnableOption ''
+    enable = lib.mkEnableOption ''
       Easyeffects daemon.
       Note, it is necessary to add
       ```nix
@@ -84,18 +84,19 @@ in {
     extraPresets = presetOptionType;
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.easyeffects" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.easyeffects" pkgs
+        lib.platforms.linux)
     ];
 
-    # running easyeffects will just attach itself to gapplication service
-    # at-spi2-core is to minimize journalctl noise of:
+    # Running easyeffects will just attach itself to `gapplication` service
+    # at-spi2-core is to minimize `journalctl` noise of:
     # "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"
     home.packages = with pkgs; [ cfg.package at-spi2-core ];
 
-    xdg.configFile = mkIf (cfg.extraPresets != { }) (lib.mapAttrs' (k: v:
-      # assuming only one of either input or output block is defined, having both in same file not seem to be supported by the application since it separates it by folder
+    xdg.configFile = lib.mkIf (cfg.extraPresets != { }) (lib.mapAttrs' (k: v:
+      # Assuming only one of either input or output block is defined, having both in same file not seem to be supported by the application since it separates it by folder
       let folder = builtins.head (builtins.attrNames v);
       in lib.nameValuePair "easyeffects/${folder}/${k}.json" {
         source = jsonFormat.generate "${folder}-${k}.json" v;
