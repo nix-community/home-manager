@@ -13,7 +13,7 @@ in {
       '';
     };
 
-    package = lib.mkPackageOption pkgs "waylogout" { };
+    package = lib.mkPackageOption pkgs "waylogout" { nullable = true; };
 
     settings = lib.mkOption {
       type = with lib.types; attrsOf (oneOf [ bool float int str ]);
@@ -39,7 +39,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."waylogout/config" = lib.mkIf (cfg.settings != { }) {
       text = lib.concatStrings (lib.mapAttrsToList (n: v:
