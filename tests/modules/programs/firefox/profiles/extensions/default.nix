@@ -1,10 +1,7 @@
 modulePath:
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
-let
-  cfg = lib.getAttrFromPath modulePath config;
-
-  firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
+let firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 in {
   imports = [ firefoxMockOverlay ];
 
@@ -27,9 +24,15 @@ in {
       };
     };
   } // {
-    nmt.script = ''
+    nmt.script = let
+      isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+      profilePath = if isDarwin then
+        "Library/Application Support/Firefox/Profiles"
+      else
+        ".mozilla/firefox";
+    in ''
       assertFileContent \
-        home-files/${cfg.configPath}/extensions/browser-extension-data/uBlock0@raymondhill.net/storage.js \
+        "home-files/${profilePath}/extensions/browser-extension-data/uBlock0@raymondhill.net/storage.js" \
         ${./expected-storage.js}
     '';
   });

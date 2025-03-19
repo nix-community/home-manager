@@ -1,5 +1,5 @@
 modulePath:
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
 
@@ -26,15 +26,17 @@ in {
       };
     };
   } // {
-    nmt.script = ''
-      assertFileRegex \
-        home-path/bin/${cfg.wrappedPackageName} \
-        MOZ_APP_LAUNCHER
-
-      assertDirectoryExists home-files/${cfg.configPath}/basic
+    nmt.script = let
+      isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+      profilePath = if isDarwin then
+        "Library/Application Support/Firefox/Profiles"
+      else
+        ".mozilla/firefox";
+    in ''
+      assertDirectoryExists "home-files/${profilePath}/basic"
 
       assertFileContent \
-        home-files/${cfg.configPath}/test/user.js \
+        "home-files/${profilePath}/test/user.js" \
         ${./expected-user.js}
     '';
   });

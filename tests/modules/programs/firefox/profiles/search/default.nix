@@ -93,6 +93,11 @@ in {
     };
   } // {
     nmt.script = let
+      isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+      profilePath = if isDarwin then
+        "Library/Application Support/Firefox/Profiles"
+      else
+        ".mozilla/firefox";
 
       noHashQuery = ''
         'def walk(f):
@@ -125,11 +130,11 @@ in {
       }
 
       assertFirefoxSearchContent \
-        home-files/${cfg.configPath}/search/search.json.mozlz4 \
+        "home-files/${profilePath}/search/search.json.mozlz4" \
         ${withName ./expected-search.json}
 
       assertFirefoxSearchContent \
-        home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
+        "home-files/${profilePath}/searchWithoutDefault/search.json.mozlz4" \
         ${withName ./expected-search-without-default.json}
     '';
   });

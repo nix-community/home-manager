@@ -16,8 +16,7 @@ let
 
   supportedPlatforms = flatten (attrVals (attrNames platforms) lib.platforms);
 
-  isWrapped = versionAtLeast config.home.stateVersion "19.09"
-    && wrappedPackageName != null;
+  isWrapped = wrappedPackageName != null;
 
   defaultPackageName =
     if isWrapped then wrappedPackageName else unwrappedPackageName;
@@ -243,10 +242,8 @@ in {
         }
       '';
       description = ''
-        The ${appName} package to use. If state version ≥ 19.09 then
-        this should be a wrapped ${appName} package. For earlier state
-        versions it should be an unwrapped ${appName} package.
-        Set to `null` to disable installing ${appName}.
+        The ${appName} package to use. This should be a wrapped ${appName}
+        package. Set to `null` to disable installing ${appName}.
       '';
     };
 
