@@ -294,7 +294,6 @@ in import nmtSrc {
     ./modules/programs/darcs
     ./modules/programs/dircolors
     ./modules/programs/direnv
-    ./modules/programs/distrobox
     ./modules/programs/earthly
     ./modules/programs/emacs
     ./modules/programs/fastfetch
@@ -438,6 +437,7 @@ in import nmtSrc {
     ./modules/programs/bemenu
     ./modules/programs/boxxy
     ./modules/programs/cavalier
+    ./modules/programs/distrobox
     ./modules/programs/eww
     ./modules/programs/firefox
     ./modules/programs/firefox/firefox.nix
