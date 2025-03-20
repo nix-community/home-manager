@@ -23,17 +23,17 @@ let
   fishIntegration = ''
     ${getExe pkgs.mcfly} init fish | source
   '' + optionalString cfg.fzf.enable ''
-    if [[ -o interactive ]]; then
-      ${getExe pkgs.mcfly-fzf} init fish | source
-    fi
+    if status is-interactive
+      eval "$(${getExe pkgs.mcfly-fzf} init zsh)"
+    end
   '';
 
   zshIntegration = ''
     eval "$(${getExe pkgs.mcfly} init zsh)"
   '' + optionalString cfg.fzf.enable ''
-    if status is-interactive
-      eval "$(${getExe pkgs.mcfly-fzf} init zsh)"
-    end
+    if [[ -o interactive ]]; then
+      ${getExe pkgs.mcfly-fzf} init fish | source
+    fi
   '';
 
 in {
