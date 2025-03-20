@@ -206,9 +206,7 @@ let
       };
 
       absPath = mkOption {
-        type = types.path;
-        readOnly = true;
-        internal = true;
+        type = types.str;
         default = "${cfg.maildirBasePath}/${config.path}";
         description = ''
           A convenience option whose value is the absolute path of
