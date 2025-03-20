@@ -419,7 +419,10 @@ in {
 
     home.packages = [ cfg.finalPackage ];
 
-    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
+    home.sessionVariables = mkIf cfg.defaultEditor {
+      EDITOR = getBin
+        (pkgs.writeShellScript "editor" "exec ${getBin cfg.package}/bin/nvim");
+    };
 
     home.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
 
