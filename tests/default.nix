@@ -142,6 +142,7 @@ let
       "nix-index"
       "nix-your-shell"
       "ollama"
+      "onlyoffice"
       "openstackclient"
       "papis"
       "pay-respects"
@@ -353,6 +354,7 @@ in import nmtSrc {
     ./modules/programs/nnn
     ./modules/programs/nushell
     ./modules/programs/oh-my-posh
+    ./modules/programs/onlyoffice
     ./modules/programs/openstackclient
     ./modules/programs/pandoc
     ./modules/programs/papis
@@ -457,7 +459,6 @@ in import nmtSrc {
     ./modules/programs/looking-glass-client
     ./modules/programs/mangohud
     ./modules/programs/ncmpcpp-linux
-    ./modules/programs/onlyoffice
     ./modules/programs/pqiv
     ./modules/programs/rbw
     ./modules/programs/rofi
