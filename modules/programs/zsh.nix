@@ -544,7 +544,10 @@ in
       localVariables = mkOption {
         type = types.attrs;
         default = {};
-        example = { POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=["dir" "vcs"]; };
+        example = {
+          POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=["dir" "vcs"];
+          ZSH_HIGHLIGHT_STYLES={unknown-token="bg=red,fg=white,bold";};
+        };
         description = ''
           Extra local variables defined at the top of {file}`.zshrc`.
         '';
