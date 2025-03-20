@@ -5,6 +5,7 @@ builtins.mapAttrs (test: module: import module [ "programs" name ]) {
   "${name}-final-package" = ./final-package.nix;
   "${name}-policies" = ./policies.nix;
   "${name}-profiles-bookmarks" = ./profiles/bookmarks;
+  "${name}-profiles-bookmarks-attrset" = ./profiles/bookmarks/attrset.nix;
   "${name}-profiles-containers" = ./profiles/containers;
   "${name}-profiles-containers-duplicate-ids" =
     ./profiles/containers/duplicate-ids.nix;
