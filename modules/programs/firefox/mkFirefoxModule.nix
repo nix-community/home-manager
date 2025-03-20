@@ -158,6 +158,8 @@ let
       })
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
+
+  bookmarkTypes = import ./profiles/bookmark-types.nix { inherit lib; };
 in {
   options = setAttrByPath modulePath {
     enable = mkOption {
@@ -380,7 +382,7 @@ in {
 
           bookmarks = mkOption {
             type = (with types;
-              coercedTo (listOf anything) (bookmarks:
+              coercedTo bookmarkTypes.settingsType (bookmarks:
                 warn ''
                   ${cfg.name} bookmarks have been refactored into a submodule that now explicitly require a 'force' option to be enabled.
 
