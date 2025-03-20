@@ -119,7 +119,28 @@ $ sudo nix-channel --update
 </code></pre><p>It is then possible to add</p><pre><code class="programlisting  nix">imports = [ &lt;home-manager/nixos&gt; ];
 </code></pre><p>to your system <code class="literal">configuration.nix</code> file, which will introduce a new
 NixOS option called <code class="literal">home-manager.users</code> whose type is an attribute set
-that maps user names to Home Manager configurations.</p><p>For example, a NixOS configuration may include the lines</p><pre><code class="programlisting  nix">users.users.eve.isNormalUser = true;
+that maps user names to Home Manager configurations.</p><p>Alternatively, home-manager installation can be done declaratively through configuration.nix using the following syntax:</p><pre><code class="programlisting nix">{ config, pkgs, lib, ... }:
+
+let
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz;
+in
+{
+  imports =
+    [
+      (import &quot;${home-manager}/nixos&quot;)
+    ];
+
+  users.users.eve.isNormalUser = true;
+  home-manager.users.eve = { pkgs, ... }: {
+    home.packages = [ pkgs.atool pkgs.httpie ];
+    programs.bash.enable = true;
+  
+    # The state version is required and should stay at the version you
+    # originally installed.
+    home.stateVersion = &quot;24.11&quot;;
+  };
+}
+</code></pre><p>For example, a NixOS configuration may include the lines</p><pre><code class="programlisting  nix">users.users.eve.isNormalUser = true;
 home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
