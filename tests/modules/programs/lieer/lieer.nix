@@ -16,6 +16,8 @@
       assertFileContent home-files/Mail/hm@example.com/.gmailieer.json ${
         ./lieer-expected.json
       }
+      assertFileContains activate \
+        '$DRY_RUN_CMD mkdir -m700 -p $VERBOSE_ARG "/home/hm-user/Mail/hm@example.com"/mail/{cur,new,tmp}'
     '';
   };
 }
