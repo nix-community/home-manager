@@ -341,6 +341,7 @@ let
     ./services/kdeconnect.nix
     ./services/keybase.nix
     ./services/keynav.nix
+    ./services/librespot.nix
     ./services/lieer.nix
     ./services/linux-wallpaperengine.nix
     ./services/listenbrainz-mpd.nix
