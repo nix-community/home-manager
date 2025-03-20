@@ -1,3 +1,5 @@
+{ lib, realPkgs, ... }:
+
 {
   programs = {
     pay-respects.enable = true;
@@ -7,25 +9,27 @@
     nushell.enable = true;
   };
 
+  _module.args.pkgs = lib.mkForce realPkgs;
+
   nmt.script = ''
     assertFileExists home-files/.bashrc
-    assertFileContains \
+    assertFileRegex \
       home-files/.bashrc \
-      'eval "$(@pay-respects@/bin/pay-respects bash --alias)"'
+      'eval "$(/nix/store/[^/]*-pay-respects-[^/]*/bin/pay-respects bash --alias)"'
 
     assertFileExists home-files/.zshrc
-    assertFileContains \
+    assertFileRegex \
       home-files/.zshrc \
-      'eval "$(@pay-respects@/bin/pay-respects zsh --alias)"'
+      'eval "$(/nix/store/[^/]*-pay-respects-[^/]*/bin/pay-respects zsh --alias)"'
 
     assertFileExists home-files/.config/fish/config.fish
-    assertFileContains \
+    assertFileRegex \
       home-files/.config/fish/config.fish \
-      '@pay-respects@/bin/pay-respects fish --alias | source'
+      '/nix/store/[^/]*-pay-respects-[^/]*/bin/pay-respects fish --alias | source'
 
     assertFileExists home-files/.config/nushell/config.nu
-    assertFileContains \
+    assertFileRegex \
       home-files/.config/nushell/config.nu \
-      '@pay-respects@/bin/pay-respects nushell --alias [<alias>]'
+      'source /nix/store/[^/]*-pay-respects-nushell-config'
   '';
 }
