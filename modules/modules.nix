@@ -195,6 +195,7 @@ let
     ./programs/octant.nix
     ./programs/offlineimap.nix
     ./programs/oh-my-posh.nix
+    ./programs/onlyoffice.nix
     ./programs/opam.nix
     ./programs/openstackclient.nix
     ./programs/pandoc.nix
