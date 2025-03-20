@@ -22,6 +22,15 @@ in {
 
     server.enable = mkEnableOption "Foot terminal server";
 
+    server.systemdTarget = mkOption {
+      type = types.str;
+      default = "graphical-session.target";
+      example = "sway-session.target";
+      description = ''
+        The systemd target that will automatically start the foot server.
+      '';
+    };
+
     settings = mkOption {
       type = iniFormat.type;
       default = { };
@@ -73,7 +82,7 @@ in {
           OOMPolicy = "continue";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = { WantedBy = [ cfg.server.systemdTarget ]; };
       };
     };
   };
