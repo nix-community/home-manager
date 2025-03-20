@@ -7,22 +7,33 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
+  # These shell integrations all wrap `mcfly-fzf init` in an interactive shell
+  # check, due to a buggy interactivity check in its initialization.
+  # See: https://github.com/nix-community/home-manager/issues/6663
+  # and https://github.com/bnprks/mcfly-fzf/issues/10
+
   bashIntegration = ''
     eval "$(${getExe pkgs.mcfly} init bash)"
   '' + optionalString cfg.fzf.enable ''
-    eval "$(${getExe pkgs.mcfly-fzf} init bash)"
+    if [[ $- =~ i ]]; then
+      eval "$(${getExe pkgs.mcfly-fzf} init bash)"
+    fi
   '';
 
   fishIntegration = ''
     ${getExe pkgs.mcfly} init fish | source
   '' + optionalString cfg.fzf.enable ''
-    ${getExe pkgs.mcfly-fzf} init fish | source
+    if status is-interactive
+      eval "$(${getExe pkgs.mcfly-fzf} init zsh)"
+    end
   '';
 
   zshIntegration = ''
     eval "$(${getExe pkgs.mcfly} init zsh)"
   '' + optionalString cfg.fzf.enable ''
-    eval "$(${getExe pkgs.mcfly-fzf} init zsh)"
+    if [[ -o interactive ]]; then
+      ${getExe pkgs.mcfly-fzf} init fish | source
+    fi
   '';
 
 in {
