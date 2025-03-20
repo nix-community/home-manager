@@ -121,6 +121,8 @@ let
       "kitty"
       "kubecolor"
       "lapce"
+      "lazydocker"
+      "lazygit"
       "ledger"
       "less"
       "lesspipe"
