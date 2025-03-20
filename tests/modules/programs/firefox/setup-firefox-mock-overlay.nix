@@ -11,6 +11,7 @@ in {
     "${unwrappedName}" = {
       name = unwrappedName;
       extraAttrs = {
+        applicationName = cfg.wrappedPackageName;
         binaryName = cfg.wrappedPackageName;
         gtk3 = null;
         meta.description = "I pretend to be ${cfg.name}";
