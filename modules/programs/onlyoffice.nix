@@ -19,7 +19,7 @@ in {
   options.programs.onlyoffice = {
     enable = mkEnableOption "distrobox";
 
-    package = mkPackageOption pkgs "onlyoffice-desktopeditors" { };
+    package = mkPackageOption pkgs "onlyoffice-desktopeditors" { nullable = true; };
 
     settings = mkOption {
       type = with types; attrsOf (either bool str);
