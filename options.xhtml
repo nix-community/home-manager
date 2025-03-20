@@ -36072,6 +36072,101 @@ TOML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.lazydocker.enable"></a><a class="term" href="options.xhtml#opt-programs.lazydocker.enable"><code class="option">programs.lazydocker.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable lazydocker, a simple terminal UI for both docker and docker compose.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lazydocker.nix" target="_top">
+&lt;home-manager/modules/programs/lazydocker.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lazydocker.package"></a><a class="term" href="options.xhtml#opt-programs.lazydocker.package"><code class="option">programs.lazydocker.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The lazydocker package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.lazydocker</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lazydocker.nix" target="_top">
+&lt;home-manager/modules/programs/lazydocker.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lazydocker.settings"></a><a class="term" href="options.xhtml#opt-programs.lazydocker.settings"><code class="option">programs.lazydocker.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/lazydocker/config.yml</code>
+on Linux or on Darwin if <a class="xref" href="options.xhtml#opt-xdg.enable"  ><code class="option">xdg.enable</code></a> is set, otherwise
+<code class="filename">~/Library/Application Support/jesseduffield/lazydocker/config.yml</code>.
+See
+<a class="link" href="https://github.com/jesseduffield/lazydocker/blob/master/docs/Config.md"  target="_top">https://github.com/jesseduffield/lazydocker/blob/master/docs/Config.md</a>
+for supported values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  commandTemplates = {
+    dockerCompose = &quot;docker compose&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  gui.theme = {
+    activeBorderColor = [&quot;red&quot; &quot;bold&quot;];
+    inactiveBorderColor = [&quot;blue&quot;];
+  };
+  commandTemplates.dockerCompose = &quot;docker compose compose -f docker-compose.yml&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lazydocker.nix" target="_top">
+&lt;home-manager/modules/programs/lazydocker.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.lazygit.enable"></a><a class="term" href="options.xhtml#opt-programs.lazygit.enable"><code class="option">programs.lazygit.enable</code>
   </a>
  </span>
