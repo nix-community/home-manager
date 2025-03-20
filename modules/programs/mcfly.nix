@@ -24,7 +24,7 @@ let
     ${getExe pkgs.mcfly} init fish | source
   '' + optionalString cfg.fzf.enable ''
     if status is-interactive
-      eval "$(${getExe pkgs.mcfly-fzf} init zsh)"
+      eval "$(${getExe pkgs.mcfly-fzf} init fish)"
     end
   '';
 
@@ -32,7 +32,7 @@ let
     eval "$(${getExe pkgs.mcfly} init zsh)"
   '' + optionalString cfg.fzf.enable ''
     if [[ -o interactive ]]; then
-      ${getExe pkgs.mcfly-fzf} init fish | source
+      ${getExe pkgs.mcfly-fzf} init zsh | source
     fi
   '';
 
