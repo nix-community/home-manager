@@ -17,7 +17,7 @@ in {
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.onlyoffice = {
-    enable = mkEnableOption "distrobox";
+    enable = mkEnableOption "onlyoffice";
 
     package =
       mkPackageOption pkgs "onlyoffice-desktopeditors" { nullable = true; };
