@@ -71864,6 +71864,131 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.librespot.enable"></a><a class="term" href="options.xhtml#opt-services.librespot.enable"><code class="option">services.librespot.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Librespot (Spotify Connect speaker daemon).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/librespot.nix" target="_top">
+&lt;home-manager/modules/services/librespot.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.librespot.package"></a><a class="term" href="options.xhtml#opt-services.librespot.package"><code class="option">services.librespot.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The librespot package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.librespot</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/librespot.nix" target="_top">
+&lt;home-manager/modules/services/librespot.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.librespot.settings"></a><a class="term" href="options.xhtml#opt-services.librespot.settings"><code class="option">services.librespot.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Command-line arguments to pass to librespot.</p><p>Boolean values render as a flag if true, and nothing if false.
+Null values are ignored.
+All other values are rendered as options with an argument.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (null or boolean or string or signed integer or absolute path)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/librespot.nix" target="_top">
+&lt;home-manager/modules/services/librespot.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.librespot.settings.cache"></a><a class="term" href="options.xhtml#opt-services.librespot.settings.cache"><code class="option">services.librespot.settings.cache</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to a directory where files will be cached after downloading.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;$XDG_CACHE_HOME/librespot&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/librespot.nix" target="_top">
+&lt;home-manager/modules/services/librespot.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.librespot.settings.system-cache"></a><a class="term" href="options.xhtml#opt-services.librespot.settings.system-cache"><code class="option">services.librespot.settings.system-cache</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to a directory where system files (credentials, volume) will be cached.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;$XDG_STATE_HOME/librespot&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/librespot.nix" target="_top">
+&lt;home-manager/modules/services/librespot.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.lieer.enable"></a><a class="term" href="options.xhtml#opt-services.lieer.enable"><code class="option">services.lieer.enable</code>
   </a>
  </span>
