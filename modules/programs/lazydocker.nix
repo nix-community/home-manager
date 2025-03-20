@@ -15,7 +15,7 @@ in {
     enable = lib.mkEnableOption
       "lazydocker, a simple terminal UI for both docker and docker compose";
 
-    package = lib.mkPackageOption pkgs "lazydocker" { };
+    package = lib.mkPackageOption pkgs "lazydocker" { nullable = true; };
 
     settings = lib.mkOption {
       type = yamlFormat.type;
@@ -45,7 +45,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."Library/Application Support/jesseduffield/lazydocker/config.yml" =
       lib.mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable)) {
