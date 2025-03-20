@@ -93,39 +93,20 @@ let
     };
   };
 
-  keyMapping = types.submodule {
+  keysModule = types.submodule {
     options = {
-      mode = mkOption {
-        type = types.str;
-        example = "user";
-        description = ''
-          The mode in which the mapping takes effect.
-        '';
-      };
-
-      docstring = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = ''
-          Optional documentation text to display in info boxes.
-        '';
-      };
-
-      key = mkOption {
-        type = types.str;
-        example = "<a-x>";
-        description = ''
-          The key to be mapped. See
-          <https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc#mappable-keys>
-          for possible values.
-        '';
-      };
-
       effect = mkOption {
         type = types.str;
         example = ":wq<ret>";
         description = ''
           The sequence of keys to be mapped.
+        '';
+      };
+      docstring = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Optional documentation text to display in info boxes.
         '';
       };
     };
@@ -226,6 +207,8 @@ let
             };
           };
         });
+        docstring = lib.mkOption {
+        };
         default = null;
         description = ''
           How many lines and columns to keep visible around the cursor.
@@ -469,8 +452,18 @@ let
       };
 
       keyMappings = mkOption {
-        type = types.listOf keyMapping;
-        default = [ ];
+        type = types.attrsOf (types.attrsOf (types.oneOf types.string keysModule));
+        default = {};
+        example = {
+          normal = {
+            "=" = {
+              effect = ":echo Got count %val{count} and reg %val{register}<ret>";
+              docstring = "TODO";
+            };
+          };
+
+          user."<a-x>" = ":wq<ret>";
+        };
         description = ''
           User-defined key mappings. For documentation, see
           <https://github.com/mawww/kakoune/blob/master/doc/pages/mapping.asciidoc>.
@@ -559,15 +552,33 @@ let
       ]) "try %{declare-user-mode ${mode}}";
 
     userModeStrings = map userModeString
-      (lists.unique (map (km: km.mode) cfg.config.keyMappings));
+      (attrNames cfg.config.keyMappings);
 
     keyMappingString = km:
-      concatStringsSep " " [
-        "map global"
-        "${km.mode} ${km.key} '${km.effect}'"
-        "${optionalString (km.docstring != null)
-        "-docstring '${km.docstring}'"}"
-      ];
+      let
+        concatMap = f: lib.foldlAttrs
+          (acc: name: value: acc ++ f name value)
+          [];
+        buildMapString = mode: key: value:
+        let
+          effect = if lib.isString value then "'${value}'"
+            else if lib.isAttrs value then
+              (assert (lib.isString value.effect); "'${value.effect}'")
+            else abort "WOPS";
+
+          docstring = optionalString
+            (lib.isAttrs value && lib.isString value.docstring)
+            "-docstring '${value.docstring}'";
+        in
+          concatStringSep " " [
+            "map global"
+            "${mode}"
+            "${key}"
+            effect
+            docstring
+          ];
+      in
+        concatMap (mode: concatMap (key: value: [buildMapString mode key value]));
 
     hookString = h:
       concatStringsSep " " [
@@ -611,7 +622,7 @@ let
         ++ optional (ui != null) "set-option global ui_options ${uiOptions}"
 
         ++ [ "# User modes" ] ++ userModeStrings ++ [ "# Key mappings" ]
-        ++ map keyMappingString keyMappings
+        ++ keyMappingString keyMappings
 
         ++ [ "# Hooks" ] ++ map hookString hooks);
   in pkgs.writeText "kakrc"
