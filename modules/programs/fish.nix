@@ -499,11 +499,11 @@ in {
           # Abbreviations
           ${abbrsStr}
 
-          # Aliases
-          ${aliasesStr}
-
           # Interactive shell initialisation
           ${cfg.interactiveShellInit}
+
+          # Aliases
+          ${aliasesStr}
 
         end
 
