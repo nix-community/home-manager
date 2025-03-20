@@ -41,7 +41,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."onlyoffice/DesktopEditors.conf".source =
       pkgs.writeText "DesktopEditors.conf" (getFinalConfig cfg.settings);
