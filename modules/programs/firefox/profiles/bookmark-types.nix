@@ -1,8 +1,11 @@
 { lib, ... }:
 
-with lib;
+let
 
-rec {
+  inherit (builtins) attrValues;
+  inherit (lib) types mkOption;
+
+in rec {
   settingsType = with types;
     coercedTo (addCheck (attrsOf nodeType) (attrs: !(attrs ? settings)))
     attrValues (listOf nodeType);
