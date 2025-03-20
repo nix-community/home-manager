@@ -142,7 +142,7 @@ let
       "nix-index"
       "nix-your-shell"
       "ollama"
-      "onlyoffice"
+      "onlyoffice-desktopeditors"
       "openstackclient"
       "papis"
       "pay-respects"
