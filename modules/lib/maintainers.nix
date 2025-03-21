@@ -66,6 +66,12 @@
     github = "bertof";
     githubId = 9915675;
   };
+  bmrips = {
+    name = "Benedikt Rips";
+    email = "benedikt.rips@gmail.com";
+    github = "bmrips";
+    githubId = 20407973;
+  };
   bricked = {
     name = "Bricked";
     email = "hello@bricked.dev";
