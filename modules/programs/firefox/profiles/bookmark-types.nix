@@ -7,8 +7,10 @@ let
 
 in rec {
   settingsType = with types;
-    coercedTo (addCheck (attrsOf nodeType) (attrs: !(attrs ? settings)))
-    attrValues (listOf nodeType);
+    coercedTo (addCheck (attrsOf nodeType)
+    # Check whether attribute set is of correct type
+      (attrs: !(attrs ? settings) || nodeType.check attrs.settings)) attrValues
+    (listOf nodeType);
 
   bookmarkSubmodule = types.submodule ({ name, ... }: {
     options = {
