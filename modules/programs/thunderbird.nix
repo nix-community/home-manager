@@ -277,6 +277,28 @@ in {
                 '';
               };
 
+              accountsOrder = mkOption {
+                type = types.listOf types.str;
+                default = [ ];
+                description = ''
+                  Custom ordering of accounts in Thunderbird's folder pane. The
+                  accounts must be specified using the name of their attribute
+                  in `config.accounts.email.accounts` (or
+                  `config.programs.thunderbird.profiles.<name>.feedAccounts` for feed
+                  accounts). Enabled accounts that aren't listed here appear in
+                  an arbitrary order after the ordered accounts.
+                '';
+                example = ''
+                  [
+                    "my-awesome-account"
+                    "private"
+                    "work"
+                    "rss"
+                    /* Other accounts in arbitrary order */
+                  ]
+                '';
+              };
+
               withExternalGnupg = mkOption {
                 type = types.bool;
                 default = false;
@@ -573,13 +595,23 @@ in {
           (attrValues profile.feedAccounts);
 
         accounts = emailAccounts ++ feedAccounts;
+
+        orderedAccountsIds = let
+          accountsOrderIds =
+            map (a: builtins.hashString "sha256" a) profile.accountsOrder;
+          enabledAccountsIds = map (a: a.id) accounts;
+        in accountsOrderIds
+        ++ (lists.subtractLists accountsOrderIds enabledAccountsIds);
       in {
         text = mkUserJs (builtins.foldl' (a: b: a // b) { } ([
           cfg.settings
 
-          (optionalAttrs (length accounts != 0) {
-            "mail.accountmanager.accounts" =
-              concatStringsSep "," (map (a: "account_${a.id}") accounts);
+          (optionalAttrs (length orderedAccountsIds != 0) {
+            # Append the default local folder name "account1".
+            # See https://github.com/nix-community/home-manager/issues/5031.
+            "mail.accountmanager.accounts" = concatStringsSep ","
+              ((map (id: "account_${id}") orderedAccountsIds)
+                ++ [ "account1" ]);
           })
 
           (optionalAttrs (length smtp != 0) {

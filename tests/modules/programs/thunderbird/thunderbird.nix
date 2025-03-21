@@ -76,6 +76,8 @@
         '';
 
         feedAccounts.rss = { };
+
+        accountsOrder = [ "hm@example.com" "rss" "hm-account" ];
       };
 
       second.settings = {
