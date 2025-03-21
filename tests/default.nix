@@ -442,6 +442,7 @@ in import nmtSrc {
     ./modules/programs/bemenu
     ./modules/programs/boxxy
     ./modules/programs/cavalier
+    ./modules/programs/distrobox
     ./modules/programs/eww
     ./modules/programs/firefox
     ./modules/programs/firefox/firefox.nix
