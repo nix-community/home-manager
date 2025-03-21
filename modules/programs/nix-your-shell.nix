@@ -31,22 +31,21 @@ in {
 
     programs = {
       fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-        ${cfg.package}/bin/nix-your-shell fish | source
+        ${lib.getExe cfg.package} fish | source
       '';
 
       nushell = mkIf cfg.enableNushellIntegration {
-        extraEnv = ''
-          mkdir ${config.xdg.cacheHome}/nix-your-shell
-          ${cfg.package}/bin/nix-your-shell nu | save --force ${config.xdg.cacheHome}/nix-your-shell/init.nu
-        '';
-
         extraConfig = ''
-          source ${config.xdg.cacheHome}/nix-your-shell/init.nu
+          source ${
+            pkgs.runCommand "nix-your-shell-nushell-config" { } ''
+              ${lib.getExe cfg.package} nu >> "$out"
+            ''
+          }
         '';
       };
 
       zsh.initContent = mkIf cfg.enableZshIntegration ''
-        ${cfg.package}/bin/nix-your-shell zsh | source /dev/stdin
+        ${lib.getExe cfg.package} zsh | source /dev/stdin
       '';
     };
   };
