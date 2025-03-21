@@ -39,9 +39,6 @@
         HELPDIR="@zsh@/share/zsh/$ZSH_VERSION/help"
 
         autoload -U compinit && compinit
-        # Default priority
-        echo "Default priority content"
-
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
         # See https://github.com/nix-community/home-manager/issues/177.
         HISTSIZE="10000"
@@ -61,6 +58,9 @@
         setopt SHARE_HISTORY
         unsetopt EXTENDED_HISTORY
 
+
+        # Default priority
+        echo "Default priority content"
 
         zprof
         # Low priority (mkAfter)
