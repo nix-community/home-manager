@@ -1,30 +1,10 @@
 { lib, pkgs, config, ... }:
 let
-  inherit (lib)
-    types isBool isList boolToString concatStringsSep mapAttrsToList removeAttrs
-    mkIf mkEnableOption mkPackageOption mkOption literalExpression;
+  inherit (lib) generators types mkIf mkEnableOption mkPackageOption mkOption;
 
   cfg = config.programs.distrobox;
 
-  attrToString = name: value:
-    let
-      newvalue = if (isBool value) then
-        [ (boolToString value) ]
-      else if (isList value) then
-        value
-      else
-        [ value ];
-    in concatStringsSep "\n" (map (value: "${name}=${value}") newvalue);
-
-  getFlags = set: concatStringsSep "\n" (mapAttrsToList attrToString set);
-
-  setToContainer = name: set:
-    ''
-      [${name}]
-    '' + (getFlags set);
-
-  getContainersConfig = set:
-    (concatStringsSep "\n\n" (mapAttrsToList setToContainer set)) + "\n";
+  formatter = pkgs.formats.ini { listsAsDuplicateKeys = true; };
 in {
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
@@ -34,7 +14,7 @@ in {
     package = mkPackageOption pkgs "distrobox" { };
 
     containers = mkOption {
-      type = with types; attrsOf (attrsOf (oneOf [ bool str (listOf str) ]));
+      type = formatter.type;
       default = { };
       example = ''
         {
@@ -84,7 +64,7 @@ in {
     home.packages = [ cfg.package ];
 
     xdg.configFile."distrobox/containers.ini".source =
-      pkgs.writeText "containers.ini" (getContainersConfig cfg.containers);
+      (formatter.generate "containers.ini" cfg.containers);
 
     systemd.user.services.distrobox-home-manager = {
       Unit.Description =
