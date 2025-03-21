@@ -1,5 +1,4 @@
 { config, lib, pkgs, ... }:
-
 let
   cfg = config.programs.iamb;
   tomlFormat = pkgs.formats.toml { };
@@ -7,12 +6,7 @@ in {
   options.programs.iamb = {
     enable = lib.mkEnableOption "iamb";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.iamb;
-      defaultText = lib.literalExpression "pkgs.iamb";
-      description = "The package to use for the iamb binary.";
-    };
+    package = lib.mkPackageOption pkgs "iamb" { nullable = true; };
 
     settings = lib.mkOption {
       type = tomlFormat.type;
@@ -44,7 +38,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."iamb/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "iamb-config" cfg.settings;
