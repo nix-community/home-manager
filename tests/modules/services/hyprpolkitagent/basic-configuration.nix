@@ -14,7 +14,7 @@
         ExecStart=@hyprpolkitagent@/libexec/hyprpolkitagent
 
         [Unit]
-        After=graphical-session-pre.target
+        After=graphical-session.target
         Description=Hyprland PolicyKit Agent
         PartOf=graphical-session.target
       ''
