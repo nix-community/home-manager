@@ -19906,6 +19906,116 @@ null or package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.distrobox.enable"></a><a class="term" href="options.xhtml#opt-programs.distrobox.enable"><code class="option">programs.distrobox.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable distrobox.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/distrobox.nix" target="_top">
+&lt;home-manager/modules/programs/distrobox.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.distrobox.package"></a><a class="term" href="options.xhtml#opt-programs.distrobox.package"><code class="option">programs.distrobox.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The distrobox package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.distrobox</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/distrobox.nix" target="_top">
+&lt;home-manager/modules/programs/distrobox.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.distrobox.containers"></a><a class="term" href="options.xhtml#opt-programs.distrobox.containers"><code class="option">programs.distrobox.containers</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A set of containers and all its respective configurations. Each option cat be either a
+bool, string or a list of strings. If passed a list, the option will be repeated for each element.
+See common-debian in the example config. All the available options for the containers can be found
+in the distrobox-assemble documentation at <a class="link" href="https://github.com/89luca89/distrobox/blob/main/docs/usage/distrobox-assemble.md"  target="_top">https://github.com/89luca89/distrobox/blob/main/docs/usage/distrobox-assemble.md</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string) or a list of them for duplicate keys)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  {
+    python-project = {
+      image = &quot;fedora:40&quot;;
+      additional_packages = &quot;python3 git&quot;;
+      init_hooks = &quot;pip3 install numpy pandas torch torchvision&quot;;
+    };
+  
+    common-debian = {
+      image = &quot;debian:13&quot;;
+      entry = true;
+      additional_packages = &quot;git&quot;;
+      init_hooks = [
+        &quot;ln -sf /usr/bin/distrobox-host-exec /usr/local/bin/docker&quot;
+        &quot;ln -sf /usr/bin/distrobox-host-exec /usr/local/bin/docker-compose&quot;
+      ];
+    };
+  
+    office = {
+      clone = &quot;common-debian&quot;;
+      additional_packages = &quot;libreoffice onlyoffice&quot;;
+      entry = true;
+    };
+  
+    random-things = {
+      clone = &quot;common-debian&quot;;
+      entry = false;
+    };
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/distrobox.nix" target="_top">
+&lt;home-manager/modules/programs/distrobox.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.earthly.enable"></a><a class="term" href="options.xhtml#opt-programs.earthly.enable"><code class="option">programs.earthly.enable</code>
   </a>
  </span>
