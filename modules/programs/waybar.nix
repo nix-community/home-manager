@@ -321,7 +321,7 @@ in {
           Description =
             "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
           Documentation = "https://github.com/Alexays/Waybar/wiki";
-          PartOf = [ cfg.systemd.target ];
+          PartOf = [ cfg.systemd.target "tray.target" ];
           After = [ cfg.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           X-Restart-Triggers = optional (settings != [ ])
@@ -339,8 +339,8 @@ in {
           Environment = [ "GTK_DEBUG=interactive" ];
         };
 
-        Install.WantedBy =
-          lib.optional (cfg.systemd.target != null) cfg.systemd.target;
+        Install.WantedBy = [ "tray.target" ]
+          ++ lib.optional (cfg.systemd.target != null) cfg.systemd.target;
       };
     })
   ]);
