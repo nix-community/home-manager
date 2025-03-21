@@ -23,7 +23,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ package ];
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       function assume() {
         export GRANTED_ALIAS_CONFIGURED="true"
         source ${package}/bin/assume "$@"

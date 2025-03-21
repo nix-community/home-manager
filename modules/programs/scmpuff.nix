@@ -45,7 +45,7 @@ in {
       eval "$(${cfg.package}/bin/scmpuff init ${mkArgs "bash"})"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/scmpuff init ${mkArgs "zsh"})"
     '';
 

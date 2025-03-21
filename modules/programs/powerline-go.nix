@@ -142,27 +142,28 @@ in {
         fi
       '';
 
-    programs.zsh.initExtra = mkIf (cfg.enable && config.programs.zsh.enable) ''
-      function powerline_precmd() {
-        ${
-          if evalMode then "eval " else "PS1="
-        }"$(${pkgs.powerline-go}/bin/powerline-go -error $? -shell zsh${commandLineArguments})"
-        ${cfg.extraUpdatePS1}
-      }
+    programs.zsh.initContent =
+      mkIf (cfg.enable && config.programs.zsh.enable) ''
+        function powerline_precmd() {
+          ${
+            if evalMode then "eval " else "PS1="
+          }"$(${pkgs.powerline-go}/bin/powerline-go -error $? -shell zsh${commandLineArguments})"
+          ${cfg.extraUpdatePS1}
+        }
 
-      function install_powerline_precmd() {
-        for s in "$\{precmd_functions[@]}"; do
-          if [ "$s" = "powerline_precmd" ]; then
-            return
-          fi
-        done
-        precmd_functions+=(powerline_precmd)
-      }
+        function install_powerline_precmd() {
+          for s in "$\{precmd_functions[@]}"; do
+            if [ "$s" = "powerline_precmd" ]; then
+              return
+            fi
+          done
+          precmd_functions+=(powerline_precmd)
+        }
 
-      if [ "$TERM" != "linux" ]; then
-        install_powerline_precmd
-      fi
-    '';
+        if [ "$TERM" != "linux" ]; then
+          install_powerline_precmd
+        fi
+      '';
 
     # https://github.com/justjanne/powerline-go#fish
     programs.fish.interactiveShellInit =

@@ -79,7 +79,7 @@ in {
       eval "$(${cfg.package}/bin/rbenv init - bash)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/rbenv init - zsh)"
     '';
 

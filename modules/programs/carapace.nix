@@ -37,7 +37,7 @@ in {
         source <(${bin} _carapace bash)
       '';
 
-      zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      zsh.initContent = mkIf cfg.enableZshIntegration ''
         source <(${bin} _carapace zsh)
       '';
 
