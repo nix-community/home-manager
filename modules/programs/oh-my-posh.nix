@@ -68,27 +68,26 @@ in {
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${cfg.package}/bin/oh-my-posh init bash ${configArgument})"
+      eval "$(${lib.getExe cfg.package} init bash ${configArgument})"
     '';
 
     programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-      eval "$(${cfg.package}/bin/oh-my-posh init zsh ${configArgument})"
+      eval "$(${lib.getExe cfg.package} init zsh ${configArgument})"
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      ${cfg.package}/bin/oh-my-posh init fish ${configArgument} | source
+      ${lib.getExe cfg.package} init fish ${configArgument} | source
     '';
 
     programs.nushell = mkIf cfg.enableNushellIntegration {
-      extraEnv = ''
-        let oh_my_posh_cache = "${config.xdg.cacheHome}/oh-my-posh"
-        if not ($oh_my_posh_cache | path exists) {
-          mkdir $oh_my_posh_cache
-        }
-        ${cfg.package}/bin/oh-my-posh init nu ${configArgument} --print | save --force ${config.xdg.cacheHome}/oh-my-posh/init.nu
-      '';
       extraConfig = ''
-        source ${config.xdg.cacheHome}/oh-my-posh/init.nu
+        source ${
+          pkgs.runCommand "oh-my-posh-nushell-config" { } ''
+            ${
+              lib.getExe cfg.package
+            } init nu ${configArgument} --print >> "$out"
+          ''
+        }
       '';
     };
   };
