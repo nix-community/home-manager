@@ -3,7 +3,7 @@ let
   inherit (lib) mkEnableOption mkPackageOption mkIf maintainers;
   cfg = config.services.hyprpolkitagent;
 in {
-  meta.maintainers = [ maintainers.bobvanderlinden ];
+  meta.maintainers = with maintainers; [ bobvanderlinden khaneliman ];
 
   options = {
     services.hyprpolkitagent = {
