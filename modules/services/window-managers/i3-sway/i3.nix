@@ -19,7 +19,14 @@ let
         terminal defaultWorkspace workspaceOutputAssign;
 
       keybindings = mkOption {
-        type = types.attrsOf (types.nullOr types.str);
+        type = let
+          withPriority = types.submodule {
+            options = {
+              priority = mkOption { type = types.int; };
+              value = mkOption { type = types.str; };
+            };
+          };
+        in types.attrsOf (types.nullOr (types.either types.str withPriority));
         default = mapAttrs (n: mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
@@ -51,37 +58,87 @@ let
           "${cfg.config.modifier}+Shift+minus" = "move scratchpad";
           "${cfg.config.modifier}+minus" = "scratchpad show";
 
-          "${cfg.config.modifier}+1" = "workspace number 1";
-          "${cfg.config.modifier}+2" = "workspace number 2";
-          "${cfg.config.modifier}+3" = "workspace number 3";
-          "${cfg.config.modifier}+4" = "workspace number 4";
-          "${cfg.config.modifier}+5" = "workspace number 5";
-          "${cfg.config.modifier}+6" = "workspace number 6";
-          "${cfg.config.modifier}+7" = "workspace number 7";
-          "${cfg.config.modifier}+8" = "workspace number 8";
-          "${cfg.config.modifier}+9" = "workspace number 9";
-          "${cfg.config.modifier}+0" = "workspace number 10";
+          "${cfg.config.modifier}+1" = {
+            priority = 101;
+            value = "workspace number 1";
+          };
+          "${cfg.config.modifier}+2" = {
+            priority = 102;
+            value = "workspace number 2";
+          };
+          "${cfg.config.modifier}+3" = {
+            priority = 103;
+            value = "workspace number 3";
+          };
+          "${cfg.config.modifier}+4" = {
+            priority = 104;
+            value = "workspace number 4";
+          };
+          "${cfg.config.modifier}+5" = {
+            priority = 105;
+            value = "workspace number 5";
+          };
+          "${cfg.config.modifier}+6" = {
+            priority = 106;
+            value = "workspace number 6";
+          };
+          "${cfg.config.modifier}+7" = {
+            priority = 107;
+            value = "workspace number 7";
+          };
+          "${cfg.config.modifier}+8" = {
+            priority = 108;
+            value = "workspace number 8";
+          };
+          "${cfg.config.modifier}+9" = {
+            priority = 109;
+            value = "workspace number 9";
+          };
+          "${cfg.config.modifier}+0" = {
+            priority = 110;
+            value = "workspace number 10";
+          };
 
-          "${cfg.config.modifier}+Shift+1" =
-            "move container to workspace number 1";
-          "${cfg.config.modifier}+Shift+2" =
-            "move container to workspace number 2";
-          "${cfg.config.modifier}+Shift+3" =
-            "move container to workspace number 3";
-          "${cfg.config.modifier}+Shift+4" =
-            "move container to workspace number 4";
-          "${cfg.config.modifier}+Shift+5" =
-            "move container to workspace number 5";
-          "${cfg.config.modifier}+Shift+6" =
-            "move container to workspace number 6";
-          "${cfg.config.modifier}+Shift+7" =
-            "move container to workspace number 7";
-          "${cfg.config.modifier}+Shift+8" =
-            "move container to workspace number 8";
-          "${cfg.config.modifier}+Shift+9" =
-            "move container to workspace number 9";
-          "${cfg.config.modifier}+Shift+0" =
-            "move container to workspace number 10";
+          "${cfg.config.modifier}+Shift+1" = {
+            priority = 201;
+            value = "move container to workspace number 1";
+          };
+          "${cfg.config.modifier}+Shift+2" = {
+            priority = 202;
+            value = "move container to workspace number 2";
+          };
+          "${cfg.config.modifier}+Shift+3" = {
+            priority = 203;
+            value = "move container to workspace number 3";
+          };
+          "${cfg.config.modifier}+Shift+4" = {
+            priority = 204;
+            value = "move container to workspace number 4";
+          };
+          "${cfg.config.modifier}+Shift+5" = {
+            priority = 205;
+            value = "move container to workspace number 5";
+          };
+          "${cfg.config.modifier}+Shift+6" = {
+            priority = 206;
+            value = "move container to workspace number 6";
+          };
+          "${cfg.config.modifier}+Shift+7" = {
+            priority = 207;
+            value = "move container to workspace number 7";
+          };
+          "${cfg.config.modifier}+Shift+8" = {
+            priority = 208;
+            value = "move container to workspace number 8";
+          };
+          "${cfg.config.modifier}+Shift+9" = {
+            priority = 209;
+            value = "move container to workspace number 9";
+          };
+          "${cfg.config.modifier}+Shift+0" = {
+            priority = 210;
+            value = "move container to workspace number 10";
+          };
 
           "${cfg.config.modifier}+Shift+c" = "reload";
           "${cfg.config.modifier}+Shift+r" = "restart";
@@ -140,7 +197,7 @@ let
   inherit (commonFunctions)
     keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
     floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
-    fontConfigStr keybindingDefaultWorkspace keybindingsRest workspaceOutputStr;
+    fontConfigStr workspaceOutputStr;
 
   startupEntryStr = { command, always, notification, workspace, ... }:
     concatStringsSep " " [
@@ -174,8 +231,7 @@ let
         "client.urgent ${colorSetStr colors.urgent}"
         "client.placeholder ${colorSetStr colors.placeholder}"
         "client.background ${colors.background}"
-        (keybindingsStr { keybindings = keybindingDefaultWorkspace; })
-        (keybindingsStr { keybindings = keybindingsRest; })
+        keybindingsStr
         (keycodebindingsStr keycodebindings)
       ] ++ mapAttrsToList (modeStr false) modes
         ++ mapAttrsToList assignStr assigns ++ map barStr bars
