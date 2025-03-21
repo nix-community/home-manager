@@ -122,17 +122,12 @@ in {
       '';
 
       programs.nushell = mkIf cfg.enableNushellIntegration {
-        extraEnv = ''
-          let atuin_cache = "${config.xdg.cacheHome}/atuin"
-          if not ($atuin_cache | path exists) {
-            mkdir $atuin_cache
-          }
-          ${
-            lib.getExe cfg.package
-          } init nu ${flagsStr} | save --force ${config.xdg.cacheHome}/atuin/init.nu
-        '';
         extraConfig = ''
-          source ${config.xdg.cacheHome}/atuin/init.nu
+          source ${
+            pkgs.runCommand "atuin-nushell-config" { } ''
+              ${lib.getExe cfg.package} init nu ${flagsStr} >> "$out"
+            ''
+          }
         '';
       };
     }
