@@ -10,7 +10,7 @@
     export GOT="$(tail -n 5 `_abs home-files/.config/fish/config.fish`)"
     export NOT_EXPECTED="
     if test \"\$TERM\" != dumb
-        /home/hm-user/.nix-profile/bin/starship init fish | source
+        @starship@/bin/starship init fish | source
 
     end"
 
