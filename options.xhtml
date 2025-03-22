@@ -71202,6 +71202,148 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.jankyborders.enable"></a><a class="term" href="options.xhtml#opt-services.jankyborders.enable"><code class="option">services.jankyborders.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable jankyborders.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/jankyborders.nix" target="_top">
+&lt;home-manager/modules/services/jankyborders.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.jankyborders.package"></a><a class="term" href="options.xhtml#opt-services.jankyborders.package"><code class="option">services.jankyborders.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The jankyborders package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.jankyborders</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/jankyborders.nix" target="_top">
+&lt;home-manager/modules/services/jankyborders.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.jankyborders.errorLogFile"></a><a class="term" href="options.xhtml#opt-services.jankyborders.errorLogFile"><code class="option">services.jankyborders.errorLogFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute path to log all stderr output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">${config.home.homeDirectory}/Library/Logs/jankyborders/err.log</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;/Users/khaneliman/Library/Logs/jankyborders.log&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/jankyborders.nix" target="_top">
+&lt;home-manager/modules/services/jankyborders.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.jankyborders.outLogFile"></a><a class="term" href="options.xhtml#opt-services.jankyborders.outLogFile"><code class="option">services.jankyborders.outLogFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute path to log all stdout output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">${config.home.homeDirectory}/Library/Logs/jankyborders/out.log</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;/Users/khaneliman/Library/Logs/jankyborders.log&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/jankyborders.nix" target="_top">
+&lt;home-manager/modules/services/jankyborders.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.jankyborders.settings"></a><a class="term" href="options.xhtml#opt-services.jankyborders.settings"><code class="option">services.jankyborders.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings to passed to <code class="literal">borders</code> in
+<code class="filename">$XDG_CONFIG_HOME/borders/bordersc</code>. See
+<a class="link" href="https://github.com/FelixKratz/JankyBorders"  target="_top">https://github.com/FelixKratz/JankyBorders</a>
+for the documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of anything</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">        {
+          style=round;
+	        width=6.0;
+	        hidpi=&quot;off&quot;;
+	        active_color=&quot;0xffe2e2e3&quot;;
+	        inactive_color=&quot;0xff414550&quot;;
+        }
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/jankyborders.nix" target="_top">
+&lt;home-manager/modules/services/jankyborders.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.kanshi.enable"></a><a class="term" href="options.xhtml#opt-services.kanshi.enable"><code class="option">services.kanshi.enable</code>
   </a>
  </span>
