@@ -316,6 +316,7 @@ let
     ./services/conky.nix
     ./services/copyq.nix
     ./services/darkman.nix
+    ./services/davmail.nix
     ./services/devilspie2.nix
     ./services/dropbox.nix
     ./services/dunst.nix
