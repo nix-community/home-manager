@@ -66,9 +66,15 @@ in {
       };
     };
   } // {
-    nmt.script = ''
+    nmt.script = let
+      isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+      profilePath = if isDarwin then
+        "Library/Application Support/Firefox/Profiles"
+      else
+        ".mozilla/firefox";
+    in ''
       bookmarksUserJs=$(normalizeStorePaths \
-        home-files/${cfg.configPath}/bookmarks/user.js)
+        "home-files/${profilePath}/bookmarks/user.js")
 
       assertFileContent \
         $bookmarksUserJs \
@@ -76,7 +82,9 @@ in {
 
       bookmarksFile="$(sed -n \
         '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \
-        $TESTED/home-files/${cfg.configPath}/bookmarks/user.js)"
+        $TESTED/home-files/'${profilePath}'/bookmarks/user.js)"""
+
+      echo "bookmarksFile: $bookmarksFile"
 
       assertFileContent \
         $bookmarksFile \
