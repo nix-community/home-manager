@@ -111,6 +111,7 @@ let
       "hyfetch"
       "i3status"
       "irssi"
+      "jankyborders"
       "jujutsu"
       "joplin-desktop"
       "jqp"
@@ -418,6 +419,7 @@ in import nmtSrc {
     ./modules/services/espanso-darwin
     ./modules/services/git-sync-darwin
     ./modules/services/imapnotify-darwin
+    ./modules/services/jankyborders
     ./modules/services/nix-gc-darwin
     ./modules/services/macos-remap-keys
     ./modules/services/ollama/darwin

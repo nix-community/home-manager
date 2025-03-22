@@ -342,6 +342,7 @@ let
     ./services/hyprpaper.nix
     ./services/hyprpolkitagent.nix
     ./services/imapnotify.nix
+    ./services/jankyborders.nix
     ./services/kanshi.nix
     ./services/kbfs.nix
     ./services/kdeconnect.nix
