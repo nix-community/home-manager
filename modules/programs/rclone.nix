@@ -124,7 +124,7 @@ in {
           lib.mapAttrsToList (secret: secretFile: ''
             ${lib.getExe cfg.package} config update \
               ${remote.name} config_refresh_token=false \
-              ${secret} $(cat ${secretFile}) \
+              ${secret} "$(cat ${secretFile})" \
               --quiet > /dev/null
           '') remote.value.secrets or { };
 
