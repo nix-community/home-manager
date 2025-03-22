@@ -15,4 +15,4 @@ let
     check = check;
   };
 
-in { inherit (env) activationPackage config; }
+in { inherit (env) activationPackage config pkgs options; }
