@@ -29,13 +29,9 @@ in {
       wrappedPackageName = "librewolf";
       unwrappedPackageName = "librewolf-unwrapped";
 
-      platforms.linux = {
-        configPath = ".librewolf";
-        vendorPath = ".mozilla";
-      };
+      platforms.linux = { configPath = ".librewolf"; };
       platforms.darwin = {
         configPath = "Library/Application Support/LibreWolf";
-        vendorPath = "Library/Application Support/Mozilla";
       };
 
       enableBookmarks = false;
@@ -61,11 +57,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "programs.librewolf" pkgs
-        lib.platforms.linux)
-    ];
-
     home.file.".librewolf/librewolf.overrides.cfg" =
       lib.mkIf (cfg.settings != { }) { text = mkOverridesFile cfg.settings; };
   };

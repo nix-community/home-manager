@@ -9,7 +9,7 @@ let
     version = '${cfg.package.version}'
   '';
 
-  # If `value` is a Nix store path, create the symlink `/nix/store/newhash/${name}/*` 
+  # If `value` is a Nix store path, create the symlink `/nix/store/newhash/${name}/*`
   # to `/nix/store/oldhash/*` and returns `/nix/store/newhash`.
   wrapPlugin = name: value:
     if lib.isStorePath value then
@@ -49,7 +49,7 @@ in {
   options.programs.xplr = {
     enable = mkEnableOption "xplr, terminal UI based file explorer";
 
-    package = mkPackageOption pkgs "xplr" { };
+    package = mkPackageOption pkgs "xplr" { nullable = true; };
 
     plugins = mkOption {
       type = with types; nullOr (attrsOf (either package str));
@@ -58,7 +58,7 @@ in {
       description = ''
         An attribute set of plugin paths to be added to the [package.path]<https://www.lua.org/manual/5.4/manual.html#pdf-package.path> of the {file}`~/config/xplr/init.lua` configuration file.
 
-        Must be a package or string representing the plugin directory's path. 
+        Must be a package or string representing the plugin directory's path.
         If the path string is not absolute, it will be relative to {file}`$XDG_CONFIG_HOME/xplr/init.lua`.
       '';
       example = literalExpression ''
@@ -91,7 +91,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."xplr/init.lua".source =
       pkgs.writeText "init.lua" configFile;

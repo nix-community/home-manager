@@ -9,8 +9,6 @@
   # If disabled, the pkgs attribute passed to this function is used instead.
 , useNixpkgsModule ? true }:
 
-with lib;
-
 let
 
   modules = [
@@ -30,6 +28,7 @@ let
     ./misc/fontconfig.nix
     ./misc/gtk.nix
     ./misc/lib.nix
+    ./misc/mozilla-messaging-hosts.nix
     ./misc/news.nix
     ./misc/nixgl.nix
     ./misc/numlock.nix
@@ -89,6 +88,8 @@ let
     ./programs/dircolors.nix
     ./programs/direnv.nix
     ./programs/discocss.nix
+    ./programs/distrobox.nix
+    ./programs/earthly.nix
     ./programs/eclipse.nix
     ./programs/emacs.nix
     ./programs/eww.nix
@@ -131,6 +132,7 @@ let
     ./programs/i3blocks.nix
     ./programs/i3status-rust.nix
     ./programs/i3status.nix
+    ./programs/iamb.nix
     ./programs/imv.nix
     ./programs/info.nix
     ./programs/ion.nix
@@ -138,6 +140,7 @@ let
     ./programs/java.nix
     ./programs/jetbrains-remote.nix
     ./programs/jq.nix
+    ./programs/jqp.nix
     ./programs/jujutsu.nix
     ./programs/joshuto.nix
     ./programs/joplin-desktop.nix
@@ -151,6 +154,7 @@ let
     ./programs/kodi.nix
     ./programs/kubecolor.nix
     ./programs/lapce.nix
+    ./programs/lazydocker.nix
     ./programs/lazygit.nix
     ./programs/ledger.nix
     ./programs/less.nix
@@ -168,6 +172,7 @@ let
     ./programs/mercurial.nix
     ./programs/micro.nix
     ./programs/mise.nix
+    ./programs/mods.nix
     ./programs/mpv.nix
     ./programs/mr.nix
     ./programs/msmtp.nix
@@ -193,6 +198,7 @@ let
     ./programs/octant.nix
     ./programs/offlineimap.nix
     ./programs/oh-my-posh.nix
+    ./programs/onlyoffice.nix
     ./programs/opam.nix
     ./programs/openstackclient.nix
     ./programs/pandoc.nix
@@ -215,6 +221,7 @@ let
     ./programs/qutebrowser.nix
     ./programs/ranger.nix
     ./programs/rbw.nix
+    ./programs/rclone.nix
     ./programs/readline.nix
     ./programs/rio.nix
     ./programs/ripgrep.nix
@@ -236,12 +243,14 @@ let
     ./programs/sqls.nix
     ./programs/ssh.nix
     ./programs/starship.nix
+    ./programs/swayimg.nix
     ./programs/swaylock.nix
     ./programs/swayr.nix
     ./programs/taskwarrior.nix
     ./programs/tealdeer.nix
     ./programs/terminator.nix
     ./programs/termite.nix
+    ./programs/tex-fmt.nix
     ./programs/texlive.nix
     ./programs/thefuck.nix
     ./programs/thunderbird.nix
@@ -259,16 +268,17 @@ let
     ./programs/vifm.nix
     ./programs/vim-vint.nix
     ./programs/vim.nix
+    ./programs/vinegar.nix
     ./programs/vscode.nix
     ./programs/vscode/haskell.nix
     ./programs/pywal.nix
     ./programs/rbenv.nix
     ./programs/watson.nix
+    ./programs/waylogout.nix
     ./programs/waybar.nix
     ./programs/wezterm.nix
     ./programs/wlogout.nix
     ./programs/wofi.nix
-    ./programs/wpaperd.nix
     ./programs/xmobar.nix
     ./programs/xplr.nix
     ./programs/xonsh.nix
@@ -302,6 +312,7 @@ let
     ./services/cliphist.nix
     ./services/clipman.nix
     ./services/clipmenu.nix
+    ./services/clipse.nix
     ./services/comodoro.nix
     ./services/conky.nix
     ./services/copyq.nix
@@ -329,16 +340,20 @@ let
     ./services/hound.nix
     ./services/hypridle.nix
     ./services/hyprpaper.nix
+    ./services/hyprpolkitagent.nix
     ./services/imapnotify.nix
     ./services/kanshi.nix
     ./services/kbfs.nix
     ./services/kdeconnect.nix
     ./services/keybase.nix
     ./services/keynav.nix
+    ./services/librespot.nix
     ./services/lieer.nix
     ./services/linux-wallpaperengine.nix
     ./services/listenbrainz-mpd.nix
     ./services/lorri.nix
+    ./services/lxqt-policykit-agent.nix
+    ./services/macos-remap-keys
     ./services/mako.nix
     ./services/mbsync.nix
     ./services/megasync.nix
@@ -367,6 +382,7 @@ let
     ./services/playerctld.nix
     ./services/plex-mpv-shim.nix
     ./services/podman-linux
+    ./services/polkit-gnome.nix
     ./services/polybar.nix
     ./services/poweralertd.nix
     ./services/psd.nix
@@ -390,6 +406,7 @@ let
     ./services/swayidle.nix
     ./services/swaync.nix
     ./services/swayosd.nix
+    ./services/swww.nix
     ./services/sxhkd.nix
     ./services/syncthing.nix
     ./services/systembus-notify.nix
@@ -418,7 +435,9 @@ let
     ./services/window-managers/wayfire.nix
     ./services/window-managers/xmonad.nix
     ./services/wlsunset.nix
+    ./services/wluma.nix
     ./services/wob.nix
+    ./services/wpaperd.nix
     ./services/xcape.nix
     ./services/xembed-sni-proxy.nix
     ./services/xidlehook.nix
@@ -436,28 +455,28 @@ let
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
 
-    (mkRemovedOptionModule [ "services" "password-store-sync" ] ''
+    (lib.mkRemovedOptionModule [ "services" "password-store-sync" ] ''
       Use services.git-sync instead.
     '')
-    (mkRemovedOptionModule [ "services" "keepassx" ] ''
+    (lib.mkRemovedOptionModule [ "services" "keepassx" ] ''
       KeePassX is no longer maintained.
     '')
-  ] ++ optional useNixpkgsModule ./misc/nixpkgs.nix
-    ++ optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
+  ] ++ lib.optional useNixpkgsModule ./misc/nixpkgs.nix
+    ++ lib.optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix;
 
   pkgsModule = { config, ... }: {
     config = {
       _module.args.baseModules = modules;
       _module.args.pkgsPath = lib.mkDefault
-        (if versionAtLeast config.home.stateVersion "20.09" then
+        (if lib.versionAtLeast config.home.stateVersion "20.09" then
           pkgs.path
         else
           <nixpkgs>);
       _module.args.pkgs = lib.mkDefault pkgs;
       _module.check = check;
       lib = lib.hm;
-    } // optionalAttrs useNixpkgsModule {
-      nixpkgs.system = mkDefault pkgs.stdenv.hostPlatform.system;
+    } // lib.optionalAttrs useNixpkgsModule {
+      nixpkgs.system = lib.mkDefault pkgs.stdenv.hostPlatform.system;
     };
   };
 

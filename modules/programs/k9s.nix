@@ -24,7 +24,7 @@ in {
     enable =
       mkEnableOption "k9s - Kubernetes CLI To Manage Your Clusters In Style";
 
-    package = mkPackageOption pkgs "k9s" { };
+    package = mkPackageOption pkgs "k9s" { nullable = true; };
 
     settings = mkOption {
       type = yamlFormat.type;
@@ -182,7 +182,7 @@ in {
     enableXdgConfig = !isDarwin || config.xdg.enable;
 
   in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = mkIf enableXdgConfig ({
       "k9s/config.yaml" = mkIf (cfg.settings != { }) {

@@ -31,7 +31,7 @@ in {
         "${ide}/bin/${ide.meta.mainProgram}-remote-dev-server registerBackendLocationForGateway || true";
       lines = map mkLine cfg.ides;
       linesStr = ''
-        rm $HOME/.cache/JetBrains/RemoteDev/userProvidedDist/_nix_store*
+        rm $HOME/.cache/JetBrains/RemoteDev/userProvidedDist/_nix_store* || true
       '' + concatStringsSep "\n" lines;
     in hm.dag.entryAfter [ "writeBoundary" ] linesStr;
   };

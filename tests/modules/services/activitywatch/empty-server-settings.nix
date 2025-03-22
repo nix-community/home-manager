@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.activitywatch.enable = true;
 

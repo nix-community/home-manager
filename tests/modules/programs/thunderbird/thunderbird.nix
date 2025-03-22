@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ lib, realPkgs, ... }: {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   accounts.email.accounts = {
@@ -6,6 +6,22 @@
       thunderbird = {
         enable = true;
         profiles = [ "first" ];
+        messageFilters = [
+          {
+            name = "Should be first";
+            enabled = true;
+            type = "128";
+            action = "Cry";
+            condition = "ALL";
+          }
+          {
+            name = "Mark as Read on Archive";
+            enabled = true;
+            type = "128";
+            action = "Mark read";
+            condition = "ALL";
+          }
+        ];
       };
 
       aliases = [ "home-manager@example.com" ];
@@ -41,6 +57,10 @@
     # Disable warning so that platforms' behavior is the same
     darwinSetupWarning = false;
 
+    # Darwin doesn't support wrapped Thunderbird, using unwrapped instead;
+    # using -latest- because ESR is currently broken on Darwin
+    package = realPkgs.thunderbird-latest-unwrapped;
+
     profiles = {
       first = {
         isDefault = true;
@@ -54,6 +74,8 @@
         extraConfig = ''
           user_pref("mail.html_compose", false);
         '';
+
+        feedAccounts.rss = { };
       };
 
       second.settings = {
@@ -69,7 +91,7 @@
   };
 
   nmt.script = let
-    isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+    isDarwin = realPkgs.stdenv.hostPlatform.isDarwin;
     configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";
     profilesDir = if isDarwin then "${configDir}/Profiles" else "${configDir}";
     platform = if isDarwin then "darwin" else "linux";
@@ -93,5 +115,13 @@
     assertFileExists home-files/${profilesDir}/first/chrome/userContent.css
     assertFileContent home-files/${profilesDir}/first/chrome/userContent.css \
       <(echo "* { color: red !important; }")
+
+    assertFileExists home-files/${profilesDir}/first/ImapMail/${
+      builtins.hashString "sha256" "hm@example.com"
+    }/msgFilterRules.dat
+    assertFileContent home-files/${profilesDir}/first/ImapMail/${
+      builtins.hashString "sha256" "hm@example.com"
+    }/msgFilterRules.dat \
+      ${./thunderbird-expected-msgFilterRules.dat}
   '';
 }

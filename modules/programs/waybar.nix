@@ -211,6 +211,17 @@ in {
       '';
     };
 
+    systemd.enableInspect = mkOption {
+      type = bool;
+      default = false;
+      example = true;
+      description = ''
+        Inspect objects and find their CSS classes, experiment with live CSS styles, and lookup the current value of CSS properties.
+
+        See <https://developer.gnome.org/documentation/tools/inspector.html>
+      '';
+    };
+
     style = mkOption {
       type = nullOr (either path lines);
       default = null;
@@ -324,6 +335,8 @@ in {
           ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
           Restart = "on-failure";
           KillMode = "mixed";
+        } // optionalAttrs cfg.systemd.enableInspect {
+          Environment = [ "GTK_DEBUG=interactive" ];
         };
 
         Install.WantedBy =

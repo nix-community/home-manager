@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   imports = [ ./i3-stubs.nix ];
 

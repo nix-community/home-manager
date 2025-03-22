@@ -30,23 +30,6 @@ let
   profilesPath =
     if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
 
-  nativeMessagingHostsPath = if isDarwin then
-    "${cfg.vendorPath}/NativeMessagingHosts"
-  else
-    "${cfg.vendorPath}/native-messaging-hosts";
-
-  nativeMessagingHostsJoined = pkgs.symlinkJoin {
-    name = "ff_native-messaging-hosts";
-    paths = [
-      # Link a .keep file to keep the directory around
-      (pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/.keep" "")
-      # Link package configured native messaging hosts (entire browser actually)
-      cfg.finalPackage
-    ]
-    # Link user configured native messaging hosts
-      ++ cfg.nativeMessagingHosts;
-  };
-
   # The extensions path shared by all profiles; will not be supported
   # by future browser versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
@@ -73,10 +56,10 @@ let
     else
       builtins.toJSON pref);
 
-  mkUserJs = prePrefs: prefs: extraPrefs: bookmarks: extensions:
+  mkUserJs = prePrefs: prefs: extraPrefs: bookmarksFile: extensions:
     let
-      prefs' = lib.optionalAttrs ([ ] != bookmarks) {
-        "browser.bookmarks.file" = toString (browserBookmarksFile bookmarks);
+      prefs' = lib.optionalAttrs (bookmarksFile != null) {
+        "browser.bookmarks.file" = toString bookmarksFile;
         "browser.places.importBookmarksHTML" = true;
       } // lib.optionalAttrs (extensions != { }) {
         "extensions.webextensions.ExtensionStorageIDB.enabled" = false;
@@ -129,59 +112,6 @@ let
       }}
     '';
 
-  browserBookmarksFile = bookmarks:
-    let
-      indent = level:
-        lib.concatStringsSep "" (map (lib.const "  ") (lib.range 1 level));
-
-      bookmarkToHTML = indentLevel: bookmark:
-        ''
-          ${indent indentLevel}<DT><A HREF="${
-            escapeXML bookmark.url
-          }" ADD_DATE="1" LAST_MODIFIED="1"${
-            lib.optionalString (bookmark.keyword != null)
-            " SHORTCUTURL=\"${escapeXML bookmark.keyword}\""
-          }${
-            lib.optionalString (bookmark.tags != [ ])
-            " TAGS=\"${escapeXML (concatStringsSep "," bookmark.tags)}\""
-          }>${escapeXML bookmark.name}</A>'';
-
-      directoryToHTML = indentLevel: directory: ''
-        ${indent indentLevel}<DT>${
-          if directory.toolbar then
-            ''
-              <H3 ADD_DATE="1" LAST_MODIFIED="1" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar''
-          else
-            ''<H3 ADD_DATE="1" LAST_MODIFIED="1">${escapeXML directory.name}''
-        }</H3>
-        ${indent indentLevel}<DL><p>
-        ${allItemsToHTML (indentLevel + 1) directory.bookmarks}
-        ${indent indentLevel}</DL><p>'';
-
-      itemToHTMLOrRecurse = indentLevel: item:
-        if item ? "url" then
-          bookmarkToHTML indentLevel item
-        else
-          directoryToHTML indentLevel item;
-
-      allItemsToHTML = indentLevel: bookmarks:
-        lib.concatStringsSep "\n"
-        (map (itemToHTMLOrRecurse indentLevel) bookmarks);
-
-      bookmarkEntries = allItemsToHTML 1 bookmarks;
-    in pkgs.writeText "${packageName}-bookmarks.html" ''
-      <!DOCTYPE NETSCAPE-Bookmark-file-1>
-      <!-- This is an automatically generated file.
-        It will be read and overwritten.
-        DO NOT EDIT! -->
-      <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-      <TITLE>Bookmarks</TITLE>
-      <H1>Bookmarks Menu</H1>
-      <DL><p>
-      ${bookmarkEntries}
-      </DL>
-    '';
-
   mkNoDuplicateAssertion = entities: entityKind:
     (let
       # Return an attribute set with entity IDs as keys and a list of
@@ -224,6 +154,7 @@ let
       package.override (old: {
         cfg = old.cfg or { } // fcfg;
         extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+        pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
       })
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
@@ -296,11 +227,7 @@ in {
     vendorPath = mkOption {
       internal = true;
       type = with types; nullOr str;
-      default = with platforms;
-        if isDarwin then
-          darwin.vendorPath or null
-        else
-          linux.vendorPath or null;
+      default = null;
       example = ".mozilla";
       description =
         "Directory containing the native messaging hosts directory.";
@@ -315,7 +242,7 @@ in {
       description = "Directory containing the ${appName} configuration files.";
     };
 
-    nativeMessagingHosts = optionalAttrs (cfg.vendorPath != null) (mkOption {
+    nativeMessagingHosts = mkOption {
       inherit visible;
       type = types.listOf types.package;
       default = [ ];
@@ -323,7 +250,7 @@ in {
         Additional packages containing native messaging hosts that should be
         made available to ${appName} extensions.
       '';
-    });
+    };
 
     finalPackage = mkOption {
       inherit visible;
@@ -354,6 +281,8 @@ in {
     profiles = mkOption {
       inherit visible;
       type = types.attrsOf (types.submodule ({ config, name, ... }: {
+        imports = [ (pkgs.path + "/nixos/modules/misc/assertions.nix") ];
+
         options = {
           name = mkOption {
             type = types.str;
@@ -421,7 +350,7 @@ in {
           };
 
           userChrome = mkOption {
-            type = types.lines;
+            type = types.oneOf [ types.lines types.path ];
             default = "";
             description = "Custom ${appName} user chrome CSS.";
             example = ''
@@ -440,7 +369,7 @@ in {
           };
 
           userContent = mkOption {
-            type = types.lines;
+            type = types.oneOf [ types.lines types.path ];
             default = "";
             description = "Custom ${appName} user content CSS.";
             example = ''
@@ -450,104 +379,32 @@ in {
           };
 
           bookmarks = mkOption {
+            type = (with types;
+              coercedTo (listOf anything) (bookmarks:
+                warn ''
+                  ${cfg.name} bookmarks have been refactored into a submodule that now explicitly require a 'force' option to be enabled.
+
+                  Replace:
+
+                  ${moduleName}.profiles.${name}.bookmarks = [ ... ];
+
+                  With:
+
+                  ${moduleName}.profiles.${name}.bookmarks = {
+                    force = true;
+                    settings = [ ... ];
+                  };
+                '' {
+                  force = true;
+                  settings = bookmarks;
+                }) (submodule ({ config, ... }:
+                  import ./profiles/bookmarks.nix {
+                    inherit config lib pkgs;
+                    modulePath = modulePath ++ [ "profiles" name "bookmarks" ];
+                  })));
+            default = { };
             internal = !enableBookmarks;
-            type = let
-              bookmarkSubmodule = types.submodule ({ config, name, ... }: {
-                options = {
-                  name = mkOption {
-                    type = types.str;
-                    default = name;
-                    description = "Bookmark name.";
-                  };
-
-                  tags = mkOption {
-                    type = types.listOf types.str;
-                    default = [ ];
-                    description = "Bookmark tags.";
-                  };
-
-                  keyword = mkOption {
-                    type = types.nullOr types.str;
-                    default = null;
-                    description = "Bookmark search keyword.";
-                  };
-
-                  url = mkOption {
-                    type = types.str;
-                    description = "Bookmark url, use %s for search terms.";
-                  };
-                };
-              }) // {
-                description = "bookmark submodule";
-              };
-
-              bookmarkType = types.addCheck bookmarkSubmodule (x: x ? "url");
-
-              directoryType = types.submodule ({ config, name, ... }: {
-                options = {
-                  name = mkOption {
-                    type = types.str;
-                    default = name;
-                    description = "Directory name.";
-                  };
-
-                  bookmarks = mkOption {
-                    type = types.listOf nodeType;
-                    default = [ ];
-                    description = "Bookmarks within directory.";
-                  };
-
-                  toolbar = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = ''
-                      Make this the toolbar directory. Note, this does _not_
-                      mean that this directory will be added to the toolbar,
-                      this directory _is_ the toolbar.
-                    '';
-                  };
-                };
-              }) // {
-                description = "directory submodule";
-              };
-
-              nodeType = types.either bookmarkType directoryType;
-            in with types;
-            coercedTo (attrsOf nodeType) attrValues (listOf nodeType);
-            default = [ ];
-            example = literalExpression ''
-              [
-                {
-                  name = "wikipedia";
-                  tags = [ "wiki" ];
-                  keyword = "wiki";
-                  url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
-                }
-                {
-                  name = "kernel.org";
-                  url = "https://www.kernel.org";
-                }
-                {
-                  name = "Nix sites";
-                  toolbar = true;
-                  bookmarks = [
-                    {
-                      name = "homepage";
-                      url = "https://nixos.org/";
-                    }
-                    {
-                      name = "wiki";
-                      tags = [ "wiki" "nix" ];
-                      url = "https://wiki.nixos.org/";
-                    }
-                  ];
-                }
-              ]
-            '';
-            description = ''
-              Preloaded bookmarks. Note, this may silently overwrite any
-              previously existing bookmarks!
-            '';
+            description = "Declarative bookmarks.";
           };
 
           path = mkOption {
@@ -783,6 +640,26 @@ in {
             '';
           };
         };
+
+        config = {
+          assertions = [
+            (mkNoDuplicateAssertion config.containers "container")
+            {
+              assertion = config.extensions.settings == { }
+                || config.extensions.force;
+              message = ''
+                Using '${
+                  lib.showAttrPath (modulePath
+                    ++ [ "profiles" profileName "extensions" "settings" ])
+                }' will override all previous extensions settings.
+                Enable '${
+                  lib.showAttrPath (modulePath
+                    ++ [ "profiles" profileName "extensions" "force" ])
+                }' to acknowledge this.
+              '';
+            }
+          ] ++ config.bookmarks.assertions;
+        };
       }));
       default = { };
       description = "Attribute set of ${appName} profiles.";
@@ -797,6 +674,14 @@ in {
         also need to set the NixOS option
         `services.gnome.gnome-browser-connector.enable` to
         `true`.
+      '';
+    };
+
+    pkcs11Modules = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      description = ''
+        Additional packages to be loaded as PKCS #11 modules in Firefox.
       '';
     };
   };
@@ -838,58 +723,52 @@ in {
       }
 
       (mkNoDuplicateAssertion cfg.profiles "profile")
-    ] ++ (mapAttrsToList
-      (_: profile: mkNoDuplicateAssertion profile.containers "container")
-      cfg.profiles) ++ (mapAttrsToList (profileName: profile: {
-        assertion = profile.extensions.settings == { }
-          || profile.extensions.force;
-        message = ''
-          Using '${
-            lib.showAttrPath
-            (modulePath ++ [ "profiles" profileName "extensions" "settings" ])
-          }' will override all previous extensions settings.
-          Enable '${
-            lib.showAttrPath
-            (modulePath ++ [ "profiles" profileName "extensions" "force" ])
-          }' to acknowledge this.
-        '';
-      }) cfg.profiles);
+    ] ++ (concatMap (profile: profile.assertions) (attrValues cfg.profiles));
 
     warnings = optional (cfg.enableGnomeExtensions or false) ''
       Using '${moduleName}.enableGnomeExtensions' has been deprecated and
       will be removed in the future. Please change to overriding the package
       configuration using '${moduleName}.package' instead. You can refer to
       its example for how to do this.
+    '' ++ optional (cfg.vendorPath != null) ''
+      Using '${moduleName}.vendorPath' has been deprecated and
+      will be removed in the future. Native messaging hosts will function normally without specifying this path.
     '';
 
     home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
+    mozilla.firefoxNativeMessagingHosts = cfg.nativeMessagingHosts
+      # package configured native messaging hosts (entire browser actually)
+      ++ (lib.optional (cfg.finalPackage != null) cfg.finalPackage);
+
     home.file = mkMerge ([{
       "${cfg.configPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
-    }] ++ optional (cfg.vendorPath != null) {
-      "${nativeMessagingHostsPath}" = {
-        source =
-          "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
-        recursive = true;
-      };
-    } ++ flip mapAttrsToList cfg.profiles (_: profile:
+    }] ++ flip mapAttrsToList cfg.profiles (_: profile:
       # Merge the regular profile settings with extension settings
       mkMerge ([{
         "${profilesPath}/${profile.path}/.keep".text = "";
 
         "${profilesPath}/${profile.path}/chrome/userChrome.css" =
-          mkIf (profile.userChrome != "") { text = profile.userChrome; };
+          mkIf (profile.userChrome != "") (let
+            key =
+              if builtins.isString profile.userChrome then "text" else "source";
+          in { "${key}" = profile.userChrome; });
 
         "${profilesPath}/${profile.path}/chrome/userContent.css" =
-          mkIf (profile.userContent != "") { text = profile.userContent; };
+          mkIf (profile.userContent != "") (let
+            key = if builtins.isString profile.userContent then
+              "text"
+            else
+              "source";
+          in { "${key}" = profile.userContent; });
 
         "${profilesPath}/${profile.path}/user.js" = mkIf (profile.preConfig
           != "" || profile.settings != { } || profile.extraConfig != ""
-          || profile.bookmarks != [ ]) {
+          || profile.bookmarks.configFile != null) {
             text =
               mkUserJs profile.preConfig profile.settings profile.extraConfig
-              profile.bookmarks profile.extensions.settings;
+              profile.bookmarks.configFile profile.extensions.settings;
           };
 
         "${profilesPath}/${profile.path}/containers.json" =
@@ -922,7 +801,7 @@ in {
           (name: settingConfig: {
             "${profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" =
               {
-                force = settingConfig.force;
+                force = settingConfig.force || profile.extensions.force;
                 text = generators.toJSON { } settingConfig.settings;
               };
           }) profile.extensions.settings)))));

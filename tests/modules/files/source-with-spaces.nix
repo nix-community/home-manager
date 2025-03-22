@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   home.file."source with spaces!".source = ./. + "/source with spaces!";
 

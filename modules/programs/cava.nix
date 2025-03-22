@@ -14,7 +14,7 @@ in {
   options.programs.cava = {
     enable = mkEnableOption "Cava audio visualizer";
 
-    package = mkPackageOption pkgs "cava" { };
+    package = mkPackageOption pkgs "cava" { nullable = true; };
 
     settings = mkOption {
       type = iniFmt.type;
@@ -39,7 +39,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."cava/config" = mkIf (cfg.settings != { }) {
       text = ''

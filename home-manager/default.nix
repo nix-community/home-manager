@@ -16,12 +16,12 @@ let
 in runCommand "home-manager" {
   preferLocalBuild = true;
   nativeBuildInputs = [ gettext ];
-  meta = with lib; {
+  meta = {
     mainProgram = "home-manager";
     description = "A user environment configurator";
-    maintainers = [ maintainers.rycee ];
-    platforms = platforms.unix;
-    license = licenses.mit;
+    maintainers = [ lib.maintainers.rycee ];
+    platforms = lib.platforms.unix;
+    license = lib.licenses.mit;
   };
 } ''
   install -v -D -m755  ${./home-manager} $out/bin/home-manager

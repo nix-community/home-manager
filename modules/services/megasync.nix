@@ -1,23 +1,24 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.services.megasync;
-
+let cfg = config.services.megasync;
 in {
-  meta.maintainers = [ maintainers.GaetanLepage ];
+  meta.maintainers = [ lib.maintainers.GaetanLepage ];
 
   options = {
     services.megasync = {
-      enable = mkEnableOption "Megasync client";
+      enable = lib.mkEnableOption "Megasync client";
 
-      package = mkPackageOption pkgs "megasync" { };
+      package = lib.mkPackageOption pkgs "megasync" { };
+
+      forceWayland = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        example = true;
+        description = "Force Megasync to run on wayland";
+      };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.megasync" pkgs
         lib.platforms.linux)
@@ -34,7 +35,11 @@ in {
 
       Install = { WantedBy = [ "graphical-session.target" ]; };
 
-      Service = { ExecStart = "${cfg.package}/bin/megasync"; };
+      Service = {
+        Environment =
+          lib.optionals cfg.forceWayland [ "DO_NOT_UNSET_XDG_SESSION_TYPE=1" ];
+        ExecStart = lib.getExe cfg.package;
+      };
     };
   };
 }

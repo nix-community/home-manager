@@ -14,7 +14,7 @@ in {
 
   options.services.wob = {
     enable = mkEnableOption "wob";
-    package = mkPackageOption pkgs "wob" { };
+    package = mkPackageOption pkgs "wob" { nullable = true; };
 
     settings = mkOption {
       type = settingsFormat.type;
@@ -44,7 +44,7 @@ in {
       (lib.hm.assertions.assertPlatform "services.wob" pkgs lib.platforms.linux)
     ];
 
-    systemd.user = mkIf cfg.systemd {
+    systemd.user = mkIf (cfg.systemd && (cfg.package != null)) {
       services.wob = {
         Unit = {
           Description =

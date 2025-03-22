@@ -13,6 +13,11 @@ let
       libsForQt5.plasma-integration
       libsForQt5.systemsettings
     ];
+    kde6 = [
+      kdePackages.kio
+      kdePackages.plasma-integration
+      kdePackages.systemsettings
+    ];
     lxqt = [ lxqt.lxqt-qtplugin lxqt.lxqt-config ];
     qtct = [ libsForQt5.qt5ct qt6Packages.qt6ct ];
   };
@@ -21,6 +26,7 @@ let
   styleNames = {
     gtk = "gtk2";
     qtct = "qt5ct";
+    kde6 = "kde";
   };
 
   # Maps known lowercase style names to style packages. Non-exhaustive.
@@ -75,6 +81,8 @@ in {
               [ "libsForQt5" "qt5ct" ]
               [ "libsForQt5" "qtstyleplugins" ]
               [ "libsForQt5" "systemsettings" ]
+              [ "kdePackages" "plasma-integration" ]
+              [ "kdePackages" "systemsettings" ]
               [ "lxqt" "lxqt-config" ]
               [ "lxqt" "lxqt-qtplugin" ]
               [ "qt6Packages" "qt6ct" ]
@@ -114,7 +122,10 @@ in {
                 applications
 
               `kde`
-              : Use Qt settings from Plasma
+              : Use Qt settings from Plasma 5
+
+              `kde6`
+              : Use Qt settings from Plasma 6
             '';
           };
           package = lib.mkOption {
@@ -131,8 +142,8 @@ in {
         };
       in lib.mkOption {
         type = with lib.types;
-          nullOr
-          (either (enum [ "gtk" "gtk3" "gnome" "adwaita" "lxqt" "qtct" "kde" ])
+          nullOr (either
+            (enum [ "gtk" "gtk3" "gnome" "adwaita" "lxqt" "qtct" "kde" "kde6" ])
             (lib.types.submodule { options = newOption; }));
         default = null;
         description = ''
@@ -218,13 +229,10 @@ in {
       inherit (config.home) profileDirectory;
       qtVersions = with pkgs; [ qt5 qt6 ];
       makeQtPath = prefix:
-        lib.concatStringsSep ":"
         (map (qt: "${profileDirectory}/${qt.qtbase.${prefix}}") qtVersions);
     in {
-      QT_PLUGIN_PATH = "$QT_PLUGIN_PATH\${QT_PLUGIN_PATH:+:}"
-        + (makeQtPath "qtPluginPrefix");
-      QML2_IMPORT_PATH = "$QML2_IMPORT_PATH\${QML2_IMPORT_PATH:+:}"
-        + (makeQtPath "qtQmlPrefix");
+      QT_PLUGIN_PATH = makeQtPath "qtPluginPrefix";
+      QML2_IMPORT_PATH = makeQtPath "qtQmlPrefix";
     };
 
   in lib.mkIf cfg.enable {
@@ -248,19 +256,14 @@ in {
 
     home = {
       sessionVariables = envVars;
-      # home.sessionVariables does not support setting the same environment
-      # variable to different values.
-      # Since some other modules may set the QT_PLUGIN_PATH or QML2_IMPORT_PATH
-      # to their own value, e.g.: fcitx5, we avoid conflicts by setting
-      # the values in home.sessionVariablesExtra instead.
-      sessionVariablesExtra = ''
-        export QT_PLUGIN_PATH=${envVarsExtra.QT_PLUGIN_PATH}
-        export QML2_IMPORT_PATH=${envVarsExtra.QML2_IMPORT_PATH}
-      '';
+      sessionSearchVariables = envVarsExtra;
     };
 
     # Apply theming also to apps started by systemd.
-    systemd.user.sessionVariables = envVars // envVarsExtra;
+    systemd.user.sessionVariables = envVars // {
+      QT_PLUGIN_PATH = lib.concatStringsSep ":" envVarsExtra.QT_PLUGIN_PATH;
+      QML2_IMPORT_PATH = lib.concatStringsSep ":" envVarsExtra.QML2_IMPORT_PATH;
+    };
 
     home.packages = (lib.findFirst (x: x != [ ]) [ ] [
       (lib.optionals (platformTheme.package != null)

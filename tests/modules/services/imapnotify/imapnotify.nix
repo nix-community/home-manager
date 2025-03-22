@@ -11,6 +11,7 @@
       imapnotify = {
         enable = true;
         boxes = [ "Inbox" ];
+        extraArgs = [ "--wait 1" ];
         onNotify = ''
           ${pkgs.notmuch}/bin/notmuch new
         '';

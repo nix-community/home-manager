@@ -11,7 +11,7 @@ in {
   options.programs.yambar = {
     enable = lib.mkEnableOption "Yambar";
 
-    package = lib.mkPackageOption pkgs "yambar" { };
+    package = lib.mkPackageOption pkgs "yambar" { nullable = true; };
 
     settings = lib.mkOption {
       type = yamlFormat.type;
@@ -46,7 +46,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."yambar/config.yml" = lib.mkIf (cfg.settings != { }) {
       source = yamlFormat.generate "config.yml" cfg.settings;

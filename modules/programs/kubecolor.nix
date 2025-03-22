@@ -25,6 +25,9 @@ in {
       '';
     };
 
+    enableZshIntegration =
+      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
@@ -55,7 +58,13 @@ in {
       "kube/color.yaml";
 
   in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings = optional (cfg.package == null && cfg.plugins != [ ]) ''
+      You have configured `enableAlias` for `kubecolor` but have not set `package`.
+
+      The alias will not be created.
+    '';
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.sessionVariables = if preferXdgDirectories then {
       KUBECOLOR_CONFIG = "${config.xdg.configHome}/${configPathSuffix}";
@@ -81,7 +90,15 @@ in {
       };
     };
 
-    home.shellAliases =
-      lib.mkIf cfg.enableAlias { kubectl = lib.getExe cfg.package; };
+    home.shellAliases = lib.mkIf (cfg.enableAlias && (cfg.package != null)) {
+      kubectl = lib.getExe cfg.package;
+      oc = lib.mkIf (builtins.elem pkgs.openshift config.home.packages)
+        "env KUBECTL_COMMAND=${lib.getExe pkgs.openshift} ${
+          lib.getExe cfg.package
+        }";
+    };
+
+    programs.zsh.initContent =
+      lib.mkIf cfg.enableZshIntegration "compdef kubecolor=kubectl";
   };
 }

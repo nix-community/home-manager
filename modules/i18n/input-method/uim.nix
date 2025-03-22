@@ -1,14 +1,13 @@
 { config, pkgs, lib, ... }:
 
-with lib;
-
 let cfg = config.i18n.inputMethod.uim;
 in {
   options = {
 
     i18n.inputMethod.uim = {
-      toolbar = mkOption {
-        type = types.enum [ "gtk" "gtk3" "gtk-systray" "gtk3-systray" "qt4" ];
+      toolbar = lib.mkOption {
+        type =
+          lib.types.enum [ "gtk" "gtk3" "gtk-systray" "gtk3-systray" "qt4" ];
         default = "gtk";
         example = "gtk-systray";
         description = ''
@@ -19,7 +18,7 @@ in {
 
   };
 
-  config = mkIf (config.i18n.inputMethod.enabled == "uim") {
+  config = lib.mkIf (config.i18n.inputMethod.enabled == "uim") {
     i18n.inputMethod.package = pkgs.uim;
 
     home.sessionVariables = {

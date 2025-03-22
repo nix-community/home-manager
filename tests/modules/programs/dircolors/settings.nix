@@ -1,9 +1,7 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ pkgs, ... }: {
   config = {
+    programs.zsh.enable = true;
+
     programs.dircolors = {
       enable = true;
 
@@ -22,6 +20,11 @@ with lib;
       assertFileContent \
         home-files/.dir_colors \
         ${./settings-expected.conf}
+
+
+      assertFileRegex  \
+        home-files/.zshrc \
+        "eval \$(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)"
     '';
   };
 }

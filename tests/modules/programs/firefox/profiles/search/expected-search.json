@@ -4,9 +4,11 @@
       "_definedAliases": [
         "@np"
       ],
-      "_iconURL": "file:///run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg",
+      "_iconMapObj": {
+        "16": "file:///run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg"
+      },
       "_isAppProvided": false,
-      "_loadPath": "[home-manager]/programs.@name@.profiles.search.search.engines.\"Nix Packages\"",
+      "_loadPath": "[home-manager]/programs.@name@.profiles.search.search.engines.nix-packages",
       "_metaData": {
         "order": 1
       },
@@ -25,53 +27,55 @@
           ],
           "template": "https://search.nixos.org/packages"
         }
-      ]
+      ],
+      "id": "nix-packages"
     },
     {
       "_definedAliases": [
         "@nw"
       ],
-      "_iconURL": "https://wiki.nixos.org/favicon.png",
-      "_iconUpdateURL": "https://wiki.nixos.org/favicon.png",
+      "_iconMapObj": {
+        "16": "https://wiki.nixos.org/favicon.ico"
+      },
       "_isAppProvided": false,
-      "_loadPath": "[home-manager]/programs.@name@.profiles.search.search.engines.\"NixOS Wiki\"",
+      "_loadPath": "[home-manager]/programs.@name@.profiles.search.search.engines.nixos-wiki",
       "_metaData": {
         "order": 2
       },
       "_name": "NixOS Wiki",
-      "_updateInterval": 86400000,
       "_urls": [
         {
-          "template": "https://wiki.nixos.org/index.php?search={searchTerms}"
+          "template": "https://wiki.nixos.org/w/index.php?search={searchTerms}"
         }
-      ]
+      ],
+      "id": "nixos-wiki"
     },
     {
       "_isAppProvided": true,
       "_metaData": {
         "hidden": true
       },
-      "_name": "Bing"
+      "id": "bing"
     },
     {
       "_isAppProvided": true,
       "_metaData": {},
-      "_name": "DuckDuckGo"
+      "id": "ddg"
     },
     {
       "_isAppProvided": true,
       "_metaData": {
         "alias": "@g"
       },
-      "_name": "Google"
+      "id": "google"
     }
   ],
   "metaData": {
-    "current": "Google",
-    "hash": null,
-    "private": "DuckDuckGo",
-    "privateHash": null,
+    "defaultEngineId": "google",
+    "defaultEngineIdHash": "@hash@",
+    "privateDefaultEngineId": "ddg",
+    "privateDefaultEngineIdHash": "@privateHash@",
     "useSavedOrder": true
   },
-  "version": 6
+  "version": 12
 }

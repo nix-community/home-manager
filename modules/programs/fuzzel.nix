@@ -14,7 +14,7 @@ in {
   options.programs.fuzzel = {
     enable = mkEnableOption "fuzzel";
 
-    package = mkPackageOption pkgs "fuzzel" { };
+    package = mkPackageOption pkgs "fuzzel" { nullable = true; };
 
     settings = mkOption {
       type = iniFormat.type;
@@ -42,7 +42,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."fuzzel/fuzzel.ini" = mkIf (cfg.settings != { }) {
       source = iniFormat.generate "fuzzel.ini" cfg.settings;
