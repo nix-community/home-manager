@@ -170,6 +170,7 @@ let
     ./programs/mbsync.nix
     ./programs/mcfly.nix
     ./programs/mercurial.nix
+    ./programs/mergiraf.nix
     ./programs/micro.nix
     ./programs/mise.nix
     ./programs/mods.nix

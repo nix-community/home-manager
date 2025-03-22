@@ -339,6 +339,7 @@ in import nmtSrc {
     ./modules/programs/lieer
     ./modules/programs/man
     ./modules/programs/mbsync
+    ./modules/programs/mergiraf
     ./modules/programs/micro
     ./modules/programs/mise
     ./modules/programs/mods
