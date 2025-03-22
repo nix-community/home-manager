@@ -84,6 +84,20 @@
         ./with-secrets-in-store.conf
       } /home/alice/.config/rclone/rclone.conf")
 
+    with subtest("Secrets with spaces"):
+      succeed_as_alice("install -m644 ${
+        ./secrets-with-whitespace.nix
+      } /home/alice/.config/home-manager/test-remote.nix")
+
+      actual = succeed_as_alice("home-manager switch")
+      expected = "Activating createRcloneConfig"
+      assert expected in actual, \
+        f"expected home-manager switch to contain {expected}, but got {actual}"
+
+      succeed_as_alice("diff -u ${
+        ./secrets-with-whitespace.conf
+      } /home/alice/.config/rclone/rclone.conf")
+
     # TODO: verify correct activation order with the agenix and sops hm modules
 
     logout_alice()
