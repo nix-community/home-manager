@@ -37,7 +37,7 @@ in {
 
     style = mkOption {
       default = null;
-      type = types.nullOr types.str;
+      type = types.nullOr types.lines;
       description = ''
         CSS style for wofi to use as a stylesheet. See
         {manpage}`wofi(7)`.
