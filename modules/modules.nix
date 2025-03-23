@@ -398,6 +398,7 @@ let
     ./services/screen-locker.nix
     ./services/sctd.nix
     ./services/signaturepdf.nix
+    ./services/skhd.nix
     ./services/snixembed.nix
     ./services/spotifyd.nix
     ./services/ssh-agent.nix
