@@ -496,6 +496,7 @@ in import nmtSrc {
     ./modules/services/copyq
     ./modules/services/conky
     ./modules/services/darkman
+    ./modules/services/davmail
     ./modules/services/devilspie2
     ./modules/services/dropbox
     ./modules/services/easyeffects
