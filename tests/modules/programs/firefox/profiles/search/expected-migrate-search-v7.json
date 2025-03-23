@@ -8,7 +8,7 @@
         "16": "file:///run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg"
       },
       "_isAppProvided": false,
-      "_loadPath": "[home-manager]/programs.librewolf.profiles.migrateSearchV7.search.engines.\"Nix Packages\"",
+      "_loadPath": "[home-manager]/programs.@name@.profiles.migrateSearchV7.search.engines.\"Nix Packages\"",
       "_metaData": {
         "order": 1
       },
@@ -38,7 +38,7 @@
         "16": "https://wiki.nixos.org/favicon.ico"
       },
       "_isAppProvided": false,
-      "_loadPath": "[home-manager]/programs.librewolf.profiles.migrateSearchV7.search.engines.\"NixOS Wiki\"",
+      "_loadPath": "[home-manager]/programs.@name@.profiles.migrateSearchV7.search.engines.\"NixOS Wiki\"",
       "_metaData": {
         "order": 2
       },
