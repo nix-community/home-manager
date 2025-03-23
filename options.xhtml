@@ -81252,6 +81252,148 @@ attribute set of (string or signed integer or boolean or floating point number)<
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.skhd.enable"></a><a class="term" href="options.xhtml#opt-services.skhd.enable"><code class="option">services.skhd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable skhd.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/skhd.nix" target="_top">
+&lt;home-manager/modules/services/skhd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.skhd.package"></a><a class="term" href="options.xhtml#opt-services.skhd.package"><code class="option">services.skhd.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The skhd package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.skhd</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/skhd.nix" target="_top">
+&lt;home-manager/modules/services/skhd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.skhd.config"></a><a class="term" href="options.xhtml#opt-services.skhd.config"><code class="option">services.skhd.config</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Contents of skhd’s configuration file. If empty (the default), the configuration file won’t be managed.</p><p>See <a class="link" href="https://github.com/koekeishiya/skhd"  target="_top">documentation</a>
+and <a class="link" href="https://github.com/koekeishiya/skhd/blob/master/examples/skhdrc"  target="_top">example</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  # open terminal, blazingly fast compared to iTerm/Hyper
+  cmd - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d ~
+  
+  # open qutebrowser
+  cmd + shift - return : ~/Scripts/qtb.sh
+  
+  # open mpv
+  cmd - m : open -na /Applications/mpv.app $(pbpaste)
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/skhd.nix" target="_top">
+&lt;home-manager/modules/services/skhd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.skhd.errorLogFile"></a><a class="term" href="options.xhtml#opt-services.skhd.errorLogFile"><code class="option">services.skhd.errorLogFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute path to log all stderr output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">${config.home.homeDirectory}/Library/Logs/skhd/err.log</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;/Users/khaneliman/Library/Logs/skhd.log&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/skhd.nix" target="_top">
+&lt;home-manager/modules/services/skhd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.skhd.outLogFile"></a><a class="term" href="options.xhtml#opt-services.skhd.outLogFile"><code class="option">services.skhd.outLogFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute path to log all stdout output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">${config.home.homeDirectory}/Library/Logs/skhd/out.log</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;/Users/khaneliman/Library/Logs/skhd.log&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/skhd.nix" target="_top">
+&lt;home-manager/modules/services/skhd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.snixembed.enable"></a><a class="term" href="options.xhtml#opt-services.snixembed.enable"><code class="option">services.snixembed.enable</code>
   </a>
  </span>
