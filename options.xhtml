@@ -67359,6 +67359,99 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.davmail.enable"></a><a class="term" href="options.xhtml#opt-services.davmail.enable"><code class="option">services.davmail.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable DavMail, an MS Exchange gateway…</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/davmail.nix" target="_top">
+&lt;home-manager/modules/services/davmail.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.davmail.imitateOutlook"></a><a class="term" href="options.xhtml#opt-services.davmail.imitateOutlook"><code class="option">services.davmail.imitateOutlook</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether DavMail pretends to be Outlook.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/davmail.nix" target="_top">
+&lt;home-manager/modules/services/davmail.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.davmail.settings"></a><a class="term" href="options.xhtml#opt-services.davmail.settings"><code class="option">services.davmail.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Davmail configuration. Refer to
+<a class="link" href="http://davmail.sourceforge.net/serversetup.html"  target="_top">http://davmail.sourceforge.net/serversetup.html</a>
+and <a class="link" href="http://davmail.sourceforge.net/advanced.html"  target="_top">http://davmail.sourceforge.net/advanced.html</a>
+for details on supported values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (string, package, bool, int or float)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;davmail.allowRemote&quot; = true;
+  &quot;davmail.bindAddress&quot; = &quot;10.0.1.2&quot;;
+  &quot;davmail.caldavAutoSchedule&quot; = false;
+  &quot;davmail.folderSizeLimit&quot; = 10;
+  &quot;davmail.imapPort&quot; = 55555;
+  &quot;davmail.smtpSaveInSent&quot; = true;
+  &quot;davmail.url&quot; = &quot;https://outlook.office365.com/EWS/Exchange.asmx&quot;;
+  &quot;log4j.logger.rootLogger&quot; = &quot;DEBUG&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/davmail.nix" target="_top">
+&lt;home-manager/modules/services/davmail.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.devilspie2.enable"></a><a class="term" href="options.xhtml#opt-services.devilspie2.enable"><code class="option">services.devilspie2.enable</code>
   </a>
  </span>
