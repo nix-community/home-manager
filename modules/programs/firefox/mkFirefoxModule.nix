@@ -652,11 +652,11 @@ in {
               message = ''
                 Using '${
                   lib.showAttrPath (modulePath
-                    ++ [ "profiles" profileName "extensions" "settings" ])
+                    ++ [ "profiles" config.name "extensions" "settings" ])
                 }' will override all previous extensions settings.
                 Enable '${
                   lib.showAttrPath (modulePath
-                    ++ [ "profiles" profileName "extensions" "force" ])
+                    ++ [ "profiles" config.name "extensions" "force" ])
                 }' to acknowledge this.
               '';
             }
