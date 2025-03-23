@@ -383,27 +383,31 @@ in {
           bookmarks = mkOption {
             type = (with types;
               coercedTo bookmarkTypes.settingsType (bookmarks:
-                warn ''
-                  ${cfg.name} bookmarks have been refactored into a submodule that now explicitly require a 'force' option to be enabled.
+                if bookmarks != { } then
+                  warn ''
+                    ${cfg.name} bookmarks have been refactored into a submodule that now explicitly require a 'force' option to be enabled.
 
-                  Replace:
+                    Replace:
 
-                  ${moduleName}.profiles.${name}.bookmarks = [ ... ];
+                    ${moduleName}.profiles.${name}.bookmarks = [ ... ];
 
-                  With:
+                    With:
 
-                  ${moduleName}.profiles.${name}.bookmarks = {
+                    ${moduleName}.profiles.${name}.bookmarks = {
+                      force = true;
+                      settings = [ ... ];
+                    };
+                  '' {
                     force = true;
-                    settings = [ ... ];
-                  };
-                '' {
-                  force = true;
-                  settings = bookmarks;
-                }) (submodule ({ config, ... }:
-                  import ./profiles/bookmarks.nix {
-                    inherit config lib pkgs;
-                    modulePath = modulePath ++ [ "profiles" name "bookmarks" ];
-                  })));
+                    settings = bookmarks;
+                  }
+                else
+                  { }) (submodule ({ config, ... }:
+                    import ./profiles/bookmarks.nix {
+                      inherit config lib pkgs;
+                      modulePath = modulePath
+                        ++ [ "profiles" name "bookmarks" ];
+                    })));
             default = { };
             internal = !enableBookmarks;
             description = "Declarative bookmarks.";
