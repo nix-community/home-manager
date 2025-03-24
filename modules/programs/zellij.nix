@@ -5,6 +5,12 @@ let
 
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
+
+  mkShellIntegrationOption = option:
+    option // {
+      default = false;
+      example = true;
+    };
 in {
   meta.maintainers = [ lib.maintainers.khaneliman lib.hm.maintainers.mainrs ];
 
@@ -61,14 +67,14 @@ in {
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = mkShellIntegrationOption
+      (lib.hm.shell.mkBashIntegrationOption { inherit config; });
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = mkShellIntegrationOption
+      (lib.hm.shell.mkFishIntegrationOption { inherit config; });
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = mkShellIntegrationOption
+      (lib.hm.shell.mkZshIntegrationOption { inherit config; });
   };
 
   config = let
