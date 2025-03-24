@@ -1,29 +1,29 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
 in {
-  meta.maintainers = [ hm.maintainers.mainrs ];
+  meta.maintainers = [ lib.hm.maintainers.mainrs ];
 
   options.programs.zellij = {
-    enable = mkEnableOption "Zellij";
+    enable = lib.mkEnableOption "Zellij";
 
     package = mkOption {
       type = types.package;
       default = pkgs.zellij;
-      defaultText = literalExpression "pkgs.zellij";
+      defaultText = lib.literalExpression "pkgs.zellij";
       description = ''
         The Zellij package to install.
       '';
     };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           theme = "custom";
           themes.custom.fg = "#ffffff";
@@ -80,26 +80,26 @@ in {
     # Zellij switched from yaml to KDL in version 0.32.0:
     # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
     xdg.configFile."zellij/config.yaml" = mkIf
-      (cfg.settings != { } && (versionOlder cfg.package.version "0.32.0")) {
+      (cfg.settings != { } && (lib.versionOlder cfg.package.version "0.32.0")) {
         source = yamlFormat.generate "zellij.yaml" cfg.settings;
       };
 
-    xdg.configFile."zellij/config.kdl" = mkIf
-      (cfg.settings != { } && (versionAtLeast cfg.package.version "0.32.0")) {
+    xdg.configFile."zellij/config.kdl" = mkIf (cfg.settings != { }
+      && (lib.versionAtLeast cfg.package.version "0.32.0")) {
         text = lib.hm.generators.toKDL { } cfg.settings;
       };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${getExe cfg.package} setup --generate-auto-start bash)"
+      eval "$(${lib.getExe cfg.package} setup --generate-auto-start bash)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200''
-      eval "$(${getExe cfg.package} setup --generate-auto-start zsh)"
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration (lib.mkOrder 200 ''
+      eval "$(${lib.getExe cfg.package} setup --generate-auto-start zsh)"
     '');
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       eval (${
-        getExe cfg.package
+        lib.getExe cfg.package
       } setup --generate-auto-start fish | string collect)
     '';
 
@@ -110,10 +110,10 @@ in {
     };
 
     warnings =
-      optional (cfg.attachExistingSession && !shellIntegrationEnabled) ''
+      lib.optional (cfg.attachExistingSession && !shellIntegrationEnabled) ''
         You have enabled `programs.zellij.attachExistingSession`, but none of the shell integrations are enabled.
         This option will have no effect.
-      '' ++ optional (cfg.exitShellOnExit && !shellIntegrationEnabled) ''
+      '' ++ lib.optional (cfg.exitShellOnExit && !shellIntegrationEnabled) ''
         You have enabled `programs.zellij.exitShellOnExit`, but none of the shell integrations are enabled.
         This option will have no effect.
       '';
