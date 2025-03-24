@@ -17,14 +17,7 @@ in {
   options.programs.zellij = {
     enable = lib.mkEnableOption "Zellij";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.zellij;
-      defaultText = lib.literalExpression "pkgs.zellij";
-      description = ''
-        The Zellij package to install.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "zellij" { };
 
     settings = lib.mkOption {
       type = yamlFormat.type;
