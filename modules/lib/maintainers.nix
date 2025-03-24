@@ -738,4 +738,10 @@
     github = "michaelvanstraten";
     githubId = 50352631;
   };
+  mipmip = {
+    name = "Pim Snel";
+    email = "post@pimsnel.com";
+    github = "mipmip";
+    githubId = 658612;
+  };
 }

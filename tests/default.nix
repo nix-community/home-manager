@@ -172,6 +172,7 @@ let
       "sioyek"
       "skhd"
       "sm64ex"
+      "smug"
       "spotify-player"
       "starship"
       "taskwarrior"
@@ -390,6 +391,7 @@ in import nmtSrc {
     ./modules/programs/sftpman
     ./modules/programs/sioyek
     ./modules/programs/sm64ex
+    ./modules/programs/smug
     ./modules/programs/spotify-player
     ./modules/programs/ssh
     ./modules/programs/starship

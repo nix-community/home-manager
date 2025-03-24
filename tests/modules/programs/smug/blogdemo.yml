@@ -1,0 +1,33 @@
+before_start:
+- docker-compose -f my-microservices/docker-compose.yml up -d
+env:
+  FOO: bar
+root: ~/Developer/blog
+session: blogdemo
+stop:
+- docker stop $(docker ps -q)
+windows:
+- commands:
+  - docker-compose start
+  layout: main-vertical
+  manual: true
+  name: code
+  panes:
+  - commands:
+    - docker-compose exec php /bin/sh
+    - clear
+    root: .
+    type: horizontal
+  root: blog
+- commands:
+  - docker-compose start
+  layout: tiled
+  name: infrastructure
+  panes:
+  - commands:
+    - docker-compose up -d
+    - docker-compose exec php /bin/sh
+    - clear
+    root: .
+    type: horizontal
+  root: ~/Developer/blog/my-microservices
