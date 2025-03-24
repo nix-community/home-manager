@@ -424,6 +424,7 @@ let
     ./services/unison.nix
     ./services/vdirsyncer.nix
     ./services/volnoti.nix
+    ./services/waydroid.nix
     ./services/window-managers/awesome.nix
     ./services/window-managers/bspwm/default.nix
     ./services/window-managers/fluxbox.nix
