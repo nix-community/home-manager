@@ -6,7 +6,7 @@ let
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
 in {
-  meta.maintainers = [ lib.hm.maintainers.mainrs ];
+  meta.maintainers = [ lib.maintainers.khaneliman lib.hm.maintainers.mainrs ];
 
   options.programs.zellij = {
     enable = lib.mkEnableOption "Zellij";
