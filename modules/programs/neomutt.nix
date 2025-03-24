@@ -337,7 +337,7 @@ let
       ${account.neomutt.extraConfig}
 
       ${signature}
-    '' ]
+      '' ]
     ++ lib.optional (account.notmuch.enable && account.notmuch.neomutt.enable)
     (notmuchSection account));
 
