@@ -61026,7 +61026,7 @@ JSON value</p>
  </span>
 </dt>
 <dd>
-<p>Whether to enable zellij.</p>
+<p>Whether to enable Zellij.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
@@ -61062,7 +61062,7 @@ boolean</p>
 <a class="xref" href="options.xhtml#opt-home.shell.enableBashIntegration"  ><code class="option">home.shell.enableBashIntegration</code></a></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">false</code></p>
+<code class="literal">true</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -61089,7 +61089,7 @@ boolean</p>
 <a class="xref" href="options.xhtml#opt-home.shell.enableFishIntegration"  ><code class="option">home.shell.enableFishIntegration</code></a></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">false</code></p>
+<code class="literal">true</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -61116,7 +61116,7 @@ boolean</p>
 <a class="xref" href="options.xhtml#opt-home.shell.enableZshIntegration"  ><code class="option">home.shell.enableZshIntegration</code></a></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">false</code></p>
+<code class="literal">true</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -61134,13 +61134,61 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>The zellij package to install.</p>
+<p>The zellij package to use.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.zellij</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zellij.nix" target="_top">
+&lt;home-manager/modules/programs/zellij.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zellij.attachExistingSession"></a><a class="term" href="options.xhtml#opt-programs.zellij.attachExistingSession"><code class="option">programs.zellij.attachExistingSession</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to attach to the default session after being autostarted if a Zellij session already exists.</p><p>Variable is checked in <code class="literal">auto-start</code> script. Requires shell integration to be enabled to have effect.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zellij.nix" target="_top">
+&lt;home-manager/modules/programs/zellij.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zellij.exitShellOnExit"></a><a class="term" href="options.xhtml#opt-programs.zellij.exitShellOnExit"><code class="option">programs.zellij.exitShellOnExit</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to exit the shell when Zellij exits after being autostarted.</p><p>Variable is checked in <code class="literal">auto-start</code> script. Requires shell integration to be enabled to have effect.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
