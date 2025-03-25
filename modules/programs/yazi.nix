@@ -220,6 +220,9 @@ in {
 
       nushell.extraConfig =
         mkIf cfg.enableNushellIntegration nushellIntegration;
+
+      xonsh.xonshrc =
+        lib.mkif cfg.enableXonshIntegration xonshIntegration;
     };
 
     xdg.configFile = {
