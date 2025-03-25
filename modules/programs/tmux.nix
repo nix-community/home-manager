@@ -94,6 +94,11 @@ let
       bind-key -N "Kill the current pane" x kill-pane
     ''}
 
+    ${optionalString cfg.trueColor ''
+      set -g default-terminal "tmux-256color"
+      set -ag terminal-overrides ",xterm-256color:RGB"
+    ''}
+
     set  -g mouse             ${boolToStr cfg.mouse}
     set  -g focus-events      ${boolToStr cfg.focusEvents}
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
@@ -302,6 +307,8 @@ in {
       tmuxp.enable = mkEnableOption "tmuxp";
 
       tmuxinator.enable = mkEnableOption "tmuxinator";
+
+      trueColor = mkEnableOption "true color support";
 
       plugins = mkOption {
         type = with types;
