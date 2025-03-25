@@ -791,8 +791,8 @@ function buildNews() {
     nix-instantiate \
         --no-build-output --strict \
         --eval '<home-manager/home-manager/build-news.nix>' \
-        --arg newsJsonFile "\"$(escapeForNix "$newsJsonFile")\"" \
-        --arg newsReadIdsFile "\"$(escapeForNix "$readIdsFile")\"" \
+        --argstr newsJsonFile "\"$(escapeForNix "$newsJsonFile")\"" \
+        --argstr newsReadIdsFile "\"$(escapeForNix "$readIdsFile")\"" \
         "${extraArgs[@]}" \
         > "$newsNixFile"
 }
