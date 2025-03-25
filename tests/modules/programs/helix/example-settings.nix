@@ -1,6 +1,4 @@
-{ config, ... }:
-
-{
+{ config, ... }: {
   programs.helix = {
     enable = true;
 
@@ -17,6 +15,12 @@
         esc = [ "collapse_selection" "keep_primary_selection" ];
       };
     };
+
+    extraConfig = ''
+      [keys.normal.G]
+      G = "goto_file_end"
+      g = "goto_file_start"
+    '';
 
     languages = {
       language-server.typescript-language-server = let
