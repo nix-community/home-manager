@@ -19,6 +19,8 @@ in {
 
     enable = mkEnableOption "DavMail, an MS Exchange gateway.";
 
+    package = lib.mkPackageOption pkgs "davmail" { };
+
     imitateOutlook = mkOption {
       type = types.bool;
       default = false;
@@ -91,7 +93,7 @@ in {
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.davmail}/bin/davmail ${settingsFile}";
+        ExecStart = "${lib.getExe cfg.package} ${settingsFile}";
         Restart = "on-failure";
 
         CapabilityBoundingSet = [ "" ];
@@ -121,8 +123,6 @@ in {
       };
     };
 
-    home.packages = [ pkgs.davmail ];
-
+    home.packages = [ cfg.package ];
   };
-
 }
