@@ -1,4 +1,5 @@
 [Install]
+WantedBy=tray.target
 WantedBy=sway-session.target
 
 [Service]
@@ -13,3 +14,4 @@ ConditionEnvironment=WAYLAND_DISPLAY
 Description=Highly customizable Wayland bar for Sway and Wlroots based compositors.
 Documentation=https://github.com/Alexays/Waybar/wiki
 PartOf=sway-session.target
+PartOf=tray.target
