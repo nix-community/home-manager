@@ -77,7 +77,7 @@ in let
       decryptionKeyFile = mkOption {
         type = with types; nullOr path;
         default = null;
-        description = "Path to key used for decrpytion of images.";
+        description = "Path to key used for decryption of images.";
       };
 
       description = mkOption {
