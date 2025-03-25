@@ -87,7 +87,7 @@ in {
         if [[ $prev_hash != $new_hash ]]; then
           rm -rf /tmp/storage-run-1000/containers
           rm -rf /tmp/storage-run-1000/libpod/tmp
-          $HOME/.nix-profile/bin/distrobox-assemble create --file $containers_file
+          ${cfg.package}/bin/distrobox-assemble create --file $containers_file
           echo $new_hash > $prev_hash_file
         fi
       ''}";
