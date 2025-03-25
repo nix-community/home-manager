@@ -732,10 +732,11 @@ in
 
         (lib.mkIf (aliasesStr != "" || cfg.shellGlobalAliases != {}) (mkOrder 1100
           ((optionalString (aliasesStr != "") aliasesStr) +
-           (optionalString (cfg.shellGlobalAliases != {})
+                (optionalString (cfg.shellGlobalAliases != {})
+                 (optionalString (cfg.shellAliases != {}) "\n" +
              (concatStringsSep "\n" (lib.mapAttrsToList
                (k: v: "alias -g -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}")
-               cfg.shellGlobalAliases))))))
+               cfg.shellGlobalAliases)))))))
 
         (lib.mkIf (dirHashesStr != "") (mkOrder 1150 ''
           # Named Directory Hashes
