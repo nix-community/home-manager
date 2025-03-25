@@ -61,18 +61,23 @@ in {
       };
     };
 
-    xdg.configFile =
-      mkIf (config.programs.fish.enable && cfg.enableFishIntegration) (
+    xdg.configFile = mkIf (config.programs.fish.enable
+      && cfg.enableFishIntegration
+      && lib.versionOlder config.programs.fish.package.version "4.0.0") (
         # Convert the entries from `carapace --list` to empty
         # xdg.configFile."fish/completions/NAME.fish" entries.
         #
         # This is to disable fish builtin completion for each of the
-        # carapace-supported completions It is in line with the instructions from
+        # carapace-supported completions.
+        #
+        # This is necessary for carapace to properly work with fish version < 4.0b1.
+        #
+        # It is in line with the instructions from
         # carapace-bin:
         #
         #   carapace --list | awk '{print $1}' | xargs -I{} touch ~/.config/fish/completions/{}.fish
         #
-        # See https://github.com/rsteube/carapace-bin#getting-started
+        # See https://carapace-sh.github.io/carapace-bin/setup.html#fish
         let
           carapaceListFile = pkgs.runCommandLocal "carapace-list" {
             buildInputs = [ cfg.package ];
