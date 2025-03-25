@@ -1,3 +1,4 @@
+
 { config, lib, pkgs, ... }:
 let
   inherit (lib)
@@ -222,7 +223,7 @@ in {
         mkIf cfg.enableNushellIntegration nushellIntegration;
 
       xonsh.xonshrc =
-        lib.mkif cfg.enableXonshIntegration xonshIntegration;
+        lib.mkIf cfg.enableXonshIntegration xonshIntegration;
     };
 
     xdg.configFile = {
