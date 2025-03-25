@@ -29119,6 +29119,37 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.helix.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.helix.extraConfig"><code class="option">programs.helix.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra lines to be appended to the config file.
+Use this if you would like to maintain order for helix settings (eg. for minor modes)</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[keys.normal.g] # Reverse Alphabetical Order
+G = &quot;goto_file_end&quot;
+g = &quot;goto_file_start&quot;
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/helix.nix" target="_top">
+&lt;home-manager/modules/programs/helix.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.helix.extraPackages"></a><a class="term" href="options.xhtml#opt-programs.helix.extraPackages"><code class="option">programs.helix.extraPackages</code>
   </a>
  </span>
