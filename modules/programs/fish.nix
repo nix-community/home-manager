@@ -449,7 +449,7 @@ in {
           for src in $srcs; do
             if [ -d $src/share/man ]; then
               find -L $src/share/man -type f \
-                | xargs python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out \
+                -exec python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out {} + \
                 > /dev/null
             fi
           done
