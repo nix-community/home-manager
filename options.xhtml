@@ -48117,6 +48117,323 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.ripgrep-all.enable"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.enable"><code class="option">programs.ripgrep-all.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable ripgrep-all (rga).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.package"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.package"><code class="option">programs.ripgrep-all.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The ripgrep-all package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.ripgrep-all</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters"><code class="option">programs.ripgrep-all.custom_adapters</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Custom adapters that invoke external preprocessing scripts.
+See &lt;link xlink:href=“https://github.com/phiresky/ripgrep-all/wiki#custom-adapters”/&gt;.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.args"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.args"><code class="option">programs.ripgrep-all.custom_adapters.*.args</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The output path hint; the placeholders are the same as for rga’s <code class="literal">args</code></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.binary"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.binary"><code class="option">programs.ripgrep-all.custom_adapters.*.binary</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The path of the binary to run</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+absolute path</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.description"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.description"><code class="option">programs.ripgrep-all.custom_adapters.*.description</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A description of this adapter; shown in rga’s help</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.disabled_by_default"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.disabled_by_default"><code class="option">programs.ripgrep-all.custom_adapters.*.disabled_by_default</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>If true, the adapter will be disabled by default</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.extensions"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.extensions"><code class="option">programs.ripgrep-all.custom_adapters.*.extensions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The file extensions this adapter supports</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;pdf&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.match_only_by_mime"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.match_only_by_mime"><code class="option">programs.ripgrep-all.custom_adapters.*.match_only_by_mime</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>if --rga-accurate, only match by mime types, ignore extensions completely</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.mimetypes"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.mimetypes"><code class="option">programs.ripgrep-all.custom_adapters.*.mimetypes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>If not null and --rga-accurate is enabled, mime type matching is used instead of file name matching</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;application/pdf&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.name"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.name"><code class="option">programs.ripgrep-all.custom_adapters.*.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The unique identifier and name of this adapter; must only include a-z, 0-9, _</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.output_path_hint"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.output_path_hint"><code class="option">programs.ripgrep-all.custom_adapters.*.output_path_hint</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Setting this is useful if the output format is not plain text (.txt) but instead some other format that should be passed to another adapter</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;$\${input_virtual_path}.txt.asciipagebreaks&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ripgrep-all.custom_adapters._.version"></a><a class="term" href="options.xhtml#opt-programs.ripgrep-all.custom_adapters._.version"><code class="option">programs.ripgrep-all.custom_adapters.*.version</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The version identifier used to key cache entries; change if the configuration or program changes</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">1</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ripgrep-all.nix" target="_top">
+&lt;home-manager/modules/programs/ripgrep-all.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.rofi.enable"></a><a class="term" href="options.xhtml#opt-programs.rofi.enable"><code class="option">programs.rofi.enable</code>
   </a>
  </span>
