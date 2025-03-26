@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
   inherit (lib.generators) toPlist;
@@ -12,11 +10,11 @@ let
 
   launchdConfig = { config, name, ... }: {
     options = {
-      enable = mkEnableOption name;
-      config = mkOption {
-        type = types.submodule (import ./launchd.nix);
+      enable = lib.mkEnableOption name;
+      config = lib.mkOption {
+        type = lib.types.submodule (import ./launchd.nix);
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             ProgramArguments = [ "/usr/bin/say" "Good afternoon" ];
             StartCalendarInterval = [
@@ -33,22 +31,22 @@ let
       };
     };
 
-    config = { config.Label = mkDefault "${labelPrefix}${name}"; };
+    config = { config.Label = lib.mkDefault "${labelPrefix}${name}"; };
   };
 
   toAgent = config: pkgs.writeText "${config.Label}.plist" (toPlist { } config);
 
-  agentPlists =
-    mapAttrs' (n: v: nameValuePair "${v.config.Label}.plist" (toAgent v.config))
-    (filterAttrs (n: v: v.enable) cfg.agents);
+  agentPlists = lib.mapAttrs'
+    (n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent v.config))
+    (lib.filterAttrs (n: v: v.enable) cfg.agents);
 
   agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
     mkdir -p "$out"
 
     declare -A plists
     plists=(${
-      concatStringsSep " "
-      (mapAttrsToList (name: value: "['${name}']='${value}'") agentPlists)
+      lib.concatStringsSep " "
+      (lib.mapAttrsToList (name: value: "['${name}']='${value}'") agentPlists)
     })
 
     for dest in "''${!plists[@]}"; do
@@ -57,36 +55,37 @@ let
     done
   '';
 in {
-  meta.maintainers = with maintainers; [ midchildan ];
+  meta.maintainers = with lib.maintainers; [ midchildan ];
 
   options.launchd = {
-    enable = mkOption {
-      type = types.bool;
+    enable = lib.mkOption {
+      type = lib.types.bool;
       default = isDarwin;
-      defaultText = literalExpression "pkgs.stdenv.hostPlatform.isDarwin";
+      defaultText = lib.literalExpression "pkgs.stdenv.hostPlatform.isDarwin";
       description = ''
         Whether to enable Home Manager to define per-user daemons by making use
         of launchd's LaunchAgents.
       '';
     };
 
-    agents = mkOption {
-      type = with types; attrsOf (submodule launchdConfig);
+    agents = lib.mkOption {
+      type = with lib.types; attrsOf (submodule launchdConfig);
       default = { };
       description = "Define LaunchAgents.";
     };
   };
 
-  config = mkMerge [
+  config = lib.mkMerge [
     {
       assertions = [{
         assertion = (cfg.enable && agentPlists != { }) -> isDarwin;
-        message = let names = lib.concatStringsSep ", " (attrNames agentPlists);
-        in "Must use Darwin for modules that require Launchd: " + names;
+        message =
+          let names = lib.concatStringsSep ", " (lib.attrNames agentPlists);
+          in "Must use Darwin for modules that require Launchd: " + names;
       }];
     }
 
-    (mkIf isDarwin {
+    (lib.mkIf isDarwin {
       home.extraBuilderCommands = ''
         ln -s "${agentsDrv}" $out/LaunchAgents
       '';
@@ -132,7 +131,7 @@ in {
       # NOTE: Launch Agent configurations can't be symlinked from the Nix store
       # because it needs to be owned by the user running it.
       home.activation.setupLaunchAgents =
-        hm.dag.entryAfter [ "writeBoundary" ] ''
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           setupLaunchAgents() {
             local oldDir newDir dstDir domain err
             oldDir=""
@@ -144,7 +143,7 @@ in {
               fi
             fi
             newDir="$(readlink -m "$newGenPath/LaunchAgents")"
-            dstDir=${escapeShellArg dstDir}
+            dstDir=${lib.escapeShellArg dstDir}
             domain="gui/$UID"
             err=0
 
