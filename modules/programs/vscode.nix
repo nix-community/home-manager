@@ -389,25 +389,26 @@ in {
         mkMerge (concatMap toPaths
           (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
           ++ optional
-          (versionAtLeast vscodeVersion "1.74.0" && defaultProfile != { }) {
-            # Whenever our immutable extensions.json changes, force VSCode to regenerate
-            # extensions.json with both mutable and immutable extensions.
-            "${extensionPath}/.extensions-immutable.json" = {
-              text = extensionJson defaultProfile.extensions;
-              onChange = ''
-                run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
-                verboseEcho "Regenerating VSCode extensions.json"
-                run ${getExe cfg.package} --list-extensions > /dev/null
-              '';
-            };
-          })
+          ((versionAtLeast vscodeVersion "1.74.0" || vscodePname == "cursor")
+            && defaultProfile != { }) {
+              # Whenever our immutable extensions.json changes, force VSCode to regenerate
+              # extensions.json with both mutable and immutable extensions.
+              "${extensionPath}/.extensions-immutable.json" = {
+                text = extensionJson defaultProfile.extensions;
+                onChange = ''
+                  run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
+                  verboseEcho "Regenerating VSCode extensions.json"
+                  run ${getExe cfg.package} --list-extensions > /dev/null
+                '';
+              };
+            })
       else {
         "${extensionPath}".source = let
           combinedExtensionsDrv = pkgs.buildEnv {
             name = "vscode-extensions";
             paths = (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
-              ++ optional
-              (versionAtLeast vscodeVersion "1.74.0" && defaultProfile != { })
+              ++ optional ((versionAtLeast vscodeVersion "1.74.0" || vscodePname
+                == "cursor") && defaultProfile != { })
               (extensionJsonFile "default"
                 (extensionJson defaultProfile.extensions));
           };
