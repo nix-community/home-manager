@@ -75716,6 +75716,308 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.mpdscribble.enable"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.enable"><code class="option">services.mpdscribble.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable mpdscribble, an MPD client which submits info about tracks being played to
+Last.fm (formerly AudioScrobbler)
+.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.package"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.package"><code class="option">services.mpdscribble.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The mpdscribble package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.mpdscribble</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.endpoints"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.endpoints"><code class="option">services.mpdscribble.endpoints</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Endpoints to scrobble to.
+If the endpoint is one of “jamendo”, “last.fm”, “libre.fm”, “listenbrainz” the url is set automatically.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;last.fm&quot; = {
+    passwordFile = &quot;/run/secrets/lastfm_password&quot;;
+    username = &quot;foo&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.endpoints._name_.passwordFile"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.endpoints._name_.passwordFile"><code class="option">services.mpdscribble.endpoints.&lt;name&gt;.passwordFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>File containing the password, either as MD5SUM or cleartext.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.endpoints._name_.url"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.endpoints._name_.url"><code class="option">services.mpdscribble.endpoints.&lt;name&gt;.url</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The url endpoint where the scrobble API is listening.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.endpoints._name_.username"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.endpoints._name_.username"><code class="option">services.mpdscribble.endpoints.&lt;name&gt;.username</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Username for the scrobble service.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.host"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.host"><code class="option">services.mpdscribble.host</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Host for the mpdscribble daemon to search for a mpd daemon on.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">if config.services.mpd.network.listenAddress != &quot;any&quot;
+then config.services.mpd.network.listenAddress
+else &quot;localhost&quot;
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.journalInterval"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.journalInterval"><code class="option">services.mpdscribble.journalInterval</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>How often should mpdscribble save the journal file? [seconds]</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">600</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">60</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.passwordFile"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.passwordFile"><code class="option">services.mpdscribble.passwordFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>File containing the password for the mpd daemon.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.port"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.port"><code class="option">services.mpdscribble.port</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Port for the mpdscribble daemon to search for a mpd daemon on.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">config.services.mpd.network.port</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.proxy"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.proxy"><code class="option">services.mpdscribble.proxy</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>HTTP proxy URL.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.mpdscribble.verbose"></a><a class="term" href="options.xhtml#opt-services.mpdscribble.verbose"><code class="option">services.mpdscribble.verbose</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Log level for the mpdscribble daemon.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">1</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdscribble.nix" target="_top">
+&lt;home-manager/modules/services/mpdscribble.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.mpris-proxy.enable"></a><a class="term" href="options.xhtml#opt-services.mpris-proxy.enable"><code class="option">services.mpris-proxy.enable</code>
   </a>
  </span>
