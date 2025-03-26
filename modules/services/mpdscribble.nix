@@ -121,6 +121,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.mpdscribble" pkgs
+        lib.platforms.linux)
+    ];
     systemd.user.services.mpdscribble = let
       localMpd = (cfg.host == "localhost" || cfg.host == "127.0.0.1");
 
