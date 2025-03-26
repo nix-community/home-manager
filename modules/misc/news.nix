@@ -2148,6 +2148,7 @@ in {
           under '$XDG_CONFIG_HOME/easyeffects/{input,output}/'.
         '';
       }
+
       {
         time = "2025-02-12T15:56:00+00:00";
         message = ''
@@ -2167,6 +2168,16 @@ in {
           - programs.zellij.enableBashIntegration
           - programs.zellij.enableFishIntegration
           - programs.zellij.enableZshIntegration
+        '';
+      }
+
+      {
+        time = "2025-01-02T11:21:19+00:00";
+        message = ''
+          A new module is available: 'services.mpdscribble'.
+
+          A MPD client which submits information about tracks being played to a
+          scrobbler (e.g. last.fm)
         '';
       }
     ];
