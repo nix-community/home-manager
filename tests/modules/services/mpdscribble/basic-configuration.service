@@ -1,0 +1,14 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=/nix/store/00000000000000000000000000000000-mpdscribble-start
+ExecStartPre=+/nix/store/00000000000000000000000000000000-mpdscribble-pre-start/bin/mpdscribble-pre-start
+RuntimeDirectory=mpdscribble
+RuntimeDirectoryMode=700
+StateDirectory=mpdscribble
+
+[Unit]
+After=network.target
+After=mpd.service
+Description=mpdscribble mpd scrobble client
