@@ -55,7 +55,7 @@ let
     done
   '';
 in {
-  meta.maintainers = with lib.maintainers; [ midchildan ];
+  meta.maintainers = with lib.maintainers; [ khaneliman midchildan ];
 
   options.launchd = {
     enable = lib.mkOption {
