@@ -410,6 +410,7 @@ let
       ./services/redshift-gammastep/gammastep.nix
       ./services/redshift-gammastep/redshift.nix
       ./services/remmina.nix
+      ./services/restic.nix
       ./services/rsibreak.nix
       ./services/safeeyes.nix
       ./services/screen-locker.nix
