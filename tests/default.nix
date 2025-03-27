@@ -304,6 +304,10 @@ in import nmtSrc {
     ./modules/programs/emacs
     ./modules/programs/fastfetch
     ./modules/programs/feh
+    ./modules/programs/firefox
+    ./modules/programs/firefox/firefox.nix
+    ./modules/programs/firefox/floorp.nix
+    ./modules/programs/firefox/librewolf.nix
     ./modules/programs/fish
     ./modules/programs/gallery-dl
     ./modules/programs/gh
@@ -451,10 +455,6 @@ in import nmtSrc {
     ./modules/programs/cavalier
     ./modules/programs/distrobox
     ./modules/programs/eww
-    ./modules/programs/firefox
-    ./modules/programs/firefox/firefox.nix
-    ./modules/programs/firefox/floorp.nix
-    ./modules/programs/firefox/librewolf.nix
     ./modules/programs/foot
     ./modules/programs/freetube
     ./modules/programs/fuzzel
