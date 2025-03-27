@@ -195,8 +195,10 @@ in {
     # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
     # initialization show up a bit earlier. This is to make initialization of
     # other history managers, like mcfly or atuin, take precedence.
+    # Still needs to be initialized after oh-my-zsh (order 800), otherwise
+    # omz will take precedence.
     programs.zsh.initContent =
-      mkIf cfg.enableZshIntegration (mkOrder 200 zshIntegration);
+      mkIf cfg.enableZshIntegration (mkOrder 810 zshIntegration);
 
     programs.fish.interactiveShellInit =
       mkIf cfg.enableFishIntegration (mkOrder 200 fishIntegration);
