@@ -198,7 +198,7 @@ in {
     # Still needs to be initialized after oh-my-zsh (order 800), otherwise
     # omz will take precedence.
     programs.zsh.initContent =
-      mkIf cfg.enableZshIntegration (mkOrder 810 zshIntegration);
+      mkIf cfg.enableZshIntegration (mkOrder 910 zshIntegration);
 
     programs.fish.interactiveShellInit =
       mkIf cfg.enableFishIntegration (mkOrder 200 fishIntegration);
