@@ -1,18 +1,16 @@
 { pkgs, lib, config, ... }:
-
 with lib;
-
 let
   normalizeKeyValue = k: v:
     let
-      v' = (if builtins.isBool v then
+      v' = if builtins.isBool v then
         (if v then "true" else "false")
       else if builtins.isAttrs v then
         (concatStringsSep ''
 
           ${k}='' (mapAttrsToList normalizeKeyValue v))
       else
-        builtins.toString v);
+        builtins.toString v;
     in if builtins.isNull v then "" else "${k}=${v'}";
 
   primitiveAttrs = with types; attrsOf (either primitive (listOf primitive));
@@ -32,9 +30,9 @@ let
         bVal = if builtins.hasAttr key b then b.${key} else null;
 
         # check if the types inside a list match the type of a primitive
-        listMatchesType = (list: val:
+        listMatchesType = list: val:
           isList list && builtins.length list > 0
-          && builtins.typeOf (builtins.head list) == builtins.typeOf val);
+          && builtins.typeOf (builtins.head list) == builtins.typeOf val;
       in if isAttrs aVal && isAttrs bVal then
         result // { ${key} = deepMerge aVal bVal; }
       else if isList aVal && isList bVal then
@@ -63,7 +61,7 @@ in {
   buildConfigAsserts = quadletName: extraConfig:
     let
       configRules = {
-        Build = { ImageTag = (with types; listOf str); };
+        Build = { ImageTag = with types; listOf str; };
         Container = { ContainerName = types.enum [ quadletName ]; };
         Network = { NetworkName = types.enum [ quadletName ]; };
         Volume = { VolumeName = types.enum [ quadletName ]; };
@@ -96,7 +94,6 @@ in {
           message = ''
             In '${quadletName}' config. Build.ImageTag: '[ "${imageTagsStr}" ]' does not contain 'homemanager/${quadletName}'.'';
         }];
-
       # Flatten assertions from all sections in `extraConfig`.
     in flatten (concatLists [
       (mapAttrsToList buildSectionAsserts extraConfig)
@@ -119,8 +116,7 @@ in {
       formatServiceName = quadlet:
         let
           # remove the podman- prefix from the service name string
-          strippedName =
-            builtins.replaceStrings [ "podman-" ] [ "" ] quadlet.serviceName;
+          strippedName = lib.removePrefix "podman-" quadlet.serviceName;
           # specific logic for writing the unit name goes here. It should be
           #   identical to what `podman <resource> ls` shows
         in {
