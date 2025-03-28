@@ -212,9 +212,13 @@ in {
     xdg.configFile = let
       settings = {
         "helix/config.toml" = mkIf (cfg.settings != { }) {
-          text =
-            builtins.readFile (tomlFormat.generate "helix-config" cfg.settings)
-            + "\n" + cfg.extraConfig;
+          source = let
+            configFile = tomlFormat.generate "config.toml" cfg.settings;
+            extraConfigFile =
+              pkgs.writeText "extra-config.toml" ("\n" + cfg.extraConfig);
+          in pkgs.runCommand "helix-config.toml" { } ''
+            cat ${configFile} ${extraConfigFile} >> $out
+          '';
         };
         "helix/languages.toml" = mkIf (cfg.languages != { }) {
           source = tomlFormat.generate "helix-languages-config" cfg.languages;
