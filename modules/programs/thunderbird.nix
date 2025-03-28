@@ -387,6 +387,8 @@ in {
         attrsOf (submodule ({ config, ... }: {
           config.thunderbird = {
             settings = lib.mkIf (config.flavor == "gmail.com") (id: {
+              "mail.smtpserver.smtp_${id}.authMethod" =
+                mkOptionDefault 10; # 10 = OAuth2
               "mail.server.server_${id}.authMethod" =
                 mkOptionDefault 10; # 10 = OAuth2
               "mail.server.server_${id}.socketType" =
