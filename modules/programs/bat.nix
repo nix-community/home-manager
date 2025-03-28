@@ -198,7 +198,7 @@ in {
         };
         zsh =
           mkIf (!config.programs.fish.enable && config.programs.zsh.enable) {
-            initExtra = shellInit "zsh";
+            initContent = shellInit "zsh";
           };
       };
 
