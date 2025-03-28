@@ -6,10 +6,10 @@ let
 
   cfg = config.programs.broot;
 
-  tomlFormat = pkgs.formats.toml { };
+  jsonFormat = pkgs.formats.json { };
 
   settingsModule = {
-    freeformType = tomlFormat.type;
+    freeformType = jsonFormat.type;
 
     options = {
       modal = mkEnableOption "modal (vim) mode";
@@ -194,23 +194,16 @@ in {
           # Dummy file to prevent broot from trying to reinstall itself
           (pkgs.writeTextDir "launcher/installed-v1" "")
         ];
-
         postBuild = ''
-          ln -s ${
-            tomlFormat.generate "broot-config" cfg.settings
-          } $out/conf.toml
-
-          # Remove conf.hjson, whose content has been merged into programs.broot.settings
           rm $out/conf.hjson
+          ${lib.getExe pkgs.jq} --slurp add > $out/conf.hjson \
+            <(${
+              lib.getExe pkgs.hjson-go
+            } -c ${cfg.package.src}/resources/default-conf/conf.hjson) \
+            ${jsonFormat.generate "broot-config.json" cfg.settings}
         '';
       };
     };
-
-    programs.broot.settings = builtins.fromJSON (builtins.readFile
-      (pkgs.runCommand "default-conf.json" {
-        nativeBuildInputs = [ pkgs.hjson-go ];
-      }
-        "hjson-cli -c ${cfg.package.src}/resources/default-conf/conf.hjson > $out"));
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
 
