@@ -183,7 +183,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."broot" = {
+    xdg.configFile.broot = {
       recursive = true;
       source = pkgs.symlinkJoin {
         name = "xdg.configFile.broot";
@@ -205,13 +205,15 @@ in {
       };
     };
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
+    programs = {
+      bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
 
-    programs.zsh.initContent = mkIf cfg.enableZshIntegration (shellInit "zsh");
+      zsh.initContent = mkIf cfg.enableZshIntegration (shellInit "zsh");
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
+      fish.shellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
 
-    programs.nushell.extraConfig =
-      mkIf cfg.enableNushellIntegration (shellInit "nushell");
+      nushell.extraConfig =
+        mkIf cfg.enableNushellIntegration (shellInit "nushell");
+    };
   };
 }
