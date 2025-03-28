@@ -39,6 +39,13 @@ in {
     programs.newsboat = {
       enable = mkEnableOption "the Newsboat feed reader";
 
+      package = mkOption {
+        type = types.package;
+        default = pkgs.newsboat;
+        defaultText = literalExpression "pkgs.newboat";
+        description = "The newsboat package to install";
+      };
+
       urls = mkOption {
         type = types.listOf (types.submodule {
           options = {
@@ -132,7 +139,7 @@ in {
       '';
     }];
 
-    home.packages = [ pkgs.newsboat ];
+    home.packages = [ cfg.package ];
 
     # Use ~/.newsboat on stateVersion < 21.05 and use ~/.config/newsboat for
     # stateVersion >= 21.05.
