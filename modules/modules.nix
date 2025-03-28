@@ -241,6 +241,7 @@ let
     ./programs/sioyek.nix
     ./programs/skim.nix
     ./programs/sm64ex.nix
+    ./programs/smug.nix
     ./programs/spotify-player.nix
     ./programs/sqls.nix
     ./programs/ssh.nix
