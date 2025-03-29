@@ -14,9 +14,13 @@ let
   baseUnit = username: {
     description = "Home Manager environment for ${username}";
     stopIfChanged = false;
-    environment = optionalAttrs (cfg.backupFileExtension != null) {
-      HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
-    } // optionalAttrs cfg.verbose { VERBOSE = "1"; };
+    environment = {
+      # needed to run qt programs like kwriteconfig
+      QT_QPA_PLATFORM = "offscreen";
+      HOME_MANAGER_BACKUP_EXT =
+        mkIf (cfg.backupFileExtension != null) cfg.backupFileExtension;
+      VERBOSE = mkIf cfg.verbose "1";
+    };
     serviceConfig = baseService username;
   };
   # we use a service separated from nixos-activation
