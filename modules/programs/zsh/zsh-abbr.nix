@@ -24,9 +24,32 @@ in {
         the longer phrase after they are entered.
       '';
     };
+
+    globalAbbreviations = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      example = {
+        G = "| grep";
+        L = "| less -R";
+      };
+      description = ''
+        Similar to [](#opt-programs.zsh.zsh-abbr.abbreviations),
+        but are expanded anywhere on a line.
+      '';
+    };
   };
 
-  config = mkIf cfg.enable {
+  config = let
+    abbreviations =
+      mapAttrsToList (k: v: "abbr ${escapeShellArg k}=${escapeShellArg v}")
+      cfg.abbreviations;
+
+    globalAbbreviations =
+      mapAttrsToList (k: v: "abbr -g ${escapeShellArg k}=${escapeShellArg v}")
+      cfg.globalAbbreviations;
+
+    allAbbreviations = abbreviations ++ globalAbbreviations;
+  in mkIf cfg.enable {
     programs.zsh.plugins = [{
       name = "zsh-abbr";
       src = cfg.package;
@@ -34,9 +57,8 @@ in {
     }];
 
     xdg.configFile = {
-      "zsh-abbr/user-abbreviations".text = concatStringsSep "\n"
-        (mapAttrsToList (k: v: "abbr ${escapeShellArg k}=${escapeShellArg v}")
-          cfg.abbreviations) + "\n";
+      "zsh-abbr/user-abbreviations".text =
+        concatStringsSep "\n" allAbbreviations + "\n";
     };
   };
 }
