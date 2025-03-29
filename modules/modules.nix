@@ -237,6 +237,7 @@ let
     ./programs/scmpuff.nix
     ./programs/script-directory.nix
     ./programs/senpai.nix
+    ./programs/sesh.nix
     ./programs/sftpman.nix
     ./programs/sioyek.nix
     ./programs/skim.nix

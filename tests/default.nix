@@ -386,6 +386,7 @@ in import nmtSrc {
     ./modules/programs/sbt
     ./modules/programs/scmpuff
     ./modules/programs/senpai
+    ./modules/programs/sesh
     ./modules/programs/sftpman
     ./modules/programs/sioyek
     ./modules/programs/sm64ex
