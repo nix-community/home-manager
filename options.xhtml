@@ -50151,6 +50151,201 @@ null or (list of string)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.sesh.enable"></a><a class="term" href="options.xhtml#opt-programs.sesh.enable"><code class="option">programs.sesh.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the sesh terminal session manager.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix" target="_top">
+&lt;home-manager/modules/programs/sesh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sesh.enableAlias"></a><a class="term" href="options.xhtml#opt-programs.sesh.enableAlias"><code class="option">programs.sesh.enableAlias</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable a shell alias <code class="literal">s</code> to quickly launch sessions.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix" target="_top">
+&lt;home-manager/modules/programs/sesh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sesh.enableTmuxIntegration"></a><a class="term" href="options.xhtml#opt-programs.sesh.enableTmuxIntegration"><code class="option">programs.sesh.enableTmuxIntegration</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enable Tmux integration with sesh.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix" target="_top">
+&lt;home-manager/modules/programs/sesh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sesh.package"></a><a class="term" href="options.xhtml#opt-programs.sesh.package"><code class="option">programs.sesh.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The sesh package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.sesh</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix" target="_top">
+&lt;home-manager/modules/programs/sesh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sesh.fzfPackage"></a><a class="term" href="options.xhtml#opt-programs.sesh.fzfPackage"><code class="option">programs.sesh.fzfPackage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The fzf package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.fzf</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix" target="_top">
+&lt;home-manager/modules/programs/sesh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sesh.settings"></a><a class="term" href="options.xhtml#opt-programs.sesh.settings"><code class="option">programs.sesh.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration for sesh, written to <code class="literal">~/.config/sesh/sesh.toml</code>.</p><p>See the <a class="link" href="https://github.com/joshmedeski/sesh#configuration"  target="_top">sesh documentation</a> for available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix" target="_top">
+&lt;home-manager/modules/programs/sesh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sesh.tmuxKey"></a><a class="term" href="options.xhtml#opt-programs.sesh.tmuxKey"><code class="option">programs.sesh.tmuxKey</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Keybinding for invoking sesh in Tmux.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;s&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix" target="_top">
+&lt;home-manager/modules/programs/sesh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sesh.zoxidePackage"></a><a class="term" href="options.xhtml#opt-programs.sesh.zoxidePackage"><code class="option">programs.sesh.zoxidePackage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The zoxide package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.zoxide</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix" target="_top">
+&lt;home-manager/modules/programs/sesh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.sftpman.enable"></a><a class="term" href="options.xhtml#opt-programs.sftpman.enable"><code class="option">programs.sftpman.enable</code>
   </a>
  </span>
