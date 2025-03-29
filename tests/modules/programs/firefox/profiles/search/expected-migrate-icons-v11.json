@@ -1,0 +1,26 @@
+{
+  "engines": [
+    {
+      "_definedAliases": [
+        "@nw"
+      ],
+      "_iconMapObj": {
+        "16": "https://wiki.nixos.org/favicon.ico"
+      },
+      "_isAppProvided": false,
+      "_loadPath": "[home-manager]/programs.@name@.profiles.migrateIconsV11.search.engines.nixos-wiki",
+      "_metaData": {},
+      "_name": "NixOS Wiki",
+      "_urls": [
+        {
+          "template": "https://wiki.nixos.org/w/index.php?search={searchTerms}"
+        }
+      ],
+      "id": "nixos-wiki"
+    }
+  ],
+  "metaData": {
+    "useSavedOrder": false
+  },
+  "version": 12
+}

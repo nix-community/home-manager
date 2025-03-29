@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options.programs = let
     description = ''
@@ -12,13 +10,17 @@ with lib;
       directory.
     '';
   in {
-    bash.enableVteIntegration = mkEnableOption "" // { inherit description; };
+    bash.enableVteIntegration = lib.mkEnableOption "" // {
+      inherit description;
+    };
 
-    zsh.enableVteIntegration = mkEnableOption "" // { inherit description; };
+    zsh.enableVteIntegration = lib.mkEnableOption "" // {
+      inherit description;
+    };
   };
 
-  config = mkMerge [
-    (mkIf config.programs.bash.enableVteIntegration {
+  config = lib.mkMerge [
+    (lib.mkIf config.programs.bash.enableVteIntegration {
       # Unfortunately we have to do a little dance here to fix two
       # problems with the upstream vte.sh file:
       #
@@ -42,8 +44,8 @@ with lib;
       '';
     })
 
-    (mkIf config.programs.zsh.enableVteIntegration {
-      programs.zsh.initExtra = ''
+    (lib.mkIf config.programs.zsh.enableVteIntegration {
+      programs.zsh.initContent = ''
         . ${pkgs.vte}/etc/profile.d/vte.sh
       '';
     })

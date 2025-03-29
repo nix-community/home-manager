@@ -15,7 +15,7 @@ in {
     enable = mkEnableOption
       "ruff, an extremely fast Python linter and code formatter, written in Rust";
 
-    package = mkPackageOption pkgs "ruff" { };
+    package = mkPackageOption pkgs "ruff" { nullable = true; };
 
     settings = mkOption {
       type = settingsFormat.type;
@@ -37,7 +37,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."ruff/ruff.toml".source =
       settingsFormat.generate "ruff.toml" cfg.settings;

@@ -1,8 +1,6 @@
 modulePath:
 { config, lib, ... }:
 
-with lib;
-
 let
 
   firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
@@ -10,10 +8,10 @@ let
 in {
   imports = [ firefoxMockOverlay ];
 
-  config = mkIf config.test.enableBig ({
+  config = lib.mkIf config.test.enableBig ({
     test.asserts.assertions.expected =
       [ "Container id must be smaller than 4294967294 (2^32 - 2)" ];
-  } // setAttrByPath modulePath {
+  } // lib.setAttrByPath modulePath {
     enable = true;
 
     profiles.my-profile = {

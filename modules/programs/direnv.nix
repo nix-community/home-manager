@@ -54,7 +54,7 @@ in {
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption {
       inherit config;
       extraDescription = ''
-        Note, enabling the direnv module will always active its functionality
+        Note, enabling the direnv module will always activate its functionality
         for Fish since the direnv package automatically gets loaded in Fish.
         If this is not the case try adding
         ```nix
@@ -128,7 +128,7 @@ in {
         eval "$(${getExe cfg.package} hook bash)"
       '');
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${getExe cfg.package} hook zsh)"
     '';
 

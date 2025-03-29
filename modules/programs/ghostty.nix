@@ -31,7 +31,7 @@ in {
     package = lib.mkPackageOption pkgs "ghostty" {
       nullable = true;
       extraDescription =
-        "Set programs.ghostty.package to null on platfroms where ghostty is not available or marked broken";
+        "Set programs.ghostty.package to null on platforms where ghostty is not available or marked broken";
     };
 
     settings = lib.mkOption {
@@ -194,7 +194,7 @@ in {
     })
 
     (lib.mkIf cfg.enableZshIntegration {
-      programs.zsh.initExtra = ''
+      programs.zsh.initContent = ''
         if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
           source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
         fi

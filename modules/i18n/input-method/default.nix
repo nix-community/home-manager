@@ -1,6 +1,5 @@
 { config, pkgs, lib, ... }:
 
-with lib;
 let
 
   cfg = config.i18n.inputMethod;
@@ -26,9 +25,9 @@ in {
 
   options.i18n = {
     inputMethod = {
-      enabled = mkOption {
-        type = types.nullOr
-          (types.enum [ "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" ]);
+      enabled = lib.mkOption {
+        type = lib.types.nullOr
+          (lib.types.enum [ "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" ]);
         default = null;
         example = "fcitx5";
         description = ''
@@ -61,9 +60,9 @@ in {
         '';
       };
 
-      package = mkOption {
+      package = lib.mkOption {
         internal = true;
-        type = types.nullOr types.path;
+        type = lib.types.nullOr lib.types.path;
         default = null;
         description = ''
           The input method method package.
@@ -72,9 +71,10 @@ in {
     };
   };
 
-  config = mkIf (cfg.enabled != null) {
+  config = lib.mkIf (cfg.enabled != null) {
     assertions = [
-      (hm.assertions.assertPlatform "i18n.inputMethod" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "i18n.inputMethod" pkgs
+        lib.platforms.linux)
       {
         assertion = cfg.enabled != "fcitx";
         message = "fcitx has been removed, please use fcitx5 instead";
@@ -84,5 +84,5 @@ in {
     home.packages = [ cfg.package gtk2Cache gtk3Cache ];
   };
 
-  meta.maintainers = with lib; [ hm.maintainers.kranzes ];
+  meta.maintainers = [ lib.hm.maintainers.kranzes ];
 }

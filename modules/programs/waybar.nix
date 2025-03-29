@@ -211,6 +211,17 @@ in {
       '';
     };
 
+    systemd.enableInspect = mkOption {
+      type = bool;
+      default = false;
+      example = true;
+      description = ''
+        Inspect objects and find their CSS classes, experiment with live CSS styles, and lookup the current value of CSS properties.
+
+        See <https://developer.gnome.org/documentation/tools/inspector.html>
+      '';
+    };
+
     style = mkOption {
       type = nullOr (either path lines);
       default = null;
@@ -310,7 +321,7 @@ in {
           Description =
             "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
           Documentation = "https://github.com/Alexays/Waybar/wiki";
-          PartOf = [ cfg.systemd.target ];
+          PartOf = [ cfg.systemd.target "tray.target" ];
           After = [ cfg.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           X-Restart-Triggers = optional (settings != [ ])
@@ -324,10 +335,12 @@ in {
           ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
           Restart = "on-failure";
           KillMode = "mixed";
+        } // optionalAttrs cfg.systemd.enableInspect {
+          Environment = [ "GTK_DEBUG=interactive" ];
         };
 
-        Install.WantedBy =
-          lib.optional (cfg.systemd.target != null) cfg.systemd.target;
+        Install.WantedBy = [ "tray.target" ]
+          ++ lib.optional (cfg.systemd.target != null) cfg.systemd.target;
       };
     })
   ]);

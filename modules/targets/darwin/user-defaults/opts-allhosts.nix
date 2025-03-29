@@ -1,8 +1,8 @@
 { config, lib, ... }:
 
-with lib;
-
 let
+  inherit (lib) types;
+
   mkNullableOption = args:
     lib.mkOption (args // {
       type = types.nullOr args.type;
@@ -284,12 +284,12 @@ in {
   };
 
   config = {
-    "com.apple.Safari" = mkIf (safari.IncludeDevelopMenu != null) {
+    "com.apple.Safari" = lib.mkIf (safari.IncludeDevelopMenu != null) {
       WebKitDeveloperExtrasEnabledPreferenceKey = safari.IncludeDevelopMenu;
       "WebKitPreferences.developerExtrasEnabled" = safari.IncludeDevelopMenu;
     };
     "com.apple.Safari.SandboxBroker" =
-      mkIf (safari.IncludeDevelopMenu != null) {
+      lib.mkIf (safari.IncludeDevelopMenu != null) {
         ShowDevelopMenu = safari.IncludeDevelopMenu;
       };
   };

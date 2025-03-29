@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   stubType = types.submodule ({ name, ... }: {
     options = {
@@ -15,13 +13,13 @@ let
       outPath = mkOption {
         type = types.nullOr types.str;
         default = "@${name}@";
-        defaultText = literalExpression ''"@''${name}@"'';
+        defaultText = lib.literalExpression ''"@''${name}@"'';
       };
 
       version = mkOption {
         type = types.nullOr types.str;
         default = null;
-        defaultText = literalExpression "pkgs.\${name}.version or null";
+        defaultText = lib.literalExpression "pkgs.\${name}.version or null";
       };
 
       buildScript = mkOption {
@@ -52,7 +50,7 @@ let
           meta.mainProgram = name;
         } buildScript;
 
-      stubbedPkg = pkg // optionalAttrs (outPath != null) {
+      stubbedPkg = pkg // lib.optionalAttrs (outPath != null) {
         inherit outPath;
 
         # Prevent getOutput from descending into outputs
@@ -63,7 +61,8 @@ let
           buildHost = pkg;
           hostTarget = pkg;
         };
-      } // optionalAttrs (version != null) { inherit version; } // extraAttrs;
+      } // lib.optionalAttrs (version != null) { inherit version; }
+        // extraAttrs;
     in stubbedPkg;
 
 in {
@@ -90,11 +89,12 @@ in {
   config = {
     lib.test.mkStubPackage = mkStubPackage;
 
-    test.stubOverlays = [ ] ++ optional (config.test.stubs != { }) (self: super:
-      mapAttrs (n: v:
-        builtins.traceVerbose "${n} - stubbed" (mkStubPackage (v
-          // optionalAttrs (v.version == null) {
-            version = super.${n}.version or null;
-          }))) config.test.stubs) ++ config.test.unstubs;
+    test.stubOverlays = [ ] ++ lib.optional (config.test.stubs != { })
+      (self: super:
+        lib.mapAttrs (n: v:
+          builtins.traceVerbose "${n} - stubbed" (mkStubPackage (v
+            // lib.optionalAttrs (v.version == null) {
+              version = super.${n}.version or null;
+            }))) config.test.stubs) ++ config.test.unstubs;
   };
 }

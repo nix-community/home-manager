@@ -608,8 +608,8 @@ in {
 
               command = mkOption {
                 type = str;
-                default = "syncthingtray";
-                defaultText = literalExpression "syncthingtray";
+                default = "syncthingtray --wait";
+                defaultText = literalExpression "syncthingtray --wait";
                 example = literalExpression "qsyncthingtray";
                 description = "Syncthing tray command to use.";
               };
@@ -706,7 +706,7 @@ in {
         };
 
         syncthing-init = {
-          enable = true;
+          enable = cleanedConfig != { };
           config = {
             ProgramArguments = [ "${updateConfig}" ];
             WatchPaths = [
@@ -728,7 +728,7 @@ in {
           Unit = {
             Description = cfg.tray.package.pname;
             Requires = [ "tray.target" ];
-            After = [ "graphical-session-pre.target" "tray.target" ];
+            After = [ "graphical-session.target" "tray.target" ];
             PartOf = [ "graphical-session.target" ];
           };
 
@@ -753,7 +753,7 @@ in {
           Unit = {
             Description = "syncthingtray";
             Requires = [ "tray.target" ];
-            After = [ "graphical-session-pre.target" "tray.target" ];
+            After = [ "graphical-session.target" "tray.target" ];
             PartOf = [ "graphical-session.target" ];
           };
 

@@ -48,10 +48,10 @@
   nmt.script = ''
     assertFileExists home-files/.config/neomutt/neomuttrc
     assertFileExists home-files/.config/neomutt/hm@example.com
-    assertFileContent home-files/.config/neomutt/neomuttrc ${
+    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/neomuttrc) ${
       ./neomutt-with-binds-expected.conf
     }
-    assertFileContent home-files/.config/neomutt/hm@example.com ${
+    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/hm@example.com) ${
       ./hm-example.com-expected
     }
   '';

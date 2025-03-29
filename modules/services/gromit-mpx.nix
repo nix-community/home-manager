@@ -215,7 +215,7 @@ in {
     systemd.user.services.gromit-mpx = {
       Unit = {
         Description = "Gromit-MPX";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
         X-Restart-Triggers = [
           "${config.xdg.configFile."gromit-mpx.cfg".source}"

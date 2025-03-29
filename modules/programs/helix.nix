@@ -1,7 +1,5 @@
 { config, lib, pkgs, ... }:
-
 with lib;
-
 let
   cfg = config.programs.helix;
   tomlFormat = pkgs.formats.toml { };
@@ -24,6 +22,20 @@ in {
       default = [ ];
       example = literalExpression "[ pkgs.marksman ]";
       description = "Extra packages available to hx.";
+    };
+
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Extra lines to be appended to the config file.
+        Use this if you would like to maintain order for helix settings (eg. for minor modes)
+      '';
+      example = literalExpression ''
+        [keys.normal.g] # Reverse Alphabetical Order
+        G = "goto_file_end"
+        g = "goto_file_start"
+      '';
     };
 
     defaultEditor = mkOption {
@@ -200,7 +212,13 @@ in {
     xdg.configFile = let
       settings = {
         "helix/config.toml" = mkIf (cfg.settings != { }) {
-          source = tomlFormat.generate "helix-config" cfg.settings;
+          source = let
+            configFile = tomlFormat.generate "config.toml" cfg.settings;
+            extraConfigFile =
+              pkgs.writeText "extra-config.toml" ("\n" + cfg.extraConfig);
+          in pkgs.runCommand "helix-config.toml" { } ''
+            cat ${configFile} ${extraConfigFile} >> $out
+          '';
         };
         "helix/languages.toml" = mkIf (cfg.languages != { }) {
           source = tomlFormat.generate "helix-languages-config" cfg.languages;
@@ -210,10 +228,10 @@ in {
         };
       };
 
-      themes = (mapAttrs' (n: v:
+      themes = mapAttrs' (n: v:
         nameValuePair "helix/themes/${n}.toml" {
           source = tomlFormat.generate "helix-theme-${n}" v;
-        }) cfg.themes);
+        }) cfg.themes;
     in settings // themes;
   };
 }

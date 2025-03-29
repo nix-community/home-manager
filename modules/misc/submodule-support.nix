@@ -1,13 +1,11 @@
 { lib, ... }:
 
-with lib;
-
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options.submoduleSupport = {
-    enable = mkOption {
-      type = types.bool;
+    enable = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       internal = true;
       description = ''
@@ -16,8 +14,8 @@ with lib;
       '';
     };
 
-    externalPackageInstall = mkOption {
-      type = types.bool;
+    externalPackageInstall = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       internal = true;
       description = ''
@@ -39,9 +37,9 @@ with lib;
     # module system can not inform modules about their non-existence; see
     # https://github.com/NixOS/nixpkgs/issues/311709#issuecomment-2110861842
     _module.args = {
-      osConfig = mkDefault null;
-      nixosConfig = mkDefault null;
-      darwinConfig = mkDefault null;
+      osConfig = lib.mkDefault null;
+      nixosConfig = lib.mkDefault null;
+      darwinConfig = lib.mkDefault null;
     };
   };
 }

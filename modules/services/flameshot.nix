@@ -56,7 +56,7 @@ in {
       Unit = {
         Description = "Flameshot screenshot tool";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session-pre.target" "tray.target" ];
+        After = [ "graphical-session.target" "tray.target" ];
         PartOf = [ "graphical-session.target" ];
         X-Restart-Triggers = mkIf (cfg.settings != { }) [ "${iniFile}" ];
       };

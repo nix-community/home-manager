@@ -2,7 +2,7 @@
 
 
 
-user_pref("browser.bookmarks.file", "/nix/store/00000000000000000000000000000000-@name@-bookmarks.html");
+user_pref("browser.bookmarks.file", "/nix/store/00000000000000000000000000000000-bookmarks.html");
 user_pref("browser.places.importBookmarksHTML", true);
 user_pref("general.smoothScroll", false);
 

@@ -1,0 +1,36 @@
+{
+  "engines": [
+    {
+      "_definedAliases": [
+        "@np"
+      ],
+      "_iconMapObj": {
+        "16": "https://search.nixos.org/favicon.ico"
+      },
+      "_isAppProvided": false,
+      "_loadPath": "[home-manager]/programs.@name@.profiles.migrateIconsV12.search.engines.nix-packages",
+      "_metaData": {},
+      "_name": "Nix Packages",
+      "_urls": [
+        {
+          "params": [
+            {
+              "name": "type",
+              "value": "packages"
+            },
+            {
+              "name": "query",
+              "value": "{searchTerms}"
+            }
+          ],
+          "template": "https://search.nixos.org/packages"
+        }
+      ],
+      "id": "nix-packages"
+    }
+  ],
+  "metaData": {
+    "useSavedOrder": false
+  },
+  "version": 12
+}

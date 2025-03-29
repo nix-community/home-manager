@@ -283,6 +283,13 @@ in {
 
         package = mkPackageOption pkgs "difftastic" { };
 
+        enableAsDifftool = mkEnableOption "" // {
+          description = ''
+            Enable the {command}`difftastic` syntax highlighter as a git difftool.
+            See <https://github.com/Wilfred/difftastic>.
+          '';
+        };
+
         background = mkOption {
           type = types.enum [ "light" "dark" ];
           default = "light";
@@ -411,6 +418,29 @@ in {
           '';
         };
       };
+
+      riff = {
+        enable = mkEnableOption "" // {
+          description = ''
+            Enable the <command>riff</command> diff highlighter.
+            See <link xlink:href="https://github.com/walles/riff" />.
+          '';
+        };
+
+        package = mkPackageOption pkgs "riffdiff" { };
+
+        commandLineOptions = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = literalExpression ''[ "--no-adds-only-special" ]'';
+          apply = concatStringsSep " ";
+          description = ''
+            Command line arguments to include in the <command>RIFF</command> environment variable.
+
+            Run <command>riff --help</command> for a full list of options
+          '';
+        };
+      };
     };
   };
 
@@ -434,6 +464,7 @@ in {
             cfg.diff-so-fancy.enable
             cfg.difftastic.enable
             cfg.diff-highlight.enable
+            cfg.riff.enable
           ];
         in count id enabled <= 1;
         message =
@@ -465,7 +496,7 @@ in {
         genIdentity = name: account:
           with account;
           nameValuePair "sendemail.${name}" (if account.msmtp.enable then {
-            smtpServer = "${pkgs.msmtp}/bin/msmtp";
+            sendmailCmd = "${pkgs.msmtp}/bin/msmtp";
             envelopeSender = "auto";
             from = "${realName} <${address}>";
           } else
@@ -632,18 +663,28 @@ in {
       };
     })
 
-    (mkIf cfg.difftastic.enable {
-      home.packages = [ cfg.difftastic.package ];
-
-      programs.git.iniContent = let
-        difftCommand = concatStringsSep " " [
-          "${getExe cfg.difftastic.package}"
-          "--color ${cfg.difftastic.color}"
-          "--background ${cfg.difftastic.background}"
-          "--display ${cfg.difftastic.display}"
-        ];
-      in { diff.external = difftCommand; };
-    })
+    (let
+      difftCommand = concatStringsSep " " [
+        "${getExe cfg.difftastic.package}"
+        "--color ${cfg.difftastic.color}"
+        "--background ${cfg.difftastic.background}"
+        "--display ${cfg.difftastic.display}"
+      ];
+    in (lib.mkMerge [
+      (mkIf cfg.difftastic.enable {
+        home.packages = [ cfg.difftastic.package ];
+        programs.git.iniContent = { diff.external = difftCommand; };
+      })
+      (mkIf cfg.difftastic.enableAsDifftool {
+        home.packages = [ cfg.difftastic.package ];
+        programs.git.iniContent = {
+          diff = { tool = lib.mkDefault "difftastic"; };
+          difftool = {
+            difftastic = { cmd = "${difftCommand} $LOCAL $REMOTE"; };
+          };
+        };
+      })
+    ]))
 
     (let
       deltaPackage = cfg.delta.package;
@@ -677,6 +718,26 @@ in {
               (cfg.diff-so-fancy.rulerWidth);
           };
         };
+    })
+
+    (let riffExe = baseNameOf (getExe cfg.riff.package);
+    in mkIf cfg.riff.enable {
+      home.packages = [ cfg.riff.package ];
+
+      # https://github.com/walles/riff/blob/b17e6f17ce807c8652bc59cd46758661d23ce358/README.md#usage
+      programs.git.iniContent = {
+        pager = {
+          diff = riffExe;
+          log = riffExe;
+          show = riffExe;
+        };
+
+        interactive.diffFilter = "${riffExe} --color=on";
+      };
+    })
+
+    (mkIf (cfg.riff.enable && cfg.riff.commandLineOptions != "") {
+      home.sessionVariables.RIFF = cfg.riff.commandLineOptions;
     })
   ]);
 }

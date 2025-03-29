@@ -12,7 +12,7 @@ in {
   options.programs.tofi = {
     enable = mkEnableOption "Tofi, a tiny dynamic menu for Wayland";
 
-    package = mkPackageOption pkgs "tofi" { };
+    package = mkPackageOption pkgs "tofi" { nullable = true; };
 
     settings = mkOption {
       type = with types;
@@ -46,7 +46,7 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "programs.tofi" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."tofi/config" = mkIf (cfg.settings != { }) {
       text = let

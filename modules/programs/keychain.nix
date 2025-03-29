@@ -93,7 +93,7 @@ in {
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       SHELL=fish eval (${shellCommand})
     '';
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(SHELL=zsh ${shellCommand})"
     '';
     programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration ''

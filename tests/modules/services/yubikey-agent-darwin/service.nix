@@ -28,7 +28,7 @@
         	<string>Background</string>
         	<key>ProgramArguments</key>
         	<array>
-                        <string>@yubikey-agent@/bin/yubikey-agent</string>
+        		<string>@yubikey-agent@/bin/yubikey-agent</string>
         		<string>-l</string>
         		<string>/tmp/yubikey-agent.sock</string>
         	</array>
@@ -43,8 +43,7 @@
         		</dict>
         	</dict>
         </dict>
-        </plist>
-      ''
+        </plist>''
     }
   '';
 }

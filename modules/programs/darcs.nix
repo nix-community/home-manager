@@ -13,7 +13,7 @@ in {
     programs.darcs = {
       enable = mkEnableOption "darcs";
 
-      package = mkPackageOption pkgs "darcs" { };
+      package = mkPackageOption pkgs "darcs" { nullable = true; };
 
       author = mkOption {
         type = types.listOf types.str;
@@ -36,7 +36,7 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    { home.packages = [ cfg.package ]; }
+    { home.packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
 
     (mkIf (cfg.author != [ ]) {
       home.file.".darcs/author".text =

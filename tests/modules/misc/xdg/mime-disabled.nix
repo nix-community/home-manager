@@ -1,4 +1,4 @@
-{ ... }: {
+{
   config = {
     xdg.mime.enable = false;
     nmt.script = ''

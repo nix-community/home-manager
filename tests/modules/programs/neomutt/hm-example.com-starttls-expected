@@ -13,10 +13,6 @@ set sort = "threads"
 set smtp_pass="`password-command`"
 set smtp_url='smtp://home.manager@smtp.example.com'
 
-
-
-
-
 # MRA section
 set folder='/home/hm-user/Mail/hm@example.com'
 set from='hm@example.com'
@@ -32,6 +28,7 @@ color status cyan default
 
 
 unset signature
+
 # notmuch section
 set nm_default_uri = "notmuch:///home/hm-user/Mail"
 virtual-mailboxes "My INBOX" "notmuch://?query=tag%3Ainbox"

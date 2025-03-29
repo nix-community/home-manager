@@ -15,7 +15,7 @@ in {
     programs.sapling = {
       enable = mkEnableOption "Sapling";
 
-      package = mkPackageOption pkgs "sapling" { };
+      package = mkPackageOption pkgs "sapling" { nullable = true; };
 
       userName = mkOption {
         type = types.str;
@@ -48,7 +48,7 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ cfg.package ];
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
       programs.sapling.iniContent.ui = {
         username = cfg.userName + " <" + cfg.userEmail + ">";

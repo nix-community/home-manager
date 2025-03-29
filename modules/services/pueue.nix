@@ -15,7 +15,7 @@ in {
   options.services.pueue = {
     enable = mkEnableOption "Pueue, CLI process scheduler and manager";
 
-    package = mkPackageOption pkgs "pueue" { };
+    package = mkPackageOption pkgs "pueue" { nullable = true; };
 
     settings = mkOption {
       type = yamlFormat.type;
@@ -38,11 +38,11 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "services.pueue" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."pueue/pueue.yml".source = configFile;
 
-    systemd.user = {
+    systemd.user = lib.mkIf (cfg.package != null) {
       services.pueued = {
         Unit = {
           Description = "Pueue Daemon - CLI process scheduler and manager";

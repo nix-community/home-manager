@@ -14,7 +14,7 @@ in {
   options.programs.yazi = {
     enable = mkEnableOption "yazi";
 
-    package = lib.mkPackageOption pkgs "yazi" { };
+    package = lib.mkPackageOption pkgs "yazi" { nullable = true; };
 
     shellWrapperName = lib.mkOption {
       type = types.str;
@@ -163,7 +163,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs = let
       bashIntegration = ''
@@ -214,7 +214,7 @@ in {
     in {
       bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
-      zsh.initExtra = mkIf cfg.enableZshIntegration bashIntegration;
+      zsh.initContent = mkIf cfg.enableZshIntegration bashIntegration;
 
       fish.functions.${cfg.shellWrapperName} =
         mkIf cfg.enableFishIntegration fishIntegration;

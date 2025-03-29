@@ -17,7 +17,7 @@ in {
     enable = mkEnableOption
       "wofi: a launcher/menu program for wlroots based wayland compositors such as sway";
 
-    package = mkPackageOption pkgs "wofi" { };
+    package = mkPackageOption pkgs "wofi" { nullable = true; };
 
     settings = mkOption {
       default = { };
@@ -37,7 +37,7 @@ in {
 
     style = mkOption {
       default = null;
-      type = types.nullOr types.str;
+      type = types.nullOr types.lines;
       description = ''
         CSS style for wofi to use as a stylesheet. See
         {manpage}`wofi(7)`.
@@ -58,7 +58,7 @@ in {
     assertions =
       [ (hm.assertions.assertPlatform "programs.wofi" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = mkMerge [
       (mkIf (cfg.settings != { }) {

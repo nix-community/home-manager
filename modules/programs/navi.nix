@@ -7,7 +7,7 @@ let
 
   yamlFormat = pkgs.formats.yaml { };
 
-  configDir = if pkgs.stdenv.isDarwin then
+  configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
     "Library/Application Support"
   else
     config.xdg.configHome;
@@ -66,7 +66,7 @@ in {
       fi
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
         eval "$(${cfg.package}/bin/navi widget zsh)"
       fi

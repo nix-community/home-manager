@@ -41,7 +41,7 @@ in {
       source ${cfg.package}/etc/profile.d/command-not-found.sh
     '';
 
-    programs.zsh.initExtra = lib.mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
       source ${cfg.package}/etc/profile.d/command-not-found.sh
     '';
 
