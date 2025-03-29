@@ -284,6 +284,7 @@ let
     ./programs/wofi.nix
     ./programs/xmobar.nix
     ./programs/xplr.nix
+    ./programs/xonsh.nix
     ./programs/yambar.nix
     ./programs/yazi.nix
     ./programs/yt-dlp.nix
