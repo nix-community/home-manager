@@ -41,7 +41,7 @@ in {
 
     enableXonshIntegration = lib.mkOption {
       default = true;
-      type = types.bool;
+      type = lib.types.bool;
       description = ''
         Whether to enable Xonsh integration.
       '';
