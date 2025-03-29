@@ -14,14 +14,7 @@ in {
   options.programs.ion = {
     enable = mkEnableOption "the Ion Shell. Compatible with Redox and Linux";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.ion;
-      defaultText = literalExpression "pkgs.ion";
-      description = ''
-        The ion package to install. May be used to change the version.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "ion" { };
 
     initExtra = mkOption {
       type = types.lines;

@@ -33,12 +33,7 @@ in {
   options.programs.terminator = {
     enable = mkEnableOption "terminator, a tiling terminal emulator";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.terminator;
-      example = literalExpression "pkgs.terminator";
-      description = "terminator package to install.";
-    };
+    package = lib.mkPackageOption pkgs "terminator" { };
 
     config = mkOption {
       default = { };

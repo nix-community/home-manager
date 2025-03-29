@@ -10,12 +10,7 @@ in {
   options.programs.mods = {
     enable = mkEnableOption "mods";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.mods;
-      defaultText = literalExpression "pkgs.mods";
-      description = "The mods package to install";
-    };
+    package = lib.mkPackageOption pkgs "mods" { };
 
     settings = mkOption {
       type = yamlFormat.type;

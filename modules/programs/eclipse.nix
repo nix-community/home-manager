@@ -13,14 +13,9 @@ in {
     programs.eclipse = {
       enable = mkEnableOption "Eclipse";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.eclipses.eclipse-platform;
-        defaultText = literalExpression "pkgs.eclipses.eclipse-platform";
-        example = literalExpression "pkgs.eclipses.eclipse-java";
-        description = ''
-          The Eclipse package to install.
-        '';
+      package = lib.mkPackageOption pkgs "eclipse" {
+        default = [ "eclipses" "eclipse-platform" ];
+        example = "pkgs.eclipses.eclipse-java";
       };
 
       enableLombok = mkOption {

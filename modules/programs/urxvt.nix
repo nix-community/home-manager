@@ -10,12 +10,7 @@ in {
   options.programs.urxvt = {
     enable = mkEnableOption "rxvt-unicode terminal emulator";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.rxvt-unicode;
-      defaultText = literalExpression "pkgs.rxvt-unicode";
-      description = "rxvt-unicode package to install.";
-    };
+    package = lib.mkPackageOption pkgs "rxvt-unicode" { };
 
     fonts = mkOption {
       type = types.listOf types.str;

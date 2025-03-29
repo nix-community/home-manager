@@ -9,14 +9,7 @@ in {
   options.programs.zoxide = {
     enable = lib.mkEnableOption "zoxide";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.zoxide;
-      defaultText = lib.literalExpression "pkgs.zoxide";
-      description = ''
-        Zoxide package to install.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "zoxide" { };
 
     options = lib.mkOption {
       type = lib.types.listOf lib.types.str;

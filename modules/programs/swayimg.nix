@@ -8,12 +8,9 @@ in {
 
   options.programs.swayimg = {
     enable = lib.mkEnableOption "swayimg";
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.swayimg;
-      defaultText = lib.literalExpression "pkgs.swayimg";
-      description = "The swayimg package to install";
-    };
+
+    package = lib.mkPackageOption pkgs "swayimg" { };
+
     settings = lib.mkOption {
       type = iniFormat.type;
       default = { };

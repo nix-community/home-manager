@@ -21,14 +21,9 @@ in {
         '';
       };
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.jdk;
-        defaultText = "pkgs.jdk";
-        description = ''
-          Java package to install. Typical values are
-          `pkgs.jdk` or `pkgs.jre`.
-        '';
+      package = lib.mkPackageOption pkgs "java" {
+        default = "jdk";
+        example = "pkgs.jre";
       };
     };
   };

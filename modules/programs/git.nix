@@ -76,12 +76,10 @@ in {
     programs.git = {
       enable = mkEnableOption "Git";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.git;
-        defaultText = literalExpression "pkgs.git";
-        description = ''
-          Git package to install. Use {var}`pkgs.gitAndTools.gitFull`
+      package = lib.mkPackageOption pkgs "git" {
+        example = "pkgs.gitFull";
+        extraDescription = ''
+          Use {var}`pkgs.gitFull`
           to gain access to {command}`git send-email` for instance.
         '';
       };

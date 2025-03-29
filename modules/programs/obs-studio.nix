@@ -13,14 +13,7 @@ in {
     programs.obs-studio = {
       enable = mkEnableOption "obs-studio";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.obs-studio;
-        defaultText = literalExpression "pkgs.obs-studio";
-        description = ''
-          OBS Studio package to install.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "obs-studio" { };
 
       finalPackage = mkOption {
         type = types.package;

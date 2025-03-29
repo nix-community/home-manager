@@ -13,15 +13,7 @@ in {
   options.programs.eww = {
     enable = mkEnableOption "eww";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.eww;
-      defaultText = literalExpression "pkgs.eww";
-      example = literalExpression "pkgs.eww";
-      description = ''
-        The eww package to install.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "eww" { };
 
     configDir = mkOption {
       type = types.nullOr types.path;

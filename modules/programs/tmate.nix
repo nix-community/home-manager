@@ -13,13 +13,7 @@ in {
     programs.tmate = {
       enable = mkEnableOption "tmate";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.tmate;
-        defaultText = literalExpression "pkgs.tmate";
-        example = literalExpression "pkgs.tmate";
-        description = "The tmate package to install.";
-      };
+      package = lib.mkPackageOption pkgs "tmate" { };
 
       host = mkOption {
         type = with types; nullOr str;

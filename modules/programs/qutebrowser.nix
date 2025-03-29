@@ -41,12 +41,7 @@ in {
   options.programs.qutebrowser = {
     enable = mkEnableOption "qutebrowser";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.qutebrowser;
-      defaultText = literalExpression "pkgs.qutebrowser";
-      description = "Qutebrowser package to install.";
-    };
+    package = lib.mkPackageOption pkgs "qutebrowser" { };
 
     aliases = mkOption {
       type = types.attrsOf types.str;

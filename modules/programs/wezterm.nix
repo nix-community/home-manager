@@ -16,12 +16,7 @@ in {
   options.programs.wezterm = {
     enable = mkEnableOption "wezterm";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.wezterm;
-      defaultText = literalExpression "pkgs.wezterm";
-      description = "The Wezterm package to install.";
-    };
+    package = lib.mkPackageOption pkgs "wezterm" { };
 
     extraConfig = mkOption {
       type = types.lines;

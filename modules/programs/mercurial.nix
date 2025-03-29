@@ -14,12 +14,7 @@ in {
     programs.mercurial = {
       enable = mkEnableOption "Mercurial";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.mercurial;
-        defaultText = literalExpression "pkgs.mercurial";
-        description = "Mercurial package to install.";
-      };
+      package = lib.mkPackageOption pkgs "mercurial" { };
 
       userName = mkOption {
         type = types.str;
