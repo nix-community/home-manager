@@ -12,12 +12,7 @@ in {
   options.programs.granted = {
     enable = mkEnableOption "granted";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.granted;
-      defaultText = literalExpression "pkgs.granted";
-      description = "The granted package to install.";
-    };
+    package = lib.mkPackageOption pkgs "granted" { };
 
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
