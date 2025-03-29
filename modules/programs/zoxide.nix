@@ -38,29 +38,25 @@ in {
 
     programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration
       (lib.mkOrder 2000 ''
-        eval "$(${cfg.package}/bin/zoxide init bash ${cfgOptions})"
+        eval "$(${lib.getExe cfg.package} init bash ${cfgOptions})"
       '');
 
     programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration
       (lib.mkOrder 2000 ''
-        eval "$(${cfg.package}/bin/zoxide init zsh ${cfgOptions})"
+        eval "$(${lib.getExe cfg.package} init zsh ${cfgOptions})"
       '');
 
     programs.fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
-      ${cfg.package}/bin/zoxide init fish ${cfgOptions} | source
+      ${lib.getExe cfg.package} init fish ${cfgOptions} | source
     '';
 
     programs.nushell = lib.mkIf cfg.enableNushellIntegration {
-      extraEnv = ''
-        let zoxide_cache = "${config.xdg.cacheHome}/zoxide"
-        if not ($zoxide_cache | path exists) {
-          mkdir $zoxide_cache
-        }
-        ${cfg.package}/bin/zoxide init nushell ${cfgOptions} |
-          save --force ${config.xdg.cacheHome}/zoxide/init.nu
-      '';
       extraConfig = ''
-        source ${config.xdg.cacheHome}/zoxide/init.nu
+        source ${
+          pkgs.runCommand "zoxide-nushell-config" { } ''
+            ${lib.getExe cfg.package} init nushell ${cfgOptions} >> "$out"
+          ''
+        }
       '';
     };
   };
