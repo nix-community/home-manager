@@ -10,12 +10,7 @@ in {
     programs.alacritty = {
       enable = mkEnableOption "Alacritty";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.alacritty;
-        defaultText = literalExpression "pkgs.alacritty";
-        description = "The Alacritty package to install.";
-      };
+      package = lib.mkPackageOption pkgs "alacritty" { };
 
       settings = mkOption {
         type = tomlFormat.type;

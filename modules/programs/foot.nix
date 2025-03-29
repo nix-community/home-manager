@@ -13,12 +13,7 @@ in {
   options.programs.foot = {
     enable = mkEnableOption "Foot terminal";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.foot;
-      defaultText = literalExpression "pkgs.foot";
-      description = "The foot package to install";
-    };
+    package = lib.mkPackageOption pkgs "foot" { };
 
     server.enable = mkEnableOption "Foot terminal server";
 

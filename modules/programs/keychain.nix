@@ -21,14 +21,7 @@ in {
   options.programs.keychain = {
     enable = mkEnableOption "keychain";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.keychain;
-      defaultText = literalExpression "pkgs.keychain";
-      description = ''
-        Keychain package to install.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "keychain" { };
 
     keys = mkOption {
       type = types.listOf types.str;

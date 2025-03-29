@@ -11,12 +11,7 @@ in {
   options.programs.pqiv = {
     enable = mkEnableOption "pqiv image viewer";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.pqiv;
-      defaultText = literalExpression "pkgs.pqiv";
-      description = "The pqiv package to install.";
-    };
+    package = lib.mkPackageOption pkgs "pqiv" { };
 
     settings = mkOption {
       type = iniFormat.type;

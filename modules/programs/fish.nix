@@ -254,14 +254,7 @@ in {
     programs.fish = {
       enable = mkEnableOption "fish, the friendly interactive shell";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.fish;
-        defaultText = literalExpression "pkgs.fish";
-        description = ''
-          The fish package to install. May be used to change the version.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "fish" { };
 
       generateCompletions = mkEnableOption
         "the automatic generation of completions based upon installed man pages"

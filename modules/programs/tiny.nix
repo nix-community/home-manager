@@ -15,12 +15,7 @@ in {
     programs.tiny = {
       enable = mkEnableOption "tiny, a TUI IRC client written in Rust";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.tiny;
-        defaultText = literalExpression "pkgs.tiny";
-        description = "The {command}`tiny` package to install.";
-      };
+      package = lib.mkPackageOption pkgs "tiny" { };
 
       settings = mkOption {
         type = format.type;

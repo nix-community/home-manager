@@ -72,12 +72,8 @@ in {
     services.polybar = {
       enable = mkEnableOption "Polybar status bar";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.polybar;
-        defaultText = literalExpression "pkgs.polybar";
-        description = "Polybar package to install.";
-        example = literalExpression ''
+      package = lib.mkPackageOption pkgs "polybar" {
+        example = ''
           pkgs.polybar.override {
             i3GapsSupport = true;
             alsaSupport = true;

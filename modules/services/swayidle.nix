@@ -49,12 +49,7 @@ in {
   in {
     enable = mkEnableOption "idle manager for Wayland";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.swayidle;
-      defaultText = literalExpression "pkgs.swayidle";
-      description = "Swayidle package to install.";
-    };
+    package = lib.mkPackageOption pkgs "swayidle" { };
 
     timeouts = mkOption {
       type = with types; listOf (submodule timeoutModule);

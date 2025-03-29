@@ -13,12 +13,7 @@ in {
     enable =
       mkEnableOption "tint2, a simple, unobtrusive and light panel for Xorg";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.tint2;
-      defaultText = literalExpression "pkgs.tint2";
-      description = "Tint2 package to install.";
-    };
+    package = lib.mkPackageOption pkgs "tint2" { };
 
     extraConfig = mkOption {
       type = types.lines;

@@ -14,12 +14,7 @@ in {
 
     enableNotifications = mkEnableOption "lorri build notifications";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.lorri;
-      defaultText = literalExpression "pkgs.lorri";
-      description = "Which lorri package to install.";
-    };
+    package = lib.mkPackageOption pkgs "lorri" { };
 
     nixPackage = mkOption {
       type = types.package;

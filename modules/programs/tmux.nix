@@ -226,13 +226,7 @@ in {
         '';
       };
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.tmux;
-        defaultText = literalExpression "pkgs.tmux";
-        example = literalExpression "pkgs.tmux";
-        description = "The tmux package to install";
-      };
+      package = lib.mkPackageOption pkgs "tmux" { };
 
       reverseSplit = mkOption {
         default = false;

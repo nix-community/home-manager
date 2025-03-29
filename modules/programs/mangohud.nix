@@ -28,12 +28,7 @@ in {
     programs.mangohud = {
       enable = mkEnableOption "Mangohud";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.mangohud;
-        defaultText = literalExpression "pkgs.mangohud";
-        description = "The Mangohud package to install.";
-      };
+      package = lib.mkPackageOption pkgs "mangohud" { };
 
       enableSessionWide = mkOption {
         type = types.bool;
