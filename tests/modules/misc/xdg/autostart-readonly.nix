@@ -3,6 +3,7 @@
 {
   xdg.autostart = {
     enable = true;
+    readOnly = true;
     entries = [
       "${pkgs.test1}/share/applications/test1.desktop"
       "${pkgs.test2}/share/applications/test2.desktop"
@@ -27,7 +28,7 @@
   };
 
   nmt.script = ''
-    assertDirectoryExists home-files/.config/autostart
+    assertLinkExists home-files/.config/autostart
 
     assertFileExists home-files/.config/autostart/test1.desktop
     assertFileContent home-files/.config/autostart/test1.desktop \
