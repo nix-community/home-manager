@@ -7,7 +7,7 @@ in {
     programs.alacritty = {
       enable = lib.mkEnableOption "Alacritty";
 
-      package = lib.mkPackageOption pkgs "alacritty" { };
+      package = lib.mkPackageOption pkgs "alacritty" { nullable = true; };
 
       theme = lib.mkOption {
         type = with lib.types; nullOr str;
@@ -71,7 +71,7 @@ in {
       message = "The alacritty theme '${cfg.theme}' does not exist.";
     }];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs.alacritty.settings = let
       theme = "${pkgs.alacritty-theme}/share/alacritty-theme/${cfg.theme}.toml";
