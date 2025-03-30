@@ -533,7 +533,7 @@ be as follows:</p><pre><code class="programlisting  nix">{
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.jdoe = import ./home.nix;
+            home-manager.users.jdoe = ./home.nix;
 
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
@@ -570,7 +570,7 @@ to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.jdoe = import ./home.nix;
+            home-manager.users.jdoe = ./home.nix;
 
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
