@@ -24,11 +24,12 @@ in {
 
     useFriendlyNames = lib.mkEnableOption "friendly names";
 
-    package = lib.mkPackageOption pkgs "antidote" { };
+    package = lib.mkPackageOption pkgs "antidote" { nullable = true; };
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
     programs.zsh.initContent = let
       configFiles = pkgs.runCommand "hm_antidote-files" { } ''
         echo "${zPluginStr cfg.plugins}" > $out
