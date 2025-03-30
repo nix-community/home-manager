@@ -16,6 +16,8 @@ in {
   options.programs.aria2 = {
     enable = lib.mkEnableOption "aria2";
 
+    package = lib.mkPackageOption pkgs "aria2" { nullable = true; };
+
     settings = lib.mkOption {
       type = with lib.types; attrsOf (oneOf [ bool float int str ]);
       default = { };
@@ -46,7 +48,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.aria2 ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."aria2/aria2.conf".text = lib.concatStringsSep "\n" ([ ]
       ++ lib.mapAttrsToList formatLine cfg.settings

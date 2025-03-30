@@ -25,6 +25,8 @@ in {
     programs.khard = {
       enable = lib.mkEnableOption "Khard: an address book for the Unix console";
 
+      package = lib.mkPackageOption pkgs "khard" { };
+
       settings = lib.mkOption {
         type = with lib.types;
           submodule {
@@ -78,7 +80,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.khard ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."khard/khard.conf".text = let
       makePath = anAccount:

@@ -9,6 +9,8 @@ in {
   options.programs.sqls = {
     enable = lib.mkEnableOption "sqls, a SQL language server written in Go";
 
+    package = lib.mkPackageOption pkgs "sqls" { nullable = true; };
+
     settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
@@ -33,7 +35,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.sqls ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."sqls/config.yml" = lib.mkIf (cfg.settings != { }) {
       source = yamlFormat.generate "sqls-config" cfg.settings;

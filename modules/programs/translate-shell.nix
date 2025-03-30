@@ -23,6 +23,8 @@ in {
   options.programs.translate-shell = {
     enable = lib.mkEnableOption "translate-shell";
 
+    package = lib.mkPackageOption pkgs "translate-shell" { nullable = true; };
+
     settings = lib.mkOption {
       type = with lib.types; attrsOf (oneOf [ bool str (listOf str) ]);
       default = { };
@@ -40,7 +42,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.translate-shell ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."translate-shell/init.trans" =
       lib.mkIf (cfg.settings != { }) { text = "{${toKeyValue cfg.settings}}"; };

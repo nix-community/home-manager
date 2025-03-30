@@ -291,6 +291,8 @@ in {
     programs.autorandr = {
       enable = lib.mkEnableOption "Autorandr";
 
+      package = lib.mkPackageOption pkgs "autorandr" { nullable = true; };
+
       hooks = mkOption {
         type = globalHooksModule;
         description = "Global hook scripts";
@@ -366,7 +368,8 @@ in {
         '';
       }) config) cfg.profiles);
 
-    home.packages = [ pkgs.autorandr ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
     xdg.configFile = lib.mkMerge [
       (mapAttrs' (hookToFile "postswitch.d") cfg.hooks.postswitch)
       (mapAttrs' (hookToFile "preswitch.d") cfg.hooks.preswitch)

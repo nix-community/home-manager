@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.programs.autojump;
-  package = pkgs.autojump;
 
   inherit (lib) mkIf;
 in {
@@ -9,6 +8,8 @@ in {
 
   options.programs.autojump = {
     enable = lib.mkEnableOption "autojump";
+
+    package = lib.mkPackageOption pkgs "autojump" { };
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };
@@ -21,18 +22,18 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ package ];
+    home.packages = [ cfg.package ];
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (lib.mkBefore ''
-      . ${package}/share/autojump/autojump.bash
+      . ${cfg.package}/share/autojump/autojump.bash
     '');
 
     programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-      . ${package}/share/autojump/autojump.zsh
+      . ${cfg.package}/share/autojump/autojump.zsh
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      . ${package}/share/autojump/autojump.fish
+      . ${cfg.package}/share/autojump/autojump.fish
     '';
   };
 }

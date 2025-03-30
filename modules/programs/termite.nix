@@ -9,6 +9,8 @@ in {
     programs.termite = {
       enable = lib.mkEnableOption "Termite VTE-based terminal";
 
+      package = lib.mkPackageOption pkgs "termite" { nullable = true; };
+
       allowBold = mkOption {
         default = null;
         type = types.nullOr types.bool;
@@ -322,7 +324,7 @@ in {
     optionalString = name: val:
       lib.optionalString (val != null) "${name} = ${val}";
   in lib.mkIf cfg.enable {
-    home.packages = [ pkgs.termite ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     xdg.configFile."termite/config".text = ''
       [options]
       ${optionalBoolean "allow_bold" cfg.allowBold}

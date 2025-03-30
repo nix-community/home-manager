@@ -6,6 +6,8 @@ in {
   options.programs.bashmount = {
     enable = lib.mkEnableOption "bashmount";
 
+    package = lib.mkPackageOption pkgs "bashmount" { nullable = true; };
+
     extraConfig = lib.mkOption {
       type = lib.types.lines;
       default = "";
@@ -20,7 +22,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.bashmount ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."bashmount/config" =
       lib.mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };

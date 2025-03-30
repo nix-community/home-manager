@@ -12,6 +12,8 @@ in {
   options.programs.rtorrent = {
     enable = lib.mkEnableOption "rTorrent";
 
+    package = lib.mkPackageOption pkgs "rtorrent" { nullable = true; };
+
     extraConfig = lib.mkOption {
       type = lib.types.lines;
       default = "";
@@ -26,7 +28,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.rtorrent ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."rtorrent/rtorrent.rc" =
       lib.mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };

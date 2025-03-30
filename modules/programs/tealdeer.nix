@@ -59,6 +59,8 @@ in {
   options.programs.tealdeer = {
     enable = lib.mkEnableOption "Tealdeer";
 
+    package = lib.mkPackageOption pkgs "tealdeer" { };
+
     settings = mkOption {
       type = types.nullOr settingsFormat;
       default = null;
@@ -88,7 +90,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.tealdeer ];
+    home.packages = [ cfg.package ];
 
     home.file."${configDir}/tealdeer/config.toml" =
       mkIf (cfg.settings != null && cfg.settings != { }) {
@@ -97,7 +99,7 @@ in {
 
     services.tldr-update = mkIf cfg.enableAutoUpdates {
       enable = true;
-      package = pkgs.tealdeer;
+      package = cfg.package;
     };
   };
 }

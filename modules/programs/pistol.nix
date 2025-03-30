@@ -39,6 +39,8 @@ in {
   options.programs.pistol = {
     enable = lib.mkEnableOption "file previewer for terminal file managers";
 
+    package = lib.mkPackageOption pkgs "pistol" { nullable = true; };
+
     associations = mkOption {
       type = types.listOf association;
       default = [ ];
@@ -69,7 +71,7 @@ in {
         '';
       }];
 
-      home.packages = [ pkgs.pistol ];
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     }
 
     (mkIf (cfg.associations != [ ] && pkgs.stdenv.hostPlatform.isDarwin) {

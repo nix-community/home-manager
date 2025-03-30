@@ -17,6 +17,8 @@ in {
       '';
     };
 
+    package = lib.mkPackageOption pkgs "dircolors" { default = "coreutils"; };
+
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
@@ -197,17 +199,17 @@ in {
       };
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        eval $(${pkgs.coreutils}/bin/dircolors -b ${dircolorsPath})
+        eval $(${lib.getExe' cfg.package "dircolors"} -b ${dircolorsPath})
       '';
 
       programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-        eval (${pkgs.coreutils}/bin/dircolors -c ${dircolorsPath})
+        eval (${lib.getExe' cfg.package "dircolors"} -c ${dircolorsPath})
       '';
 
       # Set `LS_COLORS` before Oh My Zsh and `initExtra`.
       programs.zsh.initContent = mkIf cfg.enableZshIntegration
         (lib.mkOrder 550 ''
-          eval $(${pkgs.coreutils}/bin/dircolors -b ${dircolorsPath})
+          eval $(${lib.getExe' cfg.package "dircolors"} -b ${dircolorsPath})
         '');
     }
     (mkIf (!config.home.preferXdgDirectories) {

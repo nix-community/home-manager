@@ -12,24 +12,24 @@ let
   # and https://github.com/bnprks/mcfly-fzf/issues/10
 
   bashIntegration = ''
-    eval "$(${getExe pkgs.mcfly} init bash)"
+    eval "$(${getExe cfg.package} init bash)"
   '' + optionalString cfg.fzf.enable ''
     if [[ $- =~ i ]]; then
-      eval "$(${getExe pkgs.mcfly-fzf} init bash)"
+      eval "$(${getExe cfg.mcflyFzfPackage} init bash)"
     fi
   '';
 
   fishIntegration = ''
-    ${getExe pkgs.mcfly} init fish | source
+    ${getExe cfg.package} init fish | source
   '' + optionalString cfg.fzf.enable ''
-    eval "$(${getExe pkgs.mcfly-fzf} init fish)"
+    eval "$(${getExe cfg.mcflyFzfPackage} init fish)"
   '';
 
   zshIntegration = ''
-    eval "$(${getExe pkgs.mcfly} init zsh)"
+    eval "$(${getExe cfg.package} init zsh)"
   '' + optionalString cfg.fzf.enable ''
     if [[ -o interactive ]]; then
-      ${getExe pkgs.mcfly-fzf} init zsh | source
+      ${getExe cfg.mcflyFzfPackage} init zsh | source
     fi
   '';
 
@@ -49,6 +49,10 @@ in {
 
   options.programs.mcfly = {
     enable = lib.mkEnableOption "mcfly";
+
+    package = lib.mkPackageOption pkgs "mcfly" { };
+
+    mcflyFzfPackage = lib.mkPackageOption pkgs "mcfly-fzf" { };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -129,8 +133,8 @@ in {
 
   config = mkIf cfg.enable (lib.mkMerge [
     {
-      home.packages = [ pkgs.mcfly ]
-        ++ lib.optional cfg.fzf.enable pkgs.mcfly-fzf;
+      home.packages = [ cfg.package ]
+        ++ lib.optional cfg.fzf.enable cfg.package;
 
       # Oddly enough, McFly expects this in the data path, not in config.
       xdg.dataFile."mcfly/config.toml" = mkIf (cfg.settings != { }) {

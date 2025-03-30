@@ -6,6 +6,8 @@ in {
   options.programs.noti = {
     enable = lib.mkEnableOption "Noti";
 
+    package = lib.mkPackageOption pkgs "noti" { nullable = true; };
+
     settings = lib.mkOption {
       type = with lib.types; attrsOf (attrsOf str);
       default = { };
@@ -32,7 +34,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.noti ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."noti/noti.yaml" = lib.mkIf (cfg.settings != { }) {
       text = lib.generators.toYAML { } cfg.settings;

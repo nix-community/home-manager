@@ -18,6 +18,8 @@ in {
   options.programs.z-lua = {
     enable = lib.mkEnableOption "z.lua";
 
+    package = lib.mkPackageOption pkgs "z-lua" { };
+
     options = lib.mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -46,16 +48,16 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.z-lua ];
+    home.packages = [ cfg.package ];
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${pkgs.z-lua}/bin/z --init bash ${
+      eval "$(${cfg.package}/bin/z --init bash ${
         lib.concatStringsSep " " cfg.options
       })"
     '';
 
     programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-      eval "$(${pkgs.z-lua}/bin/z --init zsh ${
+      eval "$(${cfg.package}/bin/z --init zsh ${
         lib.concatStringsSep " " cfg.options
       })"
     '';
@@ -67,7 +69,7 @@ in {
     programs.fish = lib.mkMerge [
       {
         shellInit = mkIf cfg.enableFishIntegration ''
-          source (${pkgs.z-lua}/bin/z --init fish ${
+          source (${cfg.package}/bin/z --init fish ${
             lib.concatStringsSep " " cfg.options
           } | psub)
         '';

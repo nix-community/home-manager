@@ -1,11 +1,17 @@
 { config, lib, pkgs, ... }:
 let cfg = config.programs.pywal;
 in {
-  options = { programs.pywal = { enable = lib.mkEnableOption "pywal"; }; };
+  options = {
+    programs.pywal = {
+      enable = lib.mkEnableOption "pywal";
+
+      package = lib.mkPackageOption pkgs "pywal" { };
+    };
+  };
 
   config = lib.mkIf cfg.enable {
 
-    home.packages = [ pkgs.pywal ];
+    home.packages = [ cfg.package ];
 
     programs.zsh.initContent = ''
       # Import colorscheme from 'wal' asynchronously

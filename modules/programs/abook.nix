@@ -4,6 +4,8 @@ in {
   options.programs.abook = {
     enable = lib.mkEnableOption "Abook";
 
+    package = lib.mkPackageOption pkgs "abook" { nullable = true; };
+
     extraConfig = lib.mkOption {
       type = lib.types.lines;
       default = "";
@@ -21,7 +23,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.abook ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."abook/abookrc" = lib.mkIf (cfg.extraConfig != "") {
       text = ''
