@@ -23,13 +23,8 @@ in {
     programs.octant = {
       enable = lib.mkEnableOption "octant";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.octant;
-        defaultText = literalExpression "pkgs.octant";
-        example = literalExpression "pkgs.octant-other";
-        description = "The Octant package to use.";
-      };
+      package =
+        lib.mkPackageOption pkgs "octant" { example = "pkgs.octant-other"; };
 
       plugins = lib.mkOption {
         default = [ ];

@@ -15,12 +15,7 @@ in {
       enable = lib.mkEnableOption
         "Sioyek, a PDF viewer designed for reading research papers and technical books";
 
-      package = mkOption {
-        default = pkgs.sioyek;
-        defaultText = literalExpression "pkgs.sioyek";
-        type = types.package;
-        description = "Package providing the sioyek binary";
-      };
+      package = lib.mkPackageOption pkgs "sioyek" { };
 
       bindings = mkOption {
         description = ''

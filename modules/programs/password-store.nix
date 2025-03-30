@@ -10,17 +10,9 @@ in {
   options.programs.password-store = {
     enable = lib.mkEnableOption "Password store";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.pass;
-      defaultText = literalExpression "pkgs.pass";
-      example = literalExpression ''
-        pkgs.pass.withExtensions (exts: [ exts.pass-otp ])
-      '';
-      description = ''
-        The `pass` package to use.
-        Can be used to specify extensions.
-      '';
+    package = lib.mkPackageOption pkgs "pass" {
+      example = "pkgs.pass.withExtensions (exts: [ exts.pass-otp ])";
+      extraDescription = "Can be used to specify extensions.";
     };
 
     settings = mkOption rec {

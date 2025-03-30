@@ -92,12 +92,7 @@ in {
   options.programs.sbt = {
     enable = lib.mkEnableOption "sbt";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.sbt;
-      defaultText = literalExpression "pkgs.sbt";
-      description = "The package with sbt to be installed.";
-    };
+    package = lib.mkPackageOption pkgs "sbt" { };
 
     baseUserConfigPath = mkOption {
       type = types.str;

@@ -219,12 +219,7 @@ in {
       '';
     };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.i3status-rust;
-      defaultText = literalExpression "pkgs.i3status-rust";
-      description = "Package providing i3status-rust";
-    };
+    package = lib.mkPackageOption pkgs "i3status-rust" { };
 
   };
 

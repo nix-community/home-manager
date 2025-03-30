@@ -48,15 +48,8 @@ in {
     enable = lib.mkEnableOption
       "ncmpcpp - an ncurses Music Player Daemon (MPD) client";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.ncmpcpp;
-      defaultText = literalExpression "pkgs.ncmpcpp";
-      description = ''
-        Package providing the `ncmpcpp` command.
-      '';
-      example =
-        literalExpression "pkgs.ncmpcpp.override { visualizerSupport = true; }";
+    package = lib.mkPackageOption pkgs "ncmpcpp" {
+      example = "pkgs.ncmpcpp.override { visualizerSupport = true; }";
     };
 
     mpdMusicDir = mkOption {

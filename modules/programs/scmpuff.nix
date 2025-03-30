@@ -11,12 +11,7 @@ in {
       scmpuff, a command line tool that allows you to work quicker with Git by
       substituting numeric shortcuts for files'';
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.scmpuff;
-      defaultText = lib.literalExpression "pkgs.scmpuff";
-      description = "Package providing the {command}`scmpuff` tool.";
-    };
+    package = lib.mkPackageOption pkgs "scmpuff" { };
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };

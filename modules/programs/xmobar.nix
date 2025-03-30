@@ -4,14 +4,7 @@ in {
   options.programs.xmobar = {
     enable = lib.mkEnableOption "Xmobar, a minimalistic status bar";
 
-    package = lib.mkOption {
-      default = pkgs.haskellPackages.xmobar;
-      defaultText = lib.literalExpression "pkgs.haskellPackages.xmobar";
-      type = lib.types.package;
-      description = ''
-        Package providing the {command}`xmobar` binary.
-      '';
-    };
+    package = lib.mkPackageOption pkgs [ "haskellPackages" "xmobar" ] { };
 
     extraConfig = lib.mkOption {
       default = "";

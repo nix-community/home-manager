@@ -24,12 +24,7 @@ in {
   options.programs.pandoc = {
     enable = mkEnableOption "pandoc";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.pandoc;
-      defaultText = literalExpression "pkgs.pandoc";
-      description = "The pandoc package to use.";
-    };
+    package = lib.mkPackageOption pkgs "pandoc" { };
 
     # We wrap the executable to pass some arguments
     finalPackage = mkOption {
@@ -98,6 +93,7 @@ in {
     };
 
     home.packages = [ cfg.finalPackage ];
+
     xdg.dataFile = lib.mapAttrs' makeTemplateFile cfg.templates
       // lib.listToAttrs (map makeCslFile cfg.citationStyles);
   };

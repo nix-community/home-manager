@@ -17,12 +17,7 @@ in {
   options.programs.navi = {
     enable = lib.mkEnableOption "Navi";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.navi;
-      defaultText = lib.literalExpression "pkgs.navi";
-      description = "The package to use for the navi binary.";
-    };
+    package = lib.mkPackageOption pkgs "navi" { };
 
     settings = lib.mkOption {
       type = yamlFormat.type;

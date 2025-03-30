@@ -143,13 +143,9 @@ in {
   options.programs.gpg = {
     enable = lib.mkEnableOption "GnuPG";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.gnupg;
-      defaultText = literalExpression "pkgs.gnupg";
-      example = literalExpression "pkgs.gnupg23";
-      description =
-        "The Gnupg package to use (also used by the gpg-agent service).";
+    package = lib.mkPackageOption pkgs "gnupg" {
+      example = "pkgs.gnupg23";
+      extraDescription = "Also used by the gpg-agent service.";
     };
 
     settings = mkOption {

@@ -59,13 +59,9 @@ in {
       '';
     };
 
-    selectcmdPackage = mkOption {
-      type = types.package;
-      default = pkgs.fzf;
-      defaultText = lib.literalExpression "pkgs.fzf";
-      description = ''
-        The package needed for the {var}`settings.selectcmd`.
-      '';
+    selectcmdPackage = lib.mkPackageOption pkgs "fzf" {
+      extraDescription =
+        "The package needed for the {var}`settings.selectcmd`.";
     };
 
     snippets = mkOption {

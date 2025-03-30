@@ -104,15 +104,8 @@ in {
     enable = lib.mkEnableOption
       "Rofi: A window switcher, application launcher and dmenu replacement";
 
-    package = mkOption {
-      default = pkgs.rofi;
-      type = types.package;
-      description = ''
-        Package providing the {command}`rofi` binary.
-      '';
-      example = literalExpression ''
-        pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
-      '';
+    package = lib.mkPackageOption pkgs "rofi" {
+      example = "pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; }";
     };
 
     finalPackage = mkOption {

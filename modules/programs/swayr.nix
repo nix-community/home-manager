@@ -97,12 +97,7 @@ in {
       '';
     };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.swayr;
-      defaultText = lib.literalExpression "pkgs.swayr";
-      description = "swayr package to use.";
-    };
+    package = lib.mkPackageOption pkgs "swayr" { };
   };
 
   config = mkIf cfg.enable (lib.mkMerge [

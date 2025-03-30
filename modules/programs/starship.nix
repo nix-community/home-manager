@@ -14,12 +14,7 @@ in {
   options.programs.starship = {
     enable = lib.mkEnableOption "starship";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.starship;
-      defaultText = lib.literalExpression "pkgs.starship";
-      description = "The package to use for the starship binary.";
-    };
+    package = lib.mkPackageOption pkgs "starship" { };
 
     settings = mkOption {
       type = tomlFormat.type;

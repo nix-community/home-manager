@@ -7,12 +7,7 @@ in {
   options.programs.ranger = {
     enable = lib.mkEnableOption "ranger file manager";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.ranger;
-      defaultText = literalExpression "pkgs.ranger";
-      description = "The ranger package to use.";
-    };
+    package = lib.mkPackageOption pkgs "ranger" { };
 
     extraPackages = mkOption {
       type = types.listOf types.package;

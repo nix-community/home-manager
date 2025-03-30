@@ -12,12 +12,7 @@ in {
   options.programs.pyenv = {
     enable = lib.mkEnableOption "pyenv";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.pyenv;
-      defaultText = lib.literalExpression "pkgs.pyenv";
-      description = "The package to use for pyenv.";
-    };
+    package = lib.mkPackageOption pkgs "pyenv" { };
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };

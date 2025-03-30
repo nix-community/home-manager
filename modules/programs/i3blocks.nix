@@ -29,12 +29,7 @@ in {
   options.programs.i3blocks = {
     enable = lib.mkEnableOption "i3blocks i3 status command scheduler";
 
-    package = lib.mkOption {
-      type = types.package;
-      default = pkgs.i3blocks;
-      defaultText = lib.literalExpression "pkgs.i3blocks";
-      description = "Package providing {command}`i3blocks`.";
-    };
+    package = lib.mkPackageOption pkgs "i3blocks" { };
 
     bars = lib.mkOption {
       type = with types; attrsOf (lib.hm.types.dagOf configType);

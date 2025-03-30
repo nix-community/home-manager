@@ -10,12 +10,7 @@ in {
   options.programs.topgrade = {
     enable = lib.mkEnableOption "topgrade";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.topgrade;
-      defaultText = lib.literalExpression "pkgs.topgrade";
-      description = "The package to use for the topgrade binary.";
-    };
+    package = lib.mkPackageOption pkgs "topgrade" { };
 
     settings = lib.mkOption {
       type = tomlFormat.type;

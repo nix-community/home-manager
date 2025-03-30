@@ -29,12 +29,7 @@ in {
     programs.jq = {
       enable = lib.mkEnableOption "the jq command-line JSON processor";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.jq;
-        defaultText = lib.literalExpression "pkgs.jq";
-        description = "jq package to use.";
-      };
+      package = lib.mkPackageOption pkgs "jq" { };
 
       colors = mkOption {
         description = ''

@@ -12,12 +12,7 @@ in {
         bottom, a cross-platform graphical process/system monitor with a
         customizable interface'';
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.bottom;
-        defaultText = lib.literalExpression "pkgs.bottom";
-        description = "Package providing {command}`bottom`.";
-      };
+      package = lib.mkPackageOption pkgs "bottom" { nullable = true; };
 
       settings = lib.mkOption {
         type = tomlFormat.type;
@@ -46,7 +41,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."bottom/bottom.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "bottom.toml" cfg.settings;

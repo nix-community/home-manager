@@ -63,11 +63,8 @@ in {
   options.programs.rbw = {
     enable = lib.mkEnableOption "rbw, a CLI Bitwarden client";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.rbw;
-      defaultText = lib.literalExpression "pkgs.rbw";
-      description = ''
+    package = lib.mkPackageOption pkgs "rbw" {
+      extraDescription = ''
         Package providing the {command}`rbw` tool and its
         {command}`rbw-agent` daemon.
       '';

@@ -164,12 +164,7 @@ in {
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.broot;
-      defaultText = literalExpression "pkgs.broot";
-      description = "Package providing broot";
-    };
+    package = lib.mkPackageOption pkgs "broot" { };
 
     settings = mkOption {
       type = types.submodule settingsModule;

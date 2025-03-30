@@ -29,13 +29,8 @@ in {
     programs.emacs = {
       enable = lib.mkEnableOption "Emacs";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.emacs;
-        defaultText = literalExpression "pkgs.emacs";
-        example = literalExpression "pkgs.emacs25-nox";
-        description = "The Emacs package to use.";
-      };
+      package =
+        lib.mkPackageOption pkgs "emacs" { example = "pkgs.emacs25-nox"; };
 
       # NOTE: The config is placed in default.el instead of ~/.emacs.d so that
       # it won't conflict with Emacs configuration frameworks. Users of these

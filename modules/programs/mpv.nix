@@ -61,14 +61,9 @@ in {
     programs.mpv = {
       enable = lib.mkEnableOption "mpv";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.mpv;
-        example = literalExpression
+      package = lib.mkPackageOption pkgs "mpv" {
+        example =
           "pkgs.mpv-unwrapped.wrapper { mpv = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }";
-        description = ''
-          Package providing mpv.
-        '';
       };
 
       finalPackage = mkOption {

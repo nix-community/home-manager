@@ -68,12 +68,7 @@ in {
   options.programs.gh = {
     enable = lib.mkEnableOption "GitHub CLI tool";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.gh;
-      defaultText = literalExpression "pkgs.gh";
-      description = "Package providing {command}`gh`.";
-    };
+    package = lib.mkPackageOption pkgs "gh" { };
 
     settings = mkOption {
       type = settingsType;

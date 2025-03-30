@@ -20,12 +20,7 @@ in {
       Zathura, a highly customizable and functional document viewer
       focused on keyboard interaction'';
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.zathura;
-      defaultText = "pkgs.zathura";
-      description = "The Zathura package to use";
-    };
+    package = lib.mkPackageOption pkgs "zathura" { };
 
     options = mkOption {
       default = { };

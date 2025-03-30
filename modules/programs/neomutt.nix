@@ -342,12 +342,7 @@ in {
     programs.neomutt = {
       enable = lib.mkEnableOption "the NeoMutt mail client";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.neomutt;
-        defaultText = lib.literalExpression "pkgs.neomutt";
-        description = "The neomutt package to use.";
-      };
+      package = lib.mkPackageOption pkgs "neomutt" { };
 
       sidebar = mkOption {
         type = sidebarModule;

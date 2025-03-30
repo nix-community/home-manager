@@ -48,12 +48,8 @@ let
         '';
       };
 
-      package = mkOption {
-        type = lib.types.package;
-        example = lib.literalExpression "pkgs.activitywatch";
-        description = ''
-          The derivation containing the watcher executable.
-        '';
+      package = lib.mkPackageOption pkgs "activitywatch" {
+        extraDescription = "The derivation containing the watcher executable.";
       };
 
       executable = mkOption {
