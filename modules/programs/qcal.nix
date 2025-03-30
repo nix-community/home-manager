@@ -31,6 +31,8 @@ in {
     programs.qcal = {
       enable = lib.mkEnableOption "qcal, a CLI calendar application";
 
+      package = lib.mkPackageOption pkgs "qcal" { nullable = true; };
+
       timezone = lib.mkOption {
         type = lib.types.singleLineStr;
         default = "Local";
@@ -53,7 +55,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.qcal ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."qcal/config.json".source =
       let jsonFormat = pkgs.formats.json { };

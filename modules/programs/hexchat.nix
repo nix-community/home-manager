@@ -222,6 +222,8 @@ in {
   options.programs.hexchat = {
     enable = lib.mkEnableOption "HexChat, a graphical IRC client";
 
+    package = lib.mkPackageOption pkgs "hexchat" { nullable = true; };
+
     channels = mkOption {
       type = types.attrsOf modChannelOption;
       default = { };
@@ -322,7 +324,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ pkgs.hexchat ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."hexchat" = mkIf (cfg.theme != null) {
       source = cfg.theme;

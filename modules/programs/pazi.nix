@@ -10,6 +10,8 @@ in {
   options.programs.pazi = {
     enable = lib.mkEnableOption "pazi";
 
+    package = lib.mkPackageOption pkgs "pazi" { };
+
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
@@ -21,18 +23,18 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.pazi ];
+    home.packages = [ cfg.package ];
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${pkgs.pazi}/bin/pazi init bash)"
+      eval "$(${lib.getExe cfg.package} init bash)"
     '';
 
     programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-      eval "$(${pkgs.pazi}/bin/pazi init zsh)"
+      eval "$(${lib.getExe cfg.package} init zsh)"
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      ${pkgs.pazi}/bin/pazi init fish | source
+      ${lib.getExe cfg.package} init fish | source
     '';
   };
 }

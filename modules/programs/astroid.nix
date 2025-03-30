@@ -54,6 +54,8 @@ in {
     programs.astroid = {
       enable = lib.mkEnableOption "Astroid";
 
+      package = lib.mkPackageOption pkgs "astroid" { nullable = true; };
+
       pollScript = mkOption {
         type = types.str;
         default = "";
@@ -113,7 +115,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.astroid ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."astroid/config".source =
       jsonFormat.generate "astroid-config" finalConfig;

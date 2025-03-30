@@ -22,6 +22,8 @@ in {
   options.programs.ne = {
     enable = lib.mkEnableOption "ne";
 
+    package = lib.mkPackageOption pkgs "ne" { nullable = true; };
+
     keybindings = mkOption {
       type = types.lines;
       default = "";
@@ -81,7 +83,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.ne ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file = {
       ".ne/.keys" = mkIf (cfg.keybindings != "") { text = cfg.keybindings; };
