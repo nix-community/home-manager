@@ -9,12 +9,7 @@ in {
   options.programs.hyfetch = {
     enable = lib.mkEnableOption "hyfetch";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.hyfetch;
-      defaultText = lib.literalExpression "pkgs.hyfetch";
-      description = "The hyfetch package to use.";
-    };
+    package = lib.mkPackageOption pkgs "hyfetch" { };
 
     settings = lib.mkOption {
       type = jsonFormat.type;

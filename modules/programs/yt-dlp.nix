@@ -16,12 +16,7 @@ in {
   options.programs.yt-dlp = {
     enable = lib.mkEnableOption "yt-dlp";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.yt-dlp;
-      defaultText = lib.literalExpression "pkgs.yt-dlp";
-      description = "Package providing the {command}`yt-dlp` tool.";
-    };
+    package = lib.mkPackageOption pkgs "yt-dlp" { };
 
     settings = mkOption {
       type = with types; attrsOf (oneOf [ bool int str ]);

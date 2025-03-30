@@ -8,12 +8,7 @@ in {
   options.programs.skim = {
     enable = lib.mkEnableOption "skim - a command-line fuzzy finder";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.skim;
-      defaultText = lib.literalExpression "pkgs.skim";
-      description = "Package providing the {command}`skim` tool.";
-    };
+    package = lib.mkPackageOption pkgs "skim" { };
 
     defaultCommand = mkOption {
       type = types.nullOr types.str;

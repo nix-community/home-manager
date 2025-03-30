@@ -7,12 +7,7 @@ in {
   options.programs.nix-index = {
     enable = lib.mkEnableOption "nix-index, a file database for nixpkgs";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.nix-index;
-      defaultText = lib.literalExpression "pkgs.nix-index";
-      description = "Package providing the {command}`nix-index` tool.";
-    };
+    package = lib.mkPackageOption pkgs "nix-index" { };
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };

@@ -48,12 +48,7 @@ in {
   options.programs.fzf = {
     enable = lib.mkEnableOption "fzf - a command-line fuzzy finder";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.fzf;
-      defaultText = literalExpression "pkgs.fzf";
-      description = "Package providing the {command}`fzf` tool.";
-    };
+    package = lib.mkPackageOption pkgs "fzf" { };
 
     defaultCommand = mkOption {
       type = types.nullOr types.str;

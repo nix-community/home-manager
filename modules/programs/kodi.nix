@@ -126,14 +126,9 @@ in {
   options.programs.kodi = {
     enable = lib.mkEnableOption "Kodi";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.kodi;
-      defaultText = literalExpression "pkgs.kodi";
-      example = literalExpression
-        "pkgs.kodi.withPackages (exts: [ exts.pvr-iptvsimple ])";
-      description = ''
-        The `kodi` package to use.
+    package = lib.mkPackageOption pkgs "kodi" {
+      example = "pkgs.kodi.withPackages (exts: [ exts.pvr-iptvsimple ])";
+      extraDescription = ''
         Can be used to specify extensions.
       '';
     };

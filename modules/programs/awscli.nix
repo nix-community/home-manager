@@ -10,11 +10,9 @@ in {
   options.programs.awscli = {
     enable = lib.mkEnableOption "AWS CLI tool";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.awscli2;
-      defaultText = lib.literalExpression "pkgs.awscli2";
-      description = "Package providing {command}`aws`.";
+    package = lib.mkPackageOption pkgs "aws" {
+      default = "awscli2";
+      nullable = true;
     };
 
     settings = lib.mkOption {
@@ -55,7 +53,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${config.home.homeDirectory}/.aws/config" =
       lib.mkIf (cfg.settings != { }) {

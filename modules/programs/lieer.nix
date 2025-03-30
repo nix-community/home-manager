@@ -216,14 +216,7 @@ in {
     programs.lieer = {
       enable = lib.mkEnableOption "lieer Gmail synchronization for notmuch";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.lieer;
-        defaultText = "pkgs.lieer";
-        description = ''
-          lieer package to use.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "lieer" { };
     };
 
     accounts.email.accounts =

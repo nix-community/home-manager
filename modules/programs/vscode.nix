@@ -244,14 +244,9 @@ in {
   options.programs.vscode = {
     enable = lib.mkEnableOption "Visual Studio Code";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.vscode;
-      defaultText = literalExpression "pkgs.vscode";
-      example = literalExpression "pkgs.vscodium";
-      description = ''
-        Version of Visual Studio Code to install.
-      '';
+    package = lib.mkPackageOption pkgs "vscode" {
+      example = "pkgs.vscodium";
+      extraDescription = "Version of Visual Studio Code to install.";
     };
 
     mutableExtensionsDir = mkOption {

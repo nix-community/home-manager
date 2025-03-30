@@ -268,14 +268,7 @@ in {
     programs.mujmap = {
       enable = lib.mkEnableOption "mujmap Gmail synchronization for notmuch";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.mujmap;
-        defaultText = "pkgs.mujmap";
-        description = ''
-          mujmap package to use.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "mujmap" { };
     };
 
     accounts.email.accounts =

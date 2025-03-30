@@ -10,12 +10,7 @@ in {
   options.programs.pubs = {
     enable = lib.mkEnableOption "pubs";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.pubs;
-      defaultText = lib.literalExpression "pkgs.pubs";
-      description = "The package to use for the pubs script.";
-    };
+    package = lib.mkPackageOption pkgs "pubs" { };
 
     extraConfig = mkOption {
       type = types.lines;

@@ -153,12 +153,7 @@ in {
       '';
     };
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.htop;
-      defaultText = lib.literalExpression "pkgs.htop";
-      description = "Package containing the {command}`htop` program.";
-    };
+    package = lib.mkPackageOption pkgs "htop" { };
   };
 
   config = lib.mkIf cfg.enable {

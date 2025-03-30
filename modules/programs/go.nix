@@ -13,12 +13,7 @@ in {
     programs.go = {
       enable = lib.mkEnableOption "Go";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.go;
-        defaultText = literalExpression "pkgs.go";
-        description = "The Go package to use.";
-      };
+      package = lib.mkPackageOption pkgs "go" { };
 
       packages = mkOption {
         type = with types; attrsOf path;

@@ -26,14 +26,10 @@ in {
         '';
       };
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.beets;
-        defaultText = literalExpression "pkgs.beets";
-        example = literalExpression
+      package = lib.mkPackageOption pkgs "beets" {
+        example =
           "(pkgs.beets.override { pluginOverrides = { beatport.enable = false; }; })";
-        description = ''
-          The `beets` package to use.
+        extraDescription = ''
           Can be used to specify extensions.
         '';
       };

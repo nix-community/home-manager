@@ -9,12 +9,7 @@ in {
   options.programs.ncspot = {
     enable = lib.mkEnableOption "ncspot";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.ncspot;
-      defaultText = lib.literalExpression "pkgs.ncspot";
-      description = "The package to use for ncspot.";
-    };
+    package = lib.mkPackageOption pkgs "ncspot" { };
 
     settings = lib.mkOption {
       type = tomlFormat.type;

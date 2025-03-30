@@ -188,12 +188,8 @@ in {
     programs.thunderbird = {
       enable = lib.mkEnableOption "Thunderbird";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.thunderbird;
-        defaultText = literalExpression "pkgs.thunderbird";
-        example = literalExpression "pkgs.thunderbird-91";
-        description = "The Thunderbird package to use.";
+      package = lib.mkPackageOption pkgs "thunderbird" {
+        example = "pkgs.thunderbird-91";
       };
 
       profileVersion = mkOption {

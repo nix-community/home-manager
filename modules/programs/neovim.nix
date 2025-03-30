@@ -250,12 +250,8 @@ in {
         '';
       };
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.neovim-unwrapped;
-        defaultText = literalExpression "pkgs.neovim-unwrapped";
-        description = "The package to use for the neovim binary.";
-      };
+      package =
+        lib.mkPackageOption pkgs "neovim" { default = "neovim-unwrapped"; };
 
       finalPackage = mkOption {
         type = types.package;
@@ -324,11 +320,8 @@ in {
       coc = {
         enable = mkEnableOption "Coc";
 
-        package = mkOption {
-          type = types.package;
-          default = pkgs.vimPlugins.coc-nvim;
-          defaultText = literalExpression "pkgs.vimPlugins.coc-nvim";
-          description = "The package to use for the CoC plugin.";
+        package = lib.mkPackageOption pkgs "coc-nvim" {
+          default = [ "vimPlugins" "coc-nvim" ];
         };
 
         settings = mkOption {

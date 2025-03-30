@@ -17,12 +17,7 @@ in {
   options.programs.watson = {
     enable = lib.mkEnableOption "watson, a wonderful CLI to track your time";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.watson;
-      defaultText = lib.literalExpression "pkgs.watson";
-      description = "Package providing the {command}`watson`.";
-    };
+    package = lib.mkPackageOption pkgs "watson" { };
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };

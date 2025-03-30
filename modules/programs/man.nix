@@ -15,12 +15,7 @@ in {
         '';
       };
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.man;
-        defaultText = lib.literalExpression "pkgs.man";
-        description = "The man package to use.";
-      };
+      package = lib.mkPackageOption pkgs "man" { };
 
       generateCaches = mkOption {
         type = types.bool;

@@ -10,13 +10,7 @@ in {
   options.programs.helix = {
     enable = lib.mkEnableOption "helix text editor";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.helix;
-      defaultText = literalExpression "pkgs.helix";
-      example = literalExpression "pkgs.evil-helix";
-      description = "The package to use for helix.";
-    };
+    package = lib.mkPackageOption pkgs "helix" { example = "pkgs.evil-helix"; };
 
     extraPackages = mkOption {
       type = with types; listOf package;

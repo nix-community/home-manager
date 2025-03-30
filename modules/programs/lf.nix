@@ -12,14 +12,7 @@ in {
     programs.lf = {
       enable = lib.mkEnableOption "lf";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.lf;
-        defaultText = literalExpression "pkgs.lf";
-        description = ''
-          lf package to use.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "lf" { };
 
       settings = mkOption {
         type = with types;

@@ -168,14 +168,7 @@ in {
     programs.vdirsyncer = {
       enable = lib.mkEnableOption "vdirsyncer";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.vdirsyncer;
-        defaultText = "pkgs.vdirsyncer";
-        description = ''
-          vdirsyncer package to use.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "vdirsyncer" { };
 
       statusPath = lib.mkOption {
         type = lib.types.str;

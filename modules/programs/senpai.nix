@@ -6,12 +6,7 @@ let
 in {
   options.programs.senpai = {
     enable = lib.mkEnableOption "senpai";
-    package = mkOption {
-      type = types.package;
-      default = pkgs.senpai;
-      defaultText = lib.literalExpression "pkgs.senpai";
-      description = "The `senpai` package to use.";
-    };
+    package = lib.mkPackageOption pkgs "senpai" { };
     config = mkOption {
       type = types.submodule {
         freeformType = types.attrsOf types.anything;

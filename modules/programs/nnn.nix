@@ -50,15 +50,8 @@ in {
     programs.nnn = {
       enable = lib.mkEnableOption "nnn";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.nnn;
-        defaultText = literalExpression "pkgs.nnn";
-        example =
-          literalExpression "pkgs.nnn.override ({ withNerdIcons = true; });";
-        description = ''
-          Package containing the {command}`nnn` program.
-        '';
+      package = lib.mkPackageOption pkgs "nnn" {
+        example = "pkgs.nnn.override { withNerdIcons = true; }";
       };
 
       finalPackage = mkOption {

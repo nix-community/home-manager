@@ -8,12 +8,7 @@ in {
   options.programs.piston-cli = {
     enable = lib.mkEnableOption "piston-cli, code runner";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.piston-cli;
-      defaultText = lib.literalExpression "pkgs.piston-cli";
-      description = "The piston-cli package to use.";
-    };
+    package = lib.mkPackageOption pkgs "piston-cli" { };
 
     settings = lib.mkOption {
       type = yamlFormat.type;

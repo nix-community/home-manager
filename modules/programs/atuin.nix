@@ -13,12 +13,7 @@ in {
   options.programs.atuin = {
     enable = lib.mkEnableOption "atuin";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.atuin;
-      defaultText = lib.literalExpression "pkgs.atuin";
-      description = "The package to use for atuin.";
-    };
+    package = lib.mkPackageOption pkgs "atuin" { };
 
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption {
       inherit config;

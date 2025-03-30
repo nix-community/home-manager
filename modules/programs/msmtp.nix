@@ -49,12 +49,7 @@ in {
     programs.msmtp = {
       enable = lib.mkEnableOption "msmtp";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.msmtp;
-        defaultText = lib.literalExpression "pkgs.msmtp";
-        description = "The msmtp package to use.";
-      };
+      package = lib.mkPackageOption pkgs "msmtp" { };
 
       extraConfig = mkOption {
         type = types.lines;
