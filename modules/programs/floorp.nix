@@ -1,15 +1,10 @@
 { lib, ... }:
-
-with lib;
-
 let
-
   modulePath = [ "programs" "floorp" ];
 
   mkFirefoxModule = import ./firefox/mkFirefoxModule.nix;
-
 in {
-  meta.maintainers = [ hm.maintainers.bricked ];
+  meta.maintainers = [ lib.hm.maintainers.bricked ];
 
   imports = [
     (mkFirefoxModule {

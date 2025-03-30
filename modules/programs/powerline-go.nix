@@ -1,20 +1,17 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption optionalString types;
 
   cfg = config.programs.powerline-go;
 
   # Convert an option value to a string to be passed as argument to
-  # powerline-go:
+  # `powerline-go`:
   valueToString = value:
     if builtins.isList value then
       builtins.concatStringsSep "," (builtins.map valueToString value)
     else if builtins.isAttrs value then
-      valueToString
-      (mapAttrsToList (key: val: "${valueToString key}=${valueToString val}")
-        value)
+      valueToString (lib.mapAttrsToList
+        (key: val: "${valueToString key}=${valueToString val}") value)
     else
       builtins.toString value;
 
@@ -26,7 +23,7 @@ let
 
   evalMode = cfg.modulesRight != null;
 
-  evalArgument = optionalString (evalMode) " -eval";
+  evalArgument = optionalString evalMode " -eval";
 
   newlineArgument = optionalString cfg.newline " -newline";
 
@@ -37,19 +34,19 @@ let
     if value == true then " -${name}" else " -${name} ${valueToString value}";
 
   otherSettingsArgument = optionalString (cfg.settings != { })
-    (concatStringsSep ""
-      (mapAttrsToList otherSettingPairArgument cfg.settings));
+    (lib.concatStringsSep ""
+      (lib.mapAttrsToList otherSettingPairArgument cfg.settings));
 
   commandLineArguments = ''
     ${evalArgument}${modulesArgument}${modulesRightArgument}${newlineArgument}${pathAliasesArgument}${otherSettingsArgument}
   '';
 
 in {
-  meta.maintainers = [ maintainers.DamienCassou ];
+  meta.maintainers = [ lib.maintainers.DamienCassou ];
 
   options = {
     programs.powerline-go = {
-      enable = mkEnableOption
+      enable = lib.mkEnableOption
         "Powerline-go, a beautiful and useful low-latency prompt for your shell";
 
       modules = mkOption {
@@ -92,7 +89,7 @@ in {
           may use '~' to represent your home directory but you should
           protect it to avoid shell substitution.
         '';
-        example = literalExpression ''
+        example = lib.literalExpression ''
           { "\\~/projects/home-manager" = "prj:home-manager"; }
         '';
       };
@@ -104,7 +101,7 @@ in {
           This can be any key/value pair as described in
           <https://github.com/justjanne/powerline-go>.
         '';
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             hostname-only-if-ssh = true;
             numeric-exit-codes = true;

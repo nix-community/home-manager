@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.rbenv;
 
@@ -27,14 +25,14 @@ in {
   meta.maintainers = [ ];
 
   options.programs.rbenv = {
-    enable = mkEnableOption "rbenv";
+    enable = lib.mkEnableOption "rbenv";
 
-    package = mkPackageOption pkgs "rbenv" { };
+    package = lib.mkPackageOption pkgs "rbenv" { };
 
     plugins = mkOption {
       type = types.listOf pluginModule;
       default = [ ];
-      example = literalExpression ''
+      example = lib.literalExpression ''
         [
           {
             name = "ruby-build";

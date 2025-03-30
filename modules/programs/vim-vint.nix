@@ -1,7 +1,4 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
 
   cfg = config.programs.vim-vint;
@@ -9,14 +6,14 @@ let
   yamlFormat = pkgs.formats.yaml { };
 
 in {
-  meta.maintainers = [ maintainers.tomodachi94 ];
+  meta.maintainers = [ lib.maintainers.tomodachi94 ];
 
   options = {
     programs.vim-vint = {
-      enable = mkEnableOption "the Vint linter for Vimscript";
-      package = mkPackageOption pkgs "vim-vint" { nullable = true; };
+      enable = lib.mkEnableOption "the Vint linter for Vimscript";
+      package = lib.mkPackageOption pkgs "vim-vint" { nullable = true; };
 
-      settings = mkOption {
+      settings = lib.mkOption {
         type = yamlFormat.type;
         default = { };
         description = ''
@@ -27,7 +24,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile.".vintrc.yaml".source =

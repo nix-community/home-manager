@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) filterAttrs mapAttrsToList mkOption types;
 
   cfg = config.programs.feh;
 
@@ -10,30 +8,30 @@ let
 
   renderThemes = options:
     let
-      render =
-        mapAttrsToList (theme: options: "${theme} ${escapeShellArgs options}");
-    in concatStringsSep "\n" (render options);
+      render = mapAttrsToList
+        (theme: options: "${theme} ${lib.escapeShellArgs options}");
+    in lib.concatStringsSep "\n" (render options);
 
   renderBindings = bindings:
     let
       enabled = filterAttrs (n: v: v != null) bindings;
       disabled = filterAttrs (n: v: v == null) bindings;
       render = mapAttrsToList renderBinding;
-    in concatStringsSep "\n" (render disabled ++ render enabled);
+    in lib.concatStringsSep "\n" (render disabled ++ render enabled);
 
   renderBinding = func: key:
     if key == null then
       func
-    else if isList key then
-      concatStringsSep " " ([ func ] ++ map toString key)
+    else if lib.isList key then
+      lib.concatStringsSep " " ([ func ] ++ map toString key)
     else
       "${func} ${toString key}";
 
 in {
   options.programs.feh = {
-    enable = mkEnableOption "feh - a fast and light image viewer";
+    enable = lib.mkEnableOption "feh - a fast and light image viewer";
 
-    package = mkPackageOption pkgs "feh" { nullable = true; };
+    package = lib.mkPackageOption pkgs "feh" { nullable = true; };
 
     buttons = mkOption {
       default = { };
@@ -97,7 +95,7 @@ in {
 
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [{
       assertion = ((filterAttrs (n: v: v == "") cfg.keybindings) == { });
       message =
@@ -106,14 +104,15 @@ in {
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."feh/buttons" =
-      mkIf (cfg.buttons != { }) { text = renderBindings cfg.buttons + "\n"; };
+    xdg.configFile."feh/buttons" = lib.mkIf (cfg.buttons != { }) {
+      text = renderBindings cfg.buttons + "\n";
+    };
 
-    xdg.configFile."feh/keys" = mkIf (cfg.keybindings != { }) {
+    xdg.configFile."feh/keys" = lib.mkIf (cfg.keybindings != { }) {
       text = renderBindings cfg.keybindings + "\n";
     };
 
     xdg.configFile."feh/themes" =
-      mkIf (cfg.themes != { }) { text = renderThemes cfg.themes + "\n"; };
+      lib.mkIf (cfg.themes != { }) { text = renderThemes cfg.themes + "\n"; };
   };
 }

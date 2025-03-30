@@ -1,17 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let cfg = config.programs.less;
 in {
-  meta.maintainers = [ maintainers.pamplemousse ];
+  meta.maintainers = [ lib.maintainers.pamplemousse ];
 
   options = {
     programs.less = {
-      enable = mkEnableOption "less, opposite of more";
+      enable = lib.mkEnableOption "less, opposite of more";
 
-      keys = mkOption {
-        type = types.lines;
+      keys = lib.mkOption {
+        type = lib.types.lines;
         default = "";
         example = ''
           s        back-line
@@ -25,7 +22,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.less ];
     xdg.configFile."lesskey".text = cfg.keys;
   };

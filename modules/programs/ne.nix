@@ -1,28 +1,26 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.ne;
 
   autoPrefFiles = let
     autoprefs = cfg.automaticPreferences
-      // optionalAttrs (cfg.defaultPreferences != "") {
+      // lib.optionalAttrs (cfg.defaultPreferences != "") {
         ".default" = cfg.defaultPreferences;
       };
 
     gen = fileExtension: configText:
-      nameValuePair ".ne/${fileExtension}#ap" {
+      lib.nameValuePair ".ne/${fileExtension}#ap" {
         text = configText;
       }; # Generates [path].text format expected by home.file.
-  in mapAttrs' gen autoprefs;
+  in lib.mapAttrs' gen autoprefs;
 
 in {
-  meta.maintainers = [ hm.maintainers.cwyc ];
+  meta.maintainers = [ lib.hm.maintainers.cwyc ];
 
   options.programs.ne = {
-    enable = mkEnableOption "ne";
+    enable = lib.mkEnableOption "ne";
 
     keybindings = mkOption {
       type = types.lines;
@@ -49,7 +47,7 @@ in {
     automaticPreferences = mkOption {
       type = types.attrsOf types.lines;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           nix = '''
             TAB 0

@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.gnome-terminal;
 
@@ -243,14 +241,14 @@ let
         foreground-color = pcfg.colors.foregroundColor;
         background-color = pcfg.colors.backgroundColor;
         palette = pcfg.colors.palette;
-      } // optionalAttrs (pcfg.allowBold != null) {
+      } // lib.optionalAttrs (pcfg.allowBold != null) {
         allow-bold = pcfg.allowBold;
       } // (if (pcfg.colors.boldColor == null) then {
         bold-color-same-as-fg = true;
       } else {
         bold-color-same-as-fg = false;
         bold-color = pcfg.colors.boldColor;
-      }) // optionalAttrs (pcfg.boldIsBright != null) {
+      }) // lib.optionalAttrs (pcfg.boldIsBright != null) {
         bold-is-bright = pcfg.boldIsBright;
       } // (if (pcfg.colors.cursor != null) then {
         cursor-colors-set = true;
@@ -264,18 +262,18 @@ let
         highlight-background-color = pcfg.colors.highlight.background;
       } else {
         highlight-colors-set = false;
-      }) // optionalAttrs (pcfg.transparencyPercent != null) {
+      }) // lib.optionalAttrs (pcfg.transparencyPercent != null) {
         background-transparency-percent = pcfg.transparencyPercent;
         use-theme-transparency = false;
         use-transparent-background = true;
       }));
 
 in {
-  meta.maintainers = with maintainers; [ kamadorueda rycee ];
+  meta.maintainers = with lib.maintainers; [ kamadorueda rycee ];
 
   options = {
     programs.gnome-terminal = {
-      enable = mkEnableOption "Gnome Terminal";
+      enable = lib.mkEnableOption "Gnome Terminal";
 
       showMenubar = mkOption {
         default = true;
@@ -301,18 +299,18 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (let
         uuidre =
           "[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}";
-        erroneous =
-          filter (n: builtins.match uuidre n == null) (attrNames cfg.profile);
+        erroneous = lib.filter (n: builtins.match uuidre n == null)
+          (lib.attrNames cfg.profile);
       in {
         assertion = erroneous == [ ];
         message = ''
           The attribute name of a Gnome Terminal profile must be a UUID.
-          Incorrect profile names: ${concatStringsSep ", " erroneous}'';
+          Incorrect profile names: ${lib.concatStringsSep ", " erroneous}'';
       })
     ];
 
@@ -327,11 +325,12 @@ in {
       };
 
       "${dconfPath}/profiles:" = {
-        default = head (attrNames (filterAttrs (n: v: v.default) cfg.profile));
-        list = attrNames cfg.profile;
+        default = lib.head
+          (lib.attrNames (lib.filterAttrs (n: v: v.default) cfg.profile));
+        list = lib.attrNames cfg.profile;
       };
-    } // mapAttrs'
-    (n: v: nameValuePair ("${dconfPath}/profiles:/:${n}") (buildProfileSet v))
+    } // lib.mapAttrs'
+    (n: v: lib.nameValuePair "${dconfPath}/profiles:/:${n}" (buildProfileSet v))
     cfg.profile;
 
     programs.bash.enableVteIntegration = true;

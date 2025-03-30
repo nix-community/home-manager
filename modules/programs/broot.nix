@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption mkRenamedOptionModule types;
 
   cfg = config.programs.broot;
 
@@ -12,7 +10,7 @@ let
     freeformType = tomlFormat.type;
 
     options = {
-      modal = mkEnableOption "modal (vim) mode";
+      modal = lib.mkEnableOption "modal (vim) mode";
 
       verbs = mkOption {
         type = with types; listOf (attrsOf (oneOf [ bool str (listOf str) ]));
@@ -121,14 +119,14 @@ let
   shellInit = shell:
     # Using mkAfter to make it more likely to appear after other
     # manipulations of the prompt.
-    mkAfter ''
+    lib.mkAfter ''
       source ${
         pkgs.runCommand "br.${shell}" { nativeBuildInputs = [ cfg.package ]; }
         "broot --print-shell-function ${shell} > $out"
       }
     '';
 in {
-  meta.maintainers = [ hm.maintainers.aheaume maintainers.dermetfan ];
+  meta.maintainers = [ lib.hm.maintainers.aheaume lib.maintainers.dermetfan ];
 
   imports = [
     (mkRenamedOptionModule [ "programs" "broot" "modal" ] [
@@ -152,7 +150,7 @@ in {
   ];
 
   options.programs.broot = {
-    enable = mkEnableOption "Broot, a better way to navigate directories";
+    enable = lib.mkEnableOption "Broot, a better way to navigate directories";
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };

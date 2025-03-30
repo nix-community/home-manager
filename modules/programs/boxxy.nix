@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
-with lib;
 let
+  inherit (lib) literalExpression mkOption types;
+
   cfg = config.programs.boxxy;
 
   configPath = "${config.xdg.configHome}/boxxy/boxxy.yaml";
@@ -82,9 +83,9 @@ let
   };
 in {
   options.programs.boxxy = {
-    enable = mkEnableOption "boxxy: Boxes in badly behaving applications";
+    enable = lib.mkEnableOption "boxxy: Boxes in badly behaving applications";
 
-    package = mkPackageOption pkgs "boxxy" { nullable = true; };
+    package = lib.mkPackageOption pkgs "boxxy" { nullable = true; };
 
     rules = mkOption {
       type = types.listOf boxxyRulesOpts;
@@ -93,11 +94,13 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "programs.boxxy" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.boxxy" pkgs
+        lib.platforms.linux)
+    ];
 
-    home.file = mkIf (cfg.rules != [ ]) {
+    home.file = lib.mkIf (cfg.rules != [ ]) {
       "${configPath}".source =
         settingsFormat.generate "boxxy-config.yaml" { rules = cfg.rules; };
     };

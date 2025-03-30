@@ -1,15 +1,13 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.termite;
 
 in {
   options = {
     programs.termite = {
-      enable = mkEnableOption "Termite VTE-based terminal";
+      enable = lib.mkEnableOption "Termite VTE-based terminal";
 
       allowBold = mkOption {
         default = null;
@@ -43,7 +41,7 @@ in {
         '';
       };
 
-      enableVteIntegration = mkEnableOption "Shell VTE integration" // {
+      enableVteIntegration = lib.mkEnableOption "Shell VTE integration" // {
         default = true;
       };
 
@@ -323,7 +321,7 @@ in {
       lib.optionalString (val != null) "${name} = ${toString val}";
     optionalString = name: val:
       lib.optionalString (val != null) "${name} = ${val}";
-  in mkIf cfg.enable {
+  in lib.mkIf cfg.enable {
     home.packages = [ pkgs.termite ];
     xdg.configFile."termite/config".text = ''
       [options]

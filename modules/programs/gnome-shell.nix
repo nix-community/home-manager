@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
 let
+  inherit (lib) mkOption types;
+
   cfg = config.programs.gnome-shell;
 
   extensionOpts = { config, ... }: {
@@ -25,8 +25,8 @@ let
       };
     };
 
-    config = mkIf (hasAttr "extensionUuid" config.package) {
-      id = mkDefault config.package.extensionUuid;
+    config = lib.mkIf (lib.hasAttr "extensionUuid" config.package) {
+      id = lib.mkDefault config.package.extensionUuid;
     };
   };
 
@@ -43,7 +43,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExpression "pkgs.plata-theme";
+        example = lib.literalExpression "pkgs.plata-theme";
         description = ''
           Package providing a GNOME Shell theme in
           `$out/share/themes/''${name}/gnome-shell`.
@@ -53,15 +53,15 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.terlar ];
+  meta.maintainers = [ lib.maintainers.terlar ];
 
   options.programs.gnome-shell = {
-    enable = mkEnableOption "GNOME Shell customization";
+    enable = lib.mkEnableOption "GNOME Shell customization";
 
     extensions = mkOption {
       type = types.listOf (types.submodule extensionOpts);
       default = [ ];
-      example = literalExpression ''
+      example = lib.literalExpression ''
         [
           { package = pkgs.gnomeExtensions.dash-to-panel; }
           {
@@ -78,7 +78,7 @@ in {
     theme = mkOption {
       type = types.nullOr (types.submodule themeOpts);
       default = null;
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           name = "Plata-Noir";
           package = pkgs.plata-theme;
@@ -90,17 +90,17 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    (mkIf (cfg.extensions != [ ]) {
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    (lib.mkIf (cfg.extensions != [ ]) {
       dconf.settings."org/gnome/shell" = {
         disable-user-extensions = false;
-        enabled-extensions = catAttrs "id" cfg.extensions;
+        enabled-extensions = lib.catAttrs "id" cfg.extensions;
       };
 
-      home.packages = catAttrs "package" cfg.extensions;
+      home.packages = lib.catAttrs "package" cfg.extensions;
     })
 
-    (mkIf (cfg.theme != null) {
+    (lib.mkIf (cfg.theme != null) {
       dconf.settings."org/gnome/shell/extensions/user-theme".name =
         cfg.theme.name;
 

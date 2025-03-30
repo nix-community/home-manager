@@ -1,8 +1,6 @@
 { config, pkgs, lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption optionalString strings types;
 
   cfg = config.programs.zsh.prezto;
 
@@ -12,9 +10,9 @@ let
 
   preztoModule = types.submodule {
     options = {
-      enable = mkEnableOption "prezto";
+      enable = lib.mkEnableOption "prezto";
 
-      package = mkPackageOption pkgs "prezto" { default = "zsh-prezto"; };
+      package = lib.mkPackageOption pkgs "prezto" { default = "zsh-prezto"; };
 
       caseSensitive = mkOption {
         type = types.nullOr types.bool;
@@ -37,7 +35,7 @@ let
       pmoduleDirs = mkOption {
         type = types.listOf types.path;
         default = [ ];
-        example = literalExpression
+        example = lib.literalExpression
           ''[ "''${config.home.homeDirectory}/.zprezto-contrib" ]'';
         description = "Add additional directories to load prezto modules from.";
       };
@@ -369,7 +367,7 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.nickhu ];
+  meta.maintainers = [ lib.maintainers.nickhu ];
   options = {
     programs.zsh = {
       prezto = mkOption {
@@ -379,7 +377,7 @@ in {
       };
     };
   };
-  config = mkIf cfg.enable (mkMerge [{
+  config = lib.mkIf cfg.enable (lib.mkMerge [{
     home.file."${relToDotDir ".zprofile"}".text =
       builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zprofile";
     home.file."${relToDotDir ".zlogin"}".text =
@@ -518,7 +516,7 @@ in {
       ${optionalString (cfg.syntaxHighlighting.styles != { }) ''
         zstyle ':prezto:module:syntax-highlighting' styles \
           ${
-            builtins.concatStringsSep " \\\n" (attrsets.mapAttrsToList
+            builtins.concatStringsSep " \\\n" (lib.attrsets.mapAttrsToList
               (k: v: strings.escapeShellArg k + " " + strings.escapeShellArg v)
               cfg.syntaxHighlighting.styles)
           }
@@ -526,7 +524,7 @@ in {
       ${optionalString (cfg.syntaxHighlighting.pattern != { }) ''
         zstyle ':prezto:module:syntax-highlighting' pattern \
           ${
-            builtins.concatStringsSep " \\\n" (attrsets.mapAttrsToList
+            builtins.concatStringsSep " \\\n" (lib.attrsets.mapAttrsToList
               (k: v: strings.escapeShellArg k + " " + strings.escapeShellArg v)
               cfg.syntaxHighlighting.pattern)
           }

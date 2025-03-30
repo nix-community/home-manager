@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.pls;
 
@@ -13,14 +11,14 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.arjan-s ];
+  meta.maintainers = [ lib.maintainers.arjan-s ];
 
   options.programs.pls = {
-    enable = mkEnableOption "pls, a modern replacement for {command}`ls`";
+    enable = lib.mkEnableOption "pls, a modern replacement for {command}`ls`";
 
-    package = mkPackageOption pkgs "pls" { };
+    package = lib.mkPackageOption pkgs "pls" { };
 
-    enableAliases = mkEnableOption "recommended pls aliases";
+    enableAliases = lib.mkEnableOption "recommended pls aliases";
   };
 
   config = mkIf cfg.enable {
@@ -28,7 +26,7 @@ in {
 
     programs.bash.shellAliases = mkIf cfg.enableAliases aliases;
 
-    programs.fish = mkMerge [
+    programs.fish = lib.mkMerge [
       (mkIf (!config.programs.fish.preferAbbrs) {
         shellAliases = mkIf cfg.enableAliases aliases;
       })

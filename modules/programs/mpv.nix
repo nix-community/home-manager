@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) generators literalExpression mkIf mkOption types;
   inherit (builtins) typeOf stringLength;
 
   cfg = config.programs.mpv;
@@ -47,11 +45,11 @@ let
   };
 
   renderBindings = bindings:
-    concatStringsSep "\n"
-    (mapAttrsToList (name: value: "${name} ${value}") bindings);
+    lib.concatStringsSep "\n"
+    (lib.mapAttrsToList (name: value: "${name} ${value}") bindings);
 
   renderDefaultProfiles = profiles:
-    renderOptions { profile = concatStringsSep "," profiles; };
+    renderOptions { profile = lib.concatStringsSep "," profiles; };
 
   mpvPackage = if cfg.scripts == [ ] then
     cfg.package
@@ -61,7 +59,7 @@ let
 in {
   options = {
     programs.mpv = {
-      enable = mkEnableOption "mpv";
+      enable = lib.mkEnableOption "mpv";
 
       package = mkOption {
         type = types.package;
@@ -206,7 +204,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       assertions = [{
         assertion = (cfg.scripts == [ ]) || (cfg.package == pkgs.mpv);
@@ -222,31 +220,32 @@ in {
     (mkIf (cfg.includes != [ ]) {
       xdg.configFile."mpv/mpv.conf" = {
         text = lib.mkAfter
-          (concatMapStringsSep "\n" (x: "include=${x}") cfg.includes);
+          (lib.concatMapStringsSep "\n" (x: "include=${x}") cfg.includes);
       };
     })
 
     (mkIf (cfg.config != { } || cfg.profiles != { }) {
       xdg.configFile."mpv/mpv.conf".text = ''
-        ${optionalString (cfg.defaultProfiles != [ ])
+        ${lib.optionalString (cfg.defaultProfiles != [ ])
         (renderDefaultProfiles cfg.defaultProfiles)}
-        ${optionalString (cfg.config != { }) (renderOptions cfg.config)}
-        ${optionalString (cfg.profiles != { }) (renderProfiles cfg.profiles)}
+        ${lib.optionalString (cfg.config != { }) (renderOptions cfg.config)}
+        ${lib.optionalString (cfg.profiles != { })
+        (renderProfiles cfg.profiles)}
       '';
     })
     (mkIf (cfg.bindings != { } || cfg.extraInput != "") {
-      xdg.configFile."mpv/input.conf".text = mkMerge [
+      xdg.configFile."mpv/input.conf".text = lib.mkMerge [
         (mkIf (cfg.bindings != { }) (renderBindings cfg.bindings))
         (mkIf (cfg.extraInput != "") cfg.extraInput)
       ];
     })
     {
-      xdg.configFile = mapAttrs' (name: value:
-        nameValuePair "mpv/script-opts/${name}.conf" {
+      xdg.configFile = lib.mapAttrs' (name: value:
+        lib.nameValuePair "mpv/script-opts/${name}.conf" {
           text = renderScriptOptions value;
         }) cfg.scriptOpts;
     }
   ]);
 
-  meta.maintainers = with maintainers; [ thiagokokada chuangzhu ];
+  meta.maintainers = with lib.maintainers; [ thiagokokada chuangzhu ];
 }

@@ -1,8 +1,7 @@
 { config, lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
+
   extraMailboxOptions = {
     options = {
       mailbox = mkOption {
@@ -30,7 +29,9 @@ let
 
 in {
   options.notmuch.neomutt = {
-    enable = mkEnableOption "Notmuch support in NeoMutt" // { default = true; };
+    enable = lib.mkEnableOption "Notmuch support in NeoMutt" // {
+      default = true;
+    };
 
     virtualMailboxes = mkOption {
       type = types.listOf (types.submodule ./notmuch-virtual-mailbox.nix);
@@ -47,7 +48,7 @@ in {
   };
 
   options.neomutt = {
-    enable = mkEnableOption "NeoMutt";
+    enable = lib.mkEnableOption "NeoMutt";
 
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
@@ -55,7 +56,7 @@ in {
         "msmtpq --read-envelope-from --read-recipients"
       else
         null;
-      defaultText = literalExpression ''
+      defaultText = lib.literalExpression ''
         if config.msmtp.enable then
           "msmtpq --read-envelope-from --read-recipients"
         else

@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   supportedBrowsers = [
     "chromium"
@@ -16,7 +14,7 @@ let
   browserModule = defaultPkg: name: visible:
     let
       browser = (builtins.parseDrvName defaultPkg.name).name;
-      isProprietaryChrome = hasPrefix "Google Chrome" name;
+      isProprietaryChrome = lib.hasPrefix "Google Chrome" name;
     in {
       enable = mkOption {
         inherit visible;
@@ -49,7 +47,7 @@ let
           [Chromium codesearch](https://source.chromium.org/search?q=file:switches.cc&ss=chromium%2Fchromium%2Fsrc).
         '';
       };
-    } // optionalAttrs (!isProprietaryChrome) {
+    } // lib.optionalAttrs (!isProprietaryChrome) {
       # Extensions do not work with Google Chrome
       # see https://github.com/nix-community/home-manager/issues/1383
       extensions = mkOption {
@@ -156,7 +154,7 @@ let
 
       drvName = (builtins.parseDrvName cfg.package.name).name;
       browser = if drvName == "ungoogled-chromium" then "chromium" else drvName;
-      isProprietaryChrome = hasPrefix "google-chrome" drvName;
+      isProprietaryChrome = lib.hasPrefix "google-chrome" drvName;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -197,14 +195,14 @@ let
 
       package = if cfg.commandLineArgs != [ ] then
         cfg.package.override {
-          commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
+          commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
         }
       else
         cfg.package;
 
-    in mkIf cfg.enable {
+    in lib.mkIf cfg.enable {
       home.packages = [ package ];
-      home.file = optionalAttrs (!isProprietaryChrome) (listToAttrs
+      home.file = lib.optionalAttrs (!isProprietaryChrome) (lib.listToAttrs
         ((map extensionJson cfg.extensions)
           ++ (map dictionary cfg.dictionaries)) // {
             "${configDir}/NativeMessagingHosts" =
@@ -219,7 +217,7 @@ let
 in {
   # Extensions do not work with the proprietary Google Chrome version
   # see https://github.com/nix-community/home-manager/issues/1383
-  imports = map (flip mkRemovedOptionModule
+  imports = map (lib.flip lib.mkRemovedOptionModule
     "The `extensions` option does not work on Google Chrome anymore.") [
       [ "programs" "google-chrome" "extensions" ]
       [ "programs" "google-chrome-beta" "extensions" ]
@@ -237,6 +235,6 @@ in {
     vivaldi = browserModule pkgs.vivaldi "Vivaldi Browser" false;
   };
 
-  config = mkMerge
+  config = lib.mkMerge
     (map (browser: browserConfig config.programs.${browser}) supportedBrowsers);
 }

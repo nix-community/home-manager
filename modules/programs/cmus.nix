@@ -1,19 +1,13 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.cmus;
-
+let cfg = config.programs.cmus;
 in {
-  meta.maintainers = [ hm.maintainers.joygnu ];
+  meta.maintainers = [ lib.hm.maintainers.joygnu ];
 
   options.programs.cmus = {
-    enable = mkEnableOption "Enable cmus, the music player.";
+    enable = lib.mkEnableOption "Enable cmus, the music player.";
 
-    theme = mkOption {
-      type = types.lines;
+    theme = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       example = "gruvbox";
       description = ''
@@ -22,8 +16,8 @@ in {
       '';
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       example = ''
         set audio_backend = "mpd"
@@ -33,11 +27,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.cmus ];
 
     home.file.".config/cmus/rc".text = ''
-      ${optionalString (cfg.theme != "") "colorscheme ${cfg.theme}"}
+      ${lib.optionalString (cfg.theme != "") "colorscheme ${cfg.theme}"}
       ${cfg.extraConfig}
     '';
   };

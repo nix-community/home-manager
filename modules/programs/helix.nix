@@ -1,13 +1,14 @@
 { config, lib, pkgs, ... }:
-with lib;
 let
+  inherit (lib) literalExpression mkIf mkOption types;
+
   cfg = config.programs.helix;
   tomlFormat = pkgs.formats.toml { };
 in {
-  meta.maintainers = [ hm.maintainers.Philipp-M ];
+  meta.maintainers = [ lib.hm.maintainers.Philipp-M ];
 
   options.programs.helix = {
-    enable = mkEnableOption "helix text editor";
+    enable = lib.mkEnableOption "helix text editor";
 
     package = mkOption {
       type = types.package;
@@ -224,12 +225,12 @@ in {
           source = tomlFormat.generate "helix-languages-config" cfg.languages;
         };
         "helix/ignore" = mkIf (cfg.ignores != [ ]) {
-          text = concatStringsSep "\n" cfg.ignores + "\n";
+          text = lib.concatStringsSep "\n" cfg.ignores + "\n";
         };
       };
 
-      themes = mapAttrs' (n: v:
-        nameValuePair "helix/themes/${n}.toml" {
+      themes = lib.mapAttrs' (n: v:
+        lib.nameValuePair "helix/themes/${n}.toml" {
           source = tomlFormat.generate "helix-theme-${n}" v;
         }) cfg.themes;
     in settings // themes;

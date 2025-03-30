@@ -4,13 +4,13 @@ in {
   meta.maintainers =
     [ lib.hm.maintainers.ambroisie lib.maintainers.khaneliman ];
 
-  options.programs.nix-index = with lib; {
-    enable = mkEnableOption "nix-index, a file database for nixpkgs";
+  options.programs.nix-index = {
+    enable = lib.mkEnableOption "nix-index, a file database for nixpkgs";
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.nix-index;
-      defaultText = literalExpression "pkgs.nix-index";
+      defaultText = lib.literalExpression "pkgs.nix-index";
       description = "Package providing the {command}`nix-index` tool.";
     };
 

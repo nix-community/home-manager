@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
 
   cfg = config.programs.emacs;
 
@@ -22,14 +20,14 @@ let
         version = "0.1.0";
         packageRequires = packages;
       };
-    in packages ++ optional (cfg.extraConfig != "") userConfig;
+    in packages ++ lib.optional (cfg.extraConfig != "") userConfig;
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     programs.emacs = {
-      enable = mkEnableOption "Emacs";
+      enable = lib.mkEnableOption "Emacs";
 
       package = mkOption {
         type = types.package;
@@ -62,7 +60,7 @@ in {
 
       extraPackages = mkOption {
         default = self: [ ];
-        type = hm.types.selectorFunction;
+        type = lib.hm.types.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExpression "epkgs: [ epkgs.emms epkgs.magit ]";
         description = ''
@@ -74,7 +72,7 @@ in {
 
       overrides = mkOption {
         default = self: super: { };
-        type = hm.types.overlayFunction;
+        type = lib.hm.types.overlayFunction;
         defaultText = "self: super: {}";
         example = literalExpression ''
           self: super: rec {

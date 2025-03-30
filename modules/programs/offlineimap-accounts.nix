@@ -1,14 +1,11 @@
 { lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   extraConfigType = with types; attrsOf (either (either str int) bool);
-
 in {
   options.offlineimap = {
-    enable = mkEnableOption "OfflineIMAP";
+    enable = lib.mkEnableOption "OfflineIMAP";
 
     extraConfig.account = mkOption {
       type = extraConfigType;

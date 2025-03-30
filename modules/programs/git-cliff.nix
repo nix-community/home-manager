@@ -1,24 +1,19 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.git-cliff;
   tomlFormat = pkgs.formats.toml { };
-
 in {
-  meta.maintainers = [ hm.maintainers.NateCox ];
+  meta.maintainers = [ lib.hm.maintainers.NateCox ];
 
   options.programs.git-cliff = {
-    enable = mkEnableOption "git-cliff changelog generator";
+    enable = lib.mkEnableOption "git-cliff changelog generator";
 
-    package = mkPackageOption pkgs "git-cliff" { nullable = true; };
+    package = lib.mkPackageOption pkgs "git-cliff" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = tomlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           header = "Changelog";
           trim = true;
@@ -33,11 +28,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
-      "git-cliff/cliff.toml" = mkIf (cfg.settings != { }) {
+      "git-cliff/cliff.toml" = lib.mkIf (cfg.settings != { }) {
         source = tomlFormat.generate "git-cliff-config" cfg.settings;
       };
     };

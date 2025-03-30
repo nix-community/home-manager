@@ -1,16 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) getExe mkIf mkOption;
   cfg = config.programs.mise;
   tomlFormat = pkgs.formats.toml { };
 in {
-  meta.maintainers = [ hm.maintainers.pedorich-n ];
+  meta.maintainers = [ lib.hm.maintainers.pedorich-n ];
 
   imports = let
     mkRemovedWarning = opt:
-      (mkRemovedOptionModule [ "programs" "rtx" opt ] ''
+      (lib.mkRemovedOptionModule [ "programs" "rtx" opt ] ''
         The `rtx` package has been replaced by `mise`, please switch over to
         using the options under `programs.mise.*` instead.
       '');
@@ -27,9 +25,9 @@ in {
 
   options = {
     programs.mise = {
-      enable = mkEnableOption "mise";
+      enable = lib.mkEnableOption "mise";
 
-      package = mkPackageOption pkgs "mise" { nullable = true; };
+      package = lib.mkPackageOption pkgs "mise" { nullable = true; };
 
       enableBashIntegration =
         lib.hm.shell.mkBashIntegrationOption { inherit config; };
@@ -46,7 +44,7 @@ in {
       globalConfig = mkOption {
         type = tomlFormat.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           tools = {
             node = "lts";
             python = ["3.10" "3.11"];
@@ -67,7 +65,7 @@ in {
       settings = mkOption {
         type = tomlFormat.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           verbose = false;
           experimental = false;
           disable_tools = ["node"];
@@ -83,7 +81,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    warnings = optional (cfg.package == null && (cfg.enableBashIntegration
+    warnings = lib.optional (cfg.package == null && (cfg.enableBashIntegration
       || cfg.enableZshIntegration || cfg.enableFishIntegration
       || cfg.enableNushellIntegration)) ''
         You have enabled shell integration for `mise` but have not set `package`.

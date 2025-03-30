@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption optionalString types;
 
   cfg = config.programs.zsh.zplug;
 
@@ -24,7 +22,7 @@ let
 
 in {
   options.programs.zsh.zplug = {
-    enable = mkEnableOption "zplug - a zsh plugin manager";
+    enable = lib.mkEnableOption "zplug - a zsh plugin manager";
 
     plugins = mkOption {
       default = [ ];
@@ -41,19 +39,19 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.zplug ];
 
-    programs.zsh.initContent = mkOrder 550 ''
+    programs.zsh.initContent = lib.mkOrder 550 ''
       export ZPLUG_HOME=${cfg.zplugHome}
 
       source ${pkgs.zplug}/share/zplug/init.zsh
 
       ${optionalString (cfg.plugins != [ ]) ''
-        ${concatStrings (map (plugin: ''
+        ${lib.concatStrings (map (plugin: ''
           zplug "${plugin.name}"${
             optionalString (plugin.tags != [ ]) ''
-              ${concatStrings (map (tag: ", ${tag}") plugin.tags)}
+              ${lib.concatStrings (map (tag: ", ${tag}") plugin.tags)}
             ''
           }
         '') cfg.plugins)}

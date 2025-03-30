@@ -1,17 +1,16 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-{
-  meta.maintainers = [ hm.maintainers.ilaumjd ];
+let inherit (lib) mkIf;
+in {
+  meta.maintainers = [ lib.hm.maintainers.ilaumjd ];
 
   options.programs.thefuck = {
-    enable = mkEnableOption
+    enable = lib.mkEnableOption
       "thefuck - magnificent app that corrects your previous console command";
 
-    package = mkPackageOption pkgs "thefuck" { };
+    package = lib.mkPackageOption pkgs "thefuck" { };
 
-    enableInstantMode = mkEnableOption "thefuck's experimental instant mode";
+    enableInstantMode =
+      lib.mkEnableOption "thefuck's experimental instant mode";
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };
@@ -29,7 +28,7 @@ with lib;
   config = let
     cfg = config.programs.thefuck;
 
-    cliArgs = cli.toGNUCommandLineShell { } {
+    cliArgs = lib.cli.toGNUCommandLineShell { } {
       alias = true;
       enable-experimental-instant-mode = cfg.enableInstantMode;
     };

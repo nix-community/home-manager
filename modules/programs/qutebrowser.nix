@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep literalExpression mapAttrsToList mkIf mkOption types;
 
   cfg = config.programs.qutebrowser;
 
@@ -32,14 +31,14 @@ let
         if c == null then
           ''config.unbind("${k}", mode="${m}")''
         else
-          ''config.bind("${k}", "${escape [ ''"'' ] c}", mode="${m}")'';
+          ''config.bind("${k}", "${lib.escape [ ''"'' ] c}", mode="${m}")'';
     in concatStringsSep "\n" (mapAttrsToList (formatKeyBinding m) b);
 
   formatQuickmarks = n: s: "${n} ${s}";
 
 in {
   options.programs.qutebrowser = {
-    enable = mkEnableOption "qutebrowser";
+    enable = lib.mkEnableOption "qutebrowser";
 
     package = lib.mkPackageOption pkgs "qutebrowser" { };
 
@@ -279,14 +278,15 @@ in {
       ++ mapAttrsToList (formatDictLine "c.url.searchengines") cfg.searchEngines
       ++ mapAttrsToList (formatDictLine "c.bindings.key_mappings")
       cfg.keyMappings
-      ++ optional (!cfg.enableDefaultBindings) "c.bindings.default = {}"
+      ++ lib.optional (!cfg.enableDefaultBindings) "c.bindings.default = {}"
       ++ mapAttrsToList formatKeyBindings cfg.keyBindings
-      ++ optional (cfg.extraConfig != "") cfg.extraConfig);
+      ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig);
 
-    quickmarksFile = optionals (cfg.quickmarks != { }) concatStringsSep "\n"
-      ((mapAttrsToList formatQuickmarks cfg.quickmarks));
+    quickmarksFile = lib.optionals (cfg.quickmarks != { }) concatStringsSep "\n"
+      (mapAttrsToList formatQuickmarks cfg.quickmarks);
 
-    greasemonkeyDir = optionals (cfg.greasemonkey != [ ]) pkgs.linkFarmFromDrvs
+    greasemonkeyDir =
+      lib.optionals (cfg.greasemonkey != [ ]) pkgs.linkFarmFromDrvs
       "greasemonkey-userscripts" cfg.greasemonkey;
   in mkIf cfg.enable {
     home.packages = [ cfg.package ];
@@ -307,7 +307,7 @@ in {
           socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/qutebrowser/ipc-$hash"
           if [[ -S $socket ]]; then
             command=${
-              escapeShellArg (builtins.toJSON {
+              lib.escapeShellArg (builtins.toJSON {
                 args = [ ":config-source" ];
                 target_arg = null;
                 protocol_version = 1;

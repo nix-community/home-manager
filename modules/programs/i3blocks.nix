@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) types;
 
   cfg = config.programs.i3blocks;
 
@@ -23,25 +21,25 @@ let
   configType = types.attrsOf configAtomType;
 
   # The INI generator
-  mkIni = generators.toINI { };
+  mkIni = lib.generators.toINI { };
 
 in {
-  meta.maintainers = [ maintainers.noodlez1232 ];
+  meta.maintainers = [ lib.maintainers.noodlez1232 ];
 
   options.programs.i3blocks = {
-    enable = mkEnableOption "i3blocks i3 status command scheduler";
+    enable = lib.mkEnableOption "i3blocks i3 status command scheduler";
 
-    package = mkOption {
+    package = lib.mkOption {
       type = types.package;
       default = pkgs.i3blocks;
-      defaultText = literalExpression "pkgs.i3blocks";
+      defaultText = lib.literalExpression "pkgs.i3blocks";
       description = "Package providing {command}`i3blocks`.";
     };
 
-    bars = mkOption {
-      type = with types; attrsOf (hm.types.dagOf configType);
+    bars = lib.mkOption {
+      type = with types; attrsOf (lib.hm.types.dagOf configType);
       description = "Configuration written to i3blocks config";
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           top = {
             # The title block
@@ -77,10 +75,10 @@ in {
         # Takes a singular name value pair and turns it into an attrset
         nameValuePairToAttr = value: (builtins.listToAttrs [ value ]);
         # Converts a dag entry to a name-value pair
-        dagEntryToNameValue = entry: (nameValuePair entry.name entry.data);
+        dagEntryToNameValue = entry: (lib.nameValuePair entry.name entry.data);
 
         # Try to sort the blocks
-        trySortedBlocks = hm.dag.topoSort config;
+        trySortedBlocks = lib.hm.dag.topoSort config;
 
         # Get the blocks if successful, abort if not
         blocks = if trySortedBlocks ? result then
@@ -95,11 +93,12 @@ in {
             blocks);
       in {
         # We create an "INI" file for each bar, then append them all in order
-        text = concatStringsSep "\n" (map (value: (mkIni value)) orderedBlocks);
+        text =
+          lib.concatStringsSep "\n" (map (value: (mkIni value)) orderedBlocks);
       };
 
     # Make our config (if enabled
-  in mkIf cfg.enable {
+  in lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.i3blocks" pkgs
         lib.platforms.linux)
@@ -107,8 +106,8 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile = (mapAttrs'
-      (name: value: nameValuePair "i3blocks/${name}" (makeFile value))
+    xdg.configFile = (lib.mapAttrs'
+      (name: value: lib.nameValuePair "i3blocks/${name}" (makeFile value))
       cfg.bars);
   };
 }

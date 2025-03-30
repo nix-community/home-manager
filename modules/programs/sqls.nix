@@ -1,23 +1,18 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.sqls;
 
   yamlFormat = pkgs.formats.yaml { };
-
 in {
   meta.maintainers = [ ];
 
   options.programs.sqls = {
-    enable = mkEnableOption "sqls, a SQL language server written in Go";
+    enable = lib.mkEnableOption "sqls, a SQL language server written in Go";
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
            lowercaseKeywords = true;
            connections = [
@@ -37,10 +32,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.sqls ];
 
-    xdg.configFile."sqls/config.yml" = mkIf (cfg.settings != { }) {
+    xdg.configFile."sqls/config.yml" = lib.mkIf (cfg.settings != { }) {
       source = yamlFormat.generate "sqls-config" cfg.settings;
     };
   };

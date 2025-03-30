@@ -1,11 +1,7 @@
-{ config, lib, ... }:
-
-with lib;
-
-{
+{ lib, ... }: {
   options.msmtp = {
-    enable = mkOption {
-      type = types.bool;
+    enable = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       description = ''
         Whether to enable msmtp.
@@ -22,9 +18,9 @@ with lib;
       '';
     };
 
-    tls.fingerprint = mkOption {
-      type =
-        types.nullOr (types.strMatching "([[:alnum:]]{2}:)+[[:alnum:]]{2}");
+    tls.fingerprint = lib.mkOption {
+      type = lib.types.nullOr
+        (lib.types.strMatching "([[:alnum:]]{2}:)+[[:alnum:]]{2}");
       default = null;
       example = "my:SH:a2:56:ha:sh";
       description = ''
@@ -34,8 +30,8 @@ with lib;
       '';
     };
 
-    extraConfig = mkOption {
-      type = types.attrsOf types.str;
+    extraConfig = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
       default = { };
       example = { auth = "login"; };
       description = ''

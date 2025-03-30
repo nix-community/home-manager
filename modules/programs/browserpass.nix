@@ -1,17 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
   cfg = config.programs.browserpass;
   browsers = [ "brave" "chrome" "chromium" "firefox" "librewolf" "vivaldi" ];
 in {
   options = {
     programs.browserpass = {
-      enable = mkEnableOption "the browserpass extension host application";
+      enable = lib.mkEnableOption "the browserpass extension host application";
 
-      browsers = mkOption {
-        type = types.listOf (types.enum browsers);
+      browsers = lib.mkOption {
+        type = lib.types.listOf (lib.types.enum browsers);
         default = browsers;
         example = [ "firefox" ];
         description = "Which browsers to install browserpass for";
@@ -19,8 +16,8 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    home.file = foldl' (a: b: a // b) { } (concatMap (x:
+  config = lib.mkIf cfg.enable {
+    home.file = lib.foldl' (a: b: a // b) { } (lib.concatMap (x:
       with pkgs.stdenv;
       if x == "brave" then
         let

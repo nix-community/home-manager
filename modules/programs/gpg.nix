@@ -1,19 +1,21 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkDefault mkIf mkOption optional types;
+
   cfg = config.programs.gpg;
 
   mkKeyValue = key: value:
-    if isString value then "${key} ${value}" else optionalString value key;
+    if lib.isString value then
+      "${key} ${value}"
+    else
+      lib.optionalString value key;
 
-  cfgText = generators.toKeyValue {
+  cfgText = lib.generators.toKeyValue {
     inherit mkKeyValue;
     listsAsDuplicateKeys = true;
   } cfg.settings;
 
-  scdaemonCfgText = generators.toKeyValue {
+  scdaemonCfgText = lib.generators.toKeyValue {
     inherit mkKeyValue;
     listsAsDuplicateKeys = true;
   } cfg.scdaemonSettings;
@@ -52,7 +54,7 @@ let
         ]);
         default = null;
         apply = v:
-          if isString v then
+          if lib.isString v then
             {
               unknown = 1;
               never = 2;
@@ -118,11 +120,11 @@ let
 
     importKey = { source, trust, ... }: ''
       ${gpg} --import ${source}
-      ${optionalString (trust != null)
+      ${lib.optionalString (trust != null)
       ''importTrust "${source}" ${toString trust}''}
     '';
 
-    importKeys = concatMapStringsSep "\n" importKey cfg.publicKeys;
+    importKeys = lib.concatMapStringsSep "\n" importKey cfg.publicKeys;
   in pkgs.runCommand "gpg-pubring" { buildInputs = [ cfg.package ]; } ''
     export GNUPGHOME
     GNUPGHOME=$(mktemp -d)
@@ -139,7 +141,7 @@ let
 
 in {
   options.programs.gpg = {
-    enable = mkEnableOption "GnuPG";
+    enable = lib.mkEnableOption "GnuPG";
 
     package = mkOption {
       type = types.package;
@@ -281,8 +283,8 @@ in {
 
     home.activation = {
       createGpgHomedir =
-        hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-          run mkdir -m700 -p $VERBOSE_ARG ${escapeShellArg cfg.homedir}
+        lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+          run mkdir -m700 -p $VERBOSE_ARG ${lib.escapeShellArg cfg.homedir}
         '';
 
       importGpgKeys = let
@@ -296,14 +298,15 @@ in {
           ++ optional (trust != null && cfg.mutableTrust)
           ''run importTrust "${source}" ${toString trust}'';
 
-        anyTrust = any (k: k.trust != null) cfg.publicKeys;
+        anyTrust = lib.any (k: k.trust != null) cfg.publicKeys;
 
-        importKeys = concatStringsSep "\n" (concatMap importKey cfg.publicKeys);
+        importKeys =
+          lib.concatStringsSep "\n" (lib.concatMap importKey cfg.publicKeys);
 
         # If any key/trust should be imported then create the block. Otherwise
         # leave it empty.
-        block = concatStringsSep "\n" (optional (importKeys != "") ''
-          export GNUPGHOME=${escapeShellArg cfg.homedir}
+        block = lib.concatStringsSep "\n" (optional (importKeys != "") ''
+          export GNUPGHOME=${lib.escapeShellArg cfg.homedir}
           if [[ ! -v VERBOSE ]]; then
             QUIET_ARG="--quiet"
           else

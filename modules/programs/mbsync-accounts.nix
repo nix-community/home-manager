@@ -1,8 +1,6 @@
-{ config, lib, ... }:
-
-with lib;
-
+{ lib, ... }:
 let
+  inherit (lib) literalExpression mkOption types;
 
   extraConfigType = with lib.types;
     attrsOf (oneOf [ str int bool (listOf str) ]);
@@ -113,7 +111,7 @@ let
 
 in {
   options.mbsync = {
-    enable = mkEnableOption "synchronization using mbsync";
+    enable = lib.mkEnableOption "synchronization using mbsync";
 
     flatten = mkOption {
       type = types.nullOr types.str;

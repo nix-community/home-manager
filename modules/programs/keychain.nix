@@ -1,25 +1,23 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.keychain;
 
-  flags = cfg.extraFlags ++ optional (cfg.agents != [ ])
-    "--agents ${concatStringsSep "," cfg.agents}"
-    ++ optional (cfg.inheritType != null) "--inherit ${cfg.inheritType}";
+  flags = cfg.extraFlags ++ lib.optional (cfg.agents != [ ])
+    "--agents ${lib.concatStringsSep "," cfg.agents}"
+    ++ lib.optional (cfg.inheritType != null) "--inherit ${cfg.inheritType}";
 
   shellCommand =
-    "${cfg.package}/bin/keychain --eval ${concatStringsSep " " flags} ${
-      concatStringsSep " " cfg.keys
+    "${cfg.package}/bin/keychain --eval ${lib.concatStringsSep " " flags} ${
+      lib.concatStringsSep " " cfg.keys
     }";
 
 in {
   meta.maintainers = [ ];
 
   options.programs.keychain = {
-    enable = mkEnableOption "keychain";
+    enable = lib.mkEnableOption "keychain";
 
     package = lib.mkPackageOption pkgs "keychain" { };
 

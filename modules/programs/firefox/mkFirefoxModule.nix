@@ -2,21 +2,24 @@
 , unwrappedPackageName ? null, platforms, visible ? false
 , enableBookmarks ? true, }:
 { config, lib, pkgs, ... }:
-with lib;
 let
+  inherit (lib)
+    attrValues concatStringsSep length literalExpression mapAttrsToList mkIf
+    mkMerge mkOption optionalString optional setAttrByPath types;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   appName = name;
 
   moduleName = concatStringsSep "." modulePath;
 
-  cfg = getAttrFromPath modulePath config;
+  cfg = lib.getAttrFromPath modulePath config;
 
   jsonFormat = pkgs.formats.json { };
 
-  supportedPlatforms = flatten (attrVals (attrNames platforms) lib.platforms);
+  supportedPlatforms =
+    lib.flatten (lib.attrVals (lib.attrNames platforms) lib.platforms);
 
-  isWrapped = versionAtLeast config.home.stateVersion "19.09"
+  isWrapped = lib.versionAtLeast config.home.stateVersion "19.09"
     && wrappedPackageName != null;
 
   defaultPackageName =
@@ -34,8 +37,8 @@ let
   # by future browser versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 
-  profiles = flip mapAttrs' cfg.profiles (_: profile:
-    nameValuePair "Profile${toString profile.id}" {
+  profiles = lib.flip lib.mapAttrs' cfg.profiles (_: profile:
+    lib.nameValuePair "Profile${toString profile.id}" {
       Name = profile.name;
       Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
       IsRelative = 1;
@@ -48,10 +51,11 @@ let
       };
     };
 
-  profilesIni = generators.toINI { } profiles;
+  profilesIni = lib.generators.toINI { } profiles;
 
   userPrefValue = pref:
-    builtins.toJSON (if isBool pref || isInt pref || isString pref then
+    builtins.toJSON
+    (if lib.isBool pref || lib.isInt pref || lib.isString pref then
       pref
     else
       builtins.toJSON pref);
@@ -69,7 +73,7 @@ let
 
       ${prePrefs}
 
-      ${concatStrings (mapAttrsToList (name: value: ''
+      ${lib.concatStrings (mapAttrsToList (name: value: ''
         user_pref("${name}", ${userPrefValue value});
       '') prefs')}
 
@@ -88,8 +92,8 @@ let
     in ''
       ${builtins.toJSON {
         version = 5;
-        lastUserContextId =
-          foldlAttrs (acc: _: value: if value.id > acc then value.id else acc) 0
+        lastUserContextId = lib.foldlAttrs
+          (acc: _: value: if value.id > acc then value.id else acc) 0
           containers;
         identities = mapAttrsToList containerToIdentity containers ++ [
           {
@@ -119,8 +123,8 @@ let
       # the result only if more than one entity has it. The argument
       # entities is a list of AttrSet of one id/name pair.
       findDuplicateIds = entities:
-        filterAttrs (_entityId: entityNames: length entityNames != 1)
-        (zipAttrs entities);
+        lib.filterAttrs (_entityId: entityNames: length entityNames != 1)
+        (lib.zipAttrs entities);
 
       duplicates = findDuplicateIds (mapAttrsToList
         (entityName: entity: { "${toString entity.id}" = entityName; })
@@ -261,7 +265,7 @@ in {
       description = "Resulting ${appName} package.";
     };
 
-    policies = optionalAttrs (wrappedPackageName != null) (mkOption {
+    policies = lib.optionalAttrs (wrappedPackageName != null) (mkOption {
       inherit visible;
       type = types.attrsOf jsonFormat.type;
       default = { };
@@ -528,7 +532,7 @@ in {
           };
           extensions = mkOption {
             type = types.coercedTo (types.listOf types.package) (packages: {
-              packages = mkIf (builtins.length packages > 0) (warn ''
+              packages = mkIf (builtins.length packages > 0) (lib.warn ''
                 In order to support declarative extension configuration,
                 extension installation has been moved from
                 ${moduleName}.profiles.<profile>.extensions
@@ -694,11 +698,11 @@ in {
 
   config = mkIf cfg.enable ({
     assertions = [
-      (hm.assertions.assertPlatform moduleName pkgs supportedPlatforms)
+      (lib.hm.assertions.assertPlatform moduleName pkgs supportedPlatforms)
 
       (let
-        defaults =
-          catAttrs "name" (filter (a: a.isDefault) (attrValues cfg.profiles));
+        defaults = lib.catAttrs "name"
+          (lib.filter (a: a.isDefault) (attrValues cfg.profiles));
       in {
         assertion = cfg.profiles == { } || length defaults == 1;
         message = "Must have exactly one default ${appName} profile but found "
@@ -708,11 +712,11 @@ in {
 
       (let
         getContainers = profiles:
-          flatten
+          lib.flatten
           (mapAttrsToList (_: value: (attrValues value.containers)) profiles);
 
         findInvalidContainerIds = profiles:
-          filter (container: container.id >= 4294967294)
+          lib.filter (container: container.id >= 4294967294)
           (getContainers profiles);
       in {
         assertion = cfg.profiles == { }
@@ -729,7 +733,8 @@ in {
       }
 
       (mkNoDuplicateAssertion cfg.profiles "profile")
-    ] ++ (concatMap (profile: profile.assertions) (attrValues cfg.profiles));
+    ] ++ (lib.concatMap (profile: profile.assertions)
+      (attrValues cfg.profiles));
 
     warnings = optional (cfg.enableGnomeExtensions or false) ''
       Using '${moduleName}.enableGnomeExtensions' has been deprecated and
@@ -750,7 +755,7 @@ in {
     home.file = mkMerge ([{
       "${cfg.configPath}/profiles.ini" =
         mkIf (cfg.profiles != { }) { text = profilesIni; };
-    }] ++ flip mapAttrsToList cfg.profiles (_: profile:
+    }] ++ lib.flip mapAttrsToList cfg.profiles (_: profile:
       # Merge the regular profile settings with extension settings
       mkMerge ([{
         "${profilesPath}/${profile.path}/.keep".text = "";
@@ -808,16 +813,16 @@ in {
             "${profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" =
               {
                 force = settingConfig.force || profile.extensions.force;
-                text = generators.toJSON { } settingConfig.settings;
+                text = lib.generators.toJSON { } settingConfig.settings;
               };
           }) profile.extensions.settings)))));
   } // setAttrByPath modulePath {
     finalPackage = wrapPackage cfg.package;
 
     policies = {
-      ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (listToAttrs (map
-        (lang:
-          nameValuePair "langpack-${lang}@firefox.mozilla.org" {
+      ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (lib.listToAttrs
+        (map (lang:
+          lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
             installation_mode = "normal_installed";
             install_url =
               "https://releases.mozilla.org/pub/firefox/releases/${cfg.package.version}/linux-x86_64/xpi/${lang}.xpi";

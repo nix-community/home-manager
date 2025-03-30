@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStrings concatStringsSep mkIf mkOption mkEnableOption optional
+    optionalString types;
 
   cfg = config.programs.kakoune;
 
@@ -559,7 +559,7 @@ let
       ]) "try %{declare-user-mode ${mode}}";
 
     userModeStrings = map userModeString
-      (lists.unique (map (km: km.mode) cfg.config.keyMappings));
+      (lib.lists.unique (map (km: km.mode) cfg.config.keyMappings));
 
     keyMappingString = km:
       concatStringsSep " " [
@@ -588,7 +588,7 @@ let
         ++ optional (indentWidth != null)
         "set-option global indentwidth ${toString indentWidth}"
         ++ optional (!incrementalSearch) "set-option global incsearch false"
-        ++ optional (alignWithTabs) "set-option global aligntab true"
+        ++ optional alignWithTabs "set-option global aligntab true"
         ++ optional (autoInfo != null)
         "set-option global autoinfo ${concatStringsSep "|" autoInfo}"
         ++ optional (autoComplete != null)
@@ -622,7 +622,8 @@ in {
     programs.kakoune = {
       enable = mkEnableOption "the kakoune text editor";
 
-      package = mkPackageOption pkgs "kakoune-unwrapped" { nullable = true; };
+      package =
+        lib.mkPackageOption pkgs "kakoune-unwrapped" { nullable = true; };
 
       config = mkOption {
         type = types.nullOr configModule;
@@ -651,7 +652,7 @@ in {
       plugins = mkOption {
         type = with types; listOf package;
         default = [ ];
-        example = literalExpression "[ pkgs.kakounePlugins.kak-fzf ]";
+        example = lib.literalExpression "[ pkgs.kakounePlugins.kak-fzf ]";
         description = ''
           List of kakoune plugins to install. To get a list of
           supported plugins run:
@@ -664,7 +665,8 @@ in {
       colorSchemePackage = mkOption {
         type = with types; nullOr package;
         default = null;
-        example = literalExpression "pkgs.kakounePlugins.kakoune-catppuccin";
+        example =
+          lib.literalExpression "pkgs.kakounePlugins.kakoune-catppuccin";
         description = ''
           A kakoune color schemes to add to your colors folder. This works
           because kakoune recursively checks
@@ -676,7 +678,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    warnings = optional (cfg.package == null && cfg.plugins != [ ]) ''
+    warnings = lib.optional (cfg.package == null && cfg.plugins != [ ]) ''
       You have configured `plugins` for `kakoune` but have not set `package`.
 
       The listed plugins will not be installed.
@@ -684,7 +686,7 @@ in {
 
     home.packages = lib.mkIf (cfg.package != null) [ kakouneWithPlugins ];
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "kak"; };
-    xdg.configFile = mkMerge [
+    xdg.configFile = lib.mkMerge [
       { "kak/kakrc".source = configFile; }
       (mkIf (cfg.colorSchemePackage != null) {
         "kak/colors/${cfg.colorSchemePackage.name}".source =

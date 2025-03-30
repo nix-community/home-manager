@@ -1,7 +1,4 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let cfg = config.programs.ripgrep;
 in {
   meta.maintainers =
@@ -9,12 +6,12 @@ in {
 
   options = {
     programs.ripgrep = {
-      enable = mkEnableOption "Ripgrep";
+      enable = lib.mkEnableOption "Ripgrep";
 
-      package = mkPackageOption pkgs "ripgrep" { nullable = true; };
+      package = lib.mkPackageOption pkgs "ripgrep" { nullable = true; };
 
-      arguments = mkOption {
-        type = with types; listOf str;
+      arguments = lib.mkOption {
+        type = with lib.types; listOf str;
         default = [ ];
         example = [ "--max-columns-preview" "--colors=line:style:bold" ];
         description = ''
@@ -28,11 +25,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home = let configPath = "${config.xdg.configHome}/ripgrep/ripgreprc";
-    in mkMerge [
+    in lib.mkMerge [
       { packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
-      (mkIf (cfg.arguments != [ ]) {
+      (lib.mkIf (cfg.arguments != [ ]) {
         file."${configPath}".text = lib.concatLines cfg.arguments;
 
         sessionVariables."RIPGREP_CONFIG_PATH" = configPath;

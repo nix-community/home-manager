@@ -1,12 +1,11 @@
 { config, pkgs, lib, ... }:
+let
+  inherit (lib) literalExpression mkOption types;
 
-with lib;
-
-let cfg = config.programs.ranger;
-
+  cfg = config.programs.ranger;
 in {
   options.programs.ranger = {
-    enable = mkEnableOption "ranger file manager";
+    enable = lib.mkEnableOption "ranger file manager";
 
     package = mkOption {
       type = types.package;
@@ -139,7 +138,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       programs.ranger.finalPackage = cfg.package.overrideAttrs (oldAttrs: {
         propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or [ ])
@@ -149,9 +148,9 @@ in {
       home.packages = [ cfg.finalPackage ];
 
       xdg.configFile."ranger/rc.conf".text = let
-        mkString = generators.mkValueStringDefault { };
+        mkString = lib.generators.mkValueStringDefault { };
         mkConfig = cmd:
-          generators.toKeyValue {
+          lib.generators.toKeyValue {
             mkKeyValue = k: v: "${cmd} ${k} ${mkString v}";
           };
       in ''
@@ -162,21 +161,21 @@ in {
       '';
     }
 
-    (mkIf (cfg.plugins != [ ]) {
+    (lib.mkIf (cfg.plugins != [ ]) {
       xdg.configFile = let
         toAttrs = i: {
           name = "ranger/plugins/${i.name}";
           value.source = i.src;
         };
-      in listToAttrs (map toAttrs cfg.plugins);
+      in lib.listToAttrs (map toAttrs cfg.plugins);
     })
 
-    (mkIf (cfg.rifle != [ ]) {
+    (lib.mkIf (cfg.rifle != [ ]) {
       xdg.configFile."ranger/rifle.conf".text =
         let lines = map (i: "${i.condition} = ${i.command}") cfg.rifle;
-        in concatLines lines;
+        in lib.concatLines lines;
     })
   ]);
 
-  meta.maintainers = [ hm.maintainers.fpob ];
+  meta.maintainers = [ lib.hm.maintainers.fpob ];
 }

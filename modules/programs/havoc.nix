@@ -1,21 +1,16 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.havoc;
   iniFormat = pkgs.formats.ini { };
-
 in {
   meta.maintainers = with lib.maintainers; [ AndersonTorres ];
 
   options.programs.havoc = {
-    enable = mkEnableOption "Havoc terminal";
+    enable = lib.mkEnableOption "Havoc terminal";
 
-    package = mkPackageOption pkgs "havoc" { nullable = true; };
+    package = lib.mkPackageOption pkgs "havoc" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = iniFormat.type;
       default = { };
       description = ''
@@ -23,7 +18,7 @@ in {
         {file}`$XDG_CONFIG_HOME/havoc.cfg`. See <https://raw.githubusercontent.com/ii8/havoc/master/havoc.cfg>
         for a list of available options.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           child.program = "bash";
           window.opacity = 240;
@@ -50,13 +45,15 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "programs.havoc" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.havoc" pkgs
+        lib.platforms.linux)
+    ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."havoc.cfg" = mkIf (cfg.settings != { }) {
+    xdg.configFile."havoc.cfg" = lib.mkIf (cfg.settings != { }) {
       source = iniFormat.generate "havoc.cfg" cfg.settings;
     };
   };

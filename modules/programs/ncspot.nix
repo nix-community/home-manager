@@ -1,30 +1,25 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.ncspot;
 
   tomlFormat = pkgs.formats.toml { };
-
 in {
   meta.maintainers = [ ];
 
   options.programs.ncspot = {
-    enable = mkEnableOption "ncspot";
+    enable = lib.mkEnableOption "ncspot";
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.ncspot;
-      defaultText = literalExpression "pkgs.ncspot";
+      defaultText = lib.literalExpression "pkgs.ncspot";
       description = "The package to use for ncspot.";
     };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = tomlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           shuffle = true;
           gapless = true;
@@ -40,10 +35,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."ncspot/config.toml" = mkIf (cfg.settings != { }) {
+    xdg.configFile."ncspot/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "ncspot-config" cfg.settings;
     };
   };

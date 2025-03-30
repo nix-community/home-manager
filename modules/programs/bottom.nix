@@ -1,7 +1,4 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
 
   cfg = config.programs.bottom;
@@ -11,18 +8,18 @@ let
 in {
   options = {
     programs.bottom = {
-      enable = mkEnableOption ''
+      enable = lib.mkEnableOption ''
         bottom, a cross-platform graphical process/system monitor with a
         customizable interface'';
 
-      package = mkOption {
-        type = types.package;
+      package = lib.mkOption {
+        type = lib.types.package;
         default = pkgs.bottom;
-        defaultText = literalExpression "pkgs.bottom";
+        defaultText = lib.literalExpression "pkgs.bottom";
         description = "Package providing {command}`bottom`.";
       };
 
-      settings = mkOption {
+      settings = lib.mkOption {
         type = tomlFormat.type;
         default = { };
         description = ''
@@ -32,7 +29,7 @@ in {
           See <https://github.com/ClementTsang/bottom/blob/master/sample_configs/default_config.toml>
           for the default configuration.
         '';
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             flags = {
               avg_cpu = true;
@@ -48,10 +45,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."bottom/bottom.toml" = mkIf (cfg.settings != { }) {
+    xdg.configFile."bottom/bottom.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "bottom.toml" cfg.settings;
     };
   };

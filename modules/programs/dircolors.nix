@@ -1,13 +1,11 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkDefault mkIf mkOption types;
   cfg = config.programs.dircolors;
 
   formatLine = n: v: "${n} ${toString v}";
 in {
-  meta.maintainers = [ hm.maintainers.justinlovinger ];
+  meta.maintainers = [ lib.hm.maintainers.justinlovinger ];
 
   options.programs.dircolors = {
     enable = mkOption {
@@ -36,7 +34,7 @@ in {
         See {command}`dircolors --print-database`
         for options.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           OTHER_WRITABLE = "30;46";
           ".sh" = "01;32";
@@ -60,10 +58,10 @@ in {
     else
       "~/.dir_colors";
 
-    dircolorsConfig = concatStringsSep "\n" ([ ]
-      ++ mapAttrsToList formatLine cfg.settings ++ [ "" ]
-      ++ optional (cfg.extraConfig != "") cfg.extraConfig);
-  in mkIf cfg.enable (mkMerge [
+    dircolorsConfig = lib.concatStringsSep "\n" ([ ]
+      ++ lib.mapAttrsToList formatLine cfg.settings ++ [ "" ]
+      ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig);
+  in mkIf cfg.enable (lib.mkMerge [
     {
       # Add default settings from `dircolors --print-database`.
       programs.dircolors.settings = {
@@ -207,9 +205,10 @@ in {
       '';
 
       # Set `LS_COLORS` before Oh My Zsh and `initExtra`.
-      programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 550 ''
-        eval $(${pkgs.coreutils}/bin/dircolors -b ${dircolorsPath})
-      '');
+      programs.zsh.initContent = mkIf cfg.enableZshIntegration
+        (lib.mkOrder 550 ''
+          eval $(${pkgs.coreutils}/bin/dircolors -b ${dircolorsPath})
+        '');
     }
     (mkIf (!config.home.preferXdgDirectories) {
       home.file.".dir_colors".text = dircolorsConfig;

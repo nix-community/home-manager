@@ -1,22 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.todoman;
-
-  format = pkgs.formats.keyValue { };
-
+let cfg = config.programs.todoman;
 in {
 
-  meta.maintainers = [ hm.maintainers.mikilio ];
+  meta.maintainers = [ lib.hm.maintainers.mikilio ];
 
   options.programs.todoman = {
     enable = lib.mkEnableOption "todoman";
 
-    glob = mkOption {
-      type = types.str;
+    glob = lib.mkOption {
+      type = lib.types.str;
       default = "*";
       description = ''
         The glob expansion which matches all directories relevant.
@@ -24,8 +16,8 @@ in {
       example = "*/*";
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       description = ''
         Text for configuration of todoman.
@@ -43,7 +35,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [{
       assertion = config.accounts.calendar ? basePath;
       message = ''

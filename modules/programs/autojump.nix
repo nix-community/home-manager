@@ -1,17 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.autojump;
   package = pkgs.autojump;
 
+  inherit (lib) mkIf;
 in {
-  meta.maintainers = [ maintainers.evanjs ];
+  meta.maintainers = [ lib.maintainers.evanjs ];
 
   options.programs.autojump = {
-    enable = mkEnableOption "autojump";
+    enable = lib.mkEnableOption "autojump";
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };
@@ -26,7 +23,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkBefore ''
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (lib.mkBefore ''
       . ${package}/share/autojump/autojump.bash
     '');
 

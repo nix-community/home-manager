@@ -1,20 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.home-manager;
-
+let cfg = config.programs.home-manager;
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     programs.home-manager = {
-      enable = mkEnableOption "Home Manager";
+      enable = lib.mkEnableOption "Home Manager";
 
-      path = mkOption {
-        type = types.nullOr types.str;
+      path = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
         default = null;
         example = "$HOME/devel/home-manager";
         description = ''
@@ -27,7 +21,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && !config.submoduleSupport.enable) {
+  config = lib.mkIf (cfg.enable && !config.submoduleSupport.enable) {
     home.packages =
       [ (pkgs.callPackage ../../home-manager { inherit (cfg) path; }) ];
   };

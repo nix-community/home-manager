@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
+
   cfg = config.programs.kodi;
 
   stylesheetCommonHeader = ''
@@ -122,10 +121,10 @@ let
     in attrsetToXml attrs name stylesheet;
 
 in {
-  meta.maintainers = [ hm.maintainers.dwagenk ];
+  meta.maintainers = [ lib.hm.maintainers.dwagenk ];
 
   options.programs.kodi = {
-    enable = mkEnableOption "Kodi";
+    enable = lib.mkEnableOption "Kodi";
 
     package = mkOption {
       type = types.package;
@@ -222,7 +221,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       assertions = [
         (lib.hm.assertions.assertPlatform "programs.kodi" pkgs
@@ -244,9 +243,9 @@ in {
     })
 
     (mkIf (cfg.addonSettings != null) {
-      home.file = mapAttrs' (k: v:
-        attrsets.nameValuePair
-        ("${cfg.datadir}/userdata/addon_data/${k}/settings.xml") {
+      home.file = lib.mapAttrs' (k: v:
+        lib.attrsets.nameValuePair
+        "${cfg.datadir}/userdata/addon_data/${k}/settings.xml" {
           source = attrsetToAddonSettingsXml v "kodi-addon-${k}-settings.xml";
         }) cfg.addonSettings;
     })

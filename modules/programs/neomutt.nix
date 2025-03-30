@@ -1,17 +1,18 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    attrValues concatStringsSep concatMapStringsSep filter isString mkIf
+    mkOption optionalString types;
+
   cfg = config.programs.neomutt;
 
   neomuttAccounts =
     filter (a: a.neomutt.enable) (attrValues config.accounts.email.accounts);
 
-  accountCommandNeeded = any (a:
+  accountCommandNeeded = lib.any (a:
     a.neomutt.enable && (a.neomutt.mailboxType == "imap"
-      || (any (m: !isString m && m.type == "imap") a.neomutt.extraMailboxes)))
-    (attrValues config.accounts.email.accounts);
+      || (lib.any (m: !isString m && m.type == "imap")
+        a.neomutt.extraMailboxes))) (attrValues config.accounts.email.accounts);
 
   accountCommand = let
     imapAccounts = filter (a:
@@ -63,7 +64,7 @@ let
 
   sidebarModule = types.submodule {
     options = {
-      enable = mkEnableOption "sidebar support";
+      enable = lib.mkEnableOption "sidebar support";
 
       width = mkOption {
         type = types.int;
@@ -154,7 +155,7 @@ let
       virtualMailboxes)}";
 
   setOption = n: v: if v == null then "unset ${n}" else "set ${n}=${v}";
-  escape = replaceStrings [ "%" ] [ "%25" ];
+  escape = lib.replaceStrings [ "%" ] [ "%25" ];
 
   accountFilename = account: config.xdg.configHome + "/neomutt/" + account.name;
 
@@ -201,10 +202,9 @@ let
       };
 
   genAccountConfig = account:
-    with account;
     let
-      folderHook = mapAttrsToList setOption (genCommonFolderHooks account
-        // optionalAttrs cfg.changeFolderWhenSourcingAccount {
+      folderHook = lib.mapAttrsToList setOption (genCommonFolderHooks account
+        // lib.optionalAttrs cfg.changeFolderWhenSourcingAccount {
           folder = "'${accountRoot account}'";
         });
     in ''
@@ -237,10 +237,9 @@ let
         else
           ''named-mailboxes "${extra.name}" "${mailboxroot}/${extra.mailbox}"'')
         account.neomutt.extraMailboxes;
-    in with account;
-    [ "## register account ${name}" ]
-    ++ optional account.neomutt.showDefaultMailbox
-    ''${mailboxes} "${mailroot}/${folders.inbox}"'' ++ [
+    in [ "## register account ${account.name}" ]
+    ++ lib.optional account.neomutt.showDefaultMailbox
+    ''${mailboxes} "${mailroot}/${account.folders.inbox}"'' ++ [
       extraMailboxes
       ''
         ${hookName} ${mailroot}/ " \
@@ -249,13 +248,13 @@ let
     ];
 
   mraSection = account:
-    with account;
     if account.imap.host != null || account.maildir != null then
       genAccountConfig account
     else
       throw "Only maildir and IMAP is supported at the moment";
 
-  optionsStr = attrs: concatStringsSep "\n" (mapAttrsToList setOption attrs);
+  optionsStr = attrs:
+    concatStringsSep "\n" (lib.mapAttrsToList setOption attrs);
 
   sidebarSection = ''
     # Sidebar
@@ -269,7 +268,7 @@ let
     concatMapStringsSep "\n" (bind:
       ''
         ${bindType} ${
-          concatStringsSep "," (toList bind.map)
+          concatStringsSep "," (lib.toList bind.map)
         } ${bind.key} "${bind.action}"'');
 
   bindSection = (genBindMapper "bind") cfg.binds;
@@ -283,11 +282,11 @@ let
 
   notmuchSection = account:
     let virtualMailboxes = account.notmuch.neomutt.virtualMailboxes;
-    in with account; ''
+    in ''
       # notmuch section
       set nm_default_uri = "notmuch://${config.accounts.email.maildirBasePath}"
       ${optionalString
-      (notmuch.neomutt.enable && builtins.length virtualMailboxes > 0)
+      (account.notmuch.neomutt.enable && builtins.length virtualMailboxes > 0)
       (mkNotmuchVirtualboxes virtualMailboxes)}
     '';
 
@@ -341,12 +340,12 @@ let
 in {
   options = {
     programs.neomutt = {
-      enable = mkEnableOption "the NeoMutt mail client";
+      enable = lib.mkEnableOption "the NeoMutt mail client";
 
       package = mkOption {
         type = types.package;
         default = pkgs.neomutt;
-        defaultText = literalExpression "pkgs.neomutt";
+        defaultText = lib.literalExpression "pkgs.neomutt";
         description = "The neomutt package to use.";
       };
 
@@ -369,7 +368,7 @@ in {
       };
 
       sort = mkOption {
-        # allow users to choose any option from sortOptions, or any option prefixed with "reverse-"
+        # Allow users to choose any option from sortOptions, or any option prefixed with "reverse-"
         type = types.enum
           (builtins.concatMap (_pre: map (_opt: _pre + _opt) sortOptions) [
             ""
@@ -407,12 +406,12 @@ in {
       };
 
       changeFolderWhenSourcingAccount =
-        mkEnableOption "changing the folder when sourcing an account" // {
+        lib.mkEnableOption "changing the folder when sourcing an account" // {
           default = true;
         };
 
       sourcePrimaryAccount =
-        mkEnableOption "source the primary account by default" // {
+        lib.mkEnableOption "source the primary account by default" // {
           default = true;
         };
 
@@ -445,14 +444,14 @@ in {
       rcFile = account: {
         "${accountFilename account}".text = accountStr account;
       };
-    in foldl' (a: b: a // b) { } (map rcFile neomuttAccounts);
+    in lib.foldl' (a: b: a // b) { } (map rcFile neomuttAccounts);
 
     xdg.configFile."neomutt/neomuttrc" = mkIf (neomuttAccounts != [ ]) {
       text = let
         # Find the primary account, if it has neomutt enabled;
         # otherwise use the first neomutt account as primary.
         primary =
-          head (filter (a: a.primary) neomuttAccounts ++ neomuttAccounts);
+          lib.head (filter (a: a.primary) neomuttAccounts ++ neomuttAccounts);
       in concatStringsSep "\n" ([
         "# Generated by Home Manager."
         ''set header_cache = "${config.xdg.cacheHome}/neomutt/headers/"''
@@ -475,7 +474,7 @@ in {
           # Macros''
         macroSection
         "# Register accounts"
-        (optionalString (accountCommandNeeded) ''
+        (optionalString accountCommandNeeded ''
           set account_command = '${accountCommand}/bin/account-command.sh'
         '')
       ] ++ (lib.flatten (map registerAccount neomuttAccounts)) ++ [
@@ -490,15 +489,14 @@ in {
     };
 
     assertions = [{
-      assertion =
-        ((filter (b: (length (toList b.map)) == 0) (cfg.binds ++ cfg.macros))
-          == [ ]);
+      assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0)
+        (cfg.binds ++ cfg.macros)) == [ ]);
       message =
         "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
     }];
 
     warnings =
-      let hasOldBinds = binds: (filter (b: !(isList b.map)) binds) != [ ];
+      let hasOldBinds = binds: (filter (b: !(lib.isList b.map)) binds) != [ ];
       in mkIf (hasOldBinds (cfg.binds ++ cfg.macros)) [
         "Specifying 'programs.neomutt.(binds|macros).map' as a string is deprecated, use a list of strings instead. See https://github.com/nix-community/home-manager/pull/1885."
       ];

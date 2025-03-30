@@ -1,8 +1,7 @@
 { config, pkgs, lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.gradle;
   defaultHomeDirectory = ".gradle";
   settingsFormat = pkgs.formats.javaProperties { };
@@ -28,16 +27,17 @@ let
       };
     };
 
-    config.source = mkIf (config.text != null) (mkDefault (pkgs.writeTextFile {
-      inherit (config) text;
-      name = hm.strings.storeFileName name;
-    }));
+    config.source = mkIf (config.text != null) (lib.mkDefault
+      (pkgs.writeTextFile {
+        inherit (config) text;
+        name = lib.hm.strings.storeFileName name;
+      }));
   });
 in {
-  meta.maintainers = [ hm.maintainers.britter ];
+  meta.maintainers = [ lib.hm.maintainers.britter ];
 
   options.programs.gradle = {
-    enable = mkEnableOption "Gradle Build Tool";
+    enable = lib.mkEnableOption "Gradle Build Tool";
 
     home = mkOption {
       type = types.str;
@@ -50,7 +50,7 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "gradle" {
+    package = lib.mkPackageOption pkgs "gradle" {
       nullable = true;
       example = "pkgs.gradle_7";
     };
@@ -58,7 +58,7 @@ in {
     settings = mkOption {
       type = types.submodule { freeformType = settingsFormat.type; };
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           "org.gradle.caching" = true;
           "org.gradle.parallel" = true;
@@ -75,7 +75,7 @@ in {
     initScripts = mkOption {
       type = with types; attrsOf initScript;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           "maven-local.gradle".text = '''
               allProject {
@@ -100,13 +100,12 @@ in {
   in mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file = mkMerge ([{
+    home.file = lib.mkMerge ([{
       "${cfg.home}/gradle.properties" = mkIf (cfg.settings != { }) {
         source = settingsFormat.generate "gradle.properties" cfg.settings;
       };
-    }]
-      ++ mapAttrsToList (k: v: { "${cfg.home}/init.d/${k}".source = v.source; })
-      cfg.initScripts);
+    }] ++ lib.mapAttrsToList
+      (k: v: { "${cfg.home}/init.d/${k}".source = v.source; }) cfg.initScripts);
 
     home.sessionVariables = mkIf (cfg.home != defaultHomeDirectory) {
       GRADLE_USER_HOME = gradleHome;

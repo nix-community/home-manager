@@ -1,21 +1,19 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
 
   cfg = config.programs.beets;
 
   yamlFormat = pkgs.formats.yaml { };
 
 in {
-  meta.maintainers = with maintainers; [ rycee Scrumplex ];
+  meta.maintainers = with lib.maintainers; [ rycee Scrumplex ];
 
   options = {
     programs.beets = {
       enable = mkOption {
         type = types.bool;
-        default = if versionAtLeast config.home.stateVersion "19.03" then
+        default = if lib.versionAtLeast config.home.stateVersion "19.03" then
           false
         else
           cfg.settings != { };
@@ -50,9 +48,9 @@ in {
       };
 
       mpdIntegration = {
-        enableStats = mkEnableOption "mpdstats plugin and service";
+        enableStats = lib.mkEnableOption "mpdstats plugin and service";
 
-        enableUpdate = mkEnableOption "mpdupdate plugin";
+        enableUpdate = lib.mkEnableOption "mpdupdate plugin";
 
         host = mkOption {
           type = types.str;
@@ -72,7 +70,7 @@ in {
     };
   };
 
-  config = mkMerge [
+  config = lib.mkMerge [
     (mkIf cfg.enable {
       home.packages = [ cfg.package ];
 
@@ -99,8 +97,8 @@ in {
       systemd.user.services."beets-mpdstats" = {
         Unit = {
           Description = "Beets MPDStats daemon";
-          After = optional config.services.mpd.enable "mpd.service";
-          Requires = optional config.services.mpd.enable "mpd.service";
+          After = lib.optional config.services.mpd.enable "mpd.service";
+          Requires = lib.optional config.services.mpd.enable "mpd.service";
         };
         Service.ExecStart = "${cfg.package}/bin/beet mpdstats";
         Install.WantedBy = [ "default.target" ];

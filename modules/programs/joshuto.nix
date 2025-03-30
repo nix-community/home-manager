@@ -1,20 +1,19 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.joshuto;
   tomlFormat = pkgs.formats.toml { };
 in {
-  meta.maintainers = [ hm.maintainers.rasmus-kirk ];
+  meta.maintainers = [ lib.hm.maintainers.rasmus-kirk ];
 
   options.programs.joshuto = {
-    enable = mkEnableOption "joshuto file manager";
+    enable = lib.mkEnableOption "joshuto file manager";
 
     package = mkOption {
       type = types.package;
       default = pkgs.joshuto;
-      defaultText = literalExpression "pkgs.joshuto";
+      defaultText = lib.literalExpression "pkgs.joshuto";
       description = "The package to use for joshuto.";
     };
 

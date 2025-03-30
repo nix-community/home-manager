@@ -1,34 +1,30 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.translate-shell;
 
   mkKeyValue = key: value:
     let
       formatValue = v:
-        if isBool v then
+        if lib.isBool v then
           (if v then "true" else "false")
-        else if isString v then
+        else if lib.isString v then
           ''"${v}"''
-        else if isList v then
-          "[ ${concatStringsSep " " (map formatValue v)} ]"
+        else if lib.isList v then
+          "[ ${lib.concatStringsSep " " (map formatValue v)} ]"
         else
           toString v;
     in ":${key} ${formatValue value}";
 
-  toKeyValue = generators.toKeyValue { inherit mkKeyValue; };
+  toKeyValue = lib.generators.toKeyValue { inherit mkKeyValue; };
 
 in {
   meta.maintainers = [ ];
 
   options.programs.translate-shell = {
-    enable = mkEnableOption "translate-shell";
+    enable = lib.mkEnableOption "translate-shell";
 
-    settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool str (listOf str) ]);
+    settings = lib.mkOption {
+      type = with lib.types; attrsOf (oneOf [ bool str (listOf str) ]);
       default = { };
       example = {
         verbose = true;
@@ -43,10 +39,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.translate-shell ];
 
     xdg.configFile."translate-shell/init.trans" =
-      mkIf (cfg.settings != { }) { text = "{${toKeyValue cfg.settings}}"; };
+      lib.mkIf (cfg.settings != { }) { text = "{${toKeyValue cfg.settings}}"; };
   };
 }

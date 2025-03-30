@@ -1,14 +1,11 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.urxvt;
-
 in {
   options.programs.urxvt = {
-    enable = mkEnableOption "rxvt-unicode terminal emulator";
+    enable = lib.mkEnableOption "rxvt-unicode terminal emulator";
 
     package = lib.mkPackageOption pkgs "rxvt-unicode" { };
 
@@ -23,7 +20,7 @@ in {
       type = types.attrsOf types.str;
       default = { };
       description = "Mapping of keybindings to actions";
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           "Shift-Control-C" = "eval:selection_to_clipboard";
           "Shift-Control-V" = "eval:paste_clipboard";
@@ -126,7 +123,7 @@ in {
 
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xresources.properties = {
@@ -142,10 +139,11 @@ in {
       "URxvt.transparent" = cfg.transparent;
       "URxvt.shading" = cfg.shading;
       "URxvt.iso14755" = cfg.iso14755;
-    } // flip mapAttrs' cfg.keybindings
-      (kb: action: nameValuePair "URxvt.keysym.${kb}" action)
-      // optionalAttrs (cfg.fonts != [ ]) {
-        "URxvt.font" = concatStringsSep "," cfg.fonts;
-      } // flip mapAttrs' cfg.extraConfig (k: v: nameValuePair "URxvt.${k}" v);
+    } // lib.flip lib.mapAttrs' cfg.keybindings
+      (kb: action: lib.nameValuePair "URxvt.keysym.${kb}" action)
+      // lib.optionalAttrs (cfg.fonts != [ ]) {
+        "URxvt.font" = lib.concatStringsSep "," cfg.fonts;
+      } // lib.flip lib.mapAttrs' cfg.extraConfig
+      (k: v: lib.nameValuePair "URxvt.${k}" v);
   };
 }

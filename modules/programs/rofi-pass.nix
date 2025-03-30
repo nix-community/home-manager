@@ -1,23 +1,20 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) types;
 
   cfg = config.programs.rofi.pass;
-
 in {
-  meta.maintainers = with maintainers; [ seylerius robwalt ];
+  meta.maintainers = with lib.maintainers; [ seylerius robwalt ];
 
   options.programs.rofi.pass = {
-    enable = mkEnableOption "rofi integration with password-store";
+    enable = lib.mkEnableOption "rofi integration with password-store";
 
-    package = mkPackageOption pkgs "rofi-pass" {
+    package = lib.mkPackageOption pkgs "rofi-pass" {
       nullable = true;
       example = "pkgs.rofi-pass-wayland";
     };
 
-    stores = mkOption {
+    stores = lib.mkOption {
       type = types.listOf types.str;
       default = [ ];
       description = ''
@@ -25,7 +22,7 @@ in {
       '';
     };
 
-    extraConfig = mkOption {
+    extraConfig = lib.mkOption {
       type = types.lines;
       default = "";
       example = ''
@@ -41,11 +38,12 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."rofi-pass/config".text = optionalString (cfg.stores != [ ])
-      ("root=" + (concatStringsSep ":" cfg.stores) + "\n") + cfg.extraConfig
-      + optionalString (cfg.extraConfig != "") "\n";
+    xdg.configFile."rofi-pass/config".text =
+      lib.optionalString (cfg.stores != [ ])
+      ("root=" + (lib.concatStringsSep ":" cfg.stores) + "\n") + cfg.extraConfig
+      + lib.optionalString (cfg.extraConfig != "") "\n";
   };
 }

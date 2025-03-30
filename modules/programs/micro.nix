@@ -1,26 +1,21 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.micro;
 
   jsonFormat = pkgs.formats.json { };
-
 in {
-  meta.maintainers = [ hm.maintainers.mforster ];
+  meta.maintainers = [ lib.hm.maintainers.mforster ];
 
   options = {
     programs.micro = {
-      enable = mkEnableOption "micro, a terminal-based text editor";
+      enable = lib.mkEnableOption "micro, a terminal-based text editor";
 
-      package = mkPackageOption pkgs "micro" { nullable = true; };
+      package = lib.mkPackageOption pkgs "micro" { nullable = true; };
 
-      settings = mkOption {
+      settings = lib.mkOption {
         type = jsonFormat.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             autosu = false;
             cursorline = false;
@@ -36,7 +31,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."micro/settings.json".source =

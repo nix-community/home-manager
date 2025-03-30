@@ -1,14 +1,11 @@
 { lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   collection = types.either types.str (types.listOf types.str);
-
 in {
   options.vdirsyncer = {
-    enable = mkEnableOption "synchronization using vdirsyncer";
+    enable = lib.mkEnableOption "synchronization using vdirsyncer";
 
     urlCommand = mkOption {
       type = types.nullOr (types.listOf types.str);

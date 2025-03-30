@@ -1,21 +1,19 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.sapling;
 
   iniFormat = pkgs.formats.ini { };
 
 in {
-  meta.maintainers = [ maintainers.pbar ];
+  meta.maintainers = [ lib.maintainers.pbar ];
 
   options = {
     programs.sapling = {
-      enable = mkEnableOption "Sapling";
+      enable = lib.mkEnableOption "Sapling";
 
-      package = mkPackageOption pkgs "sapling" { nullable = true; };
+      package = lib.mkPackageOption pkgs "sapling" { nullable = true; };
 
       userName = mkOption {
         type = types.str;
@@ -46,7 +44,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 

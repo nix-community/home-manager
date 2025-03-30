@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
+
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
 
@@ -12,16 +11,16 @@ let
       auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
     });
 in {
-  meta.maintainers = [ hm.maintainers.libewa ];
+  meta.maintainers = [ lib.hm.maintainers.libewa ];
 
   options = {
     # TODO: add vscode option parity (installing extensions, configuring
     # keybinds with nix etc.)
     programs.zed-editor = {
-      enable = mkEnableOption
+      enable = lib.mkEnableOption
         "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
 
-      package = mkPackageOption pkgs "zed-editor" { };
+      package = lib.mkPackageOption pkgs "zed-editor" { };
 
       extraPackages = mkOption {
         type = with types; listOf package;

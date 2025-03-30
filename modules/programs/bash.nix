@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption optionalAttrs types;
 
   cfg = config.programs.bash;
 
@@ -15,10 +13,10 @@ let
     };
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (mkRenamedOptionModule [ "programs" "bash" "enableAutojump" ] [
+    (lib.mkRenamedOptionModule [ "programs" "bash" "enableAutojump" ] [
       "programs"
       "autojump"
       "enable"
@@ -27,9 +25,9 @@ in {
 
   options = {
     programs.bash = {
-      enable = mkEnableOption "GNU Bourne-Again SHell";
+      enable = lib.mkEnableOption "GNU Bourne-Again SHell";
 
-      package = mkPackageOption pkgs "bash" {
+      package = lib.mkPackageOption pkgs "bash" {
         nullable = true;
         default = "bashInteractive";
       };
@@ -122,7 +120,7 @@ in {
       shellAliases = mkOption {
         default = { };
         type = types.attrsOf types.str;
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             ll = "ls -l";
             ".." = "cd ..";
@@ -173,18 +171,18 @@ in {
   };
 
   config = let
-    aliasesStr = concatStringsSep "\n"
-      (mapAttrsToList (k: v: "alias ${k}=${escapeShellArg v}")
+    aliasesStr = lib.concatStringsSep "\n"
+      (lib.mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}")
         cfg.shellAliases);
 
-    shoptsStr = let switch = v: if hasPrefix "-" v then "-u" else "-s";
-    in concatStringsSep "\n"
-    (map (v: "shopt ${switch v} ${removePrefix "-" v}") cfg.shellOptions);
+    shoptsStr = let switch = v: if lib.hasPrefix "-" v then "-u" else "-s";
+    in lib.concatStringsSep "\n"
+    (map (v: "shopt ${switch v} ${lib.removePrefix "-" v}") cfg.shellOptions);
 
     sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
 
-    historyControlStr = (concatStringsSep "\n"
-      (mapAttrsToList (n: v: "${n}=${v}")
+    historyControlStr = (lib.concatStringsSep "\n"
+      (lib.mapAttrsToList (n: v: "${n}=${v}")
         (optionalAttrs (cfg.historyFileSize != null) {
           HISTFILESIZE = toString cfg.historyFileSize;
         } // optionalAttrs (cfg.historySize != null) {
@@ -192,10 +190,11 @@ in {
         } // optionalAttrs (cfg.historyFile != null) {
           HISTFILE = ''"${cfg.historyFile}"'';
         } // optionalAttrs (cfg.historyControl != [ ]) {
-          HISTCONTROL = concatStringsSep ":" cfg.historyControl;
+          HISTCONTROL = lib.concatStringsSep ":" cfg.historyControl;
         } // optionalAttrs (cfg.historyIgnore != [ ]) {
-          HISTIGNORE = escapeShellArg (concatStringsSep ":" cfg.historyIgnore);
-        }) ++ optional (cfg.historyFile != null)
+          HISTIGNORE =
+            lib.escapeShellArg (lib.concatStringsSep ":" cfg.historyIgnore);
+        }) ++ lib.optional (cfg.historyFile != null)
         ''mkdir -p "$(dirname "$HISTFILE")"''));
   in mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -211,7 +210,7 @@ in {
     # If completion is enabled then make sure it is sourced very early. This
     # is to avoid problems if any other initialization code attempts to set up
     # completion.
-    programs.bash.initExtra = mkIf cfg.enableCompletion (mkOrder 100 ''
+    programs.bash.initExtra = mkIf cfg.enableCompletion (lib.mkOrder 100 ''
       if [[ ! -v BASH_COMPLETION_VERSINFO ]]; then
         . "${pkgs.bash-completion}/etc/profile.d/bash_completion.sh"
       fi

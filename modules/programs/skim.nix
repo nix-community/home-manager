@@ -1,19 +1,17 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.skim;
 
 in {
   options.programs.skim = {
-    enable = mkEnableOption "skim - a command-line fuzzy finder";
+    enable = lib.mkEnableOption "skim - a command-line fuzzy finder";
 
     package = mkOption {
       type = types.package;
       default = pkgs.skim;
-      defaultText = literalExpression "pkgs.skim";
+      defaultText = lib.literalExpression "pkgs.skim";
       description = "Package providing the {command}`skim` tool.";
     };
 
@@ -96,8 +94,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = mapAttrs (n: v: toString v)
-      (filterAttrs (n: v: v != [ ] && v != null) {
+    home.sessionVariables = lib.mapAttrs (n: v: toString v)
+      (lib.filterAttrs (n: v: v != [ ] && v != null) {
         SKIM_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         SKIM_ALT_C_OPTS = cfg.changeDirWidgetOptions;
         SKIM_CTRL_R_OPTS = cfg.historyWidgetOptions;

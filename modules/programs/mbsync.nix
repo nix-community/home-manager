@@ -1,19 +1,19 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    any concatStringsSep concatMapStringsSep literalExpression mapAttrsToList
+    mkIf mkOption optionalAttrs types;
 
   cfg = config.programs.mbsync;
 
   # Accounts for which mbsync is enabled.
-  mbsyncAccounts =
-    filter (a: a.mbsync.enable) (attrValues config.accounts.email.accounts);
+  mbsyncAccounts = lib.filter (a: a.mbsync.enable)
+    (lib.attrValues config.accounts.email.accounts);
 
   # Given a SINGLE group's channels attribute set, return true if ANY of the channel's
   # patterns use the invalidOption attribute set value name.
   channelInvalidOption = channels: invalidOption:
-    any (c: c) (mapAttrsToList (c: hasAttr invalidOption) channels);
+    any (c: c) (mapAttrsToList (c: lib.hasAttr invalidOption) channels);
 
   # Given a SINGLE account's groups attribute set, return true if ANY of the account's group's channel's patterns use the invalidOption attribute set value name.
   groupInvalidOption = groups: invalidOption:
@@ -36,17 +36,9 @@ let
         "STARTTLS"
       else
         "IMAPS";
-    } // optionalAttrs (tls.enable && tls.certificatesFile != null) {
+    } // lib.optionalAttrs (tls.enable && tls.certificatesFile != null) {
       CertificateFile = toString tls.certificatesFile;
     };
-
-  imports = [
-    (mkRenamedOptionModule [ "programs" "mbsync" "masterSlaveMapping" ] [
-      "programs"
-      "mbsync"
-      "nearFarMapping"
-    ])
-  ];
 
   nearFarMapping = {
     none = "None";
@@ -57,18 +49,18 @@ let
 
   genSection = header: entries:
     let
-      escapeValue = escape [ ''"'' ];
+      escapeValue = lib.escape [ ''"'' ];
       hasSpace = v: builtins.match ".* .*" v != null;
       genValue = n: v:
-        if isList v then
+        if lib.isList v then
           concatMapStringsSep " " (genValue n) v
-        else if isBool v then
+        else if lib.isBool v then
           lib.hm.booleans.yesNo v
-        else if isInt v then
+        else if lib.isInt v then
           toString v
-        else if isString v && hasSpace v then
+        else if lib.isString v && hasSpace v then
           ''"${escapeValue v}"''
-        else if isString v then
+        else if lib.isString v then
           v
         else
           let prettyV = lib.generators.toPretty { } v;
@@ -80,8 +72,8 @@ let
     '';
 
   genAccountConfig = account:
-    with account;
-    genSection "IMAPAccount ${name}" ({
+    let inherit (account) name maildir imap mbsync passwordCommand userName;
+    in genSection "IMAPAccount ${name}" ({
       Host = imap.host;
       User = userName;
       PassCmd = toString passwordCommand;
@@ -91,7 +83,7 @@ let
     + genSection "IMAPStore ${name}-remote"
     ({ Account = name; } // mbsync.extraConfig.remote) + "\n"
     + genSection "MaildirStore ${name}-local" ({
-      Inbox = "${maildir.absPath}/${folders.inbox}";
+      Inbox = "${maildir.absPath}/${account.folders.inbox}";
     } // optionalAttrs
       (mbsync.subFolders != "Maildir++" || mbsync.flatten != null) {
         Path = "${maildir.absPath}/";
@@ -101,8 +93,8 @@ let
       // mbsync.extraConfig.local) + "\n" + genChannels account;
 
   genChannels = account:
-    with account;
-    if mbsync.groups == { } then
+    let inherit (account) name mbsync;
+    in if mbsync.groups == { } then
       genAccountWideChannel account
     else
       genGroupChannelConfig name mbsync.groups + "\n"
@@ -112,8 +104,8 @@ let
   # single channel for the entire account that is then further refined within
   # the Group for synchronization.
   genAccountWideChannel = account:
-    with account;
-    genSection "Channel ${name}" ({
+    let inherit (account) name mbsync;
+    in genSection "Channel ${name}" ({
       Far = ":${name}-remote:";
       Near = ":${name}-local:";
       Patterns = mbsync.patterns;
@@ -132,12 +124,12 @@ let
       # itself, generate the string for the desired configuration.
       genChannelString = groupName: channel:
         let
-          escapeValue = escape [ ''\"'' ];
+          escapeValue = lib.escape [ ''\"'' ];
           hasSpace = v: builtins.match ".* .*" v != null;
           # Given a list of patterns, will return the string requested.
           # Only prints if the pattern is NOT the empty list, the default.
           genChannelPatterns = patterns:
-            if (length patterns) != 0 then
+            if (lib.length patterns) != 0 then
               "Pattern " + concatStringsSep " "
               (map (pat: if hasSpace pat then escapeValue pat else pat)
                 patterns) + "\n"
@@ -150,7 +142,7 @@ let
       # Given the group name, and a attr set of channels within that group,
       # Generate a list of strings for each channels' configuration.
       genChannelStrings = groupName: channels:
-        optionals (channels != { })
+        lib.optionals (channels != { })
         (mapAttrsToList (channelName: info: genChannelString groupName info)
           channels);
       # Given a group, return a string that configures all the channels within
@@ -158,8 +150,8 @@ let
       genGroupsChannels = group:
         concatStringsSep "\n" (genChannelStrings group.name group.channels);
       # Generate all channel configurations for all groups for this account.
-    in concatStringsSep "\n"
-    (remove "" (mapAttrsToList (name: group: genGroupsChannels group) groups));
+    in concatStringsSep "\n" (lib.remove ""
+      (mapAttrsToList (name: group: genGroupsChannels group) groups));
 
   # Given the attr set of groups, return a string which maps channels to groups
   genAccountGroups = groups:
@@ -171,14 +163,16 @@ let
       # Take in 1 group, if the group has channels specified, construct the
       # "Group <grpName>" header and each of the channels.
       genGroupChannelString = group:
-        flatten (optionals (group.channels != { }) ([ "Group ${group.name}" ]
-          ++ (genChannelStrings group.name group.channels)));
+        lib.flatten (lib.optionals (group.channels != { })
+          ([ "Group ${group.name}" ]
+            ++ (genChannelStrings group.name group.channels)));
       # Given set of groups, generates list of strings, where each string is one
       # of the groups and its constituent channels.
       genGroupsStrings = mapAttrsToList (name: info:
         concatStringsSep "\n" (genGroupChannelString groups.${name})) groups;
       # Join all non-empty groups.
-      combined = concatStringsSep "\n\n" (remove "" genGroupsStrings) + "\n";
+      combined = concatStringsSep "\n\n" (lib.remove "" genGroupsStrings)
+        + "\n";
     in combined;
 
   genGroupConfig = name: channels:
@@ -188,11 +182,12 @@ let
     ([ "Group ${name}" ] ++ mapAttrsToList genGroupChannel channels);
 
 in {
-  meta.maintainers = [ maintainers.KarlJoad ];
+  meta.maintainers = [ lib.maintainers.KarlJoad ];
 
   options = {
     programs.mbsync = {
-      enable = mkEnableOption "mbsync IMAP4 and Maildir mailbox synchronizer";
+      enable =
+        lib.mkEnableOption "mbsync IMAP4 and Maildir mailbox synchronizer";
 
       package = mkOption {
         type = types.package;
@@ -232,11 +227,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       assertions = let
         checkAccounts = pred: msg:
-          let badAccounts = filter pred mbsyncAccounts;
+          let badAccounts = lib.filter pred mbsyncAccounts;
           in {
             assertion = badAccounts == [ ];
             message = "mbsync: ${msg} for accounts: "
@@ -279,16 +274,16 @@ in {
       in ''
         # Generated by Home Manager.
 
-      ''
-      + concatStringsSep "\n" (optional (cfg.extraConfig != "") cfg.extraConfig)
+      '' + concatStringsSep "\n"
+      (lib.optional (cfg.extraConfig != "") cfg.extraConfig)
       + concatStringsSep "\n\n" accountsConfig
       + concatStringsSep "\n" groupsConfig;
 
       home.activation = mkIf (mbsyncAccounts != [ ]) {
         createMaildir =
-          hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+          lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
             run mkdir -m700 -p $VERBOSE_ARG ${
-              concatMapStringsSep " " (a: escapeShellArg a.maildir.absPath)
+              concatMapStringsSep " " (a: lib.escapeShellArg a.maildir.absPath)
               mbsyncAccounts
             }
           '';

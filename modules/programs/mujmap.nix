@@ -1,15 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
+
   cfg = config.programs.mujmap;
 
-  mujmapAccounts =
-    filter (a: a.mujmap.enable) (attrValues config.accounts.email.accounts);
+  mujmapAccounts = lib.filter (a: a.mujmap.enable)
+    (lib.attrValues config.accounts.email.accounts);
 
   missingNotmuchAccounts = map (a: a.name)
-    (filter (a: !a.notmuch.enable && a.mujmap.notmuchSetupWarning)
+    (lib.filter (a: !a.notmuch.enable && a.mujmap.notmuchSetupWarning)
       mujmapAccounts);
 
   notmuchConfigHelp =
@@ -18,7 +17,7 @@ let
 
   settingsFormat = pkgs.formats.toml { };
 
-  filterNull = attrs: attrsets.filterAttrs (n: v: v != null) attrs;
+  filterNull = attrs: lib.attrsets.filterAttrs (n: v: v != null) attrs;
 
   configFile = account:
     let
@@ -32,10 +31,10 @@ let
 
       settings' = settings'' // {
         username = account.userName;
-        password_command = escapeShellArgs account.passwordCommand;
+        password_command = lib.escapeShellArgs account.passwordCommand;
       } // filterNull account.mujmap.settings;
 
-      settings = if (hasAttr "fqdn" settings') then
+      settings = if (lib.hasAttr "fqdn" settings') then
         (removeAttrs settings' [ "session_url" ])
       else
         settings';
@@ -154,7 +153,7 @@ let
     password_command = mkOption {
       type = types.nullOr (types.either types.str (types.listOf types.str));
       default = null;
-      apply = p: if isList p then escapeShellArgs p else p;
+      apply = p: if lib.isList p then lib.escapeShellArgs p else p;
       example = "pass alice@example.com";
       description = ''
         Shell command which will print a password to stdout for basic HTTP
@@ -232,7 +231,7 @@ let
   };
 
   mujmapOpts = {
-    enable = mkEnableOption "mujmap JMAP synchronization for notmuch";
+    enable = lib.mkEnableOption "mujmap JMAP synchronization for notmuch";
 
     notmuchSetupWarning = mkOption {
       type = types.bool;
@@ -263,11 +262,11 @@ let
 
   mujmapModule = types.submodule { options = { mujmap = mujmapOpts; }; };
 in {
-  meta.maintainers = with maintainers; [ elizagamedev ];
+  meta.maintainers = with lib.maintainers; [ elizagamedev ];
 
   options = {
     programs.mujmap = {
-      enable = mkEnableOption "mujmap Gmail synchronization for notmuch";
+      enable = lib.mkEnableOption "mujmap Gmail synchronization for notmuch";
 
       package = mkOption {
         type = types.package;
@@ -283,16 +282,16 @@ in {
       mkOption { type = with types; attrsOf mujmapModule; };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    (mkIf (missingNotmuchAccounts != [ ]) {
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    (lib.mkIf (missingNotmuchAccounts != [ ]) {
       warnings = [''
         mujmap is enabled for the following email accounts, but notmuch is not:
 
-            ${concatStringsSep "\n    " missingNotmuchAccounts}
+            ${lib.concatStringsSep "\n    " missingNotmuchAccounts}
 
         Notmuch can be enabled with:
 
-            ${concatStringsSep "\n    " notmuchConfigHelp}
+            ${lib.concatStringsSep "\n    " notmuchConfigHelp}
 
         If you have configured notmuch outside of Home Manager, you can suppress this
         warning with:
@@ -302,14 +301,14 @@ in {
     })
 
     {
-      warnings = flatten (map (account: account.warnings) mujmapAccounts);
+      warnings = lib.flatten (map (account: account.warnings) mujmapAccounts);
 
       home.packages = [ cfg.package ];
 
       # Notmuch should ignore non-mail files created by mujmap.
       programs.notmuch.new.ignore = [ "/.*[.](toml|json|lock)$/" ];
 
-      home.file = listToAttrs (map configFile mujmapAccounts);
+      home.file = lib.listToAttrs (map configFile mujmapAccounts);
     }
   ]);
 }

@@ -1,19 +1,13 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.noti;
-
+let cfg = config.programs.noti;
 in {
   meta.maintainers = [ ];
 
   options.programs.noti = {
-    enable = mkEnableOption "Noti";
+    enable = lib.mkEnableOption "Noti";
 
-    settings = mkOption {
-      type = types.attrsOf (types.attrsOf types.str);
+    settings = lib.mkOption {
+      type = with lib.types; attrsOf (attrsOf str);
       default = { };
       description = ''
         Configuration written to
@@ -23,7 +17,7 @@ in {
         {manpage}`noti.yaml(5)`.
         for the full list of options.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           say = {
             voice = "Alex";
@@ -37,11 +31,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.noti ];
 
-    xdg.configFile."noti/noti.yaml" =
-      mkIf (cfg.settings != { }) { text = generators.toYAML { } cfg.settings; };
+    xdg.configFile."noti/noti.yaml" = lib.mkIf (cfg.settings != { }) {
+      text = lib.generators.toYAML { } cfg.settings;
+    };
   };
-
 }

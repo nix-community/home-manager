@@ -1,18 +1,18 @@
 { config, lib, pkgs, ... }:
-
-with lib;
 let
+  inherit (lib) mkIf mkOrder;
+
   cfg = config.programs.mods;
   yamlFormat = pkgs.formats.yaml { };
 in {
-  meta.maintainers = [ hm.maintainers.ipsavitsky ];
+  meta.maintainers = [ lib.hm.maintainers.ipsavitsky ];
 
   options.programs.mods = {
-    enable = mkEnableOption "mods";
+    enable = lib.mkEnableOption "mods";
 
     package = lib.mkPackageOption pkgs "mods" { };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
       example = ''

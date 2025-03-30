@@ -1,7 +1,4 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
 
   cfg = config.programs.bacon;
@@ -14,14 +11,14 @@ let
     "${config.xdg.configHome}/bacon";
 
 in {
-  meta.maintainers = [ hm.maintainers.shimunn ];
+  meta.maintainers = [ lib.hm.maintainers.shimunn ];
 
   options.programs.bacon = {
-    enable = mkEnableOption "bacon, a background rust code checker";
+    enable = lib.mkEnableOption "bacon, a background rust code checker";
 
-    package = mkPackageOption pkgs "bacon" { nullable = true; };
+    package = lib.mkPackageOption pkgs "bacon" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = settingsFormat.type;
       default = { };
       example = {
@@ -37,10 +34,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."${configDir}/prefs.toml" = mkIf (cfg.settings != { }) {
+    home.file."${configDir}/prefs.toml" = lib.mkIf (cfg.settings != { }) {
       source = settingsFormat.generate "prefs.toml" cfg.settings;
     };
   };

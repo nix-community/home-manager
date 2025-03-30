@@ -1,17 +1,16 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep filterAttrs getAttrs mapAttrs mapAttrs' mapAttrsToList;
 
   cfg = config.programs.vdirsyncer;
 
   vdirsyncerCalendarAccounts = filterAttrs (_: v: v.vdirsyncer.enable)
-    (mapAttrs' (n: v: nameValuePair ("calendar_" + n) v)
+    (mapAttrs' (n: v: lib.nameValuePair ("calendar_" + n) v)
       config.accounts.calendar.accounts);
 
   vdirsyncerContactAccounts = filterAttrs (_: v: v.vdirsyncer.enable)
-    (mapAttrs' (n: v: nameValuePair ("contacts_" + n) v)
+    (mapAttrs' (n: v: lib.nameValuePair ("contacts_" + n) v)
       config.accounts.contact.accounts);
 
   vdirsyncerAccounts = vdirsyncerCalendarAccounts // vdirsyncerContactAccounts;
@@ -19,8 +18,6 @@ let
   wrap = s: ''"${s}"'';
 
   listString = l: "[${concatStringsSep ", " l}]";
-
-  boolString = b: if b then "true" else "false";
 
   localStorage = a:
     filterAttrs (_: v: v != null)
@@ -55,7 +52,6 @@ let
         ] a.vdirsyncer));
 
   pair = a:
-    with a.vdirsyncer;
     filterAttrs (k: v: k == "collections" || (v != null && v != [ ]))
     (getAttrs [ "collections" "conflictResolution" "metadata" "partialSync" ]
       a.vdirsyncer);
@@ -99,7 +95,7 @@ let
       ''verify_fingerprint = "${v}"''
     else if (n == "auth") then
       ''auth = "${v}"''
-    else if (n == "authCert" && isString (v)) then
+    else if (n == "authCert" && lib.isString v) then
       ''auth_cert = "${v}"''
     else if (n == "authCert") then
       "auth_cert = ${listString (map wrap v)}"
@@ -121,8 +117,8 @@ let
       ''partial_sync = "${v}"''
     else if (n == "collections") then
       let
-        contents =
-          map (c: if (isString c) then ''"${c}"'' else listString (map wrap c))
+        contents = map
+          (c: if (lib.isString c) then ''"${c}"'' else listString (map wrap c))
           v;
       in "collections = ${
         if ((isNull v) || v == [ ]) then "null" else listString contents
@@ -170,10 +166,10 @@ let
 in {
   options = {
     programs.vdirsyncer = {
-      enable = mkEnableOption "vdirsyncer";
+      enable = lib.mkEnableOption "vdirsyncer";
 
-      package = mkOption {
-        type = types.package;
+      package = lib.mkOption {
+        type = lib.types.package;
         default = pkgs.vdirsyncer;
         defaultText = "pkgs.vdirsyncer";
         description = ''
@@ -181,8 +177,8 @@ in {
         '';
       };
 
-      statusPath = mkOption {
-        type = types.str;
+      statusPath = lib.mkOption {
+        type = lib.types.str;
         default = "${config.xdg.dataHome}/vdirsyncer/status";
         defaultText = "$XDG_DATA_HOME/vdirsyncer/status";
         description = ''
@@ -195,7 +191,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = let
 
       mutuallyExclusiveOptions =
@@ -256,33 +252,34 @@ in {
         let allowed = allowedOptions v.type ++ (requiredOptions v.type);
         in mapAttrsToList (a: v':
           [{
-            assertion = (elem a allowed);
+            assertion = (lib.elem a allowed);
             message = ''
               Storage ${n} is of type ${v.type}. Option
               ${a} is not allowed for this type.
             '';
           }] ++ (let
-            required =
-              filter (a: !hasAttr "${a}Command" v) (requiredOptions v.type);
+            required = lib.filter (a: !lib.hasAttr "${a}Command" v)
+              (requiredOptions v.type);
           in map (a: [{
-            assertion = hasAttr a v;
+            assertion = lib.hasAttr a v;
             message = ''
               Storage ${n} is of type ${v.type}, but required
               option ${a} is not set.
             '';
           }]) required) ++ map (attrs:
             let
-              defined = attrNames (filterAttrs (n: v: v != null)
-                (genAttrs attrs (a: v.${a} or null)));
+              defined = lib.attrNames (filterAttrs (n: v: v != null)
+                (lib.genAttrs attrs (a: v.${a} or null)));
             in {
-              assertion = length defined <= 1;
+              assertion = lib.length defined <= 1;
               message = "Storage ${n} has mutually exclusive options: ${
                   concatStringsSep ", " defined
                 }";
             }) mutuallyExclusiveOptions) (removeAttrs v [ "type" "_module" ]);
 
-      storageAssertions = flatten (mapAttrsToList assertStorage localStorages)
-        ++ flatten (mapAttrsToList assertStorage remoteStorages);
+      storageAssertions =
+        lib.flatten (mapAttrsToList assertStorage localStorages)
+        ++ lib.flatten (mapAttrsToList assertStorage remoteStorages);
 
     in storageAssertions;
     home.packages = [ cfg.package ];

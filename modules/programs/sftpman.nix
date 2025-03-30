@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
+
   cfg = config.programs.sftpman;
 
   jsonFormat = pkgs.formats.json { };
@@ -67,13 +66,13 @@ let
     };
   };
 in {
-  meta.maintainers = with maintainers; [ fugi ];
+  meta.maintainers = with lib.maintainers; [ fugi ];
 
   options.programs.sftpman = {
-    enable = mkEnableOption
+    enable = lib.mkEnableOption
       "sftpman, an application that handles sshfs/sftp file systems mounting";
 
-    package = mkPackageOption pkgs "sftpman" { nullable = true; };
+    package = lib.mkPackageOption pkgs "sftpman" { nullable = true; };
 
     defaultSshKey = mkOption {
       type = types.nullOr types.str;
@@ -92,13 +91,15 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (let
         hasMissingKey = _: mount:
           mount.authType == "publickey" && mount.sshKey == null;
-        mountsWithMissingKey = attrNames (filterAttrs hasMissingKey cfg.mounts);
-        mountsWithMissingKeyStr = concatStringsSep ", " mountsWithMissingKey;
+        mountsWithMissingKey =
+          lib.attrNames (lib.filterAttrs hasMissingKey cfg.mounts);
+        mountsWithMissingKeyStr =
+          lib.concatStringsSep ", " mountsWithMissingKey;
       in {
         assertion = mountsWithMissingKey == [ ];
         message = ''
@@ -109,8 +110,8 @@ in {
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile = mapAttrs' (name: value:
-      nameValuePair "sftpman/mounts/${name}.json" {
+    xdg.configFile = lib.mapAttrs' (name: value:
+      lib.nameValuePair "sftpman/mounts/${name}.json" {
         source =
           jsonFormat.generate "sftpman-${name}.json" (value // { id = name; });
       }) cfg.mounts;

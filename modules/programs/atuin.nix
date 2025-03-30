@@ -1,25 +1,22 @@
 { config, pkgs, lib, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.atuin;
   daemonCfg = cfg.daemon;
 
   tomlFormat = pkgs.formats.toml { };
 
+  inherit (lib) mkIf mkOption types;
   inherit (pkgs.stdenv) isLinux isDarwin;
 in {
-  meta.maintainers = [ maintainers.hawkw maintainers.water-sucks ];
+  meta.maintainers = with lib.maintainers; [ hawkw water-sucks ];
 
   options.programs.atuin = {
-    enable = mkEnableOption "atuin";
+    enable = lib.mkEnableOption "atuin";
 
     package = mkOption {
       type = types.package;
       default = pkgs.atuin;
-      defaultText = literalExpression "pkgs.atuin";
+      defaultText = lib.literalExpression "pkgs.atuin";
       description = "The package to use for atuin.";
     };
 
@@ -65,7 +62,7 @@ in {
           entries = entryOrAttrsOf (entryOrAttrsOf entry);
         in attrsOf entries // { description = "Atuin configuration"; };
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           auto_sync = true;
           sync_frequency = "5m";
@@ -83,7 +80,7 @@ in {
     };
 
     daemon = {
-      enable = mkEnableOption "Atuin daemon";
+      enable = lib.mkEnableOption "Atuin daemon";
 
       logLevel = mkOption {
         default = null;
@@ -96,8 +93,8 @@ in {
     };
   };
 
-  config = let flagsStr = escapeShellArgs cfg.flags;
-  in mkIf cfg.enable (mkMerge [
+  config = let flagsStr = lib.escapeShellArgs cfg.flags;
+  in mkIf cfg.enable (lib.mkMerge [
     {
       # Always add the configured `atuin` package.
       home.packages = [ cfg.package ];
@@ -140,11 +137,11 @@ in {
       };
     }
 
-    (mkIf daemonCfg.enable (mkMerge [
+    (mkIf daemonCfg.enable (lib.mkMerge [
       {
         assertions = [
           {
-            assertion = versionAtLeast cfg.package.version "18.2.0";
+            assertion = lib.versionAtLeast cfg.package.version "18.2.0";
             message = ''
               The Atuin daemon requires at least version 18.2.0 or later.
             '';
@@ -181,7 +178,7 @@ in {
         };
 
         systemd.user.sockets.atuin-daemon = let
-          socket_dir = if versionAtLeast cfg.package.version "18.4.0" then
+          socket_dir = if lib.versionAtLeast cfg.package.version "18.4.0" then
             "%t"
           else
             "%D/atuin";

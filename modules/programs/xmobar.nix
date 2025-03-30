@@ -1,24 +1,21 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let cfg = config.programs.xmobar;
 in {
   options.programs.xmobar = {
-    enable = mkEnableOption "Xmobar, a minimalistic status bar";
+    enable = lib.mkEnableOption "Xmobar, a minimalistic status bar";
 
-    package = mkOption {
+    package = lib.mkOption {
       default = pkgs.haskellPackages.xmobar;
-      defaultText = literalExpression "pkgs.haskellPackages.xmobar";
-      type = types.package;
+      defaultText = lib.literalExpression "pkgs.haskellPackages.xmobar";
+      type = lib.types.package;
       description = ''
         Package providing the {command}`xmobar` binary.
       '';
     };
 
-    extraConfig = mkOption {
+    extraConfig = lib.mkOption {
       default = "";
-      example = literalExpression ''
+      example = lib.literalExpression ''
         Config
           { font        = "Fira Code"
           , borderColor = "#d0d0d0"
@@ -39,7 +36,7 @@ in {
           , template    = "  %StdinReader% | %cpu% | %memory% | %enp3s0%  }{%date%  "
           }
       '';
-      type = types.lines;
+      type = lib.types.lines;
       description = ''
         Extra configuration lines to add to
         {file}`$XDG_CONFIG_HOME/xmobar/.xmobarrc`.
@@ -50,10 +47,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
     xdg.configFile."xmobar/.xmobarrc".text = cfg.extraConfig;
   };
 
-  meta.maintainers = [ hm.maintainers.t4ccer ];
+  meta.maintainers = [ lib.hm.maintainers.t4ccer ];
 }

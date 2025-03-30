@@ -1,25 +1,24 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption optionalAttrs;
 
   cfg = config.programs.offlineimap;
 
-  accounts = filter (a: a.offlineimap.enable)
-    (attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.offlineimap.enable)
+    (lib.attrValues config.accounts.email.accounts);
 
-  toIni = generators.toINI {
+  toIni = lib.generators.toINI {
     mkKeyValue = key: value:
       let
         value' =
-          (if isBool value then lib.hm.booleans.yesNo else toString) value;
+          (if lib.isBool value then lib.hm.booleans.yesNo else toString) value;
       in "${key} = ${value'}";
   };
 
   accountStr = account:
-    with account;
     let
+      inherit (account) imap name passwordCommand offlineimap;
+
       postSyncHook = optionalAttrs (offlineimap.postSyncHookCommand != "") {
         postsynchook = pkgs.writeShellScriptBin "postsynchook"
           offlineimap.postSyncHookCommand + "/bin/postsynchook";
@@ -46,7 +45,7 @@ let
       };
 
       remotePassEval =
-        let arglist = concatMapStringsSep "," (x: "'${x}'") passwordCommand;
+        let arglist = lib.concatMapStringsSep "," (x: "'${x}'") passwordCommand;
         in optionalAttrs (passwordCommand != null) {
           remotepasseval = ''get_pass("${name}", [${arglist}]).strip(b"\n")'';
         };
@@ -58,24 +57,24 @@ let
 
       "Repository ${name}-local" = {
         type = localType;
-        localfolders = maildir.absPath;
+        localfolders = account.maildir.absPath;
       } // offlineimap.extraConfig.local;
 
       "Repository ${name}-remote" = {
         type = remoteType;
-        remoteuser = userName;
+        remoteuser = account.userName;
       } // remoteHost // remotePort // remotePassEval // ssl
         // offlineimap.extraConfig.remote;
     };
 
-  extraConfigType = with types; attrsOf (either (either str int) bool);
+  extraConfigType = with lib.types; attrsOf (either (either str int) bool);
 
 in {
   options = {
     programs.offlineimap = {
-      enable = mkEnableOption "OfflineIMAP";
+      enable = lib.mkEnableOption "OfflineIMAP";
 
-      package = mkPackageOption pkgs "offlineimap" {
+      package = lib.mkPackageOption pkgs "offlineimap" {
         example = ''
           pkgs.offlineimap.overridePythonAttrs ( old: {
             propagatedBuildInputs = old.propagatedBuildInputs
@@ -86,7 +85,7 @@ in {
       };
 
       pythonFile = mkOption {
-        type = types.lines;
+        type = lib.types.lines;
         default = ''
           import subprocess
 
@@ -125,7 +124,7 @@ in {
       extraConfig.mbnames = mkOption {
         type = extraConfigType;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             filename = "~/.config/mutt/mailboxes";
             header = "'mailboxes '";
@@ -142,12 +141,12 @@ in {
     };
 
     accounts.email.accounts = mkOption {
-      type = with types;
+      type = with lib.types;
         attrsOf (submodule (import ./offlineimap-accounts.nix));
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xdg.configFile."offlineimap/get_settings.py".text = cfg.pythonFile;
@@ -169,14 +168,14 @@ in {
       # for an exhaustive list of options.
     '' + toIni ({
       general = {
-        accounts = concatMapStringsSep "," (a: a.name) accounts;
+        accounts = lib.concatMapStringsSep "," (a: a.name) accounts;
         pythonfile = "${config.xdg.configHome}/offlineimap/get_settings.py";
         metadata = "${config.xdg.dataHome}/offlineimap";
       } // cfg.extraConfig.general;
-    } // optionalAttrs (cfg.extraConfig.mbnames != { }) {
+    } // lib.optionalAttrs (cfg.extraConfig.mbnames != { }) {
       mbnames = { enabled = true; } // cfg.extraConfig.mbnames;
-    } // optionalAttrs (cfg.extraConfig.default != { }) {
+    } // lib.optionalAttrs (cfg.extraConfig.default != { }) {
       DEFAULT = cfg.extraConfig.default;
-    }) + "\n" + concatStringsSep "\n" (map accountStr accounts);
+    }) + "\n" + lib.concatStringsSep "\n" (map accountStr accounts);
   };
 }

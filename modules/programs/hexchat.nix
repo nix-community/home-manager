@@ -1,50 +1,48 @@
 { config, pkgs, lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
+
   cfg = config.programs.hexchat;
 
-  channelOptions = with types;
-    submodule {
-      options = {
-        autoconnect = mkOption {
-          type = nullOr bool;
-          default = false;
-          description = "Autoconnect to network.";
-        };
+  channelOptions = types.submodule {
+    options = {
+      autoconnect = mkOption {
+        type = with types; nullOr bool;
+        default = false;
+        description = "Autoconnect to network.";
+      };
 
-        connectToSelectedServerOnly = mkOption {
-          type = nullOr bool;
-          default = true;
-          description = "Connect to selected server only.";
-        };
+      connectToSelectedServerOnly = mkOption {
+        type = with types; nullOr bool;
+        default = true;
+        description = "Connect to selected server only.";
+      };
 
-        bypassProxy = mkOption {
-          type = nullOr bool;
-          default = true;
-          description = "Bypass proxy.";
-        };
+      bypassProxy = mkOption {
+        type = with types; nullOr bool;
+        default = true;
+        description = "Bypass proxy.";
+      };
 
-        forceSSL = mkOption {
-          type = nullOr bool;
-          default = false;
-          description = "Use SSL for all servers.";
-        };
+      forceSSL = mkOption {
+        type = with types; nullOr bool;
+        default = false;
+        description = "Use SSL for all servers.";
+      };
 
-        acceptInvalidSSLCertificates = mkOption {
-          type = nullOr bool;
-          default = false;
-          description = "Accept invalid SSL certificates.";
-        };
+      acceptInvalidSSLCertificates = mkOption {
+        type = with types; nullOr bool;
+        default = false;
+        description = "Accept invalid SSL certificates.";
+      };
 
-        useGlobalUserInformation = mkOption {
-          type = nullOr bool;
-          default = false;
-          description = "Use global user information.";
-        };
+      useGlobalUserInformation = mkOption {
+        type = with types; nullOr bool;
+        default = false;
+        description = "Use global user information.";
       };
     };
+  };
 
   modChannelOption = with types;
     submodule {
@@ -71,7 +69,7 @@ let
         };
 
         loginMethod = mkOption {
-          type = nullOr (enum (attrNames loginMethodMap));
+          type = nullOr (enum (lib.attrNames loginMethodMap));
           default = null;
           description = ''
             The login method. The allowed options are:
@@ -166,13 +164,16 @@ let
   transformField = k: v: if (v != null) then "${k}=${v}" else null;
 
   listChar = c: l:
-    if l != [ ] then concatMapStringsSep "\n" (transformField c) l else null;
+    if l != [ ] then
+      lib.concatMapStringsSep "\n" (transformField c) l
+    else
+      null;
 
   computeFieldsValue = channel:
     let
       ifTrue = p: n: if p then n else 0;
       result = with channel.options;
-        foldl' (a: b: a + b) 0 [
+        lib.foldl' (a: b: a + b) 0 [
           (ifTrue (!connectToSelectedServerOnly) 1)
           (ifTrue useGlobalUserInformation 2)
           (ifTrue forceSSL 4)
@@ -193,14 +194,14 @@ let
   };
 
   loginMethod = channel:
-    transformField "L" (optionalString (channel.loginMethod != null)
+    transformField "L" (lib.optionalString (channel.loginMethod != null)
       (toString loginMethodMap.${channel.loginMethod}));
 
   # Note: Missing option `D=`.
   transformChannel = channelName:
     let channel = cfg.channels.${channelName};
-    in concatStringsSep "\n" (remove null [
-      "" # leave a space between one server and another
+    in lib.concatStringsSep "\n" (lib.remove null [
+      "" # Leave a space between one server and another
       (transformField "N" channelName)
       (loginMethod channel)
       (transformField "E" channel.charset)
@@ -216,13 +217,13 @@ let
     ]);
 
 in {
-  meta.maintainers = with maintainers; [ thiagokokada ];
+  meta.maintainers = with lib.maintainers; [ thiagokokada ];
 
-  options.programs.hexchat = with types; {
-    enable = mkEnableOption "HexChat, a graphical IRC client";
+  options.programs.hexchat = {
+    enable = lib.mkEnableOption "HexChat, a graphical IRC client";
 
     channels = mkOption {
-      type = attrsOf modChannelOption;
+      type = types.attrsOf modChannelOption;
       default = { };
       example = literalExpression ''
         {
@@ -261,7 +262,7 @@ in {
 
     settings = mkOption {
       default = null;
-      type = nullOr (attrsOf str);
+      type = types.nullOr (types.attrsOf types.str);
       example = literalExpression ''
         {
           irc_nick1 = "mynick";
@@ -278,7 +279,7 @@ in {
     };
 
     overwriteConfigFiles = mkOption {
-      type = nullOr bool;
+      type = types.nullOr types.bool;
       default = false;
       description = ''
         Enables overwriting HexChat configuration files
@@ -298,7 +299,7 @@ in {
     };
 
     theme = mkOption {
-      type = nullOr package;
+      type = types.nullOr types.package;
       default = null;
       example = literalExpression ''
         source = pkgs.fetchzip {
@@ -317,7 +318,8 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "programs.hexchat" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.hexchat" pkgs
+        lib.platforms.linux)
     ];
 
     home.packages = [ pkgs.hexchat ];
@@ -329,15 +331,15 @@ in {
 
     xdg.configFile."hexchat/hexchat.conf" = mkIf (cfg.settings != null) {
       force = cfg.overwriteConfigFiles;
-      text = concatMapStringsSep "\n" (x: x + " = " + cfg.settings.${x})
-        (attrNames cfg.settings);
+      text = lib.concatMapStringsSep "\n" (x: x + " = " + cfg.settings.${x})
+        (lib.attrNames cfg.settings);
     };
 
     xdg.configFile."hexchat/servlist.conf" = mkIf (cfg.channels != { }) {
       force = cfg.overwriteConfigFiles;
       # Final line breaks is required to avoid cropping last field value.
-      text = concatMapStringsSep "\n" transformChannel (attrNames cfg.channels)
-        + "\n\n";
+      text = lib.concatMapStringsSep "\n" transformChannel
+        (lib.attrNames cfg.channels) + "\n\n";
     };
   };
 }
