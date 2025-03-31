@@ -76,12 +76,16 @@
         '';
 
         feedAccounts.rss = { };
+
+        accountsOrder =
+          [ "hm@example.com" "rss" "imperative_account" "hm-account" ];
       };
 
       second.settings = {
         "second.setting" = "some-test-setting";
         second.nested.evenFurtherNested = [ 1 2 3 ];
       };
+      second.accountsOrder = [ "account1" ];
     };
 
     settings = {
