@@ -23,9 +23,7 @@ let
   fishIntegration = ''
     ${getExe pkgs.mcfly} init fish | source
   '' + optionalString cfg.fzf.enable ''
-    if status is-interactive
-      eval "$(${getExe pkgs.mcfly-fzf} init fish)"
-    end
+    eval "$(${getExe pkgs.mcfly-fzf} init fish)"
   '';
 
   zshIntegration = ''
@@ -143,7 +141,8 @@ in {
 
       programs.zsh.initContent = mkIf cfg.enableZshIntegration zshIntegration;
 
-      programs.fish.shellInit = mkIf cfg.enableFishIntegration fishIntegration;
+      programs.fish.interactiveShellInit =
+        mkIf cfg.enableFishIntegration fishIntegration;
 
       home.sessionVariables.MCFLY_KEY_SCHEME = cfg.keyScheme;
 
