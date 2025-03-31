@@ -16,6 +16,7 @@ let
     "vscode-insiders" = "Code - Insiders";
     "vscodium" = "VSCodium";
     "openvscode-server" = "OpenVSCode Server";
+    "cursor" = "Cursor";
   }.${vscodePname};
 
   extensionDir = {
@@ -23,6 +24,7 @@ let
     "vscode-insiders" = "vscode-insiders";
     "vscodium" = "vscode-oss";
     "openvscode-server" = "openvscode-server";
+    "cursor" = "cursor";
   }.${vscodePname};
 
   userDir = if pkgs.stdenv.hostPlatform.isDarwin then
