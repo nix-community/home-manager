@@ -8,15 +8,10 @@ let
   mkKeyValue = key: value:
     if isString value then "${key} ${value}" else optionalString value key;
 
-  cfgText = generators.toKeyValue {
+  generateCfgText = generators.toKeyValue {
     inherit mkKeyValue;
     listsAsDuplicateKeys = true;
-  } cfg.settings;
-
-  scdaemonCfgText = generators.toKeyValue {
-    inherit mkKeyValue;
-    listsAsDuplicateKeys = true;
-  } cfg.scdaemonSettings;
+  };
 
   primitiveType = types.oneOf [ types.str types.bool ];
 
@@ -138,6 +133,8 @@ let
   '';
 
 in {
+  meta.maintainers = [ maintainers.Cryolitia ];
+
   options.programs.gpg = {
     enable = mkEnableOption "GnuPG";
 
@@ -153,6 +150,7 @@ in {
     settings = mkOption {
       type =
         types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
       example = literalExpression ''
         {
           no-comments = false;
@@ -173,6 +171,7 @@ in {
     scdaemonSettings = mkOption {
       type =
         types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
       example = literalExpression ''
         {
           disable-ccid = true;
@@ -184,6 +183,25 @@ in {
         [
           {manpage}`scdaemon(1)`
         ](https://www.gnupg.org/documentation/manuals/gnupg/Scdaemon-Options.html).
+      '';
+    };
+
+    dirmngrSettings = mkOption {
+      type =
+        types.attrsOf (types.either primitiveType (types.listOf types.str));
+      default = { };
+      example = literalExpression ''
+        {
+          keyserver = "keyserver.ubuntu.com";
+          disable-ipv6 = true;
+        }
+      '';
+      description = ''
+        Dirmngr configuration options. Available options are described
+        in
+        [
+          {manpage}`dirmngr(8)`
+        ](https://www.gnupg.org/documentation/manuals/gnupg/Dirmngr-Options.html).
       '';
     };
 
@@ -240,44 +258,21 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.gpg.settings = {
-      personal-cipher-preferences = mkDefault "AES256 AES192 AES";
-      personal-digest-preferences = mkDefault "SHA512 SHA384 SHA256";
-      personal-compress-preferences = mkDefault "ZLIB BZIP2 ZIP Uncompressed";
-      default-preference-list = mkDefault
-        "SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB BZIP2 ZIP Uncompressed";
-      cert-digest-algo = mkDefault "SHA512";
-      s2k-digest-algo = mkDefault "SHA512";
-      s2k-cipher-algo = mkDefault "AES256";
-      charset = mkDefault "utf-8";
-      fixed-list-mode = mkDefault true;
-      no-comments = mkDefault true;
-      no-emit-version = mkDefault true;
-      keyid-format = mkDefault "0xlong";
-      list-options = mkDefault "show-uid-validity";
-      verify-options = mkDefault "show-uid-validity";
-      with-fingerprint = mkDefault true;
-      require-cross-certification = mkDefault true;
-      no-symkey-cache = mkDefault true;
-      use-agent = mkDefault true;
-    };
-
-    programs.gpg.scdaemonSettings = {
-      # no defaults for scdaemon
-    };
-
     home.packages = [ cfg.package ];
     home.sessionVariables = { GNUPGHOME = cfg.homedir; };
 
-    home.file."${cfg.homedir}/gpg.conf".text = cfgText;
+    home.file = {
+      "${cfg.homedir}/gpg.conf".text = generateCfgText cfg.settings;
+      "${cfg.homedir}/scdaemon.conf".text =
+        generateCfgText cfg.scdaemonSettings;
+      "${cfg.homedir}/dirmngr.conf".text = generateCfgText cfg.dirmngrSettings;
 
-    home.file."${cfg.homedir}/scdaemon.conf".text = scdaemonCfgText;
-
-    # Link keyring if keys are not mutable
-    home.file."${cfg.homedir}/pubring.kbx" =
-      mkIf (!cfg.mutableKeys && cfg.publicKeys != [ ]) {
-        source = "${keyringFiles}/pubring.kbx";
-      };
+      # Link keyring if keys are not mutable
+      "${cfg.homedir}/pubring.kbx" =
+        mkIf (!cfg.mutableKeys && cfg.publicKeys != [ ]) {
+          source = "${keyringFiles}/pubring.kbx";
+        };
+    };
 
     home.activation = {
       createGpgHomedir =
