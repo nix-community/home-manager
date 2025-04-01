@@ -1,14 +1,16 @@
 { config, lib, pkgs, ... }:
+let
+  inherit (lib)
+    concatStringsSep literalExpression mapAttrsToList mkOption optionalString
+    types;
 
-with lib;
-
-let cfg = config.programs.lf;
+  cfg = config.programs.lf;
 in {
-  meta.maintainers = [ hm.maintainers.owm111 ];
+  meta.maintainers = [ lib.hm.maintainers.owm111 ];
 
   options = {
     programs.lf = {
-      enable = mkEnableOption "lf";
+      enable = lib.mkEnableOption "lf";
 
       package = mkOption {
         type = types.package;
@@ -117,22 +119,22 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xdg.configFile."lf/lfrc".text = let
       fmtSetting = k: v:
         optionalString (v != null) "set ${
-          if isBool v then
+          if lib.isBool v then
             "${optionalString (!v) "no"}${k}"
-          else if isList v then
+          else if lib.isList v then
             ''${k} "${concatStringsSep ":" (map (w: toString w) v)}"''
           else
-            "${k} ${if isInt v then toString v else ''"${v}"''}"
+            "${k} ${if lib.isInt v then toString v else ''"${v}"''}"
         }";
 
       settingsStr = concatStringsSep "\n"
-        (remove "" (mapAttrsToList fmtSetting cfg.settings));
+        (lib.remove "" (mapAttrsToList fmtSetting cfg.settings));
 
       fmtCmdMap = before: k: v:
         "${before} ${k}${optionalString (v != null && v != "") " ${v}"}";

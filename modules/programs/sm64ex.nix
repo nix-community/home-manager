@@ -1,15 +1,13 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption optionalAttrs types;
+
   cfg = config.programs.sm64ex;
 
   # This is required for tests, we cannot overwrite the dummy package.
   package = if cfg.region == null && cfg.baserom == null
   && cfg.extraCompileFlags == null then
     cfg.package
-
   else
     cfg.package.override (attrs:
       { } // optionalAttrs (cfg.region != null) { region = cfg.region; }
@@ -20,10 +18,10 @@ let
 
   mkConfig = key: value:
     let
-      generatedValue = if isBool value then
+      generatedValue = if lib.isBool value then
         (if value then "true" else "false")
-      else if isList value then
-        concatStringsSep " " value
+      else if lib.isList value then
+        lib.concatStringsSep " " value
       else
         toString value;
     in "${key} ${generatedValue}";
@@ -32,7 +30,7 @@ in {
   meta.maintainers = [ ];
 
   options.programs.sm64ex = {
-    enable = mkEnableOption "sm64ex";
+    enable = lib.mkEnableOption "sm64ex";
 
     package = lib.mkPackageOption pkgs "sm64ex" { nullable = true; };
 
@@ -113,12 +111,12 @@ in {
   };
 
   config = let
-    configFile = optionals (cfg.settings != null)
-      (concatStringsSep "\n" ((mapAttrsToList mkConfig cfg.settings)));
-  in mkIf cfg.enable {
+    configFile = lib.optionals (cfg.settings != null)
+      (lib.concatStringsSep "\n" (lib.mapAttrsToList mkConfig cfg.settings));
+  in lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.dataFile."sm64pc/sm64config.txt" =
-      mkIf (cfg.settings != null) { text = configFile; };
+      lib.mkIf (cfg.settings != null) { text = configFile; };
   };
 }

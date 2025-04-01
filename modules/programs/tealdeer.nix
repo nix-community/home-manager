@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.tealdeer;
 
   configDir = if pkgs.stdenv.isDarwin then
@@ -14,12 +14,12 @@ let
   settingsFormat = let
     updatesSection = types.submodule {
       options = {
-        auto_update = mkEnableOption "auto-update";
+        auto_update = lib.mkEnableOption "auto-update";
 
         auto_update_interval_hours = mkOption {
           type = types.ints.positive;
           default = 720;
-          example = literalExpression "24";
+          example = lib.literalExpression "24";
           description = ''
             Duration, since the last cache update, after which the cache will be refreshed.
             This parameter is ignored if {var}`auto_update` is set to `false`.
@@ -42,10 +42,10 @@ let
   };
 
 in {
-  meta.maintainers = [ hm.maintainers.pedorich-n ];
+  meta.maintainers = [ lib.hm.maintainers.pedorich-n ];
 
   imports = [
-    (mkRemovedOptionModule [ "programs" "tealdeer" "updateOnActivation" ] ''
+    (lib.mkRemovedOptionModule [ "programs" "tealdeer" "updateOnActivation" ] ''
       Updating tealdeer's cache requires network access.
       The activation script should be fast and idempotent, so the option was removed.
       Please use
@@ -57,12 +57,12 @@ in {
   ];
 
   options.programs.tealdeer = {
-    enable = mkEnableOption "Tealdeer";
+    enable = lib.mkEnableOption "Tealdeer";
 
     settings = mkOption {
       type = types.nullOr settingsFormat;
       default = null;
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           display = {
             compact = false;
@@ -81,7 +81,7 @@ in {
       '';
     };
 
-    enableAutoUpdates = mkEnableOption "Auto updates" // {
+    enableAutoUpdates = lib.mkEnableOption "Auto updates" // {
       default = true;
       example = false;
     };

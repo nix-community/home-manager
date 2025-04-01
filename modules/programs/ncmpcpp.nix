@@ -1,13 +1,11 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) concatStringsSep literalExpression mkIf mkOption types;
 
   cfg = config.programs.ncmpcpp;
 
   renderSettings = settings:
-    concatStringsSep "\n" (mapAttrsToList renderSetting settings);
+    concatStringsSep "\n" (lib.mapAttrsToList renderSetting settings);
 
   renderSetting = name: value: "${name}=${renderValue value}";
 
@@ -23,7 +21,7 @@ let
   renderBinding = { key, command }:
     concatStringsSep "\n  " ([ ''def_key "${key}"'' ] ++ maybeWrapList command);
 
-  maybeWrapList = xs: if isList xs then xs else [ xs ];
+  maybeWrapList = xs: if lib.isList xs then xs else [ xs ];
 
   valueType = with types; oneOf [ bool int str ];
 
@@ -44,11 +42,11 @@ let
   });
 
 in {
-  meta.maintainers = [ hm.maintainers.olmokramer ];
+  meta.maintainers = [ lib.hm.maintainers.olmokramer ];
 
   options.programs.ncmpcpp = {
-    enable =
-      mkEnableOption "ncmpcpp - an ncurses Music Player Daemon (MPD) client";
+    enable = lib.mkEnableOption
+      "ncmpcpp - an ncurses Music Player Daemon (MPD) client";
 
     package = mkOption {
       type = types.package;
@@ -119,7 +117,7 @@ in {
 
     xdg.configFile = {
       "ncmpcpp/config" = let
-        settings = cfg.settings // optionalAttrs (cfg.mpdMusicDir != null) {
+        settings = cfg.settings // lib.optionalAttrs (cfg.mpdMusicDir != null) {
           mpd_music_dir = cfg.mpdMusicDir;
         };
       in mkIf (settings != { }) { text = renderSettings settings + "\n"; };

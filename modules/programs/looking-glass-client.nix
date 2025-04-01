@@ -1,23 +1,21 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
   cfg = config.programs.looking-glass-client;
   settingsFormat = pkgs.formats.ini { };
 in {
-  meta.maintainers = with maintainers; [ j-brn ];
+  meta.maintainers = with lib.maintainers; [ j-brn ];
 
   options.programs.looking-glass-client = {
-    enable = mkEnableOption "looking-glass-client";
+    enable = lib.mkEnableOption "looking-glass-client";
 
-    package = mkPackageOption pkgs "looking-glass-client" { nullable = true; };
+    package =
+      lib.mkPackageOption pkgs "looking-glass-client" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = settingsFormat.type;
       default = { };
       description = "looking-glass-client settings.";
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           app = {
             allowDMA = true;
@@ -44,17 +42,16 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "programs.looking-glass-client" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.looking-glass-client" pkgs
+        lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."looking-glass/client.ini" = mkIf (cfg.settings != { }) {
-      source =
-        settingsFormat.generate ("looking-glass-client.ini") cfg.settings;
+    xdg.configFile."looking-glass/client.ini" = lib.mkIf (cfg.settings != { }) {
+      source = settingsFormat.generate "looking-glass-client.ini" cfg.settings;
     };
   };
 }

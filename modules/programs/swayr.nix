@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.swayr;
   tomlFormat = pkgs.formats.toml { };
   configFile = tomlFormat.generate "config.toml" cfg.settings;
@@ -14,12 +13,12 @@ in {
   meta.maintainers = [ lib.hm.maintainers."9p4" ];
 
   options.programs.swayr = {
-    enable = mkEnableOption "the swayr service";
+    enable = lib.mkEnableOption "the swayr service";
 
     settings = mkOption {
       type = types.nullOr tomlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         menu = {
           executable = "${pkgs.wofi}/bin/wofi";
           args = [
@@ -89,7 +88,7 @@ in {
       '';
     };
 
-    systemd.enable = mkEnableOption "swayr systemd integration";
+    systemd.enable = lib.mkEnableOption "swayr systemd integration";
     systemd.target = mkOption {
       type = types.str;
       default = "graphical-session.target";
@@ -101,12 +100,12 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.swayr;
-      defaultText = literalExpression "pkgs.swayr";
+      defaultText = lib.literalExpression "pkgs.swayr";
       description = "swayr package to use.";
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = [ cfg.package ];
 

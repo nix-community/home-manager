@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) isAttrs literalExpression mkIf mkOption optional types;
 
   cfg = config.programs.fish;
 
@@ -115,7 +113,7 @@ let
         example = [ "SIGHUP" "HUP" 1 ];
         description = ''
           Tells fish to run this function when the specified signal is
-          delievered. The signal can be a signal number or signal name.
+          delivered. The signal can be a signal number or signal name.
         '';
       };
 
@@ -197,31 +195,31 @@ let
     };
   };
 
-  abbrsStr = concatStringsSep "\n" (mapAttrsToList (name: def:
+  abbrsStr = lib.concatStringsSep "\n" (lib.mapAttrsToList (name: def:
     let
-      mods = with def;
-        cli.toGNUCommandLineShell {
-          mkOption = k: v:
-            if v == null then
-              [ ]
-            else if k == "set-cursor" then
-              [ "--${k}=${lib.generators.mkValueStringDefault { } v}" ]
-            else [
-              "--${k}"
-              (lib.generators.mkValueStringDefault { } v)
-            ];
-        } {
-          inherit position regex command function;
-          set-cursor = setCursor;
-        };
+      mods = lib.cli.toGNUCommandLineShell {
+        mkOption = k: v:
+          if v == null then
+            [ ]
+          else if k == "set-cursor" then
+            [ "--${k}=${lib.generators.mkValueStringDefault { } v}" ]
+          else [
+            "--${k}"
+            (lib.generators.mkValueStringDefault { } v)
+          ];
+      } {
+        inherit (def) position regex command function;
+        set-cursor = def.setCursor;
+      };
       modifiers = if isAttrs def then mods else "";
       expansion = if isAttrs def then def.expansion else def;
     in "abbr --add ${modifiers} -- ${name}"
-    + optionalString (expansion != null) " ${escapeShellArg expansion}")
+    + lib.optionalString (expansion != null) " ${lib.escapeShellArg expansion}")
     cfg.shellAbbrs);
 
-  aliasesStr = concatStringsSep "\n"
-    (mapAttrsToList (k: v: "alias ${k} ${escapeShellArg v}") cfg.shellAliases);
+  aliasesStr = lib.concatStringsSep "\n"
+    (lib.mapAttrsToList (k: v: "alias ${k} ${lib.escapeShellArg v}")
+      cfg.shellAliases);
 
   fishIndent = name: text:
     pkgs.runCommand name {
@@ -241,7 +239,7 @@ let
 
 in {
   imports = [
-    (mkRemovedOptionModule [ "programs" "fish" "promptInit" ] ''
+    (lib.mkRemovedOptionModule [ "programs" "fish" "promptInit" ] ''
       Prompt is now configured through the
 
         programs.fish.interactiveShellInit
@@ -252,11 +250,11 @@ in {
 
   options = {
     programs.fish = {
-      enable = mkEnableOption "fish, the friendly interactive shell";
+      enable = lib.mkEnableOption "fish, the friendly interactive shell";
 
       package = lib.mkPackageOption pkgs "fish" { };
 
-      generateCompletions = mkEnableOption
+      generateCompletions = lib.mkEnableOption
         "the automatic generation of completions based upon installed man pages"
         // {
           default = true;
@@ -398,15 +396,15 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     { home.packages = [ cfg.package ]; }
 
     (mkIf cfg.generateCompletions {
       # Support completion for `man` by building a cache for `apropos`.
-      programs.man.generateCaches = mkDefault true;
+      programs.man.generateCaches = lib.mkDefault true;
 
       xdg.dataFile."fish/home-manager_generated_completions".source = let
-        # paths later in the list will overwrite those already linked
+        # Paths later in the list will overwrite those already linked
         destructiveSymlinkJoin = args_@{ name, paths, preferLocalBuild ? true
           , allowSubstitutes ? false, postBuild ? "", ... }:
           let
@@ -431,7 +429,7 @@ in {
             }";
         in package:
         pkgs.runCommand "${getName package}-fish-completions" {
-          srcs = [ package ] ++ filter (p: p != null)
+          srcs = [ package ] ++ lib.filter (p: p != null)
             (builtins.map (outName: package.${outName} or null)
               config.home.extraOutputsToInstall);
           nativeBuildInputs = [ pkgs.python3 ];
@@ -451,7 +449,7 @@ in {
         name = "${config.home.username}-fish-completions";
         paths =
           let cmp = (a: b: (a.meta.priority or 0) > (b.meta.priority or 0));
-          in map generateCompletions (sort cmp config.home.packages);
+          in map generateCompletions (lib.sort cmp config.home.packages);
       };
 
       programs.fish.interactiveShellInit = ''
@@ -504,7 +502,7 @@ in {
       '';
     }
     {
-      xdg.configFile = mapAttrs' (name: def: {
+      xdg.configFile = lib.mapAttrs' (name: def: {
         name = "fish/functions/${name}.fish";
         value = {
           source = let
@@ -536,8 +534,8 @@ in {
 
     # Each plugin gets a corresponding conf.d/plugin-NAME.fish file to load
     # in the paths and any initialization scripts.
-    (mkIf (length cfg.plugins > 0) {
-      xdg.configFile = mkMerge ((map (plugin: {
+    (mkIf (lib.length cfg.plugins > 0) {
+      xdg.configFile = lib.mkMerge (map (plugin: {
         "fish/conf.d/plugin-${plugin.name}.fish".source =
           fishIndent "${plugin.name}.fish" ''
             # Plugin ${plugin.name}
@@ -567,7 +565,7 @@ in {
               source $plugin_dir/init.fish
             end
           '';
-      }) cfg.plugins));
+      }) cfg.plugins);
     })
   ]);
 }

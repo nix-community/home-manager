@@ -1,9 +1,7 @@
 pkgs:
 { config, lib, ... }:
-
-with lib;
-
-{
+let inherit (lib) mkOption types;
+in {
   options.alot = {
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
@@ -25,7 +23,7 @@ with lib;
           + "}[,\\]]?'";
         shellcommand_external_filtering = "False";
       };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           type = "shellcommand";
           command = "abook --mutt-query";
@@ -49,8 +47,8 @@ with lib;
     };
   };
 
-  config = mkIf config.notmuch.enable {
-    alot.sendMailCommand = mkOptionDefault (if config.msmtp.enable then
+  config = lib.mkIf config.notmuch.enable {
+    alot.sendMailCommand = lib.mkOptionDefault (if config.msmtp.enable then
       "msmtpq --read-envelope-from --read-recipients"
     else
       null);

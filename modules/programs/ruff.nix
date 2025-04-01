@@ -1,7 +1,4 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
 
   cfg = config.programs.ruff;
@@ -9,15 +6,15 @@ let
   settingsFormat = pkgs.formats.toml { };
 
 in {
-  meta.maintainers = [ hm.maintainers.GaetanLepage ];
+  meta.maintainers = [ lib.hm.maintainers.GaetanLepage ];
 
   options.programs.ruff = {
-    enable = mkEnableOption
+    enable = lib.mkEnableOption
       "ruff, an extremely fast Python linter and code formatter, written in Rust";
 
-    package = mkPackageOption pkgs "ruff" { nullable = true; };
+    package = lib.mkPackageOption pkgs "ruff" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = settingsFormat.type;
       example = lib.literalExpression ''
         {
@@ -36,7 +33,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."ruff/ruff.toml".source =

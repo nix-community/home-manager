@@ -1,25 +1,25 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    literalExpression listToAttrs mapAttrs' mapAttrsToList mkIf mkOption
+    optional types;
 
   cfg = config.programs.autorandr;
 
   matrixOf = n: m: elemType:
-    mkOptionType rec {
+    lib.mkOptionType rec {
       name = "matrixOf";
       description =
         "${toString n}×${toString m} matrix of ${elemType.description}s";
       check = xss:
-        let listOfSize = l: xs: isList xs && length xs == l;
+        let listOfSize = l: xs: lib.isList xs && lib.length xs == l;
         in listOfSize n xss
-        && all (xs: listOfSize m xs && all elemType.check xs) xss;
-      merge = mergeOneOption;
+        && lib.all (xs: listOfSize m xs && lib.all elemType.check xs) xss;
+      merge = lib.mergeOneOption;
       getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "*" "*" ]);
       getSubModules = elemType.getSubModules;
       substSubModules = mod: matrixOf n m (elemType.substSubModules mod);
-      functor = (defaultFunctor name) // { wrapped = elemType; };
+      functor = (lib.defaultFunctor name) // { wrapped = elemType; };
     };
 
   profileModule = types.submodule {
@@ -243,17 +243,17 @@ let
   };
 
   hookToFile = folder: name: hook:
-    nameValuePair "autorandr/${folder}/${name}" {
+    lib.nameValuePair "autorandr/${folder}/${name}" {
       source = "${pkgs.writeShellScriptBin "hook" hook}/bin/hook";
     };
   profileToFiles = name: profile:
-    with profile;
-    mkMerge ([
+    let inherit (profile) hooks;
+    in lib.mkMerge [
       {
-        "autorandr/${name}/setup".text = concatStringsSep "\n"
-          (mapAttrsToList fingerprintToString fingerprint);
-        "autorandr/${name}/config".text =
-          concatStringsSep "\n" (mapAttrsToList configToString profile.config);
+        "autorandr/${name}/setup".text = lib.concatStringsSep "\n"
+          (mapAttrsToList fingerprintToString profile.fingerprint);
+        "autorandr/${name}/config".text = lib.concatStringsSep "\n"
+          (mapAttrsToList configToString profile.config);
       }
       (mkIf (hooks.postswitch != "")
         (listToAttrs [ (hookToFile name "postswitch" hooks.postswitch) ]))
@@ -261,11 +261,11 @@ let
         (listToAttrs [ (hookToFile name "preswitch" hooks.preswitch) ]))
       (mkIf (hooks.predetect != "")
         (listToAttrs [ (hookToFile name "predetect" hooks.predetect) ]))
-    ]);
+    ];
   fingerprintToString = name: edid: "${name} ${edid}";
   configToString = name: config:
     if config.enable then
-      concatStringsSep "\n" ([ "output ${name}" ]
+      lib.concatStringsSep "\n" ([ "output ${name}" ]
         ++ optional (config.position != "") "pos ${config.position}"
         ++ optional (config.crtc != null) "crtc ${toString config.crtc}"
         ++ optional config.primary "primary"
@@ -276,7 +276,7 @@ let
         ++ optional (config.rotate != null) "rotate ${config.rotate}"
         ++ optional (config.filter != null) "filter ${config.filter}"
         ++ optional (config.transform != null) ("transform "
-          + concatMapStringsSep "," toString (flatten config.transform))
+          + lib.concatMapStringsSep "," toString (lib.flatten config.transform))
         ++ optional (config.scale != null)
         ((if config.scale.method == "factor" then "scale" else "scale-from")
           + " ${toString config.scale.x}x${toString config.scale.y}")
@@ -289,7 +289,7 @@ let
 in {
   options = {
     programs.autorandr = {
-      enable = mkEnableOption "Autorandr";
+      enable = lib.mkEnableOption "Autorandr";
 
       hooks = mkOption {
         type = globalHooksModule;
@@ -355,8 +355,8 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = flatten (mapAttrsToList (profile:
+  config = lib.mkIf cfg.enable {
+    assertions = lib.flatten (mapAttrsToList (profile:
       { config, ... }:
       mapAttrsToList (output: opts: {
         assertion = opts.scale == null || opts.transform == null;
@@ -367,13 +367,13 @@ in {
       }) config) cfg.profiles);
 
     home.packages = [ pkgs.autorandr ];
-    xdg.configFile = mkMerge ([
+    xdg.configFile = lib.mkMerge [
       (mapAttrs' (hookToFile "postswitch.d") cfg.hooks.postswitch)
       (mapAttrs' (hookToFile "preswitch.d") cfg.hooks.preswitch)
       (mapAttrs' (hookToFile "predetect.d") cfg.hooks.predetect)
-      (mkMerge (mapAttrsToList profileToFiles cfg.profiles))
-    ]);
+      (lib.mkMerge (mapAttrsToList profileToFiles cfg.profiles))
+    ];
   };
 
-  meta.maintainers = [ maintainers.uvnikita ];
+  meta.maintainers = [ lib.maintainers.uvnikita ];
 }

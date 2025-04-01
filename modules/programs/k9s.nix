@@ -1,18 +1,19 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
 
   cfg = config.programs.k9s;
   yamlFormat = pkgs.formats.yaml { };
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
 in {
-  meta.maintainers = with maintainers; [ liyangau hm.maintainers.LucasWagler ];
+  meta.maintainers = with lib.maintainers; [
+    liyangau
+    lib.hm.maintainers.LucasWagler
+  ];
 
   imports = [
-    (mkRenamedOptionModule [ "programs" "k9s" "skin" ] [
+    (lib.mkRenamedOptionModule [ "programs" "k9s" "skin" ] [
       "programs"
       "k9s"
       "skins"
@@ -21,10 +22,10 @@ in {
   ];
 
   options.programs.k9s = {
-    enable =
-      mkEnableOption "k9s - Kubernetes CLI To Manage Your Clusters In Style";
+    enable = lib.mkEnableOption
+      "k9s - Kubernetes CLI To Manage Your Clusters In Style";
 
-    package = mkPackageOption pkgs "k9s" { nullable = true; };
+    package = lib.mkPackageOption pkgs "k9s" { nullable = true; };
 
     settings = mkOption {
       type = yamlFormat.type;
@@ -168,8 +169,8 @@ in {
     } else
       { };
 
-    skinFiles = mapAttrs' (name: value:
-      nameValuePair (if !(isDarwin && !config.xdg.enable) then
+    skinFiles = lib.mapAttrs' (name: value:
+      lib.nameValuePair (if !(isDarwin && !config.xdg.enable) then
         "k9s/skins/${name}.yaml"
       else
         "Library/Application Support/k9s/skins/${name}.yaml") {

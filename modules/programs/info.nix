@@ -18,9 +18,6 @@
 # This is really nice.
 
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
 
   cfg = config.programs.info;
@@ -32,15 +29,15 @@ let
 
 in {
   imports = [
-    (mkRemovedOptionModule [ "programs" "info" "homeInfoDirLocation" ] ''
+    (lib.mkRemovedOptionModule [ "programs" "info" "homeInfoDirLocation" ] ''
       The `dir` file is now generated as part of the Home Manager profile and
       will no longer be placed in your home directory.
     '')
   ];
 
-  options.programs.info.enable = mkEnableOption "GNU Info";
+  options.programs.info.enable = lib.mkEnableOption "GNU Info";
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [
       infoPkg
 

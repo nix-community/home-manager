@@ -1,12 +1,10 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
 
   cfg = config.programs.sioyek;
 
-  renderConfig = generators.toKeyValue {
+  renderConfig = lib.generators.toKeyValue {
     mkKeyValue = key: value: "${key} ${value}";
     listsAsDuplicateKeys = true;
   };
@@ -14,7 +12,7 @@ let
 in {
   options = {
     programs.sioyek = {
-      enable = mkEnableOption
+      enable = lib.mkEnableOption
         "Sioyek, a PDF viewer designed for reading research papers and technical books";
 
       package = mkOption {
@@ -66,7 +64,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     { home.packages = [ cfg.package ]; }
     (mkIf (cfg.config != { }) {
       xdg.configFile."sioyek/prefs_user.config".text = renderConfig cfg.config;
@@ -76,5 +74,5 @@ in {
     })
   ]);
 
-  meta.maintainers = [ hm.maintainers.podocarp ];
+  meta.maintainers = [ lib.hm.maintainers.podocarp ];
 }

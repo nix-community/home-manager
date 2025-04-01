@@ -1,14 +1,12 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) getExe literalExpression mkIf mkOption mkOrder types;
 
   cfg = config.programs.fzf;
 
   renderedColors = colors:
-    concatStringsSep ","
-    (mapAttrsToList (name: value: "${name}:${value}") colors);
+    lib.concatStringsSep ","
+    (lib.mapAttrsToList (name: value: "${name}:${value}") colors);
 
   hasShellIntegrationEmbedded = lib.versionAtLeast cfg.package.version "0.48.0";
 
@@ -41,14 +39,14 @@ let
   '';
 in {
   imports = [
-    (mkRemovedOptionModule [ "programs" "fzf" "historyWidgetCommand" ]
+    (lib.mkRemovedOptionModule [ "programs" "fzf" "historyWidgetCommand" ]
       "This option is no longer supported by fzf.")
   ];
 
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
   options.programs.fzf = {
-    enable = mkEnableOption "fzf - a command-line fuzzy finder";
+    enable = lib.mkEnableOption "fzf - a command-line fuzzy finder";
 
     package = mkOption {
       type = types.package;
@@ -142,7 +140,7 @@ in {
     };
 
     tmux = {
-      enableShellIntegration = mkEnableOption ''
+      enableShellIntegration = lib.mkEnableOption ''
         setting `FZF_TMUX=1` which causes shell integration to use fzf-tmux
       '';
 
@@ -171,8 +169,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = mapAttrs (n: v: toString v)
-      (filterAttrs (n: v: v != [ ] && v != null) {
+    home.sessionVariables = lib.mapAttrs (n: v: toString v)
+      (lib.filterAttrs (n: v: v != [ ] && v != null) {
         FZF_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         FZF_ALT_C_OPTS = cfg.changeDirWidgetOptions;
         FZF_CTRL_R_OPTS = cfg.historyWidgetOptions;

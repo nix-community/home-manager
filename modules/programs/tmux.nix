@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkEnableOption mkOption optionalString types;
 
   cfg = config.programs.tmux;
 
@@ -105,12 +103,12 @@ let
   configPlugins = {
     assertions = [
       (let
-        hasBadPluginName = p: !(hasPrefix "tmuxplugin" (pluginName p));
-        badPlugins = filter hasBadPluginName cfg.plugins;
+        hasBadPluginName = p: !(lib.hasPrefix "tmuxplugin" (pluginName p));
+        badPlugins = lib.filter hasBadPluginName cfg.plugins;
       in {
         assertion = badPlugins == [ ];
         message = ''Invalid tmux plugin (not prefixed with "tmuxplugins"): ''
-          + concatMapStringsSep ", " pluginName badPlugins;
+          + lib.concatMapStringsSep ", " pluginName badPlugins;
       })
     ];
 
@@ -119,7 +117,7 @@ let
       # Load plugins with Home Manager                #
       # --------------------------------------------- #
 
-      ${(concatMapStringsSep "\n\n" (p: ''
+      ${(lib.concatMapStringsSep "\n\n" (p: ''
         # ${pluginName p}
         # ---------------------
         ${p.extraConfig or ""}
@@ -308,7 +306,7 @@ in {
           run at the top of your configuration.
         '';
         default = [ ];
-        example = literalExpression ''
+        example = lib.literalExpression ''
           with pkgs; [
             tmuxPlugins.cpu
             {
@@ -328,22 +326,22 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge ([
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = [ cfg.package ]
-        ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
-        ++ optional cfg.tmuxp.enable pkgs.tmuxp;
+        ++ lib.optional cfg.tmuxinator.enable pkgs.tmuxinator
+        ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
     }
 
-    { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
-    { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
+    { xdg.configFile."tmux/tmux.conf".text = lib.mkBefore tmuxConf; }
+    { xdg.configFile."tmux/tmux.conf".text = lib.mkAfter cfg.extraConfig; }
 
-    (mkIf cfg.secureSocket {
+    (lib.mkIf cfg.secureSocket {
       home.sessionVariables = {
         TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/$(id -u)"}'';
       };
     })
 
-    (mkIf (cfg.plugins != [ ]) configPlugins)
-  ]));
+    (lib.mkIf (cfg.plugins != [ ]) configPlugins)
+  ]);
 }

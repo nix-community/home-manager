@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.jq;
 
@@ -28,12 +26,12 @@ let
 in {
   options = {
     programs.jq = {
-      enable = mkEnableOption "the jq command-line JSON processor";
+      enable = lib.mkEnableOption "the jq command-line JSON processor";
 
       package = mkOption {
         type = types.package;
         default = pkgs.jq;
-        defaultText = literalExpression "pkgs.jq";
+        defaultText = lib.literalExpression "pkgs.jq";
         description = "jq package to use.";
       };
 
@@ -45,7 +43,7 @@ in {
           of the jq manual.
         '';
 
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             null    = "1;30";
             false   = "0;31";

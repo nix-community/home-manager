@@ -1,17 +1,11 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.afew;
-
+let cfg = config.programs.afew;
 in {
   options.programs.afew = {
-    enable = mkEnableOption "the afew initial tagging script for Notmuch";
+    enable = lib.mkEnableOption "the afew initial tagging script for Notmuch";
 
-    extraConfig = mkOption {
-      type = types.lines;
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = ''
         [SpamFilter]
         [KillThreadsFilter]
@@ -37,7 +31,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.afew ];
 
     xdg.configFile."afew/config".text = ''

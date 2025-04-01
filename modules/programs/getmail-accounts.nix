@@ -1,10 +1,8 @@
-{ config, lib, ... }:
-
-with lib;
-
-{
+{ lib, ... }:
+let inherit (lib) mkOption types;
+in {
   options.getmail = {
-    enable = mkEnableOption "the getmail mail retriever for this account";
+    enable = lib.mkEnableOption "the getmail mail retriever for this account";
 
     destinationCommand = mkOption {
       type = types.nullOr types.str;

@@ -1,19 +1,17 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
 
   cfg = config.programs.go;
 
   modeFileContent = "${cfg.telemetry.mode} ${cfg.telemetry.date}";
 
 in {
-  meta.maintainers = [ maintainers.rvolosatovs ];
+  meta.maintainers = [ lib.maintainers.rvolosatovs ];
 
   options = {
     programs.go = {
-      enable = mkEnableOption "Go";
+      enable = lib.mkEnableOption "Go";
 
       package = mkOption {
         type = types.package;
@@ -101,19 +99,19 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = [ cfg.package ];
 
       home.file = let
         goPath = if cfg.goPath != null then cfg.goPath else "go";
         mkSrc = n: v: { "${goPath}/src/${n}".source = v; };
-      in foldl' (a: b: a // b) { } (mapAttrsToList mkSrc cfg.packages);
+      in lib.foldl' (a: b: a // b) { } (lib.mapAttrsToList mkSrc cfg.packages);
     }
 
     (mkIf (cfg.goPath != null) {
-      home.sessionVariables.GOPATH = concatStringsSep ":" (map builtins.toPath
-        (map (path: "${config.home.homeDirectory}/${path}")
+      home.sessionVariables.GOPATH = lib.concatStringsSep ":"
+        (map builtins.toPath (map (path: "${config.home.homeDirectory}/${path}")
           ([ cfg.goPath ] ++ cfg.extraGoPaths)));
     })
 
@@ -123,7 +121,7 @@ in {
     })
 
     (mkIf (cfg.goPrivate != [ ]) {
-      home.sessionVariables.GOPRIVATE = concatStringsSep "," cfg.goPrivate;
+      home.sessionVariables.GOPRIVATE = lib.concatStringsSep "," cfg.goPrivate;
     })
 
     (mkIf (cfg.telemetry.mode != null) {

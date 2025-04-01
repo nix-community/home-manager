@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-{
+let inherit (lib) mkOption optionalAttrs types;
+in {
   imports = let
     msg = ''
       'programs.eza.enableAliases' has been deprecated and replaced with integration
@@ -12,14 +10,18 @@ with lib;
       aliases you can simply remove 'programs.eza.enableAliases' from your
       configuration.'';
     mkRenamed = opt:
-      mkRenamedOptionModule [ "programs" "exa" opt ] [ "programs" "eza" opt ];
+      lib.mkRenamedOptionModule [ "programs" "exa" opt ] [
+        "programs"
+        "eza"
+        opt
+      ];
   in (map mkRenamed [ "enable" "extraOptions" "icons" "git" ])
-  ++ [ (mkRemovedOptionModule [ "programs" "eza" "enableAliases" ] msg) ];
+  ++ [ (lib.mkRemovedOptionModule [ "programs" "eza" "enableAliases" ] msg) ];
 
-  meta.maintainers = [ maintainers.cafkafk ];
+  meta.maintainers = [ lib.maintainers.cafkafk ];
 
   options.programs.eza = {
-    enable = mkEnableOption "eza, a modern replacement for {command}`ls`";
+    enable = lib.mkEnableOption "eza, a modern replacement for {command}`ls`";
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };
@@ -72,22 +74,22 @@ with lib;
       '';
     };
 
-    package = mkPackageOption pkgs "eza" { nullable = true; };
+    package = lib.mkPackageOption pkgs "eza" { nullable = true; };
   };
 
   config = let
     cfg = config.programs.eza;
 
     iconsOption = let
-      v = if isBool cfg.icons then
+      v = if lib.isBool cfg.icons then
         (if cfg.icons then "auto" else null)
       else
         cfg.icons;
-    in optionals (v != null) [ "--icons" v ];
+    in lib.optionals (v != null) [ "--icons" v ];
 
-    args = escapeShellArgs (iconsOption
-      ++ optionals (cfg.colors != null) [ "--color" cfg.colors ]
-      ++ optional cfg.git "--git" ++ cfg.extraOptions);
+    args = lib.escapeShellArgs (iconsOption
+      ++ lib.optionals (cfg.colors != null) [ "--color" cfg.colors ]
+      ++ lib.optional cfg.git "--git" ++ cfg.extraOptions);
 
     optionsAlias = optionalAttrs (args != "") { eza = "eza ${args}"; };
 
@@ -98,8 +100,8 @@ with lib;
       lt = "eza --tree";
       lla = "eza -la";
     };
-  in mkIf cfg.enable {
-    warnings = optional (isBool cfg.icons) ''
+  in lib.mkIf cfg.enable {
+    warnings = lib.optional (lib.isBool cfg.icons) ''
       Setting programs.eza.icons to a Boolean is deprecated.
       Please update your configuration so that
 
@@ -113,13 +115,13 @@ with lib;
     programs.zsh.shellAliases = optionsAlias
       // optionalAttrs cfg.enableZshIntegration aliases;
 
-    programs.fish = mkMerge [
-      (mkIf (!config.programs.fish.preferAbbrs) {
+    programs.fish = lib.mkMerge [
+      (lib.mkIf (!config.programs.fish.preferAbbrs) {
         shellAliases = optionsAlias
           // optionalAttrs cfg.enableFishIntegration aliases;
       })
 
-      (mkIf config.programs.fish.preferAbbrs {
+      (lib.mkIf config.programs.fish.preferAbbrs {
         shellAliases = optionsAlias;
         shellAbbrs = optionalAttrs cfg.enableFishIntegration aliases;
       })

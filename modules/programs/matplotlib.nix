@@ -1,25 +1,23 @@
 { config, lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.matplotlib;
 
   formatLine = o: n: v:
     let
       formatValue = v:
-        if isBool v then (if v then "True" else "False") else toString v;
-    in if isAttrs v then
-      concatStringsSep "\n" (mapAttrsToList (formatLine "${o}${n}.") v)
+        if lib.isBool v then (if v then "True" else "False") else toString v;
+    in if lib.isAttrs v then
+      lib.concatStringsSep "\n" (lib.mapAttrsToList (formatLine "${o}${n}.") v)
     else
       (if v == "" then "" else "${o}${n}: ${formatValue v}");
 
 in {
-  meta.maintainers = [ maintainers.rprospero ];
+  meta.maintainers = [ lib.maintainers.rprospero ];
 
   options.programs.matplotlib = {
-    enable = mkEnableOption "matplotlib, a plotting library for python";
+    enable = lib.mkEnableOption "matplotlib, a plotting library for python";
 
     config = mkOption {
       default = { };
@@ -28,7 +26,7 @@ in {
         Add terms to the {file}`matplotlibrc` file to
         control the default matplotlib behavior.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           backend = "Qt5Agg";
           axes = {
@@ -52,8 +50,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    xdg.configFile."matplotlib/matplotlibrc".text = concatStringsSep "\n" ([ ]
-      ++ mapAttrsToList (formatLine "") cfg.config
-      ++ optional (cfg.extraConfig != "") cfg.extraConfig) + "\n";
+    xdg.configFile."matplotlib/matplotlibrc".text = lib.concatStringsSep "\n"
+      ([ ] ++ lib.mapAttrsToList (formatLine "") cfg.config
+        ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig) + "\n";
   };
 }

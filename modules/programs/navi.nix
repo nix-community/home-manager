@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.navi;
 
@@ -16,19 +15,19 @@ in {
   meta.maintainers = [ ];
 
   options.programs.navi = {
-    enable = mkEnableOption "Navi";
+    enable = lib.mkEnableOption "Navi";
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.navi;
-      defaultText = literalExpression "pkgs.navi";
+      defaultText = lib.literalExpression "pkgs.navi";
       description = "The package to use for the navi binary.";
     };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           cheats = {
             paths = [

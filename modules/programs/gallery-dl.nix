@@ -1,25 +1,20 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
   cfg = config.programs.gallery-dl;
 
   jsonFormat = pkgs.formats.json { };
-
 in {
   meta.maintainers = [ ];
 
   options.programs.gallery-dl = {
-    enable = mkEnableOption "gallery-dl";
+    enable = lib.mkEnableOption "gallery-dl";
 
-    package = mkPackageOption pkgs "gallery-dl" { nullable = true; };
+    package = lib.mkPackageOption pkgs "gallery-dl" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = jsonFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           extractor.base-directory = "~/Downloads";
         }
@@ -33,10 +28,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."gallery-dl/config.json" = mkIf (cfg.settings != { }) {
+    xdg.configFile."gallery-dl/config.json" = lib.mkIf (cfg.settings != { }) {
       source = jsonFormat.generate "gallery-dl-settings" cfg.settings;
     };
   };

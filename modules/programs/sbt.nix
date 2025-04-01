@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep concatStrings literalExpression mkIf mkOption types;
 
   renderPlugin = plugin: ''
     addSbtPlugin("${plugin.org}" % "${plugin.artifact}" % "${plugin.version}")
@@ -17,13 +16,14 @@ let
 
   renderCredentials = creds: ''
     import scala.sys.process._
-    ${concatStrings (imap0 renderCredential creds)}'';
+    ${concatStrings (lib.imap0 renderCredential creds)}'';
 
   renderRepository = value:
-    if isString value then ''
+    if lib.isString value then ''
       ${value}
     '' else ''
-      ${concatStrings (mapAttrsToList (name: value: "${name}: ${value}") value)}
+      ${concatStrings
+      (lib.mapAttrsToList (name: value: "${name}: ${value}") value)}
     '';
 
   renderRepositories = repos: ''
@@ -83,14 +83,14 @@ let
 
 in {
   imports = [
-    (mkRemovedOptionModule [ "programs" "sbt" "baseConfigPath" ]
+    (lib.mkRemovedOptionModule [ "programs" "sbt" "baseConfigPath" ]
       "Use programs.sbt.baseUserConfigPath instead, but note that the semantics are slightly different.")
   ];
 
-  meta.maintainers = [ maintainers.kubukoz ];
+  meta.maintainers = [ lib.maintainers.kubukoz ];
 
   options.programs.sbt = {
-    enable = mkEnableOption "sbt";
+    enable = lib.mkEnableOption "sbt";
 
     package = mkOption {
       type = types.package;
@@ -194,7 +194,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     { home.packages = [ cfg.package ]; }
 
     (mkIf (cfg.plugins != [ ] || cfg.pluginsExtra != [ ]) {

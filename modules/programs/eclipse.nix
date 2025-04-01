@@ -1,17 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.eclipse;
-
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     programs.eclipse = {
-      enable = mkEnableOption "Eclipse";
+      enable = lib.mkEnableOption "Eclipse";
 
       package = lib.mkPackageOption pkgs "eclipse" {
         default = [ "eclipses" "eclipse-platform" ];
@@ -46,7 +43,7 @@ in {
     home.packages = [
       (pkgs.eclipses.eclipseWithPlugins {
         eclipse = cfg.package;
-        jvmArgs = cfg.jvmArgs ++ optional cfg.enableLombok
+        jvmArgs = cfg.jvmArgs ++ lib.optional cfg.enableLombok
           "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
         plugins = cfg.plugins;
       })

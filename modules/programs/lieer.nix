@@ -1,22 +1,21 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) concatStringsSep mkIf mkOption mkRenamedOptionModule types;
+
   cfg = config.programs.lieer;
 
-  lieerAccounts =
-    filter (a: a.lieer.enable) (attrValues config.accounts.email.accounts);
+  lieerAccounts = lib.filter (a: a.lieer.enable)
+    (lib.attrValues config.accounts.email.accounts);
 
   nonGmailAccounts =
-    map (a: a.name) (filter (a: a.flavor != "gmail.com") lieerAccounts);
+    map (a: a.name) (lib.filter (a: a.flavor != "gmail.com") lieerAccounts);
 
   nonGmailConfigHelp =
     map (name: ''accounts.email.accounts.${name}.flavor = "gmail.com";'')
     nonGmailAccounts;
 
   missingNotmuchAccounts = map (a: a.name)
-    (filter (a: !a.notmuch.enable && a.lieer.notmuchSetupWarning)
+    (lib.filter (a: !a.notmuch.enable && a.lieer.notmuchSetupWarning)
       lieerAccounts);
 
   notmuchConfigHelp =
@@ -121,7 +120,7 @@ let
   };
 
   syncOpts = {
-    enable = mkEnableOption "lieer synchronization service";
+    enable = lib.mkEnableOption "lieer synchronization service";
 
     frequency = mkOption {
       type = types.str;
@@ -138,7 +137,7 @@ let
   };
 
   lieerOpts = {
-    enable = mkEnableOption "lieer Gmail synchronization for notmuch";
+    enable = lib.mkEnableOption "lieer Gmail synchronization for notmuch";
 
     notmuchSetupWarning = mkOption {
       type = types.bool;
@@ -210,28 +209,12 @@ let
       };
     };
   };
-
-  renamedOptions = account:
-    let prefix = [ "accounts" "email" "accounts" account.name "lieer" ];
-    in [
-      (mkRenamedOptionModule (prefix ++ [ "dropNonExistingLabels" ])
-        (prefix ++ [ "settings" "drop_non_existing_label" ]))
-      (mkRenamedOptionModule (prefix ++ [ "ignoreTagsRemote" ])
-        (prefix ++ [ "settings" "ignore_remote_labels" ]))
-      (mkRenamedOptionModule (prefix ++ [ "ignoreTagsLocal" ])
-        (prefix ++ [ "settings" "ignore_tags" ]))
-      (mkRenamedOptionModule (prefix ++ [ "timeout" ])
-        (prefix ++ [ "settings" "timeout" ]))
-      (mkRenamedOptionModule (prefix ++ [ "replaceSlashWithDot" ])
-        (prefix ++ [ "settings" "replace_slash_with_dot" ]))
-    ];
-
 in {
-  meta.maintainers = [ maintainers.tadfisher ];
+  meta.maintainers = [ lib.maintainers.tadfisher ];
 
   options = {
     programs.lieer = {
-      enable = mkEnableOption "lieer Gmail synchronization for notmuch";
+      enable = lib.mkEnableOption "lieer Gmail synchronization for notmuch";
 
       package = mkOption {
         type = types.package;
@@ -247,7 +230,7 @@ in {
       mkOption { type = with types; attrsOf lieerModule; };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     (mkIf (missingNotmuchAccounts != [ ]) {
       warnings = [''
         lieer is enabled for the following email accounts, but notmuch is not:
@@ -280,14 +263,14 @@ in {
         '';
       }];
 
-      warnings = flatten (map (account: account.warnings) lieerAccounts);
+      warnings = lib.flatten (map (account: account.warnings) lieerAccounts);
 
       home.packages = [ cfg.package ];
 
       # Notmuch should ignore non-mail files created by lieer.
       programs.notmuch.new.ignore = [ "/.*[.](json|lock|bak)$/" ];
 
-      home.file = listToAttrs (map configFile lieerAccounts);
+      home.file = lib.listToAttrs (map configFile lieerAccounts);
     }
   ]);
 }

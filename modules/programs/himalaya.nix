@@ -1,16 +1,15 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption optionalAttrs types;
+
   # aliases
   inherit (config.programs) himalaya;
   tomlFormat = pkgs.formats.toml { };
 
   # attrs util that removes entries containing a null value
-  compactAttrs = filterAttrs (_: val: !isNull val);
+  compactAttrs = lib.filterAttrs (_: val: !isNull val);
 
-  # needed for notmuch config, because the DB is here, and not in each
+  # Needed for notmuch config, because the DB is here, and not in each
   # account's dir
   maildirBasePath = config.accounts.email.maildirBasePath;
 
@@ -89,10 +88,10 @@ let
       sendmailConfig =
         optionalAttrs (isNull account.smtp && !isNull account.msmtp) {
           message.send.backend.type = "sendmail";
-          message.send.backend.cmd = getExe pkgs.msmtp;
+          message.send.backend.cmd = lib.getExe pkgs.msmtp;
         };
 
-      config = attrsets.mergeAttrsList [
+      config = lib.attrsets.mergeAttrsList [
         globalConfig
         signatureConfig
         imapConfig
@@ -102,13 +101,13 @@ let
         sendmailConfig
       ];
 
-    in recursiveUpdate config account.himalaya.settings;
+    in lib.recursiveUpdate config account.himalaya.settings;
 
 in {
-  meta.maintainers = with hm.maintainers; [ soywod toastal ];
+  meta.maintainers = with lib.hm.maintainers; [ soywod toastal ];
 
   imports = [
-    (mkRemovedOptionModule [ "services" "himalaya-watch" "enable" ] ''
+    (lib.mkRemovedOptionModule [ "services" "himalaya-watch" "enable" ] ''
       services.himalaya-watch has been removed.
 
       The watch feature moved away from Himalaya scope, and resides
@@ -121,8 +120,8 @@ in {
 
   options = {
     programs.himalaya = {
-      enable = mkEnableOption "the email client Himalaya CLI";
-      package = mkPackageOption pkgs "himalaya" { nullable = true; };
+      enable = lib.mkEnableOption "the email client Himalaya CLI";
+      package = lib.mkPackageOption pkgs "himalaya" { nullable = true; };
       settings = mkOption {
         type = types.submodule { freeformType = tomlFormat.type; };
         default = { };
@@ -136,7 +135,7 @@ in {
     accounts.email.accounts = mkOption {
       type = types.attrsOf (types.submodule {
         options.himalaya = {
-          enable = mkEnableOption
+          enable = lib.mkEnableOption
             "the email client Himalaya CLI for this email account";
 
           settings = mkOption {
@@ -152,20 +151,20 @@ in {
     };
   };
 
-  config = mkIf himalaya.enable {
+  config = lib.mkIf himalaya.enable {
     home.packages = lib.mkIf (himalaya.package != null) [ himalaya.package ];
 
     xdg = {
       configFile."himalaya/config.toml".source = let
-        enabledAccounts = filterAttrs (_: account: account.himalaya.enable)
+        enabledAccounts = lib.filterAttrs (_: account: account.himalaya.enable)
           config.accounts.email.accounts;
-        accountsConfig = mapAttrs mkAccountConfig enabledAccounts;
+        accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
         globalConfig = compactAttrs himalaya.settings;
         allConfig = globalConfig // { accounts = accountsConfig; };
       in tomlFormat.generate "himalaya.config.toml" allConfig;
 
-      desktopEntries.himalaya =
-        mkIf (pkgs.stdenv.hostPlatform.isLinux && (himalaya.package != null)) {
+      desktopEntries.himalaya = lib.mkIf
+        (pkgs.stdenv.hostPlatform.isLinux && (himalaya.package != null)) {
           type = "Application";
           name = "himalaya";
           genericName = "Email Client";

@@ -1,13 +1,11 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.msmtp;
 
-  msmtpAccounts =
-    filter (a: a.msmtp.enable) (attrValues config.accounts.email.accounts);
+  msmtpAccounts = lib.filter (a: a.msmtp.enable)
+    (lib.attrValues config.accounts.email.accounts);
 
   onOff = p: if p then "on" else "off";
 
@@ -40,7 +38,7 @@ let
 
     ${cfg.extraConfig}
 
-    ${concatStringsSep "\n\n" (map accountStr mailAccounts)}
+    ${lib.concatStringsSep "\n\n" (map accountStr mailAccounts)}
 
     ${cfg.extraAccounts}
   '';
@@ -49,12 +47,12 @@ in {
 
   options = {
     programs.msmtp = {
-      enable = mkEnableOption "msmtp";
+      enable = lib.mkEnableOption "msmtp";
 
       package = mkOption {
         type = types.package;
         default = pkgs.msmtp;
-        defaultText = literalExpression "pkgs.msmtp";
+        defaultText = lib.literalExpression "pkgs.msmtp";
         description = "The msmtp package to use.";
       };
 
@@ -87,7 +85,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xdg.configFile."msmtp/config".text = configFile msmtpAccounts;

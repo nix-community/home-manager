@@ -1,11 +1,10 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.pistol;
 
-  configFile = concatStringsSep "\n" (map ({ fpath, mime, command }:
+  configFile = lib.concatStringsSep "\n" (map ({ fpath, mime, command }:
     if fpath == "" then "${mime} ${command}" else "fpath ${fpath} ${command}")
     cfg.associations);
 
@@ -31,19 +30,19 @@ let
   };
 in {
   imports = [
-    (mkRemovedOptionModule [ "programs" "pistol" "config" ]
+    (lib.mkRemovedOptionModule [ "programs" "pistol" "config" ]
       "Pistol is now configured with programs.pistol.associations.")
   ];
 
-  meta.maintainers = [ hm.maintainers.mtoohey ];
+  meta.maintainers = [ lib.hm.maintainers.mtoohey ];
 
   options.programs.pistol = {
-    enable = mkEnableOption "file previewer for terminal file managers";
+    enable = lib.mkEnableOption "file previewer for terminal file managers";
 
     associations = mkOption {
       type = types.listOf association;
       default = [ ];
-      example = literalExpression ''
+      example = lib.literalExpression ''
         [
           { mime = "application/json"; command = "bat %pistol-filename%"; }
           { mime = "application/*"; command = "hexyl %pistol-filename%"; }
@@ -58,10 +57,10 @@ in {
 
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       assertions = [{
-        assertion = all ({ fpath, mime, ... }:
+        assertion = lib.all ({ fpath, mime, ... }:
           (fpath != "" && mime == "") || (fpath == "" && mime != ""))
           cfg.associations;
         message = ''

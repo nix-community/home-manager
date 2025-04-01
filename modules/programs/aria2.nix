@@ -1,7 +1,4 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
   cfg = config.programs.aria2;
 
@@ -14,13 +11,13 @@ let
           toString v;
     in "${n}=${formatValue v}";
 in {
-  meta.maintainers = [ hm.maintainers.justinlovinger ];
+  meta.maintainers = [ lib.hm.maintainers.justinlovinger ];
 
   options.programs.aria2 = {
-    enable = mkEnableOption "aria2";
+    enable = lib.mkEnableOption "aria2";
 
-    settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool float int str ]);
+    settings = lib.mkOption {
+      type = with lib.types; attrsOf (oneOf [ bool float int str ]);
       default = { };
       description = ''
         Options to add to {file}`aria2.conf` file.
@@ -28,7 +25,7 @@ in {
         {manpage}`aria2c(1)`
         for options.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           listen-port = 60000;
           dht-listen-port = 60000;
@@ -39,8 +36,8 @@ in {
       '';
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       description = ''
         Extra lines added to {file}`aria2.conf` file.
@@ -48,11 +45,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.aria2 ];
 
-    xdg.configFile."aria2/aria2.conf".text = concatStringsSep "\n" ([ ]
-      ++ mapAttrsToList formatLine cfg.settings
-      ++ optional (cfg.extraConfig != "") cfg.extraConfig);
+    xdg.configFile."aria2/aria2.conf".text = lib.concatStringsSep "\n" ([ ]
+      ++ lib.mapAttrsToList formatLine cfg.settings
+      ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig);
   };
 }

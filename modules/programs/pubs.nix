@@ -1,28 +1,26 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.pubs;
 
 in {
-  meta.maintainers = [ hm.maintainers.loicreynier ];
+  meta.maintainers = [ lib.hm.maintainers.loicreynier ];
 
   options.programs.pubs = {
-    enable = mkEnableOption "pubs";
+    enable = lib.mkEnableOption "pubs";
 
     package = mkOption {
       type = types.package;
       default = pkgs.pubs;
-      defaultText = literalExpression "pkgs.pubs";
+      defaultText = lib.literalExpression "pkgs.pubs";
       description = "The package to use for the pubs script.";
     };
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      example = literalExpression ''
+      example = lib.literalExpression ''
         '''
         [main]
         pubsdir = ''${config.home.homeDirectory}/.pubs
@@ -51,10 +49,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     home.file.".pubsrc" =
-      mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
+      lib.mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
   };
 }

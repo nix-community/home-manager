@@ -1,14 +1,13 @@
 { config, lib, pkgs, appName, package, modulePath, profilePath }:
-
-with lib;
-
 let
+  inherit (lib) mapAttrs mapAttrs' mkOption optionalAttrs types warn;
+
   jsonFormat = pkgs.formats.json { };
 
   # Map of nice field names to internal field names.
   # This is intended to be exhaustive and should be
   # updated at every version bump.
-  internalFieldNames = (genAttrs [
+  internalFieldNames = (lib.genAttrs [
     "name"
     "isAppProvided"
     "loadPath"
@@ -25,7 +24,10 @@ let
 
   # Convenience to specify absolute path to icon
   iconUrl = icon:
-    if isPath icon || hasPrefix "/" icon then "file://${icon}" else icon;
+    if lib.isPath icon || lib.hasPrefix "/" icon then
+      "file://${icon}"
+    else
+      icon;
 
   processCustomEngineInput = input:
     {
@@ -56,7 +58,7 @@ let
     in if requiredInput.isAppProvided then
       requiredInput
     else
-      pipe (input // requiredInput) [
+      lib.pipe (input // requiredInput) [
         migrateEngineToV11
         migrateEngineToV12
         processCustomEngineInput
@@ -79,9 +81,10 @@ let
           };
         in config // { _metaData = config._metaData // { inherit order; }; };
 
-      engineConfigsWithoutOrder = attrValues (removeAttrs configs config.order);
+      engineConfigsWithoutOrder =
+        lib.attrValues (removeAttrs configs config.order);
 
-      sortedEngineConfigs = (imap buildEngineConfigWithOrder config.order)
+      sortedEngineConfigs = (lib.imap buildEngineConfigWithOrder config.order)
         ++ engineConfigsWithoutOrder;
     in sortedEngineConfigs;
 
@@ -330,7 +333,7 @@ let
   migrateEngineToV11 = engine:
     engine // lib.optionalAttrs (engine ? iconMapObj) {
       iconMapObj = mapAttrs' (name: value:
-        let nameToIntResult = builtins.tryEval (toInt name);
+        let nameToIntResult = builtins.tryEval (lib.toInt name);
         in {
           name = if nameToIntResult.success then
             name
@@ -348,20 +351,21 @@ let
     let
       iconMapObj = optionalAttrs (engine ? iconURL) {
         "16" = warn "'iconURL' is deprecated, use 'icon = ${
-            strings.escapeNixString engine.iconURL
+            lib.strings.escapeNixString engine.iconURL
           }' instead" engine.iconURL;
       } // optionalAttrs (engine ? iconUpdateURL) {
         "16" = warn "'iconUpdateURL' is deprecated, use 'icon = ${
-            strings.escapeNixString engine.iconUpdateURL
+            lib.strings.escapeNixString engine.iconUpdateURL
           }' instead" engine.iconUpdateURL;
       } // (engine.iconMapObj or { });
-    in throwIf (engine ? hasPreferredIcon) "hasPreferredIcon has been removed"
+    in lib.throwIf (engine ? hasPreferredIcon)
+    "hasPreferredIcon has been removed"
     (removeAttrs engine [ "iconURL" "iconUpdateURL" ])
     // lib.optionalAttrs (iconMapObj != { }) { inherit iconMapObj; };
 in {
   imports = [ (pkgs.path + "/nixos/modules/misc/meta.nix") ];
 
-  meta.maintainers = with maintainers; [ kira-bruneau ];
+  meta.maintainers = with lib.maintainers; [ kira-bruneau ];
 
   options = {
     enable = mkOption {
@@ -427,7 +431,7 @@ in {
       });
 
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           nix-packages = {
             name = "Nix Packages";

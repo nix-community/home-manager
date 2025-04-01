@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) concatStringsSep literalExpression mkOption types;
 
   cfg = config.programs.vim;
   defaultPlugins = [ pkgs.vimPlugins.vim-sensible ];
@@ -38,32 +36,35 @@ let
           default = null;
           visible = false;
         };
-    in mapAttrs opt knownSettings;
+    in lib.mapAttrs opt knownSettings;
   };
 
   setExpr = name: value:
     let
-      v = if isBool value then
+      v = if lib.isBool value then
         (if value then "" else "no") + name
       else
         "${name}=${
-          if isList value then concatStringsSep "," value else toString value
+          if lib.isList value then
+            concatStringsSep "," value
+          else
+            toString value
         }";
-    in optionalString (value != null) ("set " + v);
+    in lib.optionalString (value != null) ("set " + v);
 
   plugins = let
     vpkgs = pkgs.vimPlugins;
     getPkg = p:
-      if isDerivation p then
+      if lib.isDerivation p then
         [ p ]
       else
-        optional (isString p && hasAttr p vpkgs) vpkgs.${p};
-  in concatMap getPkg cfg.plugins;
+        lib.optional (lib.isString p && lib.hasAttr p vpkgs) vpkgs.${p};
+  in lib.concatMap getPkg cfg.plugins;
 
 in {
   options = {
     programs.vim = {
-      enable = mkEnableOption "Vim";
+      enable = lib.mkEnableOption "Vim";
 
       plugins = mkOption {
         type = with types; listOf (either str package);
@@ -92,7 +93,7 @@ in {
           corresponding values must be among the following supported
           options.
 
-          ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
+          ${concatStringsSep "\n" (lib.mapAttrsToList (n: v: ''
             {var}`${n}`
             : ${v.description}
           '') knownSettings)}
@@ -140,7 +141,7 @@ in {
 
   config = (let
     customRC = ''
-      ${concatStringsSep "\n" (remove "" (mapAttrsToList setExpr
+      ${concatStringsSep "\n" (lib.remove "" (lib.mapAttrsToList setExpr
         (builtins.intersectAttrs knownSettings cfg.settings)))}
 
       ${cfg.extraConfig}
@@ -154,27 +155,28 @@ in {
         packages.home-manager.start = plugins;
       };
     };
-  in mkIf cfg.enable {
+  in lib.mkIf cfg.enable {
     assertions = let
       packagesNotFound =
-        filter (p: isString p && (!hasAttr p pkgs.vimPlugins)) cfg.plugins;
+        lib.filter (p: lib.isString p && (!lib.hasAttr p pkgs.vimPlugins))
+        cfg.plugins;
     in [{
       assertion = packagesNotFound == [ ];
       message = "Following VIM plugin not found in pkgs.vimPlugins: ${
-          concatMapStringsSep ", " (p: ''"${p}"'') packagesNotFound
+          lib.concatMapStringsSep ", " (p: ''"${p}"'') packagesNotFound
         }";
     }];
 
-    warnings = let stringPlugins = filter isString cfg.plugins;
-    in optional (stringPlugins != [ ]) ''
+    warnings = let stringPlugins = lib.filter lib.isString cfg.plugins;
+    in lib.optional (stringPlugins != [ ]) ''
       Specifying VIM plugins using strings is deprecated, found ${
-        concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
+        lib.concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
       } as strings.
     '';
 
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "vim"; };
+    home.sessionVariables = lib.mkIf cfg.defaultEditor { EDITOR = "vim"; };
 
     programs.vim = {
       package = vim;

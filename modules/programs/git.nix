@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep literalExpression mkDefault mkEnableOption mkIf mkOption
+    mkOptionDefault mkPackageOption types;
 
   cfg = config.programs.git;
 
@@ -65,8 +65,8 @@ let
       };
     };
     config.path = mkIf (config.contents != { }) (mkDefault
-      (pkgs.writeText (hm.strings.storeFileName config.contentSuffix)
-        (generators.toGitINI config.contents)));
+      (pkgs.writeText (lib.hm.strings.storeFileName config.contentSuffix)
+        (lib.generators.toGitINI config.contents)));
   });
 
 in {
@@ -431,7 +431,7 @@ in {
           type = types.listOf types.str;
           default = [ ];
           example = literalExpression ''[ "--no-adds-only-special" ]'';
-          apply = concatStringsSep " ";
+          apply = lib.concatStringsSep " ";
           description = ''
             Command line arguments to include in the <command>RIFF</command> environment variable.
 
@@ -443,7 +443,7 @@ in {
   };
 
   imports = [
-    (mkRenamedOptionModule [ "programs" "git" "signing" "gpgPath" ] [
+    (lib.mkRenamedOptionModule [ "programs" "git" "signing" "gpgPath" ] [
       "programs"
       "git"
       "signing"
@@ -451,7 +451,7 @@ in {
     ])
   ];
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = [ cfg.package ];
 
@@ -464,7 +464,7 @@ in {
             cfg.diff-highlight.enable
             cfg.riff.enable
           ];
-        in count id enabled <= 1;
+        in lib.count lib.id enabled <= 1;
         message =
           "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' can be set to true at the same time.";
       }];
@@ -475,7 +475,7 @@ in {
       };
 
       xdg.configFile = {
-        "git/config".text = generators.toGitINI cfg.iniContent;
+        "git/config".text = lib.generators.toGitINI cfg.iniContent;
 
         "git/ignore" = mkIf (cfg.ignores != [ ]) {
           text = concatStringsSep "\n" cfg.ignores + "\n";
@@ -492,8 +492,9 @@ in {
         hasSmtp = name: account: account.smtp != null;
 
         genIdentity = name: account:
-          with account;
-          nameValuePair "sendemail.${name}" (if account.msmtp.enable then {
+          let inherit (account) address realName smtp userName;
+          in lib.nameValuePair "sendemail.${name}"
+          (if account.msmtp.enable then {
             sendmailCmd = "${pkgs.msmtp}/bin/msmtp";
             envelopeSender = "auto";
             from = "${realName} <${address}>";
@@ -501,7 +502,7 @@ in {
             {
               smtpEncryption = if smtp.tls.enable then
                 (if smtp.tls.useStartTls
-                || versionOlder config.home.stateVersion "20.09" then
+                || lib.versionOlder config.home.stateVersion "20.09" then
                   "tls"
                 else
                   "ssl")
@@ -512,31 +513,31 @@ in {
               smtpServer = smtp.host;
               smtpUser = userName;
               from = "${realName} <${address}>";
-            } // optionalAttrs (smtp.port != null) {
+            } // lib.optionalAttrs (smtp.port != null) {
               smtpServerPort = smtp.port;
             });
-      in mapAttrs' genIdentity
-      (filterAttrs hasSmtp config.accounts.email.accounts);
+      in lib.mapAttrs' genIdentity
+      (lib.filterAttrs hasSmtp config.accounts.email.accounts);
     }
 
     (mkIf (cfg.signing != { }) {
       programs.git = {
         signing = {
-          format = if (versionOlder config.home.stateVersion "25.05") then
+          format = if (lib.versionOlder config.home.stateVersion "25.05") then
             (mkOptionDefault "openpgp")
           else
             (mkOptionDefault null);
           signer = let
             defaultSigners = {
-              openpgp = getExe config.programs.gpg.package;
-              ssh = getExe' pkgs.openssh "ssh-keygen";
-              x509 = getExe' config.programs.gpg.package "gpgsm";
+              openpgp = lib.getExe config.programs.gpg.package;
+              ssh = lib.getExe' pkgs.openssh "ssh-keygen";
+              x509 = lib.getExe' config.programs.gpg.package "gpgsm";
             };
           in mkIf (cfg.signing.format != null)
           (mkOptionDefault defaultSigners.${cfg.signing.format});
         };
 
-        iniContent = mkMerge [
+        iniContent = lib.mkMerge [
           (mkIf (cfg.signing.key != null) {
             user.signingKey = mkDefault cfg.signing.key;
           })
@@ -558,7 +559,7 @@ in {
       programs.git.iniContent = {
         core.hooksPath = let
           entries =
-            mapAttrsToList (name: path: { inherit name path; }) cfg.hooks;
+            lib.mapAttrsToList (name: path: { inherit name path; }) cfg.hooks;
         in toString (pkgs.linkFarm "git-hooks" entries);
       };
     })
@@ -588,15 +589,15 @@ in {
           } else {
             include.path = "${path}";
           };
-      in mkAfter (concatStringsSep "\n"
-        (map generators.toGitINI (map include cfg.includes)));
+      in lib.mkAfter (concatStringsSep "\n"
+        (map lib.generators.toGitINI (map include cfg.includes)));
     })
 
     (mkIf cfg.lfs.enable {
       home.packages = [ pkgs.git-lfs ];
 
       programs.git.iniContent.filter.lfs =
-        let skipArg = optional cfg.lfs.skipSmudge "--skip";
+        let skipArg = lib.optional cfg.lfs.skipSmudge "--skip";
         in {
           clean = "git-lfs clean -- %f";
           process =
@@ -654,8 +655,8 @@ in {
         dhCommand =
           "${cfg.package}/share/git/contrib/diff-highlight/diff-highlight";
       in {
-        core.pager = "${dhCommand} | ${getExe pkgs.less} ${
-            escapeShellArgs cfg.diff-highlight.pagerOpts
+        core.pager = "${dhCommand} | ${lib.getExe pkgs.less} ${
+            lib.escapeShellArgs cfg.diff-highlight.pagerOpts
           }";
         interactive.diffFilter = dhCommand;
       };
@@ -663,7 +664,7 @@ in {
 
     (let
       difftCommand = concatStringsSep " " [
-        "${getExe cfg.difftastic.package}"
+        "${lib.getExe cfg.difftastic.package}"
         "--color ${cfg.difftastic.color}"
         "--background ${cfg.difftastic.background}"
         "--display ${cfg.difftastic.display}"
@@ -704,7 +705,7 @@ in {
         let dsfCommand = "${pkgs.diff-so-fancy}/bin/diff-so-fancy";
         in {
           core.pager = "${dsfCommand} | ${pkgs.less}/bin/less ${
-              escapeShellArgs cfg.diff-so-fancy.pagerOpts
+              lib.escapeShellArgs cfg.diff-so-fancy.pagerOpts
             }";
           interactive.diffFilter = "${dsfCommand} --patch";
           diff-so-fancy = {
@@ -718,7 +719,7 @@ in {
         };
     })
 
-    (let riffExe = baseNameOf (getExe cfg.riff.package);
+    (let riffExe = baseNameOf (lib.getExe cfg.riff.package);
     in mkIf cfg.riff.enable {
       home.packages = [ cfg.riff.package ];
 

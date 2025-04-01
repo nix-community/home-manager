@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   cfg = config.programs.i3status-rust;
 
@@ -12,7 +10,7 @@ in {
   meta.maintainers = with lib.maintainers; [ farlion thiagokokada ];
 
   options.programs.i3status-rust = {
-    enable = mkEnableOption "a replacement for i3-status written in Rust";
+    enable = lib.mkEnableOption "a replacement for i3-status written in Rust";
 
     bars = mkOption {
       type = types.attrsOf (types.submodule {
@@ -230,10 +228,10 @@ in {
 
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "programs.i3status-rust" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.i3status-rust" pkgs
+        lib.platforms.linux)
       {
         assertion = lib.versionOlder cfg.package.version "0.31.0"
           || lib.versionAtLeast cfg.package.version "0.31.2";
@@ -244,13 +242,13 @@ in {
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile = mapAttrs' (cfgFileSuffix: cfgBar:
-      nameValuePair ("i3status-rust/config-${cfgFileSuffix}.toml") ({
+    xdg.configFile = lib.mapAttrs' (cfgFileSuffix: cfgBar:
+      lib.nameValuePair "i3status-rust/config-${cfgFileSuffix}.toml" {
         onChange = ''
           ${pkgs.procps}/bin/pkill -u $USER -USR2 i3status-rs || true
         '';
 
-        source = settingsFormat.generate ("config-${cfgFileSuffix}.toml") ({
+        source = settingsFormat.generate "config-${cfgFileSuffix}.toml" ({
           theme = if lib.versionAtLeast cfg.package.version "0.30.0" then {
             theme = cfgBar.theme;
           } else
@@ -261,6 +259,6 @@ in {
             cfgBar.icons;
           block = cfgBar.blocks;
         } // cfgBar.settings);
-      })) cfg.bars;
+      }) cfg.bars;
   };
 }

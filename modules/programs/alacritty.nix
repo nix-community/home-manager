@@ -1,21 +1,18 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
   cfg = config.programs.alacritty;
   tomlFormat = pkgs.formats.toml { };
 in {
   options = {
     programs.alacritty = {
-      enable = mkEnableOption "Alacritty";
+      enable = lib.mkEnableOption "Alacritty";
 
       package = lib.mkPackageOption pkgs "alacritty" { };
 
-      settings = mkOption {
+      settings = lib.mkOption {
         type = tomlFormat.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             window.dimensions = {
               lines = 3;
@@ -42,7 +39,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {

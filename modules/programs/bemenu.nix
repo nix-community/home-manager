@@ -1,23 +1,17 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.bemenu;
-
+let cfg = config.programs.bemenu;
 in {
   meta.maintainers = [ ];
 
   options.programs.bemenu = {
-    enable = mkEnableOption "bemenu";
+    enable = lib.mkEnableOption "bemenu";
 
-    package = mkPackageOption pkgs "bemenu" { nullable = true; };
+    package = lib.mkPackageOption pkgs "bemenu" { nullable = true; };
 
-    settings = mkOption {
-      type = with types; attrsOf (oneOf [ str number bool ]);
+    settings = lib.mkOption {
+      type = with lib.types; attrsOf (oneOf [ str number bool ]);
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           line-height = 28;
           prompt = "open";
@@ -40,14 +34,16 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "programs.bemenu" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.bemenu" pkgs
+        lib.platforms.linux)
+    ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.sessionVariables = mkIf (cfg.settings != { }) {
-      BEMENU_OPTS = cli.toGNUCommandLineShell { } cfg.settings;
+    home.sessionVariables = lib.mkIf (cfg.settings != { }) {
+      BEMENU_OPTS = lib.cli.toGNUCommandLineShell { } cfg.settings;
     };
   };
 }

@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.lazygit;
 
@@ -14,15 +12,16 @@ in {
   meta.maintainers = [ lib.hm.maintainers.kalhauge lib.maintainers.khaneliman ];
 
   options.programs.lazygit = {
-    enable = mkEnableOption "lazygit, a simple terminal UI for git commands";
+    enable =
+      lib.mkEnableOption "lazygit, a simple terminal UI for git commands";
 
-    package = mkPackageOption pkgs "lazygit" { nullable = true; };
+    package = lib.mkPackageOption pkgs "lazygit" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
-      defaultText = literalExpression "{ }";
-      example = literalExpression ''
+      defaultText = lib.literalExpression "{ }";
+      example = lib.literalExpression ''
         {
           gui.theme = {
             lightTheme = true;
@@ -45,7 +44,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."Library/Application Support/lazygit/config.yml" =
       mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable)) {

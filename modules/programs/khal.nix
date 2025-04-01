@@ -1,9 +1,7 @@
 # khal config loader is sensitive to leading space !
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption optional optionalString filterAttrs recursiveUpdate;
 
   cfg = config.programs.khal;
 
@@ -15,7 +13,7 @@ let
   # a contact account may have multiple collections, each a separate calendar
   expandContactAccount = name: acct:
     if acct.khal.collections != null then
-      listToAttrs (map (c: {
+      lib.listToAttrs (map (c: {
         name = "${name}-${c}";
         value = recursiveUpdate acct { khal.thisCollection = c; };
       }) acct.khal.collections)
@@ -23,21 +21,22 @@ let
       ${name} = acct;
     };
 
-  khalContactAccounts = concatMapAttrs expandContactAccount
-    (mapAttrs (_: v: recursiveUpdate v { khal.type = "birthdays"; })
+  khalContactAccounts = lib.concatMapAttrs expandContactAccount
+    (lib.mapAttrs (_: v: recursiveUpdate v { khal.type = "birthdays"; })
       (filterAttrs (_: a: a.khal.enable) config.accounts.contact.accounts));
 
   khalAccounts = khalCalendarAccounts // khalContactAccounts;
 
-  primaryAccount = findSingle (a: a.primary) null null
-    (mapAttrsToList (n: v: v // { name = n; }) khalCalendarAccounts);
+  primaryAccount = lib.findSingle (a: a.primary) null null
+    (lib.mapAttrsToList (n: v: v // { name = n; }) khalCalendarAccounts);
 
   definedAttrs = filterAttrs (_: v: !isNull v);
 
-  toKeyValueIfDefined = attrs: generators.toKeyValue { } (definedAttrs attrs);
+  toKeyValueIfDefined = attrs:
+    lib.generators.toKeyValue { } (definedAttrs attrs);
 
   genCalendarStr = name: value:
-    concatStringsSep "\n" ([
+    lib.concatStringsSep "\n" ([
       "[[${name}]]"
       "path = ${
         value.local.path + "/"
@@ -50,8 +49,9 @@ let
       ++ optional (value.khal.addresses != [ ])
       "addresses= ${lib.concatStringsSep ", " value.khal.addresses}"
       ++ optional (value.khal.color != null) "color = '${value.khal.color}'"
-      ++ [ (toKeyValueIfDefined (getAttrs [ "type" "priority" ] value.khal)) ]
-      ++ [ "\n" ]);
+      ++ [
+        (toKeyValueIfDefined (lib.getAttrs [ "type" "priority" ] value.khal))
+      ] ++ [ "\n" ]);
 
   localeFormatOptions = let
     T = lib.types;
@@ -166,9 +166,9 @@ let
 
 in {
   options.programs.khal = {
-    enable = mkEnableOption "khal, a CLI calendar application";
+    enable = lib.mkEnableOption "khal, a CLI calendar application";
 
-    package = mkPackageOption pkgs "khal" { nullable = true; };
+    package = lib.mkPackageOption pkgs "khal" { nullable = true; };
 
     locale = mkOption {
       type = lib.types.submodule { options = localeOptions; };
@@ -181,7 +181,7 @@ in {
     settings = mkOption {
       type = iniFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           default = {
             default_calendar = "Calendar";
@@ -198,15 +198,15 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."khal/config".text = concatStringsSep "\n" ([ "[calendars]" ]
-      ++ mapAttrsToList genCalendarStr khalAccounts ++ [
-        (generators.toINI { } (recursiveUpdate cfg.settings {
+    xdg.configFile."khal/config".text = lib.concatStringsSep "\n"
+      ([ "[calendars]" ] ++ lib.mapAttrsToList genCalendarStr khalAccounts ++ [
+        (lib.generators.toINI { } (recursiveUpdate cfg.settings {
           locale = definedAttrs (cfg.locale // { _module = null; });
 
-          default = optionalAttrs (!isNull primaryAccount) {
+          default = lib.optionalAttrs (!isNull primaryAccount) {
             highlight_event_days = true;
             default_calendar = if isNull primaryAccount.primaryCollection then
               primaryAccount.name

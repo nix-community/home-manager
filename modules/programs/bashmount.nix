@@ -1,19 +1,13 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.bashmount;
-
+let cfg = config.programs.bashmount;
 in {
-  meta.maintainers = [ maintainers.AndersonTorres ];
+  meta.maintainers = [ lib.maintainers.AndersonTorres ];
 
   options.programs.bashmount = {
-    enable = mkEnableOption "bashmount";
+    enable = lib.mkEnableOption "bashmount";
 
-    extraConfig = mkOption {
-      type = types.lines;
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       description = ''
         Configuration written to
@@ -25,10 +19,10 @@ in {
 
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.bashmount ];
 
     xdg.configFile."bashmount/config" =
-      mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
+      lib.mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
   };
 }

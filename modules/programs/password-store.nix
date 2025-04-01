@@ -1,16 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   cfg = config.programs.password-store;
 
 in {
-  meta.maintainers = with maintainers; [ euxane ];
+  meta.maintainers = with lib.maintainers; [ euxane ];
 
   options.programs.password-store = {
-    enable = mkEnableOption "Password store";
+    enable = lib.mkEnableOption "Password store";
 
     package = mkOption {
       type = types.package;
@@ -27,7 +25,7 @@ in {
 
     settings = mkOption rec {
       type = with types; attrsOf str;
-      apply = mergeAttrs default;
+      apply = lib.mergeAttrs default;
       default = {
         PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
       };
@@ -52,14 +50,14 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
     home.sessionVariables = cfg.settings;
 
     services.pass-secret-service.storePath =
-      mkDefault cfg.settings.PASSWORD_STORE_DIR;
+      lib.mkDefault cfg.settings.PASSWORD_STORE_DIR;
 
-    xsession.importedVariables = mkIf config.xsession.enable
-      (mapAttrsToList (name: value: name) cfg.settings);
+    xsession.importedVariables = lib.mkIf config.xsession.enable
+      (lib.mapAttrsToList (name: value: name) cfg.settings);
   };
 }

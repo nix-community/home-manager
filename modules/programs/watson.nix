@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.watson;
 
@@ -17,12 +15,12 @@ in {
   meta.maintainers = [ ];
 
   options.programs.watson = {
-    enable = mkEnableOption "watson, a wonderful CLI to track your time";
+    enable = lib.mkEnableOption "watson, a wonderful CLI to track your time";
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.watson;
-      defaultText = literalExpression "pkgs.watson";
+      defaultText = lib.literalExpression "pkgs.watson";
       description = "Package providing the {command}`watson`.";
     };
 
@@ -35,7 +33,7 @@ in {
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = iniFormat.type;
       default = { };
       description = ''
@@ -46,7 +44,7 @@ in {
         See <https://github.com/TailorDev/Watson/blob/master/docs/user-guide/configuration.md>
         for an example configuration.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           backend = {
             url = "https://api.crick.fr";

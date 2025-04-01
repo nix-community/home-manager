@@ -1,14 +1,18 @@
 { lib, ... }:
-with lib;
 let
+  inherit (lib) mkRemovedOptionModule;
+
   modulePath = [ "programs" "firefox" ];
 
-  moduleName = concatStringsSep "." modulePath;
+  moduleName = lib.concatStringsSep "." modulePath;
 
   mkFirefoxModule = import ./firefox/mkFirefoxModule.nix;
 in {
-  meta.maintainers =
-    [ maintainers.rycee hm.maintainers.bricked hm.maintainers.HPsaucii ];
+  meta.maintainers = [
+    lib.maintainers.rycee
+    lib.hm.maintainers.bricked
+    lib.hm.maintainers.HPsaucii
+  ];
 
   imports = [
     (mkFirefoxModule {
@@ -18,7 +22,7 @@ in {
       unwrappedPackageName = "firefox-unwrapped";
       visible = true;
 
-      platforms.linux = rec { configPath = ".mozilla/firefox"; };
+      platforms.linux = { configPath = ".mozilla/firefox"; };
       platforms.darwin = {
         configPath = "Library/Application Support/Firefox";
       };

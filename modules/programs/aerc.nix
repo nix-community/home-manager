@@ -1,7 +1,8 @@
 { config, lib, pkgs, ... }:
-
-with lib;
 let
+  inherit (lib)
+    attrsets generators literalExpression mapAttrs mkIf mkOption types;
+
   cfg = config.programs.aerc;
 
   primitive = with types;
@@ -36,9 +37,9 @@ in {
 
   options.programs.aerc = {
 
-    enable = mkEnableOption "aerc";
+    enable = lib.mkEnableOption "aerc";
 
-    package = mkPackageOption pkgs "aerc" { nullable = true; };
+    package = lib.mkPackageOption pkgs "aerc" { nullable = true; };
 
     extraAccounts = mkOption {
       type = sectionsOrLines;
@@ -103,15 +104,16 @@ in {
   };
 
   config = let
-    joinCfg = cfgs: concatStringsSep "\n" (filter (v: v != "") cfgs);
+    joinCfg = cfgs: lib.concatStringsSep "\n" (lib.filter (v: v != "") cfgs);
 
     toINI = conf: # quirk: global section is prepended w/o section heading
       let
         global = conf.global or { };
         local = removeAttrs conf [ "global" ];
         mkValueString = v:
-          if isList v then # join with comma
-            concatStringsSep "," (map (generators.mkValueStringDefault { }) v)
+          if lib.isList v then # join with comma
+            lib.concatStringsSep ","
+            (map (generators.mkValueStringDefault { }) v)
           else
             generators.mkValueStringDefault { } v;
         mkKeyValue =
@@ -121,10 +123,10 @@ in {
         (generators.toINI { inherit mkKeyValue; } local)
       ];
 
-    mkINI = conf: if isString conf then conf else toINI conf;
+    mkINI = conf: if lib.isString conf then conf else toINI conf;
 
     mkStyleset = attrsets.mapAttrs' (k: v:
-      let value = if isString v then v else toINI { global = v; };
+      let value = if lib.isString v then v else toINI { global = v; };
       in {
         name = "${configDir}/stylesets/${k}";
         value.text = joinCfg [ header value ];
@@ -146,11 +148,12 @@ in {
 
     accountsExtraBinds = mapAttrs accounts.mkAccountBinds aerc-accounts;
 
-    joinContextual = contextual: joinCfg (map mkINI (attrValues contextual));
+    joinContextual = contextual:
+      joinCfg (map mkINI (lib.attrValues contextual));
 
     isRecursivelyEmpty = x:
-      if isAttrs x then
-        all (x: x == { } || isRecursivelyEmpty x) (attrValues x)
+      if lib.isAttrs x then
+        lib.all (x: x == { } || isRecursivelyEmpty x) (lib.attrValues x)
       else
         false;
 
@@ -183,8 +186,9 @@ in {
 
     assertions = [{
       assertion = let
-        extraConfigSections = (unique (flatten
-          (mapAttrsToList (_: v: attrNames v.aerc.extraConfig) aerc-accounts)));
+        extraConfigSections = (lib.unique (lib.flatten
+          (lib.mapAttrsToList (_: v: lib.attrNames v.aerc.extraConfig)
+            aerc-accounts)));
       in extraConfigSections == [ ] || extraConfigSections == [ "ui" ];
       message = ''
         Only the ui section of $XDG_CONFIG_HOME/aerc.conf supports contextual (per-account) configuration.

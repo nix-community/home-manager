@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf types;
 
   cfg = config.programs.z-lua;
 
@@ -18,9 +16,9 @@ in {
   meta.maintainers = [ ];
 
   options.programs.z-lua = {
-    enable = mkEnableOption "z.lua";
+    enable = lib.mkEnableOption "z.lua";
 
-    options = mkOption {
+    options = lib.mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "enhanced" "once" "fzf" ];
@@ -38,7 +36,7 @@ in {
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableAliases = mkOption {
+    enableAliases = lib.mkOption {
       default = false;
       type = types.bool;
       description = ''
@@ -52,13 +50,13 @@ in {
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       eval "$(${pkgs.z-lua}/bin/z --init bash ${
-        concatStringsSep " " cfg.options
+        lib.concatStringsSep " " cfg.options
       })"
     '';
 
     programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${pkgs.z-lua}/bin/z --init zsh ${
-        concatStringsSep " " cfg.options
+        lib.concatStringsSep " " cfg.options
       })"
     '';
 
@@ -66,11 +64,11 @@ in {
 
     programs.zsh.shellAliases = mkIf cfg.enableAliases aliases;
 
-    programs.fish = mkMerge [
+    programs.fish = lib.mkMerge [
       {
         shellInit = mkIf cfg.enableFishIntegration ''
           source (${pkgs.z-lua}/bin/z --init fish ${
-            concatStringsSep " " cfg.options
+            lib.concatStringsSep " " cfg.options
           } | psub)
         '';
       }

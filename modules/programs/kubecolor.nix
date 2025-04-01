@@ -1,20 +1,18 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.kubecolor;
   yamlFormat = pkgs.formats.yaml { };
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
 in {
-  meta.maintainers = with maintainers; [ ajgon ];
+  meta.maintainers = with lib.maintainers; [ ajgon ];
 
   options.programs.kubecolor = {
-    enable = mkEnableOption "kubecolor - Colorize your kubectl output";
+    enable = lib.mkEnableOption "kubecolor - Colorize your kubectl output";
 
-    package = mkPackageOption pkgs "kubecolor" { };
+    package = lib.mkPackageOption pkgs "kubecolor" { };
 
     enableAlias = mkOption {
       type = types.bool;
@@ -31,7 +29,7 @@ in {
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         kubectl = lib.getExe pkgs.kubectl
         preset = "dark";
         paging = "auto";
@@ -58,7 +56,7 @@ in {
       "kube/color.yaml";
 
   in mkIf cfg.enable {
-    warnings = optional (cfg.package == null && cfg.plugins != [ ]) ''
+    warnings = lib.optional (cfg.package == null && cfg.plugins != [ ]) ''
       You have configured `enableAlias` for `kubecolor` but have not set `package`.
 
       The alias will not be created.

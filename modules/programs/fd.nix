@@ -1,9 +1,10 @@
 { config, lib, pkgs, ... }:
-with lib; {
-  meta.maintainers = [ maintainers.uncenter ];
+let inherit (lib) mkOption types;
+in {
+  meta.maintainers = [ lib.maintainers.uncenter ];
 
   options.programs.fd = {
-    enable = mkEnableOption
+    enable = lib.mkEnableOption
       "fd, a simple, fast and user-friendly alternative to {command}`find`";
 
     ignores = mkOption {
@@ -30,16 +31,17 @@ with lib; {
       '';
     };
 
-    package = mkPackageOption pkgs "fd" { nullable = true; };
+    package = lib.mkPackageOption pkgs "fd" { nullable = true; };
   };
 
   config = let
     cfg = config.programs.fd;
 
-    args = escapeShellArgs (optional cfg.hidden "--hidden" ++ cfg.extraOptions);
+    args = lib.escapeShellArgs
+      (lib.optional cfg.hidden "--hidden" ++ cfg.extraOptions);
 
-    optionsAlias = optionalAttrs (args != "") { fd = "fd ${args}"; };
-  in mkIf cfg.enable {
+    optionsAlias = lib.optionalAttrs (args != "") { fd = "fd ${args}"; };
+  in lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs.bash.shellAliases = optionsAlias;
@@ -52,8 +54,8 @@ with lib; {
 
     programs.nushell.shellAliases = optionsAlias;
 
-    xdg.configFile."fd/ignore" = mkIf (cfg.ignores != [ ]) {
-      text = concatStringsSep "\n" cfg.ignores + "\n";
+    xdg.configFile."fd/ignore" = lib.mkIf (cfg.ignores != [ ]) {
+      text = lib.concatStringsSep "\n" cfg.ignores + "\n";
     };
   };
 }

@@ -1,12 +1,10 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) concatStringsSep flip mapAttrsToList mkOption types;
 
   cfg = config.programs.irssi;
 
-  quoteStr = s: escape [ ''"'' ] s;
+  quoteStr = s: lib.escape [ ''"'' ] s;
 
   # Comma followed by newline.
   cnl = ''
@@ -22,7 +20,7 @@ let
       ${k} = {
         type = "${v.type}";
         nick = "${quoteStr v.nick}";
-        autosendcmd = "${concatMapStringsSep ";" quoteStr v.autoCommands}";
+        autosendcmd = "${lib.concatMapStringsSep ";" quoteStr v.autoCommands}";
         ${
           lib.optionalString (v.saslExternal) ''
             sasl_username = "${quoteStr v.nick}";
@@ -41,14 +39,14 @@ let
         ssl_verify = "${lib.hm.booleans.yesNo v.server.ssl.verify}";
         autoconnect = "${lib.hm.booleans.yesNo v.server.autoConnect}";
         ${
-          optionalString (v.server.ssl.certificateFile != null) ''
+          lib.optionalString (v.server.ssl.certificateFile != null) ''
             ssl_cert = "${v.server.ssl.certificateFile}";
           ''
         }
       }
     ''));
 
-  channelString = concatStringsSep cnl (concatLists
+  channelString = concatStringsSep cnl (lib.concatLists
     (flip mapAttrsToList cfg.networks (k: v:
       (flip mapAttrsToList v.channels (c: cv: ''
         {
@@ -163,7 +161,7 @@ in {
 
   options = {
     programs.irssi = {
-      enable = mkEnableOption "the Irssi chat client";
+      enable = lib.mkEnableOption "the Irssi chat client";
 
       extraConfig = mkOption {
         default = "";
@@ -183,7 +181,7 @@ in {
 
       networks = mkOption {
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             liberachat = {
               nick = "hmuser";
@@ -204,7 +202,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.irssi ];
 
     home.file.".irssi/config".text = ''

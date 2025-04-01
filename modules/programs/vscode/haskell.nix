@@ -1,14 +1,11 @@
 { pkgs, config, lib, ... }:
-
-with lib;
-
 let
 
   cfg = config.programs.vscode.haskell;
 
   defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
   defaultHieNixExeText =
-    literalExpression ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"'';
+    lib.literalExpression ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"'';
 
   hie-nix = pkgs.hie-nix or (abort ''
     vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
@@ -23,16 +20,16 @@ let
 
 in {
   options.programs.vscode.haskell = {
-    enable = mkEnableOption "Haskell integration for Visual Studio Code";
+    enable = lib.mkEnableOption "Haskell integration for Visual Studio Code";
 
-    hie.enable = mkOption {
-      type = types.bool;
+    hie.enable = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "Whether to enable Haskell IDE engine integration.";
     };
 
-    hie.executablePath = mkOption {
-      type = types.path;
+    hie.executablePath = lib.mkOption {
+      type = lib.types.path;
       default = defaultHieNixExe;
       defaultText = defaultHieNixExeText;
       description = ''
@@ -45,14 +42,14 @@ in {
         ${exampleOverlay}
         ```
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         (import ~/src/haskell-ide-engine {}).hies + "/bin/hie-wrapper";
       '';
     };
   };
 
-  config = mkIf cfg.enable {
-    programs.vscode.profiles.default.userSettings = mkIf cfg.hie.enable {
+  config = lib.mkIf cfg.enable {
+    programs.vscode.profiles.default.userSettings = lib.mkIf cfg.hie.enable {
       "languageServerHaskell.enableHIE" = true;
       "languageServerHaskell.hieExecutablePath" = cfg.hie.executablePath;
     };

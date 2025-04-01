@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.starship;
 
@@ -16,19 +14,19 @@ in {
   meta.maintainers = [ ];
 
   options.programs.starship = {
-    enable = mkEnableOption "starship";
+    enable = lib.mkEnableOption "starship";
 
     package = mkOption {
       type = types.package;
       default = pkgs.starship;
-      defaultText = literalExpression "pkgs.starship";
+      defaultText = lib.literalExpression "pkgs.starship";
       description = "The package to use for the starship binary.";
     };
 
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           add_newline = false;
           format = lib.concatStrings [

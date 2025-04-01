@@ -1,20 +1,16 @@
 # This module provides JAVA_HOME, with a different way to install java locally.
 # This module is modified from the NixOS module `programs.java`
-
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
 
   cfg = config.programs.java;
 
 in {
-  meta.maintainers = with maintainers; [ ShamrockLee ];
+  meta.maintainers = with lib.maintainers; [ ShamrockLee ];
 
   options = {
     programs.java = {
-      enable = mkEnableOption "" // {
+      enable = lib.mkEnableOption "" // {
         description = ''
           Install the Java development kit and set the
           {env}`JAVA_HOME` variable.
@@ -28,7 +24,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     # some instances of `jdk-linux-base.nix` pass through `result` without turning it onto a path-string.

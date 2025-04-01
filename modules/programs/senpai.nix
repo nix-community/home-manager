@@ -1,15 +1,15 @@
 { config, lib, pkgs, ... }:
+let
+  inherit (lib) mkOption types;
 
-with lib;
-
-let cfg = config.programs.senpai;
+  cfg = config.programs.senpai;
 in {
   options.programs.senpai = {
-    enable = mkEnableOption "senpai";
+    enable = lib.mkEnableOption "senpai";
     package = mkOption {
       type = types.package;
       default = pkgs.senpai;
-      defaultText = literalExpression "pkgs.senpai";
+      defaultText = lib.literalExpression "pkgs.senpai";
       description = "The `senpai` package to use.";
     };
     config = mkOption {
@@ -64,7 +64,7 @@ in {
           };
         };
       };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           address = "libera.chat:6697";
           nickname = "nicholas";
@@ -78,7 +78,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = with cfg.config; [
       {
         assertion = !isNull password-cmd -> isNull password;
@@ -102,5 +102,5 @@ in {
       lib.hm.generators.toSCFG { } cfg.config;
   };
 
-  meta.maintainers = [ hm.maintainers.malvo ];
+  meta.maintainers = [ lib.hm.maintainers.malvo ];
 }

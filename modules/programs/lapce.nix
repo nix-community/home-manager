@@ -1,13 +1,12 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
+
   cfg = config.programs.lapce;
 
   options = {
-    enable = mkEnableOption "lapce";
-    package = mkPackageOption pkgs "lapce" { nullable = true; };
+    enable = lib.mkEnableOption "lapce";
+    package = lib.mkPackageOption pkgs "lapce" { nullable = true; };
     channel = mkOption {
       type = types.enum [ "stable" "nightly" ];
       default = "stable";
@@ -141,7 +140,7 @@ let
       outputHashAlgo = "sha256";
       outputHashMode = "flat";
       outputHash = hash;
-      inherit meta;
+      inherit (lib) meta;
     });
   pluginFromRegistry = { author, name, version, hash }@args:
     pkgs.stdenvNoCC.mkDerivation {
@@ -166,7 +165,7 @@ let
         value = pluginFromRegistry plugin;
       }) plugins));
 in {
-  meta.maintainers = [ hm.maintainers.timon-schelling ];
+  meta.maintainers = [ lib.hm.maintainers.timon-schelling ];
 
   options.programs.lapce = options;
 

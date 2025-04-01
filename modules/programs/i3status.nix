@@ -1,11 +1,10 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkDefault mkOption types;
+
   cfg = config.programs.i3status;
 
-  enabledModules = filterAttrs (n: v: v.enable) cfg.modules;
+  enabledModules = lib.filterAttrs (n: v: v.enable) cfg.modules;
 
   formatOrder = n: ''order += "${n}"'';
 
@@ -14,16 +13,16 @@ let
       formatLine = n: v:
         let
           formatValue = v:
-            if isBool v then
+            if lib.isBool v then
               (if v then "true" else "false")
-            else if isString v then
+            else if lib.isString v then
               ''"${v}"''
             else
               toString v;
         in "${n} = ${formatValue v}";
     in ''
       ${n} {
-        ${concatStringsSep "\n  " (mapAttrsToList formatLine v)}
+        ${lib.concatStringsSep "\n  " (lib.mapAttrsToList formatLine v)}
       }
     '';
 
@@ -31,12 +30,12 @@ let
 
   sortAttrNamesByPosition = comparator: set:
     let pos = n: set."${n}".position;
-    in sort (a: b: comparator (pos a) (pos b)) (attrNames set);
+    in lib.sort (a: b: comparator (pos a) (pos b)) (lib.attrNames set);
 in {
-  meta.maintainers = [ hm.maintainers.justinlovinger ];
+  meta.maintainers = [ lib.hm.maintainers.justinlovinger ];
 
   options.programs.i3status = {
-    enable = mkEnableOption "i3status";
+    enable = lib.mkEnableOption "i3status";
 
     enableDefault = mkOption {
       type = types.bool;
@@ -130,11 +129,11 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "i3status" { nullable = true; };
+    package = lib.mkPackageOption pkgs "i3status" { nullable = true; };
   };
 
-  config = mkIf cfg.enable {
-    programs.i3status = mkIf cfg.enableDefault {
+  config = lib.mkIf cfg.enable {
+    programs.i3status = lib.mkIf cfg.enableDefault {
       general = {
         colors = mkDefault true;
         interval = mkDefault 5;
@@ -192,10 +191,10 @@ in {
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."i3status/config".text = concatStringsSep "\n" ([ ]
-      ++ optional (cfg.general != { }) (formatModule "general" cfg.general)
-      ++ map formatOrder (sortAttrNamesByPosition lessThan enabledModules)
-      ++ mapAttrsToList formatModule
-      (mapAttrs (n: v: v.settings) enabledModules));
+    xdg.configFile."i3status/config".text = lib.concatStringsSep "\n" ([ ]
+      ++ lib.optional (cfg.general != { }) (formatModule "general" cfg.general)
+      ++ map formatOrder (sortAttrNamesByPosition lib.lessThan enabledModules)
+      ++ lib.mapAttrsToList formatModule
+      (lib.mapAttrs (n: v: v.settings) enabledModules));
   };
 }

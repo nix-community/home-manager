@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.oh-my-posh;
 
@@ -15,17 +14,18 @@ let
     "";
 
 in {
-  meta.maintainers = [ maintainers.arjan-s ];
+  meta.maintainers = [ lib.maintainers.arjan-s ];
 
   options.programs.oh-my-posh = {
-    enable = mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
+    enable =
+      lib.mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
 
-    package = mkPackageOption pkgs "oh-my-posh" { };
+    package = lib.mkPackageOption pkgs "oh-my-posh" { };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = jsonFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
       description = ''
         Configuration written to
@@ -36,8 +36,8 @@ in {
       '';
     };
 
-    useTheme = mkOption {
-      type = types.nullOr types.str;
+    useTheme = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
       default = null;
       description = ''
         Use one of the official themes. This should be a name from this list:

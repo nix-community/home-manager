@@ -1,19 +1,15 @@
-{ config, lib, ... }:
-
-with lib;
-
-{
+{ lib, ... }: {
   options.khal = {
-    type = mkOption {
-      type = types.enum [ "calendar" "discover" ];
+    type = lib.mkOption {
+      type = lib.types.enum [ "calendar" "discover" ];
       default = "calendar";
       description = ''
         Either a single calendar (calendar which is the default) or a directory with multiple calendars (discover).
       '';
     };
 
-    glob = mkOption {
-      type = types.str;
+    glob = lib.mkOption {
+      type = lib.types.str;
       default = "*";
       description = ''
         The glob expansion to be searched for events or birthdays when

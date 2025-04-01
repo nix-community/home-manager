@@ -1,17 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption optional types;
 
   cfg = config.programs.tmate;
-
 in {
-  meta.maintainers = [ maintainers.jlesquembre ];
+  meta.maintainers = [ lib.maintainers.jlesquembre ];
 
   options = {
     programs.tmate = {
-      enable = mkEnableOption "tmate";
+      enable = lib.mkEnableOption "tmate";
 
       package = lib.mkPackageOption pkgs "tmate" { };
 
@@ -56,7 +53,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     home.file.".tmate.conf" = let
@@ -69,6 +66,6 @@ in {
         ++ optional (cfg.rsaFingerprint != null)
         ''set -g tmate-server-rsa-fingerprint "${cfg.rsaFingerprint}"''
         ++ optional (cfg.extraConfig != "") cfg.extraConfig;
-    in mkIf (conf != [ ]) { text = concatLines conf; };
+    in lib.mkIf (conf != [ ]) { text = lib.concatLines conf; };
   };
 }

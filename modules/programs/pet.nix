@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.pet;
 
@@ -40,7 +38,7 @@ let
       tag = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = literalExpression ''["git" "nixpkgs"]'';
+        example = lib.literalExpression ''["git" "nixpkgs"]'';
         description = ''
           List of tags attached to the command.
         '';
@@ -50,7 +48,7 @@ let
 
 in {
   options.programs.pet = {
-    enable = mkEnableOption "pet";
+    enable = lib.mkEnableOption "pet";
 
     settings = mkOption {
       type = format.type;
@@ -64,7 +62,7 @@ in {
     selectcmdPackage = mkOption {
       type = types.package;
       default = pkgs.fzf;
-      defaultText = literalExpression "pkgs.fzf";
+      defaultText = lib.literalExpression "pkgs.fzf";
       description = ''
         The package needed for the {var}`settings.selectcmd`.
       '';
@@ -79,13 +77,13 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.pet.settings = let
       defaultGeneral = {
-        selectcmd = mkDefault "fzf";
+        selectcmd = lib.mkDefault "fzf";
         snippetfile = config.xdg.configHome + "/pet/snippet.toml";
       };
-    in if versionAtLeast config.home.stateVersion "21.11" then {
+    in if lib.versionAtLeast config.home.stateVersion "21.11" then {
       General = defaultGeneral;
     } else
       defaultGeneral;
@@ -94,12 +92,12 @@ in {
 
     xdg.configFile = {
       "pet/config.toml".source = format.generate "config.toml"
-        (if versionAtLeast config.home.stateVersion "21.11" then
+        (if lib.versionAtLeast config.home.stateVersion "21.11" then
           cfg.settings
         else {
           General = cfg.settings;
         });
-      "pet/snippet.toml" = mkIf (cfg.snippets != [ ]) {
+      "pet/snippet.toml" = lib.mkIf (cfg.snippets != [ ]) {
         source = format.generate "snippet.toml" { snippets = cfg.snippets; };
       };
     };

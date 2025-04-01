@@ -1,14 +1,13 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
+
   cfg = config.programs.nnn;
 
   renderSetting = key: value: "${key}:${value}";
 
   renderSettings = settings:
-    concatStringsSep ";" (mapAttrsToList renderSetting settings);
+    lib.concatStringsSep ";" (lib.mapAttrsToList renderSetting settings);
 
   pluginModule = types.submodule ({ ... }: {
     options = {
@@ -45,11 +44,11 @@ let
     };
   });
 in {
-  meta.maintainers = with maintainers; [ thiagokokada ];
+  meta.maintainers = with lib.maintainers; [ thiagokokada ];
 
   options = {
     programs.nnn = {
-      enable = mkEnableOption "nnn";
+      enable = lib.mkEnableOption "nnn";
 
       package = mkOption {
         type = types.package;
@@ -115,15 +114,15 @@ in {
         ${oldAttrs.postInstall or ""}
 
         wrapProgram $out/bin/nnn \
-          --prefix PATH : "${makeBinPath cfg.extraPackages}" \
+          --prefix PATH : "${lib.makeBinPath cfg.extraPackages}" \
           --prefix NNN_BMS : "${renderSettings cfg.bookmarks}" \
           --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}"
       '';
     });
-  in mkIf cfg.enable {
+  in lib.mkIf cfg.enable {
     programs.nnn.finalPackage = nnnPackage;
     home.packages = [ nnnPackage ];
     xdg.configFile."nnn/plugins" =
-      mkIf (cfg.plugins.src != null) { source = cfg.plugins.src; };
+      lib.mkIf (cfg.plugins.src != null) { source = cfg.plugins.src; };
   };
 }

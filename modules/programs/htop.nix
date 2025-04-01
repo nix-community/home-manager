@@ -1,19 +1,16 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   cfg = config.programs.htop;
 
   formatOption = n: v:
-    let v' = if isBool v then (if v then "1" else "0") else toString v;
+    let v' = if lib.isBool v then (if v then "1" else "0") else toString v;
     in "${n}=${v'}";
 
   formatMeters = side: meters: {
-    "${side}_meters" = concatMap (mapAttrsToList (x: _: x)) meters;
-    "${side}_meter_modes" = concatMap (mapAttrsToList (_: y: y)) meters;
+    "${side}_meters" = lib.concatMap (lib.mapAttrsToList (x: _: x)) meters;
+    "${side}_meter_modes" = lib.concatMap (lib.mapAttrsToList (_: y: y)) meters;
   };
   leftMeters = formatMeters "left";
   rightMeters = formatMeters "right";
@@ -107,16 +104,16 @@ let
   blank = text "Blank";
 
 in {
-  meta.maintainers = [ hm.maintainers.bjpbakker ];
+  meta.maintainers = [ lib.hm.maintainers.bjpbakker ];
 
   options.programs.htop = {
-    enable = mkEnableOption "htop";
+    enable = lib.mkEnableOption "htop";
 
-    settings = mkOption {
-      type = with types;
+    settings = lib.mkOption {
+      type = with lib.types;
         attrsOf (oneOf [ bool int str (listOf (oneOf [ int str ])) ]);
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           color_scheme = 6;
           cpu_count_from_one = 0;
@@ -156,15 +153,15 @@ in {
       '';
     };
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.htop;
-      defaultText = literalExpression "pkgs.htop";
+      defaultText = lib.literalExpression "pkgs.htop";
       description = "Package containing the {command}`htop` program.";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     lib.htop = {
       inherit fields defaultFields modes leftMeters rightMeters bar text graph
         led blank;
@@ -175,23 +172,22 @@ in {
     xdg.configFile."htop" = let
       defaults = {
         fields = if isDarwin then
-          remove fields.M_SHARE defaultFields
+          lib.remove fields.M_SHARE defaultFields
         else
           defaultFields;
       };
 
-      before = optionalAttrs (cfg.settings ? header_layout) {
+      before = lib.optionalAttrs (cfg.settings ? header_layout) {
         inherit (cfg.settings) header_layout;
       };
 
-      settings = defaults // (removeAttrs cfg.settings (attrNames before));
+      settings = defaults // (removeAttrs cfg.settings (lib.attrNames before));
 
-      formatOptions = mapAttrsToList formatOption;
+      formatOptions = lib.mapAttrsToList formatOption;
 
-    in mkIf (cfg.settings != { }) {
-      source = pkgs.writeTextDir "htoprc"
-        (concatStringsSep "\n" (formatOptions before ++ formatOptions settings)
-          + "\n");
+    in lib.mkIf (cfg.settings != { }) {
+      source = pkgs.writeTextDir "htoprc" (lib.concatStringsSep "\n"
+        (formatOptions before ++ formatOptions settings) + "\n");
     };
   };
 }

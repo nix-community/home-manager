@@ -1,28 +1,25 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
   cfg = config.programs.hyfetch;
 
   jsonFormat = pkgs.formats.json { };
 in {
-  meta.maintainers = [ hm.maintainers.lilyinstarlight ];
+  meta.maintainers = [ lib.hm.maintainers.lilyinstarlight ];
 
   options.programs.hyfetch = {
-    enable = mkEnableOption "hyfetch";
+    enable = lib.mkEnableOption "hyfetch";
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.hyfetch;
-      defaultText = literalExpression "pkgs.hyfetch";
+      defaultText = lib.literalExpression "pkgs.hyfetch";
       description = "The hyfetch package to use.";
     };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = jsonFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           preset = "rainbow";
           mode = "rgb";
@@ -35,9 +32,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    xdg.configFile."hyfetch.json" = mkIf (cfg.settings != { }) {
+    xdg.configFile."hyfetch.json" = lib.mkIf (cfg.settings != { }) {
       source = jsonFormat.generate "hyfetch.json" cfg.settings;
     };
   };

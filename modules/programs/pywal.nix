@@ -1,13 +1,9 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let cfg = config.programs.pywal;
-
 in {
-  options = { programs.pywal = { enable = mkEnableOption "pywal"; }; };
+  options = { programs.pywal = { enable = lib.mkEnableOption "pywal"; }; };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
 
     home.packages = [ pkgs.pywal ];
 

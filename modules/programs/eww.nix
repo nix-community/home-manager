@@ -1,24 +1,20 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.eww;
-  ewwCmd = "${cfg.package}/bin/eww";
-
 in {
-  meta.maintainers = [ hm.maintainers.mainrs ];
+  meta.maintainers = [ lib.hm.maintainers.mainrs ];
 
   options.programs.eww = {
-    enable = mkEnableOption "eww";
+    enable = lib.mkEnableOption "eww";
 
     package = lib.mkPackageOption pkgs "eww" { };
 
-    configDir = mkOption {
-      type = types.nullOr types.path;
+    configDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
       default = null;
-      example = literalExpression "./eww-config-dir";
+      example = lib.literalExpression "./eww-config-dir";
       description = ''
         The directory that gets symlinked to
         {file}`$XDG_CONFIG_HOME/eww`.
@@ -35,7 +31,8 @@ in {
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
-  config = mkIf cfg.enable {
+  config = let ewwCmd = lib.getExe cfg.package;
+  in mkIf cfg.enable {
     home.packages = [ cfg.package ];
     xdg =
       mkIf (cfg.configDir != null) { configFile."eww".source = cfg.configDir; };

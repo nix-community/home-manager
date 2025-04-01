@@ -1,16 +1,10 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.opam;
-
+let cfg = config.programs.opam;
 in {
   meta.maintainers = [ ];
 
   options.programs.opam = {
-    enable = mkEnableOption "Opam";
+    enable = lib.mkEnableOption "Opam";
 
     package = lib.mkPackageOption pkgs "opam" { };
 
@@ -24,18 +18,18 @@ in {
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
       eval "$(${cfg.package}/bin/opam env --shell=bash)"
     '';
 
-    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/opam env --shell=zsh)"
     '';
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.shellInit = lib.mkIf cfg.enableFishIntegration ''
       eval (${cfg.package}/bin/opam env --shell=fish)
     '';
   };

@@ -1,17 +1,14 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
-
-  accounts =
-    filter (a: a.getmail.enable) (attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.getmail.enable)
+    (lib.attrValues config.accounts.email.accounts);
 
   renderAccountConfig = account:
-    with account;
     let
-      passCmd = concatMapStringsSep ", " (x: "'${x}'") passwordCommand;
-      renderedMailboxes = concatMapStrings (x: "'${x}', ") getmail.mailboxes;
+      inherit (account) getmail imap passwordCommand;
+      passCmd = lib.concatMapStringsSep ", " (x: "'${x}'") passwordCommand;
+      renderedMailboxes =
+        lib.concatMapStrings (x: "'${x}', ") getmail.mailboxes;
       retrieverType = if imap.tls.enable then
         "SimpleIMAPSSLRetriever"
       else
@@ -21,7 +18,7 @@ let
         destinationPath = getmail.destinationCommand;
       } else {
         destinationType = "Maildir";
-        destinationPath = "${maildir.absPath}/";
+        destinationPath = "${account.maildir.absPath}/";
       };
       renderGetmailBoolean = v: if v then "true" else "false";
     in ''
@@ -29,8 +26,8 @@ let
       [retriever]
       type = ${retrieverType}
       server = ${imap.host}
-      ${optionalString (imap.port != null) "port = ${toString imap.port}"}
-      username = ${userName}
+      ${lib.optionalString (imap.port != null) "port = ${toString imap.port}"}
+      username = ${account.userName}
       password_command = (${passCmd})
       mailboxes = ( ${renderedMailboxes} )
 
@@ -42,24 +39,26 @@ let
       delete = ${renderGetmailBoolean getmail.delete}
       read_all = ${renderGetmailBoolean getmail.readAll}
     '';
-  getmailEnabled = length (filter (a: a.getmail.enable) accounts) > 0;
+  getmailEnabled = lib.length (lib.filter (a: a.getmail.enable) accounts) > 0;
   # Watch out! This is used by the getmail.service too!
   renderConfigFilepath = a:
     ".getmail/getmail${if a.primary then "rc" else a.name}";
 
 in {
   options = {
-    accounts.email.accounts = mkOption {
-      type = with types; attrsOf (submodule (import ./getmail-accounts.nix));
+    accounts.email.accounts = lib.mkOption {
+      type = with lib.types;
+        attrsOf (submodule (import ./getmail-accounts.nix));
     };
   };
 
-  config = mkIf getmailEnabled {
+  config = lib.mkIf getmailEnabled {
     assertions = [
-      (hm.assertions.assertPlatform "programs.getmail" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.getmail" pkgs
+        lib.platforms.linux)
     ];
 
-    home.file = foldl' (a: b: a // b) { }
+    home.file = lib.foldl' (a: b: a // b) { }
       (map (a: { "${renderConfigFilepath a}".text = renderAccountConfig a; })
         accounts);
   };

@@ -1,38 +1,36 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let cfg = config.programs.discocss;
 in {
-  meta.maintainers = with maintainers; [ kranzes ];
+  meta.maintainers = with lib.maintainers; [ kranzes ];
 
   options = {
     programs.discocss = {
-      enable = mkEnableOption
+      enable = lib.mkEnableOption
         "discocss, a tiny Discord CSS injector for Linux and MacOS";
 
-      package = mkPackageOption pkgs "discocss" { nullable = true; };
+      package = lib.mkPackageOption pkgs "discocss" { nullable = true; };
 
-      discordPackage = mkPackageOption pkgs "discord" { nullable = true; };
+      discordPackage = lib.mkPackageOption pkgs "discord" { nullable = true; };
 
-      discordAlias = mkOption {
-        type = types.bool;
+      discordAlias = lib.mkOption {
+        type = lib.types.bool;
         default = true;
         description = "Whether to alias discocss to discord.";
       };
 
-      css = mkOption {
-        type = types.str;
+      css = lib.mkOption {
+        type = lib.types.str;
         default = "";
         description = "The custom CSS for discocss to use.";
       };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [{
       assertion = cfg.discordAlias
-        -> !(any (p: p.name == cfg.discordPackage.name) config.home.packages);
+        -> !(lib.any (p: p.name == cfg.discordPackage.name)
+          config.home.packages);
       message =
         "To use discocss with discordAlias you have to remove discord from home.packages, or set discordAlias to false.";
     }];

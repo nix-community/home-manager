@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.pazi;
 
@@ -10,7 +8,7 @@ in {
   meta.maintainers = [ ];
 
   options.programs.pazi = {
-    enable = mkEnableOption "pazi";
+    enable = lib.mkEnableOption "pazi";
 
     enableBashIntegration =
       lib.hm.shell.mkBashIntegrationOption { inherit config; };

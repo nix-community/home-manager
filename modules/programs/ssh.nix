@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep literalExpression mapAttrsToList mkOption optional types;
 
   cfg = config.programs.ssh;
 
@@ -18,7 +17,7 @@ let
 
   mkSetEnvStr = envStr:
     unwords (mapAttrsToList
-      (name: value: ''${name}="${escape [ ''"'' "\\" ] (toString value)}"'')
+      (name: value: ''${name}="${lib.escape [ ''"'' "\\" ] (toString value)}"'')
       envStr);
 
   bindOptions = {
@@ -142,7 +141,8 @@ let
       identityFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
         default = [ ];
-        apply = p: if p == null then [ ] else if isString p then [ p ] else p;
+        apply = p:
+          if p == null then [ ] else if lib.isString p then [ p ] else p;
         description = ''
           Specifies files from which the user identity is read.
           Identities will be tried in the given order.
@@ -227,7 +227,8 @@ let
       certificateFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
         default = [ ];
-        apply = p: if p == null then [ ] else if isString p then [ p ] else p;
+        apply = p:
+          if p == null then [ ] else if lib.isString p then [ p ] else p;
         description = ''
           Specifies files from which the user certificate is read.
         '';
@@ -337,12 +338,12 @@ let
     ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions);
 
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options.programs.ssh = {
-    enable = mkEnableOption "SSH client configuration";
+    enable = lib.mkEnableOption "SSH client configuration";
 
-    package = mkPackageOption pkgs "openssh" {
+    package = lib.mkPackageOption pkgs "openssh" {
       nullable = true;
       default = null;
       extraDescription =
@@ -469,7 +470,7 @@ in {
     };
 
     matchBlocks = mkOption {
-      type = hm.types.dagOf matchBlockModule;
+      type = lib.hm.types.dagOf matchBlockModule;
       default = { };
       example = literalExpression ''
         {
@@ -495,11 +496,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [{
       assertion = let
         # `builtins.any`/`lib.lists.any` does not return `true` if there are no elements.
-        any' = pred: items: if items == [ ] then true else any pred items;
+        any' = pred: items: if items == [ ] then true else lib.any pred items;
         # Check that if `entry.address` is defined, and is a path, that `entry.port` has not
         # been defined.
         noPathWithPort = entry:
@@ -510,7 +511,7 @@ in {
         checkLocal = block: any' checkBindAndHost block.localForwards;
         checkRemote = block: any' checkBindAndHost block.remoteForwards;
         checkMatchBlock = block:
-          all (fn: fn block) [ checkLocal checkRemote checkDynamic ];
+          lib.all (fn: fn block) [ checkLocal checkRemote checkDynamic ];
       in any' checkMatchBlock
       (map (block: block.data) (builtins.attrValues cfg.matchBlocks));
       message = "Forwarded paths cannot have ports.";
@@ -519,7 +520,7 @@ in {
     home.packages = optional (cfg.package != null) cfg.package;
 
     home.file.".ssh/config".text = let
-      sortedMatchBlocks = hm.dag.topoSort cfg.matchBlocks;
+      sortedMatchBlocks = lib.hm.dag.topoSort cfg.matchBlocks;
       sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
       matchBlocks = if sortedMatchBlocks ? result then
         sortedMatchBlocks.result
@@ -544,13 +545,13 @@ in {
         ControlPath ${cfg.controlPath}
         ControlPersist ${cfg.controlPersist}
 
-        ${replaceStrings [ "\n" ] [ "\n  " ] cfg.extraConfig}
+        ${lib.replaceStrings [ "\n" ] [ "\n  " ] cfg.extraConfig}
     '';
 
     warnings = mapAttrsToList (n: v: ''
       The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
       The match option takes precedence.'')
-      (filterAttrs (n: v: v.data.host != null && v.data.match != null)
+      (lib.filterAttrs (n: v: v.data.host != null && v.data.match != null)
         cfg.matchBlocks);
   };
 }

@@ -1,24 +1,22 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.zathura;
 
   formatLine = n: v:
     let
       formatValue = v:
-        if isBool v then (if v then "true" else "false") else toString v;
+        if lib.isBool v then (if v then "true" else "false") else toString v;
     in ''set ${n}	"${formatValue v}"'';
 
   formatMapLine = n: v: "map ${n}   ${toString v}";
 
 in {
-  meta.maintainers = [ maintainers.rprospero ];
+  meta.maintainers = [ lib.maintainers.rprospero ];
 
   options.programs.zathura = {
-    enable = mkEnableOption ''
+    enable = lib.mkEnableOption ''
       Zathura, a highly customizable and functional document viewer
       focused on keyboard interaction'';
 
@@ -73,12 +71,12 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."zathura/zathurarc".text = concatStringsSep "\n" ([ ]
-      ++ optional (cfg.extraConfig != "") cfg.extraConfig
-      ++ mapAttrsToList formatLine cfg.options
-      ++ mapAttrsToList formatMapLine cfg.mappings) + "\n";
+    xdg.configFile."zathura/zathurarc".text = lib.concatStringsSep "\n" ([ ]
+      ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
+      ++ lib.mapAttrsToList formatLine cfg.options
+      ++ lib.mapAttrsToList formatMapLine cfg.mappings) + "\n";
   };
 }

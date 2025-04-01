@@ -1,8 +1,6 @@
-{ config, lib, ... }:
-
-with lib;
-
-{
+{ lib, ... }:
+let inherit (lib) mkOption types;
+in {
   options.khal = {
     enable = lib.mkEnableOption "khal access";
 

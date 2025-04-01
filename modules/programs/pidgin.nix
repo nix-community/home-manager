@@ -1,34 +1,28 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.programs.pidgin;
-
+let cfg = config.programs.pidgin;
 in {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     programs.pidgin = {
-      enable = mkEnableOption "Pidgin messaging client";
+      enable = lib.mkEnableOption "Pidgin messaging client";
 
-      package = mkOption {
-        type = types.package;
+      package = lib.mkOption {
+        type = lib.types.package;
         default = pkgs.pidgin;
-        defaultText = literalExpression "pkgs.pidgin";
+        defaultText = lib.literalExpression "pkgs.pidgin";
         description = "The Pidgin package to use.";
       };
 
-      plugins = mkOption {
+      plugins = lib.mkOption {
         default = [ ];
-        example = literalExpression "[ pkgs.pidgin-otr pkgs.pidgin-osd ]";
+        example = lib.literalExpression "[ pkgs.pidgin-otr pkgs.pidgin-osd ]";
         description = "Plugins that should be available to Pidgin.";
       };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ (cfg.package.override { inherit (cfg) plugins; }) ];
   };
 }

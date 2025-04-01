@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.mercurial;
 
@@ -12,7 +10,7 @@ in {
 
   options = {
     programs.mercurial = {
-      enable = mkEnableOption "Mercurial";
+      enable = lib.mkEnableOption "Mercurial";
 
       package = lib.mkPackageOption pkgs "mercurial" { };
 
@@ -60,7 +58,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = [ cfg.package ];
 
@@ -78,9 +76,9 @@ in {
 
       xdg.configFile."hg/hgignore_global".text = ''
         syntax: glob
-      '' + concatStringsSep "\n" cfg.ignores + "\n" + ''
+      '' + lib.concatStringsSep "\n" cfg.ignores + "\n" + ''
         syntax: regexp
-      '' + concatStringsSep "\n" cfg.ignoresRegexp + "\n";
+      '' + lib.concatStringsSep "\n" cfg.ignoresRegexp + "\n";
     })
 
     (mkIf (cfg.aliases != { }) {

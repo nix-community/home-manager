@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
-let cfg = config.programs.man;
+let
+  inherit (lib) mkOption types;
+  cfg = config.programs.man;
 in {
   options = {
     programs.man = {
@@ -19,7 +18,7 @@ in {
       package = mkOption {
         type = types.package;
         default = pkgs.man;
-        defaultText = literalExpression "pkgs.man";
+        defaultText = lib.literalExpression "pkgs.man";
         description = "The man package to use.";
       };
 
@@ -40,12 +39,12 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
     home.extraOutputsToInstall = [ "man" ];
 
     # This is mostly copy/pasted/adapted from NixOS' documentation.nix.
-    home.file = mkIf cfg.generateCaches {
+    home.file = lib.mkIf cfg.generateCaches {
       ".manpath".text = let
         # Generate a directory containing installed packages' manpages.
         manualPages = pkgs.buildEnv {

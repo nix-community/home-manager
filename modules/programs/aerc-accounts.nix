@@ -1,10 +1,9 @@
 { config, lib, confSections, confSection, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
+
   mapAttrNames = f: attr:
-    listToAttrs (attrValues (mapAttrs (k: v: {
+    lib.listToAttrs (lib.attrValues (lib.mapAttrs (k: v: {
       name = f k;
       value = v;
     }) attr));
@@ -50,7 +49,7 @@ in {
   type = mkOption {
     type = types.attrsOf (types.submodule {
       options.aerc = {
-        enable = mkEnableOption "aerc";
+        enable = lib.mkEnableOption "aerc";
         extraAccounts = mkOption {
           type = confSection;
           default = { };
@@ -128,7 +127,7 @@ in {
         if v != null && v != [ ] && v != "" then { ${k} = v; } else { };
 
       optPwCmd = k: p:
-        optAttr "${k}-cred-cmd" (nullOrMap (concatStringsSep " ") p);
+        optAttr "${k}-cred-cmd" (nullOrMap (lib.concatStringsSep " ") p);
 
       useOauth = auth: builtins.elem auth [ "oauthbearer" "xoauth2" ];
 
@@ -232,7 +231,7 @@ in {
           { };
 
       gpgCfg = account:
-        optionalAttrs (account.gpg != null) {
+        lib.optionalAttrs (account.gpg != null) {
           pgp-key-id = account.gpg.key;
           pgp-auto-sign = account.gpg.signByDefault;
           pgp-opportunistic-encrypt = account.gpg.encryptByDefault;

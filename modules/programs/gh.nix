@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkIf mkOption types;
 
   cfg = config.programs.gh;
 
@@ -10,7 +8,7 @@ let
 
   settingsType = types.submodule {
     freeformType = yamlFormat.type;
-    # These options are only here for the mkRenamedOptionModule support
+    # These options are only here for the `mkRenamedOptionModule` support
     options = {
       aliases = mkOption {
         type = with types; attrsOf str;
@@ -45,31 +43,30 @@ let
   };
 
 in {
-  meta.maintainers = [ maintainers.gerschtli maintainers.berbiche ];
+  meta.maintainers = with lib.maintainers; [ gerschtli berbiche ];
 
   imports = (map (x:
-    mkRenamedOptionModule [ "programs" "gh" x ] [
+    lib.mkRenamedOptionModule [ "programs" "gh" x ] [
       "programs"
       "gh"
       "settings"
       x
     ]) [ "aliases" "editor" ]) ++ [
-      (mkRenamedOptionModule [ "programs" "gh" "gitProtocol" ] [
+      (lib.mkRenamedOptionModule [ "programs" "gh" "gitProtocol" ] [
         "programs"
         "gh"
         "settings"
         "git_protocol"
       ])
-      (mkRenamedOptionModule [ "programs" "gh" "enableGitCredentialHelper" ] [
+      (lib.mkRenamedOptionModule [
         "programs"
         "gh"
-        "gitCredentialHelper"
-        "enable"
-      ])
+        "enableGitCredentialHelper"
+      ] [ "programs" "gh" "gitCredentialHelper" "enable" ])
     ];
 
   options.programs.gh = {
-    enable = mkEnableOption "GitHub CLI tool";
+    enable = lib.mkEnableOption "GitHub CLI tool";
 
     package = mkOption {
       type = types.package;
@@ -98,7 +95,7 @@ in {
     };
 
     gitCredentialHelper = {
-      enable = mkEnableOption "the gh git credential helper" // {
+      enable = lib.mkEnableOption "the gh git credential helper" // {
         default = true;
       };
 
@@ -128,7 +125,7 @@ in {
     xdg.configFile."gh/config.yml".source =
       yamlFormat.generate "gh-config.yml" ({ version = "1"; } // cfg.settings);
 
-    # Version 2.40.0+ of gh needs to migrate account formats, this needs to
+    # Version 2.40.0+ of `gh` needs to migrate account formats, this needs to
     # happen before the version = 1 is placed in the configuration file. Running
     # `gh help` is sufficient to perform the migration. If the migration already
     # has occurred, then this is a no-op.
@@ -136,14 +133,14 @@ in {
     # See https://github.com/nix-community/home-manager/issues/4744 for details.
     home.activation.migrateGhAccounts =
       let ghHosts = "${config.xdg.configHome}/gh/hosts.yml";
-      in hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+      in lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
         if [[ ! -L "${ghHosts}" && -f "${ghHosts}" && $(grep --invert-match --quiet '^version:' ${ghHosts}) ]]; then
           (
             TMP_DIR=$(mktemp -d)
             trap "rm --force --recursive $TMP_DIR" EXIT
             cp "${ghHosts}" $TMP_DIR/
             export GH_CONFIG_DIR=$TMP_DIR
-            run --silence ${getExe cfg.package} help
+            run --silence ${lib.getExe cfg.package} help
             cp $TMP_DIR/hosts.yml "${ghHosts}"
           )
         fi

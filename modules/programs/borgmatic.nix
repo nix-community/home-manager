@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
+
   cfg = config.programs.borgmatic;
 
   yamlFormat = pkgs.formats.yaml { };
@@ -72,8 +71,8 @@ let
 
   configModule = types.submodule ({ config, ... }: {
     config.location.extraConfig.exclude_from =
-      mkIf config.location.excludeHomeManagerSymlinks
-      (mkAfter [ (toString hmExcludeFile) ]);
+      lib.mkIf config.location.excludeHomeManagerSymlinks
+      (lib.mkAfter [ (toString hmExcludeFile) ]);
     options = {
       location = {
         sourceDirectories = mkNullableOption {
@@ -208,7 +207,8 @@ let
     };
   });
 
-  removeNullValues = attrSet: filterAttrs (key: value: value != null) attrSet;
+  removeNullValues = attrSet:
+    lib.filterAttrs (key: value: value != null) attrSet;
 
   hmFiles = builtins.attrValues config.home.file;
   hmSymlinks = (lib.filter (file: !file.recursive) hmFiles);
@@ -219,7 +219,7 @@ let
   hmExcludeFile = pkgs.writeText "hm-symlinks.txt" hmExcludePatterns;
 
   writeConfig = config:
-    generators.toYAML { } (removeNullValues ({
+    lib.generators.toYAML { } (removeNullValues ({
       source_directories = config.location.sourceDirectories;
       patterns = config.location.patterns;
       repositories = config.location.repositories;
@@ -237,13 +237,13 @@ let
       // config.retention.extraConfig // config.consistency.extraConfig
       // config.output.extraConfig // config.hooks.extraConfig));
 in {
-  meta.maintainers = [ maintainers.DamienCassou ];
+  meta.maintainers = [ lib.maintainers.DamienCassou ];
 
   options = {
     programs.borgmatic = {
-      enable = mkEnableOption "Borgmatic";
+      enable = lib.mkEnableOption "Borgmatic";
 
-      package = mkPackageOption pkgs "borgmatic" { nullable = true; };
+      package = lib.mkPackageOption pkgs "borgmatic" { nullable = true; };
 
       backups = mkOption {
         type = types.attrsOf configModule;
@@ -271,14 +271,14 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = (mapAttrsToList (backup: opts: {
+  config = lib.mkIf cfg.enable {
+    assertions = (lib.mapAttrsToList (backup: opts: {
       assertion = opts.location.sourceDirectories == null
         || opts.location.patterns == null;
       message = ''
         Borgmatic backup configuration "${backup}" cannot specify both 'location.sourceDirectories' and 'location.patterns'.
       '';
-    }) cfg.backups) ++ (mapAttrsToList (backup: opts: {
+    }) cfg.backups) ++ (lib.mapAttrsToList (backup: opts: {
       assertion = !(opts.location.sourceDirectories == null
         && opts.location.patterns == null);
       message = ''
