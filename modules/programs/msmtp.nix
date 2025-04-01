@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption optionalAttrs types;
 
   cfg = config.programs.msmtp;
 
@@ -11,8 +11,8 @@ let
 
   accountStr = account:
     with account;
-    concatStringsSep "\n" ([ "account ${name}" ]
-      ++ mapAttrsToList (n: v: n + " " + v) ({
+    lib.concatStringsSep "\n" ([ "account ${name}" ]
+      ++ lib.mapAttrsToList (n: v: n + " " + v) ({
         host = smtp.host;
         from = address;
         auth = "on";
@@ -26,8 +26,8 @@ let
           tls_trust_file = smtp.tls.certificatesFile;
         } // optionalAttrs (passwordCommand != null) {
           passwordeval = toString passwordCommand;
-        } // msmtp.extraConfig) ++ optional primary "account default : ${name}"
-      ++ map (alias: ''
+        } // msmtp.extraConfig)
+      ++ lib.optional primary "account default : ${name}" ++ map (alias: ''
 
         account ${alias} : ${name}
         from ${alias}
