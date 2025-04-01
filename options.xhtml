@@ -53259,6 +53259,189 @@ TOML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.streamlink.enable"></a><a class="term" href="options.xhtml#opt-programs.streamlink.enable"><code class="option">programs.streamlink.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable streamlink.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/streamlink.nix" target="_top">
+&lt;home-manager/modules/programs/streamlink.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.streamlink.package"></a><a class="term" href="options.xhtml#opt-programs.streamlink.package"><code class="option">programs.streamlink.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The streamlink package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.streamlink</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/streamlink.nix" target="_top">
+&lt;home-manager/modules/programs/streamlink.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.streamlink.plugins"></a><a class="term" href="options.xhtml#opt-programs.streamlink.plugins"><code class="option">programs.streamlink.plugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Streamlink plugins.</p><p>If a source is set, the custom plugin will be linked to the data directory.</p><p>Additional configuration specific to the plugin, if defined, will be
+written to the config directory, and override global settings.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  custom_plugin = {
+    src = ./custom_plugin.py;
+    settings = {
+      quiet = true;
+    };
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/streamlink.nix" target="_top">
+&lt;home-manager/modules/programs/streamlink.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.streamlink.plugins._name_.settings"></a><a class="term" href="options.xhtml#opt-programs.streamlink.plugins._name_.settings"><code class="option">programs.streamlink.plugins.&lt;name&gt;.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration for the specific plugin, written to
+<code class="filename">$XDG_CONFIG_HOME/streamlink/config.&lt;name&gt;</code> (linux) or
+<code class="filename">Library/Application Support/streamlink/config.&lt;name&gt;</code> (darwin).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (boolean or signed integer or floating point number or string or list of (signed integer or floating point number or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  quiet = true;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/streamlink.nix" target="_top">
+&lt;home-manager/modules/programs/streamlink.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.streamlink.plugins._name_.src"></a><a class="term" href="options.xhtml#opt-programs.streamlink.plugins._name_.src"><code class="option">programs.streamlink.plugins.&lt;name&gt;.src</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Source of the custom plugin. The value should be a path to the
+plugin file, or the text of the plugin code. Will be linked to
+<code class="filename">$XDG_DATA_HOME/streamlink/plugins/&lt;name&gt;.py</code> (linux) or
+<code class="filename">Library/Application Support/streamlink/plugins/&lt;name&gt;.py</code> (darwin).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">./custom_plugin.py</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/streamlink.nix" target="_top">
+&lt;home-manager/modules/programs/streamlink.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.streamlink.settings"></a><a class="term" href="options.xhtml#opt-programs.streamlink.settings"><code class="option">programs.streamlink.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Global configuration options for streamlink. It will be written to
+<code class="filename">$XDG_CONFIG_HOME/streamlink/config</code> (linux) or
+<code class="filename">Library/Application Support/streamlink/config</code> (darwin).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (boolean or signed integer or floating point number or string or list of (signed integer or floating point number or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  player = &quot;${pkgs.mpv}/bin/mpv&quot;;
+  player-args = &quot;--cache 2048&quot;;
+  player-no-close = true;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/streamlink.nix" target="_top">
+&lt;home-manager/modules/programs/streamlink.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.swayimg.enable"></a><a class="term" href="options.xhtml#opt-programs.swayimg.enable"><code class="option">programs.swayimg.enable</code>
   </a>
  </span>
