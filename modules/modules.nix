@@ -246,6 +246,7 @@ let
     ./programs/sqls.nix
     ./programs/ssh.nix
     ./programs/starship.nix
+    ./programs/streamlink.nix
     ./programs/swayimg.nix
     ./programs/swaylock.nix
     ./programs/swayr.nix
