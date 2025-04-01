@@ -50,13 +50,6 @@ let
   };
 
 in {
-  options.users.users = mkOption {
-    type = types.attrsOf (types.submodule ({ name, config, ... }: {
-      config.packages = mkIf ((config.enable or true) && cfg.useUserPackages
-        && lib.hasAttr name cfg.users) [ cfg.users.${name}.home.path ];
-    }));
-  };
-
   options.home-manager = {
     useUserPackages = mkEnableOption ''
       installation of user packages through the
@@ -111,7 +104,10 @@ in {
   };
 
   config = (lib.mkMerge [
+    # Fix potential recursion when configuring home-manager users based on values in users.users #594
     (mkIf (cfg.useUserPackages && cfg.users != { }) {
+      users.users = (lib.mapAttrs
+        (_username: usercfg: { packages = [ usercfg.home.path ]; }) cfg.users);
       environment.pathsToLink = [ "/etc/profile.d" ];
     })
     (mkIf (cfg.users != { }) {
