@@ -6,10 +6,10 @@ let
 
   cfg = config.programs.broot;
 
-  tomlFormat = pkgs.formats.toml { };
+  jsonFormat = pkgs.formats.json { };
 
   settingsModule = {
-    freeformType = tomlFormat.type;
+    freeformType = jsonFormat.type;
 
     options = {
       modal = mkEnableOption "modal (vim) mode";
@@ -203,7 +203,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."broot" = {
+    xdg.configFile.broot = {
       recursive = true;
       source = pkgs.symlinkJoin {
         name = "xdg.configFile.broot";
@@ -214,31 +214,26 @@ in {
           # Dummy file to prevent broot from trying to reinstall itself
           (pkgs.writeTextDir "launcher/installed-v1" "")
         ];
-
         postBuild = ''
-          ln -s ${
-            tomlFormat.generate "broot-config" cfg.settings
-          } $out/conf.toml
-
-          # Remove conf.hjson, whose content has been merged into programs.broot.settings
           rm $out/conf.hjson
+          ${getExe pkgs.jq} --slurp add > $out/conf.hjson \
+            <(${
+              getExe pkgs.hjson-go
+            } -c ${cfg.package.src}/resources/default-conf/conf.hjson) \
+            ${jsonFormat.generate "broot-config.json" cfg.settings}
         '';
       };
     };
 
-    programs.broot.settings = builtins.fromJSON (builtins.readFile
-      (pkgs.runCommand "default-conf.json" {
-        nativeBuildInputs = [ pkgs.hjson ];
-      }
-        "hjson -c ${cfg.package.src}/resources/default-conf/conf.hjson > $out"));
+    programs = {
+      bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
+      zsh.initExtra = mkIf cfg.enableZshIntegration (shellInit "zsh");
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (shellInit "zsh");
+      fish.shellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
-
-    programs.nushell.extraConfig =
-      mkIf cfg.enableNushellIntegration (shellInit "nushell");
+      nushell.extraConfig =
+        mkIf cfg.enableNushellIntegration (shellInit "nushell");
+    };
   };
 }
