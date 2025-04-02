@@ -59,6 +59,14 @@ in
       })
     ];
 
+    #  Using this function it is possible to make `home.file` create a
+    #  symlink to a path outside the Nix store. For example, a Home Manager
+    #  configuration containing
+    #
+    #      `home.file."foo".source = config.lib.file.mkOutOfStoreSymlink ./bar;`
+    #
+    #  would upon activation create a symlink `~/foo` that points to the
+    #  absolute path of the `bar` file relative the configuration file.
     lib.file.mkOutOfStoreSymlink = path:
       let
         pathStr = toString path;
