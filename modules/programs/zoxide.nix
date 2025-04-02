@@ -53,7 +53,7 @@ in {
     programs.nushell = lib.mkIf cfg.enableNushellIntegration {
       extraConfig = ''
         source ${
-          pkgs.runCommand "zoxide-nushell-config" { } ''
+          pkgs.runCommand "zoxide-nushell-config.nu" { } ''
             ${lib.getExe cfg.package} init nushell ${cfgOptions} >> "$out"
           ''
         }

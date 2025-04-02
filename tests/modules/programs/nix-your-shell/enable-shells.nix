@@ -29,7 +29,7 @@
     assertFileExists ${nushellConfigDir}/config.nu
     assertFileRegex \
       ${nushellConfigDir}/config.nu \
-      'source /nix/store/[^/]*-nix-your-shell-nushell-config'
+      'source /nix/store/[^/]*-nix-your-shell-nushell-config.nu'
 
     assertFileExists home-files/.zshrc
     assertFileRegex \

@@ -16,6 +16,6 @@
   in ''
     assertFileExists "${configDir}/config.nu"
     assertFileRegex "${configDir}/config.nu" \
-      'source /nix/store/[^/]*-carapace-nushell-config'
+      'source /nix/store/[^/]*-carapace-nushell-config.nu'
   '';
 }

@@ -21,6 +21,6 @@
     assertFileExists "${configFile}"
     assertFileRegex \
       "${configFile}" \
-      'source /nix/store/[^/]*-oh-my-posh-nushell-config'
+      'source /nix/store/[^/]*-oh-my-posh-nushell-config.nu'
   '';
 }
