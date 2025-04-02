@@ -31,6 +31,14 @@ in {
 
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableXonshIntegration = lib.mkOption {
+      default = true;
+      type = lib.types.bool;
+      description = ''
+        Whether to enable Xonsh integration.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -63,5 +71,9 @@ in {
         source ${config.xdg.cacheHome}/zoxide/init.nu
       '';
     };
+
+    programs.xonsh.xonshrc = lib.mkIf cfg.enableXonshIntegration ''
+      execx($(${cfg.package}/bin/zoxide init xonsh), 'exec', __xonsh__.ctx, filename='zoxide')
+    '';
   };
 }

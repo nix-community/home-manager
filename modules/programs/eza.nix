@@ -37,6 +37,9 @@ in {
 
     enableZshIntegration =
       lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableXonshIntegration = mkEnableOption "Xonsh integration" // {
+      default = true;
+    };
 
     extraOptions = mkOption {
       type = types.listOf types.str;
@@ -129,6 +132,18 @@ in {
 
     programs.ion.shellAliases = optionsAlias
       // optionalAttrs cfg.enableIonIntegration aliases;
+
+    programs.xonsh.shellAliases = {
+      eza = [ "eza" ] ++ optional cfg.icons "--icons"
+        ++ optional cfg.git "--git" ++ cfg.extraOptions;
+    } // optionalAttrs cfg.enableXonshIntegration
+      (builtins.mapAttrs (_name: value: lib.mkDefault value) {
+        ls = [ "eza" ];
+        ll = [ "eza" "-l" ];
+        la = [ "eza" "-a" ];
+        lt = [ "eza" "--tree" ];
+        lla = [ "eza" "-la" ];
+      });
 
     programs.nushell.shellAliases = optionsAlias
       // optionalAttrs cfg.enableNushellIntegration aliases;
