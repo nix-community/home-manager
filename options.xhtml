@@ -71706,6 +71706,147 @@ null or string or (positive integer, meaning &gt;0)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.home-manager.autoExpire.enable"></a><a class="term" href="options.xhtml#opt-services.home-manager.autoExpire.enable"><code class="option">services.home-manager.autoExpire.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the Home Manager expire service that periodically expire your
+old Home Manager generations.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/home-manager-auto-expire.nix" target="_top">
+&lt;home-manager/modules/services/home-manager-auto-expire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.home-manager.autoExpire.frequency"></a><a class="term" href="options.xhtml#opt-services.home-manager.autoExpire.frequency"><code class="option">services.home-manager.autoExpire.frequency</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The interval at which the Home Manager auto expire is run.</p><p>This value is passed to the systemd timer configuration
+as the <code class="literal">OnCalendar</code> option.</p><p>The format is described in <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;monthly&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;weekly&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/home-manager-auto-expire.nix" target="_top">
+&lt;home-manager/modules/services/home-manager-auto-expire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.home-manager.autoExpire.store.cleanup"></a><a class="term" href="options.xhtml#opt-services.home-manager.autoExpire.store.cleanup"><code class="option">services.home-manager.autoExpire.store.cleanup</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable to cleanup Nix store when the Home Manager expire service runs.</p><p>It will use <code class="literal">nix-collect-garbage</code> to cleanup the store,
+removing all unreachable store objects from the current user
+(i.e.: not only the expired Home Manager generations).</p><p>This may not be what you want, this is why this option is disabled
+by default.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/home-manager-auto-expire.nix" target="_top">
+&lt;home-manager/modules/services/home-manager-auto-expire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.home-manager.autoExpire.store.options"></a><a class="term" href="options.xhtml#opt-services.home-manager.autoExpire.store.options"><code class="option">services.home-manager.autoExpire.store.options</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Options given to <code class="literal">nix-collection-garbage</code> when the service runs.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;--delete-older-than 30d&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/home-manager-auto-expire.nix" target="_top">
+&lt;home-manager/modules/services/home-manager-auto-expire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.home-manager.autoExpire.timestamp"></a><a class="term" href="options.xhtml#opt-services.home-manager.autoExpire.timestamp"><code class="option">services.home-manager.autoExpire.timestamp</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Remove generations older than <code class="literal">TIMESTAMP</code> where <code class="literal">TIMESTAMP</code> is
+interpreted as in the -d argument of the date tool.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;-30 days&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;-7 days&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/home-manager-auto-expire.nix" target="_top">
+&lt;home-manager/modules/services/home-manager-auto-expire.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.home-manager.autoUpgrade.enable"></a><a class="term" href="options.xhtml#opt-services.home-manager.autoUpgrade.enable"><code class="option">services.home-manager.autoUpgrade.enable</code>
   </a>
  </span>
