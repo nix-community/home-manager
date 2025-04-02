@@ -1,5 +1,4 @@
 { config, pkgs, lib, ... }:
-
 let
   im = config.i18n.inputMethod;
   cfg = im.fcitx5;
@@ -41,6 +40,7 @@ in {
     home = {
       sessionVariables = {
         GLFW_IM_MODULE = "ibus"; # IME support in kitty
+        SDL_IM_MODULE = "fcitx";
         XMODIFIERS = "@im=fcitx";
       } // lib.optionalAttrs (!cfg.waylandFrontend) {
         GTK_IM_MODULE = "fcitx";
@@ -61,5 +61,4 @@ in {
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };
-
 }
