@@ -44,7 +44,7 @@ in {
       nushell = lib.mkIf cfg.enableNushellIntegration {
         extraConfig = ''
           source ${
-            pkgs.runCommand "carapace-nushell-config" { } ''
+            pkgs.runCommand "carapace-nushell-config.nu" { } ''
               ${bin} _carapace nushell >> "$out"
             ''
           }

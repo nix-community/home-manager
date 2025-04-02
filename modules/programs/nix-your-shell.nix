@@ -31,7 +31,7 @@ in {
       nushell = lib.mkIf cfg.enableNushellIntegration {
         extraConfig = ''
           source ${
-            pkgs.runCommand "nix-your-shell-nushell-config" { } ''
+            pkgs.runCommand "nix-your-shell-nushell-config.nu" { } ''
               ${lib.getExe cfg.package} nu >> "$out"
             ''
           }

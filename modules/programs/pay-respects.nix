@@ -51,7 +51,7 @@ in {
 
       nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration ''
         source ${
-          pkgs.runCommand "pay-respects-nushell-config" { } ''
+          pkgs.runCommand "pay-respects-nushell-config.nu" { } ''
             ${payRespectsCmd} nushell ${cfgOptions} >> "$out"
           ''
         }

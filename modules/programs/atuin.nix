@@ -124,7 +124,7 @@ in {
       programs.nushell = mkIf cfg.enableNushellIntegration {
         extraConfig = ''
           source ${
-            pkgs.runCommand "atuin-nushell-config" { } ''
+            pkgs.runCommand "atuin-nushell-config.nu" { } ''
               ${lib.getExe cfg.package} init nu ${flagsStr} >> "$out"
             ''
           }

@@ -30,6 +30,6 @@
     assertFileExists home-files/.config/nushell/config.nu
     assertFileRegex \
       home-files/.config/nushell/config.nu \
-      'source /nix/store/[^/]*-pay-respects-nushell-config'
+      'source /nix/store/[^/]*-pay-respects-nushell-config.nu'
   '';
 }

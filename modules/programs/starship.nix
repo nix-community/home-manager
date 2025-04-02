@@ -128,7 +128,7 @@ in {
       # not done here.
       extraConfig = ''
         use ${
-          pkgs.runCommand "starship-nushell-config" { } ''
+          pkgs.runCommand "starship-nushell-config.nu" { } ''
             ${lib.getExe cfg.package} init nu >> "$out"
           ''
         }

@@ -19,6 +19,6 @@
     assertFileNotRegex home-files/.bashrc '/nix/store/[^/]*-pay-respects-[^/]*/bin/pay-respects'
     assertFileNotRegex home-files/.zshrc '/nix/store/[^/]*-pay-respects-[^/]*/bin/pay-respects'
     assertFileNotRegex home-files/.config/fish/config.fish '/nix/store/[^/]*-pay-respects-[^/]*/bin/pay-respects'
-    assertFileNotRegex home-files/.config/nushell/config.nu 'source /nix/store/[^/]*-pay-respects-nushell-config'
+    assertFileNotRegex home-files/.config/nushell/config.nu 'source /nix/store/[^/]*-pay-respects-nushell-config.nu'
   '';
 }

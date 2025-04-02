@@ -82,7 +82,7 @@ in {
     programs.nushell = mkIf cfg.enableNushellIntegration {
       extraConfig = ''
         source ${
-          pkgs.runCommand "oh-my-posh-nushell-config" { } ''
+          pkgs.runCommand "oh-my-posh-nushell-config.nu" { } ''
             ${
               lib.getExe cfg.package
             } init nu ${configArgument} --print >> "$out"
