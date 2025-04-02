@@ -6,11 +6,11 @@ let
 
   cfg = config.services.dropbox;
   baseDir = ".dropbox-hm";
-  dropboxCmd = "${pkgs.dropbox-cli}/bin/dropbox";
+  dropboxCmd = "${pkgs.dropbox}/bin/dropbox";
   homeBaseDir = "${config.home.homeDirectory}/${baseDir}";
 
 in {
-  meta.maintainers = [ maintainers.eyjhb ];
+  meta.maintainers = [ hm.maintainers.tph5595 ];
 
   options = {
     services.dropbox = {
@@ -33,7 +33,7 @@ in {
         lib.platforms.linux)
     ];
 
-    home.packages = [ pkgs.dropbox-cli ];
+    home.packages = [ pkgs.dropbox ];
 
     systemd.user.services.dropbox = {
       Unit = { Description = "dropbox"; };
@@ -41,40 +41,34 @@ in {
       Install = { WantedBy = [ "default.target" ]; };
 
       Service = {
-        Environment = [ "HOME=${homeBaseDir}" "DISPLAY=" ];
+        Environment = [ "HOME=${homeBaseDir}" ];
 
-        Type = "forking";
         PIDFile = "${homeBaseDir}/.dropbox/dropbox.pid";
 
         Restart = "on-failure";
-        PrivateTmp = true;
         ProtectSystem = "full";
         Nice = 10;
 
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
-        ExecStop = "${dropboxCmd} stop";
+        ExecStop = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
         ExecStart = toString (pkgs.writeShellScript "dropbox-start" ''
           # ensure we have the dirs we need
-          run ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p \
+          ${pkgs.coreutils}/bin/mkdir $VERBOSE_ARG -p \
             ${homeBaseDir}/{.dropbox,.dropbox-dist,Dropbox}
+          ${pkgs.coreutils}/bin/touch ${homeBaseDir}/.dropbox-dist/VERSION
 
           # symlink them as needed
           if [[ ! -d ${config.home.homeDirectory}/.dropbox ]]; then
-            run ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
+            ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
               ${homeBaseDir}/.dropbox ${config.home.homeDirectory}/.dropbox
           fi
 
           if [[ ! -d ${escapeShellArg cfg.path} ]]; then
-            run ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
+            ${pkgs.coreutils}/bin/ln $VERBOSE_ARG -s \
               ${homeBaseDir}/Dropbox ${escapeShellArg cfg.path}
           fi
 
-          # get the dropbox bins if needed
-          if [[ ! -f $HOME/.dropbox-dist/VERSION ]]; then
-            ${pkgs.coreutils}/bin/yes | ${dropboxCmd} update
-          fi
-
-          ${dropboxCmd} start
+          ${dropboxCmd}
         '');
       };
     };
