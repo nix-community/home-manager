@@ -354,6 +354,7 @@ in import nmtSrc {
     ./modules/programs/neomutt
     ./modules/programs/neovide
     ./modules/programs/neovim
+    ./modules/programs/neverest
     ./modules/programs/newsboat
     ./modules/programs/nheko
     ./modules/programs/nix-index

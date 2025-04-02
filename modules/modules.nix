@@ -186,6 +186,7 @@ let
     ./programs/neomutt.nix
     ./programs/neovide.nix
     ./programs/neovim.nix
+    ./programs/neverest.nix
     ./programs/newsboat.nix
     ./programs/nh.nix
     ./programs/nheko.nix
