@@ -8,6 +8,7 @@ KillMode=mixed
 Restart=on-failure
 
 [Unit]
-After=graphical-session.target
+After=sway-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
 Description=Clipboard management daemon
-PartOf=graphical-session.target
+PartOf=sway-session.target
