@@ -41,7 +41,9 @@ in {
       lib.concatStringsSep " " ([ "--shell=${shell}" ]
         ++ lib.optional (!cfg.enableAliases) "--aliases=false");
   in {
-    home.packages = [ cfg.package ];
+    home.packages = [ cfg.package ] ++ optional (cfg.enableBashIntegration
+      || cfg.enableZshIntegration || cfg.enableFishIntegration) pkgs.which
+      ++ optionals cfg.enableFishIntegration (with pkgs; [ gawk gnugrep ]);
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       eval "$(${cfg.package}/bin/scmpuff init ${mkArgs "bash"})"
