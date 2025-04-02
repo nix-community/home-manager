@@ -124,7 +124,9 @@ in {
       programs.nushell = mkIf cfg.enableNushellIntegration {
         extraConfig = ''
           source ${
-            pkgs.runCommand "atuin-nushell-config.nu" { } ''
+            pkgs.runCommand "atuin-nushell-config.nu" {
+              nativeBuildInputs = [ pkgs.writableTmpDirAsHomeHook ];
+            } ''
               ${lib.getExe cfg.package} init nu ${flagsStr} >> "$out"
             ''
           }
