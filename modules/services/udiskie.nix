@@ -5,11 +5,13 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    mkOption
+    types
+    ;
 
-  mergeSets = sets: lists.fold attrsets.recursiveUpdate { } sets;
+  mergeSets = sets: lib.lists.fold lib.attrsets.recursiveUpdate { } sets;
 
   yaml = pkgs.formats.yaml { };
 
@@ -17,10 +19,10 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (mkRemovedOptionModule [ "services" "udiskie" "sni" ] ''
+    (lib.mkRemovedOptionModule [ "services" "udiskie" "sni" ] ''
       Support for Status Notifier Items is now configured globally through the
 
         xsession.preferStatusNotifierItems
@@ -31,7 +33,7 @@ in
 
   options = {
     services.udiskie = {
-      enable = mkEnableOption "" // {
+      enable = lib.mkEnableOption "" // {
         description = ''
           Whether to enable the udiskie mount daemon.
 
@@ -45,7 +47,7 @@ in
       settings = mkOption {
         type = yaml.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             program_options = {
               udisks_version = 2;
@@ -100,9 +102,9 @@ in
     };
   };
 
-  config = mkIf config.services.udiskie.enable {
+  config = lib.mkIf config.services.udiskie.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.udiskie" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.udiskie" pkgs lib.platforms.linux)
     ];
 
     xdg.configFile."udiskie/config.yml".source = yaml.generate "udiskie-config.yml" (mergeSets [
@@ -132,7 +134,7 @@ in
 
       Service.ExecStart = toString (
         [ "${pkgs.udiskie}/bin/udiskie" ]
-        ++ optional config.xsession.preferStatusNotifierItems "--appindicator"
+        ++ lib.optional config.xsession.preferStatusNotifierItems "--appindicator"
       );
 
       Install.WantedBy = [ "graphical-session.target" ];

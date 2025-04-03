@@ -4,24 +4,19 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
-
   cfg = config.services.caffeine;
-
 in
 {
-  meta.maintainers = [ maintainers.uvnikita ];
+  meta.maintainers = [ lib.maintainers.uvnikita ];
 
   options = {
     services.caffeine = {
-      enable = mkEnableOption "Caffeine service";
+      enable = lib.mkEnableOption "Caffeine service";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.caffeine" pkgs lib.platforms.linux)
     ];

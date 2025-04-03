@@ -4,10 +4,13 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib)
+    mkOption
+    types
+    listToAttrs
+    optionalAttrs
+    ;
 
   cfg = config.services.imapnotify;
 
@@ -15,7 +18,9 @@ let
 
   configName = account: "imapnotify-${safeName account.name}-config.json";
 
-  imapnotifyAccounts = filter (a: a.imapnotify.enable) (attrValues config.accounts.email.accounts);
+  imapnotifyAccounts = lib.filter (a: a.imapnotify.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   genAccountUnit =
     account:
@@ -32,7 +37,7 @@ let
         Service = {
           # Use the nix store path for config to ensure service restarts when it changes
           ExecStart =
-            "${getExe cfg.package} -conf '${genAccountConfig account}'"
+            "${lib.getExe cfg.package} -conf '${genAccountConfig account}'"
             + " ${lib.optionalString (account.imapnotify.extraArgs != [ ]) (
                toString account.imapnotify.extraArgs
              )}";
@@ -41,7 +46,7 @@ let
           Type = "simple";
           Environment =
             [ "PATH=${cfg.path}" ]
-            ++ optional account.notmuch.enable "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
+            ++ lib.optional account.notmuch.enable "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
         };
 
         Install = {
@@ -63,7 +68,7 @@ let
           {
             # Use the nix store path for config to ensure service restarts when it changes
             ProgramArguments = [
-              "${getExe cfg.package}"
+              "${lib.getExe cfg.package}"
               "-conf"
               "${genAccountConfig account}"
             ];
@@ -115,17 +120,17 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.nickhu ];
+  meta.maintainers = [ lib.maintainers.nickhu ];
 
   options = {
     services.imapnotify = {
-      enable = mkEnableOption "imapnotify";
+      enable = lib.mkEnableOption "imapnotify";
 
       package = mkOption {
         type = types.package;
         default = pkgs.goimapnotify;
-        defaultText = literalExpression "pkgs.goimapnotify";
-        example = literalExpression "pkgs.imapnotify";
+        defaultText = lib.literalExpression "pkgs.goimapnotify";
+        example = lib.literalExpression "pkgs.imapnotify";
         description = "The imapnotify package to use";
       };
 
@@ -146,18 +151,18 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions =
       let
         checkAccounts =
           pred: msg:
           let
-            badAccounts = filter pred imapnotifyAccounts;
+            badAccounts = lib.filter pred imapnotifyAccounts;
           in
           {
             assertion = badAccounts == [ ];
             message =
-              "imapnotify: Missing ${msg} for accounts: " + concatMapStringsSep ", " (a: a.name) badAccounts;
+              "imapnotify: Missing ${msg} for accounts: " + lib.concatMapStringsSep ", " (a: a.name) badAccounts;
           };
       in
       [

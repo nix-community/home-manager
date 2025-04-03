@@ -4,22 +4,20 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.etesync-dav;
 
   toEnvironmentCfg =
-    vars: (concatStringsSep " " (mapAttrsToList (k: v: "${k}=${escapeShellArg v}") vars));
+    vars: (lib.concatStringsSep " " (lib.mapAttrsToList (k: v: "${k}=${lib.escapeShellArg v}") vars));
 
 in
 {
-  meta.maintainers = [ maintainers.valodim ];
+  meta.maintainers = [ lib.maintainers.valodim ];
 
   options.services.etesync-dav = {
-    enable = mkEnableOption "etesync-dav";
+    enable = lib.mkEnableOption "etesync-dav";
 
     package = mkOption {
       type = types.package;
@@ -42,7 +40,7 @@ in
         ]
       );
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           ETESYNC_LISTEN_ADDRESS = "localhost";
           ETESYNC_LISTEN_PORT = 37358;
@@ -54,7 +52,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.etesync-dav" pkgs lib.platforms.linux)
     ];

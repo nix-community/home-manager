@@ -4,24 +4,21 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.gnome-keyring;
 
 in
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     services.gnome-keyring = {
-      enable = mkEnableOption "GNOME Keyring";
+      enable = lib.mkEnableOption "GNOME Keyring";
 
-      components = mkOption {
-        type = types.listOf (
-          types.enum [
+      components = lib.mkOption {
+        type = lib.types.listOf (
+          lib.types.enum [
             "pkcs11"
             "secrets"
             "ssh"
@@ -36,7 +33,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.gnome-keyring" pkgs lib.platforms.linux)
       {
@@ -58,12 +55,12 @@ in
       Service = {
         ExecStart =
           let
-            args = concatStringsSep " " (
+            args = lib.concatStringsSep " " (
               [
                 "--start"
                 "--foreground"
               ]
-              ++ optional (cfg.components != [ ]) ("--components=" + concatStringsSep "," cfg.components)
+              ++ lib.optional (cfg.components != [ ]) ("--components=" + lib.concatStringsSep "," cfg.components)
             );
           in
           "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon ${args}";

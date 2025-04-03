@@ -4,14 +4,18 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib)
+    escapeShellArg
+    escapeShellArgs
+    concatMapStringsSep
+    mapAttrsToList
+    concatStringsSep
+    ;
 
   cfg = config.xsession.windowManager.bspwm;
 
-  camelToSnake = builtins.replaceStrings upperChars (map (c: "_${c}") lowerChars);
+  camelToSnake = builtins.replaceStrings lib.upperChars (map (c: "_${c}") lib.lowerChars);
 
   formatMonitor =
     monitor: desktops:
@@ -29,13 +33,13 @@ let
 
   formatValue =
     v:
-    if isList v then
+    if lib.isList v then
       concatMapStringsSep "," formatValue v
-    else if isBool v then
+    else if lib.isBool v then
       if v then "on" else "off"
-    else if isInt v || isFloat v then
+    else if lib.isInt v || lib.isFloat v then
       toString v
-    else if isString v then
+    else if lib.isString v then
       v
     else
       throw "unsupported type"; # should not happen
@@ -55,7 +59,7 @@ let
       formatDirective = n: v: "${camelToSnake n}=${formatValue v}";
 
       directivesStr = escapeShellArgs (
-        mapAttrsToList formatDirective (filterAttrs (n: v: v != null) directives)
+        mapAttrsToList formatDirective (lib.filterAttrs (n: v: v != null) directives)
       );
     in
     "bspc rule -a ${escapeShellArg target} ${directivesStr}";
@@ -64,19 +68,19 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.ncfavier ];
+  meta.maintainers = [ lib.maintainers.ncfavier ];
 
   options = import ./options.nix { inherit pkgs lib; };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "xsession.windowManager.bspwm" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "xsession.windowManager.bspwm" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
     xdg.configFile."bspwm/bspwmrc".source = pkgs.writeShellScript "bspwmrc" (
-      (optionalString (cfg.extraConfigEarly != "") (cfg.extraConfigEarly + "\n"))
+      (lib.optionalString (cfg.extraConfigEarly != "") (cfg.extraConfigEarly + "\n"))
       + ''
         ${concatStringsSep "\n" (mapAttrsToList formatMonitor cfg.monitors)}
 

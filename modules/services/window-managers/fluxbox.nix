@@ -4,22 +4,20 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.xsession.windowManager.fluxbox;
 
 in
 {
-  meta.maintainers = [ maintainers.AndersonTorres ];
+  meta.maintainers = [ lib.maintainers.AndersonTorres ];
 
   options = {
     xsession.windowManager.fluxbox = {
-      enable = mkEnableOption "Fluxbox window manager";
+      enable = lib.mkEnableOption "Fluxbox window manager";
 
-      package = mkPackageOption pkgs "fluxbox" { nullable = true; };
+      package = lib.mkPackageOption pkgs "fluxbox" { nullable = true; };
 
       init = mkOption {
         type = types.lines;
@@ -100,7 +98,7 @@ in
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "xsession.windowManager.fluxbox" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "xsession.windowManager.fluxbox" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -114,8 +112,8 @@ in
       ".fluxbox/windowmenu" = mkIf (cfg.windowmenu != "") { text = cfg.windowmenu; };
     };
 
-    xsession.windowManager.command = escapeShellArgs (
-      [ "${cfg.package}/bin/fluxbox" ] ++ remove "" cfg.extraCommandLineArgs
+    xsession.windowManager.command = lib.escapeShellArgs (
+      [ "${cfg.package}/bin/fluxbox" ] ++ lib.remove "" cfg.extraCommandLineArgs
     );
   };
 }

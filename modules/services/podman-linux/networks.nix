@@ -4,10 +4,9 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
+
   cfg = config.services.podman;
 
   podman-lib = import ./podman-lib.nix { inherit pkgs lib config; };
@@ -44,7 +43,7 @@ let
               PATH = (
                 builtins.concatStringsSep ":" [
                   "${podman-lib.newuidmapPaths}"
-                  "${makeBinPath [
+                  "${lib.makeBinPath [
                     pkgs.su
                     pkgs.coreutils
                   ]}"
@@ -112,7 +111,7 @@ let
       extraConfig = mkOption {
         type = podman-lib.extraConfigType;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             Network = {
               ContainerConfModule = "/etc/nvd.conf";
@@ -179,11 +178,11 @@ in
 
   config =
     let
-      networkQuadlets = mapAttrsToList toQuadletInternal cfg.networks;
+      networkQuadlets = lib.mapAttrsToList toQuadletInternal cfg.networks;
     in
-    mkIf cfg.enable {
+    lib.mkIf cfg.enable {
       services.podman.internal.quadletDefinitions = networkQuadlets;
-      assertions = flatten (map (network: network.assertions) networkQuadlets);
+      assertions = lib.flatten (map (network: network.assertions) networkQuadlets);
 
       xdg.configFile."podman/networks.manifest".text = podman-lib.generateManifestText networkQuadlets;
     };

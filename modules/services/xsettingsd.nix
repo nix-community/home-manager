@@ -5,13 +5,16 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    mkOption
+    literalExpression
+    types
+    ;
 
   cfg = config.services.xsettingsd;
 
-  renderSettings = settings: concatStrings (mapAttrsToList renderSetting settings);
+  renderSettings = settings: lib.concatStrings (lib.mapAttrsToList renderSetting settings);
 
   renderSetting = key: value: ''
     ${key} ${renderValue value}
@@ -28,11 +31,11 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.imalison ];
+  meta.maintainers = [ lib.maintainers.imalison ];
 
   options = {
     services.xsettingsd = {
-      enable = mkEnableOption "xsettingsd";
+      enable = lib.mkEnableOption "xsettingsd";
 
       package = mkOption {
         type = types.package;
@@ -80,7 +83,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.xsettingsd" pkgs lib.platforms.linux)
     ];
@@ -98,7 +101,7 @@ in
         Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
         ExecStart =
           "${cfg.package}/bin/xsettingsd"
-          + optionalString (cfg.configFile != null) " -c ${escapeShellArg cfg.configFile}";
+          + lib.optionalString (cfg.configFile != null) " -lib.c ${lib.escapeShellArg cfg.configFile}";
         Restart = "on-abort";
       };
     };

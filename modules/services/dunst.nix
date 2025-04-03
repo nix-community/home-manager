@@ -4,23 +4,26 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib)
+    literalExpression
+    mkOption
+    optional
+    types
+    ;
 
   cfg = config.services.dunst;
 
   eitherStrBoolIntList = with types; either str (either bool (either int (listOf str)));
 
-  toDunstIni = generators.toINI {
+  toDunstIni = lib.generators.toINI {
     mkKeyValue =
       key: value:
       let
         value' =
-          if isBool value then
+          if lib.isBool value then
             (lib.hm.booleans.yesNo value)
-          else if isString value then
+          else if lib.isString value then
             ''"${value}"''
           else
             toString value;
@@ -59,11 +62,11 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     services.dunst = {
-      enable = mkEnableOption "the dunst notification daemon";
+      enable = lib.mkEnableOption "the dunst notification daemon";
 
       package = mkOption {
         type = types.package;
@@ -133,96 +136,100 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "services.dunst" pkgs platforms.linux)
-      ];
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "services.dunst" pkgs lib.platforms.linux)
+        ];
 
-      home.packages = [ cfg.package ];
+        home.packages = [ cfg.package ];
 
-      xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
-        "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
+        xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
+          "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
 
-      services.dunst.settings.global.icon_path =
-        let
-          useCustomTheme =
-            cfg.iconTheme.package != hicolorTheme.package
-            || cfg.iconTheme.name != hicolorTheme.name
-            || cfg.iconTheme.size != hicolorTheme.size;
+        services.dunst.settings.global.icon_path =
+          let
+            useCustomTheme =
+              cfg.iconTheme.package != hicolorTheme.package
+              || cfg.iconTheme.name != hicolorTheme.name
+              || cfg.iconTheme.size != hicolorTheme.size;
 
-          basePaths = [
-            "/run/current-system/sw"
-            config.home.profileDirectory
-            cfg.iconTheme.package
-          ] ++ optional useCustomTheme hicolorTheme.package;
+            basePaths = [
+              "/run/current-system/sw"
+              config.home.profileDirectory
+              cfg.iconTheme.package
+            ] ++ optional useCustomTheme hicolorTheme.package;
 
-          themes = [
-            cfg.iconTheme
-          ] ++ optional useCustomTheme (hicolorTheme // { size = cfg.iconTheme.size; });
+            themes = [
+              cfg.iconTheme
+            ] ++ optional useCustomTheme (hicolorTheme // { size = cfg.iconTheme.size; });
 
-          categories = [
-            "actions"
-            "animations"
-            "apps"
-            "categories"
-            "devices"
-            "emblems"
-            "emotes"
-            "filesystem"
-            "intl"
-            "legacy"
-            "mimetypes"
-            "places"
-            "status"
-            "stock"
-          ];
+            categories = [
+              "actions"
+              "animations"
+              "apps"
+              "categories"
+              "devices"
+              "emblems"
+              "emotes"
+              "filesystem"
+              "intl"
+              "legacy"
+              "mimetypes"
+              "places"
+              "status"
+              "stock"
+            ];
 
-          mkPath =
-            {
-              basePath,
-              theme,
-              category,
-            }:
-            "${basePath}/share/icons/${theme.name}/${theme.size}/${category}";
-        in
-        concatMapStringsSep ":" mkPath (cartesianProduct {
-          basePath = basePaths;
-          theme = themes;
-          category = categories;
-        });
-
-      systemd.user.services.dunst = {
-        Unit = {
-          Description = "Dunst notification daemon";
-          After = [ config.wayland.systemd.target ];
-          PartOf = [ config.wayland.systemd.target ];
-        };
-
-        Service = {
-          Type = "dbus";
-          BusName = "org.freedesktop.Notifications";
-          ExecStart = escapeShellArgs (
-            [ "${cfg.package}/bin/dunst" ]
-            ++
-              # Using `-config` breaks dunst's drop-ins, so only use it when an alternative path is set
-              optionals (cfg.configFile != null) [
-                "-config"
-                cfg.configFile
-              ]
+            mkPath =
+              {
+                basePath,
+                theme,
+                category,
+              }:
+              "${basePath}/share/icons/${theme.name}/${theme.size}/${category}";
+          in
+          lib.concatMapStringsSep ":" mkPath (
+            lib.cartesianProduct {
+              basePath = basePaths;
+              theme = themes;
+              category = categories;
+            }
           );
-          Environment = optionalString (cfg.waylandDisplay != "") "WAYLAND_DISPLAY=${cfg.waylandDisplay}";
-        };
-      };
-    }
 
-    (mkIf (cfg.settings != { }) {
-      xdg.configFile."dunst/dunstrc" = {
-        text = toDunstIni cfg.settings;
-        onChange = ''
-          ${pkgs.procps}/bin/pkill -u "$USER" ''${VERBOSE+-e} dunst || true
-        '';
-      };
-    })
-  ]);
+        systemd.user.services.dunst = {
+          Unit = {
+            Description = "Dunst notification daemon";
+            After = [ config.wayland.systemd.target ];
+            PartOf = [ config.wayland.systemd.target ];
+          };
+
+          Service = {
+            Type = "dbus";
+            BusName = "org.freedesktop.Notifications";
+            ExecStart = lib.escapeShellArgs (
+              [ "${cfg.package}/bin/dunst" ]
+              ++
+                # Using `-config` breaks dunst's drop-ins, so only use it when an alternative path is set
+                lib.optionals (cfg.configFile != null) [
+                  "-config"
+                  cfg.configFile
+                ]
+            );
+            Environment = lib.optionalString (cfg.waylandDisplay != "") "WAYLAND_DISPLAY=${cfg.waylandDisplay}";
+          };
+        };
+      }
+
+      (lib.mkIf (cfg.settings != { }) {
+        xdg.configFile."dunst/dunstrc" = {
+          text = toDunstIni cfg.settings;
+          onChange = ''
+            ${pkgs.procps}/bin/pkill -u "$USER" ''${VERBOSE+-e} dunst || true
+          '';
+        };
+      })
+    ]
+  );
 }

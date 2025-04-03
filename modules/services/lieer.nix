@@ -4,23 +4,20 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
   cfg = config.services.lieer;
 
-  syncAccounts = filter (a: a.lieer.enable && a.lieer.sync.enable) (
-    attrValues config.accounts.email.accounts
+  syncAccounts = lib.filter (a: a.lieer.enable && a.lieer.sync.enable) (
+    lib.attrValues config.accounts.email.accounts
   );
 
   escapeUnitName =
     name:
     let
-      good = upperChars ++ lowerChars ++ stringToCharacters "0123456789-_";
-      subst = c: if any (x: x == c) good then c else "-";
+      good = lib.upperChars ++ lib.lowerChars ++ lib.stringToCharacters "0123456789-_";
+      subst = c: if lib.any (x: x == c) good then c else "-";
     in
-    stringAsChars subst name;
+    lib.stringAsChars subst name;
 
   serviceUnit = account: {
     name = escapeUnitName "lieer-${account.name}";
@@ -59,17 +56,17 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.tadfisher ];
+  meta.maintainers = [ lib.maintainers.tadfisher ];
 
-  options.services.lieer.enable = mkEnableOption "lieer Gmail synchronization service";
+  options.services.lieer.enable = lib.mkEnableOption "lieer Gmail synchronization service";
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.lieer" pkgs lib.platforms.linux)
     ];
 
     programs.lieer.enable = true;
-    systemd.user.services = listToAttrs (map serviceUnit syncAccounts);
-    systemd.user.timers = listToAttrs (map timerUnit syncAccounts);
+    systemd.user.services = lib.listToAttrs (map serviceUnit syncAccounts);
+    systemd.user.timers = lib.listToAttrs (map timerUnit syncAccounts);
   };
 }

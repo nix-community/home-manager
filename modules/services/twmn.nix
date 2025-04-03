@@ -2,13 +2,16 @@
   config,
   lib,
   pkgs,
-  stdenv,
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    mkOption
+    mkEnableOption
+    types
+    literalExpression
+    ;
 
   cfg = config.services.twmn;
 
@@ -34,7 +37,7 @@ let
 
 in
 {
-  meta.maintainers = [ hm.maintainers.austreelis ];
+  meta.maintainers = [ lib.hm.maintainers.austreelis ];
 
   options.services.twmn = {
     enable = mkEnableOption "twmn, a tiling window manager notification daemon";
@@ -304,7 +307,7 @@ in
   #################
   # Implementation
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.twmn" pkgs lib.platforms.linux)
     ];
@@ -313,7 +316,7 @@ in
 
     xdg.configFile."twmn/twmn.conf".text =
       let
-        conf = recursiveUpdate {
+        conf = lib.recursiveUpdate {
           gui = {
             always_on_top = if cfg.window.alwaysOnTop then "true" else "false";
             background_color = cfg.window.color;
@@ -337,7 +340,7 @@ in
           };
           # map null values to empty strings because formats.toml generator fails
           # when encountering a null.
-          icons = mapAttrs (_: toString) cfg.icons;
+          icons = lib.mapAttrs (_: toString) cfg.icons;
           main = {
             duration = toString cfg.duration;
             host = cfg.host;
@@ -350,10 +353,10 @@ in
 
         mkSection = section: conf: ''
           [${section}]
-          ${concatStringsSep "\n" (mapAttrsToList mkLine conf)}
+          ${lib.concatStringsSep "\n" (lib.mapAttrsToList mkLine conf)}
         '';
       in
-      concatStringsSep "\n" (mapAttrsToList mkSection conf) + "\n";
+      lib.concatStringsSep "\n" (lib.mapAttrsToList mkSection conf) + "\n";
 
     systemd.user.services.twmnd = {
       Unit = {

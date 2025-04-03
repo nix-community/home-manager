@@ -5,10 +5,13 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib)
+    generators
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.services.mopidy;
 
@@ -18,13 +21,17 @@ let
   toMopidyConf = generators.toINI {
     mkKeyValue = generators.mkKeyValueDefault {
       mkValueString =
-        v: if isList v then "\n  " + concatStringsSep "\n  " v else generators.mkValueStringDefault { } v;
+        v:
+        if lib.isList v then
+          "\n  " + lib.concatStringsSep "\n  " v
+        else
+          generators.mkValueStringDefault { } v;
     } " = ";
   };
 
   mopidyEnv = pkgs.buildEnv {
     name = "mopidy-with-extensions-${pkgs.mopidy.version}";
-    paths = closePropagation cfg.extensionPackages;
+    paths = lib.closePropagation cfg.extensionPackages;
     pathsToLink = [ "/${pkgs.mopidyPackages.python.sitePackages}" ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     ignoreCollisions = true;
@@ -60,7 +67,7 @@ let
 
   settingsFormat = mopidyConfFormat { };
 
-  configFilePaths = concatStringsSep ":" (
+  configFilePaths = lib.concatStringsSep ":" (
     [ "${config.xdg.configHome}/mopidy/mopidy.conf" ] ++ cfg.extraConfigFiles
   );
 
@@ -68,15 +75,15 @@ let
 
 in
 {
-  meta.maintainers = [ hm.maintainers.foo-dogsquared ];
+  meta.maintainers = [ lib.hm.maintainers.foo-dogsquared ];
 
   options.services.mopidy = {
-    enable = mkEnableOption "Mopidy music player daemon";
+    enable = lib.mkEnableOption "Mopidy music player daemon";
 
     extensionPackages = mkOption {
       type = with types; listOf package;
       default = [ ];
-      example = literalExpression "with pkgs; [ mopidy-spotify mopidy-mpd mopidy-mpris ]";
+      example = lib.literalExpression "with pkgs; [ mopidy-spotify mopidy-mpd mopidy-mpris ]";
       description = ''
         Mopidy extensions that should be loaded by the service.
       '';
@@ -85,7 +92,7 @@ in
     settings = mkOption {
       type = settingsFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           file = {
             media_dirs = [
@@ -131,7 +138,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [ (hm.assertions.assertPlatform "services.mopidy" pkgs platforms.linux) ];
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.mopidy" pkgs lib.platforms.linux)
+    ];
 
     xdg.configFile."mopidy/mopidy.conf".source =
       settingsFormat.generate "mopidy-${config.home.username}" cfg.settings;

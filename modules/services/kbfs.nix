@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.kbfs;
@@ -15,10 +12,10 @@ in
 {
   options = {
     services.kbfs = {
-      enable = mkEnableOption "Keybase File System";
+      enable = lib.mkEnableOption "Keybase File System";
 
-      mountPoint = mkOption {
-        type = types.str;
+      mountPoint = lib.mkOption {
+        type = lib.types.str;
         default = "keybase";
         description = ''
           Mount point for the Keybase filesystem, relative to
@@ -26,8 +23,8 @@ in
         '';
       };
 
-      extraFlags = mkOption {
-        type = types.listOf types.str;
+      extraFlags = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [ ];
         example = [
           "-label kbfs"
@@ -40,7 +37,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.kbfs" pkgs lib.platforms.linux)
     ];

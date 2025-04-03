@@ -1,8 +1,6 @@
 { pkgs, lib }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   primitive =
     with types;
@@ -182,7 +180,7 @@ let
 in
 {
   xsession.windowManager.bspwm = {
-    enable = mkEnableOption "bspwm window manager";
+    enable = lib.mkEnableOption "bspwm window manager";
 
     package = mkOption {
       type = types.package;

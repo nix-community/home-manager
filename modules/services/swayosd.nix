@@ -5,22 +5,25 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    mkOption
+    types
+    optionalString
+    ;
 
   cfg = config.services.swayosd;
 
 in
 {
-  meta.maintainers = [ hm.maintainers.pltanton ];
+  meta.maintainers = [ lib.hm.maintainers.pltanton ];
 
   options.services.swayosd = {
-    enable = mkEnableOption ''
+    enable = lib.mkEnableOption ''
       swayosd, a GTK based on screen display for keyboard shortcuts like
       caps-lock and volume'';
 
-    package = mkPackageOption pkgs "swayosd" { };
+    package = lib.mkPackageOption pkgs "swayosd" { };
 
     topMargin = mkOption {
       type = types.nullOr (
@@ -53,9 +56,9 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.swayosd" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.swayosd" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -77,7 +80,7 @@ in
           ExecStart =
             "${cfg.package}/bin/swayosd-server"
             + (optionalString (cfg.display != null) " --display ${cfg.display}")
-            + (optionalString (cfg.stylePath != null) " --style ${escapeShellArg cfg.stylePath}")
+            + (optionalString (cfg.stylePath != null) " --style ${lib.escapeShellArg cfg.stylePath}")
             + (optionalString (cfg.topMargin != null) " --top-margin ${toString cfg.topMargin}");
           Restart = "always";
           RestartSec = "2s";

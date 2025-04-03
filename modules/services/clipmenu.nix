@@ -4,19 +4,16 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.clipmenu;
-
 in
 {
-  meta.maintainers = [ maintainers.DamienCassou ];
+  meta.maintainers = [ lib.maintainers.DamienCassou ];
 
   options.services.clipmenu = {
-    enable = mkEnableOption "clipmenu, the clipboard management daemon";
+    enable = lib.mkEnableOption "clipmenu, the clipboard management daemon";
 
     package = mkOption {
       type = types.package;
@@ -36,14 +33,14 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.clipmenu" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = mkIf (cfg.launcher != null) { CM_LAUNCHER = cfg.launcher; };
+    home.sessionVariables = lib.mkIf (cfg.launcher != null) { CM_LAUNCHER = cfg.launcher; };
 
     systemd.user.services.clipmenu = {
       Unit = {
@@ -55,7 +52,7 @@ in
         ExecStart = "${cfg.package}/bin/clipmenud";
         Environment = [
           "PATH=${
-            makeBinPath (
+            lib.makeBinPath (
               with pkgs;
               [
                 coreutils

@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.owncloud-client;
@@ -15,15 +12,15 @@ in
 {
   options = {
     services.owncloud-client = {
-      enable = mkEnableOption "Owncloud Client";
+      enable = lib.mkEnableOption "Owncloud Client";
 
-      package = mkPackageOption pkgs "owncloud-client" { };
+      package = lib.mkPackageOption pkgs "owncloud-client" { };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.owncloud-client" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.owncloud-client" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.owncloud-client = {

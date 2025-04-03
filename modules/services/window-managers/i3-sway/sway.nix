@@ -4,10 +4,15 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep
+    mapAttrsToList
+    mkIf
+    mkOption
+    optional
+    types
+    ;
 
   cfg = config.wayland.windowManager.sway;
 
@@ -70,7 +75,7 @@ let
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
-        default = mapAttrs (n: mkOptionDefault) {
+        default = lib.mapAttrs (n: lib.mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
           "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";
@@ -146,7 +151,7 @@ let
           Consider to use `lib.mkOptionDefault` function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
-        example = literalExpression ''
+        example = lib.literalExpression ''
           let
             modifier = config.wayland.windowManager.sway.config.modifier;
           in lib.mkOptionDefault {
@@ -292,7 +297,7 @@ let
 
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
-    ${concatStringsSep "\n" (mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
+    ${concatStringsSep "\n" (lib.mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
     }
   '';
   inputStr = moduleStr "input";
@@ -376,7 +381,7 @@ let
 
 in
 {
-  meta.maintainers = with maintainers; [
+  meta.maintainers = with lib.maintainers; [
     Scrumplex
     alexarice
     sumnerevans
@@ -392,7 +397,7 @@ in
       ];
     in
     [
-      (mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ]) (
+      (lib.mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ]) (
         modulePath
         ++ [
           "systemd"
@@ -402,7 +407,7 @@ in
     ];
 
   options.wayland.windowManager.sway = {
-    enable = mkEnableOption "sway wayland compositor";
+    enable = lib.mkEnableOption "sway wayland compositor";
 
     package = mkOption {
       type = with types; nullOr package;
@@ -412,7 +417,7 @@ in
         withBaseWrapper = cfg.wrapperFeatures.base;
         withGtkWrapper = cfg.wrapperFeatures.gtk;
       };
-      defaultText = literalExpression "${pkgs.sway}";
+      defaultText = lib.literalExpression "${pkgs.sway}";
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
@@ -477,7 +482,7 @@ in
         '';
       };
 
-      xdgAutostart = mkEnableOption ''
+      xdgAutostart = lib.mkEnableOption ''
         autostart of applications using
         {manpage}`systemd-xdg-autostart-generator(8)`
       '';
@@ -543,7 +548,7 @@ in
     checkConfig = mkOption {
       type = types.bool;
       default = cfg.package != null;
-      defaultText = literalExpression "wayland.windowManager.sway.package != null";
+      defaultText = lib.literalExpression "wayland.windowManager.sway.package != null";
       description = "If enabled, validates the generated config file.";
     };
 
@@ -560,54 +565,56 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    (mkIf (cfg.config != null) {
-      warnings =
-        (optional (isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
-        ++ flatten (
-          map (
-            b:
-            optional (isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
-          ) cfg.config.bars
-        )
-        ++ [
-          (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      (mkIf (cfg.config != null) {
+        warnings =
+          (optional (lib.isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
+          ++ lib.flatten (
+            map (
+              b:
+              optional (lib.isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
+            ) cfg.config.bars
+          )
+          ++ [
+            (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+          ];
+      })
+
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs lib.platforms.linux)
+          {
+            assertion = cfg.checkConfig -> cfg.package != null;
+            message = "programs.sway.checkConfig requires non-null programs.sway.package";
+          }
         ];
-    })
 
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs platforms.linux)
-        {
-          assertion = cfg.checkConfig -> cfg.package != null;
-          message = "programs.sway.checkConfig requires non-null programs.sway.package";
-        }
-      ];
+        home.packages = optional (cfg.package != null) cfg.package ++ optional cfg.xwayland pkgs.xwayland;
 
-      home.packages = optional (cfg.package != null) cfg.package ++ optional cfg.xwayland pkgs.xwayland;
-
-      xdg.configFile."sway/config" = {
-        source = configFile;
-        onChange = lib.optionalString (cfg.package != null) ''
-          swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
-          if [ -S "$swaySocket" ]; then
-            ${cfg.package}/bin/swaymsg -s $swaySocket reload
-          fi
-        '';
-      };
-
-      systemd.user.targets.sway-session = mkIf cfg.systemd.enable {
-        Unit = {
-          Description = "sway compositor session";
-          Documentation = [ "man:systemd.special(7)" ];
-          BindsTo = [ "graphical-session.target" ];
-          Wants = [
-            "graphical-session-pre.target"
-          ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
-          After = [ "graphical-session-pre.target" ];
-          Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+        xdg.configFile."sway/config" = {
+          source = configFile;
+          onChange = lib.optionalString (cfg.package != null) ''
+            swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
+            if [ -S "$swaySocket" ]; then
+              ${cfg.package}/bin/swaymsg -s $swaySocket reload
+            fi
+          '';
         };
-      };
-    }
-  ]);
+
+        systemd.user.targets.sway-session = mkIf cfg.systemd.enable {
+          Unit = {
+            Description = "sway compositor session";
+            Documentation = [ "man:systemd.special(7)" ];
+            BindsTo = [ "graphical-session.target" ];
+            Wants = [
+              "graphical-session-pre.target"
+            ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+            After = [ "graphical-session-pre.target" ];
+            Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+          };
+        };
+      }
+    ]
+  );
 }

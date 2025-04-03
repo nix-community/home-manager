@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
   commonOptions = import ./lib/options.nix {
     inherit config lib pkgs;
@@ -26,5 +23,5 @@ in
 {
   inherit (commonOptions) imports meta;
   options.services.redshift = commonOptions.options;
-  config = mkIf config.services.redshift.enable commonOptions.config;
+  config = lib.mkIf config.services.redshift.enable commonOptions.config;
 }

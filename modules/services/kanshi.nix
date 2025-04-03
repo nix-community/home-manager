@@ -4,10 +4,15 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep
+    literalExpression
+    mkIf
+    mkOption
+    optionalString
+    types
+    ;
 
   cfg = config.services.kanshi;
 
@@ -42,12 +47,12 @@ let
     else if x ? include then
       ''include "${x.include}"''
     else
-      throw "Unknown tags ${attrNames x}";
+      throw "Unknown tags ${lib.attrNames x}";
 
   directivesStr = concatStringsSep "\n" (map tagToStr cfg.settings);
 
   oldDirectivesStr = ''
-    ${concatStringsSep "\n" (mapAttrsToList (n: v: profileStr (v // { name = n; })) cfg.profiles)}
+    ${concatStringsSep "\n" (lib.mapAttrsToList (n: v: profileStr (v // { name = n; })) cfg.profiles)}
     ${cfg.extraConfig}
   '';
 
@@ -194,7 +199,7 @@ let
       };
 
       exec = mkOption {
-        type = with types; coercedTo str singleton (listOf str);
+        type = with types; coercedTo str lib.singleton (listOf str);
         default = [ ];
         example = "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
         description = ''
@@ -216,10 +221,10 @@ let
 in
 {
 
-  meta.maintainers = [ hm.maintainers.nurelin ];
+  meta.maintainers = [ lib.hm.maintainers.nurelin ];
 
   options.services.kanshi = {
-    enable = mkEnableOption "kanshi, a Wayland daemon that automatically configures outputs";
+    enable = lib.mkEnableOption "kanshi, a Wayland daemon that automatically configures outputs";
 
     package = mkOption {
       type = types.package;
@@ -314,67 +319,70 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "services.kanshi" pkgs lib.platforms.linux)
-        {
-          assertion = (cfg.profiles == { } && cfg.extraConfig == "") || (length cfg.settings) == 0;
-          message = "Cannot mix kanshi.settings with kanshi.profiles or kanshi.extraConfig";
-        }
-        {
-          assertion =
-            let
-              profiles = filter (x: x ? profile) cfg.settings;
-            in
-            length (filter (x: any (a: a ? alias && a.alias != null) x.profile.outputs) profiles) == 0;
-          message = "Output kanshi.*.output.alias can only be defined on global scope";
-        }
-      ];
-    }
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "services.kanshi" pkgs lib.platforms.linux)
+          {
+            assertion = (cfg.profiles == { } && cfg.extraConfig == "") || (lib.length cfg.settings) == 0;
+            message = "Cannot mix kanshi.settings with kanshi.profiles or kanshi.extraConfig";
+          }
+          {
+            assertion =
+              let
+                profiles = lib.filter (x: x ? profile) cfg.settings;
+              in
+              lib.length (lib.filter (x: lib.any (a: a ? alias && a.alias != null) x.profile.outputs) profiles)
+              == 0;
+            message = "Output kanshi.*.output.alias can only be defined on global scope";
+          }
+        ];
+      }
 
-    (mkIf (cfg.profiles != { }) {
-      warnings = [
-        "kanshi.profiles option is deprecated. Use kanshi.settings instead."
-      ];
-    })
+      (mkIf (cfg.profiles != { }) {
+        warnings = [
+          "kanshi.profiles option is deprecated. Use kanshi.settings instead."
+        ];
+      })
 
-    (mkIf (cfg.extraConfig != "") {
-      warnings = [
-        "kanshi.extraConfig option is deprecated. Use kanshi.settings instead."
-      ];
-    })
+      (mkIf (cfg.extraConfig != "") {
+        warnings = [
+          "kanshi.extraConfig option is deprecated. Use kanshi.settings instead."
+        ];
+      })
 
-    {
-      home.packages = [ cfg.package ];
+      {
+        home.packages = [ cfg.package ];
 
-      xdg.configFile."kanshi/config" =
-        let
-          generatedConfigStr =
-            if cfg.profiles == { } && cfg.extraConfig == "" then directivesStr else oldDirectivesStr;
-        in
-        mkIf (generatedConfigStr != "") { text = generatedConfigStr; };
+        xdg.configFile."kanshi/config" =
+          let
+            generatedConfigStr =
+              if cfg.profiles == { } && cfg.extraConfig == "" then directivesStr else oldDirectivesStr;
+          in
+          mkIf (generatedConfigStr != "") { text = generatedConfigStr; };
 
-      systemd.user.services.kanshi = {
-        Unit = {
-          Description = "Dynamic output configuration";
-          Documentation = "man:kanshi(1)";
-          ConditionEnvironment = "WAYLAND_DISPLAY";
-          PartOf = cfg.systemdTarget;
-          Requires = cfg.systemdTarget;
-          After = cfg.systemdTarget;
+        systemd.user.services.kanshi = {
+          Unit = {
+            Description = "Dynamic output configuration";
+            Documentation = "man:kanshi(1)";
+            ConditionEnvironment = "WAYLAND_DISPLAY";
+            PartOf = cfg.systemdTarget;
+            Requires = cfg.systemdTarget;
+            After = cfg.systemdTarget;
+          };
+
+          Service = {
+            Type = "simple";
+            ExecStart = "${cfg.package}/bin/kanshi";
+            Restart = "always";
+          };
+
+          Install = {
+            WantedBy = [ cfg.systemdTarget ];
+          };
         };
-
-        Service = {
-          Type = "simple";
-          ExecStart = "${cfg.package}/bin/kanshi";
-          Restart = "always";
-        };
-
-        Install = {
-          WantedBy = [ cfg.systemdTarget ];
-        };
-      };
-    }
-  ]);
+      }
+    ]
+  );
 }
