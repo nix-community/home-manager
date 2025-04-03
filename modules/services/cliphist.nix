@@ -61,7 +61,8 @@ in {
     systemd.user.services.cliphist = {
       Unit = {
         Description = "Clipboard management daemon";
-        PartOf = [ "graphical-session.target" ];
+        PartOf = lib.toList cfg.systemdTargets;
+        After = lib.toList cfg.systemdTargets;
       };
 
       Service = {
@@ -77,7 +78,8 @@ in {
     systemd.user.services.cliphist-images = lib.mkIf cfg.allowImages {
       Unit = {
         Description = "Clipboard management daemon - images";
-        PartOf = [ "graphical-session.target" ];
+        PartOf = lib.toList cfg.systemdTargets;
+        After = lib.toList cfg.systemdTargets;
       };
 
       Service = {
