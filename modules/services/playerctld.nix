@@ -26,6 +26,8 @@ in {
         lib.platforms.linux)
     ];
 
+    home.packages = [ cfg.package ];
+
     systemd.user.services.playerctld = {
       Unit.Description = "MPRIS media player daemon";
 
