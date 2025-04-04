@@ -24,6 +24,14 @@ in {
         GNU/Linux distributions other than NixOS.
       '';
     };
+
+    enableKdeApplicationCache = mkEnableOption "" // {
+      description = ''
+        Whether to enable the management of the KDE application cache.
+        When using KDE Plasma, desktop applications installed via
+        home-manager may not appear in menus with this option disabled.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -106,5 +114,13 @@ in {
       TERMINFO_DIRS =
         "${profileDirectory}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}${distroTerminfoDirs}";
     };
+
+    home.activation.updateKdeApplicationCache =
+      if cfg.enableKdeApplicationCache then
+        hm.dag.entryAfter [ "installPackages" ] ''
+          run /usr/bin/kbuildsycoca5 --noincremental
+        ''
+      else
+        null;
   };
 }
