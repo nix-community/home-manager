@@ -4,6 +4,7 @@ let
 
   supportedBrowsers = [
     "chromium"
+    "ungoogled-chromium"
     "google-chrome"
     "google-chrome-beta"
     "google-chrome-dev"
@@ -158,6 +159,7 @@ let
 
       darwinDirs = {
         chromium = "Chromium";
+        ungoogled-chromium = "Chromium";
         google-chrome = "Google/Chrome";
         google-chrome-beta = "Google/Chrome Beta";
         google-chrome-dev = "Google/Chrome Dev";
@@ -226,6 +228,8 @@ in {
 
   options.programs = {
     chromium = browserModule pkgs.chromium "Chromium" true;
+    ungoogled-chromium =
+      browserModule pkgs.ungoogled-chromium "ungoogled-chromium" false;
     google-chrome = browserModule pkgs.google-chrome "Google Chrome" false;
     google-chrome-beta =
       browserModule pkgs.google-chrome-beta "Google Chrome Beta" false;
