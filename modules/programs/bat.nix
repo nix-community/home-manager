@@ -1,6 +1,8 @@
 { config, lib, pkgs, ... }:
 let
-  inherit (lib) literalExpression mkEnableOption mkOption mkIf types;
+  inherit (builtins) elem;
+  inherit (lib)
+    getExe literalExpression mkEnableOption mkOption mkIf optionalString types;
 
   cfg = config.programs.bat;
 
@@ -18,6 +20,26 @@ let
         --${k}
       '') (attrNames enabledBoolFlags);
     in keyValuePairs + switches;
+
+  initScript = { program, shell, flags ? [ ], }:
+    if (shell != "fish") then ''
+      eval "$(${getExe program} ${toString flags})"
+    '' else ''
+      ${getExe program} ${toString flags} | source
+    '';
+
+  shellInit = shell:
+    optionalString (elem pkgs.bat-extras.batpipe cfg.extraPackages)
+    (initScript {
+      program = pkgs.bat-extras.batpipe;
+      inherit shell;
+    }) + optionalString (elem pkgs.bat-extras.batman cfg.extraPackages)
+    (initScript {
+      program = pkgs.bat-extras.batman;
+      inherit shell;
+      flags = [ "--export-env" ];
+    });
+
 in {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
@@ -167,6 +189,19 @@ in {
           run ${lib.getExe cfg.package} cache --build
         )
       '';
+
+      programs = {
+        bash =
+          mkIf (!config.programs.fish.enable) { initExtra = shellInit "bash"; };
+        fish = mkIf config.programs.fish.enable {
+          interactiveShellInit = shellInit "fish";
+        };
+        zsh =
+          mkIf (!config.programs.fish.enable && config.programs.zsh.enable) {
+            initContent = shellInit "zsh";
+          };
+      };
+
     }
   ]);
 }
