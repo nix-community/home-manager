@@ -51919,6 +51919,406 @@ null or (attribute set of (string or signed integer or boolean or list of string
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.smug.enable"></a><a class="term" href="options.xhtml#opt-programs.smug.enable"><code class="option">programs.smug.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Smug session manager.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.package"></a><a class="term" href="options.xhtml#opt-programs.smug.package"><code class="option">programs.smug.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The smug package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.smug</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects"></a><a class="term" href="options.xhtml#opt-programs.smug.projects"><code class="option">programs.smug.projects</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set with project configurations.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.beforeStart"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.beforeStart"><code class="option">programs.smug.projects.&lt;name&gt;.beforeStart</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to execute before the tmux-session starts.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.env"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.env"><code class="option">programs.smug.projects.&lt;name&gt;.env</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Environment Variables to set in session.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (attribute set of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.root"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.root"><code class="option">programs.smug.projects.&lt;name&gt;.root</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Root path in filesystem of the smug project. This is where tmux
+changes its directory to.</p><p>Application defaults to <code class="literal">$HOME</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.stop"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.stop"><code class="option">programs.smug.projects.&lt;name&gt;.stop</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to execute after the tmux-session is destroyed.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows"><code class="option">programs.smug.projects.&lt;name&gt;.windows</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Windows to create in the project session</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (submodule)</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.commands"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.commands"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.commands</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to execute when window starts.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.layout"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.layout"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.layout</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Layout of window when opening panes.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “main-horizontal”, “main-vertical”, “even-vertical”, “even-horizontal”, “tiled”</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.manual"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.manual"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.manual</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Start window only manually, using the -w arg</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.name"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.name"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Name of the tmux window;</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.panes"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.panes"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.panes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Panes to open in a window.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of (submodule))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.panes._.commands"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.panes._.commands"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.panes.*.commands</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Commands to execute when pane starts.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.panes._.root"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.panes._.root"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.panes.*.root</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Root path of pane. This is relative to the path of the smug project.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.panes._.type"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.panes._.type"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.panes.*.type</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Type of pane.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “horizontal”, “vertical”</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.smug.projects._name_.windows._.root"></a><a class="term" href="options.xhtml#opt-programs.smug.projects._name_.windows._.root"><code class="option">programs.smug.projects.&lt;name&gt;.windows.*.root</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Root path of window. This is relative to the path of the smug project.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/smug.nix" target="_top">
+&lt;home-manager/modules/programs/smug.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.spotify-player.enable"></a><a class="term" href="options.xhtml#opt-programs.spotify-player.enable"><code class="option">programs.spotify-player.enable</code>
   </a>
  </span>
