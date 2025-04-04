@@ -239,6 +239,7 @@ let
     ./programs/senpai.nix
     ./programs/sesh.nix
     ./programs/sftpman.nix
+    ./programs/sheldon.nix
     ./programs/sioyek.nix
     ./programs/skim.nix
     ./programs/sm64ex.nix
