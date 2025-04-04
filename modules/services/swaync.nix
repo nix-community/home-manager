@@ -79,20 +79,20 @@ in {
   config = lib.mkIf cfg.enable {
     # at-spi2-core is to minimize journalctl noise of:
     # "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"
-    home.packages =
-      lib.mkIf (cfg.package != null) [ cfg.package pkgs.at-spi2-core ];
+    home.packages = [ cfg.package pkgs.at-spi2-core ];
 
     xdg.configFile = {
       "swaync/config.json" = {
         source = jsonFormat.generate "config.json" cfg.settings;
-        onChange = "${cfg.package}/bin/swaync-client --reload-config";
+        onChange = "${lib.getExe' cfg.package "swaync-client"} --reload-config";
       };
       "swaync/style.css" = lib.mkIf (cfg.style != null) {
+
         source = if builtins.isPath cfg.style || lib.isStorePath cfg.style then
           cfg.style
         else
           pkgs.writeText "swaync/style.css" cfg.style;
-        onChange = "${cfg.package}/bin/swaync-client --reload-css";
+        onChange = "${lib.getExe' cfg.package "swaync-client"} --reload-css";
       };
     };
 
@@ -108,7 +108,7 @@ in {
       Service = {
         Type = "dbus";
         BusName = "org.freedesktop.Notifications";
-        ExecStart = "${cfg.package}/bin/swaync";
+        ExecStart = "${lib.getExe cfg.package}";
         Restart = "on-failure";
       };
 
