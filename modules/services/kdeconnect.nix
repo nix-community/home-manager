@@ -68,12 +68,7 @@ in {
       systemd.user.services.kdeconnect-indicator = {
         Unit = {
           Description = "kdeconnect-indicator";
-          After = [
-            "graphical-session.target"
-            "polybar.service"
-            "taffybar.service"
-            "stalonetray.service"
-          ];
+          After = [ "graphical-session.target" "tray.target" ];
           PartOf = [ "graphical-session.target" ];
           Requires = [ "tray.target" ];
         };
