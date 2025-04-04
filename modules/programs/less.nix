@@ -21,6 +21,12 @@ in {
           {file}`$XDG_CONFIG_HOME/lesskey`.
         '';
       };
+
+      historyFile = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Location of the less history file.";
+      };
     };
   };
 
@@ -28,5 +34,7 @@ in {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."lesskey".text = cfg.keys;
+    home.sessionVariables =
+      mkIf (cfg.historyFile != null) { LESSHISTFILE = cfg.historyFile; };
   };
 }
