@@ -397,12 +397,19 @@ in
               };
 
               userChrome = mkOption {
-                type = types.oneOf [
-                  types.lines
-                  types.path
-                ];
-                default = "";
-                description = "Custom ${appName} user chrome CSS.";
+                type = types.nullOr (
+                  types.oneOf [
+                    types.lines
+                    types.path
+                  ]
+                );
+                default = null;
+                description = ''
+                  Custom ${appName} user chrome CSS.
+
+                  This can be a path to a file or directory in the Nix store,
+                  or a derivation, or a verbatim multi-line string.
+                '';
                 example = ''
                   /* Hide tab bar in FF Quantum */
                   @-moz-document url(chrome://browser/content/browser.xul), url(chrome://browser/content/browser.xhtml) {
@@ -861,20 +868,26 @@ in
         ]
         ++ lib.flip mapAttrsToList cfg.profiles (
           _: profile:
+          let
+            chromePath = if lib.pathIsDirectory profile.userChrome then "chrome" else "chrome/userChrome.css";
+            sourcePath = if lib.types.path.check profile.userChrome then profile.userChrome else null;
+          in
           # Merge the regular profile settings with extension settings
           mkMerge (
             [
+              (mkIf (profile.userChrome != null) {
+                "${profilesPath}/${profile.path}/${chromePath}" =
+                  if sourcePath == null then
+                    {
+                      text = profile.userChrome;
+                    }
+                  else
+                    {
+                      source = sourcePath;
+                    };
+              })
               {
                 "${profilesPath}/${profile.path}/.keep".text = "";
-
-                "${profilesPath}/${profile.path}/chrome/userChrome.css" = mkIf (profile.userChrome != "") (
-                  let
-                    key = if builtins.isString profile.userChrome then "text" else "source";
-                  in
-                  {
-                    "${key}" = profile.userChrome;
-                  }
-                );
 
                 "${profilesPath}/${profile.path}/chrome/userContent.css" = mkIf (profile.userContent != "") (
                   let

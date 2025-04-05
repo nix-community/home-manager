@@ -1,0 +1,7 @@
+{
+  "nix.serverSettings": {
+    "formatter": {
+      "command": "nixfmt-rfc-style"
+    }
+  }
+}
