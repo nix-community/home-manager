@@ -45,6 +45,13 @@ let
       id = lib.mkDefault (builtins.hashString "sha256" config.message);
     };
   });
+
+  isNixFile = n: v: v == "regular" && lib.hasSuffix ".nix" n;
+  # builtins.attrNames return the values in alphabetical order
+  newsFiles =
+    builtins.attrNames (lib.filterAttrs isNixFile (builtins.readDir ./news));
+  newsEntries =
+    builtins.map (newsFile: import (./news + "/${newsFile}")) newsFiles;
 in {
   meta.maintainers = [ lib.maintainers.rycee ];
 
@@ -96,15 +103,8 @@ in {
     news.json.output = pkgs.writeText "hm-news.json"
       (builtins.toJSON { inherit (cfg) display entries; });
 
-    # Add news entries in chronological order (i.e., latest time
-    # should be at the bottom of the list). The time should be
-    # formatted as given in the output of
-    #
-    #     date --iso-8601=second --universal
-    #
-    # On darwin (or BSD like systems) use
-    #
-    #     date -u +'%Y-%m-%dT%H:%M:%S+00:00'
+    # DO NOT define new entries here, instead use the `./create-news-entry.sh`
+    # script and create an individual news file inside `news` sub-directory.
     news.entries = [
       {
         time = "2021-06-02T04:24:10+00:00";
@@ -2231,6 +2231,6 @@ in {
           See https://github.com/ivaaaan/smug for more information.
         '';
       }
-    ];
+    ] ++ newsEntries;
   };
 }

@@ -10,13 +10,16 @@ If you do have a change worthy of a news entry then please add one in
 [`news.nix`](https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix)
 but you should follow some basic guidelines:
 
--   The entry timestamp should be in ISO-8601 format having \"+00:00\"
-    as time zone. For example, \"2017-09-13T17:10:14+00:00\". A suitable
-    timestamp can be produced by the command
+-   Use the included
+    [`create-news-entry.sh`](https://github.com/nix-community/home-manager/blob/master/modules/misc/news/create-news-entry.sh)
+    script to generate a news entry file:
 
     ``` shell
-    $ date --iso-8601=second --universal
+    $ modules/misc/news/create-news-entry.sh
     ```
+
+    this will create a new file inside `modules/misc/news` directory
+    with some placeholder information that you can edit.
 
 -   The entry condition should be as specific as possible. For example,
     if you are changing or deprecating a specific option then you could
