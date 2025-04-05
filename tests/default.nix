@@ -83,6 +83,7 @@ let
       "btop"
       "carapace"
       "cava"
+      "claude-code"
       "cmus"
       "comodoro"
       "darcs"
@@ -296,6 +297,7 @@ in import nmtSrc {
     ./modules/programs/btop
     ./modules/programs/carapace
     ./modules/programs/cava
+    ./modules/programs/claude-code
     ./modules/programs/cmus
     ./modules/programs/comodoro
     ./modules/programs/darcs
