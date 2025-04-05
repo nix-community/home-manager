@@ -906,10 +906,11 @@ associated news entry. In general, a news entry should only be added for
 truly noteworthy news. For example, a bug fix or new option does
 generally not need a news entry.</p><p>If you do have a change worthy of a news entry then please add one in
 <a class="link" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix"  target="_top"><code class="literal">news.nix</code></a>
-but you should follow some basic guidelines:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The entry timestamp should be in ISO-8601 format having &quot;+00:00&quot;
-as time zone. For example, &quot;2017-09-13T17:10:14+00:00&quot;. A suitable
-timestamp can be produced by the command</p><pre><code class="programlisting  shell">$ date --iso-8601=second --universal
-</code></pre></li><li class="listitem"><p>The entry condition should be as specific as possible. For example,
+but you should follow some basic guidelines:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Use the included
+<a class="link" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/news/create-news-entry.sh"  target="_top"><code class="literal">create-news-entry.sh</code></a>
+script to generate a news entry file:</p><pre><code class="programlisting  shell">$ modules/misc/news/create-news-entry.sh
+</code></pre><p>this will create a new file inside <code class="literal">modules/misc/news</code> directory
+with some placeholder information that you can edit.</p></li><li class="listitem"><p>The entry condition should be as specific as possible. For example,
 if you are changing or deprecating a specific option then you could
 restrict the news to those users who actually use this option.</p></li><li class="listitem"><p>Wrap the news message so that it will fit in the typical terminal,
 that is, at most 80 characters wide. Ideally a bit less.</p></li><li class="listitem"><p>Unlike commit messages, news will be read without any connection to
