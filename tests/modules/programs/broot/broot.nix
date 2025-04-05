@@ -7,7 +7,7 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/broot/conf.toml
-    assertFileContains home-files/.config/broot/conf.toml 'modal = true'
+    assertFileExists home-files/.config/broot/conf.hjson
+    assertFileContains home-files/.config/broot/conf.hjson '"modal": true'
   '';
 }
