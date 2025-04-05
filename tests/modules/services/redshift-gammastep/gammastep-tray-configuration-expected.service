@@ -1,0 +1,15 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@gammastep@/bin/gammastep-indicator -c /home/hm-user/.config/gammastep/config.ini
+Restart=on-failure
+RestartSec=3
+
+[Unit]
+After=graphical-session.target
+After=tray.target
+Description=Gammastep colour temperature adjuster
+Documentation=https://gitlab.com/chinstrap/gammastep/
+PartOf=graphical-session.target
+Requires=tray.target
