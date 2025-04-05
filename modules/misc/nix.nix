@@ -3,10 +3,11 @@
 let
 
   inherit (lib)
-    boolToString concatStringsSep escape floatToString getVersion isBool
-    isConvertibleWithToString isDerivation isFloat isInt isList isString
-    literalExpression maintainers mapAttrsToList mkDefault mkEnableOption mkIf
-    mkMerge mkOption optionalString toPretty types versionAtLeast;
+    boolToString concatStringsSep escape filterAttrs floatToString getVersion
+    hasPrefix isBool isConvertibleWithToString isDerivation isFloat isInt isList
+    isString literalExpression maintainers mapAttrsToList mkDefault
+    mkEnableOption mkIf mkMerge mkOption optionalString toPretty types
+    versionAtLeast;
 
   cfg = config.nix;
 
@@ -65,13 +66,19 @@ let
       mkKeyValuePairs = attrs:
         concatStringsSep "\n" (mapAttrsToList mkKeyValue attrs);
 
+      isExtra = key: hasPrefix "extra-" key;
+
     in pkgs.writeTextFile {
       name = "nix.conf";
+      # workaround for https://github.com/NixOS/nix/issues/9487
+      # extra-* settings must come after their non-extra counterpart
       text = ''
         # WARNING: this file is generated from the nix.settings option in
         # your Home Manager configuration at $XDG_CONFIG_HOME/nix/nix.conf.
         # Do not edit it!
-        ${mkKeyValuePairs cfg.settings}
+        ${mkKeyValuePairs
+        (filterAttrs (key: value: !(isExtra key)) cfg.settings)}
+        ${mkKeyValuePairs (filterAttrs (key: value: isExtra key) cfg.settings)}
         ${cfg.extraOptions}
       '';
       checkPhase =
