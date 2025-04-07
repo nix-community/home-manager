@@ -2,8 +2,21 @@
 
 {
   imports = [
-    ({ ... }: { config.home.sessionSearchVariables.TEST = [ "foo" ]; })
-    ({ ... }: { config.home.sessionSearchVariables.TEST = [ "bar" "baz" ]; })
+    (
+      { ... }:
+      {
+        config.home.sessionSearchVariables.TEST = [ "foo" ];
+      }
+    )
+    (
+      { ... }:
+      {
+        config.home.sessionSearchVariables.TEST = [
+          "bar"
+          "baz"
+        ];
+      }
+    )
   ];
 
   nmt.script = ''

@@ -1,14 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.khard;
 
-  accounts =
-    lib.filterAttrs (_: acc: acc.khard.enable) config.accounts.contact.accounts;
+  accounts = lib.filterAttrs (_: acc: acc.khard.enable) config.accounts.contact.accounts;
 
-  renderSettings = with lib.generators;
+  renderSettings =
+    with lib.generators;
     toINI {
       mkKeyValue = mkKeyValueDefault rec {
-        mkValueString = v:
+        mkValueString =
+          v:
           if lib.isList v then
             lib.concatStringsSep ", " v
           else if lib.isBool v then
@@ -17,9 +23,12 @@ let
             v;
       } "=";
     };
-in {
-  meta.maintainers =
-    [ lib.hm.maintainers.olmokramer lib.maintainers.antonmosich ];
+in
+{
+  meta.maintainers = [
+    lib.hm.maintainers.olmokramer
+    lib.maintainers.antonmosich
+  ];
 
   options = {
     programs.khard = {
@@ -28,10 +37,18 @@ in {
       package = lib.mkPackageOption pkgs "khard" { };
 
       settings = lib.mkOption {
-        type = with lib.types;
+        type =
+          with lib.types;
           submodule {
-            freeformType = let primOrList = oneOf [ bool str (listOf str) ];
-            in attrsOf (attrsOf primOrList);
+            freeformType =
+              let
+                primOrList = oneOf [
+                  bool
+                  str
+                  (listOf str)
+                ];
+              in
+              attrsOf (attrsOf primOrList);
 
             options.general.default_action = lib.mkOption {
               type = str;
@@ -67,7 +84,8 @@ in {
     };
 
     accounts.contact.accounts = lib.mkOption {
-      type = with lib.types;
+      type =
+        with lib.types;
         attrsOf (submodule {
           options.khard.enable = lib.mkEnableOption "khard access";
           options.khard.defaultCollection = lib.mkOption {
@@ -82,20 +100,26 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."khard/khard.conf".text = let
-      makePath = anAccount:
-        builtins.toString (/. + lib.concatStringsSep "/" [
-          anAccount.local.path
-          anAccount.khard.defaultCollection
-        ]);
-    in ''
-      [addressbooks]
-      ${lib.concatMapStringsSep "\n" (acc: ''
-        [[${acc.name}]]
-        path = ${makePath acc}
-      '') (lib.attrValues accounts)}
+    xdg.configFile."khard/khard.conf".text =
+      let
+        makePath =
+          anAccount:
+          builtins.toString (
+            /.
+            + lib.concatStringsSep "/" [
+              anAccount.local.path
+              anAccount.khard.defaultCollection
+            ]
+          );
+      in
+      ''
+        [addressbooks]
+        ${lib.concatMapStringsSep "\n" (acc: ''
+          [[${acc.name}]]
+          path = ${makePath acc}
+        '') (lib.attrValues accounts)}
 
-      ${renderSettings cfg.settings}
-    '';
+        ${renderSettings cfg.settings}
+      '';
   };
 }

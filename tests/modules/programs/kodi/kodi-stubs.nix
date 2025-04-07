@@ -3,8 +3,7 @@
 {
   nixpkgs.overlays = [
     (_: super: {
-      buildPackages =
-        super.buildPackages.extend (_: _: { inherit (realPkgs) libxslt; });
+      buildPackages = super.buildPackages.extend (_: _: { inherit (realPkgs) libxslt; });
     })
   ];
 }

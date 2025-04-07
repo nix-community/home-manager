@@ -1,6 +1,9 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+{
   config = {
-    programs.fish = { enable = true; };
+    programs.fish = {
+      enable = true;
+    };
 
     home.packages = [
       (pkgs.runCommand "manpage-with-space" { } ''

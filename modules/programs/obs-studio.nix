@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.programs.obs-studio;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.adisbladis ];
 
   options = {
@@ -30,9 +36,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.finalPackage ];
-    programs.obs-studio.finalPackage =
-      pkgs.wrapOBS.override { obs-studio = cfg.package; } {
-        plugins = cfg.plugins;
-      };
+    programs.obs-studio.finalPackage = pkgs.wrapOBS.override { obs-studio = cfg.package; } {
+      plugins = cfg.plugins;
+    };
   };
 }

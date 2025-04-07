@@ -1,18 +1,25 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.xsession.numlock;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.evanjs ];
 
-  options = { xsession.numlock.enable = lib.mkEnableOption "Num Lock"; };
+  options = {
+    xsession.numlock.enable = lib.mkEnableOption "Num Lock";
+  };
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "xsession.numlock" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "xsession.numlock" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.numlockx = {
@@ -28,7 +35,9 @@ in {
         ExecStart = "${pkgs.numlockx}/bin/numlockx";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

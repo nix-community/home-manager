@@ -1,6 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.kodi;
 
@@ -78,19 +88,23 @@ let
     </xsl:template>
   '';
 
-  attrsetToXml = attrs: name: stylesheet:
-    pkgs.runCommand name {
-      # Package splicing for libxslt does not work correctly leading to errors
-      # when cross-compiling. Use the version from buildPackages explicitly to
-      # fix this.
-      nativeBuildInputs = [ pkgs.buildPackages.libxslt.bin ];
-      xml = builtins.toXML attrs;
-      passAsFile = [ "xml" ];
-    } ''
-      xsltproc ${stylesheet} - < "$xmlPath" > "$out"
-    '';
+  attrsetToXml =
+    attrs: name: stylesheet:
+    pkgs.runCommand name
+      {
+        # Package splicing for libxslt does not work correctly leading to errors
+        # when cross-compiling. Use the version from buildPackages explicitly to
+        # fix this.
+        nativeBuildInputs = [ pkgs.buildPackages.libxslt.bin ];
+        xml = builtins.toXML attrs;
+        passAsFile = [ "xml" ];
+      }
+      ''
+        xsltproc ${stylesheet} - < "$xmlPath" > "$out"
+      '';
 
-  attrsetToAdvancedSettingsXml = attrs: name:
+  attrsetToAdvancedSettingsXml =
+    attrs: name:
     let
       stylesheet = builtins.toFile "stylesheet.xsl" ''
         ${stylesheetCommonHeader}
@@ -98,9 +112,11 @@ let
         ${stylesheetNestedTags}
         ${stylesheetCommonFooter}
       '';
-    in attrsetToXml attrs name stylesheet;
+    in
+    attrsetToXml attrs name stylesheet;
 
-  attrsetToSourcesXml = attrs: name:
+  attrsetToSourcesXml =
+    attrs: name:
     let
       stylesheet = builtins.toFile "stylesheet.xsl" ''
         ${stylesheetCommonHeader}
@@ -108,9 +124,11 @@ let
         ${stylesheetNestedTags}
         ${stylesheetCommonFooter}
       '';
-    in attrsetToXml attrs name stylesheet;
+    in
+    attrsetToXml attrs name stylesheet;
 
-  attrsetToAddonSettingsXml = attrs: name:
+  attrsetToAddonSettingsXml =
+    attrs: name:
     let
       stylesheet = builtins.toFile "stylesheet.xsl" ''
         ${stylesheetCommonHeader}
@@ -118,9 +136,11 @@ let
         ${stylesheetTagsAsSettingWithId}
         ${stylesheetCommonFooter}
       '';
-    in attrsetToXml attrs name stylesheet;
+    in
+    attrsetToXml attrs name stylesheet;
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.dwagenk ];
 
   options.programs.kodi = {
@@ -136,19 +156,20 @@ in {
     datadir = mkOption {
       type = types.path;
       default = "${config.home.homeDirectory}/.kodi";
-      defaultText =
-        literalExpression ''"''${config.home.homeDirectory}/.kodi"'';
+      defaultText = literalExpression ''"''${config.home.homeDirectory}/.kodi"'';
       example = literalExpression ''"''${config.xdg.dataHome}/kodi"'';
       description = "Directory to store configuration and metadata.";
     };
 
     settings = mkOption {
-      type = with types;
+      type =
+        with types;
         let
           valueType = either str (attrsOf valueType) // {
             description = "attribute sets of strings";
           };
-        in nullOr valueType;
+        in
+        nullOr valueType;
       default = null;
       example = literalExpression ''
         { videolibrary.showemptytvshows = "true"; }
@@ -166,12 +187,20 @@ in {
     };
 
     sources = mkOption {
-      type = with types;
+      type =
+        with types;
         let
-          valueType = oneOf [ str (attrsOf valueType) (listOf valueType) ] // {
-            description = "attribute sets or lists of strings";
-          };
-        in nullOr valueType;
+          valueType =
+            oneOf [
+              str
+              (attrsOf valueType)
+              (listOf valueType)
+            ]
+            // {
+              description = "attribute sets or lists of strings";
+            };
+        in
+        nullOr valueType;
       default = null;
       example = literalExpression ''
         {
@@ -216,33 +245,37 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (lib.mkMerge [
-    {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "programs.kodi" pkgs
-          lib.platforms.linux)
-      ];
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "programs.kodi" pkgs lib.platforms.linux)
+        ];
 
-      home.packages = [ cfg.package ];
-      home.sessionVariables = { KODI_DATA = cfg.datadir; };
-    }
+        home.packages = [ cfg.package ];
+        home.sessionVariables = {
+          KODI_DATA = cfg.datadir;
+        };
+      }
 
-    (mkIf (cfg.settings != null) {
-      home.file."${cfg.datadir}/userdata/advancedsettings.xml".source =
-        attrsetToAdvancedSettingsXml cfg.settings "kodi-advancedsettings.xml";
-    })
+      (mkIf (cfg.settings != null) {
+        home.file."${cfg.datadir}/userdata/advancedsettings.xml".source =
+          attrsetToAdvancedSettingsXml cfg.settings "kodi-advancedsettings.xml";
+      })
 
-    (mkIf (cfg.sources != null) {
-      home.file."${cfg.datadir}/userdata/sources.xml".source =
-        attrsetToSourcesXml cfg.sources "kodi-sources.xml";
-    })
+      (mkIf (cfg.sources != null) {
+        home.file."${cfg.datadir}/userdata/sources.xml".source =
+          attrsetToSourcesXml cfg.sources "kodi-sources.xml";
+      })
 
-    (mkIf (cfg.addonSettings != null) {
-      home.file = lib.mapAttrs' (k: v:
-        lib.attrsets.nameValuePair
-        "${cfg.datadir}/userdata/addon_data/${k}/settings.xml" {
-          source = attrsetToAddonSettingsXml v "kodi-addon-${k}-settings.xml";
-        }) cfg.addonSettings;
-    })
-  ]);
+      (mkIf (cfg.addonSettings != null) {
+        home.file = lib.mapAttrs' (
+          k: v:
+          lib.attrsets.nameValuePair "${cfg.datadir}/userdata/addon_data/${k}/settings.xml" {
+            source = attrsetToAddonSettingsXml v "kodi-addon-${k}-settings.xml";
+          }
+        ) cfg.addonSettings;
+      })
+    ]
+  );
 }

@@ -4,10 +4,15 @@
   home.username = lib.mkForce "root";
 
   systemd.user.services."test-service@" = {
-    Unit = { Description = "A basic test service"; };
+    Unit = {
+      Description = "A basic test service";
+    };
 
     Service = {
-      Environment = [ "VAR1=1" "VAR2=2" ];
+      Environment = [
+        "VAR1=1"
+        "VAR2=2"
+      ];
       ExecStart = ''/some/exec/start/command --with-arguments "%i"'';
     };
   };

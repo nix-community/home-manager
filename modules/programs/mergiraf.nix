@@ -1,10 +1,22 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   inherit (lib)
-    mkEnableOption mkPackageOption types literalExpression mkIf maintainers;
+    mkEnableOption
+    mkPackageOption
+    types
+    literalExpression
+    mkIf
+    maintainers
+    ;
   cfg = config.programs.mergiraf;
   mergiraf = "${cfg.package}/bin/mergiraf";
-in {
+in
+{
   meta.maintainers = [ maintainers.bobvanderlinden ];
 
   options = {
@@ -22,8 +34,7 @@ in {
       extraConfig = {
         merge.mergiraf = {
           name = "mergiraf";
-          driver =
-            "${mergiraf} merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+          driver = "${mergiraf} merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
         };
       };
     };

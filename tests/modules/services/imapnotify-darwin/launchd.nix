@@ -20,18 +20,22 @@
 
   services.imapnotify = {
     enable = true;
-    package = (config.lib.test.mkStubPackage {
-      name = "goimapnotify";
-      outPath = "@goimapnotify@";
-    });
+    package = (
+      config.lib.test.mkStubPackage {
+        name = "goimapnotify";
+        outPath = "@goimapnotify@";
+      }
+    );
   };
 
-  nmt.script = let
-    serviceFileName = "org.nix-community.home.imapnotify-hm-example.com.plist";
-  in ''
-    serviceFile="LaunchAgents/${serviceFileName}"
-    serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
-    assertFileExists $serviceFile
-    assertFileContent $serviceFileNormalized ${./launchd.plist}
-  '';
+  nmt.script =
+    let
+      serviceFileName = "org.nix-community.home.imapnotify-hm-example.com.plist";
+    in
+    ''
+      serviceFile="LaunchAgents/${serviceFileName}"
+      serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
+      assertFileExists $serviceFile
+      assertFileContent $serviceFileNormalized ${./launchd.plist}
+    '';
 }

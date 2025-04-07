@@ -4,7 +4,8 @@ let
     mkdir -p $out/Applications
     touch $out/Applications/example-app
   '';
-in {
+in
+{
   config = {
     home.packages = [ darwinTestApp ];
 

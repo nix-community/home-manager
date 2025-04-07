@@ -1,15 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
   cfg = config.programs.gitui;
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.mifom ];
 
   options.programs.gitui = {
-    enable = lib.mkEnableOption
-      "gitui, blazing fast terminal-ui for git written in rust";
+    enable = lib.mkEnableOption "gitui, blazing fast terminal-ui for git written in rust";
 
     package = lib.mkPackageOption pkgs "gitui" { };
 

@@ -1,13 +1,22 @@
-{ config, lib, realPkgs, ... }:
+{
+  config,
+  lib,
+  realPkgs,
+  ...
+}:
 
-let cfg = config.programs.pandoc;
+let
+  cfg = config.programs.pandoc;
 
-in lib.mkIf config.test.enableBig {
+in
+lib.mkIf config.test.enableBig {
   programs.pandoc = {
     enable = true;
 
     defaults = {
-      metadata = { author = "John Doe"; };
+      metadata = {
+        author = "John Doe";
+      };
       pdf-engine = "xelatex";
       citeproc = true;
     };
@@ -27,4 +36,3 @@ in lib.mkIf config.test.enableBig {
     assertFileContent "$output" ${./output-expected}
   '';
 }
-

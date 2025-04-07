@@ -1,33 +1,43 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) concatStringsSep mkIf mkOption mkRenamedOptionModule types;
+  inherit (lib)
+    concatStringsSep
+    mkIf
+    mkOption
+    mkRenamedOptionModule
+    types
+    ;
 
   cfg = config.programs.lieer;
 
-  lieerAccounts = lib.filter (a: a.lieer.enable)
-    (lib.attrValues config.accounts.email.accounts);
+  lieerAccounts = lib.filter (a: a.lieer.enable) (lib.attrValues config.accounts.email.accounts);
 
-  nonGmailAccounts =
-    map (a: a.name) (lib.filter (a: a.flavor != "gmail.com") lieerAccounts);
+  nonGmailAccounts = map (a: a.name) (lib.filter (a: a.flavor != "gmail.com") lieerAccounts);
 
-  nonGmailConfigHelp =
-    map (name: ''accounts.email.accounts.${name}.flavor = "gmail.com";'')
-    nonGmailAccounts;
+  nonGmailConfigHelp = map (
+    name: ''accounts.email.accounts.${name}.flavor = "gmail.com";''
+  ) nonGmailAccounts;
 
-  missingNotmuchAccounts = map (a: a.name)
-    (lib.filter (a: !a.notmuch.enable && a.lieer.notmuchSetupWarning)
-      lieerAccounts);
+  missingNotmuchAccounts = map (a: a.name) (
+    lib.filter (a: !a.notmuch.enable && a.lieer.notmuchSetupWarning) lieerAccounts
+  );
 
-  notmuchConfigHelp =
-    map (name: "accounts.email.accounts.${name}.notmuch.enable = true;")
-    missingNotmuchAccounts;
+  notmuchConfigHelp = map (
+    name: "accounts.email.accounts.${name}.notmuch.enable = true;"
+  ) missingNotmuchAccounts;
 
   settingsFormat = pkgs.formats.json { };
 
   configFile = account: {
     name = "${account.maildir.absPath}/.gmailieer.json";
-    value.source = settingsFormat.generate "lieer-${account.address}.json"
-      ({ account = account.address; } // account.lieer.settings);
+    value.source = settingsFormat.generate "lieer-${account.address}.json" (
+      { account = account.address; } // account.lieer.settings
+    );
   };
 
   settingsOpts = {
@@ -171,31 +181,46 @@ let
 
   lieerModule = types.submodule {
     imports = [
-      (mkRenamedOptionModule [ "lieer" "dropNonExistingLabels" ] [
-        "lieer"
-        "settings"
-        "drop_non_existing_label"
-      ])
-      (mkRenamedOptionModule [ "lieer" "ignoreTagsRemote" ] [
-        "lieer"
-        "settings"
-        "ignore_remote_labels"
-      ])
-      (mkRenamedOptionModule [ "lieer" "ignoreTagsLocal" ] [
-        "lieer"
-        "settings"
-        "ignore_tags"
-      ])
-      (mkRenamedOptionModule [ "lieer" "timeout" ] [
-        "lieer"
-        "settings"
-        "timeout"
-      ])
-      (mkRenamedOptionModule [ "lieer" "replaceSlashWithDot" ] [
-        "lieer"
-        "settings"
-        "replace_slash_with_dot"
-      ])
+      (mkRenamedOptionModule
+        [ "lieer" "dropNonExistingLabels" ]
+        [
+          "lieer"
+          "settings"
+          "drop_non_existing_label"
+        ]
+      )
+      (mkRenamedOptionModule
+        [ "lieer" "ignoreTagsRemote" ]
+        [
+          "lieer"
+          "settings"
+          "ignore_remote_labels"
+        ]
+      )
+      (mkRenamedOptionModule
+        [ "lieer" "ignoreTagsLocal" ]
+        [
+          "lieer"
+          "settings"
+          "ignore_tags"
+        ]
+      )
+      (mkRenamedOptionModule
+        [ "lieer" "timeout" ]
+        [
+          "lieer"
+          "settings"
+          "timeout"
+        ]
+      )
+      (mkRenamedOptionModule
+        [ "lieer" "replaceSlashWithDot" ]
+        [
+          "lieer"
+          "settings"
+          "replace_slash_with_dot"
+        ]
+      )
     ];
 
     options = {
@@ -209,7 +234,8 @@ let
       };
     };
   };
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.tadfisher ];
 
   options = {
@@ -219,51 +245,56 @@ in {
       package = lib.mkPackageOption pkgs "lieer" { };
     };
 
-    accounts.email.accounts =
-      mkOption { type = with types; attrsOf lieerModule; };
+    accounts.email.accounts = mkOption { type = with types; attrsOf lieerModule; };
   };
 
-  config = mkIf cfg.enable (lib.mkMerge [
-    (mkIf (missingNotmuchAccounts != [ ]) {
-      warnings = [''
-        lieer is enabled for the following email accounts, but notmuch is not:
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      (mkIf (missingNotmuchAccounts != [ ]) {
+        warnings = [
+          ''
+            lieer is enabled for the following email accounts, but notmuch is not:
 
-            ${concatStringsSep "\n    " missingNotmuchAccounts}
+                ${concatStringsSep "\n    " missingNotmuchAccounts}
 
-        Notmuch can be enabled with:
+            Notmuch can be enabled with:
 
-            ${concatStringsSep "\n    " notmuchConfigHelp}
+                ${concatStringsSep "\n    " notmuchConfigHelp}
 
-        If you have configured notmuch outside of Home Manager, you can suppress this
-        warning with:
+            If you have configured notmuch outside of Home Manager, you can suppress this
+            warning with:
 
-            programs.lieer.notmuchSetupWarning = false;
-      ''];
-    })
+                programs.lieer.notmuchSetupWarning = false;
+          ''
+        ];
+      })
 
-    {
-      assertions = [{
-        assertion = nonGmailAccounts == [ ];
-        message = ''
-          lieer is enabled for non-Gmail accounts:
+      {
+        assertions = [
+          {
+            assertion = nonGmailAccounts == [ ];
+            message = ''
+              lieer is enabled for non-Gmail accounts:
 
-              ${concatStringsSep "\n    " nonGmailAccounts}
+                  ${concatStringsSep "\n    " nonGmailAccounts}
 
-          If these accounts are actually Gmail accounts, you can
-          fix this error with:
+              If these accounts are actually Gmail accounts, you can
+              fix this error with:
 
-              ${concatStringsSep "\n    " nonGmailConfigHelp}
-        '';
-      }];
+                  ${concatStringsSep "\n    " nonGmailConfigHelp}
+            '';
+          }
+        ];
 
-      warnings = lib.flatten (map (account: account.warnings) lieerAccounts);
+        warnings = lib.flatten (map (account: account.warnings) lieerAccounts);
 
-      home.packages = [ cfg.package ];
+        home.packages = [ cfg.package ];
 
-      # Notmuch should ignore non-mail files created by lieer.
-      programs.notmuch.new.ignore = [ "/.*[.](json|lock|bak)$/" ];
+        # Notmuch should ignore non-mail files created by lieer.
+        programs.notmuch.new.ignore = [ "/.*[.](json|lock|bak)$/" ];
 
-      home.file = lib.listToAttrs (map configFile lieerAccounts);
-    }
-  ]);
+        home.file = lib.listToAttrs (map configFile lieerAccounts);
+      }
+    ]
+  );
 }

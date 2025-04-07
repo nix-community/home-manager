@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.todoman;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.todoman;
+in
+{
 
   meta.maintainers = [ lib.hm.maintainers.mikilio ];
 
@@ -38,13 +45,15 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [{
-      assertion = config.accounts.calendar ? basePath;
-      message = ''
-        A base directory for calendars must be specified via
-        `accounts.calendar.basePath` to generate config for todoman
-      '';
-    }];
+    assertions = [
+      {
+        assertion = config.accounts.calendar ? basePath;
+        message = ''
+          A base directory for calendars must be specified via
+          `accounts.calendar.basePath` to generate config for todoman
+        '';
+      }
+    ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 

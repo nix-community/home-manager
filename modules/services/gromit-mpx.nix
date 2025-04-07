@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,23 +12,28 @@ let
   cfg = config.services.gromit-mpx;
 
   # Select the appropriate hot key:
-  hotkey = if isInt cfg.hotKey then
-    "--keycode ${toString cfg.hotKey}"
-  else if cfg.hotKey != null then
-    "--key ${cfg.hotKey}"
-  else
-    "--key none";
+  hotkey =
+    if isInt cfg.hotKey then
+      "--keycode ${toString cfg.hotKey}"
+    else if cfg.hotKey != null then
+      "--key ${cfg.hotKey}"
+    else
+      "--key none";
 
   # Select the appropriate undo key:
-  undokey = if isInt cfg.undoKey then
-    "--undo-keycode ${toString cfg.undoKey}"
-  else if cfg.undoKey != null then
-    "--undo-key ${cfg.undoKey}"
-  else
-    "--undo-key none";
+  undokey =
+    if isInt cfg.undoKey then
+      "--undo-keycode ${toString cfg.undoKey}"
+    else if cfg.undoKey != null then
+      "--undo-key ${cfg.undoKey}"
+    else
+      "--undo-key none";
 
   # The command line to send to gromit-mpx:
-  commandArgs = concatStringsSep " " [ hotkey undokey ];
+  commandArgs = concatStringsSep " " [
+    hotkey
+    undokey
+  ];
 
   # Gromit reads and writes from this file to store it's run time
   # state.  That will break our config so we set it manually which,
@@ -35,21 +45,30 @@ let
   };
 
   # Allowed modifiers:
-  modsAndButtons = [ "1" "2" "3" "4" "5" "SHIFT" "CONTROL" "ALT" "META" ];
+  modsAndButtons = [
+    "1"
+    "2"
+    "3"
+    "4"
+    "5"
+    "SHIFT"
+    "CONTROL"
+    "ALT"
+    "META"
+  ];
 
   # Create a string of tool attributes:
-  toolAttrs = tool:
-    concatStringsSep " " ([ "size=${toString tool.size}" ]
+  toolAttrs =
+    tool:
+    concatStringsSep " " (
+      [ "size=${toString tool.size}" ]
       ++ optional (tool.type != "eraser") ''color="${tool.color}"''
-      ++ optional (tool.arrowSize != null)
-      "arrowsize=${toString tool.arrowSize}");
+      ++ optional (tool.arrowSize != null) "arrowsize=${toString tool.arrowSize}"
+    );
 
   # Optional tool modifier string:
-  toolMod = tool:
-    if tool.modifiers != [ ] then
-      "[" + concatStringsSep ", " tool.modifiers + "]"
-    else
-      "";
+  toolMod =
+    tool: if tool.modifiers != [ ] then "[" + concatStringsSep ", " tool.modifiers + "]" else "";
 
   # A single tool configuration:
   toolToCfg = n: tool: ''
@@ -70,7 +89,11 @@ let
       };
 
       type = mkOption {
-        type = types.enum [ "pen" "eraser" "recolor" ];
+        type = types.enum [
+          "pen"
+          "eraser"
+          "recolor"
+        ];
         default = "pen";
         example = "eraser";
         description = "Which type of tool this is.";
@@ -111,7 +134,8 @@ let
     };
   };
 
-in {
+in
+{
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.gromit-mpx = {
@@ -202,13 +226,11 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.gromit-mpx" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.gromit-mpx" pkgs lib.platforms.linux)
     ];
 
     xdg.configFile."gromit-mpx.ini".text = keyFile;
-    xdg.configFile."gromit-mpx.cfg".text =
-      concatStringsSep "\n" (imap1 toolToCfg cfg.tools);
+    xdg.configFile."gromit-mpx.cfg".text = concatStringsSep "\n" (imap1 toolToCfg cfg.tools);
 
     home.packages = [ cfg.package ];
 
@@ -228,7 +250,9 @@ in {
         ExecStart = "${cfg.package}/bin/gromit-mpx ${commandArgs}";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

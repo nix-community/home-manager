@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) mkOption types;
 
   cfg = config.xsession;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
@@ -127,18 +133,24 @@ in {
             PartOf = [ "graphical-session.target" ];
           };
 
-          Install = { WantedBy = [ "graphical-session.target" ]; };
+          Install = {
+            WantedBy = [ "graphical-session.target" ];
+          };
 
           Service = {
             Type = "oneshot";
             RemainAfterExit = true;
-            ExecStart = with config.home.keyboard;
+            ExecStart =
+              with config.home.keyboard;
               let
-                args = lib.optional (layout != null) "-layout '${layout}'"
+                args =
+                  lib.optional (layout != null) "-layout '${layout}'"
                   ++ lib.optional (variant != null) "-variant '${variant}'"
                   ++ lib.optional (model != null) "-model '${model}'"
-                  ++ [ "-option ''" ] ++ map (v: "-option '${v}'") options;
-              in "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
+                  ++ [ "-option ''" ]
+                  ++ map (v: "-option '${v}'") options;
+              in
+              "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
           };
         };
 
@@ -149,20 +161,24 @@ in {
             PartOf = [ "graphical-session.target" ];
           };
 
-          Install = { WantedBy = [ "graphical-session.target" ]; };
+          Install = {
+            WantedBy = [ "graphical-session.target" ];
+          };
 
           Service = {
             Type = "forking";
             Restart = "on-failure";
-            ExecStart = let
-              script = pkgs.writeShellScript "xplugrc" ''
-                case "$1,$3" in
-                  keyboard,connected)
-                  systemctl --user restart setxkbmap.service
-                  ;;
-                esac
-              '';
-            in "${pkgs.xplugd}/bin/xplugd ${script}";
+            ExecStart =
+              let
+                script = pkgs.writeShellScript "xplugrc" ''
+                  case "$1,$3" in
+                    keyboard,connected)
+                    systemctl --user restart setxkbmap.service
+                    ;;
+                  esac
+                '';
+              in
+              "${pkgs.xplugd}/bin/xplugd ${script}";
           };
         };
       };
@@ -173,7 +189,10 @@ in {
           Unit = {
             Description = "Home Manager X session";
             Requires = [ "graphical-session-pre.target" ];
-            BindsTo = [ "graphical-session.target" "tray.target" ];
+            BindsTo = [
+              "graphical-session.target"
+              "tray.target"
+            ];
           };
         };
 
@@ -193,9 +212,9 @@ in {
       # script starts up graphical-session.target.
       systemctl --user stop graphical-session.target graphical-session-pre.target
 
-      ${lib.optionalString (cfg.importedVariables != [ ])
-      ("systemctl --user import-environment "
-        + lib.escapeShellArgs cfg.importedVariables)}
+      ${lib.optionalString (cfg.importedVariables != [ ]) (
+        "systemctl --user import-environment " + lib.escapeShellArgs cfg.importedVariables
+      )}
 
       ${cfg.profileExtra}
 
@@ -224,9 +243,9 @@ in {
           sleep 0.5
         done
 
-        ${lib.optionalString (cfg.importedVariables != [ ])
-        ("systemctl --user unset-environment "
-          + lib.escapeShellArgs cfg.importedVariables)}
+        ${lib.optionalString (cfg.importedVariables != [ ]) (
+          "systemctl --user unset-environment " + lib.escapeShellArgs cfg.importedVariables
+        )}
       '';
     };
   };

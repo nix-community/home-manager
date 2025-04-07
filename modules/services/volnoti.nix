@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,8 +11,12 @@ let
 
   cfg = config.services.volnoti;
 
-in {
-  meta.maintainers = with maintainers; [ imalison tomodachi94 ];
+in
+{
+  meta.maintainers = with maintainers; [
+    imalison
+    tomodachi94
+  ];
 
   options = {
     services.volnoti = {
@@ -26,18 +35,23 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.volnoti" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.volnoti" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
     systemd.user.services.volnoti = {
-      Unit = { Description = "volnoti"; };
+      Unit = {
+        Description = "volnoti";
+      };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
-      Service = { ExecStart = "${lib.getExe cfg.package} -v -n"; };
+      Service = {
+        ExecStart = "${lib.getExe cfg.package} -v -n";
+      };
     };
   };
 }

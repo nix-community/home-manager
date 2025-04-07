@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
   cfg = config.services.mpd-discord-rpc;
   tomlFormat = pkgs.formats.toml { };
   configFile = tomlFormat.generate "config.toml" cfg.settings;
-in {
+in
+{
   meta.maintainers = [ maintainers.kranzes ];
 
   options.services.mpd-discord-rpc = {
@@ -40,8 +46,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.mpd-discord-rpc" pkgs
-        platforms.linux)
+      (hm.assertions.assertPlatform "services.mpd-discord-rpc" pkgs platforms.linux)
     ];
 
     xdg.configFile."discord-rpc/config.toml".source = configFile;

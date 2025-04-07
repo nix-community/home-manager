@@ -1,10 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
-let cfg = config.services.betterlockscreen;
+let
+  cfg = config.services.betterlockscreen;
 
-in {
+in
+{
   meta.maintainers = with maintainers; [ sebtm ];
 
   options = {
@@ -21,8 +28,7 @@ in {
       arguments = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description =
-          "List of arguments appended to `./betterlockscreen --lock [args]`";
+        description = "List of arguments appended to `./betterlockscreen --lock [args]`";
       };
 
       inactiveInterval = mkOption {
@@ -38,8 +44,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.betterlockscreen" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.betterlockscreen" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -47,9 +52,7 @@ in {
     services.screen-locker = {
       enable = true;
       inactiveInterval = cfg.inactiveInterval;
-      lockCmd = "${cfg.package}/bin/betterlockscreen --lock ${
-          concatStringsSep " " cfg.arguments
-        }";
+      lockCmd = "${cfg.package}/bin/betterlockscreen --lock ${concatStringsSep " " cfg.arguments}";
     };
   };
 }

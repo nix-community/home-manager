@@ -1,17 +1,33 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
 
   cfg = config.qt.kde.settings;
-in {
+in
+{
   options.qt.kde.settings = lib.mkOption {
-    type = with lib.types;
+    type =
+      with lib.types;
       let
         valueType =
-          nullOr (oneOf [ bool int float str path (attrsOf valueType) ]) // {
+          nullOr (oneOf [
+            bool
+            int
+            float
+            str
+            path
+            (attrsOf valueType)
+          ])
+          // {
             description = "KDE option value";
           };
-      in attrsOf valueType;
+      in
+      attrsOf valueType;
     default = { };
     example = {
       powermanagementprofilesrc.AC.HandleButtonEvents.lidAction = 32;
@@ -38,28 +54,32 @@ in {
 
   config = lib.mkIf (cfg != { }) {
     home.activation.kconfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      ${let
-        inherit (config.xdg) configHome;
-        toValue = v:
-          let t = builtins.typeOf v;
-          in if v == null then
-            "--delete"
-          else if t == "bool" then
-            "--type bool ${builtins.toJSON v}"
-          else
-            lib.escapeShellArg (toString v);
-        toLine = file: path: value:
-          if builtins.isAttrs value then
-            lib.mapAttrsToList
-            (group: value: toLine file (path ++ [ group ]) value) value
-          else
-            "run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file '${configHome}/${file}' ${
-              lib.concatMapStringsSep " " (x: "--group ${x}")
-              (lib.lists.init path)
-            } --key '${lib.lists.last path}' ${toValue value}";
-        lines = lib.flatten
-          (lib.mapAttrsToList (file: attrs: toLine file [ ] attrs) cfg);
-      in builtins.concatStringsSep "\n" lines}
+      ${
+        let
+          inherit (config.xdg) configHome;
+          toValue =
+            v:
+            let
+              t = builtins.typeOf v;
+            in
+            if v == null then
+              "--delete"
+            else if t == "bool" then
+              "--type bool ${builtins.toJSON v}"
+            else
+              lib.escapeShellArg (toString v);
+          toLine =
+            file: path: value:
+            if builtins.isAttrs value then
+              lib.mapAttrsToList (group: value: toLine file (path ++ [ group ]) value) value
+            else
+              "run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file '${configHome}/${file}' ${
+                lib.concatMapStringsSep " " (x: "--group ${x}") (lib.lists.init path)
+              } --key '${lib.lists.last path}' ${toValue value}";
+          lines = lib.flatten (lib.mapAttrsToList (file: attrs: toLine file [ ] attrs) cfg);
+        in
+        builtins.concatStringsSep "\n" lines
+      }
 
       # TODO: some way to only call the dbus calls needed
       run ${pkgs.kdePackages.qttools}/bin/qdbus org.kde.KWin /KWin reconfigure || echo "KWin reconfigure failed"

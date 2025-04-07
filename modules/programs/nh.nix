@@ -1,10 +1,17 @@
-{ config, osConfig, lib, pkgs, ... }:
+{
+  config,
+  osConfig,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.nh;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ johnrtitor ];
 
   options.programs.nh = {
@@ -52,11 +59,13 @@ in {
   };
 
   config = {
-    warnings = (lib.optional
-      (cfg.clean.enable && osConfig != null && osConfig.nix.gc.automatic)
-      "programs.nh.clean.enable and nix.gc.automatic (system-wide in configuration.nix) are both enabled. Please use one or the other to avoid conflict.")
+    warnings =
+      (lib.optional (cfg.clean.enable && osConfig != null && osConfig.nix.gc.automatic)
+        "programs.nh.clean.enable and nix.gc.automatic (system-wide in configuration.nix) are both enabled. Please use one or the other to avoid conflict."
+      )
       ++ (lib.optional (cfg.clean.enable && config.nix.gc.automatic)
-        "programs.nh.clean.enable and nix.gc.automatic (Home-Manager) are both enabled. Please use one or the other to avoid conflict.");
+        "programs.nh.clean.enable and nix.gc.automatic (Home-Manager) are both enabled. Please use one or the other to avoid conflict."
+      );
 
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
@@ -69,8 +78,7 @@ in {
 
         Service = {
           Type = "oneshot";
-          ExecStart =
-            "${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
+          ExecStart = "${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
         };
       };
 

@@ -1,4 +1,9 @@
-{ config, lib, realPkgs, ... }:
+{
+  config,
+  lib,
+  realPkgs,
+  ...
+}:
 
 lib.mkIf config.test.enableBig {
   i18n.inputMethod = {

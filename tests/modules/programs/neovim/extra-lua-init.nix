@@ -11,10 +11,8 @@
 
   nmt.script = ''
     nvimFolder="home-files/.config/nvim"
-    assertFileContent "$nvimFolder/init.lua" ${
-      builtins.toFile "init.lua-expected" ''
-        -- extraLuaConfig
-      ''
-    }
+    assertFileContent "$nvimFolder/init.lua" ${builtins.toFile "init.lua-expected" ''
+      -- extraLuaConfig
+    ''}
   '';
 }

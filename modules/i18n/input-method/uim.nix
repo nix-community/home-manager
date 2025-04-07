@@ -1,13 +1,25 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
-let cfg = config.i18n.inputMethod.uim;
-in {
+let
+  cfg = config.i18n.inputMethod.uim;
+in
+{
   options = {
 
     i18n.inputMethod.uim = {
       toolbar = lib.mkOption {
-        type =
-          lib.types.enum [ "gtk" "gtk3" "gtk-systray" "gtk3-systray" "qt4" ];
+        type = lib.types.enum [
+          "gtk"
+          "gtk3"
+          "gtk-systray"
+          "gtk3-systray"
+          "qt4"
+        ];
         default = "gtk";
         example = "gtk-systray";
         description = ''
@@ -32,11 +44,12 @@ in {
         Description = "Uim input method editor";
         PartOf = [ "graphical-session.desktop" ];
       };
-      Service.ExecStart = toString
-        (pkgs.writeShellScript "start-uim-xim-and-uim-toolbar" ''
+      Service.ExecStart = toString (
+        pkgs.writeShellScript "start-uim-xim-and-uim-toolbar" ''
           ${pkgs.uim}/bin/uim-xim &
           ${pkgs.uim}/bin/uim-toolbar-${cfg.toolbar}
-        '');
+        ''
+      );
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };

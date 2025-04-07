@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -8,13 +13,17 @@ let
 
   nixPkg = if config.nix.package == null then pkgs.nix else config.nix.package;
 
-in {
+in
+{
   imports = [
-    (lib.mkRenamedOptionModule [ "targets" "genericLinux" "extraXdgDataDirs" ] [
-      "xdg"
-      "systemDirs"
-      "data"
-    ])
+    (lib.mkRenamedOptionModule
+      [ "targets" "genericLinux" "extraXdgDataDirs" ]
+      [
+        "xdg"
+        "systemDirs"
+        "data"
+      ]
+    )
   ];
 
   options.targets.genericLinux = {
@@ -28,8 +37,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "targets.genericLinux" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "targets.genericLinux" pkgs lib.platforms.linux)
     ];
 
     xdg.systemDirs.data = [
@@ -87,24 +95,25 @@ in {
       }
     '';
 
-    systemd.user.sessionVariables = let
-      # https://github.com/archlinux/svntogit-packages/blob/packages/ncurses/trunk/PKGBUILD
-      # https://salsa.debian.org/debian/ncurses/-/blob/master/debian/rules
-      # https://src.fedoraproject.org/rpms/ncurses/blob/main/f/ncurses.spec
-      # https://gitweb.gentoo.org/repo/gentoo.git/tree/sys-libs/ncurses/ncurses-6.2-r1.ebuild
-      distroTerminfoDirs = lib.concatStringsSep ":" [
-        "/etc/terminfo" # debian, fedora, gentoo
-        "/lib/terminfo" # debian
-        "/usr/share/terminfo" # package default, all distros
-      ];
-    in {
-      NIX_PATH = if config.nix.enable
-      && (config.nix.settings.use-xdg-base-directories or false) then
-        "${config.xdg.stateHome}/nix/defexpr/channels\${NIX_PATH:+:}$NIX_PATH"
-      else
-        "$HOME/.nix-defexpr/channels\${NIX_PATH:+:}$NIX_PATH";
-      TERMINFO_DIRS =
-        "${profileDirectory}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}${distroTerminfoDirs}";
-    };
+    systemd.user.sessionVariables =
+      let
+        # https://github.com/archlinux/svntogit-packages/blob/packages/ncurses/trunk/PKGBUILD
+        # https://salsa.debian.org/debian/ncurses/-/blob/master/debian/rules
+        # https://src.fedoraproject.org/rpms/ncurses/blob/main/f/ncurses.spec
+        # https://gitweb.gentoo.org/repo/gentoo.git/tree/sys-libs/ncurses/ncurses-6.2-r1.ebuild
+        distroTerminfoDirs = lib.concatStringsSep ":" [
+          "/etc/terminfo" # debian, fedora, gentoo
+          "/lib/terminfo" # debian
+          "/usr/share/terminfo" # package default, all distros
+        ];
+      in
+      {
+        NIX_PATH =
+          if config.nix.enable && (config.nix.settings.use-xdg-base-directories or false) then
+            "${config.xdg.stateHome}/nix/defexpr/channels\${NIX_PATH:+:}$NIX_PATH"
+          else
+            "$HOME/.nix-defexpr/channels\${NIX_PATH:+:}$NIX_PATH";
+        TERMINFO_DIRS = "${profileDirectory}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}${distroTerminfoDirs}";
+      };
   };
 }

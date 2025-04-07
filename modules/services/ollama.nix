@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,12 +11,14 @@ let
 
   cfg = config.services.ollama;
 
-  ollamaPackage = if cfg.acceleration == null then
-    cfg.package
-  else
-    cfg.package.override { inherit (cfg) acceleration; };
+  ollamaPackage =
+    if cfg.acceleration == null then
+      cfg.package
+    else
+      cfg.package.override { inherit (cfg) acceleration; };
 
-in {
+in
+{
   meta.maintainers = [ maintainers.terlar ];
 
   options = {
@@ -39,7 +46,13 @@ in {
       };
 
       acceleration = mkOption {
-        type = types.nullOr (types.enum [ false "rocm" "cuda" ]);
+        type = types.nullOr (
+          types.enum [
+            false
+            "rocm"
+            "cuda"
+          ]
+        );
         default = null;
         example = "rocm";
         description = ''
@@ -84,18 +97,23 @@ in {
 
       Service = {
         ExecStart = "${getExe ollamaPackage} serve";
-        Environment =
-          (mapAttrsToList (n: v: "${n}=${v}") cfg.environmentVariables)
-          ++ [ "OLLAMA_HOST=${cfg.host}:${toString cfg.port}" ];
+        Environment = (mapAttrsToList (n: v: "${n}=${v}") cfg.environmentVariables) ++ [
+          "OLLAMA_HOST=${cfg.host}:${toString cfg.port}"
+        ];
       };
 
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
     };
 
     launchd.agents.ollama = mkIf pkgs.stdenv.isDarwin {
       enable = true;
       config = {
-        ProgramArguments = [ "${getExe ollamaPackage}" "serve" ];
+        ProgramArguments = [
+          "${getExe ollamaPackage}"
+          "serve"
+        ];
         EnvironmentVariables = cfg.environmentVariables // {
           OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
         };

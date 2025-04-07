@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 lib.mkIf pkgs.stdenv.isLinux {
   services.gpg-agent.enable = true;

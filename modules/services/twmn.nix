@@ -1,4 +1,10 @@
-{ config, lib, pkgs, stdenv, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  stdenv,
+  ...
+}:
 
 with lib;
 
@@ -26,7 +32,8 @@ let
     };
   };
 
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.austreelis ];
 
   options.services.twmn = {
@@ -44,8 +51,7 @@ in {
     extraConfig = mkOption {
       type = types.attrs;
       default = { };
-      example = literalExpression
-        ''{ main.activation_command = "\${pkgs.hello}/bin/hello"; }'';
+      example = literalExpression ''{ main.activation_command = "\${pkgs.hello}/bin/hello"; }'';
       description = ''
         Extra configuration options to add to the twmnd config file. See
         <https://github.com/sboli/twmn/blob/master/README.md>
@@ -178,8 +184,7 @@ in {
     };
 
     window = {
-      alwaysOnTop =
-        mkEnableOption "forcing the notification window to always be on top";
+      alwaysOnTop = mkEnableOption "forcing the notification window to always be on top";
 
       animation = {
         easeIn = mkOption {
@@ -203,13 +208,11 @@ in {
               duration = 618;
             }
           '';
-          description =
-            "Options for the notification disappearance's animation.";
+          description = "Options for the notification disappearance's animation.";
         };
 
         bounce = {
-          enable = mkEnableOption
-            "notification bounce when displaying next notification directly";
+          enable = mkEnableOption "notification bounce when displaying next notification directly";
 
           duration = mkOption {
             type = types.ints.unsigned;
@@ -303,68 +306,61 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.twmn" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.twmn" pkgs lib.platforms.linux)
     ];
 
-    home.packages =
-      lib.optional (!isNull cfg.text.font.package) cfg.text.font.package
-      ++ [ pkgs.twmn ];
+    home.packages = lib.optional (!isNull cfg.text.font.package) cfg.text.font.package ++ [ pkgs.twmn ];
 
-    xdg.configFile."twmn/twmn.conf".text = let
-      conf = recursiveUpdate {
-        gui = {
-          always_on_top = if cfg.window.alwaysOnTop then "true" else "false";
-          background_color = cfg.window.color;
-          bounce =
-            if cfg.window.animation.bounce.enable then "true" else "false";
-          bounce_duration = toString cfg.window.animation.bounce.duration;
-          font = cfg.text.font.family;
-          font_size = toString cfg.text.font.size;
-          font_variant = cfg.text.font.variant;
-          foreground_color = cfg.text.color;
-          height = toString cfg.window.height;
-          in_animation = toString cfg.window.animation.easeIn.curve;
-          in_animation_duration = toString cfg.window.animation.easeIn.duration;
-          max_length = toString
-            (if isNull cfg.text.maxLength then -1 else cfg.text.maxLength);
-          offset_x = with cfg.window.offset;
-            if x < 0 then toString x else "+${toString x}";
-          offset_y = with cfg.window.offset;
-            if y < 0 then toString y else "+${toString y}";
-          opacity = toString cfg.window.opacity;
-          out_animation = toString cfg.window.animation.easeOut.curve;
-          out_animation_duration =
-            toString cfg.window.animation.easeOut.duration;
-          position = cfg.window.position;
-          screen = toString cfg.screen;
-        };
-        # map null values to empty strings because formats.toml generator fails
-        # when encountering a null.
-        icons = mapAttrs (_: toString) cfg.icons;
-        main = {
-          duration = toString cfg.duration;
-          host = cfg.host;
-          port = toString cfg.port;
-          sound_command = cfg.soundCommand;
-        };
-      } cfg.extraConfig;
+    xdg.configFile."twmn/twmn.conf".text =
+      let
+        conf = recursiveUpdate {
+          gui = {
+            always_on_top = if cfg.window.alwaysOnTop then "true" else "false";
+            background_color = cfg.window.color;
+            bounce = if cfg.window.animation.bounce.enable then "true" else "false";
+            bounce_duration = toString cfg.window.animation.bounce.duration;
+            font = cfg.text.font.family;
+            font_size = toString cfg.text.font.size;
+            font_variant = cfg.text.font.variant;
+            foreground_color = cfg.text.color;
+            height = toString cfg.window.height;
+            in_animation = toString cfg.window.animation.easeIn.curve;
+            in_animation_duration = toString cfg.window.animation.easeIn.duration;
+            max_length = toString (if isNull cfg.text.maxLength then -1 else cfg.text.maxLength);
+            offset_x = with cfg.window.offset; if x < 0 then toString x else "+${toString x}";
+            offset_y = with cfg.window.offset; if y < 0 then toString y else "+${toString y}";
+            opacity = toString cfg.window.opacity;
+            out_animation = toString cfg.window.animation.easeOut.curve;
+            out_animation_duration = toString cfg.window.animation.easeOut.duration;
+            position = cfg.window.position;
+            screen = toString cfg.screen;
+          };
+          # map null values to empty strings because formats.toml generator fails
+          # when encountering a null.
+          icons = mapAttrs (_: toString) cfg.icons;
+          main = {
+            duration = toString cfg.duration;
+            host = cfg.host;
+            port = toString cfg.port;
+            sound_command = cfg.soundCommand;
+          };
+        } cfg.extraConfig;
 
-      mkLine = name: value: "${name}=${value}";
+        mkLine = name: value: "${name}=${value}";
 
-      mkSection = section: conf: ''
-        [${section}]
-        ${concatStringsSep "\n" (mapAttrsToList mkLine conf)}
-      '';
-    in concatStringsSep "\n" (mapAttrsToList mkSection conf) + "\n";
+        mkSection = section: conf: ''
+          [${section}]
+          ${concatStringsSep "\n" (mapAttrsToList mkLine conf)}
+        '';
+      in
+      concatStringsSep "\n" (mapAttrsToList mkSection conf) + "\n";
 
     systemd.user.services.twmnd = {
       Unit = {
         Description = "twmn daemon";
         After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers =
-          [ "${config.xdg.configFile."twmn/twmn.conf".source}" ];
+        X-Restart-Triggers = [ "${config.xdg.configFile."twmn/twmn.conf".source}" ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];

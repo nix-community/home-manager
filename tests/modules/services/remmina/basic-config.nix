@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   xdg.mimeApps.enable = true;
 
   services.remmina = {
@@ -8,7 +9,10 @@
     addRdpMimeTypeAssoc = false;
     systemdService = {
       enable = true;
-      startupFlags = [ "--icon" "--enable-extra-hardening" ];
+      startupFlags = [
+        "--icon"
+        "--enable-extra-hardening"
+      ];
     };
   };
 

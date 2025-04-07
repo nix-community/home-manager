@@ -1,27 +1,36 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) getExe mkIf mkOption;
   cfg = config.programs.mise;
   tomlFormat = pkgs.formats.toml { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.pedorich-n ];
 
-  imports = let
-    mkRemovedWarning = opt:
-      (lib.mkRemovedOptionModule [ "programs" "rtx" opt ] ''
-        The `rtx` package has been replaced by `mise`, please switch over to
-        using the options under `programs.mise.*` instead.
-      '');
+  imports =
+    let
+      mkRemovedWarning =
+        opt:
+        (lib.mkRemovedOptionModule [ "programs" "rtx" opt ] ''
+          The `rtx` package has been replaced by `mise`, please switch over to
+          using the options under `programs.mise.*` instead.
+        '');
 
-  in map mkRemovedWarning [
-    "enable"
-    "package"
-    "enableBashIntegration"
-    "enableZshIntegration"
-    "enableFishIntegration"
-    "enableNushellIntegration"
-    "settings"
-  ];
+    in
+    map mkRemovedWarning [
+      "enable"
+      "package"
+      "enableBashIntegration"
+      "enableZshIntegration"
+      "enableFishIntegration"
+      "enableNushellIntegration"
+      "settings"
+    ];
 
   options = {
     programs.mise = {
@@ -29,17 +38,13 @@ in {
 
       package = lib.mkPackageOption pkgs "mise" { nullable = true; };
 
-      enableBashIntegration =
-        lib.hm.shell.mkBashIntegrationOption { inherit config; };
+      enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-      enableFishIntegration =
-        lib.hm.shell.mkFishIntegrationOption { inherit config; };
+      enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-      enableZshIntegration =
-        lib.hm.shell.mkZshIntegrationOption { inherit config; };
+      enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-      enableNushellIntegration =
-        lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+      enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
       globalConfig = mkOption {
         type = tomlFormat.type;
@@ -81,13 +86,22 @@ in {
   };
 
   config = mkIf cfg.enable {
-    warnings = lib.optional (cfg.package == null && (cfg.enableBashIntegration
-      || cfg.enableZshIntegration || cfg.enableFishIntegration
-      || cfg.enableNushellIntegration)) ''
-        You have enabled shell integration for `mise` but have not set `package`.
+    warnings =
+      lib.optional
+        (
+          cfg.package == null
+          && (
+            cfg.enableBashIntegration
+            || cfg.enableZshIntegration
+            || cfg.enableFishIntegration
+            || cfg.enableNushellIntegration
+          )
+        )
+        ''
+          You have enabled shell integration for `mise` but have not set `package`.
 
-        The shell integration will not be added.
-      '';
+          The shell integration will not be added.
+        '';
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 

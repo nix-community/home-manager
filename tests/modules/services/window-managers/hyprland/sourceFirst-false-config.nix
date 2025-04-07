@@ -14,7 +14,9 @@
         kb_layout = "ro";
         follow_mouse = 1;
         accel_profile = "flat";
-        touchpad = { scroll_factor = 0.3; };
+        touchpad = {
+          scroll_factor = 0.3;
+        };
       };
     };
     sourceFirst = false;

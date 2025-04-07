@@ -16,13 +16,16 @@
 
   test.stubs.streamlink = { };
 
-  nmt.script = let
-    streamlinkConfig = if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/streamlink/config"
-    else
-      ".config/streamlink/config";
-  in ''
-    assertFileExists "home-files/${streamlinkConfig}"
-    assertFileContent "home-files/${streamlinkConfig}" ${./config}
-  '';
+  nmt.script =
+    let
+      streamlinkConfig =
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          "Library/Application Support/streamlink/config"
+        else
+          ".config/streamlink/config";
+    in
+    ''
+      assertFileExists "home-files/${streamlinkConfig}"
+      assertFileContent "home-files/${streamlinkConfig}" ${./config}
+    '';
 }

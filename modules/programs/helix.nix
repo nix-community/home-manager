@@ -1,10 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.helix;
   tomlFormat = pkgs.formats.toml { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.Philipp-M ];
 
   options.programs.helix = {
@@ -70,8 +81,10 @@ in {
     };
 
     languages = mkOption {
-      type = with types;
-        coercedTo (listOf tomlFormat.type) (language:
+      type =
+        with types;
+        coercedTo (listOf tomlFormat.type) (
+          language:
           lib.warn ''
             The syntax of programs.helix.languages has changed.
             It now generates the whole languages.toml file instead of just the language array in that file.
@@ -79,7 +92,8 @@ in {
             Use
             programs.helix.languages = { language = <languages list>; }
             instead.
-          '' { inherit language; }) (addCheck tomlFormat.type builtins.isAttrs);
+          '' { inherit language; }
+        ) (addCheck tomlFormat.type builtins.isAttrs);
       default = { };
       example = literalExpression ''
         {
@@ -106,7 +120,10 @@ in {
     ignores = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ ".build/" "!.gitignore" ];
+      example = [
+        ".build/"
+        "!.gitignore"
+      ];
       description = ''
         List of paths that should be globally ignored for file picker.
         Supports the usual ignore and negative ignore (unignore) rules used in `.gitignore` files.
@@ -185,48 +202,53 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = if cfg.extraPackages != [ ] then
-      [
-        (pkgs.symlinkJoin {
-          name =
-            "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
-          paths = [ cfg.package ];
-          preferLocalBuild = true;
-          nativeBuildInputs = [ pkgs.makeWrapper ];
-          postBuild = ''
-            wrapProgram $out/bin/hx \
-              --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
-          '';
-        })
-      ]
-    else
-      [ cfg.package ];
+    home.packages =
+      if cfg.extraPackages != [ ] then
+        [
+          (pkgs.symlinkJoin {
+            name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+            paths = [ cfg.package ];
+            preferLocalBuild = true;
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/hx \
+                --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+            '';
+          })
+        ]
+      else
+        [ cfg.package ];
 
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "hx"; };
 
-    xdg.configFile = let
-      settings = {
-        "helix/config.toml" = mkIf (cfg.settings != { }) {
-          source = let
-            configFile = tomlFormat.generate "config.toml" cfg.settings;
-            extraConfigFile =
-              pkgs.writeText "extra-config.toml" ("\n" + cfg.extraConfig);
-          in pkgs.runCommand "helix-config.toml" { } ''
-            cat ${configFile} ${extraConfigFile} >> $out
-          '';
+    xdg.configFile =
+      let
+        settings = {
+          "helix/config.toml" = mkIf (cfg.settings != { }) {
+            source =
+              let
+                configFile = tomlFormat.generate "config.toml" cfg.settings;
+                extraConfigFile = pkgs.writeText "extra-config.toml" ("\n" + cfg.extraConfig);
+              in
+              pkgs.runCommand "helix-config.toml" { } ''
+                cat ${configFile} ${extraConfigFile} >> $out
+              '';
+          };
+          "helix/languages.toml" = mkIf (cfg.languages != { }) {
+            source = tomlFormat.generate "helix-languages-config" cfg.languages;
+          };
+          "helix/ignore" = mkIf (cfg.ignores != [ ]) {
+            text = lib.concatStringsSep "\n" cfg.ignores + "\n";
+          };
         };
-        "helix/languages.toml" = mkIf (cfg.languages != { }) {
-          source = tomlFormat.generate "helix-languages-config" cfg.languages;
-        };
-        "helix/ignore" = mkIf (cfg.ignores != [ ]) {
-          text = lib.concatStringsSep "\n" cfg.ignores + "\n";
-        };
-      };
 
-      themes = lib.mapAttrs' (n: v:
-        lib.nameValuePair "helix/themes/${n}.toml" {
-          source = tomlFormat.generate "helix-theme-${n}" v;
-        }) cfg.themes;
-    in settings // themes;
+        themes = lib.mapAttrs' (
+          n: v:
+          lib.nameValuePair "helix/themes/${n}.toml" {
+            source = tomlFormat.generate "helix-theme-${n}" v;
+          }
+        ) cfg.themes;
+      in
+      settings // themes;
   };
 }

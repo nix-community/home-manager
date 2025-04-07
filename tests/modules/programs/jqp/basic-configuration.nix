@@ -2,7 +2,9 @@
   programs = {
     jqp = {
       enable = true;
-      settings = { theme.name = "catppuccin-frappe"; };
+      settings = {
+        theme.name = "catppuccin-frappe";
+      };
     };
   };
 

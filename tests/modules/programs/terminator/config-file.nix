@@ -8,13 +8,11 @@
   };
 
   nmt.script = ''
-    assertFileContent home-files/.config/terminator/config ${
-      builtins.toFile "expected" ''
-        [global_config]
-        borderless = True
-        [profiles]
-        [[default]]
-        background_color = "#002b36"''
-    }
+    assertFileContent home-files/.config/terminator/config ${builtins.toFile "expected" ''
+      [global_config]
+      borderless = True
+      [profiles]
+      [[default]]
+      background_color = "#002b36"''}
   '';
 }

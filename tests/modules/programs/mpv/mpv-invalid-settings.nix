@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   programs.mpv = {
@@ -8,13 +13,18 @@
   };
 
   test.stubs = {
-    mpv = { extraAttrs.override = { ... }: pkgs.emptyDirectory; };
+    mpv = {
+      extraAttrs.override = { ... }: pkgs.emptyDirectory;
+    };
 
-    mpvScript = { extraAttrs = { scriptName = "something"; }; };
+    mpvScript = {
+      extraAttrs = {
+        scriptName = "something";
+      };
+    };
   };
 
   test.asserts.assertions.expected = [
-    ''
-      The programs.mpv "package" option is mutually exclusive with "scripts" option.''
+    ''The programs.mpv "package" option is mutually exclusive with "scripts" option.''
   ];
 }

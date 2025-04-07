@@ -1,14 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) types;
 
   # Like lib.mapAttrsToList, but concatenate the results
-  concatMapAttrsToList = f: attrs:
-    builtins.concatMap (name: f name attrs.${name}) (builtins.attrNames attrs);
+  concatMapAttrsToList =
+    f: attrs: builtins.concatMap (name: f name attrs.${name}) (builtins.attrNames attrs);
 
   cfg = config.services.librespot;
-in {
+in
+{
   options.services.librespot = {
     enable = lib.mkEnableOption "Librespot (Spotify Connect speaker daemon)";
 
@@ -23,24 +29,34 @@ in {
         All other values are rendered as options with an argument.
       '';
       type = types.submodule {
-        freeformType = let t = types;
-        in t.attrsOf (t.nullOr (t.oneOf [ t.bool t.str t.int t.path ]));
+        freeformType =
+          let
+            t = types;
+          in
+          t.attrsOf (
+            t.nullOr (
+              t.oneOf [
+                t.bool
+                t.str
+                t.int
+                t.path
+              ]
+            )
+          );
 
         options = {
           cache = lib.mkOption {
             default = "${config.xdg.cacheHome}/librespot";
             defaultText = "$XDG_CACHE_HOME/librespot";
             type = types.nullOr types.path;
-            description =
-              "Path to a directory where files will be cached after downloading.";
+            description = "Path to a directory where files will be cached after downloading.";
           };
 
           system-cache = lib.mkOption {
             default = "${config.xdg.stateHome}/librespot";
             defaultText = "$XDG_STATE_HOME/librespot";
             type = types.nullOr types.path;
-            description =
-              "Path to a directory where system files (credentials, volume) will be cached.";
+            description = "Path to a directory where system files (credentials, volume) will be cached.";
           };
         };
       };
@@ -60,19 +76,23 @@ in {
 
   config = lib.mkIf cfg.enable {
     services.librespot = {
-      args = concatMapAttrsToList (k: v:
+      args = concatMapAttrsToList (
+        k: v:
         if v == null || v == false then
           [ ]
         else if v == true then
           [ "--${k}" ]
         else
-          [ "--${k}=${toString v}" ]) cfg.settings;
+          [ "--${k}=${toString v}" ]
+      ) cfg.settings;
     };
 
     home.packages = [ cfg.package ];
 
     systemd.user.services.librespot = {
-      Unit = { Description = "Librespot (an open source Spotify client)"; };
+      Unit = {
+        Description = "Librespot (an open source Spotify client)";
+      };
 
       Install.WantedBy = [ "default.target" ];
 

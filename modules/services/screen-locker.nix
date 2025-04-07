@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,21 +11,38 @@ let
 
   cfg = config.services.screen-locker;
 
-in {
-  meta.maintainers = [ hm.maintainers.jrobsonchase hm.maintainers.rszamszur ];
-
-  imports = let
-    origOpt = name: [ "services" "screen-locker" name ];
-    xautolockOpt = name: [ "services" "screen-locker" "xautolock" name ];
-    xssLockOpt = name: [ "services" "screen-locker" "xss-lock" name ];
-  in [
-    (mkRenamedOptionModule (origOpt "xssLockExtraOptions")
-      (xssLockOpt "extraOptions"))
-    (mkRenamedOptionModule (origOpt "xautolockExtraOptions")
-      (xautolockOpt "extraOptions"))
-    (mkRenamedOptionModule (origOpt "enableDetectSleep")
-      (xautolockOpt "detectSleep"))
+in
+{
+  meta.maintainers = [
+    hm.maintainers.jrobsonchase
+    hm.maintainers.rszamszur
   ];
+
+  imports =
+    let
+      origOpt = name: [
+        "services"
+        "screen-locker"
+        name
+      ];
+      xautolockOpt = name: [
+        "services"
+        "screen-locker"
+        "xautolock"
+        name
+      ];
+      xssLockOpt = name: [
+        "services"
+        "screen-locker"
+        "xss-lock"
+        name
+      ];
+    in
+    [
+      (mkRenamedOptionModule (origOpt "xssLockExtraOptions") (xssLockOpt "extraOptions"))
+      (mkRenamedOptionModule (origOpt "xautolockExtraOptions") (xautolockOpt "extraOptions"))
+      (mkRenamedOptionModule (origOpt "enableDetectSleep") (xautolockOpt "detectSleep"))
+    ];
 
   options.services.screen-locker = {
     enable = mkEnableOption "screen locker for X session";
@@ -35,8 +57,7 @@ in {
       type = types.listOf types.str;
       default = [ ];
       example = [ "XSECURELOCK_PAM_SERVICE=xsecurelock" ];
-      description =
-        "Environment variables to source a with the locker command (lockCmd).";
+      description = "Environment variables to source a with the locker command (lockCmd).";
     };
 
     inactiveInterval = mkOption {
@@ -118,8 +139,7 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       assertions = [
-        (lib.hm.assertions.assertPlatform "services.screen-locker" pkgs
-          lib.platforms.linux)
+        (lib.hm.assertions.assertPlatform "services.screen-locker" pkgs lib.platforms.linux)
       ];
 
       systemd.user.services.xss-lock = {
@@ -129,22 +149,28 @@ in {
           PartOf = [ "graphical-session.target" ];
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
 
         Service = {
-          ExecStart = concatStringsSep " "
-            ([ "${cfg.xss-lock.package}/bin/xss-lock" "-s \${XDG_SESSION_ID}" ]
-              ++ cfg.xss-lock.extraOptions ++ [ "-- ${cfg.lockCmd}" ]);
+          ExecStart = concatStringsSep " " (
+            [
+              "${cfg.xss-lock.package}/bin/xss-lock"
+              "-s \${XDG_SESSION_ID}"
+            ]
+            ++ cfg.xss-lock.extraOptions
+            ++ [ "-- ${cfg.lockCmd}" ]
+          );
           Environment = cfg.lockCmdEnv;
           Restart = "always";
         };
       };
     }
     (mkIf (!cfg.xautolock.enable) {
-      systemd.user.services.xss-lock.Service.ExecStartPre =
-        "${pkgs.xorg.xset}/bin/xset s ${toString (cfg.inactiveInterval * 60)} ${
-          toString cfg.xss-lock.screensaverCycle
-        }";
+      systemd.user.services.xss-lock.Service.ExecStartPre = "${pkgs.xorg.xset}/bin/xset s ${
+        toString (cfg.inactiveInterval * 60)
+      } ${toString cfg.xss-lock.screensaverCycle}";
     })
     (mkIf cfg.xautolock.enable {
       systemd.user.services.xautolock-session = {
@@ -154,15 +180,20 @@ in {
           PartOf = [ "graphical-session.target" ];
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
 
         Service = {
-          ExecStart = concatStringsSep " " ([
-            "${cfg.xautolock.package}/bin/xautolock"
-            "-time ${toString cfg.inactiveInterval}"
-            "-locker '${pkgs.systemd}/bin/loginctl lock-session \${XDG_SESSION_ID}'"
-          ] ++ optional cfg.xautolock.detectSleep "-detectsleep"
-            ++ cfg.xautolock.extraOptions);
+          ExecStart = concatStringsSep " " (
+            [
+              "${cfg.xautolock.package}/bin/xautolock"
+              "-time ${toString cfg.inactiveInterval}"
+              "-locker '${pkgs.systemd}/bin/loginctl lock-session \${XDG_SESSION_ID}'"
+            ]
+            ++ optional cfg.xautolock.detectSleep "-detectsleep"
+            ++ cfg.xautolock.extraOptions
+          );
           Restart = "always";
         };
       };

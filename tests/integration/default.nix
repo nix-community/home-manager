@@ -3,9 +3,13 @@
 let
   nixosLib = import "${pkgs.path}/nixos/lib" { };
 
-  runTest = test:
+  runTest =
+    test:
     nixosLib.runTest {
-      imports = [ test { node.pkgs = pkgs; } ];
+      imports = [
+        test
+        { node.pkgs = pkgs; }
+      ];
       hostPkgs = pkgs; # the Nixpkgs package set used outside the VMs
     };
 
@@ -19,7 +23,8 @@ let
     standalone-flake-basics = runTest ./standalone/flake-basics.nix;
     standalone-standard-basics = runTest ./standalone/standard-basics.nix;
   };
-in tests // {
-  all = pkgs.linkFarm "all"
-    (pkgs.lib.mapAttrsToList (name: path: { inherit name path; }) tests);
+in
+tests
+// {
+  all = pkgs.linkFarm "all" (pkgs.lib.mapAttrsToList (name: path: { inherit name path; }) tests);
 }

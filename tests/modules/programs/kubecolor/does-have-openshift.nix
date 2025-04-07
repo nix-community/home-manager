@@ -30,4 +30,3 @@
     assertFileRegex 'home-files/.zshrc' '^alias.* oc=.*'
   '';
 }
-

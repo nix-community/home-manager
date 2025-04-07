@@ -17,29 +17,42 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { self, nixpkgs, ... }:
-    let forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
-    in {
-      devShells = forAllSystems (system:
+  outputs =
+    { self, nixpkgs, ... }:
+    let
+      forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+    in
+    {
+      devShells = forAllSystems (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           tests = import ./. { inherit pkgs; };
-        in tests.run);
+        in
+        tests.run
+      );
 
-      packages = forAllSystems (system:
+      packages = forAllSystems (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           lib = pkgs.lib;
 
-          testPackages = let
-            tests = import ./. { inherit pkgs; };
-            renameTestPkg = n: lib.nameValuePair "test-${n}";
-          in lib.mapAttrs' renameTestPkg tests.build;
+          testPackages =
+            let
+              tests = import ./. { inherit pkgs; };
+              renameTestPkg = n: lib.nameValuePair "test-${n}";
+            in
+            lib.mapAttrs' renameTestPkg tests.build;
 
-          integrationTestPackages = let
-            tests = import ./integration { inherit pkgs; };
-            renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
-          in lib.mapAttrs' renameTestPkg tests;
-        in testPackages // integrationTestPackages);
+          integrationTestPackages =
+            let
+              tests = import ./integration { inherit pkgs; };
+              renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
+            in
+            lib.mapAttrs' renameTestPkg tests;
+        in
+        testPackages // integrationTestPackages
+      );
     };
 }

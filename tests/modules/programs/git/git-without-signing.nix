@@ -9,8 +9,6 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config
-    assertFileContent home-files/.config/git/config ${
-      ./git-without-signing.conf
-    }
+    assertFileContent home-files/.config/git/config ${./git-without-signing.conf}
   '';
 }

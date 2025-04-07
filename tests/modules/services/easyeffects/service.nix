@@ -1,7 +1,9 @@
 { ... }:
 
 {
-  services.easyeffects = { enable = true; };
+  services.easyeffects = {
+    enable = true;
+  };
 
   test.stubs.easyeffects = { };
 

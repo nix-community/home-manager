@@ -1,10 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
-let cfg = config.services.unclutter;
+let
+  cfg = config.services.unclutter;
 
-in {
+in
+{
   options.services.unclutter = {
 
     enable = mkEnableOption "unclutter";
@@ -32,14 +39,16 @@ in {
       description = "More arguments to pass to the unclutter command.";
       type = types.listOf types.str;
       default = [ ];
-      example = [ "exclude-root" "ignore-scrolling" ];
+      example = [
+        "exclude-root"
+        "ignore-scrolling"
+      ];
     };
   };
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.unclutter" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.unclutter" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.unclutter = {
@@ -60,7 +69,9 @@ in {
         Restart = "always";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

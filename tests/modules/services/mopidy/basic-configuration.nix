@@ -5,7 +5,10 @@
     settings = {
       file = {
         enabled = true;
-        media_dirs = [ "$XDG_MUSIC_DIR|Music" "~/Downloads|Downloads" ];
+        media_dirs = [
+          "$XDG_MUSIC_DIR|Music"
+          "~/Downloads|Downloads"
+        ];
       };
 
       spotify = {
@@ -31,23 +34,21 @@
     assertFileExists $serviceFile
     serviceFile=$(normalizeStorePaths $serviceFile)
     assertFileContent $serviceFile \
-      ${
-        builtins.toFile "expected-mopidy.service" ''
-          [Install]
-          WantedBy=default.target
+      ${builtins.toFile "expected-mopidy.service" ''
+        [Install]
+        WantedBy=default.target
 
-          [Service]
-          ExecStart=/nix/store/00000000000000000000000000000000-mopidy-with-extensions/bin/mopidy --config /home/hm-user/.config/mopidy/mopidy.conf
-          Restart=on-failure
+        [Service]
+        ExecStart=/nix/store/00000000000000000000000000000000-mopidy-with-extensions/bin/mopidy --config /home/hm-user/.config/mopidy/mopidy.conf
+        Restart=on-failure
 
-          [Unit]
-          After=network.target
-          After=sound.target
-          Description=mopidy music player daemon
-          Documentation=https://mopidy.com/
-          X-Restart-Triggers=/nix/store/00000000000000000000000000000000-mopidy-hm-user
-        ''
-      }
+        [Unit]
+        After=network.target
+        After=sound.target
+        Description=mopidy music player daemon
+        Documentation=https://mopidy.com/
+        X-Restart-Triggers=/nix/store/00000000000000000000000000000000-mopidy-hm-user
+      ''}
 
     assertPathNotExists home-files/.config/systemd/user/mopidy-scan.service
 

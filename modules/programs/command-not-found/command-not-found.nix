@@ -1,6 +1,11 @@
 # Adapted from Nixpkgs.
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.command-not-found;
   commandNotFound = pkgs.substituteAll {
@@ -9,7 +14,10 @@ let
     src = ./command-not-found.pl;
     isExecutable = true;
     inherit (cfg) dbPath;
-    perl = pkgs.perl.withPackages (p: [ p.DBDSQLite p.StringShellQuote ]);
+    perl = pkgs.perl.withPackages (p: [
+      p.DBDSQLite
+      p.StringShellQuote
+    ]);
   };
 
   shInit = commandNotFoundHandlerName: ''
@@ -26,13 +34,13 @@ let
     }
   '';
 
-in {
+in
+{
   options.programs.command-not-found = {
     enable = lib.mkEnableOption "command-not-found hook for interactive shell";
 
     dbPath = lib.mkOption {
-      default =
-        "/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite";
+      default = "/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite";
       description = ''
         Absolute path to {file}`programs.sqlite`. By
         default this file will be provided by your channel

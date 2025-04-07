@@ -1,33 +1,65 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
 
   cfg = config.i18n.inputMethod;
 
-  gtk2Cache = pkgs.runCommandLocal "gtk2-immodule.cache" {
-    buildInputs = [ pkgs.gtk2 cfg.package ];
-  } ''
-    mkdir -p $out/etc/gtk-2.0/
-    GTK_PATH=${cfg.package}/lib/gtk-2.0/ \
-      gtk-query-immodules-2.0 > $out/etc/gtk-2.0/immodules.cache
-  '';
+  gtk2Cache =
+    pkgs.runCommandLocal "gtk2-immodule.cache"
+      {
+        buildInputs = [
+          pkgs.gtk2
+          cfg.package
+        ];
+      }
+      ''
+        mkdir -p $out/etc/gtk-2.0/
+        GTK_PATH=${cfg.package}/lib/gtk-2.0/ \
+          gtk-query-immodules-2.0 > $out/etc/gtk-2.0/immodules.cache
+      '';
 
-  gtk3Cache = pkgs.runCommandLocal "gtk3-immodule.cache" {
-    buildInputs = [ pkgs.gtk3 cfg.package ];
-  } ''
-    mkdir -p $out/etc/gtk-3.0/
-    GTK_PATH=${cfg.package}/lib/gtk-3.0/ \
-      gtk-query-immodules-3.0 > $out/etc/gtk-3.0/immodules.cache
-  '';
+  gtk3Cache =
+    pkgs.runCommandLocal "gtk3-immodule.cache"
+      {
+        buildInputs = [
+          pkgs.gtk3
+          cfg.package
+        ];
+      }
+      ''
+        mkdir -p $out/etc/gtk-3.0/
+        GTK_PATH=${cfg.package}/lib/gtk-3.0/ \
+          gtk-query-immodules-3.0 > $out/etc/gtk-3.0/immodules.cache
+      '';
 
-in {
-  imports = [ ./fcitx5.nix ./hime.nix ./kime.nix ./nabi.nix ./uim.nix ];
+in
+{
+  imports = [
+    ./fcitx5.nix
+    ./hime.nix
+    ./kime.nix
+    ./nabi.nix
+    ./uim.nix
+  ];
 
   options.i18n = {
     inputMethod = {
       enabled = lib.mkOption {
-        type = lib.types.nullOr
-          (lib.types.enum [ "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" ]);
+        type = lib.types.nullOr (
+          lib.types.enum [
+            "fcitx"
+            "fcitx5"
+            "nabi"
+            "uim"
+            "hime"
+            "kime"
+          ]
+        );
         default = null;
         example = "fcitx5";
         description = ''
@@ -73,15 +105,18 @@ in {
 
   config = lib.mkIf (cfg.enabled != null) {
     assertions = [
-      (lib.hm.assertions.assertPlatform "i18n.inputMethod" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "i18n.inputMethod" pkgs lib.platforms.linux)
       {
         assertion = cfg.enabled != "fcitx";
         message = "fcitx has been removed, please use fcitx5 instead";
       }
     ];
 
-    home.packages = [ cfg.package gtk2Cache gtk3Cache ];
+    home.packages = [
+      cfg.package
+      gtk2Cache
+      gtk3Cache
+    ];
   };
 
   meta.maintainers = [ lib.hm.maintainers.kranzes ];

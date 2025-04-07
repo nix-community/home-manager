@@ -1,4 +1,5 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+{
   config = {
     programs.kitty = {
       enable = true;
@@ -29,18 +30,22 @@
         "launch_window" = "launch --cwd=current --type=os-window";
       };
 
-      environment = { LS_COLORS = "1"; };
+      environment = {
+        LS_COLORS = "1";
+      };
     };
 
-    nmt.script = ''
-      assertFileExists home-files/.config/kitty/kitty.conf
-      assertFileContent \
-        home-files/.config/kitty/kitty.conf \
-        ${./example-settings-expected.conf}
-    '' + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
-      assertFileContent \
-        home-files/.config/kitty/macos-launch-services-cmdline \
-        ${./example-macos-launch-services-cmdline}
-    '';
+    nmt.script =
+      ''
+        assertFileExists home-files/.config/kitty/kitty.conf
+        assertFileContent \
+          home-files/.config/kitty/kitty.conf \
+          ${./example-settings-expected.conf}
+      ''
+      + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+        assertFileContent \
+          home-files/.config/kitty/macos-launch-services-cmdline \
+          ${./example-macos-launch-services-cmdline}
+      '';
   };
 }

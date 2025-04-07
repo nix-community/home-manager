@@ -9,7 +9,8 @@ let
       rm -f -- "$tmp"
     }
   '';
-in {
+in
+{
   programs.zsh.enable = true;
 
   programs.yazi = {

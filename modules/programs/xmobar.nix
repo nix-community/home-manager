@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.xmobar;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.xmobar;
+in
+{
   options.programs.xmobar = {
     enable = lib.mkEnableOption "Xmobar, a minimalistic status bar";
 

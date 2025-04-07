@@ -5,8 +5,7 @@
     (self: super: {
       # Use `cat` instead of `echo` to prevent arguments from being
       # interpreted as an option.
-      emacs = pkgs.writeShellScriptBin "emacsclient"
-        ''${pkgs.coreutils}/bin/cat <<< "$*"'';
+      emacs = pkgs.writeShellScriptBin "emacsclient" ''${pkgs.coreutils}/bin/cat <<< "$*"'';
     })
   ];
 
@@ -16,9 +15,9 @@
   };
 
   nmt.script = "source ${
-      pkgs.substituteAll {
-        inherit (pkgs) coreutils;
-        src = ./emacs-default-editor.sh;
-      }
-    }";
+    pkgs.substituteAll {
+      inherit (pkgs) coreutils;
+      src = ./emacs-default-editor.sh;
+    }
+  }";
 }

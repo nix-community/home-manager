@@ -1,15 +1,29 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    concatStringsSep concatStrings literalExpression mkIf mkOption types;
+    concatStringsSep
+    concatStrings
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   renderPlugin = plugin: ''
     addSbtPlugin("${plugin.org}" % "${plugin.artifact}" % "${plugin.version}")
   '';
 
-  renderCredential = idx: cred:
-    let symbol = "credential_${toString idx}";
-    in ''
+  renderCredential =
+    idx: cred:
+    let
+      symbol = "credential_${toString idx}";
+    in
+    ''
       lazy val ${symbol} = "${cred.passwordCommand}".!!.trim
       credentials += Credentials("${cred.realm}", "${cred.host}", "${cred.user}", ${symbol})
     '';
@@ -18,13 +32,16 @@ let
     import scala.sys.process._
     ${concatStrings (lib.imap0 renderCredential creds)}'';
 
-  renderRepository = value:
-    if lib.isString value then ''
-      ${value}
-    '' else ''
-      ${concatStrings
-      (lib.mapAttrsToList (name: value: "${name}: ${value}") value)}
-    '';
+  renderRepository =
+    value:
+    if lib.isString value then
+      ''
+        ${value}
+      ''
+    else
+      ''
+        ${concatStrings (lib.mapAttrsToList (name: value: "${name}: ${value}") value)}
+      '';
 
   renderRepositories = repos: ''
     [repositories]
@@ -59,8 +76,7 @@ let
 
         host = mkOption {
           type = types.str;
-          description =
-            "The hostname of the repository you're authenticating to.";
+          description = "The hostname of the repository you're authenticating to.";
         };
 
         user = mkOption {
@@ -81,10 +97,12 @@ let
 
   cfg = config.programs.sbt;
 
-in {
+in
+{
   imports = [
     (lib.mkRemovedOptionModule [ "programs" "sbt" "baseConfigPath" ]
-      "Use programs.sbt.baseUserConfigPath instead, but note that the semantics are slightly different.")
+      "Use programs.sbt.baseUserConfigPath instead, but note that the semantics are slightly different."
+    )
   ];
 
   meta.maintainers = [ lib.maintainers.kubukoz ];
@@ -156,9 +174,15 @@ in {
     };
 
     repositories = mkOption {
-      type = with types;
-        listOf
-        (either (enum [ "local" "maven-central" "maven-local" ]) (attrsOf str));
+      type =
+        with types;
+        listOf (
+          either (enum [
+            "local"
+            "maven-central"
+            "maven-local"
+          ]) (attrsOf str)
+        );
       default = [ ];
       example = literalExpression ''
         [
@@ -189,23 +213,22 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (lib.mkMerge [
-    { home.packages = [ cfg.package ]; }
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      { home.packages = [ cfg.package ]; }
 
-    (mkIf (cfg.plugins != [ ] || cfg.pluginsExtra != [ ]) {
-      home.file."${cfg.baseUserConfigPath}/1.0/plugins/plugins.sbt".text =
-        concatStrings (map renderPlugin cfg.plugins)
-        + concatStringsSep "\n" cfg.pluginsExtra + "\n";
-    })
+      (mkIf (cfg.plugins != [ ] || cfg.pluginsExtra != [ ]) {
+        home.file."${cfg.baseUserConfigPath}/1.0/plugins/plugins.sbt".text =
+          concatStrings (map renderPlugin cfg.plugins) + concatStringsSep "\n" cfg.pluginsExtra + "\n";
+      })
 
-    (mkIf (cfg.credentials != [ ]) {
-      home.file."${cfg.baseUserConfigPath}/1.0/credentials.sbt".text =
-        renderCredentials cfg.credentials;
-    })
+      (mkIf (cfg.credentials != [ ]) {
+        home.file."${cfg.baseUserConfigPath}/1.0/credentials.sbt".text = renderCredentials cfg.credentials;
+      })
 
-    (mkIf (cfg.repositories != [ ]) {
-      home.file."${cfg.baseUserConfigPath}/repositories".text =
-        renderRepositories cfg.repositories;
-    })
-  ]);
+      (mkIf (cfg.repositories != [ ]) {
+        home.file."${cfg.baseUserConfigPath}/repositories".text = renderRepositories cfg.repositories;
+      })
+    ]
+  );
 }

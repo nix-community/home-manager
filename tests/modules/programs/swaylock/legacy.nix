@@ -11,9 +11,12 @@
     };
   };
 
-  nmt.script = let homeConfig = "home-files/.config/swaylock/config";
-  in ''
-    assertFileExists ${homeConfig}
-    assertFileContent ${homeConfig} ${./config}
-  '';
+  nmt.script =
+    let
+      homeConfig = "home-files/.config/swaylock/config";
+    in
+    ''
+      assertFileExists ${homeConfig}
+      assertFileContent ${homeConfig} ${./config}
+    '';
 }

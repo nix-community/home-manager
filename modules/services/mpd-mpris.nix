@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.services.mpd-mpris;
 
   ignoreIfLocalMpd = value: if cfg.mpd.useLocal then null else value;
 
-  renderArg = name: value:
+  renderArg =
+    name: value:
     if lib.isBool value && value then
       "-${name}"
     else if lib.isInt value then
@@ -14,18 +20,17 @@ let
     else
       "";
 
-  concatArgs = strings:
-    lib.concatStringsSep " " (lib.filter (s: s != "") strings);
+  concatArgs = strings: lib.concatStringsSep " " (lib.filter (s: s != "") strings);
 
   renderArgs = args: concatArgs (lib.mapAttrsToList renderArg args);
 
   renderCmd = pkg: args: "${pkg}/bin/mpd-mpris ${renderArgs args}";
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];
 
   options.services.mpd-mpris = {
-    enable = lib.mkEnableOption
-      "mpd-mpris: An implementation of the MPRIS protocol for MPD";
+    enable = lib.mkEnableOption "mpd-mpris: An implementation of the MPRIS protocol for MPD";
 
     package = lib.mkPackageOption pkgs "mpd-mpris" { };
 
@@ -79,16 +84,16 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.mpd-mpris" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.mpd-mpris" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.mpd-mpris = {
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
 
       Unit = {
-        Description =
-          "mpd-mpris: An implementation of the MPRIS protocol for MPD";
+        Description = "mpd-mpris: An implementation of the MPRIS protocol for MPD";
         After = [ "mpd.service" ];
         Requires = lib.mkIf cfg.mpd.useLocal [ "mpd.service" ];
       };

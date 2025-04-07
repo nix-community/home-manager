@@ -16,11 +16,12 @@
     };
   };
 
-  programs.alot = { enable = true; };
+  programs.alot = {
+    enable = true;
+  };
 
   nmt.script = ''
     assertFileExists home-files/.config/alot/config
     assertFileContent home-files/.config/alot/config ${./alot-expected.conf}
   '';
 }
-

@@ -4,7 +4,8 @@ let
 
   inherit (lib) mkIf mkOption types;
 
-in {
+in
+{
   options.uninstall = mkOption {
     type = types.bool;
     default = false;
@@ -26,25 +27,24 @@ in {
     manual.manpages.enable = lib.mkForce false;
     news.display = lib.mkForce "silent";
 
-    home.activation.uninstall =
-      lib.hm.dag.entryAfter [ "installPackages" "linkGeneration" ] ''
-        nixProfileRemove home-manager-path
+    home.activation.uninstall = lib.hm.dag.entryAfter [ "installPackages" "linkGeneration" ] ''
+      nixProfileRemove home-manager-path
 
-        if [[ -e $hmDataPath ]]; then
-            run rm $VERBOSE_ARG -r "$hmDataPath"
-        fi
+      if [[ -e $hmDataPath ]]; then
+          run rm $VERBOSE_ARG -r "$hmDataPath"
+      fi
 
-        if [[ -e $hmStatePath ]]; then
-            run rm $VERBOSE_ARG -r "$hmStatePath"
-        fi
+      if [[ -e $hmStatePath ]]; then
+          run rm $VERBOSE_ARG -r "$hmStatePath"
+      fi
 
-        if [[ -e $genProfilePath ]]; then
-            run rm $VERBOSE_ARG "$genProfilePath"*
-        fi
+      if [[ -e $genProfilePath ]]; then
+          run rm $VERBOSE_ARG "$genProfilePath"*
+      fi
 
-        if [[ -e $legacyGenGcPath ]]; then
-            run rm $VERBOSE_ARG "$legacyGenGcPath"
-        fi
-      '';
+      if [[ -e $legacyGenGcPath ]]; then
+          run rm $VERBOSE_ARG "$legacyGenGcPath"
+      fi
+    '';
   };
 }

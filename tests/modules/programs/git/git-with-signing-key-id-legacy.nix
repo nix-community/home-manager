@@ -1,4 +1,5 @@
-{ lib, options, ... }: {
+{ lib, options, ... }:
+{
   config = {
     programs.git = {
       enable = true;
@@ -13,16 +14,12 @@
     };
 
     test.asserts.warnings.expected = [
-      "The option `programs.git.signing.gpgPath' defined in ${
-        lib.showFiles options.programs.git.signing.gpgPath.files
-      } has been renamed to `programs.git.signing.signer'."
+      "The option `programs.git.signing.gpgPath' defined in ${lib.showFiles options.programs.git.signing.gpgPath.files} has been renamed to `programs.git.signing.signer'."
     ];
 
     nmt.script = ''
       assertFileExists home-files/.config/git/config
-      assertFileContent home-files/.config/git/config ${
-        ./git-with-signing-key-id-legacy-expected.conf
-      }
+      assertFileContent home-files/.config/git/config ${./git-with-signing-key-id-legacy-expected.conf}
     '';
   };
 }

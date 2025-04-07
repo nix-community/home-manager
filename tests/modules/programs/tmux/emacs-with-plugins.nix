@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   config = {
     programs.tmux = {
       aggressiveResize = true;
@@ -39,9 +40,7 @@
 
     nmt.script = ''
       assertFileExists home-files/.config/tmux/tmux.conf
-      assertFileContent home-files/.config/tmux/tmux.conf ${
-        ./emacs-with-plugins.conf
-      }
+      assertFileContent home-files/.config/tmux/tmux.conf ${./emacs-with-plugins.conf}
     '';
   };
 }

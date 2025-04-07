@@ -1,75 +1,99 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption optionalAttrs;
 
   cfg = config.programs.offlineimap;
 
-  accounts = lib.filter (a: a.offlineimap.enable)
-    (lib.attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.offlineimap.enable) (lib.attrValues config.accounts.email.accounts);
 
   toIni = lib.generators.toINI {
-    mkKeyValue = key: value:
+    mkKeyValue =
+      key: value:
       let
-        value' =
-          (if lib.isBool value then lib.hm.booleans.yesNo else toString) value;
-      in "${key} = ${value'}";
+        value' = (if lib.isBool value then lib.hm.booleans.yesNo else toString) value;
+      in
+      "${key} = ${value'}";
   };
 
-  accountStr = account:
+  accountStr =
+    account:
     let
-      inherit (account) imap name passwordCommand offlineimap;
+      inherit (account)
+        imap
+        name
+        passwordCommand
+        offlineimap
+        ;
 
       postSyncHook = optionalAttrs (offlineimap.postSyncHookCommand != "") {
-        postsynchook = pkgs.writeShellScriptBin "postsynchook"
-          offlineimap.postSyncHookCommand + "/bin/postsynchook";
+        postsynchook =
+          pkgs.writeShellScriptBin "postsynchook" offlineimap.postSyncHookCommand + "/bin/postsynchook";
       };
 
-      localType =
-        if account.flavor == "gmail.com" then "GmailMaildir" else "Maildir";
+      localType = if account.flavor == "gmail.com" then "GmailMaildir" else "Maildir";
 
       remoteType = if account.flavor == "gmail.com" then "Gmail" else "IMAP";
 
-      remoteHost =
-        optionalAttrs (imap.host != null) { remotehost = imap.host; };
+      remoteHost = optionalAttrs (imap.host != null) { remotehost = imap.host; };
 
-      remotePort =
-        optionalAttrs ((imap.port or null) != null) { remoteport = imap.port; };
+      remotePort = optionalAttrs ((imap.port or null) != null) { remoteport = imap.port; };
 
-      ssl = if imap.tls.enable then {
-        ssl = true;
-        sslcacertfile = toString imap.tls.certificatesFile;
-        starttls = imap.tls.useStartTls;
-      } else {
-        ssl = false;
-        starttls = false;
-      };
+      ssl =
+        if imap.tls.enable then
+          {
+            ssl = true;
+            sslcacertfile = toString imap.tls.certificatesFile;
+            starttls = imap.tls.useStartTls;
+          }
+        else
+          {
+            ssl = false;
+            starttls = false;
+          };
 
       remotePassEval =
-        let arglist = lib.concatMapStringsSep "," (x: "'${x}'") passwordCommand;
-        in optionalAttrs (passwordCommand != null) {
+        let
+          arglist = lib.concatMapStringsSep "," (x: "'${x}'") passwordCommand;
+        in
+        optionalAttrs (passwordCommand != null) {
           remotepasseval = ''get_pass("${name}", [${arglist}]).strip(b"\n")'';
         };
-    in toIni {
-      "Account ${name}" = {
-        localrepository = "${name}-local";
-        remoterepository = "${name}-remote";
-      } // postSyncHook // offlineimap.extraConfig.account;
+    in
+    toIni {
+      "Account ${name}" =
+        {
+          localrepository = "${name}-local";
+          remoterepository = "${name}-remote";
+        }
+        // postSyncHook
+        // offlineimap.extraConfig.account;
 
       "Repository ${name}-local" = {
         type = localType;
         localfolders = account.maildir.absPath;
       } // offlineimap.extraConfig.local;
 
-      "Repository ${name}-remote" = {
-        type = remoteType;
-        remoteuser = account.userName;
-      } // remoteHost // remotePort // remotePassEval // ssl
+      "Repository ${name}-remote" =
+        {
+          type = remoteType;
+          remoteuser = account.userName;
+        }
+        // remoteHost
+        // remotePort
+        // remotePassEval
+        // ssl
         // offlineimap.extraConfig.remote;
     };
 
   extraConfigType = with lib.types; attrsOf (either (either str int) bool);
 
-in {
+in
+{
   options = {
     programs.offlineimap = {
       enable = lib.mkEnableOption "OfflineIMAP";
@@ -114,7 +138,9 @@ in {
       extraConfig.default = mkOption {
         type = extraConfigType;
         default = { };
-        example = { gmailtrashfolder = "[Gmail]/Papierkorb"; };
+        example = {
+          gmailtrashfolder = "[Gmail]/Papierkorb";
+        };
         description = ''
           Extra configuration options added to the
           {option}`DEFAULT` section.
@@ -141,8 +167,7 @@ in {
     };
 
     accounts.email.accounts = mkOption {
-      type = with lib.types;
-        attrsOf (submodule (import ./offlineimap-accounts.nix));
+      type = with lib.types; attrsOf (submodule (import ./offlineimap-accounts.nix));
     };
   };
 
@@ -151,31 +176,43 @@ in {
 
     xdg.configFile."offlineimap/get_settings.py".text = cfg.pythonFile;
     xdg.configFile."offlineimap/get_settings.pyc".source = "${
-        pkgs.runCommandLocal "get_settings-compile" {
+      pkgs.runCommandLocal "get_settings-compile"
+        {
           nativeBuildInputs = [ cfg.package ];
           pythonFile = cfg.pythonFile;
           passAsFile = [ "pythonFile" ];
-        } ''
+        }
+        ''
           mkdir -p $out/bin
           cp $pythonFilePath $out/bin/get_settings.py
           python -m py_compile $out/bin/get_settings.py
         ''
-      }/bin/get_settings.pyc";
+    }/bin/get_settings.pyc";
 
-    xdg.configFile."offlineimap/config".text = ''
-      # Generated by Home Manager.
-      # See https://github.com/OfflineIMAP/offlineimap/blob/master/offlineimap.conf
-      # for an exhaustive list of options.
-    '' + toIni ({
-      general = {
-        accounts = lib.concatMapStringsSep "," (a: a.name) accounts;
-        pythonfile = "${config.xdg.configHome}/offlineimap/get_settings.py";
-        metadata = "${config.xdg.dataHome}/offlineimap";
-      } // cfg.extraConfig.general;
-    } // lib.optionalAttrs (cfg.extraConfig.mbnames != { }) {
-      mbnames = { enabled = true; } // cfg.extraConfig.mbnames;
-    } // lib.optionalAttrs (cfg.extraConfig.default != { }) {
-      DEFAULT = cfg.extraConfig.default;
-    }) + "\n" + lib.concatStringsSep "\n" (map accountStr accounts);
+    xdg.configFile."offlineimap/config".text =
+      ''
+        # Generated by Home Manager.
+        # See https://github.com/OfflineIMAP/offlineimap/blob/master/offlineimap.conf
+        # for an exhaustive list of options.
+      ''
+      + toIni (
+        {
+          general = {
+            accounts = lib.concatMapStringsSep "," (a: a.name) accounts;
+            pythonfile = "${config.xdg.configHome}/offlineimap/get_settings.py";
+            metadata = "${config.xdg.dataHome}/offlineimap";
+          } // cfg.extraConfig.general;
+        }
+        // lib.optionalAttrs (cfg.extraConfig.mbnames != { }) {
+          mbnames = {
+            enabled = true;
+          } // cfg.extraConfig.mbnames;
+        }
+        // lib.optionalAttrs (cfg.extraConfig.default != { }) {
+          DEFAULT = cfg.extraConfig.default;
+        }
+      )
+      + "\n"
+      + lib.concatStringsSep "\n" (map accountStr accounts);
   };
 }

@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.micro;
 
   jsonFormat = pkgs.formats.json { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.mforster ];
 
   options = {
@@ -34,7 +40,6 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."micro/settings.json".source =
-      jsonFormat.generate "micro-settings" cfg.settings;
+    xdg.configFile."micro/settings.json".source = jsonFormat.generate "micro-settings" cfg.settings;
   };
 }

@@ -1,17 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.mr;
 
-  listToValue =
-    lib.concatMapStringsSep ", " (lib.generators.mkValueStringDefault { });
+  listToValue = lib.concatMapStringsSep ", " (lib.generators.mkValueStringDefault { });
 
   iniFormat = pkgs.formats.ini { inherit listToValue; };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.nilp0inter ];
 
   options.programs.mr = {
-    enable = lib.mkEnableOption
-      "mr, a tool to manage all your version control repositories";
+    enable = lib.mkEnableOption "mr, a tool to manage all your version control repositories";
 
     package = lib.mkPackageOption pkgs "mr" { nullable = true; };
 
@@ -42,4 +46,3 @@ in {
     home.file.".mrconfig".source = iniFormat.generate ".mrconfig" cfg.settings;
   };
 }
-

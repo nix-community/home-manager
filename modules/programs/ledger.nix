@@ -1,19 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.ledger;
 
   cfgText = lib.generators.toKeyValue {
-    mkKeyValue = key: value:
-      if lib.isBool value then
-        lib.optionalString value "--${key}"
-      else
-        "--${key} ${toString value}";
+    mkKeyValue =
+      key: value:
+      if lib.isBool value then lib.optionalString value "--${key}" else "--${key} ${toString value}";
     listsAsDuplicateKeys = true;
   } cfg.settings;
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.ledger = {
@@ -22,7 +26,14 @@ in {
     package = lib.mkPackageOption pkgs "ledger" { nullable = true; };
 
     settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool int str (listOf str) ]);
+      type =
+        with types;
+        attrsOf (oneOf [
+          bool
+          int
+          str
+          (listOf str)
+        ]);
       default = { };
       example = {
         sort = "date";
@@ -59,9 +70,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."ledger/ledgerrc" =
-      mkIf (cfg.settings != { } || cfg.extraConfig != "") {
-        text = cfgText + cfg.extraConfig;
-      };
+    xdg.configFile."ledger/ledgerrc" = mkIf (cfg.settings != { } || cfg.extraConfig != "") {
+      text = cfgText + cfg.extraConfig;
+    };
   };
 }

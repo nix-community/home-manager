@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,11 +11,17 @@ let
 
   cfg = config.services.random-background;
 
-  flags = lib.concatStringsSep " "
-    ([ "--bg-${cfg.display}" "--no-fehbg" "--randomize" ]
-      ++ lib.optional (!cfg.enableXinerama) "--no-xinerama");
+  flags = lib.concatStringsSep " " (
+    [
+      "--bg-${cfg.display}"
+      "--no-fehbg"
+      "--randomize"
+    ]
+    ++ lib.optional (!cfg.enableXinerama) "--no-xinerama"
+  );
 
-in {
+in
+{
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -38,7 +49,13 @@ in {
       };
 
       display = mkOption {
-        type = types.enum [ "center" "fill" "max" "scale" "tile" ];
+        type = types.enum [
+          "center"
+          "fill"
+          "max"
+          "scale"
+          "tile"
+        ];
         default = "fill";
         description = "Display background images according to this option.";
       };
@@ -69,8 +86,7 @@ in {
   config = mkIf cfg.enable (mkMerge ([
     {
       assertions = [
-        (hm.assertions.assertPlatform "services.random-background" pkgs
-          platforms.linux)
+        (hm.assertions.assertPlatform "services.random-background" pkgs platforms.linux)
       ];
 
       systemd.user.services.random-background = {
@@ -86,16 +102,24 @@ in {
           IOSchedulingClass = "idle";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
       };
     }
     (mkIf (cfg.interval != null) {
       systemd.user.timers.random-background = {
-        Unit = { Description = "Set random desktop background using feh"; };
+        Unit = {
+          Description = "Set random desktop background using feh";
+        };
 
-        Timer = { OnUnitActiveSec = cfg.interval; };
+        Timer = {
+          OnUnitActiveSec = cfg.interval;
+        };
 
-        Install = { WantedBy = [ "timers.target" ]; };
+        Install = {
+          WantedBy = [ "timers.target" ];
+        };
       };
     })
   ]));

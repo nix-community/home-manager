@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.opam;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.opam;
+in
+{
   meta.maintainers = [ ];
 
   options.programs.opam = {
@@ -8,14 +15,11 @@ in {
 
     package = lib.mkPackageOption pkgs "opam" { };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {

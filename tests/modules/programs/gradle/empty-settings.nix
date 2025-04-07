@@ -3,8 +3,7 @@
 {
   programs.gradle.enable = true;
 
-  programs.java.package =
-    pkgs.runCommandLocal "java" { home = ""; } "mkdir $out";
+  programs.java.package = pkgs.runCommandLocal "java" { home = ""; } "mkdir $out";
 
   nmt.script = ''
     assertPathNotExists home-files/.gradle

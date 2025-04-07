@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -10,7 +15,8 @@ let
 
   cfg = config.services.udiskie;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.rycee ];
 
   imports = [
@@ -70,7 +76,11 @@ in {
       };
 
       tray = mkOption {
-        type = types.enum [ "always" "auto" "never" ];
+        type = types.enum [
+          "always"
+          "auto"
+          "never"
+        ];
         default = "auto";
         description = ''
           Whether to display tray icon.
@@ -95,34 +105,35 @@ in {
       (hm.assertions.assertPlatform "services.udiskie" pkgs platforms.linux)
     ];
 
-    xdg.configFile."udiskie/config.yml".source =
-      yaml.generate "udiskie-config.yml" (mergeSets [
-        {
-          program_options = {
-            automount = cfg.automount;
-            tray = if cfg.tray == "always" then
+    xdg.configFile."udiskie/config.yml".source = yaml.generate "udiskie-config.yml" (mergeSets [
+      {
+        program_options = {
+          automount = cfg.automount;
+          tray =
+            if cfg.tray == "always" then
               true
             else if cfg.tray == "never" then
               false
             else
               "auto";
-            notify = cfg.notify;
-          };
-        }
-        cfg.settings
-      ]);
+          notify = cfg.notify;
+        };
+      }
+      cfg.settings
+    ]);
 
     systemd.user.services.udiskie = {
       Unit = {
         Description = "udiskie mount daemon";
         Requires = lib.optional (cfg.tray != "never") "tray.target";
-        After = [ "graphical-session.target" ]
-          ++ lib.optional (cfg.tray != "never") "tray.target";
+        After = [ "graphical-session.target" ] ++ lib.optional (cfg.tray != "never") "tray.target";
         PartOf = [ "graphical-session.target" ];
       };
 
-      Service.ExecStart = toString ([ "${pkgs.udiskie}/bin/udiskie" ]
-        ++ optional config.xsession.preferStatusNotifierItems "--appindicator");
+      Service.ExecStart = toString (
+        [ "${pkgs.udiskie}/bin/udiskie" ]
+        ++ optional config.xsession.preferStatusNotifierItems "--appindicator"
+      );
 
       Install.WantedBy = [ "graphical-session.target" ];
     };

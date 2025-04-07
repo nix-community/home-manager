@@ -1,12 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.services.trayscale;
-in {
+let
+  cfg = config.services.trayscale;
+in
+{
   meta.maintainers = [ lib.hm.maintainers.callumio ];
 
   options.services.trayscale = {
-    enable = lib.mkEnableOption
-      "An unofficial GUI wrapper around the Tailscale CLI client.";
+    enable = lib.mkEnableOption "An unofficial GUI wrapper around the Tailscale CLI client.";
 
     package = lib.mkPackageOption pkgs "trayscale" { };
 
@@ -19,21 +25,25 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.trayscale" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.trayscale" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.trayscale = {
       Unit = {
-        Description =
-          "An unofficial GUI wrapper around the Tailscale CLI client";
+        Description = "An unofficial GUI wrapper around the Tailscale CLI client";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session.target" "tray.target" ];
+        After = [
+          "graphical-session.target"
+          "tray.target"
+        ];
         PartOf = [ "graphical-session.target" ];
       };
-      Install = { WantedBy = [ "graphical-session.target" ]; };
-      Service.ExecStart = toString ([ "${cfg.package}/bin/trayscale" ]
-        ++ lib.optional cfg.hideWindow "--hide-window");
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+      Service.ExecStart = toString (
+        [ "${cfg.package}/bin/trayscale" ] ++ lib.optional cfg.hideWindow "--hide-window"
+      );
     };
   };
 }

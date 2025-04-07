@@ -1,18 +1,25 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
   cfg = config.programs.zathura;
 
-  formatLine = n: v:
+  formatLine =
+    n: v:
     let
-      formatValue = v:
-        if lib.isBool v then (if v then "true" else "false") else toString v;
-    in ''set ${n}	"${formatValue v}"'';
+      formatValue = v: if lib.isBool v then (if v then "true" else "false") else toString v;
+    in
+    ''set ${n}	"${formatValue v}"'';
 
   formatMapLine = n: v: "map ${n}   ${toString v}";
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.rprospero ];
 
   options.programs.zathura = {
@@ -24,7 +31,14 @@ in {
 
     options = mkOption {
       default = { };
-      type = with types; attrsOf (oneOf [ str bool int float ]);
+      type =
+        with types;
+        attrsOf (oneOf [
+          str
+          bool
+          int
+          float
+        ]);
       description = ''
         Add {option}`:set` command options to zathura and make
         them permanent. See
@@ -69,9 +83,13 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."zathura/zathurarc".text = lib.concatStringsSep "\n" ([ ]
-      ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
-      ++ lib.mapAttrsToList formatLine cfg.options
-      ++ lib.mapAttrsToList formatMapLine cfg.mappings) + "\n";
+    xdg.configFile."zathura/zathurarc".text =
+      lib.concatStringsSep "\n" (
+        [ ]
+        ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
+        ++ lib.mapAttrsToList formatLine cfg.options
+        ++ lib.mapAttrsToList formatMapLine cfg.mappings
+      )
+      + "\n";
   };
 }

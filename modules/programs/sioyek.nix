@@ -1,6 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.sioyek;
 
@@ -9,11 +19,11 @@ let
     listsAsDuplicateKeys = true;
   };
 
-in {
+in
+{
   options = {
     programs.sioyek = {
-      enable = lib.mkEnableOption
-        "Sioyek, a PDF viewer designed for reading research papers and technical books";
+      enable = lib.mkEnableOption "Sioyek, a PDF viewer designed for reading research papers and technical books";
 
       package = lib.mkPackageOption pkgs "sioyek" { };
 
@@ -59,15 +69,17 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (lib.mkMerge [
-    { home.packages = [ cfg.package ]; }
-    (mkIf (cfg.config != { }) {
-      xdg.configFile."sioyek/prefs_user.config".text = renderConfig cfg.config;
-    })
-    (mkIf (cfg.bindings != { }) {
-      xdg.configFile."sioyek/keys_user.config".text = renderConfig cfg.bindings;
-    })
-  ]);
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      { home.packages = [ cfg.package ]; }
+      (mkIf (cfg.config != { }) {
+        xdg.configFile."sioyek/prefs_user.config".text = renderConfig cfg.config;
+      })
+      (mkIf (cfg.bindings != { }) {
+        xdg.configFile."sioyek/keys_user.config".text = renderConfig cfg.bindings;
+      })
+    ]
+  );
 
   meta.maintainers = [ lib.hm.maintainers.podocarp ];
 }

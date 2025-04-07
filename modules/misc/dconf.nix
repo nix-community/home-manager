@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) types;
@@ -7,18 +12,23 @@ let
 
   toDconfIni = lib.generators.toINI { mkKeyValue = mkIniKeyValue; };
 
-  mkIniKeyValue = key: value:
-    "${key}=${toString (lib.hm.gvariant.mkValue value)}";
+  mkIniKeyValue = key: value: "${key}=${toString (lib.hm.gvariant.mkValue value)}";
 
   # The dconf keys managed by this configuration. We store this as part of the
   # generation state to be able to reset keys that become unmanaged during
   # switch.
-  stateDconfKeys = pkgs.writeText "dconf-keys.json" (builtins.toJSON
-    (lib.concatLists (lib.mapAttrsToList
-      (dir: entries: lib.mapAttrsToList (key: _: "/${dir}/${key}") entries)
-      cfg.settings)));
+  stateDconfKeys = pkgs.writeText "dconf-keys.json" (
+    builtins.toJSON (
+      lib.concatLists (
+        lib.mapAttrsToList (
+          dir: entries: lib.mapAttrsToList (key: _: "/${dir}/${key}") entries
+        ) cfg.settings
+      )
+    )
+  );
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
@@ -84,8 +94,8 @@ in {
       ln -s ${stateDconfKeys} $out/state/${stateDconfKeys.name}
     '';
 
-    home.activation.dconfSettings = lib.hm.dag.entryAfter [ "installPackages" ]
-      (let
+    home.activation.dconfSettings = lib.hm.dag.entryAfter [ "installPackages" ] (
+      let
         iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
 
         statePath = "state/${stateDconfKeys.name}";
@@ -95,7 +105,12 @@ in {
 
           ${config.lib.bash.initHomeManagerLib}
 
-          PATH=${lib.makeBinPath [ pkgs.dconf pkgs.jq ]}''${PATH:+:}$PATH
+          PATH=${
+            lib.makeBinPath [
+              pkgs.dconf
+              pkgs.jq
+            ]
+          }''${PATH:+:}$PATH
 
           oldState="$1"
           newState="$2"
@@ -116,7 +131,8 @@ in {
                 run $DCONF_DBUS_RUN_SESSION dconf reset "$key"
               done
         '';
-      in ''
+      in
+      ''
         if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
           export DCONF_DBUS_RUN_SESSION=""
         else
@@ -132,6 +148,7 @@ in {
         run $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
 
         unset DCONF_DBUS_RUN_SESSION
-      '');
+      ''
+    );
   };
 }

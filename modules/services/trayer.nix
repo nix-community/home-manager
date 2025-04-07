@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -16,18 +21,32 @@ let
 
   knownSettings = {
     edge = {
-      type = types.enum [ "left" "right" "top" "bottom" "none" ];
+      type = types.enum [
+        "left"
+        "right"
+        "top"
+        "bottom"
+        "none"
+      ];
       default = "bottom";
     };
 
     align = {
-      type = types.enum [ "left" "right" "center" ];
+      type = types.enum [
+        "left"
+        "right"
+        "center"
+      ];
       default = "center";
     };
 
     margin = number0;
     widthtype = {
-      type = types.enum [ "request" "pixel" "percent" ];
+      type = types.enum [
+        "request"
+        "pixel"
+        "percent"
+      ];
       default = "percent";
     };
 
@@ -37,7 +56,10 @@ let
     };
 
     heighttype = {
-      type = types.enum [ "request" "pixel" ];
+      type = types.enum [
+        "request"
+        "pixel"
+      ];
       default = "pixel";
     };
 
@@ -68,7 +90,12 @@ let
     distance = number0;
 
     distancefrom = {
-      type = types.enum [ "left" "right" "top" "bottom" ];
+      type = types.enum [
+        "left"
+        "right"
+        "top"
+        "bottom"
+      ];
       default = "top";
     };
 
@@ -86,13 +113,13 @@ let
 
   cfg = config.services.trayer;
 
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.mager ];
 
   options = {
     services.trayer = {
-      enable = mkEnableOption
-        "trayer, the lightweight GTK2+ systray for UNIX desktops";
+      enable = mkEnableOption "trayer, the lightweight GTK2+ systray for UNIX desktops";
 
       package = mkOption {
         default = pkgs.trayer;
@@ -108,10 +135,12 @@ in {
           Trayer configuration as a set of attributes. Further details can be
           found in [trayer's README](https://github.com/sargon/trayer-srg/blob/master/README).
 
-          ${concatStringsSep "\n" (mapAttrsToList (n: v: ''
-            {var}`${n}`
-            : ${v.type.description} (default: `${builtins.toJSON v.default}`)
-          '') knownSettings)}
+          ${concatStringsSep "\n" (
+            mapAttrsToList (n: v: ''
+              {var}`${n}`
+              : ${v.type.description} (default: `${builtins.toJSON v.default}`)
+            '') knownSettings
+          )}
         '';
         default = { };
         example = literalExpression ''
@@ -128,29 +157,29 @@ in {
 
   config = mkIf cfg.enable ({
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.trayer" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.trayer" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    systemd.user.services.trayer = let
-      valueToString = v:
-        if isBool v then (if v then "true" else "false") else "${toString v}";
-      parameter = k: v: "--${k} ${valueToString v}";
-      parameters = concatStringsSep " " (mapAttrsToList parameter cfg.settings);
-    in {
-      Unit = {
-        Description = "trayer -- lightweight GTK2+ systray for UNIX desktops";
-        PartOf = [ "tray.target" ];
-      };
+    systemd.user.services.trayer =
+      let
+        valueToString = v: if isBool v then (if v then "true" else "false") else "${toString v}";
+        parameter = k: v: "--${k} ${valueToString v}";
+        parameters = concatStringsSep " " (mapAttrsToList parameter cfg.settings);
+      in
+      {
+        Unit = {
+          Description = "trayer -- lightweight GTK2+ systray for UNIX desktops";
+          PartOf = [ "tray.target" ];
+        };
 
-      Install.WantedBy = [ "tray.target" ];
+        Install.WantedBy = [ "tray.target" ];
 
-      Service = {
-        ExecStart = "${cfg.package}/bin/trayer ${parameters}";
-        Restart = "on-failure";
+        Service = {
+          ExecStart = "${cfg.package}/bin/trayer ${parameters}";
+          Restart = "on-failure";
+        };
       };
-    };
   });
 }

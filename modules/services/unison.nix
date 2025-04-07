@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,9 +11,12 @@ let
 
   cfg = config.services.unison;
 
-  pairOf = t:
-    let list = types.addCheck (types.listOf t) (l: length l == 2);
-    in list // { description = list.description + " of length 2"; };
+  pairOf =
+    t:
+    let
+      list = types.addCheck (types.listOf t) (l: length l == 2);
+    in
+    list // { description = list.description + " of length 2"; };
 
   pairOptions = {
     options = {
@@ -59,19 +67,19 @@ let
     };
   };
 
-  serialiseArg = key: val:
-    concatStringsSep " "
-    (forEach (toList val) (x: escapeShellArg "-${key}=${escape [ "=" ] x}"));
+  serialiseArg =
+    key: val:
+    concatStringsSep " " (forEach (toList val) (x: escapeShellArg "-${key}=${escape [ "=" ] x}"));
 
   serialiseArgs = args: concatStringsSep " " (mapAttrsToList serialiseArg args);
 
   unitName = name: "unison-pair-${name}";
 
-  makeDefs = gen:
-    mapAttrs' (name: pairCfg: nameValuePair (unitName name) (gen name pairCfg))
-    cfg.pairs;
+  makeDefs =
+    gen: mapAttrs' (name: pairCfg: nameValuePair (unitName name) (gen name pairCfg)) cfg.pairs;
 
-in {
+in
+{
   meta.maintainers = with maintainers; [ euxane ];
 
   options.services.unison = {
@@ -102,32 +110,35 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.unison" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.unison" pkgs lib.platforms.linux)
     ];
 
-    systemd.user.services = makeDefs (name: pairCfg: {
-      Unit.Description = "Unison pair sync (${name})";
-      Service = {
-        CPUSchedulingPolicy = "idle";
-        IOSchedulingClass = "idle";
-        Environment = [ "UNISON='${toString pairCfg.stateDirectory}'" ];
-        ExecStart = ''
-          ${cfg.package}/bin/unison \
-            ${serialiseArgs pairCfg.commandOptions} \
-            ${strings.concatMapStringsSep " " escapeShellArg pairCfg.roots}
-        '';
-      };
-    });
+    systemd.user.services = makeDefs (
+      name: pairCfg: {
+        Unit.Description = "Unison pair sync (${name})";
+        Service = {
+          CPUSchedulingPolicy = "idle";
+          IOSchedulingClass = "idle";
+          Environment = [ "UNISON='${toString pairCfg.stateDirectory}'" ];
+          ExecStart = ''
+            ${cfg.package}/bin/unison \
+              ${serialiseArgs pairCfg.commandOptions} \
+              ${strings.concatMapStringsSep " " escapeShellArg pairCfg.roots}
+          '';
+        };
+      }
+    );
 
-    systemd.user.timers = makeDefs (name: pairCfg: {
-      Unit.Description = "Unison pair sync auto-restart (${name})";
-      Install.WantedBy = [ "timers.target" ];
-      Timer = {
-        Unit = "${unitName name}.service";
-        OnActiveSec = 1;
-        OnUnitInactiveSec = 60;
-      };
-    });
+    systemd.user.timers = makeDefs (
+      name: pairCfg: {
+        Unit.Description = "Unison pair sync auto-restart (${name})";
+        Install.WantedBy = [ "timers.target" ];
+        Timer = {
+          Unit = "${unitName name}.service";
+          OnActiveSec = 1;
+          OnUnitInactiveSec = 60;
+        };
+      }
+    );
   };
 }

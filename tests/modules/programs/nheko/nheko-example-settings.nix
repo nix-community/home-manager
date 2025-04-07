@@ -1,16 +1,17 @@
 { pkgs, ... }:
 
 let
-  configDir = if pkgs.stdenv.isDarwin then
-    "home-files/Library/Application Support"
-  else
-    "home-files/.config";
-in {
+  configDir =
+    if pkgs.stdenv.isDarwin then "home-files/Library/Application Support" else "home-files/.config";
+in
+{
   programs.nheko = {
     enable = true;
 
     settings = {
-      general = { disableCertificateValidation = false; };
+      general = {
+        disableCertificateValidation = false;
+      };
 
       auth = {
         accessToken = "MY_ACCESS_TOKEN";
@@ -19,9 +20,13 @@ in {
         userId = "@@user:matrix.org";
       };
 
-      sidebar = { width = 416; };
+      sidebar = {
+        width = 416;
+      };
 
-      settings = { scaleFactor = 0.7; };
+      settings = {
+        scaleFactor = 0.7;
+      };
 
       user = {
         alertOnNotification = true;

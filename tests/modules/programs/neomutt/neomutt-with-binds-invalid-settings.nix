@@ -2,17 +2,21 @@
   programs.neomutt = {
     enable = true;
 
-    binds = [{
-      action = "complete-query";
-      key = "<Tab>";
-      map = [ ];
-    }];
+    binds = [
+      {
+        action = "complete-query";
+        key = "<Tab>";
+        map = [ ];
+      }
+    ];
 
-    macros = [{
-      action = "<change-folder>?<change-dir><home>^K=<enter><tab>";
-      key = "c";
-      map = [ ];
-    }];
+    macros = [
+      {
+        action = "<change-folder>?<change-dir><home>^K=<enter><tab>";
+        key = "c";
+        map = [ ];
+      }
+    ];
   };
 
   test.asserts.assertions.expected = [

@@ -1,12 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   cfg = config.programs.htop;
 
-  formatOption = n: v:
-    let v' = if lib.isBool v then (if v then "1" else "0") else toString v;
-    in "${n}=${v'}";
+  formatOption =
+    n: v:
+    let
+      v' = if lib.isBool v then (if v then "1" else "0") else toString v;
+    in
+    "${n}=${v'}";
 
   formatMeters = side: meters: {
     "${side}_meters" = lib.concatMap (lib.mapAttrsToList (x: _: x)) meters;
@@ -103,15 +111,25 @@ let
   led = meter modes.LED;
   blank = text "Blank";
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.bjpbakker ];
 
   options.programs.htop = {
     enable = lib.mkEnableOption "htop";
 
     settings = lib.mkOption {
-      type = with lib.types;
-        attrsOf (oneOf [ bool int str (listOf (oneOf [ int str ])) ]);
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          int
+          str
+          (listOf (oneOf [
+            int
+            str
+          ]))
+        ]);
       default = { };
       example = lib.literalExpression ''
         {
@@ -158,31 +176,41 @@ in {
 
   config = lib.mkIf cfg.enable {
     lib.htop = {
-      inherit fields defaultFields modes leftMeters rightMeters bar text graph
-        led blank;
+      inherit
+        fields
+        defaultFields
+        modes
+        leftMeters
+        rightMeters
+        bar
+        text
+        graph
+        led
+        blank
+        ;
     };
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."htop" = let
-      defaults = {
-        fields = if isDarwin then
-          lib.remove fields.M_SHARE defaultFields
-        else
-          defaultFields;
+    xdg.configFile."htop" =
+      let
+        defaults = {
+          fields = if isDarwin then lib.remove fields.M_SHARE defaultFields else defaultFields;
+        };
+
+        before = lib.optionalAttrs (cfg.settings ? header_layout) {
+          inherit (cfg.settings) header_layout;
+        };
+
+        settings = defaults // (removeAttrs cfg.settings (lib.attrNames before));
+
+        formatOptions = lib.mapAttrsToList formatOption;
+
+      in
+      lib.mkIf (cfg.settings != { }) {
+        source = pkgs.writeTextDir "htoprc" (
+          lib.concatStringsSep "\n" (formatOptions before ++ formatOptions settings) + "\n"
+        );
       };
-
-      before = lib.optionalAttrs (cfg.settings ? header_layout) {
-        inherit (cfg.settings) header_layout;
-      };
-
-      settings = defaults // (removeAttrs cfg.settings (lib.attrNames before));
-
-      formatOptions = lib.mapAttrsToList formatOption;
-
-    in lib.mkIf (cfg.settings != { }) {
-      source = pkgs.writeTextDir "htoprc" (lib.concatStringsSep "\n"
-        (formatOptions before ++ formatOptions settings) + "\n");
-    };
   };
 }

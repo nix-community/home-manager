@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
   cfg = config.programs.senpai;
-in {
+in
+{
   options.programs.senpai = {
     enable = lib.mkEnableOption "senpai";
     package = lib.mkPackageOption pkgs "senpai" { };
@@ -45,7 +51,11 @@ in {
           password-cmd = mkOption {
             type = types.nullOr (types.listOf types.str);
             default = null;
-            example = [ "gopass" "show" "irc/guest" ];
+            example = [
+              "gopass"
+              "show"
+              "irc/guest"
+            ];
             description = ''
               Alternatively to providing your SASL authentication password
               directly in plaintext, you can specify a command to be run to
@@ -93,8 +103,7 @@ in {
       }
     ];
     home.packages = [ cfg.package ];
-    xdg.configFile."senpai/senpai.scfg".text =
-      lib.hm.generators.toSCFG { } cfg.config;
+    xdg.configFile."senpai/senpai.scfg".text = lib.hm.generators.toSCFG { } cfg.config;
   };
 
   meta.maintainers = [ lib.hm.maintainers.malvo ];

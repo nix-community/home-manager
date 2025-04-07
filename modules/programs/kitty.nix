@@ -1,21 +1,39 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    literalExpression mkEnableOption mkIf mkOption optionalString types;
+    literalExpression
+    mkEnableOption
+    mkIf
+    mkOption
+    optionalString
+    types
+    ;
 
   cfg = config.programs.kitty;
 
-  settingsValueType = with types; oneOf [ str bool int float ];
+  settingsValueType =
+    with types;
+    oneOf [
+      str
+      bool
+      int
+      float
+    ];
 
-  optionalPackage = opt:
-    lib.optional (opt != null && opt.package != null) opt.package;
+  optionalPackage = opt: lib.optional (opt != null && opt.package != null) opt.package;
 
   toKittyConfig = lib.generators.toKeyValue {
-    mkKeyValue = key: value:
+    mkKeyValue =
+      key: value:
       let
-        value' =
-          (if lib.isBool value then lib.hm.booleans.yesNo else toString) value;
-      in "${key} ${value'}";
+        value' = (if lib.isBool value then lib.hm.booleans.yesNo else toString) value;
+      in
+      "${key} ${value'}";
   };
 
   toKittyKeybindings = lib.generators.toKeyValue {
@@ -54,33 +72,49 @@ let
     '';
   };
 
-  mkShellIntegrationOption = option:
-    option // {
-      default = (cfg.shellIntegration.mode != null) && !(lib.elem "disabled"
-        (lib.splitString " " cfg.shellIntegration.mode));
+  mkShellIntegrationOption =
+    option:
+    option
+    // {
+      default =
+        (cfg.shellIntegration.mode != null)
+        && !(lib.elem "disabled" (lib.splitString " " cfg.shellIntegration.mode));
       defaultText = literalExpression ''
         (cfg.shellIntegration.mode != null)
         && !(elem "disabled" (splitString " " config.programs.kitty.shellIntegration.mode))
       '';
     };
-in {
+in
+{
   imports = [
-    (lib.mkChangedOptionModule [ "programs" "kitty" "theme" ] [
-      "programs"
-      "kitty"
-      "themeFile"
-    ] (config:
-      let value = lib.getAttrFromPath [ "programs" "kitty" "theme" ] config;
-      in if value != null then
-        (let
-          matching = lib.filter (x: x.name == value) (lib.importJSON
-            "${pkgs.kitty-themes}/share/kitty-themes/themes.json");
-        in lib.throwIf (lib.length matching == 0)
-        "kitty-themes does not contain a theme named ${value}"
-        lib.strings.removeSuffix ".conf"
-        (lib.strings.removePrefix "themes/" (lib.head matching).file))
-      else
-        null))
+    (lib.mkChangedOptionModule
+      [ "programs" "kitty" "theme" ]
+      [
+        "programs"
+        "kitty"
+        "themeFile"
+      ]
+      (
+        config:
+        let
+          value = lib.getAttrFromPath [ "programs" "kitty" "theme" ] config;
+        in
+        if value != null then
+          (
+            let
+              matching = lib.filter (x: x.name == value) (
+                lib.importJSON "${pkgs.kitty-themes}/share/kitty-themes/themes.json"
+              );
+            in
+            lib.throwIf (lib.length matching == 0) "kitty-themes does not contain a theme named ${value}"
+              lib.strings.removeSuffix
+              ".conf"
+              (lib.strings.removePrefix "themes/" (lib.head matching).file)
+          )
+        else
+          null
+      )
+    )
   ];
 
   meta.maintainers = with lib.maintainers; [ khaneliman ];
@@ -179,12 +213,19 @@ in {
         type = types.nullOr types.str;
         default = "no-rc";
         example = "no-cursor";
-        apply = lib.mapNullable (o:
+        apply = lib.mapNullable (
+          o:
           let
             modes = lib.splitString " " o;
             filtered = lib.filter (m: m != "no-rc") modes;
-          in lib.concatStringsSep " "
-          (lib.concatLists [ [ "no-rc" ] filtered ]));
+          in
+          lib.concatStringsSep " " (
+            lib.concatLists [
+              [ "no-rc" ]
+              filtered
+            ]
+          )
+        );
         description = ''
           Set the mode of the shell integration. This accepts the same options
           as the `shell_integration` option of Kitty. Note that
@@ -194,14 +235,17 @@ in {
         '';
       };
 
-      enableBashIntegration = mkShellIntegrationOption
-        (lib.hm.shell.mkBashIntegrationOption { inherit config; });
+      enableBashIntegration = mkShellIntegrationOption (
+        lib.hm.shell.mkBashIntegrationOption { inherit config; }
+      );
 
-      enableFishIntegration = mkShellIntegrationOption
-        (lib.hm.shell.mkFishIntegrationOption { inherit config; });
+      enableFishIntegration = mkShellIntegrationOption (
+        lib.hm.shell.mkFishIntegrationOption { inherit config; }
+      );
 
-      enableZshIntegration = mkShellIntegrationOption
-        (lib.hm.shell.mkZshIntegrationOption { inherit config; });
+      enableZshIntegration = mkShellIntegrationOption (
+        lib.hm.shell.mkZshIntegrationOption { inherit config; }
+      );
     };
 
     extraConfig = mkOption {
@@ -212,69 +256,78 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = !(cfg.shellIntegration.mode == null
-        && (cfg.shellIntegration.enableBashIntegration
-          || cfg.shellIntegration.enableFishIntegration
-          || cfg.shellIntegration.enableZshIntegration));
-      message =
-        "Cannot enable shell integration when `programs.kitty.shellIntegration.mode` is `null`";
-    }];
+    assertions = [
+      {
+        assertion =
+          !(
+            cfg.shellIntegration.mode == null
+            && (
+              cfg.shellIntegration.enableBashIntegration
+              || cfg.shellIntegration.enableFishIntegration
+              || cfg.shellIntegration.enableZshIntegration
+            )
+          );
+        message = "Cannot enable shell integration when `programs.kitty.shellIntegration.mode` is `null`";
+      }
+    ];
 
     home.packages = [ cfg.package ] ++ optionalPackage cfg.font;
 
-    xdg.configFile."kitty/kitty.conf" = {
-      text = ''
-        # Generated by Home Manager.
-        # See https://sw.kovidgoyal.net/kitty/conf.html
-      '' + lib.concatStringsSep "\n" [
-        (optionalString (cfg.font != null) ''
-          font_family ${cfg.font.name}
-          ${optionalString (cfg.font.size != null)
-          "font_size ${toString cfg.font.size}"}
-        '')
+    xdg.configFile."kitty/kitty.conf" =
+      {
+        text =
+          ''
+            # Generated by Home Manager.
+            # See https://sw.kovidgoyal.net/kitty/conf.html
+          ''
+          + lib.concatStringsSep "\n" [
+            (optionalString (cfg.font != null) ''
+              font_family ${cfg.font.name}
+              ${optionalString (cfg.font.size != null) "font_size ${toString cfg.font.size}"}
+            '')
 
-        (optionalString (cfg.themeFile != null) ''
-          include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.themeFile}.conf
-        '')
-        (optionalString (cfg.shellIntegration.mode != null) ''
-          # Shell integration is sourced and configured manually
-          shell_integration ${cfg.shellIntegration.mode}
-        '')
-        (toKittyConfig cfg.settings)
-        (toKittyActionAliases cfg.actionAliases)
-        (toKittyKeybindings cfg.keybindings)
-        (toKittyEnv cfg.environment)
-        cfg.extraConfig
-      ];
-    } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-      onChange = ''
-        ${pkgs.procps}/bin/pkill -USR1 -u $USER kitty || true
-      '';
-    };
-
-    home.activation.checkKittyTheme = mkIf (cfg.themeFile != null) (let
-      themePath =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.themeFile}.conf";
-    in lib.hm.dag.entryBefore [ "writeBoundary" ] ''
-      if [[ ! -f "${themePath}" ]]; then
-        errorEcho "kitty-themes does not contain the theme file ${themePath}!"
-        exit 1
-      fi
-    '');
-
-    xdg.configFile."kitty/macos-launch-services-cmdline" = mkIf
-      (cfg.darwinLaunchOptions != null && pkgs.stdenv.hostPlatform.isDarwin) {
-        text = lib.concatStringsSep " " cfg.darwinLaunchOptions;
+            (optionalString (cfg.themeFile != null) ''
+              include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.themeFile}.conf
+            '')
+            (optionalString (cfg.shellIntegration.mode != null) ''
+              # Shell integration is sourced and configured manually
+              shell_integration ${cfg.shellIntegration.mode}
+            '')
+            (toKittyConfig cfg.settings)
+            (toKittyActionAliases cfg.actionAliases)
+            (toKittyKeybindings cfg.keybindings)
+            (toKittyEnv cfg.environment)
+            cfg.extraConfig
+          ];
+      }
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+        onChange = ''
+          ${pkgs.procps}/bin/pkill -USR1 -u $USER kitty || true
+        '';
       };
 
-    programs.bash.initExtra =
-      mkIf cfg.shellIntegration.enableBashIntegration shellIntegrationInit.bash;
+    home.activation.checkKittyTheme = mkIf (cfg.themeFile != null) (
+      let
+        themePath = "${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.themeFile}.conf";
+      in
+      lib.hm.dag.entryBefore [ "writeBoundary" ] ''
+        if [[ ! -f "${themePath}" ]]; then
+          errorEcho "kitty-themes does not contain the theme file ${themePath}!"
+          exit 1
+        fi
+      ''
+    );
 
-    programs.fish.interactiveShellInit =
-      mkIf cfg.shellIntegration.enableFishIntegration shellIntegrationInit.fish;
+    xdg.configFile."kitty/macos-launch-services-cmdline" =
+      mkIf (cfg.darwinLaunchOptions != null && pkgs.stdenv.hostPlatform.isDarwin)
+        {
+          text = lib.concatStringsSep " " cfg.darwinLaunchOptions;
+        };
 
-    programs.zsh.initContent =
-      mkIf cfg.shellIntegration.enableZshIntegration shellIntegrationInit.zsh;
+    programs.bash.initExtra = mkIf cfg.shellIntegration.enableBashIntegration shellIntegrationInit.bash;
+
+    programs.fish.interactiveShellInit = mkIf cfg.shellIntegration.enableFishIntegration shellIntegrationInit.fish;
+
+    programs.zsh.initContent = mkIf cfg.shellIntegration.enableZshIntegration shellIntegrationInit.zsh;
   };
 }

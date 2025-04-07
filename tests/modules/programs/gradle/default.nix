@@ -4,4 +4,3 @@
   gradle-init-scripts-settings = ./init-scripts-settings.nix;
   gradle-alternate-home-settings = ./alternate-home-settings.nix;
 }
-

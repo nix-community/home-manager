@@ -1,14 +1,16 @@
 { pkgs, ... }:
 let
 
-  substituteExpected = path:
+  substituteExpected =
+    path:
     pkgs.substituteAll {
       src = path;
 
       sensible_rtp = pkgs.tmuxPlugins.sensible.rtp;
     };
 
-in {
+in
+{
   config = {
     programs.tmux = {
       enable = true;

@@ -19,7 +19,9 @@
         autojoin = [ "#home-manager" ];
       };
       efnet = {
-        options = { forceSSL = true; };
+        options = {
+          forceSSL = true;
+        };
         servers = [
           "irc.choopa.net"
           "irc.colosolutions.net"

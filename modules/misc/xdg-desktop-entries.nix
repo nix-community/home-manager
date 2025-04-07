@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) literalExpression mkOption types;
@@ -6,9 +11,9 @@ let
   desktopEntry = {
     imports = [
       (lib.mkRemovedOptionModule [ "extraConfig" ]
-        "The `extraConfig` option of `xdg.desktopEntries` has been removed following a change in Nixpkgs.")
-      (lib.mkRemovedOptionModule [ "fileValidation" ]
-        "Validation of the desktop file is always enabled.")
+        "The `extraConfig` option of `xdg.desktopEntries` has been removed following a change in Nixpkgs."
+      )
+      (lib.mkRemovedOptionModule [ "fileValidation" ] "Validation of the desktop file is always enabled.")
     ];
     options = {
       # Since this module uses the nixpkgs/pkgs/build-support/make-desktopitem function,
@@ -28,7 +33,11 @@ let
       type = mkOption {
         description = "The type of the desktop entry.";
         default = "Application";
-        type = types.enum [ "Application" "Link" "Directory" ];
+        type = types.enum [
+          "Application"
+          "Link"
+          "Directory"
+        ];
       };
 
       exec = mkOption {
@@ -73,8 +82,7 @@ let
       };
 
       categories = mkOption {
-        description =
-          "Categories in which the entry should be shown in a menu.";
+        description = "Categories in which the entry should be shown in a menu.";
         type = types.nullOr (types.listOf types.str);
         default = null;
       };
@@ -122,24 +130,29 @@ let
       };
 
       actions = mkOption {
-        type = types.attrsOf (types.submodule ({ name, ... }: {
-          options.name = mkOption {
-            type = types.str;
-            default = name;
-            defaultText = literalExpression "<name>";
-            description = "Name of the action.";
-          };
-          options.exec = mkOption {
-            type = types.nullOr types.str;
-            description = "Program to execute, possibly with arguments.";
-            default = null;
-          };
-          options.icon = mkOption {
-            type = with types; nullOr (either str path);
-            default = null;
-            description = "Icon to display in file manager, menus, etc.";
-          };
-        }));
+        type = types.attrsOf (
+          types.submodule (
+            { name, ... }:
+            {
+              options.name = mkOption {
+                type = types.str;
+                default = name;
+                defaultText = literalExpression "<name>";
+                description = "Name of the action.";
+              };
+              options.exec = mkOption {
+                type = types.nullOr types.str;
+                description = "Program to execute, possibly with arguments.";
+                default = null;
+              };
+              options.icon = mkOption {
+                type = with types; nullOr (either str path);
+                default = null;
+                description = "Icon to display in file manager, menus, etc.";
+              };
+            }
+          )
+        );
         default = { };
         defaultText = literalExpression "{ }";
         example = literalExpression ''
@@ -149,8 +162,7 @@ let
             };
           }
         '';
-        description =
-          "The set of actions made available to application launchers.";
+        description = "The set of actions made available to application launchers.";
       };
 
       # Required for the assertions
@@ -165,18 +177,29 @@ let
   };
 
   #passes config options to makeDesktopItem in expected format
-  makeFile = name: config:
+  makeFile =
+    name: config:
     pkgs.makeDesktopItem {
       inherit name;
       inherit (config)
-        type exec icon comment terminal genericName startupNotify noDisplay
-        prefersNonDefaultGPU actions;
+        type
+        exec
+        icon
+        comment
+        terminal
+        genericName
+        startupNotify
+        noDisplay
+        prefersNonDefaultGPU
+        actions
+        ;
       desktopName = config.name;
       mimeTypes = lib.optionals (config.mimeType != null) config.mimeType;
       categories = lib.optionals (config.categories != null) config.categories;
       extraConfig = config.settings;
     };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.cwyc ];
 
   options.xdg.desktopEntries = mkOption {
@@ -205,14 +228,13 @@ in {
 
   config = lib.mkIf (config.xdg.desktopEntries != { }) {
     assertions = [
-      (lib.hm.assertions.assertPlatform "xdg.desktopEntries" pkgs
-        lib.platforms.linux)
-    ] ++ lib.flatten
-      (lib.catAttrs "assertions" (lib.attrValues config.xdg.desktopEntries));
+      (lib.hm.assertions.assertPlatform "xdg.desktopEntries" pkgs lib.platforms.linux)
+    ] ++ lib.flatten (lib.catAttrs "assertions" (lib.attrValues config.xdg.desktopEntries));
 
-    home.packages =
-      (map lib.hiPrio # we need hiPrio to override existing entries
-        (lib.attrsets.mapAttrsToList makeFile config.xdg.desktopEntries));
+    home.packages = (
+      map lib.hiPrio # we need hiPrio to override existing entries
+        (lib.attrsets.mapAttrsToList makeFile config.xdg.desktopEntries)
+    );
   };
 
 }

@@ -1,22 +1,32 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.ne;
 
-  autoPrefFiles = let
-    autoprefs = cfg.automaticPreferences
-      // lib.optionalAttrs (cfg.defaultPreferences != "") {
-        ".default" = cfg.defaultPreferences;
-      };
+  autoPrefFiles =
+    let
+      autoprefs =
+        cfg.automaticPreferences
+        // lib.optionalAttrs (cfg.defaultPreferences != "") {
+          ".default" = cfg.defaultPreferences;
+        };
 
-    gen = fileExtension: configText:
-      lib.nameValuePair ".ne/${fileExtension}#ap" {
-        text = configText;
-      }; # Generates [path].text format expected by home.file.
-  in lib.mapAttrs' gen autoprefs;
+      gen =
+        fileExtension: configText:
+        lib.nameValuePair ".ne/${fileExtension}#ap" {
+          text = configText;
+        }; # Generates [path].text format expected by home.file.
+    in
+    lib.mapAttrs' gen autoprefs;
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.cwyc ];
 
   options.programs.ne = {
@@ -87,8 +97,7 @@ in {
 
     home.file = {
       ".ne/.keys" = mkIf (cfg.keybindings != "") { text = cfg.keybindings; };
-      ".ne/.extensions" =
-        mkIf (cfg.virtualExtensions != "") { text = cfg.virtualExtensions; };
+      ".ne/.extensions" = mkIf (cfg.virtualExtensions != "") { text = cfg.virtualExtensions; };
       ".ne/.menus" = mkIf (cfg.menus != "") { text = cfg.menus; };
     } // autoPrefFiles;
   };

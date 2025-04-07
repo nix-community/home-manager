@@ -1,9 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) mkEnableOption mkPackageOption mkIf maintainers;
+  inherit (lib)
+    mkEnableOption
+    mkPackageOption
+    mkIf
+    maintainers
+    ;
   cfg = config.services.hyprpolkitagent;
-in {
-  meta.maintainers = with maintainers; [ bobvanderlinden khaneliman ];
+in
+{
+  meta.maintainers = with maintainers; [
+    bobvanderlinden
+    khaneliman
+  ];
 
   options = {
     services.hyprpolkitagent = {
@@ -20,9 +34,13 @@ in {
         After = [ config.wayland.systemd.target ];
       };
 
-      Install = { WantedBy = [ config.wayland.systemd.target ]; };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
 
-      Service = { ExecStart = "${cfg.package}/libexec/hyprpolkitagent"; };
+      Service = {
+        ExecStart = "${cfg.package}/libexec/hyprpolkitagent";
+      };
     };
   };
 }

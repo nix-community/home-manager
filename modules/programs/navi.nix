@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf;
 
@@ -6,12 +11,14 @@ let
 
   yamlFormat = pkgs.formats.yaml { };
 
-  configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
-    "Library/Application Support"
-  else
-    config.xdg.configHome;
+  configDir =
+    if pkgs.stdenv.isDarwin && !config.xdg.enable then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.navi = {
@@ -41,14 +48,11 @@ in {
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {

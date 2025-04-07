@@ -1,16 +1,21 @@
 { pkgs, ... }:
 let
-  configDir = if pkgs.stdenv.isDarwin then
-    "Library/Application Support/org.dystroy.bacon"
-  else
-    ".config/bacon";
-in {
+  configDir =
+    if pkgs.stdenv.isDarwin then "Library/Application Support/org.dystroy.bacon" else ".config/bacon";
+in
+{
   programs.bacon = {
     enable = true;
     settings = {
       jobs = {
         ta = {
-          command = [ "cargo" "test" "--all-features" "--color" "always" ];
+          command = [
+            "cargo"
+            "test"
+            "--all-features"
+            "--color"
+            "always"
+          ];
           need_stdout = true;
         };
       };

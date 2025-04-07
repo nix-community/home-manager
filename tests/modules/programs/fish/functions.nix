@@ -13,7 +13,8 @@ let
     end
   '';
 
-in {
+in
+{
   config = {
     programs.fish = {
       enable = true;
@@ -28,12 +29,12 @@ in {
     };
 
     # Needed to avoid error with dummy fish package.
-    xdg.dataFile."fish/home-manager_generated_completions".source =
-      lib.mkForce (builtins.toFile "empty" "");
+    xdg.dataFile."fish/home-manager_generated_completions".source = lib.mkForce (
+      builtins.toFile "empty" ""
+    );
 
     nmt = {
-      description =
-        "if fish.function is set, check file exists and contents match";
+      description = "if fish.function is set, check file exists and contents match";
       script = ''
         assertFileExists home-files/.config/fish/functions/func.fish
         echo ${func}

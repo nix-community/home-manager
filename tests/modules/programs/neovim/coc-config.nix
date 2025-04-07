@@ -20,4 +20,3 @@
     assertFileContent "$cocSettingsNormalized" "${./coc-config.expected}"
   '';
 }
-

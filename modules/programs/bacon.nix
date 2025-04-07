@@ -1,16 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.programs.bacon;
 
   settingsFormat = pkgs.formats.toml { };
 
-  configDir = if pkgs.stdenv.isDarwin then
-    "Library/Application Support/org.dystroy.bacon"
-  else
-    "${config.xdg.configHome}/bacon";
+  configDir =
+    if pkgs.stdenv.isDarwin then
+      "Library/Application Support/org.dystroy.bacon"
+    else
+      "${config.xdg.configHome}/bacon";
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.shimunn ];
 
   options.programs.bacon = {
@@ -23,7 +30,13 @@ in {
       default = { };
       example = {
         jobs.default = {
-          command = [ "cargo" "build" "--all-features" "--color" "always" ];
+          command = [
+            "cargo"
+            "build"
+            "--all-features"
+            "--color"
+            "always"
+          ];
           need_stdout = true;
         };
       };

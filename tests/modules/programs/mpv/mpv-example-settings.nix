@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   programs.mpv = {
@@ -31,7 +36,9 @@
     };
 
     profiles = {
-      fast = { vo = "vdpau"; };
+      fast = {
+        vo = "vdpau";
+      };
       "protocol.dvd" = {
         profile-desc = "profile for dvd:// streams";
         alang = "en";

@@ -33,10 +33,10 @@ let
 
   '';
 
-  expected = pkgs.writeText "expected"
-    (if isDarwin then darwinExpected else linuxExpected);
+  expected = pkgs.writeText "expected" (if isDarwin then darwinExpected else linuxExpected);
 
-in {
+in
+{
   config = {
     home.sessionVariables = {
       V1 = "v1";

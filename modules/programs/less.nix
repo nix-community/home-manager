@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.less;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.less;
+in
+{
   meta.maintainers = [ lib.maintainers.pamplemousse ];
 
   options = {

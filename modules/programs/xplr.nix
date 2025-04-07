@@ -1,7 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    types mkIf mkOption mkEnableOption mkPackageOption literalExpression;
+    types
+    mkIf
+    mkOption
+    mkEnableOption
+    mkPackageOption
+    literalExpression
+    ;
 
   cfg = config.programs.xplr;
 
@@ -11,7 +22,8 @@ let
 
   # If `value` is a Nix store path, create the symlink `/nix/store/newhash/${name}/*`
   # to `/nix/store/oldhash/*` and returns `/nix/store/newhash`.
-  wrapPlugin = name: value:
+  wrapPlugin =
+    name: value:
     if lib.isStorePath value then
       pkgs.symlinkJoin {
         name = name;
@@ -27,23 +39,26 @@ let
 
   makePluginSearchPath = p: "${p}/?/init.lua;${p}/?.lua";
 
-  pluginPath = if cfg.plugins != { } then
-    let
-      wrappedPlugins = lib.mapAttrsToList wrapPlugin cfg.plugins;
-      searchPaths = map makePluginSearchPath wrappedPlugins;
-      pluginSearchPath = lib.concatStringsSep ";" searchPaths;
-    in (''
-      package.path = "${pluginSearchPath};" .. package.path
-    '')
-  else
-    "\n";
+  pluginPath =
+    if cfg.plugins != { } then
+      let
+        wrappedPlugins = lib.mapAttrsToList wrapPlugin cfg.plugins;
+        searchPaths = map makePluginSearchPath wrappedPlugins;
+        pluginSearchPath = lib.concatStringsSep ";" searchPaths;
+      in
+      (''
+        package.path = "${pluginSearchPath};" .. package.path
+      '')
+    else
+      "\n";
 
   # We provide a default version line within the configuration file, which is
   # obtained from the package's attributes. Merge the initial configFile, a
   # mapped list of plugins and then the user defined configuration to obtain
   # the final configuration.
   configFile = initialConfig + pluginPath + cfg.extraConfig;
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.NotAShelf ];
 
   options.programs.xplr = {
@@ -93,7 +108,6 @@ in {
   config = mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."xplr/init.lua".source =
-      pkgs.writeText "init.lua" configFile;
+    xdg.configFile."xplr/init.lua".source = pkgs.writeText "init.lua" configFile;
   };
 }

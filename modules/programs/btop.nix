@@ -1,26 +1,38 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.btop;
 
-  finalConfig = let
-    toKeyValue = lib.generators.toKeyValue {
-      mkKeyValue = lib.generators.mkKeyValueDefault {
-        mkValueString = v:
-          with builtins;
-          if isBool v then
-            (if v then "True" else "False")
-          else if isString v then
-            ''"${v}"''
-          else
-            toString v;
-      } " = ";
-    };
-  in ''
-    ${toKeyValue cfg.settings}
-    ${lib.optionalString (cfg.extraConfig != "") cfg.extraConfig}
-  '';
-in {
-  meta.maintainers = with lib.maintainers; [ GaetanLepage khaneliman ];
+  finalConfig =
+    let
+      toKeyValue = lib.generators.toKeyValue {
+        mkKeyValue = lib.generators.mkKeyValueDefault {
+          mkValueString =
+            v:
+            with builtins;
+            if isBool v then
+              (if v then "True" else "False")
+            else if isString v then
+              ''"${v}"''
+            else
+              toString v;
+        } " = ";
+      };
+    in
+    ''
+      ${toKeyValue cfg.settings}
+      ${lib.optionalString (cfg.extraConfig != "") cfg.extraConfig}
+    '';
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    GaetanLepage
+    khaneliman
+  ];
 
   options.programs.btop = {
     enable = lib.mkEnableOption "btop";
@@ -28,7 +40,14 @@ in {
     package = lib.mkPackageOption pkgs "btop" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types; attrsOf (oneOf [ bool float int str ]);
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          float
+          int
+          str
+        ]);
       default = { };
       example = {
         color_theme = "Default";
@@ -105,18 +124,24 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile = let
-      mkThemeConfig = name: theme: {
-        name = "btop/themes/${name}.theme";
-        value = {
-          source = (if builtins.isPath theme || lib.isStorePath theme then
-            theme
-          else
-            pkgs.writeText "btop-theme.theme" theme);
+    xdg.configFile =
+      let
+        mkThemeConfig = name: theme: {
+          name = "btop/themes/${name}.theme";
+          value = {
+            source = (
+              if builtins.isPath theme || lib.isStorePath theme then
+                theme
+              else
+                pkgs.writeText "btop-theme.theme" theme
+            );
+          };
         };
-      };
-    in {
-      "btop/btop.conf" = lib.mkIf (cfg.settings != { }) { text = finalConfig; };
-    } // lib.mapAttrs' mkThemeConfig cfg.themes;
+      in
+      {
+
+        "btop/btop.conf" = lib.mkIf (cfg.settings != { }) { text = finalConfig; };
+      }
+      // lib.mapAttrs' mkThemeConfig cfg.themes;
   };
 }

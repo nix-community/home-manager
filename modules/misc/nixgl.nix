@@ -1,13 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.nixGL;
-  wrapperListMarkdown = with builtins;
-    foldl' (list: name:
-      list + ''
+  wrapperListMarkdown =
+    with builtins;
+    foldl' (
+      list: name:
+      list
+      + ''
         - ${name}
-      '') "" (attrNames config.lib.nixGL.wrappers);
-in {
+      ''
+    ) "" (attrNames config.lib.nixGL.wrappers);
+in
+{
   meta.maintainers = [ lib.maintainers.smona ];
 
   options.nixGL = {
@@ -93,7 +103,12 @@ in {
     };
 
     prime.installScript = lib.mkOption {
-      type = with lib.types; nullOr (enum [ "mesa" "nvidia" ]);
+      type =
+        with lib.types;
+        nullOr (enum [
+          "mesa"
+          "nvidia"
+        ]);
       default = null;
       example = "mesa";
       description = ''
@@ -109,10 +124,12 @@ in {
     };
 
     installScripts = lib.mkOption {
-      type = with lib.types;
-        nullOr (listOf (enum (builtins.attrNames config.lib.nixGL.wrappers)));
+      type = with lib.types; nullOr (listOf (enum (builtins.attrNames config.lib.nixGL.wrappers)));
       default = null;
-      example = [ "mesa" "mesaPrime" ];
+      example = [
+        "mesa"
+        "mesaPrime"
+      ];
       description = ''
         For each wrapper `wrp` named in the provided list, a wrapper script
         named `nixGLWrp` is installed into the environment. These scripts are
@@ -137,168 +154,199 @@ in {
     };
   };
 
-  config = let
-    findWrapperPackage = packageAttr:
-      # NixGL has wrapper packages in different places depending on how you
-      # access it. We want HM configuration to be the same, regardless of how
-      # NixGL is imported.
-      #
-      # First, let's see if we have a flake.
-      if builtins.hasAttr pkgs.system cfg.packages then
-        cfg.packages.${pkgs.system}.${packageAttr}
-      else
-      # Next, let's see if we have a channel.
-      if builtins.hasAttr packageAttr cfg.packages then
-        cfg.packages.${packageAttr}
-      else
-      # Lastly, with channels, some wrappers are grouped under "auto".
-      if builtins.hasAttr "auto" cfg.packages then
-        cfg.packages.auto.${packageAttr}
-      else
-        throw "Incompatible NixGL package layout";
-
-    getWrapperExe = vendor:
-      let
-        glPackage = findWrapperPackage "nixGL${vendor}";
-        glExe = lib.getExe glPackage;
-        vulkanPackage = findWrapperPackage "nixVulkan${vendor}";
-        vulkanExe = if cfg.vulkan.enable then lib.getExe vulkanPackage else "";
-      in "${glExe} ${vulkanExe}";
-
-    mesaOffloadEnv = { "DRI_PRIME" = "${cfg.prime.card}"; };
-
-    nvOffloadEnv = {
-      "DRI_PRIME" = "${cfg.prime.card}";
-      "__NV_PRIME_RENDER_OFFLOAD" = "1";
-      "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
-      "__VK_LAYER_NV_optimus" = "NVIDIA_only";
-    } // (let provider = cfg.prime.nvidiaProvider;
-    in if !isNull provider then {
-      "__NV_PRIME_RENDER_OFFLOAD_PROVIDER" = "${provider}";
-    } else
-      { });
-
-    makePackageWrapper = vendor: environment: pkg:
-      if builtins.isNull cfg.packages then
-        pkg
-      else
-      # Wrap the package's binaries with nixGL, while preserving the rest of
-      # the outputs and derivation attributes.
-        (pkg.overrideAttrs (old: {
-          name = "nixGL-${pkg.name}";
-
-          # Make sure this is false for the wrapper derivation, so nix doesn't expect
-          # a new debug output to be produced. We won't be producing any debug info
-          # for the original package.
-          separateDebugInfo = false;
-          nativeBuildInputs = old.nativeBuildInputs or [ ]
-            ++ [ pkgs.makeWrapper ];
-          buildCommand = let
-            # We need an intermediate wrapper package because makeWrapper
-            # requires a single executable as the wrapper.
-            combinedWrapperPkg =
-              pkgs.writeShellScriptBin "nixGLCombinedWrapper-${vendor}" ''
-                exec ${getWrapperExe vendor} "$@"
-              '';
-          in ''
-            set -eo pipefail
-
-            ${ # Heavily inspired by https://stackoverflow.com/a/68523368/6259505
-            lib.concatStringsSep "\n" (map (outputName: ''
-              echo "Copying output ${outputName}"
-              set -x
-              cp -rs --no-preserve=mode "${
-                pkg.${outputName}
-              }" "''$${outputName}"
-              set +x
-            '') (old.outputs or [ "out" ]))}
-
-            rm -rf $out/bin/*
-            shopt -s nullglob # Prevent loop from running if no files
-            for file in ${pkg.out}/bin/*; do
-              local prog="$(basename "$file")"
-              makeWrapper \
-                "${lib.getExe combinedWrapperPkg}" \
-                "$out/bin/$prog" \
-                --argv0 "$prog" \
-                --add-flags "$file" \
-                ${
-                  lib.concatStringsSep " " (lib.attrsets.mapAttrsToList
-                    (var: val: "--set '${var}' '${val}'") environment)
-                }
-            done
-
-            # If .desktop files refer to the old package, replace the references
-            for dsk in "$out/share/applications"/*.desktop ; do
-              if ! grep -q "${pkg.out}" "$dsk"; then
-                continue
-              fi
-              src="$(readlink "$dsk")"
-              rm "$dsk"
-              sed "s|${pkg.out}|$out|g" "$src" > "$dsk"
-            done
-
-            shopt -u nullglob # Revert nullglob back to its normal default state
-          '';
-        })) // {
-          # When the nixGL-wrapped package is given to a HM module, the module
-          # might want to override the package arguments, but our wrapper
-          # wouldn't know what to do with them. So, we rewrite the override
-          # function to instead forward the arguments to the package's own
-          # override function.
-          override = args:
-            makePackageWrapper vendor environment (pkg.override args);
-        };
-
-    wrappers = {
-      mesa = makePackageWrapper "Intel" { };
-      mesaPrime = makePackageWrapper "Intel" mesaOffloadEnv;
-      nvidia = makePackageWrapper "Nvidia" { };
-      nvidiaPrime = makePackageWrapper "Nvidia" nvOffloadEnv;
-    };
-  in {
-    lib.nixGL.wrap = wrappers.${cfg.defaultWrapper};
-    lib.nixGL.wrapOffload = wrappers.${cfg.offloadWrapper};
-    lib.nixGL.wrappers = wrappers;
-
-    home.packages = let
-      wantsPrimeWrapper = (!isNull cfg.prime.installScript);
-      wantsWrapper = wrapper:
-        (!isNull cfg.packages) && (!isNull cfg.installScripts)
-        && (builtins.elem wrapper cfg.installScripts);
-      envVarsAsScript = environment:
-        lib.concatStringsSep "\n"
-        (lib.attrsets.mapAttrsToList (var: val: "export ${var}=${val}")
-          environment);
-    in [
-      (lib.mkIf wantsPrimeWrapper (pkgs.writeShellScriptBin "prime-offload" ''
-        ${if cfg.prime.installScript == "mesa" then
-          (envVarsAsScript mesaOffloadEnv)
+  config =
+    let
+      findWrapperPackage =
+        packageAttr:
+        # NixGL has wrapper packages in different places depending on how you
+        # access it. We want HM configuration to be the same, regardless of how
+        # NixGL is imported.
+        #
+        # First, let's see if we have a flake.
+        if builtins.hasAttr pkgs.system cfg.packages then
+          cfg.packages.${pkgs.system}.${packageAttr}
         else
-          (envVarsAsScript nvOffloadEnv)}
-        exec "$@"
-      ''))
+        # Next, let's see if we have a channel.
+        if builtins.hasAttr packageAttr cfg.packages then
+          cfg.packages.${packageAttr}
+        else
+        # Lastly, with channels, some wrappers are grouped under "auto".
+        if builtins.hasAttr "auto" cfg.packages then
+          cfg.packages.auto.${packageAttr}
+        else
+          throw "Incompatible NixGL package layout";
 
-      (lib.mkIf (wantsWrapper "mesa") (pkgs.writeShellScriptBin "nixGLMesa" ''
-        exec ${getWrapperExe "Intel"} "$@"
-      ''))
+      getWrapperExe =
+        vendor:
+        let
+          glPackage = findWrapperPackage "nixGL${vendor}";
+          glExe = lib.getExe glPackage;
+          vulkanPackage = findWrapperPackage "nixVulkan${vendor}";
+          vulkanExe = if cfg.vulkan.enable then lib.getExe vulkanPackage else "";
+        in
+        "${glExe} ${vulkanExe}";
 
-      (lib.mkIf (wantsWrapper "mesaPrime")
-        (pkgs.writeShellScriptBin "nixGLMesaPrime" ''
-          ${envVarsAsScript mesaOffloadEnv}
-          exec ${getWrapperExe "Intel"} "$@"
-        ''))
+      mesaOffloadEnv = {
+        "DRI_PRIME" = "${cfg.prime.card}";
+      };
 
-      (lib.mkIf (wantsWrapper "nvidia")
-        (pkgs.writeShellScriptBin "nixGLNvidia" ''
-          exec ${getWrapperExe "Nvidia"} "$@"
-        ''))
+      nvOffloadEnv =
+        {
+          "DRI_PRIME" = "${cfg.prime.card}";
+          "__NV_PRIME_RENDER_OFFLOAD" = "1";
+          "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
+          "__VK_LAYER_NV_optimus" = "NVIDIA_only";
+        }
+        // (
+          let
+            provider = cfg.prime.nvidiaProvider;
+          in
+          if !isNull provider then
+            {
+              "__NV_PRIME_RENDER_OFFLOAD_PROVIDER" = "${provider}";
+            }
+          else
+            { }
+        );
 
-      (lib.mkIf (wantsWrapper "nvidia")
-        (pkgs.writeShellScriptBin "nixGLNvidiaPrime" ''
-          ${envVarsAsScript nvOffloadEnv}
-          exec ${getWrapperExe "Nvidia"} "$@"
-        ''))
-    ];
-  };
+      makePackageWrapper =
+        vendor: environment: pkg:
+        if builtins.isNull cfg.packages then
+          pkg
+        else
+          # Wrap the package's binaries with nixGL, while preserving the rest of
+          # the outputs and derivation attributes.
+          (pkg.overrideAttrs (old: {
+            name = "nixGL-${pkg.name}";
+
+            # Make sure this is false for the wrapper derivation, so nix doesn't expect
+            # a new debug output to be produced. We won't be producing any debug info
+            # for the original package.
+            separateDebugInfo = false;
+            nativeBuildInputs = old.nativeBuildInputs or [ ] ++ [ pkgs.makeWrapper ];
+            buildCommand =
+              let
+                # We need an intermediate wrapper package because makeWrapper
+                # requires a single executable as the wrapper.
+                combinedWrapperPkg = pkgs.writeShellScriptBin "nixGLCombinedWrapper-${vendor}" ''
+                  exec ${getWrapperExe vendor} "$@"
+                '';
+              in
+              ''
+                set -eo pipefail
+
+                ${
+                  # Heavily inspired by https://stackoverflow.com/a/68523368/6259505
+                  lib.concatStringsSep "\n" (
+                    map (outputName: ''
+                      echo "Copying output ${outputName}"
+                      set -x
+                      cp -rs --no-preserve=mode "${pkg.${outputName}}" "''$${outputName}"
+                      set +x
+                    '') (old.outputs or [ "out" ])
+                  )
+                }
+
+                rm -rf $out/bin/*
+                shopt -s nullglob # Prevent loop from running if no files
+                for file in ${pkg.out}/bin/*; do
+                  local prog="$(basename "$file")"
+                  makeWrapper \
+                    "${lib.getExe combinedWrapperPkg}" \
+                    "$out/bin/$prog" \
+                    --argv0 "$prog" \
+                    --add-flags "$file" \
+                    ${lib.concatStringsSep " " (
+                      lib.attrsets.mapAttrsToList (var: val: "--set '${var}' '${val}'") environment
+                    )}
+                done
+
+                # If .desktop files refer to the old package, replace the references
+                for dsk in "$out/share/applications"/*.desktop ; do
+                  if ! grep -q "${pkg.out}" "$dsk"; then
+                    continue
+                  fi
+                  src="$(readlink "$dsk")"
+                  rm "$dsk"
+                  sed "s|${pkg.out}|$out|g" "$src" > "$dsk"
+                done
+
+                shopt -u nullglob # Revert nullglob back to its normal default state
+              '';
+          }))
+          // {
+            # When the nixGL-wrapped package is given to a HM module, the module
+            # might want to override the package arguments, but our wrapper
+            # wouldn't know what to do with them. So, we rewrite the override
+            # function to instead forward the arguments to the package's own
+            # override function.
+            override = args: makePackageWrapper vendor environment (pkg.override args);
+          };
+
+      wrappers = {
+        mesa = makePackageWrapper "Intel" { };
+        mesaPrime = makePackageWrapper "Intel" mesaOffloadEnv;
+        nvidia = makePackageWrapper "Nvidia" { };
+        nvidiaPrime = makePackageWrapper "Nvidia" nvOffloadEnv;
+      };
+    in
+    {
+      lib.nixGL.wrap = wrappers.${cfg.defaultWrapper};
+      lib.nixGL.wrapOffload = wrappers.${cfg.offloadWrapper};
+      lib.nixGL.wrappers = wrappers;
+
+      home.packages =
+        let
+          wantsPrimeWrapper = (!isNull cfg.prime.installScript);
+          wantsWrapper =
+            wrapper:
+            (!isNull cfg.packages)
+            && (!isNull cfg.installScripts)
+            && (builtins.elem wrapper cfg.installScripts);
+          envVarsAsScript =
+            environment:
+            lib.concatStringsSep "\n" (
+              lib.attrsets.mapAttrsToList (var: val: "export ${var}=${val}") environment
+            );
+        in
+        [
+          (lib.mkIf wantsPrimeWrapper (
+            pkgs.writeShellScriptBin "prime-offload" ''
+              ${
+                if cfg.prime.installScript == "mesa" then
+                  (envVarsAsScript mesaOffloadEnv)
+                else
+                  (envVarsAsScript nvOffloadEnv)
+              }
+              exec "$@"
+            ''
+          ))
+
+          (lib.mkIf (wantsWrapper "mesa") (
+            pkgs.writeShellScriptBin "nixGLMesa" ''
+              exec ${getWrapperExe "Intel"} "$@"
+            ''
+          ))
+
+          (lib.mkIf (wantsWrapper "mesaPrime") (
+            pkgs.writeShellScriptBin "nixGLMesaPrime" ''
+              ${envVarsAsScript mesaOffloadEnv}
+              exec ${getWrapperExe "Intel"} "$@"
+            ''
+          ))
+
+          (lib.mkIf (wantsWrapper "nvidia") (
+            pkgs.writeShellScriptBin "nixGLNvidia" ''
+              exec ${getWrapperExe "Nvidia"} "$@"
+            ''
+          ))
+
+          (lib.mkIf (wantsWrapper "nvidia") (
+            pkgs.writeShellScriptBin "nixGLNvidiaPrime" ''
+              ${envVarsAsScript nvOffloadEnv}
+              exec ${getWrapperExe "Nvidia"} "$@"
+            ''
+          ))
+        ];
+    };
 }

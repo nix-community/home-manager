@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
 
@@ -6,7 +11,8 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ tmarkus ];
 
   options.programs.pyenv = {
@@ -14,14 +20,11 @@ in {
 
     package = lib.mkPackageOption pkgs "pyenv" { };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     rootDirectory = lib.mkOption {
       type = lib.types.path;

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,13 +11,13 @@ let
 
   cfg = config.services.keybase;
 
-in {
+in
+{
   options.services.keybase.enable = mkEnableOption "Keybase";
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.keybase" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.keybase" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ pkgs.keybase ];

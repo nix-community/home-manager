@@ -4,7 +4,9 @@
     git-worktree-switcher.enable = true;
   };
 
-  test.stubs.git-worktree-switcher = { name = "git-worktree-switcher"; };
+  test.stubs.git-worktree-switcher = {
+    name = "git-worktree-switcher";
+  };
 
   nmt.script = ''
     assertFileExists home-files/.zshrc

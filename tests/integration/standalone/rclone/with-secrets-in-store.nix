@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   programs.rclone.remotes = {
     alices-cool-remote-v2 = {
       config = {

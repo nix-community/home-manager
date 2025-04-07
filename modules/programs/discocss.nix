@@ -1,12 +1,18 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.discocss;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.discocss;
+in
+{
   meta.maintainers = with lib.maintainers; [ kranzes ];
 
   options = {
     programs.discocss = {
-      enable = lib.mkEnableOption
-        "discocss, a tiny Discord CSS injector for Linux and MacOS";
+      enable = lib.mkEnableOption "discocss, a tiny Discord CSS injector for Linux and MacOS";
 
       package = lib.mkPackageOption pkgs "discocss" { nullable = true; };
 
@@ -27,13 +33,13 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [{
-      assertion = cfg.discordAlias
-        -> !(lib.any (p: p.name == cfg.discordPackage.name)
-          config.home.packages);
-      message =
-        "To use discocss with discordAlias you have to remove discord from home.packages, or set discordAlias to false.";
-    }];
+    assertions = [
+      {
+        assertion =
+          cfg.discordAlias -> !(lib.any (p: p.name == cfg.discordPackage.name) config.home.packages);
+        message = "To use discocss with discordAlias you have to remove discord from home.packages, or set discordAlias to false.";
+      }
+    ];
 
     home.packages = lib.mkIf (cfg.package != null) [
       (cfg.package.override {

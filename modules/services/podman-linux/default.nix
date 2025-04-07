@@ -1,9 +1,18 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.services.podman;
   toml = pkgs.formats.toml { };
-in {
-  meta.maintainers = with lib.hm.maintainers; [ bamhm182 n-hass ];
+in
+{
+  meta.maintainers = with lib.hm.maintainers; [
+    bamhm182
+    n-hass
+  ];
 
   imports = [
     ./builds.nix
@@ -79,8 +88,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    assertions =
-      [ (lib.hm.assertions.assertPlatform "podman" pkgs lib.platforms.linux) ];
+    assertions = [ (lib.hm.assertions.assertPlatform "podman" pkgs lib.platforms.linux) ];
 
     home.packages = [ cfg.package ];
 
@@ -89,18 +97,16 @@ in {
     };
 
     xdg.configFile = {
-      "containers/policy.json".source = if cfg.settings.policy != { } then
-        pkgs.writeText "policy.json" (builtins.toJSON cfg.settings.policy)
-      else
-        "${pkgs.skopeo.policy}/default-policy.json";
+      "containers/policy.json".source =
+        if cfg.settings.policy != { } then
+          pkgs.writeText "policy.json" (builtins.toJSON cfg.settings.policy)
+        else
+          "${pkgs.skopeo.policy}/default-policy.json";
       "containers/registries.conf".source = toml.generate "registries.conf" {
-        registries =
-          lib.mapAttrs (n: v: { registries = v; }) cfg.settings.registries;
+        registries = lib.mapAttrs (n: v: { registries = v; }) cfg.settings.registries;
       };
-      "containers/storage.conf".source =
-        toml.generate "storage.conf" cfg.settings.storage;
-      "containers/containers.conf".source =
-        toml.generate "containers.conf" cfg.settings.containers;
+      "containers/storage.conf".source = toml.generate "storage.conf" cfg.settings.storage;
+      "containers/containers.conf".source = toml.generate "containers.conf" cfg.settings.containers;
     };
   };
 }

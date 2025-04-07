@@ -9,7 +9,8 @@ let
     ws5 = "Multiple";
   };
 
-in {
+in
+{
   wayland.windowManager.sway = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
@@ -36,7 +37,11 @@ in {
       }
       {
         workspace = "${i3.ws5}";
-        output = [ "DVI" "HDMI" "DP" ];
+        output = [
+          "DVI"
+          "HDMI"
+          "DP"
+        ];
       }
     ];
   };

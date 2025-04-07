@@ -1,6 +1,13 @@
-{ pkgs, config, lib, ... }:
-let cfg = config.programs.waylogout;
-in {
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+let
+  cfg = config.programs.waylogout;
+in
+{
   meta.maintainers = [ lib.hm.maintainers.noodlez ];
 
   options.programs.waylogout = {
@@ -16,7 +23,15 @@ in {
     package = lib.mkPackageOption pkgs "waylogout" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types; attrsOf (oneOf [ bool float int path str ]);
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          float
+          int
+          path
+          str
+        ]);
       default = { };
       description = ''
         Default arguments to {command}`waylogout`. An empty set
@@ -35,19 +50,17 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.waylogout" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.waylogout" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."waylogout/config" = lib.mkIf (cfg.settings != { }) {
-      text = lib.concatStrings (lib.mapAttrsToList (n: v:
-        if v == false then
-          ""
-        else
-          (if v == true then n else n + "=" + builtins.toString v) + "\n")
-        cfg.settings);
+      text = lib.concatStrings (
+        lib.mapAttrsToList (
+          n: v: if v == false then "" else (if v == true then n else n + "=" + builtins.toString v) + "\n"
+        ) cfg.settings
+      );
     };
   };
 }

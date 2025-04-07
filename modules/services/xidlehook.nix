@@ -1,6 +1,11 @@
 # Wrapper around xidlehook.
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -9,17 +14,23 @@ let
 
   notEmpty = list: filter (x: x != "" && x != null) (flatten list);
 
-  timers = let
-    toTimer = timer:
-      "--timer ${toString timer.delay} ${
-        escapeShellArgs [ timer.command timer.canceller ]
-      }";
-  in map toTimer (filter (timer: timer.command != null) cfg.timers);
+  timers =
+    let
+      toTimer =
+        timer:
+        "--timer ${toString timer.delay} ${
+          escapeShellArgs [
+            timer.command
+            timer.canceller
+          ]
+        }";
+    in
+    map toTimer (filter (timer: timer.command != null) cfg.timers);
 
   script = pkgs.writeShellScript "xidlehook" ''
-    ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "export ${name}=${value}")
-      cfg.environment or { })}
+    ${concatStringsSep "\n" (
+      mapAttrsToList (name: value: "export ${name}=${value}") cfg.environment or { }
+    )}
     ${concatStringsSep " " (notEmpty [
       "${cfg.package}/bin/xidlehook"
       (optionalString cfg.once "--once")
@@ -29,8 +40,12 @@ let
       timers
     ])}
   '';
-in {
-  meta.maintainers = [ maintainers.dschrempf hm.maintainers.bertof ];
+in
+{
+  meta.maintainers = [
+    maintainers.dschrempf
+    hm.maintainers.bertof
+  ];
 
   options.services.xidlehook = {
     enable = mkEnableOption "xidlehook systemd service";
@@ -56,8 +71,7 @@ in {
       '';
     };
 
-    detect-sleep = mkEnableOption
-      "detecting when the system wakes up from a suspended state and resetting the idle timer";
+    detect-sleep = mkEnableOption "detecting when the system wakes up from a suspended state and resetting the idle timer";
 
     not-when-fullscreen = mkOption {
       type = types.bool;
@@ -76,39 +90,41 @@ in {
     once = mkEnableOption "running the program once and exiting";
 
     timers = mkOption {
-      type = types.listOf (types.submodule {
-        options = {
-          delay = mkOption {
-            type = types.ints.unsigned;
-            example = 60;
-            description = "Time before executing the command.";
+      type = types.listOf (
+        types.submodule {
+          options = {
+            delay = mkOption {
+              type = types.ints.unsigned;
+              example = 60;
+              description = "Time before executing the command.";
+            };
+            command = mkOption {
+              type = types.nullOr types.str;
+              example = literalExpression ''
+                ''${pkgs.libnotify}/bin/notify-send "Idle" "Sleeping in 1 minute"
+              '';
+              description = ''
+                Command executed after the idle timeout is reached.
+                Path to executables are accepted.
+                The command is automatically escaped.
+              '';
+            };
+            canceller = mkOption {
+              type = types.str;
+              default = "";
+              example = literalExpression ''
+                ''${pkgs.libnotify}/bin/notify-send "Idle" "Resuming activity"
+              '';
+              description = ''
+                Command executed when the user becomes active again.
+                This is only executed if the next timer has not been reached.
+                Path to executables are accepted.
+                The command is automatically escaped.
+              '';
+            };
           };
-          command = mkOption {
-            type = types.nullOr types.str;
-            example = literalExpression ''
-              ''${pkgs.libnotify}/bin/notify-send "Idle" "Sleeping in 1 minute"
-            '';
-            description = ''
-              Command executed after the idle timeout is reached.
-              Path to executables are accepted.
-              The command is automatically escaped.
-            '';
-          };
-          canceller = mkOption {
-            type = types.str;
-            default = "";
-            example = literalExpression ''
-              ''${pkgs.libnotify}/bin/notify-send "Idle" "Resuming activity"
-            '';
-            description = ''
-              Command executed when the user becomes active again.
-              This is only executed if the next timer has not been reached.
-              Path to executables are accepted.
-              The command is automatically escaped.
-            '';
-          };
-        };
-      });
+        }
+      );
       default = [ ];
       example = literalExpression ''
         [
@@ -137,8 +153,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.xidlehook" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.xidlehook" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.xidlehook = {

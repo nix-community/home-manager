@@ -6,10 +6,23 @@
 
     config = {
       bars = [
-        { fonts = [ "FontAwesome" "Iosevka 11.500000" ]; }
-        { fonts = [ "FontAwesome" "Iosevka Bold Semi-Condensed 14px" ]; }
+        {
+          fonts = [
+            "FontAwesome"
+            "Iosevka 11.500000"
+          ];
+        }
+        {
+          fonts = [
+            "FontAwesome"
+            "Iosevka Bold Semi-Condensed 14px"
+          ];
+        }
       ];
-      fonts = [ "DejaVuSansMono" "Terminus Bold Semi-Condensed 13.500000" ];
+      fonts = [
+        "DejaVuSansMono"
+        "Terminus Bold Semi-Condensed 13.500000"
+      ];
     };
   };
 

@@ -3,14 +3,20 @@
 {
   xsession.windowManager.bspwm = {
     enable = true;
-    monitors.focused = [ "desktop 1" "d'esk top" ]; # pathological desktop names
+    monitors.focused = [
+      "desktop 1"
+      "d'esk top"
+    ]; # pathological desktop names
     alwaysResetDesktops = false;
     settings = {
       border_width = 2;
       split_ratio = 0.52;
       gapless_monocle = true;
       external_rules_command = "/path/to/external rules command";
-      ignore_ewmh_fullscreen = [ "enter" "exit" ];
+      ignore_ewmh_fullscreen = [
+        "enter"
+        "exit"
+      ];
     };
     rules."*" = {
       sticky = true;
@@ -26,15 +32,16 @@
     extraConfig = ''
       extra config
     '';
-    startupPrograms = [ "foo" "bar || qux" ];
+    startupPrograms = [
+      "foo"
+      "bar || qux"
+    ];
   };
 
   nmt.script = ''
     bspwmrc=home-files/.config/bspwm/bspwmrc
     assertFileExists "$bspwmrc"
     assertFileIsExecutable "$bspwmrc"
-    assertFileContent "$bspwmrc" ${
-      pkgs.writeShellScript "bspwmrc-expected" (builtins.readFile ./bspwmrc)
-    }
+    assertFileContent "$bspwmrc" ${pkgs.writeShellScript "bspwmrc-expected" (builtins.readFile ./bspwmrc)}
   '';
 }

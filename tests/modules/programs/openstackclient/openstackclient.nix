@@ -14,7 +14,9 @@
     };
     publicClouds = {
       example-cloud = {
-        auth = { auth_url = "https://identity.cloud.example.com/v2.0"; };
+        auth = {
+          auth_url = "https://identity.cloud.example.com/v2.0";
+        };
       };
     };
 

@@ -1,61 +1,87 @@
-{ config, lib, pkgs, appName, package, modulePath, profilePath }:
+{
+  config,
+  lib,
+  pkgs,
+  appName,
+  package,
+  modulePath,
+  profilePath,
+}:
 let
-  inherit (lib) mapAttrs mapAttrs' mkOption optionalAttrs types warn;
+  inherit (lib)
+    mapAttrs
+    mapAttrs'
+    mkOption
+    optionalAttrs
+    types
+    warn
+    ;
 
   jsonFormat = pkgs.formats.json { };
 
   # Map of nice field names to internal field names.
   # This is intended to be exhaustive and should be
   # updated at every version bump.
-  internalFieldNames = (lib.genAttrs [
-    "name"
-    "isAppProvided"
-    "loadPath"
-    "updateInterval"
-    "updateURL"
-    "iconMapObj"
-    "metaData"
-    "orderHint"
-    "definedAliases"
-    "urls"
-  ] (name: "_${name}")) // {
-    searchForm = "__searchForm";
-  };
+  internalFieldNames =
+    (lib.genAttrs [
+      "name"
+      "isAppProvided"
+      "loadPath"
+      "updateInterval"
+      "updateURL"
+      "iconMapObj"
+      "metaData"
+      "orderHint"
+      "definedAliases"
+      "urls"
+    ] (name: "_${name}"))
+    // {
+      searchForm = "__searchForm";
+    };
 
   # Convenience to specify absolute path to icon
-  iconUrl = icon:
-    if lib.isPath icon || lib.hasPrefix "/" icon then
-      "file://${icon}"
-    else
-      icon;
+  iconUrl = icon: if lib.isPath icon || lib.hasPrefix "/" icon then "file://${icon}" else icon;
 
-  processCustomEngineInput = input:
+  processCustomEngineInput =
+    input:
     {
       name = input.id;
-    } // (removeAttrs input [ "icon" ])
+    }
+    // (removeAttrs input [ "icon" ])
     // optionalAttrs (input ? icon || input ? iconMapObj) {
-      iconMapObj = mapAttrs (name: iconUrl) ((optionalAttrs (input ? icon) {
-        # Convenience to specify single icon instead of map
-        "16" = input.icon;
-      }) // (input.iconMapObj or { }));
-    } // {
+      iconMapObj = mapAttrs (name: iconUrl) (
+        (optionalAttrs (input ? icon) {
+          # Convenience to specify single icon instead of map
+          "16" = input.icon;
+        })
+        // (input.iconMapObj or { })
+      );
+    }
+    // {
       # Required for custom engine configurations, loadPaths
       # are unique identifiers that are generally formatted
       # like: [source]/path/to/engine.xml
       loadPath = "[home-manager]/${
-          lib.showAttrPath (modulePath ++ [ "engines" input.id ])
-        }";
+        lib.showAttrPath (
+          modulePath
+          ++ [
+            "engines"
+            input.id
+          ]
+        )
+      }";
     };
 
-  processEngineInput = id: input:
+  processEngineInput =
+    id: input:
     let
       requiredInput = {
         inherit id;
-        isAppProvided =
-          input.isAppProvided or (removeAttrs input [ "metaData" ] == { });
+        isAppProvided = input.isAppProvided or (removeAttrs input [ "metaData" ] == { });
         metaData = input.metaData or { };
       };
-    in if requiredInput.isAppProvided then
+    in
+    if requiredInput.isAppProvided then
       requiredInput
     else
       lib.pipe (input // requiredInput) [
@@ -64,105 +90,123 @@ let
         processCustomEngineInput
       ];
 
-  buildEngineConfig = name: input:
+  buildEngineConfig =
+    name: input:
     mapAttrs' (name: value: {
       name = internalFieldNames.${name} or name;
       inherit value;
     }) (processEngineInput name input);
 
-  sortEngineConfigs = configs:
+  sortEngineConfigs =
+    configs:
     let
-      buildEngineConfigWithOrder = order: id:
+      buildEngineConfigWithOrder =
+        order: id:
         let
-          config = configs.${id} or {
-            inherit id;
-            _isAppProvided = true;
-            _metaData = { };
+          config =
+            configs.${id} or {
+              inherit id;
+              _isAppProvided = true;
+              _metaData = { };
+            };
+        in
+        config
+        // {
+          _metaData = config._metaData // {
+            inherit order;
           };
-        in config // { _metaData = config._metaData // { inherit order; }; };
+        };
 
-      engineConfigsWithoutOrder =
-        lib.attrValues (removeAttrs configs config.order);
+      engineConfigsWithoutOrder = lib.attrValues (removeAttrs configs config.order);
 
-      sortedEngineConfigs = (lib.imap buildEngineConfigWithOrder config.order)
-        ++ engineConfigsWithoutOrder;
-    in sortedEngineConfigs;
+      sortedEngineConfigs =
+        (lib.imap buildEngineConfigWithOrder config.order) ++ engineConfigsWithoutOrder;
+    in
+    sortedEngineConfigs;
 
-  engineInput = config.engines // {
-    # Infer config.default as an app provided
-    # engine if it's not in config.engines
-    ${config.default} = config.engines.${config.default} or { };
-  } // {
-    ${config.privateDefault} = config.engines.${config.privateDefault} or { };
-  };
+  engineInput =
+    config.engines
+    // {
+      # Infer config.default as an app provided
+      # engine if it's not in config.engines
+      ${config.default} = config.engines.${config.default} or { };
+    }
+    // {
+      ${config.privateDefault} = config.engines.${config.privateDefault} or { };
+    };
 
   settings = {
     version = 12;
     engines = sortEngineConfigs (mapAttrs buildEngineConfig engineInput);
 
-    metaData = optionalAttrs (config.default != null) {
-      defaultEngineId = config.default;
-      defaultEngineIdHash = "@hash@";
-    } // optionalAttrs (config.privateDefault != null) {
-      privateDefaultEngineId = config.privateDefault;
-      privateDefaultEngineIdHash = "@privateHash@";
-    } // {
-      useSavedOrder = config.order != [ ];
-    };
+    metaData =
+      optionalAttrs (config.default != null) {
+        defaultEngineId = config.default;
+        defaultEngineIdHash = "@hash@";
+      }
+      // optionalAttrs (config.privateDefault != null) {
+        privateDefaultEngineId = config.privateDefault;
+        privateDefaultEngineIdHash = "@privateHash@";
+      }
+      // {
+        useSavedOrder = config.order != [ ];
+      };
   };
 
   # Home Manager doesn't circumvent user consent and isn't acting
   # maliciously. We're modifying the search outside of the browser, but
   # a claim by Mozilla to remove this would be very anti-user, and
   # is unlikely to be an issue for our use case.
-  disclaimer = "By modifying this file, I agree that I am doing so "
+  disclaimer =
+    "By modifying this file, I agree that I am doing so "
     + "only within @appName@ itself, using official, user-driven search "
     + "engine selection processes, and in a way which does not circumvent "
     + "user consent. I acknowledge that any attempt to change this file "
     + "from outside of @appName@ is a malicious act, and will be responded "
     + "to accordingly.";
 
-  salt = if config.default != null then
-    profilePath + config.default + disclaimer
-  else
-    null;
+  salt = if config.default != null then profilePath + config.default + disclaimer else null;
 
-  privateSalt = if config.privateDefault != null then
-    profilePath + config.privateDefault + disclaimer
-  else
-    null;
+  privateSalt =
+    if config.privateDefault != null then profilePath + config.privateDefault + disclaimer else null;
 
-  appNameVariable = if package == null then
-    "appName=${lib.escapeShellArg appName}"
-  else ''
-    applicationIni="$(find ${lib.escapeShellArg package} -maxdepth 3 -path ${
-      lib.escapeShellArg package
-    }'/lib/*/application.ini' -print -quit)"
-    if test -n "$applicationIni"; then
-      appName="$(sed -n 's/^Name=\(.*\)$/\1/p' "$applicationIni" | head -n1)"
+  appNameVariable =
+    if package == null then
+      "appName=${lib.escapeShellArg appName}"
     else
-      appName=${lib.escapeShellArg appName}
-    fi
-  '';
+      ''
+        applicationIni="$(find ${lib.escapeShellArg package} -maxdepth 3 -path ${lib.escapeShellArg package}'/lib/*/application.ini' -print -quit)"
+        if test -n "$applicationIni"; then
+          appName="$(sed -n 's/^Name=\(.*\)$/\1/p' "$applicationIni" | head -n1)"
+        else
+          appName=${lib.escapeShellArg appName}
+        fi
+      '';
 
-  file = pkgs.runCommand "search.json.mozlz4" {
-    nativeBuildInputs = with pkgs; [ mozlz4a openssl ];
-    json = builtins.toJSON settings;
-    inherit salt privateSalt;
-  } ''
-    ${appNameVariable}
+  file =
+    pkgs.runCommand "search.json.mozlz4"
+      {
+        nativeBuildInputs = with pkgs; [
+          mozlz4a
+          openssl
+        ];
+        json = builtins.toJSON settings;
+        inherit salt privateSalt;
+      }
+      ''
+        ${appNameVariable}
 
-    salt=''${salt//@appName@/"$appName"}
-    privateSalt=''${privateSalt//@appName@/"$appName"}
+        salt=''${salt//@appName@/"$appName"}
+        privateSalt=''${privateSalt//@appName@/"$appName"}
 
-    if [[ -n $salt ]]; then
-      export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
-      export privateHash=$(echo -n "$privateSalt" | openssl dgst -sha256 -binary | base64)
-      mozlz4a <(substituteStream json search.json.in --subst-var hash --subst-var privateHash) "$out"
-    else
-      mozlz4a <(echo "$json") "$out"
-    fi
-  '';
+        if [[ -n $salt ]]; then
+          export hash=$(echo -n "$salt" | openssl dgst -sha256 -binary | base64)
+          export privateHash=$(echo -n "$privateSalt" | openssl dgst -sha256 -binary | base64)
+          mozlz4a <(substituteStream json search.json.in --subst-var hash --subst-var privateHash) "$out"
+        else
+          mozlz4a <(echo "$json") "$out"
+        fi
+      '';
 
   engineNameToId = {
     # Derived from https://searchfox.org/mozilla-central/rev/e3f42ec9320748b2aab3d474d1e47075def9000c/services/settings/dumps/main/search-config-v2.json
@@ -322,47 +366,62 @@ let
     "Wikipedia (tr)" = "wikipedia-tr";
   };
 
-  migrateEngineNameToIdV7 = engine:
+  migrateEngineNameToIdV7 =
+    engine:
     if builtins.hasAttr engine engineNameToId then
-      warn "Search engines are now referenced by id instead of by name, use '${
+      warn
+        "Search engines are now referenced by id instead of by name, use '${engineNameToId.${engine}}' instead of '${engine}'"
         engineNameToId.${engine}
-      }' instead of '${engine}'" engineNameToId.${engine}
     else
       engine;
 
-  migrateEngineToV11 = engine:
-    engine // lib.optionalAttrs (engine ? iconMapObj) {
-      iconMapObj = mapAttrs' (name: value:
-        let nameToIntResult = builtins.tryEval (lib.toInt name);
-        in {
-          name = if nameToIntResult.success then
-            name
-          else
-            let size = toString (builtins.fromJSON name).width;
-            in warn
-            "JSON object names for 'iconMapObj' are deprecated, use '${size}' instead of '${name}'"
-            size;
+  migrateEngineToV11 =
+    engine:
+    engine
+    // lib.optionalAttrs (engine ? iconMapObj) {
+      iconMapObj = mapAttrs' (
+        name: value:
+        let
+          nameToIntResult = builtins.tryEval (lib.toInt name);
+        in
+        {
+          name =
+            if nameToIntResult.success then
+              name
+            else
+              let
+                size = toString (builtins.fromJSON name).width;
+              in
+              warn "JSON object names for 'iconMapObj' are deprecated, use '${size}' instead of '${name}'" size;
 
           inherit value;
-        }) engine.iconMapObj;
+        }
+      ) engine.iconMapObj;
     };
 
-  migrateEngineToV12 = engine:
+  migrateEngineToV12 =
+    engine:
     let
-      iconMapObj = optionalAttrs (engine ? iconURL) {
-        "16" = warn "'iconURL' is deprecated, use 'icon = ${
-            lib.strings.escapeNixString engine.iconURL
-          }' instead" engine.iconURL;
-      } // optionalAttrs (engine ? iconUpdateURL) {
-        "16" = warn "'iconUpdateURL' is deprecated, use 'icon = ${
-            lib.strings.escapeNixString engine.iconUpdateURL
-          }' instead" engine.iconUpdateURL;
-      } // (engine.iconMapObj or { });
-    in lib.throwIf (engine ? hasPreferredIcon)
-    "hasPreferredIcon has been removed"
-    (removeAttrs engine [ "iconURL" "iconUpdateURL" ])
+      iconMapObj =
+        optionalAttrs (engine ? iconURL) {
+          "16" =
+            warn "'iconURL' is deprecated, use 'icon = ${lib.strings.escapeNixString engine.iconURL}' instead" engine.iconURL;
+        }
+        // optionalAttrs (engine ? iconUpdateURL) {
+          "16" =
+            warn "'iconUpdateURL' is deprecated, use 'icon = ${lib.strings.escapeNixString engine.iconUpdateURL}' instead" engine.iconUpdateURL;
+        }
+        // (engine.iconMapObj or { });
+    in
+    lib.throwIf (engine ? hasPreferredIcon) "hasPreferredIcon has been removed" (
+      removeAttrs engine [
+        "iconURL"
+        "iconUpdateURL"
+      ]
+    )
     // lib.optionalAttrs (iconMapObj != { }) { inherit iconMapObj; };
-in {
+in
+{
   imports = [ (pkgs.path + "/nixos/modules/misc/meta.nix") ];
 
   meta.maintainers = with lib.maintainers; [ kira-bruneau ];
@@ -370,8 +429,11 @@ in {
   options = {
     enable = mkOption {
       type = with types; bool;
-      default = config.default != null || config.privateDefault != null
-        || config.order != [ ] || config.engines != { };
+      default =
+        config.default != null
+        || config.privateDefault != null
+        || config.order != [ ]
+        || config.engines != { };
       internal = true;
     };
 
@@ -389,8 +451,7 @@ in {
 
     default = mkOption {
       type = with types; nullOr str;
-      apply = engine:
-        if engine != null then migrateEngineNameToIdV7 engine else null;
+      apply = engine: if engine != null then migrateEngineNameToIdV7 engine else null;
       default = null;
       example = "ddg";
       description = ''
@@ -401,8 +462,7 @@ in {
 
     privateDefault = mkOption {
       type = with types; nullOr str;
-      apply = engine:
-        if engine != null then migrateEngineNameToIdV7 engine else null;
+      apply = engine: if engine != null then migrateEngineNameToIdV7 engine else null;
       default = null;
       example = "ddg";
       description = ''
@@ -414,7 +474,10 @@ in {
       type = with types; uniq (listOf str);
       apply = builtins.map migrateEngineNameToIdV7;
       default = [ ];
-      example = [ "ddg" "google" ];
+      example = [
+        "ddg"
+        "google"
+      ];
       description = ''
         The order the search engines are listed in. Any engines that
         aren't included in this list will be listed after these in an
@@ -425,10 +488,12 @@ in {
     engines = mkOption {
       type = with types; attrsOf (attrsOf jsonFormat.type);
 
-      apply = mapAttrs' (name: value: {
-        name = migrateEngineNameToIdV7 name;
-        inherit value;
-      });
+      apply = mapAttrs' (
+        name: value: {
+          name = migrateEngineNameToIdV7 name;
+          inherit value;
+        }
+      );
 
       default = { };
       example = lib.literalExpression ''

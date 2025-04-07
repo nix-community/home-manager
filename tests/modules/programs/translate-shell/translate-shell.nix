@@ -6,7 +6,10 @@
       engine = "bing";
       play = true;
       hl = "en";
-      tl = [ "de" "fr" ];
+      tl = [
+        "de"
+        "fr"
+      ];
     };
   };
 

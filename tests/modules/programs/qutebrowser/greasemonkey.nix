@@ -11,20 +11,24 @@ let
     // ==/UserScript==
   '';
 
-in {
+in
+{
   programs.qutebrowser = {
     enable = true;
     greasemonkey = [ greasemonkeyScript ];
   };
 
-  nmt.script = let
-    scriptDir = if pkgs.stdenv.hostPlatform.isDarwin then
-      ".qutebrowser/greasemonkey"
-    else
-      ".config/qutebrowser/greasemonkey";
-  in ''
-    assertFileContent \
-      home-files/${scriptDir}/qutebrowser-greasemonkey.js \
-      ${greasemonkeyScript}
-  '';
+  nmt.script =
+    let
+      scriptDir =
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          ".qutebrowser/greasemonkey"
+        else
+          ".config/qutebrowser/greasemonkey";
+    in
+    ''
+      assertFileContent \
+        home-files/${scriptDir}/qutebrowser-greasemonkey.js \
+        ${greasemonkeyScript}
+    '';
 }

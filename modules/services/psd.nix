@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -12,7 +17,8 @@ let
     USE_BACKUP="${if cfg.useBackup then "yes" else "no"}"
     BACKUP_LIMIT=${builtins.toString cfg.backupLimit}
   '';
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.danjujan ];
 
   options.services.psd = {
@@ -34,7 +40,11 @@ in {
     browsers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      example = [ "chromium" "google-chrome" "firefox" ];
+      example = [
+        "chromium"
+        "google-chrome"
+        "firefox"
+      ];
       description = ''
         A list of browsers to sync. An empty list will enable all browsers to be managed by profile-sync-daemon.
 
@@ -68,60 +78,77 @@ in {
     home.packages = [ pkgs.profile-sync-daemon ];
 
     systemd.user = {
-      services = let
-        exe = "${pkgs.profile-sync-daemon}/bin/profile-sync-daemon";
-        envPath = lib.makeBinPath (with pkgs; [
-          rsync
-          kmod
-          gawk
-          gnugrep
-          gnused
-          coreutils
-          findutils
-          nettools
-          util-linux
-          profile-sync-daemon
-        ]);
-      in {
-        psd = {
-          Unit = {
-            Description = "Profile-sync-daemon";
-            Wants = [ "psd-resync.service" ];
-            RequiresMountsFor = [ "/home/" ];
-            After = "winbindd.service";
+      services =
+        let
+          exe = "${pkgs.profile-sync-daemon}/bin/profile-sync-daemon";
+          envPath = lib.makeBinPath (
+            with pkgs;
+            [
+              rsync
+              kmod
+              gawk
+              gnugrep
+              gnused
+              coreutils
+              findutils
+              nettools
+              util-linux
+              profile-sync-daemon
+            ]
+          );
+        in
+        {
+          psd = {
+            Unit = {
+              Description = "Profile-sync-daemon";
+              Wants = [ "psd-resync.service" ];
+              RequiresMountsFor = [ "/home/" ];
+              After = "winbindd.service";
+            };
+            Service = {
+              Type = "oneshot";
+              RemainAfterExit = "yes";
+              ExecStart = "${exe} startup";
+              ExecStop = "${exe} unsync";
+              Environment = [
+                "LAUNCHED_BY_SYSTEMD=1"
+                "PATH=$PATH:${envPath}"
+              ];
+            };
+            Install = {
+              WantedBy = [ "default.target" ];
+            };
           };
-          Service = {
-            Type = "oneshot";
-            RemainAfterExit = "yes";
-            ExecStart = "${exe} startup";
-            ExecStop = "${exe} unsync";
-            Environment = [ "LAUNCHED_BY_SYSTEMD=1" "PATH=$PATH:${envPath}" ];
-          };
-          Install = { WantedBy = [ "default.target" ]; };
-        };
 
-        psd-resync = {
-          Unit = {
-            Description = "Timed profile resync";
-            After = [ "psd.service" ];
-            Wants = [ "psd-resync.timer" ];
-            PartOf = [ "psd.service" ];
+          psd-resync = {
+            Unit = {
+              Description = "Timed profile resync";
+              After = [ "psd.service" ];
+              Wants = [ "psd-resync.timer" ];
+              PartOf = [ "psd.service" ];
+            };
+            Service = {
+              Type = "oneshot";
+              ExecStart = "${exe} resync";
+              Environment = [ "PATH=$PATH:${envPath}" ];
+            };
+            Install = {
+              WantedBy = [ "default.target" ];
+            };
           };
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${exe} resync";
-            Environment = [ "PATH=$PATH:${envPath}" ];
-          };
-          Install = { WantedBy = [ "default.target" ]; };
         };
-      };
 
       timers.psd-resync = {
         Unit = {
           Description = "Timer for Profile-sync-daemon";
-          PartOf = [ "psd-resync.service" "psd.service" ];
+          PartOf = [
+            "psd-resync.service"
+            "psd.service"
+          ];
         };
-        Timer = { OnUnitActiveSec = cfg.resyncTimer; };
+        Timer = {
+          OnUnitActiveSec = cfg.resyncTimer;
+        };
       };
     };
 

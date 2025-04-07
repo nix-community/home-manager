@@ -3,7 +3,9 @@
 {
   programs.git = {
     enable = true;
-    hooks = { pre-commit = ./git-pre-commit-hook.sh; };
+    hooks = {
+      pre-commit = ./git-pre-commit-hook.sh;
+    };
   };
 
   nmt.script = ''

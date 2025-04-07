@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.rsibreak;
 
-in {
+in
+{
   options.services.rsibreak = {
 
     enable = mkEnableOption "rsibreak";
@@ -15,8 +21,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.rsibreak" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.rsibreak" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ pkgs.rsibreak ];
@@ -27,7 +32,9 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
         Environment = [ "PATH=${config.home.profileDirectory}/bin" ];

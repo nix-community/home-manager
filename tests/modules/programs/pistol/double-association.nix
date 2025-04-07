@@ -2,15 +2,19 @@
   programs.pistol = {
     enable = true;
     # contains both fpath and mime
-    associations = [{
-      fpath = ".*.md$";
-      mime = "application/json";
-      command = "bat %pistol-filename%";
-    }];
+    associations = [
+      {
+        fpath = ".*.md$";
+        mime = "application/json";
+        command = "bat %pistol-filename%";
+      }
+    ];
   };
 
-  test.asserts.assertions.expected = [''
-    Each entry in programs.pistol.associations must contain exactly one
-    of fpath or mime.
-  ''];
+  test.asserts.assertions.expected = [
+    ''
+      Each entry in programs.pistol.associations must contain exactly one
+      of fpath or mime.
+    ''
+  ];
 }

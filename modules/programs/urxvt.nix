@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
   cfg = config.programs.urxvt;
-in {
+in
+{
   options.programs.urxvt = {
     enable = lib.mkEnableOption "rxvt-unicode terminal emulator";
 
@@ -31,8 +37,7 @@ in {
     iso14755 = mkOption {
       type = types.bool;
       default = true;
-      description =
-        "ISO14755 support for viewing and entering unicode characters.";
+      description = "ISO14755 support for viewing and entering unicode characters.";
     };
 
     scroll = {
@@ -46,19 +51,31 @@ in {
             };
 
             style = mkOption {
-              type = types.enum [ "rxvt" "plain" "next" "xterm" ];
+              type = types.enum [
+                "rxvt"
+                "plain"
+                "next"
+                "xterm"
+              ];
               default = "plain";
               description = "Scrollbar style.";
             };
 
             align = mkOption {
-              type = types.enum [ "top" "bottom" "center" ];
+              type = types.enum [
+                "top"
+                "bottom"
+                "center"
+              ];
               default = "center";
               description = "Scrollbar alignment.";
             };
 
             position = mkOption {
-              type = types.enum [ "left" "right" ];
+              type = types.enum [
+                "left"
+                "right"
+              ];
               default = "right";
               description = "Scrollbar position.";
             };
@@ -66,8 +83,7 @@ in {
             floating = mkOption {
               type = types.bool;
               default = true;
-              description =
-                "Whether to display an rxvt scrollbar without a trough.";
+              description = "Whether to display an rxvt scrollbar without a trough.";
             };
           };
         };
@@ -84,8 +100,7 @@ in {
       keepPosition = mkOption {
         type = types.bool;
         default = true;
-        description =
-          "Whether to keep a scroll position when TTY receives new lines.";
+        description = "Whether to keep a scroll position when TTY receives new lines.";
       };
 
       scrollOnKeystroke = mkOption {
@@ -110,15 +125,16 @@ in {
     shading = mkOption {
       type = types.ints.between 0 200;
       default = 100;
-      description =
-        "Darken (0 to 99) or lighten (101 to 200) the transparent background.";
+      description = "Darken (0 to 99) or lighten (101 to 200) the transparent background.";
     };
 
     extraConfig = mkOption {
       default = { };
       type = types.attrsOf types.anything;
       description = "Additional configuration to add.";
-      example = { "shading" = 15; };
+      example = {
+        "shading" = 15;
+      };
     };
 
   };
@@ -126,24 +142,27 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xresources.properties = {
-      "URxvt.scrollBar" = cfg.scroll.bar.enable;
-      "URxvt.scrollstyle" = cfg.scroll.bar.style;
-      "URxvt.scrollBar_align" = cfg.scroll.bar.align;
-      "URxvt.scrollBar_right" = cfg.scroll.bar.position == "right";
-      "URxvt.scrollBar_floating" = cfg.scroll.bar.floating;
-      "URxvt.saveLines" = cfg.scroll.lines;
-      "URxvt.scrollWithBuffer" = cfg.scroll.keepPosition;
-      "URxvt.scrollTtyKeypress" = cfg.scroll.scrollOnKeystroke;
-      "URxvt.scrollTtyOutput" = cfg.scroll.scrollOnOutput;
-      "URxvt.transparent" = cfg.transparent;
-      "URxvt.shading" = cfg.shading;
-      "URxvt.iso14755" = cfg.iso14755;
-    } // lib.flip lib.mapAttrs' cfg.keybindings
-      (kb: action: lib.nameValuePair "URxvt.keysym.${kb}" action)
+    xresources.properties =
+      {
+        "URxvt.scrollBar" = cfg.scroll.bar.enable;
+        "URxvt.scrollstyle" = cfg.scroll.bar.style;
+        "URxvt.scrollBar_align" = cfg.scroll.bar.align;
+        "URxvt.scrollBar_right" = cfg.scroll.bar.position == "right";
+        "URxvt.scrollBar_floating" = cfg.scroll.bar.floating;
+        "URxvt.saveLines" = cfg.scroll.lines;
+        "URxvt.scrollWithBuffer" = cfg.scroll.keepPosition;
+        "URxvt.scrollTtyKeypress" = cfg.scroll.scrollOnKeystroke;
+        "URxvt.scrollTtyOutput" = cfg.scroll.scrollOnOutput;
+        "URxvt.transparent" = cfg.transparent;
+        "URxvt.shading" = cfg.shading;
+        "URxvt.iso14755" = cfg.iso14755;
+      }
+      // lib.flip lib.mapAttrs' cfg.keybindings (
+        kb: action: lib.nameValuePair "URxvt.keysym.${kb}" action
+      )
       // lib.optionalAttrs (cfg.fonts != [ ]) {
         "URxvt.font" = lib.concatStringsSep "," cfg.fonts;
-      } // lib.flip lib.mapAttrs' cfg.extraConfig
-      (k: v: lib.nameValuePair "URxvt.${k}" v);
+      }
+      // lib.flip lib.mapAttrs' cfg.extraConfig (k: v: lib.nameValuePair "URxvt.${k}" v);
   };
 }

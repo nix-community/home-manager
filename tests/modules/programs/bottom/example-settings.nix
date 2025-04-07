@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   config = {
     programs.bottom = {
       enable = true;
@@ -10,7 +11,9 @@
           temperature_type = "c";
         };
 
-        colors = { low_battery_color = "red"; };
+        colors = {
+          low_battery_color = "red";
+        };
       };
     };
 

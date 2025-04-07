@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -9,7 +14,8 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.Scrumplex ];
 
   options.services.listenbrainz-mpd = {
@@ -24,7 +30,9 @@ in {
         Configuration for listenbrainz-mpd written to
         {file}`$XDG_CONFIG_HOME/listenbrainz-mpd/config.toml`.
       '';
-      example = { submission.token_file = "/run/secrets/listenbrainz-mpd"; };
+      example = {
+        submission.token_file = "/run/secrets/listenbrainz-mpd";
+      };
     };
   };
 
@@ -40,10 +48,7 @@ in {
         ExecStart = "${cfg.package}/bin/listenbrainz-mpd";
         Restart = "always";
         RestartSec = 5;
-        Type = if lib.versionAtLeast cfg.package.version "2.3.2" then
-          "notify"
-        else
-          "simple";
+        Type = if lib.versionAtLeast cfg.package.version "2.3.2" then "notify" else "simple";
       };
       Install.WantedBy = [ "default.target" ];
     };

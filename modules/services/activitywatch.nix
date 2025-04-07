@@ -1,13 +1,22 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) mkOption;
 
   cfg = config.services.activitywatch;
 
-  mkWatcherService = name: cfg:
-    let jobName = "activitywatch-watcher-${cfg.name}";
-    in lib.nameValuePair jobName {
+  mkWatcherService =
+    name: cfg:
+    let
+      jobName = "activitywatch-watcher-${cfg.name}";
+    in
+    lib.nameValuePair jobName {
       Unit = {
         Description = "ActivityWatch watcher '${cfg.name}'";
         After = [ "activitywatch.service" ];
@@ -15,9 +24,7 @@ let
       };
 
       Service = {
-        ExecStart = "${lib.getExe' cfg.package cfg.executable} ${
-            lib.escapeShellArgs cfg.extraOptions
-          }";
+        ExecStart = "${lib.getExe' cfg.package cfg.executable} ${lib.escapeShellArgs cfg.extraOptions}";
 
         # Some sandboxing.
         LockPersonality = true;
@@ -35,86 +42,100 @@ let
   watcherSettingsFormat = pkgs.formats.toml { };
 
   # The module interface for the watchers.
-  watcherType = { name, config, options, ... }: {
-    options = {
-      name = mkOption {
-        type = lib.types.str;
-        default = name;
-        example = "aw-watcher-afk";
-        description = ''
-          The name of the watcher. This will be used as the directory name for
-          {file}`$XDG_CONFIG_HOME/activitywatch/$NAME` when
-          {option}`services.activitywatch.watchers.<name>.settings` is set.
-        '';
-      };
-
-      package = lib.mkPackageOption pkgs "activitywatch" {
-        extraDescription = "The derivation containing the watcher executable.";
-      };
-
-      executable = mkOption {
-        type = lib.types.str;
-        default = config.name;
-        description = ''
-          The name of the executable of the watcher. This is useful in case the
-          watcher name is different from the executable. By default, this
-          option uses the watcher name.
-        '';
-      };
-
-      settings = mkOption {
-        type = watcherSettingsFormat.type;
-        default = { };
-        example = {
-          timeout = 300;
-          poll_time = 2;
+  watcherType =
+    {
+      name,
+      config,
+      options,
+      ...
+    }:
+    {
+      options = {
+        name = mkOption {
+          type = lib.types.str;
+          default = name;
+          example = "aw-watcher-afk";
+          description = ''
+            The name of the watcher. This will be used as the directory name for
+            {file}`$XDG_CONFIG_HOME/activitywatch/$NAME` when
+            {option}`services.activitywatch.watchers.<name>.settings` is set.
+          '';
         };
-        description = ''
-          The settings for the individual watcher in TOML format. If set, a
-          file will be generated at
-          {file}`$XDG_CONFIG_HOME/activitywatch/$NAME/$FILENAME`.
 
-          To set the basename of the settings file, see
-          [](#opt-services.activitywatch.watchers._name_.settingsFilename).
-        '';
-      };
+        package = lib.mkPackageOption pkgs "activitywatch" {
+          extraDescription = "The derivation containing the watcher executable.";
+        };
 
-      settingsFilename = mkOption {
-        type = lib.types.str;
-        default = "${config.name}.toml";
-        example = "config.toml";
-        description = ''
-          The filename of the generated settings file. By default, this uses
-          the watcher name to be generated at
-          {file}`$XDG_CONFIG_HOME/activitywatch/$NAME/$NAME.toml`.
+        executable = mkOption {
+          type = lib.types.str;
+          default = config.name;
+          description = ''
+            The name of the executable of the watcher. This is useful in case the
+            watcher name is different from the executable. By default, this
+            option uses the watcher name.
+          '';
+        };
 
-          This is useful in case the watcher requires a different name for the
-          configuration file.
-        '';
-      };
+        settings = mkOption {
+          type = watcherSettingsFormat.type;
+          default = { };
+          example = {
+            timeout = 300;
+            poll_time = 2;
+          };
+          description = ''
+            The settings for the individual watcher in TOML format. If set, a
+            file will be generated at
+            {file}`$XDG_CONFIG_HOME/activitywatch/$NAME/$FILENAME`.
 
-      extraOptions = mkOption {
-        type = with lib.types; listOf str;
-        default = [ ];
-        example = [ "--host" "127.0.0.1" ];
-        description = ''
-          Extra arguments to be passed to the watcher executable.
-        '';
+            To set the basename of the settings file, see
+            [](#opt-services.activitywatch.watchers._name_.settingsFilename).
+          '';
+        };
+
+        settingsFilename = mkOption {
+          type = lib.types.str;
+          default = "${config.name}.toml";
+          example = "config.toml";
+          description = ''
+            The filename of the generated settings file. By default, this uses
+            the watcher name to be generated at
+            {file}`$XDG_CONFIG_HOME/activitywatch/$NAME/$NAME.toml`.
+
+            This is useful in case the watcher requires a different name for the
+            configuration file.
+          '';
+        };
+
+        extraOptions = mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+          example = [
+            "--host"
+            "127.0.0.1"
+          ];
+          description = ''
+            Extra arguments to be passed to the watcher executable.
+          '';
+        };
       };
     };
-  };
 
-  generateWatchersConfig = name: cfg:
+  generateWatchersConfig =
+    name: cfg:
     let
       # We're only assuming the generated filepath this since most watchers
       # uses the ActivityWatch client library which has `load_config_toml`
       # utility function for easily loading the configuration files.
       filename = "activitywatch/${cfg.name}/${cfg.settingsFilename}";
-    in lib.nameValuePair filename (lib.mkIf (cfg.settings != { }) {
-      source = watcherSettingsFormat.generate
-        "activitywatch-watcher-${cfg.name}-settings" cfg.settings;
-    });
-in {
+    in
+    lib.nameValuePair filename (
+      lib.mkIf (cfg.settings != { }) {
+        source = watcherSettingsFormat.generate "activitywatch-watcher-${cfg.name}-settings" cfg.settings;
+      }
+    );
+in
+{
   meta.maintainers = with lib.maintainers; [ foo-dogsquared ];
 
   options.services.activitywatch = {
@@ -156,7 +177,10 @@ in {
       '';
       type = with lib.types; listOf str;
       default = [ ];
-      example = [ "--port" "5999" ];
+      example = [
+        "--port"
+        "5999"
+      ];
     };
 
     watchers = mkOption {
@@ -211,8 +235,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.activitywatch" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.activitywatch" pkgs lib.platforms.linux)
     ];
 
     # We'll group these services with a target to make it easier to manage for
@@ -236,9 +259,7 @@ in {
         };
 
         Service = {
-          ExecStart = "${lib.getExe' cfg.package "aw-server"} ${
-              lib.escapeShellArgs cfg.extraOptions
-            }";
+          ExecStart = "${lib.getExe' cfg.package "aw-server"} ${lib.escapeShellArgs cfg.extraOptions}";
           Restart = "on-failure";
 
           # Some sandboxing.
@@ -251,11 +272,11 @@ in {
       };
     };
 
-    xdg.configFile = lib.mapAttrs' generateWatchersConfig cfg.watchers
+    xdg.configFile =
+      lib.mapAttrs' generateWatchersConfig cfg.watchers
       // lib.optionalAttrs (cfg.settings != { }) {
         "activitywatch/aw-server-rust/config.toml" = {
-          source = watcherSettingsFormat.generate
-            "activitywatch-server-rust-config.toml" cfg.settings;
+          source = watcherSettingsFormat.generate "activitywatch-server-rust-config.toml" cfg.settings;
         };
       };
   };

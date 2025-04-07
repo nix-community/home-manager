@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.status-notifier-watcher;
 
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.pltanton ];
 
   options = {
@@ -15,20 +21,17 @@ in {
 
       package = mkOption {
         default = pkgs.haskellPackages.status-notifier-item;
-        defaultText =
-          literalExpression "pkgs.haskellPackages.status-notifier-item";
+        defaultText = literalExpression "pkgs.haskellPackages.status-notifier-item";
         type = types.package;
         example = literalExpression "pkgs.haskellPackages.status-notifier-item";
-        description =
-          "The package to use for the status notifier watcher binary.";
+        description = "The package to use for the status notifier watcher binary.";
       };
     };
   };
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.status-notifier-watcher" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.status-notifier-watcher" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.status-notifier-watcher = {
@@ -44,7 +47,12 @@ in {
         ExecStart = "${cfg.package}/bin/status-notifier-watcher";
       };
 
-      Install = { WantedBy = [ "tray.target" "taffybar.service" ]; };
+      Install = {
+        WantedBy = [
+          "tray.target"
+          "taffybar.service"
+        ];
+      };
     };
   };
 }

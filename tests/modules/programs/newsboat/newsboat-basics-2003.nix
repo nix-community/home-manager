@@ -7,14 +7,19 @@
     urls = [
       {
         url = "http://example.org/feed.xml";
-        tags = [ "tag1" "tag2" ];
+        tags = [
+          "tag1"
+          "tag2"
+        ];
         title = "Cool feed";
       }
 
       { url = "http://example.org/feed2.xml"; }
     ];
 
-    queries = { "foo" = ''rssurl =~ "example.com"''; };
+    queries = {
+      "foo" = ''rssurl =~ "example.com"'';
+    };
   };
 
   nmt.script = ''

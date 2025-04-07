@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,11 +12,12 @@ let
   cfg = config.xsession.windowManager.awesome;
   awesome = cfg.package;
   getLuaPath = lib: dir: "${lib}/${dir}/lua/${awesome.lua.luaversion}";
-  makeSearchPath = lib.concatMapStrings (path:
-    " --search ${getLuaPath path "share"}"
-    + " --search ${getLuaPath path "lib"}");
+  makeSearchPath = lib.concatMapStrings (
+    path: " --search ${getLuaPath path "share"}" + " --search ${getLuaPath path "lib"}"
+  );
 
-in {
+in
+{
   options = {
     xsession.windowManager.awesome = {
       enable = mkEnableOption "Awesome window manager";
@@ -46,13 +52,12 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "xsession.windowManager.awesome" pkgs
-        platforms.linux)
+      (hm.assertions.assertPlatform "xsession.windowManager.awesome" pkgs platforms.linux)
     ];
 
     home.packages = [ awesome ];
 
-    xsession.windowManager.command = "${awesome}/bin/awesome "
-      + optionalString cfg.noArgb "--no-argb " + makeSearchPath cfg.luaModules;
+    xsession.windowManager.command =
+      "${awesome}/bin/awesome " + optionalString cfg.noArgb "--no-argb " + makeSearchPath cfg.luaModules;
   };
 }

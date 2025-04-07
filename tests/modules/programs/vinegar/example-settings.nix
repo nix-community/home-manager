@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   programs.vinegar = {
     enable = true;
     package = config.lib.test.mkStubPackage { };

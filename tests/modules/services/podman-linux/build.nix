@@ -7,28 +7,32 @@
     enable = true;
     builds = {
       "my-bld" = {
-        file = let
-          containerFile = pkgs.writeTextFile {
-            name = "Containerfile";
-            text = ''
-              FROM docker.io/alpine:latest
-            '';
-          };
-        in "${containerFile}";
+        file =
+          let
+            containerFile = pkgs.writeTextFile {
+              name = "Containerfile";
+              text = ''
+                FROM docker.io/alpine:latest
+              '';
+            };
+          in
+          "${containerFile}";
       };
 
       "my-bld-2" = {
         file = "https://www.github.com/././Containerfile";
         extraConfig = {
-          Build.ImageTag = [ "locahost/somethingelse" "localhost/anothertag" ];
+          Build.ImageTag = [
+            "locahost/somethingelse"
+            "localhost/anothertag"
+          ];
         };
       };
     };
   };
 
   test.asserts.assertions.expected = [
-    ''
-      In 'my-bld-2' config. Build.ImageTag: '[ "locahost/somethingelse" "localhost/anothertag" ]' does not contain 'homemanager/my-bld-2'.''
+    ''In 'my-bld-2' config. Build.ImageTag: '[ "locahost/somethingelse" "localhost/anothertag" ]' does not contain 'homemanager/my-bld-2'.''
   ];
 
   nmt.script = ''

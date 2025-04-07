@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -14,7 +19,14 @@ let
     Service = {
       Environment = [
         "PATH=${
-          lib.makeBinPath (with pkgs; [ openssh git ] ++ repo.extraPackages)
+          lib.makeBinPath (
+            with pkgs;
+            [
+              openssh
+              git
+            ]
+            ++ repo.extraPackages
+          )
         }"
         "GIT_SYNC_DIRECTORY=${strings.escapeShellArg repo.path}"
         "GIT_SYNC_COMMAND=${cfg.package}/bin/git-sync"
@@ -43,56 +55,63 @@ let
     value = mkService name repo;
   }) cfg.repositories;
 
-  repositoryType = types.submodule ({ name, ... }: {
-    options = {
-      name = mkOption {
-        internal = true;
-        default = name;
-        type = types.str;
-        description = "The name that should be given to this unit.";
+  repositoryType = types.submodule (
+    { name, ... }:
+    {
+      options = {
+        name = mkOption {
+          internal = true;
+          default = name;
+          type = types.str;
+          description = "The name that should be given to this unit.";
+        };
+
+        path = mkOption {
+          type = types.path;
+          description = "The path at which to sync the repository";
+        };
+
+        uri = mkOption {
+          type = types.str;
+          example = "git+ssh://user@example.com:/~[user]/path/to/repo.git";
+          description = ''
+            The URI of the remote to be synchronized. This is only used in the
+            event that the directory does not already exist. See
+            <https://git-scm.com/docs/git-clone#_git_urls>
+            for the supported URIs.
+
+            This option is not supported on Darwin.
+          '';
+        };
+
+        interval = mkOption {
+          type = types.int;
+          default = 500;
+          description = ''
+            The interval, specified in seconds, at which the synchronization will
+            be triggered even without filesystem changes.
+          '';
+        };
+
+        extraPackages = mkOption {
+          type = with types; listOf package;
+          default = [ ];
+          example = literalExpression "with pkgs; [ git-crypt ]";
+          description = ''
+            Extra packages available to git-sync.
+          '';
+        };
       };
+    }
+  );
 
-      path = mkOption {
-        type = types.path;
-        description = "The path at which to sync the repository";
-      };
-
-      uri = mkOption {
-        type = types.str;
-        example = "git+ssh://user@example.com:/~[user]/path/to/repo.git";
-        description = ''
-          The URI of the remote to be synchronized. This is only used in the
-          event that the directory does not already exist. See
-          <https://git-scm.com/docs/git-clone#_git_urls>
-          for the supported URIs.
-
-          This option is not supported on Darwin.
-        '';
-      };
-
-      interval = mkOption {
-        type = types.int;
-        default = 500;
-        description = ''
-          The interval, specified in seconds, at which the synchronization will
-          be triggered even without filesystem changes.
-        '';
-      };
-
-      extraPackages = mkOption {
-        type = with types; listOf package;
-        default = [ ];
-        example = literalExpression "with pkgs; [ git-crypt ]";
-        description = ''
-          Extra packages available to git-sync.
-        '';
-      };
-    };
-  });
-
-in {
-  meta.maintainers =
-    [ maintainers.imalison maintainers.cab404 maintainers.ryane ];
+in
+{
+  meta.maintainers = [
+    maintainers.imalison
+    maintainers.cab404
+    maintainers.ryane
+  ];
 
   options = {
     services.git-sync = {

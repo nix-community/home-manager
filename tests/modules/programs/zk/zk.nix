@@ -2,7 +2,9 @@
   programs.zk = {
     enable = true;
     settings = {
-      extra = { author = "Mickaël"; };
+      extra = {
+        author = "Mickaël";
+      };
 
       note = {
         default-title = "Untitled";
@@ -15,7 +17,9 @@
         language = "en";
       };
 
-      notebook = { dir = "~/notebook"; };
+      notebook = {
+        dir = "~/notebook";
+      };
     };
   };
 

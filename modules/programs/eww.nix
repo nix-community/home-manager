@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf;
 
   cfg = config.programs.eww;
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.mainrs ];
 
   options.programs.eww = {
@@ -21,38 +27,37 @@ in {
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
-  config = let ewwCmd = lib.getExe cfg.package;
-  in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
-    xdg =
-      mkIf (cfg.configDir != null) { configFile."eww".source = cfg.configDir; };
+  config =
+    let
+      ewwCmd = lib.getExe cfg.package;
+    in
+    mkIf cfg.enable {
+      home.packages = [ cfg.package ];
+      xdg = mkIf (cfg.configDir != null) { configFile."eww".source = cfg.configDir; };
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      if [[ $TERM != "dumb" ]]; then
-        eval "$(${ewwCmd} shell-completions --shell bash)"
-      fi
-    '';
+      programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+        if [[ $TERM != "dumb" ]]; then
+          eval "$(${ewwCmd} shell-completions --shell bash)"
+        fi
+      '';
 
-    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-      if [[ $TERM != "dumb" ]]; then
-        eval "$(${ewwCmd} shell-completions --shell zsh)"
-      fi
-    '';
+      programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
+        if [[ $TERM != "dumb" ]]; then
+          eval "$(${ewwCmd} shell-completions --shell zsh)"
+        fi
+      '';
 
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      if test "$TERM" != "dumb"
-        eval "$(${ewwCmd} shell-completions --shell fish)"
-      end
-    '';
-  };
+      programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+        if test "$TERM" != "dumb"
+          eval "$(${ewwCmd} shell-completions --shell fish)"
+        end
+      '';
+    };
 }

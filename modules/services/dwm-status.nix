@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,13 +12,23 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  features = [ "audio" "backlight" "battery" "cpu_load" "network" "time" ];
+  features = [
+    "audio"
+    "backlight"
+    "battery"
+    "cpu_load"
+    "network"
+    "time"
+  ];
 
-  finalConfig = { inherit (cfg) order; } // cfg.extraConfig;
+  finalConfig = {
+    inherit (cfg) order;
+  } // cfg.extraConfig;
 
   configFile = jsonFormat.generate "dwm-status.json" finalConfig;
 
-in {
+in
+{
   options = {
     services.dwm-status = {
       enable = mkEnableOption "dwm-status user service";
@@ -54,8 +69,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.dwm-status" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.dwm-status" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.dwm-status = {
@@ -64,9 +78,13 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
-      Service = { ExecStart = "${cfg.package}/bin/dwm-status ${configFile}"; };
+      Service = {
+        ExecStart = "${cfg.package}/bin/dwm-status ${configFile}";
+      };
     };
   };
 }

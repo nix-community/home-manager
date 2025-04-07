@@ -1,6 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) generators literalExpression mkIf mkOption types;
+  inherit (lib)
+    generators
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
   inherit (builtins) typeOf stringLength;
 
   cfg = config.programs.mpv;
@@ -12,58 +23,55 @@ let
   mpvBindings = with types; attrsOf str;
   mpvDefaultProfiles = with types; listOf str;
 
-  renderOption = option:
+  renderOption =
+    option:
     rec {
       int = toString option;
       float = int;
       bool = lib.hm.booleans.yesNo option;
       string = option;
-    }.${typeOf option};
+    }
+    .${typeOf option};
 
-  renderOptionValue = value:
+  renderOptionValue =
+    value:
     let
       rendered = renderOption value;
       length = toString (stringLength rendered);
-    in "%${length}%${rendered}";
+    in
+    "%${length}%${rendered}";
 
   renderOptions = generators.toKeyValue {
-    mkKeyValue =
-      generators.mkKeyValueDefault { mkValueString = renderOptionValue; } "=";
+    mkKeyValue = generators.mkKeyValueDefault { mkValueString = renderOptionValue; } "=";
     listsAsDuplicateKeys = true;
   };
 
   renderScriptOptions = generators.toKeyValue {
-    mkKeyValue =
-      generators.mkKeyValueDefault { mkValueString = renderOption; } "=";
+    mkKeyValue = generators.mkKeyValueDefault { mkValueString = renderOption; } "=";
     listsAsDuplicateKeys = true;
   };
 
   renderProfiles = generators.toINI {
-    mkKeyValue =
-      generators.mkKeyValueDefault { mkValueString = renderOptionValue; } "=";
+    mkKeyValue = generators.mkKeyValueDefault { mkValueString = renderOptionValue; } "=";
     listsAsDuplicateKeys = true;
   };
 
-  renderBindings = bindings:
-    lib.concatStringsSep "\n"
-    (lib.mapAttrsToList (name: value: "${name} ${value}") bindings);
+  renderBindings =
+    bindings: lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "${name} ${value}") bindings);
 
-  renderDefaultProfiles = profiles:
-    renderOptions { profile = lib.concatStringsSep "," profiles; };
+  renderDefaultProfiles = profiles: renderOptions { profile = lib.concatStringsSep "," profiles; };
 
-  mpvPackage = if cfg.scripts == [ ] then
-    cfg.package
-  else
-    pkgs.mpv.override { inherit (cfg) scripts; };
+  mpvPackage =
+    if cfg.scripts == [ ] then cfg.package else pkgs.mpv.override { inherit (cfg) scripts; };
 
-in {
+in
+{
   options = {
     programs.mpv = {
       enable = lib.mkEnableOption "mpv";
 
       package = lib.mkPackageOption pkgs "mpv" {
-        example =
-          "pkgs.mpv-unwrapped.wrapper { mpv = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }";
+        example = "pkgs.mpv-unwrapped.wrapper { mpv = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }";
       };
 
       finalPackage = mkOption {
@@ -130,8 +138,7 @@ in {
             "~/path/to/conditional.inc";
           ]
         '';
-        description =
-          "List of configuration files to include at the end of mpv.conf.";
+        description = "List of configuration files to include at the end of mpv.conf.";
       };
 
       profiles = mkOption {
@@ -199,48 +206,53 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (lib.mkMerge [
-    {
-      assertions = [{
-        assertion = (cfg.scripts == [ ]) || (cfg.package == pkgs.mpv);
-        message = ''
-          The programs.mpv "package" option is mutually exclusive with "scripts" option.'';
-      }];
-    }
-    {
-      home.packages = [ mpvPackage ];
-      programs.mpv.finalPackage = mpvPackage;
-    }
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          {
+            assertion = (cfg.scripts == [ ]) || (cfg.package == pkgs.mpv);
+            message = ''The programs.mpv "package" option is mutually exclusive with "scripts" option.'';
+          }
+        ];
+      }
+      {
+        home.packages = [ mpvPackage ];
+        programs.mpv.finalPackage = mpvPackage;
+      }
 
-    (mkIf (cfg.includes != [ ]) {
-      xdg.configFile."mpv/mpv.conf" = {
-        text = lib.mkAfter
-          (lib.concatMapStringsSep "\n" (x: "include=${x}") cfg.includes);
-      };
-    })
+      (mkIf (cfg.includes != [ ]) {
+        xdg.configFile."mpv/mpv.conf" = {
+          text = lib.mkAfter (lib.concatMapStringsSep "\n" (x: "include=${x}") cfg.includes);
+        };
+      })
 
-    (mkIf (cfg.config != { } || cfg.profiles != { }) {
-      xdg.configFile."mpv/mpv.conf".text = ''
-        ${lib.optionalString (cfg.defaultProfiles != [ ])
-        (renderDefaultProfiles cfg.defaultProfiles)}
-        ${lib.optionalString (cfg.config != { }) (renderOptions cfg.config)}
-        ${lib.optionalString (cfg.profiles != { })
-        (renderProfiles cfg.profiles)}
-      '';
-    })
-    (mkIf (cfg.bindings != { } || cfg.extraInput != "") {
-      xdg.configFile."mpv/input.conf".text = lib.mkMerge [
-        (mkIf (cfg.bindings != { }) (renderBindings cfg.bindings))
-        (mkIf (cfg.extraInput != "") cfg.extraInput)
-      ];
-    })
-    {
-      xdg.configFile = lib.mapAttrs' (name: value:
-        lib.nameValuePair "mpv/script-opts/${name}.conf" {
-          text = renderScriptOptions value;
-        }) cfg.scriptOpts;
-    }
-  ]);
+      (mkIf (cfg.config != { } || cfg.profiles != { }) {
+        xdg.configFile."mpv/mpv.conf".text = ''
+          ${lib.optionalString (cfg.defaultProfiles != [ ]) (renderDefaultProfiles cfg.defaultProfiles)}
+          ${lib.optionalString (cfg.config != { }) (renderOptions cfg.config)}
+          ${lib.optionalString (cfg.profiles != { }) (renderProfiles cfg.profiles)}
+        '';
+      })
+      (mkIf (cfg.bindings != { } || cfg.extraInput != "") {
+        xdg.configFile."mpv/input.conf".text = lib.mkMerge [
+          (mkIf (cfg.bindings != { }) (renderBindings cfg.bindings))
+          (mkIf (cfg.extraInput != "") cfg.extraInput)
+        ];
+      })
+      {
+        xdg.configFile = lib.mapAttrs' (
+          name: value:
+          lib.nameValuePair "mpv/script-opts/${name}.conf" {
+            text = renderScriptOptions value;
+          }
+        ) cfg.scriptOpts;
+      }
+    ]
+  );
 
-  meta.maintainers = with lib.maintainers; [ thiagokokada chuangzhu ];
+  meta.maintainers = with lib.maintainers; [
+    thiagokokada
+    chuangzhu
+  ];
 }

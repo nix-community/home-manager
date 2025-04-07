@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   services.jankyborders = {
     enable = true;
     settings = {
@@ -15,10 +16,7 @@
     assertFileExists $configFile
     assertFileIsExecutable "$configFile"
     # assertFileContent $configFile ${./jankyborders-config-expected}
-    assertFileContent "$configFile" ${
-      pkgs.writeShellScript "bordersrc"
-      (builtins.readFile ./jankyborders-config-expected)
-    }
+    assertFileContent "$configFile" ${pkgs.writeShellScript "bordersrc" (builtins.readFile ./jankyborders-config-expected)}
 
     serviceFile=LaunchAgents/org.nix-community.home.jankyborders.plist
     assertFileExists "$serviceFile"

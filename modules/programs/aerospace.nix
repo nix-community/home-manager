@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
   cfg = config.programs.aerospace;
@@ -6,22 +11,29 @@ let
   tomlFormat = pkgs.formats.toml { };
 
   # filterAttrsRecursive supporting lists, as well.
-  filterListAndAttrsRecursive = pred: set:
-    lib.listToAttrs (lib.concatMap (name:
-      let v = set.${name};
-      in if pred v then
-        [
-          (lib.nameValuePair name (if lib.isAttrs v then
-            filterListAndAttrsRecursive pred v
-          else if lib.isList v then
-            (map (i:
-              if lib.isAttrs i then filterListAndAttrsRecursive pred i else i)
-              (lib.filter pred v))
-          else
-            v))
-        ]
-      else
-        [ ]) (lib.attrNames set));
+  filterListAndAttrsRecursive =
+    pred: set:
+    lib.listToAttrs (
+      lib.concatMap (
+        name:
+        let
+          v = set.${name};
+        in
+        if pred v then
+          [
+            (lib.nameValuePair name (
+              if lib.isAttrs v then
+                filterListAndAttrsRecursive pred v
+              else if lib.isList v then
+                (map (i: if lib.isAttrs i then filterListAndAttrsRecursive pred i else i) (lib.filter pred v))
+              else
+                v
+            ))
+          ]
+        else
+          [ ]
+      ) (lib.attrNames set)
+    );
   filterNulls = filterListAndAttrsRecursive (v: v != null);
 
   # Turns
@@ -30,16 +42,22 @@ let
   #   {"if.foo" = "xxx"; "if.bar" = "yyy"}
   # so that the correct TOML is generated for the
   # on-window-detected table.
-  flattenConditions = attrs:
-    let conditions = attrs."if" or { };
-    in builtins.removeAttrs attrs [ "if" ]
-    // lib.concatMapAttrs (n: v: { "if.${n}" = v; }) conditions;
+  flattenConditions =
+    attrs:
+    let
+      conditions = attrs."if" or { };
+    in
+    builtins.removeAttrs attrs [ "if" ] // lib.concatMapAttrs (n: v: { "if.${n}" = v; }) conditions;
 
-  flattenOnWindowDetected = cfg:
-    let owd = cfg.on-window-detected or [ ];
-    in cfg // { on-window-detected = map flattenConditions owd; };
+  flattenOnWindowDetected =
+    cfg:
+    let
+      owd = cfg.on-window-detected or [ ];
+    in
+    cfg // { on-window-detected = map flattenConditions owd; };
 
-in {
+in
+{
   meta.maintainers = with lib.hm.maintainers; [ damidoug ];
 
   options.programs.aerospace = {
@@ -76,102 +94,122 @@ in {
           enable-normalization-flatten-containers = mkOption {
             type = types.bool;
             default = true;
-            description =
-              ''Containers that have only one child are "flattened".'';
+            description = ''Containers that have only one child are "flattened".'';
           };
-          enable-normalization-opposite-orientation-for-nested-containers =
-            mkOption {
-              type = types.bool;
-              default = true;
-              description =
-                "Containers that nest into each other must have opposite orientations.";
-            };
+          enable-normalization-opposite-orientation-for-nested-containers = mkOption {
+            type = types.bool;
+            default = true;
+            description = "Containers that nest into each other must have opposite orientations.";
+          };
           accordion-padding = mkOption {
             type = types.int;
             default = 30;
             description = "Padding between windows in an accordion container.";
           };
           default-root-container-layout = mkOption {
-            type = types.enum [ "tiles" "accordion" ];
+            type = types.enum [
+              "tiles"
+              "accordion"
+            ];
             default = "tiles";
             description = "Default layout for the root container.";
           };
           default-root-container-orientation = mkOption {
-            type = types.enum [ "horizontal" "vertical" "auto" ];
+            type = types.enum [
+              "horizontal"
+              "vertical"
+              "auto"
+            ];
             default = "auto";
             description = "Default orientation for the root container.";
           };
           on-window-detected = mkOption {
-            type = types.listOf (types.submodule {
-              options = {
-                "if" = mkOption {
-                  type = types.submodule {
-                    options = {
-                      app-id = mkOption {
-                        type = with types; nullOr str;
-                        default = null;
-                        description = "The application ID to match (optional).";
-                      };
-                      workspace = mkOption {
-                        type = with types; nullOr str;
-                        default = null;
-                        description = "The workspace name to match (optional).";
-                      };
-                      window-title-regex-substring = mkOption {
-                        type = with types; nullOr str;
-                        default = null;
-                        description =
-                          "Substring to match in the window title (optional).";
-                      };
-                      app-name-regex-substring = mkOption {
-                        type = with types; nullOr str;
-                        default = null;
-                        description =
-                          "Regex substring to match the app name (optional).";
-                      };
-                      during-aerospace-startup = mkOption {
-                        type = with types; nullOr bool;
-                        default = null;
-                        description =
-                          "Whether to match during aerospace startup (optional).";
+            type = types.listOf (
+              types.submodule {
+                options = {
+                  "if" = mkOption {
+                    type = types.submodule {
+                      options = {
+                        app-id = mkOption {
+                          type = with types; nullOr str;
+                          default = null;
+                          description = "The application ID to match (optional).";
+                        };
+                        workspace = mkOption {
+                          type = with types; nullOr str;
+                          default = null;
+                          description = "The workspace name to match (optional).";
+                        };
+                        window-title-regex-substring = mkOption {
+                          type = with types; nullOr str;
+                          default = null;
+                          description = "Substring to match in the window title (optional).";
+                        };
+                        app-name-regex-substring = mkOption {
+                          type = with types; nullOr str;
+                          default = null;
+                          description = "Regex substring to match the app name (optional).";
+                        };
+                        during-aerospace-startup = mkOption {
+                          type = with types; nullOr bool;
+                          default = null;
+                          description = "Whether to match during aerospace startup (optional).";
+                        };
                       };
                     };
+                    default = { };
+                    description = "Conditions for detecting a window.";
                   };
-                  default = { };
-                  description = "Conditions for detecting a window.";
+                  check-further-callbacks = mkOption {
+                    type = with types; nullOr bool;
+                    default = null;
+                    description = "Whether to check further callbacks after this rule (optional).";
+                  };
+                  run = mkOption {
+                    type =
+                      with types;
+                      oneOf [
+                        str
+                        (listOf str)
+                      ];
+                    example = [
+                      "move-node-to-workspace m"
+                      "resize-node"
+                    ];
+                    description = "Commands to execute when the conditions match (required).";
+                  };
                 };
-                check-further-callbacks = mkOption {
-                  type = with types; nullOr bool;
-                  default = null;
-                  description =
-                    "Whether to check further callbacks after this rule (optional).";
-                };
-                run = mkOption {
-                  type = with types; oneOf [ str (listOf str) ];
-                  example = [ "move-node-to-workspace m" "resize-node" ];
-                  description =
-                    "Commands to execute when the conditions match (required).";
-                };
-              };
-            });
+              }
+            );
             default = [ ];
-            example = [{
-              "if" = {
-                app-id = "Another.Cool.App";
-                workspace = "cool-workspace";
-                window-title-regex-substring = "Title";
-                app-name-regex-substring = "CoolApp";
-                during-aerospace-startup = false;
-              };
-              check-further-callbacks = false;
-              run = [ "move-node-to-workspace m" "resize-node" ];
-            }];
-            description =
-              "Commands to run every time a new window is detected with optional conditions.";
+            example = [
+              {
+                "if" = {
+                  app-id = "Another.Cool.App";
+                  workspace = "cool-workspace";
+                  window-title-regex-substring = "Title";
+                  app-name-regex-substring = "CoolApp";
+                  during-aerospace-startup = false;
+                };
+                check-further-callbacks = false;
+                run = [
+                  "move-node-to-workspace m"
+                  "resize-node"
+                ];
+              }
+            ];
+            description = "Commands to run every time a new window is detected with optional conditions.";
           };
           workspace-to-monitor-force-assignment = mkOption {
-            type = with types;
-              nullOr (attrsOf (oneOf [ int str (listOf str) ]));
+            type =
+              with types;
+              nullOr (
+                attrsOf (oneOf [
+                  int
+                  str
+                  (listOf str)
+                ])
+              );
             default = null;
             description = ''
               Map workspaces to specific monitors.
@@ -182,17 +220,18 @@ in {
               "2" = "main"; # Main monitor.
               "3" = "secondary"; # Secondary monitor (non-main).
               "4" = "built-in"; # Built-in display.
-              "5" =
-                "^built-in retina display$"; # Regex for the built-in retina display.
-              "6" = [ "secondary" "dell" ]; # Match first pattern in the list.
+              "5" = "^built-in retina display$"; # Regex for the built-in retina display.
+              "6" = [
+                "secondary"
+                "dell"
+              ]; # Match first pattern in the list.
             };
           };
           on-focus-changed = mkOption {
             type = with types; listOf str;
             default = [ ];
             example = [ "move-mouse monitor-lazy-center" ];
-            description =
-              "Commands to run every time focused window or workspace changes.";
+            description = "Commands to run every time focused window or workspace changes.";
           };
           on-focused-monitor-changed = mkOption {
             type = with types; listOf str;
@@ -210,7 +249,10 @@ in {
             description = "Commands to run every time workspace changes.";
           };
           key-mapping.preset = mkOption {
-            type = types.enum [ "qwerty" "dvorak" ];
+            type = types.enum [
+              "qwerty"
+              "dvorak"
+            ];
             default = "qwerty";
             description = "Keymapping preset.";
           };
@@ -243,15 +285,14 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.aerospace" pkgs
-        lib.platforms.darwin)
+      (lib.hm.assertions.assertPlatform "programs.aerospace" pkgs lib.platforms.darwin)
     ];
 
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-      file.".config/aerospace/aerospace.toml".source =
-        tomlFormat.generate "aerospace"
-        (filterNulls (flattenOnWindowDetected cfg.userSettings));
+      file.".config/aerospace/aerospace.toml".source = tomlFormat.generate "aerospace" (
+        filterNulls (flattenOnWindowDetected cfg.userSettings)
+      );
     };
   };
 }

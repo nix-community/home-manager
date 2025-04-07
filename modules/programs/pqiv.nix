@@ -1,9 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.pqiv;
   iniFormat = pkgs.formats.ini { };
-in {
-  meta.maintainers = with lib.maintainers; [ donovanglover iynaix ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    donovanglover
+    iynaix
+  ];
 
   options.programs.pqiv = {
     enable = lib.mkEnableOption "pqiv image viewer";
@@ -52,26 +61,23 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.pqiv" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.pqiv" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."pqivrc" =
-      lib.mkIf (cfg.settings != { } || cfg.extraConfig != "") {
-        text = lib.concatLines [
-          (lib.generators.toINI {
-            mkKeyValue = key: value:
-              let
-                value' = if lib.isBool value then
-                  (if value then "1" else "0")
-                else
-                  toString value;
-              in "${key} = ${value'}";
-          } cfg.settings)
-          cfg.extraConfig
-        ];
-      };
+    xdg.configFile."pqivrc" = lib.mkIf (cfg.settings != { } || cfg.extraConfig != "") {
+      text = lib.concatLines [
+        (lib.generators.toINI {
+          mkKeyValue =
+            key: value:
+            let
+              value' = if lib.isBool value then (if value then "1" else "0") else toString value;
+            in
+            "${key} = ${value'}";
+        } cfg.settings)
+        cfg.extraConfig
+      ];
+    };
   };
 }

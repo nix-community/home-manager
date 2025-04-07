@@ -1,18 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
   cfg = config.programs.ion;
 
-  aliasesStr = lib.concatStringsSep "\n"
-    (lib.mapAttrsToList (k: v: "alias ${k} = ${lib.escapeShellArg v}")
-      cfg.shellAliases);
-in {
+  aliasesStr = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (k: v: "alias ${k} = ${lib.escapeShellArg v}") cfg.shellAliases
+  );
+in
+{
   meta.maintainers = [ lib.maintainers.jo1gi ];
 
   options.programs.ion = {
-    enable =
-      lib.mkEnableOption "the Ion Shell. Compatible with Redox and Linux";
+    enable = lib.mkEnableOption "the Ion Shell. Compatible with Redox and Linux";
 
     package = lib.mkPackageOption pkgs "ion" { };
 

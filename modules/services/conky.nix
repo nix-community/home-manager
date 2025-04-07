@@ -1,10 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.services.conky;
 
-in with lib; {
+in
+with lib;
+{
   meta.maintainers = [ hm.maintainers.kaleo ];
 
   options = {
@@ -27,8 +34,7 @@ in with lib; {
   };
 
   config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "services.conky" pkgs platforms.linux) ];
+    assertions = [ (hm.assertions.assertPlatform "services.conky" pkgs platforms.linux) ];
 
     home.packages = [ cfg.package ];
 
@@ -41,13 +47,13 @@ in with lib; {
       Service = {
         Restart = "always";
         RestartSec = "3";
-        ExecStart = toString ([ "${cfg.package}/bin/conky" ]
-          ++ optional (cfg.extraConfig != "")
-          "--config ${pkgs.writeText "conky.conf" cfg.extraConfig}");
+        ExecStart = toString (
+          [ "${cfg.package}/bin/conky" ]
+          ++ optional (cfg.extraConfig != "") "--config ${pkgs.writeText "conky.conf" cfg.extraConfig}"
+        );
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 }
-

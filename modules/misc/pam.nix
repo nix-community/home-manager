@@ -4,14 +4,20 @@ let
 
   cfg = config.pam;
 
-in {
-  meta.maintainers = with lib.maintainers; [ rycee veehaitch ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    rycee
+    veehaitch
+  ];
 
   options = {
     pam.sessionVariables = lib.mkOption {
       default = { };
       type = lib.types.attrs;
-      example = { EDITOR = "vim"; };
+      example = {
+        EDITOR = "vim";
+      };
       description = ''
         Environment variables that will be set for the PAM session.
         The variable values must be as described in
@@ -24,13 +30,15 @@ in {
 
     pam.yubico.authorizedYubiKeys = {
       ids = lib.mkOption {
-        type = with lib.types;
+        type =
+          with lib.types;
           let
             yubiKeyId = addCheck str (s: lib.stringLength s == 12) // {
               name = "yubiKeyId";
               description = "string of length 12";
             };
-          in listOf yubiKeyId;
+          in
+          listOf yubiKeyId;
         default = [ ];
         description = ''
           List of authorized YubiKey token IDs. Refer to
@@ -52,15 +60,17 @@ in {
 
   config = lib.mkMerge [
     (lib.mkIf (cfg.sessionVariables != { }) {
-      home.file.".pam_environment".text = lib.concatStringsSep "\n"
-        (lib.mapAttrsToList (n: v: ''${n} OVERRIDE="${toString v}"'')
-          cfg.sessionVariables) + "\n";
+      home.file.".pam_environment".text =
+        lib.concatStringsSep "\n" (
+          lib.mapAttrsToList (n: v: ''${n} OVERRIDE="${toString v}"'') cfg.sessionVariables
+        )
+        + "\n";
     })
 
     (lib.mkIf (cfg.yubico.authorizedYubiKeys.ids != [ ]) {
-      home.file.${cfg.yubico.authorizedYubiKeys.path}.text =
-        lib.concatStringsSep ":"
-        ([ config.home.username ] ++ cfg.yubico.authorizedYubiKeys.ids);
+      home.file.${cfg.yubico.authorizedYubiKeys.path}.text = lib.concatStringsSep ":" (
+        [ config.home.username ] ++ cfg.yubico.authorizedYubiKeys.ids
+      );
     })
   ];
 }

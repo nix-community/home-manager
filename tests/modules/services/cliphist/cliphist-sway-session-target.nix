@@ -12,9 +12,7 @@
   '';
 
   test.asserts.warnings.expected = [
-    "The option `services.cliphist.systemdTarget' defined in ${
-      lib.showFiles options.services.cliphist.systemdTarget.files
-    } has been renamed to `services.cliphist.systemdTargets'."
+    "The option `services.cliphist.systemdTarget' defined in ${lib.showFiles options.services.cliphist.systemdTarget.files} has been renamed to `services.cliphist.systemdTargets'."
   ];
 
 }

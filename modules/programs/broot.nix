@@ -1,6 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption mkRenamedOptionModule types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    mkRenamedOptionModule
+    types
+    ;
 
   cfg = config.programs.broot;
 
@@ -13,7 +24,15 @@ let
       modal = lib.mkEnableOption "modal (vim) mode";
 
       verbs = mkOption {
-        type = with types; listOf (attrsOf (oneOf [ bool str (listOf str) ]));
+        type =
+          with types;
+          listOf (
+            attrsOf (oneOf [
+              bool
+              str
+              (listOf str)
+            ])
+          );
         default = [ ];
         example = literalExpression ''
           [
@@ -116,53 +135,64 @@ let
     };
   };
 
-  shellInit = shell:
+  shellInit =
+    shell:
     # Using mkAfter to make it more likely to appear after other
     # manipulations of the prompt.
     lib.mkAfter ''
       source ${
-        pkgs.runCommand "br.${shell}" { nativeBuildInputs = [ cfg.package ]; }
-        "broot --print-shell-function ${shell} > $out"
+        pkgs.runCommand "br.${shell}" {
+          nativeBuildInputs = [ cfg.package ];
+        } "broot --print-shell-function ${shell} > $out"
       }
     '';
-in {
-  meta.maintainers = [ lib.hm.maintainers.aheaume lib.maintainers.dermetfan ];
+in
+{
+  meta.maintainers = [
+    lib.hm.maintainers.aheaume
+    lib.maintainers.dermetfan
+  ];
 
   imports = [
-    (mkRenamedOptionModule [ "programs" "broot" "modal" ] [
-      "programs"
-      "broot"
-      "settings"
-      "modal"
-    ])
-    (mkRenamedOptionModule [ "programs" "broot" "verbs" ] [
-      "programs"
-      "broot"
-      "settings"
-      "verbs"
-    ])
-    (mkRenamedOptionModule [ "programs" "broot" "skin" ] [
-      "programs"
-      "broot"
-      "settings"
-      "skin"
-    ])
+    (mkRenamedOptionModule
+      [ "programs" "broot" "modal" ]
+      [
+        "programs"
+        "broot"
+        "settings"
+        "modal"
+      ]
+    )
+    (mkRenamedOptionModule
+      [ "programs" "broot" "verbs" ]
+      [
+        "programs"
+        "broot"
+        "settings"
+        "verbs"
+      ]
+    )
+    (mkRenamedOptionModule
+      [ "programs" "broot" "skin" ]
+      [
+        "programs"
+        "broot"
+        "settings"
+        "skin"
+      ]
+    )
   ];
 
   options.programs.broot = {
     enable = lib.mkEnableOption "Broot, a better way to navigate directories";
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableNushellIntegration =
-      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     package = lib.mkPackageOption pkgs "broot" { };
 
@@ -190,9 +220,7 @@ in {
         postBuild = ''
           rm $out/conf.hjson
           ${lib.getExe pkgs.jq} --slurp add > $out/conf.hjson \
-            <(${
-              lib.getExe pkgs.hjson-go
-            } -c ${cfg.package.src}/resources/default-conf/conf.hjson) \
+            <(${lib.getExe pkgs.hjson-go} -c ${cfg.package.src}/resources/default-conf/conf.hjson) \
             ${jsonFormat.generate "broot-config.json" cfg.settings}
         '';
       };
@@ -205,8 +233,7 @@ in {
 
       fish.shellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
 
-      nushell.extraConfig =
-        mkIf cfg.enableNushellIntegration (shellInit "nushell");
+      nushell.extraConfig = mkIf cfg.enableNushellIntegration (shellInit "nushell");
     };
   };
 }

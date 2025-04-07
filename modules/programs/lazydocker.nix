@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -8,20 +13,19 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.hausken ];
 
   options.programs.lazydocker = {
-    enable = lib.mkEnableOption
-      "lazydocker, a simple terminal UI for both docker and docker compose";
+    enable = lib.mkEnableOption "lazydocker, a simple terminal UI for both docker and docker compose";
 
     package = lib.mkPackageOption pkgs "lazydocker" { nullable = true; };
 
     settings = lib.mkOption {
       type = yamlFormat.type;
       default = {
-        commandTemplates.dockerCompose =
-          "docker compose"; # Lazydocker uses docker-compose by default which will not work
+        commandTemplates.dockerCompose = "docker compose"; # Lazydocker uses docker-compose by default which will not work
       };
       example = lib.literalExpression ''
         {
@@ -48,13 +52,15 @@ in {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."Library/Application Support/jesseduffield/lazydocker/config.yml" =
-      lib.mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable)) {
-        source = yamlFormat.generate "lazydocker-config" cfg.settings;
-      };
+      lib.mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable))
+        {
+          source = yamlFormat.generate "lazydocker-config" cfg.settings;
+        };
 
     xdg.configFile."lazydocker/config.yml" =
-      lib.mkIf (cfg.settings != { } && !(isDarwin && !config.xdg.enable)) {
-        source = yamlFormat.generate "lazydocker-config" cfg.settings;
-      };
+      lib.mkIf (cfg.settings != { } && !(isDarwin && !config.xdg.enable))
+        {
+          source = yamlFormat.generate "lazydocker-config" cfg.settings;
+        };
   };
 }

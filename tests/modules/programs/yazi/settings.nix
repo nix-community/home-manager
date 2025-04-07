@@ -37,7 +37,9 @@
       ];
     };
     settings = {
-      log = { enabled = false; };
+      log = {
+        enabled = false;
+      };
       manager = {
         show_hidden = false;
         sort_by = "mtime";

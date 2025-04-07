@@ -1,4 +1,10 @@
-{ config, lib, pkgs, realPkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  realPkgs,
+  ...
+}:
 
 lib.mkIf config.test.enableBig {
   home.packages = [ pkgs.comic-relief ];

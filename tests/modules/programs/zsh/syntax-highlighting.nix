@@ -6,7 +6,11 @@
     syntaxHighlighting = {
       enable = true;
       package = pkgs.hello;
-      highlighters = [ "brackets" "pattern" "cursor" ];
+      highlighters = [
+        "brackets"
+        "pattern"
+        "cursor"
+      ];
       styles.comment = "fg=#6c6c6c";
       patterns."rm -rf *" = "fg=white,bold,bg=red";
     };

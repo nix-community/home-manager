@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.notify-osd;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.imalison ];
 
   options = {
@@ -26,8 +32,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.notify-osd" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.notify-osd" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.notify-osd = {

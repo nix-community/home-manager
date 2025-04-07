@@ -3,13 +3,18 @@
 let
   inherit (lib) types;
 
-  mkNullableOption = args:
-    lib.mkOption (args // {
-      type = types.nullOr args.type;
-      default = null;
-    });
+  mkNullableOption =
+    args:
+    lib.mkOption (
+      args
+      // {
+        type = types.nullOr args.type;
+        default = null;
+      }
+    );
 
-  mkNullableEnableOption = name:
+  mkNullableEnableOption =
+    name:
     lib.mkOption {
       type = with types; nullOr bool;
       default = null;
@@ -18,7 +23,8 @@ let
     };
 
   safari = config."com.apple.Safari";
-in {
+in
+{
   freeformType = with types; attrsOf (attrsOf anything);
 
   options = {
@@ -36,7 +42,10 @@ in {
       };
 
       AppleMeasurementUnits = mkNullableOption {
-        type = types.enum [ "Centimeters" "Inches" ];
+        type = types.enum [
+          "Centimeters"
+          "Inches"
+        ];
         example = "Centimeters";
         description = "Sets the measurement unit.";
       };
@@ -44,8 +53,7 @@ in {
       ApplePressAndHoldEnabled = mkNullableOption {
         type = types.bool;
         example = true;
-        description =
-          "Repeat a key when it is held down (false) or display the accented character selector (true)";
+        description = "Repeat a key when it is held down (false) or display the accented character selector (true)";
       };
 
       AppleShowAllExtensions = mkNullableOption {
@@ -55,7 +63,10 @@ in {
       };
 
       AppleTemperatureUnit = mkNullableOption {
-        type = types.enum [ "Celsius" "Fahrenheit" ];
+        type = types.enum [
+          "Celsius"
+          "Fahrenheit"
+        ];
         example = "Celsius";
         description = "Sets the temperature unit.";
       };
@@ -72,20 +83,15 @@ in {
         '';
       };
 
-      NSAutomaticCapitalizationEnabled =
-        mkNullableEnableOption "automatic capitalization";
+      NSAutomaticCapitalizationEnabled = mkNullableEnableOption "automatic capitalization";
 
-      NSAutomaticDashSubstitutionEnabled =
-        mkNullableEnableOption "smart dashes";
+      NSAutomaticDashSubstitutionEnabled = mkNullableEnableOption "smart dashes";
 
-      NSAutomaticPeriodSubstitutionEnabled =
-        mkNullableEnableOption "period with double space";
+      NSAutomaticPeriodSubstitutionEnabled = mkNullableEnableOption "period with double space";
 
-      NSAutomaticQuoteSubstitutionEnabled =
-        mkNullableEnableOption "smart quotes";
+      NSAutomaticQuoteSubstitutionEnabled = mkNullableEnableOption "smart quotes";
 
-      NSAutomaticSpellingCorrectionEnabled =
-        mkNullableEnableOption "spelling correction";
+      NSAutomaticSpellingCorrectionEnabled = mkNullableEnableOption "spelling correction";
     };
 
     "com.apple.desktopservices" = {
@@ -113,10 +119,13 @@ in {
         example = true;
         description = "Hide the Dock automatically";
       };
-      expose-group-apps = mkNullableEnableOption
-        "grouping of windows by application in Mission Control";
+      expose-group-apps = mkNullableEnableOption "grouping of windows by application in Mission Control";
       orientation = mkNullableOption {
-        type = types.enum [ "left" "bottom" "right" ];
+        type = types.enum [
+          "left"
+          "bottom"
+          "right"
+        ];
         example = "left";
         description = "Position of the Dock on the screen";
       };
@@ -155,7 +164,10 @@ in {
     };
 
     "com.apple.menuextra.battery".ShowPercent = mkNullableOption {
-      type = types.enum [ "YES" "NO" ];
+      type = types.enum [
+        "YES"
+        "NO"
+      ];
       example = "NO";
       description = ''
         This option no longer works on macOS 11 and later. Instead, use
@@ -166,11 +178,9 @@ in {
     };
 
     "com.apple.menuextra.clock" = {
-      IsAnalog = mkNullableEnableOption
-        "showing an analog clock instead of a digital one";
+      IsAnalog = mkNullableEnableOption "showing an analog clock instead of a digital one";
 
-      Show24Hour = mkNullableEnableOption
-        "showing a 24-hour clock, instead of a 12-hour clock";
+      Show24Hour = mkNullableEnableOption "showing a 24-hour clock, instead of a 12-hour clock";
 
       ShowAMPM = mkNullableOption {
         type = types.bool;
@@ -180,7 +190,11 @@ in {
       };
 
       ShowDate = mkNullableOption {
-        type = types.enum [ 0 1 2 ];
+        type = types.enum [
+          0
+          1
+          2
+        ];
         description = ''
           Show the full date. Default is null.
 
@@ -196,19 +210,14 @@ in {
 
       ShowDayOfWeek = mkNullableEnableOption "showing the day of the week";
 
-      ShowSeconds = mkNullableEnableOption
-        "showing the clock with second precision, instead of minutes";
+      ShowSeconds = mkNullableEnableOption "showing the clock with second precision, instead of minutes";
     };
 
     "com.apple.Safari" = {
-      AutoOpenSafeDownloads =
-        mkNullableEnableOption "opening of downloaded files";
-      AutoFillPasswords =
-        mkNullableEnableOption "autofill of usernames and passwords";
-      AutoFillCreditCardData =
-        mkNullableEnableOption "autofill of credit card numbers";
-      IncludeDevelopMenu =
-        mkNullableEnableOption ''"Develop" menu in the menu bar'';
+      AutoOpenSafeDownloads = mkNullableEnableOption "opening of downloaded files";
+      AutoFillPasswords = mkNullableEnableOption "autofill of usernames and passwords";
+      AutoFillCreditCardData = mkNullableEnableOption "autofill of credit card numbers";
+      IncludeDevelopMenu = mkNullableEnableOption ''"Develop" menu in the menu bar'';
       ShowOverlayStatusBar = mkNullableEnableOption "status bar";
 
       WebKitDeveloperExtrasEnabledPreferenceKey = mkNullableOption {
@@ -250,14 +259,11 @@ in {
     };
 
     "com.googlecode.iterm2" = {
-      AddNewTabAtEndOfTabs = mkNullableEnableOption
-        "placement of new tabs at the end of the tab bar";
+      AddNewTabAtEndOfTabs = mkNullableEnableOption "placement of new tabs at the end of the tab bar";
 
-      AlternateMouseScroll = mkNullableEnableOption
-        "arrow keys when scrolling in alternate screen mode";
+      AlternateMouseScroll = mkNullableEnableOption "arrow keys when scrolling in alternate screen mode";
 
-      CopySelection =
-        mkNullableEnableOption "copy to clipboard upon selecting text";
+      CopySelection = mkNullableEnableOption "copy to clipboard upon selecting text";
 
       OpenTmuxWindowsIn = mkNullableOption {
         type = types.int;
@@ -278,8 +284,7 @@ in {
         '';
       };
 
-      ExperimentalKeyHandling = mkNullableEnableOption
-        "experimental key handling for AquaSKK compatibility";
+      ExperimentalKeyHandling = mkNullableEnableOption "experimental key handling for AquaSKK compatibility";
     };
   };
 
@@ -288,9 +293,8 @@ in {
       WebKitDeveloperExtrasEnabledPreferenceKey = safari.IncludeDevelopMenu;
       "WebKitPreferences.developerExtrasEnabled" = safari.IncludeDevelopMenu;
     };
-    "com.apple.Safari.SandboxBroker" =
-      lib.mkIf (safari.IncludeDevelopMenu != null) {
-        ShowDevelopMenu = safari.IncludeDevelopMenu;
-      };
+    "com.apple.Safari.SandboxBroker" = lib.mkIf (safari.IncludeDevelopMenu != null) {
+      ShowDevelopMenu = safari.IncludeDevelopMenu;
+    };
   };
 }

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.parcellite;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.gleber ];
 
   options.services.parcellite = {
@@ -32,8 +38,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.parcellite" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.parcellite" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -42,16 +47,19 @@ in {
       Unit = {
         Description = "Lightweight GTK+ clipboard manager";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session.target" "tray.target" ];
+        After = [
+          "graphical-session.target"
+          "tray.target"
+        ];
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
-        ExecStart = "${cfg.package}/bin/${cfg.package.pname} ${
-            escapeShellArgs cfg.extraOptions
-          }";
+        ExecStart = "${cfg.package}/bin/${cfg.package.pname} ${escapeShellArgs cfg.extraOptions}";
         Restart = "on-abort";
       };
     };

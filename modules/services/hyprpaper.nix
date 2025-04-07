@@ -1,7 +1,17 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.services.hyprpaper;
-in {
-  meta.maintainers = with lib.maintainers; [ khaneliman fufexan ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.hyprpaper;
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    fufexan
+  ];
 
   options.services.hyprpaper = {
     enable = lib.mkEnableOption "Hyprpaper, Hyprland's wallpaper daemon";
@@ -9,20 +19,24 @@ in {
     package = lib.mkPackageOption pkgs "hyprpaper" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types;
+      type =
+        with lib.types;
         let
-          valueType = nullOr (oneOf [
-            bool
-            int
-            float
-            str
-            path
-            (attrsOf valueType)
-            (listOf valueType)
-          ]) // {
-            description = "Hyprpaper configuration value";
-          };
-        in valueType;
+          valueType =
+            nullOr (oneOf [
+              bool
+              int
+              float
+              str
+              path
+              (attrsOf valueType)
+              (listOf valueType)
+            ])
+            // {
+              description = "Hyprpaper configuration value";
+            };
+        in
+        valueType;
       default = { };
       description = ''
         hyprpaper configuration written in Nix. Entries with the same key
@@ -65,15 +79,18 @@ in {
     };
 
     systemd.user.services.hyprpaper = lib.mkIf (cfg.package != null) {
-      Install = { WantedBy = [ config.wayland.systemd.target ]; };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hyprpaper";
         After = [ config.wayland.systemd.target ];
         PartOf = [ config.wayland.systemd.target ];
-        X-Restart-Triggers = lib.mkIf (cfg.settings != { })
-          [ "${config.xdg.configFile."hypr/hyprpaper.conf".source}" ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."hypr/hyprpaper.conf".source}"
+        ];
       };
 
       Service = {

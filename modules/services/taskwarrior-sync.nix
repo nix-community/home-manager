@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,14 +11,17 @@ let
 
   cfg = config.services.taskwarrior-sync;
 
-in {
-  meta.maintainers = with maintainers; [ euxane minijackson ];
+in
+{
+  meta.maintainers = with maintainers; [
+    euxane
+    minijackson
+  ];
 
   options.services.taskwarrior-sync = {
     enable = mkEnableOption "Taskwarrior periodic sync";
 
-    package =
-      mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
+    package = mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
 
     frequency = mkOption {
       type = types.str;
@@ -30,12 +38,13 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.taskwarrior-sync" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.taskwarrior-sync" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.taskwarrior-sync = {
-      Unit = { Description = "Taskwarrior sync"; };
+      Unit = {
+        Description = "Taskwarrior sync";
+      };
       Service = {
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
@@ -44,12 +53,16 @@ in {
     };
 
     systemd.user.timers.taskwarrior-sync = {
-      Unit = { Description = "Taskwarrior periodic sync"; };
+      Unit = {
+        Description = "Taskwarrior periodic sync";
+      };
       Timer = {
         Unit = "taskwarrior-sync.service";
         OnCalendar = cfg.frequency;
       };
-      Install = { WantedBy = [ "timers.target" ]; };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
   };
 }

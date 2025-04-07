@@ -2,27 +2,35 @@
 
 let
 
-  mkShellIntegrationOption = name:
-    { config, baseName ? name, extraDescription ? "" }:
-    let attrName = "enable${baseName}Integration";
-    in lib.mkOption {
+  mkShellIntegrationOption =
+    name:
+    {
+      config,
+      baseName ? name,
+      extraDescription ? "",
+    }:
+    let
+      attrName = "enable${baseName}Integration";
+    in
+    lib.mkOption {
       default = config.home.shell.${attrName};
       defaultText = lib.literalMD "[](#opt-home.shell.${attrName})";
       example = false;
       description = "Whether to enable ${name} integration.${
-          lib.optionalString (extraDescription != "")
-          ("\n\n" + extraDescription)
-        }";
+        lib.optionalString (extraDescription != "") ("\n\n" + extraDescription)
+      }";
       type = lib.types.bool;
     };
 
-in rec {
+in
+rec {
   # Produces a Bourne shell like statement that prepend new values to
   # an possibly existing variable, using sep(arator).
   # Example:
   #   prependToVar ":" "PATH" [ "$HOME/bin" "$HOME/.local/bin" ]
   #   => "$HOME/bin:$HOME/.local/bin:${PATH:+:}\$PATH"
-  prependToVar = sep: n: v:
+  prependToVar =
+    sep: n: v:
     "${lib.concatStringsSep sep v}\${${n}:+${sep}}\$${n}";
 
   # Produces a Bourne shell like variable export statement.

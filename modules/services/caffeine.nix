@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,23 +11,29 @@ let
 
   cfg = config.services.caffeine;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.uvnikita ];
 
   options = {
-    services.caffeine = { enable = mkEnableOption "Caffeine service"; };
+    services.caffeine = {
+      enable = mkEnableOption "Caffeine service";
+    };
   };
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.caffeine" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.caffeine" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.caffeine = {
-      Unit = { Description = "caffeine"; };
+      Unit = {
+        Description = "caffeine";
+      };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
         Restart = "on-failure";

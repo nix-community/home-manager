@@ -7,57 +7,55 @@
   nmt.script = ''
     assertFileContent \
       home-files/.config/i3status/config \
-      ${
-        builtins.toFile "i3status-expected-config" ''
-          general {
-            colors = true
-            interval = 5
-          }
+      ${builtins.toFile "i3status-expected-config" ''
+        general {
+          colors = true
+          interval = 5
+        }
 
-          order += "ipv6"
-          order += "wireless _first_"
-          order += "ethernet _first_"
-          order += "battery all"
-          order += "disk /"
-          order += "load"
-          order += "memory"
-          order += "tztime local"
-          battery all {
-            format = "%status %percentage %remaining"
-          }
+        order += "ipv6"
+        order += "wireless _first_"
+        order += "ethernet _first_"
+        order += "battery all"
+        order += "disk /"
+        order += "load"
+        order += "memory"
+        order += "tztime local"
+        battery all {
+          format = "%status %percentage %remaining"
+        }
 
-          disk / {
-            format = "%avail"
-          }
+        disk / {
+          format = "%avail"
+        }
 
-          ethernet _first_ {
-            format_down = "E: down"
-            format_up = "E: %ip (%speed)"
-          }
+        ethernet _first_ {
+          format_down = "E: down"
+          format_up = "E: %ip (%speed)"
+        }
 
-          ipv6 {
-            
-          }
+        ipv6 {
+          
+        }
 
-          load {
-            format = "%1min"
-          }
+        load {
+          format = "%1min"
+        }
 
-          memory {
-            format = "%used | %available"
-            format_degraded = "MEMORY < %available"
-            threshold_degraded = "1G"
-          }
+        memory {
+          format = "%used | %available"
+          format_degraded = "MEMORY < %available"
+          threshold_degraded = "1G"
+        }
 
-          tztime local {
-            format = "%Y-%m-%d %H:%M:%S"
-          }
+        tztime local {
+          format = "%Y-%m-%d %H:%M:%S"
+        }
 
-          wireless _first_ {
-            format_down = "W: down"
-            format_up = "W: (%quality at %essid) %ip"
-          }
-        ''
-      }
+        wireless _first_ {
+          format_down = "W: down"
+          format_up = "W: (%quality at %essid) %ip"
+        }
+      ''}
   '';
 }

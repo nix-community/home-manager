@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,16 +12,36 @@ let
   cfg = config.xsession.windowManager.i3;
 
   commonOptions = import ./lib/options.nix {
-    inherit config lib cfg pkgs;
+    inherit
+      config
+      lib
+      cfg
+      pkgs
+      ;
     moduleName = "i3";
   };
 
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        fonts window floating focus assigns modifier workspaceLayout
-        workspaceAutoBackAndForth keycodebindings colors bars startup gaps menu
-        terminal defaultWorkspace workspaceOutputAssign;
+        fonts
+        window
+        floating
+        focus
+        assigns
+        modifier
+        workspaceLayout
+        workspaceAutoBackAndForth
+        keycodebindings
+        colors
+        bars
+        startup
+        gaps
+        menu
+        terminal
+        defaultWorkspace
+        workspaceOutputAssign
+        ;
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
@@ -62,26 +87,16 @@ let
           "${cfg.config.modifier}+9" = "workspace number 9";
           "${cfg.config.modifier}+0" = "workspace number 10";
 
-          "${cfg.config.modifier}+Shift+1" =
-            "move container to workspace number 1";
-          "${cfg.config.modifier}+Shift+2" =
-            "move container to workspace number 2";
-          "${cfg.config.modifier}+Shift+3" =
-            "move container to workspace number 3";
-          "${cfg.config.modifier}+Shift+4" =
-            "move container to workspace number 4";
-          "${cfg.config.modifier}+Shift+5" =
-            "move container to workspace number 5";
-          "${cfg.config.modifier}+Shift+6" =
-            "move container to workspace number 6";
-          "${cfg.config.modifier}+Shift+7" =
-            "move container to workspace number 7";
-          "${cfg.config.modifier}+Shift+8" =
-            "move container to workspace number 8";
-          "${cfg.config.modifier}+Shift+9" =
-            "move container to workspace number 9";
-          "${cfg.config.modifier}+Shift+0" =
-            "move container to workspace number 10";
+          "${cfg.config.modifier}+Shift+1" = "move container to workspace number 1";
+          "${cfg.config.modifier}+Shift+2" = "move container to workspace number 2";
+          "${cfg.config.modifier}+Shift+3" = "move container to workspace number 3";
+          "${cfg.config.modifier}+Shift+4" = "move container to workspace number 4";
+          "${cfg.config.modifier}+Shift+5" = "move container to workspace number 5";
+          "${cfg.config.modifier}+Shift+6" = "move container to workspace number 6";
+          "${cfg.config.modifier}+Shift+7" = "move container to workspace number 7";
+          "${cfg.config.modifier}+Shift+8" = "move container to workspace number 8";
+          "${cfg.config.modifier}+Shift+9" = "move container to workspace number 9";
+          "${cfg.config.modifier}+Shift+0" = "move container to workspace number 10";
 
           "${cfg.config.modifier}+Shift+c" = "reload";
           "${cfg.config.modifier}+Shift+r" = "restart";
@@ -138,70 +153,95 @@ let
   };
 
   inherit (commonFunctions)
-    keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
-    fontConfigStr keybindingDefaultWorkspace keybindingsRest workspaceOutputStr;
+    keybindingsStr
+    keycodebindingsStr
+    modeStr
+    assignStr
+    barStr
+    gapsStr
+    floatingCriteriaStr
+    windowCommandsStr
+    colorSetStr
+    windowBorderString
+    fontConfigStr
+    keybindingDefaultWorkspace
+    keybindingsRest
+    workspaceOutputStr
+    ;
 
-  startupEntryStr = { command, always, notification, workspace, ... }:
+  startupEntryStr =
+    {
+      command,
+      always,
+      notification,
+      workspace,
+      ...
+    }:
     concatStringsSep " " [
       (if always then "exec_always" else "exec")
       (if (notification && workspace == null) then "" else "--no-startup-id")
-      (if (workspace == null) then
-        command
-      else
-        "i3-msg 'workspace ${workspace}; exec ${command}'")
+      (if (workspace == null) then command else "i3-msg 'workspace ${workspace}; exec ${command}'")
     ];
 
-  configFile = pkgs.writeText "i3.conf" (concatStringsSep "\n"
-    ((if cfg.config != null then
-      with cfg.config;
-      ([
-        (fontConfigStr fonts)
-        "floating_modifier ${floating.modifier}"
-        (windowBorderString window floating)
-        "hide_edge_borders ${window.hideEdgeBorders}"
-        "focus_wrapping ${focus.wrapping}"
-        "focus_follows_mouse ${lib.hm.booleans.yesNo focus.followMouse}"
-        "focus_on_window_activation ${focus.newWindow}"
-        "mouse_warping ${if focus.mouseWarping then "output" else "none"}"
-        "workspace_layout ${workspaceLayout}"
-        "workspace_auto_back_and_forth ${
-          lib.hm.booleans.yesNo workspaceAutoBackAndForth
-        }"
-        "client.focused ${colorSetStr colors.focused}"
-        "client.focused_inactive ${colorSetStr colors.focusedInactive}"
-        "client.unfocused ${colorSetStr colors.unfocused}"
-        "client.urgent ${colorSetStr colors.urgent}"
-        "client.placeholder ${colorSetStr colors.placeholder}"
-        "client.background ${colors.background}"
-        (keybindingsStr { keybindings = keybindingDefaultWorkspace; })
-        (keybindingsStr { keybindings = keybindingsRest; })
-        (keycodebindingsStr keycodebindings)
-      ] ++ mapAttrsToList (modeStr false) modes
-        ++ mapAttrsToList assignStr assigns ++ map barStr bars
-        ++ optional (gaps != null) gapsStr
-        ++ map floatingCriteriaStr floating.criteria
-        ++ map windowCommandsStr window.commands ++ map startupEntryStr startup
-        ++ map workspaceOutputStr workspaceOutputAssign)
-    else
-      [ ]) ++ [ cfg.extraConfig ]));
+  configFile = pkgs.writeText "i3.conf" (
+    concatStringsSep "\n" (
+      (
+        if cfg.config != null then
+          with cfg.config;
+          (
+            [
+              (fontConfigStr fonts)
+              "floating_modifier ${floating.modifier}"
+              (windowBorderString window floating)
+              "hide_edge_borders ${window.hideEdgeBorders}"
+              "focus_wrapping ${focus.wrapping}"
+              "focus_follows_mouse ${lib.hm.booleans.yesNo focus.followMouse}"
+              "focus_on_window_activation ${focus.newWindow}"
+              "mouse_warping ${if focus.mouseWarping then "output" else "none"}"
+              "workspace_layout ${workspaceLayout}"
+              "workspace_auto_back_and_forth ${lib.hm.booleans.yesNo workspaceAutoBackAndForth}"
+              "client.focused ${colorSetStr colors.focused}"
+              "client.focused_inactive ${colorSetStr colors.focusedInactive}"
+              "client.unfocused ${colorSetStr colors.unfocused}"
+              "client.urgent ${colorSetStr colors.urgent}"
+              "client.placeholder ${colorSetStr colors.placeholder}"
+              "client.background ${colors.background}"
+              (keybindingsStr { keybindings = keybindingDefaultWorkspace; })
+              (keybindingsStr { keybindings = keybindingsRest; })
+              (keycodebindingsStr keycodebindings)
+            ]
+            ++ mapAttrsToList (modeStr false) modes
+            ++ mapAttrsToList assignStr assigns
+            ++ map barStr bars
+            ++ optional (gaps != null) gapsStr
+            ++ map floatingCriteriaStr floating.criteria
+            ++ map windowCommandsStr window.commands
+            ++ map startupEntryStr startup
+            ++ map workspaceOutputStr workspaceOutputAssign
+          )
+        else
+          [ ]
+      )
+      ++ [ cfg.extraConfig ]
+    )
+  );
 
   # Validates the i3 configuration
-  checkI3Config =
-    pkgs.runCommandLocal "i3-config" { buildInputs = [ cfg.package ]; } ''
-      # We have to make sure the wrapper does not start a dbus session
-      export DBUS_SESSION_BUS_ADDRESS=1
+  checkI3Config = pkgs.runCommandLocal "i3-config" { buildInputs = [ cfg.package ]; } ''
+    # We have to make sure the wrapper does not start a dbus session
+    export DBUS_SESSION_BUS_ADDRESS=1
 
-      # A zero exit code means i3 successfully validated the configuration
-      i3 -c ${configFile} -C -d all || {
-        echo "i3 configuration validation failed"
-        echo "For a verbose log of the failure, run 'i3 -c ${configFile} -C -d all'"
-        exit 1
-      };
-      cp ${configFile} $out
-    '';
+    # A zero exit code means i3 successfully validated the configuration
+    i3 -c ${configFile} -C -d all || {
+      echo "i3 configuration validation failed"
+      echo "For a verbose log of the failure, run 'i3 -c ${configFile} -C -d all'"
+      exit 1
+    };
+    cp ${configFile} $out
+  '';
 
-in {
+in
+{
   meta.maintainers = with maintainers; [ sumnerevans ];
 
   options = {
@@ -219,8 +259,7 @@ in {
       extraConfig = mkOption {
         type = types.lines;
         default = "";
-        description =
-          "Extra configuration lines to add to ~/.config/i3/config.";
+        description = "Extra configuration lines to add to ~/.config/i3/config.";
       };
     };
   };
@@ -228,8 +267,7 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       assertions = [
-        (hm.assertions.assertPlatform "xsession.windowManager.i3" pkgs
-          platforms.linux)
+        (hm.assertions.assertPlatform "xsession.windowManager.i3" pkgs platforms.linux)
       ];
 
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -251,20 +289,25 @@ in {
     }
 
     (mkIf (cfg.config != null) {
-      warnings = (optional (isList cfg.config.fonts)
-        "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
-        ++ flatten (map (b:
-          optional (isList b.fonts)
-          "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
-          cfg.config.bars) ++ [
-            (mkIf (any (s: s.workspace != null) cfg.config.startup)
-              ("'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
-                + "use 'xsession.windowManager.i3.config.assigns' instead."
-                + "See https://github.com/nix-community/home-manager/issues/265."))
-            (mkIf cfg.config.focus.forceWrapping
-              ("'xsession.windowManager.i3.config.focus.forceWrapping' is deprecated, "
-                + "use 'xsession.windowManager.i3.config.focus.wrapping' instead."))
-          ];
+      warnings =
+        (optional (isList cfg.config.fonts) "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
+        ++ flatten (
+          map (
+            b:
+            optional (isList b.fonts) "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
+          ) cfg.config.bars
+        )
+        ++ [
+          (mkIf (any (s: s.workspace != null) cfg.config.startup) (
+            "'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
+            + "use 'xsession.windowManager.i3.config.assigns' instead."
+            + "See https://github.com/nix-community/home-manager/issues/265."
+          ))
+          (mkIf cfg.config.focus.forceWrapping (
+            "'xsession.windowManager.i3.config.focus.forceWrapping' is deprecated, "
+            + "use 'xsession.windowManager.i3.config.focus.wrapping' instead."
+          ))
+        ];
     })
   ]);
 }

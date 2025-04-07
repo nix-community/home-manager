@@ -4,13 +4,22 @@
       enable = true;
       associations = {
         added = {
-          "mimetype1" = [ "foo1.desktop" "foo2.desktop" "foo3.desktop" ];
+          "mimetype1" = [
+            "foo1.desktop"
+            "foo2.desktop"
+            "foo3.desktop"
+          ];
           "mimetype2" = "foo4.desktop";
         };
-        removed = { mimetype1 = "foo5.desktop"; };
+        removed = {
+          mimetype1 = "foo5.desktop";
+        };
       };
       defaultApplications = {
-        "mimetype1" = [ "default1.desktop" "default2.desktop" ];
+        "mimetype1" = [
+          "default1.desktop"
+          "default2.desktop"
+        ];
       };
     };
 

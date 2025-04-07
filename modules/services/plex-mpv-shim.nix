@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,7 +12,8 @@ let
   jsonFormat = pkgs.formats.json { };
   cfg = config.services.plex-mpv-shim;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.starcraft66 ];
 
   options = {
@@ -47,8 +53,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.plex-mpv-shim" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.plex-mpv-shim" pkgs lib.platforms.linux)
     ];
 
     xdg.configFile."plex-mpv-shim/conf.json" = mkIf (cfg.settings != { }) {
@@ -62,9 +67,13 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Service = { ExecStart = "${cfg.package}/bin/plex-mpv-shim"; };
+      Service = {
+        ExecStart = "${cfg.package}/bin/plex-mpv-shim";
+      };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

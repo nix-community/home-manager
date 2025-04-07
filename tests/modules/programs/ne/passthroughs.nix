@@ -36,12 +36,11 @@ let
 
   checkFile = filename: contents: ''
     assertFileExists home-files/.ne/${filename}
-    assertFileContent home-files/.ne/${filename} ${
-      builtins.toFile "checkFile" contents
-    }
+    assertFileContent home-files/.ne/${filename} ${builtins.toFile "checkFile" contents}
   '';
 
-in {
+in
+{
   programs.ne = {
     enable = true;
     inherit keybindings;
@@ -58,9 +57,9 @@ in {
       (checkFile ".menus" menus)
 
       # Generates a check command for each entry in automaticPreferences.
-      (lib.concatStringsSep "\n" (lib.mapAttrsToList
-        (extension: contents: checkFile "${extension}#ap" contents)
-        automaticPreferences))
+      (lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (extension: contents: checkFile "${extension}#ap" contents) automaticPreferences
+      ))
     ];
   };
 }

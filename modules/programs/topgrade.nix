@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.topgrade;
 
   tomlFormat = pkgs.formats.toml { };
-in {
+in
+{
 
   meta.maintainers = [ lib.hm.maintainers.msfjarvis ];
 

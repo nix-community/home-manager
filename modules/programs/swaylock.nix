@@ -1,13 +1,19 @@
-{ pkgs, config, lib, ... }:
-let cfg = config.programs.swaylock;
-in {
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+let
+  cfg = config.programs.swaylock;
+in
+{
   meta.maintainers = [ lib.hm.maintainers.rcerc ];
 
   options.programs.swaylock = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = lib.versionOlder config.home.stateVersion "23.05"
-        && (cfg.settings != { });
+      default = lib.versionOlder config.home.stateVersion "23.05" && (cfg.settings != { });
       defaultText = lib.literalExpression ''
         true  if state version < 23.05 and settings ≠ { },
         false otherwise
@@ -33,7 +39,15 @@ in {
     package = lib.mkPackageOption pkgs "swaylock" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types; attrsOf (oneOf [ bool float int path str ]);
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          float
+          int
+          path
+          str
+        ]);
       default = { };
       description = ''
         Default arguments to {command}`swaylock`. An empty set
@@ -52,19 +66,17 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.swaylock" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.swaylock" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."swaylock/config" = lib.mkIf (cfg.settings != { }) {
-      text = lib.concatStrings (lib.mapAttrsToList (n: v:
-        if v == false then
-          ""
-        else
-          (if v == true then n else n + "=" + builtins.toString v) + "\n")
-        cfg.settings);
+      text = lib.concatStrings (
+        lib.mapAttrsToList (
+          n: v: if v == false then "" else (if v == true then n else n + "=" + builtins.toString v) + "\n"
+        ) cfg.settings
+      );
     };
   };
 }

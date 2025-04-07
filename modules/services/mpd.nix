@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
   cfg = config.services.mpd;
-in {
+in
+{
   options = {
     services.mpd = {
       enable = mkOption {
@@ -126,95 +132,113 @@ in {
     };
   };
 
-  config = let
-    mpdConf = pkgs.writeText "mpd.conf" (''
-      music_directory     "${cfg.musicDirectory}"
-      playlist_directory  "${cfg.playlistDirectory}"
-    '' + lib.optionalString (cfg.dbFile != null) ''
-      db_file             "${cfg.dbFile}"
-    '' + lib.optionalString (pkgs.stdenv.hostPlatform.isDarwin) ''
-      log_file            "${config.home.homeDirectory}/Library/Logs/mpd/log.txt"
-    '' + ''
-      state_file          "${cfg.dataDir}/state"
-      sticker_file        "${cfg.dataDir}/sticker.sql"
+  config =
+    let
+      mpdConf = pkgs.writeText "mpd.conf" (
+        ''
+          music_directory     "${cfg.musicDirectory}"
+          playlist_directory  "${cfg.playlistDirectory}"
+        ''
+        + lib.optionalString (cfg.dbFile != null) ''
+          db_file             "${cfg.dbFile}"
+        ''
+        + lib.optionalString (pkgs.stdenv.hostPlatform.isDarwin) ''
+          log_file            "${config.home.homeDirectory}/Library/Logs/mpd/log.txt"
+        ''
+        + ''
+          state_file          "${cfg.dataDir}/state"
+          sticker_file        "${cfg.dataDir}/sticker.sql"
 
-    '' + lib.optionalString (cfg.network.listenAddress != "any") ''
-      bind_to_address     "${cfg.network.listenAddress}"
-    '' + lib.optionalString (cfg.network.port != 6600) ''
-      port                "${toString cfg.network.port}"
-    '' + lib.optionalString (cfg.extraConfig != "") ''
-      ${cfg.extraConfig}
-    '');
-  in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+        ''
+        + lib.optionalString (cfg.network.listenAddress != "any") ''
+          bind_to_address     "${cfg.network.listenAddress}"
+        ''
+        + lib.optionalString (cfg.network.port != 6600) ''
+          port                "${toString cfg.network.port}"
+        ''
+        + lib.optionalString (cfg.extraConfig != "") ''
+          ${cfg.extraConfig}
+        ''
+      );
+    in
+    mkIf cfg.enable {
+      home.packages = [ cfg.package ];
 
-    services.mpd = lib.mkMerge [
-      (mkIf (lib.versionAtLeast config.home.stateVersion "22.11"
-        && config.xdg.userDirs.enable) {
+      services.mpd = lib.mkMerge [
+        (mkIf (lib.versionAtLeast config.home.stateVersion "22.11" && config.xdg.userDirs.enable) {
           musicDirectory = lib.mkOptionDefault config.xdg.userDirs.music;
         })
 
-      (mkIf (lib.versionOlder config.home.stateVersion "22.11") {
-        musicDirectory =
-          lib.mkOptionDefault "${config.home.homeDirectory}/music";
-      })
-    ];
+        (mkIf (lib.versionOlder config.home.stateVersion "22.11") {
+          musicDirectory = lib.mkOptionDefault "${config.home.homeDirectory}/music";
+        })
+      ];
 
-    systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-      services.mpd = {
-        Unit = lib.mkMerge [
-          {
-            Description = "Music Player Daemon";
-            After = [ "network.target" "sound.target" ];
-          }
+      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+        services.mpd = {
+          Unit = lib.mkMerge [
+            {
+              Description = "Music Player Daemon";
+              After = [
+                "network.target"
+                "sound.target"
+              ];
+            }
 
-          (mkIf cfg.network.startWhenNeeded {
-            Requires = [ "mpd.socket" ];
-            After = [ "mpd.socket" ];
-          })
-        ];
+            (mkIf cfg.network.startWhenNeeded {
+              Requires = [ "mpd.socket" ];
+              After = [ "mpd.socket" ];
+            })
+          ];
 
-        Install = mkIf (!cfg.network.startWhenNeeded) {
-          WantedBy = [ "default.target" ];
+          Install = mkIf (!cfg.network.startWhenNeeded) {
+            WantedBy = [ "default.target" ];
+          };
+
+          Service = {
+            Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
+            ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf} ${lib.escapeShellArgs cfg.extraArgs}";
+            Type = "notify";
+            ExecStartPre = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
+          };
         };
 
-        Service = {
-          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
-          ExecStart = "${cfg.package}/bin/mpd --no-daemon ${mpdConf} ${
-              lib.escapeShellArgs cfg.extraArgs
-            }";
-          Type = "notify";
-          ExecStartPre = ''
-            ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p '${cfg.dataDir}' '${cfg.playlistDirectory}'"'';
+        sockets.mpd = mkIf cfg.network.startWhenNeeded {
+          Socket = {
+            ListenStream =
+              let
+                listen =
+                  if cfg.network.listenAddress == "any" then
+                    toString cfg.network.port
+                  else
+                    "${cfg.network.listenAddress}:${toString cfg.network.port}";
+              in
+              [
+                listen
+                "%t/mpd/socket"
+              ];
+
+            Backlog = 5;
+            KeepAlive = true;
+          };
+
+          Install = {
+            WantedBy = [ "sockets.target" ];
+          };
         };
       };
 
-      sockets.mpd = mkIf cfg.network.startWhenNeeded {
-        Socket = {
-          ListenStream = let
-            listen = if cfg.network.listenAddress == "any" then
-              toString cfg.network.port
-            else
-              "${cfg.network.listenAddress}:${toString cfg.network.port}";
-          in [ listen "%t/mpd/socket" ];
-
-          Backlog = 5;
+      launchd.agents.mpd = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        enable = true;
+        config = {
+          ProgramArguments = [
+            (lib.getExe cfg.package)
+            "--no-daemon"
+            "${mpdConf}"
+          ] ++ cfg.extraArgs;
           KeepAlive = true;
+          ProcessType = "Interactive";
         };
-
-        Install = { WantedBy = [ "sockets.target" ]; };
       };
     };
-
-    launchd.agents.mpd = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-      enable = true;
-      config = {
-        ProgramArguments =
-          [ (lib.getExe cfg.package) "--no-daemon" "${mpdConf}" ]
-          ++ cfg.extraArgs;
-        KeepAlive = true;
-        ProcessType = "Interactive";
-      };
-    };
-  };
 }

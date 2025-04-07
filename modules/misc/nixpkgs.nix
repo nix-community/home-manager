@@ -1,6 +1,12 @@
 # Adapted from Nixpkgs.
 
-{ config, lib, pkgs, pkgsPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  pkgsPath,
+  ...
+}:
 
 let
 
@@ -8,16 +14,22 @@ let
 
   optCall = f: x: if builtins.isFunction f then f x else f;
 
-  mergeConfig = lhs_: rhs_:
+  mergeConfig =
+    lhs_: rhs_:
     let
       lhs = optCall lhs_ { inherit pkgs; };
       rhs = optCall rhs_ { inherit pkgs; };
-    in lhs // rhs // lib.optionalAttrs (lhs ? packageOverrides) {
-      packageOverrides = pkgs:
-        optCall lhs.packageOverrides pkgs
-        // optCall (lib.attrByPath [ "packageOverrides" ] { } rhs) pkgs;
-    } // lib.optionalAttrs (lhs ? perlPackageOverrides) {
-      perlPackageOverrides = pkgs:
+    in
+    lhs
+    // rhs
+    // lib.optionalAttrs (lhs ? packageOverrides) {
+      packageOverrides =
+        pkgs:
+        optCall lhs.packageOverrides pkgs // optCall (lib.attrByPath [ "packageOverrides" ] { } rhs) pkgs;
+    }
+    // lib.optionalAttrs (lhs ? perlPackageOverrides) {
+      perlPackageOverrides =
+        pkgs:
         optCall lhs.perlPackageOverrides pkgs
         // optCall (lib.attrByPath [ "perlPackageOverrides" ] { } rhs) pkgs;
     };
@@ -25,9 +37,12 @@ let
   configType = lib.mkOptionType {
     name = "nixpkgs-config";
     description = "nixpkgs config";
-    check = x:
-      let traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
-      in traceXIfNot isConfig;
+    check =
+      x:
+      let
+        traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
+      in
+      traceXIfNot isConfig;
     merge = args: lib.fold (def: mergeConfig def.value) { };
   };
 
@@ -40,11 +55,14 @@ let
 
   _pkgs = import pkgsPath (lib.filterAttrs (n: v: v != null) config.nixpkgs);
 
-in {
+in
+{
   options.nixpkgs = {
     config = lib.mkOption {
       default = null;
-      example = { allowBroken = true; };
+      example = {
+        allowBroken = true;
+      };
       type = lib.types.nullOr configType;
       description = ''
         The configuration of the Nix Packages collection. (For
@@ -123,10 +141,7 @@ in {
       # `_pkgs`, see https://github.com/nix-community/home-manager/pull/993
       pkgs = lib.mkOverride lib.modules.defaultOverridePriority _pkgs;
       pkgs_i686 =
-        if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86 then
-          _pkgs.pkgsi686Linux
-        else
-          { };
+        if _pkgs.stdenv.isLinux && _pkgs.stdenv.hostPlatform.isx86 then _pkgs.pkgsi686Linux else { };
     };
   };
 }

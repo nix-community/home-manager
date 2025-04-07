@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.lesspipe;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.lesspipe;
+in
+{
   meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {

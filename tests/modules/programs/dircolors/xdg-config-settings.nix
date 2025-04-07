@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   config = {
     home.preferXdgDirectories = true;
 

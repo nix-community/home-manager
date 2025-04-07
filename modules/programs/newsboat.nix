@@ -1,37 +1,45 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.newsboat;
   wrapQuote = x: ''"${x}"'';
 
-  urlsFileContents = let
-    mkUrlEntry = u:
-      lib.concatStringsSep " " ([ u.url ] ++ map wrapQuote u.tags
-        ++ lib.optional (u.title != null) (wrapQuote "~${u.title}"));
-    urls = map mkUrlEntry cfg.urls;
+  urlsFileContents =
+    let
+      mkUrlEntry =
+        u:
+        lib.concatStringsSep " " (
+          [ u.url ] ++ map wrapQuote u.tags ++ lib.optional (u.title != null) (wrapQuote "~${u.title}")
+        );
+      urls = map mkUrlEntry cfg.urls;
 
-    mkQueryEntry = n: v: ''"query:${n}:${lib.escape [ ''"'' ] v}"'';
-    queries = lib.mapAttrsToList mkQueryEntry cfg.queries;
-  in lib.concatStringsSep "\n"
-  (if lib.versionAtLeast config.home.stateVersion "20.03" then
-    queries ++ urls
-  else
-    urls ++ queries) + "\n";
+      mkQueryEntry = n: v: ''"query:${n}:${lib.escape [ ''"'' ] v}"'';
+      queries = lib.mapAttrsToList mkQueryEntry cfg.queries;
+    in
+    lib.concatStringsSep "\n" (
+      if lib.versionAtLeast config.home.stateVersion "20.03" then queries ++ urls else urls ++ queries
+    )
+    + "\n";
 
   configFileContents = ''
     max-items ${toString cfg.maxItems}
     browser ${cfg.browser}
     reload-threads ${toString cfg.reloadThreads}
     auto-reload ${lib.hm.booleans.yesNo cfg.autoReload}
-    ${lib.optionalString (cfg.reloadTime != null)
-    (toString "reload-time ${toString cfg.reloadTime}")}
+    ${lib.optionalString (cfg.reloadTime != null) (toString "reload-time ${toString cfg.reloadTime}")}
     prepopulate-query-feeds yes
 
     ${cfg.extraConfig}
   '';
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.sumnerevans ];
 
   options = {
@@ -41,34 +49,44 @@ in {
       package = lib.mkPackageOption pkgs "newsboat" { nullable = true; };
 
       urls = mkOption {
-        type = types.listOf (types.submodule {
-          options = {
-            url = mkOption {
-              type = types.str;
-              example = "http://example.com";
-              description = "Feed URL.";
-            };
+        type = types.listOf (
+          types.submodule {
+            options = {
+              url = mkOption {
+                type = types.str;
+                example = "http://example.com";
+                description = "Feed URL.";
+              };
 
-            tags = mkOption {
-              type = types.listOf types.str;
-              default = [ ];
-              example = [ "foo" "bar" ];
-              description = "Feed tags.";
-            };
+              tags = mkOption {
+                type = types.listOf types.str;
+                default = [ ];
+                example = [
+                  "foo"
+                  "bar"
+                ];
+                description = "Feed tags.";
+              };
 
-            title = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              example = "ORF News";
-              description = "Feed title.";
+              title = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                example = "ORF News";
+                description = "Feed title.";
+              };
             };
-          };
-        });
+          }
+        );
         default = [ ];
-        example = [{
-          url = "http://example.com";
-          tags = [ "foo" "bar" ];
-        }];
+        example = [
+          {
+            url = "http://example.com";
+            tags = [
+              "foo"
+              "bar"
+            ];
+          }
+        ];
         description = ''
           List of news feeds. Leave it empty if you want to manage feeds
           imperatively, for example, using Syncthing.
@@ -110,7 +128,9 @@ in {
       queries = mkOption {
         type = types.attrsOf types.str;
         default = { };
-        example = { "foo" = ''rssurl =~ "example.com"''; };
+        example = {
+          "foo" = ''rssurl =~ "example.com"'';
+        };
         description = "A list of queries to use.";
       };
 
@@ -125,13 +145,15 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = cfg.queries != { } -> cfg.urls != [ ];
-      message = ''
-        Cannot specify queries if urls is empty. Unset queries if you
-        want to manage urls imperatively.
-      '';
-    }];
+    assertions = [
+      {
+        assertion = cfg.queries != { } -> cfg.urls != [ ];
+        message = ''
+          Cannot specify queries if urls is empty. Unset queries if you
+          want to manage urls imperatively.
+        '';
+      }
+    ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
@@ -141,10 +163,9 @@ in {
       ".newsboat/urls" = mkIf (cfg.urls != [ ]) { text = urlsFileContents; };
       ".newsboat/config".text = configFileContents;
     };
-    xdg.configFile =
-      mkIf (lib.versionAtLeast config.home.stateVersion "21.05") {
-        "newsboat/urls" = mkIf (cfg.urls != [ ]) { text = urlsFileContents; };
-        "newsboat/config".text = configFileContents;
-      };
+    xdg.configFile = mkIf (lib.versionAtLeast config.home.stateVersion "21.05") {
+      "newsboat/urls" = mkIf (cfg.urls != [ ]) { text = urlsFileContents; };
+      "newsboat/config".text = configFileContents;
+    };
   };
 }

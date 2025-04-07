@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.programs.bottom;
 
   tomlFormat = pkgs.formats.toml { };
 
-in {
+in
+{
   options = {
     programs.bottom = {
       enable = lib.mkEnableOption ''

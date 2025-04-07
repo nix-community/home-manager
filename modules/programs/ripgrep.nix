@@ -1,8 +1,17 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.ripgrep;
-in {
-  meta.maintainers =
-    [ lib.maintainers.khaneliman lib.hm.maintainers.pedorich-n ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.ripgrep;
+in
+{
+  meta.maintainers = [
+    lib.maintainers.khaneliman
+    lib.hm.maintainers.pedorich-n
+  ];
 
   options = {
     programs.ripgrep = {
@@ -13,7 +22,10 @@ in {
       arguments = lib.mkOption {
         type = with lib.types; listOf str;
         default = [ ];
-        example = [ "--max-columns-preview" "--colors=line:style:bold" ];
+        example = [
+          "--max-columns-preview"
+          "--colors=line:style:bold"
+        ];
         description = ''
           List of arguments to pass to ripgrep. Each item is given to ripgrep as
           a single command line argument verbatim.
@@ -26,14 +38,17 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home = let configPath = "${config.xdg.configHome}/ripgrep/ripgreprc";
-    in lib.mkMerge [
-      { packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
-      (lib.mkIf (cfg.arguments != [ ]) {
-        file."${configPath}".text = lib.concatLines cfg.arguments;
+    home =
+      let
+        configPath = "${config.xdg.configHome}/ripgrep/ripgreprc";
+      in
+      lib.mkMerge [
+        { packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
+        (lib.mkIf (cfg.arguments != [ ]) {
+          file."${configPath}".text = lib.concatLines cfg.arguments;
 
-        sessionVariables."RIPGREP_CONFIG_PATH" = configPath;
-      })
-    ];
+          sessionVariables."RIPGREP_CONFIG_PATH" = configPath;
+        })
+      ];
   };
 }

@@ -1,5 +1,7 @@
-let relToDotDirCustom = ".zshplugins";
-in {
+let
+  relToDotDirCustom = ".zshplugins";
+in
+{
   programs.zsh = {
     enable = true;
     dotDir = relToDotDirCustom;

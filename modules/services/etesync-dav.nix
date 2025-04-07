@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,11 +11,11 @@ let
 
   cfg = config.services.etesync-dav;
 
-  toEnvironmentCfg = vars:
-    (concatStringsSep " "
-      (mapAttrsToList (k: v: "${k}=${escapeShellArg v}") vars));
+  toEnvironmentCfg =
+    vars: (concatStringsSep " " (mapAttrsToList (k: v: "${k}=${escapeShellArg v}") vars));
 
-in {
+in
+{
   meta.maintainers = [ maintainers.valodim ];
 
   options.services.etesync-dav = {
@@ -30,7 +35,12 @@ in {
     };
 
     settings = mkOption {
-      type = types.attrsOf (types.oneOf [ types.str types.int ]);
+      type = types.attrsOf (
+        types.oneOf [
+          types.str
+          types.int
+        ]
+      );
       default = { };
       example = literalExpression ''
         {
@@ -46,22 +56,24 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.etesync-dav" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.etesync-dav" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
     systemd.user.services.etesync-dav = {
-      Unit = { Description = "etesync-dav"; };
+      Unit = {
+        Description = "etesync-dav";
+      };
 
       Service = {
         ExecStart = "${cfg.package}/bin/etesync-dav";
-        Environment =
-          toEnvironmentCfg ({ ETESYNC_URL = cfg.serverUrl; } // cfg.settings);
+        Environment = toEnvironmentCfg ({ ETESYNC_URL = cfg.serverUrl; } // cfg.settings);
       };
 
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
     };
   };
 }

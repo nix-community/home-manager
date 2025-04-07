@@ -16,7 +16,8 @@ let
     # More config...
 
   '';
-in {
+in
+{
   programs.lf = {
     enable = true;
 
@@ -24,7 +25,9 @@ in {
       # More config...
     '';
 
-    previewer = { source = pvScript; };
+    previewer = {
+      source = pvScript;
+    };
   };
 
   nmt.script = ''

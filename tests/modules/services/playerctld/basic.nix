@@ -12,20 +12,18 @@
 
       assertFileExists "$serviceFile"
 
-      assertFileContent "$serviceFile" "${
-        pkgs.writeText "playerctld-test" ''
-          [Install]
-          WantedBy=default.target
+      assertFileContent "$serviceFile" "${pkgs.writeText "playerctld-test" ''
+        [Install]
+        WantedBy=default.target
 
-          [Service]
-          BusName=org.mpris.MediaPlayer2.playerctld
-          ExecStart=@playerctld@/bin/playerctld
-          Type=dbus
+        [Service]
+        BusName=org.mpris.MediaPlayer2.playerctld
+        ExecStart=@playerctld@/bin/playerctld
+        Type=dbus
 
-          [Unit]
-          Description=MPRIS media player daemon
-        ''
-      }"
+        [Unit]
+        Description=MPRIS media player daemon
+      ''}"
     '';
   };
 }

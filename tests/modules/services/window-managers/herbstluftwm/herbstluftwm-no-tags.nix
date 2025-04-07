@@ -1,5 +1,7 @@
 {
-  xsession.windowManager.herbstluftwm = { enable = true; };
+  xsession.windowManager.herbstluftwm = {
+    enable = true;
+  };
 
   nmt.script = ''
     autostart=home-files/.config/herbstluftwm/autostart

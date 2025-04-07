@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.abook;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.abook;
+in
+{
   options.programs.abook = {
     enable = lib.mkEnableOption "Abook";
 

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,16 +11,24 @@ let
 
   cfg = config.services.sxhkd;
 
-  keybindingsStr = concatStringsSep "\n" (mapAttrsToList (hotkey: command:
-    optionalString (command != null) ''
-      ${hotkey}
-        ${command}
-    '') cfg.keybindings);
+  keybindingsStr = concatStringsSep "\n" (
+    mapAttrsToList (
+      hotkey: command:
+      optionalString (command != null) ''
+        ${hotkey}
+          ${command}
+      ''
+    ) cfg.keybindings
+  );
 
-in {
+in
+{
   imports = [
-    (mkRemovedOptionModule [ "services" "sxhkd" "extraPath" ]
-      "This option is no longer needed and can be removed.")
+    (mkRemovedOptionModule [
+      "services"
+      "sxhkd"
+      "extraPath"
+    ] "This option is no longer needed and can be removed.")
   ];
 
   options.services.sxhkd = {
@@ -36,8 +49,14 @@ in {
     };
 
     keybindings = mkOption {
-      type =
-        types.attrsOf (types.nullOr (types.oneOf [ types.str types.path ]));
+      type = types.attrsOf (
+        types.nullOr (
+          types.oneOf [
+            types.str
+            types.path
+          ]
+        )
+      );
       default = { };
       description = "An attribute set that assigns hotkeys to commands.";
       example = literalExpression ''
@@ -62,20 +81,23 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.sxhkd" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.sxhkd" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."sxhkd/sxhkdrc".text =
-      concatStringsSep "\n" [ keybindingsStr cfg.extraConfig ];
+    xdg.configFile."sxhkd/sxhkdrc".text = concatStringsSep "\n" [
+      keybindingsStr
+      cfg.extraConfig
+    ];
 
-    xsession.initExtra = let
-      sxhkdCommand = "${cfg.package}/bin/sxhkd ${toString cfg.extraOptions}";
-    in ''
-      systemctl --user stop sxhkd.scope 2> /dev/null || true
-      systemd-cat -t sxhkd systemd-run --user --scope --property=OOMPolicy=continue -u sxhkd ${sxhkdCommand} &
-    '';
+    xsession.initExtra =
+      let
+        sxhkdCommand = "${cfg.package}/bin/sxhkd ${toString cfg.extraOptions}";
+      in
+      ''
+        systemctl --user stop sxhkd.scope 2> /dev/null || true
+        systemd-cat -t sxhkd systemd-run --user --scope --property=OOMPolicy=continue -u sxhkd ${sxhkdCommand} &
+      '';
   };
 }

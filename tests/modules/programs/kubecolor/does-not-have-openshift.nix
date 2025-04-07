@@ -21,4 +21,3 @@
     assertFileNotRegex 'home-files/.zshrc' '^alias.* oc=.*'
   '';
 }
-

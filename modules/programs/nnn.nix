@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) literalExpression mkOption types;
 
@@ -6,44 +11,47 @@ let
 
   renderSetting = key: value: "${key}:${value}";
 
-  renderSettings = settings:
-    lib.concatStringsSep ";" (lib.mapAttrsToList renderSetting settings);
+  renderSettings = settings: lib.concatStringsSep ";" (lib.mapAttrsToList renderSetting settings);
 
-  pluginModule = types.submodule ({ ... }: {
-    options = {
-      src = mkOption {
-        type = with types; nullOr path;
-        example = literalExpression ''
-          (pkgs.fetchFromGitHub {
-            owner = "jarun";
-            repo = "nnn";
-            rev = "v4.0";
-            sha256 = "sha256-Hpc8YaJeAzJoEi7aJ6DntH2VLkoR6ToP6tPYn3llR7k=";
-          }) + "/plugins";
-        '';
-        default = null;
-        description = ''
-          Path to the plugin folder.
-        '';
-      };
+  pluginModule = types.submodule (
+    { ... }:
+    {
+      options = {
+        src = mkOption {
+          type = with types; nullOr path;
+          example = literalExpression ''
+            (pkgs.fetchFromGitHub {
+              owner = "jarun";
+              repo = "nnn";
+              rev = "v4.0";
+              sha256 = "sha256-Hpc8YaJeAzJoEi7aJ6DntH2VLkoR6ToP6tPYn3llR7k=";
+            }) + "/plugins";
+          '';
+          default = null;
+          description = ''
+            Path to the plugin folder.
+          '';
+        };
 
-      mappings = mkOption {
-        type = with types; attrsOf str;
-        description = ''
-          Key mappings to the plugins.
-        '';
-        default = { };
-        example = literalExpression ''
-          {
-            c = "fzcd";
-            f = "finder";
-            v = "imgview";
-          };
-        '';
+        mappings = mkOption {
+          type = with types; attrsOf str;
+          description = ''
+            Key mappings to the plugins.
+          '';
+          default = { };
+          example = literalExpression ''
+            {
+              c = "fzcd";
+              f = "finder";
+              v = "imgview";
+            };
+          '';
+        };
       };
-    };
-  });
-in {
+    }
+  );
+in
+{
   meta.maintainers = with lib.maintainers; [ thiagokokada ];
 
   options = {
@@ -81,8 +89,7 @@ in {
 
       extraPackages = mkOption {
         type = with types; listOf package;
-        example =
-          literalExpression "with pkgs; [ ffmpegthumbnailer mediainfo sxiv ]";
+        example = literalExpression "with pkgs; [ ffmpegthumbnailer mediainfo sxiv ]";
         description = ''
           Extra packages available to nnn.
         '';
@@ -99,23 +106,23 @@ in {
     };
   };
 
-  config = let
-    nnnPackage = cfg.package.overrideAttrs (oldAttrs: {
-      nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ])
-        ++ [ pkgs.makeWrapper ];
-      postInstall = ''
-        ${oldAttrs.postInstall or ""}
+  config =
+    let
+      nnnPackage = cfg.package.overrideAttrs (oldAttrs: {
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
+        postInstall = ''
+          ${oldAttrs.postInstall or ""}
 
-        wrapProgram $out/bin/nnn \
-          --prefix PATH : "${lib.makeBinPath cfg.extraPackages}" \
-          --prefix NNN_BMS : "${renderSettings cfg.bookmarks}" \
-          --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}"
-      '';
-    });
-  in lib.mkIf cfg.enable {
-    programs.nnn.finalPackage = nnnPackage;
-    home.packages = [ nnnPackage ];
-    xdg.configFile."nnn/plugins" =
-      lib.mkIf (cfg.plugins.src != null) { source = cfg.plugins.src; };
-  };
+          wrapProgram $out/bin/nnn \
+            --prefix PATH : "${lib.makeBinPath cfg.extraPackages}" \
+            --prefix NNN_BMS : "${renderSettings cfg.bookmarks}" \
+            --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}"
+        '';
+      });
+    in
+    lib.mkIf cfg.enable {
+      programs.nnn.finalPackage = nnnPackage;
+      home.packages = [ nnnPackage ];
+      xdg.configFile."nnn/plugins" = lib.mkIf (cfg.plugins.src != null) { source = cfg.plugins.src; };
+    };
 }

@@ -2,8 +2,21 @@
 
 {
   imports = [
-    ({ ... }: { config.home.sessionPath = [ "foo" ]; })
-    ({ ... }: { config.home.sessionPath = [ "bar" "baz" ]; })
+    (
+      { ... }:
+      {
+        config.home.sessionPath = [ "foo" ];
+      }
+    )
+    (
+      { ... }:
+      {
+        config.home.sessionPath = [
+          "bar"
+          "baz"
+        ];
+      }
+    )
   ];
 
   nmt.script = ''

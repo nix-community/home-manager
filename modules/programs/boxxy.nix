@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) literalExpression mkOption types;
 
@@ -37,7 +42,10 @@ let
       };
 
       mode = mkOption {
-        type = types.enum [ "file" "directory" ];
+        type = types.enum [
+          "file"
+          "directory"
+        ];
         default = "directory";
         description = ''
           Does the current path redirect a file or a directory?
@@ -81,7 +89,8 @@ let
       };
     };
   };
-in {
+in
+{
   options.programs.boxxy = {
     enable = lib.mkEnableOption "boxxy: Boxes in badly behaving applications";
 
@@ -96,13 +105,11 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.boxxy" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.boxxy" pkgs lib.platforms.linux)
     ];
 
     home.file = lib.mkIf (cfg.rules != [ ]) {
-      "${configPath}".source =
-        settingsFormat.generate "boxxy-config.yaml" { rules = cfg.rules; };
+      "${configPath}".source = settingsFormat.generate "boxxy-config.yaml" { rules = cfg.rules; };
     };
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -110,4 +117,3 @@ in {
 
   meta.maintainers = with lib.hm.maintainers; [ nikp123 ];
 }
-

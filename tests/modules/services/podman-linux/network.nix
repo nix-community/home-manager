@@ -11,8 +11,13 @@
         extraConfig = {
           Network = {
             NetworkName = "my-net";
-            Options = { isolate = "true"; };
-            PodmanArgs = [ "--dns=192.168.55.1" "--log-level=debug" ];
+            Options = {
+              isolate = "true";
+            };
+            PodmanArgs = [
+              "--dns=192.168.55.1"
+              "--log-level=debug"
+            ];
           };
         };
       };
@@ -21,15 +26,16 @@
         subnet = "192.168.2.0/24";
         gateway = "192.168.2.1";
         extraConfig = {
-          Network = { NetworkName = "some-other-network-name"; };
+          Network = {
+            NetworkName = "some-other-network-name";
+          };
         };
       };
     };
   };
 
   test.asserts.assertions.expected = [
-    ''
-      In 'my-net-2' config. Network.NetworkName: 'some-other-network-name' does not match expected type: value "my-net-2" (singular enum)''
+    ''In 'my-net-2' config. Network.NetworkName: 'some-other-network-name' does not match expected type: value "my-net-2" (singular enum)''
   ];
 
   nmt.script = ''

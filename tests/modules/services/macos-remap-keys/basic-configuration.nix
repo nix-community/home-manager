@@ -1,7 +1,9 @@
 {
   services.macos-remap-keys = {
     enable = true;
-    keyboard = { Capslock = "Backspace"; };
+    keyboard = {
+      Capslock = "Backspace";
+    };
   };
 
   nmt.script = ''

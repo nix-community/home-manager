@@ -35,12 +35,14 @@
       ReverseMirror = false;
       InnerRadius = 0.5;
       Rotation = 0;
-      ColorProfiles = [{
-        Name = "Default";
-        FgColors = [ "#ff3584e4" ];
-        BgColors = [ "#ff242424" ];
-        Theme = 1;
-      }];
+      ColorProfiles = [
+        {
+          Name = "Default";
+          FgColors = [ "#ff3584e4" ];
+          BgColors = [ "#ff242424" ];
+          Theme = 1;
+        }
+      ];
       ActiveProfile = 0;
       BgImageIndex = -1;
       BgImageScale = 1;

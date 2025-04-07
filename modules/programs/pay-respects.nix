@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.pay-respects;
   payRespectsCmd = lib.getExe cfg.package;
   cfgOptions = lib.concatStringsSep " " cfg.options;
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.ALameLlama ];
 
   options.programs.pay-respects = {
@@ -14,23 +20,22 @@ in {
     options = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ "--alias" ];
-      example = [ "--alias" "f" ];
+      example = [
+        "--alias"
+        "f"
+      ];
       description = ''
         List of options to pass to pay-respects <shell>.
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableNushellIntegration =
-      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {

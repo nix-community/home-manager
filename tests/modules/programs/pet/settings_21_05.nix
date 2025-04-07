@@ -7,13 +7,11 @@
 
   nmt.script = ''
     assertFileContent home-files/.config/pet/config.toml \
-      ${
-        builtins.toFile "pet-settings.toml" ''
-          [General]
-          editor = "nvim"
-          selectcmd = "fzf"
-          snippetfile = "/home/hm-user/.config/pet/snippet.toml"
-        ''
-      }
+      ${builtins.toFile "pet-settings.toml" ''
+        [General]
+        editor = "nvim"
+        selectcmd = "fzf"
+        snippetfile = "/home/hm-user/.config/pet/snippet.toml"
+      ''}
   '';
 }

@@ -1,47 +1,52 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.tealdeer;
 
-  configDir = if pkgs.stdenv.isDarwin then
-    "Library/Application Support"
-  else
-    config.xdg.configHome;
+  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else config.xdg.configHome;
 
   tomlFormat = pkgs.formats.toml { };
 
-  settingsFormat = let
-    updatesSection = types.submodule {
-      options = {
-        auto_update = lib.mkEnableOption "auto-update";
+  settingsFormat =
+    let
+      updatesSection = types.submodule {
+        options = {
+          auto_update = lib.mkEnableOption "auto-update";
 
-        auto_update_interval_hours = mkOption {
-          type = types.ints.positive;
-          default = 720;
-          example = lib.literalExpression "24";
+          auto_update_interval_hours = mkOption {
+            type = types.ints.positive;
+            default = 720;
+            example = lib.literalExpression "24";
+            description = ''
+              Duration, since the last cache update, after which the cache will be refreshed.
+              This parameter is ignored if {var}`auto_update` is set to `false`.
+            '';
+          };
+        };
+      };
+    in
+    types.submodule {
+      freeformType = tomlFormat.type;
+      options = {
+        updates = mkOption {
+          type = updatesSection;
+          default = { };
           description = ''
-            Duration, since the last cache update, after which the cache will be refreshed.
-            This parameter is ignored if {var}`auto_update` is set to `false`.
+            Tealdeer can refresh the cache automatically when it is outdated.
+            This behavior can be configured in the updates section.
           '';
         };
       };
     };
-  in types.submodule {
-    freeformType = tomlFormat.type;
-    options = {
-      updates = mkOption {
-        type = updatesSection;
-        default = { };
-        description = ''
-          Tealdeer can refresh the cache automatically when it is outdated.
-          This behavior can be configured in the updates section.
-        '';
-      };
-    };
-  };
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.pedorich-n ];
 
   imports = [
@@ -92,10 +97,9 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file."${configDir}/tealdeer/config.toml" =
-      mkIf (cfg.settings != null && cfg.settings != { }) {
-        source = tomlFormat.generate "tealdeer-config" cfg.settings;
-      };
+    home.file."${configDir}/tealdeer/config.toml" = mkIf (cfg.settings != null && cfg.settings != { }) {
+      source = tomlFormat.generate "tealdeer-config" cfg.settings;
+    };
 
     services.tldr-update = mkIf cfg.enableAutoUpdates {
       enable = true;

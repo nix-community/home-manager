@@ -1,15 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
-let cfg = config.services.snixembed;
-in {
+let
+  cfg = config.services.snixembed;
+in
+{
   meta.maintainers = [ maintainers.DamienCassou ];
 
   options = {
     services.snixembed = {
-      enable = mkEnableOption
-        "snixembed: proxy StatusNotifierItems as XEmbedded systemtray-spec icons";
+      enable = mkEnableOption "snixembed: proxy StatusNotifierItems as XEmbedded systemtray-spec icons";
 
       package = mkPackageOption pkgs "snixembed" { };
 

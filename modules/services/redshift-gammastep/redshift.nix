@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -17,7 +22,8 @@ let
     serviceDocumentation = "http://jonls.dk/redshift/";
   };
 
-in {
+in
+{
   inherit (commonOptions) imports meta;
   options.services.redshift = commonOptions.options;
   config = mkIf config.services.redshift.enable commonOptions.config;

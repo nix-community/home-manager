@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.hstr;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.hstr;
+in
+{
   meta.maintainers = [ lib.hm.maintainers.Dines97 ];
 
   options.programs.hstr = {
@@ -10,11 +17,9 @@ in {
 
     package = lib.mkPackageOption pkgs "hstr" { };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {

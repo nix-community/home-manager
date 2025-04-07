@@ -3,7 +3,10 @@
 {
   nix = {
     package = config.lib.test.mkStubPackage { };
-    nixPath = [ "/a" "/b/c" ];
+    nixPath = [
+      "/a"
+      "/b/c"
+    ];
     keepOldNixPath = false;
   };
 

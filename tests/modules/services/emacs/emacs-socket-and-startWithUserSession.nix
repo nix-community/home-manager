@@ -12,8 +12,11 @@
       emacs = pkgs.writeShellScriptBin "dummy-emacs-28.0.5" "" // {
         outPath = "@emacs@";
       };
-      emacsPackagesFor = _:
-        lib.makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
+      emacsPackagesFor =
+        _:
+        lib.makeScope super.newScope (_: {
+          emacsWithPackages = _: emacs;
+        });
     })
   ];
 

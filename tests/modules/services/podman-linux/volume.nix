@@ -6,21 +6,28 @@
     volumes = {
       "my-vol" = {
         device = "tmpfs";
-        extraConfig = { Volume = { User = 1000; }; };
+        extraConfig = {
+          Volume = {
+            User = 1000;
+          };
+        };
         extraPodmanArgs = [ "--module=/etc/nvd.conf" ];
         group = 1000;
         type = "tmpfs";
       };
 
       "my-vol-2" = {
-        extraConfig = { Volume = { VolumeName = "some-other-volume-name"; }; };
+        extraConfig = {
+          Volume = {
+            VolumeName = "some-other-volume-name";
+          };
+        };
       };
     };
   };
 
   test.asserts.assertions.expected = [
-    ''
-      In 'my-vol-2' config. Volume.VolumeName: 'some-other-volume-name' does not match expected type: value "my-vol-2" (singular enum)''
+    ''In 'my-vol-2' config. Volume.VolumeName: 'some-other-volume-name' does not match expected type: value "my-vol-2" (singular enum)''
   ];
 
   nmt.script = ''

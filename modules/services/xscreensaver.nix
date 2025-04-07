@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.xscreensaver;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -37,15 +43,13 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.xscreensaver" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.xscreensaver" pkgs lib.platforms.linux)
     ];
 
     # To make the xscreensaver-command tool available.
     home.packages = [ cfg.package ];
 
-    xresources.properties =
-      mapAttrs' (n: nameValuePair "xscreensaver.${n}") cfg.settings;
+    xresources.properties = mapAttrs' (n: nameValuePair "xscreensaver.${n}") cfg.settings;
 
     systemd.user.services.xscreensaver = {
       Unit = {
@@ -54,8 +58,7 @@ in {
         PartOf = [ "graphical-session.target" ];
 
         # Make sure the service is restarted if the settings change.
-        X-Restart-Triggers =
-          [ (builtins.hashString "md5" (builtins.toJSON cfg.settings)) ];
+        X-Restart-Triggers = [ (builtins.hashString "md5" (builtins.toJSON cfg.settings)) ];
       };
 
       Service = {
@@ -63,7 +66,9 @@ in {
         Environment = [ "PATH=${makeBinPath [ cfg.package ]}" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

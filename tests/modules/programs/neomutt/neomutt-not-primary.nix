@@ -10,8 +10,6 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/neomutt/neomuttrc
-    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/neomuttrc) ${
-      ./neomutt-not-primary-expected.conf
-    }
+    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/neomuttrc) ${./neomutt-not-primary-expected.conf}
   '';
 }

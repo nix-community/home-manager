@@ -1,10 +1,21 @@
-{ lib }: {
+{ lib }:
+{
   hm = (import ../modules/lib/stdlib-extended.nix lib).hm;
-  homeManagerConfiguration = { modules ? [ ], pkgs, lib ? pkgs.lib
-    , extraSpecialArgs ? { }, check ? true
+  homeManagerConfiguration =
+    {
+      modules ? [ ],
+      pkgs,
+      lib ? pkgs.lib,
+      extraSpecialArgs ? { },
+      check ? true,
       # Deprecated:
-    , configuration ? null, extraModules ? null, stateVersion ? null
-    , username ? null, homeDirectory ? null, system ? null }@args:
+      configuration ? null,
+      extraModules ? null,
+      stateVersion ? null,
+      username ? null,
+      homeDirectory ? null,
+      system ? null,
+    }@args:
     let
       msgForRemovedArg = ''
         The 'homeManagerConfiguration' arguments
@@ -20,7 +31,8 @@
         'modules'. See the 22.11 release notes for more: https://nix-community.github.io/home-manager/release-notes.xhtml#sec-release-22.11-highlights
       '';
 
-      throwForRemovedArgs = v:
+      throwForRemovedArgs =
+        v:
         let
           used = builtins.filter (n: (args.${n} or null) != null) [
             "configuration"
@@ -30,20 +42,34 @@
             "extraModules"
             "system"
           ];
-          msg = msgForRemovedArg + ''
+          msg =
+            msgForRemovedArg
+            + ''
 
 
-            Deprecated args passed: '' + builtins.concatStringsSep " " used;
-        in lib.throwIf (used != [ ]) msg v;
+              Deprecated args passed: ''
+            + builtins.concatStringsSep " " used;
+        in
+        lib.throwIf (used != [ ]) msg v;
 
-    in throwForRemovedArgs (import ../modules {
-      inherit pkgs lib check extraSpecialArgs;
-      configuration = { ... }: {
-        imports = modules ++ [{ programs.home-manager.path = "${../.}"; }];
-        nixpkgs = {
-          config = lib.mkDefault pkgs.config;
-          inherit (pkgs) overlays;
-        };
-      };
-    });
+    in
+    throwForRemovedArgs (
+      import ../modules {
+        inherit
+          pkgs
+          lib
+          check
+          extraSpecialArgs
+          ;
+        configuration =
+          { ... }:
+          {
+            imports = modules ++ [ { programs.home-manager.path = "${../.}"; } ];
+            nixpkgs = {
+              config = lib.mkDefault pkgs.config;
+              inherit (pkgs) overlays;
+            };
+          };
+      }
+    );
 }

@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   services.swww = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@swww@"; };

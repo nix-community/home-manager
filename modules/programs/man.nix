@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
   cfg = config.programs.man;
-in {
+in
+{
   options = {
     programs.man = {
       enable = mkOption {
@@ -40,31 +46,36 @@ in {
 
     # This is mostly copy/pasted/adapted from NixOS' documentation.nix.
     home.file = lib.mkIf cfg.generateCaches {
-      ".manpath".text = let
-        # Generate a directory containing installed packages' manpages.
-        manualPages = pkgs.buildEnv {
-          name = "man-paths";
-          paths = config.home.packages;
-          pathsToLink = [ "/share/man" ];
-          extraOutputsToInstall = [ "man" ];
-          ignoreCollisions = true;
-        };
+      ".manpath".text =
+        let
+          # Generate a directory containing installed packages' manpages.
+          manualPages = pkgs.buildEnv {
+            name = "man-paths";
+            paths = config.home.packages;
+            pathsToLink = [ "/share/man" ];
+            extraOutputsToInstall = [ "man" ];
+            ignoreCollisions = true;
+          };
 
-        # Generate a database of all manpages in ${manualPages}.
-        manualCache = pkgs.runCommandLocal "man-cache" {
-          nativeBuildInputs = [ cfg.package ];
-        } ''
-          # Generate a temporary man.conf so mandb knows where to
-          # write cache files.
-          echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
+          # Generate a database of all manpages in ${manualPages}.
+          manualCache =
+            pkgs.runCommandLocal "man-cache"
+              {
+                nativeBuildInputs = [ cfg.package ];
+              }
+              ''
+                # Generate a temporary man.conf so mandb knows where to
+                # write cache files.
+                echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
 
-          # Run mandb to generate cache files:
-          mandb -C man.conf --no-straycats --create \
-            ${manualPages}/share/man
+                # Run mandb to generate cache files:
+                mandb -C man.conf --no-straycats --create \
+                  ${manualPages}/share/man
+              '';
+        in
+        ''
+          MANDB_MAP ${config.home.profileDirectory}/share/man ${manualCache}
         '';
-      in ''
-        MANDB_MAP ${config.home.profileDirectory}/share/man ${manualCache}
-      '';
     };
   };
 }

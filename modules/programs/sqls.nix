@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.sqls;
 
   yamlFormat = pkgs.formats.yaml { };
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.sqls = {

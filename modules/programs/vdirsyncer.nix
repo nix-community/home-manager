@@ -1,17 +1,28 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    concatStringsSep filterAttrs getAttrs mapAttrs mapAttrs' mapAttrsToList;
+    concatStringsSep
+    filterAttrs
+    getAttrs
+    mapAttrs
+    mapAttrs'
+    mapAttrsToList
+    ;
 
   cfg = config.programs.vdirsyncer;
 
-  vdirsyncerCalendarAccounts = filterAttrs (_: v: v.vdirsyncer.enable)
-    (mapAttrs' (n: v: lib.nameValuePair ("calendar_" + n) v)
-      config.accounts.calendar.accounts);
+  vdirsyncerCalendarAccounts = filterAttrs (_: v: v.vdirsyncer.enable) (
+    mapAttrs' (n: v: lib.nameValuePair ("calendar_" + n) v) config.accounts.calendar.accounts
+  );
 
-  vdirsyncerContactAccounts = filterAttrs (_: v: v.vdirsyncer.enable)
-    (mapAttrs' (n: v: lib.nameValuePair ("contacts_" + n) v)
-      config.accounts.contact.accounts);
+  vdirsyncerContactAccounts = filterAttrs (_: v: v.vdirsyncer.enable) (
+    mapAttrs' (n: v: lib.nameValuePair ("contacts_" + n) v) config.accounts.contact.accounts
+  );
 
   vdirsyncerAccounts = vdirsyncerCalendarAccounts // vdirsyncerContactAccounts;
 
@@ -19,48 +30,57 @@ let
 
   listString = l: "[${concatStringsSep ", " l}]";
 
-  localStorage = a:
-    filterAttrs (_: v: v != null)
-    ((getAttrs [ "type" "fileExt" "encoding" ] a.local) // {
-      path = a.local.path;
-      postHook = if a.vdirsyncer.postHook != null then
-        (pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook
-          + "/bin/post-hook")
-      else
-        null;
-    });
+  localStorage =
+    a:
+    filterAttrs (_: v: v != null) (
+      (getAttrs [ "type" "fileExt" "encoding" ] a.local)
+      // {
+        path = a.local.path;
+        postHook =
+          if a.vdirsyncer.postHook != null then
+            (pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook + "/bin/post-hook")
+          else
+            null;
+      }
+    );
 
-  remoteStorage = a:
-    filterAttrs (_: v: v != null)
-    ((getAttrs [ "type" "url" "userName" "passwordCommand" ] a.remote)
-      // (if a.vdirsyncer == null then
-        { }
-      else
-        getAttrs [
-          "urlCommand"
-          "userNameCommand"
-          "itemTypes"
-          "verify"
-          "verifyFingerprint"
-          "auth"
-          "authCert"
-          "userAgent"
-          "tokenFile"
-          "clientIdCommand"
-          "clientSecretCommand"
-          "timeRange"
-        ] a.vdirsyncer));
+  remoteStorage =
+    a:
+    filterAttrs (_: v: v != null) (
+      (getAttrs [ "type" "url" "userName" "passwordCommand" ] a.remote)
+      // (
+        if a.vdirsyncer == null then
+          { }
+        else
+          getAttrs [
+            "urlCommand"
+            "userNameCommand"
+            "itemTypes"
+            "verify"
+            "verifyFingerprint"
+            "auth"
+            "authCert"
+            "userAgent"
+            "tokenFile"
+            "clientIdCommand"
+            "clientSecretCommand"
+            "timeRange"
+          ] a.vdirsyncer
+      )
+    );
 
-  pair = a:
-    filterAttrs (k: v: k == "collections" || (v != null && v != [ ]))
-    (getAttrs [ "collections" "conflictResolution" "metadata" "partialSync" ]
-      a.vdirsyncer);
+  pair =
+    a:
+    filterAttrs (k: v: k == "collections" || (v != null && v != [ ])) (
+      getAttrs [ "collections" "conflictResolution" "metadata" "partialSync" ] a.vdirsyncer
+    );
 
   pairs = mapAttrs (_: v: pair v) vdirsyncerAccounts;
   localStorages = mapAttrs (_: v: localStorage v) vdirsyncerAccounts;
   remoteStorages = mapAttrs (_: v: remoteStorage v) vdirsyncerAccounts;
 
-  optionString = n: v:
+  optionString =
+    n: v:
     if (n == "type") then
       ''type = "${v}"''
     else if (n == "path") then
@@ -75,9 +95,11 @@ let
       ''url = "${v}"''
     else if (n == "urlCommand") then
       "url.fetch = ${listString (map wrap ([ "command" ] ++ v))}"
-    else if (n == "timeRange") then ''
-      start_date = "${v.start}"
-      end_date = "${v.end}"'' else if (n == "itemTypes") then
+    else if (n == "timeRange") then
+      ''
+        start_date = "${v.start}"
+        end_date = "${v.end}"''
+    else if (n == "itemTypes") then
       "item_types = ${listString (map wrap v)}"
     else if (n == "userName") then
       ''username = "${v}"''
@@ -117,12 +139,9 @@ let
       ''partial_sync = "${v}"''
     else if (n == "collections") then
       let
-        contents = map
-          (c: if (lib.isString c) then ''"${c}"'' else listString (map wrap c))
-          v;
-      in "collections = ${
-        if ((isNull v) || v == [ ]) then "null" else listString contents
-      }"
+        contents = map (c: if (lib.isString c) then ''"${c}"'' else listString (map wrap c)) v;
+      in
+      "collections = ${if ((isNull v) || v == [ ]) then "null" else listString contents}"
     else if (n == "conflictResolution") then
       if v == "remote wins" then
         ''conflict_resolution = "a wins"''
@@ -152,18 +171,19 @@ let
 
     ### Local storages
 
-    ${concatStringsSep "\n\n"
-    (mapAttrsToList (n: v: "[storage ${n}_local]" + "\n" + attrsString v)
-      localStorages)}
+    ${concatStringsSep "\n\n" (
+      mapAttrsToList (n: v: "[storage ${n}_local]" + "\n" + attrsString v) localStorages
+    )}
 
     ### Remote storages
 
-    ${concatStringsSep "\n\n"
-    (mapAttrsToList (n: v: "[storage ${n}_remote]" + "\n" + attrsString v)
-      remoteStorages)}
+    ${concatStringsSep "\n\n" (
+      mapAttrsToList (n: v: "[storage ${n}_remote]" + "\n" + attrsString v) remoteStorages
+    )}
   '';
 
-in {
+in
+{
   options = {
     programs.vdirsyncer = {
       enable = lib.mkEnableOption "vdirsyncer";
@@ -185,96 +205,143 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = let
+    assertions =
+      let
 
-      mutuallyExclusiveOptions =
-        [ [ "url" "urlCommand" ] [ "userName" "userNameCommand" ] ];
-
-      requiredOptions = t:
-        if (t == "caldav" || t == "carddav" || t == "http") then
-          [ "url" ]
-        else if (t == "filesystem") then [
-          "path"
-          "fileExt"
-        ] else if (t == "singlefile") then
-          [ "path" ]
-        else if (t == "google_calendar" || t == "google_contacts") then [
-          "tokenFile"
-          "clientId"
-          "clientSecret"
-        ] else
-          throw "Unrecognized storage type: ${t}";
-
-      allowedOptions = let
-        remoteOptions = [
-          "urlCommand"
-          "userName"
-          "userNameCommand"
-          "password"
-          "passwordCommand"
-          "passwordPrompt"
-          "verify"
-          "verifyFingerprint"
-          "auth"
-          "authCert"
-          "userAgent"
+        mutuallyExclusiveOptions = [
+          [
+            "url"
+            "urlCommand"
+          ]
+          [
+            "userName"
+            "userNameCommand"
+          ]
         ];
-      in t:
-      if (t == "caldav") then
-        [ "timeRange" "itemTypes" ] ++ remoteOptions
-      else if (t == "carddav" || t == "http") then
-        remoteOptions
-      else if (t == "filesystem") then [
-        "fileExt"
-        "encoding"
-        "postHook"
-      ] else if (t == "singlefile") then
-        [ "encoding" ]
-      else if (t == "google_calendar") then [
-        "timeRange"
-        "itemTypes"
-        "clientIdCommand"
-        "clientSecretCommand"
-      ] else if (t == "google_contacts") then [
-        "clientIdCommand"
-        "clientSecretCommand"
-      ] else
-        throw "Unrecognized storage type: ${t}";
 
-      assertStorage = n: v:
-        let allowed = allowedOptions v.type ++ (requiredOptions v.type);
-        in mapAttrsToList (a: v':
-          [{
-            assertion = (lib.elem a allowed);
-            message = ''
-              Storage ${n} is of type ${v.type}. Option
-              ${a} is not allowed for this type.
-            '';
-          }] ++ (let
-            required = lib.filter (a: !lib.hasAttr "${a}Command" v)
-              (requiredOptions v.type);
-          in map (a: [{
-            assertion = lib.hasAttr a v;
-            message = ''
-              Storage ${n} is of type ${v.type}, but required
-              option ${a} is not set.
-            '';
-          }]) required) ++ map (attrs:
-            let
-              defined = lib.attrNames (filterAttrs (n: v: v != null)
-                (lib.genAttrs attrs (a: v.${a} or null)));
-            in {
-              assertion = lib.length defined <= 1;
-              message = "Storage ${n} has mutually exclusive options: ${
-                  concatStringsSep ", " defined
-                }";
-            }) mutuallyExclusiveOptions) (removeAttrs v [ "type" "_module" ]);
+        requiredOptions =
+          t:
+          if (t == "caldav" || t == "carddav" || t == "http") then
+            [ "url" ]
+          else if (t == "filesystem") then
+            [
+              "path"
+              "fileExt"
+            ]
+          else if (t == "singlefile") then
+            [ "path" ]
+          else if (t == "google_calendar" || t == "google_contacts") then
+            [
+              "tokenFile"
+              "clientId"
+              "clientSecret"
+            ]
+          else
+            throw "Unrecognized storage type: ${t}";
 
-      storageAssertions =
-        lib.flatten (mapAttrsToList assertStorage localStorages)
-        ++ lib.flatten (mapAttrsToList assertStorage remoteStorages);
+        allowedOptions =
+          let
+            remoteOptions = [
+              "urlCommand"
+              "userName"
+              "userNameCommand"
+              "password"
+              "passwordCommand"
+              "passwordPrompt"
+              "verify"
+              "verifyFingerprint"
+              "auth"
+              "authCert"
+              "userAgent"
+            ];
+          in
+          t:
+          if (t == "caldav") then
+            [
+              "timeRange"
+              "itemTypes"
+            ]
+            ++ remoteOptions
+          else if (t == "carddav" || t == "http") then
+            remoteOptions
+          else if (t == "filesystem") then
+            [
+              "fileExt"
+              "encoding"
+              "postHook"
+            ]
+          else if (t == "singlefile") then
+            [ "encoding" ]
+          else if (t == "google_calendar") then
+            [
+              "timeRange"
+              "itemTypes"
+              "clientIdCommand"
+              "clientSecretCommand"
+            ]
+          else if (t == "google_contacts") then
+            [
+              "clientIdCommand"
+              "clientSecretCommand"
+            ]
+          else
+            throw "Unrecognized storage type: ${t}";
 
-    in storageAssertions;
+        assertStorage =
+          n: v:
+          let
+            allowed = allowedOptions v.type ++ (requiredOptions v.type);
+          in
+          mapAttrsToList
+            (
+              a: v':
+              [
+                {
+                  assertion = (lib.elem a allowed);
+                  message = ''
+                    Storage ${n} is of type ${v.type}. Option
+                    ${a} is not allowed for this type.
+                  '';
+                }
+              ]
+              ++ (
+                let
+                  required = lib.filter (a: !lib.hasAttr "${a}Command" v) (requiredOptions v.type);
+                in
+                map (a: [
+                  {
+                    assertion = lib.hasAttr a v;
+                    message = ''
+                      Storage ${n} is of type ${v.type}, but required
+                      option ${a} is not set.
+                    '';
+                  }
+                ]) required
+              )
+              ++ map (
+                attrs:
+                let
+                  defined = lib.attrNames (filterAttrs (n: v: v != null) (lib.genAttrs attrs (a: v.${a} or null)));
+                in
+                {
+                  assertion = lib.length defined <= 1;
+                  message = "Storage ${n} has mutually exclusive options: ${concatStringsSep ", " defined}";
+                }
+              ) mutuallyExclusiveOptions
+            )
+            (
+              removeAttrs v [
+                "type"
+                "_module"
+              ]
+            );
+
+        storageAssertions =
+          lib.flatten (mapAttrsToList assertStorage localStorages)
+          ++ lib.flatten (mapAttrsToList assertStorage remoteStorages);
+
+      in
+      storageAssertions;
     home.packages = [ cfg.package ];
     xdg.configFile."vdirsyncer/config".source = configFile;
   };

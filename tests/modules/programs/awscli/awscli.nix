@@ -8,7 +8,11 @@
           region = "eu-west-3";
         };
       };
-      credentials = { iam = { credential_process = "pass show aws"; }; };
+      credentials = {
+        iam = {
+          credential_process = "pass show aws";
+        };
+      };
     };
   };
 

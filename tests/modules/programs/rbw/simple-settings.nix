@@ -3,10 +3,8 @@
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  path = if isDarwin then
-    "Library/Application Support/rbw/config.json"
-  else
-    ".config/rbw/config.json";
+  path =
+    if isDarwin then "Library/Application Support/rbw/config.json" else ".config/rbw/config.json";
 
   expected = builtins.toFile "rbw-expected.json" ''
     {
@@ -17,10 +15,13 @@ let
       "pinentry": null
     }
   '';
-in {
+in
+{
   programs.rbw = {
     enable = true;
-    settings = { email = "name@example.com"; };
+    settings = {
+      email = "name@example.com";
+    };
   };
 
   nmt.script = ''

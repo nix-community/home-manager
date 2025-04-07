@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   xdg.enable = lib.mkIf pkgs.stdenv.isDarwin false;
@@ -54,7 +59,11 @@
         };
       };
     };
-    aliases = { alias = { pp = "v1/pods"; }; };
+    aliases = {
+      alias = {
+        pp = "v1/pods";
+      };
+    };
     plugin = {
       plugin = {
         fred = {
@@ -63,8 +72,15 @@
           scopes = [ "po" ];
           command = "kubectl";
           background = false;
-          args =
-            [ "logs" "-f" "$NAME" "-n" "$NAMESPACE" "--context" "$CLUSTER" ];
+          args = [
+            "logs"
+            "-f"
+            "$NAME"
+            "-n"
+            "$NAMESPACE"
+            "--context"
+            "$CLUSTER"
+          ];
         };
       };
     };
@@ -72,50 +88,57 @@
       k9s = {
         views = {
           "v1/pods" = {
-            columns = [ "AGE" "NAMESPACE" "NAME" "IP" "NODE" "STATUS" "READY" ];
+            columns = [
+              "AGE"
+              "NAMESPACE"
+              "NAME"
+              "IP"
+              "NODE"
+              "STATUS"
+              "READY"
+            ];
           };
         };
       };
     };
   };
 
-  nmt.script = let
-    configDir = if !pkgs.stdenv.isDarwin then
-      ".config/k9s"
-    else
-      "Library/Application Support/k9s";
-  in ''
-    assertFileExists "home-files/${configDir}/config.yaml"
-    assertFileContent \
-      "home-files/${configDir}/config.yaml" \
-      ${./example-config-expected.yaml}
-    assertFileExists "home-files/${configDir}/skins/default.yaml"
-    assertFileContent \
-      "home-files/${configDir}/skins/default.yaml" \
-      ${./example-skin-expected.yaml}
-    assertFileExists "home-files/${configDir}/skins/default2.yaml"
-    assertFileContent \
-      "home-files/${configDir}/skins/default2.yaml" \
-      ${./example-skin-expected.yaml}
-    assertFileExists "home-files/${configDir}/skins/alt-skin.yaml"
-    assertFileContent \
-      "home-files/${configDir}/skins/alt-skin.yaml" \
-      ${./example-skin-expected-alt.yaml}
-    assertFileExists "home-files/${configDir}/hotkeys.yaml"
-    assertFileContent \
-      "home-files/${configDir}/hotkeys.yaml" \
-      ${./example-hotkey-expected.yaml}
-    assertFileExists "home-files/${configDir}/aliases.yaml"
-    assertFileContent \
-      "home-files/${configDir}/aliases.yaml" \
-      ${./example-aliases-expected.yaml}
-    assertFileExists "home-files/${configDir}/plugins.yaml"
-    assertFileContent \
-      "home-files/${configDir}/plugins.yaml" \
-      ${./example-plugin-expected.yaml}
-    assertFileExists "home-files/${configDir}/views.yaml"
-    assertFileContent \
-      "home-files/${configDir}/views.yaml" \
-      ${./example-views-expected.yaml}
-  '';
+  nmt.script =
+    let
+      configDir = if !pkgs.stdenv.isDarwin then ".config/k9s" else "Library/Application Support/k9s";
+    in
+    ''
+      assertFileExists "home-files/${configDir}/config.yaml"
+      assertFileContent \
+        "home-files/${configDir}/config.yaml" \
+        ${./example-config-expected.yaml}
+      assertFileExists "home-files/${configDir}/skins/default.yaml"
+      assertFileContent \
+        "home-files/${configDir}/skins/default.yaml" \
+        ${./example-skin-expected.yaml}
+      assertFileExists "home-files/${configDir}/skins/default2.yaml"
+      assertFileContent \
+        "home-files/${configDir}/skins/default2.yaml" \
+        ${./example-skin-expected.yaml}
+      assertFileExists "home-files/${configDir}/skins/alt-skin.yaml"
+      assertFileContent \
+        "home-files/${configDir}/skins/alt-skin.yaml" \
+        ${./example-skin-expected-alt.yaml}
+      assertFileExists "home-files/${configDir}/hotkeys.yaml"
+      assertFileContent \
+        "home-files/${configDir}/hotkeys.yaml" \
+        ${./example-hotkey-expected.yaml}
+      assertFileExists "home-files/${configDir}/aliases.yaml"
+      assertFileContent \
+        "home-files/${configDir}/aliases.yaml" \
+        ${./example-aliases-expected.yaml}
+      assertFileExists "home-files/${configDir}/plugins.yaml"
+      assertFileContent \
+        "home-files/${configDir}/plugins.yaml" \
+        ${./example-plugin-expected.yaml}
+      assertFileExists "home-files/${configDir}/views.yaml"
+      assertFileContent \
+        "home-files/${configDir}/views.yaml" \
+        ${./example-views-expected.yaml}
+    '';
 }

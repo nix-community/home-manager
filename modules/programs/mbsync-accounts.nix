@@ -2,114 +2,125 @@
 let
   inherit (lib) literalExpression mkOption types;
 
-  extraConfigType = with lib.types;
-    attrsOf (oneOf [ str int bool (listOf str) ]);
+  extraConfigType =
+    with lib.types;
+    attrsOf (oneOf [
+      str
+      int
+      bool
+      (listOf str)
+    ]);
 
-  perAccountGroups = { name, config, ... }: {
-    options = {
-      name = mkOption {
-        type = types.str;
-        # Make value of name the same as the name used with the dot prefix
-        default = name;
-        readOnly = true;
-        description = ''
-          The name of this group for this account. These names are different than
-          some others, because they will hide channel names that are the same.
-        '';
-      };
+  perAccountGroups =
+    { name, config, ... }:
+    {
+      options = {
+        name = mkOption {
+          type = types.str;
+          # Make value of name the same as the name used with the dot prefix
+          default = name;
+          readOnly = true;
+          description = ''
+            The name of this group for this account. These names are different than
+            some others, because they will hide channel names that are the same.
+          '';
+        };
 
-      channels = mkOption {
-        type = types.attrsOf (types.submodule channel);
-        default = { };
-        description = ''
-          List of channels that should be grouped together into this group. When
-          performing a synchronization, the groups are synchronized, rather than
-          the individual channels.
+        channels = mkOption {
+          type = types.attrsOf (types.submodule channel);
+          default = { };
+          description = ''
+            List of channels that should be grouped together into this group. When
+            performing a synchronization, the groups are synchronized, rather than
+            the individual channels.
 
-          Using these channels and then grouping them together allows for you to
-          define the maildir hierarchy as you see fit.
-        '';
+            Using these channels and then grouping them together allows for you to
+            define the maildir hierarchy as you see fit.
+          '';
+        };
       };
     };
-  };
 
   # Options for configuring channel(s) that will be composed together into a group.
-  channel = { name, config, ... }: {
-    options = {
-      name = mkOption {
-        type = types.str;
-        default = name;
-        readOnly = true;
-        description = ''
-          The unique name for THIS channel in THIS group. The group will refer to
-          this channel by this name.
+  channel =
+    { name, config, ... }:
+    {
+      options = {
+        name = mkOption {
+          type = types.str;
+          default = name;
+          readOnly = true;
+          description = ''
+            The unique name for THIS channel in THIS group. The group will refer to
+            this channel by this name.
 
-          In addition, you can manually sync just this channel by specifying this
-          name to mbsync on the command line.
-        '';
-      };
+            In addition, you can manually sync just this channel by specifying this
+            name to mbsync on the command line.
+          '';
+        };
 
-      farPattern = mkOption {
-        type = types.str;
-        default = "";
-        example = "[Gmail]/Sent Mail";
-        description = ''
-          IMAP4 patterns for which mailboxes on the remote mail server to sync.
-          If `Patterns` are specified, `farPattern`
-          is interpreted as a prefix which is not matched against the patterns,
-          and is not affected by mailbox list overrides.
+        farPattern = mkOption {
+          type = types.str;
+          default = "";
+          example = "[Gmail]/Sent Mail";
+          description = ''
+            IMAP4 patterns for which mailboxes on the remote mail server to sync.
+            If `Patterns` are specified, `farPattern`
+            is interpreted as a prefix which is not matched against the patterns,
+            and is not affected by mailbox list overrides.
 
-          If this is left as the default, then mbsync will default to the pattern
-          `INBOX`.
-        '';
-      };
+            If this is left as the default, then mbsync will default to the pattern
+            `INBOX`.
+          '';
+        };
 
-      nearPattern = mkOption {
-        type = types.str;
-        default = "";
-        example = "Sent";
-        description = ''
-          Name for where mail coming from the remote (far) mail server will end up
-          locally. The mailbox specified by the far pattern will be placed in
-          this directory.
+        nearPattern = mkOption {
+          type = types.str;
+          default = "";
+          example = "Sent";
+          description = ''
+            Name for where mail coming from the remote (far) mail server will end up
+            locally. The mailbox specified by the far pattern will be placed in
+            this directory.
 
-          If this is left as the default, then mbsync will default to the pattern
-          `INBOX`.
-        '';
-      };
+            If this is left as the default, then mbsync will default to the pattern
+            `INBOX`.
+          '';
+        };
 
-      patterns = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = [ "INBOX" ];
-        description = ''
-          Instead of synchronizing *just* the mailboxes that
-          match the `farPattern`, use it as a prefix which is
-          not matched against the patterns, and is not affected by mailbox list
-          overrides.
-        '';
-      };
+        patterns = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [ "INBOX" ];
+          description = ''
+            Instead of synchronizing *just* the mailboxes that
+            match the `farPattern`, use it as a prefix which is
+            not matched against the patterns, and is not affected by mailbox list
+            overrides.
+          '';
+        };
 
-      extraConfig = mkOption {
-        type = extraConfigType;
-        default = { };
-        example = literalExpression ''
-          {
-            Create = "both";
-            CopyArrivalDate = "yes";
-            MaxMessages = 10000;
-            MaxSize = "1m";
-          }
-        '';
-        description = ''
-          Extra configuration lines to add to *THIS* channel's
-          configuration.
-        '';
+        extraConfig = mkOption {
+          type = extraConfigType;
+          default = { };
+          example = literalExpression ''
+            {
+              Create = "both";
+              CopyArrivalDate = "yes";
+              MaxMessages = 10000;
+              MaxSize = "1m";
+            }
+          '';
+          description = ''
+            Extra configuration lines to add to *THIS* channel's
+            configuration.
+          '';
+        };
       };
     };
-  };
 
-in {
+in
+{
   options.mbsync = {
     enable = lib.mkEnableOption "synchronization using mbsync";
 
@@ -125,7 +136,11 @@ in {
     };
 
     subFolders = mkOption {
-      type = types.enum [ "Verbatim" "Maildir++" "Legacy" ];
+      type = types.enum [
+        "Verbatim"
+        "Maildir++"
+        "Legacy"
+      ];
       default = "Verbatim";
       example = "Maildir++";
       description = ''
@@ -135,7 +150,12 @@ in {
     };
 
     create = mkOption {
-      type = types.enum [ "none" "maildir" "imap" "both" ];
+      type = types.enum [
+        "none"
+        "maildir"
+        "imap"
+        "both"
+      ];
       default = "none";
       example = "maildir";
       description = ''
@@ -145,7 +165,12 @@ in {
     };
 
     remove = mkOption {
-      type = types.enum [ "none" "maildir" "imap" "both" ];
+      type = types.enum [
+        "none"
+        "maildir"
+        "imap"
+        "both"
+      ];
       default = "none";
       example = "imap";
       description = ''
@@ -154,7 +179,12 @@ in {
     };
 
     expunge = mkOption {
-      type = types.enum [ "none" "maildir" "imap" "both" ];
+      type = types.enum [
+        "none"
+        "maildir"
+        "imap"
+        "both"
+      ];
       default = "none";
       example = "both";
       description = ''

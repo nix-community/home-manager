@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.afew;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.afew;
+in
+{
   options.programs.afew = {
     enable = lib.mkEnableOption "the afew initial tagging script for Notmuch";
 

@@ -4,11 +4,9 @@
   nmt.script = ''
     assertFileExists 'home-files/source with spaces!';
     assertFileContent 'home-files/source with spaces!' \
-      ${
-        builtins.path {
-          path = ./. + "/source with spaces!";
-          name = "source-with-spaces-expected";
-        }
-      }
+      ${builtins.path {
+        path = ./. + "/source with spaces!";
+        name = "source-with-spaces-expected";
+      }}
   '';
 }

@@ -1,12 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.go;
 
   modeFileContent = "${cfg.telemetry.mode} ${cfg.telemetry.date}";
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.rvolosatovs ];
 
   options = {
@@ -41,7 +52,10 @@ in {
       extraGoPaths = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = [ "extraGoPath1" "extraGoPath2" ];
+        example = [
+          "extraGoPath1"
+          "extraGoPath2"
+        ];
         description = ''
           Extra {env}`GOPATH`s relative to {env}`HOME` appended
           after [](#opt-programs.go.goPath), if that option is set.
@@ -58,7 +72,10 @@ in {
       goPrivate = mkOption {
         type = with types; listOf str;
         default = [ ];
-        example = [ "*.corp.example.com" "rsc.io/private" ];
+        example = [
+          "*.corp.example.com"
+          "rsc.io/private"
+        ];
         description = ''
           The {env}`GOPRIVATE` environment variable controls
           which modules the go command considers to be private (not
@@ -71,7 +88,13 @@ in {
         type = types.submodule {
           options = {
             mode = mkOption {
-              type = with types; nullOr (enum [ "off" "local" "on" ]);
+              type =
+                with types;
+                nullOr (enum [
+                  "off"
+                  "local"
+                  "on"
+                ]);
               default = null;
               description = "Go telemetry mode to be set.";
             };
@@ -94,41 +117,46 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (lib.mkMerge [
-    {
-      home.packages = [ cfg.package ];
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home.packages = [ cfg.package ];
 
-      home.file = let
-        goPath = if cfg.goPath != null then cfg.goPath else "go";
-        mkSrc = n: v: { "${goPath}/src/${n}".source = v; };
-      in lib.foldl' (a: b: a // b) { } (lib.mapAttrsToList mkSrc cfg.packages);
-    }
+        home.file =
+          let
+            goPath = if cfg.goPath != null then cfg.goPath else "go";
+            mkSrc = n: v: { "${goPath}/src/${n}".source = v; };
+          in
+          lib.foldl' (a: b: a // b) { } (lib.mapAttrsToList mkSrc cfg.packages);
+      }
 
-    (mkIf (cfg.goPath != null) {
-      home.sessionVariables.GOPATH = lib.concatStringsSep ":"
-        (map builtins.toPath (map (path: "${config.home.homeDirectory}/${path}")
-          ([ cfg.goPath ] ++ cfg.extraGoPaths)));
-    })
+      (mkIf (cfg.goPath != null) {
+        home.sessionVariables.GOPATH = lib.concatStringsSep ":" (
+          map builtins.toPath (
+            map (path: "${config.home.homeDirectory}/${path}") ([ cfg.goPath ] ++ cfg.extraGoPaths)
+          )
+        );
+      })
 
-    (mkIf (cfg.goBin != null) {
-      home.sessionVariables.GOBIN =
-        builtins.toPath "${config.home.homeDirectory}/${cfg.goBin}";
-    })
+      (mkIf (cfg.goBin != null) {
+        home.sessionVariables.GOBIN = builtins.toPath "${config.home.homeDirectory}/${cfg.goBin}";
+      })
 
-    (mkIf (cfg.goPrivate != [ ]) {
-      home.sessionVariables.GOPRIVATE = lib.concatStringsSep "," cfg.goPrivate;
-    })
+      (mkIf (cfg.goPrivate != [ ]) {
+        home.sessionVariables.GOPRIVATE = lib.concatStringsSep "," cfg.goPrivate;
+      })
 
-    (mkIf (cfg.telemetry.mode != null) {
-      home.file."Library/Application Support/go/telemetry/mode" = {
-        enable = pkgs.stdenv.hostPlatform.isDarwin;
-        text = modeFileContent;
-      };
+      (mkIf (cfg.telemetry.mode != null) {
+        home.file."Library/Application Support/go/telemetry/mode" = {
+          enable = pkgs.stdenv.hostPlatform.isDarwin;
+          text = modeFileContent;
+        };
 
-      xdg.configFile."go/telemetry/mode" = {
-        enable = !pkgs.stdenv.hostPlatform.isDarwin;
-        text = modeFileContent;
-      };
-    })
-  ]);
+        xdg.configFile."go/telemetry/mode" = {
+          enable = !pkgs.stdenv.hostPlatform.isDarwin;
+          text = modeFileContent;
+        };
+      })
+    ]
+  );
 }

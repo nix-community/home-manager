@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) mkOption types;
@@ -7,58 +12,64 @@ let
 
   hostPlatform = pkgs.stdenv.hostPlatform;
 
-  entryModule = types.submodule ({ config, ... }: {
-    options = {
-      id = mkOption {
-        internal = true;
-        type = types.str;
-        description = ''
-          A unique entry identifier. By default it is a base16
-          formatted hash of the entry message.
-        '';
+  entryModule = types.submodule (
+    { config, ... }:
+    {
+      options = {
+        id = mkOption {
+          internal = true;
+          type = types.str;
+          description = ''
+            A unique entry identifier. By default it is a base16
+            formatted hash of the entry message.
+          '';
+        };
+
+        time = mkOption {
+          internal = true;
+          type = types.str;
+          example = "2017-07-10T21:55:04+00:00";
+          description = ''
+            News entry time stamp in ISO-8601 format. Must be in UTC
+            (ending in '+00:00').
+          '';
+        };
+
+        condition = mkOption {
+          internal = true;
+          default = true;
+          description = "Whether the news entry should be active.";
+        };
+
+        message = mkOption {
+          internal = true;
+          type = types.str;
+          description = "The news entry content.";
+        };
       };
 
-      time = mkOption {
-        internal = true;
-        type = types.str;
-        example = "2017-07-10T21:55:04+00:00";
-        description = ''
-          News entry time stamp in ISO-8601 format. Must be in UTC
-          (ending in '+00:00').
-        '';
+      config = {
+        id = lib.mkDefault (builtins.hashString "sha256" config.message);
       };
-
-      condition = mkOption {
-        internal = true;
-        default = true;
-        description = "Whether the news entry should be active.";
-      };
-
-      message = mkOption {
-        internal = true;
-        type = types.str;
-        description = "The news entry content.";
-      };
-    };
-
-    config = {
-      id = lib.mkDefault (builtins.hashString "sha256" config.message);
-    };
-  });
+    }
+  );
 
   isNixFile = n: v: v == "regular" && lib.hasSuffix ".nix" n;
   # builtins.attrNames return the values in alphabetical order
-  newsFiles =
-    builtins.attrNames (lib.filterAttrs isNixFile (builtins.readDir ./news));
-  newsEntries =
-    builtins.map (newsFile: import (./news + "/${newsFile}")) newsFiles;
-in {
+  newsFiles = builtins.attrNames (lib.filterAttrs isNixFile (builtins.readDir ./news));
+  newsEntries = builtins.map (newsFile: import (./news + "/${newsFile}")) newsFiles;
+in
+{
   meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     news = {
       display = mkOption {
-        type = types.enum [ "silent" "notify" "show" ];
+        type = types.enum [
+          "silent"
+          "notify"
+          "show"
+        ];
         default = "notify";
         description = ''
           How unread and relevant news should be presented when
@@ -100,8 +111,9 @@ in {
   };
 
   config = {
-    news.json.output = pkgs.writeText "hm-news.json"
-      (builtins.toJSON { inherit (cfg) display entries; });
+    news.json.output = pkgs.writeText "hm-news.json" (
+      builtins.toJSON { inherit (cfg) display entries; }
+    );
 
     # DO NOT define new entries here, instead use the `./create-news-entry.sh`
     # script and create an individual news file inside `news` sub-directory.
@@ -250,8 +262,7 @@ in {
 
       {
         time = "2021-09-23T17:04:48+00:00";
-        condition = hostPlatform.isLinux
-          && config.services.screen-locker.enable;
+        condition = hostPlatform.isLinux && config.services.screen-locker.enable;
         message = ''
           'xautolock' is now optional in 'services.screen-locker', and the
           'services.screen-locker' options have been reorganized for clarity.
@@ -1699,9 +1710,12 @@ in {
 
       {
         time = "2024-06-26T07:07:17+00:00";
-        condition = with config.programs.yazi;
-          enable && (enableBashIntegration || enableZshIntegration
-            || enableFishIntegration || enableNushellIntegration);
+        condition =
+          with config.programs.yazi;
+          enable
+          && (
+            enableBashIntegration || enableZshIntegration || enableFishIntegration || enableNushellIntegration
+          );
         message = ''
           Yazi's shell integration wrappers have been renamed from 'ya' to 'yy'.
 
@@ -1881,10 +1895,12 @@ in {
 
       {
         time = "2024-12-04T20:00:00+00:00";
-        condition = let
-          sCfg = config.programs.starship;
-          fCfg = config.programs.fish;
-        in sCfg.enable && sCfg.enableFishIntegration && fCfg.enable;
+        condition =
+          let
+            sCfg = config.programs.starship;
+            fCfg = config.programs.fish;
+          in
+          sCfg.enable && sCfg.enableFishIntegration && fCfg.enable;
         message = ''
           A new option 'programs.starship.enableInteractive' is available for
           the Fish shell that only enables starship if the shell is interactive.
@@ -1894,10 +1910,11 @@ in {
       }
       {
         time = "2024-12-08T17:22:13+00:00";
-        condition = let
-          usingMbsync = lib.any (a: a.mbsync.enable)
-            (lib.attrValues config.accounts.email.accounts);
-        in usingMbsync;
+        condition =
+          let
+            usingMbsync = lib.any (a: a.mbsync.enable) (lib.attrValues config.accounts.email.accounts);
+          in
+          usingMbsync;
         message = ''
           isync/mbsync 1.5.0 has changed several things.
 

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,9 +12,15 @@ let
 
   yamlFormat = pkgs.formats.yaml { };
 
-  scriptsOptionType = kind:
+  scriptsOptionType =
+    kind:
     mkOption {
-      type = types.attrsOf (types.oneOf [ types.path types.lines ]);
+      type = types.attrsOf (
+        types.oneOf [
+          types.path
+          types.lines
+        ]
+      );
       default = { };
       example = literalExpression ''
         {
@@ -30,17 +41,22 @@ let
       '';
     };
 
-  generateScripts = folder:
-    mapAttrs' (k: v: {
-      name = "${folder}/${k}";
-      value = {
-        source = if builtins.isPath v || isDerivation v then
-          v
-        else
-          pkgs.writeShellScript (hm.strings.storeFileName k) v;
-      };
-    });
-in {
+  generateScripts =
+    folder:
+    mapAttrs' (
+      k: v: {
+        name = "${folder}/${k}";
+        value = {
+          source =
+            if builtins.isPath v || isDerivation v then
+              v
+            else
+              pkgs.writeShellScript (hm.strings.storeFileName k) v;
+        };
+      }
+    );
+in
+{
   meta.maintainers = [ maintainers.xlambein ];
 
   options.services.darkman = {
@@ -85,10 +101,8 @@ in {
     };
 
     xdg.dataFile = mkMerge [
-      (mkIf (cfg.darkModeScripts != { })
-        (generateScripts "dark-mode.d" cfg.darkModeScripts))
-      (mkIf (cfg.lightModeScripts != { })
-        (generateScripts "light-mode.d" cfg.lightModeScripts))
+      (mkIf (cfg.darkModeScripts != { }) (generateScripts "dark-mode.d" cfg.darkModeScripts))
+      (mkIf (cfg.lightModeScripts != { }) (generateScripts "light-mode.d" cfg.lightModeScripts))
     ];
 
     systemd.user.services.darkman = lib.mkIf (cfg.package != null) {
@@ -97,8 +111,9 @@ in {
         Documentation = "man:darkman(1)";
         PartOf = [ "graphical-session.target" ];
         BindsTo = [ "graphical-session.target" ];
-        X-Restart-Triggers = mkIf (cfg.settings != { })
-          [ "${config.xdg.configFile."darkman/config.yaml".source}" ];
+        X-Restart-Triggers = mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."darkman/config.yaml".source}"
+        ];
       };
 
       Service = {

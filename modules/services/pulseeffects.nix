@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -8,7 +13,8 @@ let
 
   presetOpts = optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
 
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.jonringer ];
 
   options.services.pulseeffects = {
@@ -39,28 +45,34 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.pulseeffects" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.pulseeffects" pkgs lib.platforms.linux)
     ];
 
     # running pulseeffects will just attach itself to gapplication service
     # at-spi2-core is to minimize journalctl noise of:
     # "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"
-    home.packages = [ cfg.package pkgs.at-spi2-core ];
+    home.packages = [
+      cfg.package
+      pkgs.at-spi2-core
+    ];
 
     systemd.user.services.pulseeffects = {
       Unit = {
         Description = "Pulseeffects daemon";
         Requires = [ "dbus.service" ];
         After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" "pulseaudio.service" ];
+        PartOf = [
+          "graphical-session.target"
+          "pulseaudio.service"
+        ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
-        ExecStart =
-          "${cfg.package}/bin/pulseeffects --gapplication-service ${presetOpts}";
+        ExecStart = "${cfg.package}/bin/pulseeffects --gapplication-service ${presetOpts}";
         ExecStop = "${cfg.package}/bin/pulseeffects --quit";
         Restart = "on-failure";
         RestartSec = 5;

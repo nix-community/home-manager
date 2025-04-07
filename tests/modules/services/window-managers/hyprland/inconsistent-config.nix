@@ -1,8 +1,11 @@
-{ config, ... }: {
+{ config, ... }:
+{
   wayland.windowManager.hyprland = {
     enable = true;
-    plugins =
-      [ "/path/to/plugin1" (config.lib.test.mkStubPackage { name = "foo"; }) ];
+    plugins = [
+      "/path/to/plugin1"
+      (config.lib.test.mkStubPackage { name = "foo"; })
+    ];
   };
 
   test.asserts.warnings.expected = [

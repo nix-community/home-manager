@@ -4,16 +4,18 @@ let
 
   cfg = config.programs.matplotlib;
 
-  formatLine = o: n: v:
+  formatLine =
+    o: n: v:
     let
-      formatValue = v:
-        if lib.isBool v then (if v then "True" else "False") else toString v;
-    in if lib.isAttrs v then
+      formatValue = v: if lib.isBool v then (if v then "True" else "False") else toString v;
+    in
+    if lib.isAttrs v then
       lib.concatStringsSep "\n" (lib.mapAttrsToList (formatLine "${o}${n}.") v)
     else
       (if v == "" then "" else "${o}${n}: ${formatValue v}");
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.rprospero ];
 
   options.programs.matplotlib = {
@@ -50,8 +52,12 @@ in {
   };
 
   config = mkIf cfg.enable {
-    xdg.configFile."matplotlib/matplotlibrc".text = lib.concatStringsSep "\n"
-      ([ ] ++ lib.mapAttrsToList (formatLine "") cfg.config
-        ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig) + "\n";
+    xdg.configFile."matplotlib/matplotlibrc".text =
+      lib.concatStringsSep "\n" (
+        [ ]
+        ++ lib.mapAttrsToList (formatLine "") cfg.config
+        ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
+      )
+      + "\n";
   };
 }

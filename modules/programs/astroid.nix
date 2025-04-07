@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
@@ -6,12 +11,12 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  astroidAccounts =
-    lib.filterAttrs (n: v: v.astroid.enable) config.accounts.email.accounts;
+  astroidAccounts = lib.filterAttrs (n: v: v.astroid.enable) config.accounts.email.accounts;
 
   boolOpt = b: if b then "true" else "false";
 
-  accountAttr = account:
+  accountAttr =
+    account:
     with account;
     {
       email = address;
@@ -23,33 +28,38 @@ let
       save_sent = "true";
       save_sent_to = "${maildir.absPath}/${folders.sent}/cur/";
       select_query = "";
-    } // lib.optionalAttrs (signature.showSignature != "none") {
+    }
+    // lib.optionalAttrs (signature.showSignature != "none") {
       signature_attach = boolOpt (signature.showSignature == "attach");
       signature_default_on = boolOpt (signature.showSignature != "none");
       signature_file = pkgs.writeText "signature.txt" signature.text;
       signature_file_markdown = "false";
       signature_separate = "true"; # prepends '--\n' to the signature
-    } // lib.optionalAttrs (gpg != null) {
+    }
+    // lib.optionalAttrs (gpg != null) {
       always_gpg_sign = boolOpt gpg.signByDefault;
       gpgkey = gpg.key;
-    } // astroid.extraConfig;
+    }
+    // astroid.extraConfig;
 
   # See https://github.com/astroidmail/astroid/wiki/Configuration-Reference
-  finalConfig = let
-    template = lib.importJSON ./astroid-config-template.json;
-    astroidConfig = lib.foldl' lib.recursiveUpdate template [
-      {
-        astroid.notmuch_config =
-          "${config.xdg.configHome}/notmuch/default/config";
-        accounts = lib.mapAttrs (n: accountAttr) astroidAccounts;
-        crypto.gpg.path = "${pkgs.gnupg}/bin/gpg";
-      }
-      cfg.extraConfig
-      cfg.externalEditor
-    ];
-  in astroidConfig;
+  finalConfig =
+    let
+      template = lib.importJSON ./astroid-config-template.json;
+      astroidConfig = lib.foldl' lib.recursiveUpdate template [
+        {
+          astroid.notmuch_config = "${config.xdg.configHome}/notmuch/default/config";
+          accounts = lib.mapAttrs (n: accountAttr) astroidAccounts;
+          crypto.gpg.path = "${pkgs.gnupg}/bin/gpg";
+        }
+        cfg.extraConfig
+        cfg.externalEditor
+      ];
+    in
+    astroidConfig;
 
-in {
+in
+{
   options = {
     programs.astroid = {
       enable = lib.mkEnableOption "Astroid";
@@ -69,15 +79,15 @@ in {
         type = types.nullOr types.str;
         default = null;
         # Converts it into JSON that can be merged into the configuration.
-        apply = cmd:
+        apply =
+          cmd:
           lib.optionalAttrs (cmd != null) {
             editor = {
               "external_editor" = "true";
               "cmd" = cmd;
             };
           };
-        example =
-          "nvim-qt -- -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1";
+        example = "nvim-qt -- -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1";
         description = ''
           You can use the following variables:
 
@@ -117,8 +127,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."astroid/config".source =
-      jsonFormat.generate "astroid-config" finalConfig;
+    xdg.configFile."astroid/config".source = jsonFormat.generate "astroid-config" finalConfig;
 
     xdg.configFile."astroid/poll.sh" = lib.mkIf (cfg.pollScript != "") {
       executable = true;

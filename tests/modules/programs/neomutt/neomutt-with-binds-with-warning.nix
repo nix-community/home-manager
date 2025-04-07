@@ -27,7 +27,10 @@
       {
         action = "sidebar-prev";
         key = "\\Cp";
-        map = [ "index" "pager" ];
+        map = [
+          "index"
+          "pager"
+        ];
       }
     ];
 
@@ -40,7 +43,10 @@
       {
         action = "<change-folder>?<change-dir><home>^K=<enter><tab>";
         key = "c";
-        map = [ "index" "pager" ];
+        map = [
+          "index"
+          "pager"
+        ];
       }
     ];
   };
@@ -52,11 +58,7 @@
   nmt.script = ''
     assertFileExists home-files/.config/neomutt/neomuttrc
     assertFileExists home-files/.config/neomutt/hm@example.com
-    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/neomuttrc) ${
-      ./neomutt-with-binds-expected.conf
-    }
-    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/hm@example.com) ${
-      ./hm-example.com-expected
-    }
+    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/neomuttrc) ${./neomutt-with-binds-expected.conf}
+    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/hm@example.com) ${./hm-example.com-expected}
   '';
 }

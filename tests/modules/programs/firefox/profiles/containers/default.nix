@@ -6,24 +6,28 @@ let
 
   firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 
-in {
+in
+{
   imports = [ firefoxMockOverlay ];
 
-  config = lib.mkIf config.test.enableBig (lib.setAttrByPath modulePath {
-    enable = true;
-    profiles.containers = {
-      containers = {
-        "shopping" = {
-          icon = "circle";
-          color = "yellow";
+  config = lib.mkIf config.test.enableBig (
+    lib.setAttrByPath modulePath {
+      enable = true;
+      profiles.containers = {
+        containers = {
+          "shopping" = {
+            icon = "circle";
+            color = "yellow";
+          };
         };
       };
-    };
-  } // {
-    nmt.script = ''
-      assertFileContent \
-        home-files/${cfg.configPath}/containers/containers.json \
-        ${./expected-containers.json}
-    '';
-  });
+    }
+    // {
+      nmt.script = ''
+        assertFileContent \
+          home-files/${cfg.configPath}/containers/containers.json \
+          ${./expected-containers.json}
+      '';
+    }
+  );
 }

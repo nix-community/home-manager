@@ -19,16 +19,19 @@
           }
         '';
 
-        meta = let stub = "stub";
-        in {
-          description = stub;
-          longDescription = stub;
-          homepage = stub;
-          mainProgram = stub;
-          license = [ stub ];
-          maintainers = [ stub ];
-          platforms = lib.platforms.all;
-        };
+        meta =
+          let
+            stub = "stub";
+          in
+          {
+            description = stub;
+            longDescription = stub;
+            homepage = stub;
+            mainProgram = stub;
+            license = [ stub ];
+            maintainers = [ stub ];
+            platforms = lib.platforms.all;
+          };
       };
     };
   };

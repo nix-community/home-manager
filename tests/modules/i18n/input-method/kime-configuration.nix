@@ -10,14 +10,17 @@ let
         layout: dubeolsik
   '';
 
-in {
+in
+{
   i18n.inputMethod = {
     enabled = "kime";
     kime.extraConfig = kimeConfig;
   };
 
   test.stubs = {
-    kime = { outPath = null; };
+    kime = {
+      outPath = null;
+    };
     gtk2 = {
       buildScript = ''
         mkdir -p $out/bin

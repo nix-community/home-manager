@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   serviceConfig = config.services.borgmatic;
   programConfig = config.programs.borgmatic;
-in {
+in
+{
   meta.maintainers = [ maintainers.DamienCassou ];
 
   options = {
@@ -29,8 +35,7 @@ in {
 
   config = mkIf serviceConfig.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.borgmatic" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.borgmatic" pkgs lib.platforms.linux)
     ];
 
     systemd.user = {

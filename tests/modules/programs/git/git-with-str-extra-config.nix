@@ -9,11 +9,13 @@
     userName = "John Doe";
   };
 
-  test.asserts.warnings.expected = [''
-    Using programs.git.extraConfig as a string option is
-    deprecated and will be removed in the future. Please
-    change to using it as an attribute set instead.
-  ''];
+  test.asserts.warnings.expected = [
+    ''
+      Using programs.git.extraConfig as a string option is
+      deprecated and will be removed in the future. Please
+      change to using it as an attribute set instead.
+    ''
+  ];
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config

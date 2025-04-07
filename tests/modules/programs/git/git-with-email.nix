@@ -3,8 +3,7 @@
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
-  accounts.email.accounts.hm-account.smtp.tls.certificatesFile =
-    "/etc/test/certificates.crt";
+  accounts.email.accounts.hm-account.smtp.tls.certificatesFile = "/etc/test/certificates.crt";
 
   programs.git = {
     enable = true;
@@ -26,9 +25,7 @@
     }
 
     assertFileExists home-files/.config/git/config
-    assertFileContent home-files/.config/git/config ${
-      ./git-with-email-expected.conf
-    }
+    assertFileContent home-files/.config/git/config ${./git-with-email-expected.conf}
 
     assertGitConfig "sendemail.hm@example.com.from" "H. M. Test <hm@example.com>"
     assertGitConfig "sendemail.hm-account.from" "H. M. Test Jr. <hm@example.org>"

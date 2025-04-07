@@ -12,7 +12,10 @@ let
     version = "0.4.0";
   };
 
-  plugins = [ dependencyGraph projectGraph ];
+  plugins = [
+    dependencyGraph
+    projectGraph
+  ];
   pluginsExtra = [ "addDependencyTreePlugin" ];
 
   pluginsSbtPath = ".sbt/1.0/plugins/plugins.sbt";
@@ -23,7 +26,8 @@ let
     addDependencyTreePlugin
   '';
 
-in {
+in
+{
   config = {
     programs.sbt = {
       enable = true;

@@ -1,77 +1,95 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
-  stubType = types.submodule ({ name, ... }: {
-    options = {
-      name = mkOption {
-        type = types.str;
-        default = "dummy";
-        description = "The stub package name.";
-      };
+  stubType = types.submodule (
+    { name, ... }:
+    {
+      options = {
+        name = mkOption {
+          type = types.str;
+          default = "dummy";
+          description = "The stub package name.";
+        };
 
-      outPath = mkOption {
-        type = types.nullOr types.str;
-        default = "@${name}@";
-        defaultText = lib.literalExpression ''"@''${name}@"'';
-      };
+        outPath = mkOption {
+          type = types.nullOr types.str;
+          default = "@${name}@";
+          defaultText = lib.literalExpression ''"@''${name}@"'';
+        };
 
-      version = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        defaultText = lib.literalExpression "pkgs.\${name}.version or null";
-      };
+        version = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          defaultText = lib.literalExpression "pkgs.\${name}.version or null";
+        };
 
-      buildScript = mkOption {
-        type = types.str;
-        default = defaultBuildScript;
-      };
+        buildScript = mkOption {
+          type = types.str;
+          default = defaultBuildScript;
+        };
 
-      extraAttrs = mkOption {
-        type = types.attrsOf types.anything;
-        default = { };
+        extraAttrs = mkOption {
+          type = types.attrsOf types.anything;
+          default = { };
+        };
       };
-    };
-  });
+    }
+  );
 
   defaultBuildScript = "mkdir $out";
 
-  dummyPackage = pkgs.runCommandLocal "dummy" { meta.mainProgram = "dummy"; }
-    defaultBuildScript;
+  dummyPackage = pkgs.runCommandLocal "dummy" { meta.mainProgram = "dummy"; } defaultBuildScript;
 
-  mkStubPackage = { name ? "dummy", outPath ? null, version ? null
-    , buildScript ? defaultBuildScript, extraAttrs ? { } }:
+  mkStubPackage =
+    {
+      name ? "dummy",
+      outPath ? null,
+      version ? null,
+      buildScript ? defaultBuildScript,
+      extraAttrs ? { },
+    }:
     let
-      pkg = if name == "dummy" && buildScript == defaultBuildScript then
-        dummyPackage
-      else
-        pkgs.runCommandLocal name {
-          pname = name;
-          meta.mainProgram = name;
-        } buildScript;
+      pkg =
+        if name == "dummy" && buildScript == defaultBuildScript then
+          dummyPackage
+        else
+          pkgs.runCommandLocal name {
+            pname = name;
+            meta.mainProgram = name;
+          } buildScript;
 
-      stubbedPkg = pkg // lib.optionalAttrs (outPath != null) {
-        inherit outPath;
+      stubbedPkg =
+        pkg
+        // lib.optionalAttrs (outPath != null) {
+          inherit outPath;
 
-        # Prevent getOutput from descending into outputs
-        outputSpecified = true;
+          # Prevent getOutput from descending into outputs
+          outputSpecified = true;
 
-        # Allow the original package to be used in derivation inputs
-        __spliced = {
-          buildHost = pkg;
-          hostTarget = pkg;
-        };
-      } // lib.optionalAttrs (version != null) { inherit version; }
+          # Allow the original package to be used in derivation inputs
+          __spliced = {
+            buildHost = pkg;
+            hostTarget = pkg;
+          };
+        }
+        // lib.optionalAttrs (version != null) { inherit version; }
         // extraAttrs;
-    in stubbedPkg;
+    in
+    stubbedPkg;
 
-in {
+in
+{
   options.test = {
     stubs = mkOption {
       type = types.attrsOf stubType;
       default = { };
-      description =
-        "Package attributes that should be replaced by a stub package.";
+      description = "Package attributes that should be replaced by a stub package.";
     };
 
     stubOverlays = mkOption {
@@ -89,12 +107,22 @@ in {
   config = {
     lib.test.mkStubPackage = mkStubPackage;
 
-    test.stubOverlays = [ ] ++ lib.optional (config.test.stubs != { })
-      (self: super:
-        lib.mapAttrs (n: v:
-          builtins.traceVerbose "${n} - stubbed" (mkStubPackage (v
-            // lib.optionalAttrs (v.version == null) {
-              version = super.${n}.version or null;
-            }))) config.test.stubs) ++ config.test.unstubs;
+    test.stubOverlays =
+      [ ]
+      ++ lib.optional (config.test.stubs != { }) (
+        self: super:
+        lib.mapAttrs (
+          n: v:
+          builtins.traceVerbose "${n} - stubbed" (
+            mkStubPackage (
+              v
+              // lib.optionalAttrs (v.version == null) {
+                version = super.${n}.version or null;
+              }
+            )
+          )
+        ) config.test.stubs
+      )
+      ++ config.test.unstubs;
   };
 }

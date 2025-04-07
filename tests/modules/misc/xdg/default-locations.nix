@@ -1,4 +1,5 @@
-{ config, lib, ... }: {
+{ config, lib, ... }:
+{
   config = {
     # Test fallback behavior for stateVersion >= 20.09, which is pure.
     xdg.enable = false;

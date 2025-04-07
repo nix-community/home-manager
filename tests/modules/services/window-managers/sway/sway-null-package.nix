@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Enables the default bar configuration
@@ -11,12 +16,16 @@
     config.menu = "${pkgs.dmenu}/bin/dmenu_run";
   };
 
-  assertions = [{
-    assertion =
-      !lib.elem config.wayland.windowManager.sway.config.bars [ [ { } ] [ ] ];
-    message =
-      "The default Sway bars configuration should be set for this test (sway-null-package) to work.";
-  }];
+  assertions = [
+    {
+      assertion =
+        !lib.elem config.wayland.windowManager.sway.config.bars [
+          [ { } ]
+          [ ]
+        ];
+      message = "The default Sway bars configuration should be set for this test (sway-null-package) to work.";
+    }
+  ];
 
   nmt.script = ''
     assertFileExists home-files/.config/sway/config

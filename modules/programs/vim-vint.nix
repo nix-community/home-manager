@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.programs.vim-vint;
 
   yamlFormat = pkgs.formats.yaml { };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.tomodachi94 ];
 
   options = {
@@ -27,7 +33,6 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile.".vintrc.yaml".source =
-      yamlFormat.generate "vim-vint-config" cfg.settings;
+    xdg.configFile.".vintrc.yaml".source = yamlFormat.generate "vim-vint-config" cfg.settings;
   };
 }

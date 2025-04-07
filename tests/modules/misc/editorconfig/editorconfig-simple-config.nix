@@ -19,8 +19,6 @@
 
   nmt.script = ''
     assertFileExists home-files/.editorconfig
-    assertFileContent home-files/.editorconfig ${
-      ./editorconfig-simple-config-expected
-    }
+    assertFileContent home-files/.editorconfig ${./editorconfig-simple-config-expected}
   '';
 }

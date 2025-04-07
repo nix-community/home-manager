@@ -14,7 +14,8 @@ let
     command=echo third
     interval=3
   '';
-in {
+in
+{
   config = {
     programs.i3blocks = {
       enable = true;

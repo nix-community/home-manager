@@ -4,7 +4,8 @@ let
   script = pkgs.writeShellScript "script.sh" ''
     echo "test"
   '';
-in {
+in
+{
   services.sxhkd = {
     enable = true;
 

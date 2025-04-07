@@ -12,10 +12,8 @@
     assertFileExists home-files/.bash_logout
     assertFileContent \
       home-files/.bash_logout \
-      ${
-        builtins.toFile "logout-expected" ''
-          clear-console
-        ''
-      }
+      ${builtins.toFile "logout-expected" ''
+        clear-console
+      ''}
   '';
 }

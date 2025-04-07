@@ -1,19 +1,31 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.services.cliphist;
-in {
-  meta.maintainers = [ lib.hm.maintainers.janik lib.maintainers.khaneliman ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.cliphist;
+in
+{
+  meta.maintainers = [
+    lib.hm.maintainers.janik
+    lib.maintainers.khaneliman
+  ];
 
   imports = [
-    (lib.mkRenamedOptionModule [ "services" "cliphist" "systemdTarget" ] [
-      "services"
-      "cliphist"
-      "systemdTargets"
-    ])
+    (lib.mkRenamedOptionModule
+      [ "services" "cliphist" "systemdTarget" ]
+      [
+        "services"
+        "cliphist"
+        "systemdTargets"
+      ]
+    )
   ];
 
   options.services.cliphist = {
-    enable =
-      lib.mkEnableOption "cliphist, a clipboard history “manager” for wayland";
+    enable = lib.mkEnableOption "cliphist, a clipboard history “manager” for wayland";
 
     package = lib.mkPackageOption pkgs "cliphist" { };
 
@@ -27,7 +39,12 @@ in {
 
     extraOptions = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [ "-max-dedupe-search" "10" "-max-items" "500" ];
+      default = [
+        "-max-dedupe-search"
+        "10"
+        "-max-items"
+        "500"
+      ];
       description = ''
         Flags to append to the cliphist command.
       '';
@@ -49,47 +66,51 @@ in {
     };
   };
 
-  config = let extraOptionsStr = lib.escapeShellArgs cfg.extraOptions;
-  in lib.mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.cliphist" pkgs
-        lib.platforms.linux)
-    ];
+  config =
+    let
+      extraOptionsStr = lib.escapeShellArgs cfg.extraOptions;
+    in
+    lib.mkIf cfg.enable {
+      assertions = [
+        (lib.hm.assertions.assertPlatform "services.cliphist" pkgs lib.platforms.linux)
+      ];
 
-    home.packages = [ cfg.package ];
+      home.packages = [ cfg.package ];
 
-    systemd.user.services.cliphist = {
-      Unit = {
-        Description = "Clipboard management daemon";
-        PartOf = lib.toList cfg.systemdTargets;
-        After = lib.toList cfg.systemdTargets;
+      systemd.user.services.cliphist = {
+        Unit = {
+          Description = "Clipboard management daemon";
+          PartOf = lib.toList cfg.systemdTargets;
+          After = lib.toList cfg.systemdTargets;
+        };
+
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${cfg.package}/bin/cliphist ${extraOptionsStr} store";
+          Restart = "on-failure";
+        };
+
+        Install = {
+          WantedBy = lib.toList cfg.systemdTargets;
+        };
       };
 
-      Service = {
-        Type = "simple";
-        ExecStart =
-          "${pkgs.wl-clipboard}/bin/wl-paste --watch ${cfg.package}/bin/cliphist ${extraOptionsStr} store";
-        Restart = "on-failure";
-      };
+      systemd.user.services.cliphist-images = lib.mkIf cfg.allowImages {
+        Unit = {
+          Description = "Clipboard management daemon - images";
+          PartOf = lib.toList cfg.systemdTargets;
+          After = lib.toList cfg.systemdTargets;
+        };
 
-      Install = { WantedBy = lib.toList cfg.systemdTargets; };
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${cfg.package}/bin/cliphist ${extraOptionsStr} store";
+          Restart = "on-failure";
+        };
+
+        Install = {
+          WantedBy = lib.toList cfg.systemdTargets;
+        };
+      };
     };
-
-    systemd.user.services.cliphist-images = lib.mkIf cfg.allowImages {
-      Unit = {
-        Description = "Clipboard management daemon - images";
-        PartOf = lib.toList cfg.systemdTargets;
-        After = lib.toList cfg.systemdTargets;
-      };
-
-      Service = {
-        Type = "simple";
-        ExecStart =
-          "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${cfg.package}/bin/cliphist ${extraOptionsStr} store";
-        Restart = "on-failure";
-      };
-
-      Install = { WantedBy = lib.toList cfg.systemdTargets; };
-    };
-  };
 }

@@ -1,21 +1,27 @@
-{ config, lib, ... }: {
+{ config, lib, ... }:
+{
   config = {
     programs.ssh = {
       enable = true;
       matchBlocks = {
-        abc = { port = 2222; };
+        abc = {
+          port = 2222;
+        };
 
         xyz = {
           match = "host xyz canonical";
           port = 2223;
         };
 
-        "* !github.com" = { port = 516; };
+        "* !github.com" = {
+          port = 516;
+        };
       };
     };
 
-    home.file.assertions.text = builtins.toJSON
-      (map (a: a.message) (lib.filter (a: !a.assertion) config.assertions));
+    home.file.assertions.text = builtins.toJSON (
+      map (a: a.message) (lib.filter (a: !a.assertion) config.assertions)
+    );
 
     nmt.script = ''
       assertFileExists home-files/.ssh/config

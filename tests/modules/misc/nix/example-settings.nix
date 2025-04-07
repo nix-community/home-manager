@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   nix = {
@@ -14,12 +19,19 @@
       '';
     };
 
-    nixPath = [ "/a" "/b/c" ];
+    nixPath = [
+      "/a"
+      "/b/c"
+    ];
 
     settings = {
       use-sandbox = true;
       show-trace = true;
-      system-features = [ "big-parallel" "kvm" "recursive-nix" ];
+      system-features = [
+        "big-parallel"
+        "kvm"
+        "recursive-nix"
+      ];
     };
   };
 

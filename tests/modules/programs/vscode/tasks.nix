@@ -2,23 +2,24 @@
 
 let
 
-  tasksFilePath = name:
+  tasksFilePath =
+    name:
     if pkgs.stdenv.hostPlatform.isDarwin then
       "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }tasks.json"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }tasks.json";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}tasks.json";
 
   tasks = {
     version = "2.0.0";
-    tasks = [{
-      type = "shell";
-      label = "Hello task";
-      command = "hello";
-    }];
+    tasks = [
+      {
+        type = "shell";
+        label = "Hello task";
+        command = "hello";
+      }
+    ];
   };
 
   expectedTasks = pkgs.writeText "tasks-expected.json" ''
@@ -34,7 +35,8 @@ let
     }
   '';
 
-in {
+in
+{
   programs.vscode = {
     enable = true;
     package = pkgs.writeScriptBin "vscode" "" // {

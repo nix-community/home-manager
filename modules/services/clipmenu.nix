@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.clipmenu;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.DamienCassou ];
 
   options.services.clipmenu = {
@@ -32,14 +38,12 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.clipmenu" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.clipmenu" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    home.sessionVariables =
-      mkIf (cfg.launcher != null) { CM_LAUNCHER = cfg.launcher; };
+    home.sessionVariables = mkIf (cfg.launcher != null) { CM_LAUNCHER = cfg.launcher; };
 
     systemd.user.services.clipmenu = {
       Unit = {
@@ -51,13 +55,23 @@ in {
         ExecStart = "${cfg.package}/bin/clipmenud";
         Environment = [
           "PATH=${
-            makeBinPath
-            (with pkgs; [ coreutils findutils gnugrep gnused systemd ])
+            makeBinPath (
+              with pkgs;
+              [
+                coreutils
+                findutils
+                gnugrep
+                gnused
+                systemd
+              ]
+            )
           }"
         ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

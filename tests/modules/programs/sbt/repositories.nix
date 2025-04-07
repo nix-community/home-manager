@@ -6,8 +6,7 @@ let
     { my-maven-proxy = "http://repo.mavenproxy.io/a/b/c/d"; }
     "maven-local"
     {
-      my-ivy-proxy =
-        "http://repo.company.com/ivy-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]";
+      my-ivy-proxy = "http://repo.company.com/ivy-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]";
     }
     "maven-central"
   ];
@@ -22,7 +21,8 @@ let
   '';
 
   repositoriesSbtPath = ".sbt/repositories";
-in {
+in
+{
   config = {
     programs.sbt = {
       enable = true;

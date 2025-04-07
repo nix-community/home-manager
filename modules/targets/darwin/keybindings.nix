@@ -1,11 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.targets.darwin;
   homeDir = config.home.homeDirectory;
-  confFile = pkgs.writeText "DefaultKeybinding.dict"
-    (lib.generators.toPlist { } cfg.keybindings);
-in {
+  confFile = pkgs.writeText "DefaultKeybinding.dict" (lib.generators.toPlist { } cfg.keybindings);
+in
+{
   options.targets.darwin.keybindings = lib.mkOption {
     type = with lib.types; attrsOf anything;
     default = { };
@@ -28,16 +33,14 @@ in {
 
   config = lib.mkIf (cfg.keybindings != { }) {
     assertions = [
-      (lib.hm.assertions.assertPlatform "targets.darwin.keybindings" pkgs
-        lib.platforms.darwin)
+      (lib.hm.assertions.assertPlatform "targets.darwin.keybindings" pkgs lib.platforms.darwin)
     ];
 
     # NOTE: just copy the files because symlinks won't be recognized by macOS
-    home.activation.setCocoaKeybindings =
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        verboseEcho "Configuring keybindings for the Cocoa Text System"
-        run install -Dm644 $VERBOSE_ARG \
-          "${confFile}" "${homeDir}/Library/KeyBindings/DefaultKeyBinding.dict"
-      '';
+    home.activation.setCocoaKeybindings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      verboseEcho "Configuring keybindings for the Cocoa Text System"
+      run install -Dm644 $VERBOSE_ARG \
+        "${confFile}" "${homeDir}/Library/KeyBindings/DefaultKeyBinding.dict"
+    '';
   };
 }

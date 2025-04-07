@@ -9,16 +9,18 @@ let
     };
   };
 
-  substituteExpected = path:
+  substituteExpected =
+    path:
     pkgs.substituteAll {
       src = path;
-      git_include_path = pkgs.writeText "hm_gitconfig"
-        (builtins.readFile ./git-expected-include.conf);
-      git_named_include_path = pkgs.writeText "hm_gitconfigwork"
-        (builtins.readFile ./git-expected-include.conf);
+      git_include_path = pkgs.writeText "hm_gitconfig" (builtins.readFile ./git-expected-include.conf);
+      git_named_include_path = pkgs.writeText "hm_gitconfigwork" (
+        builtins.readFile ./git-expected-include.conf
+      );
     };
 
-in {
+in
+{
   programs.git = lib.mkMerge [
     {
       enable = true;
@@ -34,7 +36,10 @@ in {
           multiple = [ 1 ];
         };
       };
-      ignores = [ "*~" "*.swp" ];
+      ignores = [
+        "*~"
+        "*.swp"
+      ];
       includes = [
         { path = "~/path/to/config.inc"; }
         {
@@ -86,8 +91,6 @@ in {
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config
-    assertFileContent home-files/.config/git/config ${
-      substituteExpected ./git-expected.conf
-    }
+    assertFileContent home-files/.config/git/config ${substituteExpected ./git-expected.conf}
   '';
 }

@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   config = {
     programs.mods = {
       enable = true;
@@ -8,7 +9,11 @@
         apis = {
           ollama = {
             base-url = "http://localhost:11434/api";
-            models = { "llama3.2" = { max-input-chars = 650000; }; };
+            models = {
+              "llama3.2" = {
+                max-input-chars = 650000;
+              };
+            };
           };
         };
       };

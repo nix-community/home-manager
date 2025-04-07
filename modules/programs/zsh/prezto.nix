@@ -1,12 +1,22 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  inherit (lib) mkOption optionalString strings types;
+  inherit (lib)
+    mkOption
+    optionalString
+    strings
+    types
+    ;
 
   cfg = config.programs.zsh.prezto;
 
-  relToDotDir = file:
-    (optionalString (config.programs.zsh.dotDir != null)
-      (config.programs.zsh.dotDir + "/")) + file;
+  relToDotDir =
+    file:
+    (optionalString (config.programs.zsh.dotDir != null) (config.programs.zsh.dotDir + "/")) + file;
 
   preztoModule = types.submodule {
     options = {
@@ -19,8 +29,7 @@ let
         # See <https://github.com/nix-community/home-manager/issues/2255>.
         default = true;
         example = true;
-        description =
-          "Set case-sensitivity for completion, history lookup, etc.";
+        description = "Set case-sensitivity for completion, history lookup, etc.";
       };
 
       color = mkOption {
@@ -35,8 +44,7 @@ let
       pmoduleDirs = mkOption {
         type = types.listOf types.path;
         default = [ ];
-        example = lib.literalExpression
-          ''[ "''${config.home.homeDirectory}/.zprezto-contrib" ]'';
+        example = lib.literalExpression ''[ "''${config.home.homeDirectory}/.zprezto-contrib" ]'';
         description = "Add additional directories to load prezto modules from.";
       };
 
@@ -51,7 +59,10 @@ let
       extraModules = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = [ "attr" "stat" ];
+        example = [
+          "attr"
+          "stat"
+        ];
         description = ''
           Set the Zsh modules to load ({manpage}`zshmodules(1)`).
         '';
@@ -60,7 +71,10 @@ let
       extraFunctions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = [ "zargs" "zmv" ];
+        example = [
+          "zargs"
+          "zmv"
+        ];
         description = ''
           Set the Zsh functions to load ({manpage}`zshcontrib(1)`).
         '';
@@ -79,8 +93,7 @@ let
           "completion"
           "prompt"
         ];
-        description =
-          "Set the Prezto modules to load (browse modules). The order matters.";
+        description = "Set the Prezto modules to load (browse modules). The order matters.";
       };
 
       autosuggestions.color = mkOption {
@@ -93,7 +106,10 @@ let
       completions.ignoredHosts = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = [ "0.0.0.0" "127.0.0.1" ];
+        example = [
+          "0.0.0.0"
+          "127.0.0.1"
+        ];
         description = ''
           Set the entries to ignore in static {file}`/etc/hosts` for
           host completion.
@@ -102,7 +118,12 @@ let
 
       editor = {
         keymap = mkOption {
-          type = types.nullOr (types.enum [ "emacs" "vi" ]);
+          type = types.nullOr (
+            types.enum [
+              "emacs"
+              "vi"
+            ]
+          );
           default = "emacs";
           example = "vi";
           description = ''
@@ -128,7 +149,14 @@ let
       };
 
       git.submoduleIgnore = mkOption {
-        type = types.nullOr (types.enum [ "dirty" "untracked" "all" "none" ]);
+        type = types.nullOr (
+          types.enum [
+            "dirty"
+            "untracked"
+            "all"
+            "none"
+          ]
+        );
         default = null;
         example = "all";
         description = ''
@@ -189,7 +217,13 @@ let
         };
 
         pwdLength = mkOption {
-          type = types.nullOr (types.enum [ "short" "long" "full" ]);
+          type = types.nullOr (
+            types.enum [
+              "short"
+              "long"
+              "full"
+            ]
+          );
           default = null;
           example = "short";
           description = ''
@@ -223,8 +257,7 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description =
-            "Automatically initialize virtualenvwrapper if pre-requisites are met.";
+          description = "Automatically initialize virtualenvwrapper if pre-requisites are met.";
         };
       };
 
@@ -240,23 +273,25 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description =
-            "Auto start a session when Zsh is launched in a local terminal.";
+          description = "Auto start a session when Zsh is launched in a local terminal.";
         };
 
         autoStartRemote = mkOption {
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description =
-            "Auto start a session when Zsh is launched in a SSH connection.";
+          description = "Auto start a session when Zsh is launched in a SSH connection.";
         };
       };
 
       ssh.identities = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = [ "id_rsa" "id_rsa2" "id_github" ];
+        example = [
+          "id_rsa"
+          "id_rsa2"
+          "id_github"
+        ];
         description = "Set the SSH identities to load into the agent.";
       };
 
@@ -264,7 +299,14 @@ let
         highlighters = mkOption {
           type = types.listOf types.str;
           default = [ ];
-          example = [ "main" "brackets" "pattern" "line" "cursor" "root" ];
+          example = [
+            "main"
+            "brackets"
+            "pattern"
+            "line"
+            "cursor"
+            "root"
+          ];
           description = ''
             Set syntax highlighters. By default, only the main
             highlighter is enabled.
@@ -285,7 +327,9 @@ let
         pattern = mkOption {
           type = types.attrsOf types.str;
           default = { };
-          example = { "rm*-rf*" = "fg=white,bold,bg=red"; };
+          example = {
+            "rm*-rf*" = "fg=white,bold,bg=red";
+          };
           description = "Set syntax pattern styles.";
         };
       };
@@ -325,16 +369,14 @@ let
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description =
-            "Auto start a session when Zsh is launched in a local terminal.";
+          description = "Auto start a session when Zsh is launched in a local terminal.";
         };
 
         autoStartRemote = mkOption {
           type = types.nullOr types.bool;
           default = null;
           example = true;
-          description =
-            "Auto start a session when Zsh is launched in a SSH connection.";
+          description = "Auto start a session when Zsh is launched in a SSH connection.";
         };
 
         itermIntegration = mkOption {
@@ -366,7 +408,8 @@ let
     };
   };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.nickhu ];
   options = {
     programs.zsh = {
@@ -377,196 +420,158 @@ in {
       };
     };
   };
-  config = lib.mkIf cfg.enable (lib.mkMerge [{
-    home.file."${relToDotDir ".zprofile"}".text =
-      builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zprofile";
-    home.file."${relToDotDir ".zlogin"}".text =
-      builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zlogin";
-    home.file."${relToDotDir ".zlogout"}".text =
-      builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zlogout";
-    home.packages = [ cfg.package ];
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home.file."${relToDotDir ".zprofile"}".text =
+          builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zprofile";
+        home.file."${relToDotDir ".zlogin"}".text =
+          builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zlogin";
+        home.file."${relToDotDir ".zlogout"}".text =
+          builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zlogout";
+        home.packages = [ cfg.package ];
 
-    home.file."${relToDotDir ".zshenv"}".text =
-      builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zshenv";
-    home.file."${relToDotDir ".zpreztorc"}".text = ''
-      # Generated by Nix
-      ${optionalString (cfg.caseSensitive != null) ''
-        zstyle ':prezto:*:*' case-sensitive '${
-          lib.hm.booleans.yesNo cfg.caseSensitive
-        }'
-      ''}
-      ${optionalString (cfg.color != null) ''
-        zstyle ':prezto:*:*' color '${lib.hm.booleans.yesNo cfg.color}'
-      ''}
-      ${optionalString (cfg.pmoduleDirs != [ ]) ''
-        zstyle ':prezto:load' pmodule-dirs ${
-          builtins.concatStringsSep " " cfg.pmoduleDirs
-        }
-      ''}
-      ${optionalString (cfg.extraModules != [ ]) ''
-        zstyle ':prezto:load' zmodule ${
-          strings.concatMapStringsSep " " strings.escapeShellArg
-          cfg.extraModules
-        }
-      ''}
-      ${optionalString (cfg.extraFunctions != [ ]) ''
-        zstyle ':prezto:load' zfunction ${
-          strings.concatMapStringsSep " " strings.escapeShellArg
-          cfg.extraFunctions
-        }
-      ''}
-      ${optionalString (cfg.pmodules != [ ]) ''
-        zstyle ':prezto:load' pmodule \
-          ${
-            strings.concatMapStringsSep " \\\n  " strings.escapeShellArg
-            cfg.pmodules
-          }
-      ''}
-      ${optionalString (cfg.autosuggestions.color != null) ''
-        zstyle ':prezto:module:autosuggestions:color' found '${cfg.autosuggestions.color}'
-      ''}
-      ${optionalString (cfg.completions.ignoredHosts != [ ]) ''
-        zstyle ':prezto:module:completion:*:hosts' etc-host-ignores \
-          ${
-            strings.concatMapStringsSep " " strings.escapeShellArg
-            cfg.completions.ignoredHosts
-          }
-      ''}
-      ${optionalString (cfg.editor.keymap != null) ''
-        zstyle ':prezto:module:editor' key-bindings '${cfg.editor.keymap}'
-      ''}
-      ${optionalString (cfg.editor.dotExpansion != null) ''
-        zstyle ':prezto:module:editor' dot-expansion '${
-          lib.hm.booleans.yesNo cfg.editor.dotExpansion
-        }'
-      ''}
-      ${optionalString (cfg.editor.promptContext != null) ''
-        zstyle ':prezto:module:editor' ps-context '${
-          lib.hm.booleans.yesNo cfg.editor.promptContext
-        }'
-      ''}
-      ${optionalString (cfg.git.submoduleIgnore != null) ''
-        zstyle ':prezto:module:git:status:ignore' submodules '${cfg.git.submoduleIgnore}'
-      ''}
-      ${optionalString (cfg.gnuUtility.prefix != null) ''
-        zstyle ':prezto:module:gnu-utility' prefix '${cfg.gnuUtility.prefix}'
-      ''}
-      ${optionalString (cfg.historySubstring.foundColor != null) ''
-        zstyle ':prezto:module:history-substring-search:color' found '${cfg.historySubstring.foundColor}'
-      ''}
-      ${optionalString (cfg.historySubstring.notFoundColor != null) ''
-        zstyle ':prezto:module:history-substring-search:color' not-found '${cfg.historySubstring.notFoundColor}'
-      ''}
-      ${optionalString (cfg.historySubstring.globbingFlags != null) ''
-        zstyle ':prezto:module:history-substring-search:color' globbing-flags '${cfg.historySubstring.globbingFlags}'
-      ''}
-      ${optionalString (cfg.macOS.dashKeyword != null) ''
-        zstyle ':prezto:module:osx:man' dash-keyword '${cfg.macOS.dashKeyword}'
-      ''}
-      ${optionalString (cfg.prompt.theme != null) ''
-        zstyle ':prezto:module:prompt' theme '${cfg.prompt.theme}'
-      ''}
-      ${optionalString (cfg.prompt.pwdLength != null) ''
-        zstyle ':prezto:module:prompt' pwd-length '${cfg.prompt.pwdLength}'
-      ''}
-      ${optionalString (cfg.prompt.showReturnVal != null) ''
-        zstyle ':prezto:module:prompt' show-return-val '${
-          lib.hm.booleans.yesNo cfg.prompt.showReturnVal
-        }'
-      ''}
-      ${optionalString (cfg.python.virtualenvAutoSwitch != null) ''
-        zstyle ':prezto:module:python:virtualenv' auto-switch '${
-          lib.hm.booleans.yesNo cfg.python.virtualenvAutoSwitch
-        }'
-      ''}
-      ${optionalString (cfg.python.virtualenvInitialize != null) ''
-        zstyle ':prezto:module:python:virtualenv' initialize '${
-          lib.hm.booleans.yesNo cfg.python.virtualenvInitialize
-        }'
-      ''}
-      ${optionalString (cfg.ruby.chrubyAutoSwitch != null) ''
-        zstyle ':prezto:module:ruby:chruby' auto-switch '${
-          lib.hm.booleans.yesNo cfg.ruby.chrubyAutoSwitch
-        }'
-      ''}
-      ${optionalString (cfg.screen.autoStartLocal != null) ''
-        zstyle ':prezto:module:screen:auto-start' local '${
-          lib.hm.booleans.yesNo cfg.screen.autoStartLocal
-        }'
-      ''}
-      ${optionalString (cfg.screen.autoStartRemote != null) ''
-        zstyle ':prezto:module:screen:auto-start' remote '${
-          lib.hm.booleans.yesNo cfg.screen.autoStartRemote
-        }'
-      ''}
-      ${optionalString (cfg.ssh.identities != [ ]) ''
-        zstyle ':prezto:module:ssh:load' identities \
-          ${
-            strings.concatMapStringsSep " " strings.escapeShellArg
-            cfg.ssh.identities
-          }
-      ''}
-      ${optionalString (cfg.syntaxHighlighting.highlighters != [ ]) ''
-        zstyle ':prezto:module:syntax-highlighting' highlighters \
-          ${
-            strings.concatMapStringsSep " \\\n  " strings.escapeShellArg
-            cfg.syntaxHighlighting.highlighters
-          }
-      ''}
-      ${optionalString (cfg.syntaxHighlighting.styles != { }) ''
-        zstyle ':prezto:module:syntax-highlighting' styles \
-          ${
-            builtins.concatStringsSep " \\\n" (lib.attrsets.mapAttrsToList
-              (k: v: strings.escapeShellArg k + " " + strings.escapeShellArg v)
-              cfg.syntaxHighlighting.styles)
-          }
-      ''}
-      ${optionalString (cfg.syntaxHighlighting.pattern != { }) ''
-        zstyle ':prezto:module:syntax-highlighting' pattern \
-          ${
-            builtins.concatStringsSep " \\\n" (lib.attrsets.mapAttrsToList
-              (k: v: strings.escapeShellArg k + " " + strings.escapeShellArg v)
-              cfg.syntaxHighlighting.pattern)
-          }
-      ''}
-      ${optionalString (cfg.terminal.autoTitle != null) ''
-        zstyle ':prezto:module:terminal' auto-title '${
-          lib.hm.booleans.yesNo cfg.terminal.autoTitle
-        }'
-      ''}
-      ${optionalString (cfg.terminal.windowTitleFormat != null) ''
-        zstyle ':prezto:module:terminal:window-title' format '${cfg.terminal.windowTitleFormat}'
-      ''}
-      ${optionalString (cfg.terminal.tabTitleFormat != null) ''
-        zstyle ':prezto:module:terminal:tab-title' format '${cfg.terminal.tabTitleFormat}'
-      ''}
-      ${optionalString (cfg.terminal.multiplexerTitleFormat != null) ''
-        zstyle ':prezto:module:terminal:multiplexer-title' format '${cfg.terminal.multiplexerTitleFormat}'
-      ''}
-      ${optionalString (cfg.tmux.autoStartLocal != null) ''
-        zstyle ':prezto:module:tmux:auto-start' local '${
-          lib.hm.booleans.yesNo cfg.tmux.autoStartLocal
-        }'
-      ''}
-      ${optionalString (cfg.tmux.autoStartRemote != null) ''
-        zstyle ':prezto:module:tmux:auto-start' remote '${
-          lib.hm.booleans.yesNo cfg.tmux.autoStartRemote
-        }'
-      ''}
-      ${optionalString (cfg.tmux.itermIntegration != null) ''
-        zstyle ':prezto:module:tmux:iterm' integrate '${
-          lib.hm.booleans.yesNo cfg.tmux.itermIntegration
-        }'
-      ''}
-      ${optionalString (cfg.tmux.defaultSessionName != null) ''
-        zstyle ':prezto:module:tmux:session' name '${cfg.tmux.defaultSessionName}'
-      ''}
-      ${optionalString (cfg.utility.safeOps != null) ''
-        zstyle ':prezto:module:utility' safe-ops '${
-          lib.hm.booleans.yesNo cfg.utility.safeOps
-        }'
-      ''}
-      ${cfg.extraConfig}
-    '';
-  }]);
+        home.file."${relToDotDir ".zshenv"}".text =
+          builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zshenv";
+        home.file."${relToDotDir ".zpreztorc"}".text = ''
+          # Generated by Nix
+          ${optionalString (cfg.caseSensitive != null) ''
+            zstyle ':prezto:*:*' case-sensitive '${lib.hm.booleans.yesNo cfg.caseSensitive}'
+          ''}
+          ${optionalString (cfg.color != null) ''
+            zstyle ':prezto:*:*' color '${lib.hm.booleans.yesNo cfg.color}'
+          ''}
+          ${optionalString (cfg.pmoduleDirs != [ ]) ''
+            zstyle ':prezto:load' pmodule-dirs ${builtins.concatStringsSep " " cfg.pmoduleDirs}
+          ''}
+          ${optionalString (cfg.extraModules != [ ]) ''
+            zstyle ':prezto:load' zmodule ${
+              strings.concatMapStringsSep " " strings.escapeShellArg cfg.extraModules
+            }
+          ''}
+          ${optionalString (cfg.extraFunctions != [ ]) ''
+            zstyle ':prezto:load' zfunction ${
+              strings.concatMapStringsSep " " strings.escapeShellArg cfg.extraFunctions
+            }
+          ''}
+          ${optionalString (cfg.pmodules != [ ]) ''
+            zstyle ':prezto:load' pmodule \
+              ${strings.concatMapStringsSep " \\\n  " strings.escapeShellArg cfg.pmodules}
+          ''}
+          ${optionalString (cfg.autosuggestions.color != null) ''
+            zstyle ':prezto:module:autosuggestions:color' found '${cfg.autosuggestions.color}'
+          ''}
+          ${optionalString (cfg.completions.ignoredHosts != [ ]) ''
+            zstyle ':prezto:module:completion:*:hosts' etc-host-ignores \
+              ${strings.concatMapStringsSep " " strings.escapeShellArg cfg.completions.ignoredHosts}
+          ''}
+          ${optionalString (cfg.editor.keymap != null) ''
+            zstyle ':prezto:module:editor' key-bindings '${cfg.editor.keymap}'
+          ''}
+          ${optionalString (cfg.editor.dotExpansion != null) ''
+            zstyle ':prezto:module:editor' dot-expansion '${lib.hm.booleans.yesNo cfg.editor.dotExpansion}'
+          ''}
+          ${optionalString (cfg.editor.promptContext != null) ''
+            zstyle ':prezto:module:editor' ps-context '${lib.hm.booleans.yesNo cfg.editor.promptContext}'
+          ''}
+          ${optionalString (cfg.git.submoduleIgnore != null) ''
+            zstyle ':prezto:module:git:status:ignore' submodules '${cfg.git.submoduleIgnore}'
+          ''}
+          ${optionalString (cfg.gnuUtility.prefix != null) ''
+            zstyle ':prezto:module:gnu-utility' prefix '${cfg.gnuUtility.prefix}'
+          ''}
+          ${optionalString (cfg.historySubstring.foundColor != null) ''
+            zstyle ':prezto:module:history-substring-search:color' found '${cfg.historySubstring.foundColor}'
+          ''}
+          ${optionalString (cfg.historySubstring.notFoundColor != null) ''
+            zstyle ':prezto:module:history-substring-search:color' not-found '${cfg.historySubstring.notFoundColor}'
+          ''}
+          ${optionalString (cfg.historySubstring.globbingFlags != null) ''
+            zstyle ':prezto:module:history-substring-search:color' globbing-flags '${cfg.historySubstring.globbingFlags}'
+          ''}
+          ${optionalString (cfg.macOS.dashKeyword != null) ''
+            zstyle ':prezto:module:osx:man' dash-keyword '${cfg.macOS.dashKeyword}'
+          ''}
+          ${optionalString (cfg.prompt.theme != null) ''
+            zstyle ':prezto:module:prompt' theme '${cfg.prompt.theme}'
+          ''}
+          ${optionalString (cfg.prompt.pwdLength != null) ''
+            zstyle ':prezto:module:prompt' pwd-length '${cfg.prompt.pwdLength}'
+          ''}
+          ${optionalString (cfg.prompt.showReturnVal != null) ''
+            zstyle ':prezto:module:prompt' show-return-val '${lib.hm.booleans.yesNo cfg.prompt.showReturnVal}'
+          ''}
+          ${optionalString (cfg.python.virtualenvAutoSwitch != null) ''
+            zstyle ':prezto:module:python:virtualenv' auto-switch '${lib.hm.booleans.yesNo cfg.python.virtualenvAutoSwitch}'
+          ''}
+          ${optionalString (cfg.python.virtualenvInitialize != null) ''
+            zstyle ':prezto:module:python:virtualenv' initialize '${lib.hm.booleans.yesNo cfg.python.virtualenvInitialize}'
+          ''}
+          ${optionalString (cfg.ruby.chrubyAutoSwitch != null) ''
+            zstyle ':prezto:module:ruby:chruby' auto-switch '${lib.hm.booleans.yesNo cfg.ruby.chrubyAutoSwitch}'
+          ''}
+          ${optionalString (cfg.screen.autoStartLocal != null) ''
+            zstyle ':prezto:module:screen:auto-start' local '${lib.hm.booleans.yesNo cfg.screen.autoStartLocal}'
+          ''}
+          ${optionalString (cfg.screen.autoStartRemote != null) ''
+            zstyle ':prezto:module:screen:auto-start' remote '${lib.hm.booleans.yesNo cfg.screen.autoStartRemote}'
+          ''}
+          ${optionalString (cfg.ssh.identities != [ ]) ''
+            zstyle ':prezto:module:ssh:load' identities \
+              ${strings.concatMapStringsSep " " strings.escapeShellArg cfg.ssh.identities}
+          ''}
+          ${optionalString (cfg.syntaxHighlighting.highlighters != [ ]) ''
+            zstyle ':prezto:module:syntax-highlighting' highlighters \
+              ${strings.concatMapStringsSep " \\\n  " strings.escapeShellArg
+                cfg.syntaxHighlighting.highlighters
+              }
+          ''}
+          ${optionalString (cfg.syntaxHighlighting.styles != { }) ''
+            zstyle ':prezto:module:syntax-highlighting' styles \
+              ${builtins.concatStringsSep " \\\n" (
+                lib.attrsets.mapAttrsToList (
+                  k: v: strings.escapeShellArg k + " " + strings.escapeShellArg v
+                ) cfg.syntaxHighlighting.styles
+              )}
+          ''}
+          ${optionalString (cfg.syntaxHighlighting.pattern != { }) ''
+            zstyle ':prezto:module:syntax-highlighting' pattern \
+              ${builtins.concatStringsSep " \\\n" (
+                lib.attrsets.mapAttrsToList (
+                  k: v: strings.escapeShellArg k + " " + strings.escapeShellArg v
+                ) cfg.syntaxHighlighting.pattern
+              )}
+          ''}
+          ${optionalString (cfg.terminal.autoTitle != null) ''
+            zstyle ':prezto:module:terminal' auto-title '${lib.hm.booleans.yesNo cfg.terminal.autoTitle}'
+          ''}
+          ${optionalString (cfg.terminal.windowTitleFormat != null) ''
+            zstyle ':prezto:module:terminal:window-title' format '${cfg.terminal.windowTitleFormat}'
+          ''}
+          ${optionalString (cfg.terminal.tabTitleFormat != null) ''
+            zstyle ':prezto:module:terminal:tab-title' format '${cfg.terminal.tabTitleFormat}'
+          ''}
+          ${optionalString (cfg.terminal.multiplexerTitleFormat != null) ''
+            zstyle ':prezto:module:terminal:multiplexer-title' format '${cfg.terminal.multiplexerTitleFormat}'
+          ''}
+          ${optionalString (cfg.tmux.autoStartLocal != null) ''
+            zstyle ':prezto:module:tmux:auto-start' local '${lib.hm.booleans.yesNo cfg.tmux.autoStartLocal}'
+          ''}
+          ${optionalString (cfg.tmux.autoStartRemote != null) ''
+            zstyle ':prezto:module:tmux:auto-start' remote '${lib.hm.booleans.yesNo cfg.tmux.autoStartRemote}'
+          ''}
+          ${optionalString (cfg.tmux.itermIntegration != null) ''
+            zstyle ':prezto:module:tmux:iterm' integrate '${lib.hm.booleans.yesNo cfg.tmux.itermIntegration}'
+          ''}
+          ${optionalString (cfg.tmux.defaultSessionName != null) ''
+            zstyle ':prezto:module:tmux:session' name '${cfg.tmux.defaultSessionName}'
+          ''}
+          ${optionalString (cfg.utility.safeOps != null) ''
+            zstyle ':prezto:module:utility' safe-ops '${lib.hm.booleans.yesNo cfg.utility.safeOps}'
+          ''}
+          ${cfg.extraConfig}
+        '';
+      }
+    ]
+  );
 }

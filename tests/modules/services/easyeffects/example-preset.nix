@@ -29,8 +29,6 @@
 
   nmt.script = ''
     assertFileContent \
-      home-files/.config/easyeffects/input/example-preset.json "${
-        ./example-preset.json
-      }"
+      home-files/.config/easyeffects/input/example-preset.json "${./example-preset.json}"
   '';
 }

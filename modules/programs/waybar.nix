@@ -1,9 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib)
-    all filterAttrs hasAttr isStorePath literalExpression optional optionalAttrs
-    types;
+    all
+    filterAttrs
+    hasAttr
+    isStorePath
+    literalExpression
+    optional
+    optionalAttrs
+    types
+    ;
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf mkMerge;
 
@@ -11,7 +23,8 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  mkMargin = name:
+  mkMargin =
+    name:
     mkOption {
       type = types.nullOr types.int;
       default = null;
@@ -19,13 +32,18 @@ let
       description = "Margin value without unit.";
     };
 
-  waybarBarConfig = with types;
+  waybarBarConfig =
+    with types;
     submodule {
       freeformType = jsonFormat.type;
 
       options = {
         layer = mkOption {
-          type = nullOr (enum [ "top" "bottom" "overlay" ]);
+          type = nullOr (enum [
+            "top"
+            "bottom"
+            "overlay"
+          ]);
           default = null;
           description = ''
             Decide if the bar is displayed in front (`"top"`)
@@ -47,7 +65,12 @@ let
         };
 
         position = mkOption {
-          type = nullOr (enum [ "top" "bottom" "left" "right" ]);
+          type = nullOr (enum [
+            "top"
+            "bottom"
+            "left"
+            "right"
+          ]);
           default = null;
           example = "right";
           description = "Bar position relative to the output.";
@@ -57,16 +80,14 @@ let
           type = nullOr ints.unsigned;
           default = null;
           example = 5;
-          description =
-            "Height to be used by the bar if possible. Leave blank for a dynamic value.";
+          description = "Height to be used by the bar if possible. Leave blank for a dynamic value.";
         };
 
         width = mkOption {
           type = nullOr ints.unsigned;
           default = null;
           example = 5;
-          description =
-            "Width to be used by the bar if possible. Leave blank for a dynamic value.";
+          description = "Width to be used by the bar if possible. Leave blank for a dynamic value.";
         };
 
         modules-left = mkOption {
@@ -128,8 +149,7 @@ let
         name = mkOption {
           type = nullOr str;
           default = null;
-          description =
-            "Optional name added as a CSS class, for styling multiple waybars.";
+          description = "Optional name added as a CSS class, for styling multiple waybars.";
           example = "waybar-1";
         };
 
@@ -137,13 +157,16 @@ let
           type = nullOr bool;
           default = null;
           example = false;
-          description =
-            "Option to disable the use of gtk-layer-shell for popups.";
+          description = "Option to disable the use of gtk-layer-shell for popups.";
         };
       };
     };
-in {
-  meta.maintainers = with lib.maintainers; [ berbiche khaneliman ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    berbiche
+    khaneliman
+  ];
 
   options.programs.waybar = with lib.types; {
     enable = mkEnableOption "Waybar";
@@ -250,98 +273,102 @@ in {
     };
   };
 
-  config = let
-    # Removes nulls because Waybar ignores them.
-    # This is not recursive.
-    removeTopLevelNulls = filterAttrs (_: v: v != null);
+  config =
+    let
+      # Removes nulls because Waybar ignores them.
+      # This is not recursive.
+      removeTopLevelNulls = filterAttrs (_: v: v != null);
 
-    # Makes the actual valid configuration Waybar accepts
-    # (strips our custom settings before converting to JSON)
-    makeConfiguration = configuration:
-      let
-        # The "modules" option is not valid in the JSON
-        # as its descendants have to live at the top-level
-        settingsWithoutModules = removeAttrs configuration [ "modules" ];
-        settingsModules =
-          optionalAttrs (configuration.modules != null) configuration.modules;
-      in removeTopLevelNulls (settingsWithoutModules // settingsModules);
+      # Makes the actual valid configuration Waybar accepts
+      # (strips our custom settings before converting to JSON)
+      makeConfiguration =
+        configuration:
+        let
+          # The "modules" option is not valid in the JSON
+          # as its descendants have to live at the top-level
+          settingsWithoutModules = removeAttrs configuration [ "modules" ];
+          settingsModules = optionalAttrs (configuration.modules != null) configuration.modules;
+        in
+        removeTopLevelNulls (settingsWithoutModules // settingsModules);
 
-    # Allow using attrs for settings instead of a list in order to more easily override
-    settings = if builtins.isAttrs cfg.settings then
-      lib.attrValues cfg.settings
-    else
-      cfg.settings;
+      # Allow using attrs for settings instead of a list in order to more easily override
+      settings = if builtins.isAttrs cfg.settings then lib.attrValues cfg.settings else cfg.settings;
 
-    # The clean list of configurations
-    finalConfiguration = map makeConfiguration settings;
+      # The clean list of configurations
+      finalConfiguration = map makeConfiguration settings;
 
-    configSource = jsonFormat.generate "waybar-config.json" finalConfiguration;
+      configSource = jsonFormat.generate "waybar-config.json" finalConfiguration;
 
-  in mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "programs.waybar" pkgs
-          lib.platforms.linux)
-        ({
-          assertion =
-            if lib.versionAtLeast config.home.stateVersion "22.05" then
-              all (x: !hasAttr "modules" x || x.modules == null) settings
-            else
-              true;
-          message = ''
-            The `programs.waybar.settings.[].modules` option has been removed.
-            It is now possible to declare modules in the configuration without nesting them under the `modules` option.
+    in
+    mkIf cfg.enable (mkMerge [
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "programs.waybar" pkgs lib.platforms.linux)
+          ({
+            assertion =
+              if lib.versionAtLeast config.home.stateVersion "22.05" then
+                all (x: !hasAttr "modules" x || x.modules == null) settings
+              else
+                true;
+            message = ''
+              The `programs.waybar.settings.[].modules` option has been removed.
+              It is now possible to declare modules in the configuration without nesting them under the `modules` option.
+            '';
+          })
+        ];
+
+        home.packages = [ cfg.package ];
+
+        xdg.configFile."waybar/config" = mkIf (settings != [ ]) {
+          source = configSource;
+          onChange = ''
+            ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
           '';
-        })
-      ];
-
-      home.packages = [ cfg.package ];
-
-      xdg.configFile."waybar/config" = mkIf (settings != [ ]) {
-        source = configSource;
-        onChange = ''
-          ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
-        '';
-      };
-
-      xdg.configFile."waybar/style.css" = mkIf (cfg.style != null) {
-        source = if builtins.isPath cfg.style || isStorePath cfg.style then
-          cfg.style
-        else
-          pkgs.writeText "waybar/style.css" cfg.style;
-        onChange = ''
-          ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
-        '';
-      };
-    }
-
-    (mkIf cfg.systemd.enable {
-      systemd.user.services.waybar = {
-        Unit = {
-          Description =
-            "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
-          Documentation = "https://github.com/Alexays/Waybar/wiki";
-          PartOf = [ cfg.systemd.target "tray.target" ];
-          After = [ cfg.systemd.target ];
-          ConditionEnvironment = "WAYLAND_DISPLAY";
-          X-Restart-Triggers = optional (settings != [ ])
-            "${config.xdg.configFile."waybar/config".source}"
-            ++ optional (cfg.style != null)
-            "${config.xdg.configFile."waybar/style.css".source}";
         };
 
-        Service = {
-          ExecStart = "${cfg.package}/bin/waybar";
-          ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
-          Restart = "on-failure";
-          KillMode = "mixed";
-        } // optionalAttrs cfg.systemd.enableInspect {
-          Environment = [ "GTK_DEBUG=interactive" ];
+        xdg.configFile."waybar/style.css" = mkIf (cfg.style != null) {
+          source =
+            if builtins.isPath cfg.style || isStorePath cfg.style then
+              cfg.style
+            else
+              pkgs.writeText "waybar/style.css" cfg.style;
+          onChange = ''
+            ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
+          '';
         };
+      }
 
-        Install.WantedBy = [ "tray.target" ]
-          ++ lib.optional (cfg.systemd.target != null) cfg.systemd.target;
-      };
-    })
-  ]);
+      (mkIf cfg.systemd.enable {
+        systemd.user.services.waybar = {
+          Unit = {
+            Description = "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
+            Documentation = "https://github.com/Alexays/Waybar/wiki";
+            PartOf = [
+              cfg.systemd.target
+              "tray.target"
+            ];
+            After = [ cfg.systemd.target ];
+            ConditionEnvironment = "WAYLAND_DISPLAY";
+            X-Restart-Triggers =
+              optional (settings != [ ]) "${config.xdg.configFile."waybar/config".source}"
+              ++ optional (cfg.style != null) "${config.xdg.configFile."waybar/style.css".source}";
+          };
+
+          Service =
+            {
+              ExecStart = "${cfg.package}/bin/waybar";
+              ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
+              Restart = "on-failure";
+              KillMode = "mixed";
+            }
+            // optionalAttrs cfg.systemd.enableInspect {
+              Environment = [ "GTK_DEBUG=interactive" ];
+            };
+
+          Install.WantedBy = [
+            "tray.target"
+          ] ++ lib.optional (cfg.systemd.target != null) cfg.systemd.target;
+        };
+      })
+    ]);
 }

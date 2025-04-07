@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.bun;
   tomlFormat = pkgs.formats.toml { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.jack5079 ];
 
   options.programs.bun = {
@@ -55,13 +61,12 @@ in {
     };
 
     # https://bun.sh/docs/install/lockfile#how-do-i-git-diff-bun-s-lockfile
-    programs.git.attributes =
-      lib.mkIf (cfg.enableGitIntegration && (cfg.package != null))
-      [ "*.lockb binary diff=lockb" ];
-    programs.git.extraConfig.diff.lockb =
-      lib.mkIf (cfg.enableGitIntegration && (cfg.package != null)) {
-        textconv = lib.getExe cfg.package;
-        binary = true;
-      };
+    programs.git.attributes = lib.mkIf (cfg.enableGitIntegration && (cfg.package != null)) [
+      "*.lockb binary diff=lockb"
+    ];
+    programs.git.extraConfig.diff.lockb = lib.mkIf (cfg.enableGitIntegration && (cfg.package != null)) {
+      textconv = lib.getExe cfg.package;
+      binary = true;
+    };
   };
 }

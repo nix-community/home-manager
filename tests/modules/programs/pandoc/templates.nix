@@ -2,7 +2,9 @@
   programs.pandoc = {
     enable = true;
 
-    templates = { "default.latex" = ./template.latex; };
+    templates = {
+      "default.latex" = ./template.latex;
+    };
   };
 
   test.stubs.pandoc = import ./stub.nix;
@@ -13,4 +15,3 @@
       ${./template.latex}
   '';
 }
-

@@ -1,16 +1,28 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.glance;
 
-  inherit (lib) mkEnableOption mkPackageOption mkOption mkIf getExe;
+  inherit (lib)
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    mkIf
+    getExe
+    ;
 
   settingsFormat = pkgs.formats.yaml { };
 
   settingsFile = settingsFormat.generate "glance.yml" cfg.settings;
 
   configFilePath = "${config.xdg.configHome}/glance/glance.yml";
-in {
+in
+{
   meta.maintainers = [ pkgs.lib.maintainers.gepbird ];
 
   options.services.glance = {
@@ -21,29 +33,37 @@ in {
     settings = mkOption {
       type = settingsFormat.type;
       default = {
-        pages = [{
-          name = "Calendar";
-          columns = [{
-            size = "full";
-            widgets = [{ type = "calendar"; }];
-          }];
-        }];
+        pages = [
+          {
+            name = "Calendar";
+            columns = [
+              {
+                size = "full";
+                widgets = [ { type = "calendar"; } ];
+              }
+            ];
+          }
+        ];
       };
       example = {
         server.port = 5678;
-        pages = [{
-          name = "Home";
-          columns = [{
-            size = "full";
-            widgets = [
-              { type = "calendar"; }
+        pages = [
+          {
+            name = "Home";
+            columns = [
               {
-                type = "weather";
-                location = "London, United Kingdom";
+                size = "full";
+                widgets = [
+                  { type = "calendar"; }
+                  {
+                    type = "weather";
+                    location = "London, United Kingdom";
+                  }
+                ];
               }
             ];
-          }];
-        }];
+          }
+        ];
       };
       description = ''
         Configuration written to a yaml file that is read by glance. See
@@ -55,8 +75,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.glance" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.glance" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];

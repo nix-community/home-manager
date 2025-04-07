@@ -1,14 +1,26 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
 
-  inherit (lib) mkIf mkMerge mkOption optional types;
+  inherit (lib)
+    mkIf
+    mkMerge
+    mkOption
+    optional
+    types
+    ;
 
-  associationOptions = with types;
-    attrsOf (coercedTo (either (listOf str) str)
-      (x: lib.concatStringsSep ";" (lib.toList x)) str);
+  associationOptions =
+    with types;
+    attrsOf (coercedTo (either (listOf str) str) (x: lib.concatStringsSep ";" (lib.toList x)) str);
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.misterio77 ];
 
   options.xdg.portal = {
@@ -63,12 +75,22 @@ in {
       type = types.attrsOf associationOptions;
       default = { };
       example = {
-        x-cinnamon = { default = [ "xapp" "gtk" ]; };
+        x-cinnamon = {
+          default = [
+            "xapp"
+            "gtk"
+          ];
+        };
         pantheon = {
-          default = [ "pantheon" "gtk" ];
+          default = [
+            "pantheon"
+            "gtk"
+          ];
           "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
         };
-        common = { default = [ "gtk" ]; };
+        common = {
+          default = [ "gtk" ];
+        };
       };
       description = ''
         Sets which portal backend should be used to provide the implementation
@@ -97,51 +119,53 @@ in {
     };
   };
 
-  config = let
-    cfg = config.xdg.portal;
-    packages = [ pkgs.xdg-desktop-portal ] ++ cfg.extraPortals;
-    portalsDir =
-      "${config.home.profileDirectory}/share/xdg-desktop-portal/portals";
-  in mkIf cfg.enable {
-    warnings = optional (cfg.configPackages == [ ] && cfg.config == { }) ''
-      xdg-desktop-portal 1.17 reworked how portal implementations are loaded, you
-      should either set `xdg.portal.config` or `xdg.portal.configPackages`
-      to specify which portal backend to use for the requested interface.
+  config =
+    let
+      cfg = config.xdg.portal;
+      packages = [ pkgs.xdg-desktop-portal ] ++ cfg.extraPortals;
+      portalsDir = "${config.home.profileDirectory}/share/xdg-desktop-portal/portals";
+    in
+    mkIf cfg.enable {
+      warnings = optional (cfg.configPackages == [ ] && cfg.config == { }) ''
+        xdg-desktop-portal 1.17 reworked how portal implementations are loaded, you
+        should either set `xdg.portal.config` or `xdg.portal.configPackages`
+        to specify which portal backend to use for the requested interface.
 
-      https://github.com/flatpak/xdg-desktop-portal/blob/1.18.1/doc/portals.conf.rst.in
+        https://github.com/flatpak/xdg-desktop-portal/blob/1.18.1/doc/portals.conf.rst.in
 
-      If you simply want to keep the behaviour in < 1.17, which uses the first
-      portal implementation found in lexicographical order, use the following:
+        If you simply want to keep the behaviour in < 1.17, which uses the first
+        portal implementation found in lexicographical order, use the following:
 
-      xdg.portal.config.common.default = "*";
-    '';
+        xdg.portal.config.common.default = "*";
+      '';
 
-    assertions = [
-      (lib.hm.assertions.assertPlatform "xdg.portal" pkgs lib.platforms.linux)
+      assertions = [
+        (lib.hm.assertions.assertPlatform "xdg.portal" pkgs lib.platforms.linux)
 
-      {
-        assertion = cfg.extraPortals != [ ];
-        message =
-          "Setting xdg.portal.enable to true requires a portal implementation in xdg.portal.extraPortals such as xdg-desktop-portal-gtk or xdg-desktop-portal-kde.";
-      }
-    ];
-
-    home = {
-      packages = packages ++ cfg.configPackages;
-      sessionVariables = mkMerge [
-        (mkIf cfg.xdgOpenUsePortal { NIXOS_XDG_OPEN_USE_PORTAL = "1"; })
-        { NIX_XDG_DESKTOP_PORTAL_DIR = portalsDir; }
+        {
+          assertion = cfg.extraPortals != [ ];
+          message = "Setting xdg.portal.enable to true requires a portal implementation in xdg.portal.extraPortals such as xdg-desktop-portal-gtk or xdg-desktop-portal-kde.";
+        }
       ];
-    };
-    systemd.user.sessionVariables = {
-      NIX_XDG_DESKTOP_PORTAL_DIR = portalsDir;
-    };
 
-    xdg.configFile = lib.concatMapAttrs (desktop: conf:
-      lib.optionalAttrs (conf != { }) {
-        "xdg-desktop-portal/${
-          lib.optionalString (desktop != "common") "${desktop}-"
-        }portals.conf".text = lib.generators.toINI { } { preferred = conf; };
-      }) cfg.config;
-  };
+      home = {
+        packages = packages ++ cfg.configPackages;
+        sessionVariables = mkMerge [
+          (mkIf cfg.xdgOpenUsePortal { NIXOS_XDG_OPEN_USE_PORTAL = "1"; })
+          { NIX_XDG_DESKTOP_PORTAL_DIR = portalsDir; }
+        ];
+      };
+      systemd.user.sessionVariables = {
+        NIX_XDG_DESKTOP_PORTAL_DIR = portalsDir;
+      };
+
+      xdg.configFile = lib.concatMapAttrs (
+        desktop: conf:
+        lib.optionalAttrs (conf != { }) {
+          "xdg-desktop-portal/${lib.optionalString (desktop != "common") "${desktop}-"}portals.conf".text =
+            lib.generators.toINI { }
+              { preferred = conf; };
+        }
+      ) cfg.config;
+    };
 }

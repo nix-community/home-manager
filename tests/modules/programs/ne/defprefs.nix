@@ -7,7 +7,8 @@ let
     defined through automaticPreferences
   '';
 
-in {
+in
+{
   programs.ne = {
     enable = true;
     defaultPreferences = defpref;
@@ -15,13 +16,10 @@ in {
   };
 
   nmt = {
-    description =
-      "Check that it gracefully handles the case of both defaultPreferences and automaticPreferences.'.default' being set, defaulting to the former.";
+    description = "Check that it gracefully handles the case of both defaultPreferences and automaticPreferences.'.default' being set, defaulting to the former.";
     script = ''
       assertFileExists home-files/.ne/.default#ap
-      assertFileContent home-files/.ne/.default#ap ${
-        builtins.toFile "defpref" defpref
-      }
+      assertFileContent home-files/.ne/.default#ap ${builtins.toFile "defpref" defpref}
     '';
   };
 }

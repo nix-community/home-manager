@@ -13,17 +13,15 @@
     serviceFile=home-files/.config/systemd/user/volnoti.service
     assertFileExists $serviceFile
     assertFileContent $serviceFile \
-      ${
-        builtins.toFile "expected-volnoti.service" ''
-          [Install]
-          WantedBy=graphical-session.target
+      ${builtins.toFile "expected-volnoti.service" ''
+        [Install]
+        WantedBy=graphical-session.target
 
-          [Service]
-          ExecStart=@volnoti@/bin/volnoti -v -n
+        [Service]
+        ExecStart=@volnoti@/bin/volnoti -v -n
 
-          [Unit]
-          Description=volnoti
-        ''
-      }
+        [Unit]
+        Description=volnoti
+      ''}
   '';
 }

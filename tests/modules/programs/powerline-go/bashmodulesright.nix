@@ -7,9 +7,14 @@
       newline = true;
       modules = [ "nix-shell" ];
       modulesRight = [ "git" ];
-      pathAliases = { "\\~/project/foo" = "prj-foo"; };
+      pathAliases = {
+        "\\~/project/foo" = "prj-foo";
+      };
       settings = {
-        ignore-repos = [ "/home/me/project1" "/home/me/project2" ];
+        ignore-repos = [
+          "/home/me/project1"
+          "/home/me/project2"
+        ];
       };
     };
   };

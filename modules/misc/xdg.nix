@@ -1,25 +1,40 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
-  inherit (lib) mkOptionDefault mkIf mkOption types;
+  inherit (lib)
+    mkOptionDefault
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.xdg;
 
-  fileType = (import ../lib/file-type.nix {
-    inherit (config.home) homeDirectory;
-    inherit lib pkgs;
-  }).fileType;
+  fileType =
+    (import ../lib/file-type.nix {
+      inherit (config.home) homeDirectory;
+      inherit lib pkgs;
+    }).fileType;
 
   defaultCacheHome = "${config.home.homeDirectory}/.cache";
   defaultConfigHome = "${config.home.homeDirectory}/.config";
   defaultDataHome = "${config.home.homeDirectory}/.local/share";
   defaultStateHome = "${config.home.homeDirectory}/.local/state";
 
-  getEnvFallback = name: fallback:
-    let value = builtins.getEnv name;
-    in if value != "" then value else fallback;
+  getEnvFallback =
+    name: fallback:
+    let
+      value = builtins.getEnv name;
+    in
+    if value != "" then value else fallback;
 
-in {
+in
+{
   options.xdg = {
     enable = lib.mkEnableOption "management of XDG base directories";
 
@@ -64,8 +79,7 @@ in {
     };
 
     dataFile = mkOption {
-      type =
-        fileType "xdg.dataFile" "<varname>xdg.dataHome</varname>" cfg.dataHome;
+      type = fileType "xdg.dataFile" "<varname>xdg.dataHome</varname>" cfg.dataHome;
       default = { };
       description = ''
         Attribute set of files to link into the user's XDG
@@ -85,8 +99,7 @@ in {
     };
 
     stateFile = mkOption {
-      type = fileType "xdg.stateFile" "<varname>xdg.stateHome</varname>"
-        cfg.stateHome;
+      type = fileType "xdg.stateFile" "<varname>xdg.stateHome</varname>" cfg.stateHome;
       default = { };
       description = ''
         Attribute set of files to link into the user's XDG
@@ -107,34 +120,32 @@ in {
   };
 
   config = lib.mkMerge [
-    (let
-      variables = {
-        XDG_CACHE_HOME = cfg.cacheHome;
-        XDG_CONFIG_HOME = cfg.configHome;
-        XDG_DATA_HOME = cfg.dataHome;
-        XDG_STATE_HOME = cfg.stateHome;
-      };
-    in mkIf cfg.enable {
-      xdg.cacheHome = mkOptionDefault defaultCacheHome;
-      xdg.configHome = mkOptionDefault defaultConfigHome;
-      xdg.dataHome = mkOptionDefault defaultDataHome;
-      xdg.stateHome = mkOptionDefault defaultStateHome;
+    (
+      let
+        variables = {
+          XDG_CACHE_HOME = cfg.cacheHome;
+          XDG_CONFIG_HOME = cfg.configHome;
+          XDG_DATA_HOME = cfg.dataHome;
+          XDG_STATE_HOME = cfg.stateHome;
+        };
+      in
+      mkIf cfg.enable {
+        xdg.cacheHome = mkOptionDefault defaultCacheHome;
+        xdg.configHome = mkOptionDefault defaultConfigHome;
+        xdg.dataHome = mkOptionDefault defaultDataHome;
+        xdg.stateHome = mkOptionDefault defaultStateHome;
 
-      home.sessionVariables = variables;
-      systemd.user.sessionVariables =
-        mkIf pkgs.stdenv.hostPlatform.isLinux variables;
-    })
+        home.sessionVariables = variables;
+        systemd.user.sessionVariables = mkIf pkgs.stdenv.hostPlatform.isLinux variables;
+      }
+    )
 
     # Legacy non-deterministic setup.
     (mkIf (!cfg.enable && lib.versionOlder config.home.stateVersion "20.09") {
-      xdg.cacheHome =
-        mkOptionDefault (getEnvFallback "XDG_CACHE_HOME" defaultCacheHome);
-      xdg.configHome =
-        mkOptionDefault (getEnvFallback "XDG_CONFIG_HOME" defaultConfigHome);
-      xdg.dataHome =
-        mkOptionDefault (getEnvFallback "XDG_DATA_HOME" defaultDataHome);
-      xdg.stateHome =
-        mkOptionDefault (getEnvFallback "XDG_STATE_HOME" defaultStateHome);
+      xdg.cacheHome = mkOptionDefault (getEnvFallback "XDG_CACHE_HOME" defaultCacheHome);
+      xdg.configHome = mkOptionDefault (getEnvFallback "XDG_CONFIG_HOME" defaultConfigHome);
+      xdg.dataHome = mkOptionDefault (getEnvFallback "XDG_DATA_HOME" defaultDataHome);
+      xdg.stateHome = mkOptionDefault (getEnvFallback "XDG_STATE_HOME" defaultStateHome);
     })
 
     # "Modern" deterministic setup.
@@ -147,18 +158,10 @@ in {
 
     {
       home.file = lib.mkMerge [
-        (lib.mapAttrs'
-          (name: file: lib.nameValuePair "${cfg.cacheHome}/${name}" file)
-          cfg.cacheFile)
-        (lib.mapAttrs'
-          (name: file: lib.nameValuePair "${cfg.configHome}/${name}" file)
-          cfg.configFile)
-        (lib.mapAttrs'
-          (name: file: lib.nameValuePair "${cfg.dataHome}/${name}" file)
-          cfg.dataFile)
-        (lib.mapAttrs'
-          (name: file: lib.nameValuePair "${cfg.stateHome}/${name}" file)
-          cfg.stateFile)
+        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.cacheHome}/${name}" file) cfg.cacheFile)
+        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.configHome}/${name}" file) cfg.configFile)
+        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.dataHome}/${name}" file) cfg.dataFile)
+        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.stateHome}/${name}" file) cfg.stateFile)
         { "${cfg.cacheHome}/.keep".text = ""; }
         { "${cfg.stateHome}/.keep".text = ""; }
       ];

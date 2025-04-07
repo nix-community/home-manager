@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   cfg = config.services.avizo;
   settingsFormat = pkgs.formats.ini { };
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.pltanton ];
 
   options.services.avizo = {
@@ -44,8 +50,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "services.avizo" pkgs platforms.linux) ];
+    assertions = [ (hm.assertions.assertPlatform "services.avizo" pkgs platforms.linux) ];
 
     xdg.configFile."avizo/config.ini" = mkIf (cfg.settings != { }) {
       source = settingsFormat.generate "avizo-config.ini" cfg.settings;
@@ -69,7 +74,9 @@ in {
           Restart = "always";
         };
 
-        Install = { WantedBy = [ config.wayland.systemd.target ]; };
+        Install = {
+          WantedBy = [ config.wayland.systemd.target ];
+        };
       };
     };
   };

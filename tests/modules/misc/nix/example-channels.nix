@@ -8,7 +8,8 @@ let
       example = pkgs.emptyDirectory;
     }
   '';
-in {
+in
+{
   nix = {
     package = config.lib.test.mkStubPackage { };
     channels.example = exampleChannel;

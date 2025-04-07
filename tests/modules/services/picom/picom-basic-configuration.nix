@@ -3,14 +3,26 @@
     enable = true;
     fade = true;
     fadeDelta = 5;
-    fadeSteps = [ 4.0e-2 4.0e-2 ];
-    fadeExclude =
-      [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
+    fadeSteps = [
+      4.0e-2
+      4.0e-2
+    ];
+    fadeExclude = [
+      "window_type *= 'menu'"
+      "name ~= 'Firefox$'"
+      "focused = 1"
+    ];
     shadow = true;
-    shadowOffsets = [ (-10) (-15) ];
+    shadowOffsets = [
+      (-10)
+      (-15)
+    ];
     shadowOpacity = 0.8;
-    shadowExclude =
-      [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
+    shadowExclude = [
+      "window_type *= 'menu'"
+      "name ~= 'Firefox$'"
+      "focused = 1"
+    ];
     backend = "xrender";
     vSync = true;
     settings = {

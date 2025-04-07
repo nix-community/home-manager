@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.pidgin;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.pidgin;
+in
+{
   meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {

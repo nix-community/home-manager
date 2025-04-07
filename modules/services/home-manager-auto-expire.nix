@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -8,7 +13,8 @@ let
     path = config.programs.home-manager.path;
   };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.thiagokokada ];
 
   options = {
@@ -66,8 +72,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.home-manager.autoExpire" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.home-manager.autoExpire" pkgs lib.platforms.linux)
     ];
 
     systemd.user = {
@@ -86,14 +91,18 @@ in {
       services.home-manager-auto-expire = {
         Unit.Description = "Home Manager expire generations";
 
-        Service.ExecStart = toString
-          (pkgs.writeShellScript "home-manager-auto-expire" (''
-            echo "Expire old Home Manager generations"
-            ${homeManagerPackage}/bin/home-manager expire-generations '${cfg.timestamp}'
-          '' + lib.optionalString cfg.store.cleanup ''
-            echo "Clean-up Nix store"
-            ${pkgs.nix}/bin/nix-collect-garbage ${cfg.store.options}
-          ''));
+        Service.ExecStart = toString (
+          pkgs.writeShellScript "home-manager-auto-expire" (
+            ''
+              echo "Expire old Home Manager generations"
+              ${homeManagerPackage}/bin/home-manager expire-generations '${cfg.timestamp}'
+            ''
+            + lib.optionalString cfg.store.cleanup ''
+              echo "Clean-up Nix store"
+              ${pkgs.nix}/bin/nix-collect-garbage ${cfg.store.options}
+            ''
+          )
+        );
       };
     };
   };

@@ -6,29 +6,35 @@ let
 
   home = "/home/alice";
 
-in {
+in
+{
   name = "works-with-nh-stable";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine = { ... }: {
-    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-    virtualisation.memorySize = 2048;
-    environment.systemPackages = [ pkgs.nh ];
-    nix = {
-      registry.home-manager.to = {
-        type = "path";
-        path = ../../..;
+  nodes.machine =
+    { ... }:
+    {
+      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+      virtualisation.memorySize = 2048;
+      environment.systemPackages = [ pkgs.nh ];
+      nix = {
+        registry.home-manager.to = {
+          type = "path";
+          path = ../../..;
+        };
+        settings.extra-experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
       };
-      settings.extra-experimental-features = [ "nix-command" "flakes" ];
+      users.users.alice = {
+        isNormalUser = true;
+        description = "Alice Foobar";
+        password = "foobar";
+        uid = 1000;
+        inherit home;
+      };
     };
-    users.users.alice = {
-      isNormalUser = true;
-      description = "Alice Foobar";
-      password = "foobar";
-      uid = 1000;
-      inherit home;
-    };
-  };
 
   testScript = ''
     import shlex
@@ -72,9 +78,7 @@ in {
       # Copy a configuration to activate.
       succeed_as_alice(" ; ".join([
         "mkdir -vp ${home}/.config/home-manager",
-        "cp -v ${
-          ./alice-flake-init.nix
-        } ${home}/.config/home-manager/flake.nix",
+        "cp -v ${./alice-flake-init.nix} ${home}/.config/home-manager/flake.nix",
         "cp -v ${./alice-home-next.nix} ${home}/.config/home-manager/home.nix"
       ]))
 

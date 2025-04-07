@@ -1,16 +1,21 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
 
   cfg = config.programs.vscode.haskell;
 
   defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
-  defaultHieNixExeText =
-    lib.literalExpression ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"'';
+  defaultHieNixExeText = lib.literalExpression ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"'';
 
-  hie-nix = pkgs.hie-nix or (abort ''
-    vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
-    ${exampleOverlay}
-  '');
+  hie-nix =
+    pkgs.hie-nix or (abort ''
+      vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
+      ${exampleOverlay}
+    '');
 
   exampleOverlay = ''
     nixpkgs.overlays = [
@@ -18,7 +23,8 @@ let
     ]
   '';
 
-in {
+in
+{
   options.programs.vscode.haskell = {
     enable = lib.mkEnableOption "Haskell integration for Visual Studio Code";
 
@@ -54,9 +60,8 @@ in {
       "languageServerHaskell.hieExecutablePath" = cfg.hie.executablePath;
     };
 
-    programs.vscode.profiles.default.extensions =
-      [ pkgs.vscode-extensions.justusadam.language-haskell ]
-      ++ lib.optional cfg.hie.enable
-      pkgs.vscode-extensions.alanz.vscode-hie-server;
+    programs.vscode.profiles.default.extensions = [
+      pkgs.vscode-extensions.justusadam.language-haskell
+    ] ++ lib.optional cfg.hie.enable pkgs.vscode-extensions.alanz.vscode-hie-server;
   };
 }

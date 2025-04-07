@@ -1,14 +1,28 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
-  inherit (lib) mkEnableOption mkPackageOption mkOption mkIf literalExpression;
+  inherit (lib)
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    mkIf
+    literalExpression
+    ;
 
   cfg = config.programs.fastfetch;
 
   jsonFormat = pkgs.formats.json { };
-in {
-  meta.maintainers =
-    [ lib.hm.maintainers.afresquet lib.maintainers.khaneliman ];
+in
+{
+  meta.maintainers = [
+    lib.hm.maintainers.afresquet
+    lib.maintainers.khaneliman
+  ];
 
   options.programs.fastfetch = {
     enable = mkEnableOption "Fastfetch";

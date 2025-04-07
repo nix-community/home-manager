@@ -2,8 +2,7 @@
   config = {
     targets.darwin = {
       defaults."com.apple.desktopservices".DSDontWriteNetworkStores = true;
-      currentHostDefaults."com.apple.controlcenter".BatteryShowPercentage =
-        true;
+      currentHostDefaults."com.apple.controlcenter".BatteryShowPercentage = true;
     };
 
     nmt.script = ''

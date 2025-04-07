@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.timidity;
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.amesgen ];
 
   options.programs.timidity = {

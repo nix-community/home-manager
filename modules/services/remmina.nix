@@ -1,12 +1,24 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
-  inherit (lib) mkIf mkMerge mkEnableOption mkPackageOption mkOption;
+  inherit (lib)
+    mkIf
+    mkMerge
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    ;
 
   cfg = config.services.remmina;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ cyntheticfox ];
 
   options.services.remmina = {
@@ -19,7 +31,9 @@ in {
     };
 
     systemdService = {
-      enable = mkEnableOption "systemd Remmina service" // { default = true; };
+      enable = mkEnableOption "systemd Remmina service" // {
+        default = true;
+      };
 
       startupFlags = mkOption {
         type = with lib.types; listOf str;
@@ -44,9 +58,7 @@ in {
 
         Service = {
           Type = "simple";
-          ExecStart = "${lib.getExe cfg.package} ${
-              lib.escapeShellArgs cfg.systemdService.startupFlags
-            }";
+          ExecStart = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.systemdService.startupFlags}";
           Restart = "on-failure";
         };
 
@@ -55,8 +67,7 @@ in {
     })
 
     (mkIf (config.xdg.mimeApps.enable && cfg.addRdpMimeTypeAssoc) {
-      xdg.mimeApps.associations.added."application/x-rdp" =
-        "org.remmina.Remmina.desktop";
+      xdg.mimeApps.associations.added."application/x-rdp" = "org.remmina.Remmina.desktop";
 
       xdg.dataFile."mime/packages/application-x-rdp.xml".text = ''
         <?xml version="1.0" encoding="UTF-8"?>

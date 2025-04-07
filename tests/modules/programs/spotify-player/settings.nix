@@ -15,55 +15,70 @@
       };
     };
 
-    themes = [{
-      name = "default2";
-      palette = {
-        black = "black";
-        red = "red";
-        green = "green";
-        yellow = "yellow";
-        blue = "blue";
-        magenta = "magenta";
-        cyan = "cyan";
-        white = "white";
-        bright_black = "bright_black";
-        bright_red = "bright_red";
-        bright_green = "bright_green";
-        bright_yellow = "bright_yellow";
-        bright_blue = "bright_blue";
-        bright_magenta = "bright_magenta";
-        bright_cyan = "bright_cyan";
-        bright_white = "bright_white";
-      };
-      component_style = {
-        block_title = { fg = "Magenta"; };
-        border = { };
-        playback_track = {
-          fg = "Cyan";
-          modifiers = [ "Bold" ];
+    themes = [
+      {
+        name = "default2";
+        palette = {
+          black = "black";
+          red = "red";
+          green = "green";
+          yellow = "yellow";
+          blue = "blue";
+          magenta = "magenta";
+          cyan = "cyan";
+          white = "white";
+          bright_black = "bright_black";
+          bright_red = "bright_red";
+          bright_green = "bright_green";
+          bright_yellow = "bright_yellow";
+          bright_blue = "bright_blue";
+          bright_magenta = "bright_magenta";
+          bright_cyan = "bright_cyan";
+          bright_white = "bright_white";
         };
-        playback_artists = {
-          fg = "Cyan";
-          modifiers = [ "Bold" ];
+        component_style = {
+          block_title = {
+            fg = "Magenta";
+          };
+          border = { };
+          playback_track = {
+            fg = "Cyan";
+            modifiers = [ "Bold" ];
+          };
+          playback_artists = {
+            fg = "Cyan";
+            modifiers = [ "Bold" ];
+          };
+          playback_album = {
+            fg = "Yellow";
+          };
+          playback_metadata = {
+            fg = "BrightBlack";
+          };
+          playback_progress_bar = {
+            bg = "BrightBlack";
+            fg = "Green";
+          };
+          current_playing = {
+            fg = "Green";
+            modifiers = [ "Bold" ];
+          };
+          page_desc = {
+            fg = "Cyan";
+            modifiers = [ "Bold" ];
+          };
+          table_header = {
+            fg = "Blue";
+          };
+          selection = {
+            modifiers = [
+              "Bold"
+              "Reversed"
+            ];
+          };
         };
-        playback_album = { fg = "Yellow"; };
-        playback_metadata = { fg = "BrightBlack"; };
-        playback_progress_bar = {
-          bg = "BrightBlack";
-          fg = "Green";
-        };
-        current_playing = {
-          fg = "Green";
-          modifiers = [ "Bold" ];
-        };
-        page_desc = {
-          fg = "Cyan";
-          modifiers = [ "Bold" ];
-        };
-        table_header = { fg = "Blue"; };
-        selection = { modifiers = [ "Bold" "Reversed" ]; };
-      };
-    }];
+      }
+    ];
 
     keymaps = [
       {
@@ -107,11 +122,7 @@
 
   nmt.script = ''
     assertFileContent home-files/.config/spotify-player/app.toml ${./app.toml}
-    assertFileContent home-files/.config/spotify-player/theme.toml ${
-      ./theme.toml
-    }
-    assertFileContent home-files/.config/spotify-player/keymap.toml ${
-      ./keymap.toml
-    }
+    assertFileContent home-files/.config/spotify-player/theme.toml ${./theme.toml}
+    assertFileContent home-files/.config/spotify-player/keymap.toml ${./keymap.toml}
   '';
 }
