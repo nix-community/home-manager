@@ -3,6 +3,9 @@
 #
 # $ git config blame.ignoreRevsFile .git-blame-ignore-revs
 
+# Treewide nixfmt-rfc-style
+0a13e03a7ca1782b630cc0d52ca584921fe00bd5
+
 # Treewide remove with lib
 0b491b460f52e87e23eb17bbf59c6ae64b7664c1
 95711f926676018d279ba09fe7530d03b5d5b3e2
