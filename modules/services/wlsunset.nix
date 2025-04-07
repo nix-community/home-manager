@@ -96,7 +96,7 @@ in {
 
     systemdTarget = mkOption {
       type = with types; str;
-      default = "graphical-session.target";
+      default = config.wayland.systemd.target;
       description = ''
         Systemd target to bind to.
       '';
