@@ -56,6 +56,10 @@
           };
         });
     in {
+      checks = forAllSystems   (system: {
+        formatting = treefmtEval.${system}.config.build.check self;
+      });
+
       formatter = forAllSystems  (system: treefmtEval.${system}.config.build.wrapper);
 
       packages = forAllSystems (system:
