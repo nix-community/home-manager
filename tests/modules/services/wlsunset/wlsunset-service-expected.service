@@ -5,6 +5,6 @@ WantedBy=test.target
 ExecStart=@wlsunset@/bin/wlsunset -L 128.8 -T 6000 -g 0.6 -l 12.3 -t 3500
 
 [Unit]
-After=graphical-session.target
+After=test.target
 Description=Day/night gamma adjustments for Wayland compositors.
-PartOf=graphical-session.target
+PartOf=test.target
