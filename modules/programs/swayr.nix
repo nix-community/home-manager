@@ -91,7 +91,7 @@ in {
     systemd.enable = lib.mkEnableOption "swayr systemd integration";
     systemd.target = mkOption {
       type = types.str;
-      default = "graphical-session.target";
+      default = config.wayland.systemd.target;
       description = ''
         Systemd target to bind to.
       '';
