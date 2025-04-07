@@ -1,6 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/6616de389ed55fba6eeba60377fc04732d5a207c.tar.gz -i bash -p git gnugrep gnused findutils nixfmt
-
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/42a1c966be226125b48c384171c44c651c236c22.tar.gz -i bash -p git gnugrep gnused findutils nixfmt-tree
 # Avoid being affected by system and user git config.
 export GIT_CONFIG_NOSYSTEM=1
 export HOME=
@@ -28,23 +27,9 @@ for arg do
     esac
 done
 
-# The excludes are for files touched by open pull requests and we want
-# to avoid merge conflicts.
-excludes=(
-    modules/files.nix
-    modules/home-environment.nix
-    modules/programs/zsh.nix
-)
-
-exclude_args=()
-for e in "${excludes[@]}"; do
-    exclude_args+=(-e "$e")
-done
-
 git_root=$(git rev-parse --show-toplevel)
 
 git ls-files -z --cached --others --full-name -- "${files[@]}" |
     grep -z '\.nix$' |
-    grep -z -v "${exclude_args[@]}" |
     sed -z "s|^|$git_root/|" |
-    xargs -0 nixfmt "${nixfmt_args[@]}"
+    xargs -0 treefmt "${nixfmt_args[@]}"
