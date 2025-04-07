@@ -61,7 +61,9 @@
           home-manager = hmPkg;
 
           docs-html = docs.manual.html;
+          docs-htmlOpenTool = docs.manual.htmlOpenTool;
           docs-json = docs.options.json;
+          docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
           docs-manpages = docs.manPages;
         });
     });
