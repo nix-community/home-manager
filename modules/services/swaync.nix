@@ -82,17 +82,13 @@ in {
     home.packages = [ cfg.package pkgs.at-spi2-core ];
 
     xdg.configFile = {
-      "swaync/config.json" = {
-        source = jsonFormat.generate "config.json" cfg.settings;
-        onChange = "${lib.getExe' cfg.package "swaync-client"} --reload-config";
-      };
+      "swaync/config.json".source =
+        jsonFormat.generate "config.json" cfg.settings;
       "swaync/style.css" = lib.mkIf (cfg.style != null) {
-
         source = if builtins.isPath cfg.style || lib.isStorePath cfg.style then
           cfg.style
         else
           pkgs.writeText "swaync/style.css" cfg.style;
-        onChange = "${lib.getExe' cfg.package "swaync-client"} --reload-css";
       };
     };
 
@@ -103,6 +99,11 @@ in {
         PartOf = [ config.wayland.systemd.target ];
         After = [ config.wayland.systemd.target ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
+        X-Restart-Triggers = lib.mkMerge [
+          [ config.xdg.configFile."swaync/config.json".source ]
+          (lib.mkIf (cfg.style != null)
+            [ config.xdg.configFile."swaync/style.css".source ])
+        ];
       };
 
       Service = {
