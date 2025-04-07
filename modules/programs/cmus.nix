@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.cmus;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.cmus;
+in
+{
   meta.maintainers = [ lib.hm.maintainers.joygnu ];
 
   options.programs.cmus = {

@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.granted;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.granted;
+in
+{
   meta.maintainers = [ lib.hm.maintainers.wcarlsen ];
 
   options.programs.granted = {
@@ -8,11 +15,9 @@ in {
 
     package = lib.mkPackageOption pkgs "granted" { };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {

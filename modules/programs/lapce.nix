@@ -1,6 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.lapce;
 
@@ -8,7 +18,10 @@ let
     enable = lib.mkEnableOption "lapce";
     package = lib.mkPackageOption pkgs "lapce" { nullable = true; };
     channel = mkOption {
-      type = types.enum [ "stable" "nightly" ];
+      type = types.enum [
+        "stable"
+        "nightly"
+      ];
       default = "stable";
       description = ''
         Lapce channel to configure.
@@ -48,36 +61,38 @@ let
       '';
     };
     plugins = mkOption {
-      type = types.listOf (types.submodule {
-        options = {
-          author = mkOption {
-            type = types.str;
-            description = ''
-              Author of the plugin.
-            '';
+      type = types.listOf (
+        types.submodule {
+          options = {
+            author = mkOption {
+              type = types.str;
+              description = ''
+                Author of the plugin.
+              '';
+            };
+            name = mkOption {
+              type = types.str;
+              description = ''
+                Name of the plugin.
+              '';
+            };
+            version = mkOption {
+              type = types.str;
+              description = ''
+                Version of the plugin.
+              '';
+            };
+            hash = mkOption {
+              type = types.str;
+              description = ''
+                Hash of the plugin tarball.
+                To find the hash leave this empty, rebuild and copy the hash from the error message.
+              '';
+              default = "";
+            };
           };
-          name = mkOption {
-            type = types.str;
-            description = ''
-              Name of the plugin.
-            '';
-          };
-          version = mkOption {
-            type = types.str;
-            description = ''
-              Version of the plugin.
-            '';
-          };
-          hash = mkOption {
-            type = types.str;
-            description = ''
-              Hash of the plugin tarball.
-              To find the hash leave this empty, rebuild and copy the hash from the error message.
-            '';
-            default = "";
-          };
-        };
-      });
+        }
+      );
       default = [ ];
       description = ''
         Plugins to install.
@@ -119,30 +134,47 @@ let
 
   settingsFormat = pkgs.formats.toml { };
 
-  fetchPluginTarballFromRegistry = { author, name, version, hash }:
-    pkgs.stdenvNoCC.mkDerivation (let
-      url =
-        "https://plugins.lapce.dev/api/v1/plugins/${author}/${name}/${version}/download";
-      file = "lapce-plugin-${author}-${name}-${version}.tar.zstd";
-    in {
-      name = file;
-      nativeBuildInputs = [ pkgs.curl pkgs.cacert ];
-      dontUnpack = true;
-      dontBuild = true;
-      installPhase = ''
-        runHook preInstall
+  fetchPluginTarballFromRegistry =
+    {
+      author,
+      name,
+      version,
+      hash,
+    }:
+    pkgs.stdenvNoCC.mkDerivation (
+      let
+        url = "https://plugins.lapce.dev/api/v1/plugins/${author}/${name}/${version}/download";
+        file = "lapce-plugin-${author}-${name}-${version}.tar.zstd";
+      in
+      {
+        name = file;
+        nativeBuildInputs = [
+          pkgs.curl
+          pkgs.cacert
+        ];
+        dontUnpack = true;
+        dontBuild = true;
+        installPhase = ''
+          runHook preInstall
 
-        url="$(curl ${url})"
-        curl -L "$url" -o "$out"
+          url="$(curl ${url})"
+          curl -L "$url" -o "$out"
 
-        runHook postInstall
-      '';
-      outputHashAlgo = "sha256";
-      outputHashMode = "flat";
-      outputHash = hash;
-      inherit (lib) meta;
-    });
-  pluginFromRegistry = { author, name, version, hash }@args:
+          runHook postInstall
+        '';
+        outputHashAlgo = "sha256";
+        outputHashMode = "flat";
+        outputHash = hash;
+        inherit (lib) meta;
+      }
+    );
+  pluginFromRegistry =
+    {
+      author,
+      name,
+      version,
+      hash,
+    }@args:
     pkgs.stdenvNoCC.mkDerivation {
       pname = "lapce-plugin-${author}-${name}";
       inherit version;
@@ -158,13 +190,26 @@ let
         runHook postInstall
       '';
     };
-  pluginsFromRegistry = plugins:
-    pkgs.linkFarm "lapce-plugins" (builtins.listToAttrs (builtins.map
-      ({ author, name, version, ... }@plugin: {
-        name = "${author}-${name}-${version}";
-        value = pluginFromRegistry plugin;
-      }) plugins));
-in {
+  pluginsFromRegistry =
+    plugins:
+    pkgs.linkFarm "lapce-plugins" (
+      builtins.listToAttrs (
+        builtins.map (
+          {
+            author,
+            name,
+            version,
+            ...
+          }@plugin:
+          {
+            name = "${author}-${name}-${version}";
+            value = pluginFromRegistry plugin;
+          }
+        ) plugins
+      )
+    );
+in
+{
   meta.maintainers = [ lib.hm.maintainers.timon-schelling ];
 
   options.programs.lapce = options;
@@ -172,15 +217,16 @@ in {
   config = mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg = let dir = "lapce-${cfg.channel}";
-    in {
-      configFile = {
-        "${dir}/settings.toml".source =
-          settingsFormat.generate "settings.toml" cfg.settings;
-        "${dir}/keymaps.toml".source =
-          settingsFormat.generate "keymaps.toml" { keymaps = cfg.keymaps; };
+    xdg =
+      let
+        dir = "lapce-${cfg.channel}";
+      in
+      {
+        configFile = {
+          "${dir}/settings.toml".source = settingsFormat.generate "settings.toml" cfg.settings;
+          "${dir}/keymaps.toml".source = settingsFormat.generate "keymaps.toml" { keymaps = cfg.keymaps; };
+        };
+        dataFile."${dir}/plugins".source = pluginsFromRegistry cfg.plugins;
       };
-      dataFile."${dir}/plugins".source = pluginsFromRegistry cfg.plugins;
-    };
   };
 }

@@ -13,8 +13,6 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config
-    assertFileContent home-files/.config/git/config ${
-      ./git-without-signing-key-id-expected.conf
-    }
+    assertFileContent home-files/.config/git/config ${./git-without-signing-key-id-expected.conf}
   '';
 }

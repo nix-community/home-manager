@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 
@@ -6,12 +11,12 @@ let
 
   cfg = config.services.cachix-agent;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.rycee ];
 
   options.services.cachix-agent = {
-    enable =
-      mkEnableOption "Cachix Deploy Agent: <https://docs.cachix.org/deploy/>";
+    enable = mkEnableOption "Cachix Deploy Agent: <https://docs.cachix.org/deploy/>";
 
     name = mkOption {
       type = types.str;
@@ -39,8 +44,7 @@ in {
     credentialsFile = mkOption {
       type = types.path;
       default = "${config.xdg.configHome}/cachix-agent.token";
-      defaultText =
-        literalExpression ''"''${config.xdg.configHome}/cachix-agent.token"'';
+      defaultText = literalExpression ''"''${config.xdg.configHome}/cachix-agent.token"'';
       description = ''
         Required file that needs to contain
         `CACHIX_AGENT_TOKEN=...`.
@@ -50,8 +54,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.cachix-agent" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.cachix-agent" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.cachix-agent = {
@@ -60,10 +63,7 @@ in {
       Service = {
         Environment = [
           "PATH=${
-            if config.nix.enable && config.nix.package != null then
-              config.nix.package
-            else
-              pkgs.nix
+            if config.nix.enable && config.nix.package != null then config.nix.package else pkgs.nix
           }/bin"
         ];
         EnvironmentFile = cfg.credentialsFile;
@@ -71,11 +71,17 @@ in {
         # We don't want to kill children processes as those are deployments.
         KillMode = "process";
         Restart = "on-failure";
-        ExecStart = escapeShellArgs ([ "${cfg.package}/bin/cachix" ]
+        ExecStart = escapeShellArgs (
+          [ "${cfg.package}/bin/cachix" ]
           ++ optional cfg.verbose "--verbose"
           ++ optional (cfg.host != null) "--host ${cfg.host}"
-          ++ [ "deploy" "agent" cfg.name ]
-          ++ optional (cfg.profile != null) cfg.profile);
+          ++ [
+            "deploy"
+            "agent"
+            cfg.name
+          ]
+          ++ optional (cfg.profile != null) cfg.profile
+        );
       };
 
       Install.WantedBy = [ "default.target" ];

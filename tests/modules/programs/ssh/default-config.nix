@@ -1,9 +1,13 @@
-{ config, lib, ... }: {
+{ config, lib, ... }:
+{
   config = {
-    programs.ssh = { enable = true; };
+    programs.ssh = {
+      enable = true;
+    };
 
-    home.file.assertions.text = builtins.toJSON
-      (map (a: a.message) (lib.filter (a: !a.assertion) config.assertions));
+    home.file.assertions.text = builtins.toJSON (
+      map (a: a.message) (lib.filter (a: !a.assertion) config.assertions)
+    );
 
     nmt.script = ''
       assertFileExists home-files/.ssh/config

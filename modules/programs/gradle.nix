@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
@@ -6,34 +11,41 @@ let
   defaultHomeDirectory = ".gradle";
   settingsFormat = pkgs.formats.javaProperties { };
 
-  initScript = types.submodule ({ name, config, ... }: {
-    options = {
-      text = mkOption {
-        type = types.nullOr types.lines;
-        default = null;
-        description = ''
-          Text of the init script file. if this option is null
-          then `source` must be set.
-        '';
+  initScript = types.submodule (
+    { name, config, ... }:
+    {
+      options = {
+        text = mkOption {
+          type = types.nullOr types.lines;
+          default = null;
+          description = ''
+            Text of the init script file. if this option is null
+            then `source` must be set.
+          '';
+        };
+
+        source = mkOption {
+          type = types.path;
+          description = ''
+            Path of the init script file. If
+            `text` is non-null then this option will automatically point
+            to a file containing that text.
+          '';
+        };
       };
 
-      source = mkOption {
-        type = types.path;
-        description = ''
-          Path of the init script file. If
-          `text` is non-null then this option will automatically point
-          to a file containing that text.
-        '';
-      };
-    };
-
-    config.source = mkIf (config.text != null) (lib.mkDefault
-      (pkgs.writeTextFile {
-        inherit (config) text;
-        name = lib.hm.strings.storeFileName name;
-      }));
-  });
-in {
+      config.source = mkIf (config.text != null) (
+        lib.mkDefault (
+          pkgs.writeTextFile {
+            inherit (config) text;
+            name = lib.hm.strings.storeFileName name;
+          }
+        )
+      );
+    }
+  );
+in
+{
   meta.maintainers = [ lib.hm.maintainers.britter ];
 
   options.programs.gradle = {
@@ -96,19 +108,26 @@ in {
     };
   };
 
-  config = let gradleHome = "${config.home.homeDirectory}/${cfg.home}";
-  in mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+  config =
+    let
+      gradleHome = "${config.home.homeDirectory}/${cfg.home}";
+    in
+    mkIf cfg.enable {
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file = lib.mkMerge ([{
-      "${cfg.home}/gradle.properties" = mkIf (cfg.settings != { }) {
-        source = settingsFormat.generate "gradle.properties" cfg.settings;
+      home.file = lib.mkMerge (
+        [
+          {
+            "${cfg.home}/gradle.properties" = mkIf (cfg.settings != { }) {
+              source = settingsFormat.generate "gradle.properties" cfg.settings;
+            };
+          }
+        ]
+        ++ lib.mapAttrsToList (k: v: { "${cfg.home}/init.d/${k}".source = v.source; }) cfg.initScripts
+      );
+
+      home.sessionVariables = mkIf (cfg.home != defaultHomeDirectory) {
+        GRADLE_USER_HOME = gradleHome;
       };
-    }] ++ lib.mapAttrsToList
-      (k: v: { "${cfg.home}/init.d/${k}".source = v.source; }) cfg.initScripts);
-
-    home.sessionVariables = mkIf (cfg.home != defaultHomeDirectory) {
-      GRADLE_USER_HOME = gradleHome;
     };
-  };
 }

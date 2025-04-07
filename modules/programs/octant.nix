@@ -1,14 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) literalExpression;
 
   cfg = config.programs.octant;
 
-  mkPluginEnv = packages:
+  mkPluginEnv =
+    packages:
     let
       pluginDirs = map (pkg: "${pkg}/bin") packages;
       plugins = lib.concatMapStringsSep " " (p: "${p}/*") pluginDirs;
-    in pkgs.runCommandLocal "octant-plugins" { } ''
+    in
+    pkgs.runCommandLocal "octant-plugins" { } ''
       mkdir $out
       [[ '${plugins}' ]] || exit 0
       for plugin in ${plugins}; do
@@ -16,15 +23,15 @@ let
       done
     '';
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ jk ];
 
   options = {
     programs.octant = {
       enable = lib.mkEnableOption "octant";
 
-      package =
-        lib.mkPackageOption pkgs "octant" { example = "pkgs.octant-other"; };
+      package = lib.mkPackageOption pkgs "octant" { example = "pkgs.octant-other"; };
 
       plugins = lib.mkOption {
         default = [ ];
@@ -38,7 +45,8 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."octant/plugins" =
-      lib.mkIf (cfg.plugins != [ ]) { source = mkPluginEnv cfg.plugins; };
+    xdg.configFile."octant/plugins" = lib.mkIf (cfg.plugins != [ ]) {
+      source = mkPluginEnv cfg.plugins;
+    };
   };
 }

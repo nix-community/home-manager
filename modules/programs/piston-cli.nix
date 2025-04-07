@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.piston-cli;
   yamlFormat = pkgs.formats.yaml { };
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ ethancedwards8 ];
 
   options.programs.piston-cli = {

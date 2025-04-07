@@ -1,4 +1,10 @@
-{ config, lib, pkgs, realPkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  realPkgs,
+  ...
+}:
 
 lib.mkIf config.test.enableBig {
   programs.neovim = {
@@ -29,4 +35,3 @@ lib.mkIf config.test.enableBig {
     assertFileContains "$vimout" "HM_PLUGINS_CONFIG"
   '';
 }
-

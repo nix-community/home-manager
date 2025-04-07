@@ -1,4 +1,10 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -10,21 +16,27 @@ let
   # see the example configuration from the package (i.e.,
   # `$out/share/recoll/examples/recoll.conf`).
   mkRecollConfKeyValue = generators.mkKeyValueDefault {
-    mkValueString = let mkQuoted = v: ''"${escape [ ''"'' ] v}"'';
-    in v:
-    if v == true then
-      "1"
-    else if v == false then
-      "0"
-    else if isList v then
-      concatMapStringsSep " " mkQuoted v
-    else
-      generators.mkValueStringDefault { } v;
+    mkValueString =
+      let
+        mkQuoted = v: ''"${escape [ ''"'' ] v}"'';
+      in
+      v:
+      if v == true then
+        "1"
+      else if v == false then
+        "0"
+      else if isList v then
+        concatMapStringsSep " " mkQuoted v
+      else
+        generators.mkValueStringDefault { } v;
   } " = ";
 
   # A modified version of 'lib.generators.toINI' that also accepts top-level
   # attributes as non-attrsets.
-  toRecollConf = { listsAsDuplicateKeys ? false }:
+  toRecollConf =
+    {
+      listsAsDuplicateKeys ? false,
+    }:
     attr:
     let
       toKeyValue = generators.toKeyValue {
@@ -32,11 +44,13 @@ let
         mkKeyValue = mkRecollConfKeyValue;
       };
       mkSectionName = name: strings.escape [ "[" "]" ] name;
-      convert = k: v:
+      convert =
+        k: v:
         if isAttrs v then
           ''
             [${mkSectionName k}]
-          '' + toKeyValue v
+          ''
+          + toKeyValue v
         else
           toKeyValue { "${k}" = v; };
 
@@ -47,34 +61,42 @@ let
       _config = mapAttrsToList convert (filterAttrs (k: v: !isAttrs v) attr);
       _config' = mapAttrsToList convert (filterAttrs (k: v: isAttrs v) attr);
       config = _config ++ _config';
-    in concatStringsSep "\n" config;
+    in
+    concatStringsSep "\n" config;
 
   # A specific type for Recoll config format. Taken from `pkgs.formats`
   # implementation from nixpkgs. See the 'Nix-representable formats' from the
   # NixOS manual for more information.
-  recollConfFormat = { }: {
-    type = with types;
-      let
-        valueType = nullOr (oneOf [
-          bool
-          float
-          int
-          path
-          str
-          (attrsOf valueType)
-          (listOf valueType)
-        ]) // {
-          description = "Recoll config value";
-        };
-      in attrsOf valueType;
+  recollConfFormat =
+    { }:
+    {
+      type =
+        with types;
+        let
+          valueType =
+            nullOr (oneOf [
+              bool
+              float
+              int
+              path
+              str
+              (attrsOf valueType)
+              (listOf valueType)
+            ])
+            // {
+              description = "Recoll config value";
+            };
+        in
+        attrsOf valueType;
 
-    generate = name: value: pkgs.writeText name (toRecollConf { } value);
-  };
+      generate = name: value: pkgs.writeText name (toRecollConf { } value);
+    };
 
   # The actual object we're going to use for this module. This is for the sake
   # of consistency (and dogfooding the settings format implementation).
   settingsFormat = recollConfFormat { };
-in {
+in
+{
   meta.maintainers = [ maintainers.foo-dogsquared ];
 
   options.services.recoll = {
@@ -139,17 +161,17 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.recoll" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.recoll" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = { RECOLL_CONFDIR = cfg.configDir; };
+    home.sessionVariables = {
+      RECOLL_CONFDIR = cfg.configDir;
+    };
 
     home.file."${cfg.configDir}/recoll.conf".source =
-      settingsFormat.generate "recoll-conf-${config.home.username}"
-      cfg.settings;
+      settingsFormat.generate "recoll-conf-${config.home.username}" cfg.settings;
 
     systemd.user.services.recollindex = {
       Unit = {

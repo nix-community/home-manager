@@ -38,7 +38,8 @@ let
       };
     };
   };
-in {
+in
+{
   options.services.podman = {
     internal = {
       quadletDefinitions = lib.mkOption {

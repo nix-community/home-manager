@@ -3,8 +3,10 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    plugins =
-      [ "/path/to/plugin1" (config.lib.test.mkStubPackage { name = "foo"; }) ];
+    plugins = [
+      "/path/to/plugin1"
+      (config.lib.test.mkStubPackage { name = "foo"; })
+    ];
     settings = {
       source = [ "sourced.conf" ];
 
@@ -34,7 +36,9 @@
         kb_layout = "ro";
         follow_mouse = 1;
         accel_profile = "flat";
-        touchpad = { scroll_factor = 0.3; };
+        touchpad = {
+          scroll_factor = 0.3;
+        };
       };
 
       bindm = [
@@ -58,7 +62,9 @@
       plugin = {
         plugin1 = {
           dummy = "plugin setting";
-          section = { other = "dummy setting"; };
+          section = {
+            other = "dummy setting";
+          };
         };
       };
     };

@@ -9,12 +9,12 @@
     };
   };
 
-  programs.himalaya = { enable = true; };
+  programs.himalaya = {
+    enable = true;
+  };
 
   nmt.script = ''
     assertFileExists home-files/.config/himalaya/config.toml
-    assertFileContent home-files/.config/himalaya/config.toml ${
-      ./basic-expected.toml
-    }
+    assertFileContent home-files/.config/himalaya/config.toml ${./basic-expected.toml}
   '';
 }

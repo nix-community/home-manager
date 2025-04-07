@@ -3,16 +3,18 @@
 {
   name = "rclone";
 
-  nodes.machine = { ... }: {
-    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-    virtualisation.memorySize = 2048;
-    users.users.alice = {
-      isNormalUser = true;
-      description = "Alice Foobar";
-      password = "foobar";
-      uid = 1000;
+  nodes.machine =
+    { ... }:
+    {
+      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+      virtualisation.memorySize = 2048;
+      users.users.alice = {
+        isNormalUser = true;
+        description = "Alice Foobar";
+        password = "foobar";
+        uid = 1000;
+      };
     };
-  };
 
   testScript = ''
     start_all()
@@ -52,56 +54,40 @@
     with subtest("Home Manager installation"):
       succeed_as_alice("nix-shell \"<home-manager>\" -A install")
 
-    succeed_as_alice("cp ${
-      ./home.nix
-    } /home/alice/.config/home-manager/home.nix")
+    succeed_as_alice("cp ${./home.nix} /home/alice/.config/home-manager/home.nix")
 
     with subtest("Generate with no secrets"):
-      succeed_as_alice("install -m644 ${
-        ./no-secrets.nix
-      } /home/alice/.config/home-manager/test-remote.nix")
+      succeed_as_alice("install -m644 ${./no-secrets.nix} /home/alice/.config/home-manager/test-remote.nix")
 
       actual = succeed_as_alice("home-manager switch")
       expected = "Activating createRcloneConfig"
       assert expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 
-      succeed_as_alice("diff -u ${
-        ./no-secrets.conf
-      } /home/alice/.config/rclone/rclone.conf")
+      succeed_as_alice("diff -u ${./no-secrets.conf} /home/alice/.config/rclone/rclone.conf")
 
     with subtest("Generate with secrets from store"):
-      succeed_as_alice("install -m644 ${
-        ./with-secrets-in-store.nix
-      } /home/alice/.config/home-manager/test-remote.nix")
+      succeed_as_alice("install -m644 ${./with-secrets-in-store.nix} /home/alice/.config/home-manager/test-remote.nix")
 
       actual = succeed_as_alice("home-manager switch")
       expected = "Activating createRcloneConfig"
       assert expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 
-      succeed_as_alice("diff -u ${
-        ./with-secrets-in-store.conf
-      } /home/alice/.config/rclone/rclone.conf")
+      succeed_as_alice("diff -u ${./with-secrets-in-store.conf} /home/alice/.config/rclone/rclone.conf")
 
     with subtest("Secrets with spaces"):
-      succeed_as_alice("install -m644 ${
-        ./secrets-with-whitespace.nix
-      } /home/alice/.config/home-manager/test-remote.nix")
+      succeed_as_alice("install -m644 ${./secrets-with-whitespace.nix} /home/alice/.config/home-manager/test-remote.nix")
 
       actual = succeed_as_alice("home-manager switch")
       expected = "Activating createRcloneConfig"
       assert expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 
-      succeed_as_alice("diff -u ${
-        ./secrets-with-whitespace.conf
-      } /home/alice/.config/rclone/rclone.conf")
+      succeed_as_alice("diff -u ${./secrets-with-whitespace.conf} /home/alice/.config/rclone/rclone.conf")
 
     with subtest("Un-typed remote"):
-      succeed_as_alice("install -m644 ${
-        ./no-type.nix
-      } /home/alice/.config/home-manager/test-remote.nix")
+      succeed_as_alice("install -m644 ${./no-type.nix} /home/alice/.config/home-manager/test-remote.nix")
 
       actual = fail_as_alice("home-manager switch")
       expected = "Activating createRcloneConfig"

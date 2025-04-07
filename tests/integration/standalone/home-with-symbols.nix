@@ -7,21 +7,24 @@ let
   nixHome = "/home/alice@home\\extra";
   pyHome = "/home/alice@home\\\\extra";
 
-in {
+in
+{
   name = "home-with-symbols";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine = { ... }: {
-    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-    virtualisation.memorySize = 2048;
-    users.users.alice = {
-      isNormalUser = true;
-      description = "Alice Foobar";
-      password = "foobar";
-      uid = 1000;
-      home = nixHome;
+  nodes.machine =
+    { ... }:
+    {
+      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+      virtualisation.memorySize = 2048;
+      users.users.alice = {
+        isNormalUser = true;
+        description = "Alice Foobar";
+        password = "foobar";
+        uid = 1000;
+        home = nixHome;
+      };
     };
-  };
 
   testScript = ''
     import shlex
@@ -69,9 +72,7 @@ in {
       assert actual == "home.nix\n", \
         f"unexpected content of ${pyHome}/.config/home-manager: {actual}"
 
-      machine.succeed("diff -u ${
-        ./home-with-symbols-init.nix
-      } '${pyHome}/.config/home-manager/home.nix'")
+      machine.succeed("diff -u ${./home-with-symbols-init.nix} '${pyHome}/.config/home-manager/home.nix'")
 
       # The default configuration creates this link on activation.
       machine.succeed("test -L '${pyHome}/.cache/.keep'")

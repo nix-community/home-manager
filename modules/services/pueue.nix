@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,10 +11,10 @@ let
 
   cfg = config.services.pueue;
   yamlFormat = pkgs.formats.yaml { };
-  configFile =
-    yamlFormat.generate "pueue.yaml" ({ shared = { }; } // cfg.settings);
+  configFile = yamlFormat.generate "pueue.yaml" ({ shared = { }; } // cfg.settings);
 
-in {
+in
+{
   meta.maintainers = [ maintainers.AndersonTorres ];
 
   options.services.pueue = {
@@ -35,8 +40,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "services.pueue" pkgs platforms.linux) ];
+    assertions = [ (hm.assertions.assertPlatform "services.pueue" pkgs platforms.linux) ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 

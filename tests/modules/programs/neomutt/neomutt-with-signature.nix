@@ -29,12 +29,8 @@
   nmt.script = ''
     assertFileExists home-files/.config/neomutt/neomuttrc
     assertFileExists home-files/.config/neomutt/hm@example.com
-    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/neomuttrc) ${
-      ./neomutt-expected.conf
-    }
+    assertFileContent $(normalizeStorePaths home-files/.config/neomutt/neomuttrc) ${./neomutt-expected.conf}
     expectedSignature=$(normalizeStorePaths "home-files/.config/neomutt/hm@example.com")
-    assertFileContent "$expectedSignature" ${
-      ./hm-example.com-signature-expected
-    }
+    assertFileContent "$expectedSignature" ${./hm-example.com-signature-expected}
   '';
 }

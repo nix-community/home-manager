@@ -1,9 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   inherit (lib)
-    mapAttrsRecursive mkDefault mkEnableOption mkIf mkOption optionalAttrs
-    types;
+    mapAttrsRecursive
+    mkDefault
+    mkEnableOption
+    mkIf
+    mkOption
+    optionalAttrs
+    types
+    ;
 
   cfg = config.services.davmail;
 
@@ -11,7 +22,8 @@ let
 
   settingsFile = javaProperties.generate "davmail.properties" cfg.settings;
 
-in {
+in
+{
 
   meta.maintainers = [ lib.hm.maintainers.bmrips ];
 
@@ -53,42 +65,49 @@ in {
 
   config = mkIf cfg.enable {
 
-    assertions = [{
-      assertion = pkgs.stdenv.hostPlatform.isLinux;
-      message = "The DavMail service is only available on Linux.";
-    }];
+    assertions = [
+      {
+        assertion = pkgs.stdenv.hostPlatform.isLinux;
+        message = "The DavMail service is only available on Linux.";
+      }
+    ];
 
-    services.davmail.settings = mapAttrsRecursive (_: mkDefault) {
-      "davmail.server" = true;
-      "davmail.disableUpdateCheck" = true;
-      "davmail.logFilePath" = "${config.xdg.stateHome}/davmail.log";
-      "davmail.logFileSize" = "1MB";
-      "davmail.mode" = "auto";
-      "davmail.url" = "https://outlook.office365.com/EWS/Exchange.asmx";
-      "davmail.caldavPort" = 1080;
-      "davmail.imapPort" = 1143;
-      "davmail.ldapPort" = 1389;
-      "davmail.popPort" = 1110;
-      "davmail.smtpPort" = 1025;
+    services.davmail.settings =
+      mapAttrsRecursive (_: mkDefault) {
+        "davmail.server" = true;
+        "davmail.disableUpdateCheck" = true;
+        "davmail.logFilePath" = "${config.xdg.stateHome}/davmail.log";
+        "davmail.logFileSize" = "1MB";
+        "davmail.mode" = "auto";
+        "davmail.url" = "https://outlook.office365.com/EWS/Exchange.asmx";
+        "davmail.caldavPort" = 1080;
+        "davmail.imapPort" = 1143;
+        "davmail.ldapPort" = 1389;
+        "davmail.popPort" = 1110;
+        "davmail.smtpPort" = 1025;
 
-      # The token file path is set because, otherwise, if oauth.persistToken
-      # is enabled, DavMail would attempt to write the token into generated
-      # configuration which lays in the Nix store.
-      "davmail.oauth.tokenFilePath" = "${config.xdg.stateHome}/davmail-tokens";
+        # The token file path is set because, otherwise, if oauth.persistToken
+        # is enabled, DavMail would attempt to write the token into generated
+        # configuration which lays in the Nix store.
+        "davmail.oauth.tokenFilePath" = "${config.xdg.stateHome}/davmail-tokens";
 
-      "log4j.logger.davmail" = "WARN";
-      "log4j.logger.httpclient.wire" = "WARN";
-      "log4j.logger.org.apache.commons.httpclient" = "WARN";
-      "log4j.rootLogger" = "WARN";
-    } // optionalAttrs cfg.imitateOutlook {
-      "davmail.oauth.clientId" = "d3590ed6-52b3-4102-aeff-aad2292ab01c";
-      "davmail.oauth.redirectUri" = "urn:ietf:wg:oauth:2.0:oob";
-    };
+        "log4j.logger.davmail" = "WARN";
+        "log4j.logger.httpclient.wire" = "WARN";
+        "log4j.logger.org.apache.commons.httpclient" = "WARN";
+        "log4j.rootLogger" = "WARN";
+      }
+      // optionalAttrs cfg.imitateOutlook {
+        "davmail.oauth.clientId" = "d3590ed6-52b3-4102-aeff-aad2292ab01c";
+        "davmail.oauth.redirectUri" = "urn:ietf:wg:oauth:2.0:oob";
+      };
 
     systemd.user.services.davmail = {
       Unit = {
         Description = "DavMail POP/IMAP/SMTP Exchange Gateway";
-        After = [ "graphical-session.target" "network.target" ];
+        After = [
+          "graphical-session.target"
+          "network.target"
+        ];
       };
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
@@ -112,7 +131,10 @@ in {
         ProtectKernelTunables = true;
         ProtectProc = "invisible";
         RemoveIPC = true;
-        RestrictAddressFamilies = [ "AF_INET" "AF_INET6" ];
+        RestrictAddressFamilies = [
+          "AF_INET"
+          "AF_INET6"
+        ];
         RestrictNamespaces = true;
         RestrictRealtime = true;
         RestrictSUIDSGID = true;

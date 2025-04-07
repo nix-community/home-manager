@@ -1,18 +1,26 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   cfg = config.services.lieer;
 
-  syncAccounts = filter (a: a.lieer.enable && a.lieer.sync.enable)
-    (attrValues config.accounts.email.accounts);
+  syncAccounts = filter (a: a.lieer.enable && a.lieer.sync.enable) (
+    attrValues config.accounts.email.accounts
+  );
 
-  escapeUnitName = name:
+  escapeUnitName =
+    name:
     let
       good = upperChars ++ lowerChars ++ stringToCharacters "0123456789-_";
       subst = c: if any (x: x == c) good then c else "-";
-    in stringAsChars subst name;
+    in
+    stringAsChars subst name;
 
   serviceUnit = account: {
     name = escapeUnitName "lieer-${account.name}";
@@ -26,8 +34,7 @@ let
         Type = "oneshot";
         ExecStart = "${config.programs.lieer.package}/bin/gmi sync";
         WorkingDirectory = account.maildir.absPath;
-        Environment =
-          "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
+        Environment = "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
       };
     };
   };
@@ -44,20 +51,21 @@ let
         RandomizedDelaySec = 30;
       };
 
-      Install = { WantedBy = [ "timers.target" ]; };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
   };
 
-in {
+in
+{
   meta.maintainers = [ maintainers.tadfisher ];
 
-  options.services.lieer.enable =
-    mkEnableOption "lieer Gmail synchronization service";
+  options.services.lieer.enable = mkEnableOption "lieer Gmail synchronization service";
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.lieer" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.lieer" pkgs lib.platforms.linux)
     ];
 
     programs.lieer.enable = true;

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.xsession.windowManager.fluxbox;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.AndersonTorres ];
 
   options = {
@@ -79,7 +85,10 @@ in {
       extraCommandLineArgs = mkOption {
         type = with types; listOf str;
         default = [ ];
-        example = [ "-log" "/tmp/fluxbox.log" ];
+        example = [
+          "-log"
+          "/tmp/fluxbox.log"
+        ];
         description = ''
           Extra command line arguments to pass to {command}`fluxbox`.
           Look at the
@@ -91,8 +100,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "xsession.windowManager.fluxbox" pkgs
-        platforms.linux)
+      (hm.assertions.assertPlatform "xsession.windowManager.fluxbox" pkgs platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -103,11 +111,11 @@ in {
       ".fluxbox/keys" = mkIf (cfg.keys != "") { text = cfg.keys; };
       ".fluxbox/menu" = mkIf (cfg.menu != "") { text = cfg.menu; };
       ".fluxbox/slitlist" = mkIf (cfg.slitlist != "") { text = cfg.slitlist; };
-      ".fluxbox/windowmenu" =
-        mkIf (cfg.windowmenu != "") { text = cfg.windowmenu; };
+      ".fluxbox/windowmenu" = mkIf (cfg.windowmenu != "") { text = cfg.windowmenu; };
     };
 
-    xsession.windowManager.command = escapeShellArgs
-      ([ "${cfg.package}/bin/fluxbox" ] ++ remove "" cfg.extraCommandLineArgs);
+    xsession.windowManager.command = escapeShellArgs (
+      [ "${cfg.package}/bin/fluxbox" ] ++ remove "" cfg.extraCommandLineArgs
+    );
   };
 }

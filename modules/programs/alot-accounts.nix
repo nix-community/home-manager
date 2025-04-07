@@ -1,7 +1,9 @@
 pkgs:
 { config, lib, ... }:
-let inherit (lib) mkOption types;
-in {
+let
+  inherit (lib) mkOption types;
+in
+{
   options.alot = {
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
@@ -16,11 +18,9 @@ in {
       type = types.attrsOf types.str;
       default = {
         type = "shellcommand";
-        command =
-          "'${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients  date:6M..'";
-        regexp = "'\\[?{" + ''
-          "name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"''
-          + "}[,\\]]?'";
+        command = "'${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients  date:6M..'";
+        regexp =
+          "'\\[?{" + ''"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"'' + "}[,\\]]?'";
         shellcommand_external_filtering = "False";
       };
       example = lib.literalExpression ''
@@ -48,9 +48,8 @@ in {
   };
 
   config = lib.mkIf config.notmuch.enable {
-    alot.sendMailCommand = lib.mkOptionDefault (if config.msmtp.enable then
-      "msmtpq --read-envelope-from --read-recipients"
-    else
-      null);
+    alot.sendMailCommand = lib.mkOptionDefault (
+      if config.msmtp.enable then "msmtpq --read-envelope-from --read-recipients" else null
+    );
   };
 }

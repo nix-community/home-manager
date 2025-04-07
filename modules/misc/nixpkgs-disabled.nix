@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -11,16 +16,22 @@ let
   optCall = f: x: if builtins.isFunction f then f x else f;
 
   # Copied from nixpkgs.nix.
-  mergeConfig = lhs_: rhs_:
+  mergeConfig =
+    lhs_: rhs_:
     let
       lhs = optCall lhs_ { inherit pkgs; };
       rhs = optCall rhs_ { inherit pkgs; };
-    in lhs // rhs // lib.optionalAttrs (lhs ? packageOverrides) {
-      packageOverrides = pkgs:
-        optCall lhs.packageOverrides pkgs
-        // optCall (lib.attrByPath [ "packageOverrides" ] { } rhs) pkgs;
-    } // lib.optionalAttrs (lhs ? perlPackageOverrides) {
-      perlPackageOverrides = pkgs:
+    in
+    lhs
+    // rhs
+    // lib.optionalAttrs (lhs ? packageOverrides) {
+      packageOverrides =
+        pkgs:
+        optCall lhs.packageOverrides pkgs // optCall (lib.attrByPath [ "packageOverrides" ] { } rhs) pkgs;
+    }
+    // lib.optionalAttrs (lhs ? perlPackageOverrides) {
+      perlPackageOverrides =
+        pkgs:
         optCall lhs.perlPackageOverrides pkgs
         // optCall (lib.attrByPath [ "perlPackageOverrides" ] { } rhs) pkgs;
     };
@@ -29,9 +40,12 @@ let
   configType = lib.mkOptionType {
     name = "nixpkgs-config";
     description = "nixpkgs config";
-    check = x:
-      let traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
-      in traceXIfNot isConfig;
+    check =
+      x:
+      let
+        traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
+      in
+      traceXIfNot isConfig;
     merge = args: lib.fold (def: mergeConfig def.value) { };
   };
 
@@ -43,7 +57,8 @@ let
     merge = lib.mergeOneOption;
   };
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ thiagokokada ];
 
   options.nixpkgs = {

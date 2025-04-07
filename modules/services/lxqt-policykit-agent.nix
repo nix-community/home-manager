@@ -1,9 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    mkEnableOption mkPackageOption types literalExpression mkIf maintainers;
+    mkEnableOption
+    mkPackageOption
+    types
+    literalExpression
+    mkIf
+    maintainers
+    ;
   cfg = config.services.lxqt-policykit-agent;
-in {
+in
+{
   meta.maintainers = [ maintainers.bobvanderlinden ];
 
   options = {
@@ -21,9 +33,13 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
-      Service = { ExecStart = "${cfg.package}/bin/lxqt-policykit-agent"; };
+      Service = {
+        ExecStart = "${cfg.package}/bin/lxqt-policykit-agent";
+      };
     };
   };
 }

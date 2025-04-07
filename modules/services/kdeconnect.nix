@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.kdeconnect;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.adisbladis ];
 
   options = {
@@ -32,25 +38,24 @@ in {
       home.packages = [ cfg.package ];
 
       assertions = [
-        (hm.assertions.assertPlatform "services.kdeconnect" pkgs
-          platforms.linux)
+        (hm.assertions.assertPlatform "services.kdeconnect" pkgs platforms.linux)
       ];
 
       systemd.user.services.kdeconnect = {
         Unit = {
-          Description =
-            "Adds communication between your desktop and your smartphone";
+          Description = "Adds communication between your desktop and your smartphone";
           After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
 
         Service = {
           Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
           ExecStart =
-            if strings.versionAtLeast (versions.majorMinor cfg.package.version)
-            "24.05" then
+            if strings.versionAtLeast (versions.majorMinor cfg.package.version) "24.05" then
               "${cfg.package}/bin/kdeconnectd"
             else
               "${cfg.package}/libexec/kdeconnectd";
@@ -61,19 +66,23 @@ in {
 
     (mkIf cfg.indicator {
       assertions = [
-        (hm.assertions.assertPlatform "services.kdeconnect" pkgs
-          platforms.linux)
+        (hm.assertions.assertPlatform "services.kdeconnect" pkgs platforms.linux)
       ];
 
       systemd.user.services.kdeconnect-indicator = {
         Unit = {
           Description = "kdeconnect-indicator";
-          After = [ "graphical-session.target" "tray.target" ];
+          After = [
+            "graphical-session.target"
+            "tray.target"
+          ];
           PartOf = [ "graphical-session.target" ];
           Requires = [ "tray.target" ];
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
 
         Service = {
           Environment = [ "PATH=${config.home.profileDirectory}/bin" ];

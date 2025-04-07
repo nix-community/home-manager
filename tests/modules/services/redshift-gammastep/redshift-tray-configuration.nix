@@ -9,7 +9,9 @@
         adjustment-method = "randr";
         gamma = 0.8;
       };
-      randr = { screen = 0; };
+      randr = {
+        screen = 0;
+      };
     };
     tray = true;
   };

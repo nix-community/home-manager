@@ -1,14 +1,19 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) mkOption types;
 
   cfg = config.xdg.mimeApps;
 
-  strListOrSingleton = with types;
-    coercedTo (either (listOf str) str) lib.toList (listOf str);
+  strListOrSingleton = with types; coercedTo (either (listOf str) str) lib.toList (listOf str);
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ euxane ];
 
   options.xdg.mimeApps = {
@@ -44,7 +49,9 @@ in {
     associations.removed = mkOption {
       type = types.attrsOf strListOrSingleton;
       default = { };
-      example = { "mimetype1" = "foo5.desktop"; };
+      example = {
+        "mimetype1" = "foo5.desktop";
+      };
       description = ''
         Removes associations of applications with mimetypes, as if the
         .desktop file was *not* listing this
@@ -75,43 +82,47 @@ in {
       # Given a package that installs .desktop files in the usual location,
       # return a mapping from mime types to lists of desktop file names. This is
       # suitable for use with `xdg.mimeApps.defaultApplications`.
-      lib.xdg.mimeAssociations = let
-        processLines = str:
-          lib.zipAttrs (lib.filter (e: e != null)
-            (map processLine (lib.splitString "\n" str)));
+      lib.xdg.mimeAssociations =
+        let
+          processLines =
+            str: lib.zipAttrs (lib.filter (e: e != null) (map processLine (lib.splitString "\n" str)));
 
-        processLine = str:
-          let
-            entry = lib.splitString ";" str;
-            k = lib.elemAt entry 0;
-            v = lib.elemAt entry 1;
-          in if lib.length entry == 2 then { ${k} = v; } else null;
+          processLine =
+            str:
+            let
+              entry = lib.splitString ";" str;
+              k = lib.elemAt entry 0;
+              v = lib.elemAt entry 1;
+            in
+            if lib.length entry == 2 then { ${k} = v; } else null;
 
-        associations = ps:
-          pkgs.runCommand "mime-assoc" { inherit ps; } ''
-            for p in $ps ; do
-              for path in "$p"/share/applications/*.desktop ; do
-                name="''${path##*/}"
-                sed -n -E "/^MimeType=/ { s/.*=//; s/;?$|;/;$name\n/g; p; }" "$path"
-              done
-            done > "$out"
-          '';
-      in p: processLines (builtins.readFile (associations p));
+          associations =
+            ps:
+            pkgs.runCommand "mime-assoc" { inherit ps; } ''
+              for p in $ps ; do
+                for path in "$p"/share/applications/*.desktop ; do
+                  name="''${path##*/}"
+                  sed -n -E "/^MimeType=/ { s/.*=//; s/;?$|;/;$name\n/g; p; }" "$path"
+                done
+              done > "$out"
+            '';
+        in
+        p: processLines (builtins.readFile (associations p));
     }
 
     (lib.mkIf cfg.enable {
       assertions = [
-        (lib.hm.assertions.assertPlatform "xdg.mimeApps" pkgs
-          lib.platforms.linux)
+        (lib.hm.assertions.assertPlatform "xdg.mimeApps" pkgs lib.platforms.linux)
       ];
 
       # Deprecated but still used by some applications.
-      xdg.dataFile."applications/mimeapps.list".source =
-        config.xdg.configFile."mimeapps.list".source;
+      xdg.dataFile."applications/mimeapps.list".source = config.xdg.configFile."mimeapps.list".source;
 
       xdg.configFile."mimeapps.list".text =
-        let joinValues = lib.mapAttrs (n: lib.concatStringsSep ";");
-        in lib.generators.toINI { } {
+        let
+          joinValues = lib.mapAttrs (n: lib.concatStringsSep ";");
+        in
+        lib.generators.toINI { } {
           "Added Associations" = joinValues cfg.associations.added;
           "Removed Associations" = joinValues cfg.associations.removed;
           "Default Applications" = joinValues cfg.defaultApplications;

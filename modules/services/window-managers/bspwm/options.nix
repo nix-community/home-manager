@@ -4,7 +4,14 @@ with lib;
 
 let
 
-  primitive = with types; oneOf [ bool int float str ];
+  primitive =
+    with types;
+    oneOf [
+      bool
+      int
+      float
+      str
+    ];
 
   rule = types.submodule {
     freeformType = with types; attrsOf primitive;
@@ -32,22 +39,41 @@ let
       };
 
       state = mkOption {
-        type = types.nullOr
-          (types.enum [ "tiled" "pseudo_tiled" "floating" "fullscreen" ]);
+        type = types.nullOr (
+          types.enum [
+            "tiled"
+            "pseudo_tiled"
+            "floating"
+            "fullscreen"
+          ]
+        );
         default = null;
         description = "The state in which a new window should spawn.";
         example = "floating";
       };
 
       layer = mkOption {
-        type = types.nullOr (types.enum [ "below" "normal" "above" ]);
+        type = types.nullOr (
+          types.enum [
+            "below"
+            "normal"
+            "above"
+          ]
+        );
         default = null;
         description = "The layer where a new window should spawn.";
         example = "above";
       };
 
       splitDir = mkOption {
-        type = types.nullOr (types.enum [ "north" "west" "south" "east" ]);
+        type = types.nullOr (
+          types.enum [
+            "north"
+            "west"
+            "south"
+            "east"
+          ]
+        );
         default = null;
         description = "The direction where the container is going to be split.";
         example = "south";
@@ -153,7 +179,8 @@ let
     };
   };
 
-in {
+in
+{
   xsession.windowManager.bspwm = {
     enable = mkEnableOption "bspwm window manager";
 
@@ -179,8 +206,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description =
-        "Additional shell commands to be run at the end of the config file.";
+      description = "Additional shell commands to be run at the end of the config file.";
       example = ''
         bspc subscribe all > ~/bspc-report.log &
       '';
@@ -189,16 +215,21 @@ in {
     extraConfigEarly = mkOption {
       type = types.lines;
       default = "";
-      description =
-        "Like extraConfig, except commands are run at the start of the config file.";
+      description = "Like extraConfig, except commands are run at the start of the config file.";
     };
 
     monitors = mkOption {
       type = types.attrsOf (types.listOf types.str);
       default = { };
-      description =
-        "Specifies the names of desktops to create on each monitor.";
-      example = { "HDMI-0" = [ "web" "terminal" "III" "IV" ]; };
+      description = "Specifies the names of desktops to create on each monitor.";
+      example = {
+        "HDMI-0" = [
+          "web"
+          "terminal"
+          "III"
+          "IV"
+        ];
+      };
     };
 
     alwaysResetDesktops = mkOption {
@@ -217,8 +248,7 @@ in {
     rules = mkOption {
       type = types.attrsOf rule;
       default = { };
-      description =
-        "Rule configuration. The keys of the attribute set are the targets of the rules.";
+      description = "Rule configuration. The keys of the attribute set are the targets of the rules.";
       example = literalExpression ''
         {
           "Gimp" = {
@@ -240,7 +270,10 @@ in {
       type = types.listOf types.str;
       default = [ ];
       description = "Programs to be executed during startup.";
-      example = [ "numlockx on" "tilda" ];
+      example = [
+        "numlockx on"
+        "tilda"
+      ];
     };
   };
 }

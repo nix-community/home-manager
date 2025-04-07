@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.zk;
   tomlFormat = pkgs.formats.toml { };
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.silmarp ];
 
   options.programs.zk = {

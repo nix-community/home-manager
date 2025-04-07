@@ -13,7 +13,11 @@
           position = "top";
           height = 30;
           output = [ "DP-1" ];
-          modules-left = [ "sway/workspaces" "sway/mode" "custom/my-module" ];
+          modules-left = [
+            "sway/workspaces"
+            "sway/mode"
+            "custom/my-module"
+          ];
           modules-center = [ "sway/window" ];
           modules-right = [
             "idle_inhibitor"
@@ -33,15 +37,22 @@
               disable-scroll = true;
               all-outputs = true;
             };
-            "sway/mode" = { tooltip = false; };
-            "sway/window" = { max-length = 120; };
-            "idle_inhibitor" = { format = "{icon}"; };
+            "sway/mode" = {
+              tooltip = false;
+            };
+            "sway/window" = {
+              max-length = 120;
+            };
+            "idle_inhibitor" = {
+              format = "{icon}";
+            };
             "custom/my-module" = {
               format = "hello from {}";
-              exec = let
-                dummyScript =
-                  config.lib.test.mkStubPackage { outPath = "@dummy@"; };
-              in "${dummyScript}/bin/dummy";
+              exec =
+                let
+                  dummyScript = config.lib.test.mkStubPackage { outPath = "@dummy@"; };
+                in
+                "${dummyScript}/bin/dummy";
             };
           };
         }
@@ -50,7 +61,11 @@
           output = [ "!DP-1" ];
           modules-left = [ "sway/mode" ];
           modules-center = [ "clock" ];
-          modules = { "sway/mode" = { tooltip = true; }; };
+          modules = {
+            "sway/mode" = {
+              tooltip = true;
+            };
+          };
         }
       ];
     };

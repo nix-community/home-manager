@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.jqp;
 
   yamlFormat = pkgs.formats.yaml { };
-in {
+in
+{
   options.programs.jqp = {
     enable = lib.mkEnableOption "jqp, jq playground";
 
@@ -15,7 +21,9 @@ in {
       example = {
         theme = {
           name = "monokai";
-          chromaStyleOverrides = { kc = "#009900 underline"; };
+          chromaStyleOverrides = {
+            kc = "#009900 underline";
+          };
         };
       };
       description = "Jqp configuration";

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.programs.vifm;
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.aabccd021 ];
 
   options.programs.vifm = {
@@ -27,7 +33,6 @@ in {
   config = mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."vifm/vifmrc" =
-      mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
+    xdg.configFile."vifm/vifmrc" = mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
   };
 }

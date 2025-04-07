@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ lib, ... }:
+{
   options.msmtp = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -19,8 +20,7 @@
     };
 
     tls.fingerprint = lib.mkOption {
-      type = lib.types.nullOr
-        (lib.types.strMatching "([[:alnum:]]{2}:)+[[:alnum:]]{2}");
+      type = lib.types.nullOr (lib.types.strMatching "([[:alnum:]]{2}:)+[[:alnum:]]{2}");
       default = null;
       example = "my:SH:a2:56:ha:sh";
       description = ''
@@ -33,7 +33,9 @@
     extraConfig = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
-      example = { auth = "login"; };
+      example = {
+        auth = "login";
+      };
       description = ''
         Extra configuration options to add to {file}`~/.msmtprc`.
         See <https://marlam.de/msmtp/msmtprc.txt> for

@@ -1,6 +1,8 @@
 { config, lib, ... }:
-let inherit (lib) concatStringsSep mkOption types;
-in {
+let
+  inherit (lib) concatStringsSep mkOption types;
+in
+{
   options.test.asserts = {
     warnings = {
       enable = mkOption {
@@ -60,8 +62,7 @@ in {
         "asserts/assertions.actual".text = concatStringsSep ''
 
           --
-        ''
-          (map (x: x.message) (lib.filter (x: !x.assertion) config.assertions));
+        '' (map (x: x.message) (lib.filter (x: !x.assertion) config.assertions));
         "asserts/assertions.expected".text = concatStringsSep ''
 
           --

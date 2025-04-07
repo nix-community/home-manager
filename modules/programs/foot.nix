@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.foot;
   iniFormat = pkgs.formats.ini { };
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ plabadens ];
 
   options.programs.foot = {
@@ -39,8 +45,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.foot" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.foot" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -52,8 +57,7 @@ in {
     systemd.user.services = lib.mkIf cfg.server.enable {
       foot = {
         Unit = {
-          Description =
-            "Fast, lightweight and minimalistic Wayland terminal emulator.";
+          Description = "Fast, lightweight and minimalistic Wayland terminal emulator.";
           Documentation = "man:foot(1)";
           PartOf = [ "graphical-session.target" ];
           After = [ "graphical-session.target" ];
@@ -65,7 +69,9 @@ in {
           OOMPolicy = "continue";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
       };
     };
   };

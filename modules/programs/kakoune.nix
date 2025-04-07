@@ -1,8 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    concatStrings concatStringsSep mkIf mkOption mkEnableOption optional
-    optionalString types;
+    concatStrings
+    concatStringsSep
+    mkIf
+    mkOption
+    mkEnableOption
+    optional
+    optionalString
+    types
+    ;
 
   cfg = config.programs.kakoune;
 
@@ -178,10 +190,20 @@ let
       };
 
       autoInfo = mkOption {
-        type = types.nullOr
-          (types.listOf (types.enum [ "command" "onkey" "normal" ]));
+        type = types.nullOr (
+          types.listOf (
+            types.enum [
+              "command"
+              "onkey"
+              "normal"
+            ]
+          )
+        );
         default = null;
-        example = [ "command" "normal" ];
+        example = [
+          "command"
+          "normal"
+        ];
         description = ''
           Contexts in which to display automatic information box.
           The kakoune default is `[ "command" "onkey" ]`.
@@ -189,7 +211,14 @@ let
       };
 
       autoComplete = mkOption {
-        type = types.nullOr (types.listOf (types.enum [ "insert" "prompt" ]));
+        type = types.nullOr (
+          types.listOf (
+            types.enum [
+              "insert"
+              "prompt"
+            ]
+          )
+        );
         default = null;
         description = ''
           Modes in which to display possible completions.
@@ -198,7 +227,13 @@ let
       };
 
       autoReload = mkOption {
-        type = types.nullOr (types.enum [ "yes" "no" "ask" ]);
+        type = types.nullOr (
+          types.enum [
+            "yes"
+            "no"
+            "ask"
+          ]
+        );
         default = null;
         description = ''
           Reload buffers when an external modification is detected.
@@ -207,25 +242,27 @@ let
       };
 
       scrollOff = mkOption {
-        type = types.nullOr (types.submodule {
-          options = {
-            lines = mkOption {
-              type = types.ints.unsigned;
-              default = 0;
-              description = ''
-                The number of lines to keep visible around the cursor.
-              '';
-            };
+        type = types.nullOr (
+          types.submodule {
+            options = {
+              lines = mkOption {
+                type = types.ints.unsigned;
+                default = 0;
+                description = ''
+                  The number of lines to keep visible around the cursor.
+                '';
+              };
 
-            columns = mkOption {
-              type = types.ints.unsigned;
-              default = 0;
-              description = ''
-                The number of columns to keep visible around the cursor.
-              '';
+              columns = mkOption {
+                type = types.ints.unsigned;
+                default = 0;
+                description = ''
+                  The number of columns to keep visible around the cursor.
+                '';
+              };
             };
-          };
-        });
+          }
+        );
         default = null;
         description = ''
           How many lines and columns to keep visible around the cursor.
@@ -233,83 +270,93 @@ let
       };
 
       ui = mkOption {
-        type = types.nullOr (types.submodule {
-          options = {
-            setTitle = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Change the title of the terminal emulator.
-              '';
-            };
+        type = types.nullOr (
+          types.submodule {
+            options = {
+              setTitle = mkOption {
+                type = types.bool;
+                default = false;
+                description = ''
+                  Change the title of the terminal emulator.
+                '';
+              };
 
-            statusLine = mkOption {
-              type = types.enum [ "top" "bottom" ];
-              default = "bottom";
-              description = ''
-                Where to display the status line.
-              '';
-            };
+              statusLine = mkOption {
+                type = types.enum [
+                  "top"
+                  "bottom"
+                ];
+                default = "bottom";
+                description = ''
+                  Where to display the status line.
+                '';
+              };
 
-            assistant = mkOption {
-              type = types.enum [ "clippy" "cat" "dilbert" "none" ];
-              default = "clippy";
-              description = ''
-                The assistant displayed in info boxes.
-              '';
-            };
+              assistant = mkOption {
+                type = types.enum [
+                  "clippy"
+                  "cat"
+                  "dilbert"
+                  "none"
+                ];
+                default = "clippy";
+                description = ''
+                  The assistant displayed in info boxes.
+                '';
+              };
 
-            enableMouse = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Whether to enable mouse support.
-              '';
-            };
+              enableMouse = mkOption {
+                type = types.bool;
+                default = false;
+                description = ''
+                  Whether to enable mouse support.
+                '';
+              };
 
-            changeColors = mkOption {
-              type = types.bool;
-              default = true;
-              description = ''
-                Change color palette.
-              '';
-            };
+              changeColors = mkOption {
+                type = types.bool;
+                default = true;
+                description = ''
+                  Change color palette.
+                '';
+              };
 
-            wheelDownButton = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                Button to send for wheel down events.
-              '';
-            };
+              wheelDownButton = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  Button to send for wheel down events.
+                '';
+              };
 
-            wheelUpButton = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                Button to send for wheel up events.
-              '';
-            };
+              wheelUpButton = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  Button to send for wheel up events.
+                '';
+              };
 
-            shiftFunctionKeys = mkOption {
-              type = types.nullOr types.ints.unsigned;
-              default = null;
-              description = ''
-                Amount by which shifted function keys are offset. That
-                is, if the terminal sends F13 for Shift-F1, this
-                should be `12`.
-              '';
-            };
+              shiftFunctionKeys = mkOption {
+                type = types.nullOr types.ints.unsigned;
+                default = null;
+                description = ''
+                  Amount by which shifted function keys are offset. That
+                  is, if the terminal sends F13 for Shift-F1, this
+                  should be `12`.
+                '';
+              };
 
-            useBuiltinKeyParser = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Bypass ncurses key parser and use an internal one.
-              '';
+              useBuiltinKeyParser = mkOption {
+                type = types.bool;
+                default = false;
+                description = ''
+                  Bypass ncurses key parser and use an internal one.
+                '';
+              };
             };
-          };
-        });
+          }
+        );
         default = null;
         description = ''
           Settings for the ncurses interface.
@@ -327,46 +374,48 @@ let
       };
 
       wrapLines = mkOption {
-        type = types.nullOr (types.submodule {
-          options = {
-            enable = mkEnableOption "the wrap lines highlighter";
+        type = types.nullOr (
+          types.submodule {
+            options = {
+              enable = mkEnableOption "the wrap lines highlighter";
 
-            word = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Wrap at word boundaries instead of codepoint boundaries.
-              '';
-            };
+              word = mkOption {
+                type = types.bool;
+                default = false;
+                description = ''
+                  Wrap at word boundaries instead of codepoint boundaries.
+                '';
+              };
 
-            indent = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Preserve line indentation when wrapping.
-              '';
-            };
+              indent = mkOption {
+                type = types.bool;
+                default = false;
+                description = ''
+                  Preserve line indentation when wrapping.
+                '';
+              };
 
-            maxWidth = mkOption {
-              type = types.nullOr types.ints.unsigned;
-              default = null;
-              description = ''
-                Wrap text at maxWidth, even if the window is wider.
-              '';
-            };
+              maxWidth = mkOption {
+                type = types.nullOr types.ints.unsigned;
+                default = null;
+                description = ''
+                  Wrap text at maxWidth, even if the window is wider.
+                '';
+              };
 
-            marker = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              example = "⏎";
-              description = ''
-                Prefix wrapped lines with marker text.
-                If not `null`,
-                the marker text will be displayed in the indentation if possible.
-              '';
+              marker = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                example = "⏎";
+                description = ''
+                  Prefix wrapped lines with marker text.
+                  If not `null`,
+                  the marker text will be displayed in the indentation if possible.
+                '';
+              };
             };
-          };
-        });
+          }
+        );
         default = null;
         description = ''
           Settings for the wrap lines highlighter.
@@ -374,37 +423,39 @@ let
       };
 
       numberLines = mkOption {
-        type = types.nullOr (types.submodule {
-          options = {
-            enable = mkEnableOption "the number lines highlighter";
+        type = types.nullOr (
+          types.submodule {
+            options = {
+              enable = mkEnableOption "the number lines highlighter";
 
-            relative = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Show line numbers relative to the main cursor line.
-              '';
-            };
+              relative = mkOption {
+                type = types.bool;
+                default = false;
+                description = ''
+                  Show line numbers relative to the main cursor line.
+                '';
+              };
 
-            highlightCursor = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Highlight the cursor line with a separate face.
-              '';
-            };
+              highlightCursor = mkOption {
+                type = types.bool;
+                default = false;
+                description = ''
+                  Highlight the cursor line with a separate face.
+                '';
+              };
 
-            separator = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                String that separates the line number column from the
-                buffer contents. The kakoune default is
-                `"|"`.
-              '';
+              separator = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  String that separates the line number column from the
+                  buffer contents. The kakoune default is
+                  `"|"`.
+                '';
+              };
             };
-          };
-        });
+          }
+        );
         default = null;
         description = ''
           Settings for the number lines highlighter.
@@ -412,56 +463,58 @@ let
       };
 
       showWhitespace = mkOption {
-        type = types.nullOr (types.submodule {
-          options = {
-            enable = mkEnableOption "the show whitespace highlighter";
+        type = types.nullOr (
+          types.submodule {
+            options = {
+              enable = mkEnableOption "the show whitespace highlighter";
 
-            lineFeed = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                The character to display for line feeds.
-                The kakoune default is `"¬"`.
-              '';
-            };
+              lineFeed = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  The character to display for line feeds.
+                  The kakoune default is `"¬"`.
+                '';
+              };
 
-            space = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                The character to display for spaces.
-                The kakoune default is `"·"`.
-              '';
-            };
+              space = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  The character to display for spaces.
+                  The kakoune default is `"·"`.
+                '';
+              };
 
-            nonBreakingSpace = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                The character to display for non-breaking spaces.
-                The kakoune default is `"⍽"`.
-              '';
-            };
+              nonBreakingSpace = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  The character to display for non-breaking spaces.
+                  The kakoune default is `"⍽"`.
+                '';
+              };
 
-            tab = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                The character to display for tabs.
-                The kakoune default is `"→"`.
-              '';
-            };
+              tab = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  The character to display for tabs.
+                  The kakoune default is `"→"`.
+                '';
+              };
 
-            tabStop = mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = ''
-                The character to append to tabs to reach the width of a tabstop.
-                The kakoune default is `" "`.
-              '';
+              tabStop = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  The character to append to tabs to reach the width of a tabstop.
+                  The kakoune default is `" "`.
+                '';
+              };
             };
-          };
-        });
+          }
+        );
         default = null;
         description = ''
           Settings for the show whitespaces highlighter.
@@ -488,142 +541,152 @@ let
     };
   };
 
-  kakouneWithPlugins =
-    pkgs.wrapKakoune cfg.package { configure = { plugins = cfg.plugins; }; };
+  kakouneWithPlugins = pkgs.wrapKakoune cfg.package {
+    configure = {
+      plugins = cfg.plugins;
+    };
+  };
 
-  configFile = let
-    wrapOptions = with cfg.config.wrapLines;
-      concatStrings [
-        "${optionalString word " -word"}"
-        "${optionalString indent " -indent"}"
-        "${optionalString (marker != null) " -marker ${marker}"}"
-        "${optionalString (maxWidth != null) " -width ${toString maxWidth}"}"
-      ];
+  configFile =
+    let
+      wrapOptions =
+        with cfg.config.wrapLines;
+        concatStrings [
+          "${optionalString word " -word"}"
+          "${optionalString indent " -indent"}"
+          "${optionalString (marker != null) " -marker ${marker}"}"
+          "${optionalString (maxWidth != null) " -width ${toString maxWidth}"}"
+        ];
 
-    numberLinesOptions = with cfg.config.numberLines;
-      concatStrings [
-        "${optionalString relative " -relative "}"
-        "${optionalString highlightCursor " -hlcursor"}"
-        "${optionalString (separator != null) " -separator ${separator}"}"
-      ];
+      numberLinesOptions =
+        with cfg.config.numberLines;
+        concatStrings [
+          "${optionalString relative " -relative "}"
+          "${optionalString highlightCursor " -hlcursor"}"
+          "${optionalString (separator != null) " -separator ${separator}"}"
+        ];
 
-    showWhitespaceOptions = with cfg.config.showWhitespace;
-      let
-        quoteSep = sep:
-          if sep == "'" then
-            ''"'"''
-          else if lib.strings.stringLength sep == 1 then
-            "'${sep}'"
-          else
-            sep; # backwards compat, in case sep == "' '", etc.
+      showWhitespaceOptions =
+        with cfg.config.showWhitespace;
+        let
+          quoteSep =
+            sep:
+            if sep == "'" then
+              ''"'"''
+            else if lib.strings.stringLength sep == 1 then
+              "'${sep}'"
+            else
+              sep; # backwards compat, in case sep == "' '", etc.
 
-      in concatStrings [
-        (optionalString (tab != null) " -tab ${quoteSep tab}")
-        (optionalString (tabStop != null) " -tabpad ${quoteSep tabStop}")
-        (optionalString (space != null) " -spc ${quoteSep space}")
-        (optionalString (nonBreakingSpace != null)
-          " -nbsp ${quoteSep nonBreakingSpace}")
-        (optionalString (lineFeed != null) " -lf ${quoteSep lineFeed}")
-      ];
+        in
+        concatStrings [
+          (optionalString (tab != null) " -tab ${quoteSep tab}")
+          (optionalString (tabStop != null) " -tabpad ${quoteSep tabStop}")
+          (optionalString (space != null) " -spc ${quoteSep space}")
+          (optionalString (nonBreakingSpace != null) " -nbsp ${quoteSep nonBreakingSpace}")
+          (optionalString (lineFeed != null) " -lf ${quoteSep lineFeed}")
+        ];
 
-    uiOptions = with cfg.config.ui;
-      concatStringsSep " " [
-        "terminal_set_title=${if setTitle then "true" else "false"}"
-        "terminal_status_on_top=${
-          if (statusLine == "top") then "true" else "false"
-        }"
-        "terminal_assistant=${assistant}"
-        "terminal_enable_mouse=${if enableMouse then "true" else "false"}"
-        "terminal_change_colors=${if changeColors then "true" else "false"}"
-        "${optionalString (wheelDownButton != null)
-        "terminal_wheel_down_button=${wheelDownButton}"}"
-        "${optionalString (wheelUpButton != null)
-        "terminal_wheel_up_button=${wheelUpButton}"}"
-        "${optionalString (shiftFunctionKeys != null)
-        "terminal_shift_function_key=${toString shiftFunctionKeys}"}"
-        "terminal_builtin_key_parser=${
-          if useBuiltinKeyParser then "true" else "false"
-        }"
-      ];
+      uiOptions =
+        with cfg.config.ui;
+        concatStringsSep " " [
+          "terminal_set_title=${if setTitle then "true" else "false"}"
+          "terminal_status_on_top=${if (statusLine == "top") then "true" else "false"}"
+          "terminal_assistant=${assistant}"
+          "terminal_enable_mouse=${if enableMouse then "true" else "false"}"
+          "terminal_change_colors=${if changeColors then "true" else "false"}"
+          "${optionalString (wheelDownButton != null) "terminal_wheel_down_button=${wheelDownButton}"}"
+          "${optionalString (wheelUpButton != null) "terminal_wheel_up_button=${wheelUpButton}"}"
+          "${optionalString (
+            shiftFunctionKeys != null
+          ) "terminal_shift_function_key=${toString shiftFunctionKeys}"}"
+          "terminal_builtin_key_parser=${if useBuiltinKeyParser then "true" else "false"}"
+        ];
 
-    userModeString = mode:
-      optionalString (!builtins.elem mode [
-        "insert"
-        "normal"
-        "prompt"
-        "menu"
-        "user"
-        "goto"
-        "view"
-        "object"
-      ]) "try %{declare-user-mode ${mode}}";
+      userModeString =
+        mode:
+        optionalString (
+          !builtins.elem mode [
+            "insert"
+            "normal"
+            "prompt"
+            "menu"
+            "user"
+            "goto"
+            "view"
+            "object"
+          ]
+        ) "try %{declare-user-mode ${mode}}";
 
-    userModeStrings = map userModeString
-      (lib.lists.unique (map (km: km.mode) cfg.config.keyMappings));
+      userModeStrings = map userModeString (lib.lists.unique (map (km: km.mode) cfg.config.keyMappings));
 
-    keyMappingString = km:
-      concatStringsSep " " [
-        "map global"
-        "${km.mode} ${km.key} '${km.effect}'"
-        "${optionalString (km.docstring != null)
-        "-docstring '${km.docstring}'"}"
-      ];
+      keyMappingString =
+        km:
+        concatStringsSep " " [
+          "map global"
+          "${km.mode} ${km.key} '${km.effect}'"
+          "${optionalString (km.docstring != null) "-docstring '${km.docstring}'"}"
+        ];
 
-    hookString = h:
-      concatStringsSep " " [
-        "hook"
-        "${optionalString (h.group != null) "-group ${h.group}"}"
-        "${optionalString (h.once) "-once"}"
-        "global"
-        "${h.name}"
-        "${optionalString (h.option != null) h.option}"
-        "%{ ${h.commands} }"
-      ];
+      hookString =
+        h:
+        concatStringsSep " " [
+          "hook"
+          "${optionalString (h.group != null) "-group ${h.group}"}"
+          "${optionalString (h.once) "-once"}"
+          "global"
+          "${h.name}"
+          "${optionalString (h.option != null) h.option}"
+          "%{ ${h.commands} }"
+        ];
 
-    cfgStr = with cfg.config;
-      concatStringsSep "\n" ([ "# Generated by home-manager" ]
-        ++ optional (colorScheme != null) "colorscheme ${colorScheme}"
-        ++ optional (tabStop != null)
-        "set-option global tabstop ${toString tabStop}"
-        ++ optional (indentWidth != null)
-        "set-option global indentwidth ${toString indentWidth}"
-        ++ optional (!incrementalSearch) "set-option global incsearch false"
-        ++ optional alignWithTabs "set-option global aligntab true"
-        ++ optional (autoInfo != null)
-        "set-option global autoinfo ${concatStringsSep "|" autoInfo}"
-        ++ optional (autoComplete != null)
-        "set-option global autocomplete ${concatStringsSep "|" autoComplete}"
-        ++ optional (autoReload != null)
-        "set-option global autoreload ${autoReload}"
-        ++ optional (wrapLines != null && wrapLines.enable)
-        "add-highlighter global/ wrap${wrapOptions}"
-        ++ optional (numberLines != null && numberLines.enable)
-        "add-highlighter global/ number-lines${numberLinesOptions}"
-        ++ optional showMatching "add-highlighter global/ show-matching"
-        ++ optional (showWhitespace != null && showWhitespace.enable)
-        "add-highlighter global/ show-whitespaces${showWhitespaceOptions}"
-        ++ optional (scrollOff != null)
-        "set-option global scrolloff ${toString scrollOff.lines},${
-          toString scrollOff.columns
-        }"
+      cfgStr =
+        with cfg.config;
+        concatStringsSep "\n" (
+          [ "# Generated by home-manager" ]
+          ++ optional (colorScheme != null) "colorscheme ${colorScheme}"
+          ++ optional (tabStop != null) "set-option global tabstop ${toString tabStop}"
+          ++ optional (indentWidth != null) "set-option global indentwidth ${toString indentWidth}"
+          ++ optional (!incrementalSearch) "set-option global incsearch false"
+          ++ optional alignWithTabs "set-option global aligntab true"
+          ++ optional (autoInfo != null) "set-option global autoinfo ${concatStringsSep "|" autoInfo}"
+          ++ optional (
+            autoComplete != null
+          ) "set-option global autocomplete ${concatStringsSep "|" autoComplete}"
+          ++ optional (autoReload != null) "set-option global autoreload ${autoReload}"
+          ++ optional (wrapLines != null && wrapLines.enable) "add-highlighter global/ wrap${wrapOptions}"
+          ++ optional (
+            numberLines != null && numberLines.enable
+          ) "add-highlighter global/ number-lines${numberLinesOptions}"
+          ++ optional showMatching "add-highlighter global/ show-matching"
+          ++ optional (
+            showWhitespace != null && showWhitespace.enable
+          ) "add-highlighter global/ show-whitespaces${showWhitespaceOptions}"
+          ++ optional (
+            scrollOff != null
+          ) "set-option global scrolloff ${toString scrollOff.lines},${toString scrollOff.columns}"
 
-        ++ [ "# UI options" ]
-        ++ optional (ui != null) "set-option global ui_options ${uiOptions}"
+          ++ [ "# UI options" ]
+          ++ optional (ui != null) "set-option global ui_options ${uiOptions}"
 
-        ++ [ "# User modes" ] ++ userModeStrings ++ [ "# Key mappings" ]
-        ++ map keyMappingString keyMappings
+          ++ [ "# User modes" ]
+          ++ userModeStrings
+          ++ [ "# Key mappings" ]
+          ++ map keyMappingString keyMappings
 
-        ++ [ "# Hooks" ] ++ map hookString hooks);
-  in pkgs.writeText "kakrc"
-  (optionalString (cfg.config != null) cfgStr + "\n" + cfg.extraConfig);
+          ++ [ "# Hooks" ]
+          ++ map hookString hooks
+        );
+    in
+    pkgs.writeText "kakrc" (optionalString (cfg.config != null) cfgStr + "\n" + cfg.extraConfig);
 
-in {
+in
+{
   options = {
     programs.kakoune = {
       enable = mkEnableOption "the kakoune text editor";
 
-      package =
-        lib.mkPackageOption pkgs "kakoune-unwrapped" { nullable = true; };
+      package = lib.mkPackageOption pkgs "kakoune-unwrapped" { nullable = true; };
 
       config = mkOption {
         type = types.nullOr configModule;
@@ -665,8 +728,7 @@ in {
       colorSchemePackage = mkOption {
         type = with types; nullOr package;
         default = null;
-        example =
-          lib.literalExpression "pkgs.kakounePlugins.kakoune-catppuccin";
+        example = lib.literalExpression "pkgs.kakounePlugins.kakoune-catppuccin";
         description = ''
           A kakoune color schemes to add to your colors folder. This works
           because kakoune recursively checks
@@ -689,8 +751,7 @@ in {
     xdg.configFile = lib.mkMerge [
       { "kak/kakrc".source = configFile; }
       (mkIf (cfg.colorSchemePackage != null) {
-        "kak/colors/${cfg.colorSchemePackage.name}".source =
-          cfg.colorSchemePackage;
+        "kak/colors/${cfg.colorSchemePackage.name}".source = cfg.colorSchemePackage;
       })
     ];
   };

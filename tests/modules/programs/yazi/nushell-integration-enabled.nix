@@ -12,7 +12,8 @@ let
       rm -fp $tmp
     }
   '';
-in {
+in
+{
   programs.nushell.enable = true;
 
   programs.yazi = {
@@ -20,12 +21,15 @@ in {
     enableNushellIntegration = true;
   };
 
-  nmt.script = let
-    configPath = if pkgs.stdenv.isDarwin && !config.xdg.enable then
-      "home-files/Library/Application Support/nushell/config.nu"
-    else
-      "home-files/.config/nushell/config.nu";
-  in ''
-    assertFileContains '${configPath}' '${shellIntegration}'
-  '';
+  nmt.script =
+    let
+      configPath =
+        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+          "home-files/Library/Application Support/nushell/config.nu"
+        else
+          "home-files/.config/nushell/config.nu";
+    in
+    ''
+      assertFileContains '${configPath}' '${shellIntegration}'
+    '';
 }

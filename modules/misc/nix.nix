@@ -1,12 +1,38 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   inherit (lib)
-    boolToString concatStringsSep escape floatToString getVersion isBool
-    isConvertibleWithToString isDerivation isFloat isInt isList isString
-    literalExpression maintainers mapAttrsToList mkDefault mkEnableOption mkIf
-    mkMerge mkOption optionalString toPretty types versionAtLeast;
+    boolToString
+    concatStringsSep
+    escape
+    floatToString
+    getVersion
+    isBool
+    isConvertibleWithToString
+    isDerivation
+    isFloat
+    isInt
+    isList
+    isString
+    literalExpression
+    maintainers
+    mapAttrsToList
+    mkDefault
+    mkEnableOption
+    mkIf
+    mkMerge
+    mkOption
+    optionalString
+    toPretty
+    types
+    versionAtLeast
+    ;
 
   cfg = config.nix;
 
@@ -16,29 +42,33 @@ let
 
   nixPath = concatStringsSep ":" cfg.nixPath;
 
-  useXdg = config.nix.enable
-    && (config.nix.settings.use-xdg-base-directories or false);
-  defexprDir = if useXdg then
-    "${config.xdg.stateHome}/nix/defexpr"
-  else
-    "${config.home.homeDirectory}/.nix-defexpr";
+  useXdg = config.nix.enable && (config.nix.settings.use-xdg-base-directories or false);
+  defexprDir =
+    if useXdg then
+      "${config.xdg.stateHome}/nix/defexpr"
+    else
+      "${config.home.homeDirectory}/.nix-defexpr";
 
   # The deploy path for declarative channels. The directory name is prefixed
   # with a number to make it easier for files in defexprDir to control the order
   # they'll be read relative to each other.
   channelPath = "${defexprDir}/50-home-manager";
 
-  channelsDrv = let
-    mkEntry = name: drv: {
-      inherit name;
-      path = toString drv;
-    };
-  in pkgs.linkFarm "channels" (lib.mapAttrsToList mkEntry cfg.channels);
+  channelsDrv =
+    let
+      mkEntry = name: drv: {
+        inherit name;
+        path = toString drv;
+      };
+    in
+    pkgs.linkFarm "channels" (lib.mapAttrsToList mkEntry cfg.channels);
 
-  nixConf = assert isNixAtLeast "2.2";
+  nixConf =
+    assert isNixAtLeast "2.2";
     let
 
-      mkValueString = v:
+      mkValueString =
+        v:
         if v == null then
           ""
         else if isInt v then
@@ -62,10 +92,10 @@ let
 
       mkKeyValue = k: v: "${escape [ "=" ] k} = ${mkValueString v}";
 
-      mkKeyValuePairs = attrs:
-        concatStringsSep "\n" (mapAttrsToList mkKeyValue attrs);
+      mkKeyValuePairs = attrs: concatStringsSep "\n" (mapAttrsToList mkKeyValue attrs);
 
-    in pkgs.writeTextFile {
+    in
+    pkgs.writeTextFile {
       name = "nix.conf";
       text = ''
         # WARNING: this file is generated from the nix.settings option in
@@ -75,48 +105,58 @@ let
         ${cfg.extraOptions}
       '';
       checkPhase =
-        if pkgs.stdenv.hostPlatform != pkgs.stdenv.buildPlatform then ''
-          echo "Ignoring validation for cross-compilation"
-        '' else
+        if pkgs.stdenv.hostPlatform != pkgs.stdenv.buildPlatform then
+          ''
+            echo "Ignoring validation for cross-compilation"
+          ''
+        else
           let
-            showCommand =
-              if isNixAtLeast "2.20pre" then "config show" else "show-config";
-          in ''
+            showCommand = if isNixAtLeast "2.20pre" then "config show" else "show-config";
+          in
+          ''
             echo "Validating generated nix.conf"
             ln -s $out ./nix.conf
             set -e
             set +o pipefail
             NIX_CONF_DIR=$PWD \
-              ${cfg.package}/bin/nix ${showCommand} ${
-                optionalString (isNixAtLeast "2.3pre")
-                "--no-net --option experimental-features nix-command"
-              } \
+              ${cfg.package}/bin/nix ${showCommand} ${optionalString (isNixAtLeast "2.3pre") "--no-net --option experimental-features nix-command"} \
               |& sed -e 's/^warning:/error:/' \
-              | (! grep '${
-                if cfg.checkConfig then "^error:" else "^error: unknown setting"
-              }')
+              | (! grep '${if cfg.checkConfig then "^error:" else "^error: unknown setting"}')
             set -o pipefail
           '';
     };
 
-  semanticConfType = with types;
+  semanticConfType =
+    with types;
     let
-      confAtom = nullOr (oneOf [ bool int float str path package ]) // {
-        description =
-          "Nix config atom (null, bool, int, float, str, path or package)";
-      };
-    in attrsOf (either confAtom (listOf confAtom));
+      confAtom =
+        nullOr (oneOf [
+          bool
+          int
+          float
+          str
+          path
+          package
+        ])
+        // {
+          description = "Nix config atom (null, bool, int, float, str, path or package)";
+        };
+    in
+    attrsOf (either confAtom (listOf confAtom));
 
   jsonFormat = pkgs.formats.json { };
 
-in {
+in
+{
   options.nix = {
-    enable = mkEnableOption ''
-      the Nix configuration module
-    '' // {
-      default = true;
-      visible = false;
-    };
+    enable =
+      mkEnableOption ''
+        the Nix configuration module
+      ''
+      // {
+        default = true;
+        visible = false;
+      };
 
     package = mkOption {
       type = types.nullOr types.package;
@@ -169,60 +209,74 @@ in {
     };
 
     registry = mkOption {
-      type = types.attrsOf (types.submodule (let
-        inputAttrs = types.attrsOf
-          (types.oneOf [ types.str types.int types.bool types.package ]);
-      in { config, name, ... }: {
-        options = {
-          from = mkOption {
-            type = inputAttrs;
-            example = {
-              type = "indirect";
-              id = "nixpkgs";
+      type = types.attrsOf (
+        types.submodule (
+          let
+            inputAttrs = types.attrsOf (
+              types.oneOf [
+                types.str
+                types.int
+                types.bool
+                types.package
+              ]
+            );
+          in
+          { config, name, ... }:
+          {
+            options = {
+              from = mkOption {
+                type = inputAttrs;
+                example = {
+                  type = "indirect";
+                  id = "nixpkgs";
+                };
+                description = "The flake reference to be rewritten.";
+              };
+              to = mkOption {
+                type = inputAttrs;
+                example = {
+                  type = "github";
+                  owner = "my-org";
+                  repo = "my-nixpkgs";
+                };
+                description = "The flake reference to which {option}`from>` is to be rewritten.";
+              };
+              flake = mkOption {
+                type = types.nullOr types.attrs;
+                default = null;
+                example = literalExpression "nixpkgs";
+                description = ''
+                  The flake input to which {option}`from>` is to be rewritten.
+                '';
+              };
+              exact = mkOption {
+                type = types.bool;
+                default = true;
+                description = ''
+                  Whether the {option}`from` reference needs to match exactly. If set,
+                  a {option}`from` reference like `nixpkgs` does not
+                  match with a reference like `nixpkgs/nixos-20.03`.
+                '';
+              };
             };
-            description = "The flake reference to be rewritten.";
-          };
-          to = mkOption {
-            type = inputAttrs;
-            example = {
-              type = "github";
-              owner = "my-org";
-              repo = "my-nixpkgs";
+            config = {
+              from = mkDefault {
+                type = "indirect";
+                id = name;
+              };
+              to = mkIf (config.flake != null) (
+                {
+                  type = "path";
+                  path = config.flake.outPath;
+                }
+                // lib.filterAttrs (
+                  n: v: n == "lastModified" || n == "rev" || n == "revCount" || n == "narHash"
+                ) config.flake
+              );
             };
-            description =
-              "The flake reference to which {option}`from>` is to be rewritten.";
-          };
-          flake = mkOption {
-            type = types.nullOr types.attrs;
-            default = null;
-            example = literalExpression "nixpkgs";
-            description = ''
-              The flake input to which {option}`from>` is to be rewritten.
-            '';
-          };
-          exact = mkOption {
-            type = types.bool;
-            default = true;
-            description = ''
-              Whether the {option}`from` reference needs to match exactly. If set,
-              a {option}`from` reference like `nixpkgs` does not
-              match with a reference like `nixpkgs/nixos-20.03`.
-            '';
-          };
-        };
-        config = {
-          from = mkDefault {
-            type = "indirect";
-            id = name;
-          };
-          to = mkIf (config.flake != null) ({
-            type = "path";
-            path = config.flake.outPath;
-          } // lib.filterAttrs (n: v:
-            n == "lastModified" || n == "rev" || n == "revCount" || n
-            == "narHash") config.flake);
-        };
-      }));
+          }
+        )
+      );
       default = { };
       description = ''
         User level flake registry.
@@ -290,22 +344,22 @@ in {
     })
 
     (mkIf (cfg.registry != { }) {
-      xdg.configFile."nix/registry.json".source =
-        jsonFormat.generate "registry.json" {
-          version = cfg.registryVersion;
-          flakes =
-            mapAttrsToList (n: v: { inherit (v) from to exact; }) cfg.registry;
-        };
+      xdg.configFile."nix/registry.json".source = jsonFormat.generate "registry.json" {
+        version = cfg.registryVersion;
+        flakes = mapAttrsToList (n: v: { inherit (v) from to exact; }) cfg.registry;
+      };
     })
 
     (mkIf (cfg.settings != { } || cfg.extraOptions != "") {
-      assertions = [{
-        assertion = cfg.package != null;
-        message = ''
-          A corresponding Nix package must be specified via `nix.package` for generating
-          nix.conf.
-        '';
-      }];
+      assertions = [
+        {
+          assertion = cfg.package != null;
+          message = ''
+            A corresponding Nix package must be specified via `nix.package` for generating
+            nix.conf.
+          '';
+        }
+      ];
 
       xdg.configFile."nix/nix.conf".source = nixConf;
     })

@@ -2,15 +2,14 @@
 
 let
 
-  snippetsDir = name:
+  snippetsDir =
+    name:
     if pkgs.stdenv.hostPlatform.isDarwin then
       "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }/snippets"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }snippets";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}snippets";
 
   globalSnippetsPath = name: "${snippetsDir name}/global.code-snippets";
 
@@ -63,7 +62,8 @@ let
     };
   };
 
-in {
+in
+{
   programs.vscode = {
     enable = true;
     package = pkgs.writeScriptBin "vscode" "" // {
@@ -78,23 +78,15 @@ in {
 
   nmt.script = ''
     assertFileExists "home-files/${globalSnippetsPath "default"}"
-    assertFileContent "home-files/${
-      globalSnippetsPath "default"
-    }" "${globalSnippetsExpectedContent}"
+    assertFileContent "home-files/${globalSnippetsPath "default"}" "${globalSnippetsExpectedContent}"
 
     assertFileExists "home-files/${globalSnippetsPath "test"}"
-    assertFileContent "home-files/${
-      globalSnippetsPath "test"
-    }" "${globalSnippetsExpectedContent}"
+    assertFileContent "home-files/${globalSnippetsPath "test"}" "${globalSnippetsExpectedContent}"
 
     assertFileExists "home-files/${haskellSnippetsPath "default"}"
-    assertFileContent "home-files/${
-      haskellSnippetsPath "default"
-    }" "${haskellSnippetsExpectedContent}"
+    assertFileContent "home-files/${haskellSnippetsPath "default"}" "${haskellSnippetsExpectedContent}"
 
     assertFileExists "home-files/${haskellSnippetsPath "test"}"
-    assertFileContent "home-files/${
-      haskellSnippetsPath "test"
-    }" "${haskellSnippetsExpectedContent}"
+    assertFileContent "home-files/${haskellSnippetsPath "test"}" "${haskellSnippetsExpectedContent}"
   '';
 }

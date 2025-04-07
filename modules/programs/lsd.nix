@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -15,7 +20,8 @@ let
     llt = "${pkgs.lsd}/bin/lsd -l --tree";
   };
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.lsd = {
@@ -34,7 +40,10 @@ in {
       default = { };
       example = {
         date = "relative";
-        ignore-globs = [ ".git" ".hg" ];
+        ignore-globs = [
+          ".git"
+          ".hg"
+        ];
       };
       description = ''
         Configuration written to
@@ -106,8 +115,7 @@ in {
       })
     ];
 
-    programs.lsd =
-      lib.mkIf (cfg.colors != { }) { settings.color.theme = "custom"; };
+    programs.lsd = lib.mkIf (cfg.colors != { }) { settings.color.theme = "custom"; };
 
     xdg.configFile."lsd/colors.yaml" = lib.mkIf (cfg.colors != { }) {
       source = yamlFormat.generate "lsd-colors" cfg.colors;

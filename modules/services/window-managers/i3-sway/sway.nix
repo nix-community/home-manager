@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,7 +12,12 @@ let
   cfg = config.wayland.windowManager.sway;
 
   commonOptions = import ./lib/options.nix {
-    inherit config lib cfg pkgs;
+    inherit
+      config
+      lib
+      cfg
+      pkgs
+      ;
     moduleName = "sway";
     capitalModuleName = "Sway";
   };
@@ -15,9 +25,24 @@ let
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        fonts window floating focus assigns workspaceLayout
-        workspaceAutoBackAndForth modifier keycodebindings colors bars startup
-        gaps menu terminal defaultWorkspace workspaceOutputAssign;
+        fonts
+        window
+        floating
+        focus
+        assigns
+        workspaceLayout
+        workspaceAutoBackAndForth
+        modifier
+        keycodebindings
+        colors
+        bars
+        startup
+        gaps
+        menu
+        terminal
+        defaultWorkspace
+        workspaceOutputAssign
+        ;
 
       left = mkOption {
         type = types.str;
@@ -93,26 +118,16 @@ let
           "${cfg.config.modifier}+9" = "workspace number 9";
           "${cfg.config.modifier}+0" = "workspace number 10";
 
-          "${cfg.config.modifier}+Shift+1" =
-            "move container to workspace number 1";
-          "${cfg.config.modifier}+Shift+2" =
-            "move container to workspace number 2";
-          "${cfg.config.modifier}+Shift+3" =
-            "move container to workspace number 3";
-          "${cfg.config.modifier}+Shift+4" =
-            "move container to workspace number 4";
-          "${cfg.config.modifier}+Shift+5" =
-            "move container to workspace number 5";
-          "${cfg.config.modifier}+Shift+6" =
-            "move container to workspace number 6";
-          "${cfg.config.modifier}+Shift+7" =
-            "move container to workspace number 7";
-          "${cfg.config.modifier}+Shift+8" =
-            "move container to workspace number 8";
-          "${cfg.config.modifier}+Shift+9" =
-            "move container to workspace number 9";
-          "${cfg.config.modifier}+Shift+0" =
-            "move container to workspace number 10";
+          "${cfg.config.modifier}+Shift+1" = "move container to workspace number 1";
+          "${cfg.config.modifier}+Shift+2" = "move container to workspace number 2";
+          "${cfg.config.modifier}+Shift+3" = "move container to workspace number 3";
+          "${cfg.config.modifier}+Shift+4" = "move container to workspace number 4";
+          "${cfg.config.modifier}+Shift+5" = "move container to workspace number 5";
+          "${cfg.config.modifier}+Shift+6" = "move container to workspace number 6";
+          "${cfg.config.modifier}+Shift+7" = "move container to workspace number 7";
+          "${cfg.config.modifier}+Shift+8" = "move container to workspace number 8";
+          "${cfg.config.modifier}+Shift+9" = "move container to workspace number 9";
+          "${cfg.config.modifier}+Shift+0" = "move container to workspace number 10";
 
           "${cfg.config.modifier}+Shift+minus" = "move scratchpad";
           "${cfg.config.modifier}+minus" = "scratchpad show";
@@ -154,7 +169,11 @@ let
       input = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        example = { "*" = { xkb_variant = "dvorak"; }; };
+        example = {
+          "*" = {
+            xkb_variant = "dvorak";
+          };
+        };
         description = ''
           An attribute set that defines input modules. See
           {manpage}`sway-input(5)`
@@ -165,7 +184,11 @@ let
       output = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        example = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
+        example = {
+          "HDMI-A-2" = {
+            bg = "~/path/to/background.png fill";
+          };
+        };
         description = ''
           An attribute set that defines output modules. See
           {manpage}`sway-output(5)`
@@ -176,7 +199,11 @@ let
       seat = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        example = { "*" = { hide_cursor = "when-typing enable"; }; };
+        example = {
+          "*" = {
+            hide_cursor = "when-typing enable";
+          };
+        };
         description = ''
           An attribute set that defines seat modules. See
           {manpage}`sway-input(5)`
@@ -212,24 +239,27 @@ let
   };
 
   wrapperOptions = types.submodule {
-    options = let
-      mkWrapperFeature = default: description:
-        mkOption {
-          type = types.bool;
-          inherit default;
-          example = !default;
-          description = "Whether to make use of the ${description}";
-        };
-    in {
-      base = mkWrapperFeature true ''
-        base wrapper to execute extra session commands and prepend a
-        dbus-run-session to the sway command.
-      '';
-      gtk = mkWrapperFeature false ''
-        wrapGAppsHook wrapper to execute sway with required environment
-        variables for GTK applications.
-      '';
-    };
+    options =
+      let
+        mkWrapperFeature =
+          default: description:
+          mkOption {
+            type = types.bool;
+            inherit default;
+            example = !default;
+            description = "Whether to make use of the ${description}";
+          };
+      in
+      {
+        base = mkWrapperFeature true ''
+          base wrapper to execute extra session commands and prepend a
+          dbus-run-session to the sway command.
+        '';
+        gtk = mkWrapperFeature false ''
+          wrapGAppsHook wrapper to execute sway with required environment
+          variables for GTK applications.
+        '';
+      };
   };
 
   commonFunctions = import ./lib/functions.nix {
@@ -238,18 +268,31 @@ let
   };
 
   inherit (commonFunctions)
-    keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
-    fontConfigStr keybindingDefaultWorkspace keybindingsRest workspaceOutputStr;
+    keybindingsStr
+    keycodebindingsStr
+    modeStr
+    assignStr
+    barStr
+    gapsStr
+    floatingCriteriaStr
+    windowCommandsStr
+    colorSetStr
+    windowBorderString
+    fontConfigStr
+    keybindingDefaultWorkspace
+    keybindingsRest
+    workspaceOutputStr
+    ;
 
-  startupEntryStr = { command, always, ... }: ''
-    ${if always then "exec_always" else "exec"} ${command}
-  '';
+  startupEntryStr =
+    { command, always, ... }:
+    ''
+      ${if always then "exec_always" else "exec"} ${command}
+    '';
 
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
-    ${concatStringsSep "\n"
-    (mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
+    ${concatStringsSep "\n" (mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
     }
   '';
   inputStr = moduleStr "input";
@@ -258,8 +301,7 @@ let
 
   variables = concatStringsSep " " cfg.systemd.variables;
   extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
-  systemdActivation = ''
-    exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+  systemdActivation = ''exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
 
   configFile = pkgs.writeTextFile {
     name = "sway.conf";
@@ -271,48 +313,47 @@ let
       ${pkgs.xvfb-run}/bin/xvfb-run ${cfg.package}/bin/sway --config "$target" --validate --unsupported-gpu
     '';
 
-    text = concatStringsSep "\n"
-      ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
-        ++ (if cfg.config != null then
+    text = concatStringsSep "\n" (
+      (optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
+      ++ (
+        if cfg.config != null then
           with cfg.config;
-          ([
-            (fontConfigStr fonts)
-            "floating_modifier ${floating.modifier}"
-            (windowBorderString window floating)
-            "hide_edge_borders ${window.hideEdgeBorders}"
-            "focus_wrapping ${focus.wrapping}"
-            "focus_follows_mouse ${focus.followMouse}"
-            "focus_on_window_activation ${focus.newWindow}"
-            "mouse_warping ${
-              if builtins.isString (focus.mouseWarping) then
-                focus.mouseWarping
-              else if focus.mouseWarping then
-                "output"
-              else
-                "none"
-            }"
-            "workspace_layout ${workspaceLayout}"
-            "workspace_auto_back_and_forth ${
-              lib.hm.booleans.yesNo workspaceAutoBackAndForth
-            }"
-            "client.focused ${colorSetStr colors.focused}"
-            "client.focused_inactive ${colorSetStr colors.focusedInactive}"
-            "client.unfocused ${colorSetStr colors.unfocused}"
-            "client.urgent ${colorSetStr colors.urgent}"
-            "client.placeholder ${colorSetStr colors.placeholder}"
-            "client.background ${colors.background}"
-            (keybindingsStr {
-              keybindings = keybindingDefaultWorkspace;
-              bindsymArgs =
-                lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-            })
-            (keybindingsStr {
-              keybindings = keybindingsRest;
-              bindsymArgs =
-                lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-            })
-            (keycodebindingsStr keycodebindings)
-          ] ++ mapAttrsToList inputStr input
+          (
+            [
+              (fontConfigStr fonts)
+              "floating_modifier ${floating.modifier}"
+              (windowBorderString window floating)
+              "hide_edge_borders ${window.hideEdgeBorders}"
+              "focus_wrapping ${focus.wrapping}"
+              "focus_follows_mouse ${focus.followMouse}"
+              "focus_on_window_activation ${focus.newWindow}"
+              "mouse_warping ${
+                if builtins.isString (focus.mouseWarping) then
+                  focus.mouseWarping
+                else if focus.mouseWarping then
+                  "output"
+                else
+                  "none"
+              }"
+              "workspace_layout ${workspaceLayout}"
+              "workspace_auto_back_and_forth ${lib.hm.booleans.yesNo workspaceAutoBackAndForth}"
+              "client.focused ${colorSetStr colors.focused}"
+              "client.focused_inactive ${colorSetStr colors.focusedInactive}"
+              "client.unfocused ${colorSetStr colors.unfocused}"
+              "client.urgent ${colorSetStr colors.urgent}"
+              "client.placeholder ${colorSetStr colors.placeholder}"
+              "client.background ${colors.background}"
+              (keybindingsStr {
+                keybindings = keybindingDefaultWorkspace;
+                bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+              })
+              (keybindingsStr {
+                keybindings = keybindingsRest;
+                bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+              })
+              (keycodebindingsStr keycodebindings)
+            ]
+            ++ mapAttrsToList inputStr input
             ++ mapAttrsToList outputStr output # outputs
             ++ mapAttrsToList seatStr seat # seats
             ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
@@ -325,12 +366,16 @@ let
             ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
           )
         else
-          [ ]) ++ (optional cfg.systemd.enable systemdActivation)
-        ++ (optional (!cfg.xwayland) "xwayland disable")
-        ++ [ cfg.extraConfig ]);
+          [ ]
+      )
+      ++ (optional cfg.systemd.enable systemdActivation)
+      ++ (optional (!cfg.xwayland) "xwayland disable")
+      ++ [ cfg.extraConfig ]
+    );
   };
 
-in {
+in
+{
   meta.maintainers = with maintainers; [
     Scrumplex
     alexarice
@@ -338,11 +383,23 @@ in {
     oxalica
   ];
 
-  imports = let modulePath = [ "wayland" "windowManager" "sway" ];
-  in [
-    (mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ])
-      (modulePath ++ [ "systemd" "enable" ]))
-  ];
+  imports =
+    let
+      modulePath = [
+        "wayland"
+        "windowManager"
+        "sway"
+      ];
+    in
+    [
+      (mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ]) (
+        modulePath
+        ++ [
+          "systemd"
+          "enable"
+        ]
+      ))
+    ];
 
   options.wayland.windowManager.sway = {
     enable = mkEnableOption "sway wayland compositor";
@@ -437,7 +494,9 @@ in {
     wrapperFeatures = mkOption {
       type = wrapperOptions;
       default = { };
-      example = { gtk = true; };
+      example = {
+        gtk = true;
+      };
       description = ''
         Attribute set of features to enable in the wrapper.
       '';
@@ -484,52 +543,48 @@ in {
     checkConfig = mkOption {
       type = types.bool;
       default = cfg.package != null;
-      defaultText =
-        literalExpression "wayland.windowManager.sway.package != null";
+      defaultText = literalExpression "wayland.windowManager.sway.package != null";
       description = "If enabled, validates the generated config file.";
     };
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description =
-        "Extra configuration lines to add to ~/.config/sway/config.";
+      description = "Extra configuration lines to add to ~/.config/sway/config.";
     };
 
     extraConfigEarly = mkOption {
       type = types.lines;
       default = "";
-      description =
-        "Like extraConfig, except lines are added to ~/.config/sway/config before all other configuration.";
+      description = "Like extraConfig, except lines are added to ~/.config/sway/config before all other configuration.";
     };
   };
 
   config = mkIf cfg.enable (mkMerge [
     (mkIf (cfg.config != null) {
-      warnings = (optional (isList cfg.config.fonts)
-        "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
-        ++ flatten (map (b:
-          optional (isList b.fonts)
-          "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
-          cfg.config.bars) ++ [
-            (mkIf cfg.config.focus.forceWrapping
-              "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
-          ];
+      warnings =
+        (optional (isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
+        ++ flatten (
+          map (
+            b:
+            optional (isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
+          ) cfg.config.bars
+        )
+        ++ [
+          (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+        ];
     })
 
     {
       assertions = [
-        (hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs
-          platforms.linux)
+        (hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs platforms.linux)
         {
           assertion = cfg.checkConfig -> cfg.package != null;
-          message =
-            "programs.sway.checkConfig requires non-null programs.sway.package";
+          message = "programs.sway.checkConfig requires non-null programs.sway.package";
         }
       ];
 
-      home.packages = optional (cfg.package != null) cfg.package
-        ++ optional cfg.xwayland pkgs.xwayland;
+      home.packages = optional (cfg.package != null) cfg.package ++ optional cfg.xwayland pkgs.xwayland;
 
       xdg.configFile."sway/config" = {
         source = configFile;
@@ -546,11 +601,11 @@ in {
           Description = "sway compositor session";
           Documentation = [ "man:systemd.special(7)" ];
           BindsTo = [ "graphical-session.target" ];
-          Wants = [ "graphical-session-pre.target" ]
-            ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+          Wants = [
+            "graphical-session-pre.target"
+          ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
           After = [ "graphical-session-pre.target" ];
-          Before =
-            optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+          Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
         };
       };
     }

@@ -15,7 +15,12 @@
 # below for changes:
 # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/development/libraries/glibc/nix-locale-archive.patch
 
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 
 let
   inherit (config.i18n) glibcLocales;
@@ -25,14 +30,20 @@ let
   archivePath = "${glibcLocales}/lib/locale/locale-archive";
 
   # lookup the version of glibcLocales and set the appropriate environment vars
-  localeVars = if lib.versionAtLeast version "2.27" then {
-    LOCALE_ARCHIVE_2_27 = archivePath;
-  } else if lib.versionAtLeast version "2.11" then {
-    LOCALE_ARCHIVE_2_11 = archivePath;
-  } else
-    { };
+  localeVars =
+    if lib.versionAtLeast version "2.27" then
+      {
+        LOCALE_ARCHIVE_2_27 = archivePath;
+      }
+    else if lib.versionAtLeast version "2.11" then
+      {
+        LOCALE_ARCHIVE_2_11 = archivePath;
+      }
+    else
+      { };
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ midchildan ];
 
   options = {

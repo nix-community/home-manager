@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.git-credential-oauth;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.tomodachi94 ];
 
   options = {
@@ -30,9 +36,10 @@ in {
     home.packages = [ cfg.package ];
 
     programs.git.extraConfig.credential.helper = lib.mkAfter [
-      ("${cfg.package}/bin/git-credential-oauth"
-        + lib.optionalString (cfg.extraFlags != [ ])
-        " ${lib.strings.concatStringsSep " " cfg.extraFlags}")
+      (
+        "${cfg.package}/bin/git-credential-oauth"
+        + lib.optionalString (cfg.extraFlags != [ ]) " ${lib.strings.concatStringsSep " " cfg.extraFlags}"
+      )
     ];
   };
 }

@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.yambar;
   yamlFormat = pkgs.formats.yaml { };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.carpinchomug ];
 
   options.programs.yambar = {
@@ -42,8 +48,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.yambar" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.yambar" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];

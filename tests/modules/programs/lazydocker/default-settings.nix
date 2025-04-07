@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   programs.lazydocker.enable = true;
   test.stubs.lazydocker = { };
   nmt.script = ''

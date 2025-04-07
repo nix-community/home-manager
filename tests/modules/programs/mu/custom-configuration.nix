@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   imports = [ ../../accounts/email-test-accounts.nix ];
 
   accounts.email.accounts = {

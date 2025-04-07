@@ -23,7 +23,8 @@ let
     credentials += Credentials("Sonatype Nexus Repository Manager X", "v2.example.com", "user1", credential_1)
   '';
   credentialsSbtPath = ".sbt/1.0/credentials.sbt";
-in {
+in
+{
   config = {
     programs.sbt = {
       enable = true;

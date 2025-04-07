@@ -23,7 +23,11 @@
       "windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' focus=on pseudotile=on"
       "class~'[Pp]inentry' instance=pinentry focus=on floating=on floatplacement=center keys_inactive='.*'"
     ];
-    tags = [ "1" "with space" "wə1rd#ch@rs'" ];
+    tags = [
+      "1"
+      "with space"
+      "wə1rd#ch@rs'"
+    ];
     extraConfig = ''
       herbstclient use 1
     '';
@@ -35,8 +39,6 @@
     assertFileIsExecutable "$autostart"
 
     normalizedAutostart=$(normalizeStorePaths "$autostart")
-    assertFileContent "$normalizedAutostart" ${
-      ./herbstluftwm-simple-config-autostart
-    }
+    assertFileContent "$normalizedAutostart" ${./herbstluftwm-simple-config-autostart}
   '';
 }

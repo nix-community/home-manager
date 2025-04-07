@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.git-cliff;
   tomlFormat = pkgs.formats.toml { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.NateCox ];
 
   options.programs.git-cliff = {

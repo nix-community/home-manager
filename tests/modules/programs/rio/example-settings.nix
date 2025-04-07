@@ -6,7 +6,8 @@ let
     padding-x = 0
     performance = "Low"
   '';
-in {
+in
+{
   programs.rio = {
     enable = true;
     package = config.lib.test.mkStubPackage { };

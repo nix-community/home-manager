@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.stalonetray;
 
-in {
+in
+{
   options = {
     services.stalonetray = {
       enable = mkEnableOption "Stalonetray system tray";
@@ -52,8 +58,7 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       assertions = [
-        (hm.assertions.assertPlatform "services.stalonetray" pkgs
-          platforms.linux)
+        (hm.assertions.assertPlatform "services.stalonetray" pkgs platforms.linux)
       ];
 
       home.packages = [ cfg.package ];
@@ -64,7 +69,9 @@ in {
           PartOf = [ "tray.target" ];
         };
 
-        Install = { WantedBy = [ "tray.target" ]; };
+        Install = {
+          WantedBy = [ "tray.target" ];
+        };
 
         Service = {
           ExecStart = "${cfg.package}/bin/stalonetray";
@@ -74,17 +81,22 @@ in {
     }
 
     (mkIf (cfg.config != { }) {
-      xdg.configFile."stalonetrayrc".text = let
-        valueToString = v:
-          if isBool v then
-            (if v then "true" else "false")
-          else if (v == null) then
-            "none"
-          else
-            ''"${toString v}"'';
-      in concatStrings (mapAttrsToList (k: v: ''
-        ${k} ${valueToString v}
-      '') cfg.config);
+      xdg.configFile."stalonetrayrc".text =
+        let
+          valueToString =
+            v:
+            if isBool v then
+              (if v then "true" else "false")
+            else if (v == null) then
+              "none"
+            else
+              ''"${toString v}"'';
+        in
+        concatStrings (
+          mapAttrsToList (k: v: ''
+            ${k} ${valueToString v}
+          '') cfg.config
+        );
     })
 
     (mkIf (cfg.extraConfig != "") {

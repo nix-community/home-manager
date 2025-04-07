@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,14 +11,13 @@ let
 
   cfg = config.services.plan9port;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.ehmry ];
 
   options.services.plan9port = {
-    fontsrv.enable =
-      mkEnableOption "the Plan 9 file system access to host fonts";
-    plumber.enable =
-      mkEnableOption "the Plan 9 file system for interprocess messaging";
+    fontsrv.enable = mkEnableOption "the Plan 9 file system access to host fonts";
+    plumber.enable = mkEnableOption "the Plan 9 file system for interprocess messaging";
   };
 
   config = mkIf (cfg.fontsrv.enable || cfg.plumber.enable) {

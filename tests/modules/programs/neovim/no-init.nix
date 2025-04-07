@@ -10,7 +10,12 @@
     withPython3 = true;
     withRuby = false;
 
-    extraPython3Packages = (ps: with ps; [ jedi pynvim ]);
+    extraPython3Packages = (
+      ps: with ps; [
+        jedi
+        pynvim
+      ]
+    );
 
     # plugins without associated config should not trigger the creation of init.vim
     plugins = with pkgs.vimPlugins; [

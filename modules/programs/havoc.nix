@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.havoc;
   iniFormat = pkgs.formats.ini { };
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ AndersonTorres ];
 
   options.programs.havoc = {
@@ -47,8 +53,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.havoc" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.havoc" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];

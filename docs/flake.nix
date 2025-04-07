@@ -9,7 +9,12 @@
     };
   };
 
-  outputs = { self, nixpkgs, scss-reset }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      scss-reset,
+    }:
     let
       supportedSystems = [
         "aarch64-darwin"
@@ -28,7 +33,12 @@
         p-build = pkgs.writeShellScriptBin "p-build" ''
           set -euo pipefail
 
-          export PATH=${lib.makeBinPath [ pkgs.coreutils pkgs.rsass ]}
+          export PATH=${
+            lib.makeBinPath [
+              pkgs.coreutils
+              pkgs.rsass
+            ]
+          }
 
           tmpfile=$(mktemp -d)
           trap "rm -r $tmpfile" EXIT
@@ -42,20 +52,25 @@
       };
 
       releaseInfo = lib.importJSON ../release.json;
-    in {
-      devShells = forAllSystems (system:
+    in
+    {
+      devShells = forAllSystems (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           fpkgs = flakePkgs pkgs;
-        in {
+        in
+        {
           default = pkgs.mkShell {
             name = "hm-docs";
             packages = [ fpkgs.p-build ];
           };
-        });
+        }
+      );
 
       # Expose the docs outputs
-      packages = forAllSystems (system:
+      packages = forAllSystems (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           docs = import ./default.nix {
@@ -63,10 +78,12 @@
             release = releaseInfo.release;
             isReleaseBranch = releaseInfo.isReleaseBranch;
           };
-        in {
+        in
+        {
           inherit (docs) manPages jsonModuleMaintainers;
           inherit (docs.manual) html htmlOpenTool;
           inherit (docs.options) json;
-        });
+        }
+      );
     };
 }

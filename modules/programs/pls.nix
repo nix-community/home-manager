@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf;
 
@@ -6,11 +11,11 @@ let
 
   aliases = {
     ls = "${cfg.package}/bin/pls";
-    ll =
-      "${cfg.package}/bin/pls -d perm -d user -d group -d size -d mtime -d git";
+    ll = "${cfg.package}/bin/pls -d perm -d user -d group -d size -d mtime -d git";
   };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.arjan-s ];
 
   options.programs.pls = {

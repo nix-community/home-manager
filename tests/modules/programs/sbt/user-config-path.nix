@@ -1,23 +1,28 @@
 { pkgs, ... }:
 
 let
-  plugins = [{
-    org = "a";
-    artifact = "b";
-    version = "c";
-  }];
+  plugins = [
+    {
+      org = "a";
+      artifact = "b";
+      version = "c";
+    }
+  ];
 
-  credentials = [{
-    realm = "a";
-    host = "b";
-    user = "c";
-    passwordCommand = "d";
-  }];
+  credentials = [
+    {
+      realm = "a";
+      host = "b";
+      user = "c";
+      passwordCommand = "d";
+    }
+  ];
 
   repositories = [ "local" ];
 
   baseSbtPath = ".config/sbt";
-in {
+in
+{
   config = {
     programs.sbt = {
       enable = true;

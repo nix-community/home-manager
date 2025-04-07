@@ -1,13 +1,17 @@
 { lib }:
 let
-  letters = let
-    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    lettersList = lib.stringToCharacters alphabet;
-    indices = builtins.genList (i: i + 4) 26;
-  in lib.listToAttrs (lib.zipListsWith (letter: index: {
-    name = letter;
-    value = "0x${lib.toHexString index}";
-  }) lettersList indices);
+  letters =
+    let
+      alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      lettersList = lib.stringToCharacters alphabet;
+      indices = builtins.genList (i: i + 4) 26;
+    in
+    lib.listToAttrs (
+      lib.zipListsWith (letter: index: {
+        name = letter;
+        value = "0x${lib.toHexString index}";
+      }) lettersList indices
+    );
 
   numbers = {
     One = "0x1E";
@@ -124,16 +128,22 @@ let
     Equal = "0x67";
   };
 
-  mapToInt = keyPage: attrs:
-    lib.mapAttrs (name: value:
-      let keycode = lib.fromHexString (lib.removePrefix "0x" value);
-      in "0x${lib.toHexString (keyPage + keycode)}") attrs;
+  mapToInt =
+    keyPage: attrs:
+    lib.mapAttrs (
+      name: value:
+      let
+        keycode = lib.fromHexString (lib.removePrefix "0x" value);
+      in
+      "0x${lib.toHexString (keyPage + keycode)}"
+    ) attrs;
 
-  page7Keys = mapToInt (lib.fromHexString "700000000") (letters // numbers
-    // specialKeys // fKeys1To12 // fKeys13To24 // navigationKeys
-    // modifierKeys);
+  page7Keys = mapToInt (lib.fromHexString "700000000") (
+    letters // numbers // specialKeys // fKeys1To12 // fKeys13To24 // navigationKeys // modifierKeys
+  );
   pageFFKeys = mapToInt (lib.fromHexString "FF00000000") { Fn = "0x3"; };
-in {
+in
+{
   keyboard = page7Keys // pageFFKeys;
   keypad = mapToInt keypadKeys;
 }

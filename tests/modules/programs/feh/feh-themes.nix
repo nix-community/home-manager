@@ -2,10 +2,27 @@
   programs.feh.enable = true;
 
   programs.feh.themes = {
-    feh = [ "--image-bg" "black" ];
-    webcam = [ "--multiwindow" "--reload" "20" ];
-    present = [ "--full-screen" "--sort" "name" "--hide-pointer" ];
-    booth = [ "--full-screen" "--hide-pointer" "--slideshow-delay" "20" ];
+    feh = [
+      "--image-bg"
+      "black"
+    ];
+    webcam = [
+      "--multiwindow"
+      "--reload"
+      "20"
+    ];
+    present = [
+      "--full-screen"
+      "--sort"
+      "name"
+      "--hide-pointer"
+    ];
+    booth = [
+      "--full-screen"
+      "--hide-pointer"
+      "--slideshow-delay"
+      "20"
+    ];
     imagemap = [
       "-rVq"
       "--thumb-width"
@@ -15,7 +32,10 @@
       "--index-info"
       "%n\\n%wx%h"
     ];
-    example = [ "--info" "foo bar" ];
+    example = [
+      "--info"
+      "foo bar"
+    ];
   };
 
   nmt.script = ''

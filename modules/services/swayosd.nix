@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.swayosd;
 
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.pltanton ];
 
   options.services.swayosd = {
@@ -17,10 +23,12 @@ in {
     package = mkPackageOption pkgs "swayosd" { };
 
     topMargin = mkOption {
-      type = types.nullOr (types.addCheck types.float (f: f >= 0.0 && f <= 1.0)
+      type = types.nullOr (
+        types.addCheck types.float (f: f >= 0.0 && f <= 1.0)
         // {
           description = "float between 0.0 and 1.0 (inclusive)";
-        });
+        }
+      );
       default = null;
       example = 1.0;
       description = "OSD margin from top edge (0.5 would be screen center).";
@@ -66,17 +74,18 @@ in {
 
         Service = {
           Type = "simple";
-          ExecStart = "${cfg.package}/bin/swayosd-server"
+          ExecStart =
+            "${cfg.package}/bin/swayosd-server"
             + (optionalString (cfg.display != null) " --display ${cfg.display}")
-            + (optionalString (cfg.stylePath != null)
-              " --style ${escapeShellArg cfg.stylePath}")
-            + (optionalString (cfg.topMargin != null)
-              " --top-margin ${toString cfg.topMargin}");
+            + (optionalString (cfg.stylePath != null) " --style ${escapeShellArg cfg.stylePath}")
+            + (optionalString (cfg.topMargin != null) " --top-margin ${toString cfg.topMargin}");
           Restart = "always";
           RestartSec = "2s";
         };
 
-        Install = { WantedBy = [ config.wayland.systemd.target ]; };
+        Install = {
+          WantedBy = [ config.wayland.systemd.target ];
+        };
       };
     };
   };

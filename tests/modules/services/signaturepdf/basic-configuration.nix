@@ -2,10 +2,14 @@
   services.signaturepdf = {
     enable = true;
     port = 9494;
-    extraConfig = { upload_max_filesize = "24M"; };
+    extraConfig = {
+      upload_max_filesize = "24M";
+    };
   };
 
-  test.stubs.signaturepdf = { outPath = "/signaturepdf"; };
+  test.stubs.signaturepdf = {
+    outPath = "/signaturepdf";
+  };
 
   nmt.script = ''
     assertFileContent \

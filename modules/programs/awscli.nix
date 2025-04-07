@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.awscli;
   iniFormat = pkgs.formats.ini { };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.anthonyroussel ];
 
   options.programs.awscli = {
@@ -55,16 +61,12 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."${config.home.homeDirectory}/.aws/config" =
-      lib.mkIf (cfg.settings != { }) {
-        source =
-          iniFormat.generate "aws-config-${config.home.username}" cfg.settings;
-      };
+    home.file."${config.home.homeDirectory}/.aws/config" = lib.mkIf (cfg.settings != { }) {
+      source = iniFormat.generate "aws-config-${config.home.username}" cfg.settings;
+    };
 
-    home.file."${config.home.homeDirectory}/.aws/credentials" =
-      lib.mkIf (cfg.credentials != { }) {
-        source = iniFormat.generate "aws-credentials-${config.home.username}"
-          cfg.credentials;
-      };
+    home.file."${config.home.homeDirectory}/.aws/credentials" = lib.mkIf (cfg.credentials != { }) {
+      source = iniFormat.generate "aws-credentials-${config.home.username}" cfg.credentials;
+    };
   };
 }

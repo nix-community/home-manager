@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
   cfg = config.programs.termite;
 
-in {
+in
+{
   options = {
     programs.termite = {
       enable = lib.mkEnableOption "Termite VTE-based terminal";
@@ -105,16 +111,14 @@ in {
         default = null;
         example = "terminal";
         type = types.nullOr types.str;
-        description =
-          "The name of the icon to be used for the terminal process.";
+        description = "The name of the icon to be used for the terminal process.";
       };
 
       scrollbackLines = mkOption {
         default = null;
         example = 10000;
         type = types.nullOr types.int;
-        description =
-          "Set the number of lines to limit the terminal's scrollback.";
+        description = "Set the number of lines to limit the terminal's scrollback.";
       };
 
       browser = mkOption {
@@ -130,7 +134,13 @@ in {
       cursorBlink = mkOption {
         default = null;
         example = "system";
-        type = types.nullOr (types.enum [ "system" "on" "off" ]);
+        type = types.nullOr (
+          types.enum [
+            "system"
+            "on"
+            "off"
+          ]
+        );
         description = ''
           Specify the how the terminal's cursor should behave.
           Accepts system to respect the gtk global configuration,
@@ -141,7 +151,13 @@ in {
       cursorShape = mkOption {
         default = null;
         example = "block";
-        type = types.nullOr (types.enum [ "block" "underline" "ibeam" ]);
+        type = types.nullOr (
+          types.enum [
+            "block"
+            "underline"
+            "ibeam"
+          ]
+        );
         description = ''
           Specify how the cursor should look. Accepts block, ibeam and underline.
         '';
@@ -150,8 +166,7 @@ in {
       filterUnmatchedUrls = mkOption {
         default = null;
         type = types.nullOr types.bool;
-        description =
-          "Whether to hide url hints not matching input in url hints mode.";
+        description = "Whether to hide url hints not matching input in url hints mode.";
       };
 
       modifyOtherKeys = mkOption {
@@ -176,7 +191,13 @@ in {
 
       scrollbar = mkOption {
         default = null;
-        type = types.nullOr (types.enum [ "off" "left" "right" ]);
+        type = types.nullOr (
+          types.enum [
+            "off"
+            "left"
+            "right"
+          ]
+        );
         description = "Scrollbar position.";
       };
 
@@ -289,8 +310,7 @@ in {
         default = "";
         example = "fullscreen = true";
         type = types.lines;
-        description =
-          "Extra options that should be added to [options] section.";
+        description = "Extra options that should be added to [options] section.";
       };
 
       colorsExtra = mkOption {
@@ -301,81 +321,79 @@ in {
           color2 = #60b48a
         '';
         type = types.lines;
-        description =
-          "Extra colors options that should be added to [colors] section.";
+        description = "Extra colors options that should be added to [colors] section.";
       };
 
       hintsExtra = mkOption {
         default = "";
         example = "border = #3f3f3f";
         type = types.lines;
-        description =
-          "Extra hints options that should be added to [hints] section.";
+        description = "Extra hints options that should be added to [hints] section.";
       };
     };
   };
 
-  config = (let
-    boolToString = v: if v then "true" else "false";
-    optionalBoolean = name: val:
-      lib.optionalString (val != null) "${name} = ${boolToString val}";
-    optionalInteger = name: val:
-      lib.optionalString (val != null) "${name} = ${toString val}";
-    optionalString = name: val:
-      lib.optionalString (val != null) "${name} = ${val}";
-  in lib.mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-    xdg.configFile."termite/config".text = ''
-      [options]
-      ${optionalBoolean "allow_bold" cfg.allowBold}
-      ${optionalBoolean "audible_bell" cfg.audibleBell}
-      ${optionalString "browser" cfg.browser}
-      ${optionalBoolean "clickable_url" cfg.clickableUrl}
-      ${optionalString "cursor_blink" cfg.cursorBlink}
-      ${optionalString "cursor_shape" cfg.cursorShape}
-      ${optionalBoolean "dynamic_title" cfg.dynamicTitle}
-      ${optionalBoolean "filter_unmatched_urls" cfg.filterUnmatchedUrls}
-      ${optionalString "font" cfg.font}
-      ${optionalBoolean "fullscreen" cfg.fullscreen}
-      ${optionalString "geometry" cfg.geometry}
-      ${optionalString "icon_name" cfg.iconName}
-      ${optionalBoolean "modify_other_keys" cfg.modifyOtherKeys}
-      ${optionalBoolean "mouse_autohide" cfg.mouseAutohide}
-      ${optionalBoolean "scroll_on_keystroke" cfg.scrollOnKeystroke}
-      ${optionalBoolean "scroll_on_output" cfg.scrollOnOutput}
-      ${optionalInteger "scrollback_lines" cfg.scrollbackLines}
-      ${optionalString "scrollbar" cfg.scrollbar}
-      ${optionalBoolean "search_wrap" cfg.searchWrap}
-      ${optionalBoolean "size_hints" cfg.sizeHints}
-      ${optionalBoolean "urgent_on_bell" cfg.urgentOnBell}
+  config = (
+    let
+      boolToString = v: if v then "true" else "false";
+      optionalBoolean = name: val: lib.optionalString (val != null) "${name} = ${boolToString val}";
+      optionalInteger = name: val: lib.optionalString (val != null) "${name} = ${toString val}";
+      optionalString = name: val: lib.optionalString (val != null) "${name} = ${val}";
+    in
+    lib.mkIf cfg.enable {
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      xdg.configFile."termite/config".text = ''
+        [options]
+        ${optionalBoolean "allow_bold" cfg.allowBold}
+        ${optionalBoolean "audible_bell" cfg.audibleBell}
+        ${optionalString "browser" cfg.browser}
+        ${optionalBoolean "clickable_url" cfg.clickableUrl}
+        ${optionalString "cursor_blink" cfg.cursorBlink}
+        ${optionalString "cursor_shape" cfg.cursorShape}
+        ${optionalBoolean "dynamic_title" cfg.dynamicTitle}
+        ${optionalBoolean "filter_unmatched_urls" cfg.filterUnmatchedUrls}
+        ${optionalString "font" cfg.font}
+        ${optionalBoolean "fullscreen" cfg.fullscreen}
+        ${optionalString "geometry" cfg.geometry}
+        ${optionalString "icon_name" cfg.iconName}
+        ${optionalBoolean "modify_other_keys" cfg.modifyOtherKeys}
+        ${optionalBoolean "mouse_autohide" cfg.mouseAutohide}
+        ${optionalBoolean "scroll_on_keystroke" cfg.scrollOnKeystroke}
+        ${optionalBoolean "scroll_on_output" cfg.scrollOnOutput}
+        ${optionalInteger "scrollback_lines" cfg.scrollbackLines}
+        ${optionalString "scrollbar" cfg.scrollbar}
+        ${optionalBoolean "search_wrap" cfg.searchWrap}
+        ${optionalBoolean "size_hints" cfg.sizeHints}
+        ${optionalBoolean "urgent_on_bell" cfg.urgentOnBell}
 
-      ${cfg.optionsExtra}
+        ${cfg.optionsExtra}
 
-      [colors]
-      ${optionalString "background" cfg.backgroundColor}
-      ${optionalString "cursor" cfg.cursorColor}
-      ${optionalString "cursor_foreground" cfg.cursorForegroundColor}
-      ${optionalString "foreground" cfg.foregroundColor}
-      ${optionalString "foreground_bold" cfg.foregroundBoldColor}
-      ${optionalString "highlight" cfg.highlightColor}
+        [colors]
+        ${optionalString "background" cfg.backgroundColor}
+        ${optionalString "cursor" cfg.cursorColor}
+        ${optionalString "cursor_foreground" cfg.cursorForegroundColor}
+        ${optionalString "foreground" cfg.foregroundColor}
+        ${optionalString "foreground_bold" cfg.foregroundBoldColor}
+        ${optionalString "highlight" cfg.highlightColor}
 
-      ${cfg.colorsExtra}
+        ${cfg.colorsExtra}
 
-      [hints]
-      ${optionalString "active_background" cfg.hintsActiveBackgroundColor}
-      ${optionalString "active_foreground" cfg.hintsActiveForegroundColor}
-      ${optionalString "background" cfg.hintsBackgroundColor}
-      ${optionalString "border" cfg.hintsBorderColor}
-      ${optionalInteger "border_width" cfg.hintsBorderWidth}
-      ${optionalString "font" cfg.hintsFont}
-      ${optionalString "foreground" cfg.hintsForegroundColor}
-      ${optionalInteger "padding" cfg.hintsPadding}
-      ${optionalInteger "roundness" cfg.hintsRoundness}
+        [hints]
+        ${optionalString "active_background" cfg.hintsActiveBackgroundColor}
+        ${optionalString "active_foreground" cfg.hintsActiveForegroundColor}
+        ${optionalString "background" cfg.hintsBackgroundColor}
+        ${optionalString "border" cfg.hintsBorderColor}
+        ${optionalInteger "border_width" cfg.hintsBorderWidth}
+        ${optionalString "font" cfg.hintsFont}
+        ${optionalString "foreground" cfg.hintsForegroundColor}
+        ${optionalInteger "padding" cfg.hintsPadding}
+        ${optionalInteger "roundness" cfg.hintsRoundness}
 
-      ${cfg.hintsExtra}
-    '';
+        ${cfg.hintsExtra}
+      '';
 
-    programs.bash.enableVteIntegration = lib.mkDefault cfg.enableVteIntegration;
-    programs.zsh.enableVteIntegration = lib.mkDefault cfg.enableVteIntegration;
-  });
+      programs.bash.enableVteIntegration = lib.mkDefault cfg.enableVteIntegration;
+      programs.zsh.enableVteIntegration = lib.mkDefault cfg.enableVteIntegration;
+    }
+  );
 }

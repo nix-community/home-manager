@@ -1,16 +1,26 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.signaturepdf;
-  extraConfigToArgs = extraConfig:
-    lib.flatten
-    (lib.mapAttrsToList (name: value: [ "-d" "${name}=${value}" ]) extraConfig);
-in {
+  extraConfigToArgs =
+    extraConfig:
+    lib.flatten (
+      lib.mapAttrsToList (name: value: [
+        "-d"
+        "${name}=${value}"
+      ]) extraConfig
+    );
+in
+{
   meta.maintainers = [ lib.maintainers.DamienCassou ];
 
   options.services.signaturepdf = with lib; {
-    enable = mkEnableOption
-      "signaturepdf; signing, organizing, editing metadatas or compressing PDFs";
+    enable = mkEnableOption "signaturepdf; signing, organizing, editing metadatas or compressing PDFs";
 
     package = mkOption {
       type = types.package;
@@ -28,9 +38,17 @@ in {
 
     extraConfig = mkOption {
       default = { };
-      type = with types;
-        let primitive = oneOf [ str int bool float ];
-        in attrsOf primitive;
+      type =
+        with types;
+        let
+          primitive = oneOf [
+            str
+            int
+            bool
+            float
+          ];
+        in
+        attrsOf primitive;
       example = {
         upload_max_filesize = "24M";
         post_max_size = "24M";
@@ -44,9 +62,7 @@ in {
     xdg.desktopEntries = {
       signaturepdf = {
         name = "SignaturePDF";
-        exec = "${pkgs.xdg-utils}/bin/xdg-open http://localhost:${
-            toString cfg.port
-          }";
+        exec = "${pkgs.xdg-utils}/bin/xdg-open http://localhost:${toString cfg.port}";
         terminal = false;
         icon = "${cfg.package}/share/signaturepdf/public/favicon.ico";
       };
@@ -54,17 +70,16 @@ in {
 
     systemd.user.services.signaturepdf = {
       Unit = {
-        Description =
-          "signaturepdf; signing, organizing, editing metadatas or compressing PDFs";
+        Description = "signaturepdf; signing, organizing, editing metadatas or compressing PDFs";
       };
 
       Service = {
-        ExecStart = "${cfg.package}/bin/signaturepdf ${toString cfg.port} ${
-            lib.escapeShellArgs (extraConfigToArgs cfg.extraConfig)
-          }";
+        ExecStart = "${cfg.package}/bin/signaturepdf ${toString cfg.port} ${lib.escapeShellArgs (extraConfigToArgs cfg.extraConfig)}";
       };
 
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
     };
   };
 }

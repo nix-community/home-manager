@@ -9,9 +9,21 @@
     config = {
       menu = "${pkgs.dmenu}/bin/dmenu_run";
 
-      input = { "*" = { xkb_variant = "dvorak"; }; };
-      output = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
-      seat = { "*" = { hide_cursor = "when-typing enable"; }; };
+      input = {
+        "*" = {
+          xkb_variant = "dvorak";
+        };
+      };
+      output = {
+        "HDMI-A-2" = {
+          bg = "~/path/to/background.png fill";
+        };
+      };
+      seat = {
+        "*" = {
+          hide_cursor = "when-typing enable";
+        };
+      };
     };
   };
 

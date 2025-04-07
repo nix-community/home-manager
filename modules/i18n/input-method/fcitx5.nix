@@ -1,9 +1,15 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   im = config.i18n.inputMethod;
   cfg = im.fcitx5;
   fcitx5Package = cfg.fcitx5-with-addons.override { inherit (cfg) addons; };
-in {
+in
+{
   options = {
     i18n.inputMethod.fcitx5 = {
       fcitx5-with-addons = lib.mkOption {
@@ -38,17 +44,18 @@ in {
     i18n.inputMethod.package = fcitx5Package;
 
     home = {
-      sessionVariables = {
-        GLFW_IM_MODULE = "ibus"; # IME support in kitty
-        SDL_IM_MODULE = "fcitx";
-        XMODIFIERS = "@im=fcitx";
-      } // lib.optionalAttrs (!cfg.waylandFrontend) {
-        GTK_IM_MODULE = "fcitx";
-        QT_IM_MODULE = "fcitx";
-      };
+      sessionVariables =
+        {
+          GLFW_IM_MODULE = "ibus"; # IME support in kitty
+          SDL_IM_MODULE = "fcitx";
+          XMODIFIERS = "@im=fcitx";
+        }
+        // lib.optionalAttrs (!cfg.waylandFrontend) {
+          GTK_IM_MODULE = "fcitx";
+          QT_IM_MODULE = "fcitx";
+        };
 
-      sessionSearchVariables.QT_PLUGIN_PATH =
-        [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
+      sessionSearchVariables.QT_PLUGIN_PATH = [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
     };
 
     systemd.user.services.fcitx5-daemon = {

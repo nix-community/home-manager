@@ -21,29 +21,29 @@ let
     {
       key = "ctrl+r";
       command = "run";
-      args = { command = "echo file"; };
+      args = {
+        command = "echo file";
+      };
     }
   ];
 
-  keybindingsPath = name:
+  keybindingsPath =
+    name:
     if pkgs.stdenv.hostPlatform.isDarwin then
       "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }keybindings.json"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }keybindings.json";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}keybindings.json";
 
-  settingsPath = name:
+  settingsPath =
+    name:
     if pkgs.stdenv.hostPlatform.isDarwin then
       "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }settings.json"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }settings.json";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}settings.json";
 
   expectedKeybindings = pkgs.writeText "expected.json" ''
     [
@@ -72,7 +72,8 @@ let
     ]
   '';
 
-in {
+in
+{
   programs.vscode = {
     enable = true;
     profiles = {
@@ -87,16 +88,12 @@ in {
 
   nmt.script = ''
     assertFileExists "home-files/${keybindingsPath "default"}"
-    assertFileContent "home-files/${
-      keybindingsPath "default"
-    }" "${expectedKeybindings}"
+    assertFileContent "home-files/${keybindingsPath "default"}" "${expectedKeybindings}"
 
     assertPathNotExists "home-files/${settingsPath "default"}"
 
     assertFileExists "home-files/${keybindingsPath "test"}"
-    assertFileContent "home-files/${
-      keybindingsPath "test"
-    }" "${expectedKeybindings}"
+    assertFileContent "home-files/${keybindingsPath "test"}" "${expectedKeybindings}"
 
     assertPathNotExists "home-files/${settingsPath "test"}"
   '';

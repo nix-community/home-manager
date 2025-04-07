@@ -1,18 +1,24 @@
-{ configuration, pkgs, lib ? pkgs.lib
+{
+  configuration,
+  pkgs,
+  lib ? pkgs.lib,
 
   # Whether to check that each option has a matching declaration.
-, check ? true
+  check ? true,
   # Extra arguments passed to specialArgs.
-, extraSpecialArgs ? { } }:
+  extraSpecialArgs ? { },
+}:
 
 let
 
-  collectFailed = cfg:
-    map (x: x.message) (lib.filter (x: !x.assertion) cfg.assertions);
+  collectFailed = cfg: map (x: x.message) (lib.filter (x: !x.assertion) cfg.assertions);
 
-  showWarnings = res:
-    let f = w: x: builtins.trace "[1;31mwarning: ${w}[0m" x;
-    in lib.fold f res res.config.warnings;
+  showWarnings =
+    res:
+    let
+      f = w: x: builtins.trace "[1;31mwarning: ${w}[0m" x;
+    in
+    lib.fold f res res.config.warnings;
 
   extendedLib = import ./lib/stdlib-extended.nix lib;
 
@@ -24,24 +30,33 @@ let
   rawModule = extendedLib.evalModules {
     modules = [ configuration ] ++ hmModules;
     class = "homeManager";
-    specialArgs = { modulesPath = builtins.toString ./.; } // extraSpecialArgs;
+    specialArgs = {
+      modulesPath = builtins.toString ./.;
+    } // extraSpecialArgs;
   };
 
-  moduleChecks = raw:
-    showWarnings (let
-      failed = collectFailed raw.config;
-      failedStr = lib.concatStringsSep "\n" (map (x: "- ${x}") failed);
-    in if failed == [ ] then
-      raw
-    else
-      throw ''
+  moduleChecks =
+    raw:
+    showWarnings (
+      let
+        failed = collectFailed raw.config;
+        failedStr = lib.concatStringsSep "\n" (map (x: "- ${x}") failed);
+      in
+      if failed == [ ] then
+        raw
+      else
+        throw ''
 
-        Failed assertions:
-        ${failedStr}'');
+          Failed assertions:
+          ${failedStr}''
+    );
 
-  withExtraAttrs = rawModule:
-    let module = moduleChecks rawModule;
-    in {
+  withExtraAttrs =
+    rawModule:
+    let
+      module = moduleChecks rawModule;
+    in
+    {
       inherit (module) options config;
 
       activationPackage = module.config.home.activationPackage;
@@ -50,11 +65,13 @@ let
       activation-script = module.config.home.activationPackage;
 
       newsDisplay = rawModule.config.news.display;
-      newsEntries = lib.sort (a: b: a.time > b.time)
-        (lib.filter (a: a.condition) rawModule.config.news.entries);
+      newsEntries = lib.sort (a: b: a.time > b.time) (
+        lib.filter (a: a.condition) rawModule.config.news.entries
+      );
 
       inherit (module._module.args) pkgs;
 
       extendModules = args: withExtraAttrs (rawModule.extendModules args);
     };
-in withExtraAttrs rawModule
+in
+withExtraAttrs rawModule

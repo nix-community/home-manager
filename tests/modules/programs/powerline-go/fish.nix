@@ -8,16 +8,22 @@
       enable = true;
       newline = true;
       modules = [ "nix-shell" ];
-      pathAliases = { "\\~/project/foo" = "prj-foo"; };
+      pathAliases = {
+        "\\~/project/foo" = "prj-foo";
+      };
       settings = {
-        ignore-repos = [ "/home/me/project1" "/home/me/project2" ];
+        ignore-repos = [
+          "/home/me/project1"
+          "/home/me/project2"
+        ];
       };
     };
   };
 
   # Needed to avoid error with dummy fish package.
-  xdg.dataFile."fish/home-manager_generated_completions".source =
-    lib.mkForce (builtins.toFile "empty" "");
+  xdg.dataFile."fish/home-manager_generated_completions".source = lib.mkForce (
+    builtins.toFile "empty" ""
+  );
 
   nmt.script = ''
     assertFileExists home-files/.config/fish/config.fish

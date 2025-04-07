@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -9,7 +14,8 @@ let
     inherit (config.home.version) release isReleaseBranch;
   };
 
-in {
+in
+{
   options = {
     manual.html.enable = lib.mkOption {
       type = lib.types.bool;
@@ -51,7 +57,10 @@ in {
 
   config = {
     home.packages = lib.mkMerge [
-      (lib.mkIf cfg.html.enable [ docs.manual.html docs.manual.htmlOpenTool ])
+      (lib.mkIf cfg.html.enable [
+        docs.manual.html
+        docs.manual.htmlOpenTool
+      ])
       (lib.mkIf cfg.manpages.enable [ docs.manPages ])
       (lib.mkIf cfg.json.enable [ docs.options.json ])
     ];

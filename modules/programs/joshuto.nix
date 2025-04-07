@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.joshuto;
   tomlFormat = pkgs.formats.toml { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.rasmus-kirk ];
 
   options.programs.joshuto = {

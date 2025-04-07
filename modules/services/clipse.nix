@@ -1,8 +1,14 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.services.clipse;
   jsonFormat = pkgs.formats.json { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.dsoverlord ];
 
   options.services.clipse = {
@@ -37,7 +43,11 @@ in {
 
     imageDisplay = {
       type = lib.mkOption {
-        type = lib.types.enum [ "basic" "kitty" "sixel" ];
+        type = lib.types.enum [
+          "basic"
+          "kitty"
+          "sixel"
+        ];
         default = "basic";
         description = "Preview image method";
       };
@@ -96,7 +106,9 @@ in {
     theme = lib.mkOption {
       type = jsonFormat.type;
 
-      default = { useCustomTheme = false; };
+      default = {
+        useCustomTheme = false;
+      };
 
       example = lib.literalExpression ''
         {
@@ -126,42 +138,40 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.clipse" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.clipse" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."clipse/config.json".source =
-      jsonFormat.generate "settings" {
-        allowDuplicates = cfg.allowDuplicates;
-        historyFile = "clipboard_history.json";
-        maxHistory = cfg.historySize;
-        logFile = "clipse.log";
-        themeFile = "custom_theme.json";
-        tempDir = "tmp_files";
-        keyBindings = cfg.keyBindings;
-        imageDisplay = cfg.imageDisplay;
+    xdg.configFile."clipse/config.json".source = jsonFormat.generate "settings" {
+      allowDuplicates = cfg.allowDuplicates;
+      historyFile = "clipboard_history.json";
+      maxHistory = cfg.historySize;
+      logFile = "clipse.log";
+      themeFile = "custom_theme.json";
+      tempDir = "tmp_files";
+      keyBindings = cfg.keyBindings;
+      imageDisplay = cfg.imageDisplay;
+    };
+
+    xdg.configFile."clipse/custom_theme.json".source = jsonFormat.generate "theme" cfg.theme;
+
+    systemd.user.services.clipse = lib.mkIf (pkgs.stdenv.isLinux && (cfg.package != null)) {
+      Unit = {
+        Description = "Clipse listener";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
 
-    xdg.configFile."clipse/custom_theme.json".source =
-      jsonFormat.generate "theme" cfg.theme;
-
-    systemd.user.services.clipse =
-      lib.mkIf (pkgs.stdenv.isLinux && (cfg.package != null)) {
-        Unit = {
-          Description = "Clipse listener";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
-        };
-
-        Service = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          ExecStart = "${cfg.package}/bin/clipse -listen";
-        };
-
-        Install = { WantedBy = [ cfg.systemdTarget ]; };
+      Service = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${cfg.package}/bin/clipse -listen";
       };
+
+      Install = {
+        WantedBy = [ cfg.systemdTarget ];
+      };
+    };
   };
 }

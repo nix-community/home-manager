@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.comodoro;
   tomlFormat = pkgs.formats.toml { };
 
-in {
+in
+{
   meta.maintainers = with lib.hm.maintainers; [ soywod ];
 
   options.programs.comodoro = {

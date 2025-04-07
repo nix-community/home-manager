@@ -1,4 +1,10 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,12 +13,12 @@ let
   cfg = config.services.polybar;
   opt = options.services.polybar;
 
-  eitherStrBoolIntList = with types;
-    either str (either bool (either int (listOf str)));
+  eitherStrBoolIntList = with types; either str (either bool (either int (listOf str)));
 
   # Convert a key/val pair to the insane format that polybar uses.
   # Each input key/val pair may return several output key/val pairs.
-  convertPolybarKeyVal = key: val:
+  convertPolybarKeyVal =
+    key: val:
     # Convert { foo = [ "a" "b" ]; }
     # to {
     #   foo-0 = "a";
@@ -20,54 +26,61 @@ let
     # }
     if isList val then
       concatLists (imap0 (i: convertPolybarKeyVal "${key}-${toString i}") val)
-      # Convert {
-      #   foo.text = "a";
-      #   foo.font = 1;
-      # } to {
-      #   foo = "a";
-      #   foo-font = 1;
-      # }
+    # Convert {
+    #   foo.text = "a";
+    #   foo.font = 1;
+    # } to {
+    #   foo = "a";
+    #   foo-font = 1;
+    # }
     else if isAttrs val && !lib.isDerivation val then
-      concatLists (mapAttrsToList
-        (k: convertPolybarKeyVal (if k == "text" then key else "${key}-${k}"))
-        val)
-      # Base case
+      concatLists (
+        mapAttrsToList (k: convertPolybarKeyVal (if k == "text" then key else "${key}-${k}")) val
+      )
+    # Base case
     else
       [ (nameValuePair key val) ];
 
-  convertPolybarSection = _: attrs:
-    listToAttrs (concatLists (mapAttrsToList convertPolybarKeyVal attrs));
+  convertPolybarSection =
+    _: attrs: listToAttrs (concatLists (mapAttrsToList convertPolybarKeyVal attrs));
 
   # Converts an attrset to INI text, quoting values as expected by polybar.
   # This does no more fancy conversion.
   toPolybarIni = generators.toINI {
-    mkKeyValue = key: value:
+    mkKeyValue =
+      key: value:
       let
-        quoted = v:
-          if hasPrefix " " v || hasSuffix " " v then ''"${v}"'' else v;
+        quoted = v: if hasPrefix " " v || hasSuffix " " v then ''"${v}"'' else v;
 
-        value' = if isBool value then
-          (if value then "true" else "false")
-        else if (isString value && key != "include-file") then
-          quoted value
-        else
-          toString value;
-      in "${key}=${value'}";
+        value' =
+          if isBool value then
+            (if value then "true" else "false")
+          else if (isString value && key != "include-file") then
+            quoted value
+          else
+            toString value;
+      in
+      "${key}=${value'}";
   };
 
-  configFile = let
-    isDeclarativeConfig = cfg.settings != opt.settings.default || cfg.config
-      != opt.config.default || cfg.extraConfig != opt.extraConfig.default;
-  in if isDeclarativeConfig then
-    pkgs.writeText "polybar.conf" ''
-      ${toPolybarIni cfg.config}
-      ${toPolybarIni (mapAttrs convertPolybarSection cfg.settings)}
-      ${cfg.extraConfig}
-    ''
-  else
-    null;
+  configFile =
+    let
+      isDeclarativeConfig =
+        cfg.settings != opt.settings.default
+        || cfg.config != opt.config.default
+        || cfg.extraConfig != opt.extraConfig.default;
+    in
+    if isDeclarativeConfig then
+      pkgs.writeText "polybar.conf" ''
+        ${toPolybarIni cfg.config}
+        ${toPolybarIni (mapAttrs convertPolybarSection cfg.settings)}
+        ${cfg.extraConfig}
+      ''
+    else
+      null;
 
-in {
+in
+{
   options = {
     services.polybar = {
       enable = mkEnableOption "Polybar status bar";
@@ -84,9 +97,11 @@ in {
       };
 
       config = mkOption {
-        type = types.coercedTo types.path
-          (p: { "section/base" = { include-file = "${p}"; }; })
-          (types.attrsOf (types.attrsOf eitherStrBoolIntList));
+        type = types.coercedTo types.path (p: {
+          "section/base" = {
+            include-file = "${p}";
+          };
+        }) (types.attrsOf (types.attrsOf eitherStrBoolIntList));
         description = ''
           Polybar configuration. Can be either path to a file, or set of attributes
           that will be used to create the final configuration.
@@ -115,9 +130,19 @@ in {
       };
 
       settings = mkOption {
-        type = with types;
-          let ty = oneOf [ bool int float str (listOf ty) (attrsOf ty) ];
-          in attrsOf (attrsOf ty // { description = "attribute sets"; });
+        type =
+          with types;
+          let
+            ty = oneOf [
+              bool
+              int
+              float
+              str
+              (listOf ty)
+              (attrsOf ty)
+            ];
+          in
+          attrsOf (attrsOf ty // { description = "attribute sets"; });
         description = ''
           Polybar configuration. This takes a nix attrset and converts it to the
           strange data format that polybar uses.
@@ -197,15 +222,13 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.polybar" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.polybar" pkgs lib.platforms.linux)
     ];
 
     meta.maintainers = with maintainers; [ h7x4 ];
 
     home.packages = [ cfg.package ];
-    xdg.configFile."polybar/config.ini" =
-      mkIf (configFile != null) { source = configFile; };
+    xdg.configFile."polybar/config.ini" = mkIf (configFile != null) { source = configFile; };
 
     systemd.user.services.polybar = {
       Unit = {
@@ -218,12 +241,16 @@ in {
         Type = "forking";
         Environment = [ "PATH=${cfg.package}/bin:/run/wrappers/bin" ];
         ExecStart =
-          let scriptPkg = pkgs.writeShellScriptBin "polybar-start" cfg.script;
-          in "${scriptPkg}/bin/polybar-start";
+          let
+            scriptPkg = pkgs.writeShellScriptBin "polybar-start" cfg.script;
+          in
+          "${scriptPkg}/bin/polybar-start";
         Restart = "on-failure";
       };
 
-      Install = { WantedBy = [ "tray.target" ]; };
+      Install = {
+        WantedBy = [ "tray.target" ];
+      };
     };
   };
 

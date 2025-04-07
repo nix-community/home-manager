@@ -1,19 +1,29 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.xdg.mime;
 
-  inherit (lib) getExe getExe' mkOption types;
+  inherit (lib)
+    getExe
+    getExe'
+    mkOption
+    types
+    ;
 
-in {
+in
+{
   options = {
     xdg.mime = {
       enable = mkOption {
         type = types.bool;
         default = pkgs.stdenv.hostPlatform.isLinux;
-        defaultText = lib.literalExpression
-          "true if host platform is Linux, false otherwise";
+        defaultText = lib.literalExpression "true if host platform is Linux, false otherwise";
         description = ''
           Whether to install programs and files to support the
           XDG Shared MIME-info specification and XDG MIME Applications
@@ -36,8 +46,7 @@ in {
         type = types.package;
         default = pkgs.desktop-file-utils;
         defaultText = lib.literalExpression "pkgs.desktop-file-utils";
-        description =
-          "The package to use when running update-desktop-database.";
+        description = "The package to use when running update-desktop-database.";
       };
     };
   };
@@ -64,16 +73,14 @@ in {
         XDG_DATA_DIRS=$out/share \
         PKGSYSTEM_ENABLE_FSYNC=0 \
         ${
-          getExe
-          (cfg.sharedMimeInfoPackage.__spliced.buildHost or cfg.sharedMimeInfoPackage)
+          getExe (cfg.sharedMimeInfoPackage.__spliced.buildHost or cfg.sharedMimeInfoPackage)
         } -V $out/share/mime > /dev/null
       fi
 
       if [[ -w $out/share/applications ]]; then
         ${
-          getExe'
-          (cfg.desktopFileUtilsPackage.__spliced.buildHost or cfg.desktopFileUtilsPackage)
-          "update-desktop-database"
+          getExe' (cfg.desktopFileUtilsPackage.__spliced.buildHost or cfg.desktopFileUtilsPackage
+          ) "update-desktop-database"
         } $out/share/applications
       fi
     '';

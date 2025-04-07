@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.home-manager;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.home-manager;
+in
+{
   meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
@@ -22,7 +29,6 @@ in {
   };
 
   config = lib.mkIf (cfg.enable && !config.submoduleSupport.enable) {
-    home.packages =
-      [ (pkgs.callPackage ../../home-manager { inherit (cfg) path; }) ];
+    home.packages = [ (pkgs.callPackage ../../home-manager { inherit (cfg) path; }) ];
   };
 }

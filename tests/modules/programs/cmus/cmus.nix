@@ -8,11 +8,9 @@
   nmt.script = ''
     assertFileContent \
       home-files/.config/cmus/rc \
-      ${
-        builtins.toFile "cmus-expected-rc" ''
-          colorscheme gruvbox
-          test
-        ''
-      }
+      ${builtins.toFile "cmus-expected-rc" ''
+        colorscheme gruvbox
+        test
+      ''}
   '';
 }

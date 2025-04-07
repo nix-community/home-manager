@@ -7,7 +7,13 @@
 
 let
   inherit (lib)
-    concatMapStringsSep concatStrings escape hasPrefix head replaceStrings;
+    concatMapStringsSep
+    concatStrings
+    escape
+    hasPrefix
+    head
+    replaceStrings
+    ;
 
   mkPrimitive = t: v: {
     _type = "gvariant";
@@ -36,7 +42,8 @@ let
 
   # Returns the GVariant type of a given Nix value. If no type can be
   # found for the value then the empty string is returned.
-  typeOf = v:
+  typeOf =
+    v:
     with type;
     if builtins.isBool v then
       boolean
@@ -47,29 +54,27 @@ let
     else if builtins.isString v then
       string
     else if builtins.isList v then
-      let elemType = elemTypeOf v;
-      in if elemType == "" then "" else arrayOf elemType
+      let
+        elemType = elemTypeOf v;
+      in
+      if elemType == "" then "" else arrayOf elemType
     else if builtins.isAttrs v && v ? type then
       v.type
     else
       "";
 
-  elemTypeOf = vs:
-    if builtins.isList vs then
-      if vs == [ ] then "" else typeOf (head vs)
-    else
-      "";
+  elemTypeOf = vs: if builtins.isList vs then if vs == [ ] then "" else typeOf (head vs) else "";
 
-  mkMaybe = elemType: elem:
-    mkPrimitive (type.maybeOf elemType) elem // {
-      __toString = self:
-        if self.value == null then
-          "@${self.type} nothing"
-        else
-          "just ${toString self.value}";
+  mkMaybe =
+    elemType: elem:
+    mkPrimitive (type.maybeOf elemType) elem
+    // {
+      __toString =
+        self: if self.value == null then "@${self.type} nothing" else "just ${toString self.value}";
     };
 
-in rec {
+in
+rec {
 
   inherit type typeOf;
 
@@ -83,7 +88,8 @@ in rec {
   # Returns the GVariant value that most closely matches the given Nix
   # value. If no GVariant value can be found then `null` is returned.
 
-  mkValue = v:
+  mkValue =
+    v:
     if builtins.isBool v then
       mkBoolean v
     else if builtins.isInt v then
@@ -99,55 +105,77 @@ in rec {
     else
       null;
 
-  mkArray = elemType: elems:
-    mkPrimitive (type.arrayOf elemType) (map mkValue elems) // {
-      __toString = self:
-        "@${self.type} [${concatMapStringsSep "," toString self.value}]";
+  mkArray =
+    elemType: elems:
+    mkPrimitive (type.arrayOf elemType) (map mkValue elems)
+    // {
+      __toString = self: "@${self.type} [${concatMapStringsSep "," toString self.value}]";
     };
 
   mkEmptyArray = elemType: mkArray elemType [ ];
 
-  mkVariant = elem:
-    let gvarElem = mkValue elem;
-    in mkPrimitive type.variant gvarElem // {
+  mkVariant =
+    elem:
+    let
+      gvarElem = mkValue elem;
+    in
+    mkPrimitive type.variant gvarElem
+    // {
       __toString = self: "@${self.type} <${toString self.value}>";
     };
 
-  mkDictionaryEntry = elems:
+  mkDictionaryEntry =
+    elems:
     let
       gvarElems = map mkValue elems;
       dictionaryType = type.dictionaryEntryOf (map (e: e.type) gvarElems);
-    in mkPrimitive dictionaryType gvarElems // {
-      __toString = self:
-        "@${self.type} {${concatMapStringsSep "," toString self.value}}";
+    in
+    mkPrimitive dictionaryType gvarElems
+    // {
+      __toString = self: "@${self.type} {${concatMapStringsSep "," toString self.value}}";
     };
 
   mkNothing = elemType: mkMaybe elemType null;
 
-  mkJust = elem: let gvarElem = mkValue elem; in mkMaybe gvarElem.type gvarElem;
+  mkJust =
+    elem:
+    let
+      gvarElem = mkValue elem;
+    in
+    mkMaybe gvarElem.type gvarElem;
 
-  mkTuple = elems:
+  mkTuple =
+    elems:
     let
       gvarElems = map mkValue elems;
       tupleType = type.tupleOf (map (e: e.type) gvarElems);
-    in mkPrimitive tupleType gvarElems // {
-      __toString = self:
-        "@${self.type} (${concatMapStringsSep "," toString self.value})";
+    in
+    mkPrimitive tupleType gvarElems
+    // {
+      __toString = self: "@${self.type} (${concatMapStringsSep "," toString self.value})";
     };
 
-  mkBoolean = v:
-    mkPrimitive type.boolean v // {
+  mkBoolean =
+    v:
+    mkPrimitive type.boolean v
+    // {
       __toString = self: if self.value then "true" else "false";
     };
 
-  mkString = v:
-    let sanitize = s: replaceStrings [ "\n" ] [ "\\n" ] (escape [ "'" "\\" ] s);
-    in mkPrimitive type.string v // {
+  mkString =
+    v:
+    let
+      sanitize = s: replaceStrings [ "\n" ] [ "\\n" ] (escape [ "'" "\\" ] s);
+    in
+    mkPrimitive type.string v
+    // {
       __toString = self: "'${sanitize self.value}'";
     };
 
-  mkObjectpath = v:
-    mkPrimitive type.string v // {
+  mkObjectpath =
+    v:
+    mkPrimitive type.string v
+    // {
       __toString = self: "objectpath '${escape [ "'" ] self.value}'";
     };
 
@@ -157,8 +185,10 @@ in rec {
 
   mkUint16 = mkPrimitive type.uint16;
 
-  mkInt32 = v:
-    mkPrimitive type.int32 v // {
+  mkInt32 =
+    v:
+    mkPrimitive type.int32 v
+    // {
       __toString = self: toString self.value;
     };
 
@@ -168,8 +198,10 @@ in rec {
 
   mkUint64 = mkPrimitive type.uint64;
 
-  mkDouble = v:
-    mkPrimitive type.double v // {
+  mkDouble =
+    v:
+    mkPrimitive type.double v
+    // {
       __toString = self: toString self.value;
     };
 

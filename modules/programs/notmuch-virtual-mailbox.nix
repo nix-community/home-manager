@@ -1,6 +1,8 @@
 { lib, ... }:
-let inherit (lib) mkOption types;
-in {
+let
+  inherit (lib) mkOption types;
+in
+{
   options = {
     name = mkOption {
       type = types.str;
@@ -24,11 +26,15 @@ in {
     };
 
     type = mkOption {
-      type = types.nullOr (types.enum [ "threads" "messages" ]);
+      type = types.nullOr (
+        types.enum [
+          "threads"
+          "messages"
+        ]
+      );
       example = "threads";
       default = null;
-      description =
-        "Reads all matching messages or whole-threads. The default is 'messages' or nm_query_type.";
+      description = "Reads all matching messages or whole-threads. The default is 'messages' or nm_query_type.";
     };
   };
 }

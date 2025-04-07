@@ -1,7 +1,17 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.services.hypridle;
-in {
-  meta.maintainers = with lib.maintainers; [ khaneliman fufexan ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.hypridle;
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    fufexan
+  ];
 
   options.services.hypridle = {
     enable = lib.mkEnableOption "Hypridle, Hyprland's idle daemon";
@@ -9,20 +19,24 @@ in {
     package = lib.mkPackageOption pkgs "hypridle" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types;
+      type =
+        with lib.types;
         let
-          valueType = nullOr (oneOf [
-            bool
-            int
-            float
-            str
-            path
-            (attrsOf valueType)
-            (listOf valueType)
-          ]) // {
-            description = "Hypridle configuration value";
-          };
-        in valueType;
+          valueType =
+            nullOr (oneOf [
+              bool
+              int
+              float
+              str
+              path
+              (attrsOf valueType)
+              (listOf valueType)
+            ])
+            // {
+              description = "Hypridle configuration value";
+            };
+        in
+        valueType;
       default = { };
       description = ''
         Hypridle configuration written in Nix. Entries with the same key
@@ -71,15 +85,18 @@ in {
     };
 
     systemd.user.services.hypridle = lib.mkIf (cfg.package != null) {
-      Install = { WantedBy = [ config.wayland.systemd.target ]; };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hypridle";
         After = [ config.wayland.systemd.target ];
         PartOf = [ config.wayland.systemd.target ];
-        X-Restart-Triggers = lib.mkIf (cfg.settings != { })
-          [ "${config.xdg.configFile."hypr/hypridle.conf".source}" ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."hypr/hypridle.conf".source}"
+        ];
       };
 
       Service = {

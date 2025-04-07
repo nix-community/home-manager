@@ -8,7 +8,10 @@
     # overriding findutils causes issues
     config.menu = "${pkgs.dmenu}/bin/dmenu_run";
 
-    systemd.variables = [ "XCURSOR_THEME" "XCURSOR_SIZE" ];
+    systemd.variables = [
+      "XCURSOR_THEME"
+      "XCURSOR_SIZE"
+    ];
   };
 
   nmt.script = ''

@@ -9,7 +9,9 @@
       extraOptions = [ "-test" ];
       screensaverCycle = 5;
     };
-    xautolock = { enable = false; };
+    xautolock = {
+      enable = false;
+    };
   };
 
   nmt.script = ''

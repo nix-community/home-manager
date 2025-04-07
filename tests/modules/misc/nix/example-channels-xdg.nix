@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   exampleChannel = pkgs.writeTextDir "default.nix" ''
@@ -8,7 +13,8 @@ let
       example = pkgs.emptyDirectory;
     }
   '';
-in {
+in
+{
   nix = {
     package = config.lib.test.mkStubPackage {
       version = lib.getVersion pkgs.nixVersions.stable;

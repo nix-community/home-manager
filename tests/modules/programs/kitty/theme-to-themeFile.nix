@@ -1,4 +1,9 @@
-{ lib, options, realPkgs, ... }:
+{
+  lib,
+  options,
+  realPkgs,
+  ...
+}:
 
 {
   programs.kitty = {
@@ -8,11 +13,11 @@
 
   test.asserts.warnings.enable = true;
   test.asserts.warnings.expected = [
-    ("The option `programs.kitty.theme' defined in ${
-        lib.showFiles options.programs.kitty.theme.files
-      } has been changed to `programs.kitty.themeFile' that has a different"
+    (
+      "The option `programs.kitty.theme' defined in ${lib.showFiles options.programs.kitty.theme.files} has been changed to `programs.kitty.themeFile' that has a different"
       + " type. Please read `programs.kitty.themeFile' documentation and"
-      + " update your configuration accordingly.")
+      + " update your configuration accordingly."
+    )
   ];
 
   nixpkgs.overlays = [ (self: super: { inherit (realPkgs) kitty-themes; }) ];

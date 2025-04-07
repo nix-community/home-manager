@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   config = {
     xdg.configHome = /. + "${config.home.homeDirectory}/.dummy-config";
     xdg.dataHome = /. + "${config.home.homeDirectory}/.dummy-data";

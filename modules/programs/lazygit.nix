@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf;
 
@@ -8,12 +13,15 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-in {
-  meta.maintainers = [ lib.hm.maintainers.kalhauge lib.maintainers.khaneliman ];
+in
+{
+  meta.maintainers = [
+    lib.hm.maintainers.kalhauge
+    lib.maintainers.khaneliman
+  ];
 
   options.programs.lazygit = {
-    enable =
-      lib.mkEnableOption "lazygit, a simple terminal UI for git commands";
+    enable = lib.mkEnableOption "lazygit, a simple terminal UI for git commands";
 
     package = lib.mkPackageOption pkgs "lazygit" { nullable = true; };
 
@@ -47,13 +55,15 @@ in {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."Library/Application Support/lazygit/config.yml" =
-      mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable)) {
-        source = yamlFormat.generate "lazygit-config" cfg.settings;
-      };
+      mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable))
+        {
+          source = yamlFormat.generate "lazygit-config" cfg.settings;
+        };
 
     xdg.configFile."lazygit/config.yml" =
-      mkIf (cfg.settings != { } && !(isDarwin && !config.xdg.enable)) {
-        source = yamlFormat.generate "lazygit-config" cfg.settings;
-      };
+      mkIf (cfg.settings != { } && !(isDarwin && !config.xdg.enable))
+        {
+          source = yamlFormat.generate "lazygit-config" cfg.settings;
+        };
   };
 }

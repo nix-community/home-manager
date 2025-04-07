@@ -8,11 +8,13 @@
     # overriding findutils causes issues
     config.menu = "${pkgs.dmenu}/bin/dmenu_run";
 
-    config.bars = [{
-      colors.focusedBackground = "#ffffff";
-      colors.focusedStatusline = "#000000";
-      colors.focusedSeparator = "#999999";
-    }];
+    config.bars = [
+      {
+        colors.focusedBackground = "#ffffff";
+        colors.focusedStatusline = "#000000";
+        colors.focusedSeparator = "#999999";
+      }
+    ];
   };
 
   nmt.script = ''

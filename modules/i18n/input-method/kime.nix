@@ -1,10 +1,22 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) literalExpression mkIf mkOption mkRemovedOptionModule types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    mkRemovedOptionModule
+    types
+    ;
 
   cfg = config.i18n.inputMethod.kime;
-in {
+in
+{
   imports = [
     (mkRemovedOptionModule [ "i18n" "inputMethod" "kime" "config" ] ''
       Please use 'i18n.inputMethod.kime.extraConfig' instead.

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -8,7 +13,8 @@ let
   concatStringsSep' = sep: list: concatStringsSep sep (remove "" list);
 
   iniFormat = pkgs.formats.ini { };
-in {
+in
+{
   meta.maintainers = [ ];
 
   options = {
@@ -79,8 +85,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "services.fnott" pkgs platforms.linux) ];
+    assertions = [ (hm.assertions.assertPlatform "services.fnott" pkgs platforms.linux) ];
 
     home.packages = [ cfg.package ];
 
@@ -111,7 +116,6 @@ in {
       SystemdService=fnott.service
     '';
 
-    xdg.configFile."fnott/fnott.ini".source =
-      iniFormat.generate "fnott.ini" cfg.settings;
+    xdg.configFile."fnott/fnott.ini".source = iniFormat.generate "fnott.ini" cfg.settings;
   };
 }

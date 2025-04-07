@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.services.jankyborders;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.jankyborders;
+in
+{
   meta.maintainers = [ lib.maintainers.khaneliman ];
 
   options.services.jankyborders = {
@@ -10,16 +17,14 @@ in {
 
     errorLogFile = lib.mkOption {
       type = with lib.types; nullOr (either path str);
-      defaultText = lib.literalExpression
-        "\${config.home.homeDirectory}/Library/Logs/jankyborders/err.log";
+      defaultText = lib.literalExpression "\${config.home.homeDirectory}/Library/Logs/jankyborders/err.log";
       example = "/Users/khaneliman/Library/Logs/jankyborders.log";
       description = "Absolute path to log all stderr output.";
     };
 
     outLogFile = lib.mkOption {
       type = with lib.types; nullOr (either path str);
-      defaultText = lib.literalExpression
-        "\${config.home.homeDirectory}/Library/Logs/jankyborders/out.log";
+      defaultText = lib.literalExpression "\${config.home.homeDirectory}/Library/Logs/jankyborders/out.log";
       example = "/Users/khaneliman/Library/Logs/jankyborders.log";
       description = "Absolute path to log all stdout output.";
     };
@@ -47,8 +52,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.jankyborders" pkgs
-        lib.platforms.darwin)
+      (lib.hm.assertions.assertPlatform "services.jankyborders" pkgs lib.platforms.darwin)
     ];
 
     home.packages = [ cfg.package ];
@@ -66,18 +70,15 @@ in {
     };
 
     services.jankyborders = {
-      errorLogFile = lib.mkOptionDefault
-        "${config.home.homeDirectory}/Library/Logs/borders/borders.err.log";
-      outLogFile = lib.mkOptionDefault
-        "${config.home.homeDirectory}/Library/Logs/borders/borders.out.log";
+      errorLogFile = lib.mkOptionDefault "${config.home.homeDirectory}/Library/Logs/borders/borders.err.log";
+      outLogFile = lib.mkOptionDefault "${config.home.homeDirectory}/Library/Logs/borders/borders.out.log";
     };
 
-    xdg.configFile."borders/bordersrc".source =
-      pkgs.writeShellScript "bordersrc" ''
-        options=(
-        ${lib.generators.toKeyValue { indent = "  "; } cfg.settings})
+    xdg.configFile."borders/bordersrc".source = pkgs.writeShellScript "bordersrc" ''
+      options=(
+      ${lib.generators.toKeyValue { indent = "  "; } cfg.settings})
 
-        ${lib.getExe cfg.package} "''${options[@]}"
-      '';
+      ${lib.getExe cfg.package} "''${options[@]}"
+    '';
   };
 }

@@ -3,7 +3,9 @@
 
   programs.kodi = {
     enable = true;
-    settings = { videolibrary.showemptytvshows = "true"; };
+    settings = {
+      videolibrary.showemptytvshows = "true";
+    };
   };
 
   nmt.script = ''

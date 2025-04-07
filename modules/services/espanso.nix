@@ -1,17 +1,33 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   inherit (lib)
-    mkOption mkEnableOption mkIf maintainers literalExpression types
-    mkRemovedOptionModule versionAtLeast;
+    mkOption
+    mkEnableOption
+    mkIf
+    maintainers
+    literalExpression
+    types
+    mkRemovedOptionModule
+    versionAtLeast
+    ;
 
   cfg = config.services.espanso;
   espansoVersion = cfg.package.version;
 
   yaml = pkgs.formats.yaml { };
-in {
+in
+{
   imports = [
-    (mkRemovedOptionModule [ "services" "espanso" "settings" ]
-      "Use services.espanso.configs and services.espanso.matches instead.")
+    (mkRemovedOptionModule [
+      "services"
+      "espanso"
+      "settings"
+    ] "Use services.espanso.configs and services.espanso.matches instead.")
   ];
   meta.maintainers = [
     maintainers.lucasew
@@ -32,7 +48,9 @@ in {
 
       configs = mkOption {
         type = yaml.type;
-        default = { default = { }; };
+        default = {
+          default = { };
+        };
         example = literalExpression ''
           {
             default = {
@@ -53,7 +71,9 @@ in {
 
       matches = mkOption {
         type = yaml.type;
-        default = { default.matches = [ ]; };
+        default = {
+          default.matches = [ ];
+        };
         example = literalExpression ''
           {
             base = {
@@ -98,42 +118,56 @@ in {
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = versionAtLeast espansoVersion "2";
-      message = ''
-        The services.espanso module only supports Espanso version 2 or later.
-      '';
-    }];
+    assertions = [
+      {
+        assertion = versionAtLeast espansoVersion "2";
+        message = ''
+          The services.espanso module only supports Espanso version 2 or later.
+        '';
+      }
+    ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile = let
-      configFiles = lib.mapAttrs' (name: value: {
-        name = "espanso/config/${name}.yml";
-        value = { source = yaml.generate "${name}.yml" value; };
-      }) cfg.configs;
-      matchesFiles = lib.mapAttrs' (name: value: {
-        name = "espanso/match/${name}.yml";
-        value = { source = yaml.generate "${name}.yml" value; };
-      }) cfg.matches;
-    in configFiles // matchesFiles;
+    xdg.configFile =
+      let
+        configFiles = lib.mapAttrs' (name: value: {
+          name = "espanso/config/${name}.yml";
+          value = {
+            source = yaml.generate "${name}.yml" value;
+          };
+        }) cfg.configs;
+        matchesFiles = lib.mapAttrs' (name: value: {
+          name = "espanso/match/${name}.yml";
+          value = {
+            source = yaml.generate "${name}.yml" value;
+          };
+        }) cfg.matches;
+      in
+      configFiles // matchesFiles;
 
     systemd.user.services.espanso = {
-      Unit = { Description = "Espanso: cross platform text expander in Rust"; };
+      Unit = {
+        Description = "Espanso: cross platform text expander in Rust";
+      };
       Service = {
         ExecStart = "${cfg.package}/bin/espanso launcher";
         Restart = "on-failure";
         RestartSec = 3;
       };
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
     };
 
     launchd.agents.espanso = {
       enable = true;
       config = {
-        ProgramArguments = [ "${cfg.package}/bin/espanso" "launcher" ];
-        EnvironmentVariables.PATH =
-          "${cfg.package}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+        ProgramArguments = [
+          "${cfg.package}/bin/espanso"
+          "launcher"
+        ];
+        EnvironmentVariables.PATH = "${cfg.package}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
         KeepAlive = {
           Crashed = true;
           SuccessfulExit = false;

@@ -1,30 +1,43 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.qcal;
 
-  qcalAccounts = lib.attrValues
-    (lib.filterAttrs (_: a: a.qcal.enable) config.accounts.calendar.accounts);
+  qcalAccounts = lib.attrValues (
+    lib.filterAttrs (_: a: a.qcal.enable) config.accounts.calendar.accounts
+  );
 
-  rename = oldname:
+  rename =
+    oldname:
     builtins.getAttr oldname {
       url = "Url";
       userName = "Username";
       passwordCommand = "PasswordCmd";
     };
 
-  filteredAccounts = let
-    mkAccount = account:
-      lib.filterAttrs (_: v: v != null) (with account.remote; {
-        Url = url;
-        Username = if userName == null then null else userName;
-        PasswordCmd =
-          if passwordCommand == null then null else toString passwordCommand;
-      });
-  in map mkAccount qcalAccounts;
+  filteredAccounts =
+    let
+      mkAccount =
+        account:
+        lib.filterAttrs (_: v: v != null) (
+          with account.remote;
+          {
+            Url = url;
+            Username = if userName == null then null else userName;
+            PasswordCmd = if passwordCommand == null then null else toString passwordCommand;
+          }
+        );
+    in
+    map mkAccount qcalAccounts;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ antonmosich ];
 
   options = {
@@ -48,9 +61,11 @@ in {
     };
 
     accounts.calendar.accounts = lib.mkOption {
-      type = with lib.types;
-        attrsOf
-        (submodule { options.qcal.enable = lib.mkEnableOption "qcal access"; });
+      type =
+        with lib.types;
+        attrsOf (submodule {
+          options.qcal.enable = lib.mkEnableOption "qcal access";
+        });
     };
   };
 
@@ -58,8 +73,10 @@ in {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."qcal/config.json".source =
-      let jsonFormat = pkgs.formats.json { };
-      in jsonFormat.generate "qcal.json" {
+      let
+        jsonFormat = pkgs.formats.json { };
+      in
+      jsonFormat.generate "qcal.json" {
         DefaultNumDays = cfg.defaultNumDays;
         Timezone = cfg.timezone;
         Calendars = filteredAccounts;

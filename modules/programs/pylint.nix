@@ -1,10 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.pylint;
-  listToValue =
-    lib.concatMapStringsSep ", " (lib.generators.mkValueStringDefault { });
+  listToValue = lib.concatMapStringsSep ", " (lib.generators.mkValueStringDefault { });
   iniFormat = pkgs.formats.ini { inherit listToValue; };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.florpe ];
   options.programs.pylint = {
     enable = lib.mkEnableOption "the pylint Python linter";

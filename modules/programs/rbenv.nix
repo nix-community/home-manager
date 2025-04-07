@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
@@ -21,7 +26,8 @@ let
     };
   };
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.rbenv = {
@@ -53,24 +59,23 @@ in {
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     home.file.".rbenv/plugins" = mkIf (cfg.plugins != [ ]) {
-      source = pkgs.linkFarm "rbenv-plugins" (builtins.map (p: {
-        name = p.name;
-        path = p.src;
-      }) cfg.plugins);
+      source = pkgs.linkFarm "rbenv-plugins" (
+        builtins.map (p: {
+          name = p.name;
+          path = p.src;
+        }) cfg.plugins
+      );
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''

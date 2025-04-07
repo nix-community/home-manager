@@ -8,7 +8,10 @@ lib.mkMerge [
 
     services.syncthing = {
       enable = true;
-      extraOptions = [ "-foo" ''-bar "baz"'' ];
+      extraOptions = [
+        "-foo"
+        ''-bar "baz"''
+      ];
     };
   }
 

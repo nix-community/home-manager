@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOrder;
 
   cfg = config.programs.mods;
   yamlFormat = pkgs.formats.yaml { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.ipsavitsky ];
 
   options.programs.mods = {
@@ -39,14 +45,11 @@ in {
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -56,17 +59,22 @@ in {
       source = yamlFormat.generate "mods.yml" cfg.settings;
     };
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
-      source <(${cfg.package}/bin/mods completion bash)
-    '');
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (
+      mkOrder 200 ''
+        source <(${cfg.package}/bin/mods completion bash)
+      ''
+    );
 
-    programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 200 ''
-      source <(${cfg.package}/bin/mods completion zsh)
-    '');
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration (
+      mkOrder 200 ''
+        source <(${cfg.package}/bin/mods completion zsh)
+      ''
+    );
 
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
-      (mkOrder 200 ''
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (
+      mkOrder 200 ''
         ${cfg.package}/bin/mods completion fish | source
-      '');
+      ''
+    );
   };
 }

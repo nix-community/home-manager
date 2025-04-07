@@ -15,8 +15,15 @@
       border-color-unfocused = "0x586e75";
       border-color-urgent = "0xff0000";
       border-width = 2;
-      csd-filter-add.app-id = [ "bar" "foo" ];
-      declare-mode = [ "locked" "normal" "passthrough" ];
+      csd-filter-add.app-id = [
+        "bar"
+        "foo"
+      ];
+      declare-mode = [
+        "locked"
+        "normal"
+        "passthrough"
+      ];
       default-layout = "rivertile";
       float-filter-add.app-id = "mpd";
       float-filter-add.title = "popup title with spaces";
@@ -66,7 +73,10 @@
       set-cursor-warp = "on-output-change";
       set-repeat = "50 300";
       xcursor-theme = "someGreatTheme 12";
-      spawn = [ "firefox" "'foot -a terminal'" ];
+      spawn = [
+        "firefox"
+        "'foot -a terminal'"
+      ];
     };
 
     extraConfig = ''

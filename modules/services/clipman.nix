@@ -1,7 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
-let cfg = config.services.clipman;
-in {
+let
+  cfg = config.services.clipman;
+in
+{
   meta.maintainers = [ maintainers.jwygoda ];
 
   options.services.clipman = {
@@ -26,8 +33,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.clipman" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.clipman" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -41,14 +47,15 @@ in {
       };
 
       Service = {
-        ExecStart =
-          "${pkgs.wl-clipboard}/bin/wl-paste -t text --watch ${cfg.package}/bin/clipman store";
+        ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste -t text --watch ${cfg.package}/bin/clipman store";
         ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
         Restart = "on-failure";
         KillMode = "mixed";
       };
 
-      Install = { WantedBy = [ cfg.systemdTarget ]; };
+      Install = {
+        WantedBy = [ cfg.systemdTarget ];
+      };
     };
   };
 }

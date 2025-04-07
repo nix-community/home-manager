@@ -1,6 +1,13 @@
-{ config, pkgs, lib, ... }:
-let cfg = config.programs.script-directory;
-in {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  cfg = config.programs.script-directory;
+in
+{
   meta.maintainers = [ lib.hm.maintainers.janik ];
 
   options.programs.script-directory = {
@@ -18,8 +25,7 @@ in {
           SD_CAT = "lolcat";
         }
       '';
-      description =
-        "script-directory config, for options take a look at the [documentation](https://github.com/ianthehenry/sd#options)";
+      description = "script-directory config, for options take a look at the [documentation](https://github.com/ianthehenry/sd#options)";
     };
   };
   config = lib.mkIf cfg.enable {

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,11 +11,11 @@ let
 
   cfg = config.services.mako;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.onny ];
 
-  imports =
-    [ (mkRenamedOptionModule [ "programs" "mako" ] [ "services" "mako" ]) ];
+  imports = [ (mkRenamedOptionModule [ "programs" "mako" ] [ "services" "mako" ]) ];
 
   options = {
     services.mako = {
@@ -44,8 +49,14 @@ in {
 
       sort = mkOption {
         default = "-time";
-        type =
-          types.nullOr (types.enum [ "+time" "-time" "+priority" "-priority" ]);
+        type = types.nullOr (
+          types.enum [
+            "+time"
+            "-time"
+            "+priority"
+            "-priority"
+          ]
+        );
         description = ''
           Sorts incoming notifications by time and/or priority in ascending(+)
           or descending(-) order.
@@ -64,8 +75,14 @@ in {
 
       layer = mkOption {
         default = "top";
-        type =
-          types.nullOr (types.enum [ "background" "bottom" "top" "overlay" ]);
+        type = types.nullOr (
+          types.enum [
+            "background"
+            "bottom"
+            "top"
+            "overlay"
+          ]
+        );
         description = ''
           Arrange mako at the specified layer, relative to normal windows.
           Supported values are background, bottom, top, and overlay. Using
@@ -77,17 +94,19 @@ in {
 
       anchor = mkOption {
         default = "top-right";
-        type = types.nullOr (types.enum [
-          "top-right"
-          "top-center"
-          "top-left"
-          "bottom-right"
-          "bottom-center"
-          "bottom-left"
-          "center-right"
-          "center-left"
-          "center"
-        ]);
+        type = types.nullOr (
+          types.enum [
+            "top-right"
+            "top-center"
+            "top-left"
+            "bottom-right"
+            "bottom-center"
+            "bottom-left"
+            "center-right"
+            "center-left"
+            "center"
+          ]
+        );
         description = ''
           Show notifications at the specified position on the output.
           Supported values are top-right, top-center, top-left, bottom-right,
@@ -304,55 +323,53 @@ in {
     };
   };
 
-  config = let
-    boolToString = v: if v then "true" else "false";
-    optionalBoolean = name: val:
-      lib.optionalString (val != null) "${name}=${boolToString val}";
-    optionalInteger = name: val:
-      lib.optionalString (val != null) "${name}=${toString val}";
-    optionalString = name: val:
-      lib.optionalString (val != null) "${name}=${val}";
-  in mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "services.mako" pkgs platforms.linux) ];
+  config =
+    let
+      boolToString = v: if v then "true" else "false";
+      optionalBoolean = name: val: lib.optionalString (val != null) "${name}=${boolToString val}";
+      optionalInteger = name: val: lib.optionalString (val != null) "${name}=${toString val}";
+      optionalString = name: val: lib.optionalString (val != null) "${name}=${val}";
+    in
+    mkIf cfg.enable {
+      assertions = [ (hm.assertions.assertPlatform "services.mako" pkgs platforms.linux) ];
 
-    home.packages = [ cfg.package ];
+      home.packages = [ cfg.package ];
 
-    xdg.configFile."mako/config" = {
-      onChange = ''
-        ${cfg.package}/bin/makoctl reload || true
-      '';
-      text = ''
-        ${optionalInteger "max-visible" cfg.maxVisible}
-        ${optionalInteger "max-history" cfg.maxHistory}
-        ${optionalString "sort" cfg.sort}
-        ${optionalString "output" cfg.output}
-        ${optionalString "layer" cfg.layer}
-        ${optionalString "anchor" cfg.anchor}
+      xdg.configFile."mako/config" = {
+        onChange = ''
+          ${cfg.package}/bin/makoctl reload || true
+        '';
+        text = ''
+          ${optionalInteger "max-visible" cfg.maxVisible}
+          ${optionalInteger "max-history" cfg.maxHistory}
+          ${optionalString "sort" cfg.sort}
+          ${optionalString "output" cfg.output}
+          ${optionalString "layer" cfg.layer}
+          ${optionalString "anchor" cfg.anchor}
 
-        ${optionalString "font" cfg.font}
-        ${optionalString "background-color" cfg.backgroundColor}
-        ${optionalString "text-color" cfg.textColor}
-        ${optionalInteger "width" cfg.width}
-        ${optionalInteger "height" cfg.height}
-        ${optionalString "margin" cfg.margin}
-        ${optionalString "padding" cfg.padding}
-        ${optionalInteger "border-size" cfg.borderSize}
-        ${optionalString "border-color" cfg.borderColor}
-        ${optionalInteger "border-radius" cfg.borderRadius}
-        ${optionalString "progress-color" cfg.progressColor}
-        ${optionalBoolean "icons" cfg.icons}
-        ${optionalInteger "max-icon-size" cfg.maxIconSize}
-        ${optionalString "icon-path" cfg.iconPath}
-        ${optionalBoolean "markup" cfg.markup}
-        ${optionalBoolean "actions" cfg.actions}
-        ${optionalString "format" cfg.format}
-        ${optionalInteger "default-timeout" cfg.defaultTimeout}
-        ${optionalBoolean "ignore-timeout" cfg.ignoreTimeout}
-        ${optionalString "group-by" cfg.groupBy}
+          ${optionalString "font" cfg.font}
+          ${optionalString "background-color" cfg.backgroundColor}
+          ${optionalString "text-color" cfg.textColor}
+          ${optionalInteger "width" cfg.width}
+          ${optionalInteger "height" cfg.height}
+          ${optionalString "margin" cfg.margin}
+          ${optionalString "padding" cfg.padding}
+          ${optionalInteger "border-size" cfg.borderSize}
+          ${optionalString "border-color" cfg.borderColor}
+          ${optionalInteger "border-radius" cfg.borderRadius}
+          ${optionalString "progress-color" cfg.progressColor}
+          ${optionalBoolean "icons" cfg.icons}
+          ${optionalInteger "max-icon-size" cfg.maxIconSize}
+          ${optionalString "icon-path" cfg.iconPath}
+          ${optionalBoolean "markup" cfg.markup}
+          ${optionalBoolean "actions" cfg.actions}
+          ${optionalString "format" cfg.format}
+          ${optionalInteger "default-timeout" cfg.defaultTimeout}
+          ${optionalBoolean "ignore-timeout" cfg.ignoreTimeout}
+          ${optionalString "group-by" cfg.groupBy}
 
-        ${cfg.extraConfig}
-      '';
+          ${cfg.extraConfig}
+        '';
+      };
     };
-  };
 }

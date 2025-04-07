@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.nix-your-shell;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.nix-your-shell;
+in
+{
   meta.maintainers = [ lib.maintainers.terlar ];
 
   options.programs.nix-your-shell = {
@@ -10,14 +17,11 @@ in {
 
     package = lib.mkPackageOption pkgs "nix-your-shell" { };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableNushellIntegration =
-      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {

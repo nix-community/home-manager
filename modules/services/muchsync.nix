@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -125,7 +130,8 @@ let
     };
   };
 
-in {
+in
+{
   meta.maintainers = with maintainers; [ euxane ];
 
   options.services.muchsync = {
@@ -146,59 +152,73 @@ in {
     };
   };
 
-  config = let
-    mapRemotes = gen:
-      with attrsets;
-      mapAttrs'
-      (name: remoteCfg: nameValuePair "muchsync-${name}" (gen name remoteCfg))
-      cfg.remotes;
-  in mkIf (cfg.remotes != { }) {
-    assertions = [
-      (hm.assertions.assertPlatform "services.muchsync" pkgs platforms.linux)
+  config =
+    let
+      mapRemotes =
+        gen:
+        with attrsets;
+        mapAttrs' (name: remoteCfg: nameValuePair "muchsync-${name}" (gen name remoteCfg)) cfg.remotes;
+    in
+    mkIf (cfg.remotes != { }) {
+      assertions = [
+        (hm.assertions.assertPlatform "services.muchsync" pkgs platforms.linux)
 
-      {
-        assertion = config.programs.notmuch.enable;
-        message = ''
-          The muchsync module requires 'programs.notmuch.enable = true'.
-        '';
-      }
-    ];
+        {
+          assertion = config.programs.notmuch.enable;
+          message = ''
+            The muchsync module requires 'programs.notmuch.enable = true'.
+          '';
+        }
+      ];
 
-    systemd.user.services = mapRemotes (name: remoteCfg: {
-      Unit = { Description = "muchsync sync service (${name})"; };
-      Service = {
-        CPUSchedulingPolicy = "idle";
-        IOSchedulingClass = "idle";
-        Environment = [
-          ''"PATH=${pkgs.notmuch}/bin"''
-          ''"NOTMUCH_CONFIG=${config.home.sessionVariables.NOTMUCH_CONFIG}"''
-          ''"NMBGIT=${config.home.sessionVariables.NMBGIT}"''
-        ];
-        ExecStart = concatStringsSep " " ([ "${pkgs.muchsync}/bin/muchsync" ]
-          ++ [ "-s ${escapeShellArg remoteCfg.sshCommand}" ]
-          ++ optional (!remoteCfg.upload) "--noup"
+      systemd.user.services = mapRemotes (
+        name: remoteCfg: {
+          Unit = {
+            Description = "muchsync sync service (${name})";
+          };
+          Service = {
+            CPUSchedulingPolicy = "idle";
+            IOSchedulingClass = "idle";
+            Environment = [
+              ''"PATH=${pkgs.notmuch}/bin"''
+              ''"NOTMUCH_CONFIG=${config.home.sessionVariables.NOTMUCH_CONFIG}"''
+              ''"NMBGIT=${config.home.sessionVariables.NMBGIT}"''
+            ];
+            ExecStart = concatStringsSep " " (
+              [ "${pkgs.muchsync}/bin/muchsync" ]
+              ++ [ "-s ${escapeShellArg remoteCfg.sshCommand}" ]
+              ++ optional (!remoteCfg.upload) "--noup"
 
-          # local configuration
-          ++ optional remoteCfg.local.checkForModifiedFiles "-F"
-          ++ optional (!remoteCfg.local.importNew) "--nonew"
+              # local configuration
+              ++ optional remoteCfg.local.checkForModifiedFiles "-F"
+              ++ optional (!remoteCfg.local.importNew) "--nonew"
 
-          # remote configuration
-          ++ [ (escapeShellArg remoteCfg.remote.host) ]
-          ++ optional (remoteCfg.remote.muchsyncPath != "")
-          "-r ${escapeShellArg remoteCfg.remote.muchsyncPath}"
-          ++ optional remoteCfg.remote.checkForModifiedFiles "-F"
-          ++ optional (!remoteCfg.remote.importNew) "--nonew");
-      };
-    });
+              # remote configuration
+              ++ [ (escapeShellArg remoteCfg.remote.host) ]
+              ++ optional (
+                remoteCfg.remote.muchsyncPath != ""
+              ) "-r ${escapeShellArg remoteCfg.remote.muchsyncPath}"
+              ++ optional remoteCfg.remote.checkForModifiedFiles "-F"
+              ++ optional (!remoteCfg.remote.importNew) "--nonew"
+            );
+          };
+        }
+      );
 
-    systemd.user.timers = mapRemotes (name: remoteCfg: {
-      Unit = { Description = "muchsync periodic sync (${name})"; };
-      Timer = {
-        Unit = "muchsync-${name}.service";
-        OnCalendar = remoteCfg.frequency;
-        Persistent = true;
-      };
-      Install = { WantedBy = [ "timers.target" ]; };
-    });
-  };
+      systemd.user.timers = mapRemotes (
+        name: remoteCfg: {
+          Unit = {
+            Description = "muchsync periodic sync (${name})";
+          };
+          Timer = {
+            Unit = "muchsync-${name}.service";
+            OnCalendar = remoteCfg.frequency;
+            Persistent = true;
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+        }
+      );
+    };
 }

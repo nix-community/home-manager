@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.services.macos-remap-keys;
   keytables = import ./keytables.nix { inherit lib; };
@@ -8,21 +13,21 @@ let
   # Note: hidutil requires HIDKeyboardModifierMapping values to be in hexadecimal
   # format rather than decimal JSON. Using hex strings instead of numbers will
   # crash macOS.
-  makeMapping = table: from: to:
-    ''
-      { "HIDKeyboardModifierMappingSrc": ${
-        keyToHIDCode table from
-      }, "HIDKeyboardModifierMappingDst": ${keyToHIDCode table to} }'';
+  makeMapping =
+    table: from: to:
+    ''{ "HIDKeyboardModifierMappingSrc": ${keyToHIDCode table from}, "HIDKeyboardModifierMappingDst": ${keyToHIDCode table to} }'';
 
-  makeMappingsList = table: mappings:
-    lib.mapAttrsToList (from: to: makeMapping table from to) mappings;
+  makeMappingsList =
+    table: mappings: lib.mapAttrsToList (from: to: makeMapping table from to) mappings;
 
-  allMappings = (makeMappingsList "keyboard" (cfg.keyboard or { }))
+  allMappings =
+    (makeMappingsList "keyboard" (cfg.keyboard or { }))
     ++ (makeMappingsList "keypad" (cfg.keypad or { }));
 
   allMappingsString = lib.concatStringsSep ", " allMappings;
   propertyString = ''{ "UserKeyMapping": [ ${allMappingsString} ] }'';
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.WeetHet ];
 
   options.services.macos-remap-keys = {
@@ -51,19 +56,21 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.macos-remap-keys" pkgs
-        lib.platforms.darwin)
+      (lib.hm.assertions.assertPlatform "services.macos-remap-keys" pkgs lib.platforms.darwin)
     ];
-    home.activation.macosRemapKeys =
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        run --silence /usr/bin/hidutil property --set '${propertyString}'
-      '';
+    home.activation.macosRemapKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run --silence /usr/bin/hidutil property --set '${propertyString}'
+    '';
 
     launchd.agents.remap-keys = {
       enable = true;
       config = {
-        ProgramArguments =
-          [ "/usr/bin/hidutil" "property" "--set" propertyString ];
+        ProgramArguments = [
+          "/usr/bin/hidutil"
+          "property"
+          "--set"
+          propertyString
+        ];
         KeepAlive.SuccessfulExit = false;
         RunAtLoad = true;
       };

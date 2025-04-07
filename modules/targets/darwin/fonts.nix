@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   homeDir = config.home.homeDirectory;
@@ -9,7 +14,8 @@ let
   };
   fonts = "${fontsEnv}/share/fonts";
   installDir = "${homeDir}/Library/Fonts/HomeManager";
-in {
+in
+{
   # macOS won't recognize symlinked fonts
   config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     home.file."Library/Fonts/.home-manager-fonts-version" = {
@@ -17,7 +23,10 @@ in {
       onChange = ''
         run mkdir -p ${lib.escapeShellArg installDir}
         run ${pkgs.rsync}/bin/rsync $VERBOSE_ARG -acL --chmod=u+w --delete \
-          ${lib.escapeShellArgs [ "${fonts}/" installDir ]}
+          ${lib.escapeShellArgs [
+            "${fonts}/"
+            installDir
+          ]}
       '';
     };
   };

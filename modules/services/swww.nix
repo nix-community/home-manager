@@ -1,24 +1,31 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.services.swww;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.swww;
+in
+{
   meta.maintainers = with lib.hm.maintainers; [ hey2022 ];
 
   options.services.swww = {
-    enable =
-      lib.mkEnableOption "swww, a Solution to your Wayland Wallpaper Woes";
+    enable = lib.mkEnableOption "swww, a Solution to your Wayland Wallpaper Woes";
     package = lib.mkPackageOption pkgs "swww" { };
   };
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.swww" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.swww" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
     systemd.user.services.swww = {
-      Install = { WantedBy = [ config.wayland.systemd.target ]; };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";

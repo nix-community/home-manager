@@ -19,10 +19,8 @@
 
     assertFileExists $config
     assertFileContent $config \
-        ${
-          builtins.toFile "scale-expected.conf" ''
-            output DP1
-            scale 2x4''
-        }
+        ${builtins.toFile "scale-expected.conf" ''
+          output DP1
+          scale 2x4''}
   '';
 }

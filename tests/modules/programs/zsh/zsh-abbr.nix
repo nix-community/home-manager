@@ -1,7 +1,9 @@
 {
   programs.zsh.zsh-abbr = {
     enable = true;
-    abbreviations = { ga = "git add"; };
+    abbreviations = {
+      ga = "git add";
+    };
   };
 
   nmt.script = ''

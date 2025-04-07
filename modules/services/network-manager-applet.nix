@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,8 +11,12 @@ let
 
   cfg = config.services.network-manager-applet;
 
-in {
-  meta.maintainers = [ maintainers.rycee maintainers.midirhee12 ];
+in
+{
+  meta.maintainers = [
+    maintainers.rycee
+    maintainers.midirhee12
+  ];
 
   options = {
     services.network-manager-applet = {
@@ -17,8 +26,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.network-manager-applet" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.network-manager-applet" pkgs lib.platforms.linux)
     ];
 
     # The package provides some icons that are good to have available.
@@ -28,15 +36,22 @@ in {
       Unit = {
         Description = "Network Manager applet";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session.target" "tray.target" ];
+        After = [
+          "graphical-session.target"
+          "tray.target"
+        ];
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
-        ExecStart = toString ([ "${pkgs.networkmanagerapplet}/bin/nm-applet" ]
-          ++ optional config.xsession.preferStatusNotifierItems "--indicator");
+        ExecStart = toString (
+          [ "${pkgs.networkmanagerapplet}/bin/nm-applet" ]
+          ++ optional config.xsession.preferStatusNotifierItems "--indicator"
+        );
       };
     };
   };

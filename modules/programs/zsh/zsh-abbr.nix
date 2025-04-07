@@ -1,13 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) escapeShellArg mkOption types;
   cfg = config.programs.zsh.zsh-abbr;
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.ilaumjd ];
 
   options.programs.zsh.zsh-abbr = {
-    enable = lib.mkEnableOption
-      "zsh-abbr - zsh manager for auto-expanding abbreviations";
+    enable = lib.mkEnableOption "zsh-abbr - zsh manager for auto-expanding abbreviations";
 
     package = lib.mkPackageOption pkgs "zsh-abbr" { };
 
@@ -39,26 +44,29 @@ in {
     };
   };
 
-  config = let
-    abbreviations =
-      lib.mapAttrsToList (k: v: "abbr ${escapeShellArg k}=${escapeShellArg v}")
-      cfg.abbreviations;
+  config =
+    let
+      abbreviations = lib.mapAttrsToList (
+        k: v: "abbr ${escapeShellArg k}=${escapeShellArg v}"
+      ) cfg.abbreviations;
 
-    globalAbbreviations = lib.mapAttrsToList
-      (k: v: "abbr -g ${escapeShellArg k}=${escapeShellArg v}")
-      cfg.globalAbbreviations;
+      globalAbbreviations = lib.mapAttrsToList (
+        k: v: "abbr -g ${escapeShellArg k}=${escapeShellArg v}"
+      ) cfg.globalAbbreviations;
 
-    allAbbreviations = abbreviations ++ globalAbbreviations;
-  in lib.mkIf cfg.enable {
-    programs.zsh.plugins = [{
-      name = "zsh-abbr";
-      src = cfg.package;
-      file = "share/zsh/zsh-abbr/zsh-abbr.plugin.zsh";
-    }];
+      allAbbreviations = abbreviations ++ globalAbbreviations;
+    in
+    lib.mkIf cfg.enable {
+      programs.zsh.plugins = [
+        {
+          name = "zsh-abbr";
+          src = cfg.package;
+          file = "share/zsh/zsh-abbr/zsh-abbr.plugin.zsh";
+        }
+      ];
 
-    xdg.configFile = {
-      "zsh-abbr/user-abbreviations".text =
-        lib.concatStringsSep "\n" allAbbreviations + "\n";
+      xdg.configFile = {
+        "zsh-abbr/user-abbreviations".text = lib.concatStringsSep "\n" allAbbreviations + "\n";
+      };
     };
-  };
 }

@@ -4,7 +4,8 @@ let
 
   filePath = ./. + "/source with spaces!";
 
-in {
+in
+{
   home.file."oos".source = config.lib.file.mkOutOfStoreSymlink filePath;
 
   nmt.script = ''

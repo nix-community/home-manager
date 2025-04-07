@@ -4,10 +4,12 @@
   programs.lapce = {
     enable = true;
     package = config.lib.test.mkStubPackage { };
-    keymaps = [{
-      command = "open_log_file";
-      key = "Ctrl+Shift+L";
-    }];
+    keymaps = [
+      {
+        command = "open_log_file";
+        key = "Ctrl+Shift+L";
+      }
+    ];
   };
 
   nmt.script = ''

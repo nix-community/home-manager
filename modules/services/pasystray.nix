@@ -1,10 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
-let cfg = config.services.pasystray;
+let
+  cfg = config.services.pasystray;
 
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.pltanton ];
 
   options = {
@@ -30,18 +37,27 @@ in {
       Unit = {
         Description = "PulseAudio system tray";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session.target" "tray.target" ];
+        After = [
+          "graphical-session.target"
+          "tray.target"
+        ];
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
         Environment =
-          let toolPaths = makeBinPath [ pkgs.paprefs pkgs.pavucontrol ];
-          in [ "PATH=${toolPaths}" ];
-        ExecStart = escapeShellArgs
-          ([ "${pkgs.pasystray}/bin/pasystray" ] ++ cfg.extraOptions);
+          let
+            toolPaths = makeBinPath [
+              pkgs.paprefs
+              pkgs.pavucontrol
+            ];
+          in
+          [ "PATH=${toolPaths}" ];
+        ExecStart = escapeShellArgs ([ "${pkgs.pasystray}/bin/pasystray" ] ++ cfg.extraOptions);
       };
     };
   };

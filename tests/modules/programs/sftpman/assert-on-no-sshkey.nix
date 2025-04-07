@@ -11,7 +11,9 @@
     };
   };
 
-  test.asserts.assertions.expected = [''
-    sftpman mounts using authentication type "publickey" but missing 'sshKey': mount1
-  ''];
+  test.asserts.assertions.expected = [
+    ''
+      sftpman mounts using authentication type "publickey" but missing 'sshKey': mount1
+    ''
+  ];
 }

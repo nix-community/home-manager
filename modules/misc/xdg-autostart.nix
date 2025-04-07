@@ -1,7 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (builtins) baseNameOf listToAttrs map unsafeDiscardStringContext;
-  inherit (lib) literalExpression mkEnableOption mkIf mkOption types;
+  inherit (builtins)
+    baseNameOf
+    listToAttrs
+    map
+    unsafeDiscardStringContext
+    ;
+  inherit (lib)
+    literalExpression
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.xdg.autostart;
 
@@ -10,7 +26,8 @@ let
     ${lib.concatMapStringsSep "\n" (e: "ln -s ${e} $out") cfg.entries}
   '';
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ Scrumplex ];
 
   options.xdg.autostart = {

@@ -1,4 +1,5 @@
-{ config, lib, ... }: {
+{ config, lib, ... }:
+{
   options.astroid = {
     enable = lib.mkEnableOption "Astroid";
 
@@ -14,7 +15,9 @@
     extraConfig = lib.mkOption {
       type = lib.types.attrsOf lib.types.anything;
       default = { };
-      example = { select_query = ""; };
+      example = {
+        select_query = "";
+      };
       description = ''
         Extra settings to add to this astroid account configuration.
       '';
@@ -22,7 +25,8 @@
   };
 
   config = lib.mkIf config.notmuch.enable {
-    astroid.sendMailCommand = lib.mkIf config.msmtp.enable
-      (lib.mkOptionDefault "msmtpq --read-envelope-from --read-recipients");
+    astroid.sendMailCommand = lib.mkIf config.msmtp.enable (
+      lib.mkOptionDefault "msmtpq --read-envelope-from --read-recipients"
+    );
   };
 }

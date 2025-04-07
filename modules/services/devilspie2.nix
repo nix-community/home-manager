@@ -1,8 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
-let cfg = config.services.devilspie2;
-in {
+let
+  cfg = config.services.devilspie2;
+in
+{
   meta.maintainers = [ maintainers.dawidsowa ];
 
   options = {
@@ -28,8 +35,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.devilspie2" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.devilspie2" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.devilspie2 = {

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -10,7 +15,8 @@ let
 
   iniFile = iniFormat.generate "flameshot.ini" cfg.settings;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.hamhut1066 ];
 
   options.services.flameshot = {
@@ -42,8 +48,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.flameshot" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.flameshot" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -56,12 +61,17 @@ in {
       Unit = {
         Description = "Flameshot screenshot tool";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session.target" "tray.target" ];
+        After = [
+          "graphical-session.target"
+          "tray.target"
+        ];
         PartOf = [ "graphical-session.target" ];
         X-Restart-Triggers = mkIf (cfg.settings != { }) [ "${iniFile}" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
         Environment = [ "PATH=${config.home.profileDirectory}/bin" ];

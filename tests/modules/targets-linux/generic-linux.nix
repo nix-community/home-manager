@@ -9,7 +9,8 @@ let
     "/var/lib/snapd/desktop"
     "/foo"
   ];
-in {
+in
+{
   config = {
     targets.genericLinux.enable = true;
 

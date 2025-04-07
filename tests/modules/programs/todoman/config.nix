@@ -16,4 +16,3 @@
     assertFileContent $configFile ${./todoman-config-expected}
   '';
 }
-

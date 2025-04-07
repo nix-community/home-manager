@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) types;
@@ -6,13 +11,13 @@ let
 
   # Systemd integration
   variables = builtins.concatStringsSep " " cfg.systemd.variables;
-  extraCommands = builtins.concatStringsSep " "
-    (map (f: "&& ${f}") cfg.systemd.extraCommands);
+  extraCommands = builtins.concatStringsSep " " (map (f: "&& ${f}") cfg.systemd.extraCommands);
   systemdActivation = ''
     ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}
   '';
 
-  toValue = val:
+  toValue =
+    val:
     if lib.isString val || lib.isDerivation val then
       toString val
     else if true == val then
@@ -27,28 +32,40 @@ let
       abort "unsupported type ${builtins.typeOf val}";
 
   # Intermediary function that converts some value (attrs, str, ...) to one or several commands.
-  toArgs = path: value:
+  toArgs =
+    path: value:
 
     let
       stringValue = lib.concatStringsSep " " (path ++ [ (toValue value) ]);
-      finalValue = if lib.isAttrs value then
-        toCommand path value
-      else if lib.isList value then
-        lib.lists.flatten (map (x: toArgs path x) value)
-      else if value == null then
-        [ ]
-      else
-        [ stringValue ];
-    in finalValue;
+      finalValue =
+        if lib.isAttrs value then
+          toCommand path value
+        else if lib.isList value then
+          lib.lists.flatten (map (x: toArgs path x) value)
+        else if value == null then
+          [ ]
+        else
+          [ stringValue ];
+    in
+    finalValue;
 
   # toCommand :: [string] -> attrs -> [string]
   # Recursive function that converts an attrs to a list of commands that can be written to the
   # config file.
-  toCommand = basePath: attrs:
-    lib.concatLists (lib.mapAttrsToList
-      (key: value: let path = basePath ++ [ key ]; in toArgs path value) attrs);
+  toCommand =
+    basePath: attrs:
+    lib.concatLists (
+      lib.mapAttrsToList (
+        key: value:
+        let
+          path = basePath ++ [ key ];
+        in
+        toArgs path value
+      ) attrs
+    );
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.GaetanLepage ];
 
   options.wayland.windowManager.river = {
@@ -62,7 +79,9 @@ in {
       '';
     };
 
-    xwayland.enable = lib.mkEnableOption "XWayland" // { default = true; };
+    xwayland.enable = lib.mkEnableOption "XWayland" // {
+      default = true;
+    };
 
     systemd = {
       enable = lib.mkEnableOption null // {
@@ -112,29 +131,39 @@ in {
       type = types.attrs;
       default = { };
       description = "Extra session variables set when running the compositor.";
-      example = { MOZ_ENABLE_WAYLAND = "1"; };
+      example = {
+        MOZ_ENABLE_WAYLAND = "1";
+      };
     };
 
     settings = lib.mkOption {
-      type = let
-        valueType = with types;
-          nullOr (oneOf [
-            bool
-            int
-            float
-            str
-            path
-            (attrsOf valueType)
-            (listOf valueType)
-          ]) // {
-            description = "River configuration value";
-          };
-      in valueType;
+      type =
+        let
+          valueType =
+            with types;
+            nullOr (oneOf [
+              bool
+              int
+              float
+              str
+              path
+              (attrsOf valueType)
+              (listOf valueType)
+            ])
+            // {
+              description = "River configuration value";
+            };
+        in
+        valueType;
       default = { };
       description = "General settings given to `riverctl`.";
       example = {
         border-width = 2;
-        declare-mode = [ "locked" "normal" "passthrough" ];
+        declare-mode = [
+          "locked"
+          "normal"
+          "passthrough"
+        ];
         map.normal."Alt Q" = "close";
         input.pointer-foo-bar = {
           accel-profile = "flat";
@@ -149,7 +178,10 @@ in {
         set-cursor-warp = "on-output-change";
         set-repeat = "50 300";
         xcursor-theme = "someGreatTheme 12";
-        spawn = [ "firefox" "'foot -a terminal'" ];
+        spawn = [
+          "firefox"
+          "'foot -a terminal'"
+        ];
       };
     };
 
@@ -159,37 +191,39 @@ in {
       example = ''
         rivertile -view-padding 6 -outer-padding 6 &
       '';
-      description =
-        "Extra lines appended to {file}`$XDG_CONFIG_HOME/river/init`.";
+      description = "Extra lines appended to {file}`$XDG_CONFIG_HOME/river/init`.";
     };
   };
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "wayland.windowManager.river" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "wayland.windowManager.river" pkgs lib.platforms.linux)
     ];
 
-    home.packages = lib.optional (cfg.package != null) cfg.package
+    home.packages =
+      lib.optional (cfg.package != null) cfg.package
       ++ lib.optional cfg.xwayland.enable pkgs.xwayland;
 
     # Configuration file ~/.config/river/init
-    xdg.configFile."river/init".source = pkgs.writeShellScript "init" (''
-      ### This file was generated with Nix. Don't modify this file directly.
+    xdg.configFile."river/init".source = pkgs.writeShellScript "init" (
+      ''
+        ### This file was generated with Nix. Don't modify this file directly.
 
-      ### SHELL VARIABLES ###
-      ${config.lib.shell.exportAll cfg.extraSessionVariables}
+        ### SHELL VARIABLES ###
+        ${config.lib.shell.exportAll cfg.extraSessionVariables}
 
-      ### CONFIGURATION ###
-      ${lib.concatStringsSep "\n" (toCommand [ "riverctl" ] cfg.settings)}
+        ### CONFIGURATION ###
+        ${lib.concatStringsSep "\n" (toCommand [ "riverctl" ] cfg.settings)}
 
-      ### EXTRA CONFIGURATION ###
-      ${cfg.extraConfig}
+        ### EXTRA CONFIGURATION ###
+        ${cfg.extraConfig}
 
-    '' + (lib.optionalString cfg.systemd.enable ''
-      ### SYSTEMD INTEGRATION ###
-      ${systemdActivation}
-    ''));
+      ''
+      + (lib.optionalString cfg.systemd.enable ''
+        ### SYSTEMD INTEGRATION ###
+        ${systemdActivation}
+      '')
+    );
 
     # Systemd integration
     systemd.user.targets.river-session = lib.mkIf cfg.systemd.enable {

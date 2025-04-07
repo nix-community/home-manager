@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   config = {
     programs.xmobar = {
       enable = true;

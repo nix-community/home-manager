@@ -1,7 +1,9 @@
 { realPkgs, ... }:
 
-let expectedContent = "something important";
-in {
+let
+  expectedContent = "something important";
+in
+{
   programs.bash.enable = true;
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;

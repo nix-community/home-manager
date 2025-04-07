@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf;
 
@@ -6,27 +11,27 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  configArgument = if cfg.settings != { } then
-    "--config ${config.xdg.configHome}/oh-my-posh/config.json"
-  else if cfg.useTheme != null then
-    "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
-  else
-    "";
+  configArgument =
+    if cfg.settings != { } then
+      "--config ${config.xdg.configHome}/oh-my-posh/config.json"
+    else if cfg.useTheme != null then
+      "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
+    else
+      "";
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.arjan-s ];
 
   options.programs.oh-my-posh = {
-    enable =
-      lib.mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
+    enable = lib.mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
 
     package = lib.mkPackageOption pkgs "oh-my-posh" { };
 
     settings = lib.mkOption {
       type = jsonFormat.type;
       default = { };
-      example = lib.literalExpression ''
-        builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
+      example = lib.literalExpression ''builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/oh-my-posh/config.json`. See
@@ -47,17 +52,13 @@ in {
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableNushellIntegration =
-      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -83,9 +84,7 @@ in {
       extraConfig = ''
         source ${
           pkgs.runCommand "oh-my-posh-nushell-config.nu" { } ''
-            ${
-              lib.getExe cfg.package
-            } init nu ${configArgument} --print >> "$out"
+            ${lib.getExe cfg.package} init nu ${configArgument} --print >> "$out"
           ''
         }
       '';

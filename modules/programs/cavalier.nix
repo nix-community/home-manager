@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption;
 
@@ -8,7 +13,8 @@ let
 
   jsonFmt = pkgs.formats.json { };
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.bricked ];
 
   options.programs.cavalier = {
@@ -75,8 +81,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.cavalier" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.cavalier" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];

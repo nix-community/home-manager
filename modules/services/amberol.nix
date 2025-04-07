@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.services.amberol;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ surfaceflinger ];
 
   options.services.amberol = {
@@ -29,7 +35,11 @@ in {
     };
 
     replaygain = lib.mkOption {
-      type = lib.types.enum [ "album" "track" "off" ];
+      type = lib.types.enum [
+        "album"
+        "track"
+        "off"
+      ];
       default = "track";
       description = "ReplayGain mode.";
     };
@@ -37,8 +47,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.amberol" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.amberol" pkgs lib.platforms.linux)
     ];
 
     # Running amberol will just attach itself to gapplication service.

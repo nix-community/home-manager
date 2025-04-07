@@ -18,7 +18,8 @@ let
     end
   '';
 
-in {
+in
+{
   config = {
     programs.fish = {
       enable = true;

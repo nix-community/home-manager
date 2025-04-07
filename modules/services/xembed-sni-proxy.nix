@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.xembed-sni-proxy;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -27,8 +33,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.xembed-sni-proxy" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.xembed-sni-proxy" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.xembed-sni-proxy = {
@@ -38,7 +43,9 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
         Environment = [ "PATH=${config.home.profileDirectory}/bin" ];

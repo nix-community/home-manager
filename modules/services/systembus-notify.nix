@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,15 +12,13 @@ with lib;
 
   options = {
     services.systembus-notify = {
-      enable =
-        mkEnableOption "systembus-notify - system bus notification daemon";
+      enable = mkEnableOption "systembus-notify - system bus notification daemon";
     };
   };
 
   config = mkIf config.services.systembus-notify.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.systembus-notify" pkgs
-        platforms.linux)
+      (hm.assertions.assertPlatform "services.systembus-notify" pkgs platforms.linux)
     ];
 
     systemd.user.services.systembus-notify = {

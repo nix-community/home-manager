@@ -1,9 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
-let cfg = config.services.podman;
-in {
+let
+  cfg = config.services.podman;
+in
+{
   options.services.podman = {
     autoUpdate = {
       enable = mkOption {
@@ -36,12 +43,12 @@ in {
         Service = {
           Type = "oneshot";
           Environment = "PATH=${
-              builtins.concatStringsSep ":" [
-                "/run/wrappers/bin"
-                "/run/current-system/sw/bin"
-                "${config.home.homeDirectory}/.nix-profile/bin"
-              ]
-            }";
+            builtins.concatStringsSep ":" [
+              "/run/wrappers/bin"
+              "/run/current-system/sw/bin"
+              "${config.home.homeDirectory}/.nix-profile/bin"
+            ]
+          }";
           ExecStart = "${cfg.package}/bin/podman auto-update";
           ExecStartPost = "${cfg.package}/bin/podman image prune -f";
           TimeoutStartSec = "300s";
@@ -50,7 +57,9 @@ in {
       };
 
       systemd.user.timers."podman-auto-update" = {
-        Unit = { Description = "Podman auto-update timer"; };
+        Unit = {
+          Description = "Podman auto-update timer";
+        };
 
         Timer = {
           OnCalendar = cfg.autoUpdate.onCalendar;
@@ -58,7 +67,9 @@ in {
           Persistent = true;
         };
 
-        Install = { WantedBy = [ "timers.target" ]; };
+        Install = {
+          WantedBy = [ "timers.target" ];
+        };
       };
     })
     ({
@@ -66,7 +77,14 @@ in {
         ''
           [Service]
           ExecSearchPath=${
-            makeBinPath (with pkgs; [ bashInteractive systemd coreutils ])
+            makeBinPath (
+              with pkgs;
+              [
+                bashInteractive
+                systemd
+                coreutils
+              ]
+            )
           }:/bin
         '';
     })

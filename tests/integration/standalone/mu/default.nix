@@ -1,16 +1,19 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   name = "mu-store-init";
 
-  nodes.machine = { ... }: {
-    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-    virtualisation.memorySize = 2048;
-    users.users.alice = {
-      isNormalUser = true;
-      description = "Alice Foobar";
-      password = "foobar";
-      uid = 1000;
+  nodes.machine =
+    { ... }:
+    {
+      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+      virtualisation.memorySize = 2048;
+      users.users.alice = {
+        isNormalUser = true;
+        description = "Alice Foobar";
+        password = "foobar";
+        uid = 1000;
+      };
     };
-  };
 
   testScript = ''
     start_all()

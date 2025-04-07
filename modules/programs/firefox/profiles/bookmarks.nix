@@ -1,35 +1,43 @@
-{ config, lib, pkgs, modulePath }:
+{
+  config,
+  lib,
+  pkgs,
+  modulePath,
+}:
 
 let
   inherit (lib)
-    escapeXML concatStringsSep mkOption maintainers types literalExpression;
+    escapeXML
+    concatStringsSep
+    mkOption
+    maintainers
+    types
+    literalExpression
+    ;
 
   inherit (bookmarkTypes) settingsType;
 
   bookmarkTypes = import ./bookmark-types.nix { inherit lib; };
 
-  bookmarksFile = bookmarks:
+  bookmarksFile =
+    bookmarks:
     let
-      indent = level:
-        lib.concatStringsSep "" (map (lib.const "  ") (lib.range 1 level));
+      indent = level: lib.concatStringsSep "" (map (lib.const "  ") (lib.range 1 level));
 
-      bookmarkToHTML = indentLevel: bookmark:
-        ''
-          ${indent indentLevel}<DT><A HREF="${
-            escapeXML bookmark.url
-          }" ADD_DATE="1" LAST_MODIFIED="1"${
-            lib.optionalString (bookmark.keyword != null)
-            " SHORTCUTURL=\"${escapeXML bookmark.keyword}\""
-          }${
-            lib.optionalString (bookmark.tags != [ ])
-            " TAGS=\"${escapeXML (concatStringsSep "," bookmark.tags)}\""
-          }>${escapeXML bookmark.name}</A>'';
+      bookmarkToHTML =
+        indentLevel: bookmark:
+        ''${indent indentLevel}<DT><A HREF="${escapeXML bookmark.url}" ADD_DATE="1" LAST_MODIFIED="1"${
+          lib.optionalString (bookmark.keyword != null) " SHORTCUTURL=\"${escapeXML bookmark.keyword}\""
+        }${
+          lib.optionalString (
+            bookmark.tags != [ ]
+          ) " TAGS=\"${escapeXML (concatStringsSep "," bookmark.tags)}\""
+        }>${escapeXML bookmark.name}</A>'';
 
       directoryToHTML = indentLevel: directory: ''
         ${indent indentLevel}<DT>${
           if directory.toolbar then
-            ''
-              <H3 ADD_DATE="1" LAST_MODIFIED="1" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar''
+            ''<H3 ADD_DATE="1" LAST_MODIFIED="1" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks Toolbar''
           else
             ''<H3 ADD_DATE="1" LAST_MODIFIED="1">${escapeXML directory.name}''
         }</H3>
@@ -37,18 +45,16 @@ let
         ${allItemsToHTML (indentLevel + 1) directory.bookmarks}
         ${indent indentLevel}</DL><p>'';
 
-      itemToHTMLOrRecurse = indentLevel: item:
-        if item ? "url" then
-          bookmarkToHTML indentLevel item
-        else
-          directoryToHTML indentLevel item;
+      itemToHTMLOrRecurse =
+        indentLevel: item:
+        if item ? "url" then bookmarkToHTML indentLevel item else directoryToHTML indentLevel item;
 
-      allItemsToHTML = indentLevel: bookmarks:
-        lib.concatStringsSep "\n"
-        (map (itemToHTMLOrRecurse indentLevel) bookmarks);
+      allItemsToHTML =
+        indentLevel: bookmarks: lib.concatStringsSep "\n" (map (itemToHTMLOrRecurse indentLevel) bookmarks);
 
       bookmarkEntries = allItemsToHTML 1 bookmarks;
-    in pkgs.writeText "bookmarks.html" ''
+    in
+    pkgs.writeText "bookmarks.html" ''
       <!DOCTYPE NETSCAPE-Bookmark-file-1>
       <!-- This is an automatically generated file.
         It will be read and overwritten.
@@ -60,7 +66,8 @@ let
       ${bookmarkEntries}
       </DL>
     '';
-in {
+in
+{
   imports = [
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
@@ -131,16 +138,14 @@ in {
   };
 
   config = {
-    assertions = [{
-      assertion = config.enable -> config.force;
-      message = ''
-        Using '${
-          lib.showAttrPath (modulePath ++ [ "settings" ])
-        }' will override all previous bookmarks.
-        Enable ${
-          lib.showAttrPath (modulePath ++ [ "force" ])
-        }' to acknowledge this.
-      '';
-    }];
+    assertions = [
+      {
+        assertion = config.enable -> config.force;
+        message = ''
+          Using '${lib.showAttrPath (modulePath ++ [ "settings" ])}' will override all previous bookmarks.
+          Enable ${lib.showAttrPath (modulePath ++ [ "force" ])}' to acknowledge this.
+        '';
+      }
+    ];
   };
 }

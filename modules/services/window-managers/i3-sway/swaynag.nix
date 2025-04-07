@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,19 +12,28 @@ let
 
   iniFormat = pkgs.formats.ini { };
 
-  confFormat = with types;
+  confFormat =
+    with types;
     let
-      confAtom = nullOr (oneOf [ bool int float str ]) // {
-        description = "Swaynag config atom (null, bool, int, float, str)";
-      };
-    in attrsOf confAtom;
-in {
+      confAtom =
+        nullOr (oneOf [
+          bool
+          int
+          float
+          str
+        ])
+        // {
+          description = "Swaynag config atom (null, bool, int, float, str)";
+        };
+    in
+    attrsOf confAtom;
+in
+{
   meta.maintainers = [ ];
 
   options = {
     wayland.windowManager.sway.swaynag = {
-      enable = mkEnableOption
-        "configuration of swaynag, a lightweight error bar for sway";
+      enable = mkEnableOption "configuration of swaynag, a lightweight error bar for sway";
 
       settings = mkOption {
         type = types.attrsOf confFormat;
@@ -56,8 +70,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "wayland.windowManager.sway.swaynag" pkgs
-        platforms.linux)
+      (hm.assertions.assertPlatform "wayland.windowManager.sway.swaynag" pkgs platforms.linux)
     ];
 
     xdg.configFile."swaynag/config" = mkIf (cfg.settings != { }) {

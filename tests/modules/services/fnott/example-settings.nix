@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   config = {
@@ -7,7 +12,9 @@
       package = config.lib.test.mkStubPackage { };
 
       settings = {
-        main = { notification-margin = 5; };
+        main = {
+          notification-margin = 5;
+        };
 
         low = {
           timeout = 5;

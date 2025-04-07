@@ -4,7 +4,8 @@ let
 
   backups = config.programs.borgmatic.backups;
 
-in {
+in
+{
   programs.borgmatic = {
     enable = true;
     backups = {
@@ -28,18 +29,10 @@ in {
 
     declare -A expectations
 
-    expectations[patterns[0]]="${
-      builtins.elemAt backups.main.location.patterns 0
-    }"
-    expectations[patterns[1]]="${
-      builtins.elemAt backups.main.location.patterns 1
-    }"
-    expectations[patterns[2]]="${
-      builtins.elemAt backups.main.location.patterns 2
-    }"
-    expectations[patterns[3]]="${
-      builtins.elemAt backups.main.location.patterns 3
-    }"
+    expectations[patterns[0]]="${builtins.elemAt backups.main.location.patterns 0}"
+    expectations[patterns[1]]="${builtins.elemAt backups.main.location.patterns 1}"
+    expectations[patterns[2]]="${builtins.elemAt backups.main.location.patterns 2}"
+    expectations[patterns[3]]="${builtins.elemAt backups.main.location.patterns 3}"
 
     yq=${realPkgs.yq-go}/bin/yq
 

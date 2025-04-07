@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.zoxide;
 
   cfgOptions = lib.concatStringsSep " " cfg.options;
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.zoxide = {
@@ -20,31 +26,29 @@ in {
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableNushellIntegration =
-      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration
-      (lib.mkOrder 2000 ''
+    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration (
+      lib.mkOrder 2000 ''
         eval "$(${lib.getExe cfg.package} init bash ${cfgOptions})"
-      '');
+      ''
+    );
 
-    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration
-      (lib.mkOrder 2000 ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration (
+      lib.mkOrder 2000 ''
         eval "$(${lib.getExe cfg.package} init zsh ${cfgOptions})"
-      '');
+      ''
+    );
 
     programs.fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
       ${lib.getExe cfg.package} init fish ${cfgOptions} | source

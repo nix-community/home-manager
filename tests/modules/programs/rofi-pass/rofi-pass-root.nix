@@ -11,10 +11,8 @@
   nmt.script = ''
     assertFileContent \
       home-files/.config/rofi-pass/config \
-      ${
-        builtins.toFile "rofi-pass-expected-config" ''
-          root=~/.local/share/password-store
-        ''
-      }
+      ${builtins.toFile "rofi-pass-expected-config" ''
+        root=~/.local/share/password-store
+      ''}
   '';
 }

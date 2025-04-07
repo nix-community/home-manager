@@ -1,25 +1,49 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    literalExpression listToAttrs mapAttrs' mapAttrsToList mkIf mkOption
-    optional types;
+    literalExpression
+    listToAttrs
+    mapAttrs'
+    mapAttrsToList
+    mkIf
+    mkOption
+    optional
+    types
+    ;
 
   cfg = config.programs.autorandr;
 
-  matrixOf = n: m: elemType:
+  matrixOf =
+    n: m: elemType:
     lib.mkOptionType rec {
       name = "matrixOf";
-      description =
-        "${toString n}×${toString m} matrix of ${elemType.description}s";
-      check = xss:
-        let listOfSize = l: xs: lib.isList xs && lib.length xs == l;
-        in listOfSize n xss
-        && lib.all (xs: listOfSize m xs && lib.all elemType.check xs) xss;
+      description = "${toString n}×${toString m} matrix of ${elemType.description}s";
+      check =
+        xss:
+        let
+          listOfSize = l: xs: lib.isList xs && lib.length xs == l;
+        in
+        listOfSize n xss && lib.all (xs: listOfSize m xs && lib.all elemType.check xs) xss;
       merge = lib.mergeOneOption;
-      getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "*" "*" ]);
+      getSubOptions =
+        prefix:
+        elemType.getSubOptions (
+          prefix
+          ++ [
+            "*"
+            "*"
+          ]
+        );
       getSubModules = elemType.getSubModules;
       substSubModules = mod: matrixOf n m (elemType.substSubModules mod);
-      functor = (lib.defaultFunctor name) // { wrapped = elemType; };
+      functor = (lib.defaultFunctor name) // {
+        wrapped = elemType;
+      };
     };
 
   profileModule = types.submodule {
@@ -97,7 +121,14 @@ let
       };
 
       rotate = mkOption {
-        type = types.nullOr (types.enum [ "normal" "left" "right" "inverted" ]);
+        type = types.nullOr (
+          types.enum [
+            "normal"
+            "left"
+            "right"
+            "inverted"
+          ]
+        );
         description = "Output rotate configuration.";
         default = null;
         example = "left";
@@ -128,26 +159,31 @@ let
       };
 
       scale = mkOption {
-        type = types.nullOr (types.submodule {
-          options = {
-            method = mkOption {
-              type = types.enum [ "factor" "pixel" ];
-              description = "Output scaling method.";
-              default = "factor";
-              example = "pixel";
-            };
+        type = types.nullOr (
+          types.submodule {
+            options = {
+              method = mkOption {
+                type = types.enum [
+                  "factor"
+                  "pixel"
+                ];
+                description = "Output scaling method.";
+                default = "factor";
+                example = "pixel";
+              };
 
-            x = mkOption {
-              type = types.either types.float types.ints.positive;
-              description = "Horizontal scaling factor/pixels.";
-            };
+              x = mkOption {
+                type = types.either types.float types.ints.positive;
+                description = "Horizontal scaling factor/pixels.";
+              };
 
-            y = mkOption {
-              type = types.either types.float types.ints.positive;
-              description = "Vertical scaling factor/pixels.";
+              y = mkOption {
+                type = types.either types.float types.ints.positive;
+                description = "Vertical scaling factor/pixels.";
+              };
             };
-          };
-        });
+          }
+        );
         description = ''
           Output scale configuration.
 
@@ -172,7 +208,12 @@ let
       };
 
       filter = mkOption {
-        type = types.nullOr (types.enum [ "bilinear" "nearest" ]);
+        type = types.nullOr (
+          types.enum [
+            "bilinear"
+            "nearest"
+          ]
+        );
         description = "Interpolation method to be used for scaling the output.";
         default = null;
         example = "nearest";
@@ -242,30 +283,35 @@ let
     };
   };
 
-  hookToFile = folder: name: hook:
+  hookToFile =
+    folder: name: hook:
     lib.nameValuePair "autorandr/${folder}/${name}" {
       source = "${pkgs.writeShellScriptBin "hook" hook}/bin/hook";
     };
-  profileToFiles = name: profile:
-    let inherit (profile) hooks;
-    in lib.mkMerge [
+  profileToFiles =
+    name: profile:
+    let
+      inherit (profile) hooks;
+    in
+    lib.mkMerge [
       {
-        "autorandr/${name}/setup".text = lib.concatStringsSep "\n"
-          (mapAttrsToList fingerprintToString profile.fingerprint);
-        "autorandr/${name}/config".text = lib.concatStringsSep "\n"
-          (mapAttrsToList configToString profile.config);
+        "autorandr/${name}/setup".text = lib.concatStringsSep "\n" (
+          mapAttrsToList fingerprintToString profile.fingerprint
+        );
+        "autorandr/${name}/config".text = lib.concatStringsSep "\n" (
+          mapAttrsToList configToString profile.config
+        );
       }
-      (mkIf (hooks.postswitch != "")
-        (listToAttrs [ (hookToFile name "postswitch" hooks.postswitch) ]))
-      (mkIf (hooks.preswitch != "")
-        (listToAttrs [ (hookToFile name "preswitch" hooks.preswitch) ]))
-      (mkIf (hooks.predetect != "")
-        (listToAttrs [ (hookToFile name "predetect" hooks.predetect) ]))
+      (mkIf (hooks.postswitch != "") (listToAttrs [ (hookToFile name "postswitch" hooks.postswitch) ]))
+      (mkIf (hooks.preswitch != "") (listToAttrs [ (hookToFile name "preswitch" hooks.preswitch) ]))
+      (mkIf (hooks.predetect != "") (listToAttrs [ (hookToFile name "predetect" hooks.predetect) ]))
     ];
   fingerprintToString = name: edid: "${name} ${edid}";
-  configToString = name: config:
+  configToString =
+    name: config:
     if config.enable then
-      lib.concatStringsSep "\n" ([ "output ${name}" ]
+      lib.concatStringsSep "\n" (
+        [ "output ${name}" ]
         ++ optional (config.position != "") "pos ${config.position}"
         ++ optional (config.crtc != null) "crtc ${toString config.crtc}"
         ++ optional config.primary "primary"
@@ -275,18 +321,23 @@ let
         ++ optional (config.rate != "") "rate ${config.rate}"
         ++ optional (config.rotate != null) "rotate ${config.rotate}"
         ++ optional (config.filter != null) "filter ${config.filter}"
-        ++ optional (config.transform != null) ("transform "
-          + lib.concatMapStringsSep "," toString (lib.flatten config.transform))
-        ++ optional (config.scale != null)
-        ((if config.scale.method == "factor" then "scale" else "scale-from")
-          + " ${toString config.scale.x}x${toString config.scale.y}")
-        ++ optional (config.extraConfig != "") config.extraConfig)
-    else ''
-      output ${name}
-      off
-    '';
+        ++ optional (config.transform != null) (
+          "transform " + lib.concatMapStringsSep "," toString (lib.flatten config.transform)
+        )
+        ++ optional (config.scale != null) (
+          (if config.scale.method == "factor" then "scale" else "scale-from")
+          + " ${toString config.scale.x}x${toString config.scale.y}"
+        )
+        ++ optional (config.extraConfig != "") config.extraConfig
+      )
+    else
+      ''
+        output ${name}
+        off
+      '';
 
-in {
+in
+{
   options = {
     programs.autorandr = {
       enable = lib.mkEnableOption "Autorandr";
@@ -358,15 +409,19 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = lib.flatten (mapAttrsToList (profile:
-      { config, ... }:
-      mapAttrsToList (output: opts: {
-        assertion = opts.scale == null || opts.transform == null;
-        message = ''
-          Cannot use the profile output options 'scale' and 'transform' simultaneously.
-          Check configuration for: programs.autorandr.profiles.${profile}.config.${output}
-        '';
-      }) config) cfg.profiles);
+    assertions = lib.flatten (
+      mapAttrsToList (
+        profile:
+        { config, ... }:
+        mapAttrsToList (output: opts: {
+          assertion = opts.scale == null || opts.transform == null;
+          message = ''
+            Cannot use the profile output options 'scale' and 'transform' simultaneously.
+            Check configuration for: programs.autorandr.profiles.${profile}.config.${output}
+          '';
+        }) config
+      ) cfg.profiles
+    );
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 

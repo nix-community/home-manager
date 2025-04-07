@@ -4,19 +4,22 @@ let
 
   cfg = config.accounts.calendar;
 
-  localModule = name:
+  localModule =
+    name:
     types.submodule {
       options = {
         path = mkOption {
           type = types.str;
           default = "${cfg.basePath}/${name}";
-          defaultText =
-            lib.literalExpression "‹accounts.calendar.basePath›/‹name›";
+          defaultText = lib.literalExpression "‹accounts.calendar.basePath›/‹name›";
           description = "The path of the storage.";
         };
 
         type = mkOption {
-          type = types.enum [ "filesystem" "singlefile" ];
+          type = types.enum [
+            "filesystem"
+            "singlefile"
+          ];
           default = "filesystem";
           description = "The type of the storage.";
         };
@@ -41,7 +44,11 @@ let
   remoteModule = types.submodule {
     options = {
       type = mkOption {
-        type = types.enum [ "caldav" "http" "google_calendar" ];
+        type = types.enum [
+          "caldav"
+          "http"
+          "google_calendar"
+        ];
         description = "The type of the storage.";
       };
 
@@ -60,7 +67,10 @@ let
       passwordCommand = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
-        example = [ "pass" "caldav" ];
+        example = [
+          "pass"
+          "caldav"
+        ];
         description = ''
           A command that prints the password to standard output.
         '';
@@ -68,62 +78,66 @@ let
     };
   };
 
-  calendarOpts = { name, ... }: {
-    options = {
-      name = mkOption {
-        type = types.str;
-        readOnly = true;
-        description = ''
-          Unique identifier of the calendar. This is set to the
-          attribute name of the calendar configuration.
-        '';
+  calendarOpts =
+    { name, ... }:
+    {
+      options = {
+        name = mkOption {
+          type = types.str;
+          readOnly = true;
+          description = ''
+            Unique identifier of the calendar. This is set to the
+            attribute name of the calendar configuration.
+          '';
+        };
+
+        primary = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Whether this is the primary account. Only one account may be
+            set as primary.
+          '';
+        };
+
+        primaryCollection = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            The primary collection of the account. Required when an
+            account has multiple collections.
+          '';
+        };
+
+        local = mkOption {
+          type = localModule name;
+          default = { };
+          description = ''
+            Local configuration for the calendar.
+          '';
+        };
+
+        remote = mkOption {
+          type = types.nullOr remoteModule;
+          default = null;
+          description = ''
+            Remote configuration for the calendar.
+          '';
+        };
       };
 
-      primary = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether this is the primary account. Only one account may be
-          set as primary.
-        '';
-      };
-
-      primaryCollection = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = ''
-          The primary collection of the account. Required when an
-          account has multiple collections.
-        '';
-      };
-
-      local = mkOption {
-        type = localModule name;
-        default = { };
-        description = ''
-          Local configuration for the calendar.
-        '';
-      };
-
-      remote = mkOption {
-        type = types.nullOr remoteModule;
-        default = null;
-        description = ''
-          Remote configuration for the calendar.
-        '';
+      config = {
+        name = name;
       };
     };
 
-    config = { name = name; };
-  };
-
-in {
+in
+{
   options.accounts.calendar = {
     basePath = mkOption {
       type = types.str;
       example = ".calendar";
-      apply = p:
-        if lib.hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
+      apply = p: if lib.hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory in which to save calendars. May be a
         relative path, in which case it is relative the home
@@ -132,25 +146,32 @@ in {
     };
 
     accounts = mkOption {
-      type = types.attrsOf (types.submodule [
-        calendarOpts
-        (import ../programs/vdirsyncer-accounts.nix)
-        (import ../programs/khal-accounts.nix)
-        (import ../programs/khal-calendar-accounts.nix)
-      ]);
+      type = types.attrsOf (
+        types.submodule [
+          calendarOpts
+          (import ../programs/vdirsyncer-accounts.nix)
+          (import ../programs/khal-accounts.nix)
+          (import ../programs/khal-calendar-accounts.nix)
+        ]
+      );
       default = { };
       description = "List of calendars.";
     };
   };
   config = lib.mkIf (cfg.accounts != { }) {
-    assertions = let
-      primaries = lib.catAttrs "name"
-        (lib.filter (a: a.primary) (lib.attrValues cfg.accounts));
-    in [{
-      assertion = lib.length primaries <= 1;
-      message = "Must have at most one primary calendar account but found "
-        + toString (lib.length primaries) + ", namely "
-        + lib.concatStringsSep ", " primaries;
-    }];
+    assertions =
+      let
+        primaries = lib.catAttrs "name" (lib.filter (a: a.primary) (lib.attrValues cfg.accounts));
+      in
+      [
+        {
+          assertion = lib.length primaries <= 1;
+          message =
+            "Must have at most one primary calendar account but found "
+            + toString (lib.length primaries)
+            + ", namely "
+            + lib.concatStringsSep ", " primaries;
+        }
+      ];
   };
 }

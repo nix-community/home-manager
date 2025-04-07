@@ -1,15 +1,30 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    attrValues concatStringsSep filter length literalExpression mapAttrsToList
-    mkIf mkOption mkOptionDefault optionalAttrs optionalString types;
+    attrValues
+    concatStringsSep
+    filter
+    length
+    literalExpression
+    mapAttrsToList
+    mkIf
+    mkOption
+    mkOptionDefault
+    optionalAttrs
+    optionalString
+    types
+    ;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   cfg = config.programs.thunderbird;
 
   thunderbirdJson = types.attrsOf (pkgs.formats.json { }).type // {
-    description =
-      "Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)";
+    description = "Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)";
   };
 
   # The extensions path shared by all profiles.
@@ -17,127 +32,139 @@ let
 
   moduleName = "programs.thunderbird";
 
-  enabledAccounts = attrValues (lib.filterAttrs (_: a: a.thunderbird.enable)
-    config.accounts.email.accounts);
+  enabledAccounts = attrValues (
+    lib.filterAttrs (_: a: a.thunderbird.enable) config.accounts.email.accounts
+  );
 
-  enabledAccountsWithId =
-    map (a: a // { id = builtins.hashString "sha256" a.name; }) enabledAccounts;
+  enabledAccountsWithId = map (a: a // { id = builtins.hashString "sha256" a.name; }) enabledAccounts;
 
-  thunderbirdConfigPath =
-    if isDarwin then "Library/Thunderbird" else ".thunderbird";
+  thunderbirdConfigPath = if isDarwin then "Library/Thunderbird" else ".thunderbird";
 
-  thunderbirdProfilesPath = if isDarwin then
-    "${thunderbirdConfigPath}/Profiles"
-  else
-    thunderbirdConfigPath;
+  thunderbirdProfilesPath =
+    if isDarwin then "${thunderbirdConfigPath}/Profiles" else thunderbirdConfigPath;
 
-  profilesWithId =
-    lib.imap0 (i: v: v // { id = toString i; }) (attrValues cfg.profiles);
+  profilesWithId = lib.imap0 (i: v: v // { id = toString i; }) (attrValues cfg.profiles);
 
-  profilesIni = lib.foldl lib.recursiveUpdate {
-    General = {
-      StartWithLastProfile = 1;
-    } // lib.optionalAttrs (cfg.profileVersion != null) {
-      Version = cfg.profileVersion;
-    };
-  } (lib.flip map profilesWithId (profile: {
-    "Profile${profile.id}" = {
-      Name = profile.name;
-      Path = if isDarwin then "Profiles/${profile.name}" else profile.name;
-      IsRelative = 1;
-      Default = if profile.isDefault then 1 else 0;
-    };
-  }));
+  profilesIni =
+    lib.foldl lib.recursiveUpdate
+      {
+        General =
+          {
+            StartWithLastProfile = 1;
+          }
+          // lib.optionalAttrs (cfg.profileVersion != null) {
+            Version = cfg.profileVersion;
+          };
+      }
+      (
+        lib.flip map profilesWithId (profile: {
+          "Profile${profile.id}" = {
+            Name = profile.name;
+            Path = if isDarwin then "Profiles/${profile.name}" else profile.name;
+            IsRelative = 1;
+            Default = if profile.isDefault then 1 else 0;
+          };
+        })
+      );
 
-  getId = account: address:
+  getId =
+    account: address:
     if address == account.address then
       account.id
     else
-      (builtins.hashString "sha256" (if (builtins.isString address) then
-        address
-      else
-        (address.address + address.realName)));
+      (builtins.hashString "sha256" (
+        if (builtins.isString address) then address else (address.address + address.realName)
+      ));
 
-  toThunderbirdIdentity = account: address:
+  toThunderbirdIdentity =
+    account: address:
     # For backwards compatibility, the primary address reuses the account ID.
     let
       id = getId account address;
       addressIsString = builtins.isString address;
-    in {
-      "mail.identity.id_${id}.fullName" =
-        if addressIsString then account.realName else address.realName;
-      "mail.identity.id_${id}.useremail" =
-        if addressIsString then address else address.address;
+    in
+    {
+      "mail.identity.id_${id}.fullName" = if addressIsString then account.realName else address.realName;
+      "mail.identity.id_${id}.useremail" = if addressIsString then address else address.address;
       "mail.identity.id_${id}.valid" = true;
       "mail.identity.id_${id}.htmlSigText" =
-        if account.signature.showSignature == "none" then
-          ""
-        else
-          account.signature.text;
-    } // optionalAttrs (account.gpg != null) {
+        if account.signature.showSignature == "none" then "" else account.signature.text;
+    }
+    // optionalAttrs (account.gpg != null) {
       "mail.identity.id_${id}.attachPgpKey" = false;
       "mail.identity.id_${id}.autoEncryptDrafts" = true;
       "mail.identity.id_${id}.e2etechpref" = 0;
-      "mail.identity.id_${id}.encryptionpolicy" =
-        if account.gpg.encryptByDefault then 2 else 0;
+      "mail.identity.id_${id}.encryptionpolicy" = if account.gpg.encryptByDefault then 2 else 0;
       "mail.identity.id_${id}.is_gnupg_key_id" = true;
-      "mail.identity.id_${id}.last_entered_external_gnupg_key_id" =
-        account.gpg.key;
+      "mail.identity.id_${id}.last_entered_external_gnupg_key_id" = account.gpg.key;
       "mail.identity.id_${id}.openpgp_key_id" = account.gpg.key;
       "mail.identity.id_${id}.protectSubject" = true;
       "mail.identity.id_${id}.sign_mail" = account.gpg.signByDefault;
-    } // optionalAttrs (account.smtp != null) {
+    }
+    // optionalAttrs (account.smtp != null) {
       "mail.identity.id_${id}.smtpServer" = "smtp_${account.id}";
-    } // account.thunderbird.perIdentitySettings id;
+    }
+    // account.thunderbird.perIdentitySettings id;
 
-  toThunderbirdAccount = account: profile:
+  toThunderbirdAccount =
+    account: profile:
     let
       id = account.id;
       addresses = [ account.address ] ++ account.aliases;
-    in {
-      "mail.account.account_${id}.identities" = concatStringsSep ","
-        (map (address: "id_${getId account address}") addresses);
+    in
+    {
+      "mail.account.account_${id}.identities" = concatStringsSep "," (
+        map (address: "id_${getId account address}") addresses
+      );
       "mail.account.account_${id}.server" = "server_${id}";
-    } // optionalAttrs account.primary {
+    }
+    // optionalAttrs account.primary {
       "mail.accountmanager.defaultaccount" = "account_${id}";
-    } // optionalAttrs (account.imap != null) {
-      "mail.server.server_${id}.directory" =
-        "${thunderbirdProfilesPath}/${profile.name}/ImapMail/${id}";
+    }
+    // optionalAttrs (account.imap != null) {
+      "mail.server.server_${id}.directory" = "${thunderbirdProfilesPath}/${profile.name}/ImapMail/${id}";
       "mail.server.server_${id}.directory-rel" = "[ProfD]ImapMail/${id}";
       "mail.server.server_${id}.hostname" = account.imap.host;
       "mail.server.server_${id}.login_at_startup" = true;
       "mail.server.server_${id}.name" = account.name;
-      "mail.server.server_${id}.port" =
-        if (account.imap.port != null) then account.imap.port else 143;
-      "mail.server.server_${id}.socketType" = if !account.imap.tls.enable then
-        0
-      else if account.imap.tls.useStartTls then
-        2
-      else
-        3;
+      "mail.server.server_${id}.port" = if (account.imap.port != null) then account.imap.port else 143;
+      "mail.server.server_${id}.socketType" =
+        if !account.imap.tls.enable then
+          0
+        else if account.imap.tls.useStartTls then
+          2
+        else
+          3;
       "mail.server.server_${id}.type" = "imap";
       "mail.server.server_${id}.userName" = account.userName;
-    } // optionalAttrs (account.smtp != null) {
+    }
+    // optionalAttrs (account.smtp != null) {
       "mail.smtpserver.smtp_${id}.authMethod" = 3;
       "mail.smtpserver.smtp_${id}.hostname" = account.smtp.host;
-      "mail.smtpserver.smtp_${id}.port" =
-        if (account.smtp.port != null) then account.smtp.port else 587;
-      "mail.smtpserver.smtp_${id}.try_ssl" = if !account.smtp.tls.enable then
-        0
-      else if account.smtp.tls.useStartTls then
-        2
-      else
-        3;
+      "mail.smtpserver.smtp_${id}.port" = if (account.smtp.port != null) then account.smtp.port else 587;
+      "mail.smtpserver.smtp_${id}.try_ssl" =
+        if !account.smtp.tls.enable then
+          0
+        else if account.smtp.tls.useStartTls then
+          2
+        else
+          3;
       "mail.smtpserver.smtp_${id}.username" = account.userName;
-    } // optionalAttrs (account.smtp != null && account.primary) {
+    }
+    // optionalAttrs (account.smtp != null && account.primary) {
       "mail.smtp.defaultserver" = "smtp_${id}";
-    } // builtins.foldl' (a: b: a // b) { }
-    (builtins.map (address: toThunderbirdIdentity account address) addresses)
+    }
+    // builtins.foldl' (a: b: a // b) { } (
+      builtins.map (address: toThunderbirdIdentity account address) addresses
+    )
     // account.thunderbird.settings id;
 
-  toThunderbirdFeed = feed: profile:
-    let id = feed.id;
-    in {
+  toThunderbirdFeed =
+    feed: profile:
+    let
+      id = feed.id;
+    in
+    {
       "mail.account.account_${id}.server" = "server_${id}";
       "mail.server.server_${id}.name" = feed.name;
       "mail.server.server_${id}.type" = "rss";
@@ -150,39 +177,52 @@ let
   mkUserJs = prefs: extraPrefs: ''
     // Generated by Home Manager.
 
-    ${lib.concatStrings (mapAttrsToList (name: value: ''
-      user_pref("${name}", ${builtins.toJSON value});
-    '') prefs)}
+    ${lib.concatStrings (
+      mapAttrsToList (name: value: ''
+        user_pref("${name}", ${builtins.toJSON value});
+      '') prefs
+    )}
     ${extraPrefs}
   '';
 
-  mkFilterToIniString = f:
+  mkFilterToIniString =
+    f:
     if f.text == null then
       ''
         name="${f.name}"
         enabled="${if f.enabled then "yes" else "no"}"
         type="${f.type}"
         action="${f.action}"
-      '' + optionalString (f.actionValue != null) ''
+      ''
+      + optionalString (f.actionValue != null) ''
         actionValue="${f.actionValue}"
-      '' + ''
+      ''
+      + ''
         condition="${f.condition}"
-      '' + optionalString (f.extraConfig != null) f.extraConfig
+      ''
+      + optionalString (f.extraConfig != null) f.extraConfig
     else
       f.text;
 
-  mkFilterListToIni = filters:
+  mkFilterListToIni =
+    filters:
     ''
       version="9"
       logging="no"
-    '' + lib.concatStrings (map (f: mkFilterToIniString f) filters);
+    ''
+    + lib.concatStrings (map (f: mkFilterToIniString f) filters);
 
-  getEmailAccountsForProfile = profileName: accounts:
-    (filter (a:
-      a.thunderbird.profiles == [ ]
-      || lib.any (p: p == profileName) a.thunderbird.profiles) accounts);
-in {
-  meta.maintainers = with lib.hm.maintainers; [ d-dervishi jkarlson ];
+  getEmailAccountsForProfile =
+    profileName: accounts:
+    (filter (
+      a: a.thunderbird.profiles == [ ] || lib.any (p: p == profileName) a.thunderbird.profiles
+    ) accounts);
+in
+{
+  meta.maintainers = with lib.hm.maintainers; [
+    d-dervishi
+    jkarlson
+  ];
 
   options = {
     programs.thunderbird = {
@@ -210,142 +250,159 @@ in {
       };
 
       profiles = mkOption {
-        type = types.attrsOf (types.submodule ({ config, name, ... }: {
-          options = {
-            name = mkOption {
-              type = types.str;
-              default = name;
-              readOnly = true;
-              description = "This profile's name.";
-            };
-
-            isDefault = mkOption {
-              type = types.bool;
-              default = false;
-              example = true;
-              description = ''
-                Whether this is a default profile. There must be exactly one
-                default profile.
-              '';
-            };
-
-            feedAccounts = mkOption {
-              type = types.attrsOf (types.submodule ({ config, name, ... }: {
-                options = {
-                  name = mkOption {
-                    type = types.str;
-                    default = name;
-                    readOnly = true;
-                    description = "This feed account's name.";
-                  };
+        type = types.attrsOf (
+          types.submodule (
+            { config, name, ... }:
+            {
+              options = {
+                name = mkOption {
+                  type = types.str;
+                  default = name;
+                  readOnly = true;
+                  description = "This profile's name.";
                 };
-              }));
-              default = { };
-              description = ''
-                Attribute set of feed accounts. Feeds themselves have to be
-                managed through Thunderbird's settings. This option allows
-                feeds to coexist with declaratively managed email accounts.
-              '';
-            };
 
-            settings = mkOption {
-              type = thunderbirdJson;
-              default = { };
-              example = literalExpression ''
-                {
-                  "mail.spellcheck.inline" = false;
-                  "mailnews.database.global.views.global.columns" = {
-                    selectCol = {
-                      visible = false;
-                      ordinal = 1;
-                    };
-                    threadCol = {
-                      visible = true;
-                      ordinal = 2;
-                    };
-                  };
-                }
-              '';
-              description = ''
-                Preferences to add to this profile's
-                {file}`user.js`.
-              '';
-            };
+                isDefault = mkOption {
+                  type = types.bool;
+                  default = false;
+                  example = true;
+                  description = ''
+                    Whether this is a default profile. There must be exactly one
+                    default profile.
+                  '';
+                };
 
-            withExternalGnupg = mkOption {
-              type = types.bool;
-              default = false;
-              example = true;
-              description = "Allow using external GPG keys with GPGME.";
-            };
+                feedAccounts = mkOption {
+                  type = types.attrsOf (
+                    types.submodule (
+                      { config, name, ... }:
+                      {
+                        options = {
+                          name = mkOption {
+                            type = types.str;
+                            default = name;
+                            readOnly = true;
+                            description = "This feed account's name.";
+                          };
+                        };
+                      }
+                    )
+                  );
+                  default = { };
+                  description = ''
+                    Attribute set of feed accounts. Feeds themselves have to be
+                    managed through Thunderbird's settings. This option allows
+                    feeds to coexist with declaratively managed email accounts.
+                  '';
+                };
 
-            userChrome = mkOption {
-              type = types.lines;
-              default = "";
-              description = "Custom Thunderbird user chrome CSS.";
-              example = ''
-                /* Hide tab bar in Thunderbird */
-                #tabs-toolbar {
-                  visibility: collapse !important;
-                }
-              '';
-            };
+                settings = mkOption {
+                  type = thunderbirdJson;
+                  default = { };
+                  example = literalExpression ''
+                    {
+                      "mail.spellcheck.inline" = false;
+                      "mailnews.database.global.views.global.columns" = {
+                        selectCol = {
+                          visible = false;
+                          ordinal = 1;
+                        };
+                        threadCol = {
+                          visible = true;
+                          ordinal = 2;
+                        };
+                      };
+                    }
+                  '';
+                  description = ''
+                    Preferences to add to this profile's
+                    {file}`user.js`.
+                  '';
+                };
 
-            userContent = mkOption {
-              type = types.lines;
-              default = "";
-              description = "Custom Thunderbird user content CSS.";
-              example = ''
-                /* Hide scrollbar on Thunderbird pages */
-                *{scrollbar-width:none !important}
-              '';
-            };
+                withExternalGnupg = mkOption {
+                  type = types.bool;
+                  default = false;
+                  example = true;
+                  description = "Allow using external GPG keys with GPGME.";
+                };
 
-            extraConfig = mkOption {
-              type = types.lines;
-              default = "";
-              description = ''
-                Extra preferences to add to {file}`user.js`.
-              '';
-            };
+                userChrome = mkOption {
+                  type = types.lines;
+                  default = "";
+                  description = "Custom Thunderbird user chrome CSS.";
+                  example = ''
+                    /* Hide tab bar in Thunderbird */
+                    #tabs-toolbar {
+                      visibility: collapse !important;
+                    }
+                  '';
+                };
 
-            search = mkOption {
-              type = types.submodule (args:
-                import ./firefox/profiles/search.nix {
-                  inherit (args) config;
-                  inherit lib pkgs;
-                  appName = "Thunderbird";
-                  package = cfg.package;
-                  modulePath =
-                    [ "programs" "thunderbird" "profiles" name "search" ];
-                  profilePath = name;
-                });
-              default = { };
-              description = "Declarative search engine configuration.";
-            };
+                userContent = mkOption {
+                  type = types.lines;
+                  default = "";
+                  description = "Custom Thunderbird user content CSS.";
+                  example = ''
+                    /* Hide scrollbar on Thunderbird pages */
+                    *{scrollbar-width:none !important}
+                  '';
+                };
 
-            extensions = mkOption {
-              type = types.listOf types.package;
-              default = [ ];
-              example = literalExpression ''
-                [
-                  pkgs.some-thunderbird-extension
-                ]
-              '';
-              description = ''
-                List of ${name} add-on packages to install for this profile.
+                extraConfig = mkOption {
+                  type = types.lines;
+                  default = "";
+                  description = ''
+                    Extra preferences to add to {file}`user.js`.
+                  '';
+                };
 
-                Note that it is necessary to manually enable extensions
-                inside ${name} after the first installation.
+                search = mkOption {
+                  type = types.submodule (
+                    args:
+                    import ./firefox/profiles/search.nix {
+                      inherit (args) config;
+                      inherit lib pkgs;
+                      appName = "Thunderbird";
+                      package = cfg.package;
+                      modulePath = [
+                        "programs"
+                        "thunderbird"
+                        "profiles"
+                        name
+                        "search"
+                      ];
+                      profilePath = name;
+                    }
+                  );
+                  default = { };
+                  description = "Declarative search engine configuration.";
+                };
 
-                To automatically enable extensions add
-                `"extensions.autoDisableScopes" = 0;`
-                to
-                [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
-              '';
-            };
-          };
-        }));
+                extensions = mkOption {
+                  type = types.listOf types.package;
+                  default = [ ];
+                  example = literalExpression ''
+                    [
+                      pkgs.some-thunderbird-extension
+                    ]
+                  '';
+                  description = ''
+                    List of ${name} add-on packages to install for this profile.
+
+                    Note that it is necessary to manually enable extensions
+                    inside ${name} after the first installation.
+
+                    To automatically enable extensions add
+                    `"extensions.autoDisableScopes" = 0;`
+                    to
+                    [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
+                  '';
+                };
+              };
+            }
+          )
+        );
         description = "Attribute set of Thunderbird profiles.";
       };
 
@@ -378,160 +435,184 @@ in {
     };
 
     accounts.email.accounts = mkOption {
-      type = types.attrsOf (types.submodule ({ config, ... }: {
-        config.thunderbird = {
-          settings = lib.mkIf (config.flavor == "gmail.com") (id: {
-            "mail.smtpserver.smtp_${id}.authMethod" =
-              mkOptionDefault 10; # 10 = OAuth2
-            "mail.server.server_${id}.authMethod" =
-              mkOptionDefault 10; # 10 = OAuth2
-            "mail.server.server_${id}.socketType" = mkOptionDefault 3; # SSL/TLS
-            "mail.server.server_${id}.is_gmail" =
-              mkOptionDefault true; # handle labels, trash, etc
-          });
-        };
-        options.thunderbird = {
-          enable =
-            lib.mkEnableOption "the Thunderbird mail client for this account";
-
-          profiles = mkOption {
-            type = with types; listOf str;
-            default = [ ];
-            example = literalExpression ''
-              [ "profile1" "profile2" ]
-            '';
-            description = ''
-              List of Thunderbird profiles for which this account should be
-              enabled. If this list is empty (the default), this account will
-              be enabled for all declared profiles.
-            '';
-          };
-
-          settings = mkOption {
-            type = with types; functionTo (attrsOf (oneOf [ bool int str ]));
-            default = _: { };
-            defaultText = literalExpression "_: { }";
-            example = literalExpression ''
-              id: {
-                "mail.server.server_''${id}.check_new_mail" = false;
-              };
-            '';
-            description = ''
-              Extra settings to add to this Thunderbird account configuration.
-              The {var}`id` given as argument is an automatically
-              generated account identifier.
-            '';
-          };
-
-          perIdentitySettings = mkOption {
-            type = with types; functionTo (attrsOf (oneOf [ bool int str ]));
-            default = _: { };
-            defaultText = literalExpression "_: { }";
-            example = literalExpression ''
-              id: {
-                "mail.identity.id_''${id}.protectSubject" = false;
-                "mail.identity.id_''${id}.autoEncryptDrafts" = false;
-              };
-            '';
-            description = ''
-              Extra settings to add to each identity of this Thunderbird
-              account configuration. The {var}`id` given as
-              argument is an automatically generated identifier.
-            '';
-          };
-
-          messageFilters = mkOption {
-            type = with types;
-              listOf (submodule {
-                options = {
-                  name = mkOption {
-                    type = str;
-                    description = "Name for the filter.";
-                  };
-                  enabled = mkOption {
-                    type = bool;
-                    default = true;
-                    description = "Whether this filter is currently active.";
-                  };
-                  type = mkOption {
-                    type = str;
-                    description = "Type for this filter.";
-                  };
-                  action = mkOption {
-                    type = str;
-                    description = "Action to perform on matched messages.";
-                  };
-                  actionValue = mkOption {
-                    type = nullOr str;
-                    default = null;
-                    description =
-                      "Argument passed to the filter action, e.g. a folder path.";
-                  };
-                  condition = mkOption {
-                    type = str;
-                    description = "Condition to match messages against.";
-                  };
-                  extraConfig = mkOption {
-                    type = nullOr str;
-                    default = null;
-                    description = "Extra settings to apply to the filter";
-                  };
-                  text = mkOption {
-                    type = nullOr str;
-                    default = null;
-                    description = ''
-                      The raw text of the filter.
-                      Note that this will override all other options.
-                    '';
-                  };
-                };
+      type = types.attrsOf (
+        types.submodule (
+          { config, ... }:
+          {
+            config.thunderbird = {
+              settings = lib.mkIf (config.flavor == "gmail.com") (id: {
+                "mail.smtpserver.smtp_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
+                "mail.server.server_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
+                "mail.server.server_${id}.socketType" = mkOptionDefault 3; # SSL/TLS
+                "mail.server.server_${id}.is_gmail" = mkOptionDefault true; # handle labels, trash, etc
               });
-            default = [ ];
-            defaultText = literalExpression "[ ]";
-            example = literalExpression ''
-              [
-                {
-                  name = "Mark as Read on Archive";
-                  enabled = true;
-                  type = "128";
-                  action = "Mark read";
-                  condition = "ALL";
-                }
-              ]
-            '';
-            description = ''
-              List of message filters to add to this Thunderbird account
-              configuration.
-            '';
-          };
-        };
-      }));
+            };
+            options.thunderbird = {
+              enable = lib.mkEnableOption "the Thunderbird mail client for this account";
+
+              profiles = mkOption {
+                type = with types; listOf str;
+                default = [ ];
+                example = literalExpression ''
+                  [ "profile1" "profile2" ]
+                '';
+                description = ''
+                  List of Thunderbird profiles for which this account should be
+                  enabled. If this list is empty (the default), this account will
+                  be enabled for all declared profiles.
+                '';
+              };
+
+              settings = mkOption {
+                type =
+                  with types;
+                  functionTo (
+                    attrsOf (oneOf [
+                      bool
+                      int
+                      str
+                    ])
+                  );
+                default = _: { };
+                defaultText = literalExpression "_: { }";
+                example = literalExpression ''
+                  id: {
+                    "mail.server.server_''${id}.check_new_mail" = false;
+                  };
+                '';
+                description = ''
+                  Extra settings to add to this Thunderbird account configuration.
+                  The {var}`id` given as argument is an automatically
+                  generated account identifier.
+                '';
+              };
+
+              perIdentitySettings = mkOption {
+                type =
+                  with types;
+                  functionTo (
+                    attrsOf (oneOf [
+                      bool
+                      int
+                      str
+                    ])
+                  );
+                default = _: { };
+                defaultText = literalExpression "_: { }";
+                example = literalExpression ''
+                  id: {
+                    "mail.identity.id_''${id}.protectSubject" = false;
+                    "mail.identity.id_''${id}.autoEncryptDrafts" = false;
+                  };
+                '';
+                description = ''
+                  Extra settings to add to each identity of this Thunderbird
+                  account configuration. The {var}`id` given as
+                  argument is an automatically generated identifier.
+                '';
+              };
+
+              messageFilters = mkOption {
+                type =
+                  with types;
+                  listOf (submodule {
+                    options = {
+                      name = mkOption {
+                        type = str;
+                        description = "Name for the filter.";
+                      };
+                      enabled = mkOption {
+                        type = bool;
+                        default = true;
+                        description = "Whether this filter is currently active.";
+                      };
+                      type = mkOption {
+                        type = str;
+                        description = "Type for this filter.";
+                      };
+                      action = mkOption {
+                        type = str;
+                        description = "Action to perform on matched messages.";
+                      };
+                      actionValue = mkOption {
+                        type = nullOr str;
+                        default = null;
+                        description = "Argument passed to the filter action, e.g. a folder path.";
+                      };
+                      condition = mkOption {
+                        type = str;
+                        description = "Condition to match messages against.";
+                      };
+                      extraConfig = mkOption {
+                        type = nullOr str;
+                        default = null;
+                        description = "Extra settings to apply to the filter";
+                      };
+                      text = mkOption {
+                        type = nullOr str;
+                        default = null;
+                        description = ''
+                          The raw text of the filter.
+                          Note that this will override all other options.
+                        '';
+                      };
+                    };
+                  });
+                default = [ ];
+                defaultText = literalExpression "[ ]";
+                example = literalExpression ''
+                  [
+                    {
+                      name = "Mark as Read on Archive";
+                      enabled = true;
+                      type = "128";
+                      action = "Mark read";
+                      condition = "ALL";
+                    }
+                  ]
+                '';
+                description = ''
+                  List of message filters to add to this Thunderbird account
+                  configuration.
+                '';
+              };
+            };
+          }
+        )
+      );
     };
   };
 
   config = mkIf cfg.enable {
     assertions = [
-      (let
-        defaults = lib.catAttrs "name" (filter (a: a.isDefault) profilesWithId);
-      in {
-        assertion = cfg.profiles == { } || length defaults == 1;
-        message = "Must have exactly one default Thunderbird profile but found "
-          + toString (length defaults) + optionalString (length defaults > 1)
-          (", namely " + concatStringsSep "," defaults);
-      })
+      (
+        let
+          defaults = lib.catAttrs "name" (filter (a: a.isDefault) profilesWithId);
+        in
+        {
+          assertion = cfg.profiles == { } || length defaults == 1;
+          message =
+            "Must have exactly one default Thunderbird profile but found "
+            + toString (length defaults)
+            + optionalString (length defaults > 1) (", namely " + concatStringsSep "," defaults);
+        }
+      )
 
-      (let
-        profiles = lib.catAttrs "name" profilesWithId;
-        selectedProfiles =
-          lib.concatMap (a: a.thunderbird.profiles) enabledAccounts;
-      in {
-        assertion = (lib.intersectLists profiles selectedProfiles)
-          == selectedProfiles;
-        message = "Cannot enable an account for a non-declared profile. "
-          + "The declared profiles are " + (concatStringsSep "," profiles)
-          + ", but the used profiles are "
-          + (concatStringsSep "," selectedProfiles);
-      })
+      (
+        let
+          profiles = lib.catAttrs "name" profilesWithId;
+          selectedProfiles = lib.concatMap (a: a.thunderbird.profiles) enabledAccounts;
+        in
+        {
+          assertion = (lib.intersectLists profiles selectedProfiles) == selectedProfiles;
+          message =
+            "Cannot enable an account for a non-declared profile. "
+            + "The declared profiles are "
+            + (concatStringsSep "," profiles)
+            + ", but the used profiles are "
+            + (concatStringsSep "," selectedProfiles);
+        }
+      )
     ];
 
     warnings = lib.optional (isDarwin && cfg.darwinSetupWarning) ''
@@ -541,83 +622,104 @@ in {
       'pkgs.runCommand'.
     '';
 
-    home.packages = [ cfg.package ] ++ lib.optional
-      (lib.any (p: p.withExternalGnupg) (attrValues cfg.profiles)) pkgs.gpgme;
+    home.packages = [
+      cfg.package
+    ] ++ lib.optional (lib.any (p: p.withExternalGnupg) (attrValues cfg.profiles)) pkgs.gpgme;
 
     mozilla.thunderbirdNativeMessagingHosts = [
       cfg.package # package configured native messaging hosts (entire mail app actually)
     ] ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
 
-    home.file = lib.mkMerge ([{
-      "${thunderbirdConfigPath}/profiles.ini" = mkIf (cfg.profiles != { }) {
-        text = lib.generators.toINI { } profilesIni;
-      };
-    }] ++ lib.flip mapAttrsToList cfg.profiles (name: profile: {
-      "${thunderbirdProfilesPath}/${name}/chrome/userChrome.css" =
-        mkIf (profile.userChrome != "") { text = profile.userChrome; };
+    home.file = lib.mkMerge (
+      [
+        {
+          "${thunderbirdConfigPath}/profiles.ini" = mkIf (cfg.profiles != { }) {
+            text = lib.generators.toINI { } profilesIni;
+          };
+        }
+      ]
+      ++ lib.flip mapAttrsToList cfg.profiles (
+        name: profile: {
+          "${thunderbirdProfilesPath}/${name}/chrome/userChrome.css" = mkIf (profile.userChrome != "") {
+            text = profile.userChrome;
+          };
 
-      "${thunderbirdProfilesPath}/${name}/chrome/userContent.css" =
-        mkIf (profile.userContent != "") { text = profile.userContent; };
+          "${thunderbirdProfilesPath}/${name}/chrome/userContent.css" = mkIf (profile.userContent != "") {
+            text = profile.userContent;
+          };
 
-      "${thunderbirdProfilesPath}/${name}/user.js" = let
-        emailAccounts = getEmailAccountsForProfile name enabledAccountsWithId;
+          "${thunderbirdProfilesPath}/${name}/user.js" =
+            let
+              emailAccounts = getEmailAccountsForProfile name enabledAccountsWithId;
 
-        smtp = filter (a: a.smtp != null) emailAccounts;
+              smtp = filter (a: a.smtp != null) emailAccounts;
 
-        feedAccounts =
-          map (f: f // { id = builtins.hashString "sha256" f.name; })
-          (attrValues profile.feedAccounts);
+              feedAccounts = map (f: f // { id = builtins.hashString "sha256" f.name; }) (
+                attrValues profile.feedAccounts
+              );
 
-        accounts = emailAccounts ++ feedAccounts;
-      in {
-        text = mkUserJs (builtins.foldl' (a: b: a // b) { } ([
-          cfg.settings
+              accounts = emailAccounts ++ feedAccounts;
+            in
+            {
+              text = mkUserJs (builtins.foldl' (a: b: a // b) { } (
+                [
+                  cfg.settings
 
-          (optionalAttrs (length accounts != 0) {
-            "mail.accountmanager.accounts" =
-              concatStringsSep "," (map (a: "account_${a.id}") accounts);
-          })
+                  (optionalAttrs (length accounts != 0) {
+                    "mail.accountmanager.accounts" = concatStringsSep "," (map (a: "account_${a.id}") accounts);
+                  })
 
-          (optionalAttrs (length smtp != 0) {
-            "mail.smtpservers" =
-              concatStringsSep "," (map (a: "smtp_${a.id}") smtp);
-          })
+                  (optionalAttrs (length smtp != 0) {
+                    "mail.smtpservers" = concatStringsSep "," (map (a: "smtp_${a.id}") smtp);
+                  })
 
-          { "mail.openpgp.allow_external_gnupg" = profile.withExternalGnupg; }
+                  { "mail.openpgp.allow_external_gnupg" = profile.withExternalGnupg; }
 
-          profile.settings
-        ] ++ (map (a: toThunderbirdAccount a profile) emailAccounts)
-          ++ (map (f: toThunderbirdFeed f profile) feedAccounts)))
-          profile.extraConfig;
-      };
-
-      "${thunderbirdProfilesPath}/${name}/search.json.mozlz4" =
-        mkIf (profile.search.enable) {
-          enable = profile.search.enable;
-          force = profile.search.force;
-          source = profile.search.file;
-        };
-
-      "${thunderbirdProfilesPath}/${name}/extensions" =
-        mkIf (profile.extensions != [ ]) {
-          source = let
-            extensionsEnvPkg = pkgs.buildEnv {
-              name = "hm-thunderbird-extensions";
-              paths = profile.extensions;
+                  profile.settings
+                ]
+                ++ (map (a: toThunderbirdAccount a profile) emailAccounts)
+                ++ (map (f: toThunderbirdFeed f profile) feedAccounts)
+              )) profile.extraConfig;
             };
-          in "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-          recursive = true;
-          force = true;
-        };
-    }) ++ (mapAttrsToList (name: profile:
-      let
-        emailAccountsWithFilters =
-          (filter (a: a.thunderbird.messageFilters != [ ])
-            (getEmailAccountsForProfile name enabledAccountsWithId));
-      in (builtins.listToAttrs (map (a: {
-        name =
-          "${thunderbirdProfilesPath}/${name}/ImapMail/${a.id}/msgFilterRules.dat";
-        value = { text = mkFilterListToIni a.thunderbird.messageFilters; };
-      }) emailAccountsWithFilters))) cfg.profiles));
+
+          "${thunderbirdProfilesPath}/${name}/search.json.mozlz4" = mkIf (profile.search.enable) {
+            enable = profile.search.enable;
+            force = profile.search.force;
+            source = profile.search.file;
+          };
+
+          "${thunderbirdProfilesPath}/${name}/extensions" = mkIf (profile.extensions != [ ]) {
+            source =
+              let
+                extensionsEnvPkg = pkgs.buildEnv {
+                  name = "hm-thunderbird-extensions";
+                  paths = profile.extensions;
+                };
+              in
+              "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+            recursive = true;
+            force = true;
+          };
+        }
+      )
+      ++ (mapAttrsToList (
+        name: profile:
+        let
+          emailAccountsWithFilters = (
+            filter (a: a.thunderbird.messageFilters != [ ]) (
+              getEmailAccountsForProfile name enabledAccountsWithId
+            )
+          );
+        in
+        (builtins.listToAttrs (
+          map (a: {
+            name = "${thunderbirdProfilesPath}/${name}/ImapMail/${a.id}/msgFilterRules.dat";
+            value = {
+              text = mkFilterListToIni a.thunderbird.messageFilters;
+            };
+          }) emailAccountsWithFilters
+        ))
+      ) cfg.profiles)
+    );
   };
 }

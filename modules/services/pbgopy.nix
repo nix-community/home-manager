@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,14 +12,17 @@ let
   cfg = config.services.pbgopy;
   package = pkgs.pbgopy;
 
-  commandLine = concatStringsSep " " ([
-    "${package}/bin/pbgopy serve"
-    "--port ${toString cfg.port}"
-    "--ttl ${cfg.cache.ttl}"
-  ] ++ optional (cfg.httpAuth != null)
-    "--basic-auth ${escapeShellArg cfg.httpAuth}");
+  commandLine = concatStringsSep " " (
+    [
+      "${package}/bin/pbgopy serve"
+      "--port ${toString cfg.port}"
+      "--ttl ${cfg.cache.ttl}"
+    ]
+    ++ optional (cfg.httpAuth != null) "--basic-auth ${escapeShellArg cfg.httpAuth}"
+  );
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.services.pbgopy = {
@@ -51,8 +59,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.pbgopy" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.pbgopy" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ package ];
@@ -67,7 +74,9 @@ in {
         ExecStart = commandLine;
         Restart = "on-abort";
       };
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

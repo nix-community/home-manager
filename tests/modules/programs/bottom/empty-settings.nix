@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   config = {
     programs.bottom = {
       enable = true;

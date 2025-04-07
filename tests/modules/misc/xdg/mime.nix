@@ -1,10 +1,15 @@
-{ ... }: {
+{ ... }:
+{
   config = {
     xdg.mime.enable = true;
     xdg.desktopEntries = {
-      mime-test = { # mime info test
+      mime-test = {
+        # mime info test
         name = "mime-test";
-        mimeType = [ "text/html" "text/xml" ];
+        mimeType = [
+          "text/html"
+          "text/xml"
+        ];
       };
 
     };

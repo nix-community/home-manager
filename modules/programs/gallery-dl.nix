@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.gallery-dl;
 
   jsonFormat = pkgs.formats.json { };
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.gallery-dl = {

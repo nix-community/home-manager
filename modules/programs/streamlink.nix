@@ -1,18 +1,29 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.streamlink;
 
-  renderSettings = settings:
-    lib.concatLines (lib.remove "" (lib.mapAttrsToList (name: value:
-      if (builtins.isBool value) then
-        if value then name else ""
-      else if (builtins.isList value) then
-        lib.concatStringsSep "\n"
-        (builtins.map (item: "${name}=${builtins.toString item}") value)
-      else
-        "${name}=${builtins.toString value}") settings));
+  renderSettings =
+    settings:
+    lib.concatLines (
+      lib.remove "" (
+        lib.mapAttrsToList (
+          name: value:
+          if (builtins.isBool value) then
+            if value then name else ""
+          else if (builtins.isList value) then
+            lib.concatStringsSep "\n" (builtins.map (item: "${name}=${builtins.toString item}") value)
+          else
+            "${name}=${builtins.toString value}"
+        ) settings
+      )
+    );
 
   pluginType = lib.types.submodule {
     options = {
@@ -29,9 +40,19 @@ let
       };
 
       settings = lib.mkOption {
-        type = with lib.types;
-          attrsOf
-          (oneOf [ bool int float str (listOf (oneOf [ int float str ])) ]);
+        type =
+          with lib.types;
+          attrsOf (oneOf [
+            bool
+            int
+            float
+            str
+            (listOf (oneOf [
+              int
+              float
+              str
+            ]))
+          ]);
         default = { };
         example = lib.literalExpression ''
           {
@@ -47,7 +68,8 @@ let
     };
   };
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.folliehiyuki ];
 
   options.programs.streamlink = {
@@ -56,9 +78,19 @@ in {
     package = lib.mkPackageOption pkgs "streamlink" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types;
-        attrsOf
-        (oneOf [ bool int float str (listOf (oneOf [ int float str ])) ]);
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          int
+          float
+          str
+          (listOf (oneOf [
+            int
+            float
+            str
+          ]))
+        ]);
       default = { };
       example = lib.literalExpression ''
         {
@@ -98,48 +130,74 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    { home.packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      { home.packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
 
-    (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-      xdg.configFile = {
-        "streamlink/config" = lib.mkIf (cfg.settings != { }) {
-          text = renderSettings cfg.settings;
-        };
-      } // (lib.mapAttrs' (name: value:
-        lib.nameValuePair "streamlink/config.${name}"
-        (lib.mkIf (value.settings != { }) {
-          text = renderSettings value.settings;
-        })) cfg.plugins);
+      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+        xdg.configFile =
+          {
+            "streamlink/config" = lib.mkIf (cfg.settings != { }) {
+              text = renderSettings cfg.settings;
+            };
+          }
+          // (lib.mapAttrs' (
+            name: value:
+            lib.nameValuePair "streamlink/config.${name}" (
+              lib.mkIf (value.settings != { }) {
+                text = renderSettings value.settings;
+              }
+            )
+          ) cfg.plugins);
 
-      xdg.dataFile = lib.mapAttrs' (name: value:
-        lib.nameValuePair "streamlink/plugins/${name}.py"
-        (lib.mkIf (value.src != null) (if (builtins.isPath value.src) then {
-          source = value.src;
-        } else {
-          text = value.src;
-        }))) cfg.plugins;
-    })
+        xdg.dataFile = lib.mapAttrs' (
+          name: value:
+          lib.nameValuePair "streamlink/plugins/${name}.py" (
+            lib.mkIf (value.src != null) (
+              if (builtins.isPath value.src) then
+                {
+                  source = value.src;
+                }
+              else
+                {
+                  text = value.src;
+                }
+            )
+          )
+        ) cfg.plugins;
+      })
 
-    (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-      home.file = {
-        "Library/Application Support/streamlink/config" =
-          lib.mkIf (cfg.settings != { }) {
-            text = renderSettings cfg.settings;
-          };
-      } // (lib.mapAttrs' (name: value:
-        lib.nameValuePair
-        "Library/Application Support/streamlink/config.${name}"
-        (lib.mkIf (value.settings != { }) {
-          text = renderSettings value.settings;
-        })) cfg.plugins) // (lib.mapAttrs' (name: value:
-          lib.nameValuePair
-          "Library/Application Support/streamlink/plugins/${name}.py"
-          (lib.mkIf (value.src != null) (if (builtins.isPath value.src) then {
-            source = value.src;
-          } else {
-            text = value.src;
-          }))) cfg.plugins);
-    })
-  ]);
+      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        home.file =
+          {
+            "Library/Application Support/streamlink/config" = lib.mkIf (cfg.settings != { }) {
+              text = renderSettings cfg.settings;
+            };
+          }
+          // (lib.mapAttrs' (
+            name: value:
+            lib.nameValuePair "Library/Application Support/streamlink/config.${name}" (
+              lib.mkIf (value.settings != { }) {
+                text = renderSettings value.settings;
+              }
+            )
+          ) cfg.plugins)
+          // (lib.mapAttrs' (
+            name: value:
+            lib.nameValuePair "Library/Application Support/streamlink/plugins/${name}.py" (
+              lib.mkIf (value.src != null) (
+                if (builtins.isPath value.src) then
+                  {
+                    source = value.src;
+                  }
+                else
+                  {
+                    text = value.src;
+                  }
+              )
+            )
+          ) cfg.plugins);
+      })
+    ]
+  );
 }

@@ -13,7 +13,10 @@
       {
         monitor = "DP-1";
         wallpaperId = "87654321";
-        extraOptions = [ "--scaling fill" "--fps 12" ];
+        extraOptions = [
+          "--scaling fill"
+          "--fps 12"
+        ];
         audio = {
           silent = true;
           automute = false;

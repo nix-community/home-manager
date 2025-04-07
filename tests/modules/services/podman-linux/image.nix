@@ -3,7 +3,11 @@
 
   services.podman = {
     enable = true;
-    images = { "my-img" = { image = "docker.io/alpine:latest"; }; };
+    images = {
+      "my-img" = {
+        image = "docker.io/alpine:latest";
+      };
+    };
   };
 
   nmt.script = ''

@@ -1,12 +1,24 @@
-{ config, lib, realPkgs, ... }:
+{
+  config,
+  lib,
+  realPkgs,
+  ...
+}:
 
 lib.mkIf config.test.enableBig {
   xdg.portal = {
     enable = true;
-    extraPortals =
-      [ realPkgs.xdg-desktop-portal-hyprland realPkgs.xdg-desktop-portal-wlr ];
+    extraPortals = [
+      realPkgs.xdg-desktop-portal-hyprland
+      realPkgs.xdg-desktop-portal-wlr
+    ];
     configPackages = [ realPkgs.hyprland ];
-    config = { sway.default = [ "wlr" "gtk" ]; };
+    config = {
+      sway.default = [
+        "wlr"
+        "gtk"
+      ];
+    };
   };
 
   test.unstubs = [ (self: super: { inherit (realPkgs) xdg-desktop-portal; }) ];

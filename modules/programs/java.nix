@@ -1,11 +1,17 @@
 # This module provides JAVA_HOME, with a different way to install java locally.
 # This module is modified from the NixOS module `programs.java`
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.programs.java;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ ShamrockLee ];
 
   options = {

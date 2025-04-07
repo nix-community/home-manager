@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -6,7 +11,8 @@ let
 
   yamlFormat = pkgs.formats.yaml { };
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.folliehiyuki ];
 
   options.programs.earthly = {

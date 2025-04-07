@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.playerctld;
 
-in {
+in
+{
   meta.maintainers = [ hm.maintainers.fendse ];
 
   options.services.playerctld = {
@@ -22,8 +28,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.playerctld" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.playerctld" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];

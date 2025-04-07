@@ -1,8 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
-let cfg = config.services.barrier;
-in {
+let
+  cfg = config.services.barrier;
+in
+{
 
   meta.maintainers = with maintainers; [ kritnich ];
 
@@ -56,8 +63,7 @@ in {
 
   config = mkIf cfg.client.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.barrier" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.barrier" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.barrierc = {
@@ -67,12 +73,16 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
       Install.WantedBy = [ "graphical-session.target" ];
-      Service.ExecStart = with cfg.client;
-        toString ([ "${pkgs.barrier}/bin/barrierc" ]
+      Service.ExecStart =
+        with cfg.client;
+        toString (
+          [ "${pkgs.barrier}/bin/barrierc" ]
           ++ optional (name != null) "--name ${name}"
           ++ optional (!enableCrypto) "--disable-crypto"
-          ++ optional enableDragDrop "--enable-drag-drop" ++ extraFlags
-          ++ [ server ]);
+          ++ optional enableDragDrop "--enable-drag-drop"
+          ++ extraFlags
+          ++ [ server ]
+        );
     };
   };
 

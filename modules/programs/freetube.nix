@@ -1,21 +1,36 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 
 let
   inherit (lib)
-    concatStringsSep mapAttrsToList mkIf mkEnableOption mkPackageOption mkOption
-    literalExpression;
+    concatStringsSep
+    mapAttrsToList
+    mkIf
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    literalExpression
+    ;
 
   cfg = config.programs.freetube;
 
-  settings = settings:
+  settings =
+    settings:
     let
-      convertSetting = name: value:
+      convertSetting =
+        name: value:
         builtins.toJSON {
           "_id" = name;
           "value" = value;
         };
-    in concatStringsSep "\n" (mapAttrsToList convertSetting settings) + "\n";
-in {
+    in
+    concatStringsSep "\n" (mapAttrsToList convertSetting settings) + "\n";
+in
+{
   meta.maintainers = with lib.maintainers; [ vonixxx ];
 
   options.programs.freetube = {
@@ -49,12 +64,14 @@ in {
     xdg.configFile."FreeTube/hm_settings.db" = {
       source = pkgs.writeText "hm_settings.db" (settings cfg.settings);
 
-      onChange = let
-        hmSettingsDb = "${config.xdg.configHome}/FreeTube/hm_settings.db";
-        settingsDb = "${config.xdg.configHome}/FreeTube/settings.db";
-      in ''
-        run install -Dm644 $VERBOSE_ARG '${hmSettingsDb}' '${settingsDb}'
-      '';
+      onChange =
+        let
+          hmSettingsDb = "${config.xdg.configHome}/FreeTube/hm_settings.db";
+          settingsDb = "${config.xdg.configHome}/FreeTube/settings.db";
+        in
+        ''
+          run install -Dm644 $VERBOSE_ARG '${hmSettingsDb}' '${settingsDb}'
+        '';
     };
   };
 }

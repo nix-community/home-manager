@@ -6,24 +6,33 @@
   services.podman = {
     enable = true;
     builds."my-bld" = {
-      file = let
-        containerFile = pkgs.writeTextFile {
-          name = "Containerfile";
-          text = ''
-            FROM docker.io/alpine:latest
-          '';
-        };
-      in "${containerFile}";
+      file =
+        let
+          containerFile = pkgs.writeTextFile {
+            name = "Containerfile";
+            text = ''
+              FROM docker.io/alpine:latest
+            '';
+          };
+        in
+        "${containerFile}";
     };
     containers = {
       "my-container" = {
         image = "my-img.image";
-        network = [ "my-app.network" "externalnet" ];
+        network = [
+          "my-app.network"
+          "externalnet"
+        ];
         volumes = [ "my-app.volume:/data" ];
       };
-      "my-container-bld" = { image = "my-bld.build"; };
+      "my-container-bld" = {
+        image = "my-bld.build";
+      };
     };
-    images."my-img" = { image = "docker.io/alpine:latest"; };
+    images."my-img" = {
+      image = "docker.io/alpine:latest";
+    };
     networks."my-app" = {
       gateway = "192.168.123.1";
       subnet = "192.168.123.0/24";
@@ -59,9 +68,7 @@
 
     assertFileContent $buildFile ${./integration-build-expected.service}
     assertFileContent $containerFile ${./integration-container-expected.service}
-    assertFileContent $containerBldFile ${
-      ./integration-container-bld-expected.service
-    }
+    assertFileContent $containerBldFile ${./integration-container-bld-expected.service}
     assertFileContent $imageFile ${./integration-image-expected.service}
     assertFileContent $networkFile ${./integration-network-expected.service}
     assertFileContent $volumeFile ${./integration-volume-expected.service}

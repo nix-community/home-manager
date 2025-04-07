@@ -1,46 +1,73 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) getExe literalExpression mkIf mkOption mkOrder types;
+  inherit (lib)
+    getExe
+    literalExpression
+    mkIf
+    mkOption
+    mkOrder
+    types
+    ;
 
   cfg = config.programs.fzf;
 
-  renderedColors = colors:
-    lib.concatStringsSep ","
-    (lib.mapAttrsToList (name: value: "${name}:${value}") colors);
+  renderedColors =
+    colors: lib.concatStringsSep "," (lib.mapAttrsToList (name: value: "${name}:${value}") colors);
 
   hasShellIntegrationEmbedded = lib.versionAtLeast cfg.package.version "0.48.0";
 
-  bashIntegration = if hasShellIntegrationEmbedded then ''
-    if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-      eval "$(${getExe cfg.package} --bash)"
-    fi
-  '' else ''
-    if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-      . ${cfg.package}/share/fzf/completion.bash
-      . ${cfg.package}/share/fzf/key-bindings.bash
-    fi
-  '';
+  bashIntegration =
+    if hasShellIntegrationEmbedded then
+      ''
+        if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+          eval "$(${getExe cfg.package} --bash)"
+        fi
+      ''
+    else
+      ''
+        if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+          . ${cfg.package}/share/fzf/completion.bash
+          . ${cfg.package}/share/fzf/key-bindings.bash
+        fi
+      '';
 
-  zshIntegration = if hasShellIntegrationEmbedded then ''
-    if [[ $options[zle] = on ]]; then
-      eval "$(${getExe cfg.package} --zsh)"
-    fi
-  '' else ''
-    if [[ $options[zle] = on ]]; then
-      . ${cfg.package}/share/fzf/completion.zsh
-      . ${cfg.package}/share/fzf/key-bindings.zsh
-    fi
-  '';
+  zshIntegration =
+    if hasShellIntegrationEmbedded then
+      ''
+        if [[ $options[zle] = on ]]; then
+          eval "$(${getExe cfg.package} --zsh)"
+        fi
+      ''
+    else
+      ''
+        if [[ $options[zle] = on ]]; then
+          . ${cfg.package}/share/fzf/completion.zsh
+          . ${cfg.package}/share/fzf/key-bindings.zsh
+        fi
+      '';
 
-  fishIntegration = if hasShellIntegrationEmbedded then ''
-    ${getExe cfg.package} --fish | source
-  '' else ''
-    source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
-  '';
-in {
+  fishIntegration =
+    if hasShellIntegrationEmbedded then
+      ''
+        ${getExe cfg.package} --fish | source
+      ''
+    else
+      ''
+        source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
+      '';
+in
+{
   imports = [
-    (lib.mkRemovedOptionModule [ "programs" "fzf" "historyWidgetCommand" ]
-      "This option is no longer supported by fzf.")
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "fzf"
+      "historyWidgetCommand"
+    ] "This option is no longer supported by fzf.")
   ];
 
   meta.maintainers = with lib.maintainers; [ khaneliman ];
@@ -63,7 +90,10 @@ in {
     defaultOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "--height 40%" "--border" ];
+      example = [
+        "--height 40%"
+        "--border"
+      ];
       description = ''
         Extra command line options given to fzf by default.
       '';
@@ -110,7 +140,10 @@ in {
     historyWidgetOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "--sort" "--exact" ];
+      example = [
+        "--sort"
+        "--exact"
+      ];
       description = ''
         Command line options for the CTRL-R keybinding.
       '';
@@ -151,49 +184,44 @@ in {
       };
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = lib.mapAttrs (n: v: toString v)
-      (lib.filterAttrs (n: v: v != [ ] && v != null) {
+    home.sessionVariables = lib.mapAttrs (n: v: toString v) (
+      lib.filterAttrs (n: v: v != [ ] && v != null) {
         FZF_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         FZF_ALT_C_OPTS = cfg.changeDirWidgetOptions;
         FZF_CTRL_R_OPTS = cfg.historyWidgetOptions;
         FZF_CTRL_T_COMMAND = cfg.fileWidgetCommand;
         FZF_CTRL_T_OPTS = cfg.fileWidgetOptions;
         FZF_DEFAULT_COMMAND = cfg.defaultCommand;
-        FZF_DEFAULT_OPTS = cfg.defaultOptions
-          ++ lib.optionals (cfg.colors != { })
-          [ "--color ${renderedColors cfg.colors}" ];
+        FZF_DEFAULT_OPTS =
+          cfg.defaultOptions
+          ++ lib.optionals (cfg.colors != { }) [ "--color ${renderedColors cfg.colors}" ];
         FZF_TMUX = if cfg.tmux.enableShellIntegration then "1" else null;
         FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
-      });
+      }
+    );
 
     # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
     # initialization show up a bit earlier. This is to make initialization of
     # other history managers, like mcfly or atuin, take precedence.
-    programs.bash.initExtra =
-      mkIf cfg.enableBashIntegration (mkOrder 200 bashIntegration);
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 bashIntegration);
 
     # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
     # initialization show up a bit earlier. This is to make initialization of
     # other history managers, like mcfly or atuin, take precedence.
     # Still needs to be initialized after oh-my-zsh (order 800), otherwise
     # omz will take precedence.
-    programs.zsh.initContent =
-      mkIf cfg.enableZshIntegration (mkOrder 910 zshIntegration);
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 910 zshIntegration);
 
-    programs.fish.interactiveShellInit =
-      mkIf cfg.enableFishIntegration (mkOrder 200 fishIntegration);
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (mkOrder 200 fishIntegration);
   };
 }

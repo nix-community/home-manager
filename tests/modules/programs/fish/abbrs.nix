@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   config = {
     programs.fish = {
       enable = true;
@@ -46,8 +47,7 @@
     };
 
     nmt = {
-      description =
-        "if fish.shellAbbrs is set, check fish.config contains valid abbreviations";
+      description = "if fish.shellAbbrs is set, check fish.config contains valid abbreviations";
       script = ''
         assertFileContains home-files/.config/fish/config.fish \
           "abbr --add -- l less"

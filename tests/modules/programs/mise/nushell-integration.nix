@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   programs = {
     mise = {
       package = config.lib.test.mkStubPackage { name = "mise"; };

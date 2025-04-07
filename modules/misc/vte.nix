@@ -1,23 +1,30 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   meta.maintainers = [ lib.maintainers.rycee ];
 
-  options.programs = let
-    description = ''
-      Whether to enable integration with terminals using the VTE
-      library. This will let the terminal track the current working
-      directory.
-    '';
-  in {
-    bash.enableVteIntegration = lib.mkEnableOption "" // {
-      inherit description;
-    };
+  options.programs =
+    let
+      description = ''
+        Whether to enable integration with terminals using the VTE
+        library. This will let the terminal track the current working
+        directory.
+      '';
+    in
+    {
+      bash.enableVteIntegration = lib.mkEnableOption "" // {
+        inherit description;
+      };
 
-    zsh.enableVteIntegration = lib.mkEnableOption "" // {
-      inherit description;
+      zsh.enableVteIntegration = lib.mkEnableOption "" // {
+        inherit description;
+      };
     };
-  };
 
   config = lib.mkMerge [
     (lib.mkIf config.programs.bash.enableVteIntegration {

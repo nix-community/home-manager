@@ -1,9 +1,15 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.cava;
 
   iniFmt = pkgs.formats.ini { };
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.bddvlpr ];
 
   options.programs.cava = {

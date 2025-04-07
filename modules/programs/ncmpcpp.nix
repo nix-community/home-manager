@@ -1,52 +1,73 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) concatStringsSep literalExpression mkIf mkOption types;
+  inherit (lib)
+    concatStringsSep
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.ncmpcpp;
 
-  renderSettings = settings:
-    concatStringsSep "\n" (lib.mapAttrsToList renderSetting settings);
+  renderSettings = settings: concatStringsSep "\n" (lib.mapAttrsToList renderSetting settings);
 
   renderSetting = name: value: "${name}=${renderValue value}";
 
-  renderValue = option:
+  renderValue =
+    option:
     {
       int = toString option;
       bool = lib.hm.booleans.yesNo option;
       string = option;
-    }.${builtins.typeOf option};
+    }
+    .${builtins.typeOf option};
 
   renderBindings = bindings: concatStringsSep "\n" (map renderBinding bindings);
 
-  renderBinding = { key, command }:
-    concatStringsSep "\n  " ([ ''def_key "${key}"'' ] ++ maybeWrapList command);
+  renderBinding =
+    { key, command }: concatStringsSep "\n  " ([ ''def_key "${key}"'' ] ++ maybeWrapList command);
 
   maybeWrapList = xs: if lib.isList xs then xs else [ xs ];
 
-  valueType = with types; oneOf [ bool int str ];
+  valueType =
+    with types;
+    oneOf [
+      bool
+      int
+      str
+    ];
 
-  bindingType = types.submodule ({ name, config, ... }: {
-    options = {
-      key = mkOption {
-        type = types.str;
-        description = "Key to bind.";
-        example = "j";
+  bindingType = types.submodule (
+    { name, config, ... }:
+    {
+      options = {
+        key = mkOption {
+          type = types.str;
+          description = "Key to bind.";
+          example = "j";
+        };
+
+        command = mkOption {
+          type = with types; either str (listOf str);
+          description = "Command or sequence of commands to be executed.";
+          example = "scroll_down";
+        };
       };
+    }
+  );
 
-      command = mkOption {
-        type = with types; either str (listOf str);
-        description = "Command or sequence of commands to be executed.";
-        example = "scroll_down";
-      };
-    };
-  });
-
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];
 
   options.programs.ncmpcpp = {
-    enable = lib.mkEnableOption
-      "ncmpcpp - an ncurses Music Player Daemon (MPD) client";
+    enable = lib.mkEnableOption "ncmpcpp - an ncurses Music Player Daemon (MPD) client";
 
     package = lib.mkPackageOption pkgs "ncmpcpp" {
       example = "pkgs.ncmpcpp.override { visualizerSupport = true; }";
@@ -54,11 +75,11 @@ in {
 
     mpdMusicDir = mkOption {
       type = with types; nullOr (coercedTo path toString str);
-      default = let mpdCfg = config.services.mpd;
-      in if pkgs.stdenv.hostPlatform.isLinux && mpdCfg.enable then
-        mpdCfg.musicDirectory
-      else
-        null;
+      default =
+        let
+          mpdCfg = config.services.mpd;
+        in
+        if pkgs.stdenv.hostPlatform.isLinux && mpdCfg.enable then mpdCfg.musicDirectory else null;
       defaultText = literalExpression ''
         if pkgs.stdenv.hostPlatform.isLinux && config.services.mpd.enable then
           config.services.mpd.musicDirectory
@@ -82,7 +103,9 @@ in {
         see
         {manpage}`ncmpcpp(1)`.
       '';
-      example = { ncmpcpp_directory = "~/.local/share/ncmpcpp"; };
+      example = {
+        ncmpcpp_directory = "~/.local/share/ncmpcpp";
+      };
     };
 
     bindings = mkOption {
@@ -102,18 +125,21 @@ in {
 
   config = mkIf cfg.enable {
     warnings = mkIf (cfg.settings ? mpd_music_dir && cfg.mpdMusicDir != null) [
-      ("programs.ncmpcpp.settings.mpd_music_dir will be overridden by"
-        + " programs.ncmpcpp.mpdMusicDir.")
+      ("programs.ncmpcpp.settings.mpd_music_dir will be overridden by" + " programs.ncmpcpp.mpdMusicDir.")
     ];
 
     home.packages = [ cfg.package ];
 
     xdg.configFile = {
-      "ncmpcpp/config" = let
-        settings = cfg.settings // lib.optionalAttrs (cfg.mpdMusicDir != null) {
-          mpd_music_dir = cfg.mpdMusicDir;
-        };
-      in mkIf (settings != { }) { text = renderSettings settings + "\n"; };
+      "ncmpcpp/config" =
+        let
+          settings =
+            cfg.settings
+            // lib.optionalAttrs (cfg.mpdMusicDir != null) {
+              mpd_music_dir = cfg.mpdMusicDir;
+            };
+        in
+        mkIf (settings != { }) { text = renderSettings settings + "\n"; };
 
       "ncmpcpp/bindings" = mkIf (cfg.bindings != [ ]) {
         text = renderBindings cfg.bindings + "\n";

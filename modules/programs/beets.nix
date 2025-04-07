@@ -1,22 +1,34 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.beets;
 
   yamlFormat = pkgs.formats.yaml { };
 
-in {
-  meta.maintainers = with lib.maintainers; [ rycee Scrumplex ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    rycee
+    Scrumplex
+  ];
 
   options = {
     programs.beets = {
       enable = mkOption {
         type = types.bool;
-        default = if lib.versionAtLeast config.home.stateVersion "19.03" then
-          false
-        else
-          cfg.settings != { };
+        default =
+          if lib.versionAtLeast config.home.stateVersion "19.03" then false else cfg.settings != { };
         defaultText = "false";
         description = ''
           Whether to enable the beets music library manager. This
@@ -27,8 +39,7 @@ in {
       };
 
       package = lib.mkPackageOption pkgs "beets" {
-        example =
-          "(pkgs.beets.override { pluginOverrides = { beatport.enable = false; }; })";
+        example = "(pkgs.beets.override { pluginOverrides = { beatport.enable = false; }; })";
         extraDescription = ''
           Can be used to specify extensions.
         '';
@@ -70,8 +81,7 @@ in {
     (mkIf cfg.enable {
       home.packages = [ cfg.package ];
 
-      xdg.configFile."beets/config.yaml".source =
-        yamlFormat.generate "beets-config" cfg.settings;
+      xdg.configFile."beets/config.yaml".source = yamlFormat.generate "beets-config" cfg.settings;
     })
 
     (mkIf (cfg.mpdIntegration.enableStats || cfg.mpdIntegration.enableUpdate) {

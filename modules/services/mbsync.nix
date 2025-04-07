@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,10 +11,13 @@ let
 
   cfg = config.services.mbsync;
 
-  mbsyncOptions = [ "--all" ] ++ optional (cfg.verbose) "--verbose"
+  mbsyncOptions =
+    [ "--all" ]
+    ++ optional (cfg.verbose) "--verbose"
     ++ optional (cfg.configFile != null) "--config ${cfg.configFile}";
 
-in {
+in
+{
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.mbsync = {
@@ -74,33 +82,40 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.mbsync" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.mbsync" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.mbsync = {
-      Unit = { Description = "mbsync mailbox synchronization"; };
+      Unit = {
+        Description = "mbsync mailbox synchronization";
+      };
 
-      Service = {
-        Type = "oneshot";
-        ExecStart =
-          "${cfg.package}/bin/mbsync ${concatStringsSep " " mbsyncOptions}";
-      } // (optionalAttrs (cfg.postExec != null) {
-        ExecStartPost = cfg.postExec;
-      }) // (optionalAttrs (cfg.preExec != null) {
-        ExecStartPre = cfg.preExec;
-      });
+      Service =
+        {
+          Type = "oneshot";
+          ExecStart = "${cfg.package}/bin/mbsync ${concatStringsSep " " mbsyncOptions}";
+        }
+        // (optionalAttrs (cfg.postExec != null) {
+          ExecStartPost = cfg.postExec;
+        })
+        // (optionalAttrs (cfg.preExec != null) {
+          ExecStartPre = cfg.preExec;
+        });
     };
 
     systemd.user.timers.mbsync = {
-      Unit = { Description = "mbsync mailbox synchronization"; };
+      Unit = {
+        Description = "mbsync mailbox synchronization";
+      };
 
       Timer = {
         OnCalendar = cfg.frequency;
         Unit = "mbsync.service";
       };
 
-      Install = { WantedBy = [ "timers.target" ]; };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
   };
 }

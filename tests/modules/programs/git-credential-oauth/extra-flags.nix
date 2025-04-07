@@ -6,7 +6,9 @@
     extraFlags = [ "-device" ];
   };
 
-  programs.git = { enable = true; };
+  programs.git = {
+    enable = true;
+  };
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config

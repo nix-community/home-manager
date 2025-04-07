@@ -24,11 +24,16 @@
         };
       };
       registries = {
-        block = [ "ghcr.io" "gallery.ecr.aws" ];
+        block = [
+          "ghcr.io"
+          "gallery.ecr.aws"
+        ];
         insecure = [ "quay.io" ];
         search = [ "docker.io" ];
       };
-      policy = { default = [{ type = "insecureAcceptAnything"; }]; };
+      policy = {
+        default = [ { type = "insecureAcceptAnything"; } ];
+      };
     };
   };
 
@@ -49,13 +54,9 @@
     registriesFile=$(normalizeStorePaths $registriesFile)
     storageFile=$(normalizeStorePaths $storageFile)
 
-    assertFileContent $containersFile ${
-      ./configuration-containers-expected.conf
-    }
+    assertFileContent $containersFile ${./configuration-containers-expected.conf}
     assertFileContent $policyFile ${./configuration-policy-expected.json}
-    assertFileContent $registriesFile ${
-      ./configuration-registries-expected.conf
-    }
+    assertFileContent $registriesFile ${./configuration-registries-expected.conf}
     assertFileContent $storageFile ${./configuration-storage-expected.conf}
   '';
 }

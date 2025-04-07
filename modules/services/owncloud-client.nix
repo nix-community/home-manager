@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.owncloud-client;
 
-in {
+in
+{
   options = {
     services.owncloud-client = {
       enable = mkEnableOption "Owncloud Client";
@@ -17,8 +23,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.owncloud-client" pkgs
-        platforms.linux)
+      (hm.assertions.assertPlatform "services.owncloud-client" pkgs platforms.linux)
     ];
 
     systemd.user.services.owncloud-client = {
@@ -33,7 +38,9 @@ in {
         ExecStart = "${cfg.package}/bin/owncloud";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

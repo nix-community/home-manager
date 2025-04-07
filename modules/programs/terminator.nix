@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.programs.terminator;
 
-  toValue = val:
+  toValue =
+    val:
     if val == null then
       "None"
     else if val == true then
@@ -13,18 +19,25 @@ let
     else
       ''"${toString val}"'';
 
-  toConfigObject = let
-    toKey = depth: key:
-      if depth == 0 then key else toKey (depth - 1) "[${key}]";
-    toConfigObjectLevel = depth: obj:
-      lib.flatten (lib.mapAttrsToList (key: val:
-        if lib.isAttrs val then
-          [ (toKey depth key) ] ++ toConfigObjectLevel (depth + 1) val
-        else
-          [ "${key} = ${toValue val}" ]) obj);
-  in obj: lib.concatStringsSep "\n" (toConfigObjectLevel 1 obj);
+  toConfigObject =
+    let
+      toKey = depth: key: if depth == 0 then key else toKey (depth - 1) "[${key}]";
+      toConfigObjectLevel =
+        depth: obj:
+        lib.flatten (
+          lib.mapAttrsToList (
+            key: val:
+            if lib.isAttrs val then
+              [ (toKey depth key) ] ++ toConfigObjectLevel (depth + 1) val
+            else
+              [ "${key} = ${toValue val}" ]
+          ) obj
+        );
+    in
+    obj: lib.concatStringsSep "\n" (toConfigObjectLevel 1 obj);
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.chisui ];
 
   options.programs.terminator = {
@@ -53,13 +66,13 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.terminator" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.terminator" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."terminator/config" =
-      lib.mkIf (cfg.config != { }) { text = toConfigObject cfg.config; };
+    xdg.configFile."terminator/config" = lib.mkIf (cfg.config != { }) {
+      text = toConfigObject cfg.config;
+    };
   };
 }

@@ -6,7 +6,11 @@
       "hm@example.com" = {
         getmail = {
           enable = true;
-          mailboxes = [ "INBOX" "Sent" "Work" ];
+          mailboxes = [
+            "INBOX"
+            "Sent"
+            "Work"
+          ];
           destinationCommand = "/bin/maildrop";
           delete = false;
         };

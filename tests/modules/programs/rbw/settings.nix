@@ -3,10 +3,8 @@
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  path = if isDarwin then
-    "Library/Application Support/rbw/config.json"
-  else
-    ".config/rbw/config.json";
+  path =
+    if isDarwin then "Library/Application Support/rbw/config.json" else ".config/rbw/config.json";
 
   expected = builtins.toFile "rbw-expected.json" ''
     {
@@ -17,7 +15,8 @@ let
       "pinentry": "@pinentry-gnome3@/bin/pinentry"
     }
   '';
-in {
+in
+{
   programs.rbw = {
     enable = true;
     settings = {

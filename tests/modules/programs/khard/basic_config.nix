@@ -12,14 +12,26 @@
     settings = {
       general = {
         default_action = "list";
-        editor = [ "vim" "-i" "NONE" ];
+        editor = [
+          "vim"
+          "-i"
+          "NONE"
+        ];
       };
 
       "contact table" = {
         group_by_address_book = true;
         reverse = false;
-        preferred_phone_number_type = [ "pref" "cell" "home" ];
-        preferred_email_address_type = [ "pref" "work" "home" ];
+        preferred_phone_number_type = [
+          "pref"
+          "cell"
+          "home"
+        ];
+        preferred_email_address_type = [
+          "pref"
+          "work"
+          "home"
+        ];
       };
     };
   };

@@ -1,16 +1,19 @@
-{ config, ... }: {
+{ config, ... }:
+{
   config = {
     home.stateVersion = "22.11";
 
     programs.wlogout = {
       package = config.lib.test.mkStubPackage { outPath = "@wlogout@"; };
       enable = true;
-      layout = [{
-        label = "shutdown";
-        action = "systemctl poweroff";
-        text = "Shutdown";
-        keybind = "s";
-      }];
+      layout = [
+        {
+          label = "shutdown";
+          action = "systemctl poweroff";
+          text = "Shutdown";
+          keybind = "s";
+        }
+      ];
     };
 
     nmt.script = ''

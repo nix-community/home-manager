@@ -1,13 +1,25 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
-  inherit (lib) mkEnableOption mkPackageOption mkOption literalExpression mkIf;
+  inherit (lib)
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    literalExpression
+    mkIf
+    ;
   inherit (lib.types) listOf;
 
   cfg = config.programs.spotify-player;
   tomlFormat = pkgs.formats.toml { };
   tomlType = tomlFormat.type;
-in {
+in
+{
   meta.maintainers = with lib.hm.maintainers; [ diniamo ];
 
   options.programs.spotify-player = {
@@ -170,8 +182,7 @@ in {
       };
 
       "spotify-player/theme.toml" = mkIf (cfg.themes != [ ]) {
-        source =
-          tomlFormat.generate "spotify-player-theme" { inherit (cfg) themes; };
+        source = tomlFormat.generate "spotify-player-theme" { inherit (cfg) themes; };
       };
 
       "spotify-player/keymap.toml" = mkIf (cfg.keymaps != [ ]) {

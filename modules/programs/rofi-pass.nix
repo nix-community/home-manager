@@ -1,10 +1,19 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) types;
 
   cfg = config.programs.rofi.pass;
-in {
-  meta.maintainers = with lib.maintainers; [ seylerius robwalt ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    seylerius
+    robwalt
+  ];
 
   options.programs.rofi.pass = {
     enable = lib.mkEnableOption "rofi integration with password-store";
@@ -42,8 +51,8 @@ in {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."rofi-pass/config".text =
-      lib.optionalString (cfg.stores != [ ])
-      ("root=" + (lib.concatStringsSep ":" cfg.stores) + "\n") + cfg.extraConfig
+      lib.optionalString (cfg.stores != [ ]) ("root=" + (lib.concatStringsSep ":" cfg.stores) + "\n")
+      + cfg.extraConfig
       + lib.optionalString (cfg.extraConfig != "") "\n";
   };
 }

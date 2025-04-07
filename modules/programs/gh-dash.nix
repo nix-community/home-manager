@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -6,7 +11,8 @@ let
 
   yamlFormat = pkgs.formats.yaml { };
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.janik ];
 
   options.programs.gh-dash = {
@@ -36,7 +42,6 @@ in {
 
     programs.gh.extensions = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."gh-dash/config.yml".source =
-      yamlFormat.generate "gh-dash-config.yml" cfg.settings;
+    xdg.configFile."gh-dash/config.yml".source = yamlFormat.generate "gh-dash-config.yml" cfg.settings;
   };
 }

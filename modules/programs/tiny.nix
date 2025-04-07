@@ -1,12 +1,19 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.tiny;
   format = pkgs.formats.yaml { };
-  configDir = if pkgs.stdenv.isDarwin then
-    "Library/Application Support/tiny"
-  else
-    "${config.xdg.configHome}/tiny";
-in {
+  configDir =
+    if pkgs.stdenv.isDarwin then
+      "Library/Application Support/tiny"
+    else
+      "${config.xdg.configHome}/tiny";
+in
+{
   meta.maintainers = [ lib.hm.maintainers.kmaasrud ];
 
   options = {

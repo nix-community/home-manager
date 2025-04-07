@@ -1,9 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    mkEnableOption mkPackageOption types literalExpression mkIf maintainers;
+    mkEnableOption
+    mkPackageOption
+    types
+    literalExpression
+    mkIf
+    maintainers
+    ;
   cfg = config.services.polkit-gnome;
-in {
+in
+{
   meta.maintainers = [ maintainers.bobvanderlinden ];
 
   options = {
@@ -21,11 +33,12 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
-        ExecStart =
-          "${cfg.package}/libexec/polkit-gnome-authentication-agent-1";
+        ExecStart = "${cfg.package}/libexec/polkit-gnome-authentication-agent-1";
       };
     };
   };

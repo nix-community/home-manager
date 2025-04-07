@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let toml = pkgs.formats.toml { };
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  toml = pkgs.formats.toml { };
+in
+{
   meta.maintainers = with lib.maintainers; [ HeitorAugustoLN ];
 
   options.programs.vinegar = {
@@ -34,17 +41,19 @@ in {
     };
   };
 
-  config = let cfg = config.programs.vinegar;
-  in lib.mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "programs.vinegar" pkgs
-        lib.platforms.linux)
-    ];
+  config =
+    let
+      cfg = config.programs.vinegar;
+    in
+    lib.mkIf cfg.enable {
+      assertions = [
+        (lib.hm.assertions.assertPlatform "programs.vinegar" pkgs lib.platforms.linux)
+      ];
 
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."vinegar/config.toml" = lib.mkIf (cfg.settings != { }) {
-      source = toml.generate "vinegar-config.toml" cfg.settings;
+      xdg.configFile."vinegar/config.toml" = lib.mkIf (cfg.settings != { }) {
+        source = toml.generate "vinegar-config.toml" cfg.settings;
+      };
     };
-  };
 }

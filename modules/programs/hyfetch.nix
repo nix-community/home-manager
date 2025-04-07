@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.hyfetch;
 
   jsonFormat = pkgs.formats.json { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.lilyinstarlight ];
 
   options.programs.hyfetch = {

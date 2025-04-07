@@ -1,22 +1,37 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.wpaperd;
   tomlFormat = pkgs.formats.toml { };
   inherit (lib) mkRenamedOptionModule mkIf;
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers."3ulalia" ];
 
   imports = [
-    (mkRenamedOptionModule # \
-      [ "programs" "wpaperd" "enable" ] # \
-      [ "services" "wpaperd" "enable" ])
-    (mkRenamedOptionModule # \
-      [ "programs" "wpaperd" "package" ] # \
-      [ "services" "wpaperd" "package" ])
-    (mkRenamedOptionModule # \
-      [ "programs" "wpaperd" "settings" ] # \
-      [ "services" "wpaperd" "settings" ])
+    (
+      # \
+      mkRenamedOptionModule
+        [ "programs" "wpaperd" "enable" ] # \
+        [ "services" "wpaperd" "enable" ]
+    )
+    (
+      # \
+      mkRenamedOptionModule
+        [ "programs" "wpaperd" "package" ] # \
+        [ "services" "wpaperd" "package" ]
+    )
+    (
+      # \
+      mkRenamedOptionModule
+        [ "programs" "wpaperd" "settings" ] # \
+        [ "services" "wpaperd" "settings" ]
+    )
   ];
 
   options.services.wpaperd = {
@@ -50,8 +65,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.wpaperd" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.wpaperd" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -63,15 +77,16 @@ in {
     };
 
     systemd.user.services.wpaperd = lib.mkIf (cfg.package != null) {
-      Install = { WantedBy = [ config.wayland.systemd.target ]; };
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "wpaperd";
         PartOf = [ config.wayland.systemd.target ];
         After = [ config.wayland.systemd.target ];
-        X-Restart-Triggers =
-          [ "${config.xdg.configFile."wpaperd/wallpaper.toml".source}" ];
+        X-Restart-Triggers = [ "${config.xdg.configFile."wpaperd/wallpaper.toml".source}" ];
       };
 
       Service = {

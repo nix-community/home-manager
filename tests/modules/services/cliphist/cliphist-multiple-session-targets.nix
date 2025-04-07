@@ -2,7 +2,10 @@
   services.cliphist = {
     enable = true;
 
-    systemdTargets = [ "sway-session.target" "hyprland-session.target" ];
+    systemdTargets = [
+      "sway-session.target"
+      "hyprland-session.target"
+    ];
   };
 
   nmt.script = ''

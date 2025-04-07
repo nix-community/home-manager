@@ -1,24 +1,32 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   inherit (lib.strings) toJSON;
   cfg = config.services.poweralertd;
-  escapeSystemdExecArg = arg:
+  escapeSystemdExecArg =
+    arg:
     let
-      s = if isPath arg then
-        "${arg}"
-      else if isString arg then
-        arg
-      else if isInt arg || isFloat arg || isDerivation arg then
-        toString arg
-      else
-        throw
-        "escapeSystemdExecArg only allows strings, paths, numbers and derivations";
-    in replaceStrings [ "%" "$" ] [ "%%" "$$" ] (toJSON s);
+      s =
+        if isPath arg then
+          "${arg}"
+        else if isString arg then
+          arg
+        else if isInt arg || isFloat arg || isDerivation arg then
+          toString arg
+        else
+          throw "escapeSystemdExecArg only allows strings, paths, numbers and derivations";
+    in
+    replaceStrings [ "%" "$" ] [ "%%" "$$" ] (toJSON s);
   escapeSystemdExecArgs = concatMapStringsSep " " escapeSystemdExecArg;
-in {
+in
+{
   meta.maintainers = [ maintainers.thibautmarty ];
 
   options.services.poweralertd = {
@@ -27,7 +35,10 @@ in {
     extraArgs = mkOption {
       type = with types; listOf str;
       default = [ ];
-      example = [ "-s" "-S" ];
+      example = [
+        "-s"
+        "-S"
+      ];
       description = ''
         Extra command line arguments to pass to poweralertd.
       '';
@@ -36,8 +47,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.poweralertd" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.poweralertd" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.poweralertd = {
@@ -52,9 +62,7 @@ in {
 
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.poweralertd}/bin/poweralertd ${
-            escapeSystemdExecArgs cfg.extraArgs
-          }";
+        ExecStart = "${pkgs.poweralertd}/bin/poweralertd ${escapeSystemdExecArgs cfg.extraArgs}";
         Restart = "always";
       };
     };

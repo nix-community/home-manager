@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,20 +11,19 @@ let
   cfg = config.services.pantalaimon;
 
   iniFmt = pkgs.formats.ini { };
-in {
+in
+{
   meta.maintainers = [ maintainers.jojosch ];
 
   options = {
     services.pantalaimon = {
-      enable = mkEnableOption
-        "Pantalaimon, an E2EE aware proxy daemon for matrix clients";
+      enable = mkEnableOption "Pantalaimon, an E2EE aware proxy daemon for matrix clients";
 
       package = mkOption {
         type = types.package;
         default = pkgs.pantalaimon;
         defaultText = literalExpression "pkgs.pantalaimon";
-        description =
-          "Package providing the {command}`pantalaimon` executable to use.";
+        description = "Package providing the {command}`pantalaimon` executable to use.";
       };
 
       settings = mkOption {
@@ -53,8 +57,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.pantalaimon" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.pantalaimon" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -62,15 +65,12 @@ in {
     systemd.user.services = {
       pantalaimon = {
         Unit = {
-          Description =
-            "Pantalaimon - E2EE aware proxy daemon for matrix clients";
+          Description = "Pantalaimon - E2EE aware proxy daemon for matrix clients";
           After = [ "network-online.target" ];
         };
 
         Service = {
-          ExecStart = "${cfg.package}/bin/pantalaimon -c ${
-              iniFmt.generate "pantalaimon.conf" cfg.settings
-            }";
+          ExecStart = "${cfg.package}/bin/pantalaimon -c ${iniFmt.generate "pantalaimon.conf" cfg.settings}";
           Restart = "on-failure";
         };
 

@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.swayimg;
   iniFormat = pkgs.formats.ini { };
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ dod-101 ];
 
   options.programs.swayimg = {
@@ -37,8 +43,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.swayimg" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.swayimg" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];

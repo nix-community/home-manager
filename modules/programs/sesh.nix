@@ -1,11 +1,24 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
-  inherit (lib) mkEnableOption mkIf mkMerge mkOption mkPackageOption types;
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkMerge
+    mkOption
+    mkPackageOption
+    types
+    ;
 
   cfg = config.programs.sesh;
   tomlFormat = pkgs.formats.toml { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.michaelvanstraten ];
 
   options.programs.sesh = {
@@ -28,8 +41,7 @@ in {
     enableAlias = mkOption {
       type = types.bool;
       default = true;
-      description =
-        "Whether to enable a shell alias `s` to quickly launch sessions.";
+      description = "Whether to enable a shell alias `s` to quickly launch sessions.";
     };
 
     enableTmuxIntegration = mkOption {
@@ -48,8 +60,7 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [ cfg.package ];
-      home.file.".config/sesh/sesh.toml".source =
-        tomlFormat.generate "sesh.toml" cfg.settings;
+      home.file.".config/sesh/sesh.toml".source = tomlFormat.generate "sesh.toml" cfg.settings;
     }
 
     (mkIf cfg.enableAlias {
@@ -58,14 +69,14 @@ in {
     })
 
     (mkIf cfg.enableTmuxIntegration {
-      assertions = [{
-        assertion = config.programs.fzf.tmux.enableShellIntegration;
-        message =
-          "To use Tmux integration with sesh, enable `programs.fzf.tmux.enableShellIntegration`.";
-      }];
+      assertions = [
+        {
+          assertion = config.programs.fzf.tmux.enableShellIntegration;
+          message = "To use Tmux integration with sesh, enable `programs.fzf.tmux.enableShellIntegration`.";
+        }
+      ];
 
-      home.packages =
-        lib.mkIf (cfg.zoxidePackage != null) [ cfg.zoxidePackage ];
+      home.packages = lib.mkIf (cfg.zoxidePackage != null) [ cfg.zoxidePackage ];
 
       programs.tmux.extraConfig = ''
         bind-key "${cfg.tmuxKey}" run-shell "sesh connect \"$(

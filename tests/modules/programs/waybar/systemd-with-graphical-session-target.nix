@@ -16,9 +16,7 @@
       assertPathNotExists home-files/.config/waybar/style.css
 
       serviceFile=$(normalizeStorePaths home-files/.config/systemd/user/waybar.service)
-      assertFileContent "$serviceFile" ${
-        ./systemd-with-graphical-session-target.service
-      }
+      assertFileContent "$serviceFile" ${./systemd-with-graphical-session-target.service}
     '';
   };
 }

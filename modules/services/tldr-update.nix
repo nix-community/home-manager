@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.services.tldr-update;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.tldr-update;
+in
+{
   meta.maintainers = [ lib.maintainers.perchun ];
 
   options.services.tldr-update = {

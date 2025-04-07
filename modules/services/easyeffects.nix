@@ -1,21 +1,33 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) literalExpression mkOption types;
 
   cfg = config.services.easyeffects;
 
-  presetOpts =
-    lib.optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
+  presetOpts = lib.optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
 
   jsonFormat = pkgs.formats.json { };
 
-  presetType = let baseType = types.attrsOf jsonFormat.type;
-  in baseType // {
-    check = v:
-      baseType.check v
-      && lib.elem (lib.head (lib.attrNames v)) [ "input" "output" ];
-    description = "EasyEffects input or output JSON preset";
-  };
+  presetType =
+    let
+      baseType = types.attrsOf jsonFormat.type;
+    in
+    baseType
+    // {
+      check =
+        v:
+        baseType.check v
+        && lib.elem (lib.head (lib.attrNames v)) [
+          "input"
+          "output"
+        ];
+      description = "EasyEffects input or output JSON preset";
+    };
 
   presetOptionType = mkOption {
     type = types.nullOr (types.attrsOf presetType);
@@ -53,8 +65,12 @@ let
       };
     '';
   };
-in {
-  meta.maintainers = with lib.maintainers; [ fufexan hausken ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    fufexan
+    hausken
+  ];
 
   options.services.easyeffects = {
     enable = lib.mkEnableOption ''
@@ -86,35 +102,45 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.easyeffects" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.easyeffects" pkgs lib.platforms.linux)
     ];
 
     # Running easyeffects will just attach itself to `gapplication` service
     # at-spi2-core is to minimize `journalctl` noise of:
     # "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"
-    home.packages = with pkgs; [ cfg.package at-spi2-core ];
+    home.packages = with pkgs; [
+      cfg.package
+      at-spi2-core
+    ];
 
-    xdg.configFile = lib.mkIf (cfg.extraPresets != { }) (lib.mapAttrs' (k: v:
-      # Assuming only one of either input or output block is defined, having both in same file not seem to be supported by the application since it separates it by folder
-      let folder = builtins.head (builtins.attrNames v);
-      in lib.nameValuePair "easyeffects/${folder}/${k}.json" {
-        source = jsonFormat.generate "${folder}-${k}.json" v;
-      }) cfg.extraPresets);
+    xdg.configFile = lib.mkIf (cfg.extraPresets != { }) (
+      lib.mapAttrs' (
+        k: v:
+        # Assuming only one of either input or output block is defined, having both in same file not seem to be supported by the application since it separates it by folder
+        let
+          folder = builtins.head (builtins.attrNames v);
+        in
+        lib.nameValuePair "easyeffects/${folder}/${k}.json" {
+          source = jsonFormat.generate "${folder}-${k}.json" v;
+        }
+      ) cfg.extraPresets
+    );
 
     systemd.user.services.easyeffects = {
       Unit = {
         Description = "Easyeffects daemon";
         Requires = [ "dbus.service" ];
         After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" "pipewire.service" ];
+        PartOf = [
+          "graphical-session.target"
+          "pipewire.service"
+        ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
 
       Service = {
-        ExecStart =
-          "${cfg.package}/bin/easyeffects --gapplication-service ${presetOpts}";
+        ExecStart = "${cfg.package}/bin/easyeffects --gapplication-service ${presetOpts}";
         ExecStop = "${cfg.package}/bin/easyeffects --quit";
         Restart = "on-failure";
         RestartSec = 5;

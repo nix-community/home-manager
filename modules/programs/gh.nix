@@ -1,6 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.gh;
 
@@ -42,27 +52,49 @@ let
     };
   };
 
-in {
-  meta.maintainers = with lib.maintainers; [ gerschtli berbiche ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    gerschtli
+    berbiche
+  ];
 
-  imports = (map (x:
-    lib.mkRenamedOptionModule [ "programs" "gh" x ] [
-      "programs"
-      "gh"
-      "settings"
-      x
-    ]) [ "aliases" "editor" ]) ++ [
-      (lib.mkRenamedOptionModule [ "programs" "gh" "gitProtocol" ] [
-        "programs"
-        "gh"
-        "settings"
-        "git_protocol"
-      ])
-      (lib.mkRenamedOptionModule [
-        "programs"
-        "gh"
-        "enableGitCredentialHelper"
-      ] [ "programs" "gh" "gitCredentialHelper" "enable" ])
+  imports =
+    (map
+      (
+        x:
+        lib.mkRenamedOptionModule
+          [ "programs" "gh" x ]
+          [
+            "programs"
+            "gh"
+            "settings"
+            x
+          ]
+      )
+      [
+        "aliases"
+        "editor"
+      ]
+    )
+    ++ [
+      (lib.mkRenamedOptionModule
+        [ "programs" "gh" "gitProtocol" ]
+        [
+          "programs"
+          "gh"
+          "settings"
+          "git_protocol"
+        ]
+      )
+      (lib.mkRenamedOptionModule
+        [
+          "programs"
+          "gh"
+          "enableGitCredentialHelper"
+        ]
+        [ "programs" "gh" "gitCredentialHelper" "enable" ]
+      )
     ];
 
   options.programs.gh = {
@@ -73,8 +105,7 @@ in {
     settings = mkOption {
       type = settingsType;
       default = { };
-      description =
-        "Configuration written to {file}`$XDG_CONFIG_HOME/gh/config.yml`.";
+      description = "Configuration written to {file}`$XDG_CONFIG_HOME/gh/config.yml`.";
       example = literalExpression ''
         {
           git_protocol = "ssh";
@@ -96,7 +127,10 @@ in {
 
       hosts = mkOption {
         type = types.listOf types.str;
-        default = [ "https://github.com" "https://gist.github.com" ];
+        default = [
+          "https://github.com"
+          "https://gist.github.com"
+        ];
         description = "GitHub hosts to enable the gh git credential helper for";
         example = literalExpression ''
           [ "https://github.com" "https://github.example.com" ]
@@ -117,8 +151,9 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."gh/config.yml".source =
-      yamlFormat.generate "gh-config.yml" ({ version = "1"; } // cfg.settings);
+    xdg.configFile."gh/config.yml".source = yamlFormat.generate "gh-config.yml" (
+      { version = "1"; } // cfg.settings
+    );
 
     # Version 2.40.0+ of `gh` needs to migrate account formats, this needs to
     # happen before the version = 1 is placed in the configuration file. Running
@@ -127,8 +162,10 @@ in {
     #
     # See https://github.com/nix-community/home-manager/issues/4744 for details.
     home.activation.migrateGhAccounts =
-      let ghHosts = "${config.xdg.configHome}/gh/hosts.yml";
-      in lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+      let
+        ghHosts = "${config.xdg.configHome}/gh/hosts.yml";
+      in
+      lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
         if [[ ! -L "${ghHosts}" && -f "${ghHosts}" && $(grep --invert-match --quiet '^version:' ${ghHosts}) ]]; then
           (
             TMP_DIR=$(mktemp -d)
@@ -141,17 +178,24 @@ in {
         fi
       '';
 
-    programs.git.extraConfig.credential = mkIf cfg.gitCredentialHelper.enable
-      (builtins.listToAttrs (map (host:
-        lib.nameValuePair host {
-          helper = "${cfg.package}/bin/gh auth git-credential";
-        }) cfg.gitCredentialHelper.hosts));
+    programs.git.extraConfig.credential = mkIf cfg.gitCredentialHelper.enable (
+      builtins.listToAttrs (
+        map (
+          host:
+          lib.nameValuePair host {
+            helper = "${cfg.package}/bin/gh auth git-credential";
+          }
+        ) cfg.gitCredentialHelper.hosts
+      )
+    );
 
     xdg.dataFile."gh/extensions" = mkIf (cfg.extensions != [ ]) {
-      source = pkgs.linkFarm "gh-extensions" (builtins.map (p: {
-        name = p.pname;
-        path = "${p}/bin";
-      }) cfg.extensions);
+      source = pkgs.linkFarm "gh-extensions" (
+        builtins.map (p: {
+          name = p.pname;
+          path = "${p}/bin";
+        }) cfg.extensions
+      );
     };
   };
 }

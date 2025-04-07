@@ -1,15 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.looking-glass-client;
   settingsFormat = pkgs.formats.ini { };
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ j-brn ];
 
   options.programs.looking-glass-client = {
     enable = lib.mkEnableOption "looking-glass-client";
 
-    package =
-      lib.mkPackageOption pkgs "looking-glass-client" { nullable = true; };
+    package = lib.mkPackageOption pkgs "looking-glass-client" { nullable = true; };
 
     settings = lib.mkOption {
       type = settingsFormat.type;
@@ -44,8 +49,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.looking-glass-client" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.looking-glass-client" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];

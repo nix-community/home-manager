@@ -20,9 +20,7 @@
     assertFileExists $serviceFile
     assertFileExists $socketFile
     assertFileExists $configFile
-    assertFileContent $(normalizeStorePaths $serviceFile) ${
-      ./wob-service-expected.service
-    }
+    assertFileContent $(normalizeStorePaths $serviceFile) ${./wob-service-expected.service}
     assertFileContent $socketFile ${./wob-service-expected.socket}
     assertFileContent $configFile ${./wob-service-expected.ini}
   '';

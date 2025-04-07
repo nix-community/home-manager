@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   config = {
     pam.sessionVariables = {
       V1 = "v1";

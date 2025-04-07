@@ -8,7 +8,10 @@
     # same time.
     # If they are, then the new version will take precedence.
     groups.inboxes = {
-      "hm@example.com" = [ "Inbox1" "Inbox2" ];
+      "hm@example.com" = [
+        "Inbox1"
+        "Inbox2"
+      ];
       hm-account = [ "Inbox" ];
     };
   };
@@ -16,7 +19,11 @@
   accounts.email.accounts = {
     "hm@example.com".mbsync = {
       enable = true;
-      extraConfig.account.TLSVersions = [ "+1.3" "+1.2" "-1.1" ];
+      extraConfig.account.TLSVersions = [
+        "+1.3"
+        "+1.2"
+        "-1.1"
+      ];
       groups.inboxes = {
         channels = {
           inbox1 = {
@@ -37,8 +44,11 @@
         channels.earlierPatternMatch = {
           farPattern = "Label";
           nearPattern = "SomethingUnderLabel";
-          patterns =
-            [ "ThingUnderLabel" "!NotThisMaildirThough" ''"[Weird] Label?"'' ];
+          patterns = [
+            "ThingUnderLabel"
+            "!NotThisMaildirThough"
+            ''"[Weird] Label?"''
+          ];
         };
         channels.inbox = {
           farPattern = "Inbox";
@@ -51,8 +61,11 @@
         channels.patternMatch = {
           farPattern = "Label";
           nearPattern = "SomethingUnderLabel";
-          patterns =
-            [ "ThingUnderLabel" "!NotThisMaildirThough" ''"[Weird] Label?"'' ];
+          patterns = [
+            "ThingUnderLabel"
+            "!NotThisMaildirThough"
+            ''"[Weird] Label?"''
+          ];
         };
       };
       # No group should be printed.

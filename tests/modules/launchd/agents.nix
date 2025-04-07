@@ -3,7 +3,11 @@
     launchd.agents."test-service" = {
       enable = true;
       config = {
-        ProgramArguments = [ "/some/command" "--with-arguments" "foo" ];
+        ProgramArguments = [
+          "/some/command"
+          "--with-arguments"
+          "foo"
+        ];
         KeepAlive = {
           Crashed = true;
           SuccessfulExit = false;

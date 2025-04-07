@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   config = {
     programs.tex-fmt = {
       enable = true;
@@ -10,22 +11,19 @@
       };
     };
 
-    nmt.script = let
-      expectedConfDir = if pkgs.stdenv.isDarwin then
-        "Library/Application Support"
-      else
-        ".config";
-      expectedConfigPath = "home-files/${expectedConfDir}/tex-fmt/tex-fmt.toml";
-    in ''
-      assertFileExists "${expectedConfigPath}"
-      assertFileContent "${expectedConfigPath}" ${
-        pkgs.writeText "tex-fmt.config-custom.expected" ''
+    nmt.script =
+      let
+        expectedConfDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else ".config";
+        expectedConfigPath = "home-files/${expectedConfDir}/tex-fmt/tex-fmt.toml";
+      in
+      ''
+        assertFileExists "${expectedConfigPath}"
+        assertFileContent "${expectedConfigPath}" ${pkgs.writeText "tex-fmt.config-custom.expected" ''
           lists = []
           tabchar = "space"
           tabsize = 2
           wrap = true
-        ''
-      }
-    '';
+        ''}
+      '';
   };
 }

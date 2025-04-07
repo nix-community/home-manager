@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.bemenu;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.bemenu;
+in
+{
   meta.maintainers = [ ];
 
   options.programs.bemenu = {
@@ -9,7 +16,13 @@ in {
     package = lib.mkPackageOption pkgs "bemenu" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types; attrsOf (oneOf [ str number bool ]);
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          str
+          number
+          bool
+        ]);
       default = { };
       example = lib.literalExpression ''
         {
@@ -29,15 +42,13 @@ in {
           width-factor = 0.3;
         }
       '';
-      description =
-        "Configuration options for bemenu. See {manpage}`bemenu(1)`.";
+      description = "Configuration options for bemenu. See {manpage}`bemenu(1)`.";
     };
   };
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.bemenu" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.bemenu" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];

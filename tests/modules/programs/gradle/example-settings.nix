@@ -11,8 +11,7 @@
     };
   };
 
-  programs.java.package =
-    pkgs.runCommandLocal "java" { home = ""; } "mkdir $out";
+  programs.java.package = pkgs.runCommandLocal "java" { home = ""; } "mkdir $out";
 
   test.stubs = {
     jdk8 = { };
@@ -22,15 +21,13 @@
 
   nmt.script = ''
     assertFileExists home-files/.gradle/gradle.properties
-    assertFileContent home-files/.gradle/gradle.properties ${
-      builtins.toFile "gradle.expected" ''
-        # Generated with Nix
+    assertFileContent home-files/.gradle/gradle.properties ${builtins.toFile "gradle.expected" ''
+      # Generated with Nix
 
-        org.gradle.caching = true
-        org.gradle.java.home = @jdk17@
-        org.gradle.java.installations.paths = @jdk8@,@jdk11@
-        org.gradle.parallel = true
-      ''
-    }
+      org.gradle.caching = true
+      org.gradle.java.home = @jdk17@
+      org.gradle.java.installations.paths = @jdk8@,@jdk11@
+      org.gradle.parallel = true
+    ''}
   '';
 }

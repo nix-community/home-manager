@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.rclone;
   iniFormat = pkgs.formats.ini { };
 
-in {
+in
+{
   options = {
     programs.rclone = {
       enable = lib.mkEnableOption "rclone";
@@ -13,67 +19,77 @@ in {
       package = lib.mkPackageOption pkgs "rclone" { };
 
       remotes = lib.mkOption {
-        type = lib.types.attrsOf (lib.types.submodule {
-          options = {
-            config = lib.mkOption {
-              type = with lib.types;
-                let
-                  baseType = attrsOf (nullOr (oneOf [ bool int float str ]));
+        type = lib.types.attrsOf (
+          lib.types.submodule {
+            options = {
+              config = lib.mkOption {
+                type =
+                  with lib.types;
+                  let
+                    baseType = attrsOf (
+                      nullOr (oneOf [
+                        bool
+                        int
+                        float
+                        str
+                      ])
+                    );
 
-                  # Should we verify whether type constitutes a valid remote?
-                  remoteConfigType = addCheck baseType (lib.hasAttr "type") // {
-                    name = "rcloneRemoteConfig";
-                    description =
-                      "An attribute set containing a remote type and options.";
-                  };
-                in remoteConfigType;
-              default = { };
-              description = ''
-                Regular configuration options as described in rclone's documentation
-                <https://rclone.org/docs/>. When specifying options follow the formatting
-                process outlined here <https://rclone.org/docs/#config-config-file>, namley:
-                 - Remove the leading double-dash (--) from the rclone option name
-                 - Replace hyphens (-) with underscores (_)
-                 - Convert to lowercase
-                 - Use the resulting string as your configuration key
+                    # Should we verify whether type constitutes a valid remote?
+                    remoteConfigType = addCheck baseType (lib.hasAttr "type") // {
+                      name = "rcloneRemoteConfig";
+                      description = "An attribute set containing a remote type and options.";
+                    };
+                  in
+                  remoteConfigType;
+                default = { };
+                description = ''
+                  Regular configuration options as described in rclone's documentation
+                  <https://rclone.org/docs/>. When specifying options follow the formatting
+                  process outlined here <https://rclone.org/docs/#config-config-file>, namley:
+                   - Remove the leading double-dash (--) from the rclone option name
+                   - Replace hyphens (-) with underscores (_)
+                   - Convert to lowercase
+                   - Use the resulting string as your configuration key
 
-                For example, the rclone option "--mega-hard-delete" would use "hard_delete"
-                as the config key.
+                  For example, the rclone option "--mega-hard-delete" would use "hard_delete"
+                  as the config key.
 
-                Security Note: Always use the {option}`secrets` option for sensitive data
-                instead of the {option}`config` option to prevent exposing credentials to
-                the world-readable Nix store.
-              '';
-              example = lib.literalExpression ''
-                {
-                  type = "mega"; # Required - specifies the remote type
-                  user = "you@example.com";
-                  hard_delete = true;
-                }'';
+                  Security Note: Always use the {option}`secrets` option for sensitive data
+                  instead of the {option}`config` option to prevent exposing credentials to
+                  the world-readable Nix store.
+                '';
+                example = lib.literalExpression ''
+                  {
+                    type = "mega"; # Required - specifies the remote type
+                    user = "you@example.com";
+                    hard_delete = true;
+                  }'';
+              };
+
+              secrets = lib.mkOption {
+                type = with lib.types; attrsOf str;
+                default = { };
+                description = ''
+                  Sensitive configuration values such as passwords, API keys, and tokens. These
+                  must be provided as file paths to the secrets, which will be read at activation
+                  time.
+
+                  Note: If using secret management solutions like agenix or sops-nix with
+                  home-manager, you need to ensure their services are activated before switching
+                  to this home-manager generation. Consider setting
+                  {option}`systemd.user.startServices` to `"sd-switch"` for automatic service
+                  startup.
+                '';
+                example = lib.literalExpression ''
+                  {
+                    password = "/run/secrets/password";
+                    api_key = config.age.secrets.api-key.path;
+                  }'';
+              };
             };
-
-            secrets = lib.mkOption {
-              type = with lib.types; attrsOf str;
-              default = { };
-              description = ''
-                Sensitive configuration values such as passwords, API keys, and tokens. These
-                must be provided as file paths to the secrets, which will be read at activation
-                time.
-
-                Note: If using secret management solutions like agenix or sops-nix with
-                home-manager, you need to ensure their services are activated before switching
-                to this home-manager generation. Consider setting
-                {option}`systemd.user.startServices` to `"sd-switch"` for automatic service
-                startup.
-              '';
-              example = lib.literalExpression ''
-                {
-                  password = "/run/secrets/password";
-                  api_key = config.age.secrets.api-key.path;
-                }'';
-            };
-          };
-        });
+          }
+        );
         default = { };
         description = ''
           An attribute set of remote configurations. Each remote consists of regular
@@ -122,28 +138,31 @@ in {
     home = {
       packages = [ cfg.package ];
 
-      activation.createRcloneConfig = let
-        safeConfig = lib.pipe cfg.remotes [
-          (lib.mapAttrs (_: v: v.config))
-          (iniFormat.generate "rclone.conf@pre-secrets")
-        ];
+      activation.createRcloneConfig =
+        let
+          safeConfig = lib.pipe cfg.remotes [
+            (lib.mapAttrs (_: v: v.config))
+            (iniFormat.generate "rclone.conf@pre-secrets")
+          ];
 
-        # https://github.com/rclone/rclone/issues/8190
-        injectSecret = remote:
-          lib.mapAttrsToList (secret: secretFile: ''
-            ${lib.getExe cfg.package} config update \
-              ${remote.name} config_refresh_token=false \
-              ${secret} "$(cat ${secretFile})" \
-              --quiet > /dev/null
-          '') remote.value.secrets or { };
+          # https://github.com/rclone/rclone/issues/8190
+          injectSecret =
+            remote:
+            lib.mapAttrsToList (secret: secretFile: ''
+              ${lib.getExe cfg.package} config update \
+                ${remote.name} config_refresh_token=false \
+                ${secret} "$(cat ${secretFile})" \
+                --quiet > /dev/null
+            '') remote.value.secrets or { };
 
-        injectAllSecrets = lib.concatMap injectSecret
-          (lib.mapAttrsToList lib.nameValuePair cfg.remotes);
-      in lib.mkIf (cfg.remotes != { })
-      (lib.hm.dag.entryAfter [ "writeBoundary" cfg.writeAfter ] ''
-        run install $VERBOSE_ARG -D -m600 ${safeConfig} "${config.xdg.configHome}/rclone/rclone.conf"
-        ${lib.concatLines injectAllSecrets}
-      '');
+          injectAllSecrets = lib.concatMap injectSecret (lib.mapAttrsToList lib.nameValuePair cfg.remotes);
+        in
+        lib.mkIf (cfg.remotes != { }) (
+          lib.hm.dag.entryAfter [ "writeBoundary" cfg.writeAfter ] ''
+            run install $VERBOSE_ARG -D -m600 ${safeConfig} "${config.xdg.configHome}/rclone/rclone.conf"
+            ${lib.concatLines injectAllSecrets}
+          ''
+        );
     };
   };
 

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
@@ -6,9 +11,9 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
-  initFish =
-    if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
-in {
+  initFish = if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
+in
+{
   meta.maintainers = [ ];
 
   options.programs.starship = {
@@ -44,20 +49,15 @@ in {
       '';
     };
 
-    enableBashIntegration =
-      lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableIonIntegration =
-      lib.hm.shell.mkIonIntegrationOption { inherit config; };
+    enableIonIntegration = lib.hm.shell.mkIonIntegrationOption { inherit config; };
 
-    enableNushellIntegration =
-      lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     enableInteractive = mkOption {
       type = types.bool;

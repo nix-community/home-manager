@@ -1,15 +1,27 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib)
-    getExe literalExpression mkEnableOption mkIf mkOption mkPackageOption
-    optional;
+    getExe
+    literalExpression
+    mkEnableOption
+    mkIf
+    mkOption
+    mkPackageOption
+    optional
+    ;
 
   cfg = config.services.wob;
   settingsFormat = pkgs.formats.ini { };
 
   configFile = settingsFormat.generate "wob.ini" cfg.settings;
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ Scrumplex ];
 
   options.services.wob = {
@@ -35,8 +47,7 @@ in {
       '';
     };
 
-    systemd = mkEnableOption "systemd service and socket for wob"
-      // mkOption { default = true; };
+    systemd = mkEnableOption "systemd service and socket for wob" // mkOption { default = true; };
   };
 
   config = mkIf cfg.enable {
@@ -47,8 +58,7 @@ in {
     systemd.user = mkIf (cfg.systemd && (cfg.package != null)) {
       services.wob = {
         Unit = {
-          Description =
-            "A lightweight overlay volume/backlight/progress/anything bar for Wayland";
+          Description = "A lightweight overlay volume/backlight/progress/anything bar for Wayland";
           Documentation = "man:wob(1)";
           PartOf = [ config.wayland.systemd.target ];
           After = [ config.wayland.systemd.target ];
@@ -56,8 +66,9 @@ in {
         };
         Service = {
           StandardInput = "socket";
-          ExecStart = builtins.concatStringsSep " " ([ (getExe cfg.package) ]
-            ++ optional (cfg.settings != { }) "--config ${configFile}");
+          ExecStart = builtins.concatStringsSep " " (
+            [ (getExe cfg.package) ] ++ optional (cfg.settings != { }) "--config ${configFile}"
+          );
         };
         Install.WantedBy = [ config.wayland.systemd.target ];
       };
@@ -73,7 +84,6 @@ in {
       };
     };
 
-    xdg.configFile."wob/wob.ini" =
-      mkIf (cfg.settings != { }) { source = configFile; };
+    xdg.configFile."wob/wob.ini" = mkIf (cfg.settings != { }) { source = configFile; };
   };
 }

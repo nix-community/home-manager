@@ -1,4 +1,10 @@
-{ config, lib, pkgs, realPkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  realPkgs,
+  ...
+}:
 
 lib.mkIf config.test.enableBig {
   programs.neovim = lib.mkMerge [
@@ -17,24 +23,38 @@ lib.mkIf config.test.enableBig {
           };
         }
       ];
-      extraWrapperArgs = let buildDeps = with pkgs; [ stdenv.cc.cc zlib ];
-      in [
-        "--suffix"
-        "LIBRARY_PATH"
-        ":"
-        "${lib.makeLibraryPath buildDeps}"
-        "--suffix"
-        "PKG_CONFIG_PATH"
-        ":"
-        "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" buildDeps}"
-      ];
+      extraWrapperArgs =
+        let
+          buildDeps = with pkgs; [
+            stdenv.cc.cc
+            zlib
+          ];
+        in
+        [
+          "--suffix"
+          "LIBRARY_PATH"
+          ":"
+          "${lib.makeLibraryPath buildDeps}"
+          "--suffix"
+          "PKG_CONFIG_PATH"
+          ":"
+          "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" buildDeps}"
+        ];
     }
     {
-      extraPython3Packages = ps: with ps; [ jedi pynvim ];
+      extraPython3Packages =
+        ps: with ps; [
+          jedi
+          pynvim
+        ];
       extraLuaPackages = ps: with ps; [ luacheck ];
     }
     {
-      extraPython3Packages = ps: with ps; [ jedi pynvim ];
+      extraPython3Packages =
+        ps: with ps; [
+          jedi
+          pynvim
+        ];
       extraLuaPackages = ps: with ps; [ luacheck ];
     }
   ];

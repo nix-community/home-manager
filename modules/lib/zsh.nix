@@ -2,7 +2,8 @@
 
 rec {
   # Produces a Zsh shell like value
-  toZshValue = v:
+  toZshValue =
+    v:
     if builtins.isBool v then
       if v then "true" else "false"
     else if builtins.isString v then

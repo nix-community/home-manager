@@ -10,7 +10,13 @@
     };
   };
 
-  outputs = { self, nixpkgs, treefmt-nix, ... }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      treefmt-nix,
+      ...
+    }:
     {
       nixosModules = rec {
         home-manager = ./nixos;
@@ -44,42 +50,50 @@
       };
 
       lib = import ./lib { inherit (nixpkgs) lib; };
-    } // (let
-      forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+    }
+    // (
+      let
+        forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
 
-      treefmtEval = forAllSystems (
-        system:
-        treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} {
-          # Formatting configuration
-          programs = {
-            nixfmt.enable = true;
-          };
+        treefmtEval = forAllSystems (
+          system:
+          treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} {
+            # Formatting configuration
+            programs = {
+              nixfmt.enable = true;
+            };
+          }
+        );
+      in
+      {
+        checks = forAllSystems (system: {
+          formatting = treefmtEval.${system}.config.build.check self;
         });
-    in {
-      checks = forAllSystems   (system: {
-        formatting = treefmtEval.${system}.config.build.check self;
-      });
 
-      formatter = forAllSystems  (system: treefmtEval.${system}.config.build.wrapper);
+        formatter = forAllSystems (system: treefmtEval.${system}.config.build.wrapper);
 
-      packages = forAllSystems (system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          releaseInfo = nixpkgs.lib.importJSON ./release.json;
-          docs = import ./docs {
-            inherit pkgs;
-            inherit (releaseInfo) release isReleaseBranch;
-          };
-          hmPkg = pkgs.callPackage ./home-manager { path = "${self}"; };
-        in {
-          default = hmPkg;
-          home-manager = hmPkg;
+        packages = forAllSystems (
+          system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            releaseInfo = nixpkgs.lib.importJSON ./release.json;
+            docs = import ./docs {
+              inherit pkgs;
+              inherit (releaseInfo) release isReleaseBranch;
+            };
+            hmPkg = pkgs.callPackage ./home-manager { path = "${self}"; };
+          in
+          {
+            default = hmPkg;
+            home-manager = hmPkg;
 
-          docs-html = docs.manual.html;
-          docs-htmlOpenTool = docs.manual.htmlOpenTool;
-          docs-json = docs.options.json;
-          docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
-          docs-manpages = docs.manPages;
-        });
-    });
+            docs-html = docs.manual.html;
+            docs-htmlOpenTool = docs.manual.htmlOpenTool;
+            docs-json = docs.options.json;
+            docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
+            docs-manpages = docs.manPages;
+          }
+        );
+      }
+    );
 }

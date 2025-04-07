@@ -1,7 +1,17 @@
 {
   imports = [
-    ({ ... }: { config.programs.zsh.history.ignorePatterns = [ "echo *" ]; })
-    ({ ... }: { config.programs.zsh.history.ignorePatterns = [ "rm *" ]; })
+    (
+      { ... }:
+      {
+        config.programs.zsh.history.ignorePatterns = [ "echo *" ];
+      }
+    )
+    (
+      { ... }:
+      {
+        config.programs.zsh.history.ignorePatterns = [ "rm *" ];
+      }
+    )
   ];
 
   programs.zsh.enable = true;

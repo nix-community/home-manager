@@ -1,32 +1,49 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkOption optionalAttrs types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    optionalAttrs
+    types
+    ;
 
   cfg = config.programs.sm64ex;
 
   # This is required for tests, we cannot overwrite the dummy package.
-  package = if cfg.region == null && cfg.baserom == null
-  && cfg.extraCompileFlags == null then
-    cfg.package
-  else
-    cfg.package.override (attrs:
-      { } // optionalAttrs (cfg.region != null) { region = cfg.region; }
-      // optionalAttrs (cfg.baserom != null) { baseRom = cfg.baserom; }
-      // optionalAttrs (cfg.extraCompileFlags != null) {
-        compileFlags = cfg.extraCompileFlags;
-      });
+  package =
+    if cfg.region == null && cfg.baserom == null && cfg.extraCompileFlags == null then
+      cfg.package
+    else
+      cfg.package.override (
+        attrs:
+        { }
+        // optionalAttrs (cfg.region != null) { region = cfg.region; }
+        // optionalAttrs (cfg.baserom != null) { baseRom = cfg.baserom; }
+        // optionalAttrs (cfg.extraCompileFlags != null) {
+          compileFlags = cfg.extraCompileFlags;
+        }
+      );
 
-  mkConfig = key: value:
+  mkConfig =
+    key: value:
     let
-      generatedValue = if lib.isBool value then
-        (if value then "true" else "false")
-      else if lib.isList value then
-        lib.concatStringsSep " " value
-      else
-        toString value;
-    in "${key} ${generatedValue}";
+      generatedValue =
+        if lib.isBool value then
+          (if value then "true" else "false")
+        else if lib.isList value then
+          lib.concatStringsSep " " value
+        else
+          toString value;
+    in
+    "${key} ${generatedValue}";
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.sm64ex = {
@@ -35,10 +52,15 @@ in {
     package = lib.mkPackageOption pkgs "sm64ex" { nullable = true; };
 
     region = mkOption {
-      type = types.nullOr (types.enum [ "us" "eu" "jp" ]);
+      type = types.nullOr (
+        types.enum [
+          "us"
+          "eu"
+          "jp"
+        ]
+      );
       default = null;
-      defaultText =
-        literalExpression "us"; # This is set both in nixpkgs and upstream
+      defaultText = literalExpression "us"; # This is set both in nixpkgs and upstream
       description = ''
         Your baserom's region. Note that only "us", "eu", and "jp" are supported.
       '';
@@ -48,8 +70,7 @@ in {
     baserom = mkOption {
       type = types.nullOr types.path;
       default = null;
-      description =
-        "The path to the Super Mario 64 baserom to extract assets from.";
+      description = "The path to the Super Mario 64 baserom to extract assets from.";
       example = literalExpression "/home/foo/baserom.us.z64";
     };
 
@@ -70,11 +91,9 @@ in {
     };
 
     settings = mkOption {
-      type = with types;
-        nullOr (attrsOf (either str (either int (either bool (listOf str)))));
+      type = with types; nullOr (attrsOf (either str (either int (either bool (listOf str)))));
       default = null;
-      description =
-        "Settings for sm64ex's {file}`$XDG_DATA_HOME/sm64pc/sm64config.txt` file.";
+      description = "Settings for sm64ex's {file}`$XDG_DATA_HOME/sm64pc/sm64config.txt` file.";
       example = literalExpression ''
         {
           fullscreen = false;
@@ -110,13 +129,15 @@ in {
     };
   };
 
-  config = let
-    configFile = lib.optionals (cfg.settings != null)
-      (lib.concatStringsSep "\n" (lib.mapAttrsToList mkConfig cfg.settings));
-  in lib.mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+  config =
+    let
+      configFile = lib.optionals (cfg.settings != null) (
+        lib.concatStringsSep "\n" (lib.mapAttrsToList mkConfig cfg.settings)
+      );
+    in
+    lib.mkIf cfg.enable {
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.dataFile."sm64pc/sm64config.txt" =
-      lib.mkIf (cfg.settings != null) { text = configFile; };
-  };
+      xdg.dataFile."sm64pc/sm64config.txt" = lib.mkIf (cfg.settings != null) { text = configFile; };
+    };
 }

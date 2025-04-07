@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.iamb;
   tomlFormat = pkgs.formats.toml { };
-in {
+in
+{
   options.programs.iamb = {
     enable = lib.mkEnableOption "iamb";
 

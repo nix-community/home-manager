@@ -1,10 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   config = {
     programs.ssh = {
       enable = true;
-      includes = [ "config.d/*" "other/dir" ];
+      includes = [
+        "config.d/*"
+        "other/dir"
+      ];
     };
 
     nmt.script = ''

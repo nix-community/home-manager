@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.taffybar;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.rycee ];
 
   options = {
@@ -44,7 +50,9 @@ in {
         RestartSec = "2s";
       };
 
-      Install = { WantedBy = [ "tray.target" ]; };
+      Install = {
+        WantedBy = [ "tray.target" ];
+      };
     };
 
     xsession.importedVariables = [ "GDK_PIXBUF_MODULE_FILE" ];

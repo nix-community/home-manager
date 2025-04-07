@@ -11,7 +11,9 @@
         dpi-aware = "yes";
       };
 
-      border = { width = 6; };
+      border = {
+        width = 6;
+      };
     };
   };
 

@@ -10,7 +10,9 @@
           beforeStart = [
             "docker-compose -f my-microservices/docker-compose.yml up -d" # my-microservices/docker-compose.yml is a relative to `root`-al
           ];
-          env = { FOO = "bar"; };
+          env = {
+            FOO = "bar";
+          };
           stop = [ "docker stop $(docker ps -q)" ];
           windows = [
             {
@@ -19,11 +21,16 @@
               manual = true;
               layout = "main-vertical";
               commands = [ "docker-compose start" ];
-              panes = [{
-                type = "horizontal";
-                root = ".";
-                commands = [ "docker-compose exec php /bin/sh" "clear" ];
-              }];
+              panes = [
+                {
+                  type = "horizontal";
+                  root = ".";
+                  commands = [
+                    "docker-compose exec php /bin/sh"
+                    "clear"
+                  ];
+                }
+              ];
             }
 
             {
@@ -31,15 +38,17 @@
               root = "~/Developer/blog/my-microservices";
               layout = "tiled";
               commands = [ "docker-compose start" ];
-              panes = [{
-                type = "horizontal";
-                root = ".";
-                commands = [
-                  "docker-compose up -d"
-                  "docker-compose exec php /bin/sh"
-                  "clear"
-                ];
-              }];
+              panes = [
+                {
+                  type = "horizontal";
+                  root = ".";
+                  commands = [
+                    "docker-compose up -d"
+                    "docker-compose exec php /bin/sh"
+                    "clear"
+                  ];
+                }
+              ];
             }
           ];
         };

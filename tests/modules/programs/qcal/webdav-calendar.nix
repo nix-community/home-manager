@@ -9,14 +9,16 @@
     remote = {
       url = "https://cal.example.com/anton/work";
       userName = "anton";
-      passwordCommand = [ "pass" "show" "calendar" ];
+      passwordCommand = [
+        "pass"
+        "show"
+        "calendar"
+      ];
     };
   };
 
   nmt.script = ''
     assertFileExists home-files/.config/qcal/config.json
-    assertFileContent home-files/.config/qcal/config.json ${
-      ./webdav-calendar.json-expected
-    }
+    assertFileContent home-files/.config/qcal/config.json ${./webdav-calendar.json-expected}
   '';
 }

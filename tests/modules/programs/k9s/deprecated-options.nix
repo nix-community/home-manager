@@ -20,9 +20,7 @@
 
   test.asserts.warnings.enable = true;
   test.asserts.warnings.expected = [
-    "The option `programs.k9s.skin' defined in ${
-      lib.showFiles options.programs.k9s.skin.files
-    } has been renamed to `programs.k9s.skins.skin'."
+    "The option `programs.k9s.skin' defined in ${lib.showFiles options.programs.k9s.skin.files} has been renamed to `programs.k9s.skins.skin'."
   ];
   nmt.script = ''
     assertFileExists home-files/.config/k9s/skins/skin.yaml

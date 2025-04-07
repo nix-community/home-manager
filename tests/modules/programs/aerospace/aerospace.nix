@@ -16,15 +16,21 @@
       };
       on-window-detected = [
         {
-          "if" = { app-id = "com.apple.MobileSMS"; };
+          "if" = {
+            app-id = "com.apple.MobileSMS";
+          };
           run = [ "move-node-to-workspace 10" ];
         }
         {
-          "if" = { app-id = "ru.keepcoder.Telegram"; };
+          "if" = {
+            app-id = "ru.keepcoder.Telegram";
+          };
           run = [ "move-node-to-workspace 10" ];
         }
         {
-          "if" = { app-id = "org.whispersystems.signal-desktop"; };
+          "if" = {
+            app-id = "org.whispersystems.signal-desktop";
+          };
           run = [ "move-node-to-workspace 10" ];
         }
       ];
@@ -32,8 +38,6 @@
   };
 
   nmt.script = ''
-    assertFileContent home-files/.config/aerospace/aerospace.toml ${
-      ./settings-expected.toml
-    }
+    assertFileContent home-files/.config/aerospace/aerospace.toml ${./settings-expected.toml}
   '';
 }

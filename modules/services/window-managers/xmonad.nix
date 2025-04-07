@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -8,14 +13,17 @@ let
 
   xmonad = pkgs.xmonad-with-packages.override {
     ghcWithPackages = cfg.haskellPackages.ghcWithPackages;
-    packages = self:
-      cfg.extraPackages self ++ optionals cfg.enableContribAndExtras [
+    packages =
+      self:
+      cfg.extraPackages self
+      ++ optionals cfg.enableContribAndExtras [
         self.xmonad-contrib
         self.xmonad-extras
       ];
   };
 
-in {
+in
+{
   options = {
     xsession.windowManager.xmonad = {
       enable = mkEnableOption "xmonad window manager";
@@ -101,78 +109,79 @@ in {
     };
   };
 
-  config = let
+  config =
+    let
 
-    xmonadBin = "${
-        pkgs.runCommandLocal "xmonad-compile" {
-          nativeBuildInputs = [ xmonad ];
-        } ''
-          mkdir -p $out/bin
+      xmonadBin = "${
+        pkgs.runCommandLocal "xmonad-compile"
+          {
+            nativeBuildInputs = [ xmonad ];
+          }
+          ''
+            mkdir -p $out/bin
 
-          export XMONAD_CONFIG_DIR="$(pwd)/xmonad-config"
-          export XMONAD_DATA_DIR="$(pwd)/data"
-          export XMONAD_CACHE_DIR="$(pwd)/cache"
+            export XMONAD_CONFIG_DIR="$(pwd)/xmonad-config"
+            export XMONAD_DATA_DIR="$(pwd)/data"
+            export XMONAD_CACHE_DIR="$(pwd)/cache"
 
-          mkdir -p "$XMONAD_CONFIG_DIR/lib" "$XMONAD_CACHE_DIR" "$XMONAD_DATA_DIR"
+            mkdir -p "$XMONAD_CONFIG_DIR/lib" "$XMONAD_CACHE_DIR" "$XMONAD_DATA_DIR"
 
-          cp ${cfg.config} xmonad-config/xmonad.hs
+            cp ${cfg.config} xmonad-config/xmonad.hs
 
-          declare -A libFiles
-          libFiles=(${
-            concatStringsSep " "
-            (mapAttrsToList (name: value: "['${name}']='${value}'")
-              cfg.libFiles)
-          })
-          for key in "''${!libFiles[@]}"; do
-            mkdir -p "xmonad-config/lib/$(dirname "$key")"
-            cp "''${libFiles[$key]}" "xmonad-config/lib/$key";
-          done
+            declare -A libFiles
+            libFiles=(${
+              concatStringsSep " " (mapAttrsToList (name: value: "['${name}']='${value}'") cfg.libFiles)
+            })
+            for key in "''${!libFiles[@]}"; do
+              mkdir -p "xmonad-config/lib/$(dirname "$key")"
+              cp "''${libFiles[$key]}" "xmonad-config/lib/$key";
+            done
 
-          xmonad --recompile
+            xmonad --recompile
 
-          # The resulting binary name depends on the arch and os
-          # https://github.com/xmonad/xmonad/blob/56b0f850bc35200ec23f05c079eca8b0a1f90305/src/XMonad/Core.hs#L565-L572
-          if [ -f "$XMONAD_DATA_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" ]; then
-            # xmonad 0.15.0
-            mv "$XMONAD_DATA_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" $out/bin/
-          else
-            # xmonad 0.17.0 (https://github.com/xmonad/xmonad/commit/9813e218b034009b0b6d09a70650178980e05d54)
-            mv "$XMONAD_CACHE_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" $out/bin/
-          fi
-        ''
+            # The resulting binary name depends on the arch and os
+            # https://github.com/xmonad/xmonad/blob/56b0f850bc35200ec23f05c079eca8b0a1f90305/src/XMonad/Core.hs#L565-L572
+            if [ -f "$XMONAD_DATA_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" ]; then
+              # xmonad 0.15.0
+              mv "$XMONAD_DATA_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" $out/bin/
+            else
+              # xmonad 0.17.0 (https://github.com/xmonad/xmonad/commit/9813e218b034009b0b6d09a70650178980e05d54)
+              mv "$XMONAD_CACHE_DIR/xmonad-${pkgs.stdenv.hostPlatform.system}" $out/bin/
+            fi
+          ''
       }/bin/xmonad-${pkgs.stdenv.hostPlatform.system}";
 
-  in mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "xsession.windowManager.xmonad" pkgs
-          platforms.linux)
-      ];
+    in
+    mkIf cfg.enable (mkMerge [
+      {
+        assertions = [
+          (hm.assertions.assertPlatform "xsession.windowManager.xmonad" pkgs platforms.linux)
+        ];
 
-      home.packages = [ (lowPrio xmonad) ];
+        home.packages = [ (lowPrio xmonad) ];
 
-      home.file = mapAttrs' (name: value:
-        attrsets.nameValuePair (".xmonad/lib/" + name) { source = value; })
-        cfg.libFiles;
-    }
+        home.file = mapAttrs' (
+          name: value: attrsets.nameValuePair (".xmonad/lib/" + name) { source = value; }
+        ) cfg.libFiles;
+      }
 
-    (mkIf (cfg.config == null) {
-      xsession.windowManager.command = "${xmonad}/bin/xmonad";
-    })
+      (mkIf (cfg.config == null) {
+        xsession.windowManager.command = "${xmonad}/bin/xmonad";
+      })
 
-    (mkIf (cfg.config != null) {
-      xsession.windowManager.command = xmonadBin;
-      home.file.".xmonad/xmonad.hs".source = cfg.config;
-      home.file.".xmonad/xmonad-${pkgs.stdenv.hostPlatform.system}" = {
-        source = xmonadBin;
-        onChange = ''
-          # Attempt to restart xmonad if X is running.
-          if [[ -v DISPLAY ]]; then
-            ${config.xsession.windowManager.command} --restart
-          fi
-        '';
-      };
-    })
+      (mkIf (cfg.config != null) {
+        xsession.windowManager.command = xmonadBin;
+        home.file.".xmonad/xmonad.hs".source = cfg.config;
+        home.file.".xmonad/xmonad-${pkgs.stdenv.hostPlatform.system}" = {
+          source = xmonadBin;
+          onChange = ''
+            # Attempt to restart xmonad if X is running.
+            if [[ -v DISPLAY ]]; then
+              ${config.xsession.windowManager.command} --restart
+            fi
+          '';
+        };
+      })
 
-  ]);
+    ]);
 }

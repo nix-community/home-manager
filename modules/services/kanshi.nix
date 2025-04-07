@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -28,7 +33,8 @@ let
     };
   };
 
-  tagToStr = x:
+  tagToStr =
+    x:
     if x ? profile then
       profileStr x.profile
     else if x ? output then
@@ -41,8 +47,7 @@ let
   directivesStr = concatStringsSep "\n" (map tagToStr cfg.settings);
 
   oldDirectivesStr = ''
-    ${concatStringsSep "\n"
-    (mapAttrsToList (n: v: profileStr (v // { name = n; })) cfg.profiles)}
+    ${concatStringsSep "\n" (mapAttrsToList (n: v: profileStr (v // { name = n; })) cfg.profiles)}
     ${cfg.extraConfig}
   '';
 
@@ -63,7 +68,12 @@ let
       };
 
       status = mkOption {
-        type = types.nullOr (types.enum [ "enable" "disable" ]);
+        type = types.nullOr (
+          types.enum [
+            "enable"
+            "disable"
+          ]
+        );
         default = null;
         description = ''
           Enables or disables the specified output.
@@ -105,16 +115,18 @@ let
       };
 
       transform = mkOption {
-        type = types.nullOr (types.enum [
-          "normal"
-          "90"
-          "180"
-          "270"
-          "flipped"
-          "flipped-90"
-          "flipped-180"
-          "flipped-270"
-        ]);
+        type = types.nullOr (
+          types.enum [
+            "normal"
+            "90"
+            "180"
+            "270"
+            "flipped"
+            "flipped-90"
+            "flipped-180"
+            "flipped-270"
+          ]
+        );
         default = null;
         description = ''
           Sets the output transform.
@@ -142,15 +154,25 @@ let
     };
   };
 
-  outputStr = { criteria, status, mode, position, scale, transform, adaptiveSync
-    , alias, ... }:
-    ''output "${criteria}"'' + optionalString (status != null) " ${status}"
+  outputStr =
+    {
+      criteria,
+      status,
+      mode,
+      position,
+      scale,
+      transform,
+      adaptiveSync,
+      alias,
+      ...
+    }:
+    ''output "${criteria}"''
+    + optionalString (status != null) " ${status}"
     + optionalString (mode != null) " mode ${mode}"
     + optionalString (position != null) " position ${position}"
     + optionalString (scale != null) " scale ${toString scale}"
     + optionalString (transform != null) " transform ${transform}"
-    + optionalString (adaptiveSync != null)
-    " adaptive_sync ${if adaptiveSync then "on" else "off"}"
+    + optionalString (adaptiveSync != null) " adaptive_sync ${if adaptiveSync then "on" else "off"}"
     + optionalString (alias != null) " alias \$${alias}";
 
   profileModule = types.submodule {
@@ -174,8 +196,7 @@ let
       exec = mkOption {
         type = with types; coercedTo str singleton (listOf str);
         default = [ ];
-        example =
-          "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
+        example = "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
         description = ''
           Commands executed after the profile is successfully applied.
           Note that if you provide multiple commands, they will be
@@ -185,21 +206,20 @@ let
     };
   };
 
-  profileStr = { outputs, exec, ... }@args: ''
-    profile ${args.name or ""} {
-      ${
-        concatStringsSep "\n  "
-        (map outputStr outputs ++ map (cmd: "exec ${cmd}") exec)
+  profileStr =
+    { outputs, exec, ... }@args:
+    ''
+      profile ${args.name or ""} {
+        ${concatStringsSep "\n  " (map outputStr outputs ++ map (cmd: "exec ${cmd}") exec)}
       }
-    }
-  '';
-in {
+    '';
+in
+{
 
   meta.maintainers = [ hm.maintainers.nurelin ];
 
   options.services.kanshi = {
-    enable = mkEnableOption
-      "kanshi, a Wayland daemon that automatically configures outputs";
+    enable = mkEnableOption "kanshi, a Wayland daemon that automatically configures outputs";
 
     package = mkOption {
       type = types.package;
@@ -297,21 +317,18 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       assertions = [
-        (lib.hm.assertions.assertPlatform "services.kanshi" pkgs
-          lib.platforms.linux)
+        (lib.hm.assertions.assertPlatform "services.kanshi" pkgs lib.platforms.linux)
         {
-          assertion = (cfg.profiles == { } && cfg.extraConfig == "")
-            || (length cfg.settings) == 0;
-          message =
-            "Cannot mix kanshi.settings with kanshi.profiles or kanshi.extraConfig";
+          assertion = (cfg.profiles == { } && cfg.extraConfig == "") || (length cfg.settings) == 0;
+          message = "Cannot mix kanshi.settings with kanshi.profiles or kanshi.extraConfig";
         }
         {
-          assertion = let profiles = filter (x: x ? profile) cfg.settings;
-          in length
-          (filter (x: any (a: a ? alias && a.alias != null) x.profile.outputs)
-            profiles) == 0;
-          message =
-            "Output kanshi.*.output.alias can only be defined on global scope";
+          assertion =
+            let
+              profiles = filter (x: x ? profile) cfg.settings;
+            in
+            length (filter (x: any (a: a ? alias && a.alias != null) x.profile.outputs) profiles) == 0;
+          message = "Output kanshi.*.output.alias can only be defined on global scope";
         }
       ];
     }
@@ -331,13 +348,12 @@ in {
     {
       home.packages = [ cfg.package ];
 
-      xdg.configFile."kanshi/config" = let
-        generatedConfigStr =
-          if cfg.profiles == { } && cfg.extraConfig == "" then
-            directivesStr
-          else
-            oldDirectivesStr;
-      in mkIf (generatedConfigStr != "") { text = generatedConfigStr; };
+      xdg.configFile."kanshi/config" =
+        let
+          generatedConfigStr =
+            if cfg.profiles == { } && cfg.extraConfig == "" then directivesStr else oldDirectivesStr;
+        in
+        mkIf (generatedConfigStr != "") { text = generatedConfigStr; };
 
       systemd.user.services.kanshi = {
         Unit = {
@@ -355,7 +371,9 @@ in {
           Restart = "always";
         };
 
-        Install = { WantedBy = [ cfg.systemdTarget ]; };
+        Install = {
+          WantedBy = [ cfg.systemdTarget ];
+        };
       };
     }
   ]);

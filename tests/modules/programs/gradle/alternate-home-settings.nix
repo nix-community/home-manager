@@ -4,12 +4,15 @@
   programs.gradle = {
     enable = true;
     home = ".gbt";
-    settings = { "org.gradle.caching" = true; };
-    initScripts = { "some-script.gradle".text = "println 'hello world'"; };
+    settings = {
+      "org.gradle.caching" = true;
+    };
+    initScripts = {
+      "some-script.gradle".text = "println 'hello world'";
+    };
   };
 
-  programs.java.package =
-    pkgs.runCommandLocal "java" { home = ""; } "mkdir $out";
+  programs.java.package = pkgs.runCommandLocal "java" { home = ""; } "mkdir $out";
 
   nmt.script = ''
     assertFileContains home-path/etc/profile.d/hm-session-vars.sh \

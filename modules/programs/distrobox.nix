@@ -1,11 +1,24 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
-  inherit (lib) generators types mkIf mkEnableOption mkPackageOption mkOption;
+  inherit (lib)
+    generators
+    types
+    mkIf
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    ;
 
   cfg = config.programs.distrobox;
 
   formatter = pkgs.formats.ini { listsAsDuplicateKeys = true; };
-in {
+in
+{
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.distrobox = {
@@ -57,18 +70,17 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.distrobox" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.distrobox" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."distrobox/containers.ini".source =
-      (formatter.generate "containers.ini" cfg.containers);
+    xdg.configFile."distrobox/containers.ini".source = (
+      formatter.generate "containers.ini" cfg.containers
+    );
 
     systemd.user.services.distrobox-home-manager = {
-      Unit.Description =
-        "Build the containers declared in ~/.config/distrobox/containers.ini";
+      Unit.Description = "Build the containers declared in ~/.config/distrobox/containers.ini";
       Install.WantedBy = [ "default.target" ];
 
       Service.ExecStart = "${pkgs.writeShellScript "distrobox-home-manager" ''

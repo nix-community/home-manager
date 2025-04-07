@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.systemd.user.tmpfiles;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.dawidsowa ];
 
   options.systemd.user.tmpfiles.rules = lib.mkOption {
@@ -21,8 +27,7 @@ in {
 
   config = lib.mkIf (cfg.rules != [ ]) {
     assertions = [
-      (lib.hm.assertions.assertPlatform "systemd.user.tmpfiles" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "systemd.user.tmpfiles" pkgs lib.platforms.linux)
     ];
 
     xdg.configFile = {

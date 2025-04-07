@@ -1,7 +1,11 @@
-{ lib, ... }: {
+{ lib, ... }:
+{
   options.khal = {
     type = lib.mkOption {
-      type = lib.types.enum [ "calendar" "discover" ];
+      type = lib.types.enum [
+        "calendar"
+        "discover"
+      ];
       default = "calendar";
       description = ''
         Either a single calendar (calendar which is the default) or a directory with multiple calendars (discover).

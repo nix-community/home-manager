@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,7 +11,8 @@ let
 
   cfg = config.services.xcape;
 
-in {
+in
+{
   meta.maintainers = [ maintainers.nickhu ];
 
   options = {
@@ -52,8 +58,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.xcape" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.xcape" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.xcape = {
@@ -64,21 +69,28 @@ in {
           PartOf = [ "graphical-session.target" ];
         }
         (mkIf (config.home.keyboard != null && config.home.keyboard != { }) {
-          After = [ "graphical-session.target" "setxkbmap.service" ];
+          After = [
+            "graphical-session.target"
+            "setxkbmap.service"
+          ];
         })
       ];
 
       Service = {
         Type = "forking";
-        ExecStart = "${pkgs.xcape}/bin/xcape"
+        ExecStart =
+          "${pkgs.xcape}/bin/xcape"
           + optionalString (cfg.timeout != null) " -t ${toString cfg.timeout}"
-          + optionalString (cfg.mapExpression != { }) " -e '${
-             builtins.concatStringsSep ";"
-             (attrsets.mapAttrsToList (n: v: "${n}=${v}") cfg.mapExpression)
-           }'";
+          +
+            optionalString (cfg.mapExpression != { })
+              " -e '${
+                 builtins.concatStringsSep ";" (attrsets.mapAttrsToList (n: v: "${n}=${v}") cfg.mapExpression)
+               }'";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

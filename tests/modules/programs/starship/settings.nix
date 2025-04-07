@@ -23,20 +23,24 @@
         aws.style = "bold blue";
         battery = {
           charging_symbol = "⚡️";
-          display = [{
-            threshold = 10;
-            style = "bold red";
-          }];
+          display = [
+            {
+              threshold = 10;
+              style = "bold red";
+            }
+          ];
         };
       }
 
       {
         aws.disabled = true;
 
-        battery.display = [{
-          threshold = 30;
-          style = "bold yellow";
-        }];
+        battery.display = [
+          {
+            threshold = 30;
+            style = "bold yellow";
+          }
+        ];
       }
     ];
   };

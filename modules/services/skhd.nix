@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.services.skhd;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.skhd;
+in
+{
   meta.maintainers = [ lib.maintainers.khaneliman ];
 
   options.services.skhd = {
@@ -10,16 +17,14 @@ in {
 
     errorLogFile = lib.mkOption {
       type = with lib.types; nullOr (either path str);
-      defaultText = lib.literalExpression
-        "\${config.home.homeDirectory}/Library/Logs/skhd/err.log";
+      defaultText = lib.literalExpression "\${config.home.homeDirectory}/Library/Logs/skhd/err.log";
       example = "/Users/khaneliman/Library/Logs/skhd.log";
       description = "Absolute path to log all stderr output.";
     };
 
     outLogFile = lib.mkOption {
       type = with lib.types; nullOr (either path str);
-      defaultText = lib.literalExpression
-        "\${config.home.homeDirectory}/Library/Logs/skhd/out.log";
+      defaultText = lib.literalExpression "\${config.home.homeDirectory}/Library/Logs/skhd/out.log";
       example = "/Users/khaneliman/Library/Logs/skhd.log";
       description = "Absolute path to log all stdout output.";
     };
@@ -48,8 +53,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.skhd" pkgs
-        lib.platforms.darwin)
+      (lib.hm.assertions.assertPlatform "services.skhd" pkgs lib.platforms.darwin)
     ];
 
     home.packages = [ cfg.package ];
@@ -67,17 +71,16 @@ in {
     };
 
     services.skhd = {
-      errorLogFile = lib.mkOptionDefault
-        "${config.home.homeDirectory}/Library/Logs/skhd/skhd.err.log";
-      outLogFile = lib.mkOptionDefault
-        "${config.home.homeDirectory}/Library/Logs/skhd/skhd.out.log";
+      errorLogFile = lib.mkOptionDefault "${config.home.homeDirectory}/Library/Logs/skhd/skhd.err.log";
+      outLogFile = lib.mkOptionDefault "${config.home.homeDirectory}/Library/Logs/skhd/skhd.out.log";
     };
 
     xdg.configFile."skhd/skhdrc" = lib.mkIf (cfg.config != null) {
-      source = if builtins.isPath cfg.config || lib.isStorePath cfg.config then
-        cfg.config
-      else
-        pkgs.writeScript "skhdrc" cfg.config;
+      source =
+        if builtins.isPath cfg.config || lib.isStorePath cfg.config then
+          cfg.config
+        else
+          pkgs.writeScript "skhdrc" cfg.config;
     };
   };
 }

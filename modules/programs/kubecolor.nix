@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
@@ -6,7 +11,8 @@ let
   yamlFormat = pkgs.formats.yaml { };
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ ajgon ];
 
   options.programs.kubecolor = {
@@ -23,8 +29,7 @@ in {
       '';
     };
 
-    enableZshIntegration =
-      lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     settings = mkOption {
       type = yamlFormat.type;
@@ -43,60 +48,63 @@ in {
     };
   };
 
-  config = let
-    preferXdgDirectories = config.home.preferXdgDirectories
-      && (!isDarwin || config.xdg.enable);
+  config =
+    let
+      preferXdgDirectories = config.home.preferXdgDirectories && (!isDarwin || config.xdg.enable);
 
-    # https://github.com/kubecolor/kubecolor/pull/145
-    configPathSuffix = if cfg.package.pname == "kubecolor"
-    && lib.strings.toInt (lib.versions.major cfg.package.version) == 0
-    && lib.strings.toInt (lib.versions.minor cfg.package.version) < 4 then
-      "kube/"
-    else
-      "kube/color.yaml";
+      # https://github.com/kubecolor/kubecolor/pull/145
+      configPathSuffix =
+        if
+          cfg.package.pname == "kubecolor"
+          && lib.strings.toInt (lib.versions.major cfg.package.version) == 0
+          && lib.strings.toInt (lib.versions.minor cfg.package.version) < 4
+        then
+          "kube/"
+        else
+          "kube/color.yaml";
 
-  in mkIf cfg.enable {
-    warnings = lib.optional (cfg.package == null && cfg.plugins != [ ]) ''
-      You have configured `enableAlias` for `kubecolor` but have not set `package`.
+    in
+    mkIf cfg.enable {
+      warnings = lib.optional (cfg.package == null && cfg.plugins != [ ]) ''
+        You have configured `enableAlias` for `kubecolor` but have not set `package`.
 
-      The alias will not be created.
-    '';
+        The alias will not be created.
+      '';
 
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.sessionVariables = if preferXdgDirectories then {
-      KUBECOLOR_CONFIG = "${config.xdg.configHome}/${configPathSuffix}";
-    } else if isDarwin then {
-      KUBECOLOR_CONFIG =
-        "${config.home.homeDirectory}/Library/Application Support/${configPathSuffix}";
-    } else
-      { };
+      home.sessionVariables =
+        if preferXdgDirectories then
+          {
+            KUBECOLOR_CONFIG = "${config.xdg.configHome}/${configPathSuffix}";
+          }
+        else if isDarwin then
+          {
+            KUBECOLOR_CONFIG = "${config.home.homeDirectory}/Library/Application Support/${configPathSuffix}";
+          }
+        else
+          { };
 
-    xdg.configFile = mkIf preferXdgDirectories {
-      "kube/color.yaml" = mkIf (cfg.settings != { }) {
-        source = yamlFormat.generate "kubecolor-settings" cfg.settings;
-      };
-    };
-
-    home.file = mkIf (!preferXdgDirectories) {
-      "Library/Application Support/kube/color.yaml" =
-        mkIf (isDarwin && cfg.settings != { }) {
+      xdg.configFile = mkIf preferXdgDirectories {
+        "kube/color.yaml" = mkIf (cfg.settings != { }) {
           source = yamlFormat.generate "kubecolor-settings" cfg.settings;
         };
-      ".kube/color.yaml" = mkIf (!isDarwin && cfg.settings != { }) {
-        source = yamlFormat.generate "kubecolor-settings" cfg.settings;
       };
-    };
 
-    home.shellAliases = lib.mkIf (cfg.enableAlias && (cfg.package != null)) {
-      kubectl = lib.getExe cfg.package;
-      oc = lib.mkIf (builtins.elem pkgs.openshift config.home.packages)
-        "env KUBECTL_COMMAND=${lib.getExe pkgs.openshift} ${
-          lib.getExe cfg.package
-        }";
-    };
+      home.file = mkIf (!preferXdgDirectories) {
+        "Library/Application Support/kube/color.yaml" = mkIf (isDarwin && cfg.settings != { }) {
+          source = yamlFormat.generate "kubecolor-settings" cfg.settings;
+        };
+        ".kube/color.yaml" = mkIf (!isDarwin && cfg.settings != { }) {
+          source = yamlFormat.generate "kubecolor-settings" cfg.settings;
+        };
+      };
 
-    programs.zsh.initContent =
-      lib.mkIf cfg.enableZshIntegration "compdef kubecolor=kubectl";
-  };
+      home.shellAliases = lib.mkIf (cfg.enableAlias && (cfg.package != null)) {
+        kubectl = lib.getExe cfg.package;
+        oc = lib.mkIf (builtins.elem pkgs.openshift config.home.packages) "env KUBECTL_COMMAND=${lib.getExe pkgs.openshift} ${lib.getExe cfg.package}";
+      };
+
+      programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration "compdef kubecolor=kubectl";
+    };
 }

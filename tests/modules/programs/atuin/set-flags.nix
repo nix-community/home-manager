@@ -3,7 +3,10 @@
 {
   programs = {
     atuin.enable = true;
-    atuin.flags = [ "--disable-ctrl-r" "--disable-up-arrow" ];
+    atuin.flags = [
+      "--disable-ctrl-r"
+      "--disable-up-arrow"
+    ];
     bash = {
       enable = true;
       enableCompletion = false;
@@ -13,8 +16,9 @@
   };
 
   # Needed to avoid error with dummy fish package.
-  xdg.dataFile."fish/home-manager_generated_completions".source =
-    lib.mkForce (builtins.toFile "empty" "");
+  xdg.dataFile."fish/home-manager_generated_completions".source = lib.mkForce (
+    builtins.toFile "empty" ""
+  );
 
   nmt.script = ''
     assertFileExists home-files/.bashrc

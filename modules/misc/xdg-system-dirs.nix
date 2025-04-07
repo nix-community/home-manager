@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib) types;
@@ -9,7 +14,8 @@ let
 
   dataDirs = lib.concatStringsSep ":" cfg.data;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ tadfisher ];
 
   options.xdg.systemDirs = {
@@ -37,25 +43,20 @@ in {
   config = lib.mkMerge [
     (lib.mkIf (cfg.config != [ ] || cfg.data != [ ]) {
       assertions = [
-        (lib.hm.assertions.assertPlatform "xdg.systemDirs" pkgs
-          lib.platforms.linux)
+        (lib.hm.assertions.assertPlatform "xdg.systemDirs" pkgs lib.platforms.linux)
       ];
     })
 
     (lib.mkIf (cfg.config != [ ]) {
-      home.sessionVariables.XDG_CONFIG_DIRS =
-        "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
+      home.sessionVariables.XDG_CONFIG_DIRS = "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
 
-      systemd.user.sessionVariables.XDG_CONFIG_DIRS =
-        "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
+      systemd.user.sessionVariables.XDG_CONFIG_DIRS = "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
     })
 
     (lib.mkIf (cfg.data != [ ]) {
-      home.sessionVariables.XDG_DATA_DIRS =
-        "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
+      home.sessionVariables.XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
 
-      systemd.user.sessionVariables.XDG_DATA_DIRS =
-        "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
+      systemd.user.sessionVariables.XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
     })
   ];
 }

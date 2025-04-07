@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -16,9 +21,13 @@ let
       echo "Upgrade Home Manager"
       home-manager switch
     '';
-    runtimeInputs = with pkgs; [ homeManagerPackage nix ];
+    runtimeInputs = with pkgs; [
+      homeManagerPackage
+      nix
+    ];
   };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.pinage404 ];
 
   options = {
@@ -43,8 +52,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.home-manager.autoUpgrade" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.home-manager.autoUpgrade" pkgs lib.platforms.linux)
     ];
 
     systemd.user = {

@@ -1,30 +1,46 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.mangohud;
 
-  settingsType = with types;
-    (oneOf [ bool int float str path (listOf (oneOf [ int str ])) ]);
+  settingsType =
+    with types;
+    (oneOf [
+      bool
+      int
+      float
+      str
+      path
+      (listOf (oneOf [
+        int
+        str
+      ]))
+    ]);
 
-  renderOption = option:
+  renderOption =
+    option:
     rec {
       int = toString option;
       float = int;
       path = int;
       bool = "0"; # "on/off" opts are disabled with `=0`
       string = option;
-      list =
-        lib.concatStringsSep "," (lib.lists.forEach option (x: toString x));
-    }.${builtins.typeOf option};
+      list = lib.concatStringsSep "," (lib.lists.forEach option (x: toString x));
+    }
+    .${builtins.typeOf option};
 
-  renderLine = k: v:
-    (if lib.isBool v && v then k else "${k}=${renderOption v}");
-  renderSettings = attrs:
-    lib.strings.concatStringsSep "\n"
-    (lib.attrsets.mapAttrsToList renderLine attrs) + "\n";
+  renderLine = k: v: (if lib.isBool v && v then k else "${k}=${renderOption v}");
+  renderSettings =
+    attrs: lib.strings.concatStringsSep "\n" (lib.attrsets.mapAttrsToList renderLine attrs) + "\n";
 
-in {
+in
+{
   options = {
     programs.mangohud = {
       enable = lib.mkEnableOption "Mangohud";
@@ -80,8 +96,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.mangohud" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.mangohud" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -91,12 +106,13 @@ in {
       MANGOHUD_DLSYM = 1;
     };
 
-    xdg.configFile = {
-      "MangoHud/MangoHud.conf" =
-        mkIf (cfg.settings != { }) { text = renderSettings cfg.settings; };
-    } // lib.mapAttrs' (n: v:
-      lib.nameValuePair "MangoHud/${n}.conf" { text = renderSettings v; })
-      cfg.settingsPerApplication;
+    xdg.configFile =
+      {
+        "MangoHud/MangoHud.conf" = mkIf (cfg.settings != { }) { text = renderSettings cfg.settings; };
+      }
+      // lib.mapAttrs' (
+        n: v: lib.nameValuePair "MangoHud/${n}.conf" { text = renderSettings v; }
+      ) cfg.settingsPerApplication;
   };
 
   meta.maintainers = with lib.maintainers; [ zeratax ];

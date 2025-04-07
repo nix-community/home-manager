@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,11 +11,13 @@ let
 
   cfg = config.services.vdirsyncer;
 
-  vdirsyncerOptions = [ ]
+  vdirsyncerOptions =
+    [ ]
     ++ optional (cfg.verbosity != null) "--verbosity ${cfg.verbosity}"
     ++ optional (cfg.configFile != null) "--config ${cfg.configFile}";
 
-in {
+in
+{
   meta.maintainers = [ maintainers.pjones ];
 
   options.services.vdirsyncer = {
@@ -36,8 +43,15 @@ in {
     };
 
     verbosity = mkOption {
-      type = types.nullOr
-        (types.enum [ "CRITICAL" "ERROR" "WARNING" "INFO" "DEBUG" ]);
+      type = types.nullOr (
+        types.enum [
+          "CRITICAL"
+          "ERROR"
+          "WARNING"
+          "INFO"
+          "DEBUG"
+        ]
+      );
       default = null;
       description = ''
         Whether vdirsyncer should produce verbose output.
@@ -64,23 +78,30 @@ in {
       Service = {
         Type = "oneshot";
         # TODO `vdirsyncer discover`
-        ExecStart = let optStr = concatStringsSep " " vdirsyncerOptions;
-        in [
-          "${cfg.package}/bin/vdirsyncer ${optStr} metasync"
-          "${cfg.package}/bin/vdirsyncer ${optStr} sync"
-        ];
+        ExecStart =
+          let
+            optStr = concatStringsSep " " vdirsyncerOptions;
+          in
+          [
+            "${cfg.package}/bin/vdirsyncer ${optStr} metasync"
+            "${cfg.package}/bin/vdirsyncer ${optStr} sync"
+          ];
       };
     };
 
     systemd.user.timers.vdirsyncer = {
-      Unit = { Description = "vdirsyncer calendar&contacts synchronization"; };
+      Unit = {
+        Description = "vdirsyncer calendar&contacts synchronization";
+      };
 
       Timer = {
         OnCalendar = cfg.frequency;
         Unit = "vdirsyncer.service";
       };
 
-      Install = { WantedBy = [ "timers.target" ]; };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
   };
 }

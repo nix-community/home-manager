@@ -1,12 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.sagemath;
 
-  inherit (lib) literalExpression mkEnableOption mkOption types;
+  inherit (lib)
+    literalExpression
+    mkEnableOption
+    mkOption
+    types
+    ;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.kirelagin ];
 
   options.programs.sagemath = {

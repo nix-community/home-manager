@@ -1,29 +1,42 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.k9s;
   yamlFormat = pkgs.formats.yaml { };
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [
     liyangau
     lib.hm.maintainers.LucasWagler
   ];
 
   imports = [
-    (lib.mkRenamedOptionModule [ "programs" "k9s" "skin" ] [
-      "programs"
-      "k9s"
-      "skins"
-      "skin"
-    ])
+    (lib.mkRenamedOptionModule
+      [ "programs" "k9s" "skin" ]
+      [
+        "programs"
+        "k9s"
+        "skins"
+        "skin"
+      ]
+    )
   ];
 
   options.programs.k9s = {
-    enable = lib.mkEnableOption
-      "k9s - Kubernetes CLI To Manage Your Clusters In Style";
+    enable = lib.mkEnableOption "k9s - Kubernetes CLI To Manage Your Clusters In Style";
 
     package = lib.mkPackageOption pkgs "k9s" { nullable = true; };
 
@@ -163,76 +176,85 @@ in {
     };
   };
 
-  config = let
-    skinSetting = if (!(cfg.settings ? k9s.ui.skin) && cfg.skins != { }) then {
-      k9s.ui.skin = "${builtins.elemAt (builtins.attrNames cfg.skins) 0}";
-    } else
-      { };
+  config =
+    let
+      skinSetting =
+        if (!(cfg.settings ? k9s.ui.skin) && cfg.skins != { }) then
+          {
+            k9s.ui.skin = "${builtins.elemAt (builtins.attrNames cfg.skins) 0}";
+          }
+        else
+          { };
 
-    skinFiles = lib.mapAttrs' (name: value:
-      lib.nameValuePair (if !(isDarwin && !config.xdg.enable) then
-        "k9s/skins/${name}.yaml"
-      else
-        "Library/Application Support/k9s/skins/${name}.yaml") {
-          source = if lib.types.path.check value then
-            value
-          else
-            yamlFormat.generate "k9s-skin-${name}.yaml" value;
-        }) cfg.skins;
+      skinFiles = lib.mapAttrs' (
+        name: value:
+        lib.nameValuePair
+          (
+            if !(isDarwin && !config.xdg.enable) then
+              "k9s/skins/${name}.yaml"
+            else
+              "Library/Application Support/k9s/skins/${name}.yaml"
+          )
+          {
+            source =
+              if lib.types.path.check value then value else yamlFormat.generate "k9s-skin-${name}.yaml" value;
+          }
+      ) cfg.skins;
 
-    enableXdgConfig = !isDarwin || config.xdg.enable;
+      enableXdgConfig = !isDarwin || config.xdg.enable;
 
-  in mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+    in
+    mkIf cfg.enable {
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile = mkIf enableXdgConfig ({
-      "k9s/config.yaml" = mkIf (cfg.settings != { }) {
-        source = yamlFormat.generate "k9s-config"
-          (lib.recursiveUpdate skinSetting cfg.settings);
-      };
+      xdg.configFile = mkIf enableXdgConfig (
+        {
+          "k9s/config.yaml" = mkIf (cfg.settings != { }) {
+            source = yamlFormat.generate "k9s-config" (lib.recursiveUpdate skinSetting cfg.settings);
+          };
 
-      "k9s/aliases.yaml" = mkIf (cfg.aliases != { }) {
-        source = yamlFormat.generate "k9s-aliases" cfg.aliases;
-      };
+          "k9s/aliases.yaml" = mkIf (cfg.aliases != { }) {
+            source = yamlFormat.generate "k9s-aliases" cfg.aliases;
+          };
 
-      "k9s/hotkeys.yaml" = mkIf (cfg.hotkey != { }) {
-        source = yamlFormat.generate "k9s-hotkey" cfg.hotkey;
-      };
+          "k9s/hotkeys.yaml" = mkIf (cfg.hotkey != { }) {
+            source = yamlFormat.generate "k9s-hotkey" cfg.hotkey;
+          };
 
-      "k9s/plugins.yaml" = mkIf (cfg.plugin != { }) {
-        source = yamlFormat.generate "k9s-plugin" cfg.plugin;
-      };
+          "k9s/plugins.yaml" = mkIf (cfg.plugin != { }) {
+            source = yamlFormat.generate "k9s-plugin" cfg.plugin;
+          };
 
-      "k9s/views.yaml" = mkIf (cfg.views != { }) {
-        source = yamlFormat.generate "k9s-views" cfg.views;
-      };
-    } // skinFiles);
+          "k9s/views.yaml" = mkIf (cfg.views != { }) {
+            source = yamlFormat.generate "k9s-views" cfg.views;
+          };
+        }
+        // skinFiles
+      );
 
-    home.file = mkIf (!enableXdgConfig) ({
-      "Library/Application Support/k9s/config.yaml" =
-        mkIf (cfg.settings != { }) {
-          source = yamlFormat.generate "k9s-config"
-            (lib.recursiveUpdate skinSetting cfg.settings);
-        };
+      home.file = mkIf (!enableXdgConfig) (
+        {
+          "Library/Application Support/k9s/config.yaml" = mkIf (cfg.settings != { }) {
+            source = yamlFormat.generate "k9s-config" (lib.recursiveUpdate skinSetting cfg.settings);
+          };
 
-      "Library/Application Support/k9s/aliases.yaml" =
-        mkIf (cfg.aliases != { }) {
-          source = yamlFormat.generate "k9s-aliases" cfg.aliases;
-        };
+          "Library/Application Support/k9s/aliases.yaml" = mkIf (cfg.aliases != { }) {
+            source = yamlFormat.generate "k9s-aliases" cfg.aliases;
+          };
 
-      "Library/Application Support/k9s/hotkeys.yaml" =
-        mkIf (cfg.hotkey != { }) {
-          source = yamlFormat.generate "k9s-hotkey" cfg.hotkey;
-        };
+          "Library/Application Support/k9s/hotkeys.yaml" = mkIf (cfg.hotkey != { }) {
+            source = yamlFormat.generate "k9s-hotkey" cfg.hotkey;
+          };
 
-      "Library/Application Support/k9s/plugins.yaml" =
-        mkIf (cfg.plugin != { }) {
-          source = yamlFormat.generate "k9s-plugin" cfg.plugin;
-        };
+          "Library/Application Support/k9s/plugins.yaml" = mkIf (cfg.plugin != { }) {
+            source = yamlFormat.generate "k9s-plugin" cfg.plugin;
+          };
 
-      "Library/Application Support/k9s/views.yaml" = mkIf (cfg.views != { }) {
-        source = yamlFormat.generate "k9s-views" cfg.views;
-      };
-    } // skinFiles);
-  };
+          "Library/Application Support/k9s/views.yaml" = mkIf (cfg.views != { }) {
+            source = yamlFormat.generate "k9s-views" cfg.views;
+          };
+        }
+        // skinFiles
+      );
+    };
 }

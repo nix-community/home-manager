@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.openstackclient;
   yamlFormat = pkgs.formats.yaml { };
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.tensor5 ];
 
   options.programs.openstackclient = {
@@ -60,14 +66,16 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."openstack/clouds.yaml".source = yamlFormat.generate
-      "openstackclient-clouds-yaml-${config.home.username}" {
-        clouds = cfg.clouds;
-      };
+    xdg.configFile."openstack/clouds.yaml".source =
+      yamlFormat.generate "openstackclient-clouds-yaml-${config.home.username}"
+        {
+          clouds = cfg.clouds;
+        };
 
-    xdg.configFile."openstack/clouds-public.yaml".source = yamlFormat.generate
-      "openstackclient-clouds-public-yaml-${config.home.username}" {
-        public-clouds = cfg.publicClouds;
-      };
+    xdg.configFile."openstack/clouds-public.yaml".source =
+      yamlFormat.generate "openstackclient-clouds-public-yaml-${config.home.username}"
+        {
+          public-clouds = cfg.publicClouds;
+        };
   };
 }

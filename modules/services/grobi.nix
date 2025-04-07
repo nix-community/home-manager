@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -6,10 +11,10 @@ let
 
   cfg = config.services.grobi;
 
-  eitherStrBoolIntList = with types;
-    either str (either bool (either int (listOf str)));
+  eitherStrBoolIntList = with types; either str (either bool (either int (listOf str)));
 
-in {
+in
+{
   meta.maintainers = [ maintainers.mbrgm ];
 
   options = {
@@ -72,8 +77,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.grobi" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.grobi" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.grobi = {
@@ -91,7 +95,9 @@ in {
         Environment = [ "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.bash}/bin" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
 
     xdg.configFile."grobi.conf".text = builtins.toJSON {

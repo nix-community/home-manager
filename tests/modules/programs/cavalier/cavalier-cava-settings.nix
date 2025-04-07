@@ -13,7 +13,9 @@
         autosens = 1;
         sensitivity = 100;
       };
-      input = { method = "pulse"; };
+      input = {
+        method = "pulse";
+      };
       output = {
         method = "raw";
         raw_target = "/dev/stdout";

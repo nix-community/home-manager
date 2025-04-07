@@ -6,8 +6,10 @@
       splash = false;
       splash_offset = 2.0;
 
-      preload =
-        [ "/share/wallpapers/buttons.png" "/share/wallpapers/cat_pacman.png" ];
+      preload = [
+        "/share/wallpapers/buttons.png"
+        "/share/wallpapers/cat_pacman.png"
+      ];
 
       wallpaper = [
         "DP-3,/share/wallpapers/buttons.png"

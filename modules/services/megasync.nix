@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.services.megasync;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.megasync;
+in
+{
   meta.maintainers = [ lib.maintainers.GaetanLepage ];
 
   options = {
@@ -20,8 +27,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.megasync" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.megasync" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -33,11 +39,12 @@ in {
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
-        Environment =
-          lib.optionals cfg.forceWayland [ "DO_NOT_UNSET_XDG_SESSION_TYPE=1" ];
+        Environment = lib.optionals cfg.forceWayland [ "DO_NOT_UNSET_XDG_SESSION_TYPE=1" ];
         ExecStart = lib.getExe cfg.package;
       };
     };

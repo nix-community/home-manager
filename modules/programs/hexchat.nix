@@ -1,6 +1,16 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  inherit (lib) literalExpression mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.hexchat;
 
@@ -44,13 +54,18 @@ let
     };
   };
 
-  modChannelOption = with types;
+  modChannelOption =
+    with types;
     submodule {
       options = {
         autojoin = mkOption {
           type = listOf str;
           default = [ ];
-          example = [ "#home-manager" "#linux" "#nix" ];
+          example = [
+            "#home-manager"
+            "#linux"
+            "#nix"
+          ];
           description = "Channels list to autojoin on connecting to server.";
         };
 
@@ -163,16 +178,14 @@ let
 
   transformField = k: v: if (v != null) then "${k}=${v}" else null;
 
-  listChar = c: l:
-    if l != [ ] then
-      lib.concatMapStringsSep "\n" (transformField c) l
-    else
-      null;
+  listChar = c: l: if l != [ ] then lib.concatMapStringsSep "\n" (transformField c) l else null;
 
-  computeFieldsValue = channel:
+  computeFieldsValue =
+    channel:
     let
       ifTrue = p: n: if p then n else 0;
-      result = with channel.options;
+      result =
+        with channel.options;
         lib.foldl' (a: b: a + b) 0 [
           (ifTrue (!connectToSelectedServerOnly) 1)
           (ifTrue useGlobalUserInformation 2)
@@ -181,7 +194,8 @@ let
           (ifTrue (!bypassProxy) 16)
           (ifTrue acceptInvalidSSLCertificates 32)
         ];
-    in toString (if channel.options == null then 0 else result);
+    in
+    toString (if channel.options == null then 0 else result);
 
   loginMethodMap = {
     nickServMsg = 1;
@@ -193,30 +207,38 @@ let
     saslExternal = 10;
   };
 
-  loginMethod = channel:
-    transformField "L" (lib.optionalString (channel.loginMethod != null)
-      (toString loginMethodMap.${channel.loginMethod}));
+  loginMethod =
+    channel:
+    transformField "L" (
+      lib.optionalString (channel.loginMethod != null) (toString loginMethodMap.${channel.loginMethod})
+    );
 
   # Note: Missing option `D=`.
-  transformChannel = channelName:
-    let channel = cfg.channels.${channelName};
-    in lib.concatStringsSep "\n" (lib.remove null [
-      "" # Leave a space between one server and another
-      (transformField "N" channelName)
-      (loginMethod channel)
-      (transformField "E" channel.charset)
-      (transformField "F" (computeFieldsValue channel))
-      (transformField "I" channel.nickname)
-      (transformField "i" channel.nickname2)
-      (transformField "R" channel.realName)
-      (transformField "U" channel.userName)
-      (transformField "P" channel.password)
-      (listChar "S" channel.servers)
-      (listChar "J" channel.autojoin)
-      (listChar "C" channel.commands)
-    ]);
+  transformChannel =
+    channelName:
+    let
+      channel = cfg.channels.${channelName};
+    in
+    lib.concatStringsSep "\n" (
+      lib.remove null [
+        "" # Leave a space between one server and another
+        (transformField "N" channelName)
+        (loginMethod channel)
+        (transformField "E" channel.charset)
+        (transformField "F" (computeFieldsValue channel))
+        (transformField "I" channel.nickname)
+        (transformField "i" channel.nickname2)
+        (transformField "R" channel.realName)
+        (transformField "U" channel.userName)
+        (transformField "P" channel.password)
+        (listChar "S" channel.servers)
+        (listChar "J" channel.autojoin)
+        (listChar "C" channel.commands)
+      ]
+    );
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ thiagokokada ];
 
   options.programs.hexchat = {
@@ -320,8 +342,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.hexchat" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.hexchat" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -333,15 +354,13 @@ in {
 
     xdg.configFile."hexchat/hexchat.conf" = mkIf (cfg.settings != null) {
       force = cfg.overwriteConfigFiles;
-      text = lib.concatMapStringsSep "\n" (x: x + " = " + cfg.settings.${x})
-        (lib.attrNames cfg.settings);
+      text = lib.concatMapStringsSep "\n" (x: x + " = " + cfg.settings.${x}) (lib.attrNames cfg.settings);
     };
 
     xdg.configFile."hexchat/servlist.conf" = mkIf (cfg.channels != { }) {
       force = cfg.overwriteConfigFiles;
       # Final line breaks is required to avoid cropping last field value.
-      text = lib.concatMapStringsSep "\n" transformChannel
-        (lib.attrNames cfg.channels) + "\n\n";
+      text = lib.concatMapStringsSep "\n" transformChannel (lib.attrNames cfg.channels) + "\n\n";
     };
   };
 }

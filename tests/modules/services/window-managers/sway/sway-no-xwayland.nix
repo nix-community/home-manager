@@ -13,10 +13,8 @@
   nmt.script = ''
     assertFileExists home-files/.config/sway/config
     assertFileContent $(normalizeStorePaths home-files/.config/sway/config) \
-        ${
-          builtins.toFile "expected" ''
-            xwayland disable
-          ''
-        }
+        ${builtins.toFile "expected" ''
+          xwayland disable
+        ''}
   '';
 }

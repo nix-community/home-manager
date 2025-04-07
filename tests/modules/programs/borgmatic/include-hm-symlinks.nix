@@ -4,7 +4,8 @@ let
 
   excludeFile = builtins.toFile "excludeFile.txt" "/foo/bar";
 
-in {
+in
+{
   programs.borgmatic = {
     enable = true;
     backups = {
@@ -13,7 +14,9 @@ in {
           sourceDirectories = [ "/my-stuff-to-backup" ];
           repositories = [ "/mnt/disk1" ];
           excludeHomeManagerSymlinks = false;
-          extraConfig = { exclude_from = [ (toString excludeFile) ]; };
+          extraConfig = {
+            exclude_from = [ (toString excludeFile) ];
+          };
         };
       };
     };
