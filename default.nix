@@ -12,10 +12,10 @@ in rec {
     inherit pkgs;
     inherit (releaseInfo) release isReleaseBranch;
   }; {
-    html = manual.html;
-    manPages = manPages;
-    json = options.json;
-    jsonModuleMaintainers = jsonModuleMaintainers; # Unstable, mainly for CI.
+
+    inherit manPages jsonModuleMaintainers;
+    inherit (manual) html htmlOpenTool;
+    inherit (options) json;
   };
 
   home-manager = pkgs.callPackage ./home-manager { inherit path; };
