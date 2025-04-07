@@ -84,6 +84,7 @@ let
       ./programs/carapace.nix
       ./programs/cava.nix
       ./programs/cavalier.nix
+      ./programs/chawan.nix
       ./programs/chromium.nix
       ./programs/cmus.nix
       ./programs/command-not-found/command-not-found.nix
