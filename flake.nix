@@ -1,9 +1,16 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { self, nixpkgs, ... }:
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, treefmt-nix, ... }:
     {
       nixosModules = rec {
         home-manager = ./nixos;
@@ -39,13 +46,17 @@
       lib = import ./lib { inherit (nixpkgs) lib; };
     } // (let
       forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+
+      treefmtEval = forAllSystems (
+        system:
+        treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} {
+          # Formatting configuration
+          programs = {
+            nixfmt.enable = true;
+          };
+        });
     in {
-      formatter = forAllSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in pkgs.linkFarm "format" [{
-          name = "bin/format";
-          path = ./format;
-        }]);
+      formatter = forAllSystems  (system: treefmtEval.${system}.config.build.wrapper);
 
       packages = forAllSystems (system:
         let
