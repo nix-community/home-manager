@@ -35,7 +35,7 @@ in {
 
     systemdTargets = lib.mkOption {
       type = with lib.types; either (listOf str) str;
-      default = [ "graphical-session.target" ];
+      default = [ config.wayland.systemd.target ];
       example = "sway-session.target";
       description = ''
         The systemd targets that will automatically start the cliphist service.
