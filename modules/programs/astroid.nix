@@ -36,7 +36,7 @@ let
 
   # See https://github.com/astroidmail/astroid/wiki/Configuration-Reference
   finalConfig = let
-    template = lib.fromJSON (lib.readFile ./astroid-config-template.json);
+    template = builtins.fromJSON (lib.readFile ./astroid-config-template.json);
     astroidConfig = lib.foldl' lib.recursiveUpdate template [
       {
         astroid.notmuch_config =
