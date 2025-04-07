@@ -10,8 +10,11 @@
   };
 
   nmt.script = ''
+    serviceFile=home-files/.config/systemd/user/swaync.service
+    serviceFile=$(normalizeStorePaths $serviceFile)
+
     assertFileContent \
-      home-files/.config/systemd/user/swaync.service \
+      $serviceFile \
       ${
         builtins.toFile "swaync.service" ''
           [Install]
@@ -29,6 +32,7 @@
           Description=Swaync notification daemon
           Documentation=https://github.com/ErikReider/SwayNotificationCenter
           PartOf=graphical-session.target
+          X-Restart-Triggers=/nix/store/00000000000000000000000000000000-config.json
         ''
       }
   '';
