@@ -97921,9 +97921,10 @@ list of package</p>
  </span>
 </dt>
 <dd>
-<p>List of additional portals that should be passed to the
-<code class="literal">xdg-desktop-portal.service</code>, via the <code class="literal">XDG_DESKTOP_PORTAL_DIR</code>
-variable.</p><p>Portals allow interaction with system, like choosing files or taking
+<p>List of additional portals that should be added to the environment.</p><p>The directory where the portal definitions have been merged together
+(likely <code class="literal">~/.nix-profile/share/xdg-desktop-portal/portals</code>) will get
+passed to <code class="literal">xdg-desktop-portal.service</code> via the
+<code class="literal">NIX_XDG_DESKTOP_PORTAL_DIR</code> environment variable.</p><p>Portals allow interaction with system, like choosing files or taking
 screenshots. At minimum, a desktop portal implementation should be
 listed.</p>
 
