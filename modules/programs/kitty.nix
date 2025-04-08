@@ -73,9 +73,8 @@ in {
       let value = lib.getAttrFromPath [ "programs" "kitty" "theme" ] config;
       in if value != null then
         (let
-          matching = lib.filter (x: x.name == value) (builtins.fromJSON
-            (builtins.readFile
-              "${pkgs.kitty-themes}/share/kitty-themes/themes.json"));
+          matching = lib.filter (x: x.name == value) (lib.importJSON
+            "${pkgs.kitty-themes}/share/kitty-themes/themes.json");
         in lib.throwIf (lib.length matching == 0)
         "kitty-themes does not contain a theme named ${value}"
         lib.strings.removeSuffix ".conf"
