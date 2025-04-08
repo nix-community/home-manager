@@ -18359,6 +18359,76 @@ attribute set of (boolean or floating point number or signed integer or string)<
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.btop.themes"></a><a class="term" href="options.xhtml#opt-programs.btop.themes"><code class="option">programs.btop.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Themes to be written to <code class="filename">$XDG_CONFIG_HOME/btop/themes/${name}.theme</code></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+lazy attribute set of (absolute path or strings concatenated with “\n”)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  theme[main_bg]=&quot;#282a36&quot;
+  theme[main_fg]=&quot;#f8f8f2&quot;
+  theme[title]=&quot;#f8f8f2&quot;
+  theme[hi_fg]=&quot;#6272a4&quot;
+  theme[selected_bg]=&quot;#ff79c6&quot;
+  theme[selected_fg]=&quot;#f8f8f2&quot;
+  theme[inactive_fg]=&quot;#44475a&quot;
+  theme[graph_text]=&quot;#f8f8f2&quot;
+  theme[meter_bg]=&quot;#44475a&quot;
+  theme[proc_misc]=&quot;#bd93f9&quot;
+  theme[cpu_box]=&quot;#bd93f9&quot;
+  theme[mem_box]=&quot;#50fa7b&quot;
+  theme[net_box]=&quot;#ff5555&quot;
+  theme[proc_box]=&quot;#8be9fd&quot;
+  theme[div_line]=&quot;#44475a&quot;
+  theme[temp_start]=&quot;#bd93f9&quot;
+  theme[temp_mid]=&quot;#ff79c6&quot;
+  theme[temp_end]=&quot;#ff33a8&quot;
+  theme[cpu_start]=&quot;#bd93f9&quot;
+  theme[cpu_mid]=&quot;#8be9fd&quot;
+  theme[cpu_end]=&quot;#50fa7b&quot;
+  theme[free_start]=&quot;#ffa6d9&quot;
+  theme[free_mid]=&quot;#ff79c6&quot;
+  theme[free_end]=&quot;#ff33a8&quot;
+  theme[cached_start]=&quot;#b1f0fd&quot;
+  theme[cached_mid]=&quot;#8be9fd&quot;
+  theme[cached_end]=&quot;#26d7fd&quot;
+  theme[available_start]=&quot;#ffd4a6&quot;
+  theme[available_mid]=&quot;#ffb86c&quot;
+  theme[available_end]=&quot;#ff9c33&quot;
+  theme[used_start]=&quot;#96faaf&quot;
+  theme[used_mid]=&quot;#50fa7b&quot;
+  theme[used_end]=&quot;#0dfa49&quot;
+  theme[download_start]=&quot;#bd93f9&quot;
+  theme[download_mid]=&quot;#50fa7b&quot;
+  theme[download_end]=&quot;#8be9fd&quot;
+  theme[upload_start]=&quot;#8c42ab&quot;
+  theme[upload_mid]=&quot;#ff79c6&quot;
+  theme[upload_end]=&quot;#ff33a8&quot;
+  theme[process_start]=&quot;#50fa7b&quot;
+  theme[process_mid]=&quot;#59b690&quot;
+  theme[process_end]=&quot;#6272a4&quot;
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/btop.nix" target="_top">
+&lt;home-manager/modules/programs/btop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.bun.enable"></a><a class="term" href="options.xhtml#opt-programs.bun.enable"><code class="option">programs.bun.enable</code>
   </a>
  </span>
