@@ -23,6 +23,22 @@ let
       else
         [ ]) (lib.attrNames set));
   filterNulls = filterListAndAttrsRecursive (v: v != null);
+
+  # Turns
+  #   {if = {foo = "xxx"; bar = "yyy"}}
+  # into
+  #   {"if.foo" = "xxx"; "if.bar" = "yyy"}
+  # so that the correct TOML is generated for the
+  # on-window-detected table.
+  flattenConditions = attrs:
+    let conditions = attrs."if" or { };
+    in builtins.removeAttrs attrs [ "if" ]
+    // lib.concatMapAttrs (n: v: { "if.${n}" = v; }) conditions;
+
+  flattenOnWindowDetected = cfg:
+    let owd = cfg.on-window-detected or [ ];
+    in cfg // { on-window-detected = map flattenConditions owd; };
+
 in {
   meta.maintainers = with lib.hm.maintainers; [ damidoug ];
 
@@ -234,7 +250,8 @@ in {
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
       file.".config/aerospace/aerospace.toml".source =
-        tomlFormat.generate "aerospace" (filterNulls cfg.userSettings);
+        tomlFormat.generate "aerospace"
+        (filterNulls (flattenOnWindowDetected cfg.userSettings));
     };
   };
 }
