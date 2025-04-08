@@ -40,6 +40,24 @@
     } // (let
       forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
     in {
+      # Include test packages as checks for primary flake.
+      # Allows us to run the tests even easier.
+      checks = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          lib = pkgs.lib;
+
+          testPackages = let
+            tests = import ./tests { inherit pkgs; };
+            renameTestPkg = n: lib.nameValuePair "test-${n}";
+          in lib.mapAttrs' renameTestPkg tests.build;
+
+          integrationTestPackages = let
+            tests = import ./tests/integration { inherit pkgs; };
+            renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
+          in lib.mapAttrs' renameTestPkg tests;
+        in testPackages // integrationTestPackages);
+
       formatter = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in pkgs.linkFarm "format" [{
@@ -47,6 +65,7 @@
           path = ./format;
         }]);
 
+      # Include doc outputs in main flake.
       packages = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
