@@ -546,6 +546,7 @@ in import nmtSrc {
     ./modules/services/podman-linux
     ./modules/services/polkit-gnome
     ./modules/services/polybar
+    ./modules/services/radicle
     ./modules/services/recoll
     ./modules/services/redshift-gammastep
     ./modules/services/remmina
