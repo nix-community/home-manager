@@ -14,7 +14,7 @@ for arg do
             echo "$0 [-c]"
             exit
             ;;
-        -c)
+        --ci)
             nixfmt_args+=("$arg")
             ;;
         -*)
