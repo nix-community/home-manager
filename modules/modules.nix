@@ -81,6 +81,7 @@ let
     ./programs/cava.nix
     ./programs/cavalier.nix
     ./programs/chromium.nix
+    ./programs/claude-code.nix
     ./programs/cmus.nix
     ./programs/command-not-found/command-not-found.nix
     ./programs/comodoro.nix
