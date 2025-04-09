@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ### This file was generated with Nix. Don't modify this file directly. -->
+<openbox_menu>
+  <menu id="client-menu" label="Client Menu">
+    <item label="Maximize">
+      <action name="ToggleMaximize" />
+    </item>
+    <item label="Fullscreen">
+      <action name="ToggleFullscreen" />
+    </item>
+    <item label="Always on Top">
+      <action name="ToggleAlwaysOnTop" />
+    </item>
+    <item label="Alacritty">
+      <action name="Execute" command="alacritty" />
+    </item>
+    <separator />
+    <menu id="workspace" label="Workspace">
+      <item label="Move Left">
+        <action name="SendToDesktop" to="left" />
+      </item>
+    </menu>
+    <separator label="sep" />
+  </menu>
+  <menu id="menu-two" label="Client Menu Two">
+    <menu id="menu-in-menu" label="Menu In Menu">
+      <menu id="menu-in-menu-in-menu" label="Menu In Menu In Menu">
+        <item label="Move Right">
+          <action name="SendToDesktop" to="right" />
+        </item>
+      </menu>
+    </menu>
+  </menu>
+  <menu id="">
+
+  </menu>
+
+</openbox_menu>
