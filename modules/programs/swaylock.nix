@@ -74,7 +74,12 @@ in
     xdg.configFile."swaylock/config" = lib.mkIf (cfg.settings != { }) {
       text = lib.concatStrings (
         lib.mapAttrsToList (
-          n: v: if v == false then "" else (if v == true then n else n + "=" + builtins.toString v) + "\n"
+          n: v:
+          if v == false then
+            ""
+          else
+            (if v == true then n else n + "=" + (if builtins.isPath v then "${v}" else builtins.toString v))
+            + "\n"
         ) cfg.settings
       );
     };
