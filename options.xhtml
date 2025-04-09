@@ -56970,6 +56970,51 @@ attribute set of (submodule)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.thunderbird.profiles._name_.accountsOrder"></a><a class="term" href="options.xhtml#opt-programs.thunderbird.profiles._name_.accountsOrder"><code class="option">programs.thunderbird.profiles.&lt;name&gt;.accountsOrder</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Custom ordering of accounts and local folders in
+Thunderbird’s folder pane. The accounts are specified
+by their name. For declarative accounts, it must be the name
+of their attribute in <code class="literal">config.accounts.email.accounts</code> (or
+<code class="literal">config.programs.thunderbird.profiles.&lt;name&gt;.feedAccounts</code>
+for feed accounts). The local folders name can be found in
+the <code class="literal">mail.accountmanager.accounts</code> Thunderbird preference,
+for example with Settings &gt; Config Editor (“account1” by
+default). Enabled accounts and local folders that aren’t
+listed here appear in an arbitrary order after the ordered
+accounts.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  [
+    &quot;my-awesome-account&quot;
+    &quot;private&quot;
+    &quot;work&quot;
+    &quot;rss&quot;
+    /* Other accounts in arbitrary order */
+  ]
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.thunderbird.profiles._name_.extensions"></a><a class="term" href="options.xhtml#opt-programs.thunderbird.profiles._name_.extensions"><code class="option">programs.thunderbird.profiles.&lt;name&gt;.extensions</code>
   </a>
  </span>
