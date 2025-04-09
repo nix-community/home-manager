@@ -320,6 +320,33 @@ in
                   '';
                 };
 
+                accountsOrder = mkOption {
+                  type = types.listOf types.str;
+                  default = [ ];
+                  description = ''
+                    Custom ordering of accounts and local folders in
+                    Thunderbird's folder pane. The accounts are specified
+                    by their name. For declarative accounts, it must be the name
+                    of their attribute in `config.accounts.email.accounts` (or
+                    `config.programs.thunderbird.profiles.<name>.feedAccounts`
+                    for feed accounts). The local folders name can be found in
+                    the `mail.accountmanager.accounts` Thunderbird preference,
+                    for example with Settings > Config Editor ("account1" by
+                    default). Enabled accounts and local folders that aren't
+                    listed here appear in an arbitrary order after the ordered
+                    accounts.
+                  '';
+                  example = ''
+                    [
+                      "my-awesome-account"
+                      "private"
+                      "work"
+                      "rss"
+                      /* Other accounts in arbitrary order */
+                    ]
+                  '';
+                };
+
                 withExternalGnupg = mkOption {
                   type = types.bool;
                   default = false;
@@ -659,14 +686,33 @@ in
               );
 
               accounts = emailAccounts ++ feedAccounts;
+
+              orderedAccounts =
+                let
+                  accountNameToId = builtins.listToAttrs (
+                    map (a: {
+                      name = a.name;
+                      value = "account_${a.id}";
+                    }) accounts
+                  );
+
+                  accountsOrderIds = map (a: accountNameToId."${a}" or a) profile.accountsOrder;
+
+                  # Append the default local folder name "account1".
+                  # See https://github.com/nix-community/home-manager/issues/5031.
+                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (name: value: value) accountNameToId) ++ [
+                    "account1"
+                  ];
+                in
+                accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds);
             in
             {
               text = mkUserJs (builtins.foldl' (a: b: a // b) { } (
                 [
                   cfg.settings
 
-                  (optionalAttrs (length accounts != 0) {
-                    "mail.accountmanager.accounts" = concatStringsSep "," (map (a: "account_${a.id}") accounts);
+                  (optionalAttrs (length orderedAccounts != 0) {
+                    "mail.accountmanager.accounts" = concatStringsSep "," orderedAccounts;
                   })
 
                   (optionalAttrs (length smtp != 0) {

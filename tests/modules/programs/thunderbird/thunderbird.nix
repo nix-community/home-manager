@@ -77,6 +77,13 @@
         '';
 
         feedAccounts.rss = { };
+
+        accountsOrder = [
+          "hm@example.com"
+          "rss"
+          "imperative_account"
+          "hm-account"
+        ];
       };
 
       second.settings = {
@@ -87,6 +94,7 @@
           3
         ];
       };
+      second.accountsOrder = [ "account1" ];
     };
 
     settings = {
