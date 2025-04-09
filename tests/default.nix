@@ -170,6 +170,7 @@ let
         "nix"
         "nix-index"
         "nix-your-shell"
+        "notmuch"
         "npth"
         "nushell"
         "ollama"
