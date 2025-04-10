@@ -350,6 +350,7 @@ let
       ./services/hypridle.nix
       ./services/hyprpaper.nix
       ./services/hyprpolkitagent.nix
+      ./services/hyprsunset.nix
       ./services/imapnotify.nix
       ./services/jankyborders.nix
       ./services/kanshi.nix

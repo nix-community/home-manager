@@ -579,6 +579,7 @@ import nmtSrc {
       ./modules/services/hypridle
       ./modules/services/hyprpaper
       ./modules/services/hyprpolkitagent
+      ./modules/services/hyprsunset
       ./modules/services/imapnotify
       ./modules/services/kanshi
       ./modules/services/lieer
