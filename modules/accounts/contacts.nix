@@ -21,12 +21,13 @@ let
             "filesystem"
             "singlefile"
           ];
+          default = "filesystem";
           description = "The type of the storage.";
         };
 
         fileExt = mkOption {
           type = types.nullOr types.str;
-          default = null;
+          default = ".vcf";
           description = "The file extension to use.";
         };
 
