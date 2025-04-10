@@ -6,12 +6,15 @@
     transitions = {
       sunrise = {
         calendar = "*-*-* 06:30:00";
-        extraArgs = [ "temperature 6500" ];
+        requests = [
+          [ "temperature 6500" ]
+          [ "identity" ]
+        ];
       };
 
       sunset = {
         calendar = "*-*-* 19:30:00";
-        extraArgs = [ "temperature 3500" ];
+        requests = [ [ "temperature 3500" ] ];
       };
     };
   };
@@ -38,7 +41,7 @@
     assertFileContains $sunsetTimer "OnCalendar=*-*-* 19:30:00"
 
     # Verify service configurations
-    assertFileContains $sunriseService "ExecStart=@hyprland@/bin/hyprctl hyprsunset 'temperature 6500'"
+    assertFileContains $sunriseService "ExecStart=@hyprland@/bin/hyprctl hyprsunset 'temperature 6500' && @hyprland@/bin/hyprctl hyprsunset identity"
     assertFileContains $sunsetService "ExecStart=@hyprland@/bin/hyprctl hyprsunset 'temperature 3500'"
   '';
 }
