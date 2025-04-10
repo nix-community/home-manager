@@ -50,11 +50,11 @@
       {
         formatter = forAllSystems (
           system:
-          nixpkgs.legacyPackages.${system}.nixfmt-tree.override ({
+          nixpkgs.legacyPackages.${system}.nixfmt-tree.override {
             settings = {
               tree-root-file = "release.json";
             };
-          })
+          }
         );
 
         packages = forAllSystems (
