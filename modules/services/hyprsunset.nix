@@ -36,13 +36,15 @@ in
               example = "*-*-* 06:00:00";
             };
 
-            extraArgs = lib.mkOption {
-              type = lib.types.listOf lib.types.str;
+            requests = lib.mkOption {
+              type = lib.types.listOf (lib.types.listOf lib.types.str);
               default = [ ];
-              description = "Additional command-line arguments to pass to `hyprctl hyprsunset` for this transition.";
-              example = [
-                "temperature 3500"
-              ];
+              description = "List of requests to pass to `hyprctl hyprsunset` for this transition. Each inner list represents a separate command.";
+              example = lib.literalExpression ''
+                [
+                  [ "temperature" "3500" ]
+                ]
+              '';
             };
           };
         }
@@ -53,11 +55,16 @@ in
         {
           sunrise = {
             calendar = "*-*-* 06:00:00";
-            extraArgs = [ "temperature" "6500" ];
+            requests = [
+              [ "temperature" "6500" ]
+              [ "gamma 100" ]
+            ];
           };
           sunset = {
             calendar = "*-*-* 19:00:00";
-            extraArgs = [ "temperature" "3500" ];
+            requests = [
+              [ "temperature" "3500" ]
+            ];
           };
         }
       '';
@@ -69,7 +76,7 @@ in
       let
         # Create the main persistent service that maintains the IPC socket
         # Create a service for each transition in the transitions configuration
-        # These services will send commands to the persistent service via IPC
+        # These services will send requests to the persistent service via IPC
         transitionServices = lib.mapAttrs' (
           name: transitionCfg:
           lib.nameValuePair "hyprsunset-${name}" {
@@ -83,8 +90,12 @@ in
             };
 
             Service = {
-              ExecStart = "${lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl"} hyprsunset ${lib.escapeShellArgs transitionCfg.extraArgs}";
               Type = "oneshot";
+              # Execute multiple requests sequentially
+              ExecStart = lib.concatMapStringsSep " && " (
+                cmd:
+                "${lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl"} hyprsunset ${lib.escapeShellArgs cmd}"
+              ) transitionCfg.requests;
             };
           }
         ) cfg.transitions;
