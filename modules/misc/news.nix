@@ -57,7 +57,13 @@ let
   isNixFile = n: v: v == "regular" && lib.hasSuffix ".nix" n;
   # builtins.attrNames return the values in alphabetical order
   newsFiles = builtins.attrNames (lib.filterAttrs isNixFile (builtins.readDir ./news));
-  newsEntries = builtins.map (newsFile: import (./news + "/${newsFile}")) newsFiles;
+  newsEntries = builtins.map (
+    newsFile:
+    let
+      imported = import (./news + "/${newsFile}");
+    in
+    if builtins.isFunction imported then imported { inherit pkgs; } else imported
+  ) newsFiles;
 in
 {
   meta.maintainers = [ lib.maintainers.rycee ];
