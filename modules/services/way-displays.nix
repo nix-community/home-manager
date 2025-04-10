@@ -5,9 +5,17 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    attrsets
+    lists
+    literalExpression
+    maintainers
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
   mergeSets = sets: lists.fold attrsets.recursiveUpdate { } sets;
   cfg = config.services.way-displays;
   yaml = pkgs.formats.yaml { };
@@ -16,20 +24,9 @@ in
   meta.maintainers = [ maintainers.jolars ];
 
   options.services.way-displays = {
-    enable = mkEnableOption "" // {
-      description = ''
-        Whether to enable way-displays.
-      '';
-    };
+    enable = mkEnableOption "way-displays";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.way-displays;
-      defaultText = literalExpression "pkgs.way-displays";
-      description = ''
-        way-displays derivation to use.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "way-displays" { };
 
     settings = mkOption {
       type = yaml.type;
