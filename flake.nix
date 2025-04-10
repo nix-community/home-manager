@@ -48,7 +48,14 @@
         forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
       in
       {
-        formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+        formatter = forAllSystems (
+          system:
+          nixpkgs.legacyPackages.${system}.nixfmt-tree.override {
+            settings = {
+              tree-root-file = "release.json";
+            };
+          }
+        );
 
         packages = forAllSystems (
           system:
