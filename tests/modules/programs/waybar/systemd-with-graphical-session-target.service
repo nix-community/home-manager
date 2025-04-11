@@ -1,6 +1,6 @@
 [Install]
-WantedBy=tray.target
 WantedBy=sway-session.target
+WantedBy=tray.target
 
 [Service]
 ExecReload=/nix/store/00000000000000000000000000000000-coreutils/bin/kill -SIGUSR2 $MAINPID
