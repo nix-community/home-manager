@@ -66,10 +66,9 @@ in
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."${configDir}/jj/config.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "jujutsu-config" (
-        cfg.settings
-        // lib.optionalAttrs (cfg.ediff) (
+    programs.jujutsu.settings = lib.mkMerge [
+      (lib.mkIf cfg.ediff {
+        merge-tools.ediff =
           let
             emacsDiffScript = pkgs.writeShellScriptBin "emacs-ediff" ''
               set -euxo pipefail
@@ -77,18 +76,19 @@ in
             '';
           in
           {
-            merge-tools.ediff = {
-              program = lib.getExe emacsDiffScript;
-              merge-args = [
-                "$left"
-                "$right"
-                "$base"
-                "$output"
-              ];
-            };
-          }
-        )
-      );
+            program = lib.getExe emacsDiffScript;
+            merge-args = [
+              "$left"
+              "$right"
+              "$base"
+              "$output"
+            ];
+          };
+      })
+    ];
+
+    home.file."${configDir}/jj/config.toml" = mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "jujutsu-config" cfg.settings;
     };
   };
 }
