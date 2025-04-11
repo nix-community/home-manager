@@ -88288,6 +88288,134 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.way-displays.enable"></a><a class="term" href="options.xhtml#opt-services.way-displays.enable"><code class="option">services.way-displays.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable way-displays.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/way-displays.nix" target="_top">
+&lt;home-manager/modules/services/way-displays.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.way-displays.package"></a><a class="term" href="options.xhtml#opt-services.way-displays.package"><code class="option">services.way-displays.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The way-displays package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.way-displays</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/way-displays.nix" target="_top">
+&lt;home-manager/modules/services/way-displays.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.way-displays.settings"></a><a class="term" href="options.xhtml#opt-services.way-displays.settings"><code class="option">services.way-displays.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The way-displays configuration written to
+<code class="filename">$XDG_CONFIG_HOME/way-displays/cfg.yml</code>. See
+<a class="link" href="https://github.com/alex-courtis/way-displays/wiki/Configuration"  target="_top">https://github.com/alex-courtis/way-displays/wiki/Configuration</a> for a
+description of available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  ORDER = [
+    &quot;DP-2&quot;
+    &quot;Monitor Maker ABC123&quot;
+    &quot;!^my_regex_here[0-9]+&quot;
+    &quot;&#x27;!.*$&#x27;&quot;
+  ];
+  SCALING = false;
+  MODE = [
+    {
+      NAME_DESC = &quot;HDMI-A-1&quot;;
+      WIDTH = 1920;
+      HEIGHT = 1080;
+      HZ = 60;
+    }
+  ];
+  TRANSFORM = [
+    {
+      NAME_DESC = &quot;eDP-1&quot;
+      TRANSFORM = &quot;FLIPPED-90&quot;;
+    }
+  ];
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/way-displays.nix" target="_top">
+&lt;home-manager/modules/services/way-displays.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.way-displays.systemdTarget"></a><a class="term" href="options.xhtml#opt-services.way-displays.systemdTarget"><code class="option">services.way-displays.systemdTarget</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Systemd target to bind to.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">config.wayland.systemd.target</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/way-displays.nix" target="_top">
+&lt;home-manager/modules/services/way-displays.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.wlsunset.enable"></a><a class="term" href="options.xhtml#opt-services.wlsunset.enable"><code class="option">services.wlsunset.enable</code>
   </a>
  </span>
