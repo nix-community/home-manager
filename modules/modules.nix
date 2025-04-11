@@ -61,6 +61,7 @@ let
       ./programs/alacritty.nix
       ./programs/alot.nix
       ./programs/antidote.nix
+      ./programs/anyrun.nix
       ./programs/aria2.nix
       ./programs/astroid.nix
       ./programs/atuin.nix
