@@ -73607,6 +73607,182 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.hyprsunset.enable"></a><a class="term" href="options.xhtml#opt-services.hyprsunset.enable"><code class="option">services.hyprsunset.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Hyprsunset, Hyprland’s blue-light filter.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix" target="_top">
+&lt;home-manager/modules/services/hyprsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.hyprsunset.package"></a><a class="term" href="options.xhtml#opt-services.hyprsunset.package"><code class="option">services.hyprsunset.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The hyprsunset package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.hyprsunset</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix" target="_top">
+&lt;home-manager/modules/services/hyprsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.hyprsunset.extraArgs"></a><a class="term" href="options.xhtml#opt-services.hyprsunset.extraArgs"><code class="option">services.hyprsunset.extraArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Additional command-line arguments to pass to <code class="literal">hyprsunset</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--identity&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix" target="_top">
+&lt;home-manager/modules/services/hyprsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.hyprsunset.transitions"></a><a class="term" href="options.xhtml#opt-services.hyprsunset.transitions"><code class="option">services.hyprsunset.transitions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Set of transitions for different times of day (e.g., sunrise, sunset)</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  sunrise = {
+    calendar = &quot;*-*-* 06:00:00&quot;;
+    requests = [
+      [ &quot;temperature&quot; &quot;6500&quot; ]
+      [ &quot;gamma 100&quot; ]
+    ];
+  };
+  sunset = {
+    calendar = &quot;*-*-* 19:00:00&quot;;
+    requests = [
+      [ &quot;temperature&quot; &quot;3500&quot; ]
+    ];
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix" target="_top">
+&lt;home-manager/modules/services/hyprsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.hyprsunset.transitions._name_.calendar"></a><a class="term" href="options.xhtml#opt-services.hyprsunset.transitions._name_.calendar"><code class="option">services.hyprsunset.transitions.&lt;name&gt;.calendar</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Systemd calendar expression for when to run this transition.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;*-*-* 06:00:00&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix" target="_top">
+&lt;home-manager/modules/services/hyprsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.hyprsunset.transitions._name_.requests"></a><a class="term" href="options.xhtml#opt-services.hyprsunset.transitions._name_.requests"><code class="option">services.hyprsunset.transitions.&lt;name&gt;.requests</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of requests to pass to <code class="literal">hyprctl hyprsunset</code> for this transition. Each inner list represents a separate command.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  [ &quot;temperature&quot; &quot;3500&quot; ]
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix" target="_top">
+&lt;home-manager/modules/services/hyprsunset.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.imapnotify.enable"></a><a class="term" href="options.xhtml#opt-services.imapnotify.enable"><code class="option">services.imapnotify.enable</code>
   </a>
  </span>
