@@ -221,7 +221,7 @@ in
     systemd.enable = mkEnableOption "Waybar systemd integration";
 
     systemd.target = mkOption {
-      type = nullOr str;
+      type = str;
       default = config.wayland.systemd.target;
       defaultText = literalExpression "config.wayland.systemd.target";
       example = "sway-session.target";
@@ -354,20 +354,18 @@ in
               ++ optional (cfg.style != null) "${config.xdg.configFile."waybar/style.css".source}";
           };
 
-          Service =
-            {
-              ExecStart = "${cfg.package}/bin/waybar";
-              ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
-              Restart = "on-failure";
-              KillMode = "mixed";
-            }
-            // optionalAttrs cfg.systemd.enableInspect {
-              Environment = [ "GTK_DEBUG=interactive" ];
-            };
+          Service = {
+            Environment = optional cfg.systemd.enableInspect "GTK_DEBUG=interactive";
+            ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
+            ExecStart = "${cfg.package}/bin/waybar";
+            KillMode = "mixed";
+            Restart = "on-failure";
+          };
 
           Install.WantedBy = [
+            cfg.systemd.target
             "tray.target"
-          ] ++ lib.optional (cfg.systemd.target != null) cfg.systemd.target;
+          ];
         };
       })
     ]);
