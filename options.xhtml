@@ -14160,6 +14160,638 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.anyrun.enable"></a><a class="term" href="options.xhtml#opt-programs.anyrun.enable"><code class="option">programs.anyrun.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable anyrun.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.package"></a><a class="term" href="options.xhtml#opt-programs.anyrun.package"><code class="option">programs.anyrun.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The anyrun package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.anyrun</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.closeOnClick"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.closeOnClick"><code class="option">programs.anyrun.config.closeOnClick</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Close window when a click outside the main box is received.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.height"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.height"><code class="option">programs.anyrun.config.height</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The minimum height of the runner, the runner will expand to fit all the entries.</p><p>This is a numeric option - pass either <code class="literal">{ absolute = int; };</code> or <code class="literal">{ fraction = float; };</code>.
+when using <code class="literal">absolute</code> it sets the absolute value in pixels,
+when using <code class="literal">fraction</code>, it sets a fraction of the width or height of the full screen (depends on exclusive zones and the settings related to them) window</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  absolute = 0;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  { absolute = 200; };
+  or
+  { fraction = 0.4; };
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.height.absolute"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.height.absolute"><code class="option">programs.anyrun.config.height.absolute</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute value in pixels.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.height.fraction"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.height.fraction"><code class="option">programs.anyrun.config.height.fraction</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Fraction of the screen.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or floating point number</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.hideIcons"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.hideIcons"><code class="option">programs.anyrun.config.hideIcons</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Hide match and plugin info icons.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.hidePluginInfo"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.hidePluginInfo"><code class="option">programs.anyrun.config.hidePluginInfo</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Hide the plugin info panel.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.ignoreExclusiveZones"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.ignoreExclusiveZones"><code class="option">programs.anyrun.config.ignoreExclusiveZones</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Ignore exclusive zones, eg. Waybar.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.layer"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.layer"><code class="option">programs.anyrun.config.layer</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Layer shell layer (background, bottom, top or overlay).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “background”, “bottom”, “top”, “overlay”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;overlay&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.maxEntries"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.maxEntries"><code class="option">programs.anyrun.config.maxEntries</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Limit amount of entries shown in total.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.plugins"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.plugins"><code class="option">programs.anyrun.config.plugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of anyrun plugins to use. Can either be packages, absolute plugin paths, or strings.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (list of (package or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.showResultsImmediately"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.showResultsImmediately"><code class="option">programs.anyrun.config.showResultsImmediately</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Show search results immediately when Anyrun starts.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.width"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.width"><code class="option">programs.anyrun.config.width</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The width of the runner.</p><p>This is a numeric option - pass either <code class="literal">{ absolute = int; };</code> or <code class="literal">{ fraction = float; };</code>.
+when using <code class="literal">absolute</code> it sets the absolute value in pixels,
+when using <code class="literal">fraction</code>, it sets a fraction of the width or height of the full screen (depends on exclusive zones and the settings related to them) window</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  absolute = 800;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  { absolute = 200; };
+  or
+  { fraction = 0.4; };
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.width.absolute"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.width.absolute"><code class="option">programs.anyrun.config.width.absolute</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute value in pixels.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.width.fraction"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.width.fraction"><code class="option">programs.anyrun.config.width.fraction</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Fraction of the screen.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or floating point number</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.x"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.x"><code class="option">programs.anyrun.config.x</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The horizontal position, adjusted so that { relative = 0.5; } always centers the runner.</p><p>This is a numeric option - pass either <code class="literal">{ absolute = int; };</code> or <code class="literal">{ fraction = float; };</code>.
+when using <code class="literal">absolute</code> it sets the absolute value in pixels,
+when using <code class="literal">fraction</code>, it sets a fraction of the width or height of the full screen (depends on exclusive zones and the settings related to them) window</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  fraction = 0.5;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  { absolute = 200; };
+  or
+  { fraction = 0.4; };
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.x.absolute"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.x.absolute"><code class="option">programs.anyrun.config.x.absolute</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute value in pixels.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.x.fraction"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.x.fraction"><code class="option">programs.anyrun.config.x.fraction</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Fraction of the screen.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or floating point number</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.y"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.y"><code class="option">programs.anyrun.config.y</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The vertical position, works the same as x.</p><p>This is a numeric option - pass either <code class="literal">{ absolute = int; };</code> or <code class="literal">{ fraction = float; };</code>.
+when using <code class="literal">absolute</code> it sets the absolute value in pixels,
+when using <code class="literal">fraction</code>, it sets a fraction of the width or height of the full screen (depends on exclusive zones and the settings related to them) window</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  fraction = 0.0;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  { absolute = 200; };
+  or
+  { fraction = 0.4; };
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.y.absolute"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.y.absolute"><code class="option">programs.anyrun.config.y.absolute</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute value in pixels.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or signed integer</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.config.y.fraction"></a><a class="term" href="options.xhtml#opt-programs.anyrun.config.y.fraction"><code class="option">programs.anyrun.config.y.fraction</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Fraction of the screen.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or floating point number</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.extraConfigFiles"></a><a class="term" href="options.xhtml#opt-programs.anyrun.extraConfigFiles"><code class="option">programs.anyrun.extraConfigFiles</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra files to put in <code class="filename">~/.config/anyrun</code>, a wrapper over <code class="option">xdg.configFile</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  programs.anyrun.extraConfigFiles.&quot;plugin-name.ron&quot;.text = &#x27;&#x27;&#x27;
+    Config(
+      some_option: true,
+    )
+  &#x27;&#x27;&#x27;
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.anyrun.extraCss"></a><a class="term" href="options.xhtml#opt-programs.anyrun.extraCss"><code class="option">programs.anyrun.extraCss</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra CSS lines to add to <code class="filename">~/.config/anyrun/style.css</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix" target="_top">
+&lt;home-manager/modules/programs/anyrun.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.aria2.enable"></a><a class="term" href="options.xhtml#opt-programs.aria2.enable"><code class="option">programs.aria2.enable</code>
   </a>
  </span>
