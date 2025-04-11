@@ -1,7 +1,13 @@
+{ config, ... }:
+
 {
   wayland.windowManager.hyprland = {
     enable = true;
     package = null;
+    plugins = [
+      "/path/to/plugin1"
+      (config.lib.test.mkStubPackage { name = "foo"; })
+    ];
     settings = {
       cursor = {
         enable_hyprcursor = true;
@@ -29,5 +35,8 @@
   nmt.script = ''
     config=home-files/.config/hypr/hyprland.conf
     assertFileExists "$config"
+
+    normalizedConfig=$(normalizeStorePaths "$config")
+    assertFileContent "$normalizedConfig" ${./null-package-config.conf}
   '';
 }

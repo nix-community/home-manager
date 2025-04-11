@@ -291,9 +291,8 @@ in
                 let
                   mkEntry =
                     entry: if lib.types.package.check entry then "${entry}/lib/lib${entry.pname}.so" else entry;
-                  hyprctl = "${cfg.finalPackage}/bin/hyprctl";
                 in
-                map (p: "${hyprctl} plugin load ${mkEntry p}") cfg.plugins;
+                map (p: "hyprctl plugin load ${mkEntry p}") cfg.plugins;
             };
             inherit (cfg) importantPrefixes;
           };
