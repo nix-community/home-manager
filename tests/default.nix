@@ -505,6 +505,7 @@ import nmtSrc {
       ./modules/misc/qt
       ./modules/misc/xsession
       ./modules/programs/abook
+      ./modules/programs/anyrun
       ./modules/programs/autorandr
       ./modules/programs/awscli
       ./modules/programs/beets # One test relies on services.mpd
