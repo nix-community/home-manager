@@ -8,6 +8,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 exec-on-workspace-change = []
 on-focus-changed = []
 on-focused-monitor-changed = ["move-mouse monitor-lazy-center"]
+on-window-detected = []
 start-at-login = false
 
 [gaps.outer]
@@ -24,15 +25,3 @@ alt-h = "focus left"
 alt-j = "focus down"
 alt-k = "focus up"
 alt-l = "focus right"
-
-[[on-window-detected]]
-"if.app-id" = "com.apple.MobileSMS"
-run = ["move-node-to-workspace 10"]
-
-[[on-window-detected]]
-"if.app-id" = "ru.keepcoder.Telegram"
-run = ["move-node-to-workspace 10"]
-
-[[on-window-detected]]
-"if.app-id" = "org.whispersystems.signal-desktop"
-run = ["move-node-to-workspace 10"]
