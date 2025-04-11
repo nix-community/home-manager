@@ -83,7 +83,7 @@ in
       yaml.generate "way-displays-config.yaml"
         (mergeSets [
           {
-            CALLBACK_CMD = "${pkgs.libnotify}/bin/notify-send \"way-displays \${CALLBACK_LEVEL}\" \"\${CALLBACK_MSG}\"";
+            CALLBACK_CMD = lib.mkDefault "${pkgs.libnotify}/bin/notify-send \"way-displays \${CALLBACK_LEVEL}\" \"\${CALLBACK_MSG}\"";
           }
           cfg.settings
         ]);
@@ -104,7 +104,7 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = "${cfg.package}/bin/way-displays";
+        ExecStart = "${lib.getExe cfg.package}";
         Restart = "always";
       };
     };
