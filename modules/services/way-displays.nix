@@ -83,7 +83,7 @@ in
       yaml.generate "way-displays-config.yaml"
         (mergeSets [
           {
-            CALLBACK_CMD = lib.mkDefault "${pkgs.libnotify}/bin/notify-send \"way-displays \${CALLBACK_LEVEL}\" \"\${CALLBACK_MSG}\"";
+            CALLBACK_CMD = "${pkgs.libnotify}/bin/notify-send \"way-displays \${CALLBACK_LEVEL}\" \"\${CALLBACK_MSG}\"";
           }
           cfg.settings
         ]);
