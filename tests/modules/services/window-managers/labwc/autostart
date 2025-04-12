@@ -7,5 +7,5 @@ waybar &
 swaybg -c '#113344' >/dev/null 2>&1 &
 
 ### SYSTEMD INTEGRATION ###
-@dbus@/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP && systemctl --user stop wayfire-session.target && systemctl --user start wayfire-session.target
+@dbus@/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP && systemctl --user stop labwc-session.target && systemctl --user start labwc-session.target
 
