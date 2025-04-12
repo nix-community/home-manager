@@ -1,4 +1,9 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   function = import ./function.nix {
     inherit lib;
@@ -13,7 +18,7 @@ let
   systemdActivation = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}";
 in
 {
-  meta.maintainers = [ lib.maintainers.LesVu ];
+  meta.maintainers = [ lib.hm.maintainers.LesVu ];
 
   options.wayland.windowManager.labwc = {
     enable = lib.mkEnableOption "Labwc, a wayland window-stacking compositor";
