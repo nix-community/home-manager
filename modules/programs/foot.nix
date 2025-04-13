@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.programs.foot;
-  iniFormat = pkgs.formats.ini { };
+  iniFormat = pkgs.formats.ini { listsAsDuplicateKeys = true; };
 in
 {
   meta.maintainers = with lib.maintainers; [ plabadens ];
