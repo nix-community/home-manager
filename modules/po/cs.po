@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-01-03 09:09+0100\n"
-"PO-Revision-Date: 2025-01-22 01:25+0000\n"
-"Last-Translator: Dark Templar <dark.templar0007@gmail.com>\n"
+"PO-Revision-Date: 2025-04-13 09:31+0000\n"
+"Last-Translator: max <weblate@p2502.net>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/home-manager/"
 "modules/cs/>\n"
 "Language: cs\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 
 #: modules/files.nix:188
 msgid "Creating home file links in %s"
@@ -33,7 +33,7 @@ msgstr "Vytváření nových generací profilu"
 
 #: modules/home-environment.nix:594
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Žádná změna, zachovává se poslední generace profilu"
 
 #: modules/home-environment.nix:643
 msgid ""
