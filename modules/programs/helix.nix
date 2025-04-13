@@ -131,7 +131,13 @@ in
     };
 
     themes = mkOption {
-      type = types.attrsOf tomlFormat.type;
+      type = types.attrsOf (
+        types.oneOf [
+          tomlFormat.type
+          types.path
+          types.lines
+        ]
+      );
       default = { };
       example = literalExpression ''
         {
@@ -245,7 +251,13 @@ in
         themes = lib.mapAttrs' (
           n: v:
           lib.nameValuePair "helix/themes/${n}.toml" {
-            source = tomlFormat.generate "helix-theme-${n}" v;
+            source =
+              if lib.isAttrs v then
+                tomlFormat.generate "helix-theme-${n}" v
+              else if builtins.isPath cfg.style || lib.isStorePath cfg.style then
+                cfg.style
+              else
+                pkgs.writeText "helix-theme-${n}" v;
           }
         ) cfg.themes;
       in
