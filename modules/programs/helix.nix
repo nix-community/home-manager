@@ -252,12 +252,12 @@ in
           n: v:
           lib.nameValuePair "helix/themes/${n}.toml" {
             source =
-              if lib.isAttrs v then
-                tomlFormat.generate "helix-theme-${n}" v
-              else if builtins.isPath cfg.style || lib.isStorePath cfg.style then
-                cfg.style
+              if lib.isString v then
+                pkgs.writeText "helix-theme-${n}" v
+              else if builtins.isPath v || lib.isStorePath v then
+                v
               else
-                pkgs.writeText "helix-theme-${n}" v;
+                tomlFormat.generate "helix-theme-${n}" v;
           }
         ) cfg.themes;
       in
