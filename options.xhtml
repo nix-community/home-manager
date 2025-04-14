@@ -55209,6 +55209,180 @@ attribute set of (boolean or signed integer or floating point number or string o
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.superfile.enable"></a><a class="term" href="options.xhtml#opt-programs.superfile.enable"><code class="option">programs.superfile.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable superfile - Pretty fancy and modern terminal file manager.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/superfile.nix" target="_top">
+&lt;home-manager/modules/programs/superfile.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.superfile.package"></a><a class="term" href="options.xhtml#opt-programs.superfile.package"><code class="option">programs.superfile.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The superfile package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.superfile</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/superfile.nix" target="_top">
+&lt;home-manager/modules/programs/superfile.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.superfile.hotkeys"></a><a class="term" href="options.xhtml#opt-programs.superfile.hotkeys"><code class="option">programs.superfile.hotkeys</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Hotkey configuration written to <code class="filename">$XDG_CONFIG_HOME/superfile/hotkeys.toml</code>
+(linux) or <code class="filename">Library/Application Support/superfile/hotkeys.toml</code> (darwin), See
+<a class="link" href="https://superfile.netlify.app/configure/custom-hotkeys/"  target="_top">https://superfile.netlify.app/configure/custom-hotkeys/</a> for supported values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">confirm = [
+  &quot;enter&quot;
+  &quot;right&quot;
+  &quot;l&quot;
+];
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/superfile.nix" target="_top">
+&lt;home-manager/modules/programs/superfile.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.superfile.settings"></a><a class="term" href="options.xhtml#opt-programs.superfile.settings"><code class="option">programs.superfile.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/superfile/config.toml</code>
+(linux) or <code class="filename">Library/Application Support/superfile/config.toml</code> (darwin), See
+<a class="link" href="https://superfile.netlify.app/configure/superfile-config/"  target="_top">https://superfile.netlify.app/configure/superfile-config/</a> for supported values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">theme = &quot;catppuccin-frappe&quot;;
+default_sort_type = 0;
+transparent_background = false;
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/superfile.nix" target="_top">
+&lt;home-manager/modules/programs/superfile.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.superfile.themes"></a><a class="term" href="options.xhtml#opt-programs.superfile.themes"><code class="option">programs.superfile.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Theme files written to <code class="filename">$XDG_CONFIG_HOME/superfile/theme/</code>
+(linux) or <code class="filename">Library/Application Support/superfile/theme/</code> (darwin), See
+<a class="link" href="https://superfile.netlify.app/configure/custom-theme/"  target="_top">https://superfile.netlify.app/configure/custom-theme/</a> for supported values.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (TOML value or absolute path)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">myTheme = {
+  code_syntax_highlight = &quot;catppuccin-latte&quot;;
+
+  file_panel_border = &quot;#101010&quot;;
+  sidebar_border = &quot;#101011&quot;;
+  footer_border = &quot;#101012&quot;;
+
+  gradient_color = [
+    &quot;#101013&quot;
+    &quot;#101014&quot;
+  ];
+
+  # ...
+};
+myOtherFavoriteTheme = {
+  code_syntax_highlight = &quot;catppuccin-mocha&quot;;
+
+  file_panel_border = &quot;#505050&quot;;
+  sidebar_border = &quot;#505051&quot;;
+  footer_border = &quot;#505052&quot;;
+
+  gradient_color = [
+    &quot;#505053&quot;
+    &quot;#505054&quot;
+  ];
+
+  # ...
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/superfile.nix" target="_top">
+&lt;home-manager/modules/programs/superfile.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.swayimg.enable"></a><a class="term" href="options.xhtml#opt-programs.swayimg.enable"><code class="option">programs.swayimg.enable</code>
   </a>
  </span>
