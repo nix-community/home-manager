@@ -69,7 +69,13 @@ in
 
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
-      sessionVariables = lib.mkIf (cfg.flake != null) { FLAKE = cfg.flake; };
+      sessionVariables = lib.mkIf (cfg.flake != null) (
+        let
+          packageVersion = lib.getVersion cfg.package;
+          isVersion4OrHigher = lib.versionAtLeast packageVersion "4.0.0";
+        in
+        if isVersion4OrHigher then { NH_FLAKE = cfg.flake; } else { FLAKE = cfg.flake; }
+      );
     };
 
     systemd.user = lib.mkIf cfg.clean.enable {
