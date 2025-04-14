@@ -118,73 +118,88 @@ in
     silent = mkEnableOption "silent mode, that is, disabling direnv logging";
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config =
+    let
+      packageVersion = lib.getVersion cfg.package;
+      isVersion236orHigher = lib.versionAtLeast packageVersion "2.36.0";
+    in
+    mkIf cfg.enable {
+      home.packages = [ cfg.package ];
 
-    xdg.configFile."direnv/direnv.toml" = mkIf (cfg.config != { }) {
-      source = tomlFormat.generate "direnv-config" cfg.config;
-    };
-
-    xdg.configFile."direnv/lib/hm-nix-direnv.sh" = mkIf cfg.nix-direnv.enable {
-      source = "${cfg.nix-direnv.package}/share/nix-direnv/direnvrc";
-    };
-
-    xdg.configFile."direnv/direnvrc" = lib.mkIf (cfg.stdlib != "") { text = cfg.stdlib; };
-
-    xdg.configFile."direnv/lib/hm-mise.sh" = mkIf cfg.mise.enable {
-      text = ''
-        eval "$(${getExe cfg.mise.package} direnv activate)"
-      '';
-    };
-
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (
-      # Using mkAfter to make it more likely to appear after other
-      # manipulations of the prompt.
-      mkAfter ''
-        eval "$(${getExe cfg.package} hook bash)"
-      ''
-    );
-
-    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-      eval "$(${getExe cfg.package} hook zsh)"
-    '';
-
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (
-      # Using mkAfter to make it more likely to appear after other
-      # manipulations of the prompt.
-      mkAfter ''
-        ${getExe cfg.package} hook fish | source
-      ''
-    );
-
-    # Using mkAfter to make it more likely to appear after other
-    # manipulations of the prompt.
-    programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration (mkAfter ''
-      $env.config = ($env.config? | default {})
-      $env.config.hooks = ($env.config.hooks? | default {})
-      $env.config.hooks.pre_prompt = (
-          $env.config.hooks.pre_prompt?
-          | default []
-          | append {||
-              ${getExe cfg.package} export json
-              | from json --strict
-              | default {}
-              | items {|key, value|
-                  let value = do (
-                      $env.ENV_CONVERSIONS?
-                      | default {}
-                      | get -i $key
-                      | get -i from_string
-                      | default {|x| $x}
-                  ) $value
-                  return [ $key $value ]
+      xdg.configFile."direnv/direnv.toml" =
+        mkIf (cfg.config != { } || (cfg.silent && isVersion236orHigher))
+          {
+            source = tomlFormat.generate "direnv-config" (
+              cfg.config
+              // lib.optionalAttrs (cfg.silent && isVersion236orHigher) {
+                global = {
+                  log_format = "-";
+                  log_filter = "^$";
+                };
               }
-              | into record
-              | load-env
-          }
-      )
-    '');
+            );
+          };
 
-    home.sessionVariables = lib.mkIf cfg.silent { DIRENV_LOG_FORMAT = ""; };
-  };
+      xdg.configFile."direnv/lib/hm-nix-direnv.sh" = mkIf cfg.nix-direnv.enable {
+        source = "${cfg.nix-direnv.package}/share/nix-direnv/direnvrc";
+      };
+
+      xdg.configFile."direnv/direnvrc" = lib.mkIf (cfg.stdlib != "") { text = cfg.stdlib; };
+
+      xdg.configFile."direnv/lib/hm-mise.sh" = mkIf cfg.mise.enable {
+        text = ''
+          eval "$(${getExe cfg.mise.package} direnv activate)"
+        '';
+      };
+
+      programs.bash.initExtra = mkIf cfg.enableBashIntegration (
+        # Using mkAfter to make it more likely to appear after other
+        # manipulations of the prompt.
+        mkAfter ''
+          eval "$(${getExe cfg.package} hook bash)"
+        ''
+      );
+
+      programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
+        eval "$(${getExe cfg.package} hook zsh)"
+      '';
+
+      programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (
+        # Using mkAfter to make it more likely to appear after other
+        # manipulations of the prompt.
+        mkAfter ''
+          ${getExe cfg.package} hook fish | source
+        ''
+      );
+
+      # Using mkAfter to make it more likely to appear after other
+      # manipulations of the prompt.
+      programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration (mkAfter ''
+        $env.config = ($env.config? | default {})
+        $env.config.hooks = ($env.config.hooks? | default {})
+        $env.config.hooks.pre_prompt = (
+            $env.config.hooks.pre_prompt?
+            | default []
+            | append {||
+                ${getExe cfg.package} export json
+                | from json --strict
+                | default {}
+                | items {|key, value|
+                    let value = do (
+                        $env.ENV_CONVERSIONS?
+                        | default {}
+                        | get -i $key
+                        | get -i from_string
+                        | default {|x| $x}
+                    ) $value
+                    return [ $key $value ]
+                }
+                | into record
+                | load-env
+            }
+        )
+      '');
+
+      home.sessionVariables = lib.mkIf cfg.silent { DIRENV_LOG_FORMAT = ""; };
+    };
 }
