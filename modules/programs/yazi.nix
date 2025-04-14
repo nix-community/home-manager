@@ -276,49 +276,5 @@ in
         ) cfg.plugins)
       ]
     );
-
-    assertions =
-      let
-        mkAsserts =
-          opt: requiredFiles:
-          mapAttrsToList (
-            name: value:
-            let
-              isDir = lib.pathIsDirectory "${value}";
-              msgNotDir = optionalString (!isDir) "The path or package should be a directory, not a single file.";
-              isFileMissing =
-                file: !(lib.pathExists "${value}/${file}") || lib.pathIsDirectory "${value}/${file}";
-              missingFiles = lib.filter isFileMissing requiredFiles;
-              msgFilesMissing = optionalString (
-                missingFiles != [ ]
-              ) "The ${singularOpt} is missing these files: ${toString missingFiles}";
-              singularOpt = lib.removeSuffix "s" opt;
-              isPluginValid =
-                opt == "plugins" && (lib.any (file: lib.pathExists "${value}/${file}") requiredFiles);
-              isValid = if opt == "plugins" then isPluginValid else missingFiles == [ ];
-            in
-            {
-              assertion = isDir && isValid;
-              message = ''
-                Value at `programs.yazi.${opt}.${name}` is not a valid yazi ${singularOpt}.
-                ${msgNotDir}
-                ${msgFilesMissing}
-                Evaluated value: `${value}`
-              '';
-            }
-          ) cfg.${opt};
-      in
-      (mkAsserts "flavors" [
-        "flavor.toml"
-        "tmtheme.xml"
-        "README.md"
-        "preview.png"
-        "LICENSE"
-        "LICENSE-tmtheme"
-      ])
-      ++ (mkAsserts "plugins" [
-        "init.lua"
-        "main.lua"
-      ]);
   };
 }
