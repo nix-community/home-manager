@@ -533,6 +533,7 @@ import nmtSrc {
       ./modules/programs/looking-glass-client
       ./modules/programs/mangohud
       ./modules/programs/ncmpcpp-linux
+      ./modules/programs/nh
       ./modules/programs/pqiv
       ./modules/programs/rbw
       ./modules/programs/rofi
