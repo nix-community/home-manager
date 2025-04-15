@@ -43,13 +43,9 @@ function setWorkDir() {
     fi
 }
 
-# Checks whether the 'flakes' and 'nix-command' Nix options are enabled.
+# Check to see if flakes are functionally available.
 function hasFlakeSupport() {
-    type -p nix > /dev/null \
-        && nix show-config 2> /dev/null \
-            | grep experimental-features \
-            | grep flakes \
-            | grep -q nix-command
+    nix eval --expr 'builtins.getFlake' > /dev/null 2>&1
 }
 
 # Escape string for use in Nix files.
