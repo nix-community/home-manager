@@ -61,7 +61,7 @@ in
         options = lib.mkOption {
           type = lib.types.str;
           description = ''
-            Options given to `nix-collection-garbage` when the service runs.
+            Options given to `nix-collect-garbage` when the service runs.
           '';
           default = "";
           example = "--delete-older-than 30d";
