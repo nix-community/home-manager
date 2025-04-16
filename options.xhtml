@@ -93924,6 +93924,420 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-wayland.windowManager.labwc.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.enable"><code class="option">wayland.windowManager.labwc.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Labwc, a wayland window-stacking compositor.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.package"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.package"><code class="option">wayland.windowManager.labwc.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The labwc package to use. Set to <code class="literal">null</code> to use Nixos labwc package.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.labwc</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.autostart"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.autostart"><code class="option">wayland.windowManager.labwc.autostart</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Command to autostart when labwc start.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;wayvnc &amp;&quot;
+  &quot;waybar &amp;&quot;
+  &quot;swaybg -c &#x27;#113344&#x27; &gt;/dev/null 2&gt;&amp;1 &amp;&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.environment"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.environment"><code class="option">wayland.windowManager.labwc.environment</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Environment variable to add when labwc start.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;XDG_CURRENT_DESKTOP=labwc:wlroots&quot;
+  &quot;XKB_DEFAULT_LAYOUT=us&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.extraConfig"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.extraConfig"><code class="option">wayland.windowManager.labwc.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra lines appended to <code class="filename">$XDG_CONFIG_HOME/labwc/rc.xml</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  &lt;tablet mapToOutput=&quot;&quot; rotate=&quot;0&quot; mouseEmulation=&quot;no&quot;&gt;
+    &lt;!-- Active area dimensions are in mm --&gt;
+    &lt;area top=&quot;0.0&quot; left=&quot;0.0&quot; width=&quot;0.0&quot; height=&quot;0.0&quot; /&gt;
+    &lt;map button=&quot;Tip&quot; to=&quot;Left&quot; /&gt;
+    &lt;map button=&quot;Stylus&quot; to=&quot;Right&quot; /&gt;
+    &lt;map button=&quot;Stylus2&quot; to=&quot;Middle&quot; /&gt;
+  &lt;/tablet&gt;
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.menu"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.menu"><code class="option">wayland.windowManager.labwc.menu</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Config to configure labwc menu</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of (XML value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    menuId = &quot;client-menu&quot;;
+    label = &quot;Client Menu&quot;;
+    icon = &quot;&quot;;
+    items = [
+      {
+        label = &quot;Maximize&quot;;
+        icon = &quot;&quot;;
+        action = {
+          name = &quot;ToggleMaximize&quot;;
+        };
+      }
+      {
+        label = &quot;Fullscreen&quot;;
+        action = {
+          name = &quot;ToggleFullscreen&quot;;
+        };
+      }
+      {
+        label = &quot;Always on Top&quot;;
+        action = {
+          name = &quot;ToggleAlwaysOnTop&quot;;
+        };
+      }
+      {
+        label = &quot;Alacritty&quot;;
+        action = {
+          name = &quot;Execute&quot;;
+          command = &quot;alacritty&quot;;
+        };
+      }
+      {
+        label = &quot;Move Left&quot;;
+        action = {
+          name = &quot;SendToDesktop&quot;;
+          to = &quot;left&quot;;
+        };
+      }
+      {
+        separator = { };
+      }
+      {
+        label = &quot;Workspace&quot;;
+        menuId = &quot;workspace&quot;;
+        icon = &quot;&quot;;
+        items = [
+          {
+            label = &quot;Move Left&quot;;
+            action = {
+              name = &quot;SendToDesktop&quot;;
+              to = &quot;left&quot;;
+            };
+          }
+        ];
+      }
+      {
+        separator = true;
+      }
+    ];
+  }
+];
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.rc"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.rc"><code class="option">wayland.windowManager.labwc.rc</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Config to configure labwc options.
+Use “@attributes” for attributes.
+See <a class="link" href="https://labwc.github.io/labwc-config.5.html"  target="_top">https://labwc.github.io/labwc-config.5.html</a> for configuration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+XML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  theme = {
+    name = &quot;nord&quot;;
+    cornerRadius = 8;
+    font = {
+      &quot;@name&quot; = &quot;FiraCode&quot;;
+      &quot;@size&quot; = &quot;11&quot;;
+    };
+  };
+  keyboard = {
+    default = true;
+    keybind = [
+      # &lt;keybind key=&quot;W-Return&quot;&gt;&lt;action name=&quot;Execute&quot; command=&quot;foot&quot;/&gt;&lt;/keybind&gt;
+      {
+        &quot;@key&quot; = &quot;W-Return&quot;;
+        action = {
+          &quot;@name&quot; = &quot;Execute&quot;;
+          &quot;@command&quot; = &quot;foot&quot;;
+        };
+      }
+      # &lt;keybind key=&quot;W-Esc&quot;&gt;&lt;action name=&quot;Execute&quot; command=&quot;loot&quot;/&gt;&lt;/keybind&gt;
+      {
+        &quot;@key&quot; = &quot;W-Esc&quot;;
+        action = {
+          &quot;@name&quot; = &quot;Execute&quot;;
+          &quot;@command&quot; = &quot;loot&quot;;
+        };
+      }
+    ];
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.systemd.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.systemd.enable"><code class="option">wayland.windowManager.labwc.systemd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable <code class="filename">labwc-session.target</code> on
+labwc startup. This links to <code class="filename">graphical-session.target</code>.
+Some important environment variables will be imported to systemd
+and D-Bus user environment before reaching the target, including</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><code class="literal">DISPLAY</code></p></li><li class="listitem"><p><code class="literal">WAYLAND_DISPLAY</code></p></li><li class="listitem"><p><code class="literal">XDG_CURRENT_DESKTOP</code></p></li></ul></div>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.systemd.extraCommands"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.systemd.extraCommands"><code class="option">wayland.windowManager.labwc.systemd.extraCommands</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra commands to be run after D-Bus activation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;systemctl --user stop labwc-session.target&quot;
+  &quot;systemctl --user start labwc-session.target&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.systemd.variables"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.systemd.variables"><code class="option">wayland.windowManager.labwc.systemd.variables</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Environment variables to be imported in the systemd &amp; D-Bus user
+environment.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;DISPLAY&quot;
+  &quot;WAYLAND_DISPLAY&quot;
+  &quot;XDG_CURRENT_DESKTOP&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;-all&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.labwc.xwayland.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.labwc.xwayland.enable"><code class="option">wayland.windowManager.labwc.xwayland.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable XWayland.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc/labwc.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/labwc/labwc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-wayland.windowManager.river.enable"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.river.enable"><code class="option">wayland.windowManager.river.enable</code>
   </a>
  </span>
