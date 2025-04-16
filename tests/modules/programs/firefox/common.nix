@@ -22,6 +22,7 @@ builtins.mapAttrs
     "${name}-profiles-overwrite" = ./profiles/overwrite;
     "${name}-profiles-search" = ./profiles/search;
     "${name}-profiles-settings" = ./profiles/settings;
+    "${name}-profiles-userchrome" = ./profiles/userchrome;
     "${name}-state-version-19_09" = ./state-version-19_09.nix;
     "${name}-profiles-shared-path" = ./profiles/shared-path.nix;
   }
