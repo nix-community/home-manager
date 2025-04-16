@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-01-03 09:09+0100\n"
-"PO-Revision-Date: 2024-02-16 22:01+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"PO-Revision-Date: 2025-04-16 07:20+0000\n"
+"Last-Translator: Hylke de Vries <hylke94+weblate@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/cli/"
 "nl/>\n"
 "Language: nl\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4\n"
+"X-Generator: Weblate 5.11.1-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "%s: ontbrekend argument voor %s"
 
 #: home-manager/home-manager:69
 msgid "No configuration file found at %s"
@@ -45,7 +45,7 @@ msgstr "Geen configuratiebestand gevonden, maak er alstublieft een aan op %s"
 
 #: home-manager/home-manager:112
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager niet gevonden in %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:120
@@ -53,6 +53,8 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
+"De fallback Home Manager lokatie %s is deprecated en een bestand/map is "
+"gevonden op deze lokatie."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:123
@@ -165,12 +167,12 @@ msgstr[1] ""
 
 #: home-manager/home-manager:592
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr "Onbekende \"new.display\" instelling \"%s\"."
+msgstr "Onbekende \"news.display\" instelling \"%s\"."
 
 #: home-manager/home-manager:600
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Zet alstublieft de $EDITOR of $VISUAL omgevings-variabele"
 
 #: home-manager/home-manager:618
 msgid "Cannot run build in read-only directory"
