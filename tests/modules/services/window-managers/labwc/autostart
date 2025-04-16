@@ -1,0 +1,11 @@
+#!/nix/store/58br4vk3q5akf4g8lx0pqzfhn47k3j8d-bash-5.2p37/bin/bash
+### This file was generated with Nix. Don't modify this file directly.
+
+### AUTOSTART SERVICE ###
+wayvnc &
+waybar &
+swaybg -c '#113344' >/dev/null 2>&1 &
+
+### SYSTEMD INTEGRATION ###
+@dbus@/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP && systemctl --user stop labwc-session.target && systemctl --user start labwc-session.target
+

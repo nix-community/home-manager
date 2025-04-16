@@ -756,4 +756,10 @@
     github = "mipmip";
     githubId = 658612;
   };
+  LesVu = {
+    name = "John Ferse";
+    email = "lesvu@ingressland.com";
+    github = "LesVu";
+    githubId = 66196443;
+  };
 }

@@ -446,6 +446,7 @@ let
       ./services/window-managers/i3-sway/i3.nix
       ./services/window-managers/i3-sway/sway.nix
       ./services/window-managers/i3-sway/swaynag.nix
+      ./services/window-managers/labwc/labwc.nix
       ./services/window-managers/river.nix
       ./services/window-managers/spectrwm.nix
       ./services/window-managers/wayfire.nix
