@@ -37,7 +37,7 @@ let
       ${getExe cfg.package} init fish | source
     ''
     + optionalString cfg.fzf.enable ''
-      eval "$(${getExe cfg.mcflyFzfPackage} init fish)"
+      ${getExe cfg.mcflyFzfPackage} init fish | source
     '';
 
   zshIntegration =
@@ -46,7 +46,7 @@ let
     ''
     + optionalString cfg.fzf.enable ''
       if [[ -o interactive ]]; then
-        ${getExe cfg.mcflyFzfPackage} init zsh | source
+      eval "$(${getExe cfg.mcflyFzfPackage} init zsh)"
       fi
     '';
 
