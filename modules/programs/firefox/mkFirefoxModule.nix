@@ -870,7 +870,7 @@ in
           _: profile:
           let
             chromePath =
-              if (lib.isPath profile.userChrome && lib.pathIsDirectory profile.userChrome) then
+              if ((i: lib.isPath i && lib.pathIsDirectory i) profile.userChrome) then
                 "chrome"
               else
                 "chrome/userChrome.css";
