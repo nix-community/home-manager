@@ -50,15 +50,15 @@ in
 
         assertFileContent \
           home-files/${cfg.configPath}/lines/chrome/userChrome.css \
-          ${./expected-userchrome.css}
+          ${./chrome/userChrome.css}
 
         assertFileContent \
           home-files/${cfg.configPath}/path/chrome/userChrome.css \
-          ${./expected-userchrome.css}
+          ${./chrome/userChrome.css}
 
         assertFileContent \
           home-files/${cfg.configPath}/folder/chrome/userChrome.css \
-          ${./expected-userchrome.css}
+          ${./chrome/userChrome.css}
       '';
     }
   );
