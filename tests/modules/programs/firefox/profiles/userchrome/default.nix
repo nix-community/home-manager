@@ -18,14 +18,17 @@ in
         basic.isDefault = true;
         lines = {
           id = 1;
-          userChrome = # CSS
-            ''
-              #urlbar {
-                min-width: none !important;
-                border: none !important;
-                outline: none !important;
-              }
-            '';
+          userChrome = ''
+            /*
+              This is a simple comment that should be written inside the `chrome/userChrome.css`
+            */
+
+            #urlbar {
+              min-width: none !important;
+              border: none !important;
+              outline: none !important;
+            }
+          '';
         };
         path = {
           id = 2;
