@@ -25,6 +25,12 @@
 
   programs.fish.enable = true;
 
+  nix = {
+    enable = true;
+    package = pkgs.nix;
+    settings.use-xdg-base-directories = true;
+  };
+
   programs.git = {
     enable = true;
     userName = "test";
