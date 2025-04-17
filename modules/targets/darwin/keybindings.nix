@@ -7,7 +7,6 @@
 
 let
   cfg = config.targets.darwin;
-  homeDir = config.home.homeDirectory;
   confFile = pkgs.writeText "DefaultKeybinding.dict" (lib.generators.toPlist { } cfg.keybindings);
 in
 {
@@ -40,7 +39,8 @@ in
     home.activation.setCocoaKeybindings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       verboseEcho "Configuring keybindings for the Cocoa Text System"
       run install -Dm644 $VERBOSE_ARG \
-        "${confFile}" "${homeDir}/Library/KeyBindings/DefaultKeyBinding.dict"
+        "${confFile}" \
+        ${config.home.homeDirectory.shell}/Library/KeyBindings/DefaultKeyBinding.dict
     '';
   };
 }
