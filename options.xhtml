@@ -15316,6 +15316,43 @@ Atuin configuration</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.atuin.themes"></a><a class="term" href="options.xhtml#opt-programs.atuin.themes"><code class="option">programs.atuin.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>See <a class="link" href="https://atuin.sh/guide/theming/"  target="_top">https://atuin.sh/guide/theming/</a> for the full list
+of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (TOML value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;my-theme&quot; = {
+    theme.name = &quot;My Theme&quot;;
+    colors = {
+      Base = &quot;#000000&quot;;
+      Title = &quot;#FFFFFF&quot;;
+    };
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/atuin.nix" target="_top">
+&lt;home-manager/modules/programs/atuin.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.autojump.enable"></a><a class="term" href="options.xhtml#opt-programs.autojump.enable"><code class="option">programs.autojump.enable</code>
   </a>
  </span>
