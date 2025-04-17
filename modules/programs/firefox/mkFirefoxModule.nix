@@ -874,7 +874,11 @@ in
                 "chrome"
               else
                 "chrome/userChrome.css";
-            sourcePath = if lib.types.path.check profile.userChrome then profile.userChrome else null;
+            sourcePath =
+              if ((i: lib.isPath i && lib.types.path.check i) profile.userChrome) then
+                profile.userChrome
+              else
+                null;
           in
           # Merge the regular profile settings with extension settings
           mkMerge (
