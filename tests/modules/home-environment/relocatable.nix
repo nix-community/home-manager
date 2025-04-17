@@ -25,6 +25,8 @@
 
   programs.fish.enable = true;
 
+  xdg.userDirs.enable = pkgs.stdenv.hostPlatform.isLinux;
+
   nix = {
     enable = true;
     package = pkgs.nix;

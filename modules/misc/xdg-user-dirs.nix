@@ -40,68 +40,60 @@ in
     # https://gitlab.freedesktop.org/xdg/xdg-user-dirs/blob/master/man/user-dirs.dirs.xml
 
     desktop = mkOption {
-      type = with types; nullOr (coercedTo path toString str);
-      default = "${config.home.homeDirectory}/Desktop";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/Desktop"'';
+      type = types.nullOr config.lib.homePath.type;
+      default = "~/Desktop";
       description = "The Desktop directory.";
     };
 
     documents = mkOption {
-      type = with types; nullOr (coercedTo path toString str);
-      default = "${config.home.homeDirectory}/Documents";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/Documents"'';
+      type = types.nullOr config.lib.homePath.type;
+      default = "~/Documents";
       description = "The Documents directory.";
     };
 
     download = mkOption {
-      type = with types; nullOr (coercedTo path toString str);
-      default = "${config.home.homeDirectory}/Downloads";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/Downloads"'';
+      type = types.nullOr config.lib.homePath.type;
+      default = "~/Downloads";
       description = "The Downloads directory.";
     };
 
     music = mkOption {
-      type = with types; nullOr (coercedTo path toString str);
-      default = "${config.home.homeDirectory}/Music";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/Music"'';
+      type = types.nullOr config.lib.homePath.type;
+      default = "~/Music";
       description = "The Music directory.";
     };
 
     pictures = mkOption {
-      type = with types; nullOr (coercedTo path toString str);
-      default = "${config.home.homeDirectory}/Pictures";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/Pictures"'';
+      type = types.nullOr config.lib.homePath.type;
+      default = "~/Pictures";
       description = "The Pictures directory.";
     };
 
     publicShare = mkOption {
-      type = with types; nullOr (coercedTo path toString str);
-      default = "${config.home.homeDirectory}/Public";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/Public"'';
+      type = types.nullOr config.lib.homePath.type;
+      default = "~/Public";
       description = "The Public share directory.";
     };
 
     templates = mkOption {
-      type = with types; nullOr (coercedTo path toString str);
-      default = "${config.home.homeDirectory}/Templates";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/Templates"'';
+      type = types.nullOr config.lib.homePath.type;
+      default = "~/Templates";
       description = "The Templates directory.";
     };
 
     videos = mkOption {
-      type = with types; nullOr (coercedTo path toString str);
-      default = "${config.home.homeDirectory}/Videos";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/Videos"'';
+      type = types.nullOr config.lib.homePath.type;
+      default = "~/Videos";
       description = "The Videos directory.";
     };
 
     extraConfig = mkOption {
-      type = with types; attrsOf (coercedTo path toString str);
+      type = with types; attrsOf config.lib.homePath.type;
       default = { };
       defaultText = literalExpression "{ }";
       example = literalExpression ''
         {
-          XDG_MISC_DIR = "''${config.home.homeDirectory}/Misc";
+          XDG_MISC_DIR = "~/Misc";
         }
       '';
       description = "Other user directories.";
@@ -133,18 +125,21 @@ in
       xdg.configFile."user-dirs.dirs".text =
         let
           # For some reason, these need to be wrapped with quotes to be valid.
-          wrapped = lib.mapAttrs (_: value: ''"${value}"'') directories;
+          wrapped = lib.mapAttrs (
+            _: dir:
+            ''"${dir.render "$HOME" (lib.replaceStrings [ "$" ''\'' ''"'' ] [ ''\$'' ''\\'' ''\"'' ])}"''
+          ) directories;
         in
         lib.generators.toKeyValue { } wrapped;
 
       xdg.configFile."user-dirs.conf".text = "enabled=False";
 
-      home.sessionVariables = directories;
+      home.sessionVariables = lib.mapAttrs (_: dir: dir.environment) directories;
 
       home.activation.createXdgUserDirectories = lib.mkIf cfg.createDirectories (
         let
           directoriesList = lib.attrValues directories;
-          mkdir = (dir: ''[[ -L "${dir}" ]] || run mkdir -p $VERBOSE_ARG "${dir}"'');
+          mkdir = (dir: ''[[ -L ${dir.shell} ]] || run mkdir -p $VERBOSE_ARG ${dir.shell}'');
         in
         lib.hm.dag.entryAfter [ "linkGeneration" ] (
           lib.strings.concatMapStringsSep "\n" mkdir directoriesList
