@@ -176,7 +176,7 @@ in
       done automatically if the shell configuration is managed by Home
       Manager. If not, then you must source the
 
-        ${cfg.profileDirectory}/etc/profile.d/hm-session-vars.sh
+        ${cfg.profileDirectory.syntax}/etc/profile.d/hm-session-vars.sh
 
       file yourself.
     '')
@@ -194,25 +194,44 @@ in
     };
 
     home.homeDirectory = mkOption {
-      type = types.path;
+      type = config.lib.homePath.type;
       defaultText = literalExpression ''
         "$HOME"   for state version < 20.09,
         undefined for state version ≥ 20.09
       '';
-      apply = toString;
       example = "/home/jane.doe";
-      description = "The user's home directory. Must be an absolute path.";
+      description = "The user's home directory.";
     };
 
     home.profileDirectory = mkOption {
-      type = types.path;
+      type = config.lib.homePath.type;
       defaultText = literalExpression ''
-        "''${home.homeDirectory}/.nix-profile"  or
+        "~/.nix-profile"  or
         "/etc/profiles/per-user/''${home.username}"
       '';
       readOnly = true;
       description = ''
         The profile directory where Home Manager generations are installed.
+      '';
+    };
+
+    home.relocatable = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to build a relocatable configuration.
+
+        If enabled, the username and home directory do not need to be
+        set, and are instead determined at activation time by the
+        {env}`USER` and {env}`HOME` environment variables. This allows
+        reusing a single built configuration across multiple users.
+
+        ::: {.note}
+        Not every option is compatible with relocatable configurations.
+        Modules may require adaptation to support them, and they are
+        fundamentally incompatible with configuration file formats that
+        require untemplated absolute paths.
+        :::
       '';
     };
 
@@ -530,12 +549,20 @@ in
   config = {
     assertions = [
       {
-        assertion = config.home.username != "";
+        assertion = config.home.relocatable || config.home.username != "";
         message = "Username could not be determined";
       }
       {
-        assertion = config.home.homeDirectory != "";
+        assertion = config.home.relocatable || config.home.homeDirectory != "";
         message = "Home directory could not be determined";
+      }
+      {
+        assertion = config.home.relocatable -> config.home.homeDirectory.equals "~";
+        message = "Home directory should not be set for relocatable configurations";
+      }
+      {
+        assertion = !config.home.relocatable -> config.home.homeDirectory.isAbsolute;
+        message = "Home directory must be an absolute path when `home.relocatable` is not enabled";
       }
     ];
 
@@ -562,20 +589,33 @@ in
         to your configuration.
       '';
 
-    home.username = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
-      lib.mkDefault (builtins.getEnv "USER")
-    );
-    home.homeDirectory = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
-      lib.mkDefault (builtins.getEnv "HOME")
-    );
+    home.username = lib.mkMerge [
+      (lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
+        lib.mkDefault (builtins.getEnv "USER")
+      ))
+      (lib.mkIf config.home.relocatable (
+        throw (
+          lib.concatStrings [
+            "`config.home.username` referenced in a relocatable "
+            "configuration. This is usually caused by incompatible modules."
+          ]
+        )
+      ))
+    ];
+    home.homeDirectory = lib.mkMerge [
+      (lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
+        lib.mkDefault (builtins.getEnv "HOME")
+      ))
+      (lib.mkIf config.home.relocatable "~")
+    ];
 
     home.profileDirectory =
       if config.submoduleSupport.enable && config.submoduleSupport.externalPackageInstall then
         "/etc/profiles/per-user/${cfg.username}"
       else if config.nix.enable && (config.nix.settings.use-xdg-base-directories or false) then
-        "${config.xdg.stateHome}/nix/profile"
+        config.xdg.stateHome.join "nix/profile"
       else
-        cfg.homeDirectory + "/.nix-profile";
+        "~/.nix-profile";
 
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
@@ -666,7 +706,7 @@ in
             run $oldNix profile install $1
           }
 
-          if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
+          if [[ -e ${cfg.profileDirectory.shell}/manifest.json ]] ; then
             INSTALL_CMD="nix profile install"
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
             LIST_CMD="nix profile list"
@@ -766,8 +806,20 @@ in
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
           if [[ ! -v SKIP_SANITY_CHECKS ]]; then
-            checkUsername ${lib.escapeShellArg config.home.username}
-            checkHomeDirectory ${lib.escapeShellArg config.home.homeDirectory}
+            ${
+              if config.home.relocatable then
+                ''
+                  if [[ "$USER" == root ]]; then
+                    _iError 'Error: USER is "root", which is not supported for relocatable configurations'
+                    exit 1
+                  fi
+                ''
+              else
+                ''
+                  checkUsername ${lib.escapeShellArg config.home.username}
+                ''
+            }
+            checkHomeDirectory ${config.home.homeDirectory.shell}
           fi
 
           # Create a temporary GC root to prevent collection during activation.

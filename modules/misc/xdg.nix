@@ -10,21 +10,20 @@ let
     mkOptionDefault
     mkIf
     mkOption
-    types
     ;
 
   cfg = config.xdg;
 
   fileType =
     (import ../lib/file-type.nix {
-      inherit (config.home) homeDirectory;
+      inherit (config.lib) homePath;
       inherit lib pkgs;
     }).fileType;
 
-  defaultCacheHome = "${config.home.homeDirectory}/.cache";
-  defaultConfigHome = "${config.home.homeDirectory}/.config";
-  defaultDataHome = "${config.home.homeDirectory}/.local/share";
-  defaultStateHome = "${config.home.homeDirectory}/.local/state";
+  defaultCacheHome = "~/.cache";
+  defaultConfigHome = "~/.config";
+  defaultDataHome = "~/.local/share";
+  defaultStateHome = "~/.local/state";
 
   getEnvFallback =
     name: fallback:
@@ -48,9 +47,8 @@ in
     };
 
     cacheHome = mkOption {
-      type = types.path;
-      defaultText = "~/.cache";
-      apply = toString;
+      type = config.lib.homePath.type;
+      defaultText = defaultCacheHome;
       description = ''
         Absolute path to directory holding application caches.
 
@@ -68,9 +66,8 @@ in
     };
 
     configHome = mkOption {
-      type = types.path;
-      defaultText = "~/.config";
-      apply = toString;
+      type = config.lib.homePath.type;
+      defaultText = defaultConfigHome;
       description = ''
         Absolute path to directory holding application configurations.
 
@@ -88,9 +85,8 @@ in
     };
 
     dataHome = mkOption {
-      type = types.path;
-      defaultText = "~/.local/share";
-      apply = toString;
+      type = config.lib.homePath.type;
+      defaultText = defaultDataHome;
       description = ''
         Absolute path to directory holding application data.
 
@@ -108,9 +104,8 @@ in
     };
 
     stateHome = mkOption {
-      type = types.path;
-      defaultText = "~/.local/state";
-      apply = toString;
+      type = config.lib.homePath.type;
+      defaultText = defaultStateHome;
       description = ''
         Absolute path to directory holding application states.
 
@@ -123,10 +118,10 @@ in
     (
       let
         variables = {
-          XDG_CACHE_HOME = cfg.cacheHome;
-          XDG_CONFIG_HOME = cfg.configHome;
-          XDG_DATA_HOME = cfg.dataHome;
-          XDG_STATE_HOME = cfg.stateHome;
+          XDG_CACHE_HOME = cfg.cacheHome.environment;
+          XDG_CONFIG_HOME = cfg.configHome.environment;
+          XDG_DATA_HOME = cfg.dataHome.environment;
+          XDG_STATE_HOME = cfg.stateHome.environment;
         };
       in
       mkIf cfg.enable {
@@ -158,12 +153,18 @@ in
 
     {
       home.file = lib.mkMerge [
-        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.cacheHome}/${name}" file) cfg.cacheFile)
-        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.configHome}/${name}" file) cfg.configFile)
-        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.dataHome}/${name}" file) cfg.dataFile)
-        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.stateHome}/${name}" file) cfg.stateFile)
-        { "${cfg.cacheHome}/.keep".text = ""; }
-        { "${cfg.stateHome}/.keep".text = ""; }
+        (lib.mapAttrs' (
+          name: file: lib.nameValuePair "${cfg.cacheHome.relative}/${name}" file
+        ) cfg.cacheFile)
+        (lib.mapAttrs' (
+          name: file: lib.nameValuePair "${cfg.configHome.relative}/${name}" file
+        ) cfg.configFile)
+        (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.dataHome.relative}/${name}" file) cfg.dataFile)
+        (lib.mapAttrs' (
+          name: file: lib.nameValuePair "${cfg.stateHome.relative}/${name}" file
+        ) cfg.stateFile)
+        { "${cfg.cacheHome.relative}/.keep".text = ""; }
+        { "${cfg.stateHome.relative}/.keep".text = ""; }
       ];
     }
   ];

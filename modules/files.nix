@@ -13,7 +13,8 @@ let
 
   fileType =
     (import lib/file-type.nix {
-      inherit homeDirectory lib pkgs;
+      inherit (config.lib) homePath;
+      inherit lib pkgs;
     }).fileType;
 
   sourceStorePath =
@@ -235,9 +236,6 @@ in
     );
 
     home.activation.checkFilesChanged = lib.hm.dag.entryBefore [ "linkGeneration" ] (
-      let
-        homeDirArg = lib.escapeShellArg homeDirectory;
-      in
       ''
         function _cmp() {
           if [[ -d $1 && -d $2 ]]; then
@@ -255,7 +253,7 @@ in
           targetArg = lib.escapeShellArg v.target;
         in
         ''
-          _cmp ${sourceArg} ${homeDirArg}/${targetArg} \
+          _cmp ${sourceArg} ${homeDirectory.shell}/${targetArg} \
             && changedFiles[${targetArg}]=0 \
             || changedFiles[${targetArg}]=1
         ''

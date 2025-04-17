@@ -30,6 +30,7 @@ let
       ./misc/editorconfig.nix
       ./misc/fontconfig.nix
       ./misc/gtk.nix
+      ./misc/home-path.nix
       ./misc/lib.nix
       ./misc/mozilla-messaging-hosts.nix
       ./misc/news.nix

@@ -19,7 +19,7 @@ let
 
   fileType =
     (import ../lib/file-type.nix {
-      inherit (config.home) homeDirectory;
+      inherit (config.lib) homePath;
       inherit lib pkgs;
     }).fileType;
 
@@ -55,9 +55,9 @@ let
 
       runtime = mkOption {
         default = { };
-        # passing actual "${xdg.configHome}/nvim" as basePath was a bit tricky
-        # due to how fileType.target is implemented
-        type = fileType "programs.neovim.plugins._.runtime" "{var}`xdg.configHome/nvim`" "nvim";
+        type = fileType "programs.neovim.plugins._.runtime" "{var}`xdg.configHome/nvim`" (
+          config.xdg.configHome.join "nvim"
+        );
         example = literalExpression ''
           { "ftplugin/c.vim".text = "setlocal omnifunc=v:lua.vim.lsp.omnifunc"; }
         '';
@@ -458,32 +458,29 @@ in
 
       home.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
 
+      # writes runtime
+      home.file = lib.mkMerge (map (x: x.runtime) pluginsNormalized);
+
       xdg.configFile =
         let
           hasLuaConfig = lib.hasAttr "lua" config.programs.neovim.generatedConfigs;
         in
-        lib.mkMerge (
-          # writes runtime
-          (map (x: x.runtime) pluginsNormalized)
-          ++ [
-            {
-              "nvim/init.lua" =
-                let
-                  luaRcContent =
-                    lib.optionalString (
-                      wrappedNeovim'.initRc != ""
-                    ) "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
-                    + config.programs.neovim.extraLuaConfig
-                    + lib.optionalString hasLuaConfig config.programs.neovim.generatedConfigs.lua;
-                in
-                mkIf (luaRcContent != "") { text = luaRcContent; };
+        {
+          "nvim/init.lua" =
+            let
+              luaRcContent =
+                lib.optionalString (
+                  wrappedNeovim'.initRc != ""
+                ) "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
+                + config.programs.neovim.extraLuaConfig
+                + lib.optionalString hasLuaConfig config.programs.neovim.generatedConfigs.lua;
+            in
+            mkIf (luaRcContent != "") { text = luaRcContent; };
 
-              "nvim/coc-settings.json" = mkIf cfg.coc.enable {
-                source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
-              };
-            }
-          ]
-        );
+          "nvim/coc-settings.json" = mkIf cfg.coc.enable {
+            source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
+          };
+        };
 
       programs.neovim.finalPackage = wrappedNeovim';
     };

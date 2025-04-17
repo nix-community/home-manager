@@ -1,5 +1,5 @@
 {
-  homeDirectory,
+  homePath,
   lib,
   pkgs,
 }:
@@ -12,7 +12,6 @@ let
     mkDefault
     mkIf
     mkOption
-    removePrefix
     types
     ;
 in
@@ -42,13 +41,8 @@ in
               '';
             };
             target = mkOption {
-              type = types.str;
-              apply =
-                p:
-                let
-                  absPath = if hasPrefix "/" p then p else "${basePath}/${p}";
-                in
-                removePrefix (homeDirectory + "/") absPath;
+              type = types.coercedTo types.str (p: if hasPrefix "/" p then p else basePath.join p) homePath.type;
+              apply = p: p.relative;
               defaultText = literalExpression "name";
               description = ''
                 Path to target file relative to ${basePathDesc}.
