@@ -89,6 +89,26 @@ in
       '';
     };
 
+    themes = mkOption {
+      type = types.attrsOf tomlFormat.type;
+      default = { };
+      example = lib.literalExpression ''
+        {
+          "my-theme" = {
+            theme.name = "My Theme";
+            colors = {
+              Base = "#000000";
+              Title = "#FFFFFF";
+            };
+          };
+        }
+      '';
+      description = ''
+        See <https://atuin.sh/guide/theming/> for the full list
+        of options.
+      '';
+    };
+
     daemon = {
       enable = lib.mkEnableOption "Atuin daemon";
 
@@ -121,9 +141,22 @@ in
           home.packages = [ cfg.package ];
 
           # If there are user-provided settings, generate the config file.
-          xdg.configFile."atuin/config.toml" = mkIf (cfg.settings != { }) {
-            source = tomlFormat.generate "atuin-config" cfg.settings;
-          };
+          xdg.configFile = lib.mkMerge [
+            (mkIf (cfg.settings != { }) {
+              "atuin/config.toml" = {
+                source = tomlFormat.generate "atuin-config" cfg.settings;
+              };
+            })
+
+            (mkIf (cfg.themes != { }) (
+              lib.mapAttrs' (
+                name: theme:
+                lib.nameValuePair "atuin/themes/${name}.toml" {
+                  source = tomlFormat.generate "atuin-theme-${name}" theme;
+                }
+              ) cfg.themes
+            ))
+          ];
 
           programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
             if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
