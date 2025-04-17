@@ -43,7 +43,7 @@ in
     xdg.systemDirs.data = [
       # Nix profiles
       "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default/share"
-      "${profileDirectory}/share"
+      "${profileDirectory.environment}/share"
 
       # Distribution-specific
       "/usr/share/ubuntu"
@@ -57,7 +57,7 @@ in
     # https://github.com/nix-community/home-manager/pull/2891#issuecomment-1101064521
     home.sessionSearchVariables = {
       XCURSOR_PATH = [
-        "${config.home.profileDirectory}/share/icons"
+        "${config.home.profileDirectory.environment}/share/icons"
         "/usr/share/icons"
         "/usr/share/pixmaps"
       ];
@@ -110,10 +110,10 @@ in
       {
         NIX_PATH =
           if config.nix.enable && (config.nix.settings.use-xdg-base-directories or false) then
-            "${config.xdg.stateHome}/nix/defexpr/channels\${NIX_PATH:+:}$NIX_PATH"
+            "${config.xdg.stateHome.environment}/nix/defexpr/channels\${NIX_PATH:+:}$NIX_PATH"
           else
             "$HOME/.nix-defexpr/channels\${NIX_PATH:+:}$NIX_PATH";
-        TERMINFO_DIRS = "${profileDirectory}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}${distroTerminfoDirs}";
+        TERMINFO_DIRS = "${profileDirectory.environment}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}${distroTerminfoDirs}";
       };
   };
 }

@@ -2,7 +2,7 @@
 let
   expectedXdgDataDirs = lib.concatStringsSep ":" [
     "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default/share"
-    "/home/hm-user/.nix-profile/share"
+    "\${HOME}/.nix-profile/share"
     "/usr/share/ubuntu"
     "/usr/local/share"
     "/usr/share"
@@ -22,7 +22,7 @@ in
       assertFileContains $envFile \
         'XDG_DATA_DIRS=${expectedXdgDataDirs}''${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}'
       assertFileContains $envFile \
-        'TERMINFO_DIRS=/home/hm-user/.nix-profile/share/terminfo:$TERMINFO_DIRS''${TERMINFO_DIRS:+:}/etc/terminfo:/lib/terminfo:/usr/share/terminfo'
+        'TERMINFO_DIRS=''${HOME}/.nix-profile/share/terminfo:$TERMINFO_DIRS''${TERMINFO_DIRS:+:}/etc/terminfo:/lib/terminfo:/usr/share/terminfo'
 
       sessionVarsFile=home-path/etc/profile.d/hm-session-vars.sh
       assertFileExists $sessionVarsFile
