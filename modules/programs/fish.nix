@@ -509,7 +509,7 @@ in
 
             in
             destructiveSymlinkJoin {
-              name = "${config.home.username}-fish-completions";
+              name = "fish-completions";
               paths = allCompletions;
             };
 
@@ -526,7 +526,7 @@ in
               set -l post_joined (string replace $prev_joined "" $joined)
               set -l prev (string split " " (string trim $prev_joined))
               set -l post (string split " " (string trim $post_joined))
-              set fish_complete_path $prev "${config.xdg.dataHome}/fish/home-manager_generated_completions" $post
+              set fish_complete_path $prev ${config.xdg.dataHome.shell}/fish/home-manager_generated_completions $post
             end
           '';
         }
