@@ -1,6 +1,12 @@
-{ lib, realPkgs, ... }:
 {
-  imports = [ ../../accounts/email-test-accounts.nix ];
+  config,
+  pkgs,
+  ...
+}:
+{
+  imports = [
+    ../../accounts/email-test-accounts.nix
+  ];
 
   accounts.email.accounts = {
     "hm@example.com" = {
@@ -54,13 +60,12 @@
 
   programs.thunderbird = {
     enable = true;
+    package = config.lib.test.mkStubPackage {
+      name = "thunderbird";
+    };
 
     # Disable warning so that platforms' behavior is the same
     darwinSetupWarning = false;
-
-    # Darwin doesn't support wrapped Thunderbird, using unwrapped instead;
-    # using -latest- because ESR is currently broken on Darwin
-    package = realPkgs.thunderbird-latest-unwrapped;
 
     profiles = {
       first = {
@@ -105,7 +110,7 @@
 
   nmt.script =
     let
-      isDarwin = realPkgs.stdenv.hostPlatform.isDarwin;
+      isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
       configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";
       profilesDir = if isDarwin then "${configDir}/Profiles" else "${configDir}";
       platform = if isDarwin then "darwin" else "linux";
