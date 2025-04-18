@@ -131,6 +131,7 @@ let
         "granted"
         "helix"
         "himalaya"
+        "hjson-go"
         "htop"
         "hyfetch"
         "i3status"
