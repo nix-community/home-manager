@@ -1394,18 +1394,25 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-accounts.contact.accounts._name_.khard.defaultCollection"></a><a class="term" href="options.xhtml#opt-accounts.contact.accounts._name_.khard.defaultCollection"><code class="option">accounts.contact.accounts.&lt;name&gt;.khard.defaultCollection</code>
+ <a id="opt-accounts.contact.accounts._name_.khard.addressbooks"></a><a class="term" href="options.xhtml#opt-accounts.contact.accounts._name_.khard.addressbooks"><code class="option">accounts.contact.accounts.&lt;name&gt;.khard.addressbooks</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>VCARD collection to be searched by khard.</p>
+<p>If provided, each item on this list will generate an
+entry on khard configuration file as a separate addressbook
+(vdir).</p><p>This is used for hardcoding sub-directories under the local
+storage path
+(accounts.contact.accounts.&lt;name&gt;.local.path) for khard. The
+default value will set the aforementioned path as a single vdir.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-string</p>
+(list of string) or string convertible to it</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;&quot;</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;&quot;
+]
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
