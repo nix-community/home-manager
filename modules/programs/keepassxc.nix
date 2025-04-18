@@ -16,7 +16,7 @@ in
   options.programs.keepassxc = {
     enable = lib.mkEnableOption "keepassxc";
 
-    package = lib.mkPackageOption pkgs "keepassxc" { };
+    package = lib.mkPackageOption pkgs "keepassxc" { nullable = true; };
 
     settings = lib.mkOption {
       type = iniFormat.type;
@@ -46,7 +46,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     xdg.configFile = {
       "keepassxc/keepassxc.ini" = lib.mkIf (cfg.settings != { }) {
         source = iniFormat.generate "keepassxc-settings" cfg.settings;
