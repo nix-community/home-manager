@@ -200,6 +200,6 @@ in
         )
       '');
 
-      home.sessionVariables = lib.mkIf cfg.silent { DIRENV_LOG_FORMAT = ""; };
+      home.sessionVariables = lib.mkIf (cfg.silent && !isVersion236orHigher) { DIRENV_LOG_FORMAT = ""; };
     };
 }
