@@ -1,12 +1,25 @@
-{ realPkgs, ... }:
+{ config, ... }:
 
 {
   programs.broot = {
     enable = true;
+    package = (
+      config.lib.test.mkStubPackage {
+        name = "broot";
+        extraAttrs = {
+          src = config.lib.test.mkStubPackage {
+            name = "broot-src";
+            buildScript = ''
+              mkdir -p $out/resources/default-conf/
+              echo test > $out/resources/default-conf/conf.hjson
+            '';
+          };
+        };
+      }
+    );
+
     settings.modal = true;
   };
-
-  nixpkgs.overlays = [ (self: super: { inherit (realPkgs) broot hjson-go; }) ];
 
   nmt.script = ''
     assertFileExists home-files/.config/broot/conf.hjson
