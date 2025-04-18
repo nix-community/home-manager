@@ -38,6 +38,17 @@ in
           id = 3;
           userChrome = ./chrome;
         };
+        derivation = {
+          id = 4;
+          userChrome = config.lib.test.mkStubPackage {
+            name = "wavefox";
+            buildScript = ''
+              mkdir -p $out
+              ln -s ${./chrome/userChrome.css} $out/userChrome.css
+              echo test > $out/README.md
+            '';
+          };
+        };
       };
     }
     // {
@@ -64,6 +75,12 @@ in
           home-files/${cfg.configPath}/folder/chrome/extraFile.css
         assertFileContent \
           home-files/${cfg.configPath}/folder/chrome/userChrome.css \
+          ${./chrome/userChrome.css}
+
+        assertFileExists \
+          home-files/${cfg.configPath}/derivation/chrome/README.md
+        assertFileContent \
+          home-files/${cfg.configPath}/derivation/chrome/userChrome.css \
           ${./chrome/userChrome.css}
       '';
     }
