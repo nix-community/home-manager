@@ -39,6 +39,13 @@
           command = "git";
           expansion = "checkout";
         };
+        s = {
+          command = [
+            "git"
+            "hg"
+          ];
+          expansion = "status";
+        };
         dotdot = {
           regex = "^\\.\\.+$";
           function = "multicd";
@@ -70,6 +77,8 @@
         '"
         assertFileContains home-files/.config/fish/config.fish \
           "abbr --add --command git -- co checkout"
+        assertFileContains home-files/.config/fish/config.fish \
+          "abbr --add --command git --command hg -- s status"
         assertFileContains home-files/.config/fish/config.fish \
           "abbr --add --function multicd --regex '^\.\.+$' -- dotdot"
       '';
