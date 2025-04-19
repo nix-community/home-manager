@@ -140,6 +140,7 @@ let
       ./programs/iamb.nix
       ./programs/imv.nix
       ./programs/info.nix
+      ./programs/inori.nix
       ./programs/ion.nix
       ./programs/irssi.nix
       ./programs/java.nix
