@@ -870,12 +870,12 @@ in
           _: profile:
           let
             chromePath =
-              if ((i: lib.isPath i && lib.pathIsDirectory i) profile.userChrome) then
+              if ((i: (lib.isPath i && lib.pathIsDirectory i) || lib.isDerivation i) profile.userChrome) then
                 "chrome"
               else
                 "chrome/userChrome.css";
             sourcePath =
-              if ((i: lib.isPath i && lib.types.path.check i) profile.userChrome) then
+              if ((i: (lib.isPath i && lib.types.path.check i) || lib.isDerivation i) profile.userChrome) then
                 profile.userChrome
               else
                 null;
