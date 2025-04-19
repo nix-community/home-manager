@@ -32654,6 +32654,88 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.inori.enable"></a><a class="term" href="options.xhtml#opt-programs.inori.enable"><code class="option">programs.inori.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable inori.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/inori.nix" target="_top">
+&lt;home-manager/modules/programs/inori.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.inori.package"></a><a class="term" href="options.xhtml#opt-programs.inori.package"><code class="option">programs.inori.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The inori package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.inori</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/inori.nix" target="_top">
+&lt;home-manager/modules/programs/inori.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.inori.settings"></a><a class="term" href="options.xhtml#opt-programs.inori.settings"><code class="option">programs.inori.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/inori/config.toml</code>.</p><p>See <a class="link" href="https://github.com/eshrh/inori/blob/master/CONFIGURATION.md"  target="_top">https://github.com/eshrh/inori/blob/master/CONFIGURATION.md</a> for available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  seek_seconds = 10;
+  dvorak_keybindings = true;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/inori.nix" target="_top">
+&lt;home-manager/modules/programs/inori.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.ion.enable"></a><a class="term" href="options.xhtml#opt-programs.ion.enable"><code class="option">programs.ion.enable</code>
   </a>
  </span>
