@@ -60768,6 +60768,197 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.vesktop.enable"></a><a class="term" href="options.xhtml#opt-programs.vesktop.enable"><code class="option">programs.vesktop.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Vesktop, an alternate client for Discord with Vencord built-in.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop.nix" target="_top">
+&lt;home-manager/modules/programs/vesktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vesktop.package"></a><a class="term" href="options.xhtml#opt-programs.vesktop.package"><code class="option">programs.vesktop.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The vesktop package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.vesktop</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop.nix" target="_top">
+&lt;home-manager/modules/programs/vesktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vesktop.settings"></a><a class="term" href="options.xhtml#opt-programs.vesktop.settings"><code class="option">programs.vesktop.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Vesktop settings written to
+<code class="filename">$XDG_CONFIG_HOME/vesktop/settings.json</code>. See
+<a class="link" href="https://github.com/Vencord/Vesktop/blob/main/src/shared/settings.d.ts"  target="_top">https://github.com/Vencord/Vesktop/blob/main/src/shared/settings.d.ts</a>
+for available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  appBadge = false;
+  arRPC = true;
+  checkUpdates = false;
+  customTitleBar = false;
+  disableMinSize = true;
+  minimizeToTray = false;
+  tray = false;
+  splashBackground = &quot;#000000&quot;;
+  splashColor = &quot;#ffffff&quot;;
+  splashTheming = true;
+  staticTitle = true;
+  hardwareAcceleration = true;
+  discordBranch = &quot;stable&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop.nix" target="_top">
+&lt;home-manager/modules/programs/vesktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vesktop.vencord.settings"></a><a class="term" href="options.xhtml#opt-programs.vesktop.vencord.settings"><code class="option">programs.vesktop.vencord.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Vencord settings written to
+<code class="filename">$XDG_CONFIG_HOME/vesktop/settings/settings.json</code>. See
+<a class="link" href="https://github.com/Vendicated/Vencord/blob/main/src/api/Settings.ts"  target="_top">https://github.com/Vendicated/Vencord/blob/main/src/api/Settings.ts</a>
+for available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  autoUpdate = false;
+  autoUpdateNotification = false;
+  notifyAboutUpdates = false;
+  useQuickCss = true;
+  disableMinSize = true;
+  plugins = {
+    MessageLogger = {
+      enabled = true;
+      ignoreSelf = true;
+    };
+    FakeNitro.enabled = true;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop.nix" target="_top">
+&lt;home-manager/modules/programs/vesktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vesktop.vencord.theme"></a><a class="term" href="options.xhtml#opt-programs.vesktop.vencord.theme"><code class="option">programs.vesktop.vencord.theme</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The theme to use for Vencord</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or strings concatenated with “\n” or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop.nix" target="_top">
+&lt;home-manager/modules/programs/vesktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.vesktop.vencord.useSystem"></a><a class="term" href="options.xhtml#opt-programs.vesktop.vencord.useSystem"><code class="option">programs.vesktop.vencord.useSystem</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Vencord package from Nixpkgs.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop.nix" target="_top">
+&lt;home-manager/modules/programs/vesktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.vifm.enable"></a><a class="term" href="options.xhtml#opt-programs.vifm.enable"><code class="option">programs.vifm.enable</code>
   </a>
  </span>
