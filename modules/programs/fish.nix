@@ -185,7 +185,7 @@ let
       };
 
       command = mkOption {
-        type = with types; nullOr str;
+        type = with types; nullOr (either str (listOf str));
         default = null;
         description = ''
           Specifies the command(s) for which the abbreviation should expand. If
