@@ -50,12 +50,15 @@ in
 
     vencord = {
       useSystem = lib.mkEnableOption "Vencord package from Nixpkgs";
-      theme = lib.mkOption {
-        description = "The theme to use for Vencord";
-        default = null;
+      themes = lib.mkOption {
+        description = ''
+          Themes to add for Vencord, they can be enabled by setting
+          `programs.vesktop.vencord.settings.enabledThemes` to `[ "THEME_NAME.css" ]`
+        '';
+        default = { };
         type =
           with lib.types;
-          nullOr (oneOf [
+          attrsOf (oneOf [
             lines
             path
           ]);
@@ -89,24 +92,29 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        home.packages = [
-          (cfg.package.override { withSystemVencord = cfg.vencord.useSystem; })
-        ];
-        xdg.configFile."vesktop/settings.json".source = jsonFormat.generate "vesktop-settings" cfg.settings;
-        xdg.configFile."vesktop/settings/settings.json".source =
-          jsonFormat.generate "vencord-settings" cfg.vencord.settings;
-      }
-      (lib.mkIf (cfg.vencord.theme != null) {
-        programs.vesktop.vencord.settings.enabledThemes = [ "theme.css" ];
-        xdg.configFile."vesktop/themes/theme.css".source =
-          if builtins.isPath cfg.vencord.theme || lib.isStorePath cfg.vencord.theme then
-            cfg.vencord.theme
-          else
-            pkgs.writeText "vesktop/themes/theme.css" cfg.vencord.theme;
-      })
-    ]
-  );
+  config = lib.mkIf cfg.enable {
+    home.packages = [
+      (cfg.package.override { withSystemVencord = cfg.vencord.useSystem; })
+    ];
+    xdg.configFile =
+      lib.attrsets.unionOfDisjoint
+        {
+          "vesktop/settings.json".source = jsonFormat.generate "vesktop-settings" cfg.settings;
+          "vesktop/settings/settings.json".source =
+            jsonFormat.generate "vencord-settings" cfg.vencord.settings;
+        }
+        (
+          lib.mapAttrs' (
+            name: value:
+            lib.nameValuePair "vesktop/themes/${name}.css" {
+              source =
+                if builtins.isPath value || lib.isStorePath value then
+                  value
+                else
+                  pkgs.writeText "vesktop-themes-${name}" value;
+            }
+          ) cfg.vencord.themes
+        );
+
+  };
 }

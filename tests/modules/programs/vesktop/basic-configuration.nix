@@ -13,7 +13,7 @@
         discordBranch = "stable";
       };
       vencord = {
-        theme = ''
+        themes.my_theme = ''
           .privateChannels_f0963d::after {
             content: "";
             position: absolute;
@@ -51,8 +51,8 @@
       assertFileExists $configDir/settings/settings.json
       assertFileContent $configDir/settings/settings.json \
         ${./basic-vencord-settings.json}
-      assertFileExists $configDir/themes/theme.css
-      assertFileContent $configDir/themes/theme.css \
+      assertFileExists $configDir/themes/my_theme.css
+      assertFileContent $configDir/themes/my_theme.css \
         ${./basic-theme.css}
     '';
   };
