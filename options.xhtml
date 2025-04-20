@@ -60692,6 +60692,93 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.uv.enable"></a><a class="term" href="options.xhtml#opt-programs.uv.enable"><code class="option">programs.uv.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable uv.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/uv.nix" target="_top">
+&lt;home-manager/modules/programs/uv.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.uv.package"></a><a class="term" href="options.xhtml#opt-programs.uv.package"><code class="option">programs.uv.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The uv package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.uv</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/uv.nix" target="_top">
+&lt;home-manager/modules/programs/uv.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.uv.settings"></a><a class="term" href="options.xhtml#opt-programs.uv.settings"><code class="option">programs.uv.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/uv/uv.toml</code>.
+See <a class="link" href="https://docs.astral.sh/uv/configuration/files/"  target="_top">https://docs.astral.sh/uv/configuration/files/</a>
+and <a class="link" href="https://docs.astral.sh/uv/reference/settings/"  target="_top">https://docs.astral.sh/uv/reference/settings/</a>
+for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  python-downloads = &quot;never&quot;;
+  python-preference = &quot;only-system&quot;;
+  pip.index-url = &quot;https://test.pypi.org/simple&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/uv.nix" target="_top">
+&lt;home-manager/modules/programs/uv.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.vdirsyncer.enable"></a><a class="term" href="options.xhtml#opt-programs.vdirsyncer.enable"><code class="option">programs.vdirsyncer.enable</code>
   </a>
  </span>
