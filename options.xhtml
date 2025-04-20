@@ -61795,6 +61795,89 @@ JSON value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.wallust.enable"></a><a class="term" href="options.xhtml#opt-programs.wallust.enable"><code class="option">programs.wallust.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Wallust color scheme generator.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wallust.nix" target="_top">
+&lt;home-manager/modules/programs/wallust.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.wallust.package"></a><a class="term" href="options.xhtml#opt-programs.wallust.package"><code class="option">programs.wallust.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The wallust package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.wallust</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wallust.nix" target="_top">
+&lt;home-manager/modules/programs/wallust.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.wallust.settings"></a><a class="term" href="options.xhtml#opt-programs.wallust.settings"><code class="option">programs.wallust.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/wallust/wallust.toml</code>.
+See <a class="link" href="https://explosion-mental.codeberg.page/wallust/config/"  target="_top">https://explosion-mental.codeberg.page/wallust/config/</a> for
+documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  palette = &quot;softdark&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wallust.nix" target="_top">
+&lt;home-manager/modules/programs/wallust.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.watson.enable"></a><a class="term" href="options.xhtml#opt-programs.watson.enable"><code class="option">programs.watson.enable</code>
   </a>
  </span>
