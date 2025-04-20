@@ -90,7 +90,21 @@ in
     };
 
     themes = mkOption {
-      type = types.attrsOf tomlFormat.type;
+      type = types.attrsOf (
+        types.oneOf [
+          tomlFormat.type
+          types.path
+          types.string
+        ]
+      );
+      description = ''
+        Each theme is written to
+        {file}`$XDG_CONFIG_HOME/atuin/themes/theme-name.toml`
+        where the name of each attribute is the theme-name
+
+        See <https://atuin.sh/guide/theming/> for the full list
+        of options.
+      '';
       default = { };
       example = lib.literalExpression ''
         {
@@ -102,10 +116,6 @@ in
             };
           };
         }
-      '';
-      description = ''
-        See <https://atuin.sh/guide/theming/> for the full list
-        of options.
       '';
     };
 
@@ -152,7 +162,13 @@ in
               lib.mapAttrs' (
                 name: theme:
                 lib.nameValuePair "atuin/themes/${name}.toml" {
-                  source = tomlFormat.generate "atuin-theme-${name}" theme;
+                  source =
+                    if lib.isString theme then
+                      pkgs.writeText "atuin-theme-${name}" theme
+                    else if builtins.isPath theme || lib.isStorePath theme then
+                      theme
+                    else
+                      tomlFormat.generate "atuin-theme-${name}" theme;
                 }
               ) cfg.themes
             ))
