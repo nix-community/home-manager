@@ -105,6 +105,25 @@ in
           in the wiki.
         '';
       };
+
+      themes = mkOption {
+        description = ''
+          Each theme is written to
+          {file}`$XDG_CONFIG_HOME/zed/themes/theme-name.json`
+          where the name of each attribute is the theme-name
+
+          See <https://zed.dev/docs/extensions/themes> for the structure of a
+          Zed theme
+        '';
+        type = types.attrsOf (
+          types.oneOf [
+            jsonFormat.type
+            types.path
+            types.lines
+          ]
+        );
+        default = { };
+      };
     };
   };
 
@@ -136,16 +155,34 @@ in
       }
     );
 
-    xdg.configFile."zed/settings.json" = (
-      mkIf (mergedSettings != { }) {
-        source = jsonFormat.generate "zed-user-settings" mergedSettings;
-      }
-    );
+    xdg.configFile =
+      lib.attrsets.unionOfDisjoint
+        {
+          "zed/settings.json" = (
+            mkIf (mergedSettings != { }) {
+              source = jsonFormat.generate "zed-user-settings" mergedSettings;
+            }
+          );
 
-    xdg.configFile."zed/keymap.json" = (
-      mkIf (cfg.userKeymaps != { }) {
-        source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
-      }
-    );
+          "zed/keymap.json" = (
+            mkIf (cfg.userKeymaps != { }) {
+              source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
+            }
+          );
+        }
+        (
+          lib.mapAttrs' (
+            n: v:
+            lib.nameValuePair "zed/themes/${n}.json" {
+              source =
+                if lib.isString v then
+                  pkgs.writeText "zed-theme-${n}" v
+                else if builtins.isPath v || lib.isStorePath v then
+                  v
+                else
+                  jsonFormat.generate "zed-theme-${n}" v;
+            }
+          ) cfg.themes
+        );
   };
 }
