@@ -84907,6 +84907,710 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.restic.enable"></a><a class="term" href="options.xhtml#opt-services.restic.enable"><code class="option">services.restic.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable restic.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups"></a><a class="term" href="options.xhtml#opt-services.restic.backups"><code class="option">services.restic.backups</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Periodic backups to create with Restic.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  localbackup = {
+    exclude = [
+      &quot;/home/*/.cache&quot;
+    ];
+    initialize = true;
+    passwordFile = &quot;/etc/nixos/secrets/restic-password&quot;;
+    paths = [
+      &quot;/home&quot;
+    ];
+    repository = &quot;/mnt/backup-hdd&quot;;
+  };
+  remotebackup = {
+    extraOptions = [
+      &quot;sftp.command=&#x27;ssh backup@host -i /etc/nixos/secrets/backup-private-key -s sftp&#x27;&quot;
+    ];
+    passwordFile = &quot;/etc/nixos/secrets/restic-password&quot;;
+    paths = [
+      &quot;/home&quot;
+    ];
+    repository = &quot;sftp:backup@host:/backups/home&quot;;
+    timerConfig = {
+      OnCalendar = &quot;00:05&quot;;
+      RandomizedDelaySec = &quot;5h&quot;;
+    };
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.package"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.package"><code class="option">services.restic.backups.&lt;name&gt;.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The restic package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.restic</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.backupCleanupCommand"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.backupCleanupCommand"><code class="option">services.restic.backups.&lt;name&gt;.backupCleanupCommand</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A script that must run after finishing the backup process.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.backupPrepareCommand"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.backupPrepareCommand"><code class="option">services.restic.backups.&lt;name&gt;.backupPrepareCommand</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A script that must run before starting the backup process.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.checkOpts"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.checkOpts"><code class="option">services.restic.backups.&lt;name&gt;.checkOpts</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A list of options for ‘restic check’.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--with-cache&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.createWrapper"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.createWrapper"><code class="option">services.restic.backups.&lt;name&gt;.createWrapper</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to generate and add a script to the system path, that has the
+same environment variables set as the systemd service. This can be used
+to e.g. mount snapshots or perform other opterations, without having to
+manually specify most options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.dynamicFilesFrom"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.dynamicFilesFrom"><code class="option">services.restic.backups.&lt;name&gt;.dynamicFilesFrom</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A script that produces a list of files to back up. The results of
+this command, along with the paths specified via <code class="option">paths</code>,
+are given to the ‘–files-from’ option.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;find /home/alice/git -type d -name .git&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.environmentFile"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.environmentFile"><code class="option">services.restic.backups.&lt;name&gt;.environmentFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A file containing the credentials to access the repository, in the
+format of an EnvironmentFile as described by <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.exec.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.exec</span>(5)</span></a>.
+See <a class="link" href="https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html"  target="_top">https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html</a>
+for the specific credentials you will need for your backend.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.exclude"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.exclude"><code class="option">services.restic.backups.&lt;name&gt;.exclude</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Patterns to exclude when backing up. See
+<a class="link" href="https://restic.readthedocs.io/en/stable/040_backup.html#excluding-files"  target="_top">https://restic.readthedocs.io/en/stable/040_backup.html#excluding-files</a> for
+details on syntax.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;/var/cache&quot;
+  &quot;/home/*/.cache&quot;
+  &quot;.git&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.extraBackupArgs"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.extraBackupArgs"><code class="option">services.restic.backups.&lt;name&gt;.extraBackupArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra arguments passed to restic backup.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--cleanup-cache&quot;
+  &quot;--exclude-file=/etc/nixos/restic-ignore&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.extraOptions"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.extraOptions"><code class="option">services.restic.backups.&lt;name&gt;.extraOptions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra extended options to be passed to the restic <code class="literal">-o</code> flag. See the restic
+documentation for more details.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;sftp.command=&#x27;ssh backup@192.168.1.100 -i /home/user/.ssh/id_rsa -s sftp&#x27;&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.inhibitsSleep"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.inhibitsSleep"><code class="option">services.restic.backups.&lt;name&gt;.inhibitsSleep</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Prevents the system from sleeping while backing up. This uses systemd-inhibit
+to block system idling so you may need to enable polkitd with
+<code class="option">security.polkit.enable</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.initialize"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.initialize"><code class="option">services.restic.backups.&lt;name&gt;.initialize</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Create the repository if it does not already exist.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.passwordFile"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.passwordFile"><code class="option">services.restic.backups.&lt;name&gt;.passwordFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A file containing the repository password.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;/etc/nixos/restic-password&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.paths"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.paths"><code class="option">services.restic.backups.&lt;name&gt;.paths</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Paths to back up, alongside those defined by the <code class="option">dynamicFilesFrom</code>
+option. If left empty and <code class="option">dynamicFilesFrom</code> is also not specified, no
+backup command will be run. This can be used to create a prune-only job.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;/var/lib/postgresql&quot;
+  &quot;/home/user/backup&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.progressFps"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.progressFps"><code class="option">services.restic.backups.&lt;name&gt;.progressFps</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Controls the frequency of progress reporting.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (nonnegative integer or floating point number, meaning &gt;=0)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">0.1</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.pruneOpts"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.pruneOpts"><code class="option">services.restic.backups.&lt;name&gt;.pruneOpts</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A list of policy options for ‘restic forget --prune’, to automatically
+prune old snapshots. See
+<a class="link" href="https://restic.readthedocs.io/en/latest/060_forget.html#removing-snapshots-according-to-a-policy"  target="_top">https://restic.readthedocs.io/en/latest/060_forget.html#removing-snapshots-according-to-a-policy</a>
+for a full list of options.</p><p>Note: The ‘forget’ command is run <span class="emphasis"><em>after</em></span> the ‘backup’ command, so keep
+that in mind when constructing the --keep-* options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--keep-daily 7&quot;
+  &quot;--keep-weekly 5&quot;
+  &quot;--keep-monthly 12&quot;
+  &quot;--keep-yearly 75&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.rcloneOptions"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.rcloneOptions"><code class="option">services.restic.backups.&lt;name&gt;.rcloneOptions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Options to pass to rclone to control its behavior. See
+<a class="link" href="https://rclone.org/docs/#options"  target="_top">https://rclone.org/docs/#options</a> for available options. When specifying
+option names, strip the leading <code class="literal">--</code>. To set a flag such as
+<code class="literal">--drive-use-trash</code>, which does not take a value, set the value to the
+Boolean <code class="literal">true</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (string or boolean)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  bwlimit = &quot;10M&quot;;
+  drive-use-trash = true;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.repository"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.repository"><code class="option">services.restic.backups.&lt;name&gt;.repository</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Repository to backup to. This should be in the form of a backend specification as
+detailed here
+<a class="link" href="https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html"  target="_top">https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html</a>.</p><p>If your using the rclone backend, you can configure your remotes with
+<code class="option">programs.rclone.remotes</code> then use them in your backend specification.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;sftp:backup@192.168.1.100:/backups/‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.repositoryFile"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.repositoryFile"><code class="option">services.restic.backups.&lt;name&gt;.repositoryFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to a file containing the repository location to backup to. This should be
+in the same form as the <code class="option">repository</code> option.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.runCheck"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.runCheck"><code class="option">services.restic.backups.&lt;name&gt;.runCheck</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to run ‘restic check’ with the provided <code class="literal">checkOpts</code> options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">lib.length config.checkOpts &gt; 0 || lib.length config.pruneOpts &gt; 0</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.ssh-package"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.ssh-package"><code class="option">services.restic.backups.&lt;name&gt;.ssh-package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The openssh package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.openssh</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.restic.backups._name_.timerConfig"></a><a class="term" href="options.xhtml#opt-services.restic.backups._name_.timerConfig"><code class="option">services.restic.backups.&lt;name&gt;.timerConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When to run the backup. See <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.timer.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.timer</span>(5)</span></a> for details. If null
+no timer is created and the backup will only run when explicitly started.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or (attribute set of (boolean or signed integer or string or absolute path or list of (boolean or signed integer or string or absolute path)))</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  OnCalendar = &quot;daily&quot;;
+  Persistent = true;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  OnCalendar = &quot;00:05&quot;;
+  Persistent = true;
+  RandomizedDelaySec = &quot;5h&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/restic.nix" target="_top">
+&lt;home-manager/modules/services/restic.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.rsibreak.enable"></a><a class="term" href="options.xhtml#opt-services.rsibreak.enable"><code class="option">services.rsibreak.enable</code>
   </a>
  </span>
