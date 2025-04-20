@@ -547,6 +547,7 @@ import nmtSrc {
       ./modules/programs/swayr
       ./modules/programs/terminator
       ./modules/programs/tofi
+      ./modules/programs/vesktop
       ./modules/programs/vinegar
       ./modules/programs/waybar
       ./modules/programs/wlogout
