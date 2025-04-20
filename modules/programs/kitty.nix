@@ -248,6 +248,8 @@ in
       );
     };
 
+    enableGitIntegration = lib.mkEnableOption "git integration";
+
     extraConfig = mkOption {
       default = "";
       type = types.lines;
@@ -329,5 +331,22 @@ in
     programs.fish.interactiveShellInit = mkIf cfg.shellIntegration.enableFishIntegration shellIntegrationInit.fish;
 
     programs.zsh.initContent = mkIf cfg.shellIntegration.enableZshIntegration shellIntegrationInit.zsh;
+
+    programs.git.iniContent = lib.mkIf cfg.enableGitIntegration {
+      diff = {
+        tool = lib.mkDefault "kitty";
+        guitool = lib.mkDefault "kitty.gui";
+      };
+      difftool = {
+        prompt = lib.mkDefault false;
+        trustExistCode = lib.mkDefault true;
+        kitty = {
+          cmd = "kitten diff $LOCAL $REMOTE";
+        };
+        "kitty.gui" = {
+          cmd = "kitten diff $LOCAL $REMOTE";
+        };
+      };
+    };
   };
 }
