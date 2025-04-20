@@ -24,7 +24,7 @@ in
   options.programs.uv = {
     enable = mkEnableOption "uv";
 
-    package = mkPackageOption pkgs "uv" { };
+    package = mkPackageOption pkgs "uv" { nullable = true; };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -47,7 +47,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."uv/uv.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "uv-config" cfg.settings;
