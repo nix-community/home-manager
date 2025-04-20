@@ -21,7 +21,7 @@ Also make sure to read the guidelines found at
 
 - [ ] Change is backwards compatible.
 
-- [ ] Code formatted with `./format`.
+- [ ] Code formatted with `nix fmt` or `./format`.
 
 - [ ] Code tested through `nix-shell --pure tests -A run.all`
     or `nix build --reference-lock-file flake.lock ./tests#test-all` using Flakes.
