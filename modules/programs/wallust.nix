@@ -21,7 +21,9 @@ in
 
   options.programs.wallust = {
     enable = mkEnableOption "Wallust color scheme generator";
-    package = mkPackageOption pkgs "wallust" { };
+
+    package = mkPackageOption pkgs "wallust" { nullable = true; };
+
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
@@ -38,7 +40,8 @@ in
     };
   };
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
     xdg.configFile."wallust/wallust.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "wallust.toml" cfg.settings;
     };
