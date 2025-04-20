@@ -612,6 +612,7 @@ import nmtSrc {
       ./modules/services/recoll
       ./modules/services/redshift-gammastep
       ./modules/services/remmina
+      ./modules/services/restic
       ./modules/services/screen-locker
       ./modules/services/signaturepdf
       ./modules/services/snixembed
