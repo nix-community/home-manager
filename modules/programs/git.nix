@@ -753,6 +753,54 @@ in
               };
           in
           lib.attrsets.mapAttrs' toSystemdTimer cfg.maintenance.timers;
+
+        launchd.agents =
+          let
+            baseArguments = [
+              "${lib.getExe cfg.package}"
+              "for-each-repo"
+              "--keep-going"
+              "--config=maintenance.repo"
+              "maintenance"
+              "run"
+            ];
+          in
+          {
+            "git-maintenance-hourly" = {
+              enable = true;
+              config = {
+                ProgramArguments = baseArguments ++ [ "--schedule=hourly" ];
+                StartCalendarInterval = map (hour: {
+                  Hour = hour;
+                  Minute = 53;
+                }) (lib.range 1 23);
+              };
+            };
+            "git-maintenance-daily" = {
+              enable = true;
+              config = {
+                ProgramArguments = baseArguments ++ [ "--schedule=daily" ];
+                StartCalendarInterval = map (weekday: {
+                  Weekday = weekday;
+                  Hour = 0;
+                  Minute = 53;
+                }) (lib.range 1 6);
+              };
+            };
+            "git-maintenance-weekly" = {
+              enable = true;
+              config = {
+                ProgramArguments = baseArguments ++ [ "--schedule=weekly" ];
+                StartCalendarInterval = [
+                  {
+                    Weekday = 0;
+                    Hour = 0;
+                    Minute = 53;
+                  }
+                ];
+              };
+            };
+          };
       })
 
       (mkIf cfg.diff-highlight.enable {
