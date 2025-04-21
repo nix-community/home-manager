@@ -261,6 +261,7 @@ let
       ./programs/swayr.nix
       ./programs/taskwarrior.nix
       ./programs/tealdeer.nix
+      ./programs/television.nix
       ./programs/terminator.nix
       ./programs/termite.nix
       ./programs/tex-fmt.nix
