@@ -2,9 +2,6 @@
   "autoUpdate": false,
   "autoUpdateNotification": false,
   "disableMinSize": true,
-  "enabledThemes": [
-    "theme.css"
-  ],
   "notifyAboutUpdates": false,
   "plugins": {
     "FakeNitro": {
