@@ -419,6 +419,7 @@ let
       ./services/safeeyes.nix
       ./services/screen-locker.nix
       ./services/sctd.nix
+      ./services/shikane.nix
       ./services/signaturepdf.nix
       ./services/skhd.nix
       ./services/snixembed.nix
