@@ -292,6 +292,7 @@
     - modules/programs/pylint.nix
     - modules/programs/mise.nix
     - modules/programs/nix-index.nix
+    - modules/programs/nix-init.nix
     - modules/programs/nh.nix
     - modules/programs/bacon.nix
     - modules/programs/sqls.nix
