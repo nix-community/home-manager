@@ -56701,6 +56701,97 @@ positive integer, meaning &gt;0</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.television.enable"></a><a class="term" href="options.xhtml#opt-programs.television.enable"><code class="option">programs.television.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable television.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/television.nix" target="_top">
+&lt;home-manager/modules/programs/television.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.television.package"></a><a class="term" href="options.xhtml#opt-programs.television.package"><code class="option">programs.television.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The television package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.television</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/television.nix" target="_top">
+&lt;home-manager/modules/programs/television.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.television.settings"></a><a class="term" href="options.xhtml#opt-programs.television.settings"><code class="option">programs.television.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/television/config.toml</code>.
+See <a class="link" href="https://github.com/alexpasmantier/television/blob/main/.config/config.toml"  target="_top">https://github.com/alexpasmantier/television/blob/main/.config/config.toml</a>
+for the full list of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  tick_rate = 50;
+  ui = {
+    use_nerd_font_icons = true;
+    ui_scale = 120;
+    show_preview_panel = false;
+  };
+  keybindings = {
+    quit = [ &quot;esc&quot; &quot;ctrl-c&quot; ];
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/television.nix" target="_top">
+&lt;home-manager/modules/programs/television.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.terminator.enable"></a><a class="term" href="options.xhtml#opt-programs.terminator.enable"><code class="option">programs.terminator.enable</code>
   </a>
  </span>
