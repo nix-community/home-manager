@@ -535,7 +535,10 @@ in {
 
     home.packages = optional (cfg.package != null) cfg.package;
 
-    home.file.".ssh/config".source = mkIf cfg.internallyManaged cfg.configPath;
+    home.file.".ssh/config" = {
+      enabled = cfg.internallyManaged;
+      source = cfg.configPath;
+    };
 
     programs.ssh.configPath = let
       sortedMatchBlocks = hm.dag.topoSort cfg.matchBlocks;
