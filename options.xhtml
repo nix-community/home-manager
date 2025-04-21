@@ -19986,6 +19986,102 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.clock-rs.enable"></a><a class="term" href="options.xhtml#opt-programs.clock-rs.enable"><code class="option">programs.clock-rs.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable clock-rs.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/clock-rs.nix" target="_top">
+&lt;home-manager/modules/programs/clock-rs.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.clock-rs.package"></a><a class="term" href="options.xhtml#opt-programs.clock-rs.package"><code class="option">programs.clock-rs.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The clock-rs package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.clock-rs</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/clock-rs.nix" target="_top">
+&lt;home-manager/modules/programs/clock-rs.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.clock-rs.settings"></a><a class="term" href="options.xhtml#opt-programs.clock-rs.settings"><code class="option">programs.clock-rs.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The configuration file to be used for clock-rs</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">general = {
+  color = &quot;magenta&quot;;
+  interval = 250;
+  blink = true;
+  bold = true;
+};
+
+position = {
+  horizontal = &quot;start&quot;;
+  vertical = &quot;end&quot;;
+};
+
+date = {
+  fmt = &quot;%A, %B %d, %Y&quot;;
+  use_12h = true;
+  utc = true;
+  hide_seconds = true;
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/clock-rs.nix" target="_top">
+&lt;home-manager/modules/programs/clock-rs.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.cmus.enable"></a><a class="term" href="options.xhtml#opt-programs.cmus.enable"><code class="option">programs.cmus.enable</code>
   </a>
  </span>
