@@ -66,7 +66,7 @@ in
             let
               path =
                 with pkgs;
-                makeSearchPath "bin" [
+                lib.makeSearchPath "bin" [
                   cfg.nixPackage
                   gitMinimal
                   gnutar
