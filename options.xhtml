@@ -43813,6 +43813,109 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.nix-init.enable"></a><a class="term" href="options.xhtml#opt-programs.nix-init.enable"><code class="option">programs.nix-init.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable nix-init.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nix-init.nix" target="_top">
+&lt;home-manager/modules/programs/nix-init.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.nix-init.package"></a><a class="term" href="options.xhtml#opt-programs.nix-init.package"><code class="option">programs.nix-init.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The nix-init package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.nix-init</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nix-init.nix" target="_top">
+&lt;home-manager/modules/programs/nix-init.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.nix-init.settings"></a><a class="term" href="options.xhtml#opt-programs.nix-init.settings"><code class="option">programs.nix-init.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/nix-init/config.toml</code>.
+See <a class="link" href="https://github.com/nix-community/nix-init#configuration"  target="_top">https://github.com/nix-community/nix-init#configuration</a> for the full list
+of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  maintainers = [
+    &quot;figsoda&quot;
+  ];
+  nixpkgs = &quot;&lt;nixpkgs&gt;&quot;;
+  commit = true;
+  access-tokens = {
+    github.com = &quot;ghp_blahblahblah...&quot;;
+    gitlab.com = {
+      command = [
+        &quot;secret-tool&quot;
+        &quot;or&quot;
+        &quot;whatever&quot;
+        &quot;you&quot;
+        &quot;use&quot;
+      ];
+    };
+    gitlab.gnome.org = {
+      file = &quot;/path/to/api/token&quot;;
+    };
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nix-init.nix" target="_top">
+&lt;home-manager/modules/programs/nix-init.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.nix-your-shell.enable"></a><a class="term" href="options.xhtml#opt-programs.nix-your-shell.enable"><code class="option">programs.nix-your-shell.enable</code>
   </a>
  </span>
