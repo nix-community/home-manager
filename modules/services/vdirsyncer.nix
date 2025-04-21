@@ -5,9 +5,8 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib) mkOption optional types;
 
   cfg = config.services.vdirsyncer;
 
@@ -18,16 +17,16 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.pjones ];
+  meta.maintainers = [ lib.maintainers.pjones ];
 
   options.services.vdirsyncer = {
-    enable = mkEnableOption "vdirsyncer";
+    enable = lib.mkEnableOption "vdirsyncer";
 
     package = mkOption {
       type = types.package;
       default = pkgs.vdirsyncer;
       defaultText = "pkgs.vdirsyncer";
-      example = literalExpression "pkgs.vdirsyncer";
+      example = lib.literalExpression "pkgs.vdirsyncer";
       description = "The package to use for the vdirsyncer binary.";
     };
 
@@ -68,7 +67,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.user.services.vdirsyncer = {
       Unit = {
         Description = "vdirsyncer calendar&contacts synchronization";
@@ -80,7 +79,7 @@ in
         # TODO `vdirsyncer discover`
         ExecStart =
           let
-            optStr = concatStringsSep " " vdirsyncerOptions;
+            optStr = lib.concatStringsSep " " vdirsyncerOptions;
           in
           [
             "${cfg.package}/bin/vdirsyncer ${optStr} metasync"

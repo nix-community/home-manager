@@ -5,26 +5,24 @@
   ...
 }:
 
-with lib;
-
 let
 
   cfg = config.services.taskwarrior-sync;
 
 in
 {
-  meta.maintainers = with maintainers; [
+  meta.maintainers = with lib.maintainers; [
     euxane
     minijackson
   ];
 
   options.services.taskwarrior-sync = {
-    enable = mkEnableOption "Taskwarrior periodic sync";
+    enable = lib.mkEnableOption "Taskwarrior periodic sync";
 
-    package = mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
+    package = lib.mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
 
-    frequency = mkOption {
-      type = types.str;
+    frequency = lib.mkOption {
+      type = lib.types.str;
       default = "*:0/5";
       description = ''
         How often to run `taskwarrior sync`. This
@@ -36,7 +34,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.taskwarrior-sync" pkgs lib.platforms.linux)
     ];

@@ -5,15 +5,18 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    mkOption
+    types
+    literalExpression
+    ;
 
   cfg = config.services.swayidle;
 
 in
 {
-  meta.maintainers = [ maintainers.c0deaddict ];
+  meta.maintainers = [ lib.maintainers.c0deaddict ];
 
   options.services.swayidle =
     let
@@ -64,7 +67,7 @@ in
 
     in
     {
-      enable = mkEnableOption "idle manager for Wayland";
+      enable = lib.mkEnableOption "idle manager for Wayland";
 
       package = lib.mkPackageOption pkgs "swayidle" { };
 
@@ -110,9 +113,9 @@ in
 
     };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.swayidle" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.swayidle" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.swayidle = {
@@ -128,7 +131,7 @@ in
         Type = "simple";
         Restart = "always";
         # swayidle executes commands using "sh -c", so the PATH needs to contain a shell.
-        Environment = [ "PATH=${makeBinPath [ pkgs.bash ]}" ];
+        Environment = [ "PATH=${lib.makeBinPath [ pkgs.bash ]}" ];
         ExecStart =
           let
             mkTimeout =
@@ -138,7 +141,7 @@ in
                 (toString t.timeout)
                 t.command
               ]
-              ++ optionals (t.resumeCommand != null) [
+              ++ lib.optionals (t.resumeCommand != null) [
                 "resume"
                 t.resumeCommand
               ];
@@ -148,9 +151,10 @@ in
               e.command
             ];
 
-            args = cfg.extraArgs ++ (concatMap mkTimeout cfg.timeouts) ++ (concatMap mkEvent cfg.events);
+            args =
+              cfg.extraArgs ++ (lib.concatMap mkTimeout cfg.timeouts) ++ (lib.concatMap mkEvent cfg.events);
           in
-          "${getExe cfg.package} ${escapeShellArgs args}";
+          "${lib.getExe cfg.package} ${lib.escapeShellArgs args}";
       };
 
       Install = {

@@ -4,18 +4,16 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkEnableOption mkOption types;
 
   cfg = config.services.mpdris2;
 
-  toIni = generators.toINI {
+  toIni = lib.generators.toINI {
     mkKeyValue =
       key: value:
       let
-        value' = if isBool value then (if value then "True" else "False") else toString value;
+        value' = if lib.isBool value then (if value then "True" else "False") else toString value;
       in
       "${key} = ${value'}";
   };
@@ -27,7 +25,7 @@ let
         port = cfg.mpd.port;
         music_dir = cfg.mpd.musicDirectory;
       }
-      // optionalAttrs (cfg.mpd.password != null) {
+      // lib.optionalAttrs (cfg.mpd.password != null) {
         password = cfg.mpd.password;
       };
 
@@ -39,7 +37,7 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.pjones ];
+  meta.maintainers = [ lib.maintainers.pjones ];
 
   options.services.mpdris2 = {
     enable = mkEnableOption "mpDris2 the MPD to MPRIS2 bridge";
@@ -49,7 +47,7 @@ in
     package = mkOption {
       type = types.package;
       default = pkgs.mpdris2;
-      defaultText = literalExpression "pkgs.mpdris2";
+      defaultText = lib.literalExpression "pkgs.mpdris2";
       description = "The mpDris2 package to use.";
     };
 
@@ -90,7 +88,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.mpdris2" pkgs lib.platforms.linux)
     ];

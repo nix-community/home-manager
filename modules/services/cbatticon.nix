@@ -4,10 +4,8 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption optional types;
 
   cfg = config.services.cbatticon;
 
@@ -22,7 +20,7 @@ let
       "--${commandName} ${cmd}"
     );
 
-  commandLine = concatStringsSep " " (
+  commandLine = lib.concatStringsSep " " (
     [ "${package}/bin/cbatticon" ]
     ++ makeCommand "command-critical-level" cfg.commandCriticalLevel
     ++ makeCommand "command-left-click" cfg.commandLeftClick
@@ -40,11 +38,11 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.pmiddend ];
+  meta.maintainers = [ lib.maintainers.pmiddend ];
 
   options = {
     services.cbatticon = {
-      enable = mkEnableOption "cbatticon";
+      enable = lib.mkEnableOption "cbatticon";
 
       commandCriticalLevel = mkOption {
         type = types.nullOr types.lines;
@@ -124,7 +122,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.cbatticon" pkgs lib.platforms.linux)
     ];

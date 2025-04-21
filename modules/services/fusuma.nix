@@ -4,10 +4,8 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   cfg = config.services.fusuma;
 
@@ -60,14 +58,15 @@ let
   };
 
   makeBinPath =
-    packages: foldl (a: b: if a == "" then b else "${a}:${b}") "" (map (pkg: "${pkg}/bin") packages);
+    packages:
+    lib.foldl (a: b: if a == "" then b else "${a}:${b}") "" (map (pkg: "${pkg}/bin") packages);
 
 in
 {
-  meta.maintainers = [ hm.maintainers.iosmanthus ];
+  meta.maintainers = [ lib.hm.maintainers.iosmanthus ];
 
   options.services.fusuma = {
-    enable = mkEnableOption "the fusuma systemd service to automatically enable touchpad gesture";
+    enable = lib.mkEnableOption "the fusuma systemd service to automatically enable touchpad gesture";
 
     package = mkOption {
       type = types.package;
@@ -118,7 +117,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.fusuma" pkgs lib.platforms.linux)
     ];

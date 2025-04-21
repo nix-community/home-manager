@@ -4,21 +4,18 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.pulseeffects;
 
-  presetOpts = optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
+  presetOpts = lib.optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
 
 in
 {
-  meta.maintainers = [ hm.maintainers.jonringer ];
+  meta.maintainers = [ lib.hm.maintainers.jonringer ];
 
   options.services.pulseeffects = {
-    enable = mkEnableOption ''
+    enable = lib.mkEnableOption ''
       Pulseeffects daemon
       Note, it is necessary to add
       ```nix
@@ -26,15 +23,15 @@ in
       ```
       to your system configuration for the daemon to work correctly'';
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.pulseeffects-legacy;
-      defaultText = literalExpression "pkgs.pulseeffects-legacy";
+      defaultText = lib.literalExpression "pkgs.pulseeffects-legacy";
       description = "Pulseeffects package to use.";
     };
 
-    preset = mkOption {
-      type = types.str;
+    preset = lib.mkOption {
+      type = lib.types.str;
       default = "";
       description = ''
         Which preset to use when starting pulseeffects.
@@ -43,7 +40,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.pulseeffects" pkgs lib.platforms.linux)
     ];

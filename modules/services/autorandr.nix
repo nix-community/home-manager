@@ -4,20 +4,15 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
   cfg = config.services.autorandr;
-
 in
 {
-
-  meta.maintainers = [ maintainers.GaetanLepage ];
+  meta.maintainers = [ lib.maintainers.GaetanLepage ];
 
   options = {
     services.autorandr = {
-      enable = mkEnableOption "" // {
+      enable = lib.mkEnableOption "" // {
         description = ''
           Whether to enable the Autorandr systemd service.
           This module is complementary to {option}`programs.autorandr`
@@ -25,15 +20,15 @@ in
         '';
       };
 
-      ignoreLid = mkOption {
+      ignoreLid = lib.mkOption {
         default = false;
-        type = types.bool;
+        type = lib.types.bool;
         description = "Treat outputs as connected even if their lids are closed.";
       };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.autorandr" pkgs lib.platforms.linux)
     ];
@@ -47,7 +42,7 @@ in
 
       Service = {
         Type = "oneshot";
-        ExecStart = "${pkgs.autorandr}/bin/autorandr --change ${optionalString cfg.ignoreLid "--ignore-lid"}";
+        ExecStart = "${pkgs.autorandr}/bin/autorandr --change ${lib.optionalString cfg.ignoreLid "--ignore-lid"}";
       };
 
       Install.WantedBy = [ "graphical-session.target" ];

@@ -4,20 +4,18 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.fluidsynth;
 
 in
 {
-  meta.maintainers = [ maintainers.valodim ];
+  meta.maintainers = [ lib.maintainers.valodim ];
 
   options = {
     services.fluidsynth = {
-      enable = mkEnableOption "fluidsynth midi synthesizer";
+      enable = lib.mkEnableOption "fluidsynth midi synthesizer";
 
       soundFont = mkOption {
         type = types.path;
@@ -52,7 +50,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.fluidsynth" pkgs lib.platforms.linux)
     ];

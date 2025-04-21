@@ -4,22 +4,21 @@
   pkgs,
   ...
 }:
-with lib;
 let
   cfg = config.services.clipman;
 in
 {
-  meta.maintainers = [ maintainers.jwygoda ];
+  meta.maintainers = [ lib.maintainers.jwygoda ];
 
   options.services.clipman = {
-    enable = mkEnableOption "clipman, a simple clipboard manager for Wayland";
+    enable = lib.mkEnableOption "clipman, a simple clipboard manager for Wayland";
 
-    package = mkPackageOption pkgs "clipman" { };
+    package = lib.mkPackageOption pkgs "clipman" { };
 
-    systemdTarget = mkOption {
-      type = types.str;
+    systemdTarget = lib.mkOption {
+      type = lib.types.str;
       default = config.wayland.systemd.target;
-      defaultText = literalExpression "config.wayland.systemd.target";
+      defaultText = lib.literalExpression "config.wayland.systemd.target";
       example = "sway-session.target";
       description = ''
         The systemd target that will automatically start the clipman service.
@@ -31,7 +30,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.clipman" pkgs lib.platforms.linux)
     ];

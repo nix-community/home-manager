@@ -4,13 +4,17 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 # Documentation was partially copied from the muchsync manual.
 # See http://www.muchsync.org/muchsync.html
 
 let
+  inherit (lib)
+    escapeShellArg
+    mkOption
+    optional
+    types
+    ;
+
   cfg = config.services.muchsync;
   syncOptions = {
     options = {
@@ -132,13 +136,13 @@ let
 
 in
 {
-  meta.maintainers = with maintainers; [ euxane ];
+  meta.maintainers = with lib.maintainers; [ euxane ];
 
   options.services.muchsync = {
     remotes = mkOption {
       type = with types; attrsOf (submodule syncOptions);
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           server = {
             frequency = "*:0/10";
@@ -156,12 +160,13 @@ in
     let
       mapRemotes =
         gen:
-        with attrsets;
-        mapAttrs' (name: remoteCfg: nameValuePair "muchsync-${name}" (gen name remoteCfg)) cfg.remotes;
+        lib.attrsets.mapAttrs' (
+          name: remoteCfg: lib.attrsets.nameValuePair "muchsync-${name}" (gen name remoteCfg)
+        ) cfg.remotes;
     in
-    mkIf (cfg.remotes != { }) {
+    lib.mkIf (cfg.remotes != { }) {
       assertions = [
-        (hm.assertions.assertPlatform "services.muchsync" pkgs platforms.linux)
+        (lib.hm.assertions.assertPlatform "services.muchsync" pkgs lib.platforms.linux)
 
         {
           assertion = config.programs.notmuch.enable;
@@ -184,7 +189,7 @@ in
               ''"NOTMUCH_CONFIG=${config.home.sessionVariables.NOTMUCH_CONFIG}"''
               ''"NMBGIT=${config.home.sessionVariables.NMBGIT}"''
             ];
-            ExecStart = concatStringsSep " " (
+            ExecStart = lib.concatStringsSep " " (
               [ "${pkgs.muchsync}/bin/muchsync" ]
               ++ [ "-s ${escapeShellArg remoteCfg.sshCommand}" ]
               ++ optional (!remoteCfg.upload) "--noup"

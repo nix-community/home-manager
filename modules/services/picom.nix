@@ -10,10 +10,8 @@ let
   inherit (builtins)
     elemAt
     isAttrs
-    isBool
     length
     mapAttrs
-    toJSON
     ;
   inherit (lib)
     boolToString
@@ -28,9 +26,7 @@ let
     mkDefault
     mkIf
     mkOption
-    optional
     types
-    warn
     getExe
     ;
 

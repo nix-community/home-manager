@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
   commonOptions = import ./lib/options.nix {
     inherit config lib pkgs;
@@ -27,5 +24,5 @@ in
 {
   inherit (commonOptions) imports meta;
   options.services.gammastep = commonOptions.options;
-  config = mkIf config.services.gammastep.enable commonOptions.config;
+  config = lib.mkIf config.services.gammastep.enable commonOptions.config;
 }

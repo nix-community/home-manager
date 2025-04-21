@@ -4,8 +4,14 @@
   config,
   ...
 }:
-with lib;
 let
+  inherit (lib)
+    concatStringsSep
+    isList
+    mapAttrsToList
+    types
+    ;
+
   normalizeKeyValue =
     k: v:
     let
@@ -32,7 +38,7 @@ let
       path
     ]);
 
-  toQuadletIni = generators.toINI {
+  toQuadletIni = lib.generators.toINI {
     listsAsDuplicateKeys = true;
     mkKeyValue = normalizeKeyValue;
   };
@@ -40,7 +46,7 @@ let
   # meant for ini. favours b when two values are unmergeable
   deepMerge =
     a: b:
-    foldl' (
+    lib.foldl' (
       result: key:
       let
         aVal = if builtins.hasAttr key a then a.${key} else null;
@@ -53,7 +59,7 @@ let
           && builtins.length list > 0
           && builtins.typeOf (builtins.head list) == builtins.typeOf val;
       in
-      if isAttrs aVal && isAttrs bVal then
+      if lib.isAttrs aVal && lib.isAttrs bVal then
         result // { ${key} = deepMerge aVal bVal; }
       else if isList aVal && isList bVal then
         result // { ${key} = aVal ++ bVal; }
@@ -102,7 +108,7 @@ in
       buildSectionAsserts =
         section: attrs:
         if builtins.hasAttr section configRules then
-          flatten (
+          lib.flatten (
             mapAttrsToList (
               attrName: attrValue:
               if builtins.hasAttr attrName configRules.${section} then
@@ -126,7 +132,7 @@ in
         let
           imageTags = (extraConfig.Build or { }).ImageTag or [ ];
           containsRequiredTag = builtins.elem "homemanager/${quadletName}" imageTags;
-          imageTagsStr = concatMapStringsSep ''" "'' toString imageTags;
+          imageTagsStr = lib.concatMapStringsSep ''" "'' toString imageTags;
         in
         [
           {
@@ -136,10 +142,12 @@ in
         ];
       # Flatten assertions from all sections in `extraConfig`.
     in
-    flatten (concatLists [
-      (mapAttrsToList buildSectionAsserts extraConfig)
-      (checkImageTag extraConfig)
-    ]);
+    lib.flatten (
+      lib.concatLists [
+        (mapAttrsToList buildSectionAsserts extraConfig)
+        (checkImageTag extraConfig)
+      ]
+    );
 
   extraConfigType =
     with types;
@@ -156,9 +164,9 @@ in
     quadlets:
     let
       # create a list of all unique quadlet.resourceType in quadlets
-      quadletTypes = unique (map (quadlet: quadlet.resourceType) quadlets);
+      quadletTypes = lib.unique (map (quadlet: quadlet.resourceType) quadlets);
       # if quadletTypes is > 1, then all quadlets are not the same type
-      allQuadletsSameType = length quadletTypes <= 1;
+      allQuadletsSameType = lib.length quadletTypes <= 1;
 
       # ensures the service name is formatted correctly to be easily read
       #   by the activation script and matches `podman <resource> ls` output
@@ -200,8 +208,8 @@ in
   removeBlankLines =
     text:
     let
-      lines = splitString "\n" text;
-      nonEmptyLines = filter (line: line != "") lines;
+      lines = lib.splitString "\n" text;
+      nonEmptyLines = lib.filter (line: line != "") lines;
     in
     concatStringsSep "\n" nonEmptyLines;
 

@@ -4,21 +4,19 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.pbgopy;
   package = pkgs.pbgopy;
 
-  commandLine = concatStringsSep " " (
+  commandLine = lib.concatStringsSep " " (
     [
       "${package}/bin/pbgopy serve"
       "--port ${toString cfg.port}"
       "--ttl ${cfg.cache.ttl}"
     ]
-    ++ optional (cfg.httpAuth != null) "--basic-auth ${escapeShellArg cfg.httpAuth}"
+    ++ lib.optional (cfg.httpAuth != null) "--basic-auth ${lib.escapeShellArg cfg.httpAuth}"
   );
 
 in
@@ -26,7 +24,7 @@ in
   meta.maintainers = [ ];
 
   options.services.pbgopy = {
-    enable = mkEnableOption "pbgopy";
+    enable = lib.mkEnableOption "pbgopy";
 
     port = mkOption {
       type = types.port;
@@ -57,7 +55,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.pbgopy" pkgs lib.platforms.linux)
     ];

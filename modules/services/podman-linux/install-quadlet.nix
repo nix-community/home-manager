@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
   cfg = config.services.podman;
 
@@ -25,7 +22,7 @@ let
 
       unpackPhase = ''
         mkdir -p $out/quadlets
-        ${concatStringsSep "\n" (
+        ${lib.concatStringsSep "\n" (
           map (
             v:
             "echo 'linking ${v.quadletData.serviceName}.${v.quadletData.resourceType}'; ln -s ${v.out}/quadlets/${v.quadletData.serviceName}.${v.quadletData.resourceType} $out/quadlets"
@@ -46,7 +43,7 @@ let
       '';
 
       passthru = {
-        outPath = self.out;
+        outPath = lib.self.out;
         quadletData = quadlet;
       };
     };
@@ -76,9 +73,9 @@ let
             }
           ];
     in
-    flatten (map (name: processEntry name (getAttr name entries)) (attrNames entries));
+    lib.flatten (map (name: processEntry name (lib.getAttr name entries)) (lib.attrNames entries));
 
-  allUnitFiles = concatMap (
+  allUnitFiles = lib.concatMap (
     builtQuadlet: accumulateUnitFiles "" "${builtQuadlet.outPath}/units" builtQuadlet.quadletData
   ) builtQuadlets;
 
@@ -86,7 +83,7 @@ let
   # merge from multiple sources. so we link each file explicitly, which is fine for all unique files
   generateSystemdFileLinks =
     files:
-    listToAttrs (
+    lib.listToAttrs (
       map (unitFile: {
         name = "${config.xdg.configHome}/systemd/user/${unitFile.key}";
         value = {
@@ -99,7 +96,7 @@ in
 {
   imports = [ ./options.nix ];
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.file = generateSystemdFileLinks allUnitFiles;
 
     # if the length of builtQuadlets is 0, then we don't need register the activation script
@@ -107,10 +104,10 @@ in
       lib.hm.dag.entryAfter [ "reloadSystemd" ] activationCleanupScript
     );
 
-    services.podman.internal.builtQuadlets = listToAttrs (
+    services.podman.internal.builtQuadlets = lib.listToAttrs (
       map (pkg: {
         name =
-          (removePrefix "podman-" pkg.passthru.quadletData.serviceName)
+          (lib.removePrefix "podman-" pkg.passthru.quadletData.serviceName)
           + "."
           + pkg.passthru.quadletData.resourceType;
         value = pkg;
