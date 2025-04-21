@@ -1,6 +1,7 @@
 {
   programs.ranger = {
     enable = true;
+    package = null;
     settings = {
       column_ratios = "1,3,3";
       confirm_on_delete = "never";
