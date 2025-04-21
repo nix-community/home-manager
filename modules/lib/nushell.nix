@@ -81,5 +81,5 @@ rec {
           }${outroSpace}}"
       )
     else
-      abort "nushell.toNushell: type ${lib.typeOf v} is unsupported";
+      throw "nushell.toNushell: type ${lib.typeOf v} is unsupported";
 }
