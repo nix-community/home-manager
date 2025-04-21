@@ -296,6 +296,7 @@ in
           configuration file.
         '';
       };
+
       pinentryPackage = mkOption {
         type = types.nullOr types.package;
         example = lib.literalExpression "pkgs.pinentry-gnome3";
@@ -308,6 +309,15 @@ in
           ```nix
           home.packages = [ pkgs.gcr ];
           ```
+        '';
+      };
+
+      pinentryBinary = mkOption {
+        type = types.nullOr (types.path);
+        example = "\${pkgs.wayprompt}/bin/wayprompt-pinentry";
+        default = null;
+        description = ''
+          Which binary to use for `pinentry-program`.
         '';
       };
 
@@ -324,6 +334,14 @@ in
   config = mkIf cfg.enable (
     lib.mkMerge [
       {
+        assertions = [
+          {
+            assertion = cfg.pinentryBinary == null || cfg.pinentryPackage == null;
+            message = "pinentryBinary and pinentryPackage cannot both be set.";
+          }
+        ];
+      }
+      {
         home.file."${homedir}/gpg-agent.conf".text = lib.concatStringsSep "\n" (
           optional (cfg.enableSshSupport) "enable-ssh-support"
           ++ optional cfg.grabKeyboardAndMouse "grab"
@@ -336,6 +354,7 @@ in
           ++ optional (cfg.maxCacheTtl != null) "max-cache-ttl ${toString cfg.maxCacheTtl}"
           ++ optional (cfg.maxCacheTtlSsh != null) "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
           ++ optional (cfg.pinentryPackage != null) "pinentry-program ${lib.getExe cfg.pinentryPackage}"
+          ++ optional (cfg.pinentryBinary != null) "pinentry-program ${cfg.pinentryBinary}"
           ++ [ cfg.extraConfig ]
         );
 
