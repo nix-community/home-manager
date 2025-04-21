@@ -86387,6 +86387,118 @@ integer between 2500 and 9000 (both inclusive)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.shikane.enable"></a><a class="term" href="options.xhtml#opt-services.shikane.enable"><code class="option">services.shikane.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable shikane, A dynamic output configuration tool that automatically detects and configures connected outputs based on a set of profiles…</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/shikane.nix" target="_top">
+&lt;home-manager/modules/services/shikane.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.shikane.package"></a><a class="term" href="options.xhtml#opt-services.shikane.package"><code class="option">services.shikane.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The shikane package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.shikane</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/shikane.nix" target="_top">
+&lt;home-manager/modules/services/shikane.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.shikane.settings"></a><a class="term" href="options.xhtml#opt-services.shikane.settings"><code class="option">services.shikane.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+&lt;filename&gt;$XDG_CONFIG_HOME/shikane/config.toml&lt;/filename&gt;.
+&lt;/para&gt;&lt;para&gt;
+See &lt;link xlink:href=“https://gitlab.com/w0lff/shikane/-/blob/master/docs/shikane.5.man.md” /&gt;
+for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  profile = [
+    {
+      name = &quot;external-monitor-default&quot;;
+      output = [
+        {
+          match = &quot;eDP-1&quot;;
+          enable = true;
+        }
+        {
+          match = &quot;HDMI-A-1&quot;;
+          enable = true;
+          position = {
+            x = 1920;
+            y = 0;
+          };
+        }
+      ];
+    }
+    {
+      name = &quot;builtin-monitor-only&quot;;
+      output = [
+        {
+          match = &quot;eDP-1&quot;;
+          enable = true;
+        }
+      ];
+    }
+  ];
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/shikane.nix" target="_top">
+&lt;home-manager/modules/services/shikane.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.signaturepdf.enable"></a><a class="term" href="options.xhtml#opt-services.signaturepdf.enable"><code class="option">services.signaturepdf.enable</code>
   </a>
  </span>
