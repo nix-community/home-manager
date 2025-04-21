@@ -460,6 +460,7 @@ import nmtSrc {
       ./modules/programs/superfile
       ./modules/programs/taskwarrior
       ./modules/programs/tealdeer
+      ./modules/programs/television
       ./modules/programs/tex-fmt
       ./modules/programs/texlive
       ./modules/programs/thefuck
