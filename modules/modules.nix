@@ -198,6 +198,7 @@ let
       ./programs/nh.nix
       ./programs/nheko.nix
       ./programs/nix-index.nix
+      ./programs/nix-init.nix
       ./programs/nix-your-shell.nix
       ./programs/nnn.nix
       ./programs/noti.nix
