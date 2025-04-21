@@ -94,7 +94,7 @@ in
         types.oneOf [
           tomlFormat.type
           types.path
-          types.string
+          types.lines
         ]
       );
       description = ''
