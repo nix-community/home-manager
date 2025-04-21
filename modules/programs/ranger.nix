@@ -13,7 +13,7 @@ in
   options.programs.ranger = {
     enable = lib.mkEnableOption "ranger file manager";
 
-    package = lib.mkPackageOption pkgs "ranger" { };
+    package = lib.mkPackageOption pkgs "ranger" { nullable = true; };
 
     extraPackages = mkOption {
       type = types.listOf types.package;
@@ -152,11 +152,20 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        programs.ranger.finalPackage = cfg.package.overrideAttrs (oldAttrs: {
-          propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or [ ]) ++ cfg.extraPackages;
-        });
+        assertions = [
+          {
+            assertion = cfg.extraPackages != [ ] -> cfg.package != null;
+            message = "programs.ranger.extraPackages requires non-null programs.ranger.package";
+          }
+        ];
 
-        home.packages = [ cfg.finalPackage ];
+        programs.ranger.finalPackage = lib.mkIf (cfg.package != null) (
+          cfg.package.overrideAttrs (oldAttrs: {
+            propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or [ ]) ++ cfg.extraPackages;
+          })
+        );
+
+        home.packages = lib.mkIf (cfg.package != null) [ cfg.finalPackage ];
 
         xdg.configFile."ranger/rc.conf".text =
           let
