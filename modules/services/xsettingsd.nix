@@ -101,7 +101,7 @@ in
         Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
         ExecStart =
           "${cfg.package}/bin/xsettingsd"
-          + lib.optionalString (cfg.configFile != null) " -lib.c ${lib.escapeShellArg cfg.configFile}";
+          + lib.optionalString (cfg.configFile != null) " -c ${lib.escapeShellArg cfg.configFile}";
         Restart = "on-abort";
       };
     };
