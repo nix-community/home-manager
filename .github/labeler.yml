@@ -19,6 +19,7 @@
     - tests/modules/programs/thunderbird/*
     - modules/services/imapnotify*.nix
     - modules/programs/mu.nix
+    - modules/programs/msmtp*.nix
     - modules/programs/lieer.nix
     - modules/services/lieer.nix
     - modules/programs/msmtp*.nix
