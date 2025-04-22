@@ -9330,6 +9330,30 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.classicUiConfig"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.classicUiConfig"><code class="option">i18n.inputMethod.fcitx5.classicUiConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration to be written to <code class="filename">$XDG_DATA_HOME/fcitx5/conf/classicui.conf</code></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+absolute path or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-i18n.inputMethod.fcitx5.fcitx5-with-addons"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.fcitx5-with-addons"><code class="option">i18n.inputMethod.fcitx5.fcitx5-with-addons</code>
   </a>
  </span>
@@ -9345,6 +9369,106 @@ package</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">pkgs.kdePackages.fcitx5-with-addons</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.themes"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.themes"><code class="option">i18n.inputMethod.fcitx5.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Themes to be written to <code class="filename">$XDG_DATA_HOME/fcitx5/themes/${name}</code></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+lazy attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.themes._name_.highlightImage"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.themes._name_.highlightImage"><code class="option">i18n.inputMethod.fcitx5.themes.&lt;name&gt;.highlightImage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to the SVG of the highlight.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.themes._name_.panelImage"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.themes._name_.panelImage"><code class="option">i18n.inputMethod.fcitx5.themes.&lt;name&gt;.panelImage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to the SVG of the panel.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.themes._name_.theme"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.themes._name_.theme"><code class="option">i18n.inputMethod.fcitx5.themes.&lt;name&gt;.theme</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The <code class="literal">theme.conf</code> file of the theme.</p><p>See https://fcitx-im.org/wiki/Fcitx_5_Theme#Background_images
+for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or strings concatenated with “\n” or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
