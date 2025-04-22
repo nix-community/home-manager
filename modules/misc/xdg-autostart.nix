@@ -5,12 +5,6 @@
   ...
 }:
 let
-  inherit (builtins)
-    baseNameOf
-    listToAttrs
-    map
-    unsafeDiscardStringContext
-    ;
   inherit (lib)
     literalExpression
     mkEnableOption
@@ -21,7 +15,7 @@ let
 
   cfg = config.xdg.autostart;
 
-  linkedDesktopEntries = pkgs.runCommandNoCCLocal "xdg-autostart-entries" { } ''
+  linkedDesktopEntries = pkgs.runCommandLocal "xdg-autostart-entries" { } ''
     mkdir -p $out
     ${lib.concatMapStringsSep "\n" (e: "ln -s ${e} $out") cfg.entries}
   '';
