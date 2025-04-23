@@ -113,7 +113,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enabled != null) {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "i18n.inputMethod" pkgs lib.platforms.linux)
       {
