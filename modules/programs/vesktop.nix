@@ -92,29 +92,38 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [
-      (cfg.package.override { withSystemVencord = cfg.vencord.useSystem; })
-    ];
-    xdg.configFile =
-      lib.attrsets.unionOfDisjoint
-        {
-          "vesktop/settings.json".source = jsonFormat.generate "vesktop-settings" cfg.settings;
-          "vesktop/settings/settings.json".source =
-            jsonFormat.generate "vencord-settings" cfg.vencord.settings;
-        }
-        (
-          lib.mapAttrs' (
-            name: value:
-            lib.nameValuePair "vesktop/themes/${name}.css" {
-              source =
-                if builtins.isPath value || lib.isStorePath value then
-                  value
-                else
-                  pkgs.writeText "vesktop-themes-${name}" value;
-            }
-          ) cfg.vencord.themes
-        );
-
-  };
+  config = lib.mkIf cfg.enable (
+    let
+      config =
+        lib.attrsets.unionOfDisjoint
+          {
+            "vesktop/settings.json".source = jsonFormat.generate "vesktop-settings" cfg.settings;
+            "vesktop/settings/settings.json".source =
+              jsonFormat.generate "vencord-settings" cfg.vencord.settings;
+          }
+          (
+            lib.mapAttrs' (
+              name: value:
+              lib.nameValuePair "vesktop/themes/${name}.css" {
+                source =
+                  if builtins.isPath value || lib.isStorePath value then
+                    value
+                  else
+                    pkgs.writeText "vesktop-themes-${name}" value;
+              }
+            ) cfg.vencord.themes
+          );
+    in
+    lib.mkMerge [
+      {
+        home.packages = [
+          (cfg.package.override { withSystemVencord = cfg.vencord.useSystem; })
+        ];
+      }
+      (lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) { xdg.configFile = config; })
+      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        home.file = lib.mapAttrs' (n: v: lib.nameValuePair "Library/Application Support/${n}" v) config;
+      })
+    ]
+  );
 }
