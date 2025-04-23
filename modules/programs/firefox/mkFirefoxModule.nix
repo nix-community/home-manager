@@ -246,9 +246,11 @@ let
     targetDir: fileName:
     let
       fileType = sourceFile targetDir fileName;
+      union = types.either types.lines fileType;
     in
-    types.either types.lines fileType
+    union
     // {
+      check = x: !(lib.isPath x) && union.check x;
       merge =
         loc: defs:
         fileType.merge loc (
