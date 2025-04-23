@@ -100,39 +100,37 @@ in
       sessionSearchVariables.QT_PLUGIN_PATH = [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
     };
 
-    xdg =
-      let
-        mkThemeConfig = name: attrs: {
-          dataFile = {
-            "fcitx5/themes/${name}/highlight.svg" = lib.mkIf (attrs.highlightImage != null) {
-              source = attrs.highlightImage;
-            };
-            "fcitx5/themes/${name}/panel.svg" = lib.mkIf (attrs.panelImage != null) {
-              source = attrs.panelImage;
-            };
-            "fcitx5/themes/${name}/theme.conf" = lib.mkIf (attrs.theme != null) {
-              source =
-                if builtins.isPath attrs.theme || lib.isStorePath attrs.theme then
-                  attrs.theme
-                else
-                  pkgs.writeText "fcitx5-theme.conf" attrs.theme;
-            };
-          };
-        };
-      in
-      lib.mkMerge (
-        [
-          (lib.mkIf (cfg.classicUiConfig != "") {
-            dataFile."fcitx5/conf/classicui.conf".source = (
-              if builtins.isPath cfg.classicUiConfig || lib.isStorePath cfg.classicUiConfig then
-                cfg.classicUiConfig
+    xdg = lib.mkMerge (
+      [
+        (lib.mkIf (cfg.classicUiConfig != "") {
+          dataFile."fcitx5/conf/classicui.conf".source = (
+            if builtins.isPath cfg.classicUiConfig || lib.isStorePath cfg.classicUiConfig then
+              cfg.classicUiConfig
+            else
+              pkgs.writeText "fcitx5-classicui.conf" cfg.classicUiConfig
+          );
+        })
+      ]
+      ++ lib.mapAttrsToList (name: attrs: {
+        dataFile =
+          let
+            nullableFile =
+              n: maybeNull: source:
+              lib.nameValuePair "fcitx5/themes/${name}/${n}" (lib.mkIf (maybeNull != null) { inherit source; });
+            simpleFile = n: v: nullableFile n v v;
+          in
+          builtins.listToAttrs [
+            (simpleFile "highlight.svg" attrs.highlightImage)
+            (simpleFile "panel.svg" attrs.panelImage)
+            (nullableFile "theme.conf" attrs.theme (
+              if builtins.isPath attrs.theme || lib.isStorePath attrs.theme then
+                attrs.theme
               else
-                pkgs.writeText "fcitx5-classicui.conf" cfg.classicUiConfig
-            );
-          })
-        ]
-        ++ (builtins.attrValues (lib.mapAttrs mkThemeConfig cfg.themes))
-      );
+                pkgs.writeText "fcitx5-theme.conf" attrs.theme
+            ))
+          ];
+      }) cfg.themes
+    );
 
     systemd.user.services.fcitx5-daemon = {
       Unit = {
