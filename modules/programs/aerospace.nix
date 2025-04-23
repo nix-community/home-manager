@@ -44,7 +44,7 @@ in
 
     package = lib.mkPackageOption pkgs "aerospace" { nullable = true; };
 
-    userSettings = mkOption {
+    settings = mkOption {
       type = types.submodule {
         freeformType = tomlFormat.type;
         options = {
