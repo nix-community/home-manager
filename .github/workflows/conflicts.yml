@@ -5,6 +5,7 @@ on:
 jobs:
   triage:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'nix-community'
     steps:
       - uses: mschilde/auto-label-merge-conflicts@master
         with:
