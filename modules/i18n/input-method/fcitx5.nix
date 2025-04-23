@@ -131,7 +131,7 @@ in
             );
           })
         ]
-        ++ (builtins.attrValues (lib.mapAttrs mkThemeConfig cfg.themes))
+        ++ (lib.mapAttrsToList mkThemeConfig cfg.themes)
       );
 
     systemd.user.services.fcitx5-daemon = {
