@@ -168,6 +168,20 @@ in
       "gpg-agent"
       "pinentryFlavor"
     ] "Use services.gpg-agent.pinentryPackage instead")
+
+    (lib.mkRenamedOptionModule
+      [
+        "services"
+        "gpg-agent"
+        "pinentryPackage"
+      ]
+      [
+        "services"
+        "gpg-agent"
+        "pinentry"
+        "package"
+      ]
+    )
   ];
 
   options = {
@@ -296,19 +310,29 @@ in
           configuration file.
         '';
       };
-      pinentryPackage = mkOption {
-        type = types.nullOr types.package;
-        example = lib.literalExpression "pkgs.pinentry-gnome3";
-        default = null;
-        description = ''
-          Which pinentry interface to use. If not `null`, it sets
-          {option}`pinentry-program` in {file}`gpg-agent.conf`. Beware that
-          `pinentry-gnome3` may not work on non-GNOME systems. You can fix it by
-          adding the following to your configuration:
-          ```nix
-          home.packages = [ pkgs.gcr ];
-          ```
-        '';
+
+      pinentry = {
+        package = lib.mkPackageOption pkgs "pinentry-gnome3" {
+          nullable = true;
+          default = null;
+          extraDescription = ''
+            Which pinentry interface to use. If not `null`, it sets
+            {option}`pinentry-program` in {file}`gpg-agent.conf`. Beware that
+            `pinentry-gnome3` may not work on non-GNOME systems. You can fix it by
+            adding the following to your configuration:
+            ```nix
+            home.packages = [ pkgs.gcr ];
+            ```
+          '';
+        };
+
+        program = lib.mkOption {
+          type = types.nullOr types.str;
+          example = "wayprompt-pinentry";
+          description = ''
+            Which program to search for in the configured `pinentry.package`.
+          '';
+        };
       };
 
       enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
@@ -324,6 +348,11 @@ in
   config = mkIf cfg.enable (
     lib.mkMerge [
       {
+        # Grab the default binary name and fallback to expected value if `meta.mainProgram` not set
+        services.gpg-agent.pinentry.program = lib.mkOptionDefault (
+          cfg.pinentry.package.meta.mainProgram or "pinentry"
+        );
+
         home.file."${homedir}/gpg-agent.conf".text = lib.concatStringsSep "\n" (
           optional (cfg.enableSshSupport) "enable-ssh-support"
           ++ optional cfg.grabKeyboardAndMouse "grab"
@@ -335,7 +364,9 @@ in
           ) "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
           ++ optional (cfg.maxCacheTtl != null) "max-cache-ttl ${toString cfg.maxCacheTtl}"
           ++ optional (cfg.maxCacheTtlSsh != null) "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
-          ++ optional (cfg.pinentryPackage != null) "pinentry-program ${lib.getExe cfg.pinentryPackage}"
+          ++ optional (
+            cfg.pinentry.package != null
+          ) "pinentry-program ${lib.getExe' cfg.pinentry.package cfg.pinentry.program}"
           ++ [ cfg.extraConfig ]
         );
 
