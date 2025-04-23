@@ -20,7 +20,7 @@ lib.mkIf config.test.enableBig {
           ScaleWithDPI=True
         '';
       };
-      classicUiConfig = "Theme=example";
+      settings.addons.classicui.globalSection.Theme = "example";
     };
   };
 
@@ -32,8 +32,8 @@ lib.mkIf config.test.enableBig {
 
   nmt.script = ''
     assertFileExists home-files/.config/systemd/user/fcitx5-daemon.service
+    assertFileExists home-files/.config/fcitx5/conf/classicui.conf
     assertFileExists home-files/.local/share/fcitx5/themes/example/theme.conf
-    assertFileExists home-files/.local/share/fcitx5/conf/classicui.conf
     assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'GTK_IM_MODULE'
     assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'QT_IM_MODULE'
   '';
