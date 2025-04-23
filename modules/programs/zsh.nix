@@ -500,29 +500,69 @@ in
           default = "";
           type = types.lines;
           example = lib.literalExpression ''
-            lib.mkOrder 1000 ''''
+            lib.mkOrder 1200 ''''
               echo "Hello zsh initContent!"
             '''';
           '';
-          description = "Content to be added to {file}`.zshrc`. To specify the order, use `lib.mkOrder`.";
+          description = ''
+            Content to be added to {file}`.zshrc`.
+
+            To specify the order, use `lib.mkOrder`.
+
+            Common order values:
+            - 500 (mkBefore): Early initialization (replaces initExtraFirst)
+            - 550: Before completion initialization (replaces initExtraBeforeCompInit)
+            - 1000 (default): General configuration (replaces initExtra)
+            - 1500 (mkAfter): Last to run configuration
+          '';
         };
 
         initExtraBeforeCompInit = mkOption {
           default = "";
           type = types.lines;
-          description = "Extra commands that should be added to {file}`.zshrc` before compinit.";
+          apply =
+            x:
+            lib.warnIfNot (x == "") ''
+              `programs.zsh.initExtraBeforeCompInit` is deprecated, use `programs.zsh.initContent` with `lib.mkOrder 550` instead.
+
+              Example: programs.zsh.initContent = lib.mkOrder 550 "your content here";
+            '' x;
+          visible = false;
+          description = ''
+            Extra commands that should be added to {file}`.zshrc` before compinit.
+          '';
         };
 
         initExtra = mkOption {
           default = "";
           type = types.lines;
-          description = "Extra commands that should be added to {file}`.zshrc`.";
+          visible = false;
+          apply =
+            x:
+            lib.warnIfNot (x == "") ''
+              `programs.zsh.initExtra` is deprecated, use `programs.zsh.initContent` instead.
+
+              Example: programs.zsh.initContent = "your content here";
+            '' x;
+          description = ''
+            Extra commands that should be added to {file}`.zshrc`.
+          '';
         };
 
         initExtraFirst = mkOption {
           default = "";
           type = types.lines;
-          description = "Commands that should be added to top of {file}`.zshrc`.";
+          visible = false;
+          apply =
+            x:
+            lib.warnIfNot (x == "") ''
+              `programs.zsh.initExtraFirst` is deprecated, use `programs.zsh.initContent` with `lib.mkBefore` instead.
+
+              Example: programs.zsh.initContent = lib.mkBefore "your content here";
+            '' x;
+          description = ''
+            Commands that should be added to top of {file}`.zshrc`.
+          '';
         };
 
         envExtra = mkOption {
