@@ -97,9 +97,12 @@ in
       config =
         lib.attrsets.unionOfDisjoint
           {
-            "vesktop/settings.json".source = jsonFormat.generate "vesktop-settings" cfg.settings;
-            "vesktop/settings/settings.json".source =
-              jsonFormat.generate "vencord-settings" cfg.vencord.settings;
+            "vesktop/settings.json" = lib.mkIf (cfg.settings != { }) {
+              source = jsonFormat.generate "vesktop-settings" cfg.settings;
+            };
+            "vesktop/settings/settings.json" = lib.mkIf (cfg.vencord.settings != { }) {
+              source = jsonFormat.generate "vencord-settings" cfg.vencord.settings;
+            };
           }
           (
             lib.mapAttrs' (
