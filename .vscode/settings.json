@@ -1,0 +1,12 @@
+{
+  "nix.serverPath": "/nix/store/hz8g10avilia96rxkrpjkbh07dc731kp-nixd-nightly/bin/nixd",
+  "nix.serverSettings": {
+    "nixd": {
+      "formatting": {
+        "command": [
+          "nixfmt",
+        ]
+      }
+    }
+  },
+}
