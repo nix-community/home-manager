@@ -224,6 +224,7 @@ let
         "zed-editor"
         "zellij"
         "zk"
+        "zoxide"
         "zplug"
         "zsh"
       ];
