@@ -9270,18 +9270,39 @@ absolute path</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-i18n.inputMethod.enable"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.enable"><code class="option">i18n.inputMethod.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable an additional input method type.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code> if the deprecated option <code class="literal">enabled</code> is set, false otherwise</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/default.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/default.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-i18n.inputMethod.enabled"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.enabled"><code class="option">i18n.inputMethod.enabled</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Select the enabled input method. Input methods are software to input
-symbols that are not available on standard input devices.</p><p>Input methods are especially used to input Chinese, Japanese and
-Korean characters.</p><p>Currently the following input methods are available in Home Manager:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">fcitx5</code></span></dt><dd><p>A customizable lightweight input method.
-The next generation of fcitx.
-Addons (including engines, dictionaries, skins) can be added using
-<a class="xref" href="options.xhtml#opt-i18n.inputMethod.fcitx5.addons"  ><code class="option">i18n.inputMethod.fcitx5.addons</code></a>.</p></dd><dt><span class="term"><code class="literal">nabi</code></span></dt><dd><p>A Korean input method based on XIM. Nabi doesn’t support Qt 5.</p></dd><dt><span class="term"><code class="literal">uim</code></span></dt><dd><p>The “universal input method” is a library with an XIM bridge.
-uim mainly supports Chinese, Japanese and Korean.</p></dd><dt><span class="term"><code class="literal">hime</code></span></dt><dd><p>An extremely easy-to-use input method framework.</p></dd><dt><span class="term"><code class="literal">kime</code></span></dt><dd><p>A Korean IME.</p></dd></dl></div>
+<p>Deprecated - use <code class="literal">type</code> and <code class="literal">enable = true</code> instead</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 null or one of “fcitx”, “fcitx5”, “nabi”, “uim”, “hime”, “kime”</p>
@@ -9536,6 +9557,39 @@ engine:
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/kime.nix" target="_top">
 &lt;home-manager/modules/i18n/input-method/kime.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.type"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.type"><code class="option">i18n.inputMethod.type</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Select the enabled input method. Input methods are software to input
+symbols that are not available on standard input devices.</p><p>Input methods are especially used to input Chinese, Japanese and
+Korean characters.</p><p>Currently the following input methods are available in Home Manager:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">fcitx5</code></span></dt><dd><p>A customizable lightweight input method.
+The next generation of fcitx.
+Addons (including engines, dictionaries, skins) can be added using
+<a class="xref" href="options.xhtml#opt-i18n.inputMethod.fcitx5.addons"  ><code class="option">i18n.inputMethod.fcitx5.addons</code></a>.</p></dd><dt><span class="term"><code class="literal">nabi</code></span></dt><dd><p>A Korean input method based on XIM. Nabi doesn’t support Qt 5.</p></dd><dt><span class="term"><code class="literal">uim</code></span></dt><dd><p>The “universal input method” is a library with an XIM bridge.
+uim mainly supports Chinese, Japanese and Korean.</p></dd><dt><span class="term"><code class="literal">hime</code></span></dt><dd><p>An extremely easy-to-use input method framework.</p></dd><dt><span class="term"><code class="literal">kime</code></span></dt><dd><p>A Korean IME.</p></dd></dl></div>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or one of “fcitx”, “fcitx5”, “nabi”, “uim”, “hime”, “kime”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+The value of the deprecated option <code class="literal">enabled</code>, defaulting to null</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;fcitx5&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/default.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/default.nix&gt;
 </a></code>
 </td></tr>
 </table>
