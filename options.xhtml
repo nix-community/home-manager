@@ -9351,30 +9351,6 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-i18n.inputMethod.fcitx5.classicUiConfig"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.classicUiConfig"><code class="option">i18n.inputMethod.fcitx5.classicUiConfig</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Configuration to be written to <code class="filename">$XDG_DATA_HOME/fcitx5/conf/classicui.conf</code></p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-absolute path or strings concatenated with “\n”</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
-&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
  <a id="opt-i18n.inputMethod.fcitx5.fcitx5-with-addons"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.fcitx5-with-addons"><code class="option">i18n.inputMethod.fcitx5.fcitx5-with-addons</code>
   </a>
  </span>
@@ -9390,6 +9366,248 @@ package</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">pkgs.kdePackages.fcitx5-with-addons</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.ignoreUserConfig"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.ignoreUserConfig"><code class="option">i18n.inputMethod.fcitx5.ignoreUserConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Ignore the user configures. <span class="strong"><strong>Warning</strong></span>: When this is enabled, the
+user config files are totally ignored and the user dict can’t be saved
+and loaded.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.quickPhrase"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.quickPhrase"><code class="option">i18n.inputMethod.fcitx5.quickPhrase</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Quick phrases.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  smile = &quot;（・∀・）&quot;;
+  angry = &quot;(￣ー￣)&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.quickPhraseFiles"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.quickPhraseFiles"><code class="option">i18n.inputMethod.fcitx5.quickPhraseFiles</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Quick phrase files.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  words = ./words.mb;
+  numbers = ./numbers.mb;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.settings.addons"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.settings.addons"><code class="option">i18n.inputMethod.fcitx5.settings.addons</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The addon configures in <code class="literal">conf</code> folder in ini format with global sections.
+Each item is written to the corresponding file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  classicui.globalSection.Theme = &quot;example&quot;;
+  pinyin.globalSection.EmojiEnabled = &quot;True&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.settings.addons._name_.globalSection"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.settings.addons._name_.globalSection"><code class="option">i18n.inputMethod.fcitx5.settings.addons.&lt;name&gt;.globalSection</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>global section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.settings.addons._name_.sections"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.settings.addons._name_.sections"><code class="option">i18n.inputMethod.fcitx5.settings.addons.&lt;name&gt;.sections</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.settings.globalOptions"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.settings.globalOptions"><code class="option">i18n.inputMethod.fcitx5.settings.globalOptions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The global options in <code class="literal">config</code> file in ini format.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  Behavior = {
+    ActiveByDefault = false;
+  };
+  Hotkey = {
+    EnumerateWithTriggerKeys = true;
+    EnumerateSkipFirst = false;
+    ModifierOnlyKeyTimeout = 250;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix" target="_top">
+&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-i18n.inputMethod.fcitx5.settings.inputMethod"></a><a class="term" href="options.xhtml#opt-i18n.inputMethod.fcitx5.settings.inputMethod"><code class="option">i18n.inputMethod.fcitx5.settings.inputMethod</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The input method configure in <code class="literal">profile</code> file in ini format.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  GroupOrder.&quot;0&quot; = &quot;Default&quot;;
+  &quot;Groups/0&quot; = {
+    Name = &quot;Default&quot;;
+    &quot;Default Layout&quot; = &quot;us&quot;;
+    DefaultIM = &quot;pinyin&quot;;
+  };
+  &quot;Groups/0/Items/0&quot;.Name = &quot;keyboard-us&quot;;
+  &quot;Groups/0/Items/1&quot;.Name = &quot;pinyin&quot;;
+}
+
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -9486,7 +9704,7 @@ null or absolute path</p>
 for more information.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or strings concatenated with “\n” or absolute path</p>
+null or (attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))) or strings concatenated with “\n” or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
