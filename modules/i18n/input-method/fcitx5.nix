@@ -8,6 +8,8 @@ let
   im = config.i18n.inputMethod;
   cfg = im.fcitx5;
   fcitx5Package = cfg.fcitx5-with-addons.override { inherit (cfg) addons; };
+  iniFormat = pkgs.formats.ini { };
+  iniGlobalFormat = pkgs.formats.iniWithGlobalSection { };
 in
 {
   options = {
@@ -38,11 +40,96 @@ in
         '';
       };
 
-      classicUiConfig = lib.mkOption {
-        type = with lib.types; either path lines;
-        default = "";
+      quickPhrase = lib.mkOption {
+        type = with lib.types; attrsOf str;
+        default = { };
+        example = lib.literalExpression ''
+          {
+            smile = "（・∀・）";
+            angry = "(￣ー￣)";
+          }
+        '';
+        description = "Quick phrases.";
+      };
+
+      quickPhraseFiles = lib.mkOption {
+        type = with lib.types; attrsOf path;
+        default = { };
+        example = lib.literalExpression ''
+          {
+            words = ./words.mb;
+            numbers = ./numbers.mb;
+          }
+        '';
+        description = "Quick phrase files.";
+      };
+
+      settings = {
+        globalOptions = lib.mkOption {
+          type = lib.types.submodule {
+            freeformType = iniFormat.type;
+          };
+          default = { };
+          description = ''
+            The global options in `config` file in ini format.
+          '';
+          example = lib.literalExpression ''
+            {
+              Behavior = {
+                ActiveByDefault = false;
+              };
+              Hotkey = {
+                EnumerateWithTriggerKeys = true;
+                EnumerateSkipFirst = false;
+                ModifierOnlyKeyTimeout = 250;
+              };
+            }
+          '';
+        };
+        inputMethod = lib.mkOption {
+          type = lib.types.submodule {
+            freeformType = iniFormat.type;
+          };
+          default = { };
+          description = ''
+            The input method configure in `profile` file in ini format.
+          '';
+          example = lib.literalExpression ''
+            {
+              GroupOrder."0" = "Default";
+              "Groups/0" = {
+                Name = "Default";
+                "Default Layout" = "us";
+                DefaultIM = "pinyin";
+              };
+              "Groups/0/Items/0".Name = "keyboard-us";
+              "Groups/0/Items/1".Name = "pinyin";
+            }
+          '';
+        };
+        addons = lib.mkOption {
+          type = with lib.types; (attrsOf iniGlobalFormat.type);
+          default = { };
+          description = ''
+            The addon configures in `conf` folder in ini format with global sections.
+            Each item is written to the corresponding file.
+          '';
+          example = lib.literalExpression ''
+            {
+              classicui.globalSection.Theme = "example";
+              pinyin.globalSection.EmojiEnabled = "True";
+            }
+          '';
+        };
+      };
+
+      ignoreUserConfig = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
         description = ''
-          Configuration to be written to {file}`$XDG_DATA_HOME/fcitx5/conf/classicui.conf`
+          Ignore the user configures. **Warning**: When this is enabled, the
+          user config files are totally ignored and the user dict can't be saved
+          and loaded.
         '';
       };
 
@@ -52,7 +139,13 @@ in
           lazyAttrsOf (submodule {
             options = {
               theme = lib.mkOption {
-                type = with lib.types; nullOr (either lines path);
+                type =
+                  with lib.types;
+                  nullOr (oneOf [
+                    iniFormat.type
+                    lines
+                    path
+                  ]);
                 default = null;
                 description = ''
                   The `theme.conf` file of the theme.
@@ -83,7 +176,27 @@ in
   };
 
   config = lib.mkIf (im.enable && im.type == "fcitx5") {
-    i18n.inputMethod.package = fcitx5Package;
+    i18n.inputMethod = {
+      package = fcitx5Package;
+
+      fcitx5.addons =
+        lib.optionals (cfg.quickPhrase != { }) [
+          (pkgs.writeTextDir "share/fcitx5/data/QuickPhrase.mb" (
+            lib.concatStringsSep "\n" (
+              lib.mapAttrsToList (
+                name: value: "${name} ${builtins.replaceStrings [ "\\" "\n" ] [ "\\\\" "\\n" ] value}"
+              ) cfg.quickPhrase
+            )
+          ))
+        ]
+        ++ lib.optionals (cfg.quickPhraseFiles != { }) [
+          (pkgs.linkFarm "quickPhraseFiles" (
+            lib.mapAttrs' (
+              name: value: lib.nameValuePair ("share/fcitx5/data/quickphrase.d/${name}.mb") value
+            ) cfg.quickPhraseFiles
+          ))
+        ];
+    };
 
     home = {
       sessionVariables =
@@ -95,42 +208,52 @@ in
         // lib.optionalAttrs (!cfg.waylandFrontend) {
           GTK_IM_MODULE = "fcitx";
           QT_IM_MODULE = "fcitx";
+        }
+        // lib.optionalAttrs cfg.ignoreUserConfig {
+          SKIP_FCITX_USER_PATH = "1";
         };
 
       sessionSearchVariables.QT_PLUGIN_PATH = [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
     };
 
-    xdg = lib.mkMerge (
-      [
-        (lib.mkIf (cfg.classicUiConfig != "") {
-          dataFile."fcitx5/conf/classicui.conf".source = (
-            if builtins.isPath cfg.classicUiConfig || lib.isStorePath cfg.classicUiConfig then
-              cfg.classicUiConfig
+    xdg = {
+      configFile =
+        let
+          optionalFile =
+            p: f: v:
+            lib.optionalAttrs (v != { }) {
+              "fcitx5/${p}".source = f v;
+            };
+        in
+        lib.attrsets.mergeAttrsList [
+          (optionalFile "config" iniFormat.generate cfg.settings.globalOptions)
+          (optionalFile "profile" iniFormat.generate cfg.settings.inputMethod)
+          (lib.concatMapAttrs (
+            name: value: optionalFile "conf/${name}.conf" iniGlobalFormat.generate value
+          ) cfg.settings.addons)
+        ];
+      dataFile = lib.concatMapAttrs (
+        name: attrs:
+        let
+          nullableFile =
+            n: maybeNull: source:
+            lib.nameValuePair "fcitx5/themes/${name}/${n}" (lib.mkIf (maybeNull != null) { inherit source; });
+          simpleFile = n: v: nullableFile n v v;
+        in
+        builtins.listToAttrs [
+          (simpleFile "highlight.svg" attrs.highlightImage)
+          (simpleFile "panel.svg" attrs.panelImage)
+          (nullableFile "theme.conf" attrs.theme (
+            if builtins.isPath attrs.theme || lib.isStorePath attrs.theme then
+              attrs.theme
+            else if builtins.isString attrs.theme then
+              pkgs.writeText "fcitx5-theme.conf" attrs.theme
             else
-              pkgs.writeText "fcitx5-classicui.conf" cfg.classicUiConfig
-          );
-        })
-      ]
-      ++ lib.mapAttrsToList (name: attrs: {
-        dataFile =
-          let
-            nullableFile =
-              n: maybeNull: source:
-              lib.nameValuePair "fcitx5/themes/${name}/${n}" (lib.mkIf (maybeNull != null) { inherit source; });
-            simpleFile = n: v: nullableFile n v v;
-          in
-          builtins.listToAttrs [
-            (simpleFile "highlight.svg" attrs.highlightImage)
-            (simpleFile "panel.svg" attrs.panelImage)
-            (nullableFile "theme.conf" attrs.theme (
-              if builtins.isPath attrs.theme || lib.isStorePath attrs.theme then
-                attrs.theme
-              else
-                pkgs.writeText "fcitx5-theme.conf" attrs.theme
-            ))
-          ];
-      }) cfg.themes
-    );
+              iniFormat.generate attrs.theme
+          ))
+        ]
+      ) cfg.themes;
+    };
 
     systemd.user.services.fcitx5-daemon = {
       Unit = {
