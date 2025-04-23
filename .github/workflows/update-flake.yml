@@ -8,6 +8,7 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
