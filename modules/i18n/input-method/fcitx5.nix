@@ -222,7 +222,7 @@ in
           optionalFile =
             p: f: v:
             lib.optionalAttrs (v != { }) {
-              "fcitx5/${p}".source = f v;
+              "fcitx5/${p}".source = f "fcitx5-${builtins.replaceStrings [ "/" ] [ "-" ] p}" v;
             };
         in
         lib.attrsets.mergeAttrsList [
@@ -249,7 +249,7 @@ in
             else if builtins.isString attrs.theme then
               pkgs.writeText "fcitx5-theme.conf" attrs.theme
             else
-              iniFormat.generate attrs.theme
+              iniFormat.generate "fcitx5-${name}-theme" attrs.theme
           ))
         ]
       ) cfg.themes;
