@@ -270,7 +270,7 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
       file.".config/aerospace/aerospace.toml".source = tomlFormat.generate "aerospace" (
-        filterNulls cfg.userSettings
+        filterNulls cfg.settings
       );
     };
   };
