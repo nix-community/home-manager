@@ -4,9 +4,11 @@
   lib,
   ...
 }:
-
+let
+  im = config.i18n.inputMethod;
+in
 {
-  config = lib.mkIf (config.i18n.inputMethod.enabled == "hime") {
+  config = lib.mkIf (im.enable && im.type == "hime") {
     i18n.inputMethod.package = pkgs.hime;
 
     home.sessionVariables = {

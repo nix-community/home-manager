@@ -14,6 +14,7 @@ let
     types
     ;
 
+  im = config.i18n.inputMethod;
   cfg = config.i18n.inputMethod.kime;
 in
 {
@@ -46,7 +47,7 @@ in
     };
   };
 
-  config = mkIf (config.i18n.inputMethod.enabled == "kime") {
+  config = mkIf (im.enable && im.type == "kime") {
     i18n.inputMethod.package = pkgs.kime;
 
     home.sessionVariables = {

@@ -7,8 +7,7 @@
 
 lib.mkIf config.test.enableBig {
   i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
+    enabled = "fcitx5";
     fcitx5 = {
       waylandFrontend = true;
       themes.example = {
@@ -26,6 +25,10 @@ lib.mkIf config.test.enableBig {
   };
 
   _module.args.pkgs = lib.mkForce realPkgs;
+
+  test.asserts.warnings.expected = [
+    "i18n.inputMethod.enabled will be removed in a future release. Please use .type, and .enable = true instead"
+  ];
 
   nmt.script = ''
     assertFileExists home-files/.config/systemd/user/fcitx5-daemon.service

@@ -7,6 +7,7 @@
 
 let
   cfg = config.i18n.inputMethod.uim;
+  im = config.i18n.inputMethod;
 in
 {
   options = {
@@ -30,7 +31,7 @@ in
 
   };
 
-  config = lib.mkIf (config.i18n.inputMethod.enabled == "uim") {
+  config = lib.mkIf (im.enable && im.type == "uim") {
     i18n.inputMethod.package = pkgs.uim;
 
     home.sessionVariables = {

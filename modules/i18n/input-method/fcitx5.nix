@@ -82,7 +82,7 @@ in
     };
   };
 
-  config = lib.mkIf (im.enabled == "fcitx5") {
+  config = lib.mkIf (im.enable && im.type == "fcitx5") {
     i18n.inputMethod.package = fcitx5Package;
 
     home = {

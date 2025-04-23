@@ -13,7 +13,8 @@ let
 in
 {
   i18n.inputMethod = {
-    enabled = "kime";
+    enable = true;
+    type = "kime";
     kime.extraConfig = kimeConfig;
   };
 
