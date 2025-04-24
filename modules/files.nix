@@ -101,9 +101,7 @@ in
 
         storeDir = lib.escapeShellArg builtins.storeDir;
 
-        check = pkgs.substituteAll {
-          src = ./files/check-link-targets.sh;
-
+        check = pkgs.replaceVars ./files/check-link-targets.sh {
           inherit (config.lib.bash) initHomeManagerLib;
           inherit forcedPaths storeDir;
         };

@@ -11,12 +11,16 @@ let
 
   substituteExpected =
     path:
-    pkgs.substituteAll {
+    pkgs.substitute {
       src = path;
-      git_include_path = pkgs.writeText "hm_gitconfig" (builtins.readFile ./git-expected-include.conf);
-      git_named_include_path = pkgs.writeText "hm_gitconfigwork" (
-        builtins.readFile ./git-expected-include.conf
-      );
+      substitutions = [
+        "--replace"
+        "@git_include_path@"
+        (pkgs.writeText "hm_gitconfig" (builtins.readFile ./git-expected-include.conf))
+        "--replace"
+        "@git_named_include_path@"
+        (pkgs.writeText "hm_gitconfigwork" (builtins.readFile ./git-expected-include.conf))
+      ];
     };
 
 in
