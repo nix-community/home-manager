@@ -34,8 +34,7 @@ in
     assertFileExists $sxhkdrc
 
     assertFileContent $sxhkdrc ${
-      pkgs.substituteAll {
-        src = ./sxhkdrc;
+      pkgs.replaceVars ./sxhkdrc {
         inherit script;
       }
     }

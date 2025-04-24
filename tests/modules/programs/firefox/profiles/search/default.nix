@@ -14,9 +14,13 @@ let
 
   withName =
     path:
-    pkgs.substituteAll {
+    pkgs.substitute {
       src = path;
-      name = cfg.wrappedPackageName;
+      substitutions = [
+        "--replace"
+        "@name@"
+        cfg.wrappedPackageName
+      ];
     };
 
 in

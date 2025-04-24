@@ -35,9 +35,13 @@
 
       assertFileContent \
         home-files/.config/systemd/user/emacs.service \
-        ${pkgs.substituteAll {
-          inherit (pkgs) runtimeShell coreutils;
+        ${pkgs.substitute {
           src = ./emacs-socket-28-emacs.service;
+          substitutions = [
+            "--replace"
+            "@runtimeShell@"
+            pkgs.runtimeShell
+          ];
         }}
 
       assertFileContent \
