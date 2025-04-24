@@ -6,6 +6,7 @@
   config,
   lib,
   pkgs,
+  _class,
   ...
 }:
 
@@ -28,6 +29,7 @@ let
     specialArgs = {
       lib = extendedLib;
       osConfig = config;
+      osClass = _class;
       modulesPath = builtins.toString ../modules;
     } // cfg.extraSpecialArgs;
     modules = [
