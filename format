@@ -2,8 +2,8 @@
 #! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/42a1c966be226125b48c384171c44c651c236c22.tar.gz -i bash -p git gnugrep gnused findutils nixfmt-tree
 # Avoid being affected by system and user git config.
 export GIT_CONFIG_NOSYSTEM=1
-export HOME=
-export XDG_CONFIG_HOME=
+export HOME=/var/empty
+export XDG_CONFIG_HOME=/var/empty
 
 nixfmt_args=()
 files=()
