@@ -32,4 +32,4 @@ git_root=$(git rev-parse --show-toplevel)
 git ls-files -z --cached --others --full-name -- "${files[@]}" |
     grep -z '\.nix$' |
     sed -z "s|^|$git_root/|" |
-    xargs -0 treefmt "${nixfmt_args[@]}"
+    xargs -0 treefmt --no-cache "${nixfmt_args[@]}"
