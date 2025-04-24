@@ -1,6 +1,11 @@
-{ pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+lib.mkIf config.test.enableLegacyIfd {
   imports = [ ./podman-stubs.nix ];
 
   services.podman = {
