@@ -258,7 +258,6 @@ import nmtSrc {
       ./modules/programs/nnn
       ./modules/programs/nushell
       ./modules/programs/oh-my-posh
-      ./modules/programs/onedrive
       ./modules/programs/onlyoffice
       ./modules/programs/openstackclient
       ./modules/programs/pandoc
@@ -379,6 +378,7 @@ import nmtSrc {
       ./modules/programs/mangohud
       ./modules/programs/ncmpcpp-linux
       ./modules/programs/nh
+      ./modules/programs/onedrive
       ./modules/programs/pqiv
       ./modules/programs/rbw
       ./modules/programs/rofi
