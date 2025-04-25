@@ -36,9 +36,7 @@ in
 
     extraConfig = mkOption {
       type = types.lines;
-      default = ''
-        return {}
-      '';
+      default = "";
       example = literalExpression ''
         -- Your lua code / config here
         local mylib = require 'mylib';
