@@ -4,6 +4,6 @@
   };
 
   nmt.script = ''
-      assertPathNotExists home-files/.config/wezterm/wezterm.lua
-    '';
+    assertPathNotExists home-files/.config/wezterm/wezterm.lua
+  '';
 }
