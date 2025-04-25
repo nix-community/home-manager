@@ -28,10 +28,7 @@ in
     alias = lib.mkOption {
       type = lib.types.str;
       default = "fuck";
-      description = ''
-        `thefuck` needs an alias to be configured.
-        The default value is `fuck`, but you can use anything else as well.";
-      '';
+      description = "Alias used to invoke `thefuck`.";
     };
   };
 
