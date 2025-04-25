@@ -54,7 +54,7 @@ in
       (lib.hm.assertions.assertPlatform "programs.onedrive" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = mkIf (cfg.settings != { }) {
       "onedrive/config".text = generateConfig cfg.settings;
