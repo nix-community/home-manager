@@ -62,7 +62,7 @@ let
     let
       imported = import (./news + "/${newsFile}");
     in
-    if builtins.isFunction imported then imported { inherit pkgs; } else imported
+    if builtins.isFunction imported then imported { inherit config lib pkgs; } else imported
   ) newsFiles;
 in
 {
