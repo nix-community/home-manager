@@ -17,8 +17,9 @@ let
 
   cfg = config.programs.onedrive;
 
-  attrToString = name: value: ''${name} = "${value}"'';
-  generateConfig = settings: concatStringsSep "\n" (mapAttrsToList attrToString settings) + "\n";
+  generateConfig = lib.generators.toKeyValue {
+    mkKeyValue = name: value: ''${name} = "${value}"'';
+  };
 in
 {
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
