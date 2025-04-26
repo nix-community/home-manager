@@ -378,6 +378,7 @@ import nmtSrc {
       ./modules/programs/mangohud
       ./modules/programs/ncmpcpp-linux
       ./modules/programs/nh
+      ./modules/programs/onedrive
       ./modules/programs/pqiv
       ./modules/programs/rbw
       ./modules/programs/rofi
