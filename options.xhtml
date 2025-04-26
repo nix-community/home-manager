@@ -46079,6 +46079,97 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.onedrive.enable"></a><a class="term" href="options.xhtml#opt-programs.onedrive.enable"><code class="option">programs.onedrive.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable onedrive.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/onedrive.nix" target="_top">
+&lt;home-manager/modules/programs/onedrive.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.onedrive.package"></a><a class="term" href="options.xhtml#opt-programs.onedrive.package"><code class="option">programs.onedrive.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The onedrive package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.onedrive</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/onedrive.nix" target="_top">
+&lt;home-manager/modules/programs/onedrive.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.onedrive.settings"></a><a class="term" href="options.xhtml#opt-programs.onedrive.settings"><code class="option">programs.onedrive.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for Onedrive. All available options can be
+found at <a class="link" href="https://github.com/abraunegg/onedrive/blob/master/config"  target="_top">https://github.com/abraunegg/onedrive/blob/master/config</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  {
+    check_nomount = &quot;false&quot;;
+    check_nosync = &quot;false&quot;;
+    classify_as_big_delete = &quot;1000&quot;;
+    cleanup_local_files = &quot;false&quot;;
+    disable_notifications = &quot;false&quot;;
+    no_remote_delete = &quot;false&quot;;
+    rate_limit = &quot;0&quot;;
+    resync = &quot;false&quot;;
+    skip_dotfiles = &quot;false&quot;;
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/onedrive.nix" target="_top">
+&lt;home-manager/modules/programs/onedrive.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.onlyoffice.enable"></a><a class="term" href="options.xhtml#opt-programs.onlyoffice.enable"><code class="option">programs.onlyoffice.enable</code>
   </a>
  </span>
