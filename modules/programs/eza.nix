@@ -47,7 +47,10 @@ in
 
     enableIonIntegration = lib.hm.shell.mkIonIntegrationOption { inherit config; };
 
-    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; } // {
+      default = false;
+      example = true;
+    };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
