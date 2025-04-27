@@ -413,6 +413,7 @@ in
         };
 
         zprof.enable = mkOption {
+          type = types.bool;
           default = false;
           description = ''
             Enable zprof in your zshrc.
