@@ -277,6 +277,7 @@ import nmtSrc {
       ./modules/programs/rio
       ./modules/programs/ripgrep
       ./modules/programs/ripgrep-all
+      ./modules/programs/rmpc
       ./modules/programs/ruff
       ./modules/programs/sagemath
       ./modules/programs/sapling

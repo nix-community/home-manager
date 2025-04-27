@@ -237,6 +237,7 @@ let
       ./programs/rio.nix
       ./programs/ripgrep.nix
       ./programs/ripgrep-all.nix
+      ./programs/rmpc.nix
       ./programs/rofi-pass.nix
       ./programs/rofi.nix
       ./programs/rtorrent.nix
