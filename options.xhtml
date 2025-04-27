@@ -50829,6 +50829,103 @@ signed integer</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.rmpc.enable"></a><a class="term" href="options.xhtml#opt-programs.rmpc.enable"><code class="option">programs.rmpc.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable rmpc.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rmpc.nix" target="_top">
+&lt;home-manager/modules/programs/rmpc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rmpc.package"></a><a class="term" href="options.xhtml#opt-programs.rmpc.package"><code class="option">programs.rmpc.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The rmpc package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.rmpc</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rmpc.nix" target="_top">
+&lt;home-manager/modules/programs/rmpc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rmpc.config"></a><a class="term" href="options.xhtml#opt-programs.rmpc.config"><code class="option">programs.rmpc.config</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for rmpc in the Rusty Object Notation
+format. All available options can be found in the official
+documentation at <a class="link" href="https://mierak.github.io/rmpc/next/configuration/"  target="_top">https://mierak.github.io/rmpc/next/configuration/</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  (
+      address: &quot;127.0.0.1:6600&quot;,
+      password: None,
+      theme: None,
+      cache_dir: None,
+      on_song_change: None,
+      volume_step: 5,
+      max_fps: 30,
+      scrolloff: 0,
+      wrap_navigation: false,
+      enable_mouse: true,
+      enable_config_hot_reload: true,
+      status_update_interval_ms: 1000,
+      select_current_song_on_change: false,
+      browser_song_sort: [Disc, Track, Artist, Title],
+  )
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rmpc.nix" target="_top">
+&lt;home-manager/modules/programs/rmpc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.rofi.enable"></a><a class="term" href="options.xhtml#opt-programs.rofi.enable"><code class="option">programs.rofi.enable</code>
   </a>
  </span>
