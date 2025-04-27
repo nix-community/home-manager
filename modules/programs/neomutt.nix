@@ -507,7 +507,7 @@ in
             "set crypt_use_gpgme = yes"
             "alternative_order text/enriched text/plain text"
             "set delete = yes"
-            (optionalString cfg.vimKeys "source ${pkgs.neomutt}/share/doc/neomutt/vim-keys/vim-keys.rc")
+            (optionalString cfg.vimKeys "source ${cfg.package}/share/doc/neomutt/vim-keys/vim-keys.rc")
           ]
           ++ (lib.optionals (cfg.binds != [ ]) [
             ''
