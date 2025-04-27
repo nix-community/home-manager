@@ -227,7 +227,6 @@ import nmtSrc {
       ./modules/programs/keepassxc
       ./modules/programs/khal
       ./modules/programs/khard
-      ./modules/programs/kickoff
       ./modules/programs/kitty
       ./modules/programs/kubecolor
       ./modules/programs/lapce
@@ -377,6 +376,7 @@ import nmtSrc {
       ./modules/programs/i3status-rust
       ./modules/programs/imv
       ./modules/programs/kodi
+      ./modules/programs/kickoff
       ./modules/programs/looking-glass-client
       ./modules/programs/mangohud
       ./modules/programs/ncmpcpp-linux
