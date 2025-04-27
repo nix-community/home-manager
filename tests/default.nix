@@ -227,6 +227,7 @@ import nmtSrc {
       ./modules/programs/keepassxc
       ./modules/programs/khal
       ./modules/programs/khard
+      ./modules/programs/kickoff
       ./modules/programs/kitty
       ./modules/programs/kubecolor
       ./modules/programs/lapce
