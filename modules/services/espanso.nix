@@ -34,6 +34,7 @@ in
     maintainers.bobvanderlinden
     lib.hm.maintainers.liyangau
     maintainers.n8henrie
+    maintainers.phanirithvij
   ];
   options = {
     services.espanso = {
