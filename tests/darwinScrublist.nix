@@ -35,6 +35,7 @@ let
     "earthly"
     "emacs"
     "espanso"
+    "eza"
     "fastfetch"
     "feh"
     "fzf"

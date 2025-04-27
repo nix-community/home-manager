@@ -196,6 +196,7 @@ import nmtSrc {
       ./modules/programs/direnv
       ./modules/programs/earthly
       ./modules/programs/emacs
+      ./modules/programs/eza
       ./modules/programs/fastfetch
       ./modules/programs/feh
       ./modules/programs/fish
