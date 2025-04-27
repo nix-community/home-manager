@@ -152,7 +152,7 @@ in
               ${lib.getExe cfg.package} config update \
                 ${remote.name} config_refresh_token=false \
                 ${secret} "$(cat ${secretFile})" \
-                --quiet > /dev/null
+                --quiet --non-interactive > /dev/null
             '') remote.value.secrets or { };
 
           injectAllSecrets = lib.concatMap injectSecret (lib.mapAttrsToList lib.nameValuePair cfg.remotes);
