@@ -21,7 +21,7 @@ in
   options.programs.rmpc = {
     enable = mkEnableOption "rmpc";
     package = mkPackageOption pkgs "rmpc" { nullable = true; };
-    extraConfig = mkOption {
+    config = mkOption {
       type = types.lines;
       default = "";
       example = ''
@@ -52,8 +52,8 @@ in
 
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
-    xdg.configFile = mkIf (cfg.extraConfig != "") {
-      "rmpc/config.ron".text = cfg.extraConfig;
+    xdg.configFile = mkIf (cfg.config != "") {
+      "rmpc/config.ron".text = cfg.config;
     };
   };
 }
