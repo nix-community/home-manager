@@ -52,6 +52,7 @@ in
     lib.hm.maintainers.liyangau
     maintainers.n8henrie
     maintainers.phanirithvij
+    maintainers.delafthi
   ];
   options = {
     services.espanso = {
@@ -155,6 +156,16 @@ in
           for a description of available options.
         '';
       };
+
+      plugins = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExpression "[ pkgs.espansoPlugins.actually-all-emojis-spaces ]";
+        description = ''
+          List of Espanso plugins to install. To get a list of supported plugins run:
+          {command}`nix-env -f '<nixpkgs>' -qaP -A espansoPlugins`.
+        '';
+      };
     };
   };
 
@@ -191,8 +202,16 @@ in
             source = yaml.generate "${name}.yml" value;
           };
         }) cfg.matches;
+        plugins = lib.listToAttrs (
+          lib.map (plugin: {
+            name = "espanso/match/packages/${plugin.pname}";
+            value = {
+              source = plugin;
+            };
+          }) cfg.plugins
+        );
       in
-      configFiles // matchesFiles;
+      configFiles // matchesFiles // plugins;
 
     systemd.user.services.espanso = {
       Unit = {
