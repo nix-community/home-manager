@@ -1,7 +1,6 @@
 {
   programs.lsd = {
     enable = true;
-    enableAliases = false;
     settings = {
       date = "relative";
       blocks = [
