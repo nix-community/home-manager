@@ -378,6 +378,7 @@ import nmtSrc {
       ./modules/programs/kodi
       ./modules/programs/looking-glass-client
       ./modules/programs/mangohud
+      ./modules/programs/mpvpaper
       ./modules/programs/ncmpcpp-linux
       ./modules/programs/nh
       ./modules/programs/onedrive
