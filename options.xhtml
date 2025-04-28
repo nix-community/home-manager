@@ -37092,6 +37092,96 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.kickoff.enable"></a><a class="term" href="options.xhtml#opt-programs.kickoff.enable"><code class="option">programs.kickoff.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable kickoff.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kickoff.nix" target="_top">
+&lt;home-manager/modules/programs/kickoff.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.kickoff.package"></a><a class="term" href="options.xhtml#opt-programs.kickoff.package"><code class="option">programs.kickoff.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The kickoff package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.kickoff</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kickoff.nix" target="_top">
+&lt;home-manager/modules/programs/kickoff.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.kickoff.settings"></a><a class="term" href="options.xhtml#opt-programs.kickoff.settings"><code class="option">programs.kickoff.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for kickoff. All the available options can be found
+here: <a class="link" href="https://github.com/j0ru/kickoff/blob/main/assets/default_config.toml"  target="_top">https://github.com/j0ru/kickoff/blob/main/assets/default_config.toml</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  padding = 100;
+  font_size = 32;
+  search.show_hidden_files = false;
+  history.decrease_interval = 48;
+  
+  keybinding = {
+    paste = [ &quot;ctrl+v&quot; ];
+    execute = [ &quot;KP_Enter&quot; &quot;Return&quot; ];
+    complete = [ &quot;Tab&quot; ];
+  };
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/kickoff.nix" target="_top">
+&lt;home-manager/modules/programs/kickoff.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.kitty.enable"></a><a class="term" href="options.xhtml#opt-programs.kitty.enable"><code class="option">programs.kitty.enable</code>
   </a>
  </span>
