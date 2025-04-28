@@ -19,6 +19,10 @@ in
 {
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
+  assertions = [
+    (lib.hm.assertions.assertPlatform "programs.kickoff" pkgs lib.platforms.linux)
+  ];
+
   options.programs.kickoff = {
     enable = mkEnableOption "kickoff";
     package = mkPackageOption pkgs "kickoff" { nullable = true; };
