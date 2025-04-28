@@ -19,21 +19,30 @@ let
     lla = "${pkgs.lsd}/bin/lsd -lA";
     llt = "${pkgs.lsd}/bin/lsd -l --tree";
   };
-
 in
 {
+  imports =
+    let
+      msg = ''
+        'programs.lsd.enableAliases' has been deprecated and replaced with integration
+        options per shell, for example, 'programs.lsd.enableBashIntegration'.
+
+        Note, the default for these options is 'true' so if you want to enable the
+        aliases you can simply remove 'programs.lsd.enableAliases' from your
+        configuration.'';
+    in
+    [ (lib.mkRemovedOptionModule [ "programs" "lsd" "enableAliases" ] msg) ];
+
   meta.maintainers = [ ];
 
   options.programs.lsd = {
     enable = lib.mkEnableOption "lsd";
 
-    enableAliases = lib.mkOption {
-      default = false;
-      type = lib.types.bool;
-      description = ''
-        Whether to enable recommended lsd aliases.
-      '';
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     settings = lib.mkOption {
       type = yamlFormat.type;
@@ -101,17 +110,17 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.lsd ];
 
-    programs.bash.shellAliases = lib.mkIf cfg.enableAliases aliases;
+    programs.bash.shellAliases = lib.mkIf cfg.enableBashIntegration aliases;
 
-    programs.zsh.shellAliases = lib.mkIf cfg.enableAliases aliases;
+    programs.zsh.shellAliases = lib.mkIf cfg.enableZshIntegration aliases;
 
     programs.fish = lib.mkMerge [
       (lib.mkIf (!config.programs.fish.preferAbbrs) {
-        shellAliases = lib.mkIf cfg.enableAliases aliases;
+        shellAliases = lib.mkIf cfg.enableFishIntegration aliases;
       })
 
       (lib.mkIf config.programs.fish.preferAbbrs {
-        shellAbbrs = lib.mkIf cfg.enableAliases aliases;
+        shellAbbrs = lib.mkIf cfg.enableFishIntegration aliases;
       })
     ];
 
