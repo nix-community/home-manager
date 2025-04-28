@@ -19,10 +19,6 @@ in
 {
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
-  assertions = [
-    (lib.hm.assertions.assertPlatform "programs.kickoff" pkgs lib.platforms.linux)
-  ];
-
   options.programs.kickoff = {
     enable = mkEnableOption "kickoff";
     package = mkPackageOption pkgs "kickoff" { nullable = true; };
@@ -49,6 +45,10 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.kickoff" pkgs lib.platforms.linux)
+    ];
+
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = mkIf (cfg.settings != { }) {
