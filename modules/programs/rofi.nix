@@ -340,5 +340,5 @@ in
     );
   };
 
-  meta.maintainers = with lib.maintainers; [ thiagokokada ];
+  meta.maintainers = with lib.maintainers; [ ];
 }
