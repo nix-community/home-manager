@@ -1,0 +1,13 @@
+font_size = 32
+padding = 100
+
+[history]
+decrease_interval = 48
+
+[keybinding]
+complete = ["Tab"]
+execute = ["KP_Enter", "Return"]
+paste = ["ctrl+v"]
+
+[search]
+show_hidden_files = false

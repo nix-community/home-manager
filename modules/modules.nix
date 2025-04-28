@@ -158,6 +158,7 @@ let
       ./programs/keychain.nix
       ./programs/khal.nix
       ./programs/khard.nix
+      ./programs/kickoff.nix
       ./programs/kitty.nix
       ./programs/kodi.nix
       ./programs/kubecolor.nix

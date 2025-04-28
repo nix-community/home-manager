@@ -376,6 +376,7 @@ import nmtSrc {
       ./modules/programs/i3status-rust
       ./modules/programs/imv
       ./modules/programs/kodi
+      ./modules/programs/kickoff
       ./modules/programs/looking-glass-client
       ./modules/programs/mangohud
       ./modules/programs/ncmpcpp-linux
