@@ -190,8 +190,6 @@ let
     in
     if package == null then
       null
-    else if isDarwin then
-      package
     else if isWrapped then
       package.override (old: {
         cfg = old.cfg or { } // fcfg;
