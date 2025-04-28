@@ -4,21 +4,10 @@
   pkgs,
   ...
 }:
-
 let
-
   cfg = config.programs.lsd;
 
   yamlFormat = pkgs.formats.yaml { };
-
-  aliases = {
-    ls = "${pkgs.lsd}/bin/lsd";
-    ll = "${pkgs.lsd}/bin/lsd -l";
-    la = "${pkgs.lsd}/bin/lsd -A";
-    lt = "${pkgs.lsd}/bin/lsd --tree";
-    lla = "${pkgs.lsd}/bin/lsd -lA";
-    llt = "${pkgs.lsd}/bin/lsd -l --tree";
-  };
 in
 {
   imports =
@@ -110,32 +99,47 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.lsd ];
 
-    programs.bash.shellAliases = lib.mkIf cfg.enableBashIntegration aliases;
+    programs =
+      let
+        aliases = {
+          ls = "${pkgs.lsd}/bin/lsd";
+          ll = "${pkgs.lsd}/bin/lsd -l";
+          la = "${pkgs.lsd}/bin/lsd -A";
+          lt = "${pkgs.lsd}/bin/lsd --tree";
+          lla = "${pkgs.lsd}/bin/lsd -lA";
+          llt = "${pkgs.lsd}/bin/lsd -l --tree";
+        };
+      in
+      {
+        bash.shellAliases = lib.mkIf cfg.enableBashIntegration aliases;
 
-    programs.zsh.shellAliases = lib.mkIf cfg.enableZshIntegration aliases;
+        fish = lib.mkMerge [
+          (lib.mkIf (!config.programs.fish.preferAbbrs) {
+            shellAliases = lib.mkIf cfg.enableFishIntegration aliases;
+          })
 
-    programs.fish = lib.mkMerge [
-      (lib.mkIf (!config.programs.fish.preferAbbrs) {
-        shellAliases = lib.mkIf cfg.enableFishIntegration aliases;
-      })
+          (lib.mkIf config.programs.fish.preferAbbrs {
+            shellAbbrs = lib.mkIf cfg.enableFishIntegration aliases;
+          })
+        ];
 
-      (lib.mkIf config.programs.fish.preferAbbrs {
-        shellAbbrs = lib.mkIf cfg.enableFishIntegration aliases;
-      })
-    ];
+        lsd = lib.mkIf (cfg.colors != { }) { settings.color.theme = "custom"; };
 
-    programs.lsd = lib.mkIf (cfg.colors != { }) { settings.color.theme = "custom"; };
+        zsh.shellAliases = lib.mkIf cfg.enableZshIntegration aliases;
+      };
 
-    xdg.configFile."lsd/colors.yaml" = lib.mkIf (cfg.colors != { }) {
-      source = yamlFormat.generate "lsd-colors" cfg.colors;
-    };
+    xdg.configFile = {
+      "lsd/colors.yaml" = lib.mkIf (cfg.colors != { }) {
+        source = yamlFormat.generate "lsd-colors" cfg.colors;
+      };
 
-    xdg.configFile."lsd/icons.yaml" = lib.mkIf (cfg.icons != { }) {
-      source = yamlFormat.generate "lsd-icons" cfg.icons;
-    };
+      "lsd/config.yaml" = lib.mkIf (cfg.settings != { }) {
+        source = yamlFormat.generate "lsd-config" cfg.settings;
+      };
 
-    xdg.configFile."lsd/config.yaml" = lib.mkIf (cfg.settings != { }) {
-      source = yamlFormat.generate "lsd-config" cfg.settings;
+      "lsd/icons.yaml" = lib.mkIf (cfg.icons != { }) {
+        source = yamlFormat.generate "lsd-icons" cfg.icons;
+      };
     };
   };
 }
