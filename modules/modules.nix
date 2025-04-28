@@ -184,6 +184,7 @@ let
       ./programs/mise.nix
       ./programs/mods.nix
       ./programs/mpv.nix
+      ./programs/mpvpaper.nix
       ./programs/mr.nix
       ./programs/msmtp.nix
       ./programs/mu.nix
