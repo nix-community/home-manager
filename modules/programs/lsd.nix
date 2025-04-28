@@ -27,6 +27,8 @@ in
   options.programs.lsd = {
     enable = lib.mkEnableOption "lsd";
 
+    package = lib.mkPackageOption pkgs "lsd" { nullable = true; };
+
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
@@ -97,7 +99,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.lsd ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs =
       let
