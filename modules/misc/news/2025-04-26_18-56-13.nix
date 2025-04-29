@@ -1,7 +1,7 @@
 { pkgs, config, ... }:
 {
   time = "2025-04-26T13:26:13+00:00";
-  condition = pkgs.hostPlatform.isLinux && config.services.espanso.enable;
+  condition = pkgs.stdenv.hostPlatform.isLinux && config.services.espanso.enable;
   message = ''
     `services.espanso` now supports wayland.
     This is enabled by default on Linux as `services.espanso.waylandSupport = true;`.
