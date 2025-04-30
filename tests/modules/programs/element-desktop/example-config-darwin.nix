@@ -48,10 +48,10 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/Library/Application Support/Element/config.json
-    assertFileExists home-files/Library/Application Support/Element-work/config.json
-    assertFileExists home-files/Library/Application Support/Element-home/config.json
-    assertFileExists home-files/Library/Application Support/Element-other/config.json
+    assertFileExists "home-files/Library/Application Support/Element/config.json"
+    assertFileExists "home-files/Library/Application Support/Element-work/config.json"
+    assertFileExists "home-files/Library/Application Support/Element-home/config.json"
+    assertFileExists "home-files/Library/Application Support/Element-other/config.json"
 
     assertFileContent "home-files/Library/Application Support/Element/config.json" \
     ${./cfg/default.json}
