@@ -268,6 +268,9 @@ in
       assert int(actual) == 8, \
         f"Expected a snapshot count of 8 but got {actual}"
 
+    with subtest("Prune opts"):
+      systemctl_succeed_as_alice("start restic-backups-prune-opts.service")
+
     logout_alice()
   '';
 }
