@@ -163,7 +163,6 @@ in
 
     with subtest("Backup with prepare and cleanup commands"):
       systemctl_succeed_as_alice("start restic-backups-pre-post-jobs.service")
-      spin_on("restic-backups-pre-post-jobs.service")
       actual = succeed_as_alice("journalctl --no-pager --user -u restic-backups-pre-post-jobs.service")
 
       expected_list = [
@@ -197,9 +196,15 @@ in
         f"Paths containing \"*secret*\" got backed up incorrectly. output: {actual}"
 
     with subtest("Inhibit Sleep"):
+      # Gives us some time to grep systemd-inhibit before exiting
+      succeed_as_alice(
+        "chmod +w /home/alice/files",
+        # 100MB
+        "dd if=/dev/urandom of=/home/alice/files/bigfile status=none bs=4096 count=25600"
+      )
+
       systemctl_succeed_as_alice("start --no-block restic-backups-inhibits-sleep.service")
       machine.wait_until_succeeds("systemd-inhibit --no-legend --no-pager | grep -q restic", 30)
-
       spin_on("restic-backups-inhibits-sleep.service")
 
       actual = succeed_as_alice("restic-inhibits-sleep ls latest")
@@ -207,6 +212,8 @@ in
 
       assert "exclude" not in actual, \
         f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
+
+      succeed_as_alice("rm /home/alice/files/bigfile")
 
     with subtest("Create a few backups at different times"):
       snapshot_count = 0
