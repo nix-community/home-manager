@@ -17,7 +17,8 @@ let
 
   formatter = pkgs.formats.json { };
 
-  prefix = if (pkgs.stdenv.isDarwin) then "Library/Application Support" else ".config";
+  prefix =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 in
 {
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
