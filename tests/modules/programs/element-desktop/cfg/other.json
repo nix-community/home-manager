@@ -1,0 +1,6 @@
+{
+  "brand": "Element",
+  "force_verification": false,
+  "integrations_rest_url": "https://scalar.vector.im/api",
+  "integrations_ui_url": "https://scalar.vector.im/"
+}
