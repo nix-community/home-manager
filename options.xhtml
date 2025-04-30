@@ -75203,12 +75203,12 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-services.gpg-agent.pinentryPackage"></a><a class="term" href="options.xhtml#opt-services.gpg-agent.pinentryPackage"><code class="option">services.gpg-agent.pinentryPackage</code>
+ <a id="opt-services.gpg-agent.pinentry.package"></a><a class="term" href="options.xhtml#opt-services.gpg-agent.pinentry.package"><code class="option">services.gpg-agent.pinentry.package</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Which pinentry interface to use. If not <code class="literal">null</code>, it sets
+<p>The pinentry-gnome3 package to use. Which pinentry interface to use. If not <code class="literal">null</code>, it sets
 <code class="option">pinentry-program</code> in <code class="filename">gpg-agent.conf</code>. Beware that
 <code class="literal">pinentry-gnome3</code> may not work on non-GNOME systems. You can fix it by
 adding the following to your configuration:</p><pre><code class="programlisting nix">home.packages = [ pkgs.gcr ];
@@ -75220,8 +75220,29 @@ null or package</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
 
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/gpg-agent.nix" target="_top">
+&lt;home-manager/modules/services/gpg-agent.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.gpg-agent.pinentry.program"></a><a class="term" href="options.xhtml#opt-services.gpg-agent.pinentry.program"><code class="option">services.gpg-agent.pinentry.program</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Which program to search for in the configured <code class="literal">pinentry.package</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">pkgs.pinentry-gnome3</code></p>
+<code class="literal">&quot;wayprompt-pinentry&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
