@@ -63,7 +63,11 @@ in
         Description = "Kime input method editor";
         PartOf = [ "graphical-session.target" ];
       };
-      Service.ExecStart = "${pkgs.kime}/bin/kime";
+      Service = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.kime}/bin/kime";
+      };
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };
