@@ -6,7 +6,7 @@
 
     pls = {
       enable = true;
-      enableAliases = true;
+      enableZshIntegration = true;
       package = config.lib.test.mkStubPackage { outPath = "@pls@"; };
     };
   };
