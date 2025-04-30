@@ -397,7 +397,7 @@ in
 
         Service =
           {
-            Type = "simple";
+            Type = "oneshot";
 
             X-RestartIfChanged = true;
             RuntimeDirectory = serviceName;
