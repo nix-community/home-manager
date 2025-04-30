@@ -49,7 +49,7 @@ in
         extraConfig = ''
           source ${
             pkgs.runCommand "carapace-nushell-config.nu" { } ''
-              ${bin} _carapace nushell >> "$out"
+              ${bin} _carapace nushell | sed 's|"/homeless-shelter|$"($env.HOME)|g' >> "$out"
             ''
           }
         '';
