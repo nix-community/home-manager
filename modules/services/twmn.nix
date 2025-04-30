@@ -123,13 +123,13 @@ in
       };
 
       font = {
-        package = mkOption {
-          type = types.nullOr types.package;
+        package = lib.mkPackageOption pkgs "font" {
           default = null;
-          example = literalExpression "pkgs.dejavu_fonts";
-          description = ''
-            Notification text's font package. If `null` then
-            the font is assumed to already be available in your profile.
+          example = "pkgs.dejavu_fonts";
+          nullable = true;
+          extraDescription = ''
+            Package providing the font to use for the notification text.
+            This package is only used if `font.package` is not null.
           '';
         };
 

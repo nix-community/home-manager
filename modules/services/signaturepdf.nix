@@ -24,12 +24,7 @@ in
   options.services.signaturepdf = {
     enable = lib.mkEnableOption "signaturepdf; signing, organizing, editing metadatas or compressing PDFs";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.signaturepdf;
-      defaultText = "pkgs.signaturepdf";
-      description = "signaturepdf derivation to use.";
-    };
+    package = lib.mkPackageOption pkgs "signaturepdf" { };
 
     port = mkOption {
       type = types.port;

@@ -47,15 +47,7 @@ in
   options.xsession.windowManager.herbstluftwm = {
     enable = lib.mkEnableOption "herbstluftwm window manager";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.herbstluftwm;
-      defaultText = lib.literalExpression "pkgs.herbstluftwm";
-      description = ''
-        Package providing the {command}`herbstluftwm` and
-        {command}`herbstclient` commands.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "herbstluftwm" { };
 
     settings = lib.mkOption {
       type = lib.types.attrsOf settingType;

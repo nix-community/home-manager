@@ -22,13 +22,7 @@ in
   options.services.vdirsyncer = {
     enable = lib.mkEnableOption "vdirsyncer";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.vdirsyncer;
-      defaultText = "pkgs.vdirsyncer";
-      example = lib.literalExpression "pkgs.vdirsyncer";
-      description = "The package to use for the vdirsyncer binary.";
-    };
+    package = lib.mkPackageOption pkgs "vdirsyncer" { };
 
     frequency = mkOption {
       type = types.str;

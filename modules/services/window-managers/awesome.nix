@@ -20,11 +20,8 @@ in
     xsession.windowManager.awesome = {
       enable = lib.mkEnableOption "Awesome window manager";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.awesome;
-        defaultText = lib.literalExpression "pkgs.awesome";
-        description = "Package to use for running the Awesome WM.";
+      package = lib.mkPackageOption pkgs "awesome" {
+        extraDescription = "to use for running the Awesome WM";
       };
 
       luaModules = mkOption {

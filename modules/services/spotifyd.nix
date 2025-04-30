@@ -19,13 +19,9 @@ in
   options.services.spotifyd = {
     enable = lib.mkEnableOption "SpotifyD connect";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.spotifyd;
-      defaultText = literalExpression "pkgs.spotifyd";
-      example = literalExpression "(pkgs.spotifyd.override { withKeyring = true; })";
-      description = ''
-        The `spotifyd` package to use.
+    package = lib.mkPackageOption pkgs "spotifyd" {
+      example = "(pkgs.spotifyd.override { withKeyring = true; })";
+      extraDescription = ''
         Can be used to specify extensions.
       '';
     };

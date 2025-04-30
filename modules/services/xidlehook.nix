@@ -56,12 +56,7 @@ in
   options.services.xidlehook = {
     enable = mkEnableOption "xidlehook systemd service";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.xidlehook;
-      defaultText = "pkgs.xidlehook";
-      description = "The package to use for xidlehook.";
-    };
+    package = lib.mkPackageOption pkgs "xidlehook" { };
 
     environment = mkOption {
       type = types.attrsOf types.str;

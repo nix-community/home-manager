@@ -84,13 +84,7 @@ in
         description = "Use xautolock for time-based locking.";
       };
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.xautolock;
-        description = ''
-          Package providing the {command}`xautolock` binary.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "xautolock" { };
 
       detectSleep = mkOption {
         type = types.bool;
@@ -112,13 +106,7 @@ in
     };
 
     xss-lock = {
-      package = mkOption {
-        type = types.package;
-        default = pkgs.xss-lock;
-        description = ''
-          Package providing the {command}`xss-lock` binary.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "xss-lock" { };
 
       extraOptions = mkOption {
         type = types.listOf types.str;

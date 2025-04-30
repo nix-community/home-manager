@@ -41,13 +41,8 @@ in
     xsession.windowManager.spectrwm = {
       enable = lib.mkEnableOption "Spectrwm window manager";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.spectrwm;
-        defaultText = literalExpression "pkgs.spectrwm";
-        description = ''
-          Package providing the {command}`spectrwm` command.
-        '';
+      package = lib.mkPackageOption pkgs "spectrwm" {
+        extraDescription = "providing the spectrwm command";
       };
 
       settings = mkOption {

@@ -182,12 +182,8 @@ in
   xsession.windowManager.bspwm = {
     enable = lib.mkEnableOption "bspwm window manager";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.bspwm;
-      defaultText = literalExpression "pkgs.bspwm";
-      description = "The bspwm package to use.";
-      example = literalExpression "pkgs.bspwm-unstable";
+    package = lib.mkPackageOption pkgs "bspwm" {
+      example = "pkgs.bspwm-unstable";
     };
 
     settings = mkOption {

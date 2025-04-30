@@ -226,14 +226,7 @@ in
   options.services.kanshi = {
     enable = lib.mkEnableOption "kanshi, a Wayland daemon that automatically configures outputs";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.kanshi;
-      defaultText = literalExpression "pkgs.kanshi";
-      description = ''
-        kanshi derivation to use.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "kanshi" { };
 
     profiles = mkOption {
       type = types.attrsOf profileModule;

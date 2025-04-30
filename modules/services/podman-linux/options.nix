@@ -56,12 +56,7 @@ in
       };
     };
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.podman;
-      defaultText = lib.literalExpression "pkgs.podman";
-      description = "The podman package to use.";
-    };
+    package = lib.mkPackageOption pkgs "podman" { };
 
     enableTypeChecks = lib.mkEnableOption "type checks for podman quadlets";
   };

@@ -15,12 +15,7 @@ in
   options.services.playerctld = {
     enable = lib.mkEnableOption "playerctld daemon";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.playerctl;
-      defaultText = lib.literalExpression "pkgs.playerctl";
-      description = "The playerctl package to use.";
-    };
+    package = lib.mkPackageOption pkgs "playerctl" { };
   };
 
   config = lib.mkIf cfg.enable {
