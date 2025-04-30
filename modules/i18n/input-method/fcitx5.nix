@@ -217,21 +217,23 @@ in
     };
 
     xdg = {
-      configFile =
+      configFile.fcitx5 =
         let
           optionalFile =
             p: f: v:
             lib.optionalAttrs (v != { }) {
-              "fcitx5/${p}".source = f "fcitx5-${builtins.replaceStrings [ "/" ] [ "-" ] p}" v;
+              ${p} = f "fcitx5-${builtins.replaceStrings [ "/" ] [ "-" ] p}" v;
             };
+          entries = lib.attrsets.mergeAttrsList [
+            (optionalFile "config" iniFormat.generate cfg.settings.globalOptions)
+            (optionalFile "profile" iniFormat.generate cfg.settings.inputMethod)
+            (lib.concatMapAttrs (
+              name: value: optionalFile "conf/${name}.conf" iniGlobalFormat.generate value
+            ) cfg.settings.addons)
+          ];
         in
-        lib.attrsets.mergeAttrsList [
-          (optionalFile "config" iniFormat.generate cfg.settings.globalOptions)
-          (optionalFile "profile" iniFormat.generate cfg.settings.inputMethod)
-          (lib.concatMapAttrs (
-            name: value: optionalFile "conf/${name}.conf" iniGlobalFormat.generate value
-          ) cfg.settings.addons)
-        ];
+        lib.mkIf (entries != { }) { source = pkgs.linkFarm "fcitx-config" entries; };
+
       dataFile = lib.concatMapAttrs (
         name: attrs:
         let
