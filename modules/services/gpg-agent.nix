@@ -328,7 +328,7 @@ in
 
         program = lib.mkOption {
           type = types.nullOr types.str;
-          example = "wayprompt-pinentry";
+          example = "pinentry-wayprompt";
           description = ''
             Which program to search for in the configured `pinentry.package`.
           '';
