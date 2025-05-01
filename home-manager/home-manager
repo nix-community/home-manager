@@ -451,11 +451,13 @@ EOF
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs =
+    { nixpkgs, home-manager, ... }:
     let
       system = "$nixSystem";
       pkgs = nixpkgs.legacyPackages.\${system};
-    in {
+    in
+    {
       homeConfigurations."$(escapeForNix "$USER")" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
