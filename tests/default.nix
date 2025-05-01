@@ -437,6 +437,7 @@ import nmtSrc {
       ./modules/services/lieer
       ./modules/services/linux-wallpaperengine
       ./modules/services/lxqt-policykit-agent
+      ./modules/services/mako
       ./modules/services/mopidy
       ./modules/services/mpd
       ./modules/services/mpd-mpris
