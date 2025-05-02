@@ -21833,6 +21833,163 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.element-desktop.enable"></a><a class="term" href="options.xhtml#opt-programs.element-desktop.enable"><code class="option">programs.element-desktop.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable element-desktop.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/element-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/element-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.element-desktop.package"></a><a class="term" href="options.xhtml#opt-programs.element-desktop.package"><code class="option">programs.element-desktop.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The element-desktop package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.element-desktop</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/element-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/element-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.element-desktop.profiles"></a><a class="term" href="options.xhtml#opt-programs.element-desktop.profiles"><code class="option">programs.element-desktop.profiles</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra profiles for Element. Those can be accessed using the
+“–profile $NAME” flag. The same warning and options apply
+here.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (JSON value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  {
+    work = {
+      default_server_config = {
+        &quot;m.homeserver&quot; = {
+            base_url = &quot;https://matrix-client.matrix.org&quot;;
+            server_name = &quot;matrix.org&quot;;
+        };
+        &quot;m.identity_server&quot; = {
+            base_url = &quot;https://vector.im&quot;;
+        };
+      };
+    };
+    home = {
+      disable_custom_urls = false;
+      disable_guests = false;
+      disable_login_language_selector = false;
+      disable_3pid_login = false;
+    };
+    other = {
+      force_verification = false;
+      brand = &quot;Element&quot;;
+      integrations_ui_url = &quot;https://scalar.vector.im/&quot;;
+      integrations_rest_url = &quot;https://scalar.vector.im/api&quot;;
+    };
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/element-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/element-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.element-desktop.settings"></a><a class="term" href="options.xhtml#opt-programs.element-desktop.settings"><code class="option">programs.element-desktop.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for Element’s default profiles.
+WARNING: Element doesn’t combine this config with the defaults,
+so make sure to configure most options. For details about this
+behavior and available configuration options see:
+<a class="link" href="https://github.com/element-hq/element-web/blob/develop/docs/config.md"  target="_top">https://github.com/element-hq/element-web/blob/develop/docs/config.md</a></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  {
+    default_server_config = {
+      &quot;m.homeserver&quot; = {
+          base_url = &quot;https://matrix-client.matrix.org&quot;;
+          server_name = &quot;matrix.org&quot;;
+      };
+      &quot;m.identity_server&quot; = {
+          base_url = &quot;https://vector.im&quot;;
+      };
+    };
+    disable_custom_urls = false;
+    disable_guests = false;
+    disable_login_language_selector = false;
+    disable_3pid_login = false;
+    force_verification = false;
+    brand = &quot;Element&quot;;
+    integrations_ui_url = &quot;https://scalar.vector.im/&quot;;
+    integrations_rest_url = &quot;https://scalar.vector.im/api&quot;;
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/element-desktop.nix" target="_top">
+&lt;home-manager/modules/programs/element-desktop.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.emacs.enable"></a><a class="term" href="options.xhtml#opt-programs.emacs.enable"><code class="option">programs.emacs.enable</code>
   </a>
  </span>
