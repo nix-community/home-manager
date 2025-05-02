@@ -508,8 +508,12 @@ in
       in
       pkgs.writeShellApplication {
         name = "restic-${name}";
-        # https://github.com/koalaman/shellcheck/issues/1986
-        excludeShellChecks = [ "SC2034" ];
+        excludeShellChecks = [
+          # https://github.com/koalaman/shellcheck/issues/1986
+          "SC2034"
+          # Allow sourcing environmentFile
+          "SC1091"
+        ];
         bashOptions = [
           "errexit"
           "nounset"

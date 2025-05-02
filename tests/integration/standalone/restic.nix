@@ -271,6 +271,14 @@ in
     with subtest("Prune opts"):
       systemctl_succeed_as_alice("start restic-backups-prune-opts.service")
 
+    with subtest("Environment file"):
+      systemctl_succeed_as_alice("start restic-backups-env-file.service")
+      actual = succeed_as_alice("restic-env-file ls latest")
+      assert_list("restic-env-file ls latest", expectedIncluded, actual)
+
+      assert "exclude" not in actual, \
+        f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
+
     logout_alice()
   '';
 }
