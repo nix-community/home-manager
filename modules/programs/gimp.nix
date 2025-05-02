@@ -14,13 +14,22 @@ let
     ;
 
   cfg = config.programs.gimp;
+  defaultPackage = if cfg.withPlugins then "gimp-with-plugins" else "gimp";
 in
 {
-  meta.maintainers = with lib.hm.maintainers [ aguirre-matteo ];
+  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.gimp = {
     enable = mkEnableOption "gimp";
-    package = mkPackageOption pkgs "gimp-with-plugins" { nullable = true; };
+    package = mkPackageOption pkgs defaultPackage { nullable = true; };
+    withPlugins = mkOption {
+      type = types.bool;
+      default = true;
+      example = false;
+      description = ''
+        Whatever to install Gimp with plugins enabled.
+      '';
+    };
     plugins = mkOption {
       type = with types; listOf package;
       default = [ ];
@@ -34,12 +43,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    warnings = lib.optional (cfg.package == null && cfg.plugins != [ ]) ''
-      You have configured `plugins` for Gimp, but havee not set `package`.
+    warnings = lib.optional ((cfg.package == null || cfg.withPlugins == false) && cfg.plugins != [ ]) ''
+      You have configured `plugins` for Gimp, but have either not set `package` or have `withPlugins` set to false.
 
       The listed plugins will not be installed.
     '';
 
-    home.packages = mkIf (cfg.package != null) [ cfg.package ] ++ cfg.plugins;
+    home.packages = mkIf (cfg.package != null) ([ cfg.package ] ++ cfg.plugins);
   };
 }
