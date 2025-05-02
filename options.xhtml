@@ -71464,6 +71464,242 @@ null or (positive integer, meaning &gt;0)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.clipcat.enable"></a><a class="term" href="options.xhtml#opt-services.clipcat.enable"><code class="option">services.clipcat.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable clipcat.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipcat.nix" target="_top">
+&lt;home-manager/modules/services/clipcat.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipcat.enableSystemdUnit"></a><a class="term" href="options.xhtml#opt-services.clipcat.enableSystemdUnit"><code class="option">services.clipcat.enableSystemdUnit</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enable clipcat’s Systemd Unit.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipcat.nix" target="_top">
+&lt;home-manager/modules/services/clipcat.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipcat.enableZshIntegration"></a><a class="term" href="options.xhtml#opt-services.clipcat.enableZshIntegration"><code class="option">services.clipcat.enableZshIntegration</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Zsh integration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<a class="xref" href="options.xhtml#opt-home.shell.enableZshIntegration"  ><code class="option">home.shell.enableZshIntegration</code></a></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipcat.nix" target="_top">
+&lt;home-manager/modules/services/clipcat.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipcat.package"></a><a class="term" href="options.xhtml#opt-services.clipcat.package"><code class="option">services.clipcat.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The clipcat package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.clipcat</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipcat.nix" target="_top">
+&lt;home-manager/modules/services/clipcat.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipcat.ctlSettings"></a><a class="term" href="options.xhtml#opt-services.clipcat.ctlSettings"><code class="option">services.clipcat.ctlSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for clipcatctl. All available options can be found
+here: <a class="link" href="https://github.com/xrelkd/clipcat?tab=readme-ov-file#configuration"  target="_top">https://github.com/xrelkd/clipcat?tab=readme-ov-file#configuration</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  {
+    server_endpoint = &quot;/run/user/&lt;user-id&gt;/clipcat/grpc.sock&quot;;
+    log = {
+      file_path = &quot;/path/to/log/file&quot;;
+      emit_journald = true;
+      emit_stdout = false;
+      emit_stderr = false;
+      level = &quot;INFO&quot;;
+    };
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipcat.nix" target="_top">
+&lt;home-manager/modules/services/clipcat.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipcat.daemonSettings"></a><a class="term" href="options.xhtml#opt-services.clipcat.daemonSettings"><code class="option">services.clipcat.daemonSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for clipcatd. All available options can be found
+here: <a class="link" href="https://github.com/xrelkd/clipcat?tab=readme-ov-file#configuration"  target="_top">https://github.com/xrelkd/clipcat?tab=readme-ov-file#configuration</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  daemonize = true;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  {
+    daemonize = true;
+    max_history = 50;
+    history_file_path = &quot;/home/&lt;username&gt;/.cache/clipcat/clipcatd-history&quot;;
+    pid_file = &quot;/run/user/&lt;user-id&gt;/clipcatd.pid&quot;;
+    primary_threshold_ms = 5000;
+    log = {
+      file_path = &quot;/path/to/log/file&quot;;
+      emit_journald = true;
+      emit_stdout = false;
+      emit_stderr = false;
+      level = &quot;INFO&quot;;
+    };
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipcat.nix" target="_top">
+&lt;home-manager/modules/services/clipcat.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.clipcat.menuSettings"></a><a class="term" href="options.xhtml#opt-services.clipcat.menuSettings"><code class="option">services.clipcat.menuSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for clipcat-menu. All available options can be found
+here: <a class="link" href="https://github.com/xrelkd/clipcat?tab=readme-ov-file#configuration"  target="_top">https://github.com/xrelkd/clipcat?tab=readme-ov-file#configuration</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  {
+    server_endpoint = &quot;/run/user/&lt;user-id&gt;/clipcat/grpc.sock&quot;;
+    finder = &quot;rofi&quot;;
+    rofi = {
+      line_length = 100;
+      menu_length = 30;
+      menu_prompt = &quot;Clipcat&quot;;
+      extra_arguments = [
+        &quot;-mesg&quot;
+        &quot;Please select a clip&quot;
+      ];
+    };
+    dmenu = {
+      line_length = 100;
+      menu_length = 30;
+      menu_prompt = &quot;Clipcat&quot;;
+    };
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/clipcat.nix" target="_top">
+&lt;home-manager/modules/services/clipcat.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.cliphist.enable"></a><a class="term" href="options.xhtml#opt-services.cliphist.enable"><code class="option">services.cliphist.enable</code>
   </a>
  </span>
