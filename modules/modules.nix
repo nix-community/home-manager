@@ -295,6 +295,7 @@ let
       ./programs/vinegar.nix
       ./programs/vscode.nix
       ./programs/vscode/haskell.nix
+      ./programs/visidata.nix
       ./programs/pywal.nix
       ./programs/rbenv.nix
       ./programs/wallust.nix
