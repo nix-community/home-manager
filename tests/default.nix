@@ -309,6 +309,7 @@ import nmtSrc {
       ./modules/programs/uv
       ./modules/programs/vifm
       ./modules/programs/vim-vint
+      ./modules/programs/visidata
       ./modules/programs/vscode
       ./modules/programs/wallust
       ./modules/programs/watson

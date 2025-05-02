@@ -1,0 +1,9 @@
+options.min_memory_mb=100
+
+bindkey('0', 'go-leftmost')
+
+def median(values):
+    L = sorted(values)
+    return L[len(L)//2]
+
+vd.aggregator('median', median)
