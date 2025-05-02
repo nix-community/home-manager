@@ -62939,6 +62939,96 @@ attribute set of (TOML value)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.visidata.enable"></a><a class="term" href="options.xhtml#opt-programs.visidata.enable"><code class="option">programs.visidata.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Visidata.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/visidata.nix" target="_top">
+&lt;home-manager/modules/programs/visidata.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.visidata.package"></a><a class="term" href="options.xhtml#opt-programs.visidata.package"><code class="option">programs.visidata.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The visidata package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.visidata</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/visidata.nix" target="_top">
+&lt;home-manager/modules/programs/visidata.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.visidata.visidatarc"></a><a class="term" href="options.xhtml#opt-programs.visidata.visidatarc"><code class="option">programs.visidata.visidatarc</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings and Python function declarations
+to be written to ~/.visidatarc. All available options
+can be found here: <a class="link" href="https://www.visidata.org/docs/"  target="_top">https://www.visidata.org/docs/</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  options.min_memory_mb=100  # stop processing without 100MB free
+  
+  bindkey(&#x27;0&#x27;, &#x27;go-leftmost&#x27;)   # alias &#x27;0&#x27; to go to first column, like vim
+  
+  def median(values):
+      L = sorted(values)
+      return L[len(L)//2]
+  
+  vd.aggregator(&#x27;median&#x27;, median)
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/visidata.nix" target="_top">
+&lt;home-manager/modules/programs/visidata.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.vivaldi.nativeMessagingHosts"></a><a class="term" href="options.xhtml#opt-programs.vivaldi.nativeMessagingHosts"><code class="option">programs.vivaldi.nativeMessagingHosts</code>
   </a>
  </span>
