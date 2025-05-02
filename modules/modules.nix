@@ -97,6 +97,7 @@ let
       ./programs/distrobox.nix
       ./programs/earthly.nix
       ./programs/eclipse.nix
+      ./programs/element-desktop.nix
       ./programs/emacs.nix
       ./programs/eww.nix
       ./programs/eza.nix
