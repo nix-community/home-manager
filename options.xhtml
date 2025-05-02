@@ -67608,7 +67608,11 @@ The default of <code class="literal">^[[A</code> may correspond to the UP key �
  </span>
 </dt>
 <dd>
-<p>Content to be added to <code class="filename">.zshrc</code>.</p><p>To specify the order, use <code class="literal">lib.mkOrder</code>.</p><p>Common order values:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>500 (mkBefore): Early initialization (replaces initExtraFirst)</p></li><li class="listitem"><p>550: Before completion initialization (replaces initExtraBeforeCompInit)</p></li><li class="listitem"><p>1000 (default): General configuration (replaces initExtra)</p></li><li class="listitem"><p>1500 (mkAfter): Last to run configuration</p></li></ul></div>
+<p>Content to be added to <code class="filename">.zshrc</code>.</p><p>To specify the order, use <code class="literal">lib.mkOrder</code>.</p><p>Common order values:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>500 (mkBefore): Early initialization (replaces initExtraFirst)</p></li><li class="listitem"><p>550: Before completion initialization (replaces initExtraBeforeCompInit)</p></li><li class="listitem"><p>1000 (default): General configuration (replaces initExtra)</p></li><li class="listitem"><p>1500 (mkAfter): Last to run configuration</p></li></ul></div><p>To specify both content in Early initialization and General configuration, use <code class="literal">lib.mkMerge</code>.</p><p>e.g.</p><p>initContent = let
+zshConfigEarlyInit = lib.mkOrder 500 “do something”;
+zshConfig = lib.mkOrder 1000 “do something”;
+in
+lib.mkMerge [ zshConfigEarlyInit zshConfig ];</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 strings concatenated with “\n”</p>
