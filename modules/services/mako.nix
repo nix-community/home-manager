@@ -27,6 +27,14 @@ in
         "mako"
       ];
 
+      removedOptions = [
+        (lib.mkRemovedOptionModule [
+          "services"
+          "mako"
+          "extraConfig"
+        ] "Use services.mako.settings instead.")
+      ];
+
       renamedOptions = [
         "maxVisible"
         "maxHistory"
@@ -60,7 +68,8 @@ in
         oldPrefix: newPrefix:
         map (option: lib.mkRenamedOptionModule (oldPrefix ++ [ option ]) (newPrefix ++ [ option ]));
     in
-    mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) renamedOptions;
+    removedOptions
+    ++ mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) renamedOptions;
 
   options.services.mako = {
     enable = mkEnableOption "mako";
