@@ -20,87 +20,47 @@ in
 {
   meta.maintainers = [ lib.maintainers.onny ];
 
-  imports = [
-    (lib.mkRenamedOptionModule [ "programs" "mako" ] [ "services" "mako" ])
+  imports =
+    let
+      basePath = [
+        "services"
+        "mako"
+      ];
 
-    (lib.mkRemovedOptionModule [
-      "services"
-      "mako"
-      "extraConfig"
-    ] "Use services.mako.settings instead.")
+      renamedOptions = [
+        "maxVisible"
+        "maxHistory"
+        "sort"
+        "output"
+        "layer"
+        "anchor"
+        "font"
+        "backgroundColor"
+        "textColor"
+        "width"
+        "height"
+        "margin"
+        "padding"
+        "borderSize"
+        "borderColor"
+        "borderRadius"
+        "progressColor"
+        "icons"
+        "maxIconSize"
+        "iconPath"
+        "markup"
+        "actions"
+        "format"
+        "defaultTimeout"
+        "ignoreTimeout"
+        "groupBy"
+      ];
 
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "maxVisible" ]
-      [ "services" "mako" "settings" "maxVisible" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "maxHistory" ]
-      [ "services" "mako" "settings" "maxHistory" ]
-    )
-    (lib.mkRenamedOptionModule [ "services" "mako" "sort" ] [ "services" "mako" "settings" "sort" ])
-    (lib.mkRenamedOptionModule [ "services" "mako" "output" ] [ "services" "mako" "settings" "output" ])
-    (lib.mkRenamedOptionModule [ "services" "mako" "layer" ] [ "services" "mako" "settings" "layer" ])
-    (lib.mkRenamedOptionModule [ "services" "mako" "anchor" ] [ "services" "mako" "settings" "anchor" ])
-    (lib.mkRenamedOptionModule [ "services" "mako" "font" ] [ "services" "mako" "settings" "font" ])
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "backgroundColor" ]
-      [ "services" "mako" "settings" "backgroundColor" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "textColor" ]
-      [ "services" "mako" "settings" "textColor" ]
-    )
-    (lib.mkRenamedOptionModule [ "services" "mako" "width" ] [ "services" "mako" "settings" "width" ])
-    (lib.mkRenamedOptionModule [ "services" "mako" "height" ] [ "services" "mako" "settings" "height" ])
-    (lib.mkRenamedOptionModule [ "services" "mako" "margin" ] [ "services" "mako" "settings" "margin" ])
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "padding" ]
-      [ "services" "mako" "settings" "padding" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "borderSize" ]
-      [ "services" "mako" "settings" "borderSize" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "borderColor" ]
-      [ "services" "mako" "settings" "borderColor" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "borderRadius" ]
-      [ "services" "mako" "settings" "borderRadius" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "progressColor" ]
-      [ "services" "mako" "settings" "progressColor" ]
-    )
-    (lib.mkRenamedOptionModule [ "services" "mako" "icons" ] [ "services" "mako" "settings" "icons" ])
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "maxIconSize" ]
-      [ "services" "mako" "settings" "maxIconSize" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "iconPath" ]
-      [ "services" "mako" "settings" "iconPath" ]
-    )
-    (lib.mkRenamedOptionModule [ "services" "mako" "markup" ] [ "services" "mako" "settings" "markup" ])
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "actions" ]
-      [ "services" "mako" "settings" "actions" ]
-    )
-    (lib.mkRenamedOptionModule [ "services" "mako" "format" ] [ "services" "mako" "settings" "format" ])
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "defaultTimeout" ]
-      [ "services" "mako" "settings" "defaultTimeout" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "ignoreTimeout" ]
-      [ "services" "mako" "settings" "ignoreTimeout" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "services" "mako" "groupBy" ]
-      [ "services" "mako" "settings" "groupBy" ]
-    )
-  ];
+      mkSettingsRenamedOptionModules =
+        oldPrefix: newPrefix:
+        map (option: lib.mkRenamedOptionModule (oldPrefix ++ [ option ]) (newPrefix ++ [ option ]));
+    in
+    mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) renamedOptions;
 
   options.services.mako = {
     enable = mkEnableOption "mako";
