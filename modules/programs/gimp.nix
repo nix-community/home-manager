@@ -16,6 +16,8 @@ let
   cfg = config.programs.gimp;
 in
 {
+  meta.maintainers = with lib.hm.maintainers [ aguirre-matteo ];
+
   options.programs.gimp = {
     enable = mkEnableOption "gimp";
     package = mkPackageOption pkgs "gimp-with-plugins" { nullable = true; };
