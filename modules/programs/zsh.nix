@@ -515,6 +515,16 @@ in
             - 550: Before completion initialization (replaces initExtraBeforeCompInit)
             - 1000 (default): General configuration (replaces initExtra)
             - 1500 (mkAfter): Last to run configuration
+
+            To specify both content in Early initialization and General configuration, use `lib.mkMerge`.
+
+            e.g.
+
+            initContent = let
+                zshConfigEarlyInit = lib.mkOrder 500 "do something";
+                zshConfig = lib.mkOrder 1000 "do something";
+            in
+                lib.mkMerge [ zshConfigEarlyInit zshConfig ];
           '';
         };
 
