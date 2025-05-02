@@ -408,6 +408,7 @@ import nmtSrc {
       ./modules/services/blanket
       ./modules/services/borgmatic
       ./modules/services/cachix-agent
+      ./modules/services/clipcat
       ./modules/services/cliphist
       ./modules/services/clipman
       ./modules/services/clipse
