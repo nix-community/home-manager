@@ -12,10 +12,3 @@ layer=top
 margin=10
 markup=true
 width=300
-
-[mode=do-not-disturb]
-invisible=1
-
-[app-name="Google Chrome"]
-max-visible=1
-history=0

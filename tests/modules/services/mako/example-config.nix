@@ -17,14 +17,6 @@
       margin = "10";
       markup = "true";
     };
-    extraConfig = ''
-      [mode=do-not-disturb]
-      invisible=1
-
-      [app-name="Google Chrome"]
-      max-visible=1
-      history=0
-    '';
   };
 
   nmt.script = ''
