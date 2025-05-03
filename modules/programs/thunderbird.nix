@@ -704,7 +704,9 @@ in
                     "account1"
                   ];
                 in
-                accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds);
+                lib.optionals (accounts != [ ]) (
+                  accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
+                );
             in
             {
               text = mkUserJs (builtins.foldl' (a: b: a // b) { } (
