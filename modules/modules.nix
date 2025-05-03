@@ -211,6 +211,7 @@ let
       ./programs/octant.nix
       ./programs/offlineimap.nix
       ./programs/oh-my-posh.nix
+      ./programs/onagre.nix
       ./programs/onedrive.nix
       ./programs/onlyoffice.nix
       ./programs/opam.nix
