@@ -137,7 +137,7 @@ in
       );
     };
   };
-  meta.maintainers = with lib.maintainers; [ bikku ];
+  meta.maintainers = [ lib.hm.maintainers.bikku ];
   config = mkIf cfg.enable {
     home.packages =
       let
