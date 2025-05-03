@@ -237,6 +237,7 @@ import nmtSrc {
       ./modules/programs/lf
       ./modules/programs/lsd
       ./modules/programs/lieer
+      ./modules/programs/lutris
       ./modules/programs/man
       ./modules/programs/mbsync
       ./modules/programs/mergiraf
