@@ -32,7 +32,7 @@ in
     // {
       nmt.script = ''
         assertFileContent \
-          home-files/${cfg.configPath}/extensions/browser-extension-data/uBlock0@raymondhill.net/storage.js \
+          "home-files/${cfg.profilesPath}/extensions/browser-extension-data/uBlock0@raymondhill.net/storage.js" \
           ${./expected-storage.js}
       '';
     }

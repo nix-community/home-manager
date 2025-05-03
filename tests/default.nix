@@ -199,6 +199,10 @@ import nmtSrc {
       ./modules/programs/eza
       ./modules/programs/fastfetch
       ./modules/programs/feh
+      ./modules/programs/firefox
+      ./modules/programs/firefox/firefox.nix
+      ./modules/programs/firefox/floorp.nix
+      ./modules/programs/firefox/librewolf.nix
       ./modules/programs/fish
       ./modules/programs/gallery-dl
       ./modules/programs/gh
@@ -363,10 +367,6 @@ import nmtSrc {
       ./modules/programs/distrobox
       ./modules/programs/element-desktop/linux.nix
       ./modules/programs/eww
-      ./modules/programs/firefox
-      ./modules/programs/firefox/firefox.nix
-      ./modules/programs/firefox/floorp.nix
-      ./modules/programs/firefox/librewolf.nix
       ./modules/programs/foot
       ./modules/programs/freetube
       ./modules/programs/fuzzel

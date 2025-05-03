@@ -47,8 +47,6 @@ let
 
   packageName = if wrappedPackageName != null then wrappedPackageName else unwrappedPackageName;
 
-  profilesPath = if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
-
   # The extensions path shared by all profiles; will not be supported
   # by future browser versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
@@ -265,6 +263,24 @@ in
       type = with types; nullOr str;
       default = wrappedPackageName;
       description = "Name of the wrapped browser package.";
+    };
+
+    darwinAppName = mkOption {
+      internal = true;
+      type = types.str;
+      default =
+        lib.toUpper (lib.substring 0 1 cfg.wrappedPackageName)
+        + lib.toLower (
+          lib.substring 1 ((lib.stringLength cfg.wrappedPackageName) - 1) cfg.wrappedPackageName
+        );
+      description = "Name of browser app on Darwin.";
+    };
+
+    profilesPath = mkOption {
+      internal = true;
+      type = types.str;
+      default = if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
+      description = "Path to profiles.";
     };
 
     vendorPath = mkOption {
@@ -863,9 +879,9 @@ in
           mkMerge (
             [
               {
-                "${profilesPath}/${profile.path}/.keep".text = "";
+                "${cfg.profilesPath}/${profile.path}/.keep".text = "";
 
-                "${profilesPath}/${profile.path}/chrome/userChrome.css" = mkIf (profile.userChrome != "") (
+                "${cfg.profilesPath}/${profile.path}/chrome/userChrome.css" = mkIf (profile.userChrome != "") (
                   let
                     key = if builtins.isString profile.userChrome then "text" else "source";
                   in
@@ -874,7 +890,7 @@ in
                   }
                 );
 
-                "${profilesPath}/${profile.path}/chrome/userContent.css" = mkIf (profile.userContent != "") (
+                "${cfg.profilesPath}/${profile.path}/chrome/userContent.css" = mkIf (profile.userContent != "") (
                   let
                     key = if builtins.isString profile.userContent then "text" else "source";
                   in
@@ -883,7 +899,7 @@ in
                   }
                 );
 
-                "${profilesPath}/${profile.path}/user.js" =
+                "${cfg.profilesPath}/${profile.path}/user.js" =
                   mkIf
                     (
                       profile.preConfig != ""
@@ -897,18 +913,18 @@ in
                           profile.extensions.settings;
                     };
 
-                "${profilesPath}/${profile.path}/containers.json" = mkIf (profile.containers != { }) {
+                "${cfg.profilesPath}/${profile.path}/containers.json" = mkIf (profile.containers != { }) {
                   text = mkContainersJson profile.containers;
                   force = profile.containersForce;
                 };
 
-                "${profilesPath}/${profile.path}/search.json.mozlz4" = mkIf (profile.search.enable) {
+                "${cfg.profilesPath}/${profile.path}/search.json.mozlz4" = mkIf (profile.search.enable) {
                   enable = profile.search.enable;
                   force = profile.search.force;
                   source = profile.search.file;
                 };
 
-                "${profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
+                "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
                   source =
                     let
                       extensionsEnvPkg = pkgs.buildEnv {
@@ -927,7 +943,7 @@ in
               optional (profile.extensions.settings != { }) (
                 mkMerge (
                   mapAttrsToList (name: settingConfig: {
-                    "${profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" = {
+                    "${cfg.profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" = {
                       force = settingConfig.force || profile.extensions.force;
                       text = lib.generators.toJSON { } settingConfig.settings;
                     };

@@ -34,27 +34,35 @@ in
       };
     }
     // {
-      nmt.script = ''
-        assertFileRegex \
-          home-path/bin/${cfg.wrappedPackageName} \
-          MOZ_APP_LAUNCHER
+      nmt.script =
+        let
+          binPath =
+            if pkgs.hostPlatform.isDarwin then
+              "Applications/${cfg.darwinAppName}.app/Contents/MacOS"
+            else
+              "bin";
+        in
+        ''
+          assertFileRegex \
+            "home-path/${binPath}/${cfg.wrappedPackageName}" \
+            MOZ_APP_LAUNCHER
 
-        assertDirectoryExists home-files/${cfg.configPath}/basic
+          assertDirectoryExists "home-files/${cfg.profilesPath}/basic"
 
-        assertFileContent \
-          home-files/${cfg.configPath}/lines/chrome/userChrome.css \
-          ${./chrome/userChrome.css}
+          assertFileContent \
+            "home-files/${cfg.profilesPath}/lines/chrome/userChrome.css" \
+            ${./chrome/userChrome.css}
 
-        assertFileContent \
-          home-files/${cfg.configPath}/file/chrome/userChrome.css \
-          ${./chrome/userChrome.css}
+          assertFileContent \
+            "home-files/${cfg.profilesPath}/file/chrome/userChrome.css" \
+            ${./chrome/userChrome.css}
 
-        assertPathNotExists \
-          home-files/${cfg.configPath}/derivation-file/chrome/extraFile.css
-        assertFileContent \
-          home-files/${cfg.configPath}/derivation-file/chrome/userChrome.css \
-          ${./chrome/userChrome.css}
-      '';
+          assertPathNotExists \
+            "home-files/${cfg.profilesPath}/derivation-file/chrome/extraFile.css"
+          assertFileContent \
+            "home-files/${cfg.profilesPath}/derivation-file/chrome/userChrome.css" \
+            ${./chrome/userChrome.css}
+        '';
     }
   );
 }

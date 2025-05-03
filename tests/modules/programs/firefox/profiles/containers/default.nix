@@ -25,7 +25,7 @@ in
     // {
       nmt.script = ''
         assertFileContent \
-          home-files/${cfg.configPath}/containers/containers.json \
+          "home-files/${cfg.profilesPath}/containers/containers.json" \
           ${./expected-containers.json}
       '';
     }
