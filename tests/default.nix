@@ -237,7 +237,6 @@ import nmtSrc {
       ./modules/programs/lf
       ./modules/programs/lsd
       ./modules/programs/lieer
-      ./modules/programs/lutris
       ./modules/programs/man
       ./modules/programs/mbsync
       ./modules/programs/mergiraf
@@ -382,6 +381,7 @@ import nmtSrc {
       ./modules/programs/kodi
       ./modules/programs/kickoff
       ./modules/programs/looking-glass-client
+      ./modules/programs/lutris
       ./modules/programs/mangohud
       ./modules/programs/mpvpaper
       ./modules/programs/ncmpcpp-linux
