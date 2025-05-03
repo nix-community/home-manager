@@ -15,7 +15,9 @@ let
 
   cfg = config.services.mako;
 
-  generateConfig = lib.generators.toKeyValue { };
+  generateConfig = lib.generators.toINIWithGlobalSection { };
+  settingsType = with types; attrsOf str;
+  criteriasType = types.attrsOf settingsType;
 in
 {
   meta.maintainers = [ lib.maintainers.onny ];
@@ -75,7 +77,7 @@ in
     enable = mkEnableOption "mako";
     package = mkPackageOption pkgs "mako" { };
     settings = mkOption {
-      type = with types; attrsOf str;
+      type = settingsType;
       default = { };
       example = ''
         {
@@ -100,6 +102,27 @@ in
         here: <https://github.com/emersion/mako/blob/master/doc/mako.5.scd>.
       '';
     };
+    criterias = mkOption {
+      type = criteriasType;
+      default = { };
+      example = {
+        "actionable=true" = {
+          anchor = "top-left";
+        };
+
+        "app-name=Google\\ Chrome" = {
+          max-visible = "5";
+        };
+
+        "field1=value field2=value" = {
+          text-alignment = "left";
+        };
+      };
+      description = ''
+        Criterias for mako's config. All the details can be found in the
+        CRITERIA section in the official documentation.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -109,9 +132,12 @@ in
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."mako/config" = mkIf (cfg.settings != { }) {
+    xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.criterias != { }) {
       onChange = "${cfg.package}/bin/makoctl reload || true";
-      text = generateConfig cfg.settings;
+      text = generateConfig {
+        globalSection = cfg.settings;
+        sections = cfg.criterias;
+      };
     };
   };
 }
