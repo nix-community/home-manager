@@ -46578,6 +46578,116 @@ null or string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.onagre.enable"></a><a class="term" href="options.xhtml#opt-programs.onagre.enable"><code class="option">programs.onagre.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable onagre.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/onagre.nix" target="_top">
+&lt;home-manager/modules/programs/onagre.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.onagre.package"></a><a class="term" href="options.xhtml#opt-programs.onagre.package"><code class="option">programs.onagre.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The onagre package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.onagre</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/onagre.nix" target="_top">
+&lt;home-manager/modules/programs/onagre.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.onagre.style"></a><a class="term" href="options.xhtml#opt-programs.onagre.style"><code class="option">programs.onagre.style</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration file to be written to theme.scss for setting
+Onagre’s theme. The documentation can be found here:
+<a class="link" href="https://github.com/onagre-launcher/onagre/wiki/Theming"  target="_top">https://github.com/onagre-launcher/onagre/wiki/Theming</a></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  .onagre {
+    --exit-unfocused: false;
+    height: 250px;
+    width: 400px;
+    --font-family: &quot;Iosevka,Iosevka Nerd Font&quot;;
+    font-size: 18px;
+    background: #151515;
+    color: #414141;
+    padding: 10px;
+  
+    .container {
+      .rows {
+        --height: fill-portion 6;
+        .row-selected {
+          color: #ffffff;
+          --spacing: 3px;
+        }
+      }
+  
+      .scrollable {
+        background: #151515;
+        width: 0;
+        .scroller {
+          width: 0;
+          color: #151515;
+        }
+      }
+    }
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/onagre.nix" target="_top">
+&lt;home-manager/modules/programs/onagre.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.onedrive.enable"></a><a class="term" href="options.xhtml#opt-programs.onedrive.enable"><code class="option">programs.onedrive.enable</code>
   </a>
  </span>
