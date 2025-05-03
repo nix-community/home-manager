@@ -260,23 +260,23 @@ in
           }
 
           assertFirefoxSearchContent \
-            home-files/${cfg.configPath}/search/search.json.mozlz4 \
+            "home-files/${cfg.profilesPath}/search/search.json.mozlz4" \
             ${withName ./expected-search.json}
 
           assertFirefoxSearchContent \
-            home-files/${cfg.configPath}/searchWithoutDefault/search.json.mozlz4 \
+            "home-files/${cfg.profilesPath}/searchWithoutDefault/search.json.mozlz4" \
             ${withName ./expected-search-without-default.json}
 
           assertFirefoxSearchContent \
-            home-files/${cfg.configPath}/migrateSearchV7/search.json.mozlz4 \
+            "home-files/${cfg.profilesPath}/migrateSearchV7/search.json.mozlz4" \
             ${withName ./expected-migrate-search-v7.json}
 
           assertFirefoxSearchContent \
-            home-files/${cfg.configPath}/migrateIconsV11/search.json.mozlz4 \
+            "home-files/${cfg.profilesPath}/migrateIconsV11/search.json.mozlz4" \
             ${withName ./expected-migrate-icons-v11.json}
 
           assertFirefoxSearchContent \
-            home-files/${cfg.configPath}/migrateIconsV12/search.json.mozlz4 \
+            "home-files/${cfg.profilesPath}/migrateIconsV12/search.json.mozlz4" \
             ${withName ./expected-migrate-icons-v12.json}
         '';
     }

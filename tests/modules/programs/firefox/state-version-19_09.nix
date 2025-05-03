@@ -1,5 +1,10 @@
 modulePath:
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = lib.getAttrFromPath modulePath config;
 
@@ -8,7 +13,7 @@ in
 {
   imports = [ firefoxMockOverlay ];
 
-  config = lib.mkIf config.test.enableBig (
+  config = lib.mkIf (config.test.enableBig && !pkgs.hostPlatform.isDarwin) (
     {
       home.stateVersion = "19.09";
     }
