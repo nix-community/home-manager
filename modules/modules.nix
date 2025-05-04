@@ -265,6 +265,7 @@ let
       ./programs/starship.nix
       ./programs/streamlink.nix
       ./programs/superfile.nix
+      ./programs/sway-easyfocus.nix
       ./programs/swayimg.nix
       ./programs/swaylock.nix
       ./programs/swayr.nix

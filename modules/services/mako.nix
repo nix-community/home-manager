@@ -63,11 +63,6 @@ in
         map (option: lib.mkRenamedOptionModule (oldPrefix ++ [ option ]) (newPrefix ++ [ option ]));
     in
     [
-      (lib.mkRemovedOptionModule [
-        "services"
-        "mako"
-        "extraConfig"
-      ] "Use services.mako.settings instead.")
       (lib.mkRenamedOptionModule [ "services" "mako" "criterias" ] [ "services" "mako" "criteria" ])
     ]
     ++ mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) renamedOptions;
@@ -122,6 +117,15 @@ in
         CRITERIA section in the official documentation.
       '';
     };
+    extraConfig = mkOption {
+      default = "";
+      type = types.lines;
+      example = lib.literalExpression ''
+        [urgency=low]
+        border-color=#b8bb26
+      '';
+      description = "Additional configuration.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -133,10 +137,12 @@ in
 
     xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.criteria != { }) {
       onChange = "${cfg.package}/bin/makoctl reload || true";
-      text = generateConfig {
-        globalSection = cfg.settings;
-        sections = cfg.criteria;
-      };
+      text =
+        generateConfig {
+          globalSection = cfg.settings;
+          sections = cfg.criteria;
+        }
+        + cfg.extraConfig;
     };
   };
 }
