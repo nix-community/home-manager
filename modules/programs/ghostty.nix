@@ -186,7 +186,7 @@ in
           syntaxes.ghostty = {
             src = cfg.package;
             file =
-              if pkgs.stdenv.isDarwin then
+              if pkgs.stdenv.hostPlatform.isDarwin then
                 "Applications/Ghostty.app/Contents/Resources/bat/syntaxes/ghostty.sublime-syntax"
               else
                 "share/bat/syntaxes/ghostty.sublime-syntax";
