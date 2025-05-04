@@ -18,7 +18,7 @@
       markup = "true";
     };
 
-    criterias = {
+    criteria = {
       "actionable=true" = {
         anchor = "top-left";
       };
