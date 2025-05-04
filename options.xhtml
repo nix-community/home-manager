@@ -79376,8 +79376,7 @@ attribute set of string</p>
  </span>
 </dt>
 <dd>
-<p>Whether to enable Mako, lightweight notification daemon for Wayland
-.</p>
+<p>Whether to enable mako.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
@@ -79423,196 +79422,31 @@ package</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-services.mako.actions"></a><a class="term" href="options.xhtml#opt-services.mako.actions"><code class="option">services.mako.actions</code>
+ <a id="opt-services.mako.criterias"></a><a class="term" href="options.xhtml#opt-services.mako.criterias"><code class="option">services.mako.criterias</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Applications may request an action to be associated with activating a
-notification. Disabling this will cause mako to ignore these requests.</p>
+<p>Criterias for mako’s config. All the details can be found in the
+CRITERIA section in the official documentation.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or boolean</p>
+attribute set of attribute set of string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
+<code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.anchor"></a><a class="term" href="options.xhtml#opt-services.mako.anchor"><code class="option">services.mako.anchor</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Show notifications at the specified position on the output.
-Supported values are top-right, top-center, top-left, bottom-right,
-bottom-center, bottom-left, center-right, center-left and center.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or one of “top-right”, “top-center”, “top-left”, “bottom-right”, “bottom-center”, “bottom-left”, “center-right”, “center-left”, “center”</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;top-right&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.backgroundColor"></a><a class="term" href="options.xhtml#opt-services.mako.backgroundColor"><code class="option">services.mako.backgroundColor</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set popup background color to a specific color, represented in hex
-color code.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;#285577FF&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.borderColor"></a><a class="term" href="options.xhtml#opt-services.mako.borderColor"><code class="option">services.mako.borderColor</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set popup border color to a specific color, represented in hex color
-code.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;#4C7899FF&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.borderRadius"></a><a class="term" href="options.xhtml#opt-services.mako.borderRadius"><code class="option">services.mako.borderRadius</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set popup corner radius to the specified number of pixels.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">0</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.borderSize"></a><a class="term" href="options.xhtml#opt-services.mako.borderSize"><code class="option">services.mako.borderSize</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set popup border size to the specified number of pixels.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">1</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.defaultTimeout"></a><a class="term" href="options.xhtml#opt-services.mako.defaultTimeout"><code class="option">services.mako.defaultTimeout</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set the default timeout to timeout in milliseconds. To disable the
-timeout, set it to zero.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">0</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.extraConfig"></a><a class="term" href="options.xhtml#opt-services.mako.extraConfig"><code class="option">services.mako.extraConfig</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Additional configuration.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-strings concatenated with “\n”</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;&quot;</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[urgency=low]
-border-color=#b8bb26
-
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;actionable=true&quot; = {
+    anchor = &quot;top-left&quot;;
+  };
+  &quot;app-name=Google\\ Chrome&quot; = {
+    max-visible = &quot;5&quot;;
+  };
+  &quot;field1=value field2=value&quot; = {
+    text-alignment = &quot;left&quot;;
+  };
+}
 </code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
@@ -79626,489 +79460,39 @@ border-color=#b8bb26
 </dd>
 <dt>
  <span class="term">
- <a id="opt-services.mako.font"></a><a class="term" href="options.xhtml#opt-services.mako.font"><code class="option">services.mako.font</code>
+ <a id="opt-services.mako.settings"></a><a class="term" href="options.xhtml#opt-services.mako.settings"><code class="option">services.mako.settings</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Font to use, in Pango format.</p>
+<p>Configuration settings for mako. All available options can be found
+here: <a class="link" href="https://github.com/emersion/mako/blob/master/doc/mako.5.scd"  target="_top">https://github.com/emersion/mako/blob/master/doc/mako.5.scd</a>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
+attribute set of string</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;monospace 10&quot;</code></p>
+<code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.format"></a><a class="term" href="options.xhtml#opt-services.mako.format"><code class="option">services.mako.format</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set notification format string to format. See FORMAT SPECIFIERS for
-more information. To change this for grouped notifications, set it
-within a grouped criteria.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;&lt;b&gt;%s&lt;/b&gt;\\n%b&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.groupBy"></a><a class="term" href="options.xhtml#opt-services.mako.groupBy"><code class="option">services.mako.groupBy</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>A comma-separated list of criteria fields that will be compared to
-other visible notifications to determine if this one should form a
-group with them. All listed criteria must be exactly equal for two
-notifications to group.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.height"></a><a class="term" href="options.xhtml#opt-services.mako.height"><code class="option">services.mako.height</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set maximum height of notification popups. Notifications whose text
-takes up less space are shrunk to fit.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">100</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.iconPath"></a><a class="term" href="options.xhtml#opt-services.mako.iconPath"><code class="option">services.mako.iconPath</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Paths to search for icons when a notification specifies a name
-instead of a full path. Colon-delimited. This approximates the search
-algorithm used by the XDG Icon Theme Specification, but does not
-support any of the theme metadata. Therefore, if you want to search
-parent themes, you’ll need to add them to the path manually.</p><p>The <code class="filename">/usr/share/icons/hicolor</code> and
-<code class="filename">/usr/share/pixmaps</code> directories are
-always searched.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.icons"></a><a class="term" href="options.xhtml#opt-services.mako.icons"><code class="option">services.mako.icons</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Whether or not to show icons in notifications.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.ignoreTimeout"></a><a class="term" href="options.xhtml#opt-services.mako.ignoreTimeout"><code class="option">services.mako.ignoreTimeout</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>If set, mako will ignore the expire timeout sent by notifications
-and use the one provided by default-timeout instead.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.layer"></a><a class="term" href="options.xhtml#opt-services.mako.layer"><code class="option">services.mako.layer</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Arrange mako at the specified layer, relative to normal windows.
-Supported values are background, bottom, top, and overlay. Using
-overlay will cause notifications to be displayed above fullscreen
-windows, though this may also occur at top depending on your
-compositor.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or one of “background”, “bottom”, “top”, “overlay”</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;top&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.margin"></a><a class="term" href="options.xhtml#opt-services.mako.margin"><code class="option">services.mako.margin</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set margin of each edge specified in pixels. Specify single value to
-apply margin on all sides. Two comma-separated values will set
-vertical and horizontal edges separately. Four comma-separated will
-give each edge a separate value.
-For example: 10,20,5 will set top margin to 10, left and right to 20
-and bottom to five.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;10&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.markup"></a><a class="term" href="options.xhtml#opt-services.mako.markup"><code class="option">services.mako.markup</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>If 1, enable Pango markup. If 0, disable Pango markup. If enabled,
-Pango markup will be interpreted in your format specifier and in the
-body of notifications.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.maxHistory"></a><a class="term" href="options.xhtml#opt-services.mako.maxHistory"><code class="option">services.mako.maxHistory</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set maximum number of expired notifications to keep in the history
-buffer. Set 0 to disable history.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">5</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.maxIconSize"></a><a class="term" href="options.xhtml#opt-services.mako.maxIconSize"><code class="option">services.mako.maxIconSize</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set maximum icon size to the specified number of pixels.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">64</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.maxVisible"></a><a class="term" href="options.xhtml#opt-services.mako.maxVisible"><code class="option">services.mako.maxVisible</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set maximum number of visible notifications. Set -1 to show all.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">5</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.output"></a><a class="term" href="options.xhtml#opt-services.mako.output"><code class="option">services.mako.output</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Show notifications on the specified output. If empty, notifications
-will appear on the focused output. Requires the compositor to support
-the Wayland protocol xdg-output-unstable-v1 version 2.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.padding"></a><a class="term" href="options.xhtml#opt-services.mako.padding"><code class="option">services.mako.padding</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set padding of each edge specified in pixels. Specify single value to
-apply margin on all sides. Two comma-separated values will set
-vertical and horizontal edges separately. Four comma-separated will
-give each edge a separate value.
-For example: 10,20,5 will set top margin to 10, left and right to 20
-and bottom to five.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;5&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.progressColor"></a><a class="term" href="options.xhtml#opt-services.mako.progressColor"><code class="option">services.mako.progressColor</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set popup progress indicator color to a specific color,
-represented in hex color code. To draw the progress
-indicator on top of the background color, use the
-<code class="literal">over</code> attribute. To replace the background
-color, use the <code class="literal">source</code> attribute (this can
-be useful when the notification is semi-transparent).</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;over #5588AAFF&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.sort"></a><a class="term" href="options.xhtml#opt-services.mako.sort"><code class="option">services.mako.sort</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Sorts incoming notifications by time and/or priority in ascending(+)
-or descending(-) order.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or one of “+time”, “-time”, “+priority”, “-priority”</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;-time&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.textColor"></a><a class="term" href="options.xhtml#opt-services.mako.textColor"><code class="option">services.mako.textColor</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set popup text color to a specific color, represented in hex color
-code.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;#FFFFFFFF&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/mako.nix" target="_top">
-&lt;home-manager/modules/services/mako.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-services.mako.width"></a><a class="term" href="options.xhtml#opt-services.mako.width"><code class="option">services.mako.width</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Set width of notification popups in specified number of pixels.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or signed integer</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">300</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  {
+    actions = &quot;true&quot;;
+    anchor = &quot;top-right&quot;;
+    backgroundColor = &quot;#000000&quot;;
+    borderColor = &quot;#FFFFFF&quot;;
+    borderRadius = &quot;0&quot;;
+    defaultTimeout = &quot;0&quot;;
+    font = &quot;monospace 10&quot;;
+    height = &quot;100&quot;;
+    width = &quot;300&quot;;
+    icons = &quot;true&quot;;
+    ignoreTimeout = &quot;false&quot;;
+    layer = &quot;top&quot;;
+    margin = &quot;10&quot;;
+    markup = &quot;true&quot;;
+  }
+&#x27;&#x27;
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
