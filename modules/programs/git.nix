@@ -496,6 +496,17 @@ in
           '';
         };
       };
+
+      patdiff = {
+        enable = mkEnableOption "" // {
+          description = ''
+            Whether to enable the {command}`patdiff` differ.
+            See <https://opensource.janestreet.com/patdiff/>
+          '';
+        };
+
+        package = mkPackageOption pkgs "patdiff" { };
+      };
     };
   };
 
@@ -526,10 +537,11 @@ in
                   cfg.difftastic.enable
                   cfg.diff-highlight.enable
                   cfg.riff.enable
+                  cfg.patdiff.enable
                 ];
               in
               lib.count lib.id enabled <= 1;
-            message = "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' can be set to true at the same time.";
+            message = "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' or 'programs.git.patdiff' can be set to true at the same time.";
           }
         ];
 
@@ -898,6 +910,20 @@ in
             };
 
             interactive.diffFilter = "${riffExe} --color=on";
+          };
+        }
+      )
+
+      (
+        let
+          patdiffPackage = cfg.patdiff.package;
+          patdiffCommand = "${lib.getExe' patdiffPackage "patdiff-git-wrapper"}";
+        in
+        mkIf cfg.patdiff.enable {
+          home.packages = [ patdiffPackage ];
+
+          programs.git.iniContent = {
+            diff.external = patdiffCommand;
           };
         }
       )

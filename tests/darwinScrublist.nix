@@ -45,6 +45,7 @@ let
     "gh-dash"
     "ghostty"
     "git"
+    "patdiff"
     "gitMinimal"
     "git-cliff"
     "git-credential-oauth"
