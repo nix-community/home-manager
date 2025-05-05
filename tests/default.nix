@@ -392,6 +392,7 @@ import nmtSrc {
       ./modules/programs/rbw
       ./modules/programs/rofi
       ./modules/programs/rofi-pass
+      ./modules/programs/sway-easyfocus
       ./modules/programs/swayimg
       ./modules/programs/swaylock
       ./modules/programs/swayr
