@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib)
-    types
     mkIf
     mkEnableOption
     mkPackageOption
@@ -16,8 +15,8 @@ let
   cfg = config.services.mako;
 
   generateConfig = lib.generators.toINIWithGlobalSection { };
-  settingsType = with types; attrsOf str;
-  criteriaType = types.attrsOf settingsType;
+  iniType = (pkgs.formats.ini { }).type;
+  iniAtomType = (pkgs.formats.ini { }).lib.types.atom;
 in
 {
   meta.maintainers = [ lib.maintainers.onny ];
@@ -76,7 +75,7 @@ in
     enable = mkEnableOption "mako";
     package = mkPackageOption pkgs "mako" { };
     settings = mkOption {
-      type = settingsType;
+      type = lib.types.attrsOf iniAtomType;
       default = { };
       example = ''
         {
@@ -102,7 +101,7 @@ in
       '';
     };
     criteria = mkOption {
-      type = criteriaType;
+      type = iniType;
       default = { };
       example = {
         "actionable=true" = {
