@@ -2,7 +2,14 @@
 {
   programs = {
     mise = {
-      package = config.lib.test.mkStubPackage { name = "mise"; };
+      package = config.lib.test.mkStubPackage {
+        name = "mise";
+        buildScript = ''
+          mkdir -p $out/bin
+          touch $out/bin/mise
+          chmod +x $out/bin/mise
+        '';
+      };
       enable = true;
       enableNushellIntegration = true;
     };
@@ -11,12 +18,7 @@
   };
 
   nmt.script = ''
-    assertFileContains home-files/.config/nushell/env.nu \
-      '
-      let mise_path = $nu.default-config-dir | path join mise.nu
-      ^mise activate nu | save $mise_path --force
-      '
-    assertFileContains home-files/.config/nushell/config.nu \
-      'use ($nu.default-config-dir | path join mise.nu)'
+    assertFileRegex home-files/.config/nushell/config.nu \
+      'use \/nix\/store\/.*-mise-nushell-config.nu'
   '';
 }

@@ -129,12 +129,12 @@ in
       '';
 
       nushell = mkIf (cfg.enableNushellIntegration && cfg.package != null) {
-        extraEnv = ''
-          let mise_path = $nu.default-config-dir | path join mise.nu
-          ^mise activate nu | save $mise_path --force
-        '';
         extraConfig = ''
-          use ($nu.default-config-dir | path join mise.nu)
+          use ${
+            pkgs.runCommand "mise-nushell-config.nu" { } ''
+              ${lib.getExe cfg.package} activate nu > $out
+            ''
+          }
         '';
       };
     };
