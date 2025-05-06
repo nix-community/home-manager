@@ -14,6 +14,7 @@ in
   options.programs.television = {
     enable = lib.mkEnableOption "television";
     package = lib.mkPackageOption pkgs "television" { nullable = true; };
+
     settings = lib.mkOption {
       type = tomlFormat.type;
       default = { };
@@ -36,6 +37,10 @@ in
         for the full list of options.
       '';
     };
+
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
@@ -44,5 +49,15 @@ in
     xdg.configFile."television/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "config.toml" cfg.settings;
     };
+
+    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
+      eval "$(${lib.getExe cfg.package} init bash)"
+    '';
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
+      eval "$(${lib.getExe cfg.package} init zsh)"
+    '';
+    programs.fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
+      ${lib.getExe cfg.package} init fish | source
+    '';
   };
 }
