@@ -7,7 +7,6 @@
 
 let
   inherit (lib)
-    all
     filterAttrs
     isStorePath
     literalExpression

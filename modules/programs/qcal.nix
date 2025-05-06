@@ -13,14 +13,6 @@ let
     lib.filterAttrs (_: a: a.qcal.enable) config.accounts.calendar.accounts
   );
 
-  rename =
-    oldname:
-    builtins.getAttr oldname {
-      url = "Url";
-      userName = "Username";
-      passwordCommand = "PasswordCmd";
-    };
-
   filteredAccounts =
     let
       mkAccount =

@@ -447,7 +447,6 @@ in
       programs.neovim.generatedConfigs =
         let
           grouped = lib.lists.groupBy (x: x.type) pluginsNormalized;
-          concatConfigs = lib.concatMapStrings (p: p.config);
           configsOnly = lib.foldl (acc: p: if p.config != null then acc ++ [ p.config ] else acc) [ ];
         in
         lib.mapAttrs (name: vals: lib.concatStringsSep "\n" (configsOnly vals)) grouped;

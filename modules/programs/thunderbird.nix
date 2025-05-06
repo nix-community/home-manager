@@ -275,7 +275,7 @@ in
                 feedAccounts = mkOption {
                   type = types.attrsOf (
                     types.submodule (
-                      { config, name, ... }:
+                      { name, ... }:
                       {
                         options = {
                           name = mkOption {

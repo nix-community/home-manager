@@ -173,7 +173,6 @@ let
       author,
       name,
       version,
-      hash,
     }@args:
     pkgs.stdenvNoCC.mkDerivation {
       pname = "lapce-plugin-${author}-${name}";

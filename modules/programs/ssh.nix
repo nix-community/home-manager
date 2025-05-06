@@ -70,288 +70,285 @@ let
     };
   };
 
-  matchBlockModule = types.submodule (
-    { dagName, ... }:
-    {
-      options = {
-        host = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          example = "*.example.org";
-          description = ''
-            `Host` pattern used by this conditional block.
-            See
-            {manpage}`ssh_config(5)`
-            for `Host` block details.
-            This option is ignored if
-            {option}`ssh.matchBlocks.*.match`
-            if defined.
-          '';
-        };
-
-        match = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          example = ''
-            host <hostname> canonical
-            host <hostname> exec "ping -c1 -q 192.168.17.1"'';
-          description = ''
-            `Match` block conditions used by this block. See
-            {manpage}`ssh_config(5)`
-            for `Match` block details.
-            This option takes precedence over
-            {option}`ssh.matchBlocks.*.host`
-            if defined.
-          '';
-        };
-
-        port = mkOption {
-          type = types.nullOr types.port;
-          default = null;
-          description = "Specifies port number to connect on remote host.";
-        };
-
-        forwardAgent = mkOption {
-          default = null;
-          type = types.nullOr types.bool;
-          description = ''
-            Whether the connection to the authentication agent (if any)
-            will be forwarded to the remote machine.
-          '';
-        };
-
-        forwardX11 = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Specifies whether X11 connections will be automatically redirected
-            over the secure channel and {env}`DISPLAY` set.
-          '';
-        };
-
-        forwardX11Trusted = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Specifies whether remote X11 clients will have full access to the
-            original X11 display.
-          '';
-        };
-
-        identitiesOnly = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Specifies that ssh should only use the authentication
-            identity explicitly configured in the
-            {file}`~/.ssh/config` files or passed on the
-            ssh command-line, even if {command}`ssh-agent`
-            offers more identities.
-          '';
-        };
-
-        identityFile = mkOption {
-          type = with types; either (listOf str) (nullOr str);
-          default = [ ];
-          apply =
-            p:
-            if p == null then
-              [ ]
-            else if lib.isString p then
-              [ p ]
-            else
-              p;
-          description = ''
-            Specifies files from which the user identity is read.
-            Identities will be tried in the given order.
-          '';
-        };
-
-        identityAgent = mkOption {
-          type = with types; either (listOf str) (nullOr str);
-          default = [ ];
-          apply =
-            p:
-            if p == null then
-              [ ]
-            else if lib.isString p then
-              [ p ]
-            else
-              p;
-          description = ''
-            Specifies the location of the ssh identity agent.
-          '';
-        };
-
-        user = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "Specifies the user to log in as.";
-        };
-
-        hostname = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "Specifies the real host name to log into.";
-        };
-
-        serverAliveInterval = mkOption {
-          type = types.int;
-          default = 0;
-          description = "Set timeout in seconds after which response will be requested.";
-        };
-
-        serverAliveCountMax = mkOption {
-          type = types.ints.positive;
-          default = 3;
-          description = ''
-            Sets the number of server alive messages which may be sent
-            without SSH receiving any messages back from the server.
-          '';
-        };
-
-        sendEnv = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          description = ''
-            Environment variables to send from the local host to the
-            server.
-          '';
-        };
-
-        setEnv = mkOption {
-          type =
-            with types;
-            attrsOf (oneOf [
-              str
-              path
-              int
-              float
-            ]);
-          default = { };
-          description = ''
-            Environment variables and their value to send to the server.
-          '';
-        };
-
-        compression = mkOption {
-          type = types.nullOr types.bool;
-          default = null;
-          description = ''
-            Specifies whether to use compression. Omitted from the host
-            block when `null`.
-          '';
-        };
-
-        checkHostIP = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Check the host IP address in the
-            {file}`known_hosts` file.
-          '';
-        };
-
-        proxyCommand = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "The command to use to connect to the server.";
-        };
-
-        proxyJump = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "The proxy host to use to connect to the server.";
-        };
-
-        certificateFile = mkOption {
-          type = with types; either (listOf str) (nullOr str);
-          default = [ ];
-          apply =
-            p:
-            if p == null then
-              [ ]
-            else if lib.isString p then
-              [ p ]
-            else
-              p;
-          description = ''
-            Specifies files from which the user certificate is read.
-          '';
-        };
-
-        addressFamily = mkOption {
-          default = null;
-          type = types.nullOr (
-            types.enum [
-              "any"
-              "inet"
-              "inet6"
-            ]
-          );
-          description = ''
-            Specifies which address family to use when connecting.
-          '';
-        };
-
-        localForwards = mkOption {
-          type = types.listOf forwardModule;
-          default = [ ];
-          example = literalExpression ''
-            [
-              {
-                bind.port = 8080;
-                host.address = "10.0.0.13";
-                host.port = 80;
-              }
-            ];
-          '';
-          description = ''
-            Specify local port forwardings. See
-            {manpage}`ssh_config(5)` for `LocalForward`.
-          '';
-        };
-
-        remoteForwards = mkOption {
-          type = types.listOf forwardModule;
-          default = [ ];
-          example = literalExpression ''
-            [
-              {
-                bind.port = 8080;
-                host.address = "10.0.0.13";
-                host.port = 80;
-              }
-            ];
-          '';
-          description = ''
-            Specify remote port forwardings. See
-            {manpage}`ssh_config(5)` for `RemoteForward`.
-          '';
-        };
-
-        dynamicForwards = mkOption {
-          type = types.listOf dynamicForwardModule;
-          default = [ ];
-          example = literalExpression ''
-            [ { port = 8080; } ];
-          '';
-          description = ''
-            Specify dynamic port forwardings. See
-            {manpage}`ssh_config(5)` for `DynamicForward`.
-          '';
-        };
-
-        extraOptions = mkOption {
-          type = types.attrsOf types.str;
-          default = { };
-          description = "Extra configuration options for the host.";
-        };
+  matchBlockModule = types.submodule {
+    options = {
+      host = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "*.example.org";
+        description = ''
+          `Host` pattern used by this conditional block.
+          See
+          {manpage}`ssh_config(5)`
+          for `Host` block details.
+          This option is ignored if
+          {option}`ssh.matchBlocks.*.match`
+          if defined.
+        '';
       };
 
-      #    config.host = mkDefault dagName;
-    }
-  );
+      match = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = ''
+          host <hostname> canonical
+          host <hostname> exec "ping -c1 -q 192.168.17.1"'';
+        description = ''
+          `Match` block conditions used by this block. See
+          {manpage}`ssh_config(5)`
+          for `Match` block details.
+          This option takes precedence over
+          {option}`ssh.matchBlocks.*.host`
+          if defined.
+        '';
+      };
+
+      port = mkOption {
+        type = types.nullOr types.port;
+        default = null;
+        description = "Specifies port number to connect on remote host.";
+      };
+
+      forwardAgent = mkOption {
+        default = null;
+        type = types.nullOr types.bool;
+        description = ''
+          Whether the connection to the authentication agent (if any)
+          will be forwarded to the remote machine.
+        '';
+      };
+
+      forwardX11 = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Specifies whether X11 connections will be automatically redirected
+          over the secure channel and {env}`DISPLAY` set.
+        '';
+      };
+
+      forwardX11Trusted = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Specifies whether remote X11 clients will have full access to the
+          original X11 display.
+        '';
+      };
+
+      identitiesOnly = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Specifies that ssh should only use the authentication
+          identity explicitly configured in the
+          {file}`~/.ssh/config` files or passed on the
+          ssh command-line, even if {command}`ssh-agent`
+          offers more identities.
+        '';
+      };
+
+      identityFile = mkOption {
+        type = with types; either (listOf str) (nullOr str);
+        default = [ ];
+        apply =
+          p:
+          if p == null then
+            [ ]
+          else if lib.isString p then
+            [ p ]
+          else
+            p;
+        description = ''
+          Specifies files from which the user identity is read.
+          Identities will be tried in the given order.
+        '';
+      };
+
+      identityAgent = mkOption {
+        type = with types; either (listOf str) (nullOr str);
+        default = [ ];
+        apply =
+          p:
+          if p == null then
+            [ ]
+          else if lib.isString p then
+            [ p ]
+          else
+            p;
+        description = ''
+          Specifies the location of the ssh identity agent.
+        '';
+      };
+
+      user = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Specifies the user to log in as.";
+      };
+
+      hostname = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Specifies the real host name to log into.";
+      };
+
+      serverAliveInterval = mkOption {
+        type = types.int;
+        default = 0;
+        description = "Set timeout in seconds after which response will be requested.";
+      };
+
+      serverAliveCountMax = mkOption {
+        type = types.ints.positive;
+        default = 3;
+        description = ''
+          Sets the number of server alive messages which may be sent
+          without SSH receiving any messages back from the server.
+        '';
+      };
+
+      sendEnv = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          Environment variables to send from the local host to the
+          server.
+        '';
+      };
+
+      setEnv = mkOption {
+        type =
+          with types;
+          attrsOf (oneOf [
+            str
+            path
+            int
+            float
+          ]);
+        default = { };
+        description = ''
+          Environment variables and their value to send to the server.
+        '';
+      };
+
+      compression = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          Specifies whether to use compression. Omitted from the host
+          block when `null`.
+        '';
+      };
+
+      checkHostIP = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Check the host IP address in the
+          {file}`known_hosts` file.
+        '';
+      };
+
+      proxyCommand = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The command to use to connect to the server.";
+      };
+
+      proxyJump = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The proxy host to use to connect to the server.";
+      };
+
+      certificateFile = mkOption {
+        type = with types; either (listOf str) (nullOr str);
+        default = [ ];
+        apply =
+          p:
+          if p == null then
+            [ ]
+          else if lib.isString p then
+            [ p ]
+          else
+            p;
+        description = ''
+          Specifies files from which the user certificate is read.
+        '';
+      };
+
+      addressFamily = mkOption {
+        default = null;
+        type = types.nullOr (
+          types.enum [
+            "any"
+            "inet"
+            "inet6"
+          ]
+        );
+        description = ''
+          Specifies which address family to use when connecting.
+        '';
+      };
+
+      localForwards = mkOption {
+        type = types.listOf forwardModule;
+        default = [ ];
+        example = literalExpression ''
+          [
+            {
+              bind.port = 8080;
+              host.address = "10.0.0.13";
+              host.port = 80;
+            }
+          ];
+        '';
+        description = ''
+          Specify local port forwardings. See
+          {manpage}`ssh_config(5)` for `LocalForward`.
+        '';
+      };
+
+      remoteForwards = mkOption {
+        type = types.listOf forwardModule;
+        default = [ ];
+        example = literalExpression ''
+          [
+            {
+              bind.port = 8080;
+              host.address = "10.0.0.13";
+              host.port = 80;
+            }
+          ];
+        '';
+        description = ''
+          Specify remote port forwardings. See
+          {manpage}`ssh_config(5)` for `RemoteForward`.
+        '';
+      };
+
+      dynamicForwards = mkOption {
+        type = types.listOf dynamicForwardModule;
+        default = [ ];
+        example = literalExpression ''
+          [ { port = 8080; } ];
+        '';
+        description = ''
+          Specify dynamic port forwardings. See
+          {manpage}`ssh_config(5)` for `DynamicForward`.
+        '';
+      };
+
+      extraOptions = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = "Extra configuration options for the host.";
+      };
+    };
+
+    #    config.host = mkDefault dagName;
+  };
 
   matchBlockStr =
     key: cf:

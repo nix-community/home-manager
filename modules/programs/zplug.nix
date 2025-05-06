@@ -9,25 +9,20 @@ let
 
   cfg = config.programs.zsh.zplug;
 
-  pluginModule = types.submodule (
-    { config, ... }:
-    {
-      options = {
-        name = mkOption {
-          type = types.str;
-          description = "The name of the plugin.";
-        };
-
-        tags = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          description = "The plugin tags.";
-        };
+  pluginModule = types.submodule {
+    options = {
+      name = mkOption {
+        type = types.str;
+        description = "The name of the plugin.";
       };
 
-    }
-  );
-
+      tags = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "The plugin tags.";
+      };
+    };
+  };
 in
 {
   options.programs.zsh.zplug = {

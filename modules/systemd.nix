@@ -12,7 +12,6 @@ let
   inherit (lib)
     any
     attrValues
-    getAttr
     hm
     isBool
     literalExpression

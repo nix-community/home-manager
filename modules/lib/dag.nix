@@ -126,7 +126,6 @@ in
         i: before: after: entries:
         let
           name = "${tag}-${toString i}";
-          i' = i + 1;
         in
         if entries == [ ] then
           hm.dag.empty

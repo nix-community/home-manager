@@ -8,8 +8,6 @@ let
   inherit (lib)
     mkEnableOption
     mkPackageOption
-    types
-    literalExpression
     mkIf
     maintainers
     ;

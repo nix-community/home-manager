@@ -12,7 +12,7 @@ let
     ]);
 
   perAccountGroups =
-    { name, config, ... }:
+    { name, ... }:
     {
       options = {
         name = mkOption {
@@ -43,7 +43,7 @@ let
 
   # Options for configuring channel(s) that will be composed together into a group.
   channel =
-    { name, config, ... }:
+    { name, ... }:
     {
       options = {
         name = mkOption {
