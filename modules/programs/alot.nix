@@ -96,10 +96,10 @@ let
           sendmail_command = optionalString (alot.sendMailCommand != null) alot.sendMailCommand;
         }
         // optionalAttrs (folders.sent != null) {
-          sent_box = "maildir" + "://" + maildir.absPath + "/" + folders.sent;
+          sent_box = "'maildir" + "://" + maildir.absPath + "/" + folders.sent + "'";
         }
         // optionalAttrs (folders.drafts != null) {
-          draft_box = "maildir" + "://" + maildir.absPath + "/" + folders.drafts;
+          draft_box = "'maildir" + "://" + maildir.absPath + "/" + folders.drafts + "'";
         }
         // optionalAttrs (aliases != [ ]) {
           aliases = concatStringsSep "," aliases;
