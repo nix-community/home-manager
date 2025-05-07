@@ -65,9 +65,9 @@ in
       ] "Use services.mako.settings instead.")
       (lib.mkRenamedOptionModule [ "services" "mako" "criterias" ] [ "services" "mako" "criteria" ])
     ]
-    ++ lib.deprecations.mkSettingsRenamedOptionModules basePath (
-      basePath ++ [ "settings" ]
-    ) renamedOptions;
+    ++ lib.hm.deprecations.mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) {
+      transform = lib.hm.strings.toKebabCase;
+    } renamedOptions;
 
   options.services.mako = {
     enable = mkEnableOption "mako";
