@@ -9,9 +9,14 @@ let
 
   cfg = config.programs.jujutsu;
   tomlFormat = pkgs.formats.toml { };
+  packageVersion = lib.getVersion cfg.package;
 
-  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else config.xdg.configHome;
-
+  # jj v0.29+ deprecated support for "~/Library/Application Support" on Darwin.
+  configDir =
+    if pkgs.stdenv.isDarwin && !(lib.versionAtLeast packageVersion "0.29.0") then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 in
 {
   meta.maintainers = [ lib.maintainers.shikanime ];
