@@ -56,10 +56,6 @@ in
         "ignoreTimeout"
         "groupBy"
       ];
-
-      mkSettingsRenamedOptionModules =
-        oldPrefix: newPrefix:
-        map (option: lib.mkRenamedOptionModule (oldPrefix ++ [ option ]) (newPrefix ++ [ option ]));
     in
     [
       (lib.mkRemovedOptionModule [
@@ -69,7 +65,9 @@ in
       ] "Use services.mako.settings instead.")
       (lib.mkRenamedOptionModule [ "services" "mako" "criterias" ] [ "services" "mako" "criteria" ])
     ]
-    ++ mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) renamedOptions;
+    ++ lib.deprecations.mkSettingsRenamedOptionModules basePath (
+      basePath ++ [ "settings" ]
+    ) renamedOptions;
 
   options.services.mako = {
     enable = mkEnableOption "mako";
