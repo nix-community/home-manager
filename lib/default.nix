@@ -10,11 +10,6 @@
       check ? true,
       # Deprecated:
       configuration ? null,
-      extraModules ? null,
-      stateVersion ? null,
-      username ? null,
-      homeDirectory ? null,
-      system ? null,
     }@args:
     let
       msgForRemovedArg = ''

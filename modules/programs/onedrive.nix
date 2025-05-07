@@ -11,8 +11,6 @@ let
     mkPackageOption
     mkOption
     types
-    concatStringsSep
-    mapAttrsToList
     ;
 
   cfg = config.programs.onedrive;

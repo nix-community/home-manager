@@ -43,25 +43,21 @@ let
       str
     ];
 
-  bindingType = types.submodule (
-    { name, config, ... }:
-    {
-      options = {
-        key = mkOption {
-          type = types.str;
-          description = "Key to bind.";
-          example = "j";
-        };
-
-        command = mkOption {
-          type = with types; either str (listOf str);
-          description = "Command or sequence of commands to be executed.";
-          example = "scroll_down";
-        };
+  bindingType = types.submodule {
+    options = {
+      key = mkOption {
+        type = types.str;
+        description = "Key to bind.";
+        example = "j";
       };
-    }
-  );
 
+      command = mkOption {
+        type = with types; either str (listOf str);
+        description = "Command or sequence of commands to be executed.";
+        example = "scroll_down";
+      };
+    };
+  };
 in
 {
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];

@@ -1,5 +1,3 @@
-{ config, lib, ... }:
-
 {
   programs.git.enable = true;
   programs.mergiraf.enable = true;

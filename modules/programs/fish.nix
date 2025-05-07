@@ -16,31 +16,28 @@ let
 
   cfg = config.programs.fish;
 
-  pluginModule = types.submodule (
-    { config, ... }:
-    {
-      options = {
-        src = mkOption {
-          type = types.path;
-          description = ''
-            Path to the plugin folder.
+  pluginModule = types.submodule {
+    options = {
+      src = mkOption {
+        type = types.path;
+        description = ''
+          Path to the plugin folder.
 
-            Relevant pieces will be added to the fish function path and
-            the completion path. The {file}`init.fish` and
-            {file}`key_binding.fish` files are sourced if
-            they exist.
-          '';
-        };
-
-        name = mkOption {
-          type = types.str;
-          description = ''
-            The name of the plugin.
-          '';
-        };
+          Relevant pieces will be added to the fish function path and
+          the completion path. The {file}`init.fish` and
+          {file}`key_binding.fish` files are sourced if
+          they exist.
+        '';
       };
-    }
-  );
+
+      name = mkOption {
+        type = types.str;
+        description = ''
+          The name of the plugin.
+        '';
+      };
+    };
+  };
 
   functionModule = types.submodule {
     options = {
@@ -480,7 +477,6 @@ in
               destructiveSymlinkJoin =
                 args_@{
                   name,
-                  paths,
                   preferLocalBuild ? true,
                   allowSubstitutes ? false,
                   postBuild ? "",

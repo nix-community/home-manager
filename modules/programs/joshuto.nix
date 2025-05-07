@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib) mkIf mkOption;
 
   cfg = config.programs.joshuto;
   tomlFormat = pkgs.formats.toml { };

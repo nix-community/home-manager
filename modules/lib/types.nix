@@ -16,7 +16,6 @@ let
     mergeAttrs
     mergeDefaultOption
     mergeOneOption
-    mergeOptions
     mkOption
     mkOptionType
     showFiles

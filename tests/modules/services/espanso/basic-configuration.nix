@@ -1,7 +1,4 @@
-espansoExtraArgs:
-{ config, ... }:
-
-{
+espansoExtraArgs: {
   services.espanso = {
     enable = true;
     configs = {

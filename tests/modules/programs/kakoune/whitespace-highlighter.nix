@@ -1,5 +1,3 @@
-{ lib, ... }:
-
 {
   imports = [ ./stubs.nix ];
 

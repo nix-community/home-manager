@@ -6,8 +6,6 @@
 }:
 let
   inherit (lib)
-    generators
-    types
     mkIf
     mkEnableOption
     mkPackageOption
