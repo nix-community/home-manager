@@ -14,6 +14,16 @@ let
 
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
+  impureConfigMerger = empty: jqOperation: path: staticSettings: ''
+    mkdir -p $(dirname ${lib.escapeShellArg path})
+    if [ ! -e ${lib.escapeShellArg path} ]; then
+      # No file? Create it
+      echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
+    fi
+    config="$(${pkgs.jq}/bin/jq -s ${lib.escapeShellArg jqOperation} ${lib.escapeShellArg path} ${lib.escapeShellArg staticSettings})"
+    printf '%s\n' "$config" > ${lib.escapeShellArg path}
+    unset config
+  '';
 
   mergedSettings =
     cfg.userSettings
@@ -155,34 +165,31 @@ in
       }
     );
 
-    xdg.configFile =
-      lib.attrsets.unionOfDisjoint
-        {
-          "zed/settings.json" = (
-            mkIf (mergedSettings != { }) {
-              source = jsonFormat.generate "zed-user-settings" mergedSettings;
-            }
-          );
+    home.activation = {
+      zedSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+        impureConfigMerger "{}" ".[0] * .[1]" "${config.xdg.configHome}/zed/settings.json" (
+          jsonFormat.generate "zed-user-settings" mergedSettings
+        )
+      );
+      zedKeymapActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+        impureConfigMerger "[]"
+          ".[0] + .[1] | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
+          "${config.xdg.configHome}/zed/keymap.json"
+          (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
+      );
+    };
 
-          "zed/keymap.json" = (
-            mkIf (cfg.userKeymaps != { }) {
-              source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
-            }
-          );
-        }
-        (
-          lib.mapAttrs' (
-            n: v:
-            lib.nameValuePair "zed/themes/${n}.json" {
-              source =
-                if lib.isString v then
-                  pkgs.writeText "zed-theme-${n}" v
-                else if builtins.isPath v || lib.isStorePath v then
-                  v
-                else
-                  jsonFormat.generate "zed-theme-${n}" v;
-            }
-          ) cfg.themes
-        );
+    xdg.configFile = lib.mapAttrs' (
+      n: v:
+      lib.nameValuePair "zed/themes/${n}.json" {
+        source =
+          if lib.isString v then
+            pkgs.writeText "zed-theme-${n}" v
+          else if builtins.isPath v || lib.isStorePath v then
+            v
+          else
+            jsonFormat.generate "zed-theme-${n}" v;
+      }
+    ) cfg.themes;
   };
 }
