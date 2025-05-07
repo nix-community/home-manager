@@ -10,7 +10,7 @@ let
     upperChars
     ;
 in
-{
+rec {
   # Figures out a valid Nix store name for the given path.
   storeFileName =
     path:
@@ -39,32 +39,27 @@ in
     "hm_" + safeName;
 
   /*
-       Convert a string from camelCase to snake_case
-    Type: string -> string
+    Convert a string from camelCase to another case format using a separator
+    Type: string -> string -> string
   */
-  toSnakeCase =
+  toCaseWithSeparator =
+    separator: string:
     let
       splitByWords = builtins.split "([A-Z])";
-      processWord = s: if lib.isString s then s else "_" + lib.toLower (lib.elemAt s 0);
-    in
-    string:
-    let
+      processWord = s: if lib.isString s then s else separator + lib.toLower (lib.elemAt s 0);
       words = splitByWords string;
     in
     lib.concatStrings (map processWord words);
 
   /*
-       Convert a string from camelCase to kebab-case
+    Convert a string from camelCase to snake_case
     Type: string -> string
   */
-  toKebabCase =
-    let
-      splitByWords = builtins.split "([A-Z])";
-      processWord = s: if lib.isString s then s else "-" + lib.toLower (lib.elemAt s 0);
-    in
-    string:
-    let
-      words = splitByWords string;
-    in
-    lib.concatStrings (map processWord words);
+  toSnakeCase = toCaseWithSeparator "_";
+
+  /*
+    Convert a string from camelCase to kebab-case
+    Type: string -> string
+  */
+  toKebabCase = toCaseWithSeparator "-";
 }
