@@ -37,4 +37,19 @@ in
       safeName = replaceStrings unsafeInName (empties unsafeInName) path;
     in
     "hm_" + safeName;
+
+  /*
+       Convert a string from camelCase to snake_case
+    Type: string -> string
+  */
+  toSnakeCase =
+    let
+      splitByWords = builtins.split "([A-Z])";
+      processWord = s: if lib.isString s then s else "_" + lib.toLower (lib.elemAt s 0);
+    in
+    string:
+    let
+      words = splitByWords string;
+    in
+    lib.concatStrings (map processWord words);
 }
