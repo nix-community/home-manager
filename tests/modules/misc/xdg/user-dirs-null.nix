@@ -16,13 +16,13 @@
       configFile=home-files/.config/user-dirs.dirs
       assertFileExists $configFile
       assertFileContent $configFile ${pkgs.writeText "expected" ''
-        XDG_DOCUMENTS_DIR="/home/hm-user/Documents"
-        XDG_DOWNLOAD_DIR="/home/hm-user/Downloads"
-        XDG_MUSIC_DIR="/home/hm-user/Music"
-        XDG_PICTURES_DIR="/home/hm-user/Pictures"
-        XDG_PUBLICSHARE_DIR="/home/hm-user/Public"
-        XDG_TEMPLATES_DIR="/home/hm-user/Templates"
-        XDG_VIDEOS_DIR="/home/hm-user/Videos"
+        XDG_DOCUMENTS_DIR="$HOME/Documents"
+        XDG_DOWNLOAD_DIR="$HOME/Downloads"
+        XDG_MUSIC_DIR="$HOME/Music"
+        XDG_PICTURES_DIR="$HOME/Pictures"
+        XDG_PUBLICSHARE_DIR="$HOME/Public"
+        XDG_TEMPLATES_DIR="$HOME/Templates"
+        XDG_VIDEOS_DIR="$HOME/Videos"
       ''}
     '';
   };

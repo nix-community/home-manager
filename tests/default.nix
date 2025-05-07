@@ -131,7 +131,7 @@ let
           xdg.enable = lib.mkDefault true;
           home = {
             username = "hm-user";
-            homeDirectory = "/home/hm-user";
+            homeDirectory = lib.mkIf (!config.home.relocatable) "/home/hm-user";
             stateVersion = lib.mkDefault "18.09";
           };
 

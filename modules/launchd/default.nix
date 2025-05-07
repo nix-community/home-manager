@@ -11,7 +11,6 @@ let
 
   cfg = config.launchd;
   labelPrefix = "org.nix-community.home.";
-  dstDir = "${config.home.homeDirectory}/Library/LaunchAgents";
 
   launchdConfig =
     { config, name, ... }:
@@ -234,7 +233,7 @@ in
               local oldDir newDir dstDir domain
 
               newDir="$(readlink -m "$newGenPath/LaunchAgents")"
-              dstDir=${lib.escapeShellArg dstDir}
+              dstDir=${config.home.homeDirectory.shell}/Library/LaunchAgents
               domain="gui/$UID"
 
               if [[ -n "''${oldGenPath:-}" ]]; then

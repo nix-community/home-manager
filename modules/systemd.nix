@@ -126,7 +126,7 @@ let
     "systemd/user.conf".source = settingsFormat.generate "user.conf" cfg.settings;
   };
 
-  configHome = lib.removePrefix config.home.homeDirectory config.xdg.configHome;
+  configHome = config.xdg.configHome.relative;
 
 in
 {
@@ -329,7 +329,7 @@ in
   # If we run under a Linux system we assume that systemd is
   # available, in particular we assume that systemctl is in PATH.
   # Do not install any user services if username is root.
-  config = mkIf (cfg.enable && config.home.username != "root") {
+  config = mkIf (cfg.enable && (config.home.relocatable || config.home.username != "root")) {
     assertions = [
       {
         assertion = pkgs.stdenv.isLinux;
@@ -397,13 +397,13 @@ in
           fi
 
           if [[ -v oldGenPath ]]; then
-            oldUnitsDir="$oldGenPath/home-files${configHome}/systemd/user"
+            oldUnitsDir="$oldGenPath/home-files/${configHome}/systemd/user"
             if [[ ! -e $oldUnitsDir ]]; then
               oldUnitsDir=
             fi
           fi
 
-          newUnitsDir="$newGenPath/home-files${configHome}/systemd/user"
+          newUnitsDir="$newGenPath/home-files/${configHome}/systemd/user"
           if [[ ! -e $newUnitsDir ]]; then
             newUnitsDir=${pkgs.emptyDirectory}
           fi
