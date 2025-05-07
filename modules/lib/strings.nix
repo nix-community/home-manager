@@ -52,4 +52,19 @@ in
       words = splitByWords string;
     in
     lib.concatStrings (map processWord words);
+
+  /*
+       Convert a string from camelCase to kebab-case
+    Type: string -> string
+  */
+  toKebabCase =
+    let
+      splitByWords = builtins.split "([A-Z])";
+      processWord = s: if lib.isString s then s else "-" + lib.toLower (lib.elemAt s 0);
+    in
+    string:
+    let
+      words = splitByWords string;
+    in
+    lib.concatStrings (map processWord words);
 }
