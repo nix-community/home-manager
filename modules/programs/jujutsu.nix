@@ -9,9 +9,6 @@ let
 
   cfg = config.programs.jujutsu;
   tomlFormat = pkgs.formats.toml { };
-
-  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else config.xdg.configHome;
-
 in
 {
   meta.maintainers = [ lib.maintainers.shikanime ];
@@ -87,7 +84,7 @@ in
       })
     ];
 
-    home.file."${configDir}/jj/config.toml" = mkIf (cfg.settings != { }) {
+    home.file."${config.xdg.configHome}/jj/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "jujutsu-config" cfg.settings;
     };
   };
