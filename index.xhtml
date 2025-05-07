@@ -933,14 +933,15 @@ the form of &quot;golden tests&quot; where, for example, a generated
 configuration file is compared to a known correct file.</p><p>It is relatively easy to create tests by modeling the existing tests,
 found in the <code class="literal">tests</code> project directory. For a full reference to the
 functions available in test scripts, you can look at NMT’s
-<a class="link" href="https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib"  target="_top">bash-lib</a>.</p><p>The full Home Manager test suite can be run by executing</p><pre><code class="programlisting  shell">$ nix-shell --pure tests -A run.all
-</code></pre><p>in the project root. List all test cases through</p><pre><code class="programlisting  shell">$ nix-shell --pure tests -A list
+<a class="link" href="https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib"  target="_top">bash-lib</a>.</p><p>The full Home Manager test suite can be run by executing</p><pre><code class="programlisting  shell">$ nix-build --pure --option allow-import-from-derivation false tests -A build.all
+</code></pre><p>in the project root. List all test cases through</p><pre><code class="programlisting  shell">$ nix-build --pure tests --option allow-import-from-derivation false -A list
 </code></pre><p>and run an individual test, for example <code class="literal">alacritty-empty-settings</code>,
-through</p><pre><code class="programlisting  shell">$ nix-shell --pure tests -A run.alacritty-empty-settings
+through</p><pre><code class="programlisting  shell">$ nix-build --pure tests --option allow-import-from-derivation false -A build.alacritty-empty-settings
 </code></pre><p>However, those invocations will impurely source the system’s Nixpkgs,
 and may cause failures. To run against the Nixpkgs from the <code class="literal">flake.lock</code> file,
-use instead e.g.</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock ./tests#test-all
-</code></pre><p>or</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock ./tests#test-alacritty-empty-settings
+use instead e.g.</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-all
+</code></pre><p>or</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-alacritty-empty-settings
+</code></pre><p>Some tests may be marked with <code class="literal">enableLegacyIfd</code>, those may be run by run with e.g.</p><pre><code class="programlisting  shell">$ nix-build --pure tests --arg enableLegacyIfd true -A build.mytest
 </code></pre>
 </div>
 </div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 id="ch-3rd-party" class="title" >Third-Party Tools and Extensions   </h1>  </div> </div></div><div class="partintro"><p>Here is a collection of tools and extensions that relate to Home
