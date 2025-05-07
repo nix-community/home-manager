@@ -96,6 +96,7 @@ let
     "neomutt"
     "neovide"
     "neovim"
+    "newsboat"
     "nheko"
     "nix"
     "nix-direnv"
