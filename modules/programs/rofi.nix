@@ -132,6 +132,7 @@ let
     else
       cfg.theme;
 
+  modes = map (mode: if isString mode then mode else "${mode.name}:${mode.path}") cfg.modes;
 in
 {
   options.programs.rofi = {
@@ -254,11 +255,36 @@ in
       description = "Path where to put generated configuration file.";
     };
 
+    modes = mkOption {
+      default = [ ];
+      example = literalExpression ''
+        [
+          "drun"
+          "emoji"
+          "ssh"
+          {
+            name = "whatnot";
+            path = lib.getExe pkgs.rofi-whatnot;
+          }
+        ]
+      '';
+      type =
+        with types;
+        listOf (
+          either str (submodule {
+            options = {
+              name = mkOption { type = str; };
+              path = mkOption { type = str; };
+            };
+          })
+        );
+      description = "Modes to enable. For custom modes see `man 5 rofi-script`.";
+    };
+
     extraConfig = mkOption {
       default = { };
       example = literalExpression ''
         {
-          modi = "drun,emoji,ssh";
           kb-primary-paste = "Control+V,Shift+Insert";
           kb-secondary-paste = "Control+v,Insert";
         }
@@ -313,6 +339,7 @@ in
       toRasi {
         configuration = (
           {
+            inherit modes;
             font = cfg.font;
             terminal = cfg.terminal;
             cycle = cfg.cycle;
