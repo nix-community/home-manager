@@ -39892,6 +39892,331 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.lutris.enable"></a><a class="term" href="options.xhtml#opt-programs.lutris.enable"><code class="option">programs.lutris.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable lutris…</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.package"></a><a class="term" href="options.xhtml#opt-programs.lutris.package"><code class="option">programs.lutris.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The lutris package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&lt;derivation lutris-0.5.19&gt;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.extraPackages"></a><a class="term" href="options.xhtml#opt-programs.lutris.extraPackages"><code class="option">programs.lutris.extraPackages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of packages to pass as extraPkgs to lutris.
+Please note runners are not detected properly this way, use a proper option for those.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;with pkgs; [mangohud winetricks gamescope gamemode umu-launcher]&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.protonPackages"></a><a class="term" href="options.xhtml#opt-programs.lutris.protonPackages"><code class="option">programs.lutris.protonPackages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of proton packages to be added for lutris to use with umu-launcher.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;[ pkgs.proton-ge-bin ]&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.runners"></a><a class="term" href="options.xhtml#opt-programs.lutris.runners"><code class="option">programs.lutris.runners</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of Lutris runners along with their configurations.
+Each runner must be named exactly as lutris expects on <code class="literal">lutris --list-runners</code>.
+Note that runners added here won’t be configurable through Lutris using the GUI.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  runners = {
+    cemu.package = pkgs.cemu;
+    pcsx2.config = {
+      system.disable_screen_saver = true;
+      runner.executable_path = &quot;$\{pkgs.pcsx2}/bin/pcsx2-qt&quot;;
+    };
+  };
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.runners._name_.package"></a><a class="term" href="options.xhtml#opt-programs.lutris.runners._name_.package"><code class="option">programs.lutris.runners.&lt;name&gt;.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The package to use for this runner, nix will try to find the executable for this package.
+A more specific path can be set by using settings.runner.executable_path instead.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;pkgs.cemu&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.runners._name_.settings"></a><a class="term" href="options.xhtml#opt-programs.lutris.runners._name_.settings"><code class="option">programs.lutris.runners.&lt;name&gt;.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings passed directly to lutris for this runner’s config at XDG_CONFIG/lutris/runners.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.runners._name_.settings.runner"></a><a class="term" href="options.xhtml#opt-programs.lutris.runners._name_.settings.runner"><code class="option">programs.lutris.runners.&lt;name&gt;.settings.runner</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Runner specific options.
+For references, you must look for the file of said runner on lutris’ source code.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.runners._name_.settings.runner.executable_path"></a><a class="term" href="options.xhtml#opt-programs.lutris.runners._name_.settings.runner.executable_path"><code class="option">programs.lutris.runners.&lt;name&gt;.settings.runner.executable_path</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Specific option to point to a runner executable directly, don’t set runner.package if you set this.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.runners._name_.settings.system"></a><a class="term" href="options.xhtml#opt-programs.lutris.runners._name_.settings.system"><code class="option">programs.lutris.runners.&lt;name&gt;.settings.system</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Lutris system options for this runner.
+Reference for system options:
+https://github.com/lutris/lutris/blob/master/lutris/sysoptions.py#L78</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.steamPackage"></a><a class="term" href="options.xhtml#opt-programs.lutris.steamPackage"><code class="option">programs.lutris.steamPackage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>This must be the same you use for your system, or two instances will conflict,
+for example, if you configure steam through the nixos module, a good value is “osConfig.programs.steam.package”</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;pkgs.steam or osConfig.programs.steam.package&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.lutris.winePackages"></a><a class="term" href="options.xhtml#opt-programs.lutris.winePackages"><code class="option">programs.lutris.winePackages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of wine packages to be added for lutris to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;[ pkgs.wineWow64Packages.full ]&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lutris.nix" target="_top">
+&lt;home-manager/modules/programs/lutris.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.man.enable"></a><a class="term" href="options.xhtml#opt-programs.man.enable"><code class="option">programs.man.enable</code>
   </a>
  </span>
