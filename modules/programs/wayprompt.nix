@@ -25,6 +25,8 @@ let
   };
 in
 {
+  meta.maintainers = [ lib.maintainers.panchoh ];
+
   options.programs.wayprompt = {
     enable = lib.mkEnableOption "Wayprompt, a password-prompter for Wayland";
 
