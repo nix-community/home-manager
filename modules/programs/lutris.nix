@@ -139,6 +139,10 @@ in
   };
   meta.maintainers = [ lib.hm.maintainers.bikku ];
   config = mkIf cfg.enable {
+      assertions = [
+      (lib.hm.assertions.assertPlatform "programs.lutris" pkgs lib.platforms.linux)
+    ];
+
     home.packages =
       let
         lutris-overrides = {
