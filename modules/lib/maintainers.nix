@@ -792,4 +792,10 @@
     github = "miku4k";
     githubId = 89653242;
   };
+  bikku = {
+    name = "Bikku";
+    email = "bikku+dev@slmail.me";
+    github = "b1kku";
+    githubId = 77858854;
+  };
 }

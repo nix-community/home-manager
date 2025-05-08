@@ -175,6 +175,7 @@ let
       ./programs/lieer.nix
       ./programs/looking-glass-client.nix
       ./programs/lsd.nix
+      ./programs/lutris.nix
       ./programs/man.nix
       ./programs/mangohud.nix
       ./programs/matplotlib.nix
