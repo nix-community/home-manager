@@ -159,10 +159,10 @@ in
           runner_name: runner_config:
           {
             "${runner_name}" =
-              (optionalAttrs (runner_config.settings.runner != { }) runner_config.settings.runner)
-              // (optionalAttrs (runner_config.package != null) {
+              (optionalAttrs (runner_config.package != null) {
                 executable_path = getExe runner_config.package;
-              });
+              })
+              // (optionalAttrs (runner_config.settings.runner != { }) runner_config.settings.runner);
           }
           // optionalAttrs (runner_config.settings.system != { }) {
             system = runner_config.settings.system;
