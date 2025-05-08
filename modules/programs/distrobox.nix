@@ -21,9 +21,16 @@ in
 
   options.programs.distrobox = {
     enable = mkEnableOption "distrobox";
-
     package = mkPackageOption pkgs "distrobox" { };
-
+    enableSystemdUnit = mkOption {
+      type = lib.types.bool;
+      default = true;
+      example = false;
+      description = ''
+        Whatever to enable a Systemd Unit that automatically rebuilds your
+        containers when changes are detected.
+      '';
+    };
     containers = mkOption {
       type = formatter.type;
       default = { };
@@ -77,7 +84,7 @@ in
       formatter.generate "containers.ini" cfg.containers
     );
 
-    systemd.user.services.distrobox-home-manager = {
+    systemd.user.services.distrobox-home-manager = mkIf cfg.enableSystemdUnit {
       Unit.Description = "Build the containers declared in ~/.config/distrobox/containers.ini";
       Install.WantedBy = [ "default.target" ];
 
