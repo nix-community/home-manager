@@ -339,7 +339,6 @@ in
       toRasi {
         configuration = (
           {
-            inherit modes;
             font = cfg.font;
             terminal = cfg.terminal;
             cycle = cfg.cycle;
@@ -347,6 +346,7 @@ in
             xoffset = cfg.xoffset;
             yoffset = cfg.yoffset;
           }
+          // lib.optionalAttrs (modes != [ ]) { inherit modes; }
           // cfg.extraConfig
         );
         # @theme must go after configuration but attrs are output in alphabetical order ('@' first)
