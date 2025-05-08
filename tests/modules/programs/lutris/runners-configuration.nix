@@ -6,7 +6,7 @@
       cemu.package = pkgs.cemu;
       pcsx2.settings = {
         system.disable_screen_saver = true;
-        runner.executable_path = "${pkgs.pcsx2}/bin/pcsx2-qt";
+        runner.runner_executable = "${pkgs.pcsx2}/bin/pcsx2-qt";
       };
       rpcs3 = {
         package = pkgs.rpcs3;
@@ -23,18 +23,18 @@
       runnersDir = "home-files/.config/lutris/runners";
       expectedCemu = builtins.toFile "cemu.yml" ''
         cemu:
-          executable_path: '${lib.getExe pkgs.cemu}'
+          runner_executable: '${lib.getExe pkgs.cemu}'
       '';
       expectedPcsx2 = builtins.toFile "pcsx2.yml" ''
         pcsx2:
-          executable_path: '${pkgs.pcsx2}/bin/pcsx2-qt'
+          runner_executable: '${pkgs.pcsx2}/bin/pcsx2-qt'
         system:
           disable_screen_saver: true
       '';
       expectedRpcs3 = builtins.toFile "rpcs3.yml" ''
         rpcs3:
-          executable_path: '${lib.getExe pkgs.rpcs3}'
           nogui: true
+          runner_executable: '${lib.getExe pkgs.rpcs3}'
         system:
           disable_screen_saver: true
       '';

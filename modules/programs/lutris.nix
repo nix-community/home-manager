@@ -75,7 +75,7 @@ in
           cemu.package = pkgs.cemu;
           pcsx2.config = {
             system.disable_screen_saver = true;
-            runner.executable_path = "$\{pkgs.pcsx2}/bin/pcsx2-qt";
+            runner.runner_executable = "$\{pkgs.pcsx2}/bin/pcsx2-qt";
           };
         };
       '';
@@ -92,7 +92,7 @@ in
               example = "pkgs.cemu";
               description = ''
                 The package to use for this runner, nix will try to find the executable for this package.
-                A more specific path can be set by using settings.runner.executable_path instead.
+                A more specific path can be set by using settings.runner.runner_executable instead.
               '';
               type = types.nullOr types.package;
             };
@@ -112,7 +112,7 @@ in
                     type = types.submodule {
                       freeformType = settingsFormat.type;
                       options = {
-                        executable_path = mkOption {
+                        runner_executable = mkOption {
                           type = types.either types.str types.path;
                           default = "";
                           description = ''
@@ -149,16 +149,16 @@ in
         redundantRunners = attrNames (
           filterAttrs (
             _: runner_config:
-            runner_config.package != null && runner_config.settings.runner.executable_path != ""
+            runner_config.package != null && runner_config.settings.runner.runner_executable != ""
           ) cfg.runners
         );
       in
       mkIf (redundantRunners != [ ]) [
         ''
           Under programs.lutris.runners, the following lutris runners had both a
-          <runner>.package and <runner>.settings.runner.executable_path options set:
+          <runner>.package and <runner>.settings.runner.runner_executable options set:
             - ${concatStringsSep ", " redundantRunners}
-          Note that executable_path overrides package, setting both is pointless.
+          Note that runner_executable overrides package, setting both is pointless.
         ''
       ];
     home.packages =
@@ -179,9 +179,9 @@ in
             "${runner_name}" =
               (optionalAttrs (runner_config.settings.runner != { }) runner_config.settings.runner)
               // (optionalAttrs
-                (runner_config.package != null && runner_config.settings.runner.executable_path == "")
+                (runner_config.package != null && runner_config.settings.runner.runner_executable == "")
                 {
-                  executable_path = getExe runner_config.package;
+                  runner_executable = getExe runner_config.package;
                 }
               );
           }
