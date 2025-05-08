@@ -12,10 +12,13 @@ let
     types
     optional
     optionalAttrs
-    toLower
-    listToAttrs
     nameValuePair
     mapAttrs'
+    filterAttrs
+    attrNames
+    concatStringsSep
+    toLower
+    listToAttrs
     getExe
     ;
   cfg = config.programs.lutris;
@@ -23,7 +26,6 @@ let
 in
 {
   options.programs.lutris = {
-
     enable = mkEnableOption "lutris.";
     package = mkOption {
       default = pkgs.lutris;
@@ -142,7 +144,23 @@ in
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.lutris" pkgs lib.platforms.linux)
     ];
-
+    warnings =
+      let
+        redundantRunners = attrNames (
+          filterAttrs (
+            _: runner_config:
+            runner_config.package != null && runner_config.settings.runner.executable_path != ""
+          ) cfg.runners
+        );
+      in
+      mkIf (redundantRunners != [ ]) [
+        ''
+          Under programs.lutris.runners, the following lutris runners had both a
+          <runner>.package and <runner>.settings.runner.executable_path options set:
+            - ${concatStringsSep ", " redundantRunners}
+          Note that executable_path overrides package, setting both is pointless.
+        ''
+      ];
     home.packages =
       let
         lutris-overrides = {
