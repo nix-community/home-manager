@@ -209,6 +209,7 @@ let
       ./programs/notmuch.nix
       ./programs/nushell.nix
       ./programs/obs-studio.nix
+      ./programs/obsidian.nix
       ./programs/octant.nix
       ./programs/offlineimap.nix
       ./programs/oh-my-posh.nix
