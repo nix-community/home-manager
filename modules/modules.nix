@@ -304,6 +304,7 @@ let
       ./programs/watson.nix
       ./programs/waylogout.nix
       ./programs/waybar.nix
+      ./programs/wayprompt.nix
       ./programs/wezterm.nix
       ./programs/wlogout.nix
       ./programs/wofi.nix
