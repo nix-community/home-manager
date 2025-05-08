@@ -1,0 +1,28 @@
+{
+  "default-dark": {
+    "background": "#00000077",
+    "black": "#757575",
+    "blue": "#85aacb",
+    "brightBlack": "#727272",
+    "brightBlue": "#9ab6cb",
+    "brightCyan": "#b7b8cb",
+    "brightGreen": "#a3dd97",
+    "brightMagenta": "#cc8ecb",
+    "brightRed": "#cc9d97",
+    "brightWhite": "#f0f0f0",
+    "brightYellow": "#cbcaaa",
+    "cmdtext": "#f0f0f0",
+    "cursorAccent": "",
+    "cyan": "#74a7cb",
+    "display:name": "Default Dark",
+    "display:order": 1,
+    "foreground": "#c1c1c1",
+    "gray": "#8b918a",
+    "green": "#76c266",
+    "magenta": "#cc72ca",
+    "red": "#cc685c",
+    "selectionBackground": "",
+    "white": "#c1c1c1",
+    "yellow": "#cbca9b"
+  }
+}

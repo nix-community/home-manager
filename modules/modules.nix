@@ -303,6 +303,7 @@ let
       ./programs/rbenv.nix
       ./programs/wallust.nix
       ./programs/watson.nix
+      ./programs/waveterm.nix
       ./programs/waylogout.nix
       ./programs/waybar.nix
       ./programs/wayprompt.nix
