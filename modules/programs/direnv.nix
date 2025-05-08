@@ -175,6 +175,7 @@ in
       # Using mkAfter to make it more likely to appear after other
       # manipulations of the prompt.
       programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration (mkAfter ''
+        use std/config env-conversions
         $env.config = ($env.config? | default {})
         $env.config.hooks = ($env.config.hooks? | default {})
         $env.config.hooks.pre_prompt = (
@@ -186,8 +187,8 @@ in
                 | default {}
                 | items {|key, value|
                     let value = do (
-                        $env.ENV_CONVERSIONS?
-                        | default {}
+                        { PATH: (env-conversions).path }
+                        | merge ($env.ENV_CONVERSIONS? | default {})
                         | get -i $key
                         | get -i from_string
                         | default {|x| $x}
@@ -198,6 +199,7 @@ in
                 | load-env
             }
         )
+        hide env-conversions
       '');
 
       home.sessionVariables = lib.mkIf (cfg.silent && !isVersion236orHigher) { DIRENV_LOG_FORMAT = ""; };
