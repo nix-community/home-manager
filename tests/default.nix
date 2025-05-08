@@ -397,6 +397,7 @@ import nmtSrc {
       ./modules/programs/vesktop
       ./modules/programs/vinegar
       ./modules/programs/waybar
+      ./modules/programs/wayprompt
       ./modules/programs/wlogout
       ./modules/programs/wofi
       ./modules/programs/xmobar
