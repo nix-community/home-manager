@@ -1,6 +1,5 @@
 configuration {
 location: 0;
-modes: [  ];
 xoffset: 0;
 yoffset: 0;
 }
