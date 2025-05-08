@@ -139,7 +139,7 @@ in
   };
   meta.maintainers = [ lib.hm.maintainers.bikku ];
   config = mkIf cfg.enable {
-      assertions = [
+    assertions = [
       (lib.hm.assertions.assertPlatform "programs.lutris" pkgs lib.platforms.linux)
     ];
 
