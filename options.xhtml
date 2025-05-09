@@ -40018,7 +40018,7 @@ attribute set of (submodule)</p>
     cemu.package = pkgs.cemu;
     pcsx2.config = {
       system.disable_screen_saver = true;
-      runner.executable_path = &quot;$\{pkgs.pcsx2}/bin/pcsx2-qt&quot;;
+      runner.runner_executable = &quot;$\{pkgs.pcsx2}/bin/pcsx2-qt&quot;;
     };
   };
 &#x27;&#x27;
@@ -40041,7 +40041,7 @@ attribute set of (submodule)</p>
 </dt>
 <dd>
 <p>The package to use for this runner, nix will try to find the executable for this package.
-A more specific path can be set by using settings.runner.executable_path instead.</p>
+A more specific path can be set by using settings.runner.runner_executable instead.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 null or package</p>
@@ -40112,7 +40112,7 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.lutris.runners._name_.settings.runner.executable_path"></a><a class="term" href="options.xhtml#opt-programs.lutris.runners._name_.settings.runner.executable_path"><code class="option">programs.lutris.runners.&lt;name&gt;.settings.runner.executable_path</code>
+ <a id="opt-programs.lutris.runners._name_.settings.runner.runner_executable"></a><a class="term" href="options.xhtml#opt-programs.lutris.runners._name_.settings.runner.runner_executable"><code class="option">programs.lutris.runners.&lt;name&gt;.settings.runner.runner_executable</code>
   </a>
  </span>
 </dt>
