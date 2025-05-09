@@ -1,0 +1,13 @@
+{
+  "app:dismissarchitecturewarning": false,
+  "autoupdate:enabled": false,
+  "term:fontfamily": "JuliaMono",
+  "term:fontsize": 12.0,
+  "term:theme": "my-custom-theme",
+  "term:transparency": 0.5,
+  "window:bgcolor": "#000000",
+  "window:blur": true,
+  "window:opacity": 0.5,
+  "window:reducedmotion": true,
+  "window:showhelp": false
+}

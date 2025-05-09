@@ -313,6 +313,7 @@ import nmtSrc {
       ./modules/programs/vscode
       ./modules/programs/wallust
       ./modules/programs/watson
+      ./modules/programs/waveterm
       ./modules/programs/wezterm
       ./modules/programs/yazi
       ./modules/programs/zed-editor
