@@ -822,7 +822,7 @@ All text is hosted in Home Manager’s Git repository.</p><p>The HTML version of
 descriptions and the documentation of Home Manager can be generated and
 opened by typing the following in a shell within a clone of the Home
 Manager Git repository:</p><pre><code class="programlisting  shell">$ nix-build -A docs.html
-$ xdg-open ./result/share/doc/home-manager/index.html
+$ xdg-open ./result/share/doc/home-manager/index.xhtml
 </code></pre><p>When you have made changes to a module, it is a good idea to check that
 the man page version of the module options looks good:</p><pre><code class="programlisting  shell">$ nix-build -A docs.manPages
 $ man ./result/share/man/man5/home-configuration.nix.5.gz
