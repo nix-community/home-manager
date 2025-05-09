@@ -1,7 +1,19 @@
-{ pkgs, config, ... }:
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else ".config";
+  cfg = config.programs.jujutsu;
+  packageVersion = lib.getVersion cfg.package;
+
+  # jj v0.29+ deprecated support for "~/Library/Application Support" on Darwin.
+  configDir =
+    if pkgs.stdenv.isDarwin && !(lib.versionAtLeast packageVersion "0.29.0") then
+      "Library/Application Support"
+    else
+      ".config";
 in
 {
   programs.jujutsu = {
