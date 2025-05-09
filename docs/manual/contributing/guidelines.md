@@ -81,7 +81,7 @@ Manager Git repository:
 
 ``` shell
 $ nix-build -A docs.html
-$ xdg-open ./result/share/doc/home-manager/index.html
+$ xdg-open ./result/share/doc/home-manager/index.xhtml
 ```
 
 When you have made changes to a module, it is a good idea to check that
