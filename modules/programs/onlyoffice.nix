@@ -7,11 +7,6 @@
 
 let
   inherit (lib)
-    types
-    isBool
-    boolToString
-    concatStringsSep
-    mapAttrsToList
     mkIf
     mkEnableOption
     mkPackageOption
@@ -19,15 +14,7 @@ let
     ;
 
   cfg = config.programs.onlyoffice;
-
-  attrToString =
-    name: value:
-    let
-      newvalue = if (isBool value) then (boolToString value) else value;
-    in
-    "${name}=${newvalue}";
-
-  getFinalConfig = set: (concatStringsSep "\n" (mapAttrsToList attrToString set)) + "\n";
+  formatter = pkgs.formats.keyValue { };
 in
 {
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
@@ -38,7 +25,7 @@ in
     package = mkPackageOption pkgs "onlyoffice-desktopeditors" { nullable = true; };
 
     settings = mkOption {
-      type = with types; attrsOf (either bool str);
+      type = formatter.type;
       default = { };
       example = ''
         UITheme = "theme-contrast-dark";
@@ -59,8 +46,8 @@ in
   config = mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."onlyoffice/DesktopEditors.conf".source = pkgs.writeText "DesktopEditors.conf" (
-      getFinalConfig cfg.settings
-    );
+    xdg.configFile."onlyoffice/DesktopEditors.conf" = mkIf (cfg.settings != { }) {
+      source = formatter.generate "onlyoffice-config" cfg.settings;
+    };
   };
 }
