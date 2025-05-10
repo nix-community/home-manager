@@ -291,6 +291,12 @@
     github = "loicreynier";
     githubId = 88983487;
   };
+  lowlevl = {
+    name = "maya_t";
+    email = "lowlevl@users.noreply.github.com";
+    github = "lowlevl";
+    githubId = 15341887;
+  };
   LucasWagler = {
     name = "Lucas Wagler";
     email = "lucas@wagler.dev";
