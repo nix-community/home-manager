@@ -10,15 +10,19 @@ If you do have a change worthy of a news entry then please add one in
 [`news.nix`](https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix)
 but you should follow some basic guidelines:
 
--   Use the included
-    [`create-news-entry.sh`](https://github.com/nix-community/home-manager/blob/master/modules/misc/news/create-news-entry.sh)
-    script to generate a news entry file:
+-   Use the included news entry generator to create a news entry file:
+
+    ``` shell
+    $ nix run .#create-news-entry
+    ```
+
+    Alternatively, you can directly use the script:
 
     ``` shell
     $ modules/misc/news/create-news-entry.sh
     ```
 
-    this will create a new file inside `modules/misc/news` directory
+    This will create a new file inside the `modules/misc/news` directory
     with some placeholder information that you can edit.
 
 -   The entry condition should be as specific as possible. For example,
