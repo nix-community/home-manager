@@ -40,7 +40,7 @@ in
       };
       description = ''
         Configuration settings for WaveTerm. All available options can be
-        found here: <\https://docs.waveterm.dev/config#configuration-keys>.
+        found here: <https://docs.waveterm.dev/config#configuration-keys>.
       '';
     };
 
