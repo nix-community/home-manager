@@ -309,6 +309,7 @@ let
       ./programs/wayprompt.nix
       ./programs/wezterm.nix
       ./programs/wlogout.nix
+      ./programs/wlr-which-key.nix
       ./programs/wofi.nix
       ./programs/xmobar.nix
       ./programs/xplr.nix
