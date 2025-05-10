@@ -16,17 +16,13 @@
       layer = "top";
       margin = 10;
       markup = true;
-    };
 
-    criteria = {
       "actionable=true" = {
         anchor = "top-left";
       };
-
       "app-name=Google\\ Chrome" = {
         max-visible = 5;
       };
-
       "field1=value field2=value" = {
         text-alignment = "left";
       };

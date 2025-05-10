@@ -14,9 +14,30 @@ let
 
   cfg = config.services.mako;
 
-  generateConfig = lib.generators.toINIWithGlobalSection { };
-  iniType = (pkgs.formats.ini { }).type;
-  iniAtomType = (pkgs.formats.ini { }).lib.types.atom;
+  generateConfig =
+    config:
+    let
+      formatValue = v: if builtins.isBool v then if v then "true" else "false" else toString v;
+
+      globalSettings = lib.filterAttrs (n: v: !(lib.isAttrs v)) config;
+      sectionSettings = lib.filterAttrs (n: v: lib.isAttrs v) config;
+
+      globalLines = lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (k: v: "${k}=${formatValue v}") globalSettings
+      );
+
+      formatSection =
+        name: attrs:
+        "\n[${name}]\n"
+        + lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "${k}=${formatValue v}") attrs);
+
+      sectionLines = lib.concatStringsSep "\n" (lib.mapAttrsToList formatSection sectionSettings);
+    in
+    if sectionSettings != { } then globalLines + "\n" + sectionLines + "\n" else globalLines + "\n";
+
+  iniFormat = pkgs.formats.ini { };
+  iniType = iniFormat.type;
+  iniAtomType = iniFormat.lib.types.atom;
 in
 {
   meta.maintainers = [ lib.maintainers.onny ];
@@ -73,29 +94,40 @@ in
     enable = mkEnableOption "mako";
     package = mkPackageOption pkgs "mako" { };
     settings = mkOption {
-      type = lib.types.attrsOf iniAtomType;
+      type = lib.types.attrsOf (
+        lib.types.oneOf [
+          iniAtomType
+          (lib.types.attrsOf iniAtomType)
+        ]
+      );
       default = { };
       example = ''
         {
-          actions = "true";
+          actions = true;
           anchor = "top-right";
           background-color = "#000000";
           border-color = "#FFFFFF";
-          border-radius = "0";
-          default-timeout = "0";
+          border-radius = 0;
+          default-timeout = 0;
           font = "monospace 10";
-          height = "100";
-          width = "300";
-          icons = "true";
-          ignore-timeout = "false";
+          height = 100;
+          width = 300;
+          icons = true;
+          ignore-timeout = false;
           layer = "top";
-          margin = "10";
-          markup = "true";
+          margin = 10;
+          markup = true;
+
+          # Section example
+          "actionable=true" = {
+            anchor = "top-left";
+          };
         }
       '';
       description = ''
-        Configuration settings for mako. All available options can be found
-        here: <https://github.com/emersion/mako/blob/master/doc/mako.5.scd>.
+        Configuration settings for mako. Can include both global settings and sections.
+        All available options can be found here:
+        <https://github.com/emersion/mako/blob/master/doc/mako.5.scd>.
       '';
     };
     criteria = mkOption {
@@ -130,10 +162,13 @@ in
 
     xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.criteria != { }) {
       onChange = "${cfg.package}/bin/makoctl reload || true";
-      text = generateConfig {
-        globalSection = cfg.settings;
-        sections = cfg.criteria;
-      };
+      text =
+        let
+          # Merge settings and criteria into a single attribute set
+          # where settings are at the top level and criteria are nested attributes
+          mergedConfig = cfg.settings // cfg.criteria;
+        in
+        generateConfig mergedConfig;
     };
   };
 }
