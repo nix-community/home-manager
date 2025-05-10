@@ -8,7 +8,10 @@ let
   cfg = config.services.autorandr;
 in
 {
-  meta.maintainers = [ lib.maintainers.GaetanLepage ];
+  meta.maintainers = [
+    lib.maintainers.GaetanLepage
+    lib.hm.maintainers.lowlevl
+  ];
 
   options = {
     services.autorandr = {
@@ -19,6 +22,8 @@ in
           which handles the configuration (profiles).
         '';
       };
+
+      package = lib.mkPackageOption pkgs "autorandr" { };
 
       ignoreLid = lib.mkOption {
         default = false;
@@ -35,14 +40,14 @@ in
 
     systemd.user.services.autorandr = {
       Unit = {
-        Description = "autorandr";
+        Description = "Auto-detect the connected display hardware and load the appropriate X11 setup using xrandr";
         After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
       Service = {
         Type = "oneshot";
-        ExecStart = "${pkgs.autorandr}/bin/autorandr --change ${lib.optionalString cfg.ignoreLid "--ignore-lid"}";
+        ExecStart = "${cfg.package}/bin/autorandr --change ${lib.optionalString cfg.ignoreLid "--ignore-lid"}";
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
