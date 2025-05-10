@@ -23,6 +23,8 @@ in
         '';
       };
 
+      package = lib.mkPackageOption pkgs "autorandr" { };
+
       ignoreLid = lib.mkOption {
         default = false;
         type = lib.types.bool;
@@ -45,7 +47,7 @@ in
 
       Service = {
         Type = "oneshot";
-        ExecStart = "${pkgs.autorandr}/bin/autorandr --change ${lib.optionalString cfg.ignoreLid "--ignore-lid"}";
+        ExecStart = "${cfg.package}/bin/autorandr --change ${lib.optionalString cfg.ignoreLid "--ignore-lid"}";
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
