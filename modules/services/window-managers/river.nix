@@ -76,6 +76,8 @@ in
       extraDescription = ''
         Set to `null` to not add any river package to your path.
         This should be done if you want to use the NixOS river module to install river.
+
+        test change to trigger CI
       '';
     };
 
