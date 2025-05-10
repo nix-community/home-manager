@@ -8,7 +8,10 @@ let
   cfg = config.services.autorandr;
 in
 {
-  meta.maintainers = [ lib.maintainers.GaetanLepage ];
+  meta.maintainers = [
+    lib.maintainers.GaetanLepage
+    lib.hm.maintainers.lowlevl
+  ];
 
   options = {
     services.autorandr = {
