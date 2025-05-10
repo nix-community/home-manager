@@ -55,7 +55,7 @@ in
 
     systemd.user.services.autorandr = {
       Unit = {
-        Description = "autorandr";
+        Description = "Auto-detect the connected display hardware and load the appropriate X11 setup using xrandr";
         After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
