@@ -127,9 +127,7 @@ If your contribution includes a change that should be communicated to
 users of Home Manager then you can add a news entry. The entry must be
 formatted as described in [News](#sec-news).
 
-When new modules are added a news entry should be included but you do
-not need to create this entry manually. The merging maintainer will
-create the entry for you. This is to reduce the risk of merge conflicts.
+When new modules are added a news entry should be included.
 
 ## Use conditional modules and news {#sec-guidelines-conditional-modules}
 
