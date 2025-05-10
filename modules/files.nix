@@ -297,6 +297,7 @@ in
               local relTarget="$2"
               local executable="$3"
               local recursive="$4"
+              local ignorelinks="$5"
 
               # If the target already exists then we have a collision. Note, this
               # should not happen due to the assertion found in the 'files' module.
@@ -321,7 +322,11 @@ in
               if [[ -d $source ]]; then
                 if [[ $recursive ]]; then
                   mkdir -p "$target"
-                  lndir -silent "$source" "$target"
+                  if [[ $ignorelinks ]]; then
+                    lndir -silent -ignorelinks "$source" "$target"
+                  else
+                    lndir -silent "$source" "$target"
+                  fi
                 else
                   ln -s "$source" "$target"
                 fi
@@ -357,6 +362,7 @@ in
                   v.target
                   (if v.executable == null then "inherit" else toString v.executable)
                   (toString v.recursive)
+                  (toString v.ignorelinks)
                 ]
               }
             '') cfg

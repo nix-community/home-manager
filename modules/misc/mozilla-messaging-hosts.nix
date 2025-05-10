@@ -70,11 +70,13 @@ in
               "${thunderbirdNativeMessagingHostsPath}" = lib.mkIf (cfg.thunderbirdNativeMessagingHosts != [ ]) {
                 source = "${thunderbirdNativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
                 recursive = true;
+                ignorelinks = true;
               };
 
               "${firefoxNativeMessagingHostsPath}" = lib.mkIf (cfg.firefoxNativeMessagingHosts != [ ]) {
                 source = "${firefoxNativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
                 recursive = true;
+                ignorelinks = true;
               };
             }
           else
@@ -89,6 +91,7 @@ in
               "${firefoxNativeMessagingHostsPath}" = {
                 source = "${nativeMessagingHostsJoined}/lib/mozilla/native-messaging-hosts";
                 recursive = true;
+                ignorelinks = true;
               };
             };
       };

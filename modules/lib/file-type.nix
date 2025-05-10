@@ -102,6 +102,18 @@ in
               '';
             };
 
+            ignorelinks = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                When `recursive` is enabled, adds `-ignorelinks` flag to lndir
+
+                It causes lndir to not treat symbolic links in the source directory specially.
+                The link created in the target directory will point back to the corresponding
+                (symbolic link) file in the source directory. If the link is to a directory
+              '';
+            };
+
             onChange = mkOption {
               type = types.lines;
               default = "";
