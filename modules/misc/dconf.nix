@@ -43,14 +43,7 @@ in
         # re-enabled, unclear whether there's actual value in it though.
         default = !pkgs.stdenv.hostPlatform.isDarwin;
         visible = false;
-        description = ''
-          Whether to enable dconf settings.
-
-          Note, if you use NixOS then you must add
-          `programs.dconf.enable = true`
-          to your system configuration. Otherwise you will see a systemd error
-          message when your configuration is activated.
-        '';
+        description = "Whether to enable dconf.";
       };
 
       settings = lib.mkOption {
@@ -85,70 +78,82 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enable && cfg.settings != { }) {
-    # Make sure the dconf directory exists.
-    xdg.configFile."dconf/.keep".source = builtins.toFile "keep" "";
+  config = lib.mkIf cfg.enable (
+    {
+      home.packages = lib.singleton pkgs.dconf;
 
-    home.extraBuilderCommands = ''
-      mkdir -p $out/state/
-      ln -s ${stateDconfKeys} $out/state/${stateDconfKeys.name}
-    '';
+      xdg.dataFile."dbus-1/services/ca.desrt.dconf.service".source =
+        "${pkgs.dconf}/share/dbus-1/services/ca.desrt.dconf.service";
 
-    home.activation.dconfSettings = lib.hm.dag.entryAfter [ "installPackages" ] (
-      let
-        iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
+      xdg.configFile."systemd/user/dconf.service".source = "${pkgs.dconf}/lib/systemd/user/dconf.service";
 
-        statePath = "state/${stateDconfKeys.name}";
+      home.sessionVariables.GIO_EXTRA_MODULES = "${pkgs.dconf.lib}/lib/gio/modules";
+    }
+    // lib.mkIf (cfg.settings != { }) {
+      # Make sure the dconf directory exists.
+      xdg.configFile."dconf/.keep".source = builtins.toFile "keep" "";
 
-        cleanup = pkgs.writeShellScript "dconf-cleanup" ''
-          set -euo pipefail
+      home.extraBuilderCommands = ''
+        mkdir -p $out/state/
+        ln -s ${stateDconfKeys} $out/state/${stateDconfKeys.name}
+      '';
 
-          ${config.lib.bash.initHomeManagerLib}
+      home.activation.dconfSettings = lib.hm.dag.entryAfter [ "installPackages" ] (
+        let
+          iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
 
-          PATH=${
-            lib.makeBinPath [
-              pkgs.dconf
-              pkgs.jq
-            ]
-          }''${PATH:+:}$PATH
+          statePath = "state/${stateDconfKeys.name}";
 
-          oldState="$1"
-          newState="$2"
+          cleanup = pkgs.writeShellScript "dconf-cleanup" ''
+            set -euo pipefail
 
-          # Can't do cleanup if we don't know the old state.
-          if [[ ! -f $oldState ]]; then
-            exit 0
+            ${config.lib.bash.initHomeManagerLib}
+
+            PATH=${
+              lib.makeBinPath [
+                pkgs.dconf
+                pkgs.jq
+              ]
+            }''${PATH:+:}$PATH
+
+            oldState="$1"
+            newState="$2"
+
+            # Can't do cleanup if we don't know the old state.
+            if [[ ! -f $oldState ]]; then
+              exit 0
+            fi
+
+            # Reset all keys that are present in the old generation but not the new
+            # one.
+            jq -r -n \
+                --slurpfile old "$oldState" \
+                --slurpfile new "$newState" \
+                '($old[] - $new[])[]' \
+              | while read -r key; do
+                  verboseEcho "Resetting dconf key \"$key\""
+                  run $DCONF_DBUS_RUN_SESSION dconf reset "$key"
+                done
+          '';
+        in
+        ''
+          if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
+            export DCONF_DBUS_RUN_SESSION=""
+          else
+            export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
           fi
 
-          # Reset all keys that are present in the old generation but not the new
-          # one.
-          jq -r -n \
-              --slurpfile old "$oldState" \
-              --slurpfile new "$newState" \
-              '($old[] - $new[])[]' \
-            | while read -r key; do
-                verboseEcho "Resetting dconf key \"$key\""
-                run $DCONF_DBUS_RUN_SESSION dconf reset "$key"
-              done
-        '';
-      in
-      ''
-        if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
-          export DCONF_DBUS_RUN_SESSION=""
-        else
-          export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
-        fi
+          if [[ -v oldGenPath ]]; then
+            ${cleanup} \
+              "$oldGenPath/${statePath}" \
+              "$newGenPath/${statePath}"
+          fi
 
-        if [[ -v oldGenPath ]]; then
-          ${cleanup} \
-            "$oldGenPath/${statePath}" \
-            "$newGenPath/${statePath}"
-        fi
+          run $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
 
-        run $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
-
-        unset DCONF_DBUS_RUN_SESSION
-      ''
-    );
-  };
+          unset DCONF_DBUS_RUN_SESSION
+        ''
+      );
+    }
+  );
 }
