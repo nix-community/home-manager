@@ -843,9 +843,7 @@ consistent commit message format as described in
 <a class="link" href="index.xhtml#sec-commit-style" title="Commits" >Commits</a>.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-guidelines-news-style" class="title" >Format your news entries   </h3>  </div> </div></div><p>If your contribution includes a change that should be communicated to
 users of Home Manager then you can add a news entry. The entry must be
-formatted as described in <a class="link" href="index.xhtml#sec-news" title="News" >News</a>.</p><p>When new modules are added a news entry should be included but you do
-not need to create this entry manually. The merging maintainer will
-create the entry for you. This is to reduce the risk of merge conflicts.</p>
+formatted as described in <a class="link" href="index.xhtml#sec-news" title="News" >News</a>.</p><p>When new modules are added a news entry should be included.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-guidelines-conditional-modules" class="title" >Use conditional modules and news   </h3>  </div> </div></div><p>Home Manager includes a number of modules that are only usable on some
 of the supported platforms. The most common example of platform specific
 modules are those that define systemd user services, which only works on
@@ -906,10 +904,9 @@ associated news entry. In general, a news entry should only be added for
 truly noteworthy news. For example, a bug fix or new option does
 generally not need a news entry.</p><p>If you do have a change worthy of a news entry then please add one in
 <a class="link" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix"  target="_top"><code class="literal">news.nix</code></a>
-but you should follow some basic guidelines:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Use the included
-<a class="link" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/news/create-news-entry.sh"  target="_top"><code class="literal">create-news-entry.sh</code></a>
-script to generate a news entry file:</p><pre><code class="programlisting  shell">$ modules/misc/news/create-news-entry.sh
-</code></pre><p>this will create a new file inside <code class="literal">modules/misc/news</code> directory
+but you should follow some basic guidelines:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Use the included news entry generator to create a news entry file:</p><pre><code class="programlisting  shell">$ nix run .#create-news-entry
+</code></pre><p>Alternatively, you can directly use the script:</p><pre><code class="programlisting  shell">$ modules/misc/news/create-news-entry.sh
+</code></pre><p>This will create a new file inside the <code class="literal">modules/misc/news</code> directory
 with some placeholder information that you can edit.</p></li><li class="listitem"><p>The entry condition should be as specific as possible. For example,
 if you are changing or deprecating a specific option then you could
 restrict the news to those users who actually use this option.</p></li><li class="listitem"><p>Wrap the news message so that it will fit in the typical terminal,
