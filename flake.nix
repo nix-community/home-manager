@@ -72,6 +72,10 @@
             default = hmPkg;
             home-manager = hmPkg;
 
+            create-news-entry = pkgs.writeShellScriptBin "create-news-entry" ''
+              ./modules/misc/news/create-news-entry.sh
+            '';
+
             docs-html = docs.manual.html;
             docs-htmlOpenTool = docs.manual.htmlOpenTool;
             docs-json = docs.options.json;
