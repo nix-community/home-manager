@@ -131,6 +131,7 @@ in
       '';
     };
     criteria = mkOption {
+      visible = false;
       type = iniType;
       default = { };
       example = {
@@ -147,8 +148,21 @@ in
         };
       };
       description = ''
-        Criterias for mako's config. All the details can be found in the
+        Criteria for mako's config. All the details can be found in the
         CRITERIA section in the official documentation.
+
+        *Deprecated*: Use `settings` with nested attributes instead. For example:
+        ```nix
+        settings = {
+          # Global settings
+          anchor = "top-right";
+
+          # Criteria sections
+          "actionable=true" = {
+            anchor = "top-left";
+          };
+        };
+        ```
       '';
     };
   };
@@ -157,6 +171,28 @@ in
     assertions = [
       (lib.hm.assertions.assertPlatform "services.mako" pkgs lib.platforms.linux)
     ];
+
+    warnings = lib.optional (cfg.criteria != { }) ''
+      The option `services.mako.criteria` is deprecated and will be removed in a future release.
+      Please use `services.mako.settings` with nested attributes instead.
+
+      For example, instead of:
+        criteria = {
+          "actionable=true" = {
+            anchor = "top-left";
+          };
+        };
+
+      Use:
+        settings = {
+          # Global settings here...
+
+          # Criteria sections
+          "actionable=true" = {
+            anchor = "top-left";
+          };
+        };
+    '';
 
     home.packages = [ cfg.package ];
 
