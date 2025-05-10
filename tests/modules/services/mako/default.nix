@@ -1,1 +1,4 @@
-{ mako-example-config = ./example-config.nix; }
+{
+  mako-example-config = ./example-config.nix;
+  mako-deprecated-criteria = ./deprecated-criteria.nix;
+}
