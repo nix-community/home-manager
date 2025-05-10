@@ -30,6 +30,21 @@ in
         type = lib.types.bool;
         description = "Treat outputs as connected even if their lids are closed.";
       };
+
+      matchEdid = lib.mkOption {
+        default = false;
+        type = lib.types.bool;
+        description = "Match displays based on edid instead of name.";
+      };
+
+      extraOptions = lib.mkOption {
+        default = [ ];
+        type = lib.types.listOf lib.types.str;
+        example = [
+          "--force"
+        ];
+        description = "Extra options to pass to Autorandr.";
+      };
     };
   };
 
@@ -47,7 +62,15 @@ in
 
       Service = {
         Type = "oneshot";
-        ExecStart = "${cfg.package}/bin/autorandr --change ${lib.optionalString cfg.ignoreLid "--ignore-lid"}";
+        ExecStart =
+          let
+            args = lib.escapeShellArgs (
+              lib.optional cfg.ignoreLid "--ignore-lid"
+              ++ lib.optional cfg.matchEdid "--match-edid"
+              ++ cfg.extraOptions
+            );
+          in
+          "${lib.getExe cfg.package} --change ${args}";
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
