@@ -71,6 +71,21 @@ in
       '';
     };
 
+    themes = mkOption {
+      type = types.attrsOf (
+        types.oneOf [
+          yamlFormat.type
+          types.path
+          types.lines
+        ]
+      );
+      default = { };
+      description = ''
+        Each them is written to {file}`$XDG_CONFIG_HOME/zellij/themes/NAME.kdl`.
+        See <https://zellij.dev/documentation/themes.html> for more information.
+      '';
+    };
+
     enableBashIntegration = mkShellIntegrationOption (
       lib.hm.shell.mkBashIntegrationOption { inherit config; }
     );
@@ -95,17 +110,32 @@ in
 
       # Zellij switched from yaml to KDL in version 0.32.0:
       # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
-      xdg.configFile."zellij/config.yaml" =
-        mkIf (cfg.settings != { } && (lib.versionOlder cfg.package.version "0.32.0"))
-          {
-            source = yamlFormat.generate "zellij.yaml" cfg.settings;
-          };
-
-      xdg.configFile."zellij/config.kdl" =
-        mkIf (cfg.settings != { } && (lib.versionAtLeast cfg.package.version "0.32.0"))
-          {
-            text = lib.hm.generators.toKDL { } cfg.settings;
-          };
+      xdg.configFile = lib.mkMerge [
+        {
+          "zellij/config.yaml" =
+            mkIf (cfg.settings != { } && (lib.versionOlder cfg.package.version "0.32.0"))
+              {
+                source = yamlFormat.generate "zellij.yaml" cfg.settings;
+              };
+          "zellij/config.kdl" =
+            mkIf (cfg.settings != { } && (lib.versionAtLeast cfg.package.version "0.32.0"))
+              {
+                text = lib.hm.generators.toKDL { } cfg.settings;
+              };
+        }
+        (lib.mapAttrs' (
+          name: value:
+          lib.nameValuePair "zellij/themes/${name}.kdl" {
+            source =
+              if builtins.isPath value || lib.isStorePath value then
+                value
+              else
+                pkgs.writeText "zellij-theme-${name}" (
+                  if lib.isString value then value else lib.hm.generators.toKDL { } value
+                );
+          }
+        ) cfg.themes)
+      ];
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
         eval "$(${lib.getExe cfg.package} setup --generate-auto-start bash)"
