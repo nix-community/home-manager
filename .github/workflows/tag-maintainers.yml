@@ -36,6 +36,8 @@ jobs:
       - name: Find maintainers for changed files
         id: find-maintainers
         if: steps.changed-files.outputs.module_files != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           MODULE_MAINTAINERS=$(cat ./result)
 
@@ -54,7 +56,7 @@ jobs:
             # Try different path formats to find the right one that matches the JSON
             for PATH_FORMAT in \
               "$FILE" \
-              "/Users/khaneliman/github/home-manager/$FILE" \
+              "$GITHUB_WORKSPACE/$FILE" \
               "/$PWD/$FILE" \
               "$PWD/$FILE"
             do
@@ -98,22 +100,46 @@ jobs:
 
           # If we found maintainers to notify, prepare the list
           if [[ ${#MAINTAINERS_TO_NOTIFY[@]} -gt 0 ]]; then
-            # Create JSON array of reviewers
-            REVIEWERS_JSON="["
-            first=true
+            # Check if maintainers are collaborators
+            REPO="${{ github.repository }}"
+            VALID_MAINTAINERS=()
+
             for MAINTAINER in "${!MAINTAINERS_TO_NOTIFY[@]}"; do
-              if [ "$first" = true ]; then
-                REVIEWERS_JSON="$REVIEWERS_JSON\"$MAINTAINER\""
-                first=false
+              echo "Checking if $MAINTAINER is a collaborator..."
+
+              if gh api \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "/repos/$REPO/collaborators/$MAINTAINER" &>/dev/null; then
+                echo "User $MAINTAINER is a collaborator, adding to reviewers list"
+                VALID_MAINTAINERS+=("$MAINTAINER")
               else
-                REVIEWERS_JSON="$REVIEWERS_JSON,\"$MAINTAINER\""
+                echo "User $MAINTAINER is not a repository collaborator, probably missed the automated invite to the maintainers team, ignoring"
               fi
             done
-            REVIEWERS_JSON="$REVIEWERS_JSON]"
 
-            echo "Found maintainers to notify: $(echo $REVIEWERS_JSON | tr -d '[]\"')"
-            echo "reviewers_json=$REVIEWERS_JSON" >> $GITHUB_OUTPUT
-            echo "has_maintainers=true" >> $GITHUB_OUTPUT
+            # Only proceed if we have valid maintainers who are collaborators
+            if [[ ${#VALID_MAINTAINERS[@]} -gt 0 ]]; then
+              # Create JSON array of reviewers
+              REVIEWERS_JSON="["
+              first=true
+              for MAINTAINER in "${VALID_MAINTAINERS[@]}"; do
+                if [ "$first" = true ]; then
+                  REVIEWERS_JSON="$REVIEWERS_JSON\"$MAINTAINER\""
+                  first=false
+                else
+                  REVIEWERS_JSON="$REVIEWERS_JSON,\"$MAINTAINER\""
+                fi
+              done
+              REVIEWERS_JSON="$REVIEWERS_JSON]"
+
+              echo "Found valid maintainers to notify: $(echo $REVIEWERS_JSON | tr -d '[]\"')"
+              echo "reviewers_json=$REVIEWERS_JSON" >> $GITHUB_OUTPUT
+              echo "has_maintainers=true" >> $GITHUB_OUTPUT
+            else
+              echo "No valid collaborator maintainers found for the modified files."
+              echo "has_maintainers=false" >> $GITHUB_OUTPUT
+            fi
           else
             echo "No module maintainers found for the modified files."
             echo "has_maintainers=false" >> $GITHUB_OUTPUT
