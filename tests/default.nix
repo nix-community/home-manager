@@ -371,6 +371,7 @@ import nmtSrc {
       ./modules/programs/getmail
       ./modules/programs/gnome-shell
       ./modules/programs/gnome-terminal
+      ./modules/programs/halloy
       ./modules/programs/hexchat
       ./modules/programs/hyprlock
       ./modules/programs/i3bar-river
