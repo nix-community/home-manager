@@ -67606,6 +67606,31 @@ YAML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.zellij.themes"></a><a class="term" href="options.xhtml#opt-programs.zellij.themes"><code class="option">programs.zellij.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Each them is written to <code class="filename">$XDG_CONFIG_HOME/zellij/themes/NAME.kdl</code>.
+See <a class="link" href="https://zellij.dev/documentation/themes.html"  target="_top">https://zellij.dev/documentation/themes.html</a> for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (YAML value or absolute path or strings concatenated with “\n”)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zellij.nix" target="_top">
+&lt;home-manager/modules/programs/zellij.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.zk.enable"></a><a class="term" href="options.xhtml#opt-programs.zk.enable"><code class="option">programs.zk.enable</code>
   </a>
  </span>
@@ -79596,7 +79621,7 @@ boolean</p>
 package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&lt;derivation kdeconnect-kde-25.04.0&gt;</code></p>
+<code class="literal">&lt;derivation kdeconnect-kde-25.04.1&gt;</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">pkgs.plasma5Packages.kdeconnect-kde</code></p>
