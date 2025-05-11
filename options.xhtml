@@ -30858,6 +30858,96 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.halloy.enable"></a><a class="term" href="options.xhtml#opt-programs.halloy.enable"><code class="option">programs.halloy.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable halloy.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/halloy.nix" target="_top">
+&lt;home-manager/modules/programs/halloy.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.halloy.package"></a><a class="term" href="options.xhtml#opt-programs.halloy.package"><code class="option">programs.halloy.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The halloy package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.halloy</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/halloy.nix" target="_top">
+&lt;home-manager/modules/programs/halloy.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.halloy.settings"></a><a class="term" href="options.xhtml#opt-programs.halloy.settings"><code class="option">programs.halloy.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration settings for halloy. All available options can be
+found here: <a class="link" href="https://halloy.chat/configuration/index.html"  target="_top">https://halloy.chat/configuration/index.html</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;buffer.channel.topic&quot; = {
+    enabled = true;
+  };
+  &quot;servers.liberachat&quot; = {
+    channels = [
+      &quot;#halloy&quot;
+    ];
+    nickname = &quot;halloy-user&quot;;
+    server = &quot;irc.libera.chat&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/halloy.nix" target="_top">
+&lt;home-manager/modules/programs/halloy.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.havoc.enable"></a><a class="term" href="options.xhtml#opt-programs.havoc.enable"><code class="option">programs.havoc.enable</code>
   </a>
  </span>
