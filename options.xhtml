@@ -58701,6 +58701,51 @@ null or package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.television.channels"></a><a class="term" href="options.xhtml#opt-programs.television.channels"><code class="option">programs.television.channels</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Each set of channels are written to
+<code class="filename">$XDG_CONFIG_HOME/television/NAME-channels.toml</code></p><p>See <a class="link" href="https://github.com/alexpasmantier/television/blob/main/docs/channels.md"  target="_top">https://github.com/alexpasmantier/television/blob/main/docs/channels.md</a>
+for options</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (TOML value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  my-custom = {
+    cable_channel = [
+      {
+        name = &quot;git-log&quot;;
+        source_command = &quot;git log --oneline --date=short --pretty=\&quot;format:%h %s %an %cd\&quot; \&quot;$@\&quot;&quot;;
+        preview_command = &quot;git show -p --stat --pretty=fuller --color=always {0}&quot;;
+      }
+      {
+        name = &quot;git-log&quot;;
+        source_command = &quot;git log --oneline --date=short --pretty=\&quot;format:%h %s %an %cd\&quot; \&quot;$@\&quot;&quot;;
+        preview_command = &quot;git show -p --stat --pretty=fuller --color=always {0}&quot;;
+      }
+    ];
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/television.nix" target="_top">
+&lt;home-manager/modules/programs/television.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.television.settings"></a><a class="term" href="options.xhtml#opt-programs.television.settings"><code class="option">programs.television.settings</code>
   </a>
  </span>
