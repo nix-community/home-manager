@@ -208,6 +208,7 @@ let
       ./programs/nnn.nix
       ./programs/noti.nix
       ./programs/notmuch.nix
+      ./programs/numbat.nix
       ./programs/nushell.nix
       ./programs/obs-studio.nix
       ./programs/octant.nix
