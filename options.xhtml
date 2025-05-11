@@ -7886,6 +7886,32 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-home.file._name_.ignorelinks"></a><a class="term" href="options.xhtml#opt-home.file._name_.ignorelinks"><code class="option">home.file.&lt;name&gt;.ignorelinks</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When <code class="literal">recursive</code> is enabled, adds <code class="literal">-ignorelinks</code> flag to lndir</p><p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+(symbolic link) file in the source directory. If the link is to a directory</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/files.nix" target="_top">
+&lt;home-manager/modules/files.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-home.file._name_.onChange"></a><a class="term" href="options.xhtml#opt-home.file._name_.onChange"><code class="option">home.file.&lt;name&gt;.onChange</code>
   </a>
  </span>
@@ -102273,6 +102299,32 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-xdg.cacheFile._name_.ignorelinks"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.ignorelinks"><code class="option">xdg.cacheFile.&lt;name&gt;.ignorelinks</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When <code class="literal">recursive</code> is enabled, adds <code class="literal">-ignorelinks</code> flag to lndir</p><p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+(symbolic link) file in the source directory. If the link is to a directory</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-xdg.cacheFile._name_.onChange"></a><a class="term" href="options.xhtml#opt-xdg.cacheFile._name_.onChange"><code class="option">xdg.cacheFile.&lt;name&gt;.onChange</code>
   </a>
  </span>
@@ -102533,6 +102585,32 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-xdg.configFile._name_.ignorelinks"></a><a class="term" href="options.xhtml#opt-xdg.configFile._name_.ignorelinks"><code class="option">xdg.configFile.&lt;name&gt;.ignorelinks</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When <code class="literal">recursive</code> is enabled, adds <code class="literal">-ignorelinks</code> flag to lndir</p><p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+(symbolic link) file in the source directory. If the link is to a directory</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-xdg.configFile._name_.onChange"></a><a class="term" href="options.xhtml#opt-xdg.configFile._name_.onChange"><code class="option">xdg.configFile.&lt;name&gt;.onChange</code>
   </a>
  </span>
@@ -102775,6 +102853,32 @@ null or boolean</p>
 by the managed file source. Warning, this will silently
 delete the target regardless of whether it is a file or
 link.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.dataFile._name_.ignorelinks"></a><a class="term" href="options.xhtml#opt-xdg.dataFile._name_.ignorelinks"><code class="option">xdg.dataFile.&lt;name&gt;.ignorelinks</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When <code class="literal">recursive</code> is enabled, adds <code class="literal">-ignorelinks</code> flag to lndir</p><p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+(symbolic link) file in the source directory. If the link is to a directory</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
@@ -103864,6 +103968,32 @@ null or boolean</p>
 by the managed file source. Warning, this will silently
 delete the target regardless of whether it is a file or
 link.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile._name_.ignorelinks"></a><a class="term" href="options.xhtml#opt-xdg.stateFile._name_.ignorelinks"><code class="option">xdg.stateFile.&lt;name&gt;.ignorelinks</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>When <code class="literal">recursive</code> is enabled, adds <code class="literal">-ignorelinks</code> flag to lndir</p><p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+(symbolic link) file in the source directory. If the link is to a directory</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
