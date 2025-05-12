@@ -423,6 +423,7 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
+        # add prezto file content to existing files as `.text` merges everything
         home.file."${relToDotDir ".zprofile"}".text =
           builtins.readFile "${cfg.package}/share/zsh-prezto/runcoms/zprofile";
         home.file."${relToDotDir ".zlogin"}".text =
