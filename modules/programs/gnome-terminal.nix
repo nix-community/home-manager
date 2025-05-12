@@ -333,6 +333,8 @@ in
     programs.gnome-terminal = {
       enable = lib.mkEnableOption "Gnome Terminal";
 
+      package = lib.mkPackageOption pkgs "gnome-terminal" { nullable = true; };
+
       showMenubar = mkOption {
         default = true;
         type = types.bool;
@@ -378,7 +380,7 @@ in
       )
     ];
 
-    home.packages = [ pkgs.gnome-terminal ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     dconf.settings =
       let
