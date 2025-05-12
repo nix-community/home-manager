@@ -30975,6 +30975,48 @@ TOML value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.halloy.themes"></a><a class="term" href="options.xhtml#opt-programs.halloy.themes"><code class="option">programs.halloy.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Each theme is written to <code class="filename">$XDG_CONFIG_HOME/halloy/themes/NAME.toml</code>.
+See <a class="link" href="https://halloy.chat/configuration/themes/index.html"  target="_top">https://halloy.chat/configuration/themes/index.html</a> for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (TOML value or strings concatenated with “\n” or absolute path)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  general = {
+    background = &quot;&lt;string&gt;&quot;;
+    border = &quot;&lt;string&gt;&quot;;
+    horizontal_rule = &quot;&lt;string&gt;&quot;;
+    unread_indicator = &quot;&lt;string&gt;&quot;;
+  };
+  text = {
+    error = &quot;&lt;string&gt;&quot;;
+    primary = &quot;&lt;string&gt;&quot;;
+    secondary = &quot;&lt;string&gt;&quot;;
+    success = &quot;&lt;string&gt;&quot;;
+    tertiary = &quot;&lt;string&gt;&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/halloy.nix" target="_top">
+&lt;home-manager/modules/programs/halloy.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.havoc.enable"></a><a class="term" href="options.xhtml#opt-programs.havoc.enable"><code class="option">programs.havoc.enable</code>
   </a>
  </span>
