@@ -272,6 +272,7 @@ in
       file.".config/aerospace/aerospace.toml".source = tomlFormat.generate "aerospace" (
         filterNulls cfg.userSettings
       );
+      onChange = "${lib.getExe cfg.package} reload-config";
     };
   };
 }
