@@ -42,7 +42,7 @@ in
             pin-square-amount = 32;
           };
           colours = {
-            background = "0xffffffaa";
+            background = "ffffffaa";
           };
         }
       '';
