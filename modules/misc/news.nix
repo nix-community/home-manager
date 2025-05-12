@@ -55,12 +55,29 @@ let
   );
 
   isNixFile = n: v: v == "regular" && lib.hasSuffix ".nix" n;
-  # builtins.attrNames return the values in alphabetical order
-  newsFiles = builtins.attrNames (lib.filterAttrs isNixFile (builtins.readDir ./news));
+  isDirectory = n: v: v == "directory";
+
+  # Recursively collect all .nix files from a directory
+  collectNixFiles =
+    dir:
+    let
+      contents = builtins.readDir dir;
+      files = lib.filterAttrs isNixFile contents;
+      fileList = map (file: dir + "/${file}") (builtins.attrNames files);
+
+      # Process subdirectories
+      subdirs = lib.filterAttrs isDirectory contents;
+      subdirFiles = lib.concatMap (subdir: collectNixFiles (dir + "/${subdir}")) (
+        builtins.attrNames subdirs
+      );
+    in
+    fileList ++ subdirFiles;
+
+  newsFiles = collectNixFiles ./news;
   newsEntries = builtins.map (
     newsFile:
     let
-      imported = import (./news + "/${newsFile}");
+      imported = import newsFile;
     in
     if builtins.isFunction imported then imported { inherit config lib pkgs; } else imported
   ) newsFiles;
