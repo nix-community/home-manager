@@ -48,21 +48,25 @@ in
         ]
       );
       default = { };
-      example = {
-        general = {
-          background = "<string>";
-          border = "<string>";
-          horizontal_rule = "<string>";
-          unread_indicator = "<string>";
-        };
-        text = {
-          primary = "<string>";
-          secondary = "<string>";
-          tertiary = "<string>";
-          success = "<string>";
-          error = "<string>";
-        };
-      };
+      example = lib.literalExpression ''
+        {
+          my-theme = {
+            general = {
+              background = "<string>";
+              border = "<string>";
+              horizontal_rule = "<string>";
+              unread_indicator = "<string>";
+            };
+            text = {
+              primary = "<string>";
+              secondary = "<string>";
+              tertiary = "<string>";
+              success = "<string>";
+              error = "<string>";
+            };
+          };
+        }
+      '';
       description = ''
         Each theme is written to {file}`$XDG_CONFIG_HOME/halloy/themes/NAME.toml`.
         See <https://halloy.chat/configuration/themes/index.html> for more information.
