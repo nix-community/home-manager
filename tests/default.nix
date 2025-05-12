@@ -330,6 +330,7 @@ import nmtSrc {
       ./modules/launchd
       ./modules/programs/aerospace
       ./modules/programs/element-desktop/darwin.nix
+      ./modules/programs/sketchybar
       ./modules/services/emacs-darwin
       ./modules/services/espanso-darwin
       ./modules/services/git-sync-darwin
