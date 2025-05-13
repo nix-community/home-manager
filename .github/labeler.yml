@@ -160,6 +160,7 @@
     - modules/programs/cmus.nix
     - modules/programs/ncspot.nix
     - modules/programs/spotify-player.nix
+    - modules/programs/foliate.nix
     - modules/programs/freetube.nix
     - modules/programs/yt-dlp.nix
     - modules/programs/kodi.nix

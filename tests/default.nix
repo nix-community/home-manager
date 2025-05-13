@@ -365,6 +365,7 @@ import nmtSrc {
       ./modules/programs/distrobox
       ./modules/programs/element-desktop/linux.nix
       ./modules/programs/eww
+      ./modules/programs/foliate
       ./modules/programs/foot
       ./modules/programs/freetube
       ./modules/programs/fuzzel
