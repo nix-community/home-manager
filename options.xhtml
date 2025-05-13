@@ -31015,20 +31015,23 @@ attribute set of (TOML value or strings concatenated with “\n” or absolute p
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  general = {
-    background = &quot;&lt;string&gt;&quot;;
-    border = &quot;&lt;string&gt;&quot;;
-    horizontal_rule = &quot;&lt;string&gt;&quot;;
-    unread_indicator = &quot;&lt;string&gt;&quot;;
-  };
-  text = {
-    error = &quot;&lt;string&gt;&quot;;
-    primary = &quot;&lt;string&gt;&quot;;
-    secondary = &quot;&lt;string&gt;&quot;;
-    success = &quot;&lt;string&gt;&quot;;
-    tertiary = &quot;&lt;string&gt;&quot;;
+  my-theme = {
+    general = {
+      background = &quot;&lt;string&gt;&quot;;
+      border = &quot;&lt;string&gt;&quot;;
+      horizontal_rule = &quot;&lt;string&gt;&quot;;
+      unread_indicator = &quot;&lt;string&gt;&quot;;
+    };
+    text = {
+      primary = &quot;&lt;string&gt;&quot;;
+      secondary = &quot;&lt;string&gt;&quot;;
+      tertiary = &quot;&lt;string&gt;&quot;;
+      success = &quot;&lt;string&gt;&quot;;
+      error = &quot;&lt;string&gt;&quot;;
+    };
   };
 }
+
 </code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
