@@ -586,6 +586,11 @@ in
           ''}
           ${cfg.extraConfig}
         '';
+
+        programs.zsh.initContent = lib.mkOrder 850 ''
+          # Load prezto
+          source ${cfg.package}/share/zsh-prezto/runcoms/zshrc
+        '';
       }
     ]
   );
