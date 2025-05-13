@@ -815,10 +815,7 @@ in
             ))
 
             (mkOrder 900 (
-              (optionalString cfg.prezto.enable (
-                builtins.readFile "${cfg.prezto.package}/share/zsh-prezto/runcoms/zshrc"
-              ))
-              + (lib.concatStrings (
+              (lib.concatStrings (
                 map (plugin: ''
                   if [[ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
                     source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
