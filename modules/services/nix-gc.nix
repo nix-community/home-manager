@@ -66,7 +66,7 @@ let
         ];
       };
     in
-    freq.${frequency};
+    freq.${frequency} or null;
 
   nixPackage =
     if config.nix.enable && config.nix.package != null then config.nix.package else pkgs.nix;
@@ -95,7 +95,7 @@ in
 
           On Linux this is a string as defined by {manpage}`systemd.time(7)`.
 
-          On Darwin it must be one of: ${toString darwinIntervals}, which are
+          On Darwin it must be one of: ${lib.concatStringsSep ", " darwinIntervals}, which are
           implemented as defined in the manual page above.
         '';
       };
@@ -172,7 +172,7 @@ in
         assertions = [
           {
             assertion = lib.elem cfg.frequency darwinIntervals;
-            message = "On Darwin nix.gc.frequency must be one of: ${toString darwinIntervals}.";
+            message = "On Darwin nix.gc.frequency must be one of: ${lib.concatStringsSep ", " darwinIntervals}.";
           }
         ];
 
