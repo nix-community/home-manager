@@ -173,11 +173,19 @@ let
       author,
       name,
       version,
-    }@args:
+      hash,
+    }:
     pkgs.stdenvNoCC.mkDerivation {
       pname = "lapce-plugin-${author}-${name}";
       inherit version;
-      src = fetchPluginTarballFromRegistry args;
+      src = fetchPluginTarballFromRegistry {
+        inherit
+          author
+          name
+          version
+          hash
+          ;
+      };
       nativeBuildInputs = [ pkgs.zstd ];
       phases = [ "installPhase" ];
       installPhase = ''
