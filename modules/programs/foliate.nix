@@ -41,7 +41,7 @@ in
               show-covers = true;
             };
             "viewer/view" = {
-              theme = "My Theme";
+              theme = "myTheme.json";
             };
             "viewer/font" = {
               monospace = "Maple Mono";
