@@ -120,6 +120,14 @@ in
 
   config = mkIf cfg.enable (
     lib.mkMerge [
+      {
+        home.sessionVariables = mkIf cfg.defaultEditor {
+          EDITOR = lib.getBin (
+            pkgs.writeShellScript "editor" ''exec ${lib.getBin cfg.package}/bin/emacsclient "''${@:---create-frame}"''
+          );
+        };
+      }
+
       (mkIf pkgs.stdenv.isLinux {
         systemd.user.services.emacs =
           {
@@ -179,15 +187,7 @@ in
             };
           };
 
-        home = {
-          packages = optional cfg.client.enable (lib.hiPrio clientDesktopItem);
-
-          sessionVariables = mkIf cfg.defaultEditor {
-            EDITOR = lib.getBin (
-              pkgs.writeShellScript "editor" ''exec ${lib.getBin cfg.package}/bin/emacsclient "''${@:---create-frame}"''
-            );
-          };
-        };
+        home.packages = optional cfg.client.enable (lib.hiPrio clientDesktopItem);
       })
 
       (mkIf (cfg.socketActivation.enable && pkgs.stdenv.isLinux) {
