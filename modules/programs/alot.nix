@@ -269,10 +269,6 @@ in
         '';
       };
     };
-
-    accounts.email.accounts = mkOption {
-      type = with types; attrsOf (submodule (import ./alot-accounts.nix pkgs));
-    };
   };
 
   config = lib.mkIf cfg.enable {
