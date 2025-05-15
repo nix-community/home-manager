@@ -12291,8 +12291,7 @@ boolean</p>
  </span>
 </dt>
 <dd>
-<p>When to run the Nix garbage collector.</p><p>On Linux this is a string as defined by <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>.</p><p>On Darwin it must be one of: hourly daily weekly monthly semiannually annually, which are
-implemented as defined in the manual page above.</p>
+<p>When to run the Nix garbage collector.</p><p>On Linux this is a string as defined by <a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>.</p><p>$lib.hm.darwin.{intervalDocumentation}</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 string</p>
