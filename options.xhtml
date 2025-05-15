@@ -51752,6 +51752,132 @@ An attribute set containing a remote type and options.</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.rclone.remotes._name_.mounts"></a><a class="term" href="options.xhtml#opt-programs.rclone.remotes._name_.mounts"><code class="option">programs.rclone.remotes.&lt;name&gt;.mounts</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>An attribute set mapping remote file paths to their corresponding mount
+point configurations.</p><p>For each entry, to perform the equivalent of
+<code class="literal">rclone mount remote:path/to/files /path/to/local/mount</code> — as described in the
+rclone documentation <a class="link" href="https://rclone.org/commands/rclone_mount/"  target="_top">https://rclone.org/commands/rclone_mount/</a> — we create
+a key-value pair like this:
+<code class="literal">&quot;path/to/files/on/remote&quot; = { ... }</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;path/to/files&quot; = {
+    enable = true;
+    mountPoint = &quot;/home/alice/rclone-mount&quot;;
+    options = {
+      dir-cache-time = &quot;5000h&quot;;
+      poll-interval = &quot;10s&quot;;
+      umask = &quot;002&quot;;
+      user-agent = &quot;Laptop&quot;;
+    };
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rclone.remotes._name_.mounts._name_.enable"></a><a class="term" href="options.xhtml#opt-programs.rclone.remotes._name_.mounts._name_.enable"><code class="option">programs.rclone.remotes.&lt;name&gt;.mounts.&lt;name&gt;.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable this mount.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rclone.remotes._name_.mounts._name_.mountPoint"></a><a class="term" href="options.xhtml#opt-programs.rclone.remotes._name_.mounts._name_.mountPoint"><code class="option">programs.rclone.remotes.&lt;name&gt;.mounts.&lt;name&gt;.mountPoint</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A local file path specifying the location of the mount point.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;/home/alice/my-remote&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.rclone.remotes._name_.mounts._name_.options"></a><a class="term" href="options.xhtml#opt-programs.rclone.remotes._name_.mounts._name_.options"><code class="option">programs.rclone.remotes.&lt;name&gt;.mounts.&lt;name&gt;.options</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>An attribute set of option values passed to <code class="literal">rclone mount</code>. To set
+a boolean option, assign it <code class="literal">true</code> or <code class="literal">false</code>. See
+<a class="link" href="https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toGNUCommandLineShell"  target="_top">https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toGNUCommandLineShell</a>
+for more details on the format.</p><p>Some caching options are set by default, namely <code class="literal">vfs-cache-mode = &quot;full&quot;</code>
+and <code class="literal">cache-dir</code>. These can be overridden if desired.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (null or boolean or signed integer or floating point number or string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix" target="_top">
+&lt;home-manager/modules/programs/rclone.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.rclone.remotes._name_.secrets"></a><a class="term" href="options.xhtml#opt-programs.rclone.remotes._name_.secrets"><code class="option">programs.rclone.remotes.&lt;name&gt;.secrets</code>
   </a>
  </span>
