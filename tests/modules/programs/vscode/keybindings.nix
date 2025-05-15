@@ -45,6 +45,42 @@ let
     else
       ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}settings.json";
 
+  content = ''
+    [
+      // Order doesn't change
+      {
+        "command": "deleteFile",
+        "key": "ctrl+c",
+        "when": ""
+      },
+      {
+        "command": "deleteFile",
+        "key": "ctrl+c",
+        "when": ""
+      },
+      {
+        "args": {
+          "command": "echo file"
+        },
+        "command": "run",
+        "key": "ctrl+r"
+      },
+      // Comments should be preserved
+      {
+        "command": "editor.action.clipboardCopyAction",
+        "key": "ctrl+c",
+        "when": "textInputFocus && false"
+      },
+      {
+        "command": "deleteFile",
+        "key": "d",
+        "when": "explorerViewletVisible"
+      }
+    ]
+  '';
+
+  customBindingsPath = pkgs.writeText "custom.json" content;
+
   expectedKeybindings = pkgs.writeText "expected.json" ''
     [
       {
@@ -72,6 +108,8 @@ let
     ]
   '';
 
+  expectedCustomKeybindings = pkgs.writeText "custom-expected.json" content;
+
 in
 {
   programs.vscode = {
@@ -79,6 +117,7 @@ in
     profiles = {
       default.keybindings = bindings;
       test.keybindings = bindings;
+      custom.keybindings = customBindingsPath;
     };
     package = pkgs.writeScriptBin "vscode" "" // {
       pname = "vscode";
@@ -96,5 +135,10 @@ in
     assertFileContent "home-files/${keybindingsPath "test"}" "${expectedKeybindings}"
 
     assertPathNotExists "home-files/${settingsPath "test"}"
+
+    assertFileExists "home-files/${keybindingsPath "custom"}"
+    assertFileContent "home-files/${keybindingsPath "custom"}" "${expectedCustomKeybindings}"
+
+    assertPathNotExists "home-files/${settingsPath "custom"}"
   '';
 }
