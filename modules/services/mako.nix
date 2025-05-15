@@ -196,6 +196,8 @@ in
 
     home.packages = [ cfg.package ];
 
+    dbus.packages = [ cfg.package ];
+
     xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.criteria != { }) {
       onChange = "${cfg.package}/bin/makoctl reload || true";
       text =
