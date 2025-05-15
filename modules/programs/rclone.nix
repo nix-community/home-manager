@@ -9,6 +9,7 @@ let
 
   cfg = config.programs.rclone;
   iniFormat = pkgs.formats.ini { };
+  replaceSlashes = builtins.replaceStrings [ "/" ] [ "." ];
 
 in
 {
@@ -87,6 +88,80 @@ in
                     api_key = config.age.secrets.api-key.path;
                   }'';
               };
+
+              mounts = lib.mkOption {
+                type =
+                  with lib.types;
+                  attrsOf (
+                    lib.types.submodule {
+                      options = {
+                        enable = lib.mkEnableOption "this mount";
+
+                        mountPoint = lib.mkOption {
+                          type = lib.types.str;
+                          default = null;
+                          description = ''
+                            A local file path specifying the location of the mount point.
+                          '';
+                          example = "/home/alice/my-remote";
+                        };
+
+                        options = lib.mkOption {
+                          type =
+                            with lib.types;
+                            attrsOf (
+                              nullOr (oneOf [
+                                bool
+                                int
+                                float
+                                str
+                              ])
+                            );
+                          default = { };
+                          apply = lib.mergeAttrs {
+                            vfs-cache-mode = "full";
+                            cache-dir = "%C";
+                          };
+                          description = ''
+                            An attribute set of option values passed to `rclone mount`. To set
+                            a boolean option, assign it `true` or `false`. See
+                            <https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toGNUCommandLineShell>
+                            for more details on the format.
+
+                            Some caching options are set by default, namely `vfs-cache-mode = "full"`
+                            and `cache-dir`. These can be overridden if desired.
+                          '';
+                        };
+                      };
+                    }
+                  );
+                default = { };
+                description = ''
+                  An attribute set mapping remote file paths to their corresponding mount
+                  point configurations.
+
+                  For each entry, to perform the equivalent of
+                  `rclone mount remote:path/to/files /path/to/local/mount` — as described in the
+                  rclone documentation <https://rclone.org/commands/rclone_mount/> — we create
+                  a key-value pair like this:
+                  `"path/to/files/on/remote" = { ... }`.
+                '';
+                example = lib.literalExpression ''
+                  {
+                    "path/to/files" = {
+                      enable = true;
+                      mountPoint = "/home/alice/rclone-mount";
+                      options = {
+                        dir-cache-time = "5000h";
+                        poll-interval = "10s";
+                        umask = "002";
+                        user-agent = "Laptop";
+                      };
+                    };
+                  }
+                '';
+
+              };
             };
           }
         );
@@ -164,6 +239,56 @@ in
           ''
         );
     };
+
+    systemd.user.services = lib.listToAttrs (
+      lib.concatMap
+        (
+          { name, value }:
+          let
+            remote-name = name;
+            remote = value;
+          in
+          lib.concatMap (
+            { name, value }:
+            let
+              mount-path = name;
+              mount = value;
+            in
+            [
+              (lib.nameValuePair "rclone-mount:${replaceSlashes mount-path}@${remote-name}" {
+                Unit = {
+                  Description = "Rclone FUSE daemon for ${remote-name}:${mount-path}";
+                };
+
+                Service = {
+                  Environment = [
+                    # fusermount/fusermount3
+                    "PATH=/run/wrappers/bin"
+                  ];
+                  ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mount.mountPoint}";
+                  ExecStart = lib.concatStringsSep " " [
+                    (lib.getExe cfg.package)
+                    "mount"
+                    "-vv"
+                    (lib.cli.toGNUCommandLineShell { } mount.options)
+                    "${remote-name}:${mount-path}"
+                    "${mount.mountPoint}"
+                  ];
+                  Restart = "on-failure";
+                };
+
+                Install.WantedBy = [ "default.target" ];
+              })
+            ]
+          ) (lib.attrsToList remote.mounts)
+        )
+        (
+          lib.pipe cfg.remotes [
+            lib.attrsToList
+            (lib.filter (rem: rem.value ? mounts))
+          ]
+        )
+    );
   };
 
   meta.maintainers = with lib.hm.maintainers; [ jess ];
