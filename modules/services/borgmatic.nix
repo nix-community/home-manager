@@ -81,6 +81,27 @@ in
           };
         };
       })
+
+      (lib.mkIf pkgs.stdenv.isDarwin {
+        assertions = [
+          (lib.hm.darwin.assertInterval "services.borgmatic.frequency" serviceConfig.frequency pkgs)
+        ];
+
+        launchd.agents.borgmatic = {
+          enable = true;
+          config = {
+            ProgramArguments = [
+              (lib.getExe programConfig.package)
+              "--stats"
+              "--list"
+            ];
+            ProcessType = "Background";
+            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval serviceConfig.frequency;
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/borgmatic/launchd-stdout.log";
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/borgmatic/launchd-stderr.log";
+          };
+        };
+      })
     ]
   );
 }
