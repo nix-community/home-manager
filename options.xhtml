@@ -6757,6 +6757,33 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-dbus.packages"></a><a class="term" href="options.xhtml#opt-dbus.packages"><code class="option">dbus.packages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Packages whose D-Bus configuration files should be included in
+the configuration of the D-Bus session-wide message bus. Specifically,
+files in «pkg»/share/dbus-1/services will be included in the user’s
+$XDG_DATA_HOME/dbus-1/services directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/dbus.nix" target="_top">
+&lt;home-manager/modules/dbus.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-dconf.settings"></a><a class="term" href="options.xhtml#opt-dconf.settings"><code class="option">dconf.settings</code>
   </a>
  </span>
