@@ -226,6 +226,7 @@ let
       ./programs/pay-respects.nix
       ./programs/pazi.nix
       ./programs/pet.nix
+      ./programs/pgcli.nix
       ./programs/pidgin.nix
       ./programs/pistol.nix
       ./programs/piston-cli.nix

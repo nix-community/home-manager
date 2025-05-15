@@ -266,6 +266,7 @@ import nmtSrc {
       ./modules/programs/papis
       ./modules/programs/pay-respects
       ./modules/programs/pet
+      ./modules/programs/pgcli
       ./modules/programs/pistol
       ./modules/programs/pls
       ./modules/programs/poetry
