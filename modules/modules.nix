@@ -490,6 +490,7 @@ let
       ./services/xsuspender.nix
       ./services/yubikey-agent.nix
       ./systemd.nix
+      ./dbus.nix
       ./targets/darwin
       ./targets/generic-linux.nix
       ./wayland.nix
