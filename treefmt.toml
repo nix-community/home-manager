@@ -1,0 +1,10 @@
+on-unmatched = "info"
+tree-root-file = "release.json"
+
+[formatter.nixfmt]
+command = "nixfmt"
+includes = [ "*.nix" ]
+
+[formatter.keep-sorted]
+command = "keep-sorted"
+includes = [ "*" ]

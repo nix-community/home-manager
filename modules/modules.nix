@@ -15,9 +15,10 @@ let
 
   modules =
     [
-      ./accounts/email.nix
+      # keep-sorted start case=no numeric=yes
       ./accounts/calendar.nix
       ./accounts/contacts.nix
+      ./accounts/email.nix
       ./config/home-cursor.nix
       ./config/i18n.nix
       ./files.nix
@@ -33,6 +34,7 @@ let
       ./misc/lib.nix
       ./misc/mozilla-messaging-hosts.nix
       ./misc/news.nix
+      ./misc/nix.nix
       ./misc/nixgl.nix
       ./misc/numlock.nix
       ./misc/pam.nix
@@ -68,10 +70,10 @@ let
       ./programs/autojump.nix
       ./programs/autorandr.nix
       ./programs/awscli.nix
+      ./programs/bacon.nix
       ./programs/bash.nix
       ./programs/bashmount.nix
       ./programs/bat.nix
-      ./programs/bacon.nix
       ./programs/beets.nix
       ./programs/bemenu.nix
       ./programs/borgmatic.nix
@@ -113,8 +115,8 @@ let
       ./programs/fzf.nix
       ./programs/gallery-dl.nix
       ./programs/getmail.nix
-      ./programs/gh.nix
       ./programs/gh-dash.nix
+      ./programs/gh.nix
       ./programs/ghostty.nix
       ./programs/git-cliff.nix
       ./programs/git-credential-oauth.nix
@@ -149,11 +151,11 @@ let
       ./programs/irssi.nix
       ./programs/java.nix
       ./programs/jetbrains-remote.nix
+      ./programs/joplin-desktop.nix
+      ./programs/joshuto.nix
       ./programs/jq.nix
       ./programs/jqp.nix
       ./programs/jujutsu.nix
-      ./programs/joshuto.nix
-      ./programs/joplin-desktop.nix
       ./programs/just.nix
       ./programs/k9s.nix
       ./programs/kakoune.nix
@@ -236,15 +238,17 @@ let
       ./programs/pubs.nix
       ./programs/pyenv.nix
       ./programs/pylint.nix
+      ./programs/pywal.nix
       ./programs/qcal.nix
       ./programs/qutebrowser.nix
       ./programs/ranger.nix
+      ./programs/rbenv.nix
       ./programs/rbw.nix
       ./programs/rclone.nix
       ./programs/readline.nix
       ./programs/rio.nix
-      ./programs/ripgrep.nix
       ./programs/ripgrep-all.nix
+      ./programs/ripgrep.nix
       ./programs/rmpc.nix
       ./programs/rofi-pass.nix
       ./programs/rofi.nix
@@ -286,8 +290,8 @@ let
       ./programs/tiny.nix
       ./programs/tmate.nix
       ./programs/tmux.nix
-      ./programs/tofi.nix
       ./programs/todoman.nix
+      ./programs/tofi.nix
       ./programs/topgrade.nix
       ./programs/translate-shell.nix
       ./programs/urxvt.nix
@@ -298,16 +302,14 @@ let
       ./programs/vim-vint.nix
       ./programs/vim.nix
       ./programs/vinegar.nix
+      ./programs/visidata.nix
       ./programs/vscode.nix
       ./programs/vscode/haskell.nix
-      ./programs/visidata.nix
-      ./programs/pywal.nix
-      ./programs/rbenv.nix
       ./programs/wallust.nix
       ./programs/watson.nix
       ./programs/waveterm.nix
-      ./programs/waylogout.nix
       ./programs/waybar.nix
+      ./programs/waylogout.nix
       ./programs/wayprompt.nix
       ./programs/wezterm.nix
       ./programs/wlogout.nix
@@ -357,8 +359,8 @@ let
       ./services/dwm-status.nix
       ./services/easyeffects.nix
       ./services/emacs.nix
-      ./services/etesync-dav.nix
       ./services/espanso.nix
+      ./services/etesync-dav.nix
       ./services/flameshot.nix
       ./services/fluidsynth.nix
       ./services/fnott.nix
@@ -396,11 +398,11 @@ let
       ./services/mbsync.nix
       ./services/megasync.nix
       ./services/mopidy.nix
+      ./services/mpd-discord-rpc.nix
+      ./services/mpd-mpris.nix
       ./services/mpd.nix
       ./services/mpdris2.nix
       ./services/mpdscribble.nix
-      ./services/mpd-discord-rpc.nix
-      ./services/mpd-mpris.nix
       ./services/mpris-proxy.nix
       ./services/muchsync.nix
       ./services/network-manager-applet.nix
@@ -495,7 +497,7 @@ let
       ./wayland.nix
       ./xresources.nix
       ./xsession.nix
-      ./misc/nix.nix
+      # keep-sorted end
       (pkgs.path + "/nixos/modules/misc/assertions.nix")
       (pkgs.path + "/nixos/modules/misc/meta.nix")
 
