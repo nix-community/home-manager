@@ -36,7 +36,7 @@ in
 
           On Linux this is a string as defined by {manpage}`systemd.time(7)`.
 
-          $lib.hm.darwin.{intervalDocumentation}
+          ${lib.hm.darwin.intervalDocumentation}
         '';
       };
 
