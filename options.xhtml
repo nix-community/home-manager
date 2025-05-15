@@ -64665,10 +64665,11 @@ JSON value</p>
 </dt>
 <dd>
 <p>Keybindings written to Visual Studio Code’s
-<code class="filename">keybindings.json</code>.</p>
+<code class="filename">keybindings.json</code>.
+This can be a JSON object or a path to a custom JSON file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-list of (submodule)</p>
+absolute path or list of (submodule)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
@@ -64682,110 +64683,6 @@ list of (submodule)</p>
 ]
 
 </code></pre>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.vscode.profiles._name_.keybindings._.args"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings._.args"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings.*.args</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Optional arguments for a command.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or JSON value</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  direction = &quot;up&quot;;
-}
-</code></pre>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.vscode.profiles._name_.keybindings._.command"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings._.command"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings.*.command</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The VS Code command to execute.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-string</p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;editor.action.clipboardCopyAction&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.vscode.profiles._name_.keybindings._.key"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings._.key"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings.*.key</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>The key or key-combination to bind.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-string</p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;ctrl+c&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vscode.nix" target="_top">
-&lt;home-manager/modules/programs/vscode.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.vscode.profiles._name_.keybindings._.when"></a><a class="term" href="options.xhtml#opt-programs.vscode.profiles._name_.keybindings._.when"><code class="option">programs.vscode.profiles.&lt;name&gt;.keybindings.*.when</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Optional context filter.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-null or string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
-
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;textInputFocus&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -64843,10 +64740,11 @@ JSON value</p>
 </dt>
 <dd>
 <p>Configuration written to Visual Studio Code’s
-<code class="filename">settings.json</code>.</p>
+<code class="filename">settings.json</code>.
+This can be a JSON object or a path to a custom JSON file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-JSON value</p>
+absolute path or JSON value</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -64875,10 +64773,11 @@ JSON value</p>
 </dt>
 <dd>
 <p>Configuration written to Visual Studio Code’s
-<code class="filename">tasks.json</code>.</p>
+<code class="filename">tasks.json</code>.
+This can be a JSON object or a path to a custom JSON file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-JSON value</p>
+absolute path or JSON value</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
