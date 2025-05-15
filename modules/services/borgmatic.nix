@@ -25,6 +25,8 @@ in
           the onCalendar option. See
           {manpage}`systemd.time(7)`
           for more information about the format.
+
+          ${lib.hm.darwin.intervalDocumentation}
         '';
       };
     };
