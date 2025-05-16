@@ -1,5 +1,9 @@
-# Test custom keymap functionality
-{ config, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   programs.zed-editor = {
@@ -20,28 +24,78 @@
     ];
   };
 
+  home.homeDirectory = lib.mkForce "/@TMPDIR@/hm-user";
+
   nmt.script =
     let
-      expectedContent = builtins.toFile "expected.json" ''
+      preexistingKeymaps = builtins.toFile "preexisting.json" ''
         [
           {
             "bindings": {
-              "up": "menu::SelectPrev"
+              "down": "menu::SelectNext"
             }
           },
           {
             "bindings": {
-              "escape": "editor::Cancel"
+              "down": "select"
+            },
+            "context": "Terminal"
+          },
+          {
+            "bindings": {
+              "enter": "newline"
             },
             "context": "Editor"
           }
         ]
       '';
 
+      expectedContent = builtins.toFile "expected.json" ''
+        [
+          {
+            "bindings": {
+              "down": "menu::SelectNext",
+              "up": "menu::SelectPrev"
+            }
+          },
+          {
+            "bindings": {
+              "enter": "newline",
+              "escape": "editor::Cancel"
+            },
+            "context": "Editor"
+          },
+          {
+            "bindings": {
+              "down": "select"
+            },
+            "context": "Terminal"
+          }
+        ]
+      '';
+
       keymapPath = ".config/zed/keymap.json";
+      activationScript = pkgs.writeScript "activation" config.home.activation.zedKeymapActivation.data;
     in
     ''
-      assertFileExists "home-files/${keymapPath}"
-      assertFileContent "home-files/${keymapPath}" "${expectedContent}"
+      export HOME=$TMPDIR/hm-user
+
+      # Simulate preexisting keymaps
+      mkdir -p $HOME/.config/zed
+      cat ${preexistingKeymaps} > $HOME/${keymapPath}
+
+      # Run the activation script
+      substitute ${activationScript} $TMPDIR/activate --subst-var TMPDIR
+      chmod +x $TMPDIR/activate
+      $TMPDIR/activate
+
+      # Validate the merged keymaps
+      assertFileExists "$HOME/${keymapPath}"
+      assertFileContent "$HOME/${keymapPath}" "${expectedContent}"
+
+      # Test idempotency
+      $TMPDIR/activate
+      assertFileExists "$HOME/${keymapPath}"
+      assertFileContent "$HOME/${keymapPath}" "${expectedContent}"
     '';
 }
