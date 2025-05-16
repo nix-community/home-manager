@@ -49074,6 +49074,95 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.pgcli.enable"></a><a class="term" href="options.xhtml#opt-programs.pgcli.enable"><code class="option">programs.pgcli.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable pgcli.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pgcli.nix" target="_top">
+&lt;home-manager/modules/programs/pgcli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.pgcli.package"></a><a class="term" href="options.xhtml#opt-programs.pgcli.package"><code class="option">programs.pgcli.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The pgcli package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.pgcli</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pgcli.nix" target="_top">
+&lt;home-manager/modules/programs/pgcli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.pgcli.settings"></a><a class="term" href="options.xhtml#opt-programs.pgcli.settings"><code class="option">programs.pgcli.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/pgcli/config</code>.
+See <a class="link" href="https://www.pgcli.com/config"  target="_top">https://www.pgcli.com/config</a>
+for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  main = {
+    smart_completion = true;
+    vi = true;
+  };
+
+  &quot;named queries&quot;.simple = &quot;select * from abc where a is not Null&quot;;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pgcli.nix" target="_top">
+&lt;home-manager/modules/programs/pgcli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.pidgin.enable"></a><a class="term" href="options.xhtml#opt-programs.pidgin.enable"><code class="option">programs.pidgin.enable</code>
   </a>
  </span>
