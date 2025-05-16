@@ -169,6 +169,8 @@ in
             The location to put the GTK configuration file.
           '';
         };
+
+        force = lib.mkEnableOption "GTK 2 config force overwrite (workaround for bug #6188)";
       };
 
       gtk3 = {
@@ -294,10 +296,14 @@ in
         cfg.cursorTheme
       ];
 
-      home.file.${cfg2.configLocation}.text =
-        lib.concatMapStrings (l: l + "\n") (lib.mapAttrsToList formatGtk2Option gtkIni)
-        + cfg2.extraConfig
-        + "\n";
+      home.file.${cfg2.configLocation} = {
+        text =
+          lib.concatMapStrings (l: l + "\n") (lib.mapAttrsToList formatGtk2Option gtkIni)
+          + cfg2.extraConfig
+          + "\n";
+
+        force = cfg2.force;
+      };
 
       home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
 
