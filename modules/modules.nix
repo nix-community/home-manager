@@ -117,6 +117,7 @@ let
       ./programs/gh-dash.nix
       ./programs/ghostty.nix
       ./programs/git-cliff.nix
+      ./programs/gimp.nix
       ./programs/git-credential-oauth.nix
       ./programs/git-worktree-switcher.nix
       ./programs/git.nix
