@@ -66,7 +66,7 @@ on how to perform this installation.</p></li><li class="listitem"><p>As a module
 user profiles to be built together with the system when running
 <code class="literal">nixos-rebuild</code>. See <a class="link" href="index.xhtml#sec-install-nixos-module" title="NixOS module" >NixOS module</a> for a
 description of this setup.</p></li><li class="listitem"><p>As a module within a
-<a class="link" href="https://github.com/LnL7/nix-darwin/"  target="_top">nix-darwin</a> system
+<a class="link" href="https://github.com/nix-darwin/nix-darwin/"  target="_top">nix-darwin</a> system
 configuration. This allows the user profiles to be built together
 with the system when running <code class="literal">darwin-rebuild</code>. See <a class="link" href="index.xhtml#sec-install-nix-darwin-module" title="nix-darwin module" >nix-darwin
 module</a> for a description of this
@@ -186,7 +186,7 @@ you create. This contains the system’s NixOS configuration.</p><pre><code clas
 description of Home Manager and how to use it.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-install-nix-darwin-module" class="title" style="clear: both">nix-darwin module   </h2>  </div> </div></div><p>Home Manager provides a module that allows you to prepare user
 environments directly from the
-<a class="link" href="https://github.com/LnL7/nix-darwin/"  target="_top">nix-darwin</a> configuration file,
+<a class="link" href="https://github.com/nix-darwin/nix-darwin/"  target="_top">nix-darwin</a> configuration file,
 which often is more convenient than using the <code class="literal">home-manager</code> tool.</p><p>To make the NixOS module available for use you must <code class="literal">import</code> it into
 your system configuration. This is most conveniently done by adding a
 Home Manager channel. For example, if you are following Nixpkgs master
@@ -554,7 +554,7 @@ to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><
 
   inputs = {
     nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
-    darwin.url = &quot;github:lnl7/nix-darwin&quot;;
+    darwin.url = &quot;github:nix-darwin/nix-darwin&quot;;
     darwin.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
     home-manager.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
