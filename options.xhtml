@@ -50042,6 +50042,100 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.ptyxis.enable"></a><a class="term" href="options.xhtml#opt-programs.ptyxis.enable"><code class="option">programs.ptyxis.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable ptyxis.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ptyxis.nix" target="_top">
+&lt;home-manager/modules/programs/ptyxis.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ptyxis.package"></a><a class="term" href="options.xhtml#opt-programs.ptyxis.package"><code class="option">programs.ptyxis.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The ptyxis package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.ptyxis</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ptyxis.nix" target="_top">
+&lt;home-manager/modules/programs/ptyxis.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.ptyxis.palettes"></a><a class="term" href="options.xhtml#opt-programs.ptyxis.palettes"><code class="option">programs.ptyxis.palettes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Written to <code class="filename">$XDG_CONFIG_HOME/org.gnome.Prompt/palettes/NAME.palette</code>.
+See <a class="link" href="https://gitlab.gnome.org/chergert/ptyxis/-/tree/main/data/palettes"  target="_top">https://gitlab.gnome.org/chergert/ptyxis/-/tree/main/data/palettes</a>
+for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of ((attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))) or absolute path or string)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  myPalette = {
+    Palette.Name = &quot;My awesome theme&quot;;
+    Light = {
+      Foreground=&quot;#E2E2E3&quot;;
+      Background=&quot;#2C2E34&quot;;
+      Color0=&quot;#2C2E34&quot;;
+      Color1=&quot;#FC5D7C&quot;;
+      Color2=&quot;#9ED072&quot;;
+      Color3=&quot;#E7C664&quot;;
+      Color4=&quot;#F39660&quot;;
+    };
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ptyxis.nix" target="_top">
+&lt;home-manager/modules/programs/ptyxis.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.pubs.enable"></a><a class="term" href="options.xhtml#opt-programs.pubs.enable"><code class="option">programs.pubs.enable</code>
   </a>
  </span>
