@@ -390,6 +390,7 @@ import nmtSrc {
       ./modules/programs/onagre
       ./modules/programs/onedrive
       ./modules/programs/pqiv
+      ./modules/programs/ptyxis
       ./modules/programs/rbw
       ./modules/programs/rofi
       ./modules/programs/rofi-pass
