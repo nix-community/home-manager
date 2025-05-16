@@ -2,7 +2,7 @@
 
 Home Manager provides a module that allows you to prepare user
 environments directly from the
-[nix-darwin](https://github.com/LnL7/nix-darwin/) configuration file,
+[nix-darwin](https://github.com/nix-darwin/nix-darwin/) configuration file,
 which often is more convenient than using the `home-manager` tool.
 
 To make the NixOS module available for use you must `import` it into

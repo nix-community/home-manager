@@ -1,7 +1,7 @@
 # launchd option type from nix-darwin
 #
 # Original Source:
-# https://github.com/LnL7/nix-darwin/blob/14a12e9/modules/launchd/launchd.nix
+# https://github.com/nix-darwin/nix-darwin/blob/14a12e9/modules/launchd/launchd.nix
 
 # Copyright 2017 Daiderd Jordan
 #
