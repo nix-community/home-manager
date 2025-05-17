@@ -16,26 +16,18 @@ let
 
   cfg = config.programs.qutebrowser;
 
-  formatLine =
-    o: n: v:
-    let
-      formatValue =
-        v:
-        if v == null then
-          "None"
-        else if builtins.isBool v then
-          (if v then "True" else "False")
-        else if builtins.isString v then
-          ''"${v}"''
-        else if builtins.isList v then
-          "[${concatStringsSep ", " (map formatValue v)}]"
-        else
-          builtins.toString v;
-    in
-    if builtins.isAttrs v then
-      concatStringsSep "\n" (mapAttrsToList (formatLine "${o}${n}.") v)
+  pythonize =
+    v:
+    if v == null then
+      "None"
+    else if builtins.isBool v then
+      (if v then "True" else "False")
+    else if builtins.isString v then
+      ''"${v}"''
+    else if builtins.isList v then
+      "[${concatStringsSep ", " (map pythonize v)}]"
     else
-      "${o}${n} = ${formatValue v}";
+      builtins.toString v;
 
   formatDictLine =
     o: n: v:
@@ -55,6 +47,19 @@ let
 
   formatQuickmarks = n: s: "${n} ${s}";
 
+  # flattenSettings attrset -> [ [ <opt_path> <opt_value>] ]
+  flattenSettings =
+    x:
+    lib.collect (x: !builtins.isAttrs x) (
+      lib.mapAttrsRecursive (path: value: [
+        (lib.concatStringsSep "." path)
+        value
+      ]) x
+    );
+
+  configSet = l: "config.set(${lib.concatStringsSep ", " (map pythonize l)})";
+
+  setUrlConfig = url: conf: map (x: configSet (x ++ [ url ])) (flattenSettings conf);
 in
 {
   options.programs.qutebrowser = {
@@ -285,6 +290,27 @@ in
         Extra lines added to qutebrowser {file}`config.py` file.
       '';
     };
+
+    perDomainSettings = mkOption {
+      type = types.attrsOf types.anything;
+      default = { };
+      description = ''
+        Options to set, as in `settings` but per domain.
+        Refer to {option}`settings` for details.
+      '';
+      example = literalExpression ''
+        {
+          "zoom.us" = {
+            content = {
+              autoplay = true;
+              media.audio_capture = true;
+              media.video_capture = true;
+            };
+          };
+          "github.com".colors.webpage.darkmode.enabled = false;
+        };
+      '';
+    };
   };
 
   config =
@@ -293,13 +319,14 @@ in
         [
           (if cfg.loadAutoconfig then "config.load_autoconfig()" else "config.load_autoconfig(False)")
         ]
-        ++ mapAttrsToList (formatLine "c.") cfg.settings
+        ++ map configSet (flattenSettings cfg.settings)
         ++ mapAttrsToList (formatDictLine "c.aliases") cfg.aliases
         ++ mapAttrsToList (formatDictLine "c.url.searchengines") cfg.searchEngines
         ++ mapAttrsToList (formatDictLine "c.bindings.key_mappings") cfg.keyMappings
         ++ lib.optional (!cfg.enableDefaultBindings) "c.bindings.default = {}"
         ++ mapAttrsToList formatKeyBindings cfg.keyBindings
         ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
+        ++ lib.lists.flatten (mapAttrsToList setUrlConfig cfg.perDomainSettings)
       );
 
       quickmarksFile = lib.optionals (cfg.quickmarks != { }) concatStringsSep "\n" (
