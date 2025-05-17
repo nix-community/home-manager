@@ -138,68 +138,16 @@ in
     # source and target generation.
     home.activation.linkGeneration = lib.hm.dag.entryAfter [ "writeBoundary" ] (
       let
-        link = pkgs.writeShellScript "link" ''
-          ${config.lib.bash.initHomeManagerLib}
+        link = pkgs.replaceVars ./files/link.sh {
+          inherit (config.lib.bash) initHomeManagerLib;
+        };
 
-          newGenFiles="$1"
-          shift
-          for sourcePath in "$@" ; do
-            relativePath="''${sourcePath#$newGenFiles/}"
-            targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
-              # The target exists, back it up
-              backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-              run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
-            fi
+        storeDir = lib.escapeShellArg builtins.storeDir;
 
-            if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
-              # The target exists but is identical – don't do anything.
-              verboseEcho "Skipping '$targetPath' as it is identical to '$sourcePath'"
-            else
-              # Place that symlink, --force
-              # This can still fail if the target is a directory, in which case we bail out.
-              run mkdir -p $VERBOSE_ARG "$(dirname "$targetPath")"
-              run ln -Tsf $VERBOSE_ARG "$sourcePath" "$targetPath" || exit 1
-            fi
-          done
-        '';
-
-        cleanup = pkgs.writeShellScript "cleanup" ''
-          ${config.lib.bash.initHomeManagerLib}
-
-          # A symbolic link whose target path matches this pattern will be
-          # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${lib.escapeShellArg builtins.storeDir})/*-home-manager-files/*"
-
-          newGenFiles="$1"
-          shift 1
-          for relativePath in "$@" ; do
-            targetPath="$HOME/$relativePath"
-            if [[ -e "$newGenFiles/$relativePath" ]] ; then
-              verboseEcho "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
-              warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
-            else
-              verboseEcho "Checking $targetPath: gone (deleting)"
-              run rm $VERBOSE_ARG "$targetPath"
-
-              # Recursively delete empty parent directories.
-              targetDir="$(dirname "$relativePath")"
-              if [[ "$targetDir" != "." ]] ; then
-                pushd "$HOME" > /dev/null
-
-                # Call rmdir with a relative path excluding $HOME.
-                # Otherwise, it might try to delete $HOME and exit
-                # with a permission error.
-                run rmdir $VERBOSE_ARG \
-                    -p --ignore-fail-on-non-empty \
-                    "$targetDir"
-
-                popd > /dev/null
-              fi
-            fi
-          done
-        '';
+        cleanup = pkgs.replaceVars ./files/cleanup.sh {
+          inherit (config.lib.bash) initHomeManagerLib;
+          inherit storeDir;
+        };
       in
       ''
         function linkNewGen() {
@@ -280,93 +228,34 @@ in
 
     # Symlink directories and files that have the right execute bit.
     # Copy files that need their execute bit changed.
-    home-files =
-      pkgs.runCommandLocal "home-manager-files"
-        {
-          nativeBuildInputs = [ pkgs.xorg.lndir ];
-        }
-        (
-          ''
-            mkdir -p $out
-
-            # Needed in case /nix is a symbolic link.
-            realOut="$(realpath -m "$out")"
-
-            function insertFile() {
-              local source="$1"
-              local relTarget="$2"
-              local executable="$3"
-              local recursive="$4"
-              local ignorelinks="$5"
-
-              # If the target already exists then we have a collision. Note, this
-              # should not happen due to the assertion found in the 'files' module.
-              # We therefore simply log the conflict and otherwise ignore it, mainly
-              # to make the `files-target-config` test work as expected.
-              if [[ -e "$realOut/$relTarget" ]]; then
-                echo "File conflict for file '$relTarget'" >&2
-                return
-              fi
-
-              # Figure out the real absolute path to the target.
-              local target
-              target="$(realpath -m "$realOut/$relTarget")"
-
-              # Target path must be within $HOME.
-              if [[ ! $target == $realOut* ]] ; then
-                echo "Error installing file '$relTarget' outside \$HOME" >&2
-                exit 1
-              fi
-
-              mkdir -p "$(dirname "$target")"
-              if [[ -d $source ]]; then
-                if [[ $recursive ]]; then
-                  mkdir -p "$target"
-                  if [[ $ignorelinks ]]; then
-                    lndir -silent -ignorelinks "$source" "$target"
-                  else
-                    lndir -silent "$source" "$target"
-                  fi
-                else
-                  ln -s "$source" "$target"
-                fi
-              else
-                [[ -x $source ]] && isExecutable=1 || isExecutable=""
-
-                # Link the file into the home file directory if possible,
-                # i.e., if the executable bit of the source is the same we
-                # expect for the target. Otherwise, we copy the file and
-                # set the executable bit to the expected value.
-                if [[ $executable == inherit || $isExecutable == $executable ]]; then
-                  ln -s "$source" "$target"
-                else
-                  cp "$source" "$target"
-
-                  if [[ $executable == inherit ]]; then
-                    # Don't change file mode if it should match the source.
-                    :
-                  elif [[ $executable ]]; then
-                    chmod +x "$target"
-                  else
-                    chmod -x "$target"
-                  fi
-                fi
-              fi
-            }
-          ''
-          + lib.concatStrings (
-            lib.mapAttrsToList (n: v: ''
-              insertFile ${
-                lib.escapeShellArgs [
-                  (sourceStorePath v)
-                  v.target
-                  (if v.executable == null then "inherit" else toString v.executable)
-                  (toString v.recursive)
-                  (toString v.ignorelinks)
-                ]
-              }
-            '') cfg
-          )
-        );
+    home-files = pkgs.stdenvNoCC.mkDerivation (finalAttrs: {
+      name = "home-manager-files";
+      enableParallelBuilding = true;
+      preferLocalBuild = true;
+      allowSubstitutes = false;
+      nativeBuildInputs = [ pkgs.xorg.lndir ];
+      PATH = lib.makeBinPath finalAttrs.nativeBuildInputs;
+      passAsFile = [
+        "buildCommand"
+        "insertFiles"
+      ];
+      buildCommand = ./files/home-manager-files.sh;
+      insertFiles = lib.concatStrings (
+        lib.mapAttrsToList (n: v: ''
+          insertFile ${
+            lib.escapeShellArgs [
+              (sourceStorePath v)
+              v.target
+              (if v.executable == null then "inherit" else toString v.executable)
+              (toString v.recursive)
+              (toString v.ignorelinks)
+            ]
+          }
+        '') cfg
+      );
+      checkPhase = ''
+        ${pkgs.stdenvNoCC.shellDryRun} "$target"
+      '';
+    });
   };
 }
