@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -10,7 +15,9 @@ with lib;
         prompt_ps1_transient = "trim:same-dir";
         prompt_ruler = "empty-line";
       };
-      faces = { auto_complete = "fg=240"; };
+      faces = {
+        auto_complete = "fg=240";
+      };
       imports = [ "contrib/bash-preexec" ];
       blercExtra = ''
         function my/complete-load-hook {

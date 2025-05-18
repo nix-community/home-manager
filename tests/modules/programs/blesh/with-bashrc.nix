@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -7,7 +12,9 @@ with lib;
     programs.blesh.enable = true;
     programs.bash = {
       enable = true;
-      shellAliases = { ls = "ls -H --color=auto"; };
+      shellAliases = {
+        ls = "ls -H --color=auto";
+      };
     };
 
     nmt.script = ''
