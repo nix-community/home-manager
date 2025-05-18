@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib)
-    toString
     mapAttrs
     mkOption
     types
