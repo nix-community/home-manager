@@ -22,7 +22,7 @@ in
   config = mkIf config.uninstall {
     home.packages = lib.mkForce [ ];
     home.file = lib.mkForce { };
-    home.stateVersion = lib.mkForce "24.11";
+    home.stateVersion = lib.mkForce "25.05";
     home.enableNixpkgsReleaseCheck = lib.mkForce false;
     manual.manpages.enable = lib.mkForce false;
     news.display = lib.mkForce "silent";
