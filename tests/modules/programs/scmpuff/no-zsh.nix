@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs = {
     scmpuff = {
@@ -7,11 +5,6 @@
       enableZshIntegration = false;
     };
     zsh.enable = true;
-  };
-
-  test.stubs = {
-    zsh = { };
-    scmpuff = { };
   };
 
   nmt.script = ''

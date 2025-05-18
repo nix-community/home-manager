@@ -1,14 +1,12 @@
 { lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   collection = types.either types.str (types.listOf types.str);
-
-in {
+in
+{
   options.vdirsyncer = {
-    enable = mkEnableOption "synchronization using vdirsyncer";
+    enable = lib.mkEnableOption "synchronization using vdirsyncer";
 
     urlCommand = mkOption {
       type = types.nullOr (types.listOf types.str);
@@ -33,9 +31,12 @@ in {
     };
 
     conflictResolution = mkOption {
-      type = types.nullOr
-        (types.either (types.enum [ "remote wins" "local wins" ])
-          (types.listOf types.str));
+      type = types.nullOr (
+        types.either (types.enum [
+          "remote wins"
+          "local wins"
+        ]) (types.listOf types.str)
+      );
       default = null;
       description = ''
         What to do in case of a conflict between the storages. Either
@@ -47,7 +48,13 @@ in {
     };
 
     partialSync = mkOption {
-      type = types.nullOr (types.enum [ "revert" "error" "ignore" ]);
+      type = types.nullOr (
+        types.enum [
+          "revert"
+          "error"
+          "ignore"
+        ]
+      );
       default = null;
       description = ''
         What should happen if synchronization in one direction
@@ -63,7 +70,10 @@ in {
     metadata = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "color" "displayname" ];
+      example = [
+        "color"
+        "displayname"
+      ];
       description = ''
         Metadata keys that should be synchronized when vdirsyncer
         metasync is executed.
@@ -71,19 +81,21 @@ in {
     };
 
     timeRange = mkOption {
-      type = types.nullOr (types.submodule {
-        options = {
-          start = mkOption {
-            type = types.str;
-            description = "Start of time range to show.";
-          };
+      type = types.nullOr (
+        types.submodule {
+          options = {
+            start = mkOption {
+              type = types.str;
+              description = "Start of time range to show.";
+            };
 
-          end = mkOption {
-            type = types.str;
-            description = "End of time range to show.";
+            end = mkOption {
+              type = types.str;
+              description = "End of time range to show.";
+            };
           };
-        };
-      });
+        }
+      );
       default = null;
       description = ''
         A time range to synchronize. start and end can be any Python
@@ -126,7 +138,13 @@ in {
     };
 
     auth = mkOption {
-      type = types.nullOr (types.enum [ "basic" "digest" "guess" ]);
+      type = types.nullOr (
+        types.enum [
+          "basic"
+          "digest"
+          "guess"
+        ]
+      );
       default = null;
       description = ''
         Authentication settings. The default is `basic`.
@@ -174,7 +192,10 @@ in {
     clientIdCommand = mkOption {
       type = types.nullOr (types.listOf types.str);
       default = null;
-      example = [ "pass" "client_id" ];
+      example = [
+        "pass"
+        "client_id"
+      ];
       description = ''
         A command that prints the OAuth credentials to standard
         output.
@@ -188,7 +209,10 @@ in {
     clientSecretCommand = mkOption {
       type = types.nullOr (types.listOf types.str);
       default = null;
-      example = [ "pass" "client_secret" ];
+      example = [
+        "pass"
+        "client_secret"
+      ];
       description = ''
         A command that prints the OAuth credentials to standard
         output.

@@ -7,8 +7,10 @@
     enable = true;
 
     config.keybindings =
-      let modifier = config.xsession.windowManager.i3.config.modifier;
-      in lib.mkOptionDefault {
+      let
+        modifier = config.xsession.windowManager.i3.config.modifier;
+      in
+      lib.mkOptionDefault {
         "${modifier}+Left" = "overridden-command";
         "${modifier}+Right" = null;
         "${modifier}+Invented" = "invented-key-command";

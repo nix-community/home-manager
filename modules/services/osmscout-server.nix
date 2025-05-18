@@ -1,16 +1,22 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkIf mkOption types;
 
-with lib;
-
-let cfg = config.services.osmscout-server;
-in {
-  meta.maintainers = [ maintainers.Thra11 ];
+  cfg = config.services.osmscout-server;
+in
+{
+  meta.maintainers = [ lib.maintainers.Thra11 ];
 
   options = {
     services.osmscout-server = {
-      enable = mkEnableOption "OSM Scout Server";
+      enable = lib.mkEnableOption "OSM Scout Server";
 
-      package = mkPackageOption pkgs "osmscout-server" { };
+      package = lib.mkPackageOption pkgs "osmscout-server" { };
 
       network = {
         startWhenNeeded = mkOption {
@@ -42,12 +48,13 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.osmscout-server" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.osmscout-server" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.osmscout-server = {
-      Unit = { Description = "OSM Scout Server"; };
+      Unit = {
+        Description = "OSM Scout Server";
+      };
 
       Install = mkIf (!cfg.network.startWhenNeeded) {
         WantedBy = [ "default.target" ];
@@ -59,16 +66,19 @@ in {
     };
 
     systemd.user.sockets.osmscout-server = mkIf cfg.network.startWhenNeeded {
-      Unit = { Description = "OSM Scout Server Socket"; };
+      Unit = {
+        Description = "OSM Scout Server Socket";
+      };
 
       Socket = {
-        ListenStream =
-          "${cfg.network.listenAddress}:${toString cfg.network.port}";
+        ListenStream = "${cfg.network.listenAddress}:${toString cfg.network.port}";
         TriggerLimitIntervalSec = "60s";
         TriggerLimitBurst = 1;
       };
 
-      Install = { WantedBy = [ "sockets.target" ]; };
+      Install = {
+        WantedBy = [ "sockets.target" ];
+      };
     };
 
     home.packages = [ cfg.package ];

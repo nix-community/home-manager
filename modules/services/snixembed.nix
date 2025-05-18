@@ -1,20 +1,24 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-with lib;
-
-let cfg = config.services.snixembed;
-in {
-  meta.maintainers = [ maintainers.DamienCassou ];
+let
+  cfg = config.services.snixembed;
+in
+{
+  meta.maintainers = [ lib.maintainers.DamienCassou ];
 
   options = {
     services.snixembed = {
-      enable = mkEnableOption
-        "snixembed: proxy StatusNotifierItems as XEmbedded systemtray-spec icons";
+      enable = lib.mkEnableOption "snixembed: proxy StatusNotifierItems as XEmbedded systemtray-spec icons";
 
-      package = mkPackageOption pkgs "snixembed" { };
+      package = lib.mkPackageOption pkgs "snixembed" { };
 
-      beforeUnits = mkOption {
-        type = with types; listOf str;
+      beforeUnits = lib.mkOption {
+        type = with lib.types; listOf str;
         default = [ ];
         example = [ "safeeyes.service" ];
         description = ''
@@ -24,9 +28,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.snixembed" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.snixembed" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.snixembed = {
@@ -41,7 +45,7 @@ in {
       };
 
       Service = {
-        ExecStart = getExe pkgs.snixembed;
+        ExecStart = lib.getExe pkgs.snixembed;
         Restart = "on-failure";
         RestartSec = 3;
       };

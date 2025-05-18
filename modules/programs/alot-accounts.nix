@@ -1,8 +1,8 @@
 pkgs:
 { config, lib, ... }:
-
-with lib;
-
+let
+  inherit (lib) mkOption types;
+in
 {
   options.alot = {
     sendMailCommand = mkOption {
@@ -18,14 +18,12 @@ with lib;
       type = types.attrsOf types.str;
       default = {
         type = "shellcommand";
-        command =
-          "'${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients  date:6M..'";
-        regexp = "'\\[?{" + ''
-          "name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"''
-          + "}[,\\]]?'";
+        command = "'${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients  date:6M..'";
+        regexp =
+          "'\\[?{" + ''"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"'' + "}[,\\]]?'";
         shellcommand_external_filtering = "False";
       };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           type = "shellcommand";
           command = "abook --mutt-query";
@@ -49,10 +47,9 @@ with lib;
     };
   };
 
-  config = mkIf config.notmuch.enable {
-    alot.sendMailCommand = mkOptionDefault (if config.msmtp.enable then
-      "msmtpq --read-envelope-from --read-recipients"
-    else
-      null);
+  config = lib.mkIf config.notmuch.enable {
+    alot.sendMailCommand = lib.mkOptionDefault (
+      if config.msmtp.enable then "msmtpq --read-envelope-from --read-recipients" else null
+    );
   };
 }

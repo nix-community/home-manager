@@ -43,13 +43,14 @@ function setWorkDir() {
     fi
 }
 
-# Checks whether the 'flakes' and 'nix-command' Nix options are enabled.
+# Check to see if flakes are functionally available.
 function hasFlakeSupport() {
-    type -p nix > /dev/null \
-        && nix show-config 2> /dev/null \
-            | grep experimental-features \
-            | grep flakes \
-            | grep -q nix-command
+    nix eval --expr 'builtins.getFlake' > /dev/null 2>&1
+}
+
+# Escape string for use in Nix files.
+function escapeForNix() {
+    printf %s "$1" | sed 's/["$\\]/\\\0/g'
 }
 
 # Attempts to set the HOME_MANAGER_CONFIG global variable.
@@ -186,7 +187,7 @@ function setFlakeAttribute() {
         fi
 
         if [[ -v configFlake ]]; then
-            FLAKE_ARG="path:$(dirname "$(readlink -f "$configFlake")")"
+            FLAKE_ARG="$(dirname "$(readlink -f "$configFlake")")"
         fi
     fi
 
@@ -201,7 +202,7 @@ function setFlakeAttribute() {
                 # Check FQDN, long, and short hostnames; long first to preserve
                 # pre-existing behaviour in case both happen to be defined.
                 for n in "$USER@$(hostname -f)" "$USER@$(hostname)" "$USER@$(hostname -s)"; do
-                    if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$n\"")" == "true" ]]; then
+                    if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$(escapeForNix "$n")\"")" == "true" ]]; then
                         name="$n"
                         if [[ -v VERBOSE ]]; then
                             echo "Using flake homeConfiguration for $name"
@@ -210,7 +211,7 @@ function setFlakeAttribute() {
                 done
                 ;;
         esac
-        export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$name\""
+        export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$(printf %s "$name" | jq -sRr @uri)\""
     fi
 }
 
@@ -349,8 +350,8 @@ function doInit() {
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "$USER";
-  home.homeDirectory = "$HOME";
+  home.username = "$(escapeForNix "$USER")";
+  home.homeDirectory = "$(escapeForNix "$HOME")";
 $xdgVars
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -359,7 +360,7 @@ $xdgVars
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "24.05"; # Please read the comment before changing.
+  home.stateVersion = "25.05"; # Please read the comment before changing.
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -439,7 +440,7 @@ EOF
             mkdir -p "$confDir"
             cat > "$flakeFile" <<EOF
 {
-  description = "Home Manager configuration of $USER";
+  description = "Home Manager configuration of $(escapeForNix "$USER")";
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
@@ -450,12 +451,14 @@ EOF
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs =
+    { nixpkgs, home-manager, ... }:
     let
       system = "$nixSystem";
       pkgs = nixpkgs.legacyPackages.\${system};
-    in {
-      homeConfigurations."$USER" = home-manager.lib.homeManagerConfiguration {
+    in
+    {
+      homeConfigurations."$(escapeForNix "$USER")" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,
@@ -786,8 +789,8 @@ function buildNews() {
     nix-instantiate \
         --no-build-output --strict \
         --eval '<home-manager/home-manager/build-news.nix>' \
-        --arg newsJsonFile "$newsJsonFile" \
-        --arg newsReadIdsFile "$readIdsFile" \
+        --arg newsJsonFile "\"$(escapeForNix "$newsJsonFile")\"" \
+        --arg newsReadIdsFile "\"$(escapeForNix "$readIdsFile")\"" \
         "${extraArgs[@]}" \
         > "$newsNixFile"
 }
@@ -802,23 +805,23 @@ function doShowNews() {
     local readIdsFile
     readIdsFile="$(newsReadIdsFile)"
 
-    local news
+    local newsAttr
 
-    # shellcheck disable=2154,2046
     case $1 in
         --all)
-            news="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).news.all")"
+            newsAttr="all"
             ;;
         --unread)
-            news="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).news.unread")"
+            newsAttr="unread"
             ;;
         *)
             _i 'Unknown argument %s' "$1"
             return 1
     esac
 
-    # Prints the news without surrounding quotes.
-    echo -e "${news:1:-1}" | ${PAGER:-less}
+    nix-instantiate --quiet --eval --json --expr "(import ${newsNixFile}).news.$newsAttr" \
+        | jq -r . \
+        | ${PAGER:-less}
 
     local allIds
     allIds="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).meta.ids")"
@@ -855,9 +858,9 @@ function doUninstall() {
             cat > "$HOME_MANAGER_CONFIG" <<EOF
 {
   uninstall = true;
-  home.username = "$USER";
-  home.homeDirectory = "$HOME";
-  home.stateVersion = "24.05";
+  home.username = "$(escapeForNix "$USER")";
+  home.homeDirectory = "$(escapeForNix "$HOME")";
+  home.stateVersion = "25.05";
 }
 EOF
             # shellcheck disable=2064
@@ -902,6 +905,7 @@ function doHelp() {
     echo "  -j, --max-jobs NUM"
     echo "  --option NAME VALUE"
     echo "  -L, --print-build-logs"
+    echo "  --log-format FORMAT"
     echo "  --show-trace"
     echo "  --(no-)substitute"
     echo "  --no-out-link            Do not create a symlink to the output path"
@@ -1031,7 +1035,7 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
-        -j|--max-jobs|--cores|--builders)
+        -j|--max-jobs|--cores|--builders|--log-format)
             [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
@@ -1044,7 +1048,7 @@ while [[ $# -gt 0 ]]; do
             export VERBOSE=1
             ;;
         --version)
-            echo 25.05-pre
+            echo 25.11-pre
             exit 0
             ;;
         *)

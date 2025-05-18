@@ -1,19 +1,31 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.emacs;
 
   # Copied from all-packages.nix, with modifications to support
   # overrides.
-  emacsPackages = let epkgs = pkgs.emacsPackagesFor cfg.package;
-  in epkgs.overrideScope cfg.overrides;
+  emacsPackages =
+    let
+      epkgs = pkgs.emacsPackagesFor cfg.package;
+    in
+    epkgs.overrideScope cfg.overrides;
 
   emacsWithPackages = emacsPackages.emacsWithPackages;
 
-  extraPackages = epkgs:
+  extraPackages =
+    epkgs:
     let
       packages = cfg.extraPackages epkgs;
       userConfig = epkgs.trivialBuild {
@@ -22,22 +34,18 @@ let
         version = "0.1.0";
         packageRequires = packages;
       };
-    in packages ++ optional (cfg.extraConfig != "") userConfig;
+    in
+    packages ++ lib.optional (cfg.extraConfig != "") userConfig;
 
-in {
-  meta.maintainers = [ maintainers.rycee ];
+in
+{
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     programs.emacs = {
-      enable = mkEnableOption "Emacs";
+      enable = lib.mkEnableOption "Emacs";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.emacs;
-        defaultText = literalExpression "pkgs.emacs";
-        example = literalExpression "pkgs.emacs25-nox";
-        description = "The Emacs package to use.";
-      };
+      package = lib.mkPackageOption pkgs "emacs" { example = "pkgs.emacs25-nox"; };
 
       # NOTE: The config is placed in default.el instead of ~/.emacs.d so that
       # it won't conflict with Emacs configuration frameworks. Users of these
@@ -62,7 +70,7 @@ in {
 
       extraPackages = mkOption {
         default = self: [ ];
-        type = hm.types.selectorFunction;
+        type = lib.hm.types.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExpression "epkgs: [ epkgs.emms epkgs.magit ]";
         description = ''
@@ -74,7 +82,7 @@ in {
 
       overrides = mkOption {
         default = self: super: { };
-        type = hm.types.overlayFunction;
+        type = lib.hm.types.overlayFunction;
         defaultText = "self: super: {}";
         example = literalExpression ''
           self: super: rec {

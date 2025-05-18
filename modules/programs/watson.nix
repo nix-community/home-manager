@@ -1,44 +1,35 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.watson;
 
   iniFormat = pkgs.formats.ini { };
 
-  configDir = if pkgs.stdenv.hostPlatform.isDarwin then
-    "Library/Application Support"
-  else
-    config.xdg.configHome;
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.watson = {
-    enable = mkEnableOption "watson, a wonderful CLI to track your time";
+    enable = lib.mkEnableOption "watson, a wonderful CLI to track your time";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.watson;
-      defaultText = literalExpression "pkgs.watson";
-      description = "Package providing the {command}`watson`.";
-    };
+    package = lib.mkPackageOption pkgs "watson" { };
 
-    enableBashIntegration = mkEnableOption "watson's bash integration" // {
-      default = true;
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "watson's zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "watson's fish integration" // {
-      default = true;
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = iniFormat.type;
       default = { };
       description = ''
@@ -49,7 +40,7 @@ in {
         See <https://github.com/TailorDev/Watson/blob/master/docs/user-guide/configuration.md>
         for an example configuration.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           backend = {
             url = "https://api.crick.fr";
@@ -83,7 +74,7 @@ in {
       source ${cfg.package}/share/bash-completion/completions/watson
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       source ${cfg.package}/share/zsh/site-functions/_watson
     '';
 

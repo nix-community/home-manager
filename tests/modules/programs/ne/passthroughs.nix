@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ lib, ... }:
 
 let
 
@@ -38,35 +36,30 @@ let
 
   checkFile = filename: contents: ''
     assertFileExists home-files/.ne/${filename}
-    assertFileContent home-files/.ne/${filename} ${
-      builtins.toFile "checkFile" contents
-    }
+    assertFileContent home-files/.ne/${filename} ${builtins.toFile "checkFile" contents}
   '';
 
-in {
-  config = {
-    programs.ne = {
-      enable = true;
-      inherit keybindings;
-      inherit menus;
-      inherit virtualExtensions;
-      inherit automaticPreferences;
-    };
+in
+{
+  programs.ne = {
+    enable = true;
+    inherit keybindings;
+    inherit menus;
+    inherit virtualExtensions;
+    inherit automaticPreferences;
+  };
 
-    test.stubs.ne = { };
+  nmt = {
+    description = "Check that configuration files are correctly written";
+    script = lib.concatStringsSep "\n" [
+      (checkFile ".keys" keybindings)
+      (checkFile ".extensions" virtualExtensions)
+      (checkFile ".menus" menus)
 
-    nmt = {
-      description = "Check that configuration files are correctly written";
-      script = concatStringsSep "\n" [
-        (checkFile ".keys" keybindings)
-        (checkFile ".extensions" virtualExtensions)
-        (checkFile ".menus" menus)
-
-        # Generates a check command for each entry in automaticPreferences.
-        (concatStringsSep "\n" (mapAttrsToList
-          (extension: contents: checkFile "${extension}#ap" contents)
-          automaticPreferences))
-      ];
-    };
+      # Generates a check command for each entry in automaticPreferences.
+      (lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (extension: contents: checkFile "${extension}#ap" contents) automaticPreferences
+      ))
+    ];
   };
 }

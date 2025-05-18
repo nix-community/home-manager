@@ -1,28 +1,39 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.wayland.windowManager.sway.swaynag;
 
   iniFormat = pkgs.formats.ini { };
 
-  confFormat = with types;
+  confFormat =
+    with lib.types;
     let
-      confAtom = nullOr (oneOf [ bool int float str ]) // {
-        description = "Swaynag config atom (null, bool, int, float, str)";
-      };
-    in attrsOf confAtom;
-in {
+      confAtom =
+        nullOr (oneOf [
+          bool
+          int
+          float
+          str
+        ])
+        // {
+          description = "Swaynag config atom (null, bool, int, float, str)";
+        };
+    in
+    attrsOf confAtom;
+in
+{
   meta.maintainers = [ ];
 
   options = {
     wayland.windowManager.sway.swaynag = {
-      enable = mkEnableOption
-        "configuration of swaynag, a lightweight error bar for sway";
+      enable = lib.mkEnableOption "configuration of swaynag, a lightweight error bar for sway";
 
-      settings = mkOption {
-        type = types.attrsOf confFormat;
+      settings = lib.mkOption {
+        type = lib.types.attrsOf confFormat;
         default = { };
         description = ''
           Configuration written to
@@ -34,7 +45,7 @@ in {
           Note, configurations declared under `<config>`
           will override the default type values of swaynag.
         '';
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             "<config>" = {
               edge = "bottom";
@@ -54,13 +65,12 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "wayland.windowManager.sway.swaynag" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "wayland.windowManager.sway.swaynag" pkgs lib.platforms.linux)
     ];
 
-    xdg.configFile."swaynag/config" = mkIf (cfg.settings != { }) {
+    xdg.configFile."swaynag/config" = lib.mkIf (cfg.settings != { }) {
       source = iniFormat.generate "swaynag.conf" cfg.settings;
     };
   };

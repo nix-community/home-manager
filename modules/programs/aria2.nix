@@ -1,26 +1,36 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.aria2;
 
-  formatLine = n: v:
+  formatLine =
+    n: v:
     let
-      formatValue = v:
-        if builtins.isBool v then
-          (if v then "true" else "false")
-        else
-          toString v;
-    in "${n}=${formatValue v}";
-in {
-  meta.maintainers = [ hm.maintainers.justinlovinger ];
+      formatValue = v: if builtins.isBool v then (if v then "true" else "false") else toString v;
+    in
+    "${n}=${formatValue v}";
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.justinlovinger ];
 
   options.programs.aria2 = {
-    enable = mkEnableOption "aria2";
+    enable = lib.mkEnableOption "aria2";
 
-    settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool float int str ]);
+    package = lib.mkPackageOption pkgs "aria2" { nullable = true; };
+
+    settings = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          float
+          int
+          str
+        ]);
       default = { };
       description = ''
         Options to add to {file}`aria2.conf` file.
@@ -28,7 +38,7 @@ in {
         {manpage}`aria2c(1)`
         for options.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           listen-port = 60000;
           dht-listen-port = 60000;
@@ -39,8 +49,8 @@ in {
       '';
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       description = ''
         Extra lines added to {file}`aria2.conf` file.
@@ -48,11 +58,13 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ pkgs.aria2 ];
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."aria2/aria2.conf".text = concatStringsSep "\n" ([ ]
-      ++ mapAttrsToList formatLine cfg.settings
-      ++ optional (cfg.extraConfig != "") cfg.extraConfig);
+    xdg.configFile."aria2/aria2.conf".text = lib.concatStringsSep "\n" (
+      [ ]
+      ++ lib.mapAttrsToList formatLine cfg.settings
+      ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
+    );
   };
 }

@@ -1,7 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ config, ... }:
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
@@ -18,9 +15,7 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/Mail/hm@example.com/mujmap.toml
-      assertFileContent home-files/Mail/hm@example.com/mujmap.toml ${
-        ./mujmap-defaults-expected.toml
-      }
+      assertFileContent home-files/Mail/hm@example.com/mujmap.toml ${./mujmap-defaults-expected.toml}
     '';
   };
 }

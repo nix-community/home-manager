@@ -45,6 +45,7 @@
 .Op Fl -keep-failed
 .Op Fl -keep-going
 .Op Bro Fl L | Fl -print-build-logs Brc
+.Op Fl -log-format
 .Op Fl -show-trace
 .Op Fl -(no-)substitute
 .Op Fl -no-out-link
@@ -335,6 +336,13 @@ when building from a flake\&.
 .RE
 .Pp
 
+.It Cm Fl -log-format Ar format
+.RS 4
+Passed on to
+\fBnix-build\fR(1)\&.
+.RE
+.Pp
+
 .It Cm Fl -show-trace
 .RS 4
 Passed on to
@@ -396,5 +404,5 @@ Author.
 
 .Sh COPYRIGHT
 .br
-Copyright \(co 2017\(en2022 Home Manager contributors
+Copyright \(co 2017\(en2025 Home Manager contributors
 .br

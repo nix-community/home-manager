@@ -1,50 +1,59 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) types;
   inherit (lib.strings) toJSON;
+
   cfg = config.services.poweralertd;
-  escapeSystemdExecArg = arg:
+  escapeSystemdExecArg =
+    arg:
     let
-      s = if isPath arg then
-        "${arg}"
-      else if isString arg then
-        arg
-      else if isInt arg || isFloat arg || isDerivation arg then
-        toString arg
-      else
-        throw
-        "escapeSystemdExecArg only allows strings, paths, numbers and derivations";
-    in replaceStrings [ "%" "$" ] [ "%%" "$$" ] (toJSON s);
-  escapeSystemdExecArgs = concatMapStringsSep " " escapeSystemdExecArg;
-in {
-  meta.maintainers = [ maintainers.thibautmarty ];
+      s =
+        if lib.isPath arg then
+          "${arg}"
+        else if lib.isString arg then
+          arg
+        else if lib.isInt arg || lib.isFloat arg || lib.isDerivation arg then
+          toString arg
+        else
+          throw "escapeSystemdExecArg only allows strings, paths, numbers and derivations";
+    in
+    lib.replaceStrings [ "%" "$" ] [ "%%" "$$" ] (toJSON s);
+  escapeSystemdExecArgs = lib.concatMapStringsSep " " escapeSystemdExecArg;
+in
+{
+  meta.maintainers = [ lib.maintainers.thibautmarty ];
 
   options.services.poweralertd = {
-    enable = mkEnableOption "the Upower-powered power alertd";
+    enable = lib.mkEnableOption "the Upower-powered power alertd";
 
-    extraArgs = mkOption {
+    extraArgs = lib.mkOption {
       type = with types; listOf str;
       default = [ ];
-      example = [ "-s" "-S" ];
+      example = [
+        "-s"
+        "-S"
+      ];
       description = ''
         Extra command line arguments to pass to poweralertd.
       '';
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.poweralertd" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.poweralertd" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.poweralertd = {
       Unit = {
         Description = "UPower-powered power alerter";
         Documentation = "man:poweralertd(1)";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
@@ -52,9 +61,7 @@ in {
 
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.poweralertd}/bin/poweralertd ${
-            escapeSystemdExecArgs cfg.extraArgs
-          }";
+        ExecStart = "${pkgs.poweralertd}/bin/poweralertd ${escapeSystemdExecArgs cfg.extraArgs}";
         Restart = "always";
       };
     };

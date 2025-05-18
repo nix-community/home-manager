@@ -1,27 +1,26 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.services.getmail;
 
-  accounts =
-    filter (a: a.getmail.enable) (attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.getmail.enable) (lib.attrValues config.accounts.email.accounts);
 
   # Note: The getmail service does not expect a path, but just the filename!
-  renderConfigFilepath = a:
-    if a.primary then "getmailrc" else "getmail${a.name}";
-  configFiles =
-    concatMapStringsSep " " (a: " --rcfile ${renderConfigFilepath a}") accounts;
-in {
+  renderConfigFilepath = a: if a.primary then "getmailrc" else "getmail${a.name}";
+  configFiles = lib.concatMapStringsSep " " (a: " --rcfile ${renderConfigFilepath a}") accounts;
+in
+{
   options = {
     services.getmail = {
-      enable = mkEnableOption
-        "the getmail systemd service to automatically retrieve mail";
+      enable = lib.mkEnableOption "the getmail systemd service to automatically retrieve mail";
 
-      frequency = mkOption {
-        type = types.str;
+      frequency = lib.mkOption {
+        type = lib.types.str;
         default = "*:0/5";
         example = "hourly";
         description = ''
@@ -36,24 +35,31 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.getmail" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.getmail" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.getmail = {
-      Unit = { Description = "getmail email fetcher"; };
-      Service = { ExecStart = "${pkgs.getmail6}/bin/getmail ${configFiles}"; };
+      Unit = {
+        Description = "getmail email fetcher";
+      };
+      Service = {
+        ExecStart = "${pkgs.getmail6}/bin/getmail ${configFiles}";
+      };
     };
 
     systemd.user.timers.getmail = {
-      Unit = { Description = "getmail email fetcher"; };
+      Unit = {
+        Description = "getmail email fetcher";
+      };
       Timer = {
         OnCalendar = "${cfg.frequency}";
         Unit = "getmail.service";
       };
-      Install = { WantedBy = [ "timers.target" ]; };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
 
   };

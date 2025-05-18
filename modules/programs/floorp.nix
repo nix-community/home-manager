@@ -1,15 +1,14 @@
 { lib, ... }:
-
-with lib;
-
 let
-
-  modulePath = [ "programs" "floorp" ];
+  modulePath = [
+    "programs"
+    "floorp"
+  ];
 
   mkFirefoxModule = import ./firefox/mkFirefoxModule.nix;
-
-in {
-  meta.maintainers = [ hm.maintainers.bricked ];
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.bricked ];
 
   imports = [
     (mkFirefoxModule {
@@ -21,9 +20,10 @@ in {
 
       platforms.linux = {
         configPath = ".floorp";
-        vendorPath = ".floorp";
       };
-      platforms.darwin = { configPath = "Library/Application Support/Floorp"; };
+      platforms.darwin = {
+        configPath = "Library/Application Support/Floorp";
+      };
     })
   ];
 }

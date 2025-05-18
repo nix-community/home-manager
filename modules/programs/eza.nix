@@ -1,55 +1,80 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-  imports = let
-    msg = ''
-      'programs.eza.enableAliases' has been deprecated and replaced with integration
-      options per shell, for example, 'programs.eza.enableBashIntegration'.
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkOption optionalAttrs types;
+  yamlFormat = pkgs.formats.yaml { };
+in
+{
+  imports =
+    let
+      msg = ''
+        'programs.eza.enableAliases' has been deprecated and replaced with integration
+        options per shell, for example, 'programs.eza.enableBashIntegration'.
 
-      Note, the default for these options is 'true' so if you want to enable the
-      aliases you can simply remove 'programs.eza.enableAliases' from your
-      configuration.'';
-    mkRenamed = opt:
-      mkRenamedOptionModule [ "programs" "exa" opt ] [ "programs" "eza" opt ];
-  in (map mkRenamed [ "enable" "extraOptions" "icons" "git" ])
-  ++ [ (mkRemovedOptionModule [ "programs" "eza" "enableAliases" ] msg) ];
+        Note, the default for these options is 'true' so if you want to enable the
+        aliases you can simply remove 'programs.eza.enableAliases' from your
+        configuration.'';
+      mkRenamed =
+        opt:
+        lib.mkRenamedOptionModule
+          [ "programs" "exa" opt ]
+          [
+            "programs"
+            "eza"
+            opt
+          ];
+    in
+    (map mkRenamed [
+      "enable"
+      "extraOptions"
+      "icons"
+      "git"
+    ])
+    ++ [ (lib.mkRemovedOptionModule [ "programs" "eza" "enableAliases" ] msg) ];
 
-  meta.maintainers = [ maintainers.cafkafk ];
+  meta.maintainers = [ lib.maintainers.cafkafk ];
 
   options.programs.eza = {
-    enable = mkEnableOption "eza, a modern replacement for {command}`ls`";
+    enable = lib.mkEnableOption "eza, a modern replacement for {command}`ls`";
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+    enableIonIntegration = lib.hm.shell.mkIonIntegrationOption { inherit config; };
+
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; } // {
+      default = false;
+      example = true;
     };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
-
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
-
-    enableIonIntegration = mkEnableOption "Ion integration" // {
-      default = true;
-    };
-
-    enableNushellIntegration = mkEnableOption "Nushell integration";
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     extraOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "--group-directories-first" "--header" ];
+      example = [
+        "--group-directories-first"
+        "--header"
+      ];
       description = ''
         Extra command line options passed to eza.
       '';
     };
 
     icons = mkOption {
-      type = types.enum [ null true false "auto" "always" "never" ];
+      type = types.enum [
+        null
+        true
+        false
+        "auto"
+        "always"
+        "never"
+      ];
       default = null;
       description = ''
         Display icons next to file names ({option}`--icons` argument).
@@ -60,7 +85,12 @@ with lib;
     };
 
     colors = mkOption {
-      type = types.enum [ null "auto" "always" "never" ];
+      type = types.enum [
+        null
+        "auto"
+        "always"
+        "never"
+      ];
       default = null;
       description = ''
         Use terminal colors in output ({option}`--color` argument).
@@ -75,63 +105,82 @@ with lib;
       '';
     };
 
-    package = mkPackageOption pkgs "eza" { };
-  };
+    package = lib.mkPackageOption pkgs "eza" { nullable = true; };
 
-  config = let
-    cfg = config.programs.eza;
+    theme = mkOption {
+      type = yamlFormat.type;
+      default = { };
+      description = ''
+        Written to {file}`$XDG_CONFIG_HOME/eza/theme.yml`
 
-    iconsOption = let
-      v = if isBool cfg.icons then
-        (if cfg.icons then "auto" else null)
-      else
-        cfg.icons;
-    in optionals (v != null) [ "--icons" v ];
-
-    args = escapeShellArgs (iconsOption
-      ++ optionals (cfg.colors != null) [ "--color" cfg.colors ]
-      ++ optional cfg.git "--git" ++ cfg.extraOptions);
-
-    optionsAlias = optionalAttrs (args != "") { eza = "eza ${args}"; };
-
-    aliases = builtins.mapAttrs (_name: value: lib.mkDefault value) {
-      ls = "eza";
-      ll = "eza -l";
-      la = "eza -a";
-      lt = "eza --tree";
-      lla = "eza -la";
+        See <https://github.com/eza-community/eza#custom-themes>
+      '';
     };
-  in mkIf cfg.enable {
-    warnings = optional (isBool cfg.icons) ''
-      Setting programs.eza.icons to a Boolean is deprecated.
-      Please update your configuration so that
-
-        programs.eza.icons = ${if cfg.icons then ''"auto"'' else "null"}'';
-
-    home.packages = [ cfg.package ];
-
-    programs.bash.shellAliases = optionsAlias
-      // optionalAttrs cfg.enableBashIntegration aliases;
-
-    programs.zsh.shellAliases = optionsAlias
-      // optionalAttrs cfg.enableZshIntegration aliases;
-
-    programs.fish = mkMerge [
-      (mkIf (!config.programs.fish.preferAbbrs) {
-        shellAliases = optionsAlias
-          // optionalAttrs cfg.enableFishIntegration aliases;
-      })
-
-      (mkIf config.programs.fish.preferAbbrs {
-        shellAliases = optionsAlias;
-        shellAbbrs = optionalAttrs cfg.enableFishIntegration aliases;
-      })
-    ];
-
-    programs.ion.shellAliases = optionsAlias
-      // optionalAttrs cfg.enableIonIntegration aliases;
-
-    programs.nushell.shellAliases = optionsAlias
-      // optionalAttrs cfg.enableNushellIntegration aliases;
   };
+
+  config =
+    let
+      cfg = config.programs.eza;
+
+      iconsOption =
+        let
+          v = if lib.isBool cfg.icons then (if cfg.icons then "auto" else null) else cfg.icons;
+        in
+        lib.optionals (v != null) [
+          "--icons"
+          v
+        ];
+
+      args = lib.escapeShellArgs (
+        iconsOption
+        ++ lib.optionals (cfg.colors != null) [
+          "--color"
+          cfg.colors
+        ]
+        ++ lib.optional cfg.git "--git"
+        ++ cfg.extraOptions
+      );
+
+      optionsAlias = optionalAttrs (args != "") { eza = "eza ${args}"; };
+
+      aliases = builtins.mapAttrs (_name: value: lib.mkDefault value) {
+        ls = "eza";
+        ll = "eza -l";
+        la = "eza -a";
+        lt = "eza --tree";
+        lla = "eza -la";
+      };
+    in
+    lib.mkIf cfg.enable {
+      warnings = lib.optional (lib.isBool cfg.icons) ''
+        Setting programs.eza.icons to a Boolean is deprecated.
+        Please update your configuration so that
+
+          programs.eza.icons = ${if cfg.icons then ''"auto"'' else "null"}'';
+
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+      xdg.configFile."eza/theme.yml" = lib.mkIf (cfg.theme != { }) {
+        source = yamlFormat.generate "eza-theme" cfg.theme;
+      };
+
+      programs.bash.shellAliases = optionsAlias // optionalAttrs cfg.enableBashIntegration aliases;
+
+      programs.zsh.shellAliases = optionsAlias // optionalAttrs cfg.enableZshIntegration aliases;
+
+      programs.fish = lib.mkMerge [
+        (lib.mkIf (!config.programs.fish.preferAbbrs) {
+          shellAliases = optionsAlias // optionalAttrs cfg.enableFishIntegration aliases;
+        })
+
+        (lib.mkIf config.programs.fish.preferAbbrs {
+          shellAliases = optionsAlias;
+          shellAbbrs = optionalAttrs cfg.enableFishIntegration aliases;
+        })
+      ];
+
+      programs.ion.shellAliases = optionsAlias // optionalAttrs cfg.enableIonIntegration aliases;
+
+      programs.nushell.shellAliases = optionsAlias // optionalAttrs cfg.enableNushellIntegration aliases;
+    };
 }

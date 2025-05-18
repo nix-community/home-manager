@@ -1,21 +1,20 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.skim;
 
-in {
+in
+{
   options.programs.skim = {
-    enable = mkEnableOption "skim - a command-line fuzzy finder";
+    enable = lib.mkEnableOption "skim - a command-line fuzzy finder";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.skim;
-      defaultText = literalExpression "pkgs.skim";
-      description = "Package providing the {command}`skim` tool.";
-    };
+    package = lib.mkPackageOption pkgs "skim" { };
 
     defaultCommand = mkOption {
       type = types.nullOr types.str;
@@ -30,7 +29,10 @@ in {
     defaultOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "--height 40%" "--prompt ⟫" ];
+      example = [
+        "--height 40%"
+        "--prompt ⟫"
+      ];
       description = ''
         Extra command line options given to skim by default.
       '';
@@ -77,42 +79,27 @@ in {
     historyWidgetOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "--tac" "--exact" ];
+      example = [
+        "--tac"
+        "--exact"
+      ];
       description = ''
         Command line options for the CTRL-R keybinding.
       '';
     };
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = mapAttrs (n: v: toString v)
-      (filterAttrs (n: v: v != [ ] && v != null) {
+    home.sessionVariables = lib.mapAttrs (n: v: toString v) (
+      lib.filterAttrs (n: v: v != [ ] && v != null) {
         SKIM_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         SKIM_ALT_C_OPTS = cfg.changeDirWidgetOptions;
         SKIM_CTRL_R_OPTS = cfg.historyWidgetOptions;
@@ -120,7 +107,8 @@ in {
         SKIM_CTRL_T_OPTS = cfg.fileWidgetOptions;
         SKIM_DEFAULT_COMMAND = cfg.defaultCommand;
         SKIM_DEFAULT_OPTIONS = cfg.defaultOptions;
-      });
+      }
+    );
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
@@ -129,7 +117,7 @@ in {
       fi
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
         . ${cfg.package}/share/skim/completion.zsh
         . ${cfg.package}/share/skim/key-bindings.zsh

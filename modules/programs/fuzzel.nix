@@ -1,20 +1,32 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
-  inherit (lib) literalExpression mkEnableOption mkPackageOption mkOption mkIf;
+  inherit (lib)
+    literalExpression
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    mkIf
+    ;
 
   cfg = config.programs.fuzzel;
 
   iniFormat = pkgs.formats.ini { };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.Scrumplex ];
 
   options.programs.fuzzel = {
     enable = mkEnableOption "fuzzel";
 
-    package = mkPackageOption pkgs "fuzzel" { };
+    package = mkPackageOption pkgs "fuzzel" { nullable = true; };
 
     settings = mkOption {
       type = iniFormat.type;
@@ -38,11 +50,10 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.fuzzel" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.fuzzel" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."fuzzel/fuzzel.ini" = mkIf (cfg.settings != { }) {
       source = iniFormat.generate "fuzzel.ini" cfg.settings;

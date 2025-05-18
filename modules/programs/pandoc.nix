@@ -1,35 +1,41 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.pandoc;
 
-  inherit (lib) literalExpression mkEnableOption mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
 
   jsonFormat = pkgs.formats.json { };
 
-  makeTemplateFile = name: file:
-    lib.nameValuePair "pandoc/templates/${name}" { source = file; };
+  makeTemplateFile = name: file: lib.nameValuePair "pandoc/templates/${name}" { source = file; };
 
-  getFileName = file:
+  getFileName =
+    file:
     # This is actually safe here, since it is just a file name
     builtins.unsafeDiscardStringContext (baseNameOf file);
 
-  makeCslFile = file:
-    lib.nameValuePair "pandoc/csl/${getFileName file}" { source = file; };
+  makeCslFile = file: lib.nameValuePair "pandoc/csl/${getFileName file}" { source = file; };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.kirelagin ];
 
   options.programs.pandoc = {
     enable = mkEnableOption "pandoc";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.pandoc;
-      defaultText = literalExpression "pkgs.pandoc";
-      description = "The pandoc package to use.";
-    };
+    package = lib.mkPackageOption pkgs "pandoc" { };
 
     # We wrap the executable to pass some arguments
     finalPackage = mkOption {
@@ -98,7 +104,9 @@ in {
     };
 
     home.packages = [ cfg.finalPackage ];
-    xdg.dataFile = lib.mapAttrs' makeTemplateFile cfg.templates
+
+    xdg.dataFile =
+      lib.mapAttrs' makeTemplateFile cfg.templates
       // lib.listToAttrs (map makeCslFile cfg.citationStyles);
   };
 }

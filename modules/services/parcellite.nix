@@ -1,19 +1,22 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.services.parcellite;
 
-in {
-  meta.maintainers = [ maintainers.gleber ];
+in
+{
+  meta.maintainers = [ lib.maintainers.gleber ];
 
   options.services.parcellite = {
-    enable = mkEnableOption "Parcellite";
+    enable = lib.mkEnableOption "Parcellite";
 
-    extraOptions = mkOption {
-      type = types.listOf types.str;
+    extraOptions = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
       default = [ ];
       example = [ "--no-icon" ];
       description = ''
@@ -21,19 +24,18 @@ in {
       '';
     };
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.parcellite;
-      defaultText = literalExpression "pkgs.parcellite";
-      example = literalExpression "pkgs.clipit";
+      defaultText = lib.literalExpression "pkgs.parcellite";
+      example = lib.literalExpression "pkgs.clipit";
       description = "Parcellite derivation to use.";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.parcellite" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.parcellite" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -42,16 +44,19 @@ in {
       Unit = {
         Description = "Lightweight GTK+ clipboard manager";
         Requires = [ "tray.target" ];
-        After = [ "graphical-session-pre.target" "tray.target" ];
+        After = [
+          "graphical-session.target"
+          "tray.target"
+        ];
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
-        ExecStart = "${cfg.package}/bin/${cfg.package.pname} ${
-            escapeShellArgs cfg.extraOptions
-          }";
+        ExecStart = "${cfg.package}/bin/${cfg.package.pname} ${lib.escapeShellArgs cfg.extraOptions}";
         Restart = "on-abort";
       };
     };

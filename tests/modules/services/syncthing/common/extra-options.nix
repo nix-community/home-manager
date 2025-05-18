@@ -2,13 +2,19 @@
 
 lib.mkMerge [
   {
-    services.syncthing = {
-      enable = true;
-      extraOptions = [ "-foo" ''-bar "baz"'' ];
+    test.stubs.writers = {
+      extraAttrs.writeBash = (name: fn: "@syncthing-wrapper@");
     };
 
-    test.stubs.syncthing = { };
+    services.syncthing = {
+      enable = true;
+      extraOptions = [
+        "-foo"
+        ''-bar "baz"''
+      ];
+    };
   }
+
   (lib.mkIf pkgs.stdenv.isLinux {
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/syncthing.service
@@ -16,6 +22,7 @@ lib.mkMerge [
       "ExecStart=@syncthing@/bin/syncthing -no-browser -no-restart -no-upgrade '-gui-address=127.0.0.1:8384' '-logflags=0' -foo '-bar \"baz\"'"
     '';
   })
+
   (lib.mkIf pkgs.stdenv.isDarwin {
     nmt.script = ''
       serviceFile=LaunchAgents/org.nix-community.home.syncthing.plist

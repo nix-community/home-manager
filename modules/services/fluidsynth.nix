@@ -1,17 +1,21 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.fluidsynth;
 
-in {
-  meta.maintainers = [ maintainers.valodim ];
+in
+{
+  meta.maintainers = [ lib.maintainers.valodim ];
 
   options = {
     services.fluidsynth = {
-      enable = mkEnableOption "fluidsynth midi synthesizer";
+      enable = lib.mkEnableOption "fluidsynth midi synthesizer";
 
       soundFont = mkOption {
         type = types.path;
@@ -22,7 +26,11 @@ in {
       };
 
       soundService = mkOption {
-        type = types.enum [ "jack" "pipewire-pulse" "pulseaudio" ];
+        type = types.enum [
+          "jack"
+          "pipewire-pulse"
+          "pulseaudio"
+        ];
         default = "pulseaudio";
         example = "pipewire-pulse";
         description = ''
@@ -42,10 +50,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.fluidsynth" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.fluidsynth" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.fluidsynth = {
@@ -56,12 +63,12 @@ in {
         After = [ (cfg.soundService + ".service") ];
       };
 
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
 
       Service = {
-        ExecStart = "${pkgs.fluidsynth}/bin/fluidsynth -a pulseaudio -si ${
-            lib.concatStringsSep " " cfg.extraOptions
-          } ${cfg.soundFont}";
+        ExecStart = "${pkgs.fluidsynth}/bin/fluidsynth -a pulseaudio -si ${lib.concatStringsSep " " cfg.extraOptions} ${cfg.soundFont}";
       };
     };
   };

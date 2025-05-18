@@ -1,27 +1,27 @@
-{ ... }:
-
 {
   services.glance = {
     enable = true;
     settings = {
       server.port = 5678;
-      pages = [{
-        name = "Home";
-        columns = [{
-          size = "full";
-          widgets = [
-            { type = "calendar"; }
+      pages = [
+        {
+          name = "Home";
+          columns = [
             {
-              type = "weather";
-              location = "London, United Kingdom";
+              size = "full";
+              widgets = [
+                { type = "calendar"; }
+                {
+                  type = "weather";
+                  location = "London, United Kingdom";
+                }
+              ];
             }
           ];
-        }];
-      }];
+        }
+      ];
     };
   };
-
-  test.stubs.glance = { };
 
   nmt.script = ''
     configFile=home-files/.config/glance/glance.yml

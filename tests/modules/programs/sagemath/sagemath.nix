@@ -10,8 +10,6 @@
     '';
   };
 
-  test.stubs.sage = { };
-
   nmt.script = ''
     assertFileExists home-files/.config/sage/init.sage
     assertFileContent home-files/.config/sage/init.sage \

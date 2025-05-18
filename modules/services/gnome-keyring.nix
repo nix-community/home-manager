@@ -1,20 +1,29 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.services.gnome-keyring;
 
-in {
-  meta.maintainers = [ maintainers.rycee ];
+in
+{
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     services.gnome-keyring = {
-      enable = mkEnableOption "GNOME Keyring";
+      enable = lib.mkEnableOption "GNOME Keyring";
 
-      components = mkOption {
-        type = types.listOf (types.enum [ "pkcs11" "secrets" "ssh" ]);
+      components = lib.mkOption {
+        type = lib.types.listOf (
+          lib.types.enum [
+            "pkcs11"
+            "secrets"
+            "ssh"
+          ]
+        );
         default = [ ];
         description = ''
           The GNOME keyring components to start. If empty then the
@@ -24,10 +33,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.gnome-keyring" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.gnome-keyring" pkgs lib.platforms.linux)
       {
         assertion = !config.services.pass-secret-service.enable;
         message = ''
@@ -45,15 +53,23 @@ in {
       };
 
       Service = {
-        ExecStart = let
-          args = concatStringsSep " " ([ "--start" "--foreground" ]
-            ++ optional (cfg.components != [ ])
-            ("--components=" + concatStringsSep "," cfg.components));
-        in "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon ${args}";
+        ExecStart =
+          let
+            args = lib.concatStringsSep " " (
+              [
+                "--start"
+                "--foreground"
+              ]
+              ++ lib.optional (cfg.components != [ ]) ("--components=" + lib.concatStringsSep "," cfg.components)
+            );
+          in
+          "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon ${args}";
         Restart = "on-abort";
       };
 
-      Install = { WantedBy = [ "graphical-session-pre.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session-pre.target" ];
+      };
     };
   };
 }

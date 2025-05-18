@@ -1,20 +1,32 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib)
-    getExe literalExpression mkEnableOption mkIf mkOption mkPackageOption
-    optional;
+    getExe
+    literalExpression
+    mkEnableOption
+    mkIf
+    mkOption
+    mkPackageOption
+    optional
+    ;
 
   cfg = config.services.wob;
   settingsFormat = pkgs.formats.ini { };
 
   configFile = settingsFormat.generate "wob.ini" cfg.settings;
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ Scrumplex ];
 
   options.services.wob = {
     enable = mkEnableOption "wob";
-    package = mkPackageOption pkgs "wob" { };
+    package = mkPackageOption pkgs "wob" { nullable = true; };
 
     settings = mkOption {
       type = settingsFormat.type;
@@ -35,8 +47,7 @@ in {
       '';
     };
 
-    systemd = mkEnableOption "systemd service and socket for wob"
-      // mkOption { default = true; };
+    systemd = mkEnableOption "systemd service and socket for wob" // mkOption { default = true; };
   };
 
   config = mkIf cfg.enable {
@@ -44,22 +55,22 @@ in {
       (lib.hm.assertions.assertPlatform "services.wob" pkgs lib.platforms.linux)
     ];
 
-    systemd.user = mkIf cfg.systemd {
+    systemd.user = mkIf (cfg.systemd && (cfg.package != null)) {
       services.wob = {
         Unit = {
-          Description =
-            "A lightweight overlay volume/backlight/progress/anything bar for Wayland";
+          Description = "A lightweight overlay volume/backlight/progress/anything bar for Wayland";
           Documentation = "man:wob(1)";
-          PartOf = "graphical-session.target";
-          After = "graphical-session.target";
+          PartOf = [ config.wayland.systemd.target ];
+          After = [ config.wayland.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
         };
         Service = {
           StandardInput = "socket";
-          ExecStart = builtins.concatStringsSep " " ([ (getExe cfg.package) ]
-            ++ optional (cfg.settings != { }) "--config ${configFile}");
+          ExecStart = builtins.concatStringsSep " " (
+            [ (getExe cfg.package) ] ++ optional (cfg.settings != { }) "--config ${configFile}"
+          );
         };
-        Install.WantedBy = [ "graphical-session.target" ];
+        Install.WantedBy = [ config.wayland.systemd.target ];
       };
 
       sockets.wob = {
@@ -73,7 +84,6 @@ in {
       };
     };
 
-    xdg.configFile."wob/wob.ini" =
-      mkIf (cfg.settings != { }) { source = configFile; };
+    xdg.configFile."wob/wob.ini" = mkIf (cfg.settings != { }) { source = configFile; };
   };
 }

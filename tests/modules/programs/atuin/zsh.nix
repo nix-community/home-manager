@@ -1,14 +1,7 @@
-{ ... }:
-
 {
   programs = {
     atuin.enable = true;
     zsh.enable = true;
-  };
-
-  test.stubs = {
-    atuin = { name = "atuin"; };
-    bash-preexec = { };
   };
 
   nmt.script = ''

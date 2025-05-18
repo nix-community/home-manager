@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 {
   home.file."tokdl-result.txt".text = lib.hm.generators.toKDL { } {
@@ -10,7 +10,13 @@
       \t \n \" "
     '';
     unsafeString = " \" \n 	 ";
-    flatItems = [ 1 2 "asdf" true null ];
+    flatItems = [
+      1
+      2
+      "asdf"
+      true
+      null
+    ];
     bigFlatItems = [
       23847590283751
       1.239
@@ -20,9 +26,23 @@
       ''
       null
     ];
-    nested = [ [ 1 2 ] [ true false ] [ ] [ null ] ];
+    nested = [
+      [
+        1
+        2
+      ]
+      [
+        true
+        false
+      ]
+      [ ]
+      [ null ]
+    ];
     extraAttrs = {
-      _args = [ 2 true ];
+      _args = [
+        2
+        true
+      ];
       _props = {
         arg1 = 1;
         arg2 = false;
@@ -38,10 +58,10 @@
         { b = true; }
         {
           c = null;
-          d = [{ e = "asdfadfasdfasdf"; }];
+          d = [ { e = "asdfadfasdfasdf"; } ];
         }
       ];
-      list2 = [{ a = 8; }];
+      list2 = [ { a = 8; } ];
     };
   };
 

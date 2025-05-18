@@ -1,8 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib) literalExpression;
 
   cfg = config.services.spotifyd;
 
@@ -10,23 +14,23 @@ let
 
   configFile = tomlFormat.generate "spotifyd.conf" cfg.settings;
 
-in {
+in
+{
   options.services.spotifyd = {
-    enable = mkEnableOption "SpotifyD connect";
+    enable = lib.mkEnableOption "SpotifyD connect";
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.spotifyd;
       defaultText = literalExpression "pkgs.spotifyd";
-      example =
-        literalExpression "(pkgs.spotifyd.override { withKeyring = true; })";
+      example = literalExpression "(pkgs.spotifyd.override { withKeyring = true; })";
       description = ''
         The `spotifyd` package to use.
         Can be used to specify extensions.
       '';
     };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = tomlFormat.type;
       default = { };
       description = "Configuration for spotifyd";
@@ -42,10 +46,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.spotifyd" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.spotifyd" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -59,8 +62,7 @@ in {
       Install.WantedBy = [ "default.target" ];
 
       Service = {
-        ExecStart =
-          "${cfg.package}/bin/spotifyd --no-daemon --config-path ${configFile}";
+        ExecStart = "${cfg.package}/bin/spotifyd --no-daemon --config-path ${configFile}";
         Restart = "always";
         RestartSec = 12;
       };

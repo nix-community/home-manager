@@ -1,21 +1,31 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.random-background;
 
-  flags = lib.concatStringsSep " "
-    ([ "--bg-${cfg.display}" "--no-fehbg" "--randomize" ]
-      ++ lib.optional (!cfg.enableXinerama) "--no-xinerama");
+  flags = lib.concatStringsSep " " (
+    [
+      "--bg-${cfg.display}"
+      "--no-fehbg"
+      "--randomize"
+    ]
+    ++ lib.optional (!cfg.enableXinerama) "--no-xinerama"
+  );
 
-in {
-  meta.maintainers = [ maintainers.rycee ];
+in
+{
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     services.random-background = {
-      enable = mkEnableOption "" // {
+      enable = lib.mkEnableOption "" // {
         description = ''
           Whether to enable random desktop background.
 
@@ -38,7 +48,13 @@ in {
       };
 
       display = mkOption {
-        type = types.enum [ "center" "fill" "max" "scale" "tile" ];
+        type = types.enum [
+          "center"
+          "fill"
+          "max"
+          "scale"
+          "tile"
+        ];
         default = "fill";
         description = "Display background images according to this option.";
       };
@@ -66,37 +82,46 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge ([
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "services.random-background" pkgs
-          platforms.linux)
-      ];
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "services.random-background" pkgs lib.platforms.linux)
+        ];
 
-      systemd.user.services.random-background = {
-        Unit = {
-          Description = "Set random desktop background using feh";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
+        systemd.user.services.random-background = {
+          Unit = {
+            Description = "Set random desktop background using feh";
+            After = [ "graphical-session.target" ];
+            PartOf = [ "graphical-session.target" ];
+          };
+
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.feh}/bin/feh ${flags} ${cfg.imageDirectory}";
+            IOSchedulingClass = "idle";
+          };
+
+          Install = {
+            WantedBy = [ "graphical-session.target" ];
+          };
         };
+      }
+      (lib.mkIf (cfg.interval != null) {
+        systemd.user.timers.random-background = {
+          Unit = {
+            Description = "Set random desktop background using feh";
+          };
 
-        Service = {
-          Type = "oneshot";
-          ExecStart = "${pkgs.feh}/bin/feh ${flags} ${cfg.imageDirectory}";
-          IOSchedulingClass = "idle";
+          Timer = {
+            OnUnitActiveSec = cfg.interval;
+          };
+
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
         };
-
-        Install = { WantedBy = [ "graphical-session.target" ]; };
-      };
-    }
-    (mkIf (cfg.interval != null) {
-      systemd.user.timers.random-background = {
-        Unit = { Description = "Set random desktop background using feh"; };
-
-        Timer = { OnUnitActiveSec = cfg.interval; };
-
-        Install = { WantedBy = [ "timers.target" ]; };
-      };
-    })
-  ]));
+      })
+    ]
+  );
 }

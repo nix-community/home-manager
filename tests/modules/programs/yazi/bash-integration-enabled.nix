@@ -1,5 +1,3 @@
-{ ... }:
-
 let
   shellIntegration = ''
     function yy() {
@@ -11,15 +9,14 @@ let
       rm -f -- "$tmp"
     }
   '';
-in {
+in
+{
   programs.bash.enable = true;
 
   programs.yazi = {
     enable = true;
     enableBashIntegration = true;
   };
-
-  test.stubs.yazi = { };
 
   nmt.script = ''
     assertFileContains home-files/.bashrc '${shellIntegration}'

@@ -1,4 +1,5 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, ... }:
+{
   config = {
     programs.ripgrep = {
       enable = true;
@@ -12,13 +13,11 @@
 
     nmt.script = ''
       assertFileExists home-files/.config/ripgrep/ripgreprc
-      assertFileContent home-files/.config/ripgrep/ripgreprc ${
-        pkgs.writeText "ripgrep.expected" ''
-          --max-columns-preview
-          --colors=line:style:bold
-          --no-require-git
-        ''
-      }
+      assertFileContent home-files/.config/ripgrep/ripgreprc ${pkgs.writeText "ripgrep.expected" ''
+        --max-columns-preview
+        --colors=line:style:bold
+        --no-require-git
+      ''}
     '';
   };
 }

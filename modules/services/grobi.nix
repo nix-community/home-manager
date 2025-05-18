@@ -1,20 +1,23 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption mkIf types;
 
   cfg = config.services.grobi;
 
-  eitherStrBoolIntList = with types;
-    either str (either bool (either int (listOf str)));
+  eitherStrBoolIntList = with types; either str (either bool (either int (listOf str)));
 
-in {
-  meta.maintainers = [ maintainers.mbrgm ];
+in
+{
+  meta.maintainers = [ lib.maintainers.mbrgm ];
 
   options = {
     services.grobi = {
-      enable = mkEnableOption "the grobi display setup daemon";
+      enable = lib.mkEnableOption "the grobi display setup daemon";
 
       executeAfter = mkOption {
         type = with types; listOf str;
@@ -31,7 +34,7 @@ in {
       rules = mkOption {
         type = with types; listOf (attrsOf eitherStrBoolIntList);
         default = [ ];
-        example = literalExpression ''
+        example = lib.literalExpression ''
           [
             {
               name = "Home";
@@ -72,14 +75,13 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.grobi" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.grobi" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.grobi = {
       Unit = {
         Description = "grobi display auto config daemon";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
@@ -91,7 +93,9 @@ in {
         Environment = [ "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.bash}/bin" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
 
     xdg.configFile."grobi.conf".text = builtins.toJSON {

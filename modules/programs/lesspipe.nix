@@ -1,19 +1,26 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-  meta.maintainers = [ maintainers.rycee ];
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.lesspipe;
+in
+{
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     programs.lesspipe = {
-      enable = mkEnableOption "lesspipe preprocessor for less";
+      enable = lib.mkEnableOption "lesspipe preprocessor for less";
+
+      package = lib.mkPackageOption pkgs "lesspipe" { };
     };
   };
 
-  config = mkIf config.programs.lesspipe.enable {
+  config = lib.mkIf cfg.enable {
     home.sessionVariables = {
-      LESSOPEN = "|${pkgs.lesspipe}/bin/lesspipe.sh %s";
+      LESSOPEN = "|${cfg.package}/bin/lesspipe.sh %s";
     };
   };
 }

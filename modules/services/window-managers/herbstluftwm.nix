@@ -1,37 +1,47 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.xsession.windowManager.herbstluftwm;
 
-  renderValue = val:
-    if lib.isBool val then
-      if val then "true" else "false"
-    else
-      lib.escapeShellArg val;
+  renderValue =
+    val: if lib.isBool val then if val then "true" else "false" else lib.escapeShellArg val;
 
-  renderSettings = settings:
-    lib.concatStringsSep "\n" (lib.mapAttrsToList
-      (name: value: "herbstclient set ${name} ${renderValue value}") settings);
+  renderSettings =
+    settings:
+    lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (name: value: "herbstclient set ${name} ${renderValue value}") settings
+    );
 
-  renderKeybinds = keybinds:
-    lib.concatStringsSep "\n"
-    (lib.mapAttrsToList (key: cmd: "herbstclient keybind ${key} ${cmd}")
-      keybinds);
+  renderKeybinds =
+    keybinds:
+    lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (key: cmd: "herbstclient keybind ${key} ${cmd}") keybinds
+    );
 
-  renderMousebinds = mousebinds:
-    lib.concatStringsSep "\n"
-    (lib.mapAttrsToList (btn: cmd: "herbstclient mousebind ${btn} ${cmd}")
-      mousebinds);
+  renderMousebinds =
+    mousebinds:
+    lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (btn: cmd: "herbstclient mousebind ${btn} ${cmd}") mousebinds
+    );
 
-  renderRules = rules:
-    lib.concatStringsSep "\n" (map (rule: "herbstclient rule ${rule}") rules);
+  renderRules = rules: lib.concatStringsSep "\n" (map (rule: "herbstclient rule ${rule}") rules);
 
-  settingType = lib.types.oneOf [ lib.types.bool lib.types.int lib.types.str ];
+  settingType = lib.types.oneOf [
+    lib.types.bool
+    lib.types.int
+    lib.types.str
+  ];
 
   escapedTags = map lib.escapeShellArg cfg.tags;
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];
 
   options.xsession.windowManager.herbstluftwm = {
@@ -121,55 +131,53 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "xsession.windowManager.herbstluftwm"
-        pkgs lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "xsession.windowManager.herbstluftwm" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
     xsession.windowManager.command = "${cfg.package}/bin/herbstluftwm --locked";
 
-    xdg.configFile."herbstluftwm/autostart".source =
-      pkgs.writeShellScript "herbstluftwm-autostart" ''
-        shopt -s expand_aliases
+    xdg.configFile."herbstluftwm/autostart".source = pkgs.writeShellScript "herbstluftwm-autostart" ''
+      shopt -s expand_aliases
 
-        # shellcheck disable=SC2142
-        alias herbstclient='set -- "$@" ";"'
-        set --
+      # shellcheck disable=SC2142
+      alias herbstclient='set -- "$@" ";"'
+      set --
 
-        herbstclient emit_hook reload
+      herbstclient emit_hook reload
 
-        # Reset everything.
-        herbstclient attr theme.tiling.reset 1
-        herbstclient attr theme.floating.reset 1
-        herbstclient keyunbind --all
-        herbstclient mouseunbind --all
-        herbstclient unrule --all
+      # Reset everything.
+      herbstclient attr theme.tiling.reset 1
+      herbstclient attr theme.floating.reset 1
+      herbstclient keyunbind --all
+      herbstclient mouseunbind --all
+      herbstclient unrule --all
 
-        ${renderSettings cfg.settings}
+      ${renderSettings cfg.settings}
 
-        ${lib.optionalString (cfg.tags != [ ]) ''
-          for tag in ${lib.concatStringsSep " " escapedTags}; do
-            herbstclient add "$tag"
-          done
+      ${lib.optionalString (cfg.tags != [ ]) ''
+        for tag in ${lib.concatStringsSep " " escapedTags}; do
+          herbstclient add "$tag"
+        done
 
-          if ${cfg.package}/bin/herbstclient object_tree tags.by-name.default &>/dev/null; then
-            herbstclient use ${lib.head escapedTags}
-            herbstclient merge_tag default ${lib.head escapedTags}
-          fi
-        ''}
+        if ${cfg.package}/bin/herbstclient object_tree tags.by-name.default &>/dev/null; then
+          herbstclient use ${lib.head escapedTags}
+          herbstclient merge_tag default ${lib.head escapedTags}
+        fi
+      ''}
 
-        ${renderKeybinds cfg.keybinds}
+      ${renderKeybinds cfg.keybinds}
 
-        ${renderMousebinds cfg.mousebinds}
+      ${renderMousebinds cfg.mousebinds}
 
-        ${renderRules cfg.rules}
+      ${renderRules cfg.rules}
 
-        ${cfg.extraConfig}
+      ${cfg.extraConfig}
 
-        herbstclient unlock
+      herbstclient unlock
 
-        ${cfg.package}/bin/herbstclient chain ";" "$@"
-      '';
+      ${cfg.package}/bin/herbstclient chain ";" "$@"
+    '';
   };
 }

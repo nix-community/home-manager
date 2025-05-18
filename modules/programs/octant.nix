@@ -1,16 +1,21 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) literalExpression;
 
   cfg = config.programs.octant;
 
-  mkPluginEnv = packages:
+  mkPluginEnv =
+    packages:
     let
       pluginDirs = map (pkg: "${pkg}/bin") packages;
-      plugins = concatMapStringsSep " " (p: "${p}/*") pluginDirs;
-    in pkgs.runCommandLocal "octant-plugins" { } ''
+      plugins = lib.concatMapStringsSep " " (p: "${p}/*") pluginDirs;
+    in
+    pkgs.runCommandLocal "octant-plugins" { } ''
       mkdir $out
       [[ '${plugins}' ]] || exit 0
       for plugin in ${plugins}; do
@@ -18,34 +23,30 @@ let
       done
     '';
 
-in {
-  meta.maintainers = with maintainers; [ jk ];
+in
+{
+  meta.maintainers = with lib.maintainers; [ jk ];
 
   options = {
     programs.octant = {
-      enable = mkEnableOption "octant";
+      enable = lib.mkEnableOption "octant";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.octant;
-        defaultText = literalExpression "pkgs.octant";
-        example = literalExpression "pkgs.octant-other";
-        description = "The Octant package to use.";
-      };
+      package = lib.mkPackageOption pkgs "octant" { example = "pkgs.octant-other"; };
 
-      plugins = mkOption {
+      plugins = lib.mkOption {
         default = [ ];
         example = literalExpression "[ pkgs.starboard-octant-plugin ]";
         description = "Optional Octant plugins.";
-        type = types.listOf types.package;
+        type = lib.types.listOf lib.types.package;
       };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."octant/plugins" =
-      mkIf (cfg.plugins != [ ]) { source = mkPluginEnv cfg.plugins; };
+    xdg.configFile."octant/plugins" = lib.mkIf (cfg.plugins != [ ]) {
+      source = mkPluginEnv cfg.plugins;
+    };
   };
 }

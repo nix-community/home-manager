@@ -1,26 +1,44 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
+
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
 
-  mergedSettings = cfg.userSettings // {
-    # this part by @cmacrae
-    auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
-  };
-in {
-  meta.maintainers = [ hm.maintainers.libewa ];
+  mergedSettings =
+    cfg.userSettings
+    // (lib.optionalAttrs (builtins.length cfg.extensions > 0) {
+      # this part by @cmacrae
+      auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
+    });
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.libewa ];
 
   options = {
     # TODO: add vscode option parity (installing extensions, configuring
     # keybinds with nix etc.)
     programs.zed-editor = {
-      enable = mkEnableOption
-        "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
+      enable = lib.mkEnableOption "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
 
-      package = mkPackageOption pkgs "zed-editor" { };
+      package = lib.mkPackageOption pkgs "zed-editor" { };
+
+      extraPackages = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        example = literalExpression "[ pkgs.nixd ]";
+        description = "Extra packages available to Zed.";
+      };
 
       userSettings = mkOption {
         type = jsonFormat.type;
@@ -72,18 +90,99 @@ in {
           Use the name of a repository in the [extension list](https://github.com/zed-industries/extensions/tree/main/extensions).
         '';
       };
+
+      installRemoteServer = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether to symlink the Zed's remote server binary to the expected
+          location. This allows remotely connecting to this system from a
+          distant Zed client.
+
+          For more information, consult the
+          ["Remote Server" section](https://wiki.nixos.org/wiki/Zed#Remote_Server)
+          in the wiki.
+        '';
+      };
+
+      themes = mkOption {
+        description = ''
+          Each theme is written to
+          {file}`$XDG_CONFIG_HOME/zed/themes/theme-name.json`
+          where the name of each attribute is the theme-name
+
+          See <https://zed.dev/docs/extensions/themes> for the structure of a
+          Zed theme
+        '';
+        type = types.attrsOf (
+          types.oneOf [
+            jsonFormat.type
+            types.path
+            types.lines
+          ]
+        );
+        default = { };
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages =
+      if cfg.extraPackages != [ ] then
+        [
+          (pkgs.symlinkJoin {
+            name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+            paths = [ cfg.package ];
+            preferLocalBuild = true;
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/zeditor \
+                --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+            '';
+          })
+        ]
+      else
+        [ cfg.package ];
 
-    xdg.configFile."zed/settings.json" = (mkIf (mergedSettings != { }) {
-      source = jsonFormat.generate "zed-user-settings" mergedSettings;
-    });
+    home.file = mkIf (cfg.installRemoteServer && (cfg.package ? remote_server)) (
+      let
+        inherit (cfg.package) version remote_server;
+        binaryName = "zed-remote-server-stable-${version}";
+      in
+      {
+        ".zed_server/${binaryName}".source = lib.getExe' remote_server binaryName;
+      }
+    );
 
-    xdg.configFile."zed/keymap.json" = (mkIf (cfg.userKeymaps != { }) {
-      source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
-    });
+    xdg.configFile =
+      lib.attrsets.unionOfDisjoint
+        {
+          "zed/settings.json" = (
+            mkIf (mergedSettings != { }) {
+              source = jsonFormat.generate "zed-user-settings" mergedSettings;
+            }
+          );
+
+          "zed/keymap.json" = (
+            mkIf (cfg.userKeymaps != { }) {
+              source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
+            }
+          );
+        }
+        (
+          lib.mapAttrs' (
+            n: v:
+            lib.nameValuePair "zed/themes/${n}.json" {
+              source =
+                if lib.isString v then
+                  pkgs.writeText "zed-theme-${n}" v
+                else if builtins.isPath v || lib.isStorePath v then
+                  v
+                else
+                  jsonFormat.generate "zed-theme-${n}" v;
+            }
+          ) cfg.themes
+        );
   };
 }

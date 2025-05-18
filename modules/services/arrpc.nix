@@ -1,9 +1,21 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  inherit (lib) mkIf mkOption mkPackageOption mkEnableOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkPackageOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.services.arrpc;
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.NotAShelf ];
 
   options.services.arrpc = {
@@ -23,8 +35,7 @@ in {
   config = mkIf cfg.enable {
     systemd.user.services.arRPC = {
       Unit = {
-        Description =
-          "Discord Rich Presence for browsers, and some custom clients";
+        Description = "Discord Rich Presence for browsers, and some custom clients";
         PartOf = [ "graphical-session.target" ];
       };
 

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.ledger = {
     enable = true;
@@ -16,8 +14,6 @@
       ];
     };
   };
-
-  test.stubs.ledger = { };
 
   nmt.script = ''
     assertFileContent home-files/.config/ledger/ledgerrc \

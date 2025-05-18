@@ -1,15 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ pkgs, ... }:
 let
-
   darwinTestApp = pkgs.runCommandLocal "target-darwin-example-app" { } ''
     mkdir -p $out/Applications
     touch $out/Applications/example-app
   '';
-
-in {
+in
+{
   config = {
     home.packages = [ darwinTestApp ];
 

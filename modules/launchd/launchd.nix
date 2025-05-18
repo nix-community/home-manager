@@ -1,7 +1,7 @@
 # launchd option type from nix-darwin
 #
 # Original Source:
-# https://github.com/LnL7/nix-darwin/blob/14a12e9/modules/launchd/launchd.nix
+# https://github.com/nix-darwin/nix-darwin/blob/14a12e9/modules/launchd/launchd.nix
 
 # Copyright 2017 Daiderd Jordan
 #
@@ -25,8 +25,11 @@
 
 { config, lib, ... }:
 
-with lib;
+let
+  inherit (lib) types mkOption; # added by Home Manager
 
+  launchdTypes = import ./types.nix { inherit config lib; };
+in
 {
   freeformType = with types; attrsOf anything; # added by Home Manager
 
@@ -80,23 +83,27 @@ with lib;
 
     inetdCompatibility = mkOption {
       default = null;
-      example = { Wait = true; };
+      example = {
+        Wait = true;
+      };
       description = ''
         The presence of this key specifies that the daemon expects to be run as if it were launched from inetd.
       '';
-      type = types.nullOr (types.submodule {
-        options = {
-          Wait = mkOption {
-            type = types.nullOr (types.either types.bool types.str);
-            default = null;
-            description = ''
-              This flag corresponds to the "wait" or "nowait" option of inetd. If true, then the listening
-              socket is passed via the standard in/out/error file descriptors. If false, then `accept(2)` is
-              called on behalf of the job, and the result is passed via the standard in/out/error descriptors.
-            '';
+      type = types.nullOr (
+        types.submodule {
+          options = {
+            Wait = mkOption {
+              type = types.nullOr (types.either types.bool types.str);
+              default = null;
+              description = ''
+                This flag corresponds to the "wait" or "nowait" option of inetd. If true, then the listening
+                socket is passed via the standard in/out/error file descriptors. If false, then `accept(2)` is
+                called on behalf of the job, and the result is passed via the standard in/out/error descriptors.
+              '';
+            };
           };
-        };
-      });
+        }
+      );
     };
 
     LimitLoadToHosts = mkOption {
@@ -118,7 +125,12 @@ with lib;
     };
 
     LimitLoadToSessionType = mkOption {
-      type = types.nullOr types.str;
+      type = types.nullOr (
+        types.oneOf [
+          types.str
+          (types.listOf types.str)
+        ]
+      );
       default = null;
       description = ''
         This configuration file only applies to sessions of the type specified. This key is used in concert
@@ -175,68 +187,72 @@ with lib;
     };
 
     KeepAlive = mkOption {
-      type = types.nullOr (types.either types.bool (types.submodule {
-        options = {
+      type = types.nullOr (
+        types.either types.bool (
+          types.submodule {
+            options = {
 
-          SuccessfulExit = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              If true, the job will be restarted as long as the program exits and with an exit status of zero.
-              If false, the job will be restarted in the inverse condition.  This key implies that "RunAtLoad"
-              is set to true, since the job needs to run at least once before we can get an exit status.
-            '';
-          };
+              SuccessfulExit = mkOption {
+                type = types.nullOr types.bool;
+                default = null;
+                description = ''
+                  If true, the job will be restarted as long as the program exits and with an exit status of zero.
+                  If false, the job will be restarted in the inverse condition.  This key implies that "RunAtLoad"
+                  is set to true, since the job needs to run at least once before we can get an exit status.
+                '';
+              };
 
-          NetworkState = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              If true, the job will be kept alive as long as the network is up, where up is defined as at least
-              one non-loopback interface being up and having IPv4 or IPv6 addresses assigned to them.  If
-              false, the job will be kept alive in the inverse condition.
-            '';
-          };
+              NetworkState = mkOption {
+                type = types.nullOr types.bool;
+                default = null;
+                description = ''
+                  If true, the job will be kept alive as long as the network is up, where up is defined as at least
+                  one non-loopback interface being up and having IPv4 or IPv6 addresses assigned to them.  If
+                  false, the job will be kept alive in the inverse condition.
+                '';
+              };
 
-          PathState = mkOption {
-            type = types.nullOr (types.attrsOf types.bool);
-            default = null;
-            description = ''
-              Each key in this dictionary is a file-system path. If the value of the key is true, then the job
-              will be kept alive as long as the path exists.  If false, the job will be kept alive in the
-              inverse condition. The intent of this feature is that two or more jobs may create semaphores in
-              the file-system namespace.
-            '';
-          };
+              PathState = mkOption {
+                type = types.nullOr (types.attrsOf types.bool);
+                default = null;
+                description = ''
+                  Each key in this dictionary is a file-system path. If the value of the key is true, then the job
+                  will be kept alive as long as the path exists.  If false, the job will be kept alive in the
+                  inverse condition. The intent of this feature is that two or more jobs may create semaphores in
+                  the file-system namespace.
+                '';
+              };
 
-          OtherJobEnabled = mkOption {
-            type = types.nullOr (types.attrsOf types.bool);
-            default = null;
-            description = ''
-              Each key in this dictionary is the label of another job. If the value of the key is true, then
-              this job is kept alive as long as that other job is enabled. Otherwise, if the value is false,
-              then this job is kept alive as long as the other job is disabled.  This feature should not be
-              considered a substitute for the use of IPC.
-            '';
-          };
+              OtherJobEnabled = mkOption {
+                type = types.nullOr (types.attrsOf types.bool);
+                default = null;
+                description = ''
+                  Each key in this dictionary is the label of another job. If the value of the key is true, then
+                  this job is kept alive as long as that other job is enabled. Otherwise, if the value is false,
+                  then this job is kept alive as long as the other job is disabled.  This feature should not be
+                  considered a substitute for the use of IPC.
+                '';
+              };
 
-          Crashed = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              If true, the the job will be restarted as long as it exited due to a signal which is typically
-              associated with a crash (SIGILL, SIGSEGV, etc.). If false, the job will be restarted in the
-              inverse condition.
-            '';
-          };
+              Crashed = mkOption {
+                type = types.nullOr types.bool;
+                default = null;
+                description = ''
+                  If true, the the job will be restarted as long as it exited due to a signal which is typically
+                  associated with a crash (SIGILL, SIGSEGV, etc.). If false, the job will be restarted in the
+                  inverse condition.
+                '';
+              };
 
-          AfterInitialDemand = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-          };
+              AfterInitialDemand = mkOption {
+                type = types.nullOr types.bool;
+                default = null;
+              };
 
-        };
-      }));
+            };
+          }
+        )
+      );
       default = null;
       description = ''
         This optional key is used to control whether your job is to be kept continuously running or to let
@@ -369,60 +385,28 @@ with lib;
 
     StartCalendarInterval = mkOption {
       default = null;
-      example = {
-        Hour = 2;
-        Minute = 30;
-      };
+      example = [
+        {
+          Hour = 2;
+          Minute = 30;
+        }
+      ];
       description = ''
-        This optional key causes the job to be started every calendar interval as specified. Missing arguments
-        are considered to be wildcard. The semantics are much like `crontab(5)`.  Unlike cron which skips job
-        invocations when the computer is asleep, launchd will start the job the next time the computer wakes
+        This optional key causes the job to be started every calendar interval as specified. The semantics are
+        much like {manpage}`crontab(5)`: Missing attributes are considered to be wildcard. Unlike cron which skips
+        job invocations when the computer is asleep, launchd will start the job the next time the computer wakes
         up.  If multiple intervals transpire before the computer is woken, those events will be coalesced into
-        one event upon wake from sleep.
+        one event upon waking from sleep.
+
+        ::: {.important}
+        The list must not be empty and must not contain duplicate entries (attrsets which compare equally).
+        :::
+
+        ::: {.caution}
+        Since missing attrs become wildcards, an empty attrset effectively means "every minute".
+        :::
       '';
-      type = types.nullOr (types.listOf (types.submodule {
-        options = {
-          Minute = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The minute on which this job will be run.
-            '';
-          };
-
-          Hour = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The hour on which this job will be run.
-            '';
-          };
-
-          Day = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The day on which this job will be run.
-            '';
-          };
-
-          Weekday = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The weekday on which this job will be run (0 and 7 are Sunday).
-            '';
-          };
-
-          Month = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The month on which this job will be run.
-            '';
-          };
-        };
-      }));
+      type = types.nullOr launchdTypes.StartCalendarInterval;
     };
 
     StandardInPath = mkOption {
@@ -474,181 +458,187 @@ with lib;
         Resource limits to be imposed on the job. These adjust variables set with `setrlimit(2)`.  The following
         keys apply:
       '';
-      type = types.nullOr (types.submodule {
-        options = {
-          Core = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The largest size (in bytes) core file that may be created.
-            '';
-          };
+      type = types.nullOr (
+        types.submodule {
+          options = {
+            Core = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The largest size (in bytes) core file that may be created.
+              '';
+            };
 
-          CPU = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum amount of cpu time (in seconds) to be used by each process.
-            '';
-          };
+            CPU = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum amount of cpu time (in seconds) to be used by each process.
+              '';
+            };
 
-          Data = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum size (in bytes) of the data segment for a process; this defines how far a program may
-              extend its break with the `sbrk(2)` system call.
-            '';
-          };
+            Data = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum size (in bytes) of the data segment for a process; this defines how far a program may
+                extend its break with the `sbrk(2)` system call.
+              '';
+            };
 
-          FileSize = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The largest size (in bytes) file that may be created.
-            '';
-          };
+            FileSize = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The largest size (in bytes) file that may be created.
+              '';
+            };
 
-          MemoryLock = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum size (in bytes) which a process may lock into memory using the mlock(2) function.
-            '';
-          };
+            MemoryLock = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum size (in bytes) which a process may lock into memory using the mlock(2) function.
+              '';
+            };
 
-          NumberOfFiles = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum number of open files for this process.  Setting this value in a system wide daemon
-              will set the `sysctl(3)` kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
-              value in addition to the `setrlimit(2)` values.
-            '';
-          };
+            NumberOfFiles = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum number of open files for this process.  Setting this value in a system wide daemon
+                will set the `sysctl(3)` kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
+                value in addition to the `setrlimit(2)` values.
+              '';
+            };
 
-          NumberOfProcesses = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum number of simultaneous processes for this user id.  Setting this value in a system
-              wide daemon will set the `sysctl(3)` kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
-              (HardResourceLimits) value in addition to the `setrlimit(2)` values.
-            '';
-          };
+            NumberOfProcesses = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum number of simultaneous processes for this user id.  Setting this value in a system
+                wide daemon will set the `sysctl(3)` kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
+                (HardResourceLimits) value in addition to the `setrlimit(2)` values.
+              '';
+            };
 
-          ResidentSetSize = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum size (in bytes) to which a process's resident set size may grow.  This imposes a
-              limit on the amount of physical memory to be given to a process; if memory is tight, the system
-              will prefer to take memory from processes that are exceeding their declared resident set size.
-            '';
-          };
+            ResidentSetSize = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum size (in bytes) to which a process's resident set size may grow.  This imposes a
+                limit on the amount of physical memory to be given to a process; if memory is tight, the system
+                will prefer to take memory from processes that are exceeding their declared resident set size.
+              '';
+            };
 
-          Stack = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum size (in bytes) of the stack segment for a process; this defines how far a program's
-              stack segment may be extended.  Stack extension is performed automatically by the system.
-            '';
+            Stack = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum size (in bytes) of the stack segment for a process; this defines how far a program's
+                stack segment may be extended.  Stack extension is performed automatically by the system.
+              '';
+            };
           };
-        };
-      });
+        }
+      );
     };
 
     HardResourceLimits = mkOption {
       default = null;
-      example = { NumberOfFiles = 4096; };
+      example = {
+        NumberOfFiles = 4096;
+      };
       description = ''
         Resource limits to be imposed on the job. These adjust variables set with `setrlimit(2)`.  The following
         keys apply:
       '';
-      type = types.nullOr (types.submodule {
-        options = {
-          Core = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The largest size (in bytes) core file that may be created.
-            '';
-          };
+      type = types.nullOr (
+        types.submodule {
+          options = {
+            Core = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The largest size (in bytes) core file that may be created.
+              '';
+            };
 
-          CPU = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum amount of cpu time (in seconds) to be used by each process.
-            '';
-          };
+            CPU = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum amount of cpu time (in seconds) to be used by each process.
+              '';
+            };
 
-          Data = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum size (in bytes) of the data segment for a process; this defines how far a program may
-              extend its break with the `sbrk(2)` system call.
-            '';
-          };
+            Data = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum size (in bytes) of the data segment for a process; this defines how far a program may
+                extend its break with the `sbrk(2)` system call.
+              '';
+            };
 
-          FileSize = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The largest size (in bytes) file that may be created.
-            '';
-          };
+            FileSize = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The largest size (in bytes) file that may be created.
+              '';
+            };
 
-          MemoryLock = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum size (in bytes) which a process may lock into memory using the `mlock(2)` function.
-            '';
-          };
+            MemoryLock = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum size (in bytes) which a process may lock into memory using the `mlock(2)` function.
+              '';
+            };
 
-          NumberOfFiles = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum number of open files for this process.  Setting this value in a system wide daemon
-              will set the `sysctl(3)` kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
-              value in addition to the `setrlimit(2)` values.
-            '';
-          };
+            NumberOfFiles = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum number of open files for this process.  Setting this value in a system wide daemon
+                will set the `sysctl(3)` kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
+                value in addition to the `setrlimit(2)` values.
+              '';
+            };
 
-          NumberOfProcesses = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum number of simultaneous processes for this user id.  Setting this value in a system
-              wide daemon will set the `sysctl(3)` kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
-              (HardResourceLimits) value in addition to the `setrlimit(2)` values.
-            '';
-          };
+            NumberOfProcesses = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum number of simultaneous processes for this user id.  Setting this value in a system
+                wide daemon will set the `sysctl(3)` kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
+                (HardResourceLimits) value in addition to the `setrlimit(2)` values.
+              '';
+            };
 
-          ResidentSetSize = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum size (in bytes) to which a process's resident set size may grow.  This imposes a
-              limit on the amount of physical memory to be given to a process; if memory is tight, the system
-              will prefer to take memory from processes that are exceeding their declared resident set size.
-            '';
-          };
+            ResidentSetSize = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum size (in bytes) to which a process's resident set size may grow.  This imposes a
+                limit on the amount of physical memory to be given to a process; if memory is tight, the system
+                will prefer to take memory from processes that are exceeding their declared resident set size.
+              '';
+            };
 
-          Stack = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              The maximum size (in bytes) of the stack segment for a process; this defines how far a program's
-              stack segment may be extended.  Stack extension is performed automatically by the system.
-            '';
+            Stack = mkOption {
+              type = types.nullOr types.int;
+              default = null;
+              description = ''
+                The maximum size (in bytes) of the stack segment for a process; this defines how far a program's
+                stack segment may be extended.  Stack extension is performed automatically by the system.
+              '';
+            };
           };
-        };
-      });
+        }
+      );
     };
 
     Nice = mkOption {
@@ -660,8 +650,14 @@ with lib;
     };
 
     ProcessType = mkOption {
-      type = types.nullOr
-        (types.enum [ "Background" "Standard" "Adaptive" "Interactive" ]);
+      type = types.nullOr (
+        types.enum [
+          "Background"
+          "Standard"
+          "Adaptive"
+          "Interactive"
+        ]
+      );
       default = null;
       example = "Background";
       description = ''
@@ -669,22 +665,22 @@ with lib;
         resource limits based on what kind of job it is. If left unspecified, the system will apply light
         resource limits to the job, throttling its CPU usage and I/O bandwidth. The following are valid values:
 
-           Background
-           : Background jobs are generally processes that do work that was not directly requested by the user.
-             The resource limits applied to Background jobs are intended to prevent them from disrupting the
-             user experience.
+        Background
+        : Background jobs are generally processes that do work that was not directly requested by the user.
+          The resource limits applied to Background jobs are intended to prevent them from disrupting the
+          user experience.
 
-           Standard
-           :  Standard jobs are equivalent to no ProcessType being set.
+        Standard
+        : Standard jobs are equivalent to no ProcessType being set.
 
-           Adaptive
-           :  Adaptive jobs move between the Background and Interactive classifications based on activity over
-              XPC connections. See {manpage}`xpc_transaction_begin(3)` for details.
+        Adaptive
+        : Adaptive jobs move between the Background and Interactive classifications based on activity over
+          XPC connections. See `xpc_transaction_begin(3)` for details.
 
-           Interactive
-           :  Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
-              jobs are critical to maintaining a responsive user experience, and this key should only be
-              used if an app's ability to be responsive depends on it, and cannot be made Adaptive.
+        Interactive
+        : Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
+          jobs are critical to maintaining a responsive user experience, and this key should only be
+          used if an app's ability to be responsive depends on it, and cannot be made Adaptive.
       '';
     };
 
@@ -706,6 +702,15 @@ with lib;
       '';
     };
 
+    LowPriorityBackgroundIO = mkOption {
+      type = types.nullOr types.bool;
+      default = null;
+      description = ''
+        This optional key specifies whether the kernel should consider this daemon to be low priority when
+        doing file system I/O when the process is throttled with the Darwin-background classification.
+      '';
+    };
+
     LaunchOnlyOnce = mkOption {
       type = types.nullOr types.bool;
       default = null;
@@ -717,7 +722,11 @@ with lib;
 
     MachServices = mkOption {
       default = null;
-      example = { ResetAtClose = true; };
+      example = {
+        "org.nixos.service" = {
+          ResetAtClose = true;
+        };
+      };
       description = ''
         This optional key is used to specify Mach services to be registered with the Mach bootstrap sub-system.
         Each key in this dictionary should be the name of service to be advertised. The value of the key must
@@ -726,31 +735,37 @@ with lib;
         Finally, for the job itself, the values will be replaced with Mach ports at the time of check-in with
         launchd.
       '';
-      type = types.nullOr (types.submodule {
-        options = {
-          ResetAtClose = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              If this boolean is false, the port is recycled, thus leaving clients to remain oblivious to the
-              demand nature of job. If the value is set to true, clients receive port death notifications when
-              the job lets go of the receive right. The port will be recreated atomically with respect to bootstrap_look_up()
-              calls, so that clients can trust that after receiving a port death notification,
-              the new port will have already been recreated. Setting the value to true should be done with
-              care. Not all clients may be able to handle this behavior. The default value is false.
-            '';
-          };
+      type = types.nullOr (
+        types.attrsOf (
+          types.either types.bool (
+            types.submodule {
+              options = {
+                ResetAtClose = mkOption {
+                  type = types.nullOr types.bool;
+                  default = null;
+                  description = ''
+                    If this boolean is false, the port is recycled, thus leaving clients to remain oblivious to the
+                    demand nature of job. If the value is set to true, clients receive port death notifications when
+                    the job lets go of the receive right. The port will be recreated atomically with respect to bootstrap_look_up()
+                    calls, so that clients can trust that after receiving a port death notification,
+                    the new port will have already been recreated. Setting the value to true should be done with
+                    care. Not all clients may be able to handle this behavior. The default value is false.
+                  '';
+                };
 
-          HideUntilCheckIn = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              Reserve the name in the namespace, but cause bootstrap_look_up() to fail until the job has
-              checked in with launchd.
-            '';
-          };
-        };
-      });
+                HideUntilCheckIn = mkOption {
+                  type = types.nullOr types.bool;
+                  default = null;
+                  description = ''
+                    Reserve the name in the namespace, but cause bootstrap_look_up() to fail until the job has
+                    checked in with launchd.
+                  '';
+                };
+              };
+            }
+          )
+        )
+      );
     };
 
     LaunchEvents = mkOption {
@@ -778,6 +793,26 @@ with lib;
       };
     };
 
+    ServiceIPC = mkOption {
+      type = types.nullOr types.bool;
+      default = null;
+      description = ''
+        This optional key specifies whether the job participates in advanced
+        communication with launchd. The default is false. This flag is
+        incompatible with the inetdCompatibility key.
+      '';
+    };
+
+    SessionCreate = mkOption {
+      type = types.nullOr types.bool;
+      default = null;
+      description = ''
+        This key specifies that the job should be spawned into a new security
+        audit session rather than the default session for the context is belongs
+        to. See auditon(2) for details.
+      '';
+    };
+
     Sockets = mkOption {
       default = null;
       description = ''
@@ -792,109 +827,123 @@ with lib;
 
         The parameters below are used as inputs to call `getaddrinfo(3)`.
       '';
-      type = types.nullOr (types.attrsOf (types.submodule {
-        options = {
-          SockType = mkOption {
-            type = types.nullOr (types.enum [ "stream" "dgram" "seqpacket" ]);
-            default = null;
-            description = ''
-              This optional key tells launchctl what type of socket to create. The default is "stream" and
-              other valid values for this key are "dgram" and "seqpacket" respectively.
-            '';
-          };
+      type = types.nullOr (
+        types.attrsOf (
+          types.submodule {
+            options = {
+              SockType = mkOption {
+                type = types.nullOr (
+                  types.enum [
+                    "stream"
+                    "dgram"
+                    "seqpacket"
+                  ]
+                );
+                default = null;
+                description = ''
+                  This optional key tells launchctl what type of socket to create. The default is "stream" and
+                  other valid values for this key are "dgram" and "seqpacket" respectively.
+                '';
+              };
 
-          SockPassive = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = ''
-              This optional key specifies whether `listen(2)` or `connect(2)` should be called on the created file
-              descriptor. The default is true ("to listen").
-            '';
-          };
+              SockPassive = mkOption {
+                type = types.nullOr types.bool;
+                default = null;
+                description = ''
+                  This optional key specifies whether `listen(2)` or `connect(2)` should be called on the created file
+                  descriptor. The default is true ("to listen").
+                '';
+              };
 
-          SockNodeName = mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            description = ''
-              This optional key specifies the node to `connect(2)` or `bind(2)` to.
-            '';
-          };
+              SockNodeName = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  This optional key specifies the node to `connect(2)` or `bind(2)` to.
+                '';
+              };
 
-          SockServiceName = mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            description = ''
-              This optional key specifies the service on the node to `connect(2)` or `bind(2)` to.
-            '';
-          };
+              SockServiceName = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  This optional key specifies the service on the node to `connect(2)` or `bind(2)` to.
+                '';
+              };
 
-          SockFamily = mkOption {
-            type = types.nullOr (types.enum [ "IPv4" "IPv6" ]);
-            default = null;
-            description = ''
-              This optional key can be used to specifically request that "IPv4" or "IPv6" socket(s) be created.
-            '';
-          };
+              SockFamily = mkOption {
+                type = types.nullOr (
+                  types.enum [
+                    "IPv4"
+                    "IPv6"
+                  ]
+                );
+                default = null;
+                description = ''
+                  This optional key can be used to specifically request that "IPv4" or "IPv6" socket(s) be created.
+                '';
+              };
 
-          SockProtocol = mkOption {
-            type = types.nullOr (types.enum [ "TCP" ]);
-            default = null;
-            description = ''
-              This optional key specifies the protocol to be passed to `socket(2)`.  The only value understood by
-              this key at the moment is "TCP".
-            '';
-          };
+              SockProtocol = mkOption {
+                type = types.nullOr (types.enum [ "TCP" ]);
+                default = null;
+                description = ''
+                  This optional key specifies the protocol to be passed to `socket(2)`.  The only value understood by
+                  this key at the moment is "TCP".
+                '';
+              };
 
-          SockPathName = mkOption {
-            type = types.nullOr types.path;
-            default = null;
-            description = ''
-              This optional key implies SockFamily is set to "Unix". It specifies the path to `connect(2)` or
-              `bind(2)` to.
-            '';
-          };
+              SockPathName = mkOption {
+                type = types.nullOr types.path;
+                default = null;
+                description = ''
+                  This optional key implies SockFamily is set to "Unix". It specifies the path to `connect(2)` or
+                  `bind(2)` to.
+                '';
+              };
 
-          SecureSocketWithKey = mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            description = ''
-              This optional key is a variant of SockPathName. Instead of binding to a known path, a securely
-              generated socket is created and the path is assigned to the environment variable that is inherited
-              by all jobs spawned by launchd.
-            '';
-          };
+              SecureSocketWithKey = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  This optional key is a variant of SockPathName. Instead of binding to a known path, a securely
+                  generated socket is created and the path is assigned to the environment variable that is inherited
+                  by all jobs spawned by launchd.
+                '';
+              };
 
-          SockPathMode = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            description = ''
-              This optional key specifies the mode of the socket. Known bug: Property lists don't support
-              octal, so please convert the value to decimal.
-            '';
-          };
+              SockPathMode = mkOption {
+                type = types.nullOr types.int;
+                default = null;
+                description = ''
+                  This optional key specifies the mode of the socket. Known bug: Property lists don't support
+                  octal, so please convert the value to decimal.
+                '';
+              };
 
-          Bonjour = mkOption {
-            type =
-              types.nullOr (types.either types.bool (types.listOf types.str));
-            default = null;
-            description = ''
-              This optional key can be used to request that the service be registered with the
-              `mDNSResponder(8)`.  If the value is boolean, the service name is inferred from the SockServiceName.
-            '';
-          };
+              Bonjour = mkOption {
+                type = types.nullOr (types.either types.bool (types.listOf types.str));
+                default = null;
+                description = ''
+                  This optional key can be used to request that the service be registered with the
+                  `mDNSResponder(8)`.  If the value is boolean, the service name is inferred from the SockServiceName.
+                '';
+              };
 
-          MulticastGroup = mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            description = ''
-              This optional key can be used to request that the datagram socket join a multicast group.  If the
-              value is a hostname, then `getaddrinfo(3)` will be used to join the correct multicast address for a
-              given socket family.  If an explicit IPv4 or IPv6 address is given, it is required that the SockFamily
-              family also be set, otherwise the results are undefined.
-            '';
-          };
-        };
-      }));
+              MulticastGroup = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  This optional key can be used to request that the datagram socket join a multicast group.  If the
+                  value is a hostname, then `getaddrinfo(3)` will be used to join the correct multicast address for a
+                  given socket family.  If an explicit IPv4 or IPv6 address is given, it is required that the SockFamily
+                  family also be set, otherwise the results are undefined.
+                '';
+              };
+            };
+          }
+        )
+      );
     };
   };
 

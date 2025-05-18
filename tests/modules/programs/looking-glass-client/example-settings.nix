@@ -1,7 +1,4 @@
-{ config, lib, ... }:
-
-with lib;
-
+{ config, ... }:
 {
   config = {
     programs.looking-glass-client = {

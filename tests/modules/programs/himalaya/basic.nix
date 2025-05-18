@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
@@ -13,14 +9,12 @@ with lib;
     };
   };
 
-  programs.himalaya = { enable = true; };
-
-  test.stubs.himalaya = { };
+  programs.himalaya = {
+    enable = true;
+  };
 
   nmt.script = ''
     assertFileExists home-files/.config/himalaya/config.toml
-    assertFileContent home-files/.config/himalaya/config.toml ${
-      ./basic-expected.toml
-    }
+    assertFileContent home-files/.config/himalaya/config.toml ${./basic-expected.toml}
   '';
 }

@@ -1,10 +1,13 @@
-{ config, osConfig, lib, pkgs, ... }:
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
   cfg = config.programs.nh;
-
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ johnrtitor ];
 
   options.programs.nh = {
@@ -13,7 +16,7 @@ in {
     package = lib.mkPackageOption pkgs "nh" { };
 
     flake = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
+      type = with lib.types; nullOr (either singleLineStr path);
       default = null;
       description = ''
         The path that will be used for the {env}`FLAKE` environment variable.
@@ -52,19 +55,19 @@ in {
   };
 
   config = {
-    warnings = lib.optionals (!(cfg.clean.enable -> !osConfig.nix.gc.automatic))
-      [
-        "programs.nh.clean.enable and nix.gc.automatic (system-wide in configuration.nix) are both enabled. Please use one or the other to avoid conflict."
-      ];
-
-    assertions = [{
-      assertion = (cfg.flake != null) -> !(lib.hasSuffix ".nix" cfg.flake);
-      message = "nh.flake must be a directory, not a nix file";
-    }];
+    warnings =
+      lib.optional (cfg.clean.enable && config.nix.gc.automatic)
+        "programs.nh.clean.enable and nix.gc.automatic (Home-Manager) are both enabled. Please use one or the other to avoid conflict.";
 
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
-      sessionVariables = lib.mkIf (cfg.flake != null) { FLAKE = cfg.flake; };
+      sessionVariables = lib.mkIf (cfg.flake != null) (
+        let
+          packageVersion = lib.getVersion cfg.package;
+          isVersion4OrHigher = lib.versionAtLeast packageVersion "4.0.0";
+        in
+        if isVersion4OrHigher then { NH_FLAKE = cfg.flake; } else { FLAKE = cfg.flake; }
+      );
     };
 
     systemd.user = lib.mkIf cfg.clean.enable {
@@ -73,9 +76,7 @@ in {
 
         Service = {
           Type = "oneshot";
-          ExecStart =
-            "exec ${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
-          Environment = "PATH=$PATH:${config.nix.package}";
+          ExecStart = "${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
         };
       };
 

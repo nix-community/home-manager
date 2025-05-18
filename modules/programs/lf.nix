@@ -1,32 +1,48 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib)
+    concatStringsSep
+    literalExpression
+    mapAttrsToList
+    mkOption
+    optionalString
+    types
+    ;
 
-with lib;
-
-let cfg = config.programs.lf;
-in {
-  meta.maintainers = [ hm.maintainers.owm111 ];
+  cfg = config.programs.lf;
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.owm111 ];
 
   options = {
     programs.lf = {
-      enable = mkEnableOption "lf";
+      enable = lib.mkEnableOption "lf";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.lf;
-        defaultText = literalExpression "pkgs.lf";
-        description = ''
-          lf package to use.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "lf" { };
 
       settings = mkOption {
-        type = with types;
-          attrsOf (oneOf [ str int (listOf (either str int)) bool ]);
+        type =
+          with types;
+          attrsOf (oneOf [
+            str
+            int
+            (listOf (either str int))
+            bool
+          ]);
         default = { };
         example = {
           tabstop = 4;
           number = true;
-          ratios = [ 1 1 2 ];
+          ratios = [
+            1
+            1
+            2
+          ];
         };
         description = ''
           An attribute set of lf settings. See the lf documentation for
@@ -59,8 +75,7 @@ in {
           U = "!du -sh";
           gg = null;
         };
-        description =
-          "Keys to bind. Keys set to null or an empty string are deleted.";
+        description = "Keys to bind. Keys set to null or an empty string are deleted.";
       };
 
       cmdKeybindings = mkOption {
@@ -117,53 +132,55 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."lf/lfrc".text = let
-      fmtSetting = k: v:
-        optionalString (v != null) "set ${
-          if isBool v then
-            "${optionalString (!v) "no"}${k}"
-          else if isList v then
-            ''${k} "${concatStringsSep ":" (map (w: toString w) v)}"''
-          else
-            "${k} ${if isInt v then toString v else ''"${v}"''}"
-        }";
+    xdg.configFile."lf/lfrc".text =
+      let
+        fmtSetting =
+          k: v:
+          optionalString (v != null)
+            "set ${
+              if lib.isBool v then
+                "${optionalString (!v) "no"}${k}"
+              else if lib.isList v then
+                ''${k} "${concatStringsSep ":" (map (w: toString w) v)}"''
+              else
+                "${k} ${if lib.isInt v then toString v else ''"${v}"''}"
+            }";
 
-      settingsStr = concatStringsSep "\n"
-        (remove "" (mapAttrsToList fmtSetting cfg.settings));
+        settingsStr = concatStringsSep "\n" (lib.remove "" (mapAttrsToList fmtSetting cfg.settings));
 
-      fmtCmdMap = before: k: v:
-        "${before} ${k}${optionalString (v != null && v != "") " ${v}"}";
-      fmtCmd = fmtCmdMap "cmd";
-      fmtMap = fmtCmdMap "map";
-      fmtCmap = fmtCmdMap "cmap";
+        fmtCmdMap =
+          before: k: v:
+          "${before} ${k}${optionalString (v != null && v != "") " ${v}"}";
+        fmtCmd = fmtCmdMap "cmd";
+        fmtMap = fmtCmdMap "map";
+        fmtCmap = fmtCmdMap "cmap";
 
-      commandsStr = concatStringsSep "\n" (mapAttrsToList fmtCmd cfg.commands);
-      keybindingsStr =
-        concatStringsSep "\n" (mapAttrsToList fmtMap cfg.keybindings);
-      cmdKeybindingsStr =
-        concatStringsSep "\n" (mapAttrsToList fmtCmap cfg.cmdKeybindings);
+        commandsStr = concatStringsSep "\n" (mapAttrsToList fmtCmd cfg.commands);
+        keybindingsStr = concatStringsSep "\n" (mapAttrsToList fmtMap cfg.keybindings);
+        cmdKeybindingsStr = concatStringsSep "\n" (mapAttrsToList fmtCmap cfg.cmdKeybindings);
 
-      previewerStr = optionalString (cfg.previewer.source != null) ''
-        set previewer ${cfg.previewer.source}
-        ${optionalString (cfg.previewer.keybinding != null) ''
-          map ${cfg.previewer.keybinding} ''$${cfg.previewer.source} "$f" | less -R
-        ''}
+        previewerStr = optionalString (cfg.previewer.source != null) ''
+          set previewer ${cfg.previewer.source}
+          ${optionalString (cfg.previewer.keybinding != null) ''
+            map ${cfg.previewer.keybinding} ''$${cfg.previewer.source} "$f" | less -R
+          ''}
+        '';
+      in
+      ''
+        ${settingsStr}
+
+        ${commandsStr}
+
+        ${keybindingsStr}
+
+        ${cmdKeybindingsStr}
+
+        ${previewerStr}
+
+        ${cfg.extraConfig}
       '';
-    in ''
-      ${settingsStr}
-
-      ${commandsStr}
-
-      ${keybindingsStr}
-
-      ${cmdKeybindingsStr}
-
-      ${previewerStr}
-
-      ${cfg.extraConfig}
-    '';
   };
 }

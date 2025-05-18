@@ -1,6 +1,8 @@
-{ ... }:
+{ config, lib, ... }:
 
-{
+lib.mkIf config.test.enableLegacyIfd {
+  imports = [ ./podman-stubs.nix ];
+
   services.podman = {
     enable = true;
     containers."my-container-1" = {
@@ -47,18 +49,14 @@
     assertFileExists $containerManifest
     assertFileExists $networkManifest
 
-    assertFileContent $containerManifest ${
-      builtins.toFile "containers.expected" ''
-        my-container-1
-        my-container-2
-      ''
-    }
+    assertFileContent $containerManifest ${builtins.toFile "containers.expected" ''
+      my-container-1
+      my-container-2
+    ''}
 
-    assertFileContent $networkManifest ${
-      builtins.toFile "networks.expected" ''
-        mynet-1
-        mynet-2
-      ''
-    }
+    assertFileContent $networkManifest ${builtins.toFile "networks.expected" ''
+      mynet-1
+      mynet-2
+    ''}
   '';
 }

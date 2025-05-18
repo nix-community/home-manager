@@ -1,32 +1,33 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.services.pantalaimon;
 
   iniFmt = pkgs.formats.ini { };
-in {
-  meta.maintainers = [ maintainers.jojosch ];
+in
+{
+  meta.maintainers = [ lib.maintainers.jojosch ];
 
   options = {
     services.pantalaimon = {
-      enable = mkEnableOption
-        "Pantalaimon, an E2EE aware proxy daemon for matrix clients";
+      enable = lib.mkEnableOption "Pantalaimon, an E2EE aware proxy daemon for matrix clients";
 
-      package = mkOption {
-        type = types.package;
+      package = lib.mkOption {
+        type = lib.types.package;
         default = pkgs.pantalaimon;
-        defaultText = literalExpression "pkgs.pantalaimon";
-        description =
-          "Package providing the {command}`pantalaimon` executable to use.";
+        defaultText = lib.literalExpression "pkgs.pantalaimon";
+        description = "Package providing the {command}`pantalaimon` executable to use.";
       };
 
-      settings = mkOption {
+      settings = lib.mkOption {
         type = iniFmt.type;
         default = { };
-        defaultText = literalExpression "{ }";
-        example = literalExpression ''
+        defaultText = lib.literalExpression "{ }";
+        example = lib.literalExpression ''
           {
             Default = {
               LogLevel = "Debug";
@@ -51,10 +52,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.pantalaimon" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.pantalaimon" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -62,15 +62,12 @@ in {
     systemd.user.services = {
       pantalaimon = {
         Unit = {
-          Description =
-            "Pantalaimon - E2EE aware proxy daemon for matrix clients";
+          Description = "Pantalaimon - E2EE aware proxy daemon for matrix clients";
           After = [ "network-online.target" ];
         };
 
         Service = {
-          ExecStart = "${cfg.package}/bin/pantalaimon -c ${
-              iniFmt.generate "pantalaimon.conf" cfg.settings
-            }";
+          ExecStart = "${cfg.package}/bin/pantalaimon -c ${iniFmt.generate "pantalaimon.conf" cfg.settings}";
           Restart = "on-failure";
         };
 

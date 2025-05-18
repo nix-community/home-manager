@@ -1,19 +1,19 @@
 { lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   extraConfigType = with types; attrsOf (either (either str int) bool);
-
-in {
+in
+{
   options.offlineimap = {
-    enable = mkEnableOption "OfflineIMAP";
+    enable = lib.mkEnableOption "OfflineIMAP";
 
     extraConfig.account = mkOption {
       type = extraConfigType;
       default = { };
-      example = { autorefresh = 20; };
+      example = {
+        autorefresh = 20;
+      };
       description = ''
         Extra configuration options to add to the account section.
       '';
@@ -22,7 +22,9 @@ in {
     extraConfig.local = mkOption {
       type = extraConfigType;
       default = { };
-      example = { sync_deletes = true; };
+      example = {
+        sync_deletes = true;
+      };
       description = ''
         Extra configuration options to add to the local account
         section.

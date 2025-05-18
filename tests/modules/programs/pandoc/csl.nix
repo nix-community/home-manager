@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   programs.pandoc = {
     enable = true;
@@ -15,4 +13,3 @@
       ${./example.csl}
   '';
 }
-

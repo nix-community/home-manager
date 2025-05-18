@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   programs.swaylock.settings = { };
 
   nmt.script = ''

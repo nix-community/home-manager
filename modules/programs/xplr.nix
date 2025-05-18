@@ -1,7 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
-    types mkIf mkOption mkEnableOption mkPackageOption literalExpression;
+    types
+    mkIf
+    mkOption
+    mkEnableOption
+    mkPackageOption
+    literalExpression
+    ;
 
   cfg = config.programs.xplr;
 
@@ -9,9 +20,10 @@ let
     version = '${cfg.package.version}'
   '';
 
-  # If `value` is a Nix store path, create the symlink `/nix/store/newhash/${name}/*` 
+  # If `value` is a Nix store path, create the symlink `/nix/store/newhash/${name}/*`
   # to `/nix/store/oldhash/*` and returns `/nix/store/newhash`.
-  wrapPlugin = name: value:
+  wrapPlugin =
+    name: value:
     if lib.isStorePath value then
       pkgs.symlinkJoin {
         name = name;
@@ -27,29 +39,32 @@ let
 
   makePluginSearchPath = p: "${p}/?/init.lua;${p}/?.lua";
 
-  pluginPath = if cfg.plugins != { } then
-    let
-      wrappedPlugins = lib.mapAttrsToList wrapPlugin cfg.plugins;
-      searchPaths = map makePluginSearchPath wrappedPlugins;
-      pluginSearchPath = lib.concatStringsSep ";" searchPaths;
-    in (''
-      package.path = "${pluginSearchPath};" .. package.path
-    '')
-  else
-    "\n";
+  pluginPath =
+    if cfg.plugins != { } then
+      let
+        wrappedPlugins = lib.mapAttrsToList wrapPlugin cfg.plugins;
+        searchPaths = map makePluginSearchPath wrappedPlugins;
+        pluginSearchPath = lib.concatStringsSep ";" searchPaths;
+      in
+      (''
+        package.path = "${pluginSearchPath};" .. package.path
+      '')
+    else
+      "\n";
 
   # We provide a default version line within the configuration file, which is
   # obtained from the package's attributes. Merge the initial configFile, a
   # mapped list of plugins and then the user defined configuration to obtain
   # the final configuration.
   configFile = initialConfig + pluginPath + cfg.extraConfig;
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.NotAShelf ];
 
   options.programs.xplr = {
     enable = mkEnableOption "xplr, terminal UI based file explorer";
 
-    package = mkPackageOption pkgs "xplr" { };
+    package = mkPackageOption pkgs "xplr" { nullable = true; };
 
     plugins = mkOption {
       type = with types; nullOr (attrsOf (either package str));
@@ -58,7 +73,7 @@ in {
       description = ''
         An attribute set of plugin paths to be added to the [package.path]<https://www.lua.org/manual/5.4/manual.html#pdf-package.path> of the {file}`~/config/xplr/init.lua` configuration file.
 
-        Must be a package or string representing the plugin directory's path. 
+        Must be a package or string representing the plugin directory's path.
         If the path string is not absolute, it will be relative to {file}`$XDG_CONFIG_HOME/xplr/init.lua`.
       '';
       example = literalExpression ''
@@ -91,9 +106,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."xplr/init.lua".source =
-      pkgs.writeText "init.lua" configFile;
+    xdg.configFile."xplr/init.lua".source = pkgs.writeText "init.lua" configFile;
   };
 }

@@ -1,25 +1,29 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.services.safeeyes;
 
-in {
-  meta.maintainers = [ hm.maintainers.rosuavio ];
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.rosuavio ];
 
   options = {
     services.safeeyes = {
-      enable = mkEnableOption "The Safe Eyes OSGI service";
+      enable = lib.mkEnableOption "The Safe Eyes OSGI service";
 
-      package = mkPackageOption pkgs "safeeyes" { };
+      package = lib.mkPackageOption pkgs "safeeyes" { };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.safeeyes" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.safeeyes" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -35,7 +39,7 @@ in {
       };
 
       Service = {
-        ExecStart = getExe pkgs.safeeyes;
+        ExecStart = lib.getExe pkgs.safeeyes;
         Restart = "on-failure";
         RestartSec = 3;
       };

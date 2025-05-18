@@ -1,0 +1,7 @@
+server_endpoint = "/run/user/<user-id>/clipcat/grpc.sock"
+[log]
+emit_journald = true
+emit_stderr = false
+emit_stdout = false
+file_path = "/path/to/log/file"
+level = "INFO"

@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   config = {
@@ -9,14 +12,17 @@ with lib;
     programs.waybar = {
       package = config.lib.test.mkStubPackage { outPath = "@waybar@"; };
       enable = true;
-      settings = let
-        settingsComplex = (import ./settings-complex.nix {
-          inherit config lib pkgs;
-        }).config.programs.waybar.settings;
-      in {
-        mainBar = builtins.head settingsComplex;
-        secondaryBar = builtins.elemAt settingsComplex 1;
-      };
+      settings =
+        let
+          settingsComplex =
+            (import ./settings-complex.nix {
+              inherit config lib pkgs;
+            }).config.programs.waybar.settings;
+        in
+        {
+          mainBar = builtins.head settingsComplex;
+          secondaryBar = builtins.elemAt settingsComplex 1;
+        };
     };
 
     nmt.script = ''

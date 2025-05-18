@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.services.batsignal;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ kranzes ];
 
   options = {
@@ -25,21 +31,19 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.batsignal" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.batsignal" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.batsignal = {
       Unit = {
         Description = "batsignal - battery monitor daemon";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
       Service = {
         Type = "simple";
-        ExecStart =
-          "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs}";
+        ExecStart = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs}";
         Restart = "on-failure";
         RestartSec = 1;
       };

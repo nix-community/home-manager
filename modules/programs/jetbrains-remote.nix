@@ -1,21 +1,17 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ config, lib, ... }:
 let
-
   cfg = config.programs.jetbrains-remote;
-
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ genericnerdyusername ];
 
   options.programs.jetbrains-remote = {
-    enable = mkEnableOption "JetBrains remote development system";
+    enable = lib.mkEnableOption "JetBrains remote development system";
 
-    ides = mkOption {
-      type = types.listOf types.package;
+    ides = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
       default = [ ];
-      example = literalExpression ''
+      example = lib.literalExpression ''
         with pkgs.jetbrains; [ clion pycharm-professional ];
       '';
       description = ''
@@ -24,15 +20,20 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.ides != [ ]) {
-    home.activation.jetBrainsRemote = let
-      mkLine = ide:
-        # Errors out if the symlink already exists
-        "${ide}/bin/${ide.meta.mainProgram}-remote-dev-server registerBackendLocationForGateway || true";
-      lines = map mkLine cfg.ides;
-      linesStr = ''
-        rm $HOME/.cache/JetBrains/RemoteDev/userProvidedDist/_nix_store*
-      '' + concatStringsSep "\n" lines;
-    in hm.dag.entryAfter [ "writeBoundary" ] linesStr;
+  config = lib.mkIf (cfg.enable && cfg.ides != [ ]) {
+    home.activation.jetBrainsRemote =
+      let
+        mkLine =
+          ide:
+          # Errors out if the symlink already exists
+          "${ide}/bin/${ide.meta.mainProgram}-remote-dev-server registerBackendLocationForGateway || true";
+        lines = map mkLine cfg.ides;
+        linesStr =
+          ''
+            rm $HOME/.cache/JetBrains/RemoteDev/userProvidedDist/_nix_store* || true
+          ''
+          + lib.concatStringsSep "\n" lines;
+      in
+      lib.hm.dag.entryAfter [ "writeBoundary" ] linesStr;
   };
 }

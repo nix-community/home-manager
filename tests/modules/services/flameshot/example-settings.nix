@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.flameshot = {
     enable = true;
@@ -12,17 +10,13 @@
     };
   };
 
-  test.stubs.flameshot = { };
-
   nmt.script = ''
     assertFileContent \
       home-files/.config/flameshot/flameshot.ini \
-      ${
-        builtins.toFile "expected.ini" ''
-          [General]
-          disabledTrayIcon=true
-          showStartupLaunchMessage=false
-        ''
-      }
+      ${builtins.toFile "expected.ini" ''
+        [General]
+        disabledTrayIcon=true
+        showStartupLaunchMessage=false
+      ''}
   '';
 }

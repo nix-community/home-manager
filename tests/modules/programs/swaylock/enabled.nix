@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   programs.swaylock = {
     enable = true;
     package = config.lib.test.mkStubPackage { };

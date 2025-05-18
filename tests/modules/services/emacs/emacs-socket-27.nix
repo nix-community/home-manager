@@ -7,15 +7,21 @@
         emacs = pkgs.writeShellScriptBin "dummy-emacs-27.2" "" // {
           outPath = "@emacs@";
         };
-        emacsPackagesFor = _:
-          lib.makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
+        emacsPackagesFor =
+          _:
+          lib.makeScope super.newScope (_: {
+            emacsWithPackages = _: emacs;
+          });
       })
     ];
 
     programs.emacs.enable = true;
     services.emacs.enable = true;
     services.emacs.client.enable = true;
-    services.emacs.extraOptions = [ "-f" "exwm-enable" ];
+    services.emacs.extraOptions = [
+      "-f"
+      "exwm-enable"
+    ];
     services.emacs.socketActivation.enable = true;
 
     nmt.script = ''
@@ -29,12 +35,17 @@
 
       assertFileContent \
         home-files/.config/systemd/user/emacs.service \
-        ${
-          pkgs.substituteAll {
-            inherit (pkgs) runtimeShell coreutils;
-            src = ./emacs-socket-27-emacs.service;
-          }
-        }
+        ${pkgs.substitute {
+          src = ./emacs-socket-27-emacs.service;
+          substitutions = [
+            "--replace"
+            "@runtimeShell@"
+            pkgs.runtimeShell
+            "--replace"
+            "@coreutils@"
+            pkgs.coreutils
+          ];
+        }}
 
       assertFileContent \
         home-path/share/applications/emacsclient.desktop \

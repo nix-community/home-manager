@@ -1,29 +1,33 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkEnableOption mkOption types;
 
   cfg = config.services.mpdris2;
 
-  toIni = generators.toINI {
-    mkKeyValue = key: value:
+  toIni = lib.generators.toINI {
+    mkKeyValue =
+      key: value:
       let
-        value' = if isBool value then
-          (if value then "True" else "False")
-        else
-          toString value;
-      in "${key} = ${value'}";
+        value' = if lib.isBool value then (if value then "True" else "False") else toString value;
+      in
+      "${key} = ${value'}";
   };
 
   mpdris2Conf = {
-    Connection = {
-      host = cfg.mpd.host;
-      port = cfg.mpd.port;
-      music_dir = cfg.mpd.musicDirectory;
-    } // optionalAttrs (cfg.mpd.password != null) {
-      password = cfg.mpd.password;
-    };
+    Connection =
+      {
+        host = cfg.mpd.host;
+        port = cfg.mpd.port;
+        music_dir = cfg.mpd.musicDirectory;
+      }
+      // lib.optionalAttrs (cfg.mpd.password != null) {
+        password = cfg.mpd.password;
+      };
 
     Bling = {
       notify = cfg.notifications;
@@ -31,8 +35,9 @@ let
     };
   };
 
-in {
-  meta.maintainers = [ maintainers.pjones ];
+in
+{
+  meta.maintainers = [ lib.maintainers.pjones ];
 
   options.services.mpdris2 = {
     enable = mkEnableOption "mpDris2 the MPD to MPRIS2 bridge";
@@ -42,7 +47,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.mpdris2;
-      defaultText = literalExpression "pkgs.mpdris2";
+      defaultText = lib.literalExpression "pkgs.mpdris2";
       description = "The mpDris2 package to use.";
     };
 
@@ -83,16 +88,17 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.mpdris2" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.mpdris2" pkgs lib.platforms.linux)
     ];
 
     xdg.configFile."mpDris2/mpDris2.conf".text = toIni mpdris2Conf;
 
     systemd.user.services.mpdris2 = {
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
 
       Unit = {
         Description = "MPRIS 2 support for MPD";

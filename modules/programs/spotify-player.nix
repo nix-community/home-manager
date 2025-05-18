@@ -1,19 +1,31 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
-  inherit (lib) mkEnableOption mkPackageOption mkOption literalExpression mkIf;
+  inherit (lib)
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    literalExpression
+    mkIf
+    ;
   inherit (lib.types) listOf;
 
   cfg = config.programs.spotify-player;
   tomlFormat = pkgs.formats.toml { };
   tomlType = tomlFormat.type;
-in {
+in
+{
   meta.maintainers = with lib.hm.maintainers; [ diniamo ];
 
   options.programs.spotify-player = {
     enable = mkEnableOption "spotify-player";
 
-    package = mkPackageOption pkgs "spotify-player" { };
+    package = mkPackageOption pkgs "spotify-player" { nullable = true; };
 
     settings = mkOption {
       type = tomlType;
@@ -162,7 +174,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "spotify-player/app.toml" = mkIf (cfg.settings != { }) {
@@ -170,8 +182,7 @@ in {
       };
 
       "spotify-player/theme.toml" = mkIf (cfg.themes != [ ]) {
-        source =
-          tomlFormat.generate "spotify-player-theme" { inherit (cfg) themes; };
+        source = tomlFormat.generate "spotify-player-theme" { inherit (cfg) themes; };
       };
 
       "spotify-player/keymap.toml" = mkIf (cfg.keymaps != [ ]) {

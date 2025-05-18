@@ -1,13 +1,10 @@
 { config, lib, ... }:
-
-with lib;
-
 {
   options.astroid = {
-    enable = mkEnableOption "Astroid";
+    enable = lib.mkEnableOption "Astroid";
 
-    sendMailCommand = mkOption {
-      type = types.str;
+    sendMailCommand = lib.mkOption {
+      type = lib.types.str;
       description = ''
         Command to send a mail. If msmtp is enabled for the account,
         then this is set to
@@ -15,18 +12,21 @@ with lib;
       '';
     };
 
-    extraConfig = mkOption {
-      type = types.attrsOf types.anything;
+    extraConfig = lib.mkOption {
+      type = lib.types.attrsOf lib.types.anything;
       default = { };
-      example = { select_query = ""; };
+      example = {
+        select_query = "";
+      };
       description = ''
         Extra settings to add to this astroid account configuration.
       '';
     };
   };
 
-  config = mkIf config.notmuch.enable {
-    astroid.sendMailCommand = mkIf config.msmtp.enable
-      (mkOptionDefault "msmtpq --read-envelope-from --read-recipients");
+  config = lib.mkIf config.notmuch.enable {
+    astroid.sendMailCommand = lib.mkIf config.msmtp.enable (
+      lib.mkOptionDefault "msmtpq --read-envelope-from --read-recipients"
+    );
   };
 }

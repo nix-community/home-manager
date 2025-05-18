@@ -1,7 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ lib, pkgs, ... }:
 {
   config = {
     programs.texlive.enable = true;
@@ -11,10 +8,11 @@ with lib;
       (self: super: {
         texlive = {
           collection-basic = pkgs.writeTextDir "collection-basic" "";
-          combine = tpkgs:
+          combine =
+            tpkgs:
             pkgs.symlinkJoin {
               name = "dummy-texlive-combine";
-              paths = attrValues tpkgs;
+              paths = lib.attrValues tpkgs;
             };
         };
       })

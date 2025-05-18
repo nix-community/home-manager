@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.translate-shell = {
     enable = true;
@@ -8,11 +6,12 @@
       engine = "bing";
       play = true;
       hl = "en";
-      tl = [ "de" "fr" ];
+      tl = [
+        "de"
+        "fr"
+      ];
     };
   };
-
-  test.stubs.translate-shell = { };
 
   nmt.script = ''
     assertFileContent home-files/.config/translate-shell/init.trans \

@@ -1,7 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ config, ... }:
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
 
@@ -17,9 +14,7 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/Mail/hm@example.com/.gmailieer.json
-      assertFileContent home-files/Mail/hm@example.com/.gmailieer.json ${
-        ./lieer-expected.json
-      }
+      assertFileContent home-files/Mail/hm@example.com/.gmailieer.json ${./lieer-expected.json}
     '';
   };
 }

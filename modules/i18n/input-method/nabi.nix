@@ -1,7 +1,14 @@
-{ config, pkgs, lib, ... }:
-
-with lib; {
-  config = mkIf (config.i18n.inputMethod.enabled == "nabi") {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  im = config.i18n.inputMethod;
+in
+{
+  config = lib.mkIf (im.enable && im.type == "nabi") {
     i18n.inputMethod.package = pkgs.nabi;
 
     home.sessionVariables = {

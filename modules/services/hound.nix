@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.hound;
 
@@ -15,13 +18,17 @@ let
     health-check-url = "/healthz";
   };
 
-  houndOptions = [ "--addr ${cfg.listenAddress}" "--conf ${configFile}" ];
+  houndOptions = [
+    "--addr ${cfg.listenAddress}"
+    "--conf ${configFile}"
+  ];
 
-in {
-  meta.maintainers = [ maintainers.adisbladis ];
+in
+{
+  meta.maintainers = [ lib.maintainers.adisbladis ];
 
   options.services.hound = {
-    enable = mkEnableOption "hound";
+    enable = lib.mkEnableOption "hound";
 
     maxConcurrentIndexers = mkOption {
       type = types.ints.positive;
@@ -45,7 +52,7 @@ in {
     repositories = mkOption {
       type = types.attrsOf jsonFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           SomeGitRepo = {
             url = "https://www.github.com/YourOrganization/RepoOne.git";
@@ -58,23 +65,32 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.hound" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.hound" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ pkgs.hound ];
 
     systemd.user.services.hound = {
-      Unit = { Description = "Hound source code search engine"; };
+      Unit = {
+        Description = "Hound source code search engine";
+      };
 
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
 
       Service = {
-        Environment = [ "PATH=${makeBinPath [ pkgs.mercurial pkgs.git ]}" ];
-        ExecStart =
-          "${pkgs.hound}/bin/houndd ${concatStringsSep " " houndOptions}";
+        Environment = [
+          "PATH=${
+            lib.makeBinPath [
+              pkgs.mercurial
+              pkgs.git
+            ]
+          }"
+        ];
+        ExecStart = "${pkgs.hound}/bin/houndd ${lib.concatStringsSep " " houndOptions}";
       };
     };
   };

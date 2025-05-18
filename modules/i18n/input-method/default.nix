@@ -1,35 +1,76 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-
   cfg = config.i18n.inputMethod;
 
-  gtk2Cache = pkgs.runCommandLocal "gtk2-immodule.cache" {
-    buildInputs = [ pkgs.gtk2 cfg.package ];
-  } ''
-    mkdir -p $out/etc/gtk-2.0/
-    GTK_PATH=${cfg.package}/lib/gtk-2.0/ \
-      gtk-query-immodules-2.0 > $out/etc/gtk-2.0/immodules.cache
-  '';
+  allowedTypes = lib.types.enum [
+    "fcitx"
+    "fcitx5"
+    "nabi"
+    "uim"
+    "hime"
+    "kime"
+  ];
 
-  gtk3Cache = pkgs.runCommandLocal "gtk3-immodule.cache" {
-    buildInputs = [ pkgs.gtk3 cfg.package ];
-  } ''
-    mkdir -p $out/etc/gtk-3.0/
-    GTK_PATH=${cfg.package}/lib/gtk-3.0/ \
-      gtk-query-immodules-3.0 > $out/etc/gtk-3.0/immodules.cache
-  '';
+  gtk2Cache =
+    pkgs.runCommandLocal "gtk2-immodule.cache"
+      {
+        buildInputs = [
+          pkgs.gtk2
+          cfg.package
+        ];
+      }
+      ''
+        mkdir -p $out/etc/gtk-2.0/
+        GTK_PATH=${cfg.package}/lib/gtk-2.0/ \
+          gtk-query-immodules-2.0 > $out/etc/gtk-2.0/immodules.cache
+      '';
 
-in {
-  imports = [ ./fcitx5.nix ./hime.nix ./kime.nix ./nabi.nix ./uim.nix ];
+  gtk3Cache =
+    pkgs.runCommandLocal "gtk3-immodule.cache"
+      {
+        buildInputs = [
+          pkgs.gtk3
+          cfg.package
+        ];
+      }
+      ''
+        mkdir -p $out/etc/gtk-3.0/
+        GTK_PATH=${cfg.package}/lib/gtk-3.0/ \
+          gtk-query-immodules-3.0 > $out/etc/gtk-3.0/immodules.cache
+      '';
+in
+{
+  imports = [
+    ./fcitx5.nix
+    ./hime.nix
+    ./kime.nix
+    ./nabi.nix
+    ./uim.nix
+  ];
 
   options.i18n = {
     inputMethod = {
-      enabled = mkOption {
-        type = types.nullOr
-          (types.enum [ "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" ]);
+      enable = lib.mkEnableOption "an additional input method type" // {
+        default = cfg.enabled != null;
+        defaultText = lib.literalMD "`true` if the deprecated option `enabled` is set, false otherwise";
+      };
+
+      enabled = lib.mkOption {
+        type = lib.types.nullOr allowedTypes;
         default = null;
+        example = "fcitx5";
+        description = "Deprecated - use `type` and `enable = true` instead";
+      };
+
+      type = lib.mkOption {
+        type = lib.types.nullOr allowedTypes;
+        default = cfg.enabled;
+        defaultText = lib.literalMD "The value of the deprecated option `enabled`, defaulting to null";
         example = "fcitx5";
         description = ''
           Select the enabled input method. Input methods are software to input
@@ -61,9 +102,9 @@ in {
         '';
       };
 
-      package = mkOption {
+      package = lib.mkOption {
         internal = true;
-        type = types.nullOr types.path;
+        type = lib.types.nullOr lib.types.path;
         default = null;
         description = ''
           The input method method package.
@@ -72,17 +113,28 @@ in {
     };
   };
 
-  config = mkIf (cfg.enabled != null) {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "i18n.inputMethod" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "i18n.inputMethod" pkgs lib.platforms.linux)
       {
         assertion = cfg.enabled != "fcitx";
         message = "fcitx has been removed, please use fcitx5 instead";
       }
     ];
 
-    home.packages = [ cfg.package gtk2Cache gtk3Cache ];
+    warnings =
+      lib.optional (cfg.enabled != null)
+        "i18n.inputMethod.enabled will be removed in a future release. Please use .type, and .enable = true instead";
+
+    home.packages = [
+      cfg.package
+      gtk2Cache
+      gtk3Cache
+    ];
   };
 
-  meta.maintainers = with lib; [ hm.maintainers.kranzes ];
+  meta.maintainers = [
+    lib.hm.maintainers.kranzes
+    lib.maintainers.awwpotato
+  ];
 }

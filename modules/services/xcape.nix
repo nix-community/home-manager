@@ -1,19 +1,26 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib)
+    types
+    ;
 
   cfg = config.services.xcape;
 
-in {
-  meta.maintainers = [ maintainers.nickhu ];
+in
+{
+  meta.maintainers = [ lib.maintainers.nickhu ];
 
   options = {
     services.xcape = {
-      enable = mkEnableOption "xcape";
+      enable = lib.mkEnableOption "xcape";
 
-      timeout = mkOption {
+      timeout = lib.mkOption {
         type = types.nullOr types.int;
         default = null;
         example = 500;
@@ -23,7 +30,7 @@ in {
         '';
       };
 
-      mapExpression = mkOption {
+      mapExpression = lib.mkOption {
         type = types.attrsOf types.str;
         default = { };
         example = {
@@ -50,35 +57,41 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.xcape" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.xcape" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.xcape = {
-      Unit = mkMerge [
+      Unit = lib.mkMerge [
         {
           Description = "xcape";
-          After = [ "graphical-session-pre.target" ];
+          After = [ "graphical-session.target" ];
           PartOf = [ "graphical-session.target" ];
         }
-        (mkIf (config.home.keyboard != null && config.home.keyboard != { }) {
-          After = [ "graphical-session-pre.target" "setxkbmap.service" ];
+        (lib.mkIf (config.home.keyboard != null && config.home.keyboard != { }) {
+          After = [
+            "graphical-session.target"
+            "setxkbmap.service"
+          ];
         })
       ];
 
       Service = {
         Type = "forking";
-        ExecStart = "${pkgs.xcape}/bin/xcape"
-          + optionalString (cfg.timeout != null) " -t ${toString cfg.timeout}"
-          + optionalString (cfg.mapExpression != { }) " -e '${
-             builtins.concatStringsSep ";"
-             (attrsets.mapAttrsToList (n: v: "${n}=${v}") cfg.mapExpression)
-           }'";
+        ExecStart =
+          "${pkgs.xcape}/bin/xcape"
+          + lib.optionalString (cfg.timeout != null) " -t ${toString cfg.timeout}"
+          +
+            lib.optionalString (cfg.mapExpression != { })
+              " -e '${
+                 builtins.concatStringsSep ";" (lib.attrsets.mapAttrsToList (n: v: "${n}=${v}") cfg.mapExpression)
+               }'";
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

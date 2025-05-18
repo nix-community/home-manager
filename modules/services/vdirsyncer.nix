@@ -1,26 +1,32 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib) mkOption optional types;
 
   cfg = config.services.vdirsyncer;
 
-  vdirsyncerOptions = [ ]
+  vdirsyncerOptions =
+    [ ]
     ++ optional (cfg.verbosity != null) "--verbosity ${cfg.verbosity}"
     ++ optional (cfg.configFile != null) "--config ${cfg.configFile}";
 
-in {
-  meta.maintainers = [ maintainers.pjones ];
+in
+{
+  meta.maintainers = [ lib.maintainers.pjones ];
 
   options.services.vdirsyncer = {
-    enable = mkEnableOption "vdirsyncer";
+    enable = lib.mkEnableOption "vdirsyncer";
 
     package = mkOption {
       type = types.package;
       default = pkgs.vdirsyncer;
       defaultText = "pkgs.vdirsyncer";
-      example = literalExpression "pkgs.vdirsyncer";
+      example = lib.literalExpression "pkgs.vdirsyncer";
       description = "The package to use for the vdirsyncer binary.";
     };
 
@@ -36,8 +42,15 @@ in {
     };
 
     verbosity = mkOption {
-      type = types.nullOr
-        (types.enum [ "CRITICAL" "ERROR" "WARNING" "INFO" "DEBUG" ]);
+      type = types.nullOr (
+        types.enum [
+          "CRITICAL"
+          "ERROR"
+          "WARNING"
+          "INFO"
+          "DEBUG"
+        ]
+      );
       default = null;
       description = ''
         Whether vdirsyncer should produce verbose output.
@@ -54,7 +67,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.user.services.vdirsyncer = {
       Unit = {
         Description = "vdirsyncer calendar&contacts synchronization";
@@ -64,23 +77,30 @@ in {
       Service = {
         Type = "oneshot";
         # TODO `vdirsyncer discover`
-        ExecStart = let optStr = concatStringsSep " " vdirsyncerOptions;
-        in [
-          "${cfg.package}/bin/vdirsyncer ${optStr} metasync"
-          "${cfg.package}/bin/vdirsyncer ${optStr} sync"
-        ];
+        ExecStart =
+          let
+            optStr = lib.concatStringsSep " " vdirsyncerOptions;
+          in
+          [
+            "${cfg.package}/bin/vdirsyncer ${optStr} metasync"
+            "${cfg.package}/bin/vdirsyncer ${optStr} sync"
+          ];
       };
     };
 
     systemd.user.timers.vdirsyncer = {
-      Unit = { Description = "vdirsyncer calendar&contacts synchronization"; };
+      Unit = {
+        Description = "vdirsyncer calendar&contacts synchronization";
+      };
 
       Timer = {
         OnCalendar = cfg.frequency;
         Unit = "vdirsyncer.service";
       };
 
-      Install = { WantedBy = [ "timers.target" ]; };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
   };
 }

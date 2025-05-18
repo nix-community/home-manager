@@ -10,10 +10,9 @@
   };
 
   # Needed to avoid error with dummy fish package.
-  xdg.dataFile."fish/home-manager_generated_completions".source =
-    lib.mkForce (builtins.toFile "empty" "");
-
-  test.stubs.scmpuff = { };
+  xdg.dataFile."fish/home-manager_generated_completions".source = lib.mkForce (
+    builtins.toFile "empty" ""
+  );
 
   nmt.script = ''
     assertFileExists home-files/.bashrc

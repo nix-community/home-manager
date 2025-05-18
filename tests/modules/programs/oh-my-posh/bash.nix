@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs = {
     bash.enable = true;
@@ -9,8 +7,6 @@
       useTheme = "jandedobbeleer";
     };
   };
-
-  test.stubs.oh-my-posh = { };
 
   nmt.script = ''
     assertFileExists home-files/.bashrc

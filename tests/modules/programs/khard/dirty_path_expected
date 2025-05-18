@@ -1,6 +1,6 @@
 [addressbooks]
-[[forward]]
-path = /home/user/who/likes/forward/slashes/a/lot
+[[kebap-case-named-abook]]
+path = /home/user/who/likes/kebap-case/named-abook
 
 
 [general]

@@ -1,10 +1,10 @@
 { pkgs, lib, ... }:
-
-with lib;
-
+let
+  inherit (lib) mkOption types;
+in
 {
   options.imapnotify = {
-    enable = mkEnableOption "imapnotify";
+    enable = lib.mkEnableOption "imapnotify";
 
     onNotify = mkOption {
       type = with types; either str (attrsOf str);
@@ -17,8 +17,7 @@ with lib;
       type = with types; either str (attrsOf str);
       default = "";
       example = {
-        mail =
-          "\${pkgs.notmuch}/bin/notmuch new && \${pkgs.libnotify}/bin/notify-send 'New mail arrived'";
+        mail = "\${pkgs.notmuch}/bin/notmuch new && \${pkgs.libnotify}/bin/notify-send 'New mail arrived'";
       };
       description = "Shell commands to run after onNotify event.";
     };
@@ -26,14 +25,27 @@ with lib;
     boxes = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "Inbox" "[Gmail]/MyLabel" ];
+      example = [
+        "Inbox"
+        "[Gmail]/MyLabel"
+      ];
       description = "IMAP folders to watch.";
     };
 
+    extraArgs = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "-wait 1" ];
+      description = "Extra arguments to pass to goimapnotify.";
+    };
+
     extraConfig = mkOption {
-      type = let jsonFormat = pkgs.formats.json { }; in jsonFormat.type;
+      type =
+        let
+          jsonFormat = pkgs.formats.json { };
+        in
+        jsonFormat.type;
       default = { };
-      example = { wait = 10; };
       description = "Additional configuration to add for this account.";
     };
   };

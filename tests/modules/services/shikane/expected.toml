@@ -1,0 +1,21 @@
+[[profile]]
+name = "external-monitor-default"
+
+[[profile.output]]
+enable = true
+match = "eDP-1"
+
+[[profile.output]]
+enable = true
+match = "HDMI-A-1"
+
+[profile.output.position]
+x = 1920
+y = 0
+
+[[profile]]
+name = "builtin"
+
+[[profile.output]]
+enable = true
+match = "eDP-1"

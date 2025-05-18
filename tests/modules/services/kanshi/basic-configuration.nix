@@ -1,17 +1,23 @@
-{ config, pkgs, ... }: {
+{ config, ... }:
+{
   config = {
     services.kanshi = {
       enable = true;
       package = config.lib.test.mkStubPackage { };
       profiles = {
         nomad = {
-          outputs = [{
-            criteria = "eDP-1";
-            status = "enable";
-          }];
+          outputs = [
+            {
+              criteria = "eDP-1";
+              status = "enable";
+            }
+          ];
         };
         desktop = {
-          exec = [ ''echo "1 two 3"'' ''echo "4 five 6"'' ];
+          exec = [
+            ''echo "1 two 3"''
+            ''echo "4 five 6"''
+          ];
           outputs = [
             {
               criteria = "eDP-1";
@@ -33,10 +39,12 @@
           ];
         };
         backwardsCompat = {
-          outputs = [{
-            criteria = "LVDS-1";
-            status = "enable";
-          }];
+          outputs = [
+            {
+              criteria = "LVDS-1";
+              status = "enable";
+            }
+          ];
           exec = ''echo "7 eight 9"'';
         };
       };

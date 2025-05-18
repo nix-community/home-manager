@@ -1,17 +1,23 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let cfg = config.programs.less;
-in {
-  meta.maintainers = [ maintainers.pamplemousse ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.less;
+in
+{
+  meta.maintainers = [ lib.maintainers.pamplemousse ];
 
   options = {
     programs.less = {
-      enable = mkEnableOption "less, opposite of more";
+      enable = lib.mkEnableOption "less, opposite of more";
 
-      keys = mkOption {
-        type = types.lines;
+      package = lib.mkPackageOption pkgs "less" { nullable = true; };
+
+      keys = lib.mkOption {
+        type = lib.types.lines;
         default = "";
         example = ''
           s        back-line
@@ -25,8 +31,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ pkgs.less ];
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
     xdg.configFile."lesskey".text = cfg.keys;
   };
 }

@@ -1,18 +1,26 @@
-{ pkgs, config, lib, ... }:
-
-with lib;
-
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
+
   cfg = config.services.pass-secret-service;
 
   busName = "org.freedesktop.secrets";
-in {
-  meta.maintainers = with maintainers; [ cab404 cyntheticfox ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    cab404
+    cyntheticfox
+  ];
 
   options.services.pass-secret-service = {
-    enable = mkEnableOption "Pass libsecret service";
+    enable = lib.mkEnableOption "Pass libsecret service";
 
-    package = mkPackageOption pkgs "pass-secret-service" { };
+    package = lib.mkPackageOption pkgs "pass-secret-service" { };
 
     storePath = mkOption {
       type = with types; nullOr str;
@@ -28,10 +36,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.pass-secret-service" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.pass-secret-service" pkgs lib.platforms.linux)
       {
         assertion = !config.services.gnome-keyring.enable;
         message = ''
@@ -43,8 +50,10 @@ in {
     ];
 
     systemd.user.services.pass-secret-service =
-      let binPath = "${cfg.package}/bin/pass_secret_service";
-      in {
+      let
+        binPath = "${cfg.package}/bin/pass_secret_service";
+      in
+      {
         Unit = {
           AssertFileIsExecutable = "${binPath}";
           Description = "Pass libsecret service";
@@ -54,9 +63,7 @@ in {
 
         Service = {
           Type = "dbus";
-          ExecStart = "${binPath} ${
-              optionalString (cfg.storePath != null) "--path ${cfg.storePath}"
-            }";
+          ExecStart = "${binPath} ${lib.optionalString (cfg.storePath != null) "--path ${cfg.storePath}"}";
           BusName = busName;
           Environment = [ "GNUPGHOME=${config.programs.gpg.homedir}" ];
         };

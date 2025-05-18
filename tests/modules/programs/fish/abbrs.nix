@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   config = {
     programs.fish = {
       enable = true;
@@ -34,6 +35,17 @@
             end
           '';
         };
+        co = {
+          command = "git";
+          expansion = "checkout";
+        };
+        s = {
+          command = [
+            "git"
+            "hg"
+          ];
+          expansion = "status";
+        };
         dotdot = {
           regex = "^\\.\\.+$";
           function = "multicd";
@@ -42,8 +54,7 @@
     };
 
     nmt = {
-      description =
-        "if fish.shellAbbrs is set, check fish.config contains valid abbreviations";
+      description = "if fish.shellAbbrs is set, check fish.config contains valid abbreviations";
       script = ''
         assertFileContains home-files/.config/fish/config.fish \
           "abbr --add -- l less"
@@ -64,6 +75,10 @@
           cd ..
         end
         '"
+        assertFileContains home-files/.config/fish/config.fish \
+          "abbr --add --command git -- co checkout"
+        assertFileContains home-files/.config/fish/config.fish \
+          "abbr --add --command git --command hg -- s status"
         assertFileContains home-files/.config/fish/config.fish \
           "abbr --add --function multicd --regex '^\.\.+$' -- dotdot"
       '';

@@ -1,43 +1,55 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
-
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.gradle;
   defaultHomeDirectory = ".gradle";
   settingsFormat = pkgs.formats.javaProperties { };
 
-  initScript = types.submodule ({ name, config, ... }: {
-    options = {
-      text = mkOption {
-        type = types.nullOr types.lines;
-        default = null;
-        description = ''
-          Text of the init script file. if this option is null
-          then `source` must be set.
-        '';
+  initScript = types.submodule (
+    { name, config, ... }:
+    {
+      options = {
+        text = mkOption {
+          type = types.nullOr types.lines;
+          default = null;
+          description = ''
+            Text of the init script file. if this option is null
+            then `source` must be set.
+          '';
+        };
+
+        source = mkOption {
+          type = types.path;
+          description = ''
+            Path of the init script file. If
+            `text` is non-null then this option will automatically point
+            to a file containing that text.
+          '';
+        };
       };
 
-      source = mkOption {
-        type = types.path;
-        description = ''
-          Path of the init script file. If
-          `text` is non-null then this option will automatically point
-          to a file containing that text.
-        '';
-      };
-    };
-
-    config.source = mkIf (config.text != null) (mkDefault (pkgs.writeTextFile {
-      inherit (config) text;
-      name = hm.strings.storeFileName name;
-    }));
-  });
-in {
-  meta.maintainers = [ hm.maintainers.britter ];
+      config.source = mkIf (config.text != null) (
+        lib.mkDefault (
+          pkgs.writeTextFile {
+            inherit (config) text;
+            name = lib.hm.strings.storeFileName name;
+          }
+        )
+      );
+    }
+  );
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.britter ];
 
   options.programs.gradle = {
-    enable = mkEnableOption "Gradle Build Tool";
+    enable = lib.mkEnableOption "Gradle Build Tool";
 
     home = mkOption {
       type = types.str;
@@ -50,12 +62,15 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "gradle" { example = "pkgs.gradle_7"; };
+    package = lib.mkPackageOption pkgs "gradle" {
+      nullable = true;
+      example = "pkgs.gradle_7";
+    };
 
     settings = mkOption {
       type = types.submodule { freeformType = settingsFormat.type; };
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           "org.gradle.caching" = true;
           "org.gradle.parallel" = true;
@@ -72,7 +87,7 @@ in {
     initScripts = mkOption {
       type = with types; attrsOf initScript;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           "maven-local.gradle".text = '''
               allProject {
@@ -93,20 +108,26 @@ in {
     };
   };
 
-  config = let gradleHome = "${config.home.homeDirectory}/${cfg.home}";
-  in mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config =
+    let
+      gradleHome = "${config.home.homeDirectory}/${cfg.home}";
+    in
+    mkIf cfg.enable {
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file = mkMerge ([{
-      "${cfg.home}/gradle.properties" = mkIf (cfg.settings != { }) {
-        source = settingsFormat.generate "gradle.properties" cfg.settings;
+      home.file = lib.mkMerge (
+        [
+          {
+            "${cfg.home}/gradle.properties" = mkIf (cfg.settings != { }) {
+              source = settingsFormat.generate "gradle.properties" cfg.settings;
+            };
+          }
+        ]
+        ++ lib.mapAttrsToList (k: v: { "${cfg.home}/init.d/${k}".source = v.source; }) cfg.initScripts
+      );
+
+      home.sessionVariables = mkIf (cfg.home != defaultHomeDirectory) {
+        GRADLE_USER_HOME = gradleHome;
       };
-    }]
-      ++ mapAttrsToList (k: v: { "${cfg.home}/init.d/${k}".source = v.source; })
-      cfg.initScripts);
-
-    home.sessionVariables = mkIf (cfg.home != defaultHomeDirectory) {
-      GRADLE_USER_HOME = gradleHome;
     };
-  };
 }

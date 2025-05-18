@@ -1,17 +1,24 @@
-{ config, lib, pkgs, ... }:
-with lib;
-let cfg = config.services.clipman;
-in {
-  meta.maintainers = [ maintainers.jwygoda ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.services.clipman;
+in
+{
+  meta.maintainers = [ lib.maintainers.jwygoda ];
 
   options.services.clipman = {
-    enable = mkEnableOption "clipman, a simple clipboard manager for Wayland";
+    enable = lib.mkEnableOption "clipman, a simple clipboard manager for Wayland";
 
-    package = mkPackageOption pkgs "clipman" { };
+    package = lib.mkPackageOption pkgs "clipman" { };
 
-    systemdTarget = mkOption {
-      type = types.str;
-      default = "graphical-session.target";
+    systemdTarget = lib.mkOption {
+      type = lib.types.str;
+      default = config.wayland.systemd.target;
+      defaultText = lib.literalExpression "config.wayland.systemd.target";
       example = "sway-session.target";
       description = ''
         The systemd target that will automatically start the clipman service.
@@ -23,10 +30,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.clipman" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.clipman" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -34,19 +40,21 @@ in {
     systemd.user.services.clipman = {
       Unit = {
         Description = "Clipboard management daemon";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
+        PartOf = [ cfg.systemdTarget ];
+        After = [ cfg.systemdTarget ];
+        ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
       Service = {
-        ExecStart =
-          "${pkgs.wl-clipboard}/bin/wl-paste -t text --watch ${cfg.package}/bin/clipman store";
+        ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste -t text --watch ${cfg.package}/bin/clipman store";
         ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
         Restart = "on-failure";
         KillMode = "mixed";
       };
 
-      Install = { WantedBy = [ cfg.systemdTarget ]; };
+      Install = {
+        WantedBy = [ cfg.systemdTarget ];
+      };
     };
   };
 }

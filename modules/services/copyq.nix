@@ -1,15 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.services.copyq;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.DamienCassou ];
 
   options.services.copyq = {
-    enable =
-      lib.mkEnableOption "CopyQ, a clipboard manager with advanced features";
+    enable = lib.mkEnableOption "CopyQ, a clipboard manager with advanced features";
 
     package = lib.mkPackageOption pkgs "copyq" { };
 
@@ -25,12 +30,18 @@ in {
         otherwise the service may never be started.
       '';
     };
+
+    forceXWayland = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      example = false;
+      description = "Force the CopyQ to use the X backend on wayland";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.copyq" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.copyq" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -45,10 +56,12 @@ in {
       Service = {
         ExecStart = "${cfg.package}/bin/copyq";
         Restart = "on-failure";
-        Environment = [ "QT_QPA_PLATFORM=xcb" ];
+        Environment = lib.optional cfg.forceXWayland "QT_QPA_PLATFORM=xcb";
       };
 
-      Install = { WantedBy = [ cfg.systemdTarget ]; };
+      Install = {
+        WantedBy = [ cfg.systemdTarget ];
+      };
     };
   };
 }

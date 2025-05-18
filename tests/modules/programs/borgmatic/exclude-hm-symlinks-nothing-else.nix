@@ -1,11 +1,6 @@
-{ config, pkgs, ... }:
+{ realPkgs, ... }:
 
-let
-
-  backups = config.programs.borgmatic.backups;
-  excludeFile = builtins.toFile "excludeFile.txt" "/foo/bar";
-
-in {
+{
   programs.borgmatic = {
     enable = true;
     backups = {
@@ -19,13 +14,11 @@ in {
     };
   };
 
-  test.stubs.borgmatic = { };
-
   nmt.script = ''
     config_file=$TESTED/home-files/.config/borgmatic.d/main.yaml
     assertFileExists $config_file
 
-    yq=${pkgs.yq-go}/bin/yq
+    yq=${realPkgs.yq-go}/bin/yq
 
     hmExclusionsFile=$($yq '.exclude_from[0]' $config_file)
     expected_content='/home/hm-user/.config/borgmatic.d/main.yaml'

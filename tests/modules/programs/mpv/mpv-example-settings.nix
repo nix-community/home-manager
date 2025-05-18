@@ -1,8 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  ...
+}:
 
 {
-  imports = [ ./mpv-stubs.nix ];
-
   programs.mpv = {
     enable = true;
 
@@ -15,6 +16,8 @@
     extraInput = ''
       #           script-binding uosc/video                   #! Video tracks
     '';
+
+    includes = [ "manual.conf" ];
 
     config = {
       force-window = true;
@@ -31,7 +34,9 @@
     };
 
     profiles = {
-      fast = { vo = "vdpau"; };
+      fast = {
+        vo = "vdpau";
+      };
       "protocol.dvd" = {
         profile-desc = "profile for dvd:// streams";
         alang = "en";

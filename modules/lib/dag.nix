@@ -9,13 +9,23 @@
 
 { lib }:
 
-let inherit (lib) all filterAttrs head hm mapAttrs length tail toposort;
-in {
+let
+  inherit (lib)
+    all
+    filterAttrs
+    head
+    hm
+    mapAttrs
+    length
+    tail
+    toposort
+    ;
+in
+{
   empty = { };
 
   isEntry = e: e ? data && e ? after && e ? before;
-  isDag = dag:
-    builtins.isAttrs dag && all hm.dag.isEntry (builtins.attrValues dag);
+  isDag = dag: builtins.isAttrs dag && all hm.dag.isEntry (builtins.attrValues dag);
 
   # Takes an attribute set containing entries built by entryAnywhere,
   # entryAfter, and entryBefore to a topologically sorted list of
@@ -73,11 +83,10 @@ in {
   #                ];
   #              }
   #    true
-  topoSort = dag:
+  topoSort =
+    dag:
     let
-      dagBefore = dag: name:
-        builtins.attrNames
-        (filterAttrs (n: v: builtins.elem name v.before) dag);
+      dagBefore = dag: name: builtins.attrNames (filterAttrs (n: v: builtins.elem name v.before) dag);
       normalizedDag = mapAttrs (n: v: {
         name = n;
         data = v.data;
@@ -85,9 +94,12 @@ in {
       }) dag;
       before = a: b: builtins.elem a.name b.after;
       sorted = toposort before (builtins.attrValues normalizedDag);
-    in if sorted ? result then {
-      result = map (v: { inherit (v) name data; }) sorted.result;
-    } else
+    in
+    if sorted ? result then
+      {
+        result = map (v: { inherit (v) name data; }) sorted.result;
+      }
+    else
       sorted;
 
   # Applies a function to each element of the given DAG.
@@ -107,21 +119,27 @@ in {
   #
   # The entries as a whole can be given a relation to other DAG nodes. All
   # generated nodes are then placed before or after those dependencies.
-  entriesBetween = tag:
+  entriesBetween =
+    tag:
     let
-      go = i: before: after: entries:
+      go =
+        i: before: after: entries:
         let
           name = "${tag}-${toString i}";
-          i' = i + 1;
-        in if entries == [ ] then
+        in
+        if entries == [ ] then
           hm.dag.empty
-        else if length entries == 1 then {
-          "${name}" = hm.dag.entryBetween before after (head entries);
-        } else
+        else if length entries == 1 then
+          {
+            "${name}" = hm.dag.entryBetween before after (head entries);
+          }
+        else
           {
             "${name}" = hm.dag.entryAfter after (head entries);
-          } // go (i + 1) before [ name ] (tail entries);
-    in go 0;
+          }
+          // go (i + 1) before [ name ] (tail entries);
+    in
+    go 0;
 
   entriesAnywhere = tag: hm.dag.entriesBetween tag [ ] [ ];
   entriesAfter = tag: hm.dag.entriesBetween tag [ ];

@@ -1,38 +1,47 @@
-{ config, name, extendModules, lib, ... }:
-
-with lib;
+{
+  config,
+  name,
+  extendModules,
+  lib,
+  ...
+}:
 
 {
-  imports =
-    [ (mkRenamedOptionModule [ "specialization" ] [ "specialisation" ]) ];
+  imports = [ (lib.mkRenamedOptionModule [ "specialization" ] [ "specialisation" ]) ];
 
-  options.specialisation = mkOption {
-    type = types.attrsOf (types.submodule {
-      options = {
-        configuration = mkOption {
-          type = let
-            extended = extendModules {
-              modules = [{
-                # Prevent infinite recursion
-                specialisation = mkOverride 0 { };
+  options.specialisation = lib.mkOption {
+    type = lib.types.attrsOf (
+      lib.types.submodule {
+        options = {
+          configuration = lib.mkOption {
+            type =
+              let
+                extended = extendModules {
+                  modules = [
+                    {
+                      # Prevent infinite recursion
+                      specialisation = lib.mkOverride 0 { };
 
-                # If used inside the NixOS/nix-darwin module, we get conflicting definitions
-                # of `name` inside the specialisation: one is the user name coming from the
-                # NixOS module definition and the other is `configuration`, the name of this
-                # option. Thus we need to explicitly wire the former into the module arguments.
-                # See discussion at https://github.com/nix-community/home-manager/issues/3716
-                _module.args.name = mkForce name;
-              }];
-            };
-          in extended.type;
-          default = { };
-          visible = "shallow";
-          description = ''
-            Arbitrary Home Manager configuration settings.
-          '';
+                      # If used inside the NixOS/nix-darwin module, we get conflicting definitions
+                      # of `name` inside the specialisation: one is the user name coming from the
+                      # NixOS module definition and the other is `configuration`, the name of this
+                      # option. Thus we need to explicitly wire the former into the module arguments.
+                      # See discussion at https://github.com/nix-community/home-manager/issues/3716
+                      _module.args.name = lib.mkForce name;
+                    }
+                  ];
+                };
+              in
+              extended.type;
+            default = { };
+            visible = "shallow";
+            description = ''
+              Arbitrary Home Manager configuration settings.
+            '';
+          };
         };
-      };
-    });
+      }
+    );
     default = { };
     description = ''
       A set of named specialized configurations. These can be used to extend
@@ -70,14 +79,24 @@ with lib;
     '';
   };
 
-  config = mkIf (config.specialisation != { }) {
-    home.extraBuilderCommands = let
-      link = n: v:
-        let pkg = v.configuration.home.activationPackage;
-        in "ln -s ${pkg} $out/specialisation/${n}";
-    in ''
-      mkdir $out/specialisation
-      ${concatStringsSep "\n" (mapAttrsToList link config.specialisation)}
-    '';
+  config = lib.mkIf (config.specialisation != { }) {
+    assertions = map (n: {
+      assertion = !lib.hasInfix "/" n;
+      message = "<name> in specialisation.<name> cannot contain a forward slash.";
+    }) (lib.attrNames config.specialisation);
+
+    home.extraBuilderCommands =
+      let
+        link =
+          n: v:
+          let
+            pkg = v.configuration.home.activationPackage;
+          in
+          "ln -s ${pkg} $out/specialisation/${lib.escapeShellArg n}";
+      in
+      ''
+        mkdir $out/specialisation
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList link config.specialisation)}
+      '';
   };
 }

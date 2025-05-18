@@ -1,51 +1,56 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.tealdeer;
 
-  configDir = if pkgs.stdenv.isDarwin then
-    "Library/Application Support"
-  else
-    config.xdg.configHome;
+  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else config.xdg.configHome;
 
   tomlFormat = pkgs.formats.toml { };
 
-  settingsFormat = let
-    updatesSection = types.submodule {
-      options = {
-        auto_update = mkEnableOption "auto-update";
+  settingsFormat =
+    let
+      updatesSection = types.submodule {
+        options = {
+          auto_update = lib.mkEnableOption "auto-update";
 
-        auto_update_interval_hours = mkOption {
-          type = types.ints.positive;
-          default = 720;
-          example = literalExpression "24";
+          auto_update_interval_hours = mkOption {
+            type = types.ints.positive;
+            default = 720;
+            example = lib.literalExpression "24";
+            description = ''
+              Duration, since the last cache update, after which the cache will be refreshed.
+              This parameter is ignored if {var}`auto_update` is set to `false`.
+            '';
+          };
+        };
+      };
+    in
+    types.submodule {
+      freeformType = tomlFormat.type;
+      options = {
+        updates = mkOption {
+          type = updatesSection;
+          default = { };
           description = ''
-            Duration, since the last cache update, after which the cache will be refreshed.
-            This parameter is ignored if {var}`auto_update` is set to `false`.
+            Tealdeer can refresh the cache automatically when it is outdated.
+            This behavior can be configured in the updates section.
           '';
         };
       };
     };
-  in types.submodule {
-    freeformType = tomlFormat.type;
-    options = {
-      updates = mkOption {
-        type = updatesSection;
-        default = { };
-        description = ''
-          Tealdeer can refresh the cache automatically when it is outdated.
-          This behavior can be configured in the updates section.
-        '';
-      };
-    };
-  };
 
-in {
-  meta.maintainers = [ hm.maintainers.pedorich-n ];
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.pedorich-n ];
 
   imports = [
-    (mkRemovedOptionModule [ "programs" "tealdeer" "updateOnActivation" ] ''
+    (lib.mkRemovedOptionModule [ "programs" "tealdeer" "updateOnActivation" ] ''
       Updating tealdeer's cache requires network access.
       The activation script should be fast and idempotent, so the option was removed.
       Please use
@@ -57,12 +62,14 @@ in {
   ];
 
   options.programs.tealdeer = {
-    enable = mkEnableOption "Tealdeer";
+    enable = lib.mkEnableOption "Tealdeer";
+
+    package = lib.mkPackageOption pkgs "tealdeer" { };
 
     settings = mkOption {
       type = types.nullOr settingsFormat;
       default = null;
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           display = {
             compact = false;
@@ -77,17 +84,26 @@ in {
         Configuration written to
         {file}`$XDG_CONFIG_HOME/tealdeer/config.toml` on Linux or
         {file}`$HOME/Library/Application Support/tealdeer/config.toml` on Darwin.
-        See <https://dbrgn.github.io/tealdeer/config.html> for more information.
+        See <https://tealdeer-rs.github.io/tealdeer/config.html> for more information.
       '';
+    };
+
+    enableAutoUpdates = lib.mkEnableOption "Auto updates" // {
+      default = true;
+      example = false;
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.tealdeer ];
+    home.packages = [ cfg.package ];
 
-    home.file."${configDir}/tealdeer/config.toml" =
-      mkIf (cfg.settings != null && cfg.settings != { }) {
-        source = tomlFormat.generate "tealdeer-config" cfg.settings;
-      };
+    home.file."${configDir}/tealdeer/config.toml" = mkIf (cfg.settings != null && cfg.settings != { }) {
+      source = tomlFormat.generate "tealdeer-config" cfg.settings;
+    };
+
+    services.tldr-update = mkIf cfg.enableAutoUpdates {
+      enable = true;
+      package = cfg.package;
+    };
   };
 }

@@ -1,32 +1,30 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.starship;
 
   tomlFormat = pkgs.formats.toml { };
 
-  starshipCmd = "${config.home.profileDirectory}/bin/starship";
-
-in {
+  initFish = if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
+in
+{
   meta.maintainers = [ ];
 
   options.programs.starship = {
-    enable = mkEnableOption "starship";
+    enable = lib.mkEnableOption "starship";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.starship;
-      defaultText = literalExpression "pkgs.starship";
-      description = "The package to use for the starship binary.";
-    };
+    package = lib.mkPackageOption pkgs "starship" { };
 
     settings = mkOption {
       type = tomlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           add_newline = false;
           format = lib.concatStrings [
@@ -51,24 +49,25 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableIonIntegration = lib.hm.shell.mkIonIntegrationOption { inherit config; };
 
-    enableIonIntegration = mkEnableOption "Ion integration" // {
-      default = true;
-    };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration" // {
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableInteractive = mkOption {
+      type = types.bool;
       default = true;
+      description = ''
+        Only enable starship when the shell is interactive. This option is only
+        valid for the Fish shell.
+
+        Some plugins require this to be set to `false` to function correctly.
+      '';
     };
 
     enableTransience = mkOption {
@@ -94,26 +93,26 @@ in {
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" ]]; then
-        eval "$(${starshipCmd} init bash --print-full-init)"
+        eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
       fi
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       if [[ $TERM != "dumb" ]]; then
-        eval "$(${starshipCmd} init zsh)"
+        eval "$(${lib.getExe cfg.package} init zsh)"
       fi
     '';
 
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.${initFish} = mkIf cfg.enableFishIntegration ''
       if test "$TERM" != "dumb"
-        eval (${starshipCmd} init fish)
+        ${lib.getExe cfg.package} init fish | source
         ${lib.optionalString cfg.enableTransience "enable_transience"}
       end
     '';
 
     programs.ion.initExtra = mkIf cfg.enableIonIntegration ''
       if test $TERM != "dumb"
-        eval $(${starshipCmd} init ion)
+        eval $(${lib.getExe cfg.package} init ion)
       end
     '';
 
@@ -122,15 +121,12 @@ in {
       # conditionally setting (global) environment variables, which is why the
       # check for terminal compatibility (as seen above for the other shells) is
       # not done here.
-      extraEnv = ''
-        let starship_cache = "${config.xdg.cacheHome}/starship"
-        if not ($starship_cache | path exists) {
-          mkdir $starship_cache
-        }
-        ${starshipCmd} init nu | save --force ${config.xdg.cacheHome}/starship/init.nu
-      '';
       extraConfig = ''
-        use ${config.xdg.cacheHome}/starship/init.nu
+        use ${
+          pkgs.runCommand "starship-nushell-config.nu" { } ''
+            ${lib.getExe cfg.package} init nu >> "$out"
+          ''
+        }
       '';
     };
   };

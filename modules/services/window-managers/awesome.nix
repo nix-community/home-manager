@@ -1,25 +1,29 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
 
   cfg = config.xsession.windowManager.awesome;
   awesome = cfg.package;
   getLuaPath = lib: dir: "${lib}/${dir}/lua/${awesome.lua.luaversion}";
-  makeSearchPath = lib.concatMapStrings (path:
-    " --search ${getLuaPath path "share"}"
-    + " --search ${getLuaPath path "lib"}");
+  makeSearchPath = lib.concatMapStrings (
+    path: " --search ${getLuaPath path "share"}" + " --search ${getLuaPath path "lib"}"
+  );
 
-in {
+in
+{
   options = {
     xsession.windowManager.awesome = {
-      enable = mkEnableOption "Awesome window manager";
+      enable = lib.mkEnableOption "Awesome window manager";
 
       package = mkOption {
         type = types.package;
         default = pkgs.awesome;
-        defaultText = literalExpression "pkgs.awesome";
+        defaultText = lib.literalExpression "pkgs.awesome";
         description = "Package to use for running the Awesome WM.";
       };
 
@@ -30,7 +34,7 @@ in {
           List of lua packages available for being
           used in the Awesome configuration.
         '';
-        example = literalExpression "[ pkgs.luaPackages.vicious ]";
+        example = lib.literalExpression "[ pkgs.luaPackages.vicious ]";
       };
 
       noArgb = mkOption {
@@ -44,15 +48,16 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "xsession.windowManager.awesome" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "xsession.windowManager.awesome" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ awesome ];
 
-    xsession.windowManager.command = "${awesome}/bin/awesome "
-      + optionalString cfg.noArgb "--no-argb " + makeSearchPath cfg.luaModules;
+    xsession.windowManager.command =
+      "${awesome}/bin/awesome "
+      + lib.optionalString cfg.noArgb "--no-argb "
+      + makeSearchPath cfg.luaModules;
   };
 }

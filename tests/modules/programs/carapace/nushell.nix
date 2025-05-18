@@ -1,4 +1,10 @@
-{ pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  realPkgs,
+  config,
+  ...
+}:
 
 {
   programs = {
@@ -6,17 +12,19 @@
     nushell.enable = true;
   };
 
-  nmt.script = let
-    configDir = if pkgs.stdenv.isDarwin && !config.xdg.enable then
-      "home-files/Library/Application Support/nushell"
-    else
-      "home-files/.config/nushell";
-  in ''
-    assertFileExists "${configDir}/env.nu"
-    assertFileRegex "${configDir}/env.nu" \
-      '/nix/store/.*carapace.*/bin/carapace _carapace nushell \| save -f \$"(\$carapace_cache)/init\.nu"'
-    assertFileExists "${configDir}/config.nu"
-    assertFileRegex "${configDir}/config.nu" \
-      'source /.*/\.cache/carapace/init\.nu'
-  '';
+  _module.args.pkgs = lib.mkForce realPkgs;
+
+  nmt.script =
+    let
+      configDir =
+        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+          "home-files/Library/Application Support/nushell"
+        else
+          "home-files/.config/nushell";
+    in
+    ''
+      assertFileExists "${configDir}/config.nu"
+      assertFileRegex "${configDir}/config.nu" \
+        'source /nix/store/[^/]*-carapace-nushell-config.nu'
+    '';
 }

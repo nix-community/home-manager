@@ -1,23 +1,32 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
-    services.tahoe-lafs = { enable = mkEnableOption "Tahoe-LAFS"; };
+    services.tahoe-lafs = {
+      enable = lib.mkEnableOption "Tahoe-LAFS";
+    };
   };
 
-  config = mkIf config.services.tahoe-lafs.enable {
+  config = lib.mkIf config.services.tahoe-lafs.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.tahoe-lafs" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.tahoe-lafs" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.tahoe-lafs = {
-      Unit = { Description = "Tahoe-LAFS"; };
+      Unit = {
+        Description = "Tahoe-LAFS";
+      };
 
-      Service = { ExecStart = "${pkgs.tahoelafs}/bin/tahoe run -C %h/.tahoe"; };
+      Service = {
+        ExecStart = "${pkgs.tahoelafs}/bin/tahoe run -C %h/.tahoe";
+      };
     };
   };
 }

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.comodoro = {
     enable = true;
@@ -25,8 +23,6 @@
       };
     };
   };
-
-  test.stubs.comodoro = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/comodoro/config.toml

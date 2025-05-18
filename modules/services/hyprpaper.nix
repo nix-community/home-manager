@@ -1,31 +1,42 @@
-{ config, lib, pkgs, ... }:
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
   cfg = config.services.hyprpaper;
-in {
-  meta.maintainers = [ maintainers.khaneliman maintainers.fufexan ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    fufexan
+  ];
 
   options.services.hyprpaper = {
-    enable = mkEnableOption "Hyprpaper, Hyprland's wallpaper daemon";
+    enable = lib.mkEnableOption "Hyprpaper, Hyprland's wallpaper daemon";
 
-    package = mkPackageOption pkgs "hyprpaper" { };
+    package = lib.mkPackageOption pkgs "hyprpaper" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types;
+      type =
+        with lib.types;
         let
-          valueType = nullOr (oneOf [
-            bool
-            int
-            float
-            str
-            path
-            (attrsOf valueType)
-            (listOf valueType)
-          ]) // {
-            description = "Hyprpaper configuration value";
-          };
-        in valueType;
+          valueType =
+            nullOr (oneOf [
+              bool
+              int
+              float
+              str
+              path
+              (attrsOf valueType)
+              (listOf valueType)
+            ])
+            // {
+              description = "Hyprpaper configuration value";
+            };
+        in
+        valueType;
       default = { };
       description = ''
         hyprpaper configuration written in Nix. Entries with the same key
@@ -59,28 +70,31 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    xdg.configFile."hypr/hyprpaper.conf" = mkIf (cfg.settings != { }) {
+  config = lib.mkIf cfg.enable {
+    xdg.configFile."hypr/hyprpaper.conf" = lib.mkIf (cfg.settings != { }) {
       text = lib.hm.generators.toHyprconf {
         attrs = cfg.settings;
         inherit (cfg) importantPrefixes;
       };
     };
 
-    systemd.user.services.hyprpaper = {
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+    systemd.user.services.hyprpaper = lib.mkIf (cfg.package != null) {
+      Install = {
+        WantedBy = [ config.wayland.systemd.target ];
+      };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hyprpaper";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers =
-          [ "${config.xdg.configFile."hypr/hyprpaper.conf".source}" ];
+        After = [ config.wayland.systemd.target ];
+        PartOf = [ config.wayland.systemd.target ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."hypr/hyprpaper.conf".source}"
+        ];
       };
 
       Service = {
-        ExecStart = "${getExe cfg.package}";
+        ExecStart = "${lib.getExe cfg.package}";
         Restart = "always";
         RestartSec = "10";
       };

@@ -1,39 +1,40 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.targets.darwin;
 
-  mkActivationCmds = isLocal: settings:
+  mkActivationCmds =
+    isLocal: settings:
     let
-      toDefaultsFile = domain: attrs:
-        pkgs.writeText "${domain}.plist" (lib.generators.toPlist { } attrs);
+      toDefaultsFile = domain: attrs: pkgs.writeText "${domain}.plist" (lib.generators.toPlist { } attrs);
 
       cliFlags = lib.optionalString isLocal "-currentHost";
 
-      toActivationCmd = domain: attrs:
-        "run /usr/bin/defaults ${cliFlags} import ${escapeShellArg domain} ${
-          toDefaultsFile domain attrs
-        }";
+      toActivationCmd =
+        domain: attrs:
+        "run /usr/bin/defaults ${cliFlags} import ${lib.escapeShellArg domain} ${toDefaultsFile domain attrs}";
 
-      nonNullDefaults =
-        mapAttrs (domain: attrs: (filterAttrs (n: v: v != null) attrs))
-        settings;
+      nonNullDefaults = lib.mapAttrs (domain: attrs: (lib.filterAttrs (n: v: v != null) attrs)) settings;
 
-      writableDefaults =
-        filterAttrs (domain: attrs: attrs != { }) nonNullDefaults;
-    in mapAttrsToList toActivationCmd writableDefaults;
+      writableDefaults = lib.filterAttrs (domain: attrs: attrs != { }) nonNullDefaults;
+    in
+    lib.mapAttrsToList toActivationCmd writableDefaults;
 
   defaultsCmds = mkActivationCmds false cfg.defaults;
   currentHostDefaultsCmds = mkActivationCmds true cfg.currentHostDefaults;
 
   activationCmds = defaultsCmds ++ currentHostDefaultsCmds;
-in {
-  meta.maintainers = [ maintainers.midchildan ];
+in
+{
+  meta.maintainers = [ lib.maintainers.midchildan ];
 
-  options.targets.darwin.defaults = mkOption {
-    type = types.submodule ./opts-allhosts.nix;
+  options.targets.darwin.defaults = lib.mkOption {
+    type = lib.types.submodule ./opts-allhosts.nix;
     default = { };
     example = {
       "com.apple.desktopservices" = {
@@ -56,11 +57,13 @@ in {
     '';
   };
 
-  options.targets.darwin.currentHostDefaults = mkOption {
-    type = types.submodule ./opts-currenthost.nix;
+  options.targets.darwin.currentHostDefaults = lib.mkOption {
+    type = lib.types.submodule ./opts-currenthost.nix;
     default = { };
     example = {
-      "com.apple.controlcenter" = { BatteryShowPercentage = true; };
+      "com.apple.controlcenter" = {
+        BatteryShowPercentage = true;
+      };
     };
     description = ''
       Set macOS user defaults. Unlike {option}`targets.darwin.defaults`,
@@ -75,33 +78,35 @@ in {
     '';
   };
 
-  config = mkIf (activationCmds != [ ]) {
+  config = lib.mkIf (activationCmds != [ ]) {
     assertions = [
-      (hm.assertions.assertPlatform "targets.darwin.defaults" pkgs
-        platforms.darwin)
+      (lib.hm.assertions.assertPlatform "targets.darwin.defaults" pkgs lib.platforms.darwin)
     ];
 
-    warnings = let
-      batteryOptionName = ''
-        targets.darwin.currentHostDefaults."com.apple.controlcenter".BatteryShowPercentage'';
-      batteryPercentage =
-        attrByPath [ "com.apple.menuextra.battery" "ShowPercent" ] null
-        cfg.defaults;
-      webkitDevExtras = attrByPath [
-        "com.apple.Safari"
-        "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled"
-      ] null cfg.defaults;
-    in optional (batteryPercentage != null) ''
-      The option 'com.apple.menuextra.battery.ShowPercent' no longer works on
-      macOS 11 and later. Instead, use '${batteryOptionName}'.
-    '' ++ optional (webkitDevExtras != null) ''
-      The option 'com.apple.Safari.com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled'
-      is no longer present in recent versions of Safari.
-    '';
+    warnings =
+      let
+        batteryOptionName = ''targets.darwin.currentHostDefaults."com.apple.controlcenter".BatteryShowPercentage'';
+        batteryPercentage = lib.attrByPath [
+          "com.apple.menuextra.battery"
+          "ShowPercent"
+        ] null cfg.defaults;
+        webkitDevExtras = lib.attrByPath [
+          "com.apple.Safari"
+          "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled"
+        ] null cfg.defaults;
+      in
+      lib.optional (batteryPercentage != null) ''
+        The option 'com.apple.menuextra.battery.ShowPercent' no longer works on
+        macOS 11 and later. Instead, use '${batteryOptionName}'.
+      ''
+      ++ lib.optional (webkitDevExtras != null) ''
+        The option 'com.apple.Safari.com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled'
+        is no longer present in recent versions of Safari.
+      '';
 
-    home.activation.setDarwinDefaults = hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.setDarwinDefaults = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       verboseEcho "Configuring macOS user defaults"
-      ${concatStringsSep "\n" activationCmds}
+      ${lib.concatStringsSep "\n" activationCmds}
     '';
   };
 }

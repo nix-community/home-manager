@@ -1,7 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   commonOptions = import ./lib/options.nix {
     inherit config lib pkgs;
@@ -18,8 +20,9 @@ let
     serviceDocumentation = "https://gitlab.com/chinstrap/gammastep/";
   };
 
-in {
+in
+{
   inherit (commonOptions) imports meta;
   options.services.gammastep = commonOptions.options;
-  config = mkIf config.services.gammastep.enable commonOptions.config;
+  config = lib.mkIf config.services.gammastep.enable commonOptions.config;
 }

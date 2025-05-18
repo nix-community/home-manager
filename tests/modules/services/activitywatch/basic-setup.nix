@@ -1,14 +1,17 @@
 { config, ... }:
 
-let stubPackage = config.lib.test.mkStubPackage { };
+let
+  stubPackage = config.lib.test.mkStubPackage { };
 
-in {
+in
+{
   services.activitywatch = {
     enable = true;
-    package = stubPackage;
     settings = {
       port = 3012;
-      custom_static = { custom-watcher = stubPackage; };
+      custom_static = {
+        custom-watcher = stubPackage;
+      };
     };
     watchers = {
       # These are basically examples of a real world usage.

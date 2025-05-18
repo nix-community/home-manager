@@ -1,7 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ config, ... }:
 {
   config = {
     programs.bottom = {
@@ -14,7 +11,9 @@ with lib;
           temperature_type = "c";
         };
 
-        colors = { low_battery_color = "red"; };
+        colors = {
+          low_battery_color = "red";
+        };
       };
     };
 

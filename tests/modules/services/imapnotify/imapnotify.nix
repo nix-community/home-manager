@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, pkgs, ... }:
 
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
@@ -13,6 +11,7 @@ with lib;
       imapnotify = {
         enable = true;
         boxes = [ "Inbox" ];
+        extraArgs = [ "--wait 1" ];
         onNotify = ''
           ${pkgs.notmuch}/bin/notmuch new
         '';
@@ -22,13 +21,13 @@ with lib;
 
   services.imapnotify = {
     enable = true;
-    package = (config.lib.test.mkStubPackage {
-      name = "goimapnotify";
-      outPath = "@goimapnotify@";
-    });
+    package = (
+      config.lib.test.mkStubPackage {
+        name = "goimapnotify";
+        outPath = "@goimapnotify@";
+      }
+    );
   };
-
-  test.stubs.notmuch = { };
 
   nmt.script = ''
     serviceFile="home-files/.config/systemd/user/imapnotify-hm-example.com.service"

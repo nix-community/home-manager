@@ -7,9 +7,18 @@
     settings = lib.mkMerge [
       {
         misc = {
-          disable = [ "sdkman" "flutter" "node" "nix" "home_manager" ];
+          disable = [
+            "sdkman"
+            "flutter"
+            "node"
+            "nix"
+            "home_manager"
+          ];
 
-          remote_topgrades = [ "backup" "ci" ];
+          remote_topgrades = [
+            "backup"
+            "ci"
+          ];
 
           remote_topgrade_path = "bin/topgrade";
         };
@@ -21,12 +30,12 @@
 
           cleanup = true;
         };
-        commands = { "Purge unused APT packages" = "sudo apt autoremove"; };
+        commands = {
+          "Purge unused APT packages" = "sudo apt autoremove";
+        };
       }
     ];
   };
-
-  test.stubs.topgrade = { };
 
   nmt.script = ''
     assertFileContent \

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
   config = {
@@ -7,7 +7,10 @@
       package = config.lib.test.mkStubPackage { };
       settings = {
         output_folder = /home/user/Documents/mangohud;
-        fps_limit = [ 30 60 ];
+        fps_limit = [
+          30
+          60
+        ];
         vsync = 0;
         legacy_layout = false;
         cpu_stats = true;
@@ -18,7 +21,11 @@
         cpu_load_change = true;
         cpu_load_value = true;
         media_player_name = "spotify";
-        media_player_order = [ "title" "artist" "album" ];
+        media_player_order = [
+          "title"
+          "artist"
+          "album"
+        ];
       };
       settingsPerApplication = {
         mpv = {

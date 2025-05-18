@@ -1,5 +1,3 @@
-{ config, pkgs, lib, xdg, ... }:
-
 {
   programs.vim-vint = {
     enable = true;
@@ -7,7 +5,9 @@
       cmdargs = {
         severity = "error";
         color = true;
-        env = { neovim = true; };
+        env = {
+          neovim = true;
+        };
       };
       policies = {
         ProhibitEqualTildeOperator.enabled = false;
@@ -20,8 +20,6 @@
   };
 
   nmt.script = ''
-    assertFileContent home-files/.config/.vintrc.yaml ${
-      ./basic-configuration.yaml
-    }
+    assertFileContent home-files/.config/.vintrc.yaml ${./basic-configuration.yaml}
   '';
 }

@@ -17,10 +17,10 @@ $ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/m
 $ sudo nix-channel --update
 ```
 
-and if you follow a Nixpkgs version 24.05 channel, you can run
+and if you follow a Nixpkgs version 25.05 channel, you can run
 
 ``` shell
-$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz home-manager
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
 $ sudo nix-channel --update
 ```
 
@@ -34,6 +34,31 @@ to your system `configuration.nix` file, which will introduce a new
 NixOS option called `home-manager.users` whose type is an attribute set
 that maps user names to Home Manager configurations.
 
+Alternatively, home-manager installation can be done declaratively through configuration.nix using the following syntax:
+```nix
+{ config, pkgs, lib, ... }:
+
+let
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz;
+in
+{
+  imports =
+    [
+      (import "${home-manager}/nixos")
+    ];
+
+  users.users.eve.isNormalUser = true;
+  home-manager.users.eve = { pkgs, ... }: {
+    home.packages = [ pkgs.atool pkgs.httpie ];
+    programs.bash.enable = true;
+  
+    # The state version is required and should stay at the version you
+    # originally installed.
+    home.stateVersion = "25.05";
+  };
+}
+```
+
 For example, a NixOS configuration may include the lines
 
 ``` nix
@@ -42,9 +67,15 @@ home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
 
-  # The state version is required and should stay at the version you
-  # originally installed.
-  home.stateVersion = "24.05";
+  # This value determines the Home Manager release that your configuration is 
+  # compatible with. This helps avoid breakage when a new Home Manager release 
+  # introduces backwards incompatible changes. 
+  #
+  # You should not change this value, even if you update Home Manager. If you do 
+  # want to update the value, then make sure to first check the Home Manager 
+  # release notes. 
+  home.stateVersion = "24.05"; # Please read the comment before changing. 
+
 };
 ```
 
@@ -123,3 +154,4 @@ you create. This contains the system's NixOS configuration.
 
 Once installed you can see [Using Home Manager](#ch-usage) for a more detailed
 description of Home Manager and how to use it.
+

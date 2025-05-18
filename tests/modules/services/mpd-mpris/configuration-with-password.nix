@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.mpd-mpris = {
     enable = true;
@@ -10,8 +8,6 @@
       password = "my_password";
     };
   };
-
-  test.stubs.mpd-mpris = { };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/mpd-mpris.service

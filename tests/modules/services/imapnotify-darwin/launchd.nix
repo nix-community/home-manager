@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, pkgs, ... }:
 
 {
   imports = [ ../../accounts/email-test-accounts.nix ];
@@ -22,20 +20,22 @@ with lib;
 
   services.imapnotify = {
     enable = true;
-    package = (config.lib.test.mkStubPackage {
-      name = "goimapnotify";
-      outPath = "@goimapnotify@";
-    });
+    package = (
+      config.lib.test.mkStubPackage {
+        name = "goimapnotify";
+        outPath = "@goimapnotify@";
+      }
+    );
   };
 
-  test.stubs.notmuch = { };
-
-  nmt.script = let
-    serviceFileName = "org.nix-community.home.imapnotify-hm-example.com.plist";
-  in ''
-    serviceFile="LaunchAgents/${serviceFileName}"
-    serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
-    assertFileExists $serviceFile
-    assertFileContent $serviceFileNormalized ${./launchd.plist}
-  '';
+  nmt.script =
+    let
+      serviceFileName = "org.nix-community.home.imapnotify-hm-example.com.plist";
+    in
+    ''
+      serviceFile="LaunchAgents/${serviceFileName}"
+      serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
+      assertFileExists $serviceFile
+      assertFileContent $serviceFileNormalized ${./launchd.plist}
+    '';
 }

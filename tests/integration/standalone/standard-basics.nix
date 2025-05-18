@@ -4,16 +4,18 @@
   name = "standalone-standard-basics";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine = { ... }: {
-    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-    virtualisation.memorySize = 2048;
-    users.users.alice = {
-      isNormalUser = true;
-      description = "Alice Foobar";
-      password = "foobar";
-      uid = 1000;
+  nodes.machine =
+    { ... }:
+    {
+      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+      virtualisation.memorySize = 2048;
+      users.users.alice = {
+        isNormalUser = true;
+        description = "Alice Foobar";
+        password = "foobar";
+        uid = 1000;
+      };
     };
-  };
 
   testScript = ''
     start_all()
@@ -57,9 +59,7 @@
       assert actual == "home.nix\n", \
         f"unexpected content of /home/alice/.config/home-manager: {actual}"
 
-      machine.succeed("diff -u ${
-        ./alice-home-init.nix
-      } /home/alice/.config/home-manager/home.nix")
+      machine.succeed("diff -u ${./alice-home-init.nix} /home/alice/.config/home-manager/home.nix")
 
       # The default configuration creates this link on activation.
       machine.succeed("test -L /home/alice/.cache/.keep")
@@ -80,9 +80,7 @@
     with subtest("Home Manager switch"):
       fail_as_alice("hello")
 
-      succeed_as_alice("cp ${
-        ./alice-home-next.nix
-      } /home/alice/.config/home-manager/home.nix")
+      succeed_as_alice("cp ${./alice-home-next.nix} /home/alice/.config/home-manager/home.nix")
 
       actual = succeed_as_alice("home-manager switch")
       expected = "Starting units: pueued.service"

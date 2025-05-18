@@ -1,18 +1,16 @@
 {
   accounts.contact = {
     basePath = "/home/user/who/likes///";
-    accounts.forward = {
+    accounts.kebap-case = {
       local.type = "filesystem";
       khard = {
         enable = true;
-        defaultCollection = "////slashes//a/lot";
+        addressbooks = [ "named-abook" ];
       };
     };
   };
 
   programs.khard.enable = true;
-
-  test.stubs.khard = { };
 
   nmt.script = ''
     assertFileContent \

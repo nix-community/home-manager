@@ -1,8 +1,18 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    concatStringsSep
+    literalExpression
+    mkIf
+    mkOption
+    optionalString
+    types
+    ;
 
   cfg = config.services.kanshi;
 
@@ -28,7 +38,8 @@ let
     };
   };
 
-  tagToStr = x:
+  tagToStr =
+    x:
     if x ? profile then
       profileStr x.profile
     else if x ? output then
@@ -36,15 +47,12 @@ let
     else if x ? include then
       ''include "${x.include}"''
     else
-      throw "Unknown tags ${attrNames x}";
+      throw "Unknown tags ${lib.attrNames x}";
 
-  directivesStr = ''
-    ${concatStringsSep "\n" (map tagToStr cfg.settings)}
-  '';
+  directivesStr = concatStringsSep "\n" (map tagToStr cfg.settings);
 
   oldDirectivesStr = ''
-    ${concatStringsSep "\n"
-    (mapAttrsToList (n: v: profileStr (v // { name = n; })) cfg.profiles)}
+    ${concatStringsSep "\n" (lib.mapAttrsToList (n: v: profileStr (v // { name = n; })) cfg.profiles)}
     ${cfg.extraConfig}
   '';
 
@@ -65,7 +73,12 @@ let
       };
 
       status = mkOption {
-        type = types.nullOr (types.enum [ "enable" "disable" ]);
+        type = types.nullOr (
+          types.enum [
+            "enable"
+            "disable"
+          ]
+        );
         default = null;
         description = ''
           Enables or disables the specified output.
@@ -107,16 +120,18 @@ let
       };
 
       transform = mkOption {
-        type = types.nullOr (types.enum [
-          "normal"
-          "90"
-          "180"
-          "270"
-          "flipped"
-          "flipped-90"
-          "flipped-180"
-          "flipped-270"
-        ]);
+        type = types.nullOr (
+          types.enum [
+            "normal"
+            "90"
+            "180"
+            "270"
+            "flipped"
+            "flipped-90"
+            "flipped-180"
+            "flipped-270"
+          ]
+        );
         default = null;
         description = ''
           Sets the output transform.
@@ -144,15 +159,25 @@ let
     };
   };
 
-  outputStr = { criteria, status, mode, position, scale, transform, adaptiveSync
-    , alias, ... }:
-    ''output "${criteria}"'' + optionalString (status != null) " ${status}"
+  outputStr =
+    {
+      criteria,
+      status,
+      mode,
+      position,
+      scale,
+      transform,
+      adaptiveSync,
+      alias,
+      ...
+    }:
+    ''output "${criteria}"''
+    + optionalString (status != null) " ${status}"
     + optionalString (mode != null) " mode ${mode}"
     + optionalString (position != null) " position ${position}"
     + optionalString (scale != null) " scale ${toString scale}"
     + optionalString (transform != null) " transform ${transform}"
-    + optionalString (adaptiveSync != null)
-    " adaptive_sync ${if adaptiveSync then "on" else "off"}"
+    + optionalString (adaptiveSync != null) " adaptive_sync ${if adaptiveSync then "on" else "off"}"
     + optionalString (alias != null) " alias \$${alias}";
 
   profileModule = types.submodule {
@@ -174,10 +199,9 @@ let
       };
 
       exec = mkOption {
-        type = with types; coercedTo str singleton (listOf str);
+        type = with types; coercedTo str lib.singleton (listOf str);
         default = [ ];
-        example =
-          "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
+        example = "[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]";
         description = ''
           Commands executed after the profile is successfully applied.
           Note that if you provide multiple commands, they will be
@@ -187,21 +211,20 @@ let
     };
   };
 
-  profileStr = { outputs, exec, ... }@args: ''
-    profile ${args.name or ""} {
-      ${
-        concatStringsSep "\n  "
-        (map outputStr outputs ++ map (cmd: "exec ${cmd}") exec)
+  profileStr =
+    { outputs, exec, ... }@args:
+    ''
+      profile ${args.name or ""} {
+        ${concatStringsSep "\n  " (map outputStr outputs ++ map (cmd: "exec ${cmd}") exec)}
       }
-    }
-  '';
-in {
+    '';
+in
+{
 
-  meta.maintainers = [ hm.maintainers.nurelin ];
+  meta.maintainers = [ lib.hm.maintainers.nurelin ];
 
   options.services.kanshi = {
-    enable = mkEnableOption
-      "kanshi, a Wayland daemon that automatically configures outputs";
+    enable = lib.mkEnableOption "kanshi, a Wayland daemon that automatically configures outputs";
 
     package = mkOption {
       type = types.package;
@@ -288,73 +311,78 @@ in {
 
     systemdTarget = mkOption {
       type = types.str;
-      default = "sway-session.target";
+      default = config.wayland.systemd.target;
+      defaultText = literalExpression "config.wayland.systemd.target";
       description = ''
         Systemd target to bind to.
       '';
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "services.kanshi" pkgs
-          lib.platforms.linux)
-        {
-          assertion = (cfg.profiles == { } && cfg.extraConfig == "")
-            || (length cfg.settings) == 0;
-          message =
-            "Cannot mix kanshi.settings with kanshi.profiles or kanshi.extraConfig";
-        }
-        {
-          assertion = let profiles = filter (x: x ? profile) cfg.settings;
-          in length
-          (filter (x: any (a: a ? alias && a.alias != null) x.profile.outputs)
-            profiles) == 0;
-          message =
-            "Output kanshi.*.output.alias can only be defined on global scope";
-        }
-      ];
-    }
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "services.kanshi" pkgs lib.platforms.linux)
+          {
+            assertion = (cfg.profiles == { } && cfg.extraConfig == "") || (lib.length cfg.settings) == 0;
+            message = "Cannot mix kanshi.settings with kanshi.profiles or kanshi.extraConfig";
+          }
+          {
+            assertion =
+              let
+                profiles = lib.filter (x: x ? profile) cfg.settings;
+              in
+              lib.length (lib.filter (x: lib.any (a: a ? alias && a.alias != null) x.profile.outputs) profiles)
+              == 0;
+            message = "Output kanshi.*.output.alias can only be defined on global scope";
+          }
+        ];
+      }
 
-    (mkIf (cfg.profiles != { }) {
-      warnings = [
-        "kanshi.profiles option is deprecated. Use kanshi.settings instead."
-      ];
-    })
+      (mkIf (cfg.profiles != { }) {
+        warnings = [
+          "kanshi.profiles option is deprecated. Use kanshi.settings instead."
+        ];
+      })
 
-    (mkIf (cfg.extraConfig != "") {
-      warnings = [
-        "kanshi.extraConfig option is deprecated. Use kanshi.settings instead."
-      ];
-    })
+      (mkIf (cfg.extraConfig != "") {
+        warnings = [
+          "kanshi.extraConfig option is deprecated. Use kanshi.settings instead."
+        ];
+      })
 
-    {
-      home.packages = [ cfg.package ];
+      {
+        home.packages = [ cfg.package ];
 
-      xdg.configFile."kanshi/config".text =
-        if cfg.profiles == { } && cfg.extraConfig == "" then
-          directivesStr
-        else
-          oldDirectivesStr;
+        xdg.configFile."kanshi/config" =
+          let
+            generatedConfigStr =
+              if cfg.profiles == { } && cfg.extraConfig == "" then directivesStr else oldDirectivesStr;
+          in
+          mkIf (generatedConfigStr != "") { text = generatedConfigStr; };
 
-      systemd.user.services.kanshi = {
-        Unit = {
-          Description = "Dynamic output configuration";
-          Documentation = "man:kanshi(1)";
-          PartOf = cfg.systemdTarget;
-          Requires = cfg.systemdTarget;
-          After = cfg.systemdTarget;
+        systemd.user.services.kanshi = {
+          Unit = {
+            Description = "Dynamic output configuration";
+            Documentation = "man:kanshi(1)";
+            ConditionEnvironment = "WAYLAND_DISPLAY";
+            PartOf = cfg.systemdTarget;
+            Requires = cfg.systemdTarget;
+            After = cfg.systemdTarget;
+          };
+
+          Service = {
+            Type = "simple";
+            ExecStart = "${cfg.package}/bin/kanshi";
+            Restart = "always";
+          };
+
+          Install = {
+            WantedBy = [ cfg.systemdTarget ];
+          };
         };
-
-        Service = {
-          Type = "simple";
-          ExecStart = "${cfg.package}/bin/kanshi";
-          Restart = "always";
-        };
-
-        Install = { WantedBy = [ cfg.systemdTarget ]; };
-      };
-    }
-  ]);
+      }
+    ]
+  );
 }

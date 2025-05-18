@@ -1,10 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ pkgs, ... }:
 {
   config = {
-    home.packages = [ pkgs.comic-relief pkgs.unifont ];
+    home.packages = [
+      pkgs.comic-relief
+      pkgs.unifont
+    ];
 
     fonts.fontconfig.enable = true;
 

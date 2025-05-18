@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.gnome-terminal;
 
@@ -14,7 +17,7 @@ let
     "tty"
   ];
 
-  backForeSubModule = types.submodule ({ ... }: {
+  backForeSubModule = types.submodule {
     options = {
       foreground = mkOption {
         type = types.str;
@@ -26,9 +29,9 @@ let
         description = "The background color.";
       };
     };
-  });
+  };
 
-  profileColorsSubModule = types.submodule ({ ... }: {
+  profileColorsSubModule = types.submodule {
     options = {
       foregroundColor = mkOption {
         type = types.str;
@@ -63,9 +66,9 @@ let
         description = "The colors for the terminal’s highlighted area.";
       };
     };
-  });
+  };
 
-  profileSubModule = types.submodule ({ name, config, ... }: {
+  profileSubModule = types.submodule {
     options = {
       default = mkOption {
         default = false;
@@ -86,13 +89,21 @@ let
 
       cursorBlinkMode = mkOption {
         default = "system";
-        type = types.enum [ "system" "on" "off" ];
+        type = types.enum [
+          "system"
+          "on"
+          "off"
+        ];
         description = "The cursor blink mode.";
       };
 
       cursorShape = mkOption {
         default = "block";
-        type = types.enum [ "block" "ibeam" "underline" ];
+        type = types.enum [
+          "block"
+          "ibeam"
+          "underline"
+        ];
         description = "The cursor shape.";
       };
 
@@ -211,9 +222,10 @@ let
         description = "Background transparency in percent.";
       };
     };
-  });
+  };
 
-  buildProfileSet = pcfg:
+  buildProfileSet =
+    pcfg:
     {
       audible-bell = pcfg.audibleBell;
       visible-name = pcfg.visibleName;
@@ -225,57 +237,103 @@ let
       login-shell = pcfg.loginShell;
       backspace-binding = pcfg.backspaceBinding;
       delete-binding = pcfg.deleteBinding;
-    } // (if (pcfg.customCommand != null) then {
-      use-custom-command = true;
-      custom-command = pcfg.customCommand;
-    } else {
-      use-custom-command = false;
-    }) // (if (pcfg.font == null) then {
-      use-system-font = true;
-    } else {
-      use-system-font = false;
-      font = pcfg.font;
-    }) // (if (pcfg.colors == null) then {
-      use-theme-colors = true;
-    } else
-      ({
-        use-theme-colors = false;
-        foreground-color = pcfg.colors.foregroundColor;
-        background-color = pcfg.colors.backgroundColor;
-        palette = pcfg.colors.palette;
-      } // optionalAttrs (pcfg.allowBold != null) {
-        allow-bold = pcfg.allowBold;
-      } // (if (pcfg.colors.boldColor == null) then {
-        bold-color-same-as-fg = true;
-      } else {
-        bold-color-same-as-fg = false;
-        bold-color = pcfg.colors.boldColor;
-      }) // optionalAttrs (pcfg.boldIsBright != null) {
-        bold-is-bright = pcfg.boldIsBright;
-      } // (if (pcfg.colors.cursor != null) then {
-        cursor-colors-set = true;
-        cursor-foreground-color = pcfg.colors.cursor.foreground;
-        cursor-background-color = pcfg.colors.cursor.background;
-      } else {
-        cursor-colors-set = false;
-      }) // (if (pcfg.colors.highlight != null) then {
-        highlight-colors-set = true;
-        highlight-foreground-color = pcfg.colors.highlight.foreground;
-        highlight-background-color = pcfg.colors.highlight.background;
-      } else {
-        highlight-colors-set = false;
-      }) // optionalAttrs (pcfg.transparencyPercent != null) {
-        background-transparency-percent = pcfg.transparencyPercent;
-        use-theme-transparency = false;
-        use-transparent-background = true;
-      }));
+    }
+    // (
+      if (pcfg.customCommand != null) then
+        {
+          use-custom-command = true;
+          custom-command = pcfg.customCommand;
+        }
+      else
+        {
+          use-custom-command = false;
+        }
+    )
+    // (
+      if (pcfg.font == null) then
+        {
+          use-system-font = true;
+        }
+      else
+        {
+          use-system-font = false;
+          font = pcfg.font;
+        }
+    )
+    // (
+      if (pcfg.colors == null) then
+        {
+          use-theme-colors = true;
+        }
+      else
+        (
+          {
+            use-theme-colors = false;
+            foreground-color = pcfg.colors.foregroundColor;
+            background-color = pcfg.colors.backgroundColor;
+            palette = pcfg.colors.palette;
+          }
+          // lib.optionalAttrs (pcfg.allowBold != null) {
+            allow-bold = pcfg.allowBold;
+          }
+          // (
+            if (pcfg.colors.boldColor == null) then
+              {
+                bold-color-same-as-fg = true;
+              }
+            else
+              {
+                bold-color-same-as-fg = false;
+                bold-color = pcfg.colors.boldColor;
+              }
+          )
+          // lib.optionalAttrs (pcfg.boldIsBright != null) {
+            bold-is-bright = pcfg.boldIsBright;
+          }
+          // (
+            if (pcfg.colors.cursor != null) then
+              {
+                cursor-colors-set = true;
+                cursor-foreground-color = pcfg.colors.cursor.foreground;
+                cursor-background-color = pcfg.colors.cursor.background;
+              }
+            else
+              {
+                cursor-colors-set = false;
+              }
+          )
+          // (
+            if (pcfg.colors.highlight != null) then
+              {
+                highlight-colors-set = true;
+                highlight-foreground-color = pcfg.colors.highlight.foreground;
+                highlight-background-color = pcfg.colors.highlight.background;
+              }
+            else
+              {
+                highlight-colors-set = false;
+              }
+          )
+          // lib.optionalAttrs (pcfg.transparencyPercent != null) {
+            background-transparency-percent = pcfg.transparencyPercent;
+            use-theme-transparency = false;
+            use-transparent-background = true;
+          }
+        )
+    );
 
-in {
-  meta.maintainers = with maintainers; [ kamadorueda rycee ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    kamadorueda
+    rycee
+  ];
 
   options = {
     programs.gnome-terminal = {
-      enable = mkEnableOption "Gnome Terminal";
+      enable = lib.mkEnableOption "Gnome Terminal";
+
+      package = lib.mkPackageOption pkgs "gnome-terminal" { nullable = true; };
 
       showMenubar = mkOption {
         default = true;
@@ -285,7 +343,12 @@ in {
 
       themeVariant = mkOption {
         default = "default";
-        type = types.enum [ "default" "light" "dark" "system" ];
+        type = types.enum [
+          "default"
+          "light"
+          "dark"
+          "system"
+        ];
         description = "The theme variation to request";
       };
 
@@ -301,38 +364,43 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (let
-        uuidre =
-          "[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}";
-        erroneous =
-          filter (n: builtins.match uuidre n == null) (attrNames cfg.profile);
-      in {
-        assertion = erroneous == [ ];
-        message = ''
-          The attribute name of a Gnome Terminal profile must be a UUID.
-          Incorrect profile names: ${concatStringsSep ", " erroneous}'';
-      })
+      (
+        let
+          uuidre = "[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}";
+          erroneous = lib.filter (n: builtins.match uuidre n == null) (lib.attrNames cfg.profile);
+        in
+        {
+          assertion = erroneous == [ ];
+          message = ''
+            The attribute name of a Gnome Terminal profile must be a UUID.
+            Incorrect profile names: ${lib.concatStringsSep ", " erroneous}'';
+        }
+      )
     ];
 
-    home.packages = [ pkgs.gnome-terminal ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    dconf.settings = let dconfPath = "org/gnome/terminal/legacy";
-    in {
-      "${dconfPath}" = {
-        default-show-menubar = cfg.showMenubar;
-        theme-variant = cfg.themeVariant;
-        schema-version = 3;
-      };
+    dconf.settings =
+      let
+        dconfPath = "org/gnome/terminal/legacy";
+      in
+      {
+        "${dconfPath}" = {
+          default-show-menubar = cfg.showMenubar;
+          theme-variant = cfg.themeVariant;
+          schema-version = 3;
+        };
 
-      "${dconfPath}/profiles:" = {
-        default = head (attrNames (filterAttrs (n: v: v.default) cfg.profile));
-        list = attrNames cfg.profile;
-      };
-    } // mapAttrs'
-    (n: v: nameValuePair ("${dconfPath}/profiles:/:${n}") (buildProfileSet v))
-    cfg.profile;
+        "${dconfPath}/profiles:" = {
+          default = lib.head (lib.attrNames (lib.filterAttrs (n: v: v.default) cfg.profile));
+          list = lib.attrNames cfg.profile;
+        };
+      }
+      // lib.mapAttrs' (
+        n: v: lib.nameValuePair "${dconfPath}/profiles:/:${n}" (buildProfileSet v)
+      ) cfg.profile;
 
     programs.bash.enableVteIntegration = true;
     programs.zsh.enableVteIntegration = true;

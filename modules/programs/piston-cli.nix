@@ -1,27 +1,25 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.piston-cli;
   yamlFormat = pkgs.formats.yaml { };
-in {
-  meta.maintainers = with maintainers; [ ethancedwards8 ];
+in
+{
+  meta.maintainers = with lib.maintainers; [ ethancedwards8 ];
 
   options.programs.piston-cli = {
-    enable = mkEnableOption "piston-cli, code runner";
+    enable = lib.mkEnableOption "piston-cli, code runner";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.piston-cli;
-      defaultText = literalExpression "pkgs.piston-cli";
-      description = "The piston-cli package to use.";
-    };
+    package = lib.mkPackageOption pkgs "piston-cli" { };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           theme = "emacs";
           box_style = "MINIMAL_DOUBLE_HEAD";
@@ -36,10 +34,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."piston-cli/config.yml" = mkIf (cfg.settings != { }) {
+    xdg.configFile."piston-cli/config.yml" = lib.mkIf (cfg.settings != { }) {
       source = yamlFormat.generate "config.yml" cfg.settings;
     };
   };

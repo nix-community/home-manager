@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./sway-stubs.nix ];
-
   wayland.windowManager.sway = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
@@ -11,9 +9,21 @@
     config = {
       menu = "${pkgs.dmenu}/bin/dmenu_run";
 
-      input = { "*" = { xkb_variant = "dvorak"; }; };
-      output = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
-      seat = { "*" = { hide_cursor = "when-typing enable"; }; };
+      input = {
+        "*" = {
+          xkb_variant = "dvorak";
+        };
+      };
+      output = {
+        "HDMI-A-2" = {
+          bg = "~/path/to/background.png fill";
+        };
+      };
+      seat = {
+        "*" = {
+          hide_cursor = "when-typing enable";
+        };
+      };
     };
   };
 

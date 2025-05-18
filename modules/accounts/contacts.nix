@@ -1,30 +1,33 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
+  inherit (lib) mkOption types;
 
   cfg = config.accounts.contact;
 
-  localModule = name:
+  localModule =
+    name:
     types.submodule {
       options = {
         path = mkOption {
           type = types.str;
           default = "${cfg.basePath}/${name}";
-          defaultText =
-            lib.literalExpression "‹accounts.contact.basePath›/‹name›";
+          defaultText = lib.literalExpression "‹accounts.contact.basePath›/‹name›";
           description = "The path of the storage.";
         };
 
         type = mkOption {
-          type = types.enum [ "filesystem" "singlefile" ];
+          type = types.enum [
+            "filesystem"
+            "singlefile"
+          ];
+          default = "filesystem";
           description = "The type of the storage.";
         };
 
         fileExt = mkOption {
           type = types.nullOr types.str;
-          default = null;
+          default = ".vcf";
           description = "The file extension to use.";
         };
 
@@ -42,7 +45,11 @@ let
   remoteModule = types.submodule {
     options = {
       type = mkOption {
-        type = types.enum [ "carddav" "http" "google_contacts" ];
+        type = types.enum [
+          "carddav"
+          "http"
+          "google_contacts"
+        ];
         description = "The type of the storage.";
       };
 
@@ -70,7 +77,10 @@ let
       passwordCommand = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
-        example = [ "pass" "caldav" ];
+        example = [
+          "pass"
+          "caldav"
+        ];
         description = ''
           A command that prints the password to standard output.
         '';
@@ -78,43 +88,47 @@ let
     };
   };
 
-  contactOpts = { name, config, ... }: {
-    options = {
-      name = mkOption {
-        type = types.str;
-        readOnly = true;
-        description = ''
-          Unique identifier of the contact account. This is set to the
-          attribute name of the contact configuration.
-        '';
+  contactOpts =
+    { name, ... }:
+    {
+      options = {
+        name = mkOption {
+          type = types.str;
+          readOnly = true;
+          description = ''
+            Unique identifier of the contact account. This is set to the
+            attribute name of the contact configuration.
+          '';
+        };
+
+        local = mkOption {
+          type = types.nullOr (localModule name);
+          default = null;
+          description = ''
+            Local configuration for the contacts.
+          '';
+        };
+
+        remote = mkOption {
+          type = types.nullOr remoteModule;
+          default = null;
+          description = ''
+            Remote configuration for the contacts.
+          '';
+        };
       };
 
-      local = mkOption {
-        type = types.nullOr (localModule name);
-        default = null;
-        description = ''
-          Local configuration for the contacts.
-        '';
-      };
-
-      remote = mkOption {
-        type = types.nullOr remoteModule;
-        default = null;
-        description = ''
-          Remote configuration for the contacts.
-        '';
+      config = {
+        name = name;
       };
     };
 
-    config = { name = name; };
-  };
-
-in {
+in
+{
   options.accounts.contact = {
     basePath = mkOption {
       type = types.str;
-      apply = p:
-        if hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
+      apply = p: if lib.hasPrefix "/" p then p else "${config.home.homeDirectory}/${p}";
       description = ''
         The base directory in which to save contacts. May be a
         relative path, in which case it is relative the home
@@ -123,12 +137,14 @@ in {
     };
 
     accounts = mkOption {
-      type = types.attrsOf (types.submodule [
-        contactOpts
-        (import ../programs/vdirsyncer-accounts.nix)
-        (import ../programs/khal-accounts.nix)
-        (import ../programs/khal-contact-accounts.nix)
-      ]);
+      type = types.attrsOf (
+        types.submodule [
+          contactOpts
+          (import ../programs/vdirsyncer-accounts.nix)
+          (import ../programs/khal-accounts.nix)
+          (import ../programs/khal-contact-accounts.nix)
+        ]
+      );
       default = { };
       description = "List of contacts.";
     };

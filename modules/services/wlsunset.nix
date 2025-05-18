@@ -1,14 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-with lib;
+let
+  inherit (lib)
+    mkOption
+    types
+    ;
 
-let cfg = config.services.wlsunset;
-
-in {
-  meta.maintainers = [ hm.maintainers.matrss ];
+  cfg = config.services.wlsunset;
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.matrss ];
 
   options.services.wlsunset = {
-    enable = mkEnableOption "wlsunset";
+    enable = lib.mkEnableOption "wlsunset";
 
     package = mkOption {
       type = with types; package;
@@ -96,57 +105,58 @@ in {
 
     systemdTarget = mkOption {
       type = with types; str;
-      default = "graphical-session.target";
+      default = config.wayland.systemd.target;
       description = ''
         Systemd target to bind to.
       '';
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.wlsunset" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.wlsunset" pkgs lib.platforms.linux)
       {
-        assertion = (cfg.sunrise != null || cfg.sunset != null)
-          != (cfg.latitude != null || cfg.longitude != null);
-        message =
-          "Either `sunrise` and `sunset` together or `longitude` and `latitude` together must be set for wlsunset";
+        assertion =
+          (cfg.sunrise != null || cfg.sunset != null) != (cfg.latitude != null || cfg.longitude != null);
+        message = "Either `sunrise` and `sunset` together or `longitude` and `latitude` together must be set for wlsunset";
       }
       {
         assertion = (cfg.sunrise != null) == (cfg.sunset != null);
-        message =
-          "Both `sunset` and `sunrise` together must be set for wlsunset";
+        message = "Both `sunset` and `sunrise` together must be set for wlsunset";
       }
       {
         assertion = (cfg.latitude != null) == (cfg.longitude != null);
-        message =
-          "Both `latitude and `longitude` together must be set for wlsunset";
+        message = "Both `latitude and `longitude` together must be set for wlsunset";
       }
     ];
 
     systemd.user.services.wlsunset = {
       Unit = {
         Description = "Day/night gamma adjustments for Wayland compositors.";
-        PartOf = [ "graphical-session.target" ];
+        After = [ cfg.systemdTarget ];
+        PartOf = [ cfg.systemdTarget ];
       };
 
       Service = {
-        ExecStart = let
-          args = cli.toGNUCommandLineShell { } {
-            t = cfg.temperature.night;
-            T = cfg.temperature.day;
-            g = cfg.gamma;
-            l = cfg.latitude;
-            L = cfg.longitude;
-            S = cfg.sunrise;
-            s = cfg.sunset;
-            o = cfg.output;
-          };
-        in "${cfg.package}/bin/wlsunset ${args}";
+        ExecStart =
+          let
+            args = lib.cli.toGNUCommandLineShell { } {
+              t = cfg.temperature.night;
+              T = cfg.temperature.day;
+              g = cfg.gamma;
+              l = cfg.latitude;
+              L = cfg.longitude;
+              S = cfg.sunrise;
+              s = cfg.sunset;
+              o = cfg.output;
+            };
+          in
+          "${cfg.package}/bin/wlsunset ${args}";
       };
 
-      Install = { WantedBy = [ cfg.systemdTarget ]; };
+      Install = {
+        WantedBy = [ cfg.systemdTarget ];
+      };
     };
   };
 }

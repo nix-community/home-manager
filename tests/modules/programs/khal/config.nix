@@ -1,15 +1,12 @@
-{ ... }:
-
 {
   programs.khal = {
     enable = true;
     settings = {
       default.timedelta = "5d";
-      view.agenda_event_format =
-        "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
+      view.agenda_event_format = "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
     };
-
   };
+
   accounts.calendar = {
     basePath = "$XDG_CONFIG_HOME/cal";
     accounts = {
@@ -47,7 +44,10 @@
       testWithMultipleAddresss = {
         khal = {
           enable = true;
-          addresses = [ "john.doe@email.com" "another.brick@on.the.wall" ];
+          addresses = [
+            "john.doe@email.com"
+            "another.brick@on.the.wall"
+          ];
         };
         local = {
           type = "filesystem";
@@ -67,7 +67,10 @@
       testcontacts = {
         khal = {
           enable = true;
-          collections = [ "default" "automaticallyCollected" ];
+          collections = [
+            "default"
+            "automaticallyCollected"
+          ];
         };
         local.type = "filesystem";
         local.fileExt = ".vcf";
@@ -90,8 +93,6 @@
       };
     };
   };
-
-  test.stubs = { khal = { }; };
 
   nmt.script = ''
     configFile=home-files/.config/khal/config

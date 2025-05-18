@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.rbenv;
 
@@ -23,18 +26,19 @@ let
     };
   };
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.rbenv = {
-    enable = mkEnableOption "rbenv";
+    enable = lib.mkEnableOption "rbenv";
 
-    package = mkPackageOption pkgs "rbenv" { };
+    package = lib.mkPackageOption pkgs "rbenv" { };
 
     plugins = mkOption {
       type = types.listOf pluginModule;
       default = [ ];
-      example = literalExpression ''
+      example = lib.literalExpression ''
         [
           {
             name = "ruby-build";
@@ -55,34 +59,30 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     home.file.".rbenv/plugins" = mkIf (cfg.plugins != [ ]) {
-      source = pkgs.linkFarm "rbenv-plugins" (builtins.map (p: {
-        name = p.name;
-        path = p.src;
-      }) cfg.plugins);
+      source = pkgs.linkFarm "rbenv-plugins" (
+        builtins.map (p: {
+          name = p.name;
+          path = p.src;
+        }) cfg.plugins
+      );
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       eval "$(${cfg.package}/bin/rbenv init - bash)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/rbenv init - zsh)"
     '';
 

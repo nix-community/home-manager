@@ -1,26 +1,27 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.eclipse;
-
-in {
-  meta.maintainers = [ maintainers.rycee ];
+in
+{
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     programs.eclipse = {
-      enable = mkEnableOption "Eclipse";
+      enable = lib.mkEnableOption "Eclipse";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.eclipses.eclipse-platform;
-        defaultText = literalExpression "pkgs.eclipses.eclipse-platform";
-        example = literalExpression "pkgs.eclipses.eclipse-java";
-        description = ''
-          The Eclipse package to install.
-        '';
+      package = lib.mkPackageOption pkgs "eclipse" {
+        default = [
+          "eclipses"
+          "eclipse-platform"
+        ];
+        example = "pkgs.eclipses.eclipse-java";
       };
 
       enableLombok = mkOption {
@@ -51,8 +52,9 @@ in {
     home.packages = [
       (pkgs.eclipses.eclipseWithPlugins {
         eclipse = cfg.package;
-        jvmArgs = cfg.jvmArgs ++ optional cfg.enableLombok
-          "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
+        jvmArgs =
+          cfg.jvmArgs
+          ++ lib.optional cfg.enableLombok "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
         plugins = cfg.plugins;
       })
     ];

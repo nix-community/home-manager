@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
   config = {
@@ -22,14 +22,10 @@
         };
 
         format = {
-          output_format = ''
-            {indent}<b>Output {name}</b>    <span alpha="20000">({id})</span>'';
-          workspace_format = ''
-            {indent}<b>Workspace {name} [{layout}]</b> on output {output_name}    <span alpha="20000">({id})</span>'';
-          container_format = ''
-            {indent}<b>Container [{layout}]</b> <i>{marks}</i> on workspace {workspace_name}    <span alpha="20000">({id})</span>'';
-          window_format = ''
-            img:{app_icon}:text:{indent}<i>{app_name}</i> — {urgency_start}<b>“{title}”</b>{urgency_end} <i>{marks}</i> on workspace {workspace_name} / {output_name}    <span alpha="20000">({id})</span>'';
+          output_format = ''{indent}<b>Output {name}</b>    <span alpha="20000">({id})</span>'';
+          workspace_format = ''{indent}<b>Workspace {name} [{layout}]</b> on output {output_name}    <span alpha="20000">({id})</span>'';
+          container_format = ''{indent}<b>Container [{layout}]</b> <i>{marks}</i> on workspace {workspace_name}    <span alpha="20000">({id})</span>'';
+          window_format = ''img:{app_icon}:text:{indent}<i>{app_name}</i> — {urgency_start}<b>“{title}”</b>{urgency_end} <i>{marks}</i> on workspace {workspace_name} / {output_name}    <span alpha="20000">({id})</span>'';
           indent = "    ";
           urgency_start = ''<span background="darkred" foreground="yellow">'';
           urgency_end = "</span>";
@@ -39,27 +35,76 @@
         layout = {
           auto_tile = false;
           auto_tile_min_window_width_per_output_width = [
-            [ 800 400 ]
-            [ 1024 500 ]
-            [ 1280 600 ]
-            [ 1400 680 ]
-            [ 1440 700 ]
-            [ 1600 780 ]
-            [ 1680 780 ]
-            [ 1920 920 ]
-            [ 2048 980 ]
-            [ 2560 1000 ]
-            [ 3440 1200 ]
-            [ 3840 1280 ]
-            [ 4096 1400 ]
-            [ 4480 1600 ]
-            [ 7680 2400 ]
+            [
+              800
+              400
+            ]
+            [
+              1024
+              500
+            ]
+            [
+              1280
+              600
+            ]
+            [
+              1400
+              680
+            ]
+            [
+              1440
+              700
+            ]
+            [
+              1600
+              780
+            ]
+            [
+              1680
+              780
+            ]
+            [
+              1920
+              920
+            ]
+            [
+              2048
+              980
+            ]
+            [
+              2560
+              1000
+            ]
+            [
+              3440
+              1200
+            ]
+            [
+              3840
+              1280
+            ]
+            [
+              4096
+              1400
+            ]
+            [
+              4480
+              1600
+            ]
+            [
+              7680
+              2400
+            ]
           ];
         };
 
-        focus = { lockin_delay = 750; };
+        focus = {
+          lockin_delay = 750;
+        };
 
-        misc = { seq_inhibit = false; };
+        misc = {
+          seq_inhibit = false;
+        };
       };
       extraConfig = ''
         [extra]

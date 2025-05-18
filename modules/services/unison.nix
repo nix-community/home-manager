@@ -1,14 +1,24 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib)
+    mkOption
+    types
+    ;
 
   cfg = config.services.unison;
 
-  pairOf = t:
-    let list = types.addCheck (types.listOf t) (l: length l == 2);
-    in list // { description = list.description + " of length 2"; };
+  pairOf =
+    t:
+    let
+      list = types.addCheck (types.listOf t) (l: lib.length l == 2);
+    in
+    list // { description = list.description + " of length 2"; };
 
   pairOptions = {
     options = {
@@ -23,7 +33,7 @@ let
 
       commandOptions = mkOption rec {
         type = with types; attrsOf (either str (listOf str));
-        apply = mergeAttrs default;
+        apply = lib.mergeAttrs default;
         default = {
           repeat = "watch";
           sshcmd = "${pkgs.openssh}/bin/ssh";
@@ -46,7 +56,7 @@ let
 
       roots = mkOption {
         type = pairOf types.str;
-        example = literalExpression ''
+        example = lib.literalExpression ''
           [
             "/home/user/documents"
             "ssh://remote/documents"
@@ -59,32 +69,34 @@ let
     };
   };
 
-  serialiseArg = key: val:
-    concatStringsSep " "
-    (forEach (toList val) (x: escapeShellArg "-${key}=${escape [ "=" ] x}"));
+  serialiseArg =
+    key: val:
+    lib.concatStringsSep " " (
+      lib.forEach (lib.toList val) (x: lib.escapeShellArg "-${key}=${lib.escape [ "=" ] x}")
+    );
 
-  serialiseArgs = args: concatStringsSep " " (mapAttrsToList serialiseArg args);
+  serialiseArgs = args: lib.concatStringsSep " " (lib.mapAttrsToList serialiseArg args);
 
   unitName = name: "unison-pair-${name}";
 
-  makeDefs = gen:
-    mapAttrs' (name: pairCfg: nameValuePair (unitName name) (gen name pairCfg))
-    cfg.pairs;
+  makeDefs =
+    gen: lib.mapAttrs' (name: pairCfg: lib.nameValuePair (unitName name) (gen name pairCfg)) cfg.pairs;
 
-in {
-  meta.maintainers = with maintainers; [ pacien ];
+in
+{
+  meta.maintainers = with lib.maintainers; [ euxane ];
 
   options.services.unison = {
-    enable = mkEnableOption "Unison synchronisation";
+    enable = lib.mkEnableOption "Unison synchronisation";
 
-    package = mkPackageOption pkgs "unison" {
+    package = lib.mkPackageOption pkgs "unison" {
       example = "pkgs.unison.override { enableX11 = false; }";
     };
 
     pairs = mkOption {
       type = with types; attrsOf (submodule pairOptions);
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           "my-documents" = {
             roots = [
@@ -100,34 +112,37 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.unison" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.unison" pkgs lib.platforms.linux)
     ];
 
-    systemd.user.services = makeDefs (name: pairCfg: {
-      Unit.Description = "Unison pair sync (${name})";
-      Service = {
-        CPUSchedulingPolicy = "idle";
-        IOSchedulingClass = "idle";
-        Environment = [ "UNISON='${toString pairCfg.stateDirectory}'" ];
-        ExecStart = ''
-          ${cfg.package}/bin/unison \
-            ${serialiseArgs pairCfg.commandOptions} \
-            ${strings.concatMapStringsSep " " escapeShellArg pairCfg.roots}
-        '';
-      };
-    });
+    systemd.user.services = makeDefs (
+      name: pairCfg: {
+        Unit.Description = "Unison pair sync (${name})";
+        Service = {
+          CPUSchedulingPolicy = "idle";
+          IOSchedulingClass = "idle";
+          Environment = [ "UNISON='${toString pairCfg.stateDirectory}'" ];
+          ExecStart = ''
+            ${cfg.package}/bin/unison \
+              ${serialiseArgs pairCfg.commandOptions} \
+              ${lib.strings.concatMapStringsSep " " lib.escapeShellArg pairCfg.roots}
+          '';
+        };
+      }
+    );
 
-    systemd.user.timers = makeDefs (name: pairCfg: {
-      Unit.Description = "Unison pair sync auto-restart (${name})";
-      Install.WantedBy = [ "timers.target" ];
-      Timer = {
-        Unit = "${unitName name}.service";
-        OnActiveSec = 1;
-        OnUnitInactiveSec = 60;
-      };
-    });
+    systemd.user.timers = makeDefs (
+      name: pairCfg: {
+        Unit.Description = "Unison pair sync auto-restart (${name})";
+        Install.WantedBy = [ "timers.target" ];
+        Timer = {
+          Unit = "${unitName name}.service";
+          OnActiveSec = 1;
+          OnUnitInactiveSec = 60;
+        };
+      }
+    );
   };
 }

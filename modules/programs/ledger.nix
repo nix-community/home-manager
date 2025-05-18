@@ -1,30 +1,39 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.ledger;
 
-  cfgText = generators.toKeyValue {
-    mkKeyValue = key: value:
-      if isBool value then
-        optionalString value "--${key}"
-      else
-        "--${key} ${toString value}";
+  cfgText = lib.generators.toKeyValue {
+    mkKeyValue =
+      key: value:
+      if lib.isBool value then lib.optionalString value "--${key}" else "--${key} ${toString value}";
     listsAsDuplicateKeys = true;
   } cfg.settings;
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.ledger = {
-    enable = mkEnableOption "ledger, a double-entry accounting system";
+    enable = lib.mkEnableOption "ledger, a double-entry accounting system";
 
-    package = mkPackageOption pkgs "ledger" { };
+    package = lib.mkPackageOption pkgs "ledger" { nullable = true; };
 
     settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool int str (listOf str) ]);
+      type =
+        with types;
+        attrsOf (oneOf [
+          bool
+          int
+          str
+          (listOf str)
+        ]);
       default = { };
       example = {
         sort = "date";
@@ -46,7 +55,7 @@ in {
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      example = literalExpression ''
+      example = lib.literalExpression ''
         --sort date
         --effective
         --date-format %Y-%m-%d
@@ -59,11 +68,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."ledger/ledgerrc" =
-      mkIf (cfg.settings != { } || cfg.extraConfig != "") {
-        text = cfgText + cfg.extraConfig;
-      };
+    xdg.configFile."ledger/ledgerrc" = mkIf (cfg.settings != { } || cfg.extraConfig != "") {
+      text = cfgText + cfg.extraConfig;
+    };
   };
 }

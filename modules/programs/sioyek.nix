@@ -1,28 +1,31 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.sioyek;
 
-  renderConfig = generators.toKeyValue {
+  renderConfig = lib.generators.toKeyValue {
     mkKeyValue = key: value: "${key} ${value}";
     listsAsDuplicateKeys = true;
   };
 
-in {
+in
+{
   options = {
     programs.sioyek = {
-      enable = mkEnableOption
-        "Sioyek, a PDF viewer designed for reading research papers and technical books";
+      enable = lib.mkEnableOption "Sioyek, a PDF viewer designed for reading research papers and technical books";
 
-      package = mkOption {
-        default = pkgs.sioyek;
-        defaultText = literalExpression "pkgs.sioyek";
-        type = types.package;
-        description = "Package providing the sioyek binary";
-      };
+      package = lib.mkPackageOption pkgs "sioyek" { };
 
       bindings = mkOption {
         description = ''
@@ -66,15 +69,17 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    { home.packages = [ cfg.package ]; }
-    (mkIf (cfg.config != { }) {
-      xdg.configFile."sioyek/prefs_user.config".text = renderConfig cfg.config;
-    })
-    (mkIf (cfg.bindings != { }) {
-      xdg.configFile."sioyek/keys_user.config".text = renderConfig cfg.bindings;
-    })
-  ]);
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      { home.packages = [ cfg.package ]; }
+      (mkIf (cfg.config != { }) {
+        xdg.configFile."sioyek/prefs_user.config".text = renderConfig cfg.config;
+      })
+      (mkIf (cfg.bindings != { }) {
+        xdg.configFile."sioyek/keys_user.config".text = renderConfig cfg.bindings;
+      })
+    ]
+  );
 
-  meta.maintainers = [ hm.maintainers.podocarp ];
+  meta.maintainers = [ lib.hm.maintainers.podocarp ];
 }

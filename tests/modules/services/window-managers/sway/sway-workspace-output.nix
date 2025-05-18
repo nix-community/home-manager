@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   i3 = {
@@ -9,9 +9,8 @@ let
     ws5 = "Multiple";
   };
 
-in {
-  imports = [ ./sway-stubs.nix ];
-
+in
+{
   wayland.windowManager.sway = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
@@ -38,7 +37,11 @@ in {
       }
       {
         workspace = "${i3.ws5}";
-        output = [ "DVI" "HDMI" "DP" ];
+        output = [
+          "DVI"
+          "HDMI"
+          "DP"
+        ];
       }
     ];
   };

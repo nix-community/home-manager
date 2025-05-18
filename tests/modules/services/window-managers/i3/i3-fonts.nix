@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   imports = [ ./i3-stubs.nix ];
 
@@ -10,20 +8,29 @@
       bars = [
         {
           fonts = {
-            names = [ "FontAwesome" "Iosevka" ];
+            names = [
+              "FontAwesome"
+              "Iosevka"
+            ];
             size = 11.5;
           };
         }
         {
           fonts = {
-            names = [ "FontAwesome" "Iosevka" ];
+            names = [
+              "FontAwesome"
+              "Iosevka"
+            ];
             style = "Bold Semi-Condensed";
             size = "14px";
           };
         }
       ];
       fonts = {
-        names = [ "DejaVuSansMono" "Terminus" ];
+        names = [
+          "DejaVuSansMono"
+          "Terminus"
+        ];
         style = "Bold Semi-Condensed";
         size = 13.5;
       };

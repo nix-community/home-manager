@@ -1,53 +1,36 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    literalExpression
+    mapAttrsToList
+    mkEnableOption
+    mkIf
+    mkOption
+    optionalString
+    types
+    ;
+
   cfg = config.programs.yazi;
   tomlFormat = pkgs.formats.toml { };
-
-  bashIntegration = ''
-    function ${cfg.shellWrapperName}() {
-      local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-      yazi "$@" --cwd-file="$tmp"
-      if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        builtin cd -- "$cwd"
-      fi
-      rm -f -- "$tmp"
-    }
-  '';
-
-  fishIntegration = ''
-    function ${cfg.shellWrapperName}
-      set tmp (mktemp -t "yazi-cwd.XXXXX")
-      yazi $argv --cwd-file="$tmp"
-      if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-        builtin cd -- "$cwd"
-      end
-      rm -f -- "$tmp"
-    end
-  '';
-
-  nushellIntegration = ''
-    def --env ${cfg.shellWrapperName} [...args] {
-      let tmp = (mktemp -t "yazi-cwd.XXXXX")
-      yazi ...$args --cwd-file $tmp
-      let cwd = (open $tmp)
-      if $cwd != "" and $cwd != $env.PWD {
-        cd $cwd
-      }
-      rm -fp $tmp
-    }
-  '';
-in {
-  meta.maintainers = with maintainers; [ xyenon eljamm ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    eljamm
+    khaneliman
+    xyenon
+  ];
 
   options.programs.yazi = {
     enable = mkEnableOption "yazi";
 
-    package = mkPackageOption pkgs "yazi" { };
+    package = lib.mkPackageOption pkgs "yazi" { nullable = true; };
 
-    shellWrapperName = mkOption {
+    shellWrapperName = lib.mkOption {
       type = types.str;
       default = "yy";
       example = "y";
@@ -56,37 +39,29 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkEnableOption "Nushell integration" // {
-      default = true;
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     keymap = mkOption {
       type = tomlFormat.type;
       default = { };
       example = literalExpression ''
         {
-          input.keymap = [
-            { exec = "close"; on = [ "<C-q>" ]; }
-            { exec = "close --submit"; on = [ "<Enter>" ]; }
-            { exec = "escape"; on = [ "<Esc>" ]; }
-            { exec = "backspace"; on = [ "<Backspace>" ]; }
+          input.prepend_keymap = [
+            { run = "close"; on = [ "<C-q>" ]; }
+            { run = "close --submit"; on = [ "<Enter>" ]; }
+            { run = "escape"; on = [ "<Esc>" ]; }
+            { run = "backspace"; on = [ "<Backspace>" ]; }
           ];
-          manager.keymap = [
-            { exec = "escape"; on = [ "<Esc>" ]; }
-            { exec = "quit"; on = [ "q" ]; }
-            { exec = "close"; on = [ "<C-q>" ]; }
+          manager.prepend_keymap = [
+            { run = "escape"; on = [ "<Esc>" ]; }
+            { run = "quit"; on = [ "q" ]; }
+            { run = "close"; on = [ "<C-q>" ]; }
           ];
         }
       '';
@@ -109,7 +84,7 @@ in {
           };
           manager = {
             show_hidden = false;
-            sort_by = "modified";
+            sort_by = "mtime";
             sort_dir_first = true;
             sort_reverse = true;
           };
@@ -134,7 +109,7 @@ in {
               { fg = "#7AD9E5"; mime = "image/*"; }
               { fg = "#F3D398"; mime = "video/*"; }
               { fg = "#F3D398"; mime = "audio/*"; }
-              { fg = "#CD9EFC"; mime = "application/x-bzip"; }
+              { fg = "#CD9EFC"; mime = "application/bzip"; }
             ];
           };
         }
@@ -158,7 +133,12 @@ in {
     };
 
     plugins = mkOption {
-      type = with types; attrsOf (oneOf [ path package ]);
+      type =
+        with types;
+        attrsOf (oneOf [
+          path
+          package
+        ]);
       default = { };
       description = ''
         Lua plugins.
@@ -177,7 +157,12 @@ in {
     };
 
     flavors = mkOption {
-      type = with types; attrsOf (oneOf [ path package ]);
+      type =
+        with types;
+        attrsOf (oneOf [
+          path
+          package
+        ]);
       default = { };
       description = ''
         Pre-made themes.
@@ -196,91 +181,100 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
+    programs =
+      let
+        bashIntegration = ''
+          function ${cfg.shellWrapperName}() {
+            local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+            yazi "$@" --cwd-file="$tmp"
+            if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+              builtin cd -- "$cwd"
+            fi
+            rm -f -- "$tmp"
+          }
+        '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration bashIntegration;
+        fishIntegration = ''
+          set -l tmp (mktemp -t "yazi-cwd.XXXXX")
+          command yazi $argv --cwd-file="$tmp"
+          if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+            builtin cd -- "$cwd"
+          end
+          rm -f -- "$tmp"
+        '';
 
-    programs.fish.interactiveShellInit =
-      mkIf cfg.enableFishIntegration fishIntegration;
+        nushellIntegration = ''
+          def --env ${cfg.shellWrapperName} [...args] {
+            let tmp = (mktemp -t "yazi-cwd.XXXXX")
+            yazi ...$args --cwd-file $tmp
+            let cwd = (open $tmp)
+            if $cwd != "" and $cwd != $env.PWD {
+              cd $cwd
+            }
+            rm -fp $tmp
+          }
+        '';
+      in
+      {
+        bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
-    programs.nushell.extraConfig =
-      mkIf cfg.enableNushellIntegration nushellIntegration;
+        zsh.initContent = mkIf cfg.enableZshIntegration bashIntegration;
 
-    xdg.configFile = {
-      "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
-        source = tomlFormat.generate "yazi-keymap" cfg.keymap;
+        fish.functions.${cfg.shellWrapperName} = mkIf cfg.enableFishIntegration fishIntegration;
+
+        nushell.extraConfig = mkIf cfg.enableNushellIntegration nushellIntegration;
       };
-      "yazi/yazi.toml" = mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "yazi-settings" cfg.settings;
-      };
-      "yazi/theme.toml" = mkIf (cfg.theme != { }) {
-        source = tomlFormat.generate "yazi-theme" cfg.theme;
-      };
-      "yazi/init.lua" = mkIf (cfg.initLua != null)
-        (if builtins.isPath cfg.initLua then {
-          source = cfg.initLua;
-        } else {
-          text = cfg.initLua;
-        });
-    } // (mapAttrs' (name: value:
-      nameValuePair "yazi/flavors/${name}.yazi" { source = value; })
-      cfg.flavors) // (mapAttrs' (name: value:
-        nameValuePair "yazi/plugins/${name}.yazi" { source = value; })
-        cfg.plugins);
 
-    warnings = filter (s: s != "") (concatLists [
-      (mapAttrsToList (name: value:
-        optionalString (hasSuffix ".yazi" name) ''
-          Flavors like `programs.yazi.flavors."${name}"` should no longer have the suffix ".yazi" in their attribute name.
-          The flavor will be linked to `$XDG_CONFIG_HOME/yazi/flavors/${name}.yazi`.
-          You probably want to rename it to `programs.yazi.flavors."${
-            removeSuffix ".yazi" name
-          }"`.
-        '') cfg.flavors)
-      (mapAttrsToList (name: value:
-        optionalString (hasSuffix ".yazi" name) ''
-          Plugins like `programs.yazi.plugins."${name}"` should no longer have the suffix ".yazi" in their attribute name.
-          The plugin will be linked to `$XDG_CONFIG_HOME/yazi/plugins/${name}.yazi`.
-          You probably want to rename it to `programs.yazi.plugins."${
-            removeSuffix ".yazi" name
-          }"`.
-        '') cfg.plugins)
-    ]);
+    xdg.configFile =
+      {
+        "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
+          source = tomlFormat.generate "yazi-keymap" cfg.keymap;
+        };
+        "yazi/yazi.toml" = mkIf (cfg.settings != { }) {
+          source = tomlFormat.generate "yazi-settings" cfg.settings;
+        };
+        "yazi/theme.toml" = mkIf (cfg.theme != { }) {
+          source = tomlFormat.generate "yazi-theme" cfg.theme;
+        };
+        "yazi/init.lua" = mkIf (cfg.initLua != null) (
+          if builtins.isPath cfg.initLua then
+            {
+              source = cfg.initLua;
+            }
+          else
+            {
+              text = cfg.initLua;
+            }
+        );
+      }
+      // (lib.mapAttrs' (
+        name: value: lib.nameValuePair "yazi/flavors/${name}.yazi" { source = value; }
+      ) cfg.flavors)
+      // (lib.mapAttrs' (
+        name: value: lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value; }
+      ) cfg.plugins);
 
-    assertions = let
-      mkAsserts = opt: requiredFiles:
-        mapAttrsToList (name: value:
-          let
-            isDir = pathIsDirectory "${value}";
-            msgNotDir = optionalString (!isDir)
-              "The path or package should be a directory, not a single file.";
-            isFileMissing = file:
-              !(pathExists "${value}/${file}")
-              || pathIsDirectory "${value}/${file}";
-            missingFiles = filter isFileMissing requiredFiles;
-            msgFilesMissing = optionalString (missingFiles != [ ])
-              "The ${singularOpt} is missing these files: ${
-                toString missingFiles
-              }";
-            singularOpt = removeSuffix "s" opt;
-          in {
-            assertion = isDir && missingFiles == [ ];
-            message = ''
-              Value at `programs.yazi.${opt}.${name}` is not a valid yazi ${singularOpt}.
-              ${msgNotDir}
-              ${msgFilesMissing}
-              Evaluated value: `${value}`
-            '';
-          }) cfg.${opt};
-    in (mkAsserts "flavors" [
-      "flavor.toml"
-      "tmtheme.xml"
-      "README.md"
-      "preview.png"
-      "LICENSE"
-      "LICENSE-tmtheme"
-    ]) ++ (mkAsserts "plugins" [ "init.lua" ]);
+    warnings = lib.filter (s: s != "") (
+      lib.concatLists [
+        (mapAttrsToList (
+          name: _value:
+          optionalString (lib.hasSuffix ".yazi" name) ''
+            Flavors like `programs.yazi.flavors."${name}"` should no longer have the suffix ".yazi" in their attribute name.
+            The flavor will be linked to `$XDG_CONFIG_HOME/yazi/flavors/${name}.yazi`.
+            You probably want to rename it to `programs.yazi.flavors."${lib.removeSuffix ".yazi" name}"`.
+          ''
+        ) cfg.flavors)
+        (mapAttrsToList (
+          name: _value:
+          optionalString (lib.hasSuffix ".yazi" name) ''
+            Plugins like `programs.yazi.plugins."${name}"` should no longer have the suffix ".yazi" in their attribute name.
+            The plugin will be linked to `$XDG_CONFIG_HOME/yazi/plugins/${name}.yazi`.
+            You probably want to rename it to `programs.yazi.plugins."${lib.removeSuffix ".yazi" name}"`.
+          ''
+        ) cfg.plugins)
+      ]
+    );
   };
 }

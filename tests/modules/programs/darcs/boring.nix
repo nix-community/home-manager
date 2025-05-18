@@ -1,10 +1,12 @@
-{ pkgs, ... }:
-
 {
   config = {
     programs.darcs = {
       enable = true;
-      boring = [ "^.idea$" ".iml$" "^.stack-work$" ];
+      boring = [
+        "^.idea$"
+        ".iml$"
+        "^.stack-work$"
+      ];
     };
 
     nmt.script = ''

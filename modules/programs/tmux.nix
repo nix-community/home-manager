@@ -1,8 +1,17 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    literalExpression
+    mkEnableOption
+    mkOption
+    optionalString
+    types
+    ;
 
   cfg = config.programs.tmux;
 
@@ -56,8 +65,7 @@ let
     set -g status-keys ${cfg.keyMode}
     set -g mode-keys   ${cfg.keyMode}
 
-    ${optionalString
-    (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
+    ${optionalString (cfg.keyMode == "vi" && cfg.customPaneNavigationAndResize) ''
       bind -N "Select pane to the left of the active pane" h select-pane -L
       bind -N "Select pane below the active pane" j select-pane -D
       bind -N "Select pane above the active pane" k select-pane -U
@@ -73,21 +81,25 @@ let
         L resize-pane -R ${toString cfg.resizeAmount}
     ''}
 
-    ${if cfg.prefix != null then ''
-      # rebind main key: ${cfg.prefix}
-      unbind C-${defaultShortcut}
-      set -g prefix ${cfg.prefix}
-      bind -N "Send the prefix key through to the application" \
-        ${cfg.prefix} send-prefix
-    '' else
-      optionalString (cfg.shortcut != defaultShortcut) ''
-        # rebind main key: C-${cfg.shortcut}
-        unbind C-${defaultShortcut}
-        set -g prefix C-${cfg.shortcut}
-        bind -N "Send the prefix key through to the application" \
-          ${cfg.shortcut} send-prefix
-        bind C-${cfg.shortcut} last-window
-      ''}
+    ${
+      if cfg.prefix != null then
+        ''
+          # rebind main key: ${cfg.prefix}
+          unbind C-${defaultShortcut}
+          set -g prefix ${cfg.prefix}
+          bind -N "Send the prefix key through to the application" \
+            ${cfg.prefix} send-prefix
+        ''
+      else
+        optionalString (cfg.shortcut != defaultShortcut) ''
+          # rebind main key: C-${cfg.shortcut}
+          unbind C-${defaultShortcut}
+          set -g prefix C-${cfg.shortcut}
+          bind -N "Send the prefix key through to the application" \
+            ${cfg.shortcut} send-prefix
+          bind C-${cfg.shortcut} last-window
+        ''
+    }
 
     ${optionalString cfg.disableConfirmationPrompt ''
       bind-key -N "Kill the current window" & kill-window
@@ -95,6 +107,7 @@ let
     ''}
 
     set  -g mouse             ${boolToStr cfg.mouse}
+    set  -g focus-events      ${boolToStr cfg.focusEvents}
     setw -g aggressive-resize ${boolToStr cfg.aggressiveResize}
     setw -g clock-mode-style  ${if cfg.clock24 then "24" else "12"}
     set  -s escape-time       ${toString cfg.escapeTime}
@@ -103,14 +116,18 @@ let
 
   configPlugins = {
     assertions = [
-      (let
-        hasBadPluginName = p: !(hasPrefix "tmuxplugin" (pluginName p));
-        badPlugins = filter hasBadPluginName cfg.plugins;
-      in {
-        assertion = badPlugins == [ ];
-        message = ''Invalid tmux plugin (not prefixed with "tmuxplugins"): ''
-          + concatMapStringsSep ", " pluginName badPlugins;
-      })
+      (
+        let
+          hasBadPluginName = p: !(lib.hasPrefix "tmuxplugin" (pluginName p));
+          badPlugins = lib.filter hasBadPluginName cfg.plugins;
+        in
+        {
+          assertion = badPlugins == [ ];
+          message =
+            ''Invalid tmux plugin (not prefixed with "tmuxplugins"): ''
+            + lib.concatMapStringsSep ", " pluginName badPlugins;
+        }
+      )
     ];
 
     xdg.configFile."tmux/tmux.conf".text = ''
@@ -118,17 +135,20 @@ let
       # Load plugins with Home Manager                #
       # --------------------------------------------- #
 
-      ${(concatMapStringsSep "\n\n" (p: ''
-        # ${pluginName p}
-        # ---------------------
-        ${p.extraConfig or ""}
-        run-shell ${if types.package.check p then p.rtp else p.plugin.rtp}
-      '') cfg.plugins)}
+      ${
+        (lib.concatMapStringsSep "\n\n" (p: ''
+          # ${pluginName p}
+          # ---------------------
+          ${p.extraConfig or ""}
+          run-shell ${if types.package.check p then p.rtp else p.plugin.rtp}
+        '') cfg.plugins)
+      }
       # ============================================= #
     '';
   };
 
-in {
+in
+{
   options = {
     programs.tmux = {
       aggressiveResize = mkOption {
@@ -191,6 +211,15 @@ in {
         '';
       };
 
+      focusEvents = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''
+          On supported terminals, request focus events and pass them through to
+          applications running in tmux.
+        '';
+      };
+
       historyLimit = mkOption {
         default = 2000;
         example = 5000;
@@ -201,7 +230,10 @@ in {
       keyMode = mkOption {
         default = defaultKeyMode;
         example = "vi";
-        type = types.enum [ "emacs" "vi" ];
+        type = types.enum [
+          "emacs"
+          "vi"
+        ];
         description = "VI or Emacs style shortcuts.";
       };
 
@@ -216,13 +248,7 @@ in {
         '';
       };
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.tmux;
-        defaultText = literalExpression "pkgs.tmux";
-        example = literalExpression "pkgs.tmux";
-        description = "The tmux package to install";
-      };
+      package = lib.mkPackageOption pkgs "tmux" { };
 
       reverseSplit = mkOption {
         default = false;
@@ -239,7 +265,7 @@ in {
 
       sensibleOnTop = mkOption {
         type = types.bool;
-        default = true;
+        default = false;
         description = ''
           Run the sensible plugin at the top of the configuration. It
           is possible to override the sensible settings using the
@@ -274,7 +300,7 @@ in {
 
       shell = mkOption {
         default = defaultShell;
-        example = "\${pkgs.zsh}/bin/zsh";
+        example = literalExpression "${pkgs.zsh}/bin/zsh";
         type = with types; nullOr str;
         description = "Set the default-shell tmux variable.";
       };
@@ -294,8 +320,10 @@ in {
       tmuxinator.enable = mkEnableOption "tmuxinator";
 
       plugins = mkOption {
-        type = with types;
-          listOf (either package pluginModule) // {
+        type =
+          with types;
+          listOf (either package pluginModule)
+          // {
             description = "list of plugin packages or submodules";
           };
         description = ''
@@ -304,7 +332,7 @@ in {
           run at the top of your configuration.
         '';
         default = [ ];
-        example = literalExpression ''
+        example = lib.literalExpression ''
           with pkgs; [
             tmuxPlugins.cpu
             {
@@ -324,22 +352,25 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge ([
-    {
-      home.packages = [ cfg.package ]
-        ++ optional cfg.tmuxinator.enable pkgs.tmuxinator
-        ++ optional cfg.tmuxp.enable pkgs.tmuxp;
-    }
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home.packages =
+          [ cfg.package ]
+          ++ lib.optional cfg.tmuxinator.enable pkgs.tmuxinator
+          ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
+      }
 
-    { xdg.configFile."tmux/tmux.conf".text = mkBefore tmuxConf; }
-    { xdg.configFile."tmux/tmux.conf".text = mkAfter cfg.extraConfig; }
+      { xdg.configFile."tmux/tmux.conf".text = lib.mkBefore tmuxConf; }
+      { xdg.configFile."tmux/tmux.conf".text = lib.mkAfter cfg.extraConfig; }
 
-    (mkIf cfg.secureSocket {
-      home.sessionVariables = {
-        TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/$(id -u)"}'';
-      };
-    })
+      (lib.mkIf cfg.secureSocket {
+        home.sessionVariables = {
+          TMUX_TMPDIR = ''''${XDG_RUNTIME_DIR:-"/run/user/$(id -u)"}'';
+        };
+      })
 
-    (mkIf (cfg.plugins != [ ]) configPlugins)
-  ]));
+      (lib.mkIf (cfg.plugins != [ ]) configPlugins)
+    ]
+  );
 }

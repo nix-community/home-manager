@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, ... }:
 
 {
   services.swayidle = {
@@ -38,23 +38,22 @@
 
     serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
 
-    assertFileContent "$serviceFileNormalized" ${
-      builtins.toFile "expected.service" ''
-        [Install]
-        WantedBy=graphical-session.target
+    assertFileContent "$serviceFileNormalized" ${builtins.toFile "expected.service" ''
+      [Install]
+      WantedBy=graphical-session.target
 
-        [Service]
-        Environment=PATH=/nix/store/00000000000000000000000000000000-bash/bin
-        ExecStart=@swayidle@/bin/dummy -w timeout 50 'notify-send -t 10000 -- "Screen lock in 10 seconds"' timeout 60 'swaylock -fF' timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock -fF' lock 'swaylock -fF'
-        Restart=always
-        Type=simple
+      [Service]
+      Environment=PATH=@bash-interactive@/bin
+      ExecStart=@swayidle@/bin/dummy -w timeout 50 'notify-send -t 10000 -- "Screen lock in 10 seconds"' timeout 60 'swaylock -fF' timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock -fF' lock 'swaylock -fF'
+      Restart=always
+      Type=simple
 
-        [Unit]
-        ConditionEnvironment=WAYLAND_DISPLAY
-        Description=Idle manager for Wayland
-        Documentation=man:swayidle(1)
-        PartOf=graphical-session.target
-      ''
-    }
+      [Unit]
+      After=graphical-session.target
+      ConditionEnvironment=WAYLAND_DISPLAY
+      Description=Idle manager for Wayland
+      Documentation=man:swayidle(1)
+      PartOf=graphical-session.target
+    ''}
   '';
 }

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -13,7 +18,8 @@ let
 
   emacsBin = "${config.programs.emacs.finalPackage}/bin/emacs";
 
-  mkTestPackage = epkgs:
+  mkTestPackage =
+    epkgs:
     epkgs.trivialBuild {
       pname = "hm-test";
       version = "0.1.0";
@@ -23,7 +29,8 @@ let
       '';
     };
 
-in lib.mkIf config.test.enableBig {
+in
+lib.mkIf config.test.enableBig {
   programs.emacs = {
     enable = true;
     package = pkgs.emacs-nox;

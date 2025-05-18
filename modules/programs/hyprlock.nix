@@ -1,16 +1,23 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
 
   cfg = config.programs.hyprlock;
 
-in {
-  meta.maintainers = [ maintainers.khaneliman maintainers.fufexan ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    fufexan
+  ];
 
   options.programs.hyprlock = {
-    enable = mkEnableOption "" // {
+    enable = lib.mkEnableOption "" // {
       description = ''
         Whether to enable Hyprlock, Hyprland's GPU-accelerated lock screen
         utility.
@@ -27,23 +34,27 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "hyprlock" { };
+    package = lib.mkPackageOption pkgs "hyprlock" { nullable = true; };
 
     settings = lib.mkOption {
-      type = with lib.types;
+      type =
+        with lib.types;
         let
-          valueType = nullOr (oneOf [
-            bool
-            int
-            float
-            str
-            path
-            (attrsOf valueType)
-            (listOf valueType)
-          ]) // {
-            description = "Hyprlock configuration value";
-          };
-        in valueType;
+          valueType =
+            nullOr (oneOf [
+              bool
+              int
+              float
+              str
+              path
+              (attrsOf valueType)
+              (listOf valueType)
+            ])
+            // {
+              description = "Hyprlock configuration value";
+            };
+        in
+        valueType;
       default = { };
       example = lib.literalExpression ''
         {
@@ -94,34 +105,50 @@ in {
       '';
     };
 
-    sourceFirst = lib.mkEnableOption ''
-      putting source entries at the top of the configuration
-    '' // {
-      default = true;
-    };
+    sourceFirst =
+      lib.mkEnableOption ''
+        putting source entries at the top of the configuration
+      ''
+      // {
+        default = true;
+      };
 
     importantPrefixes = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [ "$" "monitor" "size" ]
-        ++ lib.optionals cfg.sourceFirst [ "source" ];
-      example = [ "$" "monitor" "size" ];
+      default = [
+        "$"
+        "bezier"
+        "monitor"
+        "size"
+      ] ++ lib.optionals cfg.sourceFirst [ "source" ];
+      example = [
+        "$"
+        "bezier"
+        "monitor"
+        "size"
+      ];
       description = ''
         List of prefix of attributes to source at the top of the config.
       '';
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."hypr/hyprlock.conf" =
-      let shouldGenerate = cfg.extraConfig != "" || cfg.settings != { };
-      in mkIf shouldGenerate {
-        text = lib.optionalString (cfg.settings != { })
-          (lib.hm.generators.toHyprconf {
-            attrs = cfg.settings;
-            inherit (cfg) importantPrefixes;
-          }) + lib.optionalString (cfg.extraConfig != null) cfg.extraConfig;
+      let
+        shouldGenerate = cfg.extraConfig != "" || cfg.settings != { };
+      in
+      lib.mkIf shouldGenerate {
+        text =
+          lib.optionalString (cfg.settings != { }) (
+            lib.hm.generators.toHyprconf {
+              attrs = cfg.settings;
+              inherit (cfg) importantPrefixes;
+            }
+          )
+          + lib.optionalString (cfg.extraConfig != null) cfg.extraConfig;
       };
   };
 }

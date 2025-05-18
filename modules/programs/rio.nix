@@ -1,9 +1,15 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   cfg = config.programs.rio;
 
   settingsFormat = pkgs.formats.toml { };
-in {
+in
+{
   options.programs.rio = {
     enable = lib.mkEnableOption null // {
       description = ''
@@ -12,7 +18,7 @@ in {
       '';
     };
 
-    package = lib.mkPackageOption pkgs "rio" { };
+    package = lib.mkPackageOption pkgs "rio" { nullable = true; };
 
     settings = lib.mkOption {
       type = settingsFormat.type;
@@ -25,17 +31,17 @@ in {
   };
   meta.maintainers = [ lib.maintainers.otavio ];
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      home.packages = [ cfg.package ];
-    }
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      }
 
-    # Only manage configuration if not empty
-    (lib.mkIf (cfg.settings != { }) {
-      xdg.configFile."rio/config.toml".source = if lib.isPath cfg.settings then
-        cfg.settings
-      else
-        settingsFormat.generate "rio.toml" cfg.settings;
-    })
-  ]);
+      # Only manage configuration if not empty
+      (lib.mkIf (cfg.settings != { }) {
+        xdg.configFile."rio/config.toml".source =
+          if lib.isPath cfg.settings then cfg.settings else settingsFormat.generate "rio.toml" cfg.settings;
+      })
+    ]
+  );
 }

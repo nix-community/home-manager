@@ -18,16 +18,14 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/pqivrc
-    assertFileContent home-files/.config/pqivrc ${
-      builtins.toFile "pqiv.expected" ''
-        [options]
-        hide-info-box = 1
-        thumbnail-size = 256x256
+    assertFileContent home-files/.config/pqivrc ${builtins.toFile "pqiv.expected" ''
+      [options]
+      hide-info-box = 1
+      thumbnail-size = 256x256
 
-        [keybindings]
-        t { montage_mode_enter() }
+      [keybindings]
+      t { montage_mode_enter() }
 
-      ''
-    }
+    ''}
   '';
 }

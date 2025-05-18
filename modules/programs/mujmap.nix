@@ -1,49 +1,54 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
+
   cfg = config.programs.mujmap;
 
-  mujmapAccounts =
-    filter (a: a.mujmap.enable) (attrValues config.accounts.email.accounts);
+  mujmapAccounts = lib.filter (a: a.mujmap.enable) (lib.attrValues config.accounts.email.accounts);
 
-  missingNotmuchAccounts = map (a: a.name)
-    (filter (a: !a.notmuch.enable && a.mujmap.notmuchSetupWarning)
-      mujmapAccounts);
+  missingNotmuchAccounts = map (a: a.name) (
+    lib.filter (a: !a.notmuch.enable && a.mujmap.notmuchSetupWarning) mujmapAccounts
+  );
 
-  notmuchConfigHelp =
-    map (name: "accounts.email.accounts.${name}.notmuch.enable = true;")
-    missingNotmuchAccounts;
+  notmuchConfigHelp = map (
+    name: "accounts.email.accounts.${name}.notmuch.enable = true;"
+  ) missingNotmuchAccounts;
 
   settingsFormat = pkgs.formats.toml { };
 
-  filterNull = attrs: attrsets.filterAttrs (n: v: v != null) attrs;
+  filterNull = attrs: lib.attrsets.filterAttrs (n: v: v != null) attrs;
 
-  configFile = account:
+  configFile =
+    account:
     let
-      settings'' = if (account.jmap == null) then
-        { }
-      else
-        filterNull {
-          fqdn = account.jmap.host;
-          session_url = account.jmap.sessionUrl;
-        };
+      settings'' =
+        if (account.jmap == null) then
+          { }
+        else
+          filterNull {
+            fqdn = account.jmap.host;
+            session_url = account.jmap.sessionUrl;
+          };
 
-      settings' = settings'' // {
-        username = account.userName;
-        password_command = escapeShellArgs account.passwordCommand;
-      } // filterNull account.mujmap.settings;
+      settings' =
+        settings''
+        // {
+          username = account.userName;
+          password_command = lib.escapeShellArgs account.passwordCommand;
+        }
+        // filterNull account.mujmap.settings;
 
-      settings = if (hasAttr "fqdn" settings') then
-        (removeAttrs settings' [ "session_url" ])
-      else
-        settings';
-    in {
+      settings =
+        if (lib.hasAttr "fqdn" settings') then (removeAttrs settings' [ "session_url" ]) else settings';
+    in
+    {
       name = "${account.maildir.absPath}/mujmap.toml";
-      value.source = settingsFormat.generate
-        "mujmap-${lib.replaceStrings [ "@" ] [ "_at_" ] account.address}.toml"
-        settings;
+      value.source = settingsFormat.generate "mujmap-${lib.replaceStrings [ "@" ] [ "_at_" ] account.address}.toml" settings;
     };
 
   tagsOpts = {
@@ -154,7 +159,7 @@ let
     password_command = mkOption {
       type = types.nullOr (types.either types.str (types.listOf types.str));
       default = null;
-      apply = p: if isList p then escapeShellArgs p else p;
+      apply = p: if lib.isList p then lib.escapeShellArgs p else p;
       example = "pass alice@example.com";
       description = ''
         Shell command which will print a password to stdout for basic HTTP
@@ -232,7 +237,7 @@ let
   };
 
   mujmapOpts = {
-    enable = mkEnableOption "mujmap JMAP synchronization for notmuch";
+    enable = lib.mkEnableOption "mujmap JMAP synchronization for notmuch";
 
     notmuchSetupWarning = mkOption {
       type = types.bool;
@@ -261,55 +266,56 @@ let
     };
   };
 
-  mujmapModule = types.submodule { options = { mujmap = mujmapOpts; }; };
-in {
-  meta.maintainers = with maintainers; [ elizagamedev ];
+  mujmapModule = types.submodule {
+    options = {
+      mujmap = mujmapOpts;
+    };
+  };
+in
+{
+  meta.maintainers = with lib.maintainers; [ elizagamedev ];
 
   options = {
     programs.mujmap = {
-      enable = mkEnableOption "mujmap Gmail synchronization for notmuch";
+      enable = lib.mkEnableOption "mujmap Gmail synchronization for notmuch";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.mujmap;
-        defaultText = "pkgs.mujmap";
-        description = ''
-          mujmap package to use.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "mujmap" { };
     };
 
-    accounts.email.accounts =
-      mkOption { type = with types; attrsOf mujmapModule; };
+    accounts.email.accounts = mkOption { type = with types; attrsOf mujmapModule; };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    (mkIf (missingNotmuchAccounts != [ ]) {
-      warnings = [''
-        mujmap is enabled for the following email accounts, but notmuch is not:
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      (lib.mkIf (missingNotmuchAccounts != [ ]) {
+        warnings = [
+          ''
+            mujmap is enabled for the following email accounts, but notmuch is not:
 
-            ${concatStringsSep "\n    " missingNotmuchAccounts}
+                ${lib.concatStringsSep "\n    " missingNotmuchAccounts}
 
-        Notmuch can be enabled with:
+            Notmuch can be enabled with:
 
-            ${concatStringsSep "\n    " notmuchConfigHelp}
+                ${lib.concatStringsSep "\n    " notmuchConfigHelp}
 
-        If you have configured notmuch outside of Home Manager, you can suppress this
-        warning with:
+            If you have configured notmuch outside of Home Manager, you can suppress this
+            warning with:
 
-            programs.mujmap.notmuchSetupWarning = false;
-      ''];
-    })
+                programs.mujmap.notmuchSetupWarning = false;
+          ''
+        ];
+      })
 
-    {
-      warnings = flatten (map (account: account.warnings) mujmapAccounts);
+      {
+        warnings = lib.flatten (map (account: account.warnings) mujmapAccounts);
 
-      home.packages = [ cfg.package ];
+        home.packages = [ cfg.package ];
 
-      # Notmuch should ignore non-mail files created by mujmap.
-      programs.notmuch.new.ignore = [ "/.*[.](toml|json|lock)$/" ];
+        # Notmuch should ignore non-mail files created by mujmap.
+        programs.notmuch.new.ignore = [ "/.*[.](toml|json|lock)$/" ];
 
-      home.file = listToAttrs (map configFile mujmapAccounts);
-    }
-  ]);
+        home.file = lib.listToAttrs (map configFile mujmapAccounts);
+      }
+    ]
+  );
 }

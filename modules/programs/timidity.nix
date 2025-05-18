@@ -1,21 +1,22 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.timidity;
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.amesgen ];
 
   options.programs.timidity = {
     enable = lib.mkEnableOption "timidity, a software MIDI renderer";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.timidity;
-      defaultText = lib.literalExpression "pkgs.timidity";
-      description = "The timidity package to use.";
-    };
+    package = lib.mkPackageOption pkgs "timidity" { };
 
     finalPackage = lib.mkOption {
       readOnly = true;

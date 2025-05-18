@@ -1,26 +1,37 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib)
+    mkOption
+    types
+    optionalString
+    ;
 
   cfg = config.services.swayosd;
 
-in {
-  meta.maintainers = [ hm.maintainers.pltanton ];
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.pltanton ];
 
   options.services.swayosd = {
-    enable = mkEnableOption ''
+    enable = lib.mkEnableOption ''
       swayosd, a GTK based on screen display for keyboard shortcuts like
       caps-lock and volume'';
 
-    package = mkPackageOption pkgs "swayosd" { };
+    package = lib.mkPackageOption pkgs "swayosd" { };
 
     topMargin = mkOption {
-      type = types.nullOr (types.addCheck types.float (f: f >= 0.0 && f <= 1.0)
+      type = types.nullOr (
+        types.addCheck types.float (f: f >= 0.0 && f <= 1.0)
         // {
           description = "float between 0.0 and 1.0 (inclusive)";
-        });
+        }
+      );
       default = null;
       example = 1.0;
       description = "OSD margin from top edge (0.5 would be screen center).";
@@ -45,9 +56,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.swayosd" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.swayosd" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -56,8 +67,8 @@ in {
       services.swayosd = {
         Unit = {
           Description = "Volume/backlight OSD indicator";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+          PartOf = [ config.wayland.systemd.target ];
+          After = [ config.wayland.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           Documentation = "man:swayosd(1)";
           StartLimitBurst = 5;
@@ -66,17 +77,18 @@ in {
 
         Service = {
           Type = "simple";
-          ExecStart = "${cfg.package}/bin/swayosd-server"
+          ExecStart =
+            "${cfg.package}/bin/swayosd-server"
             + (optionalString (cfg.display != null) " --display ${cfg.display}")
-            + (optionalString (cfg.stylePath != null)
-              " --style ${escapeShellArg cfg.stylePath}")
-            + (optionalString (cfg.topMargin != null)
-              " --top-margin ${toString cfg.topMargin}");
+            + (optionalString (cfg.stylePath != null) " --style ${lib.escapeShellArg cfg.stylePath}")
+            + (optionalString (cfg.topMargin != null) " --top-margin ${toString cfg.topMargin}");
           Restart = "always";
           RestartSec = "2s";
         };
 
-        Install = { WantedBy = [ "graphical-session.target" ]; };
+        Install = {
+          WantedBy = [ config.wayland.systemd.target ];
+        };
       };
     };
   };

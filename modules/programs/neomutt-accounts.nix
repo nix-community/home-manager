@@ -1,8 +1,7 @@
 { config, lib, ... }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
+
   extraMailboxOptions = {
     options = {
       mailbox = mkOption {
@@ -19,43 +18,51 @@ let
       };
 
       type = mkOption {
-        type = types.nullOr (types.enum [ "maildir" "imap" ]);
+        type = types.nullOr (
+          types.enum [
+            "maildir"
+            "imap"
+          ]
+        );
         example = "imap";
         default = null;
-        description =
-          "Whether this mailbox is a maildir folder or an IMAP mailbox";
+        description = "Whether this mailbox is a maildir folder or an IMAP mailbox";
       };
     };
   };
 
-in {
+in
+{
   options.notmuch.neomutt = {
-    enable = mkEnableOption "Notmuch support in NeoMutt" // { default = true; };
+    enable = lib.mkEnableOption "Notmuch support in NeoMutt" // {
+      default = true;
+    };
 
     virtualMailboxes = mkOption {
       type = types.listOf (types.submodule ./notmuch-virtual-mailbox.nix);
-      example = [{
-        name = "My INBOX";
-        query = "tag:inbox";
-      }];
-      default = [{
-        name = "My INBOX";
-        query = "tag:inbox";
-      }];
+      example = [
+        {
+          name = "My INBOX";
+          query = "tag:inbox";
+        }
+      ];
+      default = [
+        {
+          name = "My INBOX";
+          query = "tag:inbox";
+        }
+      ];
       description = "List of virtual mailboxes using Notmuch queries";
     };
   };
 
   options.neomutt = {
-    enable = mkEnableOption "NeoMutt";
+    enable = lib.mkEnableOption "NeoMutt";
 
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
-      default = if config.msmtp.enable then
-        "msmtpq --read-envelope-from --read-recipients"
-      else
-        null;
-      defaultText = literalExpression ''
+      default = if config.msmtp.enable then "msmtpq --read-envelope-from --read-recipients" else null;
+      defaultText = lib.literalExpression ''
         if config.msmtp.enable then
           "msmtpq --read-envelope-from --read-recipients"
         else
@@ -90,11 +97,13 @@ in {
     };
 
     mailboxType = mkOption {
-      type = types.enum [ "maildir" "imap" ];
+      type = types.enum [
+        "maildir"
+        "imap"
+      ];
       default = "maildir";
       example = "imap";
-      description =
-        "Whether this account uses maildir folders or IMAP mailboxes";
+      description = "Whether this account uses maildir folders or IMAP mailboxes";
     };
 
     extraMailboxes = mkOption {

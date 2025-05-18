@@ -1,8 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
-  imports = [ ./sway-stubs.nix ];
-
   wayland.windowManager.sway = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@sway@"; };
@@ -10,7 +8,10 @@
     # overriding findutils causes issues
     config.menu = "${pkgs.dmenu}/bin/dmenu_run";
 
-    systemd.variables = [ "XCURSOR_THEME" "XCURSOR_SIZE" ];
+    systemd.variables = [
+      "XCURSOR_THEME"
+      "XCURSOR_SIZE"
+    ];
   };
 
   nmt.script = ''

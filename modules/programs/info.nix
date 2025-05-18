@@ -17,10 +17,12 @@
 # two files, showing you a unified table of contents for all packages.
 # This is really nice.
 
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.programs.info;
@@ -30,17 +32,18 @@ let
   # from this package in the activation script.
   infoPkg = pkgs.texinfoInteractive;
 
-in {
+in
+{
   imports = [
-    (mkRemovedOptionModule [ "programs" "info" "homeInfoDirLocation" ] ''
+    (lib.mkRemovedOptionModule [ "programs" "info" "homeInfoDirLocation" ] ''
       The `dir` file is now generated as part of the Home Manager profile and
       will no longer be placed in your home directory.
     '')
   ];
 
-  options.programs.info.enable = mkEnableOption "GNU Info";
+  options.programs.info.enable = lib.mkEnableOption "GNU Info";
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [
       infoPkg
 
@@ -51,13 +54,21 @@ in {
 
     home.extraOutputsToInstall = [ "info" ];
 
-    home.extraProfileCommands = let infoPath = "$out/share/info";
-    in ''
-      if [[ -w "${infoPath}" && ! -e "${infoPath}/dir" ]]; then
-        PATH="${lib.makeBinPath [ pkgs.gzip infoPkg ]}''${PATH:+:}$PATH" \
-        find -L "${infoPath}" \( -name '*.info' -o -name '*.info.gz' \) \
-          -exec install-info '{}' "${infoPath}/dir" ';'
-      fi
-    '';
+    home.extraProfileCommands =
+      let
+        infoPath = "$out/share/info";
+      in
+      ''
+        if [[ -w "${infoPath}" && ! -e "${infoPath}/dir" ]]; then
+          PATH="${
+            lib.makeBinPath [
+              pkgs.gzip
+              infoPkg
+            ]
+          }''${PATH:+:}$PATH" \
+          find -L "${infoPath}" \( -name '*.info' -o -name '*.info.gz' \) \
+            -exec install-info '{}' "${infoPath}/dir" ';'
+        fi
+      '';
   };
 }

@@ -1,15 +1,23 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib) mkOption types;
 
   cfg = config.xfconf;
 
   xfIntVariant = types.submodule {
     options = {
       type = mkOption {
-        type = types.enum [ "int" "uint" "uint64" ];
+        type = types.enum [
+          "int"
+          "uint"
+          "uint64"
+        ];
         description = ''
           To distinguish between int, uint and uint64 in xfconf,
           you can specify the type in xfconf with this submodule.
@@ -24,39 +32,51 @@ let
     };
   };
 
-  withType = v:
-    if builtins.isAttrs v then [
-      "-t"
-      v.type
-      "-s"
-      (toString v.value)
-    ] else if builtins.isBool v then [
-      "-t"
-      "bool"
-      "-s"
-      (if v then "true" else "false")
-    ] else if builtins.isInt v then [
-      "-t"
-      "int"
-      "-s"
-      (toString v)
-    ] else if builtins.isFloat v then [
-      "-t"
-      "double"
-      "-s"
-      (toString v)
-    ] else if builtins.isString v then [
-      "-t"
-      "string"
-      "-s"
-      v
-    ] else if builtins.isList v then
-      [ "-a" ] ++ concatMap withType v
+  withType =
+    v:
+    if builtins.isAttrs v then
+      [
+        "-t"
+        v.type
+        "-s"
+        (toString v.value)
+      ]
+    else if builtins.isBool v then
+      [
+        "-t"
+        "bool"
+        "-s"
+        (if v then "true" else "false")
+      ]
+    else if builtins.isInt v then
+      [
+        "-t"
+        "int"
+        "-s"
+        (toString v)
+      ]
+    else if builtins.isFloat v then
+      [
+        "-t"
+        "double"
+        "-s"
+        (toString v)
+      ]
+    else if builtins.isString v then
+      [
+        "-t"
+        "string"
+        "-s"
+        v
+      ]
+    else if builtins.isList v then
+      [ "-a" ] ++ lib.concatMap withType v
     else
       throw "unexpected xfconf type: ${builtins.typeOf v}";
 
-in {
-  meta.maintainers = [ maintainers.chuangzhu ];
+in
+{
+  meta.maintainers = [ lib.maintainers.chuangzhu ];
 
   options.xfconf = {
     enable = mkOption {
@@ -74,14 +94,24 @@ in {
     };
 
     settings = mkOption {
-      type = with types;
-      # xfIntVariant must come AFTER str; otherwise strings are treated as submodule imports...
-        let value = nullOr (oneOf [ bool int float str xfIntVariant ]);
-        in attrsOf (attrsOf (either value (listOf value))) // {
+      type =
+        with types;
+        # xfIntVariant must come AFTER str; otherwise strings are treated as submodule imports...
+        let
+          value = nullOr (oneOf [
+            bool
+            int
+            float
+            str
+            xfIntVariant
+          ]);
+        in
+        attrsOf (attrsOf (either value (listOf value)))
+        // {
           description = "xfconf settings";
         };
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           xfce4-session = {
             "startup/ssh-agent/enabled" = false;
@@ -99,32 +129,34 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.settings != { }) {
-    assertions =
-      [ (hm.assertions.assertPlatform "xfconf" pkgs platforms.linux) ];
+  config = lib.mkIf (cfg.enable && cfg.settings != { }) {
+    assertions = [ (lib.hm.assertions.assertPlatform "xfconf" pkgs lib.platforms.linux) ];
 
-    home.activation.xfconfSettings = hm.dag.entryAfter [ "installPackages" ]
-      (let
+    home.activation.xfconfSettings = lib.hm.dag.entryAfter [ "installPackages" ] (
+      let
         mkCommand = channel: property: value: ''
           run ${pkgs.xfce.xfconf}/bin/xfconf-query \
-            ${
-              escapeShellArgs ([ "-c" channel "-p" "/${property}" ]
-                ++ (if value == null then
-                  [ "-r" ]
-                else
-                  [ "-n" ] ++ withType value))
-            }
+            ${lib.escapeShellArgs (
+              [
+                "-c"
+                channel
+                "-p"
+                "/${property}"
+              ]
+              ++ (if value == null then [ "-r" ] else [ "-n" ] ++ withType value)
+            )}
         '';
 
-        commands = mapAttrsToList
-          (channel: properties: mapAttrsToList (mkCommand channel) properties)
-          cfg.settings;
+        commands = lib.mapAttrsToList (
+          channel: properties: lib.mapAttrsToList (mkCommand channel) properties
+        ) cfg.settings;
 
         load = pkgs.writeShellScript "load-xfconf" ''
           ${config.lib.bash.initHomeManagerLib}
-          ${concatMapStrings concatStrings commands}
+          ${lib.concatMapStrings lib.concatStrings commands}
         '';
-      in ''
+      in
+      ''
         if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
           export DBUS_RUN_SESSION_CMD=""
         else
@@ -134,6 +166,7 @@ in {
         run $DBUS_RUN_SESSION_CMD ${load}
 
         unset DBUS_RUN_SESSION_CMD
-      '');
+      ''
+    );
   };
 }

@@ -1,56 +1,44 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
   cfg = config.programs.autojump;
-  package = pkgs.autojump;
 
-in {
-  meta.maintainers = [ maintainers.evanjs ];
+  inherit (lib) mkIf;
+in
+{
+  meta.maintainers = [ lib.maintainers.evanjs ];
 
   options.programs.autojump = {
-    enable = mkEnableOption "autojump";
+    enable = lib.mkEnableOption "autojump";
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "autojump" { };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ package ];
+    home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkBefore ''
-      . ${package}/share/autojump/autojump.bash
-    '');
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (
+      lib.mkBefore ''
+        . ${cfg.package}/share/autojump/autojump.bash
+      ''
+    );
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      . ${package}/share/autojump/autojump.zsh
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
+      . ${cfg.package}/share/autojump/autojump.zsh
     '';
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      . ${package}/share/autojump/autojump.fish
+      . ${cfg.package}/share/autojump/autojump.fish
     '';
   };
 }

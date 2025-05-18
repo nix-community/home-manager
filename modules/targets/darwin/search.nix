@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.targets.darwin;
@@ -11,18 +14,18 @@ let
     Google = "com.google.www";
     Yahoo = "com.yahoo.www";
   };
-  searchId = getAttr cfg.search searchEngines;
-in {
-  options.targets.darwin.search = mkOption {
-    type = with types; nullOr (enum (attrNames searchEngines));
+  searchId = lib.getAttr cfg.search searchEngines;
+in
+{
+  options.targets.darwin.search = lib.mkOption {
+    type = with lib.types; nullOr (enum (lib.attrNames searchEngines));
     default = null;
     description = "Default search engine.";
   };
 
-  config = mkIf (cfg.search != null) {
+  config = lib.mkIf (cfg.search != null) {
     assertions = [
-      (hm.assertions.assertPlatform "targets.darwin.search" pkgs
-        platforms.darwin)
+      (lib.hm.assertions.assertPlatform "targets.darwin.search" pkgs lib.platforms.darwin)
     ];
 
     targets.darwin.defaults = {

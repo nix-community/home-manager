@@ -1,14 +1,14 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, ... }:
 
 {
-  config = {
-    programs.rofi = {
-      enable = true;
+  programs.rofi = {
+    enable = true;
 
-      theme = let inherit (config.lib.formats.rasi) mkLiteral;
-      in {
+    theme =
+      let
+        inherit (config.lib.formats.rasi) mkLiteral;
+      in
+      {
         "@import" = "~/.cache/wal/colors-rofi-dark";
 
         "*" = {
@@ -18,7 +18,12 @@ with lib;
           width = 512;
         };
 
-        "#inputbar" = { children = map mkLiteral [ "prompt" "entry" ]; };
+        "#inputbar" = {
+          children = map mkLiteral [
+            "prompt"
+            "entry"
+          ];
+        };
 
         "#textbox-prompt-colon" = {
           expand = false;
@@ -27,17 +32,14 @@ with lib;
           text-color = mkLiteral "@foreground-color";
         };
       };
-    };
-
-    test.stubs.rofi = { };
-
-    nmt.script = ''
-      assertFileContent \
-        home-files/.config/rofi/config.rasi \
-        ${./custom-theme-config.rasi}
-      assertFileContent \
-        home-files/.local/share/rofi/themes/custom.rasi \
-        ${./custom-theme.rasi}
-    '';
   };
+
+  nmt.script = ''
+    assertFileContent \
+      home-files/.config/rofi/config.rasi \
+      ${./custom-theme-config.rasi}
+    assertFileContent \
+      home-files/.local/share/rofi/themes/custom.rasi \
+      ${./custom-theme.rasi}
+  '';
 }

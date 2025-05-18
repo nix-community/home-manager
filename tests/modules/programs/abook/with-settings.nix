@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   config = {
     programs.abook = {
@@ -27,8 +23,6 @@ with lib;
         set autosave=true
       '';
     };
-
-    test.stubs.abook = { };
 
     nmt.script = ''
       assertFileExists home-files/.config/abook/abookrc

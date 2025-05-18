@@ -1,5 +1,3 @@
-{ ... }:
-
 let
   i3 = {
     ws1 = "1";
@@ -9,7 +7,8 @@ let
     ws5 = "Multiple";
   };
 
-in {
+in
+{
   imports = [ ./i3-stubs.nix ];
 
   xsession.windowManager.i3 = {
@@ -34,7 +33,11 @@ in {
       }
       {
         workspace = "${i3.ws5}";
-        output = [ "DVI" "HDMI" "DP" ];
+        output = [
+          "DVI"
+          "HDMI"
+          "DP"
+        ];
       }
     ];
   };

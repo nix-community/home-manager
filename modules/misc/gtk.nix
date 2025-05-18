@@ -1,29 +1,39 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
+  inherit (lib)
+    literalExpression
+    mkOption
+    optionalAttrs
+    types
+    ;
 
   cfg = config.gtk;
   cfg2 = config.gtk.gtk2;
   cfg3 = config.gtk.gtk3;
   cfg4 = config.gtk.gtk4;
 
-  toGtk3Ini = generators.toINI {
-    mkKeyValue = key: value:
-      let value' = if isBool value then boolToString value else toString value;
-      in "${escape [ "=" ] key}=${value'}";
+  toGtk3Ini = lib.generators.toINI {
+    mkKeyValue =
+      key: value:
+      let
+        value' = if lib.isBool value then lib.boolToString value else toString value;
+      in
+      "${lib.escape [ "=" ] key}=${value'}";
   };
 
-  formatGtk2Option = n: v:
+  formatGtk2Option =
+    n: v:
     let
-      v' = if isBool v then
-        boolToString value
-      else if isString v then
-        ''"${v}"''
-      else
-        toString v;
-    in "${escape [ "=" ] n} = ${v'}";
+      v' =
+        if lib.isBool v then
+          lib.boolToString lib.value
+        else if lib.isString v then
+          ''"${v}"''
+        else
+          toString v;
+    in
+    "${lib.escape [ "=" ] n} = ${v'}";
 
   themeType = types.submodule {
     options = {
@@ -99,21 +109,22 @@ let
     };
   };
 
-in {
-  meta.maintainers = [ maintainers.rycee ];
+in
+{
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (mkRemovedOptionModule [ "gtk" "gtk3" "waylandSupport" ] ''
+    (lib.mkRemovedOptionModule [ "gtk" "gtk3" "waylandSupport" ] ''
       This options is not longer needed and can be removed.
     '')
   ];
 
   options = {
     gtk = {
-      enable = mkEnableOption "GTK 2/3 configuration";
+      enable = lib.mkEnableOption "GTK 2/3 configuration";
 
       font = mkOption {
-        type = types.nullOr hm.types.fontType;
+        type = types.nullOr lib.hm.types.fontType;
         default = null;
         description = ''
           The font to use in GTK+ 2/3 applications.
@@ -152,10 +163,8 @@ in {
         configLocation = mkOption {
           type = types.path;
           default = "${config.home.homeDirectory}/.gtkrc-2.0";
-          defaultText =
-            literalExpression ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
-          example =
-            literalExpression ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
+          defaultText = literalExpression ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
+          example = literalExpression ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
           description = ''
             The location to put the GTK configuration file.
           '';
@@ -171,7 +180,13 @@ in {
         };
 
         extraConfig = mkOption {
-          type = with types; attrsOf (oneOf [ bool int str ]);
+          type =
+            with types;
+            attrsOf (oneOf [
+              bool
+              int
+              str
+            ]);
           default = { };
           example = {
             gtk-cursor-blink = false;
@@ -219,75 +234,86 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (let
-    gtkIni = optionalAttrs (cfg.font != null) {
-      gtk-font-name =
-        let fontSize = if cfg.font.size != null then cfg.font.size else 10;
-        in "${cfg.font.name} ${toString fontSize}";
-    } // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
-      // optionalAttrs (cfg.iconTheme != null) {
-        gtk-icon-theme-name = cfg.iconTheme.name;
-      } // optionalAttrs (cfg.cursorTheme != null) {
-        gtk-cursor-theme-name = cfg.cursorTheme.name;
-      } // optionalAttrs
-      (cfg.cursorTheme != null && cfg.cursorTheme.size != null) {
-        gtk-cursor-theme-size = cfg.cursorTheme.size;
+  config = lib.mkIf cfg.enable (
+    let
+      gtkIni =
+        optionalAttrs (cfg.font != null) {
+          gtk-font-name =
+            let
+              fontSize = if cfg.font.size != null then cfg.font.size else 10;
+            in
+            "${cfg.font.name} ${toString fontSize}";
+        }
+        // optionalAttrs (cfg.theme != null) { gtk-theme-name = cfg.theme.name; }
+        // optionalAttrs (cfg.iconTheme != null) {
+          gtk-icon-theme-name = cfg.iconTheme.name;
+        }
+        // optionalAttrs (cfg.cursorTheme != null) {
+          gtk-cursor-theme-name = cfg.cursorTheme.name;
+        }
+        // optionalAttrs (cfg.cursorTheme != null && cfg.cursorTheme.size != null) {
+          gtk-cursor-theme-size = cfg.cursorTheme.size;
+        };
+
+      gtk4Css =
+        lib.optionalString (cfg.theme != null && cfg.theme.package != null) ''
+          /**
+           * GTK 4 reads the theme configured by gtk-theme-name, but ignores it.
+           * It does however respect user CSS, so import the theme from here.
+          **/
+          @import url("file://${cfg.theme.package}/share/themes/${cfg.theme.name}/gtk-4.0/gtk.css");
+        ''
+        + cfg4.extraCss;
+
+      dconfIni =
+        optionalAttrs (cfg.font != null) {
+          font-name =
+            let
+              fontSize = if cfg.font.size != null then cfg.font.size else 10;
+            in
+            "${cfg.font.name} ${toString fontSize}";
+        }
+        // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
+        // optionalAttrs (cfg.iconTheme != null) {
+          icon-theme = cfg.iconTheme.name;
+        }
+        // optionalAttrs (cfg.cursorTheme != null) {
+          cursor-theme = cfg.cursorTheme.name;
+        }
+        // optionalAttrs (cfg.cursorTheme != null && cfg.cursorTheme.size != null) {
+          cursor-size = cfg.cursorTheme.size;
+        };
+
+      optionalPackage = opt: lib.optional (opt != null && opt.package != null) opt.package;
+    in
+    {
+      home.packages = lib.concatMap optionalPackage [
+        cfg.font
+        cfg.theme
+        cfg.iconTheme
+        cfg.cursorTheme
+      ];
+
+      home.file.${cfg2.configLocation}.text =
+        lib.concatMapStrings (l: l + "\n") (lib.mapAttrsToList formatGtk2Option gtkIni)
+        + cfg2.extraConfig
+        + "\n";
+
+      home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
+
+      xdg.configFile."gtk-3.0/settings.ini".text = toGtk3Ini { Settings = gtkIni // cfg3.extraConfig; };
+
+      xdg.configFile."gtk-3.0/gtk.css" = lib.mkIf (cfg3.extraCss != "") { text = cfg3.extraCss; };
+
+      xdg.configFile."gtk-3.0/bookmarks" = lib.mkIf (cfg3.bookmarks != [ ]) {
+        text = lib.concatMapStrings (l: l + "\n") cfg3.bookmarks;
       };
 
-    gtk4Css =
-      lib.optionalString (cfg.theme != null && cfg.theme.package != null) ''
-        /**
-         * GTK 4 reads the theme configured by gtk-theme-name, but ignores it.
-         * It does however respect user CSS, so import the theme from here.
-        **/
-        @import url("file://${cfg.theme.package}/share/themes/${cfg.theme.name}/gtk-4.0/gtk.css");
-      '' + cfg4.extraCss;
+      xdg.configFile."gtk-4.0/settings.ini".text = toGtk3Ini { Settings = gtkIni // cfg4.extraConfig; };
 
-    dconfIni = optionalAttrs (cfg.font != null) {
-      font-name =
-        let fontSize = if cfg.font.size != null then cfg.font.size else 10;
-        in "${cfg.font.name} ${toString fontSize}";
-    } // optionalAttrs (cfg.theme != null) { gtk-theme = cfg.theme.name; }
-      // optionalAttrs (cfg.iconTheme != null) {
-        icon-theme = cfg.iconTheme.name;
-      } // optionalAttrs (cfg.cursorTheme != null) {
-        cursor-theme = cfg.cursorTheme.name;
-      } // optionalAttrs
-      (cfg.cursorTheme != null && cfg.cursorTheme.size != null) {
-        cursor-size = cfg.cursorTheme.size;
-      };
+      xdg.configFile."gtk-4.0/gtk.css" = lib.mkIf (gtk4Css != "") { text = gtk4Css; };
 
-    optionalPackage = opt:
-      optional (opt != null && opt.package != null) opt.package;
-  in {
-    home.packages = concatMap optionalPackage [
-      cfg.font
-      cfg.theme
-      cfg.iconTheme
-      cfg.cursorTheme
-    ];
-
-    home.file.${cfg2.configLocation}.text =
-      concatMapStrings (l: l + "\n") (mapAttrsToList formatGtk2Option gtkIni)
-      + cfg2.extraConfig + "\n";
-
-    home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
-
-    xdg.configFile."gtk-3.0/settings.ini".text =
-      toGtk3Ini { Settings = gtkIni // cfg3.extraConfig; };
-
-    xdg.configFile."gtk-3.0/gtk.css" =
-      mkIf (cfg3.extraCss != "") { text = cfg3.extraCss; };
-
-    xdg.configFile."gtk-3.0/bookmarks" = mkIf (cfg3.bookmarks != [ ]) {
-      text = concatMapStrings (l: l + "\n") cfg3.bookmarks;
-    };
-
-    xdg.configFile."gtk-4.0/settings.ini".text =
-      toGtk3Ini { Settings = gtkIni // cfg4.extraConfig; };
-
-    xdg.configFile."gtk-4.0/gtk.css" = mkIf (gtk4Css != "") { text = gtk4Css; };
-
-    dconf.settings."org/gnome/desktop/interface" = dconfIni;
-  });
+      dconf.settings."org/gnome/desktop/interface" = dconfIni;
+    }
+  );
 }

@@ -4,7 +4,8 @@ let
   script = pkgs.writeShellScript "script.sh" ''
     echo "test"
   '';
-in {
+in
+{
   services.sxhkd = {
     enable = true;
 
@@ -33,8 +34,7 @@ in {
     assertFileExists $sxhkdrc
 
     assertFileContent $sxhkdrc ${
-      pkgs.substituteAll {
-        src = ./sxhkdrc;
+      pkgs.replaceVars ./sxhkdrc {
         inherit script;
       }
     }

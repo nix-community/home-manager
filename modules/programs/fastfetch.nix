@@ -1,18 +1,33 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
-  inherit (lib) mkEnableOption mkPackageOption mkOption mkIf literalExpression;
+  inherit (lib)
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    mkIf
+    literalExpression
+    ;
 
   cfg = config.programs.fastfetch;
 
   jsonFormat = pkgs.formats.json { };
-in {
-  meta.maintainers = with lib.hm.maintainers; [ afresquet ];
+in
+{
+  meta.maintainers = [
+    lib.hm.maintainers.afresquet
+    lib.maintainers.khaneliman
+  ];
 
   options.programs.fastfetch = {
     enable = mkEnableOption "Fastfetch";
 
-    package = mkPackageOption pkgs "fastfetch" { };
+    package = mkPackageOption pkgs "fastfetch" { nullable = true; };
 
     settings = mkOption {
       type = jsonFormat.type;
@@ -58,7 +73,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."fastfetch/config.jsonc" = mkIf (cfg.settings != { }) {
       source = jsonFormat.generate "config.jsonc" cfg.settings;

@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   config = {
     xsession = {
@@ -15,7 +11,9 @@ with lib;
     nixpkgs.overlays = [
       (self: super: {
         xorg = super.xorg // {
-          setxkbmap = super.xorg.setxkbmap // { outPath = "@setxkbmap@"; };
+          setxkbmap = super.xorg.setxkbmap // {
+            outPath = "@setxkbmap@";
+          };
         };
       })
     ];

@@ -1,25 +1,34 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 let
 
-  inherit (lib) mkEnableOption mkPackageOption mkOption literalExpression;
+  inherit (lib)
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    literalExpression
+    ;
 
   tomlFormat = pkgs.formats.toml { };
 
-  configDir = if pkgs.stdenv.isDarwin then
-    "Library/Application Support"
-  else
-    config.xdg.configHome;
+  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else config.xdg.configHome;
 
   cfg = config.programs.poetry;
 
-in {
+in
+{
   meta.maintainers = with lib.maintainers; [ mirkolenz ];
 
   options.programs.poetry = {
     enable = mkEnableOption "poetry";
 
     package = mkPackageOption pkgs "poetry" {
+      nullable = true;
       example = "pkgs.poetry.withPlugins (ps: with ps; [ poetry-plugin-up ])";
       extraDescription = "May be used to install custom poetry plugins.";
     };
@@ -45,11 +54,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."${configDir}/pypoetry/config.toml" =
-      lib.mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "poetry-config" cfg.settings;
-      };
+    home.file."${configDir}/pypoetry/config.toml" = lib.mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "poetry-config" cfg.settings;
+    };
   };
 }

@@ -1,6 +1,8 @@
 { config, ... }:
-let inherit (config.lib.test) mkStubPackage;
-in {
+let
+  inherit (config.lib.test) mkStubPackage;
+in
+{
   config = {
     xdg.mime.enable = true;
     xdg.mime.sharedMimeInfoPackage = mkStubPackage {
@@ -17,9 +19,7 @@ in {
       buildScript = ''
         mkdir -p $out/bin
         echo '#!/bin/sh' > $out/bin/update-desktop-database
-        echo 'mkdir -p $out/share/applications/ && ln -s ${
-          ./mime-expected.cache
-        } $out/share/applications/mimeinfo.cache' >> $out/bin/update-desktop-database
+        echo 'mkdir -p $out/share/applications/ && ln -s ${./mime-expected.cache} $out/share/applications/mimeinfo.cache' >> $out/bin/update-desktop-database
         chmod +x $out/bin/update-desktop-database
       '';
     };

@@ -10,7 +10,10 @@
       v = "~/Videos";
     };
     package = pkgs.nnnDummy;
-    extraPackages = with pkgs; [ foo bar ];
+    extraPackages = with pkgs; [
+      foo
+      bar
+    ];
     plugins = {
       src = ./plugins;
       mappings = {
@@ -31,13 +34,16 @@
 
       runHook postInstall
     '';
-    foo = { name = "foo"; };
-    bar = { name = "bar"; };
+    foo = {
+      name = "foo";
+    };
+    bar = {
+      name = "bar";
+    };
   };
 
   nmt = {
-    description =
-      "Check if the binary is correctly wrapped and if the symlinks are made";
+    description = "Check if the binary is correctly wrapped and if the symlinks are made";
     script = ''
       assertDirectoryExists home-files/.config/nnn/plugins
 

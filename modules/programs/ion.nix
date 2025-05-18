@@ -1,27 +1,25 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
+
   cfg = config.programs.ion;
 
-  aliasesStr = concatStringsSep "\n"
-    (mapAttrsToList (k: v: "alias ${k} = ${escapeShellArg v}")
-      cfg.shellAliases);
-in {
-  meta.maintainers = [ maintainers.jo1gi ];
+  aliasesStr = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (k: v: "alias ${k} = ${lib.escapeShellArg v}") cfg.shellAliases
+  );
+in
+{
+  meta.maintainers = [ lib.maintainers.jo1gi ];
 
   options.programs.ion = {
-    enable = mkEnableOption "the Ion Shell. Compatible with Redox and Linux";
+    enable = lib.mkEnableOption "the Ion Shell. Compatible with Redox and Linux";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.ion;
-      defaultText = literalExpression "pkgs.ion";
-      description = ''
-        The ion package to install. May be used to change the version.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "ion" { };
 
     initExtra = mkOption {
       type = types.lines;
@@ -34,7 +32,7 @@ in {
     shellAliases = mkOption {
       type = with types; attrsOf str;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           g = "git";
         }
@@ -46,7 +44,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
     xdg.configFile."ion/initrc".text = ''

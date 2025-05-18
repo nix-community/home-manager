@@ -1,17 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkOption types;
 
-with lib;
-
-let cfg = config.programs.senpai;
-in {
+  cfg = config.programs.senpai;
+in
+{
   options.programs.senpai = {
-    enable = mkEnableOption "senpai";
-    package = mkOption {
-      type = types.package;
-      default = pkgs.senpai;
-      defaultText = literalExpression "pkgs.senpai";
-      description = "The `senpai` package to use.";
-    };
+    enable = lib.mkEnableOption "senpai";
+    package = lib.mkPackageOption pkgs "senpai" { };
     config = mkOption {
       type = types.submodule {
         freeformType = types.attrsOf types.anything;
@@ -50,7 +51,11 @@ in {
           password-cmd = mkOption {
             type = types.nullOr (types.listOf types.str);
             default = null;
-            example = [ "gopass" "show" "irc/guest" ];
+            example = [
+              "gopass"
+              "show"
+              "irc/guest"
+            ];
             description = ''
               Alternatively to providing your SASL authentication password
               directly in plaintext, you can specify a command to be run to
@@ -64,7 +69,7 @@ in {
           };
         };
       };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           address = "libera.chat:6697";
           nickname = "nicholas";
@@ -78,7 +83,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = with cfg.config; [
       {
         assertion = !isNull password-cmd -> isNull password;
@@ -98,9 +103,8 @@ in {
       }
     ];
     home.packages = [ cfg.package ];
-    xdg.configFile."senpai/senpai.scfg".text =
-      lib.hm.generators.toSCFG { } cfg.config;
+    xdg.configFile."senpai/senpai.scfg".text = lib.hm.generators.toSCFG { } cfg.config;
   };
 
-  meta.maintainers = [ hm.maintainers.malvo ];
+  meta.maintainers = [ lib.hm.maintainers.malvo ];
 }

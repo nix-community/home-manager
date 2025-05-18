@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, ... }:
+{
   config = {
     services.kanshi = {
       enable = true;
@@ -13,14 +14,19 @@
         }
         {
           profile.name = "nomad";
-          profile.outputs = [{
-            criteria = "eDP-1";
-            status = "enable";
-          }];
+          profile.outputs = [
+            {
+              criteria = "eDP-1";
+              status = "enable";
+            }
+          ];
         }
         {
           profile.name = "desktop";
-          profile.exec = [ ''echo "1 two 3"'' ''echo "4 five 6"'' ];
+          profile.exec = [
+            ''echo "1 two 3"''
+            ''echo "4 five 6"''
+          ];
           profile.outputs = [
             {
               criteria = "eDP-1";
@@ -42,10 +48,12 @@
           ];
         }
         {
-          profile.outputs = [{
-            criteria = "LVDS-1";
-            status = "enable";
-          }];
+          profile.outputs = [
+            {
+              criteria = "LVDS-1";
+              status = "enable";
+            }
+          ];
           profile.exec = ''echo "7 eight 9"'';
         }
       ];

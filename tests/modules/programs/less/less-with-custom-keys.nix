@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   programs.less = {
     enable = true;
@@ -12,15 +8,11 @@ with lib;
     '';
   };
 
-  test.stubs.less = { };
-
   nmt.script = ''
     assertFileExists home-files/.config/lesskey
-    assertFileContent home-files/.config/lesskey ${
-      builtins.toFile "less.expected" ''
-        s        back-line
-        t        forw-line
-      ''
-    }
+    assertFileContent home-files/.config/lesskey ${builtins.toFile "less.expected" ''
+      s        back-line
+      t        forw-line
+    ''}
   '';
 }

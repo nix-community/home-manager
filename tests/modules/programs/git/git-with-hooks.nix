@@ -1,14 +1,16 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
 
 {
   programs.git = {
     enable = true;
-    hooks = { pre-commit = ./git-pre-commit-hook.sh; };
+    hooks = {
+      pre-commit = ./git-pre-commit-hook.sh;
+    };
   };
 
   nmt.script = ''
     function getGitConfig() {
-      ${pkgs.gitMinimal}/bin/git config \
+      ${realPkgs.gitMinimal}/bin/git config \
         --file $TESTED/home-files/.config/git/config \
         --get $1
     }

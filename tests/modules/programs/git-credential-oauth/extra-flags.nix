@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
   programs.git-credential-oauth = {
@@ -6,9 +6,9 @@
     extraFlags = [ "-device" ];
   };
 
-  programs.git = { enable = true; };
-
-  test.stubs.git-credential-oauth = { };
+  programs.git = {
+    enable = true;
+  };
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config

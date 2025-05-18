@@ -1,8 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib) literalExpression mkOption types;
 
   inherit (config.home) stateVersion;
 
@@ -113,10 +117,7 @@ let
     options = {
       layout = mkOption {
         type = with types; nullOr str;
-        default =
-          if versionAtLeast config.home.stateVersion "19.09"
-          then null
-          else "us";
+        default = if lib.versionAtLeast config.home.stateVersion "19.09" then null else "us";
         defaultText = literalExpression "null";
         description = ''
           Keyboard layout. If `null`, then the system
@@ -138,8 +139,11 @@ let
 
       options = mkOption {
         type = types.listOf types.str;
-        default = [];
-        example = ["grp:caps_toggle" "grp_led:scroll"];
+        default = [ ];
+        example = [
+          "grp:caps_toggle"
+          "grp_led:scroll"
+        ];
         description = ''
           X keyboard options; layout switching goes here.
         '';
@@ -147,10 +151,7 @@ let
 
       variant = mkOption {
         type = with types; nullOr str;
-        default =
-          if versionAtLeast config.home.stateVersion "19.09"
-          then null
-          else "";
+        default = if lib.versionAtLeast config.home.stateVersion "19.09" then null else "";
         defaultText = literalExpression "null";
         example = "colemak";
         description = ''
@@ -167,10 +168,10 @@ let
 in
 
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (mkRemovedOptionModule [ "home" "sessionVariableSetter" ] ''
+    (lib.mkRemovedOptionModule [ "home" "sessionVariableSetter" ] ''
       Session variables are now always set through the shell. This is
       done automatically if the shell configuration is managed by Home
       Manager. If not, then you must source the
@@ -217,13 +218,13 @@ in
 
     home.language = mkOption {
       type = languageSubModule;
-      default = {};
+      default = { };
       description = "Language configuration.";
     };
 
     home.keyboard = mkOption {
       type = types.nullOr keyboardSubModule;
-      default = if versionAtLeast stateVersion "21.11" then null else { };
+      default = if lib.versionAtLeast stateVersion "21.11" then null else { };
       defaultText = literalExpression ''
         "{ }"  for state version < 21.11,
         "null" for state version ≥ 21.11
@@ -255,9 +256,19 @@ in
     };
 
     home.sessionVariables = mkOption {
-      default = {};
-      type = with types; lazyAttrsOf (oneOf [ str path int float ]);
-      example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
+      default = { };
+      type =
+        with types;
+        lazyAttrsOf (oneOf [
+          str
+          path
+          int
+          float
+        ]);
+      example = {
+        EDITOR = "emacs";
+        GS_OPTIONS = "-sPAPERSIZE=a4";
+      };
       description = ''
         Environment variables to always set at login.
 
@@ -310,12 +321,33 @@ in
         ".git/safe/../../bin"
       ];
       description = ''
-        Extra directories to add to {env}`PATH`.
+        Extra directories to prepend to {env}`PATH`.
 
         These directories are added to the {env}`PATH` variable in a
         double-quoted context, so expressions like `$HOME` are
         expanded by the shell. However, since expressions like `~` or
         `*` are escaped, they will end up in the {env}`PATH`
+        verbatim.
+      '';
+    };
+
+    home.sessionSearchVariables = mkOption {
+      default = { };
+      type = with types; attrsOf (listOf str);
+      example = {
+        MANPATH = [
+          "$HOME/.npm-packages/man"
+          "\${xdg.configHome}/.local/share/man"
+        ];
+      };
+      description = ''
+        Extra directories to prepend to arbitrary PATH-like
+        environment variables (e.g.: {env}`MANPATH`). The values
+        will be concatenated by `:`.
+        These directories are added to the environment variable in a
+        double-quoted context, so expressions like `$HOME` are
+        expanded by the shell. However, since expressions like `~` or
+        `*` are escaped, they will end up in the environment
         verbatim.
       '';
     };
@@ -332,18 +364,31 @@ in
 
     home.packages = mkOption {
       type = types.listOf types.package;
-      default = [];
+      default = [ ];
       description = "The set of packages to appear in the user environment.";
     };
 
     home.extraOutputsToInstall = mkOption {
       type = types.listOf types.str;
-      default = [];
-      example = [ "doc" "info" "devdoc" ];
+      default = [ ];
+      example = [
+        "doc"
+        "info"
+        "devdoc"
+      ];
       description = ''
         List of additional package outputs of the packages
         {var}`home.packages` that should be installed into
         the user environment.
+      '';
+    };
+
+    home.extraDependencies = mkOption {
+      type = types.listOf types.pathInStore;
+      default = [ ];
+      description = ''
+        A list of paths that should be included in the home
+        closure but generally not visible.
       '';
     };
 
@@ -355,7 +400,7 @@ in
     home.emptyActivationPath = mkOption {
       internal = true;
       type = types.bool;
-      default = versionAtLeast stateVersion "22.11";
+      default = lib.versionAtLeast stateVersion "22.11";
       defaultText = literalExpression ''
         false   for state version < 22.11,
         true    for state version ≥ 22.11
@@ -370,8 +415,8 @@ in
     };
 
     home.activation = mkOption {
-      type = hm.types.dagOf types.str;
-      default = {};
+      type = lib.hm.types.dagOf types.str;
+      default = { };
       example = literalExpression ''
         {
           myActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] '''
@@ -475,7 +520,7 @@ in
       '';
     };
 
-    home.preferXdgDirectories = mkEnableOption "" // {
+    home.preferXdgDirectories = lib.mkEnableOption "" // {
       description = ''
         Whether to make programs use XDG directories whenever supported.
       '';
@@ -498,94 +543,98 @@ in
       let
         hmRelease = config.home.version.release;
         nixpkgsRelease = lib.trivial.release;
-        releaseMismatch =
-          config.home.enableNixpkgsReleaseCheck
-          && hmRelease != nixpkgsRelease;
+        releaseMismatch = config.home.enableNixpkgsReleaseCheck && hmRelease != nixpkgsRelease;
       in
-        optional releaseMismatch ''
-          You are using
+      lib.optional releaseMismatch ''
+        You are using
 
-            Home Manager version ${hmRelease} and
-            Nixpkgs version ${nixpkgsRelease}.
+          Home Manager version ${hmRelease} and
+          Nixpkgs version ${nixpkgsRelease}.
 
-          Using mismatched versions is likely to cause errors and unexpected
-          behavior. It is therefore highly recommended to use a release of Home
-          Manager that corresponds with your chosen release of Nixpkgs.
+        Using mismatched versions is likely to cause errors and unexpected
+        behavior. It is therefore highly recommended to use a release of Home
+        Manager that corresponds with your chosen release of Nixpkgs.
 
-          If you insist then you can disable this warning by adding
+        If you insist then you can disable this warning by adding
 
-            home.enableNixpkgsReleaseCheck = false;
+          home.enableNixpkgsReleaseCheck = false;
 
-          to your configuration.
-        '';
+        to your configuration.
+      '';
 
-    home.username =
-      mkIf (versionOlder config.home.stateVersion "20.09")
-        (mkDefault (builtins.getEnv "USER"));
-    home.homeDirectory =
-      mkIf (versionOlder config.home.stateVersion "20.09")
-        (mkDefault (builtins.getEnv "HOME"));
+    home.username = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
+      lib.mkDefault (builtins.getEnv "USER")
+    );
+    home.homeDirectory = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
+      lib.mkDefault (builtins.getEnv "HOME")
+    );
 
     home.profileDirectory =
-      if config.submoduleSupport.enable
-        && config.submoduleSupport.externalPackageInstall
-      then "/etc/profiles/per-user/${cfg.username}"
-      else if config.nix.enable && (config.nix.settings.use-xdg-base-directories or false)
-      then "${config.xdg.stateHome}/nix/profile"
-      else cfg.homeDirectory + "/.nix-profile";
+      if config.submoduleSupport.enable && config.submoduleSupport.externalPackageInstall then
+        "/etc/profiles/per-user/${cfg.username}"
+      else if config.nix.enable && (config.nix.settings.use-xdg-base-directories or false) then
+        "${config.xdg.stateHome}/nix/profile"
+      else
+        cfg.homeDirectory + "/.nix-profile";
 
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
     programs.fish.shellAliases = cfg.shellAliases;
+    programs.nushell.shellAliases = cfg.shellAliases;
 
     home.sessionVariables =
       let
-        maybeSet = n: v: optionalAttrs (v != null) { ${n} = v; };
+        maybeSet = n: v: lib.optionalAttrs (v != null) { ${n} = v; };
       in
-        (maybeSet "LANG" cfg.language.base)
-        //
-        (maybeSet "LC_CTYPE" cfg.language.ctype)
-        //
-        (maybeSet "LC_NUMERIC" cfg.language.numeric)
-        //
-        (maybeSet "LC_TIME" cfg.language.time)
-        //
-        (maybeSet "LC_COLLATE" cfg.language.collate)
-        //
-        (maybeSet "LC_MONETARY" cfg.language.monetary)
-        //
-        (maybeSet "LC_MESSAGES" cfg.language.messages)
-        //
-        (maybeSet "LC_PAPER" cfg.language.paper)
-        //
-        (maybeSet "LC_NAME" cfg.language.name)
-        //
-        (maybeSet "LC_ADDRESS" cfg.language.address)
-        //
-        (maybeSet "LC_TELEPHONE" cfg.language.telephone)
-        //
-        (maybeSet "LC_MEASUREMENT" cfg.language.measurement);
+      (maybeSet "LANG" cfg.language.base)
+      // (maybeSet "LC_CTYPE" cfg.language.ctype)
+      // (maybeSet "LC_NUMERIC" cfg.language.numeric)
+      // (maybeSet "LC_TIME" cfg.language.time)
+      // (maybeSet "LC_COLLATE" cfg.language.collate)
+      // (maybeSet "LC_MONETARY" cfg.language.monetary)
+      // (maybeSet "LC_MESSAGES" cfg.language.messages)
+      // (maybeSet "LC_PAPER" cfg.language.paper)
+      // (maybeSet "LC_NAME" cfg.language.name)
+      // (maybeSet "LC_ADDRESS" cfg.language.address)
+      // (maybeSet "LC_TELEPHONE" cfg.language.telephone)
+      // (maybeSet "LC_MEASUREMENT" cfg.language.measurement);
 
     # Provide a file holding all session variables.
     home.sessionVariablesPackage = pkgs.writeTextFile {
       name = "hm-session-vars.sh";
       destination = "/etc/profile.d/hm-session-vars.sh";
-      text = ''
-        # Only source this once.
-        if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
-        export __HM_SESS_VARS_SOURCED=1
+      text =
+        ''
+          # Only source this once.
+          if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+          export __HM_SESS_VARS_SOURCED=1
 
-        ${config.lib.shell.exportAll cfg.sessionVariables}
-      '' + lib.optionalString (cfg.sessionPath != [ ]) ''
-        export PATH="$PATH''${PATH:+:}${concatStringsSep ":" cfg.sessionPath}"
-      '' + cfg.sessionVariablesExtra;
+          ${config.lib.shell.exportAll cfg.sessionVariables}
+        ''
+        + lib.concatStringsSep "\n" (
+          lib.mapAttrsToList (
+            env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
+          ) cfg.sessionSearchVariables
+        )
+        + "\n"
+        + cfg.sessionVariablesExtra;
     };
+
+    home.sessionSearchVariables.PATH = lib.mkIf (cfg.sessionPath != [ ]) cfg.sessionPath;
 
     home.packages = [ config.home.sessionVariablesPackage ];
 
-    # A dummy entry acting as a boundary between the activation
-    # script's "check" and the "write" phases.
-    home.activation.writeBoundary = hm.dag.entryAnywhere "";
+    # The entry acting as a boundary between the activation script's "check" and
+    # the "write" phases. This is where we commit to attempting to actually
+    # activate the configuration.
+    home.activation.writeBoundary = lib.hm.dag.entryAnywhere ''
+      if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
+        _i "Creating new profile generation"
+        run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
+      else
+        _i "No change so reusing latest profile generation"
+      fi
+    '';
 
     # Install packages to the user environment.
     #
@@ -602,9 +651,8 @@ in
     # In case the user has moved from a user-install of Home Manager
     # to a submodule managed one we attempt to uninstall the
     # `home-manager-path` package if it is installed.
-    home.activation.installPackages = hm.dag.entryAfter ["writeBoundary"] (
-      if config.submoduleSupport.externalPackageInstall
-      then
+    home.activation.installPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+      if config.submoduleSupport.externalPackageInstall then
         ''
           nixProfileRemove home-manager-path
         ''
@@ -645,62 +693,66 @@ in
     # in the `hm-modules` text domain.
     lib.bash.initHomeManagerLib =
       let
-        domainDir = pkgs.runCommand "hm-modules-messages" {
-          nativeBuildInputs = [ pkgs.buildPackages.gettext ];
-        } ''
-          for path in ${./po}/*.po; do
-            lang="''${path##*/}"
-            lang="''${lang%%.*}"
-            mkdir -p "$out/$lang/LC_MESSAGES"
-            msgfmt -o "$out/$lang/LC_MESSAGES/hm-modules.mo" "$path"
-          done
-        '';
+        domainDir =
+          pkgs.runCommand "hm-modules-messages"
+            {
+              nativeBuildInputs = [ pkgs.buildPackages.gettext ];
+            }
+            ''
+              for path in ${./po}/*.po; do
+                lang="''${path##*/}"
+                lang="''${lang%%.*}"
+                mkdir -p "$out/$lang/LC_MESSAGES"
+                msgfmt -o "$out/$lang/LC_MESSAGES/hm-modules.mo" "$path"
+              done
+            '';
       in
-        ''
-          export TEXTDOMAIN=hm-modules
-          export TEXTDOMAINDIR=${domainDir}
-          source ${../lib/bash/home-manager.sh}
-        '';
+      ''
+        export TEXTDOMAIN=hm-modules
+        export TEXTDOMAINDIR=${domainDir}
+        source ${../lib/bash/home-manager.sh}
+      '';
 
     home.activationPackage =
       let
         mkCmd = res: ''
-            _iNote "Activating %s" "${res.name}"
-            ${res.data}
-          '';
-        sortedCommands = hm.dag.topoSort cfg.activation;
+          _iNote "Activating %s" "${res.name}"
+          ${res.data}
+        '';
+        sortedCommands = lib.hm.dag.topoSort cfg.activation;
         activationCmds =
           if sortedCommands ? result then
-            concatStringsSep "\n" (map mkCmd sortedCommands.result)
+            lib.concatStringsSep "\n" (map mkCmd sortedCommands.result)
           else
-            abort ("Dependency cycle in activation script: "
-              + builtins.toJSON sortedCommands);
+            abort ("Dependency cycle in activation script: " + builtins.toJSON sortedCommands);
 
         # Programs that always should be available on the activation
         # script's PATH.
-        activationBinPaths = lib.makeBinPath (
-          with pkgs; [
-            bash
-            coreutils
-            diffutils           # For `cmp` and `diff`.
-            findutils
-            gettext
-            gnugrep
-            gnused
-            jq
-            ncurses             # For `tput`.
-          ]
-          ++ config.home.extraActivationPath
-        )
-        + (
-          # Add path of the Nix binaries, if a Nix package is configured, then
-          # use that one, otherwise grab the path of the nix-env tool.
-          if config.nix.enable && config.nix.package != null then
-            ":${config.nix.package}/bin"
-          else
-            ":$(${pkgs.coreutils}/bin/dirname $(${pkgs.coreutils}/bin/readlink -m $(type -p nix-env)))"
-        )
-        + optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
+        activationBinPaths =
+          lib.makeBinPath (
+            with pkgs;
+            [
+              bash
+              coreutils
+              diffutils # For `cmp` and `diff`.
+              findutils
+              gettext
+              gnugrep
+              gnused
+              jq
+              ncurses # For `tput`.
+            ]
+            ++ config.home.extraActivationPath
+          )
+          + (
+            # Add path of the Nix binaries, if a Nix package is configured, then
+            # use that one, otherwise grab the path of the nix-env tool.
+            if config.nix.enable && config.nix.package != null then
+              ":${config.nix.package}/bin"
+            else
+              ":$(${pkgs.coreutils}/bin/dirname $(${pkgs.coreutils}/bin/readlink -m $(type -p nix-env)))"
+          )
+          + lib.optionalString (!cfg.emptyActivationPath) "\${PATH:+:}$PATH";
 
         activationScript = pkgs.writeShellScript "activation-script" ''
           set -eu
@@ -714,36 +766,52 @@ in
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
           if [[ ! -v SKIP_SANITY_CHECKS ]]; then
-            checkUsername ${escapeShellArg config.home.username}
-            checkHomeDirectory ${escapeShellArg config.home.homeDirectory}
+            checkUsername ${lib.escapeShellArg config.home.username}
+            checkHomeDirectory ${lib.escapeShellArg config.home.homeDirectory}
           fi
 
+          # Create a temporary GC root to prevent collection during activation.
+          trap 'run rm -f $VERBOSE_ARG "$newGenGcPath"' EXIT
+          run --silence nix-store --realise "$newGenPath" --add-root "$newGenGcPath"
+
           ${activationCmds}
+
+          ${lib.optionalString (!config.uninstall) ''
+            # Create the "current generation" GC root.
+            run --silence nix-store --realise "$newGenPath" --add-root "$currentGenGcPath"
+
+            if [[ -e "$legacyGenGcPath" ]]; then
+              run rm $VERBOSE_ARG "$legacyGenGcPath"
+            fi
+          ''}
         '';
       in
-        pkgs.runCommand
-          "home-manager-generation"
-          {
-            preferLocalBuild = true;
-          }
-          ''
-            mkdir -p $out
+      pkgs.runCommand "home-manager-generation"
+        {
+          preferLocalBuild = true;
+          passAsFile = [ "extraDependencies" ];
+          inherit (config.home) extraDependencies;
+        }
+        ''
+          mkdir -p $out
 
-            echo "${config.home.version.full}" > $out/hm-version
+          echo "${config.home.version.full}" > $out/hm-version
 
-            cp ${activationScript} $out/activate
+          cp ${activationScript} $out/activate
 
-            mkdir $out/bin
-            ln -s $out/activate $out/bin/home-manager-generation
+          mkdir $out/bin
+          ln -s $out/activate $out/bin/home-manager-generation
 
-            substituteInPlace $out/activate \
-              --subst-var-by GENERATION_DIR $out
+          substituteInPlace $out/activate \
+            --subst-var-by GENERATION_DIR $out
 
-            ln -s ${config.home-files} $out/home-files
-            ln -s ${cfg.path} $out/home-path
+          ln -s ${config.home-files} $out/home-files
+          ln -s ${cfg.path} $out/home-path
 
-            ${cfg.extraBuilderCommands}
-          '';
+          cp "$extraDependenciesPath" "$out/extra-dependencies"
+
+          ${cfg.extraBuilderCommands}
+        '';
 
     home.path = pkgs.buildEnv {
       name = "home-manager-path";

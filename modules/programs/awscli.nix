@@ -1,20 +1,24 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.awscli;
   iniFormat = pkgs.formats.ini { };
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.anthonyroussel ];
 
   options.programs.awscli = {
     enable = lib.mkEnableOption "AWS CLI tool";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.awscli2;
-      defaultText = lib.literalExpression "pkgs.awscli2";
-      description = "Package providing {command}`aws`.";
+    package = lib.mkPackageOption pkgs "aws" {
+      default = "awscli2";
+      nullable = true;
     };
 
     settings = lib.mkOption {
@@ -55,18 +59,14 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."${config.home.homeDirectory}/.aws/config" =
-      lib.mkIf (cfg.settings != { }) {
-        source =
-          iniFormat.generate "aws-config-${config.home.username}" cfg.settings;
-      };
+    home.file."${config.home.homeDirectory}/.aws/config" = lib.mkIf (cfg.settings != { }) {
+      source = iniFormat.generate "aws-config-${config.home.username}" cfg.settings;
+    };
 
-    home.file."${config.home.homeDirectory}/.aws/credentials" =
-      lib.mkIf (cfg.credentials != { }) {
-        source = iniFormat.generate "aws-credentials-${config.home.username}"
-          cfg.credentials;
-      };
+    home.file."${config.home.homeDirectory}/.aws/credentials" = lib.mkIf (cfg.credentials != { }) {
+      source = iniFormat.generate "aws-credentials-${config.home.username}" cfg.credentials;
+    };
   };
 }

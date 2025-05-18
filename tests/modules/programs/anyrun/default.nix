@@ -1,0 +1,1 @@
+{ anyrun = ./basic-config.nix; }

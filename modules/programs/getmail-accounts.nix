@@ -1,10 +1,10 @@
-{ config, lib, ... }:
-
-with lib;
-
+{ lib, ... }:
+let
+  inherit (lib) mkOption types;
+in
 {
   options.getmail = {
-    enable = mkEnableOption "the getmail mail retriever for this account";
+    enable = lib.mkEnableOption "the getmail mail retriever for this account";
 
     destinationCommand = mkOption {
       type = types.nullOr types.str;
@@ -18,7 +18,10 @@ with lib;
     mailboxes = mkOption {
       type = types.nonEmptyListOf types.str;
       default = [ ];
-      example = [ "INBOX" "INBOX.spam" ];
+      example = [
+        "INBOX"
+        "INBOX.spam"
+      ];
       description = ''
         A non-empty list of mailboxes. To download all mail you can
         use the `ALL` mailbox.

@@ -9,13 +9,15 @@
     };
   };
 
-  test.stubs.pistol = { };
-
   test.asserts.assertions.expected = [
-    (let offendingFile = toString ./config.nix;
-    in ''
-      The option definition `programs.pistol.config' in `${offendingFile}' no longer has any effect; please remove it.
-      Pistol is now configured with programs.pistol.associations.
-    '')
+    (
+      let
+        offendingFile = toString ./config.nix;
+      in
+      ''
+        The option definition `programs.pistol.config' in `${offendingFile}' no longer has any effect; please remove it.
+        Pistol is now configured with programs.pistol.associations.
+      ''
+    )
   ];
 }

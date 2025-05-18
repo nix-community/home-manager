@@ -1,7 +1,15 @@
-{ stdenv, lib, documentation-highlighter, revision, home-manager-options
-, nixos-render-docs }:
-let outputPath = "share/doc/home-manager";
-in stdenv.mkDerivation {
+{
+  stdenv,
+  lib,
+  documentation-highlighter,
+  revision,
+  home-manager-options,
+  nixos-render-docs,
+}:
+let
+  outputPath = "share/doc/home-manager";
+in
+stdenv.mkDerivation {
   name = "home-manager-manual";
 
   nativeBuildInputs = [ nixos-render-docs ];
@@ -61,5 +69,7 @@ in stdenv.mkDerivation {
 
   passthru = { inherit home-manager-options; };
 
-  meta = { maintainers = [ lib.maintainers.considerate ]; };
+  meta = {
+    maintainers = [ lib.maintainers.considerate ];
+  };
 }

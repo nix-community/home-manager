@@ -1,0 +1,1 @@
+{ yubikey-agent = ./service.nix; }

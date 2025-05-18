@@ -1,29 +1,25 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-  config = {
-    programs.neomutt = {
-      enable = true;
+  programs.neomutt = {
+    enable = true;
 
-      binds = [{
+    binds = [
+      {
         action = "complete-query";
         key = "<Tab>";
         map = [ ];
-      }];
+      }
+    ];
 
-      macros = [{
+    macros = [
+      {
         action = "<change-folder>?<change-dir><home>^K=<enter><tab>";
         key = "c";
         map = [ ];
-      }];
-    };
-
-    test.stubs.neomutt = { };
-
-    test.asserts.assertions.expected = [
-      "The 'programs.neomutt.(binds|macros).map' list must contain at least one element."
+      }
     ];
   };
+
+  test.asserts.assertions.expected = [
+    "The 'programs.neomutt.(binds|macros).map' list must contain at least one element."
+  ];
 }

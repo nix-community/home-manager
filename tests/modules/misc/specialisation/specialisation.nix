@@ -1,7 +1,3 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
   home.file.testfile.text = "not special";
   specialisation.test.configuration = {

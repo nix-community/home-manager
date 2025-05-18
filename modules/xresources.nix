@@ -1,42 +1,58 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib) mkOption types;
 
   cfg = config.xresources;
 
-  formatLine = n: v:
+  formatLine =
+    n: v:
     let
-      formatList = x:
-        if isList x then
+      formatList =
+        x:
+        if lib.isList x then
           throw "can not convert 2-dimensional lists to Xresources format"
         else
           formatValue x;
 
-      formatValue = v:
-        if isBool v then
+      formatValue =
+        v:
+        if lib.isBool v then
           (if v then "true" else "false")
-        else if isList v then
-          concatMapStringsSep ", " formatList v
+        else if lib.isList v then
+          lib.concatMapStringsSep ", " formatList v
         else
           toString v;
-    in "${n}: ${formatValue v}";
+    in
+    "${n}: ${formatValue v}";
 
   xrdbMerge = "${pkgs.xorg.xrdb}/bin/xrdb -merge ${cfg.path}";
 
-in {
-  meta.maintainers = [ maintainers.rycee ];
+in
+{
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     xresources.properties = mkOption {
-      type = with types;
+      type =
+        with types;
         let
-          prim = either bool (either int str);
+          prim = oneOf [
+            bool
+            int
+            float
+            str
+          ];
           entry = either prim (listOf prim);
-        in nullOr (attrsOf entry);
+        in
+        nullOr (attrsOf entry);
       default = null;
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           "Emacs*toolBar" = 0;
           "XTerm*faceName" = "dejavu sans mono";
@@ -58,7 +74,7 @@ in {
     xresources.extraConfig = mkOption {
       type = types.lines;
       default = "";
-      example = literalExpression ''
+      example = lib.literalExpression ''
         builtins.readFile (
             pkgs.fetchFromGitHub {
                 owner = "solarized";
@@ -80,25 +96,26 @@ in {
       type = types.str;
       default = "${config.home.homeDirectory}/.Xresources";
       defaultText = "$HOME/.Xresources";
-      description =
-        "Path where Home Manager should link the {file}`.Xresources` file.";
+      description = "Path where Home Manager should link the {file}`.Xresources` file.";
     };
   };
 
-  config = mkIf ((cfg.properties != null && cfg.properties != { })
-    || cfg.extraConfig != "") {
-      home.file.${cfg.path} = {
-        text = concatStringsSep "\n" ([ ]
-          ++ optional (cfg.extraConfig != "") cfg.extraConfig
-          ++ optionals (cfg.properties != null)
-          (mapAttrsToList formatLine cfg.properties)) + "\n";
-        onChange = ''
-          if [[ -v DISPLAY ]]; then
-            ${xrdbMerge}
-          fi
-        '';
-      };
-
-      xsession.initExtra = xrdbMerge;
+  config = lib.mkIf ((cfg.properties != null && cfg.properties != { }) || cfg.extraConfig != "") {
+    home.file.${cfg.path} = {
+      text =
+        lib.concatStringsSep "\n" (
+          [ ]
+          ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
+          ++ lib.optionals (cfg.properties != null) (lib.mapAttrsToList formatLine cfg.properties)
+        )
+        + "\n";
+      onChange = ''
+        if [[ -v DISPLAY ]]; then
+          ${xrdbMerge}
+        fi
+      '';
     };
+
+    xsession.profileExtra = xrdbMerge;
+  };
 }

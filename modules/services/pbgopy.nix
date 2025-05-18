@@ -1,24 +1,30 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.pbgopy;
   package = pkgs.pbgopy;
 
-  commandLine = concatStringsSep " " ([
-    "${package}/bin/pbgopy serve"
-    "--port ${toString cfg.port}"
-    "--ttl ${cfg.cache.ttl}"
-  ] ++ optional (cfg.httpAuth != null)
-    "--basic-auth ${escapeShellArg cfg.httpAuth}");
+  commandLine = lib.concatStringsSep " " (
+    [
+      "${package}/bin/pbgopy serve"
+      "--port ${toString cfg.port}"
+      "--ttl ${cfg.cache.ttl}"
+    ]
+    ++ lib.optional (cfg.httpAuth != null) "--basic-auth ${lib.escapeShellArg cfg.httpAuth}"
+  );
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.services.pbgopy = {
-    enable = mkEnableOption "pbgopy";
+    enable = lib.mkEnableOption "pbgopy";
 
     port = mkOption {
       type = types.port;
@@ -49,10 +55,9 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.pbgopy" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.pbgopy" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ package ];
@@ -60,14 +65,16 @@ in {
     systemd.user.services.pbgopy = {
       Unit = {
         Description = "pbgopy server for sharing the clipboard between devices";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
       Service = {
         ExecStart = commandLine;
         Restart = "on-abort";
       };
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

@@ -7,21 +7,36 @@
     configDir = "${config.xdg.configHome}/recoll";
     settings = {
       dbdir = "~/.cache/recoll/xapiandb";
-      topdirs = [ "~/Downloads" "~/Documents" "~/library" ''~/"cool" files'' ];
+      topdirs = [
+        "~/Downloads"
+        "~/Documents"
+        "~/library"
+        ''~/"cool" files''
+      ];
       "skippedNames+" = [ "node_modules" ];
       underscoresasletter = true;
       nocjk = false;
 
       "~/library/projects" = {
-        "skippedNames+" =
-          [ ".editorconfig" ".gitignore" "result" "flake.lock" "go.sum" ];
+        "skippedNames+" = [
+          ".editorconfig"
+          ".gitignore"
+          "result"
+          "flake.lock"
+          "go.sum"
+        ];
       };
 
       "~/library/projects/software" = {
-        "skippedNames+" = [ "target" "result" ];
+        "skippedNames+" = [
+          "target"
+          "result"
+        ];
       };
 
-      "~/what-is-this-project" = { "skippedNames+" = [ "whoa-there" ]; };
+      "~/what-is-this-project" = {
+        "skippedNames+" = [ "whoa-there" ];
+      };
     };
   };
 

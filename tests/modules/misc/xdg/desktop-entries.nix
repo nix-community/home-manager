@@ -1,11 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ pkgs, ... }:
 {
   config = {
     xdg.desktopEntries = {
-      full = { # full definition
+      full = {
+        # full definition
         type = "Application";
         exec = "test --option";
         icon = "test";
@@ -13,8 +11,14 @@ with lib;
         terminal = true;
         name = "Test";
         genericName = "Web Browser";
-        mimeType = [ "text/html" "text/xml" ];
-        categories = [ "Network" "WebBrowser" ];
+        mimeType = [
+          "text/html"
+          "text/xml"
+        ];
+        categories = [
+          "Network"
+          "WebBrowser"
+        ];
         startupNotify = false;
         noDisplay = false;
         prefersNonDefaultGPU = false;
@@ -28,10 +32,13 @@ with lib;
             exec = "test --new-window";
             icon = "test";
           };
-          "Default" = { exec = "test --default"; };
+          "Default" = {
+            exec = "test --default";
+          };
         };
       };
-      min = { # minimal definition
+      min = {
+        # minimal definition
         name = "Test";
       };
       deprecated = {
@@ -61,8 +68,10 @@ with lib;
     ];
 
     test.asserts.assertions.expected =
-      let currentFile = toString ./desktop-entries.nix;
-      in [
+      let
+        currentFile = toString ./desktop-entries.nix;
+      in
+      [
         ''
           The option definition `fileValidation' in `${currentFile}' no longer has any effect; please remove it.
           Validation of the desktop file is always enabled.

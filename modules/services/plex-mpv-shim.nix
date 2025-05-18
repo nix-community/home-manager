@@ -1,30 +1,33 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   jsonFormat = pkgs.formats.json { };
   cfg = config.services.plex-mpv-shim;
 
-in {
-  meta.maintainers = [ maintainers.starcraft66 ];
+in
+{
+  meta.maintainers = [ lib.maintainers.starcraft66 ];
 
   options = {
     services.plex-mpv-shim = {
-      enable = mkEnableOption "Plex mpv shim";
+      enable = lib.mkEnableOption "Plex mpv shim";
 
-      package = mkOption {
-        type = types.package;
+      package = lib.mkOption {
+        type = lib.types.package;
         default = pkgs.plex-mpv-shim;
-        defaultText = literalExpression "pkgs.plex-mpv-shim";
+        defaultText = lib.literalExpression "pkgs.plex-mpv-shim";
         description = "The package to use for the Plex mpv shim.";
       };
 
-      settings = mkOption {
+      settings = lib.mkOption {
         type = jsonFormat.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             adaptive_transcode = false;
             allow_http = false;
@@ -45,26 +48,29 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.plex-mpv-shim" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.plex-mpv-shim" pkgs lib.platforms.linux)
     ];
 
-    xdg.configFile."plex-mpv-shim/conf.json" = mkIf (cfg.settings != { }) {
+    xdg.configFile."plex-mpv-shim/conf.json" = lib.mkIf (cfg.settings != { }) {
       source = jsonFormat.generate "conf.json" cfg.settings;
     };
 
     systemd.user.services.plex-mpv-shim = {
       Unit = {
         Description = "Plex mpv shim";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
-      Service = { ExecStart = "${cfg.package}/bin/plex-mpv-shim"; };
+      Service = {
+        ExecStart = "${cfg.package}/bin/plex-mpv-shim";
+      };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

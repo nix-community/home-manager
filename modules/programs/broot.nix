@@ -1,21 +1,38 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    mkRenamedOptionModule
+    types
+    ;
 
   cfg = config.programs.broot;
 
-  tomlFormat = pkgs.formats.toml { };
+  jsonFormat = pkgs.formats.json { };
 
   settingsModule = {
-    freeformType = tomlFormat.type;
+    freeformType = jsonFormat.type;
 
     options = {
-      modal = mkEnableOption "modal (vim) mode";
+      modal = lib.mkEnableOption "modal (vim) mode";
 
       verbs = mkOption {
-        type = with types; listOf (attrsOf (oneOf [ bool str (listOf str) ]));
+        type =
+          with types;
+          listOf (
+            attrsOf (oneOf [
+              bool
+              str
+              (listOf str)
+            ])
+          );
         default = [ ];
         example = literalExpression ''
           [
@@ -118,80 +135,66 @@ let
     };
   };
 
-  shellInit = shell:
+  shellInit =
+    shell:
     # Using mkAfter to make it more likely to appear after other
     # manipulations of the prompt.
-    mkAfter ''
+    lib.mkAfter ''
       source ${
-        pkgs.runCommand "br.${shell}" { nativeBuildInputs = [ cfg.package ]; }
-        "broot --print-shell-function ${shell} > $out"
+        pkgs.runCommand "br.${shell}" {
+          nativeBuildInputs = [ cfg.package ];
+        } "broot --print-shell-function ${shell} > $out"
       }
     '';
-in {
-  meta.maintainers = [ hm.maintainers.aheaume maintainers.dermetfan ];
+in
+{
+  meta.maintainers = [
+    lib.hm.maintainers.aheaume
+    lib.maintainers.dermetfan
+  ];
 
   imports = [
-    (mkRenamedOptionModule [ "programs" "broot" "modal" ] [
-      "programs"
-      "broot"
-      "settings"
-      "modal"
-    ])
-    (mkRenamedOptionModule [ "programs" "broot" "verbs" ] [
-      "programs"
-      "broot"
-      "settings"
-      "verbs"
-    ])
-    (mkRenamedOptionModule [ "programs" "broot" "skin" ] [
-      "programs"
-      "broot"
-      "settings"
-      "skin"
-    ])
+    (mkRenamedOptionModule
+      [ "programs" "broot" "modal" ]
+      [
+        "programs"
+        "broot"
+        "settings"
+        "modal"
+      ]
+    )
+    (mkRenamedOptionModule
+      [ "programs" "broot" "verbs" ]
+      [
+        "programs"
+        "broot"
+        "settings"
+        "verbs"
+      ]
+    )
+    (mkRenamedOptionModule
+      [ "programs" "broot" "skin" ]
+      [
+        "programs"
+        "broot"
+        "settings"
+        "skin"
+      ]
+    )
   ];
 
   options.programs.broot = {
-    enable = mkEnableOption "Broot, a better way to navigate directories";
+    enable = lib.mkEnableOption "Broot, a better way to navigate directories";
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Nushell integration.
-      '';
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.broot;
-      defaultText = literalExpression "pkgs.broot";
-      description = "Package providing broot";
-    };
+    package = lib.mkPackageOption pkgs "broot" { };
 
     settings = mkOption {
       type = types.submodule settingsModule;
@@ -203,7 +206,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."broot" = {
+    xdg.configFile.broot = {
       recursive = true;
       source = pkgs.symlinkJoin {
         name = "xdg.configFile.broot";
@@ -214,31 +217,23 @@ in {
           # Dummy file to prevent broot from trying to reinstall itself
           (pkgs.writeTextDir "launcher/installed-v1" "")
         ];
-
         postBuild = ''
-          ln -s ${
-            tomlFormat.generate "broot-config" cfg.settings
-          } $out/conf.toml
-
-          # Remove conf.hjson, whose content has been merged into programs.broot.settings
           rm $out/conf.hjson
+          ${lib.getExe pkgs.jq} --slurp add > $out/conf.hjson \
+            <(${lib.getExe pkgs.hjson-go} -c ${cfg.package.src}/resources/default-conf/conf.hjson) \
+            ${jsonFormat.generate "broot-config.json" cfg.settings}
         '';
       };
     };
 
-    programs.broot.settings = builtins.fromJSON (builtins.readFile
-      (pkgs.runCommand "default-conf.json" {
-        nativeBuildInputs = [ pkgs.hjson ];
-      }
-        "hjson -c ${cfg.package.src}/resources/default-conf/conf.hjson > $out"));
+    programs = {
+      bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
+      zsh.initContent = mkIf cfg.enableZshIntegration (shellInit "zsh");
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration (shellInit "zsh");
+      fish.shellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
-
-    programs.nushell.extraConfig =
-      mkIf cfg.enableNushellIntegration (shellInit "nushell");
+      nushell.extraConfig = mkIf cfg.enableNushellIntegration (shellInit "nushell");
+    };
   };
 }

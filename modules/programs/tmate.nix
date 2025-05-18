@@ -1,25 +1,27 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    literalExpression
+    mkOption
+    optional
+    types
+    ;
 
   cfg = config.programs.tmate;
-
-in {
-  meta.maintainers = [ maintainers.jlesquembre ];
+in
+{
+  meta.maintainers = [ lib.maintainers.jlesquembre ];
 
   options = {
     programs.tmate = {
-      enable = mkEnableOption "tmate";
+      enable = lib.mkEnableOption "tmate";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.tmate;
-        defaultText = literalExpression "pkgs.tmate";
-        example = literalExpression "pkgs.tmate";
-        description = "The tmate package to install.";
-      };
+      package = lib.mkPackageOption pkgs "tmate" { };
 
       host = mkOption {
         type = with types; nullOr str;
@@ -38,16 +40,14 @@ in {
       dsaFingerprint = mkOption {
         type = with types; nullOr str;
         default = null;
-        example = literalExpression
-          "SHA256:1111111111111111111111111111111111111111111";
+        example = literalExpression "SHA256:1111111111111111111111111111111111111111111";
         description = "Tmate server EdDSA key fingerprint.";
       };
 
       rsaFingerprint = mkOption {
         type = with types; nullOr str;
         default = null;
-        example = literalExpression
-          "SHA256:1111111111111111111111111111111111111111111";
+        example = literalExpression "SHA256:1111111111111111111111111111111111111111111";
         description = "Tmate server RSA key fingerprint.";
       };
 
@@ -62,19 +62,22 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file.".tmate.conf" = let
-      conf =
-        optional (cfg.host != null) ''set -g tmate-server-host "${cfg.host}"''
-        ++ optional (cfg.port != null)
-        "set -g tmate-server-port ${builtins.toString cfg.port}"
-        ++ optional (cfg.dsaFingerprint != null)
-        ''set -g tmate-server-ed25519-fingerprint "${cfg.dsaFingerprint}"''
-        ++ optional (cfg.rsaFingerprint != null)
-        ''set -g tmate-server-rsa-fingerprint "${cfg.rsaFingerprint}"''
-        ++ optional (cfg.extraConfig != "") cfg.extraConfig;
-    in mkIf (conf != [ ]) { text = concatLines conf; };
+    home.file.".tmate.conf" =
+      let
+        conf =
+          optional (cfg.host != null) ''set -g tmate-server-host "${cfg.host}"''
+          ++ optional (cfg.port != null) "set -g tmate-server-port ${builtins.toString cfg.port}"
+          ++ optional (
+            cfg.dsaFingerprint != null
+          ) ''set -g tmate-server-ed25519-fingerprint "${cfg.dsaFingerprint}"''
+          ++ optional (
+            cfg.rsaFingerprint != null
+          ) ''set -g tmate-server-rsa-fingerprint "${cfg.rsaFingerprint}"''
+          ++ optional (cfg.extraConfig != "") cfg.extraConfig;
+      in
+      lib.mkIf (conf != [ ]) { text = lib.concatLines conf; };
   };
 }

@@ -1,22 +1,23 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
   cfg = config.programs.darcs;
-
-in {
-  meta.maintainers = with maintainers; [ chris-martin ];
+in
+{
+  meta.maintainers = with lib.maintainers; [ chris-martin ];
 
   options = {
     programs.darcs = {
-      enable = mkEnableOption "darcs";
+      enable = lib.mkEnableOption "darcs";
 
-      package = mkPackageOption pkgs "darcs" { };
+      package = lib.mkPackageOption pkgs "darcs" { nullable = true; };
 
-      author = mkOption {
-        type = types.listOf types.str;
+      author = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [ ];
         example = [ "Fred Bloggs <fred@example.net>" ];
         description = ''
@@ -26,27 +27,31 @@ in {
         '';
       };
 
-      boring = mkOption {
-        type = types.listOf types.str;
+      boring = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [ ];
-        example = [ "^.idea$" ".iml$" "^.stack-work$" ];
+        example = [
+          "^.idea$"
+          ".iml$"
+          "^.stack-work$"
+        ];
         description = "File patterns to ignore";
       };
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    { home.packages = [ cfg.package ]; }
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      { home.packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
 
-    (mkIf (cfg.author != [ ]) {
-      home.file.".darcs/author".text =
-        concatMapStrings (x: x + "\n") cfg.author;
-    })
+      (lib.mkIf (cfg.author != [ ]) {
+        home.file.".darcs/author".text = lib.concatMapStrings (x: x + "\n") cfg.author;
+      })
 
-    (mkIf (cfg.boring != [ ]) {
-      home.file.".darcs/boring".text =
-        concatMapStrings (x: x + "\n") cfg.boring;
-    })
+      (lib.mkIf (cfg.boring != [ ]) {
+        home.file.".darcs/boring".text = lib.concatMapStrings (x: x + "\n") cfg.boring;
+      })
 
-  ]);
+    ]
+  );
 }

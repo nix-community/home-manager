@@ -1,34 +1,39 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.oh-my-posh;
 
   jsonFormat = pkgs.formats.json { };
 
-  configArgument = if cfg.settings != { } then
-    "--config ${config.xdg.configHome}/oh-my-posh/config.json"
-  else if cfg.useTheme != null then
-    "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
-  else if cfg.configFile != null then
-    "--config ${cfg.configFile}"
-  else
-    "";
+  configArgument =
+    if cfg.settings != { } then
+      "--config ${config.xdg.configHome}/oh-my-posh/config.json"
+    else if cfg.useTheme != null then
+      "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
+    else if cfg.configFile != null then
+      "--config ${cfg.configFile}"
+    else
+      "";
 
-in {
-  meta.maintainers = [ maintainers.arjan-s ];
+in
+{
+  meta.maintainers = [ lib.maintainers.arjan-s ];
 
   options.programs.oh-my-posh = {
-    enable = mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
+    enable = lib.mkEnableOption "oh-my-posh, a prompt theme engine for any shell";
 
-    package = mkPackageOption pkgs "oh-my-posh" { };
+    package = lib.mkPackageOption pkgs "oh-my-posh" { };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = jsonFormat.type;
       default = { };
-      example = literalExpression ''
-        builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
+      example = lib.literalExpression ''builtins.fromJSON (builtins.unsafeDiscardStringContext (builtins.readFile "''${pkgs.oh-my-posh}/share/oh-my-posh/themes/space.omp.json"))'';
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/oh-my-posh/config.json`. See
@@ -38,8 +43,8 @@ in {
       '';
     };
 
-    useTheme = mkOption {
-      type = types.nullOr types.str;
+    useTheme = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
       default = null;
       description = ''
         Use one of the official themes. This should be a name from this list:
@@ -49,45 +54,21 @@ in {
       '';
     };
 
-    configFile = mkOption {
-      type = types.nullOr types.path;
+    configFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
       default = null;
       description = ''
         Path to a custom configuration path, can be json, yaml or toml.
       '';
     };
 
-    enableBashIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to enable Nushell integration.
-      '';
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -98,27 +79,24 @@ in {
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(${cfg.package}/bin/oh-my-posh init bash ${configArgument})"
+      eval "$(${lib.getExe cfg.package} init bash ${configArgument})"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(${cfg.package}/bin/oh-my-posh init zsh ${configArgument})"
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
+      eval "$(${lib.getExe cfg.package} init zsh ${configArgument})"
     '';
 
     programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
-      ${cfg.package}/bin/oh-my-posh init fish ${configArgument} | source
+      ${lib.getExe cfg.package} init fish ${configArgument} | source
     '';
 
     programs.nushell = mkIf cfg.enableNushellIntegration {
-      extraEnv = ''
-        let oh_my_posh_cache = "${config.xdg.cacheHome}/oh-my-posh"
-        if not ($oh_my_posh_cache | path exists) {
-          mkdir $oh_my_posh_cache
-        }
-        ${cfg.package}/bin/oh-my-posh init nu ${configArgument} --print | save --force ${config.xdg.cacheHome}/oh-my-posh/init.nu
-      '';
       extraConfig = ''
-        source ${config.xdg.cacheHome}/oh-my-posh/init.nu
+        source ${
+          pkgs.runCommand "oh-my-posh-nushell-config.nu" { } ''
+            ${lib.getExe cfg.package} init nu ${configArgument} --print >> "$out"
+          ''
+        }
       '';
     };
   };

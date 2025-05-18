@@ -1,18 +1,43 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
-  inherit (builtins) elemAt isAttrs isBool length mapAttrs toJSON;
+  inherit (builtins)
+    elemAt
+    isAttrs
+    length
+    mapAttrs
+    ;
   inherit (lib)
-    boolToString concatMapStringsSep concatStringsSep escape literalExpression
-    mapAttrsToList mkEnableOption mkRenamedOptionModule mkRemovedOptionModule
-    mkDefault mkIf mkOption optional types warn getExe;
+    boolToString
+    concatMapStringsSep
+    concatStringsSep
+    escape
+    literalExpression
+    mapAttrsToList
+    mkEnableOption
+    mkRenamedOptionModule
+    mkRemovedOptionModule
+    mkDefault
+    mkIf
+    mkOption
+    types
+    getExe
+    ;
 
   cfg = config.services.picom;
   opt = options.services.picom;
 
-  pairOf = x:
+  pairOf =
+    x:
     with types;
-    addCheck (listOf x) (y: length y == 2) // {
+    addCheck (listOf x) (y: length y == 2)
+    // {
       description = "pair of ${x.description}";
     };
 
@@ -21,13 +46,19 @@ let
   # Basically a tinkered lib.generators.mkKeyValueDefault
   # It either serializes a top-level definition "key: { values };"
   # or an expression "key = { values };"
-  mkAttrsString = top:
-    mapAttrsToList (k: v:
-      let sep = if (top && isAttrs v) then ": " else " = ";
-      in "${escape [ sep ] k}${sep}${mkValueString v};");
+  mkAttrsString =
+    top:
+    mapAttrsToList (
+      k: v:
+      let
+        sep = if (top && isAttrs v) then ": " else " = ";
+      in
+      "${escape [ sep ] k}${sep}${mkValueString v};"
+    );
 
   # This serializes a Nix expression to the libconfig format.
-  mkValueString = v:
+  mkValueString =
+    v:
     if types.bool.check v then
       boolToString v
     else if types.int.check v then
@@ -50,19 +81,32 @@ let
 
   configFile = toConf cfg.settings;
 
-in {
+in
+{
   imports = [
-    (mkRemovedOptionModule [ "services" "picom" "refreshRate" ]
-      "The option `refresh-rate` has been deprecated by upstream.")
-    (mkRemovedOptionModule [ "services" "picom" "experimentalBackends" ]
-      "The option `--experimental-backends` has been removed by upstream.")
-    (mkRemovedOptionModule [ "services" "picom" "extraOptions" ]
-      "This option has been replaced by `services.picom.settings`.")
-    (mkRenamedOptionModule [ "services" "picom" "opacityRule" ] [
+    (mkRemovedOptionModule [
       "services"
       "picom"
-      "opacityRules"
-    ])
+      "refreshRate"
+    ] "The option `refresh-rate` has been deprecated by upstream.")
+    (mkRemovedOptionModule [
+      "services"
+      "picom"
+      "experimentalBackends"
+    ] "The option `--experimental-backends` has been removed by upstream.")
+    (mkRemovedOptionModule [
+      "services"
+      "picom"
+      "extraOptions"
+    ] "This option has been replaced by `services.picom.settings`.")
+    (mkRenamedOptionModule
+      [ "services" "picom" "opacityRule" ]
+      [
+        "services"
+        "picom"
+        "opacityRules"
+      ]
+    )
   ];
 
   options.services.picom = {
@@ -87,8 +131,14 @@ in {
 
     fadeSteps = mkOption {
       type = pairOf (types.numbers.between 1.0e-2 1);
-      default = [ 2.8e-2 3.0e-2 ];
-      example = [ 4.0e-2 4.0e-2 ];
+      default = [
+        2.8e-2
+        3.0e-2
+      ];
+      example = [
+        4.0e-2
+        4.0e-2
+      ];
       description = ''
         Opacity change between fade steps (in and out).
       '';
@@ -97,7 +147,11 @@ in {
     fadeExclude = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
+      example = [
+        "window_type *= 'menu'"
+        "name ~= 'Firefox$'"
+        "focused = 1"
+      ];
       description = ''
         List of conditions of windows that should not be faded.
         See `picom(1)` man page for more examples.
@@ -114,8 +168,14 @@ in {
 
     shadowOffsets = mkOption {
       type = pairOf types.int;
-      default = [ (-15) (-15) ];
-      example = [ (-10) (-15) ];
+      default = [
+        (-15)
+        (-15)
+      ];
+      example = [
+        (-10)
+        (-15)
+      ];
       description = ''
         Left and right offset for shadows (in pixels).
       '';
@@ -133,7 +193,11 @@ in {
     shadowExclude = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "window_type *= 'menu'" "name ~= 'Firefox$'" "focused = 1" ];
+      example = [
+        "window_type *= 'menu'"
+        "name ~= 'Firefox$'"
+        "focused = 1"
+      ];
       description = ''
         List of conditions of windows that should have no shadow.
         See `picom(1)` man page for more examples.
@@ -170,8 +234,12 @@ in {
     wintypes = mkOption {
       type = types.attrs;
       default = {
-        popup_menu = { opacity = cfg.menuOpacity; };
-        dropdown_menu = { opacity = cfg.menuOpacity; };
+        popup_menu = {
+          opacity = cfg.menuOpacity;
+        };
+        dropdown_menu = {
+          opacity = cfg.menuOpacity;
+        };
       };
       defaultText = literalExpression ''
         {
@@ -198,7 +266,12 @@ in {
     };
 
     backend = mkOption {
-      type = types.enum [ "egl" "glx" "xrender" "xr_glx_hybrid" ];
+      type = types.enum [
+        "egl"
+        "glx"
+        "xrender"
+        "xr_glx_hybrid"
+      ];
       default = "xrender";
       description = ''
         Backend to use: `egl`, `glx`, `xrender` or `xr_glx_hybrid`.
@@ -232,15 +305,29 @@ in {
       '';
     };
 
-    settings = with types;
+    settings =
+      with types;
       let
-        scalar = oneOf [ bool int float str ] // {
-          description = "scalar types";
-        };
+        scalar =
+          oneOf [
+            bool
+            int
+            float
+            str
+          ]
+          // {
+            description = "scalar types";
+          };
 
-        libConfig = oneOf [ scalar (listOf libConfig) (attrsOf libConfig) ] // {
-          description = "libconfig type";
-        };
+        libConfig =
+          oneOf [
+            scalar
+            (listOf libConfig)
+            (attrsOf libConfig)
+          ]
+          // {
+            description = "libconfig type";
+          };
 
         topLevel = attrsOf libConfig // {
           description = ''
@@ -251,7 +338,8 @@ in {
           '';
         };
 
-      in mkOption {
+      in
+      mkOption {
         type = topLevel;
         default = { };
         example = literalExpression ''
@@ -271,8 +359,7 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.picom" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.picom" pkgs lib.platforms.linux)
     ];
 
     services.picom.settings = mkDefaultAttrs {
@@ -310,17 +397,22 @@ in {
     systemd.user.services.picom = {
       Unit = {
         Description = "Picom X11 compositor";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
       Service = {
-        ExecStart = concatStringsSep " " ([
-          "${getExe cfg.package}"
-          "--config ${config.xdg.configFile."picom/picom.conf".source}"
-        ] ++ cfg.extraArgs);
+        ExecStart = concatStringsSep " " (
+          [
+            "${getExe cfg.package}"
+            "--config ${config.xdg.configFile."picom/picom.conf".source}"
+          ]
+          ++ cfg.extraArgs
+        );
         Restart = "always";
         RestartSec = 3;
       };

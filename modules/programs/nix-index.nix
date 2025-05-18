@@ -1,41 +1,45 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.programs.nix-index;
-in {
-  meta.maintainers = with lib.hm.maintainers; [ ambroisie ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.nix-index;
+in
+{
+  meta.maintainers = [
+    lib.hm.maintainers.ambroisie
+    lib.maintainers.khaneliman
+  ];
 
-  options.programs.nix-index = with lib; {
-    enable = mkEnableOption "nix-index, a file database for nixpkgs";
+  options.programs.nix-index = {
+    enable = lib.mkEnableOption "nix-index, a file database for nixpkgs";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.nix-index;
-      defaultText = literalExpression "pkgs.nix-index";
-      description = "Package providing the {command}`nix-index` tool.";
-    };
+    package = lib.mkPackageOption pkgs "nix-index" { };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = let
-      checkOpt = name: {
-        assertion = cfg.${name} -> !config.programs.command-not-found.enable;
-        message = ''
-          The 'programs.command-not-found.enable' option is mutually exclusive
-          with the 'programs.nix-index.${name}' option.
-        '';
-      };
-    in [ (checkOpt "enableBashIntegration") (checkOpt "enableZshIntegration") ];
+    assertions =
+      let
+        checkOpt = name: {
+          assertion = cfg.${name} -> !config.programs.command-not-found.enable;
+          message = ''
+            The 'programs.command-not-found.enable' option is mutually exclusive
+            with the 'programs.nix-index.${name}' option.
+          '';
+        };
+      in
+      [
+        (checkOpt "enableBashIntegration")
+        (checkOpt "enableZshIntegration")
+      ];
 
     home.packages = [ cfg.package ];
 
@@ -43,21 +47,23 @@ in {
       source ${cfg.package}/etc/profile.d/command-not-found.sh
     '';
 
-    programs.zsh.initExtra = lib.mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
       source ${cfg.package}/etc/profile.d/command-not-found.sh
     '';
 
     # See https://github.com/bennofs/nix-index/issues/126
-    programs.fish.interactiveShellInit = let
-      wrapper = pkgs.writeScript "command-not-found" ''
-        #!${pkgs.bash}/bin/bash
-        source ${cfg.package}/etc/profile.d/command-not-found.sh
-        command_not_found_handle "$@"
+    programs.fish.interactiveShellInit =
+      let
+        wrapper = pkgs.writeScript "command-not-found" ''
+          #!${pkgs.bash}/bin/bash
+          source ${cfg.package}/etc/profile.d/command-not-found.sh
+          command_not_found_handle "$@"
+        '';
+      in
+      lib.mkIf cfg.enableFishIntegration ''
+        function __fish_command_not_found_handler --on-event fish_command_not_found
+            ${wrapper} $argv
+        end
       '';
-    in lib.mkIf cfg.enableFishIntegration ''
-      function __fish_command_not_found_handler --on-event fish_command_not_found
-          ${wrapper} $argv
-      end
-    '';
   };
 }

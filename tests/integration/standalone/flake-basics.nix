@@ -4,27 +4,32 @@
   name = "standalone-flake-basics";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine = { ... }: {
-    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-    virtualisation.memorySize = 3072;
-    nix = {
-      registry.home-manager.to = {
-        type = "path";
-        path = ../../..;
+  nodes.machine =
+    { ... }:
+    {
+      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+      virtualisation.memorySize = 3072;
+      nix = {
+        registry.home-manager.to = {
+          type = "path";
+          path = ../../..;
+        };
+        settings.extra-experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
       };
-      settings.extra-experimental-features = [ "nix-command" "flakes" ];
+      users.users.alice = {
+        isNormalUser = true;
+        description = "Alice Foobar";
+        password = "foobar";
+        uid = 1000;
+      };
     };
-    users.users.alice = {
-      isNormalUser = true;
-      description = "Alice Foobar";
-      password = "foobar";
-      uid = 1000;
-    };
-  };
 
   testScript = ''
     start_all()
-    machine.wait_for_unit("network-online.target")
+    machine.wait_for_unit("network.target")
     machine.wait_for_unit("multi-user.target")
 
     def login_as_alice():
@@ -49,6 +54,12 @@
     # Create a persistent login so that Alice has a systemd session.
     login_as_alice()
 
+    # Make sure that Alice has a "nix profile" compatible profile.
+    if True:
+      succeed_as_alice("nix profile install nixpkgs#cowsay")
+      result = succeed_as_alice("cowsay Hello")
+      machine.log(f"\n{result}")
+
     with subtest("Home Manager installation"):
       succeed_as_alice("nix run home-manager -- init --home-manager-url home-manager --nixpkgs-url nixpkgs --switch")
 
@@ -57,12 +68,8 @@
       assert actual == expected, \
         f"unexpected content of /home/alice/.config/home-manager: {actual}"
 
-      machine.succeed("diff -u ${
-        ./alice-home-init.nix
-      } /home/alice/.config/home-manager/home.nix")
-      machine.succeed("diff -u ${
-        ./alice-flake-init.nix
-      } /home/alice/.config/home-manager/flake.nix")
+      machine.succeed("diff -u ${./alice-home-init.nix} /home/alice/.config/home-manager/home.nix")
+      machine.succeed("diff -u ${./alice-flake-init.nix} /home/alice/.config/home-manager/flake.nix")
 
       # The default configuration creates this link on activation.
       machine.succeed("test -L /home/alice/.cache/.keep")
@@ -83,9 +90,7 @@
     with subtest("Home Manager switch"):
       fail_as_alice("hello")
 
-      succeed_as_alice("cp ${
-        ./alice-home-next.nix
-      } /home/alice/.config/home-manager/home.nix")
+      succeed_as_alice("cp ${./alice-home-next.nix} /home/alice/.config/home-manager/home.nix")
 
       actual = succeed_as_alice("home-manager switch")
       expected = "Starting units: pueued.service"

@@ -1,19 +1,23 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.xsession.windowManager.fluxbox;
 
-in {
-  meta.maintainers = [ maintainers.AndersonTorres ];
+in
+{
+  meta.maintainers = [ lib.maintainers.AndersonTorres ];
 
   options = {
     xsession.windowManager.fluxbox = {
-      enable = mkEnableOption "Fluxbox window manager";
+      enable = lib.mkEnableOption "Fluxbox window manager";
 
-      package = mkPackageOption pkgs "fluxbox" { };
+      package = lib.mkPackageOption pkgs "fluxbox" { nullable = true; };
 
       init = mkOption {
         type = types.lines;
@@ -79,7 +83,10 @@ in {
       extraCommandLineArgs = mkOption {
         type = with types; listOf str;
         default = [ ];
-        example = [ "-log" "/tmp/fluxbox.log" ];
+        example = [
+          "-log"
+          "/tmp/fluxbox.log"
+        ];
         description = ''
           Extra command line arguments to pass to {command}`fluxbox`.
           Look at the
@@ -91,11 +98,10 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "xsession.windowManager.fluxbox" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "xsession.windowManager.fluxbox" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file = {
       ".fluxbox/init" = mkIf (cfg.init != "") { text = cfg.init; };
@@ -103,11 +109,11 @@ in {
       ".fluxbox/keys" = mkIf (cfg.keys != "") { text = cfg.keys; };
       ".fluxbox/menu" = mkIf (cfg.menu != "") { text = cfg.menu; };
       ".fluxbox/slitlist" = mkIf (cfg.slitlist != "") { text = cfg.slitlist; };
-      ".fluxbox/windowmenu" =
-        mkIf (cfg.windowmenu != "") { text = cfg.windowmenu; };
+      ".fluxbox/windowmenu" = mkIf (cfg.windowmenu != "") { text = cfg.windowmenu; };
     };
 
-    xsession.windowManager.command = escapeShellArgs
-      ([ "${cfg.package}/bin/fluxbox" ] ++ remove "" cfg.extraCommandLineArgs);
+    xsession.windowManager.command = lib.escapeShellArgs (
+      [ "${cfg.package}/bin/fluxbox" ] ++ lib.remove "" cfg.extraCommandLineArgs
+    );
   };
 }

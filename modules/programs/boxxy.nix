@@ -1,6 +1,12 @@
-{ config, lib, pkgs, ... }:
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) literalExpression mkOption types;
+
   cfg = config.programs.boxxy;
 
   configPath = "${config.xdg.configHome}/boxxy/boxxy.yaml";
@@ -36,7 +42,10 @@ let
       };
 
       mode = mkOption {
-        type = types.enum [ "file" "directory" ];
+        type = types.enum [
+          "file"
+          "directory"
+        ];
         default = "directory";
         description = ''
           Does the current path redirect a file or a directory?
@@ -80,11 +89,12 @@ let
       };
     };
   };
-in {
+in
+{
   options.programs.boxxy = {
-    enable = mkEnableOption "boxxy: Boxes in badly behaving applications";
+    enable = lib.mkEnableOption "boxxy: Boxes in badly behaving applications";
 
-    package = mkPackageOption pkgs "boxxy" { };
+    package = lib.mkPackageOption pkgs "boxxy" { nullable = true; };
 
     rules = mkOption {
       type = types.listOf boxxyRulesOpts;
@@ -93,18 +103,17 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "programs.boxxy" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.boxxy" pkgs lib.platforms.linux)
+    ];
 
-    home.file = mkIf (cfg.rules != [ ]) {
-      "${configPath}".source =
-        settingsFormat.generate "boxxy-config.yaml" { rules = cfg.rules; };
+    home.file = lib.mkIf (cfg.rules != [ ]) {
+      "${configPath}".source = settingsFormat.generate "boxxy-config.yaml" { rules = cfg.rules; };
     };
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
   };
 
   meta.maintainers = with lib.hm.maintainers; [ nikp123 ];
 }
-

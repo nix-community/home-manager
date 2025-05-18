@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) literalExpression mkOption types;
 
   supportedBrowsers = [
     "chromium"
@@ -13,11 +16,13 @@ let
     "vivaldi"
   ];
 
-  browserModule = defaultPkg: name: visible:
+  browserModule =
+    defaultPkg: name: visible:
     let
       browser = (builtins.parseDrvName defaultPkg.name).name;
-      isProprietaryChrome = hasPrefix "Google Chrome" name;
-    in {
+      isProprietaryChrome = lib.hasPrefix "Google Chrome" name;
+    in
+    {
       enable = mkOption {
         inherit visible;
         type = types.bool;
@@ -38,7 +43,10 @@ let
         inherit visible;
         type = types.listOf types.str;
         default = [ ];
-        example = [ "--enable-logging=stderr" "--ignore-gpu-blocklist" ];
+        example = [
+          "--enable-logging=stderr"
+          "--ignore-gpu-blocklist"
+        ];
         description = ''
           List of command-line arguments to be passed to ${name}.
 
@@ -49,12 +57,14 @@ let
           [Chromium codesearch](https://source.chromium.org/search?q=file:switches.cc&ss=chromium%2Fchromium%2Fsrc).
         '';
       };
-    } // optionalAttrs (!isProprietaryChrome) {
+    }
+    // lib.optionalAttrs (!isProprietaryChrome) {
       # Extensions do not work with Google Chrome
       # see https://github.com/nix-community/home-manager/issues/1383
       extensions = mkOption {
         inherit visible;
-        type = with types;
+        type =
+          with types;
           let
             extensionType = submodule {
               options = {
@@ -95,7 +105,8 @@ let
                 };
               };
             };
-          in listOf (coercedTo str (v: { id = v; }) extensionType);
+          in
+          listOf (coercedTo str (v: { id = v; }) extensionType);
         default = [ ];
         example = literalExpression ''
           [
@@ -137,14 +148,27 @@ let
           List of ${name} dictionaries to install.
         '';
       };
+      nativeMessagingHosts = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression ''
+          [
+            pkgs.kdePackages.plasma-browser-integration
+          ]
+        '';
+        description = ''
+          List of ${name} native messaging hosts to install.
+        '';
+      };
     };
 
-  browserConfig = cfg:
+  browserConfig =
+    cfg:
     let
 
       drvName = (builtins.parseDrvName cfg.package.name).name;
       browser = if drvName == "ungoogled-chromium" then "chromium" else drvName;
-      isProprietaryChrome = hasPrefix "google-chrome" drvName;
+      isProprietaryChrome = lib.hasPrefix "google-chrome" drvName;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -154,23 +178,33 @@ let
         brave = "BraveSoftware/Brave-Browser";
       };
 
-      linuxDirs = { brave = "BraveSoftware/Brave-Browser"; };
+      linuxDirs = {
+        brave = "BraveSoftware/Brave-Browser";
+      };
 
-      configDir = if pkgs.stdenv.isDarwin then
-        "Library/Application Support/" + (darwinDirs."${browser}" or browser)
-      else
-        "${config.xdg.configHome}/" + (linuxDirs."${browser}" or browser);
+      configDir =
+        if pkgs.stdenv.isDarwin then
+          "Library/Application Support/" + (darwinDirs."${browser}" or browser)
+        else
+          "${config.xdg.configHome}/" + (linuxDirs."${browser}" or browser);
 
-      extensionJson = ext:
+      extensionJson =
+        ext:
         assert ext.crxPath != null -> ext.version != null;
-        with builtins; {
+        with builtins;
+        {
           name = "${configDir}/External Extensions/${ext.id}.json";
-          value.text = toJSON (if ext.crxPath != null then {
-            external_crx = ext.crxPath;
-            external_version = ext.version;
-          } else {
-            external_update_url = ext.updateUrl;
-          });
+          value.text = toJSON (
+            if ext.crxPath != null then
+              {
+                external_crx = ext.crxPath;
+                external_version = ext.version;
+              }
+            else
+              {
+                external_update_url = ext.updateUrl;
+              }
+          );
         };
 
       dictionary = pkg: {
@@ -178,41 +212,66 @@ let
         value.source = pkg;
       };
 
-      package = if cfg.commandLineArgs != [ ] then
-        cfg.package.override {
-          commandLineArgs = concatStringsSep " " cfg.commandLineArgs;
-        }
-      else
-        cfg.package;
+      nativeMessagingHostsJoined = pkgs.symlinkJoin {
+        name = "${drvName}-native-messaging-hosts";
+        paths = cfg.nativeMessagingHosts;
+      };
 
-    in mkIf cfg.enable {
+      package =
+        if cfg.commandLineArgs != [ ] then
+          cfg.package.override {
+            commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
+          }
+        else
+          cfg.package;
+
+    in
+    lib.mkIf cfg.enable {
       home.packages = [ package ];
-      home.file = optionalAttrs (!isProprietaryChrome) (listToAttrs
-        ((map extensionJson cfg.extensions)
-          ++ (map dictionary cfg.dictionaries)));
+      home.file = lib.optionalAttrs (!isProprietaryChrome) (
+        lib.listToAttrs ((map extensionJson cfg.extensions) ++ (map dictionary cfg.dictionaries))
+        // {
+          "${configDir}/NativeMessagingHosts" = lib.mkIf (cfg.nativeMessagingHosts != [ ]) {
+            source = "${nativeMessagingHostsJoined}/etc/chromium/native-messaging-hosts";
+            recursive = true;
+          };
+        }
+      );
     };
 
-in {
+in
+{
   # Extensions do not work with the proprietary Google Chrome version
   # see https://github.com/nix-community/home-manager/issues/1383
-  imports = map (flip mkRemovedOptionModule
-    "The `extensions` option does not work on Google Chrome anymore.") [
-      [ "programs" "google-chrome" "extensions" ]
-      [ "programs" "google-chrome-beta" "extensions" ]
-      [ "programs" "google-chrome-dev" "extensions" ]
-    ];
+  imports =
+    map
+      (lib.flip lib.mkRemovedOptionModule "The `extensions` option does not work on Google Chrome anymore.")
+      [
+        [
+          "programs"
+          "google-chrome"
+          "extensions"
+        ]
+        [
+          "programs"
+          "google-chrome-beta"
+          "extensions"
+        ]
+        [
+          "programs"
+          "google-chrome-dev"
+          "extensions"
+        ]
+      ];
 
   options.programs = {
     chromium = browserModule pkgs.chromium "Chromium" true;
     google-chrome = browserModule pkgs.google-chrome "Google Chrome" false;
-    google-chrome-beta =
-      browserModule pkgs.google-chrome-beta "Google Chrome Beta" false;
-    google-chrome-dev =
-      browserModule pkgs.google-chrome-dev "Google Chrome Dev" false;
+    google-chrome-beta = browserModule pkgs.google-chrome-beta "Google Chrome Beta" false;
+    google-chrome-dev = browserModule pkgs.google-chrome-dev "Google Chrome Dev" false;
     brave = browserModule pkgs.brave "Brave Browser" false;
     vivaldi = browserModule pkgs.vivaldi "Vivaldi Browser" false;
   };
 
-  config = mkMerge
-    (map (browser: browserConfig config.programs.${browser}) supportedBrowsers);
+  config = lib.mkMerge (map (browser: browserConfig config.programs.${browser}) supportedBrowsers);
 }

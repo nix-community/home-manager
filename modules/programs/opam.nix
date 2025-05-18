@@ -1,61 +1,39 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
   cfg = config.programs.opam;
-
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.opam = {
-    enable = mkEnableOption "Opam";
+    enable = lib.mkEnableOption "Opam";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.opam;
-      defaultText = literalExpression "pkgs.opam";
-      description = "Opam package to install.";
-    };
+    package = lib.mkPackageOption pkgs "opam" { };
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
       eval "$(${cfg.package}/bin/opam env --shell=bash)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/opam env --shell=zsh)"
     '';
 
-    programs.fish.shellInit = mkIf cfg.enableFishIntegration ''
+    programs.fish.shellInit = lib.mkIf cfg.enableFishIntegration ''
       eval (${cfg.package}/bin/opam env --shell=fish)
     '';
   };

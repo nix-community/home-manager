@@ -1,7 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ pkgs, ... }:
 {
   config = {
     programs.tmux = {
@@ -43,9 +40,7 @@ with lib;
 
     nmt.script = ''
       assertFileExists home-files/.config/tmux/tmux.conf
-      assertFileContent home-files/.config/tmux/tmux.conf ${
-        ./emacs-with-plugins.conf
-      }
+      assertFileContent home-files/.config/tmux/tmux.conf ${./emacs-with-plugins.conf}
     '';
   };
 }

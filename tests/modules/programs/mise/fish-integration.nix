@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   programs = {
     mise = {
       package = config.lib.test.mkStubPackage { name = "mise"; };
@@ -13,4 +14,3 @@
     assertFileRegex home-files/.config/fish/config.fish '/nix/store/.*mise.*/bin/mise activate fish | source'
   '';
 }
-

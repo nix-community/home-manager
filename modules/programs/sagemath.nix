@@ -1,22 +1,33 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.programs.sagemath;
 
-  inherit (lib) literalExpression mkEnableOption mkOption types;
+  inherit (lib)
+    literalExpression
+    mkEnableOption
+    mkOption
+    types
+    ;
 
-in {
+in
+{
   meta.maintainers = [ lib.maintainers.kirelagin ];
 
   options.programs.sagemath = {
     enable = mkEnableOption "SageMath, a mathematics software system";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.sage;
-      defaultText = literalExpression "pkgs.sage";
-      description = "The SageMath package to use.";
+    package = lib.mkPackageOption pkgs "sage" {
+      nullable = true;
+      extraDescription = ''
+        The SageMath package to use.
+      '';
     };
 
     configDir = mkOption {
@@ -52,9 +63,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${cfg.configDir}/init.sage".text = cfg.initScript;
+
     home.sessionVariables = {
       DOT_SAGE = cfg.dataDir;
       SAGE_STARTUP_FILE = "${cfg.configDir}/init.sage";

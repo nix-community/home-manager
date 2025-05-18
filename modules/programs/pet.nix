@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.pet;
 
@@ -40,7 +43,7 @@ let
       tag = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = literalExpression ''["git" "nixpkgs"]'';
+        example = lib.literalExpression ''["git" "nixpkgs"]'';
         description = ''
           List of tags attached to the command.
         '';
@@ -48,9 +51,12 @@ let
     };
   };
 
-in {
+in
+{
   options.programs.pet = {
-    enable = mkEnableOption "pet";
+    enable = lib.mkEnableOption "pet";
+
+    package = lib.mkPackageOption pkgs "pet" { nullable = true; };
 
     settings = mkOption {
       type = format.type;
@@ -61,13 +67,9 @@ in {
       '';
     };
 
-    selectcmdPackage = mkOption {
-      type = types.package;
-      default = pkgs.fzf;
-      defaultText = literalExpression "pkgs.fzf";
-      description = ''
-        The package needed for the {var}`settings.selectcmd`.
-      '';
+    selectcmdPackage = lib.mkPackageOption pkgs "fzf" {
+      nullable = true;
+      extraDescription = "The package needed for the {var}`settings.selectcmd`.";
     };
 
     snippets = mkOption {
@@ -79,27 +81,35 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    programs.pet.settings = let
-      defaultGeneral = {
-        selectcmd = mkDefault "fzf";
-        snippetfile = config.xdg.configHome + "/pet/snippet.toml";
-      };
-    in if versionAtLeast config.home.stateVersion "21.11" then {
-      General = defaultGeneral;
-    } else
-      defaultGeneral;
+  config = lib.mkIf cfg.enable {
+    programs.pet.settings =
+      let
+        defaultGeneral = {
+          selectcmd = lib.mkDefault "fzf";
+          snippetfile = config.xdg.configHome + "/pet/snippet.toml";
+        };
+      in
+      if lib.versionAtLeast config.home.stateVersion "21.11" then
+        {
+          General = defaultGeneral;
+        }
+      else
+        defaultGeneral;
 
-    home.packages = [ pkgs.pet cfg.selectcmdPackage ];
+    home.packages =
+      lib.optional (cfg.package != null) cfg.package
+      ++ lib.optional (cfg.selectcmdPackage != null) cfg.selectcmdPackage;
 
     xdg.configFile = {
-      "pet/config.toml".source = format.generate "config.toml"
-        (if versionAtLeast config.home.stateVersion "21.11" then
+      "pet/config.toml".source = format.generate "config.toml" (
+        if lib.versionAtLeast config.home.stateVersion "21.11" then
           cfg.settings
-        else {
-          General = cfg.settings;
-        });
-      "pet/snippet.toml" = mkIf (cfg.snippets != [ ]) {
+        else
+          {
+            General = cfg.settings;
+          }
+      );
+      "pet/snippet.toml" = lib.mkIf (cfg.snippets != [ ]) {
         source = format.generate "snippet.toml" { snippets = cfg.snippets; };
       };
     };

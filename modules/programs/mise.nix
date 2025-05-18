@@ -1,51 +1,55 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) getExe mkIf mkOption;
   cfg = config.programs.mise;
   tomlFormat = pkgs.formats.toml { };
-in {
-  meta.maintainers = [ hm.maintainers.pedorich-n ];
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.pedorich-n ];
 
-  imports = let
-    mkRemovedWarning = opt:
-      (mkRemovedOptionModule [ "programs" "rtx" opt ] ''
-        The `rtx` package has been replaced by `mise`, please switch over to
-        using the options under `programs.mise.*` instead.
-      '');
+  imports =
+    let
+      mkRemovedWarning =
+        opt:
+        (lib.mkRemovedOptionModule [ "programs" "rtx" opt ] ''
+          The `rtx` package has been replaced by `mise`, please switch over to
+          using the options under `programs.mise.*` instead.
+        '');
 
-  in map mkRemovedWarning [
-    "enable"
-    "package"
-    "enableBashIntegration"
-    "enableZshIntegration"
-    "enableFishIntegration"
-    "settings"
-  ];
+    in
+    map mkRemovedWarning [
+      "enable"
+      "package"
+      "enableBashIntegration"
+      "enableZshIntegration"
+      "enableFishIntegration"
+      "enableNushellIntegration"
+      "settings"
+    ];
 
   options = {
     programs.mise = {
-      enable = mkEnableOption "mise";
+      enable = lib.mkEnableOption "mise";
 
-      package = mkPackageOption pkgs "mise" { };
+      package = lib.mkPackageOption pkgs "mise" { nullable = true; };
 
-      enableBashIntegration = mkEnableOption "Bash Integration" // {
-        default = true;
-      };
+      enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-      enableZshIntegration = mkEnableOption "Zsh Integration" // {
-        default = true;
-      };
+      enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-      enableFishIntegration = mkEnableOption "Fish Integration" // {
-        default = true;
-      };
+      enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+      enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
       globalConfig = mkOption {
         type = tomlFormat.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           tools = {
             node = "lts";
             python = ["3.10" "3.11"];
@@ -66,7 +70,7 @@ in {
       settings = mkOption {
         type = tomlFormat.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           verbose = false;
           experimental = false;
           disable_tools = ["node"];
@@ -82,7 +86,24 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings =
+      lib.optional
+        (
+          cfg.package == null
+          && (
+            cfg.enableBashIntegration
+            || cfg.enableZshIntegration
+            || cfg.enableFishIntegration
+            || cfg.enableNushellIntegration
+          )
+        )
+        ''
+          You have enabled shell integration for `mise` but have not set `package`.
+
+          The shell integration will not be added.
+        '';
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "mise/config.toml" = mkIf (cfg.globalConfig != { }) {
@@ -99,13 +120,23 @@ in {
         eval "$(${getExe cfg.package} activate bash)"
       '';
 
-      zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      zsh.initContent = mkIf cfg.enableZshIntegration ''
         eval "$(${getExe cfg.package} activate zsh)"
       '';
 
       fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
         ${getExe cfg.package} activate fish | source
       '';
+
+      nushell = mkIf cfg.enableNushellIntegration {
+        extraEnv = ''
+          let mise_path = $nu.default-config-dir | path join mise.nu
+          ^mise activate nu | save $mise_path --force
+        '';
+        extraConfig = ''
+          use ($nu.default-config-dir | path join mise.nu)
+        '';
+      };
     };
   };
 }

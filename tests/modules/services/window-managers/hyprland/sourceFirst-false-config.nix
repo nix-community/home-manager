@@ -1,10 +1,6 @@
-{ config, lib, ... }:
-
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    package = lib.makeOverridable
-      (attrs: config.lib.test.mkStubPackage { name = "hyprland"; }) { };
     settings = {
       source = [ "sourced.conf" ];
 
@@ -18,7 +14,9 @@
         kb_layout = "ro";
         follow_mouse = 1;
         accel_profile = "flat";
-        touchpad = { scroll_factor = 0.3; };
+        touchpad = {
+          scroll_factor = 0.3;
+        };
       };
     };
     sourceFirst = false;

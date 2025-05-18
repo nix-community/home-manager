@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -8,7 +13,21 @@ let
     path = config.programs.home-manager.path;
   };
 
-in {
+  autoUpgradeApp = pkgs.writeShellApplication {
+    name = "home-manager-auto-upgrade";
+    text = ''
+      echo "Update Nix's channels"
+      nix-channel --update
+      echo "Upgrade Home Manager"
+      home-manager switch
+    '';
+    runtimeInputs = with pkgs; [
+      homeManagerPackage
+      nix
+    ];
+  };
+in
+{
   meta.maintainers = [ lib.hm.maintainers.pinage404 ];
 
   options = {
@@ -33,8 +52,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.home-manager.autoUpgrade" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.home-manager.autoUpgrade" pkgs lib.platforms.linux)
     ];
 
     systemd.user = {
@@ -52,14 +70,7 @@ in {
 
       services.home-manager-auto-upgrade = {
         Unit.Description = "Home Manager upgrade";
-
-        Service.ExecStart = toString
-          (pkgs.writeShellScript "home-manager-auto-upgrade" ''
-            echo "Update Nix's channels"
-            ${pkgs.nix}/bin/nix-channel --update
-            echo "Upgrade Home Manager"
-            ${homeManagerPackage}/bin/home-manager switch
-          '');
+        Service.ExecStart = "${autoUpgradeApp}/bin/home-manager-auto-upgrade";
       };
     };
   };

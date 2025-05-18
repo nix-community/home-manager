@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
@@ -11,10 +14,11 @@ let
     inherit (config.home.version) release isReleaseBranch;
   };
 
-in {
+in
+{
   options = {
-    manual.html.enable = mkOption {
-      type = types.bool;
+    manual.html.enable = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       description = ''
         Whether to install the HTML manual. This also installs the
@@ -23,8 +27,8 @@ in {
       '';
     };
 
-    manual.manpages.enable = mkOption {
-      type = types.bool;
+    manual.manpages.enable = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       example = false;
       description = ''
@@ -37,8 +41,8 @@ in {
       '';
     };
 
-    manual.json.enable = mkOption {
-      type = types.bool;
+    manual.json.enable = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       example = true;
       description = ''
@@ -52,10 +56,13 @@ in {
   };
 
   config = {
-    home.packages = mkMerge [
-      (mkIf cfg.html.enable [ docs.manual.html docs.manual.htmlOpenTool ])
-      (mkIf cfg.manpages.enable [ docs.manPages ])
-      (mkIf cfg.json.enable [ docs.options.json ])
+    home.packages = lib.mkMerge [
+      (lib.mkIf cfg.html.enable [
+        docs.manual.html
+        docs.manual.htmlOpenTool
+      ])
+      (lib.mkIf cfg.manpages.enable [ docs.manPages ])
+      (lib.mkIf cfg.json.enable [ docs.options.json ])
     ];
   };
 

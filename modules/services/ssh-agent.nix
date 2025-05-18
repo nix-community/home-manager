@@ -1,10 +1,16 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.services.ssh-agent;
 
-in {
+in
+{
   meta.maintainers = [ lib.hm.maintainers.lheckemann ];
 
   options = {
@@ -15,8 +21,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.ssh-agent" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.ssh-agent" pkgs lib.platforms.linux)
     ];
 
     home.sessionVariablesExtra = ''

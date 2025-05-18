@@ -1,13 +1,25 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib)
+    mkEnableOption
+    mkOption
+    optional
+    types
+    ;
 
-with lib;
-let cfg = config.services.barrier;
-in {
+  cfg = config.services.barrier;
+in
+{
 
-  meta.maintainers = with maintainers; [ kritnich ];
+  meta.maintainers = with lib.maintainers; [ kritnich ];
 
   imports = [
-    (mkRemovedOptionModule [ "services" "barrier" "client" "tray" ] ''
+    (lib.mkRemovedOptionModule [ "services" "barrier" "client" "tray" ] ''
       The tray option is non-functional and has been removed.
     '')
   ];
@@ -44,7 +56,7 @@ in {
       extraFlags = mkOption {
         type = types.listOf types.str;
         default = [ "-f" ];
-        defaultText = literalExpression ''[ "-f" ]'';
+        defaultText = lib.literalExpression ''[ "-f" ]'';
         description = ''
           Additional flags to pass to {command}`barrierc`.
           See {command}`barrierc --help`.
@@ -54,26 +66,28 @@ in {
     };
   };
 
-  config = mkIf cfg.client.enable {
+  config = lib.mkIf cfg.client.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.barrier" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.barrier" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.barrierc = {
       Unit = {
         Description = "Barrier Client daemon";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
       Install.WantedBy = [ "graphical-session.target" ];
-      Service.ExecStart = with cfg.client;
-        toString ([ "${pkgs.barrier}/bin/barrierc" ]
+      Service.ExecStart =
+        with cfg.client;
+        toString (
+          [ "${pkgs.barrier}/bin/barrierc" ]
           ++ optional (name != null) "--name ${name}"
           ++ optional (!enableCrypto) "--disable-crypto"
-          ++ optional enableDragDrop "--enable-drag-drop" ++ extraFlags
-          ++ [ server ]);
+          ++ optional enableDragDrop "--enable-drag-drop"
+          ++ extraFlags
+          ++ [ server ]
+        );
     };
   };
-
 }

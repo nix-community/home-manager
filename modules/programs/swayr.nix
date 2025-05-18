@@ -1,23 +1,30 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
+
   cfg = config.programs.swayr;
   tomlFormat = pkgs.formats.toml { };
   configFile = tomlFormat.generate "config.toml" cfg.settings;
-  finalConfig = pkgs.writeText "swayr.toml"
-    ((builtins.readFile configFile) + cfg.extraConfig);
-in {
+  extraConfigFile = pkgs.writeText "extra-config.toml" cfg.extraConfig;
+  finalConfig = pkgs.runCommand "swayr.toml" { } ''
+    cat ${configFile} ${extraConfigFile} > $out
+  '';
+in
+{
   meta.maintainers = [ lib.hm.maintainers."9p4" ];
 
   options.programs.swayr = {
-    enable = mkEnableOption "the swayr service";
+    enable = lib.mkEnableOption "the swayr service";
 
     settings = mkOption {
       type = types.nullOr tomlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         menu = {
           executable = "${pkgs.wofi}/bin/wofi";
           args = [
@@ -87,49 +94,46 @@ in {
       '';
     };
 
-    systemd.enable = mkEnableOption "swayr systemd integration";
+    systemd.enable = lib.mkEnableOption "swayr systemd integration";
     systemd.target = mkOption {
       type = types.str;
-      default = "graphical-session.target";
+      default = config.wayland.systemd.target;
       description = ''
         Systemd target to bind to.
       '';
     };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.swayr;
-      defaultText = literalExpression "pkgs.swayr";
-      description = "swayr package to use.";
-    };
+    package = lib.mkPackageOption pkgs "swayr" { };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      home.packages = [ cfg.package ];
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home.packages = [ cfg.package ];
 
-      # Creating an empty file on empty configuration is desirable, otherwise swayrd will create the file on startup.
-      xdg.configFile."swayr/config.toml" =
-        mkIf (cfg.settings != { }) { source = finalConfig; };
-    }
+        # Creating an empty file on empty configuration is desirable, otherwise swayrd will create the file on startup.
+        xdg.configFile."swayr/config.toml" = mkIf (cfg.settings != { }) { source = finalConfig; };
+      }
 
-    (mkIf cfg.systemd.enable {
-      systemd.user.services.swayrd = {
-        Unit = {
-          Description = "A window-switcher & more for sway";
-          Documentation = "https://sr.ht/~tsdh/swayr";
-          After = [ cfg.systemd.target ];
-          PartOf = [ cfg.systemd.target ];
-          X-Restart-Triggers = mkIf (cfg.settings != { })
-            [ "${config.xdg.configFile."swayr/config.toml".source}" ];
+      (mkIf cfg.systemd.enable {
+        systemd.user.services.swayrd = {
+          Unit = {
+            Description = "A window-switcher & more for sway";
+            Documentation = "https://sr.ht/~tsdh/swayr";
+            After = [ cfg.systemd.target ];
+            PartOf = [ cfg.systemd.target ];
+            X-Restart-Triggers = mkIf (cfg.settings != { }) [
+              "${config.xdg.configFile."swayr/config.toml".source}"
+            ];
+          };
+          Service = {
+            Environment = [ "RUST_BACKTRACE=1" ];
+            ExecStart = "${cfg.package}/bin/swayrd";
+            Restart = "on-failure";
+          };
+          Install.WantedBy = [ cfg.systemd.target ];
         };
-        Service = {
-          Environment = [ "RUST_BACKTRACE=1" ];
-          ExecStart = "${cfg.package}/bin/swayrd";
-          Restart = "on-failure";
-        };
-        Install.WantedBy = [ cfg.systemd.target ];
-      };
-    })
-  ]);
+      })
+    ]
+  );
 }

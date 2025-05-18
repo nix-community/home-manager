@@ -1,30 +1,43 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkOption types;
 
   cfg = config.programs.papis;
 
-  defaultLibraries = remove null
-    (mapAttrsToList (n: v: if v.isDefault then n else null) cfg.libraries);
+  defaultLibraries = lib.remove null (
+    lib.mapAttrsToList (n: v: if v.isDefault then n else null) cfg.libraries
+  );
 
   settingsIni = (lib.mapAttrs (n: v: v.settings) cfg.libraries) // {
-    settings = cfg.settings // { "default-library" = head defaultLibraries; };
+    settings = cfg.settings // {
+      "default-library" = lib.head defaultLibraries;
+    };
   };
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.papis = {
-    enable = mkEnableOption "papis";
+    enable = lib.mkEnableOption "papis";
 
-    package = mkPackageOption pkgs "papis" { };
+    package = lib.mkPackageOption pkgs "papis" { nullable = true; };
 
     settings = mkOption {
-      type = with types; attrsOf (oneOf [ bool int str ]);
+      type =
+        with types;
+        attrsOf (oneOf [
+          bool
+          int
+          str
+        ]);
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           editor = "nvim";
           file-browser = "ranger"
@@ -40,55 +53,71 @@ in {
     };
 
     libraries = mkOption {
-      type = types.attrsOf (types.submodule ({ config, name, ... }: {
-        options = {
-          name = mkOption {
-            type = types.str;
-            default = name;
-            readOnly = true;
-            description = "This library's name.";
-          };
+      type = types.attrsOf (
+        types.submodule (
+          { name, ... }:
+          {
+            options = {
+              name = mkOption {
+                type = types.str;
+                default = name;
+                readOnly = true;
+                description = "This library's name.";
+              };
 
-          isDefault = mkOption {
-            type = types.bool;
-            default = false;
-            example = true;
-            description = ''
-              Whether this is a default library. There must be exactly one
-              default library.
-            '';
-          };
+              isDefault = mkOption {
+                type = types.bool;
+                default = false;
+                example = true;
+                description = ''
+                  Whether this is a default library. There must be exactly one
+                  default library.
+                '';
+              };
 
-          settings = mkOption {
-            type = with types; attrsOf (oneOf [ bool int str ]);
-            default = { };
-            example = literalExpression ''
-              {
-                dir = "~/papers/";
-              }
-            '';
-            description = ''
-              Configuration for this library.
-            '';
-          };
-        };
-      }));
+              settings = mkOption {
+                type =
+                  with types;
+                  attrsOf (oneOf [
+                    bool
+                    int
+                    str
+                  ]);
+                default = { };
+                example = lib.literalExpression ''
+                  {
+                    dir = "~/papers/";
+                  }
+                '';
+                description = ''
+                  Configuration for this library.
+                '';
+              };
+            };
+          }
+        )
+      );
       description = "Attribute set of papis libraries.";
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = [{
-      assertion = cfg.libraries == { } || length defaultLibraries == 1;
-      message = "Must have exactly one default papis library, but found "
-        + toString (length defaultLibraries)
-        + optionalString (length defaultLibraries > 1)
-        (", namely " + concatStringsSep "," defaultLibraries);
-    }];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.libraries == { } || lib.length defaultLibraries == 1;
+        message =
+          "Must have exactly one default papis library, but found "
+          + toString (lib.length defaultLibraries)
+          + lib.optionalString (lib.length defaultLibraries > 1) (
+            ", namely " + lib.concatStringsSep "," defaultLibraries
+          );
+      }
+    ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."papis/config" =
-      mkIf (cfg.libraries != { }) { text = generators.toINI { } settingsIni; };
+    xdg.configFile."papis/config" = lib.mkIf (cfg.libraries != { }) {
+      text = lib.generators.toINI { } settingsIni;
+    };
   };
 }

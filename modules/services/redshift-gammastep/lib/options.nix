@@ -1,35 +1,60 @@
-{ config, lib, pkgs, moduleName, mainSection, programName, defaultPackage
-, examplePackage, mainExecutable, appletExecutable, xdgConfigFilePath
-, serviceDocumentation }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  moduleName,
+  mainSection,
+  programName,
+  defaultPackage,
+  examplePackage,
+  mainExecutable,
+  appletExecutable,
+  xdgConfigFilePath,
+  serviceDocumentation,
+}:
 let
+  inherit (lib) mkOption mkIf types;
 
   cfg = config.services.${moduleName};
   settingsFormat = pkgs.formats.ini { };
 
-in {
-  meta.maintainers = with maintainers; [ rycee thiagokokada ];
-
-  imports = let
-    mkRenamed = old: new:
-      mkRenamedOptionModule ([ "services" moduleName ] ++ old) [
-        "services"
-        moduleName
-        "settings"
-        mainSection
-        new
-      ];
-  in [
-    (mkRemovedOptionModule [ "services" moduleName "extraOptions" ]
-      "All ${programName} configuration is now available through services.${moduleName}.settings instead.")
-    (mkRenamed [ "brightness" "day" ] "brightness-day")
-    (mkRenamed [ "brightness" "night" ] "brightness-night")
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    rycee
+    thiagokokada
   ];
 
+  imports =
+    let
+      mkRenamed =
+        old: new:
+        lib.mkRenamedOptionModule
+          (
+            [
+              "services"
+              moduleName
+            ]
+            ++ old
+          )
+          [
+            "services"
+            moduleName
+            "settings"
+            mainSection
+            new
+          ];
+    in
+    [
+      (lib.mkRemovedOptionModule [ "services" moduleName "extraOptions" ]
+        "All ${programName} configuration is now available through services.${moduleName}.settings instead."
+      )
+      (mkRenamed [ "brightness" "day" ] "brightness-day")
+      (mkRenamed [ "brightness" "night" ] "brightness-night")
+    ];
+
   options = {
-    enable = mkEnableOption programName;
+    enable = lib.mkEnableOption programName;
 
     dawnTime = mkOption {
       type = types.nullOr types.str;
@@ -72,7 +97,10 @@ in {
     };
 
     provider = mkOption {
-      type = types.enum [ "manual" "geoclue2" ];
+      type = types.enum [
+        "manual"
+        "geoclue2"
+      ];
       default = "manual";
       description = ''
         The location provider to use for determining your location. If set to
@@ -104,13 +132,13 @@ in {
     package = mkOption {
       type = types.package;
       default = defaultPackage;
-      defaultText = literalExpression examplePackage;
+      defaultText = lib.literalExpression examplePackage;
       description = ''
         ${programName} derivation to use.
       '';
     };
 
-    enableVerboseLogging = mkEnableOption "verbose service logging";
+    enableVerboseLogging = lib.mkEnableOption "verbose service logging";
 
     tray = mkOption {
       type = types.bool;
@@ -124,7 +152,7 @@ in {
     settings = mkOption {
       type = types.submodule { freeformType = settingsFormat.type; };
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           ${mainSection} = {
             adjustment-method = "randr";
@@ -144,15 +172,16 @@ in {
 
   config = {
     assertions = [
-      (hm.assertions.assertPlatform "services.${moduleName}" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.${moduleName}" pkgs lib.platforms.linux)
 
       {
-        assertion = (cfg.settings ? ${mainSection}.dawn-time || cfg.settings
-          ? ${mainSection}.dusk-time)
+        assertion =
+          (cfg.settings ? ${mainSection}.dawn-time || cfg.settings ? ${mainSection}.dusk-time)
           || (cfg.settings.${mainSection}.location-provider) == "geoclue2"
-          || ((cfg.settings.${mainSection}.location-provider) == "manual"
-            && (cfg.settings ? manual.lat || cfg.settings ? manual.lon));
+          || (
+            (cfg.settings.${mainSection}.location-provider) == "manual"
+            && (cfg.settings ? manual.lat || cfg.settings ? manual.lon)
+          );
         message = ''
           In order for ${programName} to know the time of action, you need to set one of
             - services.${moduleName}.provider = "geoclue2" for automatically inferring your location
@@ -177,33 +206,40 @@ in {
       };
     };
 
-    xdg.configFile.${xdgConfigFilePath}.source =
-      settingsFormat.generate xdgConfigFilePath cfg.settings;
+    xdg.configFile.${xdgConfigFilePath}.source = settingsFormat.generate xdgConfigFilePath cfg.settings;
 
     home.packages = [ cfg.package ];
 
     systemd.user.services.${moduleName} = {
-      Unit = let
-        geoclueAgentService =
-          lib.optional (cfg.provider == "geoclue2") "geoclue-agent.service";
-      in {
-        Description = "${programName} colour temperature adjuster";
-        Documentation = serviceDocumentation;
-        After = [ "graphical-session-pre.target" ] ++ geoclueAgentService;
-        Wants = geoclueAgentService;
-        PartOf = [ "graphical-session.target" ];
+      Unit =
+        let
+          geoclueAgentService = lib.optional (cfg.provider == "geoclue2") "geoclue-agent.service";
+        in
+        {
+          Description = "${programName} colour temperature adjuster";
+          Documentation = serviceDocumentation;
+          After =
+            [ "graphical-session.target" ] ++ (lib.optional cfg.tray "tray.target") ++ geoclueAgentService;
+          Wants = geoclueAgentService;
+          Requires = lib.mkIf cfg.tray "tray.target";
+          PartOf = [ "graphical-session.target" ];
+        };
+
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
       };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
-
       Service = {
-        ExecStart = let
-          command = if cfg.tray then appletExecutable else mainExecutable;
-          configFullPath = config.xdg.configHome + "/${xdgConfigFilePath}";
-        in "${cfg.package}/bin/${command} " + cli.toGNUCommandLineShell { } {
-          v = cfg.enableVerboseLogging;
-          c = configFullPath;
-        };
+        ExecStart =
+          let
+            command = if cfg.tray then appletExecutable else mainExecutable;
+            configFullPath = config.xdg.configHome + "/${xdgConfigFilePath}";
+          in
+          "${cfg.package}/bin/${command} "
+          + lib.cli.toGNUCommandLineShell { } {
+            v = cfg.enableVerboseLogging;
+            c = configFullPath;
+          };
         RestartSec = 3;
         Restart = "on-failure";
       };

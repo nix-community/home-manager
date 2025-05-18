@@ -1,18 +1,23 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.services.lieer;
 
-  syncAccounts = filter (a: a.lieer.enable && a.lieer.sync.enable)
-    (attrValues config.accounts.email.accounts);
+  syncAccounts = lib.filter (a: a.lieer.enable && a.lieer.sync.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
-  escapeUnitName = name:
+  escapeUnitName =
+    name:
     let
-      good = upperChars ++ lowerChars ++ stringToCharacters "0123456789-_";
-      subst = c: if any (x: x == c) good then c else "-";
-    in stringAsChars subst name;
+      good = lib.upperChars ++ lib.lowerChars ++ lib.stringToCharacters "0123456789-_";
+      subst = c: if lib.any (x: x == c) good then c else "-";
+    in
+    lib.stringAsChars subst name;
 
   serviceUnit = account: {
     name = escapeUnitName "lieer-${account.name}";
@@ -26,8 +31,7 @@ let
         Type = "oneshot";
         ExecStart = "${config.programs.lieer.package}/bin/gmi sync";
         WorkingDirectory = account.maildir.absPath;
-        Environment =
-          "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
+        Environment = "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
       };
     };
   };
@@ -44,24 +48,25 @@ let
         RandomizedDelaySec = 30;
       };
 
-      Install = { WantedBy = [ "timers.target" ]; };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
   };
 
-in {
-  meta.maintainers = [ maintainers.tadfisher ];
+in
+{
+  meta.maintainers = [ lib.maintainers.tadfisher ];
 
-  options.services.lieer.enable =
-    mkEnableOption "lieer Gmail synchronization service";
+  options.services.lieer.enable = lib.mkEnableOption "lieer Gmail synchronization service";
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.lieer" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.lieer" pkgs lib.platforms.linux)
     ];
 
     programs.lieer.enable = true;
-    systemd.user.services = listToAttrs (map serviceUnit syncAccounts);
-    systemd.user.timers = listToAttrs (map timerUnit syncAccounts);
+    systemd.user.services = lib.listToAttrs (map serviceUnit syncAccounts);
+    systemd.user.timers = lib.listToAttrs (map timerUnit syncAccounts);
   };
 }

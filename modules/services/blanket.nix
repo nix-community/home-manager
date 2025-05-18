@@ -1,10 +1,22 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
   cfg = config.services.blanket;
 
-  inherit (lib) mkIf mkEnableOption mkPackageOption hm platforms;
-in {
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    mkPackageOption
+    hm
+    platforms
+    ;
+in
+{
   meta.maintainers = [ lib.maintainers.daru-san ];
 
   options.services.blanket = {
@@ -24,8 +36,11 @@ in {
       Unit = {
         Description = "Blanket daemon";
         Requires = [ "dbus.service" ];
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" "pipewire.service" ];
+        After = [ "graphical-session.target" ];
+        PartOf = [
+          "graphical-session.target"
+          "pipewire.service"
+        ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];

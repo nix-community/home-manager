@@ -15,7 +15,7 @@ Home Manager can be used in three primary ways:
     description of this setup.
 
 3.  As a module within a
-    [nix-darwin](https://github.com/LnL7/nix-darwin/) system
+    [nix-darwin](https://github.com/nix-darwin/nix-darwin/) system
     configuration. This allows the user profiles to be built together
     with the system when running `darwin-rebuild`. See [nix-darwin
     module](#sec-install-nix-darwin-module) for a description of this

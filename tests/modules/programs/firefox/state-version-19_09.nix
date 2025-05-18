@@ -1,24 +1,29 @@
 modulePath:
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
-  cfg = getAttrFromPath modulePath config;
+  cfg = lib.getAttrFromPath modulePath config;
 
   firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix modulePath;
-
-in {
+in
+{
   imports = [ firefoxMockOverlay ];
 
-  config = lib.mkIf config.test.enableBig ({
-    home.stateVersion = "19.09";
-  } // setAttrByPath modulePath { enable = true; } // {
-    nmt.script = ''
-      assertFileRegex \
-        home-path/bin/${cfg.wrappedPackageName} \
-        MOZ_APP_LAUNCHER
-    '';
-  });
+  config = lib.mkIf (config.test.enableBig && !pkgs.hostPlatform.isDarwin) (
+    {
+      home.stateVersion = "19.09";
+    }
+    // lib.setAttrByPath modulePath { enable = true; }
+    // {
+      nmt.script = ''
+        assertFileRegex \
+          home-path/bin/${cfg.wrappedPackageName} \
+          MOZ_APP_LAUNCHER
+      '';
+    }
+  );
 }

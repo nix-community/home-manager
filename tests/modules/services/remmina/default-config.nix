@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   xdg.mimeApps.enable = true;
 
   services.remmina = {

@@ -1,0 +1,15 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@redshift@/bin/redshift-gtk -c /home/hm-user/.config/redshift/redshift.conf
+Restart=on-failure
+RestartSec=3
+
+[Unit]
+After=graphical-session.target
+After=tray.target
+Description=Redshift colour temperature adjuster
+Documentation=http://jonls.dk/redshift/
+PartOf=graphical-session.target
+Requires=tray.target

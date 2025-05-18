@@ -12,10 +12,8 @@
   nmt.script = ''
     assertFileContent \
       home-files/.config/vifm/vifmrc \
-      ${
-        builtins.toFile "vifm-expected.conf" ''
-          mark h ~/
-        ''
-      }
+      ${builtins.toFile "vifm-expected.conf" ''
+        mark h ~/
+      ''}
   '';
 }

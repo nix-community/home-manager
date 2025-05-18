@@ -1,25 +1,29 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
   cfg = config.programs.rtorrent;
-
-in {
+in
+{
   meta.maintainers = [ ];
 
   imports = [
-    (mkRenamedOptionModule # \
+    (lib.mkRenamedOptionModule # \
       [ "programs" "rtorrent" "settings" ] # \
-      [ "programs" "rtorrent" "extraConfig" ])
+      [ "programs" "rtorrent" "extraConfig" ]
+    )
   ];
 
   options.programs.rtorrent = {
-    enable = mkEnableOption "rTorrent";
+    enable = lib.mkEnableOption "rTorrent";
 
-    extraConfig = mkOption {
-      type = types.lines;
+    package = lib.mkPackageOption pkgs "rtorrent" { nullable = true; };
+
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       description = ''
         Configuration written to
@@ -31,10 +35,11 @@ in {
 
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ pkgs.rtorrent ];
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."rtorrent/rtorrent.rc" =
-      mkIf (cfg.extraConfig != "") { text = cfg.extraConfig; };
+    xdg.configFile."rtorrent/rtorrent.rc" = lib.mkIf (cfg.extraConfig != "") {
+      text = cfg.extraConfig;
+    };
   };
 }

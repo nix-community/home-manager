@@ -1,7 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   dummy-gnome-shell-extensions = pkgs.runCommand "dummy-package" { } ''
     mkdir -p $out/share/gnome-shell/extensions/dummy-package
@@ -13,12 +15,15 @@ let
     touch $out/share/gnome-shell/extensions/test-extension/test
   '';
 
-  test-extension-uuid = pkgs.runCommand "test-extension-uuid" {
-    passthru.extensionUuid = "test-extension-uuid";
-  } ''
-    mkdir -p $out/share/gnome-shell/extensions/test-extension-uuid
-    touch $out/share/gnome-shell/extensions/test-extension-uuid/test
-  '';
+  test-extension-uuid =
+    pkgs.runCommand "test-extension-uuid"
+      {
+        passthru.extensionUuid = "test-extension-uuid";
+      }
+      ''
+        mkdir -p $out/share/gnome-shell/extensions/test-extension-uuid
+        touch $out/share/gnome-shell/extensions/test-extension-uuid/test
+      '';
 
   test-theme = pkgs.runCommand "test-theme" { } ''
     mkdir -p $out/share/themes/Test/gnome-shell
@@ -31,16 +36,14 @@ let
     "test-extension-uuid"
   ];
 
-  actualEnabledExtensions = catAttrs "value"
-    config.dconf.settings."org/gnome/shell".enabled-extensions.value;
+  actualEnabledExtensions =
+    lib.catAttrs "value"
+      config.dconf.settings."org/gnome/shell".enabled-extensions.value;
 
-in {
+in
+{
   nixpkgs.overlays = [
-    (self: super: {
-      gnome = super.gnome.overrideScope (gself: gsuper: {
-        gnome-shell-extensions = dummy-gnome-shell-extensions;
-      });
-    })
+    (final: prev: { gnome-shell-extensions = dummy-gnome-shell-extensions; })
   ];
 
   programs.gnome-shell.enable = true;
@@ -60,14 +63,11 @@ in {
 
   assertions = [
     {
-      assertion =
-        config.dconf.settings."org/gnome/shell".disable-user-extensions
-        == false;
+      assertion = config.dconf.settings."org/gnome/shell".disable-user-extensions == false;
       message = "Expected disable-user-extensions to be false.";
     }
     {
-      assertion =
-        all (e: elem e actualEnabledExtensions) expectedEnabledExtensions;
+      assertion = lib.all (e: lib.elem e actualEnabledExtensions) expectedEnabledExtensions;
       message = ''
         Expected enabled-extensions to contain all of:
           ${toString expectedEnabledExtensions}
@@ -76,14 +76,10 @@ in {
       '';
     }
     {
-      assertion =
-        config.dconf.settings."org/gnome/shell/extensions/user-theme".name
-        == "Test";
+      assertion = config.dconf.settings."org/gnome/shell/extensions/user-theme".name == "Test";
       message = "Expected extensions/user-theme/name to be 'Test'.";
     }
   ];
-
-  test.stubs.dconf = { };
 
   nmt.script = ''
     assertFileExists home-path/share/gnome-shell/extensions/dummy-package/test

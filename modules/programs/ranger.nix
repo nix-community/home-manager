@@ -1,19 +1,19 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  inherit (lib) literalExpression mkOption types;
 
-with lib;
-
-let cfg = config.programs.ranger;
-
-in {
+  cfg = config.programs.ranger;
+in
+{
   options.programs.ranger = {
-    enable = mkEnableOption "ranger file manager";
+    enable = lib.mkEnableOption "ranger file manager";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.ranger;
-      defaultText = literalExpression "pkgs.ranger";
-      description = "The ranger package to use.";
-    };
+    package = lib.mkPackageOption pkgs "ranger" { nullable = true; };
 
     extraPackages = mkOption {
       type = types.listOf types.package;
@@ -29,8 +29,14 @@ in {
     };
 
     settings = mkOption {
-      type = types.attrsOf
-        (types.oneOf [ types.bool types.float types.int types.str ]);
+      type = types.attrsOf (
+        types.oneOf [
+          types.bool
+          types.float
+          types.int
+          types.str
+        ]
+      );
       default = { };
       description = ''
         Settings written to {file}`$XDG_CONFIG_HOME/ranger/rc.conf`.
@@ -78,24 +84,26 @@ in {
     };
 
     plugins = mkOption {
-      type = types.listOf (types.submodule {
-        options = {
-          name = mkOption {
-            type = types.str;
-            description = ''
-              Name of the plugin linked to
-              {file}`$XDG_CONFIG_HOME/ranger/plugins/`. In the case of a
-              single-file plugin, it must also have `.py` suffix.
-            '';
+      type = types.listOf (
+        types.submodule {
+          options = {
+            name = mkOption {
+              type = types.str;
+              description = ''
+                Name of the plugin linked to
+                {file}`$XDG_CONFIG_HOME/ranger/plugins/`. In the case of a
+                single-file plugin, it must also have `.py` suffix.
+              '';
+            };
+            src = mkOption {
+              type = types.path;
+              description = ''
+                The plugin file or directory.
+              '';
+            };
           };
-          src = mkOption {
-            type = types.path;
-            description = ''
-              The plugin file or directory.
-            '';
-          };
-        };
-      });
+        }
+      );
       default = [ ];
       description = ''
         List of files to be added to {file}`$XDG_CONFIG_HOME/ranger/plugins/`.
@@ -114,24 +122,26 @@ in {
     };
 
     rifle = mkOption {
-      type = types.listOf (types.submodule {
-        options = {
-          condition = mkOption {
-            type = types.str;
-            description = ''
-              A condition to match a file.
-            '';
-            example = "mime ^text, label editor";
+      type = types.listOf (
+        types.submodule {
+          options = {
+            condition = mkOption {
+              type = types.str;
+              description = ''
+                A condition to match a file.
+              '';
+              example = "mime ^text, label editor";
+            };
+            command = mkOption {
+              type = types.str;
+              description = ''
+                A command to run for the matching file.
+              '';
+              example = literalExpression ''"${pkgs.vim}/bin/vim -- \"$@\""'';
+            };
           };
-          command = mkOption {
-            type = types.str;
-            description = ''
-              A command to run for the matching file.
-            '';
-            example = literalExpression ''"${pkgs.vim}/bin/vim -- \"$@\""'';
-          };
-        };
-      });
+        }
+      );
       default = [ ];
       description = ''
         Settings written to {file}`$XDG_CONFIG_HOME/ranger/rifle.conf`.
@@ -139,44 +149,61 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      programs.ranger.finalPackage = cfg.package.overrideAttrs (oldAttrs: {
-        propagatedBuildInputs = oldAttrs.propagatedBuildInputs
-          ++ cfg.extraPackages;
-      });
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          {
+            assertion = cfg.extraPackages != [ ] -> cfg.package != null;
+            message = "programs.ranger.extraPackages requires non-null programs.ranger.package";
+          }
+        ];
 
-      home.packages = [ cfg.finalPackage ];
+        programs.ranger.finalPackage = lib.mkIf (cfg.package != null) (
+          cfg.package.overrideAttrs (oldAttrs: {
+            propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or [ ]) ++ cfg.extraPackages;
+          })
+        );
 
-      xdg.configFile."ranger/rc.conf".text = let
-        mkString = generators.mkValueStringDefault { };
-        mkConfig = cmd:
-          generators.toKeyValue {
-            mkKeyValue = k: v: "${cmd} ${k} ${mkString v}";
-          };
-      in ''
-        ${mkConfig "set" cfg.settings}
-        ${mkConfig "alias" cfg.aliases}
-        ${mkConfig "map" cfg.mappings}
-        ${cfg.extraConfig}
-      '';
-    }
+        home.packages = lib.mkIf (cfg.package != null) [ cfg.finalPackage ];
 
-    (mkIf (cfg.plugins != [ ]) {
-      xdg.configFile = let
-        toAttrs = i: {
-          name = "ranger/plugins/${i.name}";
-          value.source = i.src;
-        };
-      in listToAttrs (map toAttrs cfg.plugins);
-    })
+        xdg.configFile."ranger/rc.conf".text =
+          let
+            mkString = lib.generators.mkValueStringDefault { };
+            mkConfig =
+              cmd:
+              lib.generators.toKeyValue {
+                mkKeyValue = k: v: "${cmd} ${k} ${mkString v}";
+              };
+          in
+          ''
+            ${mkConfig "set" cfg.settings}
+            ${mkConfig "alias" cfg.aliases}
+            ${mkConfig "map" cfg.mappings}
+            ${cfg.extraConfig}
+          '';
+      }
 
-    (mkIf (cfg.rifle != [ ]) {
-      xdg.configFile."ranger/rifle.conf".text =
-        let lines = map (i: "${i.condition} = ${i.command}") cfg.rifle;
-        in concatLines lines;
-    })
-  ]);
+      (lib.mkIf (cfg.plugins != [ ]) {
+        xdg.configFile =
+          let
+            toAttrs = i: {
+              name = "ranger/plugins/${i.name}";
+              value.source = i.src;
+            };
+          in
+          lib.listToAttrs (map toAttrs cfg.plugins);
+      })
 
-  meta.maintainers = [ hm.maintainers.fpob ];
+      (lib.mkIf (cfg.rifle != [ ]) {
+        xdg.configFile."ranger/rifle.conf".text =
+          let
+            lines = map (i: "${i.condition} = ${i.command}") cfg.rifle;
+          in
+          lib.concatLines lines;
+      })
+    ]
+  );
+
+  meta.maintainers = [ lib.hm.maintainers.fpob ];
 }

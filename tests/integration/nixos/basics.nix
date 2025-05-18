@@ -4,28 +4,29 @@
   name = "nixos-basics";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine = { ... }: {
-    imports = [ ../../../nixos ]; # Import the HM NixOS module.
+  nodes.machine =
+    { ... }:
+    {
+      imports = [ ../../../nixos ]; # Import the HM NixOS module.
 
-    virtualisation.memorySize = 2048;
+      virtualisation.memorySize = 2048;
 
-    users.users.alice = {
-      isNormalUser = true;
-      description = "Alice Foobar";
-      password = "foobar";
-      uid = 1000;
+      users.users.alice = {
+        isNormalUser = true;
+        description = "Alice Foobar";
+        password = "foobar";
+        uid = 1000;
+      };
+
+      home-manager.users.alice =
+        { ... }:
+        {
+          home.stateVersion = "24.11";
+          home.file.test.text = "testfile";
+          # Enable a light-weight systemd service.
+          services.pueue.enable = true;
+        };
     };
-
-    home-manager.users.alice = { ... }: {
-      home.stateVersion = "24.05";
-      home.file.test.text = "testfile";
-      # Enable a light-weight systemd service.
-      services.pueue.enable = true;
-      # We focus on sd-switch since that hopefully will become the default in
-      # the future.
-      systemd.user.startServices = "sd-switch";
-    };
-  };
 
   testScript = ''
     def login_as_alice():
@@ -49,7 +50,7 @@
 
     start_all()
 
-    machine.wait_for_unit("home-manager-alice.service")
+    machine.wait_for_console_text("Finished Home Manager environment for alice.")
 
     with subtest("Home Manager file"):
       # The file should be linked with the expected content.
@@ -73,7 +74,7 @@
       fail_as_alice("pueue status")
 
       machine.systemctl("restart home-manager-alice.service")
-      machine.wait_for_unit("home-manager-alice.service")
+      machine.wait_for_console_text("Finished Home Manager environment for alice.")
 
       actual = succeed_as_alice("pueue status")
       expected = "running"

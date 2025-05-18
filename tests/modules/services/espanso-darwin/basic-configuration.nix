@@ -1,7 +1,11 @@
-{ ... }: {
+{
   services.espanso = {
     enable = true;
-    configs = { default = { show_notifications = false; }; };
+    configs = {
+      default = {
+        show_notifications = false;
+      };
+    };
     matches = {
       base = {
         matches = [
@@ -24,19 +28,21 @@
           {
             name = "currentdate";
             type = "date";
-            params = { format = "%d/%m/%Y"; };
+            params = {
+              format = "%d/%m/%Y";
+            };
           }
           {
             name = "currenttime";
             type = "date";
-            params = { format = "%R"; };
+            params = {
+              format = "%R";
+            };
           }
         ];
       };
     };
   };
-
-  test.stubs.espanso = { };
 
   nmt.script = ''
     serviceFile="LaunchAgents/org.nix-community.home.espanso.plist"

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.micro = {
     enable = true;
@@ -9,8 +7,6 @@
       cursorline = false;
     };
   };
-
-  test.stubs.micro = { };
 
   nmt.script = ''
     assertFileContent home-files/.config/micro/settings.json \

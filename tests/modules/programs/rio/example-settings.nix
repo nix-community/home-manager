@@ -1,12 +1,13 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 let
-  expected = pkgs.writeText "rio-expected.toml" ''
+  expected = builtins.toFile "rio-expected.toml" ''
     cursor = "_"
     padding-x = 0
     performance = "Low"
   '';
-in {
+in
+{
   programs.rio = {
     enable = true;
     package = config.lib.test.mkStubPackage { };

@@ -1,16 +1,22 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.comodoro;
   tomlFormat = pkgs.formats.toml { };
 
-in {
+in
+{
   meta.maintainers = with lib.hm.maintainers; [ soywod ];
 
   options.programs.comodoro = {
     enable = lib.mkEnableOption "Comodoro, a CLI to manage your time";
 
-    package = lib.mkPackageOption pkgs "comodoro" { };
+    package = lib.mkPackageOption pkgs "comodoro" { nullable = true; };
 
     settings = lib.mkOption {
       type = lib.types.submodule { freeformType = tomlFormat.type; };
@@ -23,7 +29,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."comodoro/config.toml".source =
       tomlFormat.generate "comodoro-config.toml" cfg.settings;

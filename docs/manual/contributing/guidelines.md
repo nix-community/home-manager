@@ -81,7 +81,7 @@ Manager Git repository:
 
 ``` shell
 $ nix-build -A docs.html
-$ xdg-open ./result/share/doc/home-manager/index.html
+$ xdg-open ./result/share/doc/home-manager/index.xhtml
 ```
 
 When you have made changes to a module, it is a good idea to check that
@@ -127,9 +127,7 @@ If your contribution includes a change that should be communicated to
 users of Home Manager then you can add a news entry. The entry must be
 formatted as described in [News](#sec-news).
 
-When new modules are added a news entry should be included but you do
-not need to create this entry manually. The merging maintainer will
-create the entry for you. This is to reduce the risk of merge conflicts.
+When new modules are added a news entry should be included.
 
 ## Use conditional modules and news {#sec-guidelines-conditional-modules}
 

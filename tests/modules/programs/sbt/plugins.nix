@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ pkgs, ... }:
 
 let
   dependencyGraph = {
@@ -14,20 +12,27 @@ let
     version = "0.4.0";
   };
 
-  plugins = [ dependencyGraph projectGraph ];
+  plugins = [
+    dependencyGraph
+    projectGraph
+  ];
+  pluginsExtra = [ "addDependencyTreePlugin" ];
 
   pluginsSbtPath = ".sbt/1.0/plugins/plugins.sbt";
 
   expectedPluginsSbt = pkgs.writeText "plugins.sbt" ''
     addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.10.0-RC1")
     addSbtPlugin("com.dwijnand" % "sbt-project-graph" % "0.4.0")
+    addDependencyTreePlugin
   '';
 
-in {
+in
+{
   config = {
     programs.sbt = {
       enable = true;
       plugins = plugins;
+      pluginsExtra = pluginsExtra;
       package = pkgs.writeScriptBin "sbt" "";
     };
 

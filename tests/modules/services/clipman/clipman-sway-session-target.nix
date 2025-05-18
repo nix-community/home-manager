@@ -1,16 +1,9 @@
-{ ... }:
-
 {
   home.stateVersion = "21.11";
 
   services.clipman = {
     enable = true;
     systemdTarget = "sway-session.target";
-  };
-
-  test.stubs = {
-    clipman = { };
-    wl-clipboard = { };
   };
 
   nmt.script = ''

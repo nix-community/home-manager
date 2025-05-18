@@ -1,11 +1,26 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let inherit (lib) concatStringsSep hm mapAttrsToList mkMerge mkOption types;
-in {
+let
+  inherit (lib)
+    concatStringsSep
+    hm
+    mapAttrsToList
+    mkMerge
+    mkOption
+    types
+    ;
+in
+{
   options.examples = mkOption { type = types.attrsOf hm.types.gvariant; };
 
   config = {
-    examples = with hm.gvariant;
+    examples =
+      with hm.gvariant;
       mkMerge [
         { bool = true; }
         { bool = true; }
@@ -46,7 +61,12 @@ in {
           '';
         }
 
-        { tuple = mkTuple [ 1 [ "foo" ] ]; }
+        {
+          tuple = mkTuple [
+            1
+            [ "foo" ]
+          ];
+        }
 
         { maybe1 = mkNothing type.string; }
         { maybe2 = mkJust (mkUint32 4); }
@@ -54,41 +74,46 @@ in {
         { variant1 = mkVariant "foo"; }
         { variant2 = mkVariant 42; }
 
-        { dictionaryEntry = mkDictionaryEntry [ 1 [ "foo" ] ]; }
+        {
+          dictionaryEntry = mkDictionaryEntry [
+            1
+            [ "foo" ]
+          ];
+        }
       ];
 
-    home.file."result.txt".text = let
-      mkLine = n: v: "${n} = ${toString (hm.gvariant.mkValue v)}";
-      result = concatStringsSep "\n" (mapAttrsToList mkLine config.examples);
-    in result + "\n";
+    home.file."result.txt".text =
+      let
+        mkLine = n: v: "${n} = ${toString (hm.gvariant.mkValue v)}";
+        result = concatStringsSep "\n" (mapAttrsToList mkLine config.examples);
+      in
+      result + "\n";
 
     nmt.script = ''
       assertFileContent \
         home-files/result.txt \
-        ${
-          pkgs.writeText "expected.txt" ''
-            array1 = @as ['one','two']
-            array2 = @au [1,2]
-            bool = true
-            dictionaryEntry = @{ias} {1,@as ['foo']}
-            emptyArray1 = @as []
-            emptyArray2 = @au []
-            escapedString = '\'\\\n'
-            float = 3.140000
-            int = -42
-            int16 = @n -42
-            int64 = @x -42
-            maybe1 = @ms nothing
-            maybe2 = just @u 4
-            string = 'foo'
-            tuple = @(ias) (1,@as ['foo'])
-            uint16 = @q 42
-            uint32 = @u 42
-            uint64 = @t 42
-            variant1 = @v <'foo'>
-            variant2 = @v <42>
-          ''
-        }
+        ${pkgs.writeText "expected.txt" ''
+          array1 = @as ['one','two']
+          array2 = @au [1,2]
+          bool = true
+          dictionaryEntry = @{ias} {1,@as ['foo']}
+          emptyArray1 = @as []
+          emptyArray2 = @au []
+          escapedString = '\'\\\n'
+          float = 3.140000
+          int = -42
+          int16 = @n -42
+          int64 = @x -42
+          maybe1 = @ms nothing
+          maybe2 = just @u 4
+          string = 'foo'
+          tuple = @(ias) (1,@as ['foo'])
+          uint16 = @q 42
+          uint32 = @u 42
+          uint64 = @t 42
+          variant1 = @v <'foo'>
+          variant2 = @v <42>
+        ''}
     '';
   };
 }

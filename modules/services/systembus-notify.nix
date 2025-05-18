@@ -1,21 +1,22 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  meta.maintainers = [ maintainers.asymmetric ];
+  meta.maintainers = [ lib.maintainers.asymmetric ];
 
   options = {
     services.systembus-notify = {
-      enable =
-        mkEnableOption "systembus-notify - system bus notification daemon";
+      enable = lib.mkEnableOption "systembus-notify - system bus notification daemon";
     };
   };
 
-  config = mkIf config.services.systembus-notify.enable {
+  config = lib.mkIf config.services.systembus-notify.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.systembus-notify" pkgs
-        platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.systembus-notify" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.systembus-notify = {

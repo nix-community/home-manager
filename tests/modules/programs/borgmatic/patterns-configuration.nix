@@ -1,11 +1,11 @@
-{ config, pkgs, ... }:
+{ config, realPkgs, ... }:
 
 let
 
-  boolToString = bool: if bool then "true" else "false";
   backups = config.programs.borgmatic.backups;
 
-in {
+in
+{
   programs.borgmatic = {
     enable = true;
     backups = {
@@ -23,28 +23,18 @@ in {
     };
   };
 
-  test.stubs.borgmatic = { };
-
   nmt.script = ''
     config_file=$TESTED/home-files/.config/borgmatic.d/main.yaml
     assertFileExists $config_file
 
     declare -A expectations
 
-    expectations[patterns[0]]="${
-      builtins.elemAt backups.main.location.patterns 0
-    }"
-    expectations[patterns[1]]="${
-      builtins.elemAt backups.main.location.patterns 1
-    }"
-    expectations[patterns[2]]="${
-      builtins.elemAt backups.main.location.patterns 2
-    }"
-    expectations[patterns[3]]="${
-      builtins.elemAt backups.main.location.patterns 3
-    }"
+    expectations[patterns[0]]="${builtins.elemAt backups.main.location.patterns 0}"
+    expectations[patterns[1]]="${builtins.elemAt backups.main.location.patterns 1}"
+    expectations[patterns[2]]="${builtins.elemAt backups.main.location.patterns 2}"
+    expectations[patterns[3]]="${builtins.elemAt backups.main.location.patterns 3}"
 
-    yq=${pkgs.yq-go}/bin/yq
+    yq=${realPkgs.yq-go}/bin/yq
 
     for filter in "''${!expectations[@]}"; do
       expected_value="''${expectations[$filter]}"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2024-04-17 23:19+0200\n"
+"POT-Creation-Date: 2025-01-03 09:09+0100\n"
 "PO-Revision-Date: 2023-06-12 10:49+0000\n"
 "Last-Translator: Jeff Ames <jeff@anjefu.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.18-dev\n"
 
-#: modules/files.nix:191
+#: modules/files.nix:188
 msgid "Creating home file links in %s"
 msgstr "ホームファイルのリンクを %s に作っています"
 
-#: modules/files.nix:204
+#: modules/files.nix:201
 msgid "Cleaning up orphan links from %s"
 msgstr "%s から無効なリンクを消去しています"
 
-#: modules/files.nix:220
-msgid "Creating profile generation %s"
-msgstr "世代 %s のプロファイルを生成しています"
+#: modules/home-environment.nix:591
+msgid "Creating new profile generation"
+msgstr ""
 
-#: modules/files.nix:237
-msgid "No change so reusing latest profile generation %s"
-msgstr "変更されていないので最新の世代 %s のプロファイルを再利用します"
+#: modules/home-environment.nix:594
+msgid "No change so reusing latest profile generation"
+msgstr ""
 
-#: modules/home-environment.nix:634
+#: modules/home-environment.nix:643
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "で競合を解消し、再度Home Managerの設定を試してください。"
 
-#: modules/home-environment.nix:667
+#: modules/home-environment.nix:676
 msgid "Activating %s"
 msgstr "%s を有効化しています"
 
@@ -76,69 +76,73 @@ msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
 "適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
 
-#: modules/lib-bash/activation-init.sh:83
-msgid "Sanity checking oldGenNum and oldGenPath"
-msgstr "oldGenNum と oldGenPath の健全性検査をしています"
-
-#: modules/lib-bash/activation-init.sh:86
-msgid ""
-"The previous generation number and path are in conflict! These\n"
-"must be either both empty or both set but are now set to\n"
-"\n"
-"    '%s' and '%s'\n"
-"\n"
-"If you don't mind losing previous profile generations then\n"
-"the easiest solution is probably to run\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"and trying home-manager switch again. Good luck!"
-msgstr ""
-"先行する世代番号とパスが矛盾しています！\n"
-"それらはどちらも空かどちらもセットされていなければいけません。しかし\n"
-"\n"
-"    '%s' と '%s'\n"
-"\n"
-"となっています。もしプロファイルの以前の世代を失っても構わないなら\n"
-"おそらくもっとも簡単な解決法は\n"
-"\n"
-"   rm %s/home-manager*\n"
-"   rm %s/current-home\n"
-"\n"
-"を実行して、home-manager switch を再び実行してみることでしょう。幸運を！"
-
-#: modules/lib-bash/activation-init.sh:127
+#: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 msgstr "エラー: USER は \"%s\" に設定されていますが、\"%s\" が期待されています"
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
 msgstr "エラー: HOME は \"%s\" に設定されていますが、\"%s\" が期待されています"
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
 msgstr "Home Managerの有効化を開始しました"
 
-#: modules/lib-bash/activation-init.sh:157
+#: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
 msgstr "Nixの健全性検査中です"
 
-#: modules/lib-bash/activation-init.sh:170
+#: modules/lib-bash/activation-init.sh:149
 msgid "This is a dry run"
 msgstr "これは予行練習(dry run)です"
 
-#: modules/lib-bash/activation-init.sh:174
+#: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
 msgstr "これは実際に実行されます"
 
-#: modules/lib-bash/activation-init.sh:180
+#: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
 msgstr "Nix バージョン %s を使用しています"
 
-#: modules/lib-bash/activation-init.sh:183
+#: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"
 msgstr "有効化変数:"
+
+#~ msgid "Creating profile generation %s"
+#~ msgstr "世代 %s のプロファイルを生成しています"
+
+#~ msgid "No change so reusing latest profile generation %s"
+#~ msgstr "変更されていないので最新の世代 %s のプロファイルを再利用します"
+
+#~ msgid "Sanity checking oldGenNum and oldGenPath"
+#~ msgstr "oldGenNum と oldGenPath の健全性検査をしています"
+
+#~ msgid ""
+#~ "The previous generation number and path are in conflict! These\n"
+#~ "must be either both empty or both set but are now set to\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "If you don't mind losing previous profile generations then\n"
+#~ "the easiest solution is probably to run\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "and trying home-manager switch again. Good luck!"
+#~ msgstr ""
+#~ "先行する世代番号とパスが矛盾しています！\n"
+#~ "それらはどちらも空かどちらもセットされていなければいけません。しかし\n"
+#~ "\n"
+#~ "    '%s' と '%s'\n"
+#~ "\n"
+#~ "となっています。もしプロファイルの以前の世代を失っても構わないなら\n"
+#~ "おそらくもっとも簡単な解決法は\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "を実行して、home-manager switch を再び実行してみることでしょう。幸運を！"
 
 #~ msgid "Migrating profiles from %s to %s"
 #~ msgstr "%s から %s にプロファイルを移行しています"

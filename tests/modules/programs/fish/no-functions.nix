@@ -1,7 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{ lib, ... }:
 {
   config = {
     programs.fish = {
@@ -11,12 +8,12 @@ with lib;
     };
 
     # Needed to avoid error with dummy fish package.
-    xdg.dataFile."fish/home-manager_generated_completions".source =
-      lib.mkForce (builtins.toFile "empty" "");
+    xdg.dataFile."fish/home-manager_generated_completions".source = lib.mkForce (
+      builtins.toFile "empty" ""
+    );
 
     nmt = {
-      description =
-        "if fish.functions is blank, the functions folder should not exist.";
+      description = "if fish.functions is blank, the functions folder should not exist.";
       script = ''
         assertPathNotExists home-files/.config/fish/functions
       '';

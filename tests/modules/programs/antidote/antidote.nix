@@ -1,7 +1,7 @@
-{ pkgs, ... }:
-
-let relToDotDirCustom = ".zshplugins";
-in {
+let
+  relToDotDirCustom = ".zshplugins";
+in
+{
   programs.zsh = {
     enable = true;
     dotDir = relToDotDirCustom;
@@ -10,11 +10,6 @@ in {
       useFriendlyNames = true;
       plugins = [ "zsh-users/zsh-autosuggestions" ];
     };
-  };
-
-  test.stubs = {
-    antidote = { };
-    zsh = { };
   };
 
   nmt.script = ''

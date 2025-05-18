@@ -1,4 +1,10 @@
-{ pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  realPkgs,
+  config,
+  ...
+}:
 
 {
   programs = {
@@ -10,30 +16,20 @@
     };
   };
 
-  test.stubs = {
-    oh-my-posh = { };
-    nushell = { };
-  };
+  _module.args.pkgs = lib.mkForce realPkgs;
 
-  nmt.script = let
-    configFile = if pkgs.stdenv.isDarwin && !config.xdg.enable then
-      "home-files/Library/Application Support/nushell/config.nu"
-    else
-      "home-files/.config/nushell/config.nu";
-
-    envFile = if pkgs.stdenv.isDarwin && !config.xdg.enable then
-      "home-files/Library/Application Support/nushell/env.nu"
-    else
-      "home-files/.config/nushell/env.nu";
-  in ''
-    assertFileExists "${envFile}"
-    assertFileRegex \
-      "${envFile}" \
-      '/bin/oh-my-posh init nu --config .*--print \| save --force /.*/home-files/\.cache/oh-my-posh/init\.nu'
-
-    assertFileExists "${configFile}"
-    assertFileRegex \
-      "${configFile}" \
-      'source /.*/\.cache/oh-my-posh/init\.nu'
-  '';
+  nmt.script =
+    let
+      configFile =
+        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+          "home-files/Library/Application Support/nushell/config.nu"
+        else
+          "home-files/.config/nushell/config.nu";
+    in
+    ''
+      assertFileExists "${configFile}"
+      assertFileRegex \
+        "${configFile}" \
+        'source /nix/store/[^/]*-oh-my-posh-nushell-config.nu'
+    '';
 }

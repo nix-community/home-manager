@@ -1,17 +1,19 @@
-{ config, lib, pkgs, ... }:
-
 {
   programs.gh = {
     enable = true;
     gitCredentialHelper = {
       enable = true;
-      hosts = [ "https://github.com" "https://github.example.com" ];
+      hosts = [
+        "https://github.com"
+        "https://github.example.com"
+      ];
     };
   };
 
-  programs.git.enable = true;
-
-  test.stubs.gh = { };
+  programs.git = {
+    enable = true;
+    signing.signer = "path-to-gpg";
+  };
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config

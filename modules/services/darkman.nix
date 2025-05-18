@@ -1,17 +1,27 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf types;
+
   cfg = config.services.darkman;
 
   yamlFormat = pkgs.formats.yaml { };
 
-  scriptsOptionType = kind:
-    mkOption {
-      type = types.attrsOf (types.oneOf [ types.path types.lines ]);
+  scriptsOptionType =
+    kind:
+    lib.mkOption {
+      type = types.attrsOf (
+        types.oneOf [
+          types.path
+          types.lines
+        ]
+      );
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           gtk-theme = '''
             ''${pkgs.dconf}/bin/dconf write \
@@ -30,30 +40,35 @@ let
       '';
     };
 
-  generateScripts = folder:
-    mapAttrs' (k: v: {
-      name = "${folder}/${k}";
-      value = {
-        source = if builtins.isPath v || isDerivation v then
-          v
-        else
-          pkgs.writeShellScript (hm.strings.storeFileName k) v;
-      };
-    });
-in {
-  meta.maintainers = [ maintainers.xlambein ];
+  generateScripts =
+    folder:
+    lib.mapAttrs' (
+      k: v: {
+        name = "${folder}/${k}";
+        value = {
+          source =
+            if builtins.isPath v || lib.isDerivation v then
+              v
+            else
+              pkgs.writeShellScript (lib.hm.strings.storeFileName k) v;
+        };
+      }
+    );
+in
+{
+  meta.maintainers = [ lib.maintainers.xlambein ];
 
   options.services.darkman = {
-    enable = mkEnableOption ''
+    enable = lib.mkEnableOption ''
       darkman, a tool that automatically switches dark-mode on and off based on
       the time of the day'';
 
-    package = mkPackageOption pkgs "darkman" { };
+    package = lib.mkPackageOption pkgs "darkman" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = types.submodule { freeformType = yamlFormat.type; };
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           lat = 52.3;
           lng = 4.8;
@@ -73,10 +88,10 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.darkman" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.darkman" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
       "darkman/config.yaml" = mkIf (cfg.settings != { }) {
@@ -84,33 +99,32 @@ in {
       };
     };
 
-    xdg.dataFile = mkMerge [
-      (mkIf (cfg.darkModeScripts != { })
-        (generateScripts "dark-mode.d" cfg.darkModeScripts))
-      (mkIf (cfg.lightModeScripts != { })
-        (generateScripts "light-mode.d" cfg.lightModeScripts))
+    xdg.dataFile = lib.mkMerge [
+      (mkIf (cfg.darkModeScripts != { }) (generateScripts "dark-mode.d" cfg.darkModeScripts))
+      (mkIf (cfg.lightModeScripts != { }) (generateScripts "light-mode.d" cfg.lightModeScripts))
     ];
 
-    systemd.user.services.darkman = {
+    systemd.user.services.darkman = lib.mkIf (cfg.package != null) {
       Unit = {
         Description = "Darkman system service";
         Documentation = "man:darkman(1)";
         PartOf = [ "graphical-session.target" ];
         BindsTo = [ "graphical-session.target" ];
-        X-Restart-Triggers = mkIf (cfg.settings != { })
-          [ "${config.xdg.configFile."darkman/config.yaml".source}" ];
+        X-Restart-Triggers = mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."darkman/config.yaml".source}"
+        ];
       };
 
       Service = {
         Type = "dbus";
         BusName = "nl.whynothugo.darkman";
-        ExecStart = "${getExe cfg.package} run";
+        ExecStart = "${lib.getExe cfg.package} run";
         Restart = "on-failure";
         TimeoutStopSec = 15;
         Slice = "background.slice";
       };
 
-      Install.WantedBy = mkDefault [ "graphical-session.target" ];
+      Install.WantedBy = lib.mkDefault [ "graphical-session.target" ];
     };
   };
 }

@@ -1,34 +1,29 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.programs.keychain;
 
-  flags = cfg.extraFlags ++ optional (cfg.agents != [ ])
-    "--agents ${concatStringsSep "," cfg.agents}"
-    ++ optional (cfg.inheritType != null) "--inherit ${cfg.inheritType}";
+  flags =
+    cfg.extraFlags
+    ++ lib.optional (cfg.agents != [ ]) "--agents ${lib.concatStringsSep "," cfg.agents}"
+    ++ lib.optional (cfg.inheritType != null) "--inherit ${cfg.inheritType}";
 
-  shellCommand =
-    "${cfg.package}/bin/keychain --eval ${concatStringsSep " " flags} ${
-      concatStringsSep " " cfg.keys
-    }";
+  shellCommand = "${cfg.package}/bin/keychain --eval ${lib.concatStringsSep " " flags} ${lib.concatStringsSep " " cfg.keys}";
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.keychain = {
-    enable = mkEnableOption "keychain";
+    enable = lib.mkEnableOption "keychain";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.keychain;
-      defaultText = literalExpression "pkgs.keychain";
-      description = ''
-        Keychain package to install.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "keychain" { };
 
     keys = mkOption {
       type = types.listOf types.str;
@@ -47,8 +42,14 @@ in {
     };
 
     inheritType = mkOption {
-      type =
-        types.nullOr (types.enum [ "local" "any" "local-once" "any-once" ]);
+      type = types.nullOr (
+        types.enum [
+          "local"
+          "any"
+          "local-once"
+          "any-once"
+        ]
+      );
       default = null;
       description = ''
         Inherit type to attempt from agent variables from the environment.
@@ -63,37 +64,13 @@ in {
       '';
     };
 
-    enableBashIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Bash integration.
-      '';
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Fish integration.
-      '';
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Zsh integration.
-      '';
-    };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-    enableNushellIntegration = mkOption {
-      default = true;
-      type = types.bool;
-      description = ''
-        Whether to enable Nushell integration.
-      '';
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     enableXsessionIntegration = mkOption {
       default = true;
@@ -113,7 +90,7 @@ in {
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
       SHELL=fish eval (${shellCommand})
     '';
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(SHELL=zsh ${shellCommand})"
     '';
     programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration ''

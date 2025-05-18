@@ -1,32 +1,28 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
   cfg = config.programs.topgrade;
 
   tomlFormat = pkgs.formats.toml { };
+in
+{
 
-in {
-
-  meta.maintainers = [ hm.maintainers.msfjarvis ];
+  meta.maintainers = [ lib.hm.maintainers.msfjarvis ];
 
   options.programs.topgrade = {
-    enable = mkEnableOption "topgrade";
+    enable = lib.mkEnableOption "topgrade";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.topgrade;
-      defaultText = literalExpression "pkgs.topgrade";
-      description = "The package to use for the topgrade binary.";
-    };
+    package = lib.mkPackageOption pkgs "topgrade" { };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = tomlFormat.type;
       default = { };
-      defaultText = literalExpression "{ }";
-      example = literalExpression ''
+      defaultText = lib.literalExpression "{ }";
+      example = lib.literalExpression ''
         {
           misc = {
             assume_yes = true;
@@ -52,10 +48,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."topgrade.toml" = mkIf (cfg.settings != { }) {
+    xdg.configFile."topgrade.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "topgrade-config" cfg.settings;
     };
   };

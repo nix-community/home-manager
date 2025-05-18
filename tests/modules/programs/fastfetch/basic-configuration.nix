@@ -4,7 +4,9 @@
     settings = {
       logo = {
         source = "nixos_small";
-        padding = { right = 1; };
+        padding = {
+          right = 1;
+        };
       };
       display = {
         binaryPrefix = "si";
@@ -29,11 +31,12 @@
     };
   };
 
-  test.stubs.fastfetch = { };
-
-  nmt.script = let configFile = "home-files/.config/fastfetch/config.jsonc";
-  in ''
-    assertFileExists "${configFile}"
-    assertFileContent "${configFile}" ${./basic-configuration.jsonc}
-  '';
+  nmt.script =
+    let
+      configFile = "home-files/.config/fastfetch/config.jsonc";
+    in
+    ''
+      assertFileExists "${configFile}"
+      assertFileContent "${configFile}" ${./basic-configuration.jsonc}
+    '';
 }

@@ -1,22 +1,29 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   cfg = config.services.volnoti;
 
-in {
-  meta.maintainers = [ maintainers.imalison ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    imalison
+    tomodachi94
+  ];
 
   options = {
     services.volnoti = {
-      enable = mkEnableOption "Volnoti volume HUD daemon";
+      enable = lib.mkEnableOption "Volnoti volume HUD daemon";
 
-      package = mkOption {
-        type = types.package;
+      package = lib.mkOption {
+        type = lib.types.package;
         default = pkgs.volnoti;
-        defaultText = literalExpression "pkgs.volnoti";
+        defaultText = lib.literalExpression "pkgs.volnoti";
         description = ''
           Package containing the {command}`volnoti` program.
         '';
@@ -24,20 +31,25 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.volnoti" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.volnoti" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
     systemd.user.services.volnoti = {
-      Unit = { Description = "volnoti"; };
+      Unit = {
+        Description = "volnoti";
+      };
 
-      Install = { WantedBy = [ "graphical-session.target" ]; };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
 
-      Service = { ExecStart = "${pkgs.volnoti}/bin/volnoti -v -n"; };
+      Service = {
+        ExecStart = "${lib.getExe cfg.package} -v -n";
+      };
     };
   };
 }

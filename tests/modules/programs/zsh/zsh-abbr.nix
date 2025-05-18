@@ -1,12 +1,10 @@
-{ ... }:
-
 {
   programs.zsh.zsh-abbr = {
     enable = true;
-    abbreviations = { ga = "git add"; };
+    abbreviations = {
+      ga = "git add";
+    };
   };
-
-  test.stubs.zsh-abbr = { };
 
   nmt.script = ''
     abbreviations=home-files/.config/zsh-abbr/user-abbreviations

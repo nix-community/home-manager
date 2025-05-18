@@ -1,39 +1,39 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.services.lorri;
 
-in {
-  meta.maintainers = [ maintainers.gerschtli maintainers.nyarly ];
+in
+{
+  meta.maintainers = [
+    lib.maintainers.gerschtli
+    lib.maintainers.nyarly
+  ];
 
   options.services.lorri = {
-    enable = mkEnableOption "lorri build daemon";
+    enable = lib.mkEnableOption "lorri build daemon";
 
-    enableNotifications = mkEnableOption "lorri build notifications";
+    enableNotifications = lib.mkEnableOption "lorri build notifications";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.lorri;
-      defaultText = literalExpression "pkgs.lorri";
-      description = "Which lorri package to install.";
-    };
+    package = lib.mkPackageOption pkgs "lorri" { };
 
-    nixPackage = mkOption {
-      type = types.package;
+    nixPackage = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.nix;
-      defaultText = literalExpression "pkgs.nix";
-      example = literalExpression "pkgs.nixVersions.unstable";
+      defaultText = lib.literalExpression "pkgs.nix";
+      example = lib.literalExpression "pkgs.nixVersions.unstable";
       description = "Which nix package to use.";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.lorri" pkgs
-        lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.lorri" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
@@ -59,29 +59,40 @@ in {
             "%C/lorri"
             # Needs %C/nix/fetcher-cache-v1.sqlite
             "%C/nix"
-            "/nix/var/nix/gcroots/per-user/%u"
           ];
           CacheDirectory = [ "lorri" ];
           Restart = "on-failure";
-          Environment = let
-            path = with pkgs;
-              makeSearchPath "bin" [ cfg.nixPackage gitMinimal gnutar gzip ];
-          in [ "PATH=${path}" ];
+          Environment =
+            let
+              path =
+                with pkgs;
+                lib.makeSearchPath "bin" [
+                  cfg.nixPackage
+                  gitMinimal
+                  gnutar
+                  gzip
+                ];
+            in
+            [ "PATH=${path}" ];
         };
       };
 
       sockets.lorri = {
-        Unit = { Description = "Socket for lorri build daemon"; };
+        Unit = {
+          Description = "Socket for lorri build daemon";
+        };
 
         Socket = {
           ListenStream = "%t/lorri/daemon.socket";
           RuntimeDirectory = "lorri";
         };
 
-        Install = { WantedBy = [ "sockets.target" ]; };
+        Install = {
+          WantedBy = [ "sockets.target" ];
+        };
       };
 
-      services.lorri-notify = mkIf cfg.enableNotifications {
+      services.lorri-notify = lib.mkIf cfg.enableNotifications {
         Unit = {
           Description = "lorri build notifications";
           After = "lorri.service";
@@ -89,26 +100,38 @@ in {
         };
 
         Service = {
-          ExecStart = let
-            jqFile = ''
-              (
-                (.Started?   | values | "Build starting in \(.nix_file)"),
-                (.Completed? | values | "Build complete in \(.nix_file)"),
-                (.Failure?   | values | "Build failed in \(.nix_file)")
-              )
-            '';
+          ExecStart =
+            let
+              jqFile = ''
+                (
+                  (.Started?   | values | "Build starting in \(.nix_file)"),
+                  (.Completed? | values | "Build complete in \(.nix_file)"),
+                  (.Failure?   | values | "Build failed in \(.nix_file)")
+                )
+              '';
 
-            notifyScript = pkgs.writeShellScript "lorri-notify" ''
-              lorri internal stream-events --kind live \
-                | jq --unbuffered '${jqFile}' \
-                | xargs -n 1 notify-send "Lorri Build"
-            '';
-          in toString notifyScript;
+              notifyScript = pkgs.writeShellScript "lorri-notify" ''
+                lorri internal stream-events --kind live \
+                  | jq --unbuffered '${jqFile}' \
+                  | xargs -n 1 notify-send "Lorri Build"
+              '';
+            in
+            toString notifyScript;
           Restart = "on-failure";
-          Environment = let
-            path = makeSearchPath "bin"
-              (with pkgs; [ bash jq findutils libnotify cfg.package ]);
-          in "PATH=${path}";
+          Environment =
+            let
+              path = lib.makeSearchPath "bin" (
+                with pkgs;
+                [
+                  bash
+                  jq
+                  findutils
+                  libnotify
+                  cfg.package
+                ]
+              );
+            in
+            "PATH=${path}";
         };
       };
     };

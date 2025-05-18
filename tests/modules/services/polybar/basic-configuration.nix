@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
   config = {
@@ -28,7 +28,11 @@
           format.volume = "<ramp-volume> <label-volume>";
           label.muted.text = "🔇";
           label.muted.foreground = "#666";
-          ramp.volume = [ "🔈" "🔉" "🔊" ];
+          ramp.volume = [
+            "🔈"
+            "🔉"
+            "🔊"
+          ];
           click.right = "pavucontrol &";
         };
       };

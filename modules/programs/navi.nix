@@ -1,34 +1,35 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf;
 
   cfg = config.programs.navi;
 
   yamlFormat = pkgs.formats.yaml { };
 
-  configDir = if pkgs.stdenv.isDarwin then
-    "Library/Application Support"
-  else
-    config.xdg.configHome;
+  configDir =
+    if pkgs.stdenv.isDarwin && !config.xdg.enable then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 
-in {
+in
+{
   meta.maintainers = [ ];
 
   options.programs.navi = {
-    enable = mkEnableOption "Navi";
+    enable = lib.mkEnableOption "Navi";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.navi;
-      defaultText = literalExpression "pkgs.navi";
-      description = "The package to use for the navi binary.";
-    };
+    package = lib.mkPackageOption pkgs "navi" { };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           cheats = {
             paths = [
@@ -47,17 +48,11 @@ in {
       '';
     };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
-    enableFishIntegration = mkEnableOption "Fish integration" // {
-      default = true;
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -69,7 +64,7 @@ in {
       fi
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       if [[ $options[zle] = on ]]; then
         eval "$(${cfg.package}/bin/navi widget zsh)"
       fi

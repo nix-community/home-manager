@@ -9,7 +9,12 @@
     };
   };
 
-  outputs = { self, nixpkgs, scss-reset }:
+  outputs =
+    {
+      nixpkgs,
+      scss-reset,
+      ...
+    }:
     let
       supportedSystems = [
         "aarch64-darwin"
@@ -19,7 +24,8 @@
         "x86_64-linux"
       ];
 
-      lib = nixpkgs.lib;
+      # Note, this should be "the standard library" + HM extensions.
+      lib = import ../modules/lib/stdlib-extended.nix nixpkgs.lib;
 
       forAllSystems = lib.genAttrs supportedSystems;
 
@@ -27,7 +33,12 @@
         p-build = pkgs.writeShellScriptBin "p-build" ''
           set -euo pipefail
 
-          export PATH=${lib.makeBinPath [ pkgs.coreutils pkgs.rsass ]}
+          export PATH=${
+            lib.makeBinPath [
+              pkgs.coreutils
+              pkgs.rsass
+            ]
+          }
 
           tmpfile=$(mktemp -d)
           trap "rm -r $tmpfile" EXIT
@@ -39,16 +50,40 @@
           echo "Generated ./static/style.css"
         '';
       };
-    in {
-      devShells = forAllSystems (system:
+
+      releaseInfo = lib.importJSON ../release.json;
+    in
+    {
+      devShells = forAllSystems (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           fpkgs = flakePkgs pkgs;
-        in {
+        in
+        {
           default = pkgs.mkShell {
             name = "hm-docs";
             packages = [ fpkgs.p-build ];
           };
-        });
+        }
+      );
+
+      # Expose the docs outputs
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          docs = import ./default.nix {
+            inherit pkgs lib;
+            release = releaseInfo.release;
+            isReleaseBranch = releaseInfo.isReleaseBranch;
+          };
+        in
+        {
+          inherit (docs) manPages jsonModuleMaintainers;
+          inherit (docs.manual) html htmlOpenTool;
+          inherit (docs.options) json;
+        }
+      );
     };
 }

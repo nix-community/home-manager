@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ pkgs, ... }:
 
 let
   credentials = [
@@ -20,12 +18,13 @@ let
   expectedCredentialsSbt = pkgs.writeText "credentials.sbt" ''
     import scala.sys.process._
     lazy val credential_0 = "echo password".!!.trim
-    credentials += Credentials("Sonatype Nexus Repository Manager", "example.com", "user", credential_0)
+    ThisBuild / credentials += Credentials("Sonatype Nexus Repository Manager", "example.com", "user", credential_0)
     lazy val credential_1 = "echo password1".!!.trim
-    credentials += Credentials("Sonatype Nexus Repository Manager X", "v2.example.com", "user1", credential_1)
+    ThisBuild / credentials += Credentials("Sonatype Nexus Repository Manager X", "v2.example.com", "user1", credential_1)
   '';
   credentialsSbtPath = ".sbt/1.0/credentials.sbt";
-in {
+in
+{
   config = {
     programs.sbt = {
       enable = true;

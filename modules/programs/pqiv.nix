@@ -1,31 +1,32 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.programs.pqiv;
   iniFormat = pkgs.formats.ini { };
-in {
-  meta.maintainers = with lib.maintainers; [ donovanglover iynaix ];
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    donovanglover
+    iynaix
+  ];
 
   options.programs.pqiv = {
-    enable = mkEnableOption "pqiv image viewer";
+    enable = lib.mkEnableOption "pqiv image viewer";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.pqiv;
-      defaultText = literalExpression "pkgs.pqiv";
-      description = "The pqiv package to install.";
-    };
+    package = lib.mkPackageOption pkgs "pqiv" { };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = iniFormat.type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/pqivrc`. See
         {manpage}`pqiv(1)` for a list of available options.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           options = {
             lazy-load = true;
@@ -38,14 +39,14 @@ in {
       '';
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
       default = "";
       description = ''
         Extra lines to be added to {file}`$XDG_CONFIG_HOME/pqivrc`. See
         {manpage}`pqiv(1)` for a list of available options.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         [actions]
         set_cursor_auto_hide(1)
 
@@ -58,26 +59,25 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "programs.pqiv" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.pqiv" pkgs lib.platforms.linux)
+    ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."pqivrc" =
-      mkIf (cfg.settings != { } && cfg.extraConfig != "") {
-        text = lib.concatLines [
-          (generators.toINI {
-            mkKeyValue = key: value:
-              let
-                value' = if isBool value then
-                  (if value then "1" else "0")
-                else
-                  toString value;
-              in "${key} = ${value'}";
-          } cfg.settings)
-          cfg.extraConfig
-        ];
-      };
+    xdg.configFile."pqivrc" = lib.mkIf (cfg.settings != { } || cfg.extraConfig != "") {
+      text = lib.concatLines [
+        (lib.generators.toINI {
+          mkKeyValue =
+            key: value:
+            let
+              value' = if lib.isBool value then (if value then "1" else "0") else toString value;
+            in
+            "${key} = ${value'}";
+        } cfg.settings)
+        cfg.extraConfig
+      ];
+    };
   };
 }

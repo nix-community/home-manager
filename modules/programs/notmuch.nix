@@ -1,53 +1,76 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    catAttrs
+    filter
+    mkOption
+    optionalAttrs
+    types
+    ;
 
   cfg = config.programs.notmuch;
 
-  mkIniKeyValue = key: value:
+  mkIniKeyValue =
+    key: value:
     let
-      tweakVal = v:
-        if isString v then
+      tweakVal =
+        v:
+        if lib.isString v then
           v
-        else if isList v then
-          concatMapStringsSep ";" tweakVal v
-        else if isBool v then
+        else if lib.isList v then
+          lib.concatMapStringsSep ";" tweakVal v
+        else if lib.isBool v then
           (if v then "true" else "false")
         else
           toString v;
-    in "${key}=${tweakVal value}";
+    in
+    "${key}=${tweakVal value}";
 
-  notmuchIni = recursiveUpdate {
-    database = { path = config.accounts.email.maildirBasePath; };
+  notmuchIni = lib.recursiveUpdate {
+    database = {
+      path = config.accounts.email.maildirBasePath;
+    };
 
-    maildir = { synchronize_flags = cfg.maildir.synchronizeFlags; };
+    maildir = {
+      synchronize_flags = cfg.maildir.synchronizeFlags;
+    };
 
     new = {
       ignore = cfg.new.ignore;
       tags = cfg.new.tags;
     };
 
-    user = let
-      accounts = filter (a: a.notmuch.enable)
-        (attrValues config.accounts.email.accounts);
-      primary = filter (a: a.primary) accounts;
-      secondaries = filter (a: !a.primary) accounts;
-    in {
-      name = catAttrs "realName" primary;
-      primary_email = catAttrs "address" primary;
-      other_email = catAttrs "aliases" primary ++ catAttrs "address" secondaries
-        ++ catAttrs "aliases" secondaries;
-    };
+    user =
+      let
+        accounts = filter (a: a.notmuch.enable) (lib.attrValues config.accounts.email.accounts);
+        primary = filter (a: a.primary) accounts;
+        secondaries = filter (a: !a.primary) accounts;
+      in
+      {
+        name = catAttrs "realName" primary;
+        primary_email = catAttrs "address" primary;
+        other_email = map (email: email.address or email) (
+          lib.flatten (
+            catAttrs "aliases" primary ++ catAttrs "address" secondaries ++ catAttrs "aliases" secondaries
+          )
+        );
+      };
 
-    search = { exclude_tags = cfg.search.excludeTags; };
+    search = {
+      exclude_tags = cfg.search.excludeTags;
+    };
   } cfg.extraConfig;
 
-in {
+in
+{
   options = {
     programs.notmuch = {
-      enable = mkEnableOption "Notmuch mail indexer";
+      enable = lib.mkEnableOption "Notmuch mail indexer";
 
       new = mkOption {
         type = types.submodule {
@@ -63,7 +86,10 @@ in {
 
             tags = mkOption {
               type = types.listOf types.str;
-              default = [ "unread" "inbox" ];
+              default = [
+                "unread"
+                "inbox"
+              ];
               example = [ "new" ];
               description = ''
                 A list of tags that will be added to all messages
@@ -133,8 +159,14 @@ in {
       search = {
         excludeTags = mkOption {
           type = types.listOf types.str;
-          default = [ "deleted" "spam" ];
-          example = [ "trash" "spam" ];
+          default = [
+            "deleted"
+            "spam"
+          ];
+          example = [
+            "trash"
+            "spam"
+          ];
           description = ''
             A  list  of  tags  that  will be excluded from search results by
             default. Using an excluded tag in a  query  will  override  that
@@ -145,14 +177,15 @@ in {
     };
 
     accounts.email.accounts = mkOption {
-      type = with types;
+      type =
+        with types;
         attrsOf (submodule {
-          options.notmuch.enable = mkEnableOption "notmuch indexing";
+          options.notmuch.enable = lib.mkEnableOption "notmuch indexing";
         });
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       {
         assertion = notmuchIni.user.name != [ ];
@@ -171,28 +204,31 @@ in {
       NMBGIT = "${config.xdg.dataHome}/notmuch/nmbug";
     };
 
-    xdg.configFile = let
-      hook = name: cmds: {
-        "notmuch/default/hooks/${name}".source = pkgs.writeShellScript name ''
-          export PATH="${pkgs.notmuch}/bin''${PATH:+:}$PATH"
-          export NOTMUCH_CONFIG="${config.xdg.configHome}/notmuch/default/config"
-          export NMBGIT="${config.xdg.dataHome}/notmuch/nmbug"
+    xdg.configFile =
+      let
+        hook = name: cmds: {
+          "notmuch/default/hooks/${name}".source = pkgs.writeShellScript name ''
+            export PATH="${pkgs.notmuch}/bin''${PATH:+:}$PATH"
+            export NOTMUCH_CONFIG="${config.xdg.configHome}/notmuch/default/config"
+            export NMBGIT="${config.xdg.dataHome}/notmuch/nmbug"
 
-          ${cmds}
-        '';
-      };
-    in {
-      "notmuch/default/config".text =
-        let toIni = generators.toINI { mkKeyValue = mkIniKeyValue; };
-        in ''
-          # Generated by Home Manager.
+            ${cmds}
+          '';
+        };
+      in
+      {
+        "notmuch/default/config".text =
+          let
+            toIni = lib.generators.toINI { mkKeyValue = mkIniKeyValue; };
+          in
+          ''
+            # Generated by Home Manager.
 
-        '' + toIni notmuchIni;
-    }
-    // optionalAttrs (cfg.hooks.preNew != "") (hook "pre-new" cfg.hooks.preNew)
-    // optionalAttrs (cfg.hooks.postNew != "")
-    (hook "post-new" cfg.hooks.postNew)
-    // optionalAttrs (cfg.hooks.postInsert != "")
-    (hook "post-insert" cfg.hooks.postInsert);
+          ''
+          + toIni notmuchIni;
+      }
+      // optionalAttrs (cfg.hooks.preNew != "") (hook "pre-new" cfg.hooks.preNew)
+      // optionalAttrs (cfg.hooks.postNew != "") (hook "post-new" cfg.hooks.postNew)
+      // optionalAttrs (cfg.hooks.postInsert != "") (hook "post-insert" cfg.hooks.postInsert);
   };
 }

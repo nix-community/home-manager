@@ -1,38 +1,35 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-
   cfg = config.programs.hstr;
-
-in {
-  meta.maintainers = [ hm.maintainers.Dines97 ];
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.Dines97 ];
 
   options.programs.hstr = {
-    enable = mkEnableOption ''
+    enable = lib.mkEnableOption ''
       Bash And Zsh shell history suggest box - easily view, navigate, search and
       manage your command history'';
 
-    package = mkPackageOption pkgs "hstr" { };
+    package = lib.mkPackageOption pkgs "hstr" { };
 
-    enableBashIntegration = mkEnableOption "Bash integration" // {
-      default = true;
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableZshIntegration = mkEnableOption "Zsh integration" // {
-      default = true;
-    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
       eval "$(${cfg.package}/bin/hstr --show-configuration)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
       eval "$(${cfg.package}/bin/hstr --show-zsh-configuration)"
     '';
   };

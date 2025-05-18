@@ -13,15 +13,13 @@
         }
         {
           name = "lib/clipboard";
-          tags = [ "from:oh-my-zsh" ''if:"[[ $OSTYPE == *darwin* ]]"'' ];
+          tags = [
+            "from:oh-my-zsh"
+            ''if:"[[ $OSTYPE == *darwin* ]]"''
+          ];
         }
       ];
     };
-  };
-
-  test.stubs = {
-    zplug = { };
-    zsh = { };
   };
 
   nmt.script = ''

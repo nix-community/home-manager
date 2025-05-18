@@ -4,6 +4,7 @@ This section lists the release notes for stable versions of Home Manager
 and the current unstable version.
 
 ```{=include=} chapters
+rl-2511.md
 rl-2505.md
 rl-2411.md
 rl-2405.md

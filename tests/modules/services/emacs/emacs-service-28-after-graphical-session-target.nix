@@ -6,15 +6,21 @@
       emacs = pkgs.writeShellScriptBin "dummy-emacs-28.2" "" // {
         outPath = "@emacs@";
       };
-      emacsPackagesFor = _:
-        lib.makeScope super.newScope (_: { emacsWithPackages = _: emacs; });
+      emacsPackagesFor =
+        _:
+        lib.makeScope super.newScope (_: {
+          emacsWithPackages = _: emacs;
+        });
     })
   ];
 
   programs.emacs.enable = true;
   services.emacs.enable = true;
   services.emacs.client.enable = true;
-  services.emacs.extraOptions = [ "-f" "exwm-enable" ];
+  services.emacs.extraOptions = [
+    "-f"
+    "exwm-enable"
+  ];
   services.emacs.startWithUserSession = "graphical";
 
   nmt.script = ''
@@ -24,12 +30,14 @@
 
     assertFileContent \
       home-files/.config/systemd/user/emacs.service \
-      ${
-        pkgs.substituteAll {
-          inherit (pkgs) runtimeShell;
-          src = ./emacs-service-emacs-after-graphical-session-target.service;
-        }
-      }
+      ${pkgs.substitute {
+        src = ./emacs-service-emacs-after-graphical-session-target.service;
+        substitutions = [
+          "--replace"
+          "@runtimeShell@"
+          pkgs.runtimeShell
+        ];
+      }}
 
     assertFileContent \
       home-path/share/applications/emacsclient.desktop \

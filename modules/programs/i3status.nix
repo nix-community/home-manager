@@ -1,42 +1,66 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    literalExpression
+    mkDefault
+    mkOption
+    types
+    ;
+
   cfg = config.programs.i3status;
 
-  enabledModules = filterAttrs (n: v: v.enable) cfg.modules;
+  enabledModules = lib.filterAttrs (n: v: v.enable) cfg.modules;
 
   formatOrder = n: ''order += "${n}"'';
 
-  formatModule = n: v:
+  formatModule =
+    n: v:
     let
-      formatLine = n: v:
+      formatLine =
+        n: v:
         let
-          formatValue = v:
-            if isBool v then
+          formatValue =
+            v:
+            if lib.isBool v then
               (if v then "true" else "false")
-            else if isString v then
+            else if lib.isString v then
               ''"${v}"''
             else
               toString v;
-        in "${n} = ${formatValue v}";
-    in ''
+        in
+        "${n} = ${formatValue v}";
+    in
+    ''
       ${n} {
-        ${concatStringsSep "\n  " (mapAttrsToList formatLine v)}
+        ${lib.concatStringsSep "\n  " (lib.mapAttrsToList formatLine v)}
       }
     '';
 
-  settingsType = with types; attrsOf (oneOf [ bool int str ]);
+  settingsType =
+    with types;
+    attrsOf (oneOf [
+      bool
+      int
+      str
+    ]);
 
-  sortAttrNamesByPosition = comparator: set:
-    let pos = n: set."${n}".position;
-    in sort (a: b: comparator (pos a) (pos b)) (attrNames set);
-in {
-  meta.maintainers = [ hm.maintainers.justinlovinger ];
+  sortAttrNamesByPosition =
+    comparator: set:
+    let
+      pos = n: set."${n}".position;
+    in
+    lib.sort (a: b: comparator (pos a) (pos b)) (lib.attrNames set);
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.justinlovinger ];
 
   options.programs.i3status = {
-    enable = mkEnableOption "i3status";
+    enable = lib.mkEnableOption "i3status";
 
     enableDefault = mkOption {
       type = types.bool;
@@ -69,40 +93,42 @@ in {
     };
 
     modules = mkOption {
-      type = types.attrsOf (types.submodule {
-        options = {
-          enable = mkOption {
-            type = types.bool;
-            default = true;
-            description = ''
-              Whether or not to enable this module.
-            '';
+      type = types.attrsOf (
+        types.submodule {
+          options = {
+            enable = mkOption {
+              type = types.bool;
+              default = true;
+              description = ''
+                Whether or not to enable this module.
+              '';
+            };
+            position = mkOption {
+              type = with types; either int float;
+              description = ''
+                Position of this module in i3status `order`.
+              '';
+            };
+            settings = mkOption {
+              type = settingsType;
+              default = { };
+              description = ''
+                Configuration to add to this i3status module.
+                See
+                {manpage}`i3status(1)`
+                for options.
+              '';
+              example = literalExpression ''
+                {
+                  format = "♪ %volume";
+                  format_muted = "♪ muted (%volume)";
+                  device = "pulse:1";
+                }
+              '';
+            };
           };
-          position = mkOption {
-            type = with types; either int float;
-            description = ''
-              Position of this module in i3status `order`.
-            '';
-          };
-          settings = mkOption {
-            type = settingsType;
-            default = { };
-            description = ''
-              Configuration to add to this i3status module.
-              See
-              {manpage}`i3status(1)`
-              for options.
-            '';
-            example = literalExpression ''
-              {
-                format = "♪ %volume";
-                format_muted = "♪ muted (%volume)";
-                device = "pulse:1";
-              }
-            '';
-          };
-        };
-      });
+        }
+      );
       default = { };
       description = ''
         Modules to add to i3status {file}`config` file.
@@ -130,18 +156,20 @@ in {
       '';
     };
 
-    package = mkPackageOption pkgs "i3status" { };
+    package = lib.mkPackageOption pkgs "i3status" { nullable = true; };
   };
 
-  config = mkIf cfg.enable {
-    programs.i3status = mkIf cfg.enableDefault {
+  config = lib.mkIf cfg.enable {
+    programs.i3status = lib.mkIf cfg.enableDefault {
       general = {
         colors = mkDefault true;
         interval = mkDefault 5;
       };
 
       modules = {
-        ipv6 = { position = mkDefault 1; };
+        ipv6 = {
+          position = mkDefault 1;
+        };
 
         "wireless _first_" = {
           position = mkDefault 2;
@@ -161,17 +189,23 @@ in {
 
         "battery all" = {
           position = mkDefault 4;
-          settings = { format = mkDefault "%status %percentage %remaining"; };
+          settings = {
+            format = mkDefault "%status %percentage %remaining";
+          };
         };
 
         "disk /" = {
           position = mkDefault 5;
-          settings = { format = mkDefault "%avail"; };
+          settings = {
+            format = mkDefault "%avail";
+          };
         };
 
         load = {
           position = mkDefault 6;
-          settings = { format = mkDefault "%1min"; };
+          settings = {
+            format = mkDefault "%1min";
+          };
         };
 
         memory = {
@@ -185,17 +219,20 @@ in {
 
         "tztime local" = {
           position = mkDefault 8;
-          settings = { format = mkDefault "%Y-%m-%d %H:%M:%S"; };
+          settings = {
+            format = mkDefault "%Y-%m-%d %H:%M:%S";
+          };
         };
       };
     };
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."i3status/config".text = concatStringsSep "\n" ([ ]
-      ++ optional (cfg.general != { }) (formatModule "general" cfg.general)
-      ++ map formatOrder (sortAttrNamesByPosition lessThan enabledModules)
-      ++ mapAttrsToList formatModule
-      (mapAttrs (n: v: v.settings) enabledModules));
+    xdg.configFile."i3status/config".text = lib.concatStringsSep "\n" (
+      [ ]
+      ++ lib.optional (cfg.general != { }) (formatModule "general" cfg.general)
+      ++ map formatOrder (sortAttrNamesByPosition lib.lessThan enabledModules)
+      ++ lib.mapAttrsToList formatModule (lib.mapAttrs (n: v: v.settings) enabledModules)
+    );
   };
 }

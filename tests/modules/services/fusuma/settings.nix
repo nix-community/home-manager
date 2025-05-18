@@ -1,17 +1,31 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
+  imports = [ ./fusuma-stubs.nix ];
+
   services.fusuma = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@fusuma@"; };
-    extraPackages = [ (config.lib.test.mkStubPackage { }) ];
+    extraPackages = [ pkgs.xdotool ];
 
     settings = {
-      threshold = { swipe = 1; };
-      interval = { swipe = 7; };
+      threshold = {
+        swipe = 1;
+      };
+      interval = {
+        swipe = 7;
+      };
       swipe = {
-        "3" = { left = { command = "xdotool key ctrl+alt+Right"; }; };
-        "4" = { left = { command = "xdotool key ctrl+shift+alt+Right"; }; };
+        "3" = {
+          left = {
+            command = "xdotool key ctrl+alt+Right";
+          };
+        };
+        "4" = {
+          left = {
+            command = "xdotool key ctrl+shift+alt+Right";
+          };
+        };
       };
     };
   };

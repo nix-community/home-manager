@@ -1,17 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.comodoro;
 
   args = with cfg; {
     inherit preset;
-    protocols = if lib.isList protocols then
-      lib.concatStringsSep " " protocols
-    else
-      protocols;
+    protocols = if lib.isList protocols then lib.concatStringsSep " " protocols else protocols;
   };
 
-in {
+in
+{
   meta.maintainers = with lib.hm.maintainers; [ soywod ];
 
   options.services.comodoro = {
@@ -55,15 +58,15 @@ in {
         Description = "Comodoro server";
         After = [ "network.target" ];
       };
-      Install = { WantedBy = [ "default.target" ]; };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
       Service = {
-        ExecStart = with args;
-          "${cfg.package}/bin/comodoro server start ${preset} ${protocols}";
+        ExecStart = with args; "${cfg.package}/bin/comodoro server start ${preset} ${protocols}";
         ExecSearchPath = "/bin";
         Restart = "always";
         RestartSec = 10;
-        Environment =
-          lib.mapAttrsToList (key: val: "${key}=${val}") cfg.environment;
+        Environment = lib.mapAttrsToList (key: val: "${key}=${val}") cfg.environment;
       };
     };
   };

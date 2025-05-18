@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.openstackclient = {
     enable = true;
@@ -16,13 +14,13 @@
     };
     publicClouds = {
       example-cloud = {
-        auth = { auth_url = "https://identity.cloud.example.com/v2.0"; };
+        auth = {
+          auth_url = "https://identity.cloud.example.com/v2.0";
+        };
       };
     };
 
   };
-
-  test.stubs.openstackclient = { };
 
   nmt.script = ''
     assertFileExists home-files/.config/openstack/clouds.yaml

@@ -1,36 +1,52 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    filterAttrs
+    isAttrs
+    isString
+    literalExpression
+    mkOption
+    types
+    ;
 
   cfg = config.programs.rofi;
 
-  mkValueString = value:
-    if isBool value then
+  mkValueString =
+    value:
+    if lib.isBool value then
       if value then "true" else "false"
-    else if isInt value then
+    else if lib.isInt value then
       toString value
     else if (value._type or "") == "literal" then
       value.value
     else if isString value then
       ''"${value}"''
-    else if isList value then
-      "[ ${strings.concatStringsSep "," (map mkValueString value)} ]"
+    else if lib.isList value then
+      "[ ${lib.strings.concatStringsSep "," (map mkValueString value)} ]"
     else
       abort "Unhandled value type ${builtins.typeOf value}";
 
-  mkKeyValue = { sep ? ": ", end ? ";" }:
-    name: value:
-    "${name}${sep}${mkValueString value}${end}";
+  mkKeyValue =
+    {
+      sep ? ": ",
+      end ? ";",
+    }:
+    name: value: "${name}${sep}${mkValueString value}${end}";
 
-  mkRasiSection = name: value:
+  mkRasiSection =
+    name: value:
     if isAttrs value then
       let
-        toRasiKeyValue = generators.toKeyValue { mkKeyValue = mkKeyValue { }; };
+        toRasiKeyValue = lib.generators.toKeyValue { mkKeyValue = mkKeyValue { }; };
         # Remove null values so the resulting config does not have empty lines
         configStr = toRasiKeyValue (filterAttrs (_: v: v != null) value);
-      in ''
+      in
+      ''
         ${name} {
         ${configStr}}
       ''
@@ -38,14 +54,21 @@ let
       (mkKeyValue {
         sep = " ";
         end = "";
-      } name value) + "\n";
+      } name value)
+      + "\n";
 
-  toRasi = attrs:
-    concatStringsSep "\n" (concatMap (mapAttrsToList mkRasiSection) [
-      (filterAttrs (n: _: n == "@theme") attrs)
-      (filterAttrs (n: _: n == "@import") attrs)
-      (removeAttrs attrs [ "@theme" "@import" ])
-    ]);
+  toRasi =
+    attrs:
+    lib.concatStringsSep "\n" (
+      lib.concatMap (lib.mapAttrsToList mkRasiSection) [
+        (filterAttrs (n: _: n == "@theme") attrs)
+        (filterAttrs (n: _: n == "@import") attrs)
+        (removeAttrs attrs [
+          "@theme"
+          "@import"
+        ])
+      ]
+    );
 
   locationsMap = {
     center = 0;
@@ -59,60 +82,64 @@ let
     left = 8;
   };
 
-  primitive = with types; (oneOf [ str int bool rasiLiteral ]);
+  primitive =
+    with types;
+    (oneOf [
+      str
+      int
+      bool
+      rasiLiteral
+    ]);
 
   # Either a `section { foo: "bar"; }` or a `@import/@theme "some-text"`
-  configType = with types;
-    (either (attrsOf (either primitive (listOf primitive))) str);
+  configType = with types; (either (attrsOf (either primitive (listOf primitive))) str);
 
-  rasiLiteral = types.submodule {
-    options = {
-      _type = mkOption {
-        type = types.enum [ "literal" ];
-        internal = true;
-      };
+  rasiLiteral =
+    types.submodule {
+      options = {
+        _type = mkOption {
+          type = types.enum [ "literal" ];
+          internal = true;
+        };
 
-      value = mkOption {
-        type = types.str;
-        internal = true;
+        value = mkOption {
+          type = types.str;
+          internal = true;
+        };
       };
+    }
+    // {
+      description = "Rasi literal string";
     };
-  } // {
-    description = "Rasi literal string";
-  };
 
   themeType = with types; attrsOf configType;
 
-  themeName = if (cfg.theme == null) then
-    null
-  else if (isString cfg.theme) then
-    cfg.theme
-  else if (isAttrs cfg.theme) then
-    "custom"
-  else
-    removeSuffix ".rasi" (baseNameOf cfg.theme);
+  themeName =
+    if (cfg.theme == null) then
+      null
+    else if (isString cfg.theme) then
+      cfg.theme
+    else if (isAttrs cfg.theme) then
+      "custom"
+    else
+      lib.removeSuffix ".rasi" (baseNameOf cfg.theme);
 
-  themePath = if (isString cfg.theme) then
-    null
-  else if (isAttrs cfg.theme) then
-    "custom"
-  else
-    cfg.theme;
+  themePath =
+    if (isString cfg.theme) then
+      null
+    else if (isAttrs cfg.theme) then
+      "custom"
+    else
+      cfg.theme;
 
-in {
+  modes = map (mode: if isString mode then mode else "${mode.name}:${mode.path}") cfg.modes;
+in
+{
   options.programs.rofi = {
-    enable = mkEnableOption
-      "Rofi: A window switcher, application launcher and dmenu replacement";
+    enable = lib.mkEnableOption "Rofi: A window switcher, application launcher and dmenu replacement";
 
-    package = mkOption {
-      default = pkgs.rofi;
-      type = types.package;
-      description = ''
-        Package providing the {command}`rofi` binary.
-      '';
-      example = literalExpression ''
-        pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; };
-      '';
+    package = lib.mkPackageOption pkgs "rofi" {
+      example = "pkgs.rofi.override { plugins = [ pkgs.rofi-emoji ]; }";
     };
 
     finalPackage = mkOption {
@@ -156,7 +183,7 @@ in {
 
     location = mkOption {
       default = "center";
-      type = types.enum (attrNames locationsMap);
+      type = types.enum (lib.attrNames locationsMap);
       description = "The location rofi appears on the screen.";
     };
 
@@ -178,7 +205,13 @@ in {
 
     theme = mkOption {
       default = null;
-      type = with types; nullOr (oneOf [ str path themeType ]);
+      type =
+        with types;
+        nullOr (oneOf [
+          str
+          path
+          themeType
+        ]);
       example = literalExpression ''
         let
           # Use `mkLiteral` for string-like values that should show without
@@ -222,11 +255,36 @@ in {
       description = "Path where to put generated configuration file.";
     };
 
+    modes = mkOption {
+      default = [ ];
+      example = literalExpression ''
+        [
+          "drun"
+          "emoji"
+          "ssh"
+          {
+            name = "whatnot";
+            path = lib.getExe pkgs.rofi-whatnot;
+          }
+        ]
+      '';
+      type =
+        with types;
+        listOf (
+          either str (submodule {
+            options = {
+              name = mkOption { type = str; };
+              path = mkOption { type = str; };
+            };
+          })
+        );
+      description = "Modes to enable. For custom modes see `man 5 rofi-script`.";
+    };
+
     extraConfig = mkOption {
       default = { };
       example = literalExpression ''
         {
-          modi = "drun,emoji,ssh";
           kb-primary-paste = "Control+V,Shift+Insert";
           kb-secondary-paste = "Control+v,Insert";
         }
@@ -237,59 +295,77 @@ in {
 
   };
 
-  imports = let
-    mkRemovedOptionRofi = option:
-      (mkRemovedOptionModule [ "programs" "rofi" option ]
-        "Please use a Rofi theme instead.");
-  in map mkRemovedOptionRofi [
-    "width"
-    "lines"
-    "borderWidth"
-    "rowHeight"
-    "padding"
-    "separator"
-    "scrollbar"
-    "fullscreen"
-    "colors"
-  ];
+  imports =
+    let
+      mkRemovedOptionRofi =
+        option: (lib.mkRemovedOptionModule [ "programs" "rofi" option ] "Please use a Rofi theme instead.");
+    in
+    map mkRemovedOptionRofi [
+      "width"
+      "lines"
+      "borderWidth"
+      "rowHeight"
+      "padding"
+      "separator"
+      "scrollbar"
+      "fullscreen"
+      "colors"
+    ];
 
-  config = mkIf cfg.enable {
-    assertions =
-      [ (hm.assertions.assertPlatform "programs.rofi" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.rofi" pkgs lib.platforms.linux)
+    ];
 
     lib.formats.rasi.mkLiteral = value: {
       _type = "literal";
       inherit value;
     };
 
-    programs.rofi.finalPackage = let
-      rofiWithPlugins = cfg.package.override
-        (old: { plugins = (old.plugins or [ ]) ++ cfg.plugins; });
-    in if builtins.hasAttr "override" cfg.package && cfg.plugins != [ ] then
-      rofiWithPlugins
-    else
-      cfg.package;
+    programs.rofi.finalPackage =
+      let
+        rofiWithPlugins = cfg.package.override (old: {
+          plugins = (old.plugins or [ ]) ++ cfg.plugins;
+        });
+      in
+      if builtins.hasAttr "override" cfg.package && cfg.plugins != [ ] then
+        rofiWithPlugins
+      else
+        cfg.package;
 
     home.packages = [ cfg.finalPackage ];
 
-    home.file."${cfg.configPath}".text = toRasi {
-      configuration = ({
-        font = cfg.font;
-        terminal = cfg.terminal;
-        cycle = cfg.cycle;
-        location = (getAttr cfg.location locationsMap);
-        xoffset = cfg.xoffset;
-        yoffset = cfg.yoffset;
-      } // cfg.extraConfig);
-      # @theme must go after configuration but attrs are output in alphabetical order ('@' first)
-    } + (optionalString (themeName != null) (toRasi { "@theme" = themeName; }));
+    home.file."${cfg.configPath}".text =
+      toRasi {
+        configuration = (
+          {
+            font = cfg.font;
+            terminal = cfg.terminal;
+            cycle = cfg.cycle;
+            location = (lib.getAttr cfg.location locationsMap);
+            xoffset = cfg.xoffset;
+            yoffset = cfg.yoffset;
+          }
+          // lib.optionalAttrs (modes != [ ]) { inherit modes; }
+          // cfg.extraConfig
+        );
+        # @theme must go after configuration but attrs are output in alphabetical order ('@' first)
+      }
+      + (lib.optionalString (themeName != null) (toRasi {
+        "@theme" = themeName;
+      }));
 
-    xdg.dataFile = mkIf (themePath != null) (if themePath == "custom" then {
-      "rofi/themes/${themeName}.rasi".text = toRasi cfg.theme;
-    } else {
-      "rofi/themes/${themeName}.rasi".source = themePath;
-    });
+    xdg.dataFile = lib.mkIf (themePath != null) (
+      if themePath == "custom" then
+        {
+          "rofi/themes/${themeName}.rasi".text = toRasi cfg.theme;
+        }
+      else
+        {
+          "rofi/themes/${themeName}.rasi".source = themePath;
+        }
+    );
   };
 
-  meta.maintainers = with maintainers; [ thiagokokada ];
+  meta.maintainers = with lib.maintainers; [ ];
 }

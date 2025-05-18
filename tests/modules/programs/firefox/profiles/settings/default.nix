@@ -1,43 +1,60 @@
 modulePath:
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
-  cfg = getAttrFromPath modulePath config;
+  cfg = lib.getAttrFromPath modulePath config;
 
   firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 
-in {
+in
+{
   imports = [ firefoxMockOverlay ];
 
-  config = mkIf config.test.enableBig (setAttrByPath modulePath {
-    enable = true;
-    profiles = {
-      basic.isDefault = true;
-      test = {
-        id = 1;
-        settings = {
-          "general.smoothScroll" = false;
-          "browser.newtabpage.pinned" = [{
-            title = "NixOS";
-            url = "https://nixos.org";
-          }];
+  config = lib.mkIf config.test.enableBig (
+    lib.setAttrByPath modulePath {
+      enable = true;
+      profiles = {
+        basic.isDefault = true;
+        test = {
+          id = 1;
+          settings = {
+            "general.smoothScroll" = false;
+            "browser.newtabpage.pinned" = [
+              {
+                title = "NixOS";
+                url = "https://nixos.org";
+              }
+            ];
+          };
         };
       };
-    };
-  } // {
-    nmt.script = ''
-      assertFileRegex \
-        home-path/bin/${cfg.wrappedPackageName} \
-        MOZ_APP_LAUNCHER
+    }
+    // {
+      nmt.script =
+        let
+          binPath =
+            if pkgs.hostPlatform.isDarwin then
+              "Applications/${cfg.darwinAppName}.app/Contents/MacOS"
+            else
+              "bin";
+        in
+        ''
+          assertFileRegex \
+            "home-path/${binPath}/${cfg.wrappedPackageName}" \
+            MOZ_APP_LAUNCHER
 
-      assertDirectoryExists home-files/${cfg.configPath}/basic
+          assertDirectoryExists "home-files/${cfg.profilesPath}/basic"
 
-      assertFileContent \
-        home-files/${cfg.configPath}/test/user.js \
-        ${./expected-user.js}
-    '';
-  });
+          assertFileContent \
+            "home-files/${cfg.profilesPath}/test/user.js" \
+            ${./expected-user.js}
+        '';
+    }
+  );
 }
