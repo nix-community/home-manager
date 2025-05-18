@@ -271,8 +271,8 @@ in
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
       file.".config/aerospace/aerospace.toml".source = tomlFormat.generate "aerospace" (
         filterNulls cfg.userSettings
+        onChange = "${lib.getExe cfg.package} reload-config";
       );
-      onChange = "${lib.getExe cfg.package} reload-config";
     };
   };
 }
