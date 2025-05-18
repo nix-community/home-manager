@@ -29,7 +29,7 @@
   <div class="titlepage">
    <div>
    <div><h1 class="title"><a id="home-manager-manual"></a>Home Manager Manual</h1></div>
-   <div><h2 class="subtitle">Version 25.05 (unstable)</h2></div>
+   <div><h2 class="subtitle">Version 25.11 (unstable)</h2></div>
    </div>
    <hr />
   </div>
@@ -85,7 +85,7 @@ Nix option. On NixOS you can control this option using the
 system option.</p></li><li class="listitem"><p>Add the appropriate Home Manager channel. If you are following
 Nixpkgs master or an unstable channel you can run</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 $ nix-channel --update
-</code></pre><p>and if you follow a Nixpkgs version 24.11 channel you can run</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz home-manager
+</code></pre><p>and if you follow a Nixpkgs version 25.05 channel you can run</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
 $ nix-channel --update
 </code></pre></li><li class="listitem"><p>Run the Home Manager installation command and create the first Home
 Manager generation:</p><pre><code class="programlisting  shell">$ nix-shell &#x27;&lt;home-manager&gt;&#x27; -A install
@@ -114,7 +114,7 @@ your system configuration. This is most conveniently done by adding a
 Home Manager channel to the root user. For example, if you are following
 Nixpkgs master or an unstable channel, you can run</p><pre><code class="programlisting  shell">$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 $ sudo nix-channel --update
-</code></pre><p>and if you follow a Nixpkgs version 24.11 channel, you can run</p><pre><code class="programlisting  shell">$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz home-manager
+</code></pre><p>and if you follow a Nixpkgs version 25.05 channel, you can run</p><pre><code class="programlisting  shell">$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
 $ sudo nix-channel --update
 </code></pre><p>It is then possible to add</p><pre><code class="programlisting  nix">imports = [ &lt;home-manager/nixos&gt; ];
 </code></pre><p>to your system <code class="literal">configuration.nix</code> file, which will introduce a new
@@ -122,7 +122,7 @@ NixOS option called <code class="literal">home-manager.users</code> whose type i
 that maps user names to Home Manager configurations.</p><p>Alternatively, home-manager installation can be done declaratively through configuration.nix using the following syntax:</p><pre><code class="programlisting nix">{ config, pkgs, lib, ... }:
 
 let
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz;
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz;
 in
 {
   imports =
@@ -137,7 +137,7 @@ in
   
     # The state version is required and should stay at the version you
     # originally installed.
-    home.stateVersion = &quot;24.11&quot;;
+    home.stateVersion = &quot;25.05&quot;;
   };
 }
 </code></pre><p>For example, a NixOS configuration may include the lines</p><pre><code class="programlisting  nix">users.users.eve.isNormalUser = true;
@@ -192,7 +192,7 @@ your system configuration. This is most conveniently done by adding a
 Home Manager channel. For example, if you are following Nixpkgs master
 or an unstable channel, you can run</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 $ nix-channel --update
-</code></pre><p>and if you follow a Nixpkgs version 24.11 channel, you can run</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz home-manager
+</code></pre><p>and if you follow a Nixpkgs version 25.05 channel, you can run</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
 $ nix-channel --update
 </code></pre><p>It is then possible to add</p><pre><code class="programlisting  nix">imports = [ &lt;home-manager/nix-darwin&gt; ];
 </code></pre><p>to your nix-darwin <code class="literal">configuration.nix</code> file, which will introduce a new
@@ -207,7 +207,7 @@ home-manager.users.eve = { pkgs, ... }: {
 
   # The state version is required and should stay at the version you
   # originally installed.
-  home.stateVersion = &quot;24.11&quot;;
+  home.stateVersion = &quot;25.05&quot;;
 };
 </code></pre><p>and after a <code class="literal">darwin-rebuild switch</code> the user eve’s environment should
 include a basic Bash configuration and the packages atool and httpie.</p><p>If you do not plan on having Home Manager manage your shell
@@ -279,7 +279,7 @@ command performs a combined build and activation.</p><div class="toc"> <p><stron
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = &quot;24.11&quot;;
+  home.stateVersion = &quot;25.05&quot;;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -311,7 +311,7 @@ follows:</p><pre><code class="programlisting  nix">{ config, pkgs, ... }:
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = &quot;24.11&quot;;
+  home.stateVersion = &quot;25.05&quot;;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -494,14 +494,14 @@ introduction about writing a Home Manager configuration.</p></li></ul></div>
 user, you can run the Home Manager <code class="literal">init</code> command directly from its
 flake.</p><p>For example, if you are using the unstable version of Nixpkgs or NixOS,
 then to generate and activate a basic configuration run the command</p><pre><code class="programlisting  shell">$ nix run home-manager/master -- init --switch
-</code></pre><p>For Nixpkgs or NixOS version 24.11 run</p><pre><code class="programlisting  shell">$ nix run home-manager/release-24.11 -- init --switch
+</code></pre><p>For Nixpkgs or NixOS version 25.05 run</p><pre><code class="programlisting  shell">$ nix run home-manager/release-25.05 -- init --switch
 </code></pre><p>This will generate a <code class="literal">flake.nix</code> and a <code class="literal">home.nix</code> file in
 <code class="literal">~/.config/home-manager</code>, creating the directory if it does not exist.</p><p>If you omit the <code class="literal">--switch</code> option then the activation will not happen.
 This is useful if you want to inspect and edit the configuration before
 activating it.</p><pre><code class="programlisting  shell">$ nix run home-manager/$branch -- init
 $ # Edit files in ~/.config/home-manager
 $ nix run home-manager/$branch -- init --switch
-</code></pre><p>Where <code class="literal">$branch</code> is one of <code class="literal">master</code> or <code class="literal">release-24.11</code>.</p><p>After the initial activation has completed successfully then building
+</code></pre><p>Where <code class="literal">$branch</code> is one of <code class="literal">master</code> or <code class="literal">release-25.05</code>.</p><p>After the initial activation has completed successfully then building
 and activating your flake-based configuration is as simple as</p><pre><code class="programlisting  shell">$ home-manager switch
 </code></pre><p>It is possible to override the default configuration directory, if you
 want. For example,</p><pre><code class="programlisting  shell">$ nix run home-manager/$branch -- init --switch ~/hmconf
