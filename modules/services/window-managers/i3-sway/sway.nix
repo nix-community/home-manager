@@ -162,6 +162,43 @@ let
         '';
       };
 
+      bindswitches = mkOption {
+        type = types.attrsOf (
+          types.attrsOf (
+            types.oneOf [
+              types.str
+              types.bool
+            ]
+          )
+        );
+        default = { };
+        defaultText = "No bindswitches by default";
+        description = ''
+          Binds  <switch>  to  execute  the sway command command on state changes. Supported switches are lid (laptop
+          lid) and tablet (tablet mode) switches. Valid values for state are on, off and toggle. These  switches  are
+          on when the device lid is shut and when tablet mode is active respectively. toggle is also supported to run
+          a command both when the switch is toggled on or off.
+          See sway(5).
+        '';
+        example = lib.literalExpression ''
+          let
+            laptop = "eDP-1";
+          in
+          {
+            "lid:on" = {
+              reload = true;
+              locked = true;
+              action = "output ''${laptop} disable";
+            };
+            "lid:off" = {
+              reload = true;
+              locked = true;
+              action = "output ''${laptop} enable";
+            };
+          }
+        '';
+      };
+
       bindkeysToCode = mkOption {
         type = types.bool;
         default = false;
@@ -295,6 +332,20 @@ let
       ${if always then "exec_always" else "exec"} ${command}
     '';
 
+  bindswitchesStr =
+    bindswitches:
+    concatStringsSep "\n" (
+      mapAttrsToList (
+        event: options:
+        let
+          args =
+            (lib.optionalString (builtins.hasAttr "locked" options && options.locked) "--locked ")
+            + (lib.optionalString (builtins.hasAttr "reload" options && options.reload) "--reload ");
+        in
+        "bindswitch ${args} ${event} ${options.action}"
+      ) bindswitches
+    );
+
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
     ${concatStringsSep "\n" (lib.mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
@@ -357,6 +408,7 @@ let
                 bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
               })
               (keycodebindingsStr keycodebindings)
+              (bindswitchesStr bindswitches)
             ]
             ++ mapAttrsToList inputStr input
             ++ mapAttrsToList outputStr output # outputs
