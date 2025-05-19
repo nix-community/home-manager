@@ -408,8 +408,8 @@ let
                 bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
               })
               (keycodebindingsStr keycodebindings)
-              (bindswitchesStr bindswitches)
             ]
+            ++ optional (builtins.attrNames bindswitches != [ ]) (bindswitchesStr bindswitches)
             ++ mapAttrsToList inputStr input
             ++ mapAttrsToList outputStr output # outputs
             ++ mapAttrsToList seatStr seat # seats
