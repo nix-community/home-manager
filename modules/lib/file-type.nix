@@ -138,6 +138,17 @@ in
                 link.
               '';
             };
+
+            mode = mkOption {
+              type = types.str;
+              default = "symlink";
+              example = "0600";
+              description = ''
+                If set to something else than `symlink`,
+                the file is copied instead of symlinked, with the given
+                file mode.
+              '';
+            };
           };
 
           config = {
