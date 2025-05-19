@@ -335,6 +335,7 @@ import nmtSrc {
       ./modules/services/emacs-darwin
       ./modules/services/espanso-darwin
       ./modules/services/git-sync-darwin
+      ./modules/services/home-manager-auto-expire-darwin
       ./modules/services/imapnotify-darwin
       ./modules/services/jankyborders
       ./modules/services/macos-remap-keys

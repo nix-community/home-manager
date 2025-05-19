@@ -55,6 +55,8 @@ in
           as the `OnCalendar` option.
 
           The format is described in {manpage}`systemd.time(7)`.
+
+          ${lib.hm.darwin.intervalDocumentation}
         '';
       };
 
@@ -101,6 +103,23 @@ in
             Unit.Description = "Home Manager expire generations";
 
             Service.ExecStart = toString script;
+          };
+        };
+      })
+
+      (lib.mkIf pkgs.stdenv.isDarwin {
+        assertions = [
+          (lib.hm.darwin.assertInterval "services.home-manager.autoExpire.frequency" cfg.frequency pkgs)
+        ];
+
+        launchd.agents.home-manager-auto-expire = {
+          enable = true;
+          config = {
+            ProgramArguments = [ (toString script) ];
+            ProcessType = "Background";
+            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/home-manager-auto-expire/launchd-stdout.log";
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/home-manager-auto-expire/launchd-stderr.log";
           };
         };
       })
