@@ -170,7 +170,7 @@ in
           '';
         };
 
-        force = lib.mkEnableOption "GTK 2 config force overwrite (workaround for bug #6188)";
+        force = lib.mkEnableOption "GTK 2 config force overwrite without creating a backup";
       };
 
       gtk3 = {
