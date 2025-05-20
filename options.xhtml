@@ -50933,6 +50933,44 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.qutebrowser.perDomainSettings"></a><a class="term" href="options.xhtml#opt-programs.qutebrowser.perDomainSettings"><code class="option">programs.qutebrowser.perDomainSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Options to set, as in <code class="literal">settings</code> but per domain.
+Refer to <code class="option">settings</code> for details.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of anything</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;zoom.us&quot; = {
+    content = {
+      autoplay = true;
+      media.audio_capture = true;
+      media.video_capture = true;
+    };
+  };
+  &quot;github.com&quot;.colors.webpage.darkmode.enabled = false;
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qutebrowser.nix" target="_top">
+&lt;home-manager/modules/programs/qutebrowser.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.qutebrowser.quickmarks"></a><a class="term" href="options.xhtml#opt-programs.qutebrowser.quickmarks"><code class="option">programs.qutebrowser.quickmarks</code>
   </a>
  </span>
