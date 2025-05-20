@@ -11,12 +11,19 @@
           fg = "#ffffff";
         };
         tabs.bar.bg = "#000000";
+        webpage.darkmode.enabled = true;
       };
-      spellcheck.languages = [
-        "en-US"
-        "sv-SE"
-      ];
-      tabs.tabs_are_windows = true;
+    };
+
+    perDomainSettings = {
+      "zoom.us" = {
+        content = {
+          autoplay = true;
+          media.audio_capture = true;
+          media.video_capture = true;
+        };
+      };
+      "web.whatsapp.com".colors.webpage.darkmode.enabled = false;
     };
 
     extraConfig = ''
@@ -40,9 +47,12 @@
           config.set("colors.hints.bg", "#000000")
           config.set("colors.hints.fg", "#ffffff")
           config.set("colors.tabs.bar.bg", "#000000")
-          config.set("spellcheck.languages", ["en-US", "sv-SE"])
-          config.set("tabs.tabs_are_windows", True)
+          config.set("colors.webpage.darkmode.enabled", True)
           # Extra qutebrowser configuration.
-        ''}
+
+          config.set("colors.webpage.darkmode.enabled", False, "web.whatsapp.com")
+          config.set("content.autoplay", True, "zoom.us")
+          config.set("content.media.audio_capture", True, "zoom.us")
+          config.set("content.media.video_capture", True, "zoom.us")''}
     '';
 }
