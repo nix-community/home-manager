@@ -302,7 +302,7 @@ in
           + cfg2.extraConfig
           + "\n";
 
-        force = cfg2.force;
+        inherit (cfg2) force
       };
 
       home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
