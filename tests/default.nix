@@ -158,6 +158,7 @@ import nmtSrc {
   ];
   tests = builtins.foldl' (a: b: a // (import b)) { } (
     [
+      # keep-sorted start case=no numeric=yes
       ./lib/generators
       ./lib/types
       ./modules/files
@@ -219,9 +220,9 @@ import nmtSrc {
       ./modules/programs/i3status
       ./modules/programs/inori
       ./modules/programs/irssi
-      ./modules/programs/jujutsu
       ./modules/programs/joplin-desktop
       ./modules/programs/jqp
+      ./modules/programs/jujutsu
       ./modules/programs/k9s
       ./modules/programs/kakoune
       ./modules/programs/keepassxc
@@ -230,13 +231,13 @@ import nmtSrc {
       ./modules/programs/kitty
       ./modules/programs/kubecolor
       ./modules/programs/lapce
-      ./modules/programs/ledger
       ./modules/programs/lazydocker
+      ./modules/programs/ledger
       ./modules/programs/less
       ./modules/programs/lesspipe
       ./modules/programs/lf
-      ./modules/programs/lsd
       ./modules/programs/lieer
+      ./modules/programs/lsd
       ./modules/programs/man
       ./modules/programs/mbsync
       ./modules/programs/mergiraf
@@ -326,8 +327,10 @@ import nmtSrc {
       ./modules/services/gpg-agent
       ./modules/services/syncthing/common
       ./modules/xresources
+      # keep-sorted end
     ]
     ++ lib.optionals isDarwin [
+      # keep-sorted start case=no numeric=yes
       ./modules/launchd
       ./modules/programs/aerospace
       ./modules/programs/element-desktop/darwin.nix
@@ -344,11 +347,13 @@ import nmtSrc {
       ./modules/services/skhd
       ./modules/services/yubikey-agent-darwin
       ./modules/targets-darwin
+      # keep-sorted end
     ]
     ++ lib.optionals isLinux [
-      ./modules/misc/xdg/linux.nix
+      # keep-sorted start case=no numeric=yes
       ./modules/config/home-cursor
       ./modules/config/i18n
+      ./modules/dbus
       ./modules/i18n/input-method
       ./modules/misc/debug
       ./modules/misc/editorconfig
@@ -356,6 +361,7 @@ import nmtSrc {
       ./modules/misc/numlock
       ./modules/misc/pam
       ./modules/misc/qt
+      ./modules/misc/xdg/linux.nix
       ./modules/misc/xsession
       ./modules/programs/abook
       ./modules/programs/anyrun
@@ -382,8 +388,8 @@ import nmtSrc {
       ./modules/programs/i3blocks
       ./modules/programs/i3status-rust
       ./modules/programs/imv
-      ./modules/programs/kodi
       ./modules/programs/kickoff
+      ./modules/programs/kodi
       ./modules/programs/looking-glass-client
       ./modules/programs/lutris
       ./modules/programs/mangohud
@@ -423,8 +429,8 @@ import nmtSrc {
       ./modules/services/clipman
       ./modules/services/clipse
       ./modules/services/comodoro
-      ./modules/services/copyq
       ./modules/services/conky
+      ./modules/services/copyq
       ./modules/services/darkman
       ./modules/services/davmail
       ./modules/services/devilspie2
@@ -506,7 +512,7 @@ import nmtSrc {
       ./modules/services/yubikey-agent
       ./modules/systemd
       ./modules/targets-linux
-      ./modules/dbus
+      # keep-sorted end
     ]
   );
 }
