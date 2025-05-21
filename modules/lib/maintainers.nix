@@ -55,17 +55,6 @@
     github = "aheaume";
     githubId = 13830042;
   };
-  ALameLlama = {
-    name = "Nicholas Ciechanowski";
-    email = "NicholasACiechanowski@gmail.com";
-    github = "ALameLlama";
-    githubId = 55490546;
-  };
-  ambroisie = {
-    email = "bruno.home-manager@belanyi.fr";
-    github = "ambroisie";
-    githubId = 12465195;
-    name = "Bruno BELANYI";
   ajhalili2006 = {
     name = "Andrei Jiroh Halili";
     email = "ajhalili2006@andreijiroh.dev";
@@ -81,6 +70,18 @@
         fingerprint = "A715100E58CF60500EE159652F384539C700B263";
       }
     ];
+  };
+  ALameLlama = {
+    name = "Nicholas Ciechanowski";
+    email = "NicholasACiechanowski@gmail.com";
+    github = "ALameLlama";
+    githubId = 55490546;
+  };
+  ambroisie = {
+    email = "bruno.home-manager@belanyi.fr";
+    github = "ambroisie";
+    githubId = 12465195;
+    name = "Bruno BELANYI";
   };
   amesgen = {
     name = "amesgen";
