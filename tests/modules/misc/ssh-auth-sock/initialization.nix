@@ -1,16 +1,20 @@
 {
+  programs.sh.enable = true;
   programs.bash.enable = true;
   programs.fish.enable = true;
   programs.nushell.enable = true;
   programs.zsh.enable = true;
 
   sshAuthSock.initialization = {
-    bash = "echo bash/zsh";
+    sh = "echo bash/zsh/sh";
     fish = "echo fish";
     nushell = "echo nushell";
   };
 
   nmt.script = ''
+    assertFileContains \
+      home-files/.bash_profile \
+      'if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then'
     assertFileContains \
       home-files/.profile \
       'if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then'

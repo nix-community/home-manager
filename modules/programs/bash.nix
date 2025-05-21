@@ -249,8 +249,11 @@ in
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
       home.file.".bash_profile".source = writeBashScript "bash_profile" ''
-        # include .profile if it exists
-        [[ -f ~/.profile ]] && . ~/.profile
+        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
+
+        ${sessionVarsStr}
+
+        ${cfg.profileExtra}
 
         # include .bashrc if it exists
         [[ -f ~/.bashrc ]] && . ~/.bashrc
@@ -266,15 +269,6 @@ in
           fi
         ''
       );
-
-      home.file.".profile".source = writeBashScript "profile" ''
-        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
-
-        ${sessionVarsStr}
-
-        ${cfg.profileExtra}
-      '';
-
       home.file.".bashrc".source = writeBashScript "bashrc" ''
         ${cfg.bashrcExtra}
 

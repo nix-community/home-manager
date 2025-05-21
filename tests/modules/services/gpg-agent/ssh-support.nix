@@ -1,4 +1,5 @@
 {
+  programs.sh.enable = true;
   programs.bash.enable = true;
   programs.fish.enable = true;
   programs.nushell.enable = true;
@@ -10,6 +11,10 @@
   };
 
   nmt.script = ''
+    assertFileContains \
+      home-files/.bash_profile \
+      'export SSH_AUTH_SOCK="$(@gnupg@/bin/gpgconf --list-dirs agent-ssh-socket)"'
+
     assertFileContains \
       home-files/.profile \
       'export SSH_AUTH_SOCK="$(@gnupg@/bin/gpgconf --list-dirs agent-ssh-socket)"'
@@ -23,6 +28,9 @@
       home-files/.zshenv \
       'export SSH_AUTH_SOCK="$(@gnupg@/bin/gpgconf --list-dirs agent-ssh-socket)"'
 
+    assertFileContains \
+      home-files/.shinit \
+      '@gnupg@/bin/gpg-connect-agent --quiet updatestartuptty /bye'
     assertFileContains \
       home-files/.bashrc \
       '@gnupg@/bin/gpg-connect-agent --quiet updatestartuptty /bye'
