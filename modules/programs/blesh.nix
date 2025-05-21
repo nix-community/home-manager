@@ -9,8 +9,18 @@ let
   cfg = config.programs.blesh;
   inherit (lib)
     mkEnableOption
+    mkPackageOption
     mkOption
     types
+    isList
+    mapAttrsToList
+    escapeShellArg
+    escapeShellArgs
+    concatStringsSep
+    mkIf
+    mkBefore
+    mkAfter
+    optional
     ;
 in
 {
