@@ -46,4 +46,5 @@ rec {
   mkIonIntegrationOption = mkShellIntegrationOption "Ion";
   mkNushellIntegrationOption = mkShellIntegrationOption "Nushell";
   mkZshIntegrationOption = mkShellIntegrationOption "Zsh";
+  mkShIntegrationOption = mkShellIntegrationOption "POSIX shell";
 }
