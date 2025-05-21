@@ -5,10 +5,13 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.programs.blesh;
+  inherit (lib)
+    mkEnableOption
+    mkOption
+    types
+    ;
 in
 {
   meta.maintainers = [ lib.hm.maintainers.ajhalili2006 ];
