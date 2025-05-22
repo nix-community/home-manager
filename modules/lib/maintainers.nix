@@ -91,6 +91,12 @@
     github = "bamhm182";
     githubId = 920269;
   };
+  bbigras = {
+    name = "bbigras";
+    email = "24027+bbigras@users.noreply.github.com";
+    github = "bbigras";
+    githubId = 24027;
+  };
   bertof = {
     name = "bertof";
     email = "berto.f@protonmail.com";
