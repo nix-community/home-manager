@@ -3,45 +3,42 @@
 {
   programs.sketchybar = {
     enable = true;
-    package = config.lib.test.mkStubPackage { };
+    package = config.lib.test.mkStubPackage {
+      name = "sketchybar";
+      buildScript = ''
+        mkdir -p $out/bin
+        touch $out/bin/sketchybar
+        chmod 755 $out/bin/sketchybar
+      '';
+    };
 
     configType = "bash";
 
-    variables = {
-      PADDING = "3";
-      FONT = "SF Pro";
-      COLOR = "0xff0000ff";
-    };
+    config = ''
+      # Define colors
+      export COLOR_BLACK="0xff181926"
+      export COLOR_WHITE="0xffcad3f5"
 
-    config = {
-      bar = {
-        height = 30;
-        position = "top";
-        padding_left = 10;
-        padding_right = 10;
-      };
+      # Configure bar
+      sketchybar --bar height=32 \
+                      position=top \
+                      padding_left=10 \
+                      padding_right=10 \
+                      color=$COLOR_BLACK
 
-      defaults = {
-        "icon.font" = "$FONT";
-        "icon.color" = "$COLOR";
-        "background.height" = 24;
-      };
-    };
+      # Configure default values
+      sketchybar --default icon.font="SF Pro:Bold:14.0" \
+                          icon.color=$COLOR_WHITE \
+                          label.font="SF Pro:Bold:14.0" \
+                          label.color=$COLOR_WHITE
 
-    plugins = [
-      {
-        name = "clock";
-        placement = "right";
-        script = "./scripts/clock.sh";
-        update_freq = 1;
-      }
-    ];
+      # Add items to the bar
+      sketchybar --add item clock right \
+                --set clock script="date '+%H:%M'" \
+                            update_freq=10
 
-    extraConfig = ''
-      # This is a test configuration
-      sketchybar --add item cpu right \
-                --set cpu script="$PLUGIN_DIR/cpu.sh" \
-                --subscribe cpu system_woke
+      # Update the bar
+      sketchybar --update
     '';
   };
 

@@ -9,7 +9,11 @@ let
     self: super: {
       sketchybar = config.lib.test.mkStubPackage {
         name = "sketchybar";
-        outPath = "/@sketchybar@";
+        buildScript = ''
+          mkdir -p $out/bin
+          touch $out/bin/sketchybar
+          chmod 755 $out/bin/sketchybar
+        '';
       };
       jq = config.lib.test.mkStubPackage { outPath = "/@jq@"; };
     }
@@ -21,23 +25,22 @@ in
     package = hmPkgs.sketchybar;
     configType = "bash";
 
-    variables = {
-      PADDING = "3";
-      FONT = "SF Pro";
-      COLOR = "0xff0000ff";
-    };
+    config = ''
+      #!/usr/bin/env bash
 
-    config.bar = {
-      height = 30;
-      position = "top";
-      padding_left = 10;
-      padding_right = 10;
-    };
+      # Configure bar
+      sketchybar --bar height=30 \
+                      position=top \
+                      padding_left=10 \
+                      padding_right=10
+
+      # Update the bar
+      sketchybar --update
+    '';
 
     # Enable the integrated service
     service = {
       enable = true;
-      extraPackages = [ hmPkgs.jq ];
       errorLogFile = "/home/hm-user/Library/Logs/sketchybar/sketchybar.err.log";
       outLogFile = "/home/hm-user/Library/Logs/sketchybar/sketchybar.out.log";
     };
