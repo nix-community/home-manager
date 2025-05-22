@@ -163,19 +163,12 @@ let
       };
 
       bindswitches = mkOption {
-        type = types.attrsOf (
-          types.attrsOf (
-            types.oneOf [
-              types.str
-              types.bool
-            ]
-          )
-        );
+        type = types.attrsOf bindswitchOption;
         default = { };
         defaultText = "No bindswitches by default";
         description = ''
-          Binds  <switch>  to  execute  the sway command command on state changes. Supported switches are lid (laptop
-          lid) and tablet (tablet mode) switches. Valid values for state are on, off and toggle. These  switches  are
+          Binds <switch> to execute the sway command command on state changes. Supported switches are lid (laptop
+          lid) and tablet (tablet mode) switches. Valid values for state are on, off and toggle. These switches are
           on when the device lid is shut and when tablet mode is active respectively. toggle is also supported to run
           a command both when the switch is toggled on or off.
           See sway(5).
@@ -304,6 +297,42 @@ let
       };
   };
 
+  bindswitchOption = types.submodule {
+    options = {
+      action = mkOption {
+        type = types.str;
+        description = "The sway command to execute on state changes";
+      };
+
+      locked = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Unless the flag --locked is set, the command
+          will not be run when a screen locking program
+          is active. If there is a matching binding with
+          and without --locked, the one with will be preferred
+          when locked and the one without will be
+          preferred when unlocked.
+        '';
+      };
+
+      reload = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          If the --reload flag is given, the binding will
+          also be executed when the config is reloaded.
+          toggle bindings will not be executed on reload.
+          The --locked flag will operate as normal so if
+          the config is reloaded while locked and
+          --locked is not given, the binding will not be
+          executed.
+        '';
+      };
+    };
+  };
+
   commonFunctions = import ./lib/functions.nix {
     inherit config cfg lib;
     moduleName = "sway";
@@ -327,7 +356,11 @@ let
     ;
 
   startupEntryStr =
-    { command, always, ... }:
+    {
+      command,
+      always,
+      ...
+    }:
     ''
       ${if always then "exec_always" else "exec"} ${command}
     '';
@@ -336,13 +369,16 @@ let
     bindswitches:
     concatStringsSep "\n" (
       mapAttrsToList (
-        event: options:
+        event:
+        {
+          locked,
+          reload,
+          action,
+        }:
         let
-          args =
-            (lib.optionalString (builtins.hasAttr "locked" options && options.locked) "--locked ")
-            + (lib.optionalString (builtins.hasAttr "reload" options && options.reload) "--reload ");
+          args = (lib.optionalString locked "--locked ") + (lib.optionalString reload "--reload ");
         in
-        "bindswitch ${args} ${event} ${options.action}"
+        "bindswitch ${args} ${event} ${action}"
       ) bindswitches
     );
 
@@ -430,7 +466,6 @@ let
       ++ [ cfg.extraConfig ]
     );
   };
-
 in
 {
   meta.maintainers = with lib.maintainers; [
