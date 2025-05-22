@@ -1,7 +1,7 @@
 { config, ... }:
 
 {
-  time = "2023-03-16:12:00+00:00";
+  time = "2023-03-16T00:12:00+00:00";
   condition = config.programs.i3status-rust.enable;
   message = ''
 
