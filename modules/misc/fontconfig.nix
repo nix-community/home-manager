@@ -96,19 +96,6 @@ in
       # trying to write to a read-only location.
       (pkgs.runCommandLocal "dummy-fc-dir1" { } "mkdir -p $out/lib/fontconfig")
       (pkgs.runCommandLocal "dummy-fc-dir2" { } "mkdir -p $out/lib/fontconfig")
-      # Provide fontconfig default files from /etc/fonts/
-      (pkgs.runCommand "fontconfig-conf" { } ''
-        dst=$out/etc/fonts/conf.d
-        mkdir -p $dst
-
-        # fonts.conf
-        ln -s ${pkgs.fontconfig.out}/etc/fonts/fonts.conf \
-              $dst/../fonts.conf
-
-        # fontconfig default config files
-        ln -s ${pkgs.fontconfig.out}/etc/fonts/conf.d/*.conf \
-              $dst/
-      '')
     ];
 
     home.extraProfileCommands = ''
