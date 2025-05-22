@@ -136,6 +136,7 @@ let
               else
                 "Service for container ${name}"
             );
+            X-SwitchMethod = "restart";
           };
         } containerDef.extraConfig
       );
