@@ -195,7 +195,7 @@ in
                         | merge ($env.ENV_CONVERSIONS? | default {})
                         | get -i $key
                         | get -i from_string
-                        | default {|x| $x}
+                        | if ($in | is-empty) { {|x| $x} } else { $in }
                     ) $value
                     return [ $key $value ]
                 }
