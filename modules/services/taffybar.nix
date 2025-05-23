@@ -17,13 +17,7 @@ in
     services.taffybar = {
       enable = lib.mkEnableOption "Taffybar";
 
-      package = lib.mkOption {
-        default = pkgs.taffybar;
-        defaultText = lib.literalExpression "pkgs.taffybar";
-        type = lib.types.package;
-        example = lib.literalExpression "pkgs.taffybar";
-        description = "The package to use for the Taffybar binary.";
-      };
+      package = lib.mkPackageOption pkgs "taffybar" { };
     };
   };
 

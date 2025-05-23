@@ -19,12 +19,7 @@ in
   options.services.flameshot = {
     enable = lib.mkEnableOption "Flameshot";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.flameshot;
-      defaultText = lib.literalExpression "pkgs.flameshot";
-      description = "Package providing {command}`flameshot`.";
-    };
+    package = lib.mkPackageOption pkgs "flameshot" { };
 
     settings = lib.mkOption {
       inherit (iniFormat) type;

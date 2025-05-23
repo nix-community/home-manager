@@ -17,14 +17,8 @@ in
     services.xembed-sni-proxy = {
       enable = lib.mkEnableOption "XEmbed SNI Proxy";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.kdePackages.plasma-workspace;
-        defaultText = lib.literalExpression "pkgs.kdePackages.plasma-workspace";
-        description = ''
-          Package containing the {command}`xembedsniproxy`
-          program.
-        '';
+      package = lib.mkPackageOption pkgs.kdePackages "plasma-workspace" {
+        pkgsText = "pkgs.kdePackages";
       };
     };
   };

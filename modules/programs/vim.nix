@@ -152,12 +152,9 @@ in
         readOnly = true;
       };
 
-      packageConfigurable = mkOption {
-        type = types.package;
-        description = "Vim package to customize";
-        default = pkgs.vim-full or pkgs.vim_configurable;
-        defaultText = literalExpression "pkgs.vim-full";
-        example = literalExpression "pkgs.vim";
+      packageConfigurable = lib.mkPackageOption pkgs "vim-full" {
+        extraDescription = "Vim package to customize";
+        example = "pkgs.vim";
       };
 
       defaultEditor = mkOption {

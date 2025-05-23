@@ -15,12 +15,7 @@ in
   options.services.wluma = {
     enable = lib.mkEnableOption "Enable wluma, a service for automatic brightness adjustment";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.wluma;
-      defaultText = lib.literalExpression "pkgs.wluma";
-      description = "Package providing {command}`wluma`.";
-    };
+    package = lib.mkPackageOption pkgs "wluma" { };
 
     settings = lib.mkOption {
       type = format.type;

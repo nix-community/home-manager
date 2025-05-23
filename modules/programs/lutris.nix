@@ -27,13 +27,7 @@ in
 {
   options.programs.lutris = {
     enable = mkEnableOption "lutris.";
-    package = mkOption {
-      default = pkgs.lutris;
-      description = ''
-        The lutris package to use.
-      '';
-      type = types.package;
-    };
+    package = lib.mkPackageOption pkgs "lutris" { };
     steamPackage = mkOption {
       default = null;
       example = "pkgs.steam or osConfig.programs.steam.package";

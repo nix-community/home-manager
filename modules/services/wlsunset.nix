@@ -19,14 +19,7 @@ in
   options.services.wlsunset = {
     enable = lib.mkEnableOption "wlsunset";
 
-    package = mkOption {
-      type = with types; package;
-      default = pkgs.wlsunset;
-      defaultText = "pkgs.wlsunset";
-      description = ''
-        wlsunset derivation to use.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "wlsunset" { };
 
     latitude = mkOption {
       type = with types; nullOr (either str (either float int));

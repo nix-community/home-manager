@@ -15,11 +15,9 @@ in
   options = {
     services.kdeconnect = {
       enable = lib.mkEnableOption "KDE connect";
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.kdePackages.kdeconnect-kde;
-        example = lib.literalExpression "pkgs.plasma5Packages.kdeconnect-kde";
-        description = "The KDE connect package to use";
+      package = lib.mkPackageOption pkgs.kdePackages "kdeconnect-kde" {
+        example = "pkgs.plasma5Packages.kdeconnect-kde";
+        pkgsText = "pkgs.kdePackages";
       };
 
       indicator = lib.mkOption {

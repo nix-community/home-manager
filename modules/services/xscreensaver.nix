@@ -30,12 +30,7 @@ in
         '';
       };
 
-      package = lib.mkOption {
-        type = with lib.types; package;
-        default = pkgs.xscreensaver;
-        defaultText = lib.literalExpression "pkgs.xscreensaver";
-        description = "Which xscreensaver package to use.";
-      };
+      package = lib.mkPackageOption pkgs "xscreensaver" { };
     };
   };
 

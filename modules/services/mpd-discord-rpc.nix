@@ -33,12 +33,7 @@ in
       '';
     };
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.mpd-discord-rpc;
-      defaultText = lib.literalExpression "pkgs.mpd-discord-rpc";
-      description = "mpd-discord-rpc package to use.";
-    };
+    package = lib.mkPackageOption pkgs "mpd-discord-rpc" { };
   };
 
   config = lib.mkIf cfg.enable {

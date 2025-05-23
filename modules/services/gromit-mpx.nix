@@ -139,12 +139,7 @@ in
   options.services.gromit-mpx = {
     enable = lib.mkEnableOption "Gromit-MPX annotation tool";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.gromit-mpx;
-      defaultText = "pkgs.gromit-mpx";
-      description = "The gromit-mpx package to use.";
-    };
+    package = lib.mkPackageOption pkgs "gromit-mpx" { };
 
     hotKey = mkOption {
       type = with types; nullOr (either str ints.positive);

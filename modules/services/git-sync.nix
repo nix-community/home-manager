@@ -121,14 +121,7 @@ in
     services.git-sync = {
       enable = lib.mkEnableOption "git-sync services";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.git-sync;
-        defaultText = literalExpression "pkgs.git-sync";
-        description = ''
-          Package containing the {command}`git-sync` program.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "git-sync" { };
 
       repositories = mkOption {
         type = with types; attrsOf repositoryType;

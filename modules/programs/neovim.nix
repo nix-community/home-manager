@@ -48,9 +48,10 @@ let
         description = "Don't load by default (load with :packadd)";
       };
 
-      plugin = mkOption {
-        type = types.package;
-        description = "vim plugin";
+      plugin = lib.mkPackageOption pkgs.vimPlugins "plugin" {
+        default = null;
+        example = "pkgs.vimPlugins.nvim-treesitter";
+        pkgsText = "pkgs.vimPlugins";
       };
 
       runtime = mkOption {

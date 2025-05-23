@@ -79,7 +79,9 @@
       wf-shell = {
         enable = lib.mkEnableOption "Manage wf-shell Configuration";
 
-        package = lib.mkPackageOption pkgs.wayfirePlugins "wf-shell" { };
+        package = lib.mkPackageOption pkgs.wayfirePlugins "wf-shell" {
+          pkgsText = "pkgs.wayfirePlugins";
+        };
 
         settings = lib.mkOption {
           type = configIniType;

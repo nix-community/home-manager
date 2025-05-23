@@ -44,12 +44,7 @@ in
     notifications = mkEnableOption "song change notifications";
     multimediaKeys = mkEnableOption "multimedia key support";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.mpdris2;
-      defaultText = lib.literalExpression "pkgs.mpdris2";
-      description = "The mpDris2 package to use.";
-    };
+    package = lib.mkPackageOption pkgs "mpdris2" { };
 
     mpd = {
       host = mkOption {

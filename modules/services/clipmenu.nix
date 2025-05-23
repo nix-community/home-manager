@@ -15,12 +15,7 @@ in
   options.services.clipmenu = {
     enable = lib.mkEnableOption "clipmenu, the clipboard management daemon";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.clipmenu;
-      defaultText = "pkgs.clipmenu";
-      description = "clipmenu derivation to use.";
-    };
+    package = lib.mkPackageOption pkgs "clipmenu" { };
 
     launcher = mkOption {
       type = types.nullOr types.str;

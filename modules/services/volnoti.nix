@@ -20,14 +20,7 @@ in
     services.volnoti = {
       enable = lib.mkEnableOption "Volnoti volume HUD daemon";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.volnoti;
-        defaultText = lib.literalExpression "pkgs.volnoti";
-        description = ''
-          Package containing the {command}`volnoti` program.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "volnoti" { };
     };
   };
 

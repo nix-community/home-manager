@@ -21,13 +21,7 @@ in
   options.services.mbsync = {
     enable = lib.mkEnableOption "mbsync";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.isync;
-      defaultText = lib.literalExpression "pkgs.isync";
-      example = lib.literalExpression "pkgs.isync";
-      description = "The package to use for the mbsync binary.";
-    };
+    package = lib.mkPackageOption pkgs "isync" { };
 
     frequency = mkOption {
       type = types.str;
