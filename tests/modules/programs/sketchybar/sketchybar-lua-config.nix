@@ -63,7 +63,6 @@ in
       sbar:update()'';
   };
 
-  # Validate the generated Lua configuration file
   nmt.script = ''
     assertFileContent \
       home-files/.config/sketchybar/sketchybarrc \
