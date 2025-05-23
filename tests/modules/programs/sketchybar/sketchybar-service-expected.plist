@@ -9,7 +9,7 @@
 	<key>ProcessType</key>
 	<string>Interactive</string>
 	<key>Program</key>
-	<string>/@sketchybar@/bin/sketchybar</string>
+	<string>/nix/store/00000000000000000000000000000000-sketchybar/bin/sketchybar</string>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>StandardErrorPath</key>

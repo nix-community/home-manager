@@ -38,7 +38,6 @@ in
       sketchybar --update
     '';
 
-    # Enable the integrated service
     service = {
       enable = true;
       errorLogFile = "/home/hm-user/Library/Logs/sketchybar/sketchybar.err.log";
@@ -46,16 +45,12 @@ in
     };
   };
 
-  # Change home directory for the test
   home.homeDirectory = "/home/hm-user";
 
-  # Validate the generated config files
   nmt.script = ''
-    # Verify config file exists
     assertFileExists home-files/.config/sketchybar/sketchybarrc
 
-    # Verify service file exists and matches expected content
-    serviceFile=LaunchAgents/org.nix-community.home.sketchybar.plist
+    serviceFile=$(normalizeStorePaths LaunchAgents/org.nix-community.home.sketchybar.plist)
     assertFileExists "$serviceFile"
     assertFileContent "$serviceFile" ${./sketchybar-service-expected.plist}
   '';
