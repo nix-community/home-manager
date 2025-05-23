@@ -201,7 +201,7 @@ in
     );
 
     # Generate meli configuration from email accounts
-    home.file.".config/meli/config.toml".source = (pkgs.formats.toml { }).generate "meli-config" (
+    xdg.configFile."meli/config.toml".source = (pkgs.formats.toml { }).generate "meli-config" (
       # Account Settings
       {
         accounts = meliAccounts;
