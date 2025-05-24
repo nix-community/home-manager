@@ -21,13 +21,7 @@ in
     services.stalonetray = {
       enable = lib.mkEnableOption "Stalonetray system tray";
 
-      package = mkOption {
-        default = pkgs.stalonetray;
-        defaultText = literalExpression "pkgs.stalonetray";
-        type = types.package;
-        example = literalExpression "pkgs.stalonetray";
-        description = "The package to use for the Stalonetray binary.";
-      };
+      package = lib.mkPackageOption pkgs "stalonetray" { };
 
       config = mkOption {
         type = with types; attrsOf (nullOr (either str (either bool int)));

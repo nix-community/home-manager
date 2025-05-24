@@ -24,12 +24,8 @@ in
       '';
     };
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.parcellite;
-      defaultText = lib.literalExpression "pkgs.parcellite";
-      example = lib.literalExpression "pkgs.clipit";
-      description = "Parcellite derivation to use.";
+    package = lib.mkPackageOption pkgs "parcellite" {
+      example = "pkgs.clipit";
     };
   };
 

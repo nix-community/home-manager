@@ -33,16 +33,12 @@ in
       '';
     };
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.avizo;
-      defaultText = lib.literalExpression "pkgs.avizo";
-      example = lib.literalExpression ''
+    package = lib.mkPackageOption pkgs "avizo" {
+      example = ''
         pkgs.avizo.overrideAttrs (final: prev: {
           patchPhase = "cp ''${./images}/*.png data/images/";
         })
       '';
-      description = "The `avizo` package to use.";
     };
   };
 

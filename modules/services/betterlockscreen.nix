@@ -14,12 +14,7 @@ in
     services.betterlockscreen = {
       enable = lib.mkEnableOption "betterlockscreen, a screen-locker module";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.betterlockscreen;
-        defaultText = lib.literalExpression "pkgs.betterlockscreen";
-        description = "Package providing {command}`betterlockscreen`.";
-      };
+      package = lib.mkPackageOption pkgs "betterlockscreen" { };
 
       arguments = lib.mkOption {
         type = lib.types.listOf lib.types.str;

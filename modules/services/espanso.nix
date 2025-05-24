@@ -57,12 +57,7 @@ in
     services.espanso = {
       enable = mkEnableOption "Espanso: cross platform text expander in Rust";
 
-      package = mkOption {
-        type = types.package;
-        description = "Which espanso package to use";
-        default = pkgs.espanso;
-        defaultText = literalExpression "pkgs.espanso";
-      };
+      package = lib.mkPackageOption pkgs "espanso" { };
 
       package-wayland =
         mkPackageOption pkgs "espanso-wayland" {

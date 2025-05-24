@@ -15,12 +15,8 @@ in
     services.status-notifier-watcher = {
       enable = lib.mkEnableOption "Status Notifier Watcher";
 
-      package = lib.mkOption {
-        default = pkgs.haskellPackages.status-notifier-item;
-        defaultText = lib.literalExpression "pkgs.haskellPackages.status-notifier-item";
-        type = lib.types.package;
-        example = lib.literalExpression "pkgs.haskellPackages.status-notifier-item";
-        description = "The package to use for the status notifier watcher binary.";
+      package = lib.mkPackageOption pkgs.haskellPackages "status-notifier-item" {
+        pkgsText = "pkgs.haskellPackages";
       };
     };
   };

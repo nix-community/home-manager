@@ -14,12 +14,7 @@ in
     services.nextcloud-client = {
       enable = lib.mkEnableOption "Nextcloud Client";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.nextcloud-client;
-        defaultText = lib.literalExpression "pkgs.nextcloud-client";
-        description = "The package to use for the nextcloud client binary.";
-      };
+      package = lib.mkPackageOption pkgs "nextcloud-client" { };
 
       startInBackground = lib.mkOption {
         type = lib.types.bool;

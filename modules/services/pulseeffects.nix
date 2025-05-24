@@ -23,12 +23,7 @@ in
       ```
       to your system configuration for the daemon to work correctly'';
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.pulseeffects-legacy;
-      defaultText = lib.literalExpression "pkgs.pulseeffects-legacy";
-      description = "Pulseeffects package to use.";
-    };
+    package = lib.mkPackageOption pkgs "pulseeffects-legacy" { };
 
     preset = lib.mkOption {
       type = lib.types.str;

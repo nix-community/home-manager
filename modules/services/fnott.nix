@@ -22,12 +22,7 @@ in
         fnott, a lightweight Wayland notification daemon for wlroots-based compositors
       '';
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.fnott;
-        defaultText = lib.literalExpression "pkgs.fnott";
-        description = "Package providing {command}`fnott`.";
-      };
+      package = lib.mkPackageOption pkgs "fnott" { };
 
       extraFlags = mkOption {
         type = types.listOf types.str;

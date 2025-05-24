@@ -120,13 +120,7 @@ in
     services.trayer = {
       enable = lib.mkEnableOption "trayer, the lightweight GTK2+ systray for UNIX desktops";
 
-      package = lib.mkOption {
-        default = pkgs.trayer;
-        defaultText = lib.literalExpression "pkgs.trayer";
-        type = types.package;
-        example = lib.literalExpression "pkgs.trayer";
-        description = "The package to use for the trayer binary.";
-      };
+      package = lib.mkPackageOption pkgs "trayer" { };
 
       settings = lib.mkOption {
         type = with types; attrsOf (nullOr (either str (either bool int)));

@@ -19,12 +19,7 @@ in
   options.services.etesync-dav = {
     enable = lib.mkEnableOption "etesync-dav";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.etesync-dav;
-      defaultText = "pkgs.etesync-dav";
-      description = "The etesync-dav derivation to use.";
-    };
+    package = lib.mkPackageOption pkgs "etesync-dav" { };
 
     serverUrl = mkOption {
       type = types.str;

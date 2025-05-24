@@ -16,12 +16,7 @@ in
     services.pantalaimon = {
       enable = lib.mkEnableOption "Pantalaimon, an E2EE aware proxy daemon for matrix clients";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.pantalaimon;
-        defaultText = lib.literalExpression "pkgs.pantalaimon";
-        description = "Package providing the {command}`pantalaimon` executable to use.";
-      };
+      package = lib.mkPackageOption pkgs "pantalaimon" { };
 
       settings = lib.mkOption {
         type = iniFmt.type;

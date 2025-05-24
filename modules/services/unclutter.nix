@@ -19,12 +19,7 @@ in
 
     enable = lib.mkEnableOption "unclutter";
 
-    package = mkOption {
-      description = "unclutter derivation to use.";
-      type = types.package;
-      default = pkgs.unclutter-xfixes;
-      defaultText = lib.literalExpression "pkgs.unclutter-xfixes";
-    };
+    package = lib.mkPackageOption pkgs "unclutter-xfixes" { };
 
     timeout = mkOption {
       description = "Number of seconds before the cursor is marked inactive.";

@@ -37,14 +37,7 @@ in
     services.xsettingsd = {
       enable = lib.mkEnableOption "xsettingsd";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.xsettingsd;
-        defaultText = literalExpression "pkgs.xsettingsd";
-        description = ''
-          Package containing the {command}`xsettingsd` program.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "xsettingsd" { };
 
       settings = mkOption {
         type =

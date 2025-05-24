@@ -16,14 +16,7 @@ in
     services.notify-osd = {
       enable = lib.mkEnableOption "notify-osd";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.notify-osd;
-        defaultText = lib.literalExpression "pkgs.notify-osd";
-        description = ''
-          Package containing the {command}`notify-osd` program.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "notify-osd" { };
     };
   };
 

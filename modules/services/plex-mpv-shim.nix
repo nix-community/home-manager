@@ -17,12 +17,7 @@ in
     services.plex-mpv-shim = {
       enable = lib.mkEnableOption "Plex mpv shim";
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default = pkgs.plex-mpv-shim;
-        defaultText = lib.literalExpression "pkgs.plex-mpv-shim";
-        description = "The package to use for the Plex mpv shim.";
-      };
+      package = lib.mkPackageOption pkgs "plex-mpv-shim" { };
 
       settings = lib.mkOption {
         type = jsonFormat.type;

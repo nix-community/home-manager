@@ -295,15 +295,7 @@ in
       '';
     };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.picom;
-      defaultText = literalExpression "pkgs.picom";
-      example = literalExpression "pkgs.picom";
-      description = ''
-        Picom derivation to use.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "picom" { };
 
     settings =
       with types;

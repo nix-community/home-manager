@@ -126,12 +126,8 @@ in
     services.imapnotify = {
       enable = lib.mkEnableOption "imapnotify";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.goimapnotify;
-        defaultText = lib.literalExpression "pkgs.goimapnotify";
-        example = lib.literalExpression "pkgs.imapnotify";
-        description = "The imapnotify package to use";
+      package = lib.mkPackageOption pkgs "goimapnotify" {
+        example = "pkgs.imapnotify";
       };
 
       path = mkOption {
