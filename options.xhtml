@@ -47055,6 +47055,962 @@ list of package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.obsidian.enable"></a><a class="term" href="options.xhtml#opt-programs.obsidian.enable"><code class="option">programs.obsidian.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable obsidian.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.package"></a><a class="term" href="options.xhtml#opt-programs.obsidian.package"><code class="option">programs.obsidian.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The obsidian package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.obsidian</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.defaultSettings.app"></a><a class="term" href="options.xhtml#opt-programs.obsidian.defaultSettings.app"><code class="option">programs.obsidian.defaultSettings.app</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings to write to <code class="literal">app.json</code>.</p><p>Vault-specific settings take priority and will override these, if set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+raw value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.defaultSettings.appearance"></a><a class="term" href="options.xhtml#opt-programs.obsidian.defaultSettings.appearance"><code class="option">programs.obsidian.defaultSettings.appearance</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings to write to <code class="literal">appearance.json</code>.</p><p>Vault-specific settings take priority and will override these, if set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+raw value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.defaultSettings.communityPlugins"></a><a class="term" href="options.xhtml#opt-programs.obsidian.defaultSettings.communityPlugins"><code class="option">programs.obsidian.defaultSettings.communityPlugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<pre><code class="programlisting">      Community plugins to install and activate.
+
+      Vault-specific settings take priority and will override these, if set.
+</code></pre>
+
+<p><span class="emphasis"><em>Type:</em></span>
+raw value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.defaultSettings.corePlugins"></a><a class="term" href="options.xhtml#opt-programs.obsidian.defaultSettings.corePlugins"><code class="option">programs.obsidian.defaultSettings.corePlugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Core plugins to activate.</p><p>Vault-specific settings take priority and will override these, if set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+raw value</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;backlink&quot;
+  &quot;bookmarks&quot;
+  &quot;canvas&quot;
+  &quot;command-palette&quot;
+  &quot;daily-notes&quot;
+  &quot;editor-status&quot;
+  &quot;file-explorer&quot;
+  &quot;file-recovery&quot;
+  &quot;global-search&quot;
+  &quot;graph&quot;
+  &quot;note-composer&quot;
+  &quot;outgoing-link&quot;
+  &quot;outline&quot;
+  &quot;page-preview&quot;
+  &quot;switcher&quot;
+  &quot;tag-pane&quot;
+  &quot;templates&quot;
+  &quot;word-count&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.defaultSettings.cssSnippets"></a><a class="term" href="options.xhtml#opt-programs.obsidian.defaultSettings.cssSnippets"><code class="option">programs.obsidian.defaultSettings.cssSnippets</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<pre><code class="programlisting">      CSS snippets to install.
+
+      Vault-specific settings take priority and will override these, if set.
+</code></pre>
+
+<p><span class="emphasis"><em>Type:</em></span>
+raw value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.defaultSettings.extraFiles"></a><a class="term" href="options.xhtml#opt-programs.obsidian.defaultSettings.extraFiles"><code class="option">programs.obsidian.defaultSettings.extraFiles</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<pre><code class="programlisting">      Extra files to link to the vault directory.
+
+      Vault-specific settings take priority and will override these, if set.
+</code></pre>
+
+<p><span class="emphasis"><em>Type:</em></span>
+raw value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.defaultSettings.hotkeys"></a><a class="term" href="options.xhtml#opt-programs.obsidian.defaultSettings.hotkeys"><code class="option">programs.obsidian.defaultSettings.hotkeys</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<pre><code class="programlisting">      Hotkeys to configure.
+
+      Vault-specific settings take priority and will override these, if set.
+</code></pre>
+
+<p><span class="emphasis"><em>Type:</em></span>
+raw value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.defaultSettings.themes"></a><a class="term" href="options.xhtml#opt-programs.obsidian.defaultSettings.themes"><code class="option">programs.obsidian.defaultSettings.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<pre><code class="programlisting">      Themes to install.
+
+      Vault-specific settings take priority and will override these, if set.
+</code></pre>
+
+<p><span class="emphasis"><em>Type:</em></span>
+raw value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults"><code class="option">programs.obsidian.vaults</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of vaults to create.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.enable"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.enable"><code class="option">programs.obsidian.vaults.&lt;name&gt;.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether this vault should be generated.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.app"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.app"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.app</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings to write to app.json.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of anything</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.appearance"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.appearance"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.appearance</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings to write to appearance.json.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of anything</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.communityPlugins"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.communityPlugins"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.communityPlugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Community plugins to install and activate.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of ((submodule) or package convertible to it)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.communityPlugins._.enable"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.communityPlugins._.enable"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.communityPlugins.*.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the plugin.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.communityPlugins._.pkg"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.communityPlugins._.pkg"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.communityPlugins.*.pkg</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The plugin package.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.communityPlugins._.settings"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.communityPlugins._.settings"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.communityPlugins.*.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings to include in the plugin’s <code class="literal">data.json</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of anything</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.corePlugins"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.corePlugins"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.corePlugins</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Core plugins to activate.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of ((submodule) or (one of “audio-recorder”, “backlink”, “bookmarks”, “canvas”, “command-palette”, “daily-notes”, “editor-status”, “file-explorer”, “file-recovery”, “global-search”, “graph”, “markdown-importer”, “note-composer”, “outgoing-link”, “outline”, “page-preview”, “properties”, “publish”, “random-note”, “slash-command”, “slides”, “switcher”, “sync”, “tag-pane”, “templates”, “word-count”, “workspaces”, “zk-prefixer”) convertible to it)</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;backlink&quot;
+  &quot;bookmarks&quot;
+  &quot;canvas&quot;
+  &quot;command-palette&quot;
+  &quot;daily-notes&quot;
+  &quot;editor-status&quot;
+  &quot;file-explorer&quot;
+  &quot;file-recovery&quot;
+  &quot;global-search&quot;
+  &quot;graph&quot;
+  &quot;note-composer&quot;
+  &quot;outgoing-link&quot;
+  &quot;outline&quot;
+  &quot;page-preview&quot;
+  &quot;switcher&quot;
+  &quot;tag-pane&quot;
+  &quot;templates&quot;
+  &quot;word-count&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.corePlugins._.enable"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.corePlugins._.enable"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.corePlugins.*.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the plugin.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.corePlugins._.name"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.corePlugins._.name"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.corePlugins.*.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The plugin.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “audio-recorder”, “backlink”, “bookmarks”, “canvas”, “command-palette”, “daily-notes”, “editor-status”, “file-explorer”, “file-recovery”, “global-search”, “graph”, “markdown-importer”, “note-composer”, “outgoing-link”, “outline”, “page-preview”, “properties”, “publish”, “random-note”, “slash-command”, “slides”, “switcher”, “sync”, “tag-pane”, “templates”, “word-count”, “workspaces”, “zk-prefixer”</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.corePlugins._.settings"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.corePlugins._.settings"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.corePlugins.*.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Plugin settings to include.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of anything</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.cssSnippets"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.cssSnippets"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.cssSnippets</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>CSS snippets to install.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of ((submodule) or absolute path convertible to it)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.cssSnippets._.enable"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.cssSnippets._.enable"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.cssSnippets.*.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the snippet.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.cssSnippets._.name"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.cssSnippets._.name"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.cssSnippets.*.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Name of the snippet.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">lib.strings.removeSuffix &quot;.css&quot; (builtins.baseNameOf source)</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.cssSnippets._.source"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.cssSnippets._.source"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.cssSnippets.*.source</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path of the source file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.cssSnippets._.text"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.cssSnippets._.text"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.cssSnippets.*.text</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Text of the file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.extraFiles"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.extraFiles"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.extraFiles</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra files to link to the vault directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.extraFiles._name_.source"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.extraFiles._name_.source"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.extraFiles.&lt;name&gt;.source</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path of the source file or directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.extraFiles._name_.target"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.extraFiles._name_.target"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.extraFiles.&lt;name&gt;.target</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to target relative to the vault’s directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">name</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.extraFiles._name_.text"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.extraFiles._name_.text"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.extraFiles.&lt;name&gt;.text</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Text of the file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.hotkeys"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.hotkeys"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.hotkeys</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Hotkeys to configure.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of list of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.hotkeys._name_._.key"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.hotkeys._name_._.key"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.hotkeys.&lt;name&gt;.*.key</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The hotkey.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.hotkeys._name_._.modifiers"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.hotkeys._name_._.modifiers"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.hotkeys.&lt;name&gt;.*.modifiers</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The hotkey modifiers.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.themes"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.themes"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.themes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Themes to install.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of ((submodule) or package convertible to it)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.themes._.enable"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.themes._.enable"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.themes.*.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to set the theme as active.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.settings.themes._.pkg"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.settings.themes._.pkg"><code class="option">programs.obsidian.vaults.&lt;name&gt;.settings.themes.*.pkg</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The theme package.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.obsidian.vaults._name_.target"></a><a class="term" href="options.xhtml#opt-programs.obsidian.vaults._name_.target"><code class="option">programs.obsidian.vaults.&lt;name&gt;.target</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to target vault relative to the user’s <code class="envar">HOME</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">name</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/obsidian.nix" target="_top">
+&lt;home-manager/modules/programs/obsidian.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.octant.enable"></a><a class="term" href="options.xhtml#opt-programs.octant.enable"><code class="option">programs.octant.enable</code>
   </a>
  </span>
