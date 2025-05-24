@@ -93884,6 +93884,187 @@ string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.wayvnc.enable"></a><a class="term" href="options.xhtml#opt-services.wayvnc.enable"><code class="option">services.wayvnc.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable wayvnc VNC server.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wayvnc.nix" target="_top">
+&lt;home-manager/modules/services/wayvnc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wayvnc.package"></a><a class="term" href="options.xhtml#opt-services.wayvnc.package"><code class="option">services.wayvnc.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The wayvnc package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.wayvnc</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wayvnc.nix" target="_top">
+&lt;home-manager/modules/services/wayvnc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wayvnc.autoStart"></a><a class="term" href="options.xhtml#opt-services.wayvnc.autoStart"><code class="option">services.wayvnc.autoStart</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable autostarting of wayvnc.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wayvnc.nix" target="_top">
+&lt;home-manager/modules/services/wayvnc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wayvnc.settings"></a><a class="term" href="options.xhtml#opt-services.wayvnc.settings"><code class="option">services.wayvnc.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>See CONFIGURATION section in <span class="citerefentry"><span class="refentrytitle">wayvnc</span>(1)</span>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  address = &quot;0.0.0.0&quot;;
+  port = 5901;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wayvnc.nix" target="_top">
+&lt;home-manager/modules/services/wayvnc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wayvnc.settings.address"></a><a class="term" href="options.xhtml#opt-services.wayvnc.settings.address"><code class="option">services.wayvnc.settings.address</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The address to which the server shall bind, e.g. 0.0.0.0 or
+localhost.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;0.0.0.0&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wayvnc.nix" target="_top">
+&lt;home-manager/modules/services/wayvnc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wayvnc.settings.port"></a><a class="term" href="options.xhtml#opt-services.wayvnc.settings.port"><code class="option">services.wayvnc.settings.port</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The port to which the server shall bind.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">5901</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wayvnc.nix" target="_top">
+&lt;home-manager/modules/services/wayvnc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.wayvnc.systemdTarget"></a><a class="term" href="options.xhtml#opt-services.wayvnc.systemdTarget"><code class="option">services.wayvnc.systemdTarget</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Systemd target to bind to.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">config.wayland.systemd.target</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/wayvnc.nix" target="_top">
+&lt;home-manager/modules/services/wayvnc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.wlsunset.enable"></a><a class="term" href="options.xhtml#opt-services.wlsunset.enable"><code class="option">services.wlsunset.enable</code>
   </a>
  </span>
