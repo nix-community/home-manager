@@ -579,6 +579,12 @@
     github = "mtoohey31";
     githubId = 36740602;
   };
+  munsman = {
+    name = "Hendrik Munske";
+    email = "munsman.github@gmail.com";
+    github = "munsman";
+    githubId = 48153666;
+  };
   n-hass = {
     name = "Nicholas Hassan";
     email = "nick@hassan.host";
