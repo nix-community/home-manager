@@ -1,0 +1,11 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=/nix/store/00000000000000000000000000000000-dummy/bin/dummy
+
+[Unit]
+After=graphical-session.target
+Description=wayvnc VNC server
+Documentation=man:wayvnc(1)
+PartOf=graphical-session.target

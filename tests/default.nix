@@ -496,6 +496,7 @@ import nmtSrc {
       ./modules/services/udiskie
       ./modules/services/volnoti
       ./modules/services/way-displays
+      ./modules/services/wayvnc
       ./modules/services/window-managers/bspwm
       ./modules/services/window-managers/herbstluftwm
       ./modules/services/window-managers/hyprland

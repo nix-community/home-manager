@@ -470,6 +470,7 @@ let
       ./services/vdirsyncer.nix
       ./services/volnoti.nix
       ./services/way-displays.nix
+      ./services/wayvnc.nix
       ./services/window-managers/awesome.nix
       ./services/window-managers/bspwm/default.nix
       ./services/window-managers/fluxbox.nix

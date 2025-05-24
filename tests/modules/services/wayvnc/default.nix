@@ -1,0 +1,3 @@
+{
+  wayvnc-simple = ./simple.nix;
+}
