@@ -5,4 +5,5 @@
   fish-no-functions = ./no-functions.nix;
   fish-plugins = ./plugins.nix;
   fish-manpage = ./manpage.nix;
+  fish-binds = ./binds.nix;
 }

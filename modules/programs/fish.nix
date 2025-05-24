@@ -10,6 +10,7 @@ let
     literalExpression
     mkIf
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -211,6 +212,57 @@ let
     };
   };
 
+  bindModule = types.submodule {
+    options = {
+      enable = mkEnableOption "enable the bind" // {
+        default = true;
+      };
+      mode = mkOption {
+        description = "Specify the bind mode that the bind is used in";
+        type =
+          with types;
+          nullOr (enum [
+            "default"
+            "insert"
+            "paste"
+          ]);
+        default = null;
+      };
+      command = mkOption {
+        description = "command that will be execute";
+        type =
+          with types;
+          oneOf [
+            str
+            (listOf str)
+          ];
+      };
+      setsMode = mkOption {
+        description = "Change current mode after bind is executed";
+        type =
+          with types;
+          nullOr (enum [
+            "default"
+            "insert"
+            "paste"
+          ]);
+        default = null;
+      };
+      erase = mkEnableOption "remove bind";
+      silent = mkEnableOption "Operate silently";
+      operate = mkOption {
+        description = "Operate on preset bindings or user bindings";
+        type =
+          with types;
+          nullOr (enum [
+            "preset"
+            "user"
+          ]);
+        default = null;
+      };
+    };
+  };
+
   abbrsStr = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (
       name: def:
@@ -249,6 +301,44 @@ let
 
   aliasesStr = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (k: v: "alias ${k} ${lib.escapeShellArg v}") cfg.shellAliases
+  );
+
+  filteredBinds = lib.filterAttrs (_: { enable, ... }: enable) cfg.binds;
+
+  bindsStr = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (
+      k:
+      {
+        silent,
+        erase,
+        operate,
+        mode,
+        setsMode,
+        command,
+        ...
+      }:
+      let
+        opts =
+          lib.optionals silent [ "-s" ]
+          ++ (
+            if erase then
+              [ "-e" ]
+            else
+              lib.optionals (!isNull operate) [ "--${operate}" ]
+              ++ lib.optionals (!isNull mode) [
+                "--mode"
+                mode
+              ]
+              ++ lib.optionals (!isNull setsMode) [
+                "--sets-mode"
+                setsMode
+              ]
+          );
+      in
+      lib.concatStringsSep " " (
+        [ "bind" ] ++ opts ++ [ k ] ++ map lib.escapeShellArg (lib.flatten [ command ])
+      )
+    ) filteredBinds
   );
 
   fishIndent =
@@ -334,6 +424,20 @@ in
           If enabled, abbreviations will be preferred over aliases when
           other modules define aliases for fish.
         '';
+      };
+
+      binds = mkOption {
+        type = types.attrsOf bindModule;
+        default = { };
+        description = "Manage key bindings";
+        example =
+          lib.literalExpression # nix
+            ''
+              {
+                "alt-s".command = "fish_commandline_prepend sudo";
+                "alt-shift-b".command = "fish_commandline_append bat";
+              }
+            '';
       };
 
       shellInit = mkOption {
@@ -527,6 +631,10 @@ in
           '';
         }
       ))
+
+      (mkIf (filteredBinds != { }) {
+        programs.fish.functions.fish_user_key_bindings = bindsStr;
+      })
 
       {
         xdg.configFile."fish/config.fish".source = fishIndent "config.fish" ''
