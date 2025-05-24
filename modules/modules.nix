@@ -266,6 +266,7 @@ let
       ./programs/senpai.nix
       ./programs/sesh.nix
       ./programs/sftpman.nix
+      ./programs/sh.nix
       ./programs/sioyek.nix
       ./programs/skim.nix
       ./programs/sm64ex.nix

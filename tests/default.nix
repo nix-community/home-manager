@@ -290,6 +290,7 @@ import nmtSrc {
       ./modules/programs/senpai
       ./modules/programs/sesh
       ./modules/programs/sftpman
+      ./modules/programs/sh
       ./modules/programs/sioyek
       ./modules/programs/sm64ex
       ./modules/programs/smug
