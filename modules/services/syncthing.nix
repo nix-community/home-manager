@@ -108,93 +108,80 @@ let
 
       ${curlShellFunction}
     ''
-    +
-
-      /*
-        Syncthing's rest API for the folders and devices is almost identical.
-        Hence we iterate them using lib.pipe and generate shell commands for both at
-        the same time.
-      */
-      (lib.pipe
-        {
-          # The attributes below are the only ones that are different for devices /
-          # folders.
-          devs = {
-            new_conf_IDs = map (v: v.id) devices;
-            GET_IdAttrName = "deviceID";
-            override = cfg.overrideDevices;
-            conf = devices;
-            baseAddress = curlAddressArgs "/rest/config/devices";
-          };
-          dirs = {
-            new_conf_IDs = map (v: v.id) folders;
-            GET_IdAttrName = "id";
-            override = cfg.overrideFolders;
-            conf = folders;
-            baseAddress = curlAddressArgs "/rest/config/folders";
-          };
-        }
-        [
-          # Now for each of these attributes, write the curl commands that are
-          # identical to both folders and devices.
-          (lib.mapAttrs (
-            conf_type: s:
-            # We iterate the `conf` list now, and run a curl -X POST command for each, that
-            # should update that device/folder only.
-            lib.pipe s.conf [
-              # Quoting https://docs.syncthing.net/rest/config.html:
-              #
-              # > PUT takes an array and POST a single object. In both cases if a
-              # given folder/device already exists, it’s replaced, otherwise a new
-              # one is added.
-              #
-              # What's not documented, is that using PUT will remove objects that
-              # don't exist in the array given. That's why we use here `POST`, and
-              # only if s.override == true then we DELETE the relevant folders
-              # afterwards.
-              (map (new_cfg: ''
-                curl -d ${lib.escapeShellArg (builtins.toJSON new_cfg)} -X POST ${s.baseAddress}
-              ''))
-              (lib.concatStringsSep "\n")
-            ]
-            /*
-              If we need to override devices/folders, we iterate all currently configured
-              IDs, via another `curl -X GET`, and we delete all IDs that are not part of
-              the Nix configured list of IDs
-            */
-            + lib.optionalString s.override ''
-              stale_${conf_type}_ids="$(curl -X GET ${s.baseAddress} | ${jq} \
-                --argjson new_ids ${lib.escapeShellArg (builtins.toJSON s.new_conf_IDs)} \
-                --raw-output \
-                '[.[].${s.GET_IdAttrName}] - $new_ids | .[]'
-              )"
-              for id in ''${stale_${conf_type}_ids}; do
-                curl -X DELETE ${s.baseAddress}/$id
-              done
-            ''
-          ))
-          builtins.attrValues
-          (lib.concatStringsSep "\n")
-        ]
-      )
-    +
-      /*
-        Now we update the other settings defined in cleanedConfig which are not
-        "folders" or "devices".
-      */
-      (lib.pipe cleanedConfig [
-        builtins.attrNames
-        (lib.subtractLists [
-          "folders"
-          "devices"
-        ])
-        (map (subOption: ''
-          curl -X PUT -d ${
-            lib.escapeShellArg (builtins.toJSON cleanedConfig.${subOption})
-          } ${curlAddressArgs "/rest/config/${subOption}"}
-        ''))
-        (lib.concatStringsSep "\n")
+    # We iterate the devices and run a curl -X POST command for each, to update that device only.
+    #
+    # Quoting https://docs.syncthing.net/rest/config.html:
+    #
+    # > PUT takes an array and POST a single object. In both cases if a
+    # given device already exists, it’s replaced, otherwise a new
+    # one is added.
+    #
+    # What's not documented, is that using PUT will remove objects that
+    # don't exist in the array given. That's why we use here `POST`, and
+    # only if cfg.overrideDevices == true then we DELETE the relevant devices
+    # afterwards.
+    + lib.pipe devices [
+      (map (new_device_cfg: ''
+        curl -d ${lib.escapeShellArg (builtins.toJSON new_device_cfg)} -X POST ${curlAddressArgs "/rest/config/devices"}
+      ''))
+      (lib.concatStringsSep "\n")
+    ]
+    # If we need to override devices, we iterate all currently configured
+    # IDs, via another `curl -X GET`, and we delete all IDs that are not part of
+    # the Nix configured list of IDs
+    + lib.optionalString cfg.overrideDevices ''
+      stale_devs_ids="$(curl -X GET ${curlAddressArgs "/rest/config/devices"} | ${jq} \
+        --argjson new_ids ${lib.escapeShellArg (builtins.toJSON (map (v: v.id) devices))} \
+        --raw-output \
+        '[.[].deviceID] - $new_ids | .[]'
+      )"
+      for id in ''${stale_devs_ids}; do
+        curl -X DELETE ${curlAddressArgs "/rest/config/devices/$id"}
+      done
+    ''
+    # Folders are updated in a similar way as devices, but we read encryption password from
+    # a file if it is given.
+    + lib.pipe folders [
+      (map (
+        new_folder_cfg:
+        let
+          jqExec = "${pkgs.jq}/bin/jq";
+        in
+        ''
+          devices=$(${jqExec} -c '.[] | .' <<< ${lib.escapeShellArg (builtins.toJSON new_folder_cfg.devices)} | while read line ; do if ${jqExec} -e 'has("encryptionPasswordFile")' >/dev/null <<< "$line"; then passwordFile=$(echo "$line" | ${jqExec} -c --raw-output '.encryptionPasswordFile'); ${jqExec} -c --rawfile password "$passwordFile" '.encryptionPassword=$password | del(.encryptionPasswordFile)' <<< "$line"; else echo "$line"; fi; done | ${jqExec} -c --slurp)
+          config=$(${jqExec} --argjson devices "$devices" '.devices = $devices' -c <<< ${lib.escapeShellArg (builtins.toJSON new_folder_cfg)})
+          curl --data @- -X POST ${curlAddressArgs "/rest/config/folders"} <<< "$config"
+        ''
+      ))
+      (lib.concatStringsSep "\n")
+    ]
+    + lib.optionalString cfg.overrideFolders ''
+      stale_dirs_ids="$(curl -X GET ${curlAddressArgs "/rest/config/folders"} | ${jq} \
+        --argjson new_ids ${lib.escapeShellArg (builtins.toJSON (map (v: v.id) folders))} \
+        --raw-output \
+        '[.[].id] - $new_ids | .[]'
+      )"
+      for id in ''${stale_dirs_ids}; do
+        curl -X DELETE ${curlAddressArgs "/rest/config/folders/$id"}
+      done
+    ''
+    #
+    # Now we update the other settings defined in cleanedConfig which are not
+    # "folders" or "devices".
+    #
+    + (lib.pipe cleanedConfig [
+      builtins.attrNames
+      (lib.subtractLists [
+        "folders"
+        "devices"
       ])
+      (map (subOption: ''
+        curl -X PUT -d ${
+          lib.escapeShellArg (builtins.toJSON cleanedConfig.${subOption})
+        } ${curlAddressArgs "/rest/config/${subOption}"}
+      ''))
+      (lib.concatStringsSep "\n")
+    ])
     + lib.optionalString (cfg.passwordFile != null) ''
       syncthing_password=$(${cat} ${cfg.passwordFile})
       curl -X PATCH -d '{"password": "'$syncthing_password'"}' ${curlAddressArgs "/rest/config/gui"}
@@ -478,11 +465,38 @@ in
                       };
 
                       devices = mkOption {
-                        type = with types; listOf str;
+                        type = types.listOf (
+                          types.oneOf [
+                            types.str
+                            (types.submodule {
+                              options = {
+                                deviceID = mkOption {
+                                  type = types.str;
+                                  description = ''
+                                    The ID of the device.
+                                    Corresponds to `services.syncthing.settings.devices.<name>.id`.
+                                  '';
+                                };
+                                encryptionPasswordFile = mkOption {
+                                  type = types.nullOr types.path;
+                                  default = null;
+                                  description = ''
+                                    Path to a file containing a password used to encrypt the files before sending them
+                                    to this device. May include environment variables, which are evaluated in the
+                                    syncthing services environment.
+                                  '';
+                                };
+                              };
+                            })
+                          ]
+                        );
                         default = [ ];
                         description = ''
-                          The devices this folder should be shared with. Each device must
-                          be defined in the [devices](#opt-services.syncthing.settings.devices) option.
+                          The devices this folder should be shared with.
+                          Must be either the attribute name of the corresponding attribute in the
+                          [devices](#opt-services.syncthing.settings.devices) option
+                          or an attribute set as accepted by the
+                          [Syncthing API](https://docs.syncthing.net/rest/config.html#rest-config-folders-id-rest-config-devices-id).
                         '';
                       };
 
