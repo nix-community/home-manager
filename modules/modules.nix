@@ -267,6 +267,7 @@ let
       ./programs/sesh.nix
       ./programs/sftpman.nix
       ./programs/sioyek.nix
+      ./programs/sketchybar.nix
       ./programs/skim.nix
       ./programs/sm64ex.nix
       ./programs/smug.nix

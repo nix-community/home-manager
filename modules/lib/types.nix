@@ -169,4 +169,72 @@ rec {
       );
     in
     valueType;
+
+  sourceFile =
+    targetDir: fileName:
+    let
+      targetFile = "${targetDir}/${fileName}";
+    in
+    types.submodule (
+      { config, ... }:
+      {
+        options = {
+          target = mkOption {
+            type = types.singleLineStr;
+            internal = true;
+            readOnly = true;
+          };
+          source = mkOption {
+            type = types.nullOr types.path;
+            default = null;
+            description = ''
+              The path to be linked to `${targetDir}` if {option}`source` is a directory,
+              or to `${targetFile}` if it is a file.
+            '';
+          };
+          text = mkOption {
+            type = types.lines;
+            default = "";
+            description = ''
+              Text to be included in `${targetFile}`.
+            '';
+          };
+          recursive = lib.mkEnableOption ''
+            Whether to recursively link files from {option}`source` (if it is a directory) in `${targetDir}`.
+          '';
+        };
+        config = {
+          target =
+            if config.source != null && lib.pathIsDirectory config.source then targetDir else targetFile;
+        };
+      }
+    );
+
+  sourceFileOrLines =
+    targetDir: fileName:
+    let
+      fileType = sourceFile targetDir fileName;
+      union = types.either types.lines fileType;
+    in
+    union
+    // {
+      merge =
+        loc: defs:
+        fileType.merge loc (
+          map (
+            def:
+            if types.lines.check def.value then
+              {
+                inherit (def) file;
+                value = {
+                  text = def.value;
+                  source = null;
+                  recursive = false;
+                };
+              }
+            else
+              def
+          ) defs
+        );
+    };
 }
