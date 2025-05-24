@@ -15,13 +15,19 @@ let
   # derivation to build a single Podman quadlet, outputting its systemd unit files
   buildPodmanQuadlet =
     quadlet:
+    let
+      quadletFile = pkgs.writeText "${quadlet.serviceName}.${quadlet.resourceType}" quadlet.source;
+    in
     pkgs.stdenv.mkDerivation {
       name = "home-${quadlet.resourceType}-${quadlet.serviceName}";
+
+      src = quadletFile;
 
       buildInputs = [ cfg.package ] ++ quadlet.dependencies;
 
       unpackPhase = ''
         mkdir -p $out/quadlets
+        ln -s $src $out/quadlets/${quadlet.serviceName}.${quadlet.resourceType}
         ${lib.concatStringsSep "\n" (
           map (
             v:
@@ -33,9 +39,6 @@ let
       installPhase = ''
         # Directory for systemd unit files
         mkdir -p $out/units
-
-        # Write the quadlet file
-        echo -n "${quadlet.source}" > $out/quadlets/${quadlet.serviceName}.${quadlet.resourceType}
 
         # Generate systemd unit file/s from the quadlet file
         export QUADLET_UNIT_DIRS=$out/quadlets
