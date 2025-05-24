@@ -9,12 +9,6 @@ let
   inherit (lib.hm.nushell) isNushellInline toNushell;
   cfg = config.programs.nushell;
 
-  configDir =
-    if pkgs.stdenv.isDarwin && !config.xdg.enable then
-      "Library/Application Support/nushell"
-    else
-      "${config.xdg.configHome}/nushell";
-
   linesOrSource =
     name:
     types.submodule (
@@ -54,6 +48,24 @@ in
     enable = lib.mkEnableOption "nushell";
 
     package = lib.mkPackageOption pkgs "nushell" { nullable = true; };
+
+    configDir = lib.mkOption {
+      type = types.path;
+      default =
+        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+          "Library/Application Support/nushell"
+        else
+          "${config.xdg.configHome}/nushell";
+      defaultText = lib.literalExpression ''
+        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+          "Library/Application Support/nushell"
+        else
+          "''${config.xdg.configHome}/nushell";
+      '';
+      description = ''
+        Location of the nushell config directory. This directory contains the {file}`config.nu`, {file}`env.nu`, and {file}`login.nu` files, as well as history and plugin files.
+      '';
+    };
 
     configFile = lib.mkOption {
       type = types.nullOr (linesOrSource "config.nu");
@@ -223,7 +235,7 @@ in
           );
         in
         lib.mkIf writeConfig {
-          "${configDir}/config.nu".text = lib.mkMerge [
+          "${cfg.configDir}/config.nu".text = lib.mkMerge [
             (
               let
                 hasEnvVars = cfg.environmentVariables != { };
@@ -264,13 +276,13 @@ in
       )
 
       (lib.mkIf (cfg.envFile != null || cfg.extraEnv != "") {
-        "${configDir}/env.nu".text = lib.mkMerge [
+        "${cfg.configDir}/env.nu".text = lib.mkMerge [
           (lib.mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
         ];
       })
       (lib.mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
-        "${configDir}/login.nu".text = lib.mkMerge [
+        "${cfg.configDir}/login.nu".text = lib.mkMerge [
           (lib.mkIf (cfg.loginFile != null) cfg.loginFile.text)
           cfg.extraLogin
         ];
@@ -288,7 +300,7 @@ in
           '';
         in
         lib.mkIf ((cfg.package != null) && (cfg.plugins != [ ])) {
-          "${configDir}/plugin.msgpackz".source = "${msgPackz}/plugin.msgpackz";
+          "${cfg.configDir}/plugin.msgpackz".source = "${msgPackz}/plugin.msgpackz";
         }
       )
     ];
