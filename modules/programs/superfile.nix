@@ -18,6 +18,7 @@ let
     mkOption
     mkPackageOption
     nameValuePair
+    optional
     recursiveUpdate
     types
     hm
@@ -142,7 +143,9 @@ in
       ];
     in
     mkIf cfg.enable {
-      home.packages = mkIf (cfg.package != null) [ cfg.package ];
+      home.packages = mkIf (cfg.package != null) (
+        [ cfg.package ] ++ optional (cfg.settings ? metadata && cfg.settings.metadata) pkgs.exiftool
+      );
 
       xdg.configFile = mkIf enableXdgConfig configFiles;
       home.file = mkIf (!enableXdgConfig) configFiles;
