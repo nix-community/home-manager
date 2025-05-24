@@ -18,6 +18,7 @@ let
     mkOption
     mkPackageOption
     nameValuePair
+    optional
     recursiveUpdate
     types
     hm
@@ -30,6 +31,8 @@ in
     enable = mkEnableOption "superfile - Pretty fancy and modern terminal file manager";
 
     package = mkPackageOption pkgs "superfile" { nullable = true; };
+
+    metadataPackage = mkPackageOption pkgs "exiftool" { nullable = true; };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -142,7 +145,12 @@ in
       ];
     in
     mkIf cfg.enable {
-      home.packages = mkIf (cfg.package != null) [ cfg.package ];
+      home.packages = mkIf (cfg.package != null) (
+        [ cfg.package ]
+        ++ optional (
+          cfg.metadataPackage != null && cfg.settings ? metadata && cfg.settings.metadata
+        ) cfg.metadataPackage
+      );
 
       xdg.configFile = mkIf enableXdgConfig configFiles;
       home.file = mkIf (!enableXdgConfig) configFiles;
