@@ -13,6 +13,10 @@ let
     ;
   cfg = config.programs.mergiraf;
   mergiraf = "${cfg.package}/bin/mergiraf";
+
+  attributesFile = pkgs.runCommand "mergiraf-gitattributes" { buildInputs = [ cfg.package ]; } ''
+    mergiraf languages --gitattributes > $out
+  '';
 in
 {
   meta.maintainers = [ maintainers.bobvanderlinden ];
@@ -28,7 +32,7 @@ in
     home.packages = [ cfg.package ];
 
     programs.git = {
-      attributes = [ "* merge=mergiraf" ];
+      attributes = [ (builtins.readFile attributesFile) ];
       extraConfig = {
         merge.mergiraf = {
           name = "mergiraf";
