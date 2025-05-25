@@ -56220,6 +56220,357 @@ attribute set of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.sketchybar.enable"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.enable"><code class="option">programs.sketchybar.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable sketchybar.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.package"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.package"><code class="option">programs.sketchybar.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The sketchybar package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.sketchybar</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.config"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.config"><code class="option">programs.sketchybar.config</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The sketchybar configuration. Can be specified as:</p><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>A string containing the configuration content directly</p></li><li class="listitem"><p>An attribute set with ‘source’ pointing to a directory containing
+the full configuration, and optionally ‘recursive = true’ to
+recursively copy all files</p></li><li class="listitem"><p>An attribute set with ‘text’ containing inline configuration</p></li></ol></div><p>When using a string or ‘text’, the appropriate shebang will be
+automatically added based on configType (bash or lua).</p><p>When using a directory source, it should contain a file named
+“sketchybarrc” which serves as the main entry point.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or strings concatenated with “\n” or (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting"># String example - inline configuration
+&#x27;&#x27;
+# Define colors
+export COLOR_BLACK=&quot;0xff181926&quot;
+export COLOR_WHITE=&quot;0xffcad3f5&quot;
+
+# Configure bar
+sketchybar --bar height=32 \
+                position=top \
+                padding_left=10 \
+                padding_right=10 \
+                color=$COLOR_BLACK
+
+# Configure default values
+sketchybar --default icon.font=&quot;SF Pro:Bold:14.0&quot; \
+                    icon.color=$COLOR_WHITE \
+                    label.font=&quot;SF Pro:Bold:14.0&quot; \
+                    label.color=$COLOR_WHITE
+
+# Add items to the bar
+sketchybar --add item clock right \
+          --set clock script=&quot;date &#x27;+%H:%M&#x27;&quot; \
+                      update_freq=10
+
+# Update the bar
+sketchybar --update
+&#x27;&#x27;
+
+# Or directory example - for complex configurations
+# {
+#   source = ./path/to/sketchybar-config;
+#   recursive = true;
+# }
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.configType"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.configType"><code class="option">programs.sketchybar.configType</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The type of configuration to generate.</p><p>Set to “bash” to use the standard bash configuration.
+Set to “lua” to use the Lua configuration via SbarLua.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “bash”, “lua”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;bash&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.extraLuaPackages"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.extraLuaPackages"><code class="option">programs.sketchybar.extraLuaPackages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The extra Lua packages required for your plugins to work.
+This option accepts a function that takes a Lua package set as an argument,
+and selects the required Lua packages from this package set.
+See the example for more info.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+function that evaluates to a(n) list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">ps: [ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">luaPkgs: with luaPkgs; [ luautf8 ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.extraPackages"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.extraPackages"><code class="option">programs.sketchybar.extraPackages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra packages to add to PATH for the sketchybar service.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">[ pkgs.jq ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.includeSystemPath"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.includeSystemPath"><code class="option">programs.sketchybar.includeSystemPath</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to include common system <code class="literal">PATH</code> in the wrapper.
+This allows sketchybar to access system binaries.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.luaPackage"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.luaPackage"><code class="option">programs.sketchybar.luaPackage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The lua5_4 package to use. Lua interpreter to use when configType is lua.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.lua5_4</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.sbarLuaPackage"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.sbarLuaPackage"><code class="option">programs.sketchybar.sbarLuaPackage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The sbarlua package to use. Required when using a lua configuration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.sbarlua</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.service.enable"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.service.enable"><code class="option">programs.sketchybar.service.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable sketchybar service.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.service.errorLogFile"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.service.errorLogFile"><code class="option">programs.sketchybar.service.errorLogFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute path to log all stderr output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">${config.home.homeDirectory}/Library/Logs/sketchybar/sketchybar.err.log</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;/Users/khaneliman/Library/Logs/sketchybar.log&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.sketchybar.service.outLogFile"></a><a class="term" href="options.xhtml#opt-programs.sketchybar.service.outLogFile"><code class="option">programs.sketchybar.service.outLogFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Absolute path to log all stdout output.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">${config.home.homeDirectory}/Library/Logs/sketchybar/sketchybar.out.log</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;/Users/khaneliman/Library/Logs/sketchybar.log&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sketchybar.nix" target="_top">
+&lt;home-manager/modules/programs/sketchybar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.skim.enable"></a><a class="term" href="options.xhtml#opt-programs.skim.enable"><code class="option">programs.skim.enable</code>
   </a>
  </span>
