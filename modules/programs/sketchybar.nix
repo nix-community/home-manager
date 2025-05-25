@@ -131,6 +131,15 @@ in
       '';
     };
 
+    includeSystemPath = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Whether to include common system `PATH` in the wrapper.
+        This allows sketchybar to access system binaries.
+      '';
+    };
+
     service = {
       enable = mkEnableOption "sketchybar service" // {
         default = true;
@@ -203,6 +212,13 @@ in
               "PATH"
               ":"
               "${lib.makeBinPath pathPackages}"
+            ])
+
+            (lib.optional cfg.includeSystemPath [
+              "--suffix"
+              "PATH"
+              ":"
+              "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin"
             ])
 
             (lib.optional (luaPaths != [ ]) [
