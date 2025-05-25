@@ -862,11 +862,6 @@ in
 
       home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
-      mozilla.firefoxNativeMessagingHosts =
-        cfg.nativeMessagingHosts
-        # package configured native messaging hosts (entire browser actually)
-        ++ (lib.optional (cfg.finalPackage != null) cfg.finalPackage);
-
       home.file = mkMerge (
         [
           {
