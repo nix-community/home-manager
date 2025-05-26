@@ -240,6 +240,7 @@ import nmtSrc {
       ./modules/programs/lsd
       ./modules/programs/man
       ./modules/programs/mbsync
+      ./modules/programs/meli
       ./modules/programs/mergiraf
       ./modules/programs/micro
       ./modules/programs/mise

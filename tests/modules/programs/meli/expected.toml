@@ -1,0 +1,40 @@
+[accounts."hm@example.com"]
+display_name = "H. M. Test"
+format = "Maildir"
+identity = "hm@example.com"
+root_mailbox = "/home/hm-user/Mail/hm@example.com"
+subscribed_mailboxes = ["Inbox", "Sent", "Trash", "Drafts"]
+
+[accounts."hm@example.com".mailboxes]
+
+[accounts."hm@example.com".send_mail]
+hostname = "smtp.example.com"
+port = 1848
+[accounts."hm@example.com".send_mail.auth]
+type = "auto"
+username = "home.manager"
+[accounts."hm@example.com".send_mail.auth.password]
+type = "command_eval"
+value = "password-command"
+
+[accounts."hm@example.com".send_mail.extensions]
+CHUNKING = true
+DSN_NOTIFY = "FAILURE"
+PIPELINING = true
+PRDR = true
+
+[accounts."hm@example.com".send_mail.security]
+danger_accept_invalid_certs = false
+type = "tls"
+
+[shortcuts.composing]
+
+[shortcuts.contact-list]
+
+[shortcuts.general]
+scroll_down = "j"
+scroll_up = "k"
+
+[shortcuts.listing]
+
+[shortcuts.pager]
