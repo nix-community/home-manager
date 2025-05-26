@@ -69,18 +69,6 @@ in
       userEmail = "user@example.org";
       userName = "John Doe";
       lfs.enable = true;
-      delta = {
-        enable = true;
-        options = {
-          features = "decorations";
-          whitespace-error-style = "22 reverse";
-          decorations = {
-            commit-decoration-style = "bold yellow box ul";
-            file-style = "bold yellow ul";
-            file-decoration-style = "none";
-          };
-        };
-      };
     }
 
     {
