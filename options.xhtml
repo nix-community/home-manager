@@ -101654,6 +101654,132 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-wayland.windowManager.sway.config.bindswitches"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.config.bindswitches"><code class="option">wayland.windowManager.sway.config.bindswitches</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Binds &lt;switch&gt; to execute the sway command command on state changes. Supported switches are lid (laptop
+lid) and tablet (tablet mode) switches. Valid values for state are on, off and toggle. These switches are
+on when the device lid is shut and when tablet mode is active respectively. toggle is also supported to run
+a command both when the switch is toggled on or off.
+See sway(5).</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;No bindswitches by default&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">let
+  laptop = &quot;eDP-1&quot;;
+in
+{
+  &quot;lid:on&quot; = {
+    reload = true;
+    locked = true;
+    action = &quot;output ${laptop} disable&quot;;
+  };
+  &quot;lid:off&quot; = {
+    reload = true;
+    locked = true;
+    action = &quot;output ${laptop} enable&quot;;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.sway.config.bindswitches._name_.action"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.config.bindswitches._name_.action"><code class="option">wayland.windowManager.sway.config.bindswitches.&lt;name&gt;.action</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The sway command to execute on state changes</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.sway.config.bindswitches._name_.locked"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.config.bindswitches._name_.locked"><code class="option">wayland.windowManager.sway.config.bindswitches.&lt;name&gt;.locked</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Unless the flag --locked is set, the command
+will not be run when a screen locking program
+is active. If there is a matching binding with
+and without --locked, the one with will be preferred
+when locked and the one without will be
+preferred when unlocked.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-wayland.windowManager.sway.config.bindswitches._name_.reload"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.config.bindswitches._name_.reload"><code class="option">wayland.windowManager.sway.config.bindswitches.&lt;name&gt;.reload</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>If the --reload flag is given, the binding will
+also be executed when the config is reloaded.
+toggle bindings will not be executed on reload.
+The --locked flag will operate as normal so if
+the config is reloaded while locked and
+–locked is not given, the binding will not be
+executed.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-wayland.windowManager.sway.config.colors"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.config.colors"><code class="option">wayland.windowManager.sway.config.colors</code>
   </a>
  </span>
