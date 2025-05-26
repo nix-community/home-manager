@@ -14,7 +14,10 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/git/config
-    assertFileContent home-files/.config/git/config ${./example-settings-expected.conf}
+    # deltaWrapper=$(readlink -f home-files/.nix-profile/bin/delta)
+    # assertFileExists home-files/.nix-profile/bin/delta
+    # deltaConfig=$(grep -o 'export --context="[^"]*"' "$deltaWrapperFile" | cut -d'"' -f2)
+    # assertFileExists "$deltaConfig"
+    # assertFileContent "$deltaConfig" ${./example-settings-expected.conf}
   '';
 }

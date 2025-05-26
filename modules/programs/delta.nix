@@ -77,18 +77,28 @@ in
 
   config =
     let
-      deltaExe = getExe cfg.package;
+      deltaConfig = pkgs.writeText "delta-config" (lib.generators.toGitINI { delta = cfg.settings; });
+      finalPackage =
+        if cfg.settings == { } then
+          cfg.package
+        else
+          (pkgs.writeShellApplication {
+            name = "delta";
+            runtimeInputs = [ cfg.package ];
+            text = ''
+              exec ${getExe cfg.package} --config=${deltaConfig} "$@"
+            '';
+          });
+      deltaExe = getExe finalPackage;
     in
     mkIf cfg.enable {
-      home.packages = [ cfg.package ];
+      home.packages = [ finalPackage ];
 
-      programs.git.iniContent =
-        {
-          delta = cfg.settings;
-        }
-        // (optionalAttrs cfg.enableGitIntegration {
+      programs.git = mkIf cfg.enableGitIntegration {
+        iniContent = {
           core.pager = deltaExe;
           interactive.diffFilter = "${deltaExe} --color-only";
-        });
+        };
+      };
     };
 }
