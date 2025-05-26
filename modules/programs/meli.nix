@@ -79,6 +79,7 @@ in
       };
       settings = mkOption {
         type = types.submodule {
+          freeformType = (pkgs.formats.toml { }).type;
           options = {
             shortcuts = mkOption {
               type = types.submodule {
@@ -202,21 +203,10 @@ in
 
     # Generate meli configuration from email accounts
     xdg.configFile."meli/config.toml".source = (pkgs.formats.toml { }).generate "meli-config" (
-      # Account Settings
       {
         accounts = meliAccounts;
       }
-      //
-        # Application Settings
-        {
-          shortcuts = {
-            general = config.programs.meli.settings.shortcuts.general;
-            composing = config.programs.meli.settings.shortcuts.composing;
-            contact-list = config.programs.meli.settings.shortcuts.contact-list;
-            listing = config.programs.meli.settings.shortcuts.listing;
-            pager = config.programs.meli.settings.shortcuts.pager;
-          };
-        }
+      // config.programs.meli.settings
     );
   };
 }
