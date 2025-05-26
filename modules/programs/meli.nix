@@ -23,8 +23,8 @@ let
     name: account: {
       root_mailbox = "${config.accounts.email.maildirBasePath}/${account.maildir.path}";
       format = "Maildir";
-      identity = "${account.address}";
-      display_name = "${account.realName}";
+      identity = account.address;
+      display_name = account.realName;
       subscribed_mailboxes = account.meli.mailboxes;
       send_mail = mkSmtp account;
       mailboxes = account.meli.mailboxAliases;
@@ -124,7 +124,7 @@ in
                   };
                   pager = mkOption {
                     type = types.attrsOf types.str;
-                    default = "";
+                    default = { };
                     description = "general shortcut configuration";
                     example = {
                       scroll_up = "e";
@@ -148,7 +148,7 @@ in
           { config, ... }:
           {
             options.meli = {
-              enable = mkEnableOption "the meli mail client for this account";
+              enable = mkEnableOption "the meli mail client for this account.\nRequires SMTP settings.";
               mailboxes = mkOption {
                 type = with types; listOf str;
                 default = (
@@ -187,19 +187,8 @@ in
       );
     };
   };
-
   config = mkIf config.programs.meli.enable {
     home.packages = [ config.programs.meli.package ];
-
-    assertions = lib.concatLists (
-      lib.attrsets.mapAttrsToList (
-        name: account:
-        lib.optional (account.meli.enable or false) {
-          assertion = account ? smtp;
-          message = "The email account '${name}' must have an 'smtp' attribute defined when enabling meli.";
-        }
-      ) config.accounts.email.accounts
-    );
 
     # Generate meli configuration from email accounts
     xdg.configFile."meli/config.toml".source = (pkgs.formats.toml { }).generate "meli-config" (
@@ -208,5 +197,6 @@ in
       }
       // config.programs.meli.settings
     );
+
   };
 }
