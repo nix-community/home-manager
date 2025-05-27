@@ -5,9 +5,13 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    mkIf
+    mkOption
+    types
+    literalExpression
+    ;
 
   cfg = config.services.stalonetray;
 
@@ -15,15 +19,9 @@ in
 {
   options = {
     services.stalonetray = {
-      enable = mkEnableOption "Stalonetray system tray";
+      enable = lib.mkEnableOption "Stalonetray system tray";
 
-      package = mkOption {
-        default = pkgs.stalonetray;
-        defaultText = literalExpression "pkgs.stalonetray";
-        type = types.package;
-        example = literalExpression "pkgs.stalonetray";
-        description = "The package to use for the Stalonetray binary.";
-      };
+      package = lib.mkPackageOption pkgs "stalonetray" { };
 
       config = mkOption {
         type = with types; attrsOf (nullOr (either str (either bool int)));
@@ -55,52 +53,54 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "services.stalonetray" pkgs platforms.linux)
-      ];
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "services.stalonetray" pkgs lib.platforms.linux)
+        ];
 
-      home.packages = [ cfg.package ];
+        home.packages = [ cfg.package ];
 
-      systemd.user.services.stalonetray = {
-        Unit = {
-          Description = "Stalonetray system tray";
-          PartOf = [ "tray.target" ];
+        systemd.user.services.stalonetray = {
+          Unit = {
+            Description = "Stalonetray system tray";
+            PartOf = [ "tray.target" ];
+          };
+
+          Install = {
+            WantedBy = [ "tray.target" ];
+          };
+
+          Service = {
+            ExecStart = "${cfg.package}/bin/stalonetray";
+            Restart = "on-failure";
+          };
         };
+      }
 
-        Install = {
-          WantedBy = [ "tray.target" ];
-        };
+      (mkIf (cfg.config != { }) {
+        xdg.configFile."stalonetrayrc".text =
+          let
+            valueToString =
+              v:
+              if lib.isBool v then
+                (if v then "true" else "false")
+              else if (v == null) then
+                "none"
+              else
+                ''"${toString v}"'';
+          in
+          lib.concatStrings (
+            lib.mapAttrsToList (k: v: ''
+              ${k} ${valueToString v}
+            '') cfg.config
+          );
+      })
 
-        Service = {
-          ExecStart = "${cfg.package}/bin/stalonetray";
-          Restart = "on-failure";
-        };
-      };
-    }
-
-    (mkIf (cfg.config != { }) {
-      xdg.configFile."stalonetrayrc".text =
-        let
-          valueToString =
-            v:
-            if isBool v then
-              (if v then "true" else "false")
-            else if (v == null) then
-              "none"
-            else
-              ''"${toString v}"'';
-        in
-        concatStrings (
-          mapAttrsToList (k: v: ''
-            ${k} ${valueToString v}
-          '') cfg.config
-        );
-    })
-
-    (mkIf (cfg.extraConfig != "") {
-      xdg.configFile."stalonetrayrc".text = cfg.extraConfig;
-    })
-  ]);
+      (mkIf (cfg.extraConfig != "") {
+        xdg.configFile."stalonetrayrc".text = cfg.extraConfig;
+      })
+    ]
+  );
 }

@@ -8,13 +8,14 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Nix
         uses: cachix/install-nix-action@v31
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v24
+        uses: DeterminateSystems/update-flake-lock@v25
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
           pr-labels: dependencies

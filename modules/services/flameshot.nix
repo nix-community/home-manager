@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.flameshot;
@@ -17,19 +14,14 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.hamhut1066 ];
+  meta.maintainers = [ lib.maintainers.hamhut1066 ];
 
   options.services.flameshot = {
-    enable = mkEnableOption "Flameshot";
+    enable = lib.mkEnableOption "Flameshot";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.flameshot;
-      defaultText = literalExpression "pkgs.flameshot";
-      description = "Package providing {command}`flameshot`.";
-    };
+    package = lib.mkPackageOption pkgs "flameshot" { };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       inherit (iniFormat) type;
       default = { };
       example = {
@@ -46,14 +38,14 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.flameshot" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile = mkIf (cfg.settings != { }) {
+    xdg.configFile = lib.mkIf (cfg.settings != { }) {
       "flameshot/flameshot.ini".source = iniFile;
     };
 
@@ -66,7 +58,7 @@ in
           "tray.target"
         ];
         PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers = mkIf (cfg.settings != { }) [ "${iniFile}" ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [ "${iniFile}" ];
       };
 
       Install = {

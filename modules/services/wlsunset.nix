@@ -5,26 +5,21 @@
   ...
 }:
 
-with lib;
-
 let
-  cfg = config.services.wlsunset;
+  inherit (lib)
+    mkOption
+    types
+    ;
 
+  cfg = config.services.wlsunset;
 in
 {
-  meta.maintainers = [ hm.maintainers.matrss ];
+  meta.maintainers = [ lib.hm.maintainers.matrss ];
 
   options.services.wlsunset = {
-    enable = mkEnableOption "wlsunset";
+    enable = lib.mkEnableOption "wlsunset";
 
-    package = mkOption {
-      type = with types; package;
-      default = pkgs.wlsunset;
-      defaultText = "pkgs.wlsunset";
-      description = ''
-        wlsunset derivation to use.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "wlsunset" { };
 
     latitude = mkOption {
       type = with types; nullOr (either str (either float int));
@@ -110,7 +105,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.wlsunset" pkgs lib.platforms.linux)
       {
@@ -138,7 +133,7 @@ in
       Service = {
         ExecStart =
           let
-            args = cli.toGNUCommandLineShell { } {
+            args = lib.cli.toGNUCommandLineShell { } {
               t = cfg.temperature.night;
               T = cfg.temperature.day;
               g = cfg.gamma;

@@ -5,9 +5,8 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib) types;
 
   boolTrue = {
     type = types.bool;
@@ -115,35 +114,29 @@ let
 
 in
 {
-  meta.maintainers = [ hm.maintainers.mager ];
+  meta.maintainers = [ lib.hm.maintainers.mager ];
 
   options = {
     services.trayer = {
-      enable = mkEnableOption "trayer, the lightweight GTK2+ systray for UNIX desktops";
+      enable = lib.mkEnableOption "trayer, the lightweight GTK2+ systray for UNIX desktops";
 
-      package = mkOption {
-        default = pkgs.trayer;
-        defaultText = literalExpression "pkgs.trayer";
-        type = types.package;
-        example = literalExpression "pkgs.trayer";
-        description = "The package to use for the trayer binary.";
-      };
+      package = lib.mkPackageOption pkgs "trayer" { };
 
-      settings = mkOption {
+      settings = lib.mkOption {
         type = with types; attrsOf (nullOr (either str (either bool int)));
         description = ''
           Trayer configuration as a set of attributes. Further details can be
           found in [trayer's README](https://github.com/sargon/trayer-srg/blob/master/README).
 
-          ${concatStringsSep "\n" (
-            mapAttrsToList (n: v: ''
+          ${lib.concatStringsSep "\n" (
+            lib.mapAttrsToList (n: v: ''
               {var}`${n}`
               : ${v.type.description} (default: `${builtins.toJSON v.default}`)
             '') knownSettings
           )}
         '';
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             edge = "top";
             padding = 6;
@@ -155,7 +148,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable ({
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.trayer" pkgs lib.platforms.linux)
     ];
@@ -164,9 +157,9 @@ in
 
     systemd.user.services.trayer =
       let
-        valueToString = v: if isBool v then (if v then "true" else "false") else "${toString v}";
+        valueToString = v: if lib.isBool v then (if v then "true" else "false") else "${toString v}";
         parameter = k: v: "--${k} ${valueToString v}";
-        parameters = concatStringsSep " " (mapAttrsToList parameter cfg.settings);
+        parameters = lib.concatStringsSep " " (lib.mapAttrsToList parameter cfg.settings);
       in
       {
         Unit = {
@@ -181,5 +174,5 @@ in
           Restart = "on-failure";
         };
       };
-  });
+  };
 }

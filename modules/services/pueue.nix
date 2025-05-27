@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.pueue;
@@ -15,17 +12,17 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.AndersonTorres ];
+  meta.maintainers = [ lib.maintainers.AndersonTorres ];
 
   options.services.pueue = {
-    enable = mkEnableOption "Pueue, CLI process scheduler and manager";
+    enable = lib.mkEnableOption "Pueue, CLI process scheduler and manager";
 
-    package = mkPackageOption pkgs "pueue" { nullable = true; };
+    package = lib.mkPackageOption pkgs "pueue" { nullable = true; };
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           daemon = {
             default_parallel_tasks = 2;
@@ -39,8 +36,10 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = [ (hm.assertions.assertPlatform "services.pueue" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.pueue" pkgs lib.platforms.linux)
+    ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 

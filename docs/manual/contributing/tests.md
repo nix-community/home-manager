@@ -13,20 +13,20 @@ functions available in test scripts, you can look at NMT's
 The full Home Manager test suite can be run by executing
 
 ``` shell
-$ nix-shell --pure tests -A run.all
+$ nix-build --pure --option allow-import-from-derivation false tests -A build.all
 ```
 
 in the project root. List all test cases through
 
 ``` shell
-$ nix-shell --pure tests -A list
+$ nix-build --pure tests --option allow-import-from-derivation false -A list
 ```
 
 and run an individual test, for example `alacritty-empty-settings`,
 through
 
 ``` shell
-$ nix-shell --pure tests -A run.alacritty-empty-settings
+$ nix-build --pure tests --option allow-import-from-derivation false -A build.alacritty-empty-settings
 ```
 
 However, those invocations will impurely source the system's Nixpkgs,
@@ -34,11 +34,17 @@ and may cause failures. To run against the Nixpkgs from the `flake.lock` file,
 use instead e.g.
 
 ``` shell
-$ nix build --reference-lock-file flake.lock ./tests#test-all
+$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-all
 ```
 
 or
 
 ``` shell
-$ nix build --reference-lock-file flake.lock ./tests#test-alacritty-empty-settings
+$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-alacritty-empty-settings
+```
+
+Some tests may be marked with `enableLegacyIfd`, those may be run by run with e.g.
+
+``` shell
+$ nix-build --pure tests --arg enableLegacyIfd true -A build.mytest
 ```

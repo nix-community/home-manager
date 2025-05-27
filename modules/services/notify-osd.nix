@@ -4,33 +4,23 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.notify-osd;
 
 in
 {
-  meta.maintainers = [ maintainers.imalison ];
+  meta.maintainers = [ lib.maintainers.imalison ];
 
   options = {
     services.notify-osd = {
-      enable = mkEnableOption "notify-osd";
+      enable = lib.mkEnableOption "notify-osd";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.notify-osd;
-        defaultText = literalExpression "pkgs.notify-osd";
-        description = ''
-          Package containing the {command}`notify-osd` program.
-        '';
-      };
+      package = lib.mkPackageOption pkgs "notify-osd" { };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.notify-osd" pkgs lib.platforms.linux)
     ];

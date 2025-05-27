@@ -1,11 +1,12 @@
 {
+  config,
   lib,
   options,
   realPkgs,
   ...
 }:
 
-{
+lib.mkIf config.test.enableLegacyIfd {
   programs.kitty = {
     enable = true;
     theme = "Space Gray Eighties";

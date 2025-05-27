@@ -18,15 +18,3 @@ pages:
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
       when: always
-
-Deploy NUR:
-  stage: deploy
-  variables:
-    HM_BRANCH: $CI_COMMIT_REF_NAME
-    HM_COMMIT_SHA: $CI_COMMIT_SHA
-  trigger:
-    project: rycee/nur-expressions
-    branch: master
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH =~ /^release-/
-      when: always

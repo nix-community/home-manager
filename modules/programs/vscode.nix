@@ -81,10 +81,12 @@ let
       "extensions.autoCheckUpdates" = false;
     };
 
+  isPath = p: builtins.isPath p || lib.isStorePath p;
+
   profileType = types.submodule {
     options = {
       userSettings = mkOption {
-        type = jsonFormat.type;
+        type = types.either types.path jsonFormat.type;
         default = { };
         example = literalExpression ''
           {
@@ -95,11 +97,12 @@ let
         description = ''
           Configuration written to Visual Studio Code's
           {file}`settings.json`.
+          This can be a JSON object or a path to a custom JSON file.
         '';
       };
 
       userTasks = mkOption {
-        type = jsonFormat.type;
+        type = types.either types.path jsonFormat.type;
         default = { };
         example = literalExpression ''
           {
@@ -116,43 +119,46 @@ let
         description = ''
           Configuration written to Visual Studio Code's
           {file}`tasks.json`.
+          This can be a JSON object or a path to a custom JSON file.
         '';
       };
 
       keybindings = mkOption {
-        type = types.listOf (
-          types.submodule {
-            options = {
-              key = mkOption {
-                type = types.str;
-                example = "ctrl+c";
-                description = "The key or key-combination to bind.";
-              };
-
-              command = mkOption {
-                type = types.str;
-                example = "editor.action.clipboardCopyAction";
-                description = "The VS Code command to execute.";
-              };
-
-              when = mkOption {
-                type = types.nullOr (types.str);
-                default = null;
-                example = "textInputFocus";
-                description = "Optional context filter.";
-              };
-
-              # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
-              args = mkOption {
-                type = types.nullOr (jsonFormat.type);
-                default = null;
-                example = {
-                  direction = "up";
+        type = types.either types.path (
+          types.listOf (
+            types.submodule {
+              options = {
+                key = mkOption {
+                  type = types.str;
+                  example = "ctrl+c";
+                  description = "The key or key-combination to bind.";
                 };
-                description = "Optional arguments for a command.";
+
+                command = mkOption {
+                  type = types.str;
+                  example = "editor.action.clipboardCopyAction";
+                  description = "The VS Code command to execute.";
+                };
+
+                when = mkOption {
+                  type = types.nullOr (types.str);
+                  default = null;
+                  example = "textInputFocus";
+                  description = "Optional context filter.";
+                };
+
+                # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
+                args = mkOption {
+                  type = types.nullOr (jsonFormat.type);
+                  default = null;
+                  example = {
+                    direction = "up";
+                  };
+                  description = "Optional arguments for a command.";
+                };
               };
-            };
-          }
+            }
+          )
         );
         default = [ ];
         example = literalExpression ''
@@ -167,6 +173,7 @@ let
         description = ''
           Keybindings written to Visual Studio Code's
           {file}`keybindings.json`.
+          This can be a JSON object or a path to a custom JSON file.
         '';
       };
 
@@ -360,20 +367,27 @@ in
       (mapAttrsToList (n: v: [
         (mkIf ((mergedUserSettings v.userSettings v.enableUpdateCheck v.enableExtensionUpdateCheck) != { })
           {
-            "${configFilePath n}".source = jsonFormat.generate "vscode-user-settings" (
-              mergedUserSettings v.userSettings v.enableUpdateCheck v.enableExtensionUpdateCheck
-            );
+            "${configFilePath n}".source =
+              if isPath v.userSettings then
+                v.userSettings
+              else
+                jsonFormat.generate "vscode-user-settings" (
+                  mergedUserSettings v.userSettings v.enableUpdateCheck v.enableExtensionUpdateCheck
+                );
           }
         )
 
         (mkIf (v.userTasks != { }) {
-          "${tasksFilePath n}".source = jsonFormat.generate "vscode-user-tasks" v.userTasks;
+          "${tasksFilePath n}".source =
+            if isPath v.userTasks then v.userTasks else jsonFormat.generate "vscode-user-tasks" v.userTasks;
         })
 
         (mkIf (v.keybindings != [ ]) {
-          "${keybindingsFilePath n}".source = jsonFormat.generate "vscode-keybindings" (
-            map (lib.filterAttrs (_: v: v != null)) v.keybindings
-          );
+          "${keybindingsFilePath n}".source =
+            if isPath v.keybindings then
+              v.keybindings
+            else
+              jsonFormat.generate "vscode-keybindings" (map (lib.filterAttrs (_: v: v != null)) v.keybindings);
         })
 
         (mkIf (v.languageSnippets != { }) (

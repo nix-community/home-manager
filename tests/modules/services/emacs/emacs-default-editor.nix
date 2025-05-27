@@ -15,9 +15,8 @@
   };
 
   nmt.script = "source ${
-    pkgs.substituteAll {
+    pkgs.replaceVars ./emacs-default-editor.sh {
       inherit (pkgs) coreutils;
-      src = ./emacs-default-editor.sh;
     }
   }";
 }

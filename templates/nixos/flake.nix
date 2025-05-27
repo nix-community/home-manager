@@ -8,7 +8,7 @@
   };
 
   outputs =
-    inputs@{ nixpkgs, home-manager, ... }:
+    { nixpkgs, home-manager, ... }:
     {
       nixosConfigurations = {
         hostname = nixpkgs.lib.nixosSystem {

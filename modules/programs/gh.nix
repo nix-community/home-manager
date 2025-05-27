@@ -146,14 +146,24 @@ in
       '';
       example = literalExpression "[ pkgs.gh-eco ]";
     };
+
+    hosts = mkOption {
+      inherit (yamlFormat) type;
+      default = { };
+      description = "Host-specific configuration written to {file}`$XDG_CONFIG_HOME/gh/hosts.yml`.";
+      example."github.com".user = "<your_username>";
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."gh/config.yml".source = yamlFormat.generate "gh-config.yml" (
-      { version = "1"; } // cfg.settings
-    );
+    xdg.configFile = {
+      "gh/config.yml".source = yamlFormat.generate "gh-config.yml" ({ version = "1"; } // cfg.settings);
+      "gh/hosts.yml" = mkIf (cfg.hosts != { }) {
+        source = yamlFormat.generate "gh-hosts.yml" cfg.hosts;
+      };
+    };
 
     # Version 2.40.0+ of `gh` needs to migrate account formats, this needs to
     # happen before the version = 1 is placed in the configuration file. Running

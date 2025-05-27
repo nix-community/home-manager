@@ -13,6 +13,6 @@
     labwcAutostart=home-files/.config/labwc/autostart
 
     assertFileExists "$labwcAutostart"
-    assertFileContent "$labwcAutostart" "${./autostart}"
+    assertFileContent $(normalizeStorePaths "$labwcAutostart") "${./autostart}"
   '';
 }

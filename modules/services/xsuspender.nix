@@ -5,9 +5,8 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib) mkOption types;
 
   cfg = config.services.xsuspender;
 
@@ -114,11 +113,11 @@ let
 
 in
 {
-  meta.maintainers = [ maintainers.offline ];
+  meta.maintainers = [ lib.maintainers.offline ];
 
   options = {
     services.xsuspender = {
-      enable = mkEnableOption "XSuspender";
+      enable = lib.mkEnableOption "XSuspender";
 
       defaults = mkOption {
         description = "XSuspender defaults.";
@@ -152,7 +151,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.xsuspender" pkgs lib.platforms.linux)
     ];
@@ -161,7 +160,7 @@ in
       let
         mkSection =
           values:
-          filterAttrs (_: v: v != null) {
+          lib.filterAttrs (_: v: v != null) {
             match_wm_class_contains = values.matchWmClassContains;
             match_wm_class_group_contains = values.matchWmClassGroupContains;
             match_wm_name_contains = values.matchWmNameContains;
@@ -180,7 +179,7 @@ in
       {
         Default = mkSection cfg.defaults;
       }
-      // mapAttrs (_: mkSection) cfg.rules;
+      // lib.mapAttrs (_: mkSection) cfg.rules;
 
     # To make the xsuspender tool available.
     home.packages = [ pkgs.xsuspender ];
@@ -197,7 +196,7 @@ in
 
       Service = {
         ExecStart = "${pkgs.xsuspender}/bin/xsuspender";
-        Environment = mkIf cfg.debug [ "G_MESSAGES_DEBUG=all" ];
+        Environment = lib.mkIf cfg.debug [ "G_MESSAGES_DEBUG=all" ];
       };
 
       Install = {

@@ -4,10 +4,8 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) literalExpression mkOption types;
 
   cfg = config.xsession.windowManager.xmonad;
 
@@ -16,7 +14,7 @@ let
     packages =
       self:
       cfg.extraPackages self
-      ++ optionals cfg.enableContribAndExtras [
+      ++ lib.optionals cfg.enableContribAndExtras [
         self.xmonad-contrib
         self.xmonad-extras
       ];
@@ -26,7 +24,7 @@ in
 {
   options = {
     xsession.windowManager.xmonad = {
-      enable = mkEnableOption "xmonad window manager";
+      enable = lib.mkEnableOption "xmonad window manager";
 
       haskellPackages = mkOption {
         default = pkgs.haskellPackages;
@@ -136,7 +134,7 @@ in
 
             declare -A libFiles
             libFiles=(${
-              concatStringsSep " " (mapAttrsToList (name: value: "['${name}']='${value}'") cfg.libFiles)
+              lib.concatStringsSep " " (lib.mapAttrsToList (name: value: "['${name}']='${value}'") cfg.libFiles)
             })
             for key in "''${!libFiles[@]}"; do
               mkdir -p "xmonad-config/lib/$(dirname "$key")"
@@ -158,36 +156,38 @@ in
       }/bin/xmonad-${executableSystemSuffix}";
 
     in
-    mkIf cfg.enable (mkMerge [
-      {
-        assertions = [
-          (hm.assertions.assertPlatform "xsession.windowManager.xmonad" pkgs platforms.linux)
-        ];
+    lib.mkIf cfg.enable (
+      lib.mkMerge [
+        {
+          assertions = [
+            (lib.hm.assertions.assertPlatform "xsession.windowManager.xmonad" pkgs lib.platforms.linux)
+          ];
 
-        home.packages = [ (lowPrio xmonad) ];
+          home.packages = [ (lib.lowPrio xmonad) ];
 
-        home.file = mapAttrs' (
-          name: value: attrsets.nameValuePair (".xmonad/lib/" + name) { source = value; }
-        ) cfg.libFiles;
-      }
+          home.file = lib.mapAttrs' (
+            name: value: lib.attrsets.nameValuePair (".xmonad/lib/" + name) { source = value; }
+          ) cfg.libFiles;
+        }
 
-      (mkIf (cfg.config == null) {
-        xsession.windowManager.command = "${xmonad}/bin/xmonad";
-      })
+        (lib.mkIf (cfg.config == null) {
+          xsession.windowManager.command = "${xmonad}/bin/xmonad";
+        })
 
-      (mkIf (cfg.config != null) {
-        xsession.windowManager.command = xmonadBin;
-        home.file.".xmonad/xmonad.hs".source = cfg.config;
-        home.file.".xmonad/xmonad-${pkgs.stdenv.hostPlatform.system}" = {
-          source = xmonadBin;
-          onChange = ''
-            # Attempt to restart xmonad if X is running.
-            if [[ -v DISPLAY ]]; then
-              ${config.xsession.windowManager.command} --restart
-            fi
-          '';
-        };
-      })
+        (lib.mkIf (cfg.config != null) {
+          xsession.windowManager.command = xmonadBin;
+          home.file.".xmonad/xmonad.hs".source = cfg.config;
+          home.file.".xmonad/xmonad-${pkgs.stdenv.hostPlatform.system}" = {
+            source = xmonadBin;
+            onChange = ''
+              # Attempt to restart xmonad if X is running.
+              if [[ -v DISPLAY ]]; then
+                ${config.xsession.windowManager.command} --restart
+              fi
+            '';
+          };
+        })
 
-    ]);
+      ]
+    );
 }

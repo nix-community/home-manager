@@ -9,8 +9,16 @@
       border = "border";
       separator = "separator";
     };
+    modes = [
+      "drun"
+      "emoji"
+      "ssh"
+      {
+        name = "foo";
+        path = "bar";
+      }
+    ];
     extraConfig = {
-      modi = "drun,emoji,ssh";
       kb-primary-paste = "Control+V,Shift+Insert";
       kb-secondary-paste = "Control+v,Insert";
     };

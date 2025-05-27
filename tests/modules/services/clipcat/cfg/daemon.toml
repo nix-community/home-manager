@@ -1,0 +1,12 @@
+daemonize = true
+history_file_path = "/home/<username>/.cache/clipcat/clipcatd-history"
+max_history = 50
+pid_file = "/run/user/<user-id>/clipcatd.pid"
+primary_threshold_ms = 5000
+
+[log]
+emit_journald = true
+emit_stderr = false
+emit_stdout = false
+file_path = "/path/to/log/file"
+level = "INFO"

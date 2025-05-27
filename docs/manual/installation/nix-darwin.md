@@ -2,7 +2,7 @@
 
 Home Manager provides a module that allows you to prepare user
 environments directly from the
-[nix-darwin](https://github.com/LnL7/nix-darwin/) configuration file,
+[nix-darwin](https://github.com/nix-darwin/nix-darwin/) configuration file,
 which often is more convenient than using the `home-manager` tool.
 
 To make the NixOS module available for use you must `import` it into
@@ -15,10 +15,10 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ```
 
-and if you follow a Nixpkgs version 24.11 channel, you can run
+and if you follow a Nixpkgs version 25.05 channel, you can run
 
 ``` shell
-$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz home-manager
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
 $ nix-channel --update
 ```
 
@@ -45,7 +45,7 @@ home-manager.users.eve = { pkgs, ... }: {
 
   # The state version is required and should stay at the version you
   # originally installed.
-  home.stateVersion = "24.11";
+  home.stateVersion = "25.05";
 };
 ```
 

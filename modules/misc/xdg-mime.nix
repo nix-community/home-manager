@@ -35,18 +35,12 @@ in
         '';
       };
 
-      sharedMimeInfoPackage = mkOption {
-        type = types.package;
-        default = pkgs.shared-mime-info;
-        defaultText = lib.literalExpression "pkgs.shared-mime-info";
-        description = "The package to use when running update-mime-database.";
+      sharedMimeInfoPackage = lib.mkPackageOption pkgs "shared-mime-info" {
+        extraDescription = "Used when running update-mime-database.";
       };
 
-      desktopFileUtilsPackage = mkOption {
-        type = types.package;
-        default = pkgs.desktop-file-utils;
-        defaultText = lib.literalExpression "pkgs.desktop-file-utils";
-        description = "The package to use when running update-desktop-database.";
+      desktopFileUtilsPackage = lib.mkPackageOption pkgs "desktop-file-utils" {
+        extraDescription = "Used when running update-desktop-database.";
       };
     };
   };

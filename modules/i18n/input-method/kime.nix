@@ -14,6 +14,7 @@ let
     types
     ;
 
+  im = config.i18n.inputMethod;
   cfg = config.i18n.inputMethod.kime;
 in
 {
@@ -46,7 +47,7 @@ in
     };
   };
 
-  config = mkIf (config.i18n.inputMethod.enabled == "kime") {
+  config = mkIf (im.enable && im.type == "kime") {
     i18n.inputMethod.package = pkgs.kime;
 
     home.sessionVariables = {
@@ -62,7 +63,11 @@ in
         Description = "Kime input method editor";
         PartOf = [ "graphical-session.target" ];
       };
-      Service.ExecStart = "${pkgs.kime}/bin/kime";
+      Service = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.kime}/bin/kime";
+      };
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };

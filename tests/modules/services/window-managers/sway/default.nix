@@ -1,6 +1,7 @@
 {
   sway-bar-focused-colors = ./sway-bar-focused-colors.nix;
   sway-bindkeys-to-code-and-extra-config = ./sway-bindkeys-to-code-and-extra-config.nix;
+  sway-bindswitches = ./sway-bindswitches.nix;
   sway-default = ./sway-default.nix;
   sway-followmouse = ./sway-followmouse.nix;
   sway-followmouse-legacy = ./sway-followmouse-legacy.nix;

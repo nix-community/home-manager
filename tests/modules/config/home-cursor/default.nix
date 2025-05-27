@@ -1,12 +1,20 @@
+let
+  package = {
+    buildScript = ''
+      mkdir -p $out/share/icons/catppuccin-macchiato-blue-cursors
+      echo test > $out/share/icons/catppuccin-macchiato-blue-cursors/index.theme
+    '';
+  };
+in
 {
   # Ensure backwards compatibility with existing configs
   home-cursor-legacy =
-    { realPkgs, ... }:
+    { config, ... }:
     {
       config = {
         home.pointerCursor = {
-          package = realPkgs.catppuccin-cursors.macchiatoBlue;
           name = "catppuccin-macchiato-blue-standard";
+          package = config.lib.test.mkStubPackage package;
           size = 64;
           gtk.enable = true;
           hyprcursor.enable = true;
@@ -16,9 +24,7 @@
         home.stateVersion = "24.11";
 
         nmt.script = ''
-          assertFileContent \
-            home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme \
-            ${./expected-index.theme}
+          assertFileExists home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme
 
           hmEnvFile=home-path/etc/profile.d/hm-session-vars.sh
           assertFileExists $hmEnvFile
@@ -61,12 +67,12 @@
     };
 
   home-cursor-legacy-disabled-with-enable =
-    { realPkgs, ... }:
+    { config, ... }:
     {
       config = {
         home.pointerCursor = {
           enable = false;
-          package = realPkgs.catppuccin-cursors.macchiatoBlue;
+          package = config.lib.test.mkStubPackage package;
           name = "catppuccin-macchiato-blue-standard";
           size = 64;
           gtk.enable = true;
@@ -90,12 +96,12 @@
     };
 
   home-cursor-legacy-enabled-with-enable =
-    { realPkgs, ... }:
+    { config, ... }:
     {
       config = {
         home.pointerCursor = {
           enable = true;
-          package = realPkgs.catppuccin-cursors.macchiatoBlue;
+          package = config.lib.test.mkStubPackage package;
           name = "catppuccin-macchiato-blue-standard";
           size = 64;
           gtk.enable = true;
@@ -106,9 +112,7 @@
         home.stateVersion = "24.11";
 
         nmt.script = ''
-          assertFileContent \
-            home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme \
-            ${./expected-index.theme}
+          assertFileExists home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme
 
           hmEnvFile=home-path/etc/profile.d/hm-session-vars.sh
           assertFileExists $hmEnvFile
@@ -122,12 +126,12 @@
     };
 
   home-cursor =
-    { realPkgs, ... }:
+    { config, ... }:
     {
       config = {
         home.pointerCursor = {
           enable = true;
-          package = realPkgs.catppuccin-cursors.macchiatoBlue;
+          package = config.lib.test.mkStubPackage package;
           name = "catppuccin-macchiato-blue-standard";
           size = 64;
           gtk.enable = true;
@@ -138,9 +142,7 @@
         home.stateVersion = "25.05";
 
         nmt.script = ''
-          assertFileContent \
-            home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme \
-            ${./expected-index.theme}
+          assertFileExists home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme
 
           hmEnvFile=home-path/etc/profile.d/hm-session-vars.sh
           assertFileExists $hmEnvFile
@@ -153,12 +155,12 @@
     };
 
   home-cursor-disabled =
-    { realPkgs, ... }:
+    { config, ... }:
     {
       config = {
         home.pointerCursor = {
           enable = false;
-          package = realPkgs.catppuccin-cursors.macchiatoBlue;
+          package = config.lib.test.mkStubPackage package;
           name = "catppuccin-macchiato-blue-standard";
           size = 64;
           gtk.enable = true;

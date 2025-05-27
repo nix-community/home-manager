@@ -2,8 +2,6 @@
 
 let
 
-  inherit (pkgs.lib) escapeShellArg;
-
   home = "/home/alice";
 
 in

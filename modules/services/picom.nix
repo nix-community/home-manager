@@ -10,10 +10,8 @@ let
   inherit (builtins)
     elemAt
     isAttrs
-    isBool
     length
     mapAttrs
-    toJSON
     ;
   inherit (lib)
     boolToString
@@ -28,9 +26,7 @@ let
     mkDefault
     mkIf
     mkOption
-    optional
     types
-    warn
     getExe
     ;
 
@@ -299,15 +295,7 @@ in
       '';
     };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.picom;
-      defaultText = literalExpression "pkgs.picom";
-      example = literalExpression "pkgs.picom";
-      description = ''
-        Picom derivation to use.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "picom" { };
 
     settings =
       with types;

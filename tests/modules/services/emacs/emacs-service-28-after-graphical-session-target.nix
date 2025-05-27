@@ -30,9 +30,13 @@
 
     assertFileContent \
       home-files/.config/systemd/user/emacs.service \
-      ${pkgs.substituteAll {
-        inherit (pkgs) runtimeShell;
+      ${pkgs.substitute {
         src = ./emacs-service-emacs-after-graphical-session-target.service;
+        substitutions = [
+          "--replace"
+          "@runtimeShell@"
+          pkgs.runtimeShell
+        ];
       }}
 
     assertFileContent \

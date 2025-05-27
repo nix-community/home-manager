@@ -10,18 +10,17 @@ let
   cfg = config.services.conky;
 
 in
-with lib;
 {
-  meta.maintainers = [ hm.maintainers.kaleo ];
+  meta.maintainers = [ lib.hm.maintainers.kaleo ];
 
   options = {
     services.conky = {
-      enable = mkEnableOption "Conky, a light-weight system monitor";
+      enable = lib.mkEnableOption "Conky, a light-weight system monitor";
 
-      package = mkPackageOption pkgs "conky" { };
+      package = lib.mkPackageOption pkgs "conky" { };
 
       extraConfig = lib.mkOption {
-        type = types.lines;
+        type = lib.types.lines;
         default = "";
         description = ''
           Configuration used by the Conky daemon. Check
@@ -33,8 +32,8 @@ with lib;
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = [ (hm.assertions.assertPlatform "services.conky" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [ (lib.hm.assertions.assertPlatform "services.conky" pkgs lib.platforms.linux) ];
 
     home.packages = [ cfg.package ];
 
@@ -49,7 +48,7 @@ with lib;
         RestartSec = "3";
         ExecStart = toString (
           [ "${cfg.package}/bin/conky" ]
-          ++ optional (cfg.extraConfig != "") "--config ${pkgs.writeText "conky.conf" cfg.extraConfig}"
+          ++ lib.optional (cfg.extraConfig != "") "--config ${pkgs.writeText "conky.conf" cfg.extraConfig}"
         );
       };
 

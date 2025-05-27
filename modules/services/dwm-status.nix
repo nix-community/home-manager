@@ -4,10 +4,9 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
+
   cfg = config.services.dwm-status;
 
   jsonFormat = pkgs.formats.json { };
@@ -31,14 +30,10 @@ in
 {
   options = {
     services.dwm-status = {
-      enable = mkEnableOption "dwm-status user service";
+      enable = lib.mkEnableOption "dwm-status user service";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.dwm-status;
-        defaultText = literalExpression "pkgs.dwm-status";
+      package = lib.mkPackageOption pkgs "dwm-status" {
         example = "pkgs.dwm-status.override { enableAlsaUtils = false; }";
-        description = "Which dwm-status package to use.";
       };
 
       order = mkOption {
@@ -49,7 +44,7 @@ in
       extraConfig = mkOption {
         type = jsonFormat.type;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             separator = "#";
 
@@ -67,7 +62,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.dwm-status" pkgs lib.platforms.linux)
     ];

@@ -4,10 +4,17 @@
   lib,
   ...
 }:
-
 let
-
   cfg = config.i18n.inputMethod;
+
+  allowedTypes = lib.types.enum [
+    "fcitx"
+    "fcitx5"
+    "nabi"
+    "uim"
+    "hime"
+    "kime"
+  ];
 
   gtk2Cache =
     pkgs.runCommandLocal "gtk2-immodule.cache"
@@ -36,7 +43,6 @@ let
         GTK_PATH=${cfg.package}/lib/gtk-3.0/ \
           gtk-query-immodules-3.0 > $out/etc/gtk-3.0/immodules.cache
       '';
-
 in
 {
   imports = [
@@ -49,18 +55,22 @@ in
 
   options.i18n = {
     inputMethod = {
+      enable = lib.mkEnableOption "an additional input method type" // {
+        default = cfg.enabled != null;
+        defaultText = lib.literalMD "`true` if the deprecated option `enabled` is set, false otherwise";
+      };
+
       enabled = lib.mkOption {
-        type = lib.types.nullOr (
-          lib.types.enum [
-            "fcitx"
-            "fcitx5"
-            "nabi"
-            "uim"
-            "hime"
-            "kime"
-          ]
-        );
+        type = lib.types.nullOr allowedTypes;
         default = null;
+        example = "fcitx5";
+        description = "Deprecated - use `type` and `enable = true` instead";
+      };
+
+      type = lib.mkOption {
+        type = lib.types.nullOr allowedTypes;
+        default = cfg.enabled;
+        defaultText = lib.literalMD "The value of the deprecated option `enabled`, defaulting to null";
         example = "fcitx5";
         description = ''
           Select the enabled input method. Input methods are software to input
@@ -103,7 +113,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enabled != null) {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "i18n.inputMethod" pkgs lib.platforms.linux)
       {
@@ -112,6 +122,10 @@ in
       }
     ];
 
+    warnings =
+      lib.optional (cfg.enabled != null)
+        "i18n.inputMethod.enabled will be removed in a future release. Please use .type, and .enable = true instead";
+
     home.packages = [
       cfg.package
       gtk2Cache
@@ -119,5 +133,8 @@ in
     ];
   };
 
-  meta.maintainers = [ lib.hm.maintainers.kranzes ];
+  meta.maintainers = [
+    lib.hm.maintainers.kranzes
+    lib.maintainers.awwpotato
+  ];
 }

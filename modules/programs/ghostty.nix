@@ -185,7 +185,11 @@ in
         programs.bat = lib.mkIf (cfg.package != null) {
           syntaxes.ghostty = {
             src = cfg.package;
-            file = "share/bat/syntaxes/ghostty.sublime-syntax";
+            file =
+              if pkgs.stdenv.hostPlatform.isDarwin then
+                "Applications/Ghostty.app/Contents/Resources/bat/syntaxes/ghostty.sublime-syntax"
+              else
+                "share/bat/syntaxes/ghostty.sublime-syntax";
           };
           config.map-syntax = [ "${config.xdg.configHome}/ghostty/config:Ghostty Config" ];
         };

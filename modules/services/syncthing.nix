@@ -8,8 +8,6 @@ let
   inherit (lib)
     literalExpression
     mkOption
-    mkEnableOption
-    mkPackageOption
     types
     ;
 
@@ -226,7 +224,7 @@ in
 
   options = {
     services.syncthing = {
-      enable = mkEnableOption ''
+      enable = lib.mkEnableOption ''
         Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.
       '';
 
@@ -408,7 +406,7 @@ in
                 will be reverted on restart if [overrideFolders](#opt-services.syncthing.overrideFolders)
                 is enabled.
               '';
-              example = literalExpression ''
+              example = lib.literalExpression ''
                 {
                   "/home/user/sync" = {
                     id = "syncme";
@@ -492,7 +490,7 @@ in
                           There are 4 different types of versioning with different parameters.
                           See <https://docs.syncthing.net/users/versioning.html>.
                         '';
-                        example = literalExpression ''
+                        example = lib.literalExpression ''
                           [
                             {
                               versioning = {
@@ -631,7 +629,7 @@ in
         '';
       };
 
-      package = mkPackageOption pkgs "syncthing" { };
+      package = lib.mkPackageOption pkgs "syncthing" { };
 
       tray = mkOption {
         type =

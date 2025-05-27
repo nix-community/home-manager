@@ -6,5 +6,6 @@
   atuin-no-shell = ./no-shell.nix;
   atuin-zsh = ./zsh.nix;
   atuin-set-flags = ./set-flags.nix;
+  atuin-theme = ./theme.nix;
   atuin-nushell = ./nushell.nix;
 }

@@ -6,6 +6,7 @@
 }:
 let
   inherit (lib) mkOption optionalAttrs types;
+  yamlFormat = pkgs.formats.yaml { };
 in
 {
   imports =
@@ -46,7 +47,10 @@ in
 
     enableIonIntegration = lib.hm.shell.mkIonIntegrationOption { inherit config; };
 
-    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; } // {
+      default = false;
+      example = true;
+    };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
@@ -102,6 +106,16 @@ in
     };
 
     package = lib.mkPackageOption pkgs "eza" { nullable = true; };
+
+    theme = mkOption {
+      type = yamlFormat.type;
+      default = { };
+      description = ''
+        Written to {file}`$XDG_CONFIG_HOME/eza/theme.yml`
+
+        See <https://github.com/eza-community/eza#custom-themes>
+      '';
+    };
   };
 
   config =
@@ -145,6 +159,10 @@ in
           programs.eza.icons = ${if cfg.icons then ''"auto"'' else "null"}'';
 
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+      xdg.configFile."eza/theme.yml" = lib.mkIf (cfg.theme != { }) {
+        source = yamlFormat.generate "eza-theme" cfg.theme;
+      };
 
       programs.bash.shellAliases = optionsAlias // optionalAttrs cfg.enableBashIntegration aliases;
 

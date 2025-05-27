@@ -6,7 +6,7 @@
 
     pls = {
       enable = true;
-      enableAliases = true;
+      enableFishIntegration = true;
       package = config.lib.test.mkStubPackage { outPath = "@pls@"; };
     };
   };

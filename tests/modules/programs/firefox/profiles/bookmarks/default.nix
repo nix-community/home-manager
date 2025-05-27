@@ -2,7 +2,6 @@ modulePath:
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -82,7 +81,7 @@ in
     // {
       nmt.script = ''
         bookmarksUserJs=$(normalizeStorePaths \
-          home-files/${cfg.configPath}/bookmarks/user.js)
+          "home-files/${cfg.profilesPath}/bookmarks/user.js")
 
         assertFileContent \
           $bookmarksUserJs \
@@ -90,7 +89,7 @@ in
 
         bookmarksFile="$(sed -n \
           '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \
-          $TESTED/home-files/${cfg.configPath}/bookmarks/user.js)"
+          "$TESTED/home-files/${cfg.profilesPath}/bookmarks/user.js")"
 
         assertFileContent \
           $bookmarksFile \

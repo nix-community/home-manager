@@ -74,8 +74,8 @@ in
               lib.mapAttrsToList (group: value: toLine file (path ++ [ group ]) value) value
             else
               "run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file '${configHome}/${file}' ${
-                lib.concatMapStringsSep " " (x: "--group ${x}") (lib.lists.init path)
-              } --key '${lib.lists.last path}' ${toValue value}";
+                lib.concatMapStringsSep " " (x: "--group ${lib.escapeShellArg x}") (lib.lists.init path)
+              } --key ${lib.escapeShellArg (lib.lists.last path)} ${toValue value}";
           lines = lib.flatten (lib.mapAttrsToList (file: attrs: toLine file [ ] attrs) cfg);
         in
         builtins.concatStringsSep "\n" lines

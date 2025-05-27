@@ -6,7 +6,10 @@
     platformTheme.name = "gtk";
   };
 
-  i18n.inputMethod.enabled = "fcitx5";
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+  };
 
   nixpkgs.overlays = [
     (final: prev: {

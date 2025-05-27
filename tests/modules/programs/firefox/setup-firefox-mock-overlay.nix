@@ -9,6 +9,7 @@ modulePath:
 let
 
   cfg = lib.getAttrFromPath modulePath config;
+  darwinPath = "Applications/${cfg.darwinAppName}.app/Contents/MacOS";
 
 in
 {
@@ -26,12 +27,21 @@ in
           meta.description = "I pretend to be ${cfg.name}";
         };
         outPath = null;
-        buildScript = ''
-          echo BUILD
-          mkdir -p "$out"/{bin,lib}
-          touch "$out/bin/${cfg.wrappedPackageName}"
-          chmod 755 "$out/bin/${cfg.wrappedPackageName}"
-        '';
+        buildScript =
+          if realPkgs.stdenv.hostPlatform.isDarwin then
+            ''
+              echo BUILD
+              mkdir -p "$out"/${darwinPath}
+              touch "$out/${darwinPath}/${cfg.wrappedPackageName}"
+              chmod 755 "$out/${darwinPath}/${cfg.wrappedPackageName}"
+            ''
+          else
+            ''
+              echo BUILD
+              mkdir -p "$out"/{bin,lib}
+              touch "$out/bin/${cfg.wrappedPackageName}"
+              chmod 755 "$out/bin/${cfg.wrappedPackageName}"
+            '';
       };
 
       chrome-gnome-shell = {

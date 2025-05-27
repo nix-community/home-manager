@@ -4,22 +4,19 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.parcellite;
 
 in
 {
-  meta.maintainers = [ maintainers.gleber ];
+  meta.maintainers = [ lib.maintainers.gleber ];
 
   options.services.parcellite = {
-    enable = mkEnableOption "Parcellite";
+    enable = lib.mkEnableOption "Parcellite";
 
-    extraOptions = mkOption {
-      type = types.listOf types.str;
+    extraOptions = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
       default = [ ];
       example = [ "--no-icon" ];
       description = ''
@@ -27,16 +24,12 @@ in
       '';
     };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.parcellite;
-      defaultText = literalExpression "pkgs.parcellite";
-      example = literalExpression "pkgs.clipit";
-      description = "Parcellite derivation to use.";
+    package = lib.mkPackageOption pkgs "parcellite" {
+      example = "pkgs.clipit";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.parcellite" pkgs lib.platforms.linux)
     ];
@@ -59,7 +52,7 @@ in
       };
 
       Service = {
-        ExecStart = "${cfg.package}/bin/${cfg.package.pname} ${escapeShellArgs cfg.extraOptions}";
+        ExecStart = "${cfg.package}/bin/${cfg.package.pname} ${lib.escapeShellArgs cfg.extraOptions}";
         Restart = "on-abort";
       };
     };

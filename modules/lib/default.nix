@@ -6,6 +6,8 @@ rec {
   assertions = import ./assertions.nix { inherit lib; };
 
   booleans = import ./booleans.nix { inherit lib; };
+  darwin = import ./darwin.nix { inherit lib; };
+  deprecations = import ./deprecations.nix { inherit lib; };
   generators = import ./generators.nix { inherit lib; };
   gvariant = import ./gvariant.nix { inherit lib; };
   maintainers = import ./maintainers.nix;

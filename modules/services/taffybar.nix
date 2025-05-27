@@ -5,33 +5,25 @@
   ...
 }:
 
-with lib;
-
 let
 
   cfg = config.services.taffybar;
 
 in
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     services.taffybar = {
-      enable = mkEnableOption "Taffybar";
+      enable = lib.mkEnableOption "Taffybar";
 
-      package = mkOption {
-        default = pkgs.taffybar;
-        defaultText = literalExpression "pkgs.taffybar";
-        type = types.package;
-        example = literalExpression "pkgs.taffybar";
-        description = "The package to use for the Taffybar binary.";
-      };
+      package = lib.mkPackageOption pkgs "taffybar" { };
     };
   };
 
-  config = mkIf config.services.taffybar.enable {
+  config = lib.mkIf config.services.taffybar.enable {
     assertions = [
-      (hm.assertions.assertPlatform "services.taffybar" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.taffybar" pkgs lib.platforms.linux)
     ];
 
     systemd.user.services.taffybar = {

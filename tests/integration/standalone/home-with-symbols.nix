@@ -2,8 +2,6 @@
 
 let
 
-  inherit (pkgs.lib) escapeShellArg;
-
   nixHome = "/home/alice@home\\extra";
   pyHome = "/home/alice@home\\\\extra";
 

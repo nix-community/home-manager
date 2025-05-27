@@ -81,12 +81,7 @@ in
       ```
       to your system configuration for the daemon to work correctly'';
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.easyeffects;
-      defaultText = literalExpression "pkgs.easyeffects";
-      description = "The `easyeffects` package to use.";
-    };
+    package = lib.mkPackageOption pkgs "easyeffects" { };
 
     preset = mkOption {
       type = types.str;

@@ -1,6 +1,6 @@
 # launchd option type from nix-darwin
 #
-# Original code from https://github.com/LnL7/nix-darwin/commit/861af0fc94df9454f4e92d6892f75588763164bb
+# Original code from https://github.com/nix-darwin/nix-darwin/commit/861af0fc94df9454f4e92d6892f75588763164bb
 
 { lib, ... }:
 

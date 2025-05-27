@@ -4,7 +4,7 @@
 
     pls = {
       enable = true;
-      enableAliases = true;
+      enableBashIntegration = true;
     };
   };
 

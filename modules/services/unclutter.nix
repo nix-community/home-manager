@@ -5,23 +5,21 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    mkOption
+    types
+    ;
+
   cfg = config.services.unclutter;
 
 in
 {
   options.services.unclutter = {
 
-    enable = mkEnableOption "unclutter";
+    enable = lib.mkEnableOption "unclutter";
 
-    package = mkOption {
-      description = "unclutter derivation to use.";
-      type = types.package;
-      default = pkgs.unclutter-xfixes;
-      defaultText = literalExpression "pkgs.unclutter-xfixes";
-    };
+    package = lib.mkPackageOption pkgs "unclutter-xfixes" { };
 
     timeout = mkOption {
       description = "Number of seconds before the cursor is marked inactive.";
@@ -46,7 +44,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.unclutter" pkgs lib.platforms.linux)
     ];
@@ -63,7 +61,7 @@ in
           ${cfg.package}/bin/unclutter \
             --timeout ${toString cfg.timeout} \
             --jitter ${toString (cfg.threshold - 1)} \
-            ${concatMapStrings (x: " --${x}") cfg.extraOptions}
+            ${lib.concatMapStrings (x: " --${x}") cfg.extraOptions}
         '';
         RestartSec = 3;
         Restart = "always";

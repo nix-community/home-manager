@@ -19,9 +19,11 @@ let
 
   pluginModule = types.submodule {
     options = {
-      plugin = mkOption {
-        type = types.package;
-        description = "Path of the configuration file to include.";
+      plugin = lib.mkPackageOption pkgs.tmuxPlugins "plugin" {
+        example = "pkgs.tmuxPlugins.sensible";
+        default = null;
+        pkgsText = "pkgs.tmuxPlugins";
+        extraDescription = "Path of the configuration file to include.";
       };
 
       extraConfig = mkOption {

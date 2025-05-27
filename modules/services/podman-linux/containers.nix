@@ -4,10 +4,9 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption types;
+
   cfg = config.services.podman;
 
   podman-lib = import ./podman-lib.nix { inherit pkgs lib config; };
@@ -25,11 +24,14 @@ let
 
       dependencyBySuffix =
         type: value:
-        if (hasInfix ".${type}" value) then
+        if (lib.hasInfix ".${type}" value) then
           let
             name = extractQuadletReference type value;
           in
-          if (hasAttr name cfg.internal.builtQuadlets) then [ (cfg.internal.builtQuadlets.${name}) ] else [ ]
+          if (lib.hasAttr name cfg.internal.builtQuadlets) then
+            [ (cfg.internal.builtQuadlets.${name}) ]
+          else
+            [ ]
         else
           [ ];
 
@@ -55,25 +57,29 @@ let
           builtins.concatLists (map (checkQuadletReference types) value)
         else
           let
-            type = findFirst (t: hasInfix ".${t}" value) null types;
+            type = lib.findFirst (t: lib.hasInfix ".${t}" value) null types;
           in
           if (type != null) then
             let
               quadletName = extractQuadletReference type value;
-              quadletsOfType = filterAttrs (n: v: v.quadletData.resourceType == type) cfg.internal.builtQuadlets;
+              quadletsOfType = lib.filterAttrs (
+                n: v: v.quadletData.resourceType == type
+              ) cfg.internal.builtQuadlets;
             in
-            if (hasAttr quadletName quadletsOfType) then
+            if (lib.hasAttr quadletName quadletsOfType) then
               [
-                (replaceStrings [ quadletName ] [ "podman-${quadletName}" ] value)
+                (lib.replaceStrings [ quadletName ] [ "podman-${quadletName}" ] value)
               ]
             else
               [ value ]
-          else if ((hasInfix "/nix/store" value) == false && hasAttr value cfg.internal.builtQuadlets) then
+          else if
+            ((lib.hasInfix "/nix/store" value) == false && lib.hasAttr value cfg.internal.builtQuadlets)
+          then
             lib.warn ''
               A value for Podman container '${name}' might use a reference to another quadlet: ${value}.
               Append the type '.${
                 cfg.internal.builtQuadlets.${value}.quadletData.resourceType
-              }' to '${baseName value}' if this is intended.
+              }' to '${lib.baseName value}' if this is intended.
             '' [ value ]
           else
             [ value ];
@@ -104,7 +110,7 @@ let
             Volume = checkQuadletReference [ "volume" ] containerDef.volumes;
           };
           Install = {
-            WantedBy = optionals containerDef.autoStart [
+            WantedBy = lib.optionals containerDef.autoStart [
               "default.target"
               "multi-user.target"
             ];
@@ -226,7 +232,7 @@ let
       environment = mkOption {
         type = podman-lib.primitiveAttrs;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             VAR1 = "0:100";
             VAR2 = true;
@@ -268,7 +274,7 @@ let
       extraConfig = mkOption {
         type = podman-lib.extraConfigType;
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             Container = {
               User = 1000;
@@ -320,8 +326,8 @@ let
       network = mkOption {
         type = with types; either str (listOf str);
         default = [ ];
-        apply = value: if isString value then [ value ] else value;
-        example = literalMD ''
+        apply = value: if lib.isString value then [ value ] else value;
+        example = lib.literalMD ''
           `"host"`
           or
           `"bridge_network_1"`
@@ -392,11 +398,11 @@ in
 
   config =
     let
-      containerQuadlets = mapAttrsToList toQuadletInternal cfg.containers;
+      containerQuadlets = lib.mapAttrsToList toQuadletInternal cfg.containers;
     in
-    mkIf cfg.enable {
+    lib.mkIf cfg.enable {
       services.podman.internal.quadletDefinitions = containerQuadlets;
-      assertions = flatten (map (container: container.assertions) containerQuadlets);
+      assertions = lib.flatten (map (container: container.assertions) containerQuadlets);
 
       # manifest file
       xdg.configFile."podman/containers.manifest".text =

@@ -4,29 +4,21 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.playerctld;
 
 in
 {
-  meta.maintainers = [ hm.maintainers.fendse ];
+  meta.maintainers = [ lib.hm.maintainers.fendse ];
 
   options.services.playerctld = {
-    enable = mkEnableOption "playerctld daemon";
+    enable = lib.mkEnableOption "playerctld daemon";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.playerctl;
-      defaultText = literalExpression "pkgs.playerctl";
-      description = "The playerctl package to use.";
-    };
+    package = lib.mkPackageOption pkgs "playerctl" { };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.playerctld" pkgs lib.platforms.linux)
     ];

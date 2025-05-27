@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.opensnitch-ui;
@@ -14,15 +11,15 @@ let
 in
 {
 
-  meta.maintainers = [ maintainers.onny ];
+  meta.maintainers = [ lib.maintainers.onny ];
 
   options = {
     services.opensnitch-ui = {
-      enable = mkEnableOption "Opensnitch client";
+      enable = lib.mkEnableOption "Opensnitch client";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.opensnitch-ui" pkgs lib.platforms.linux)
     ];

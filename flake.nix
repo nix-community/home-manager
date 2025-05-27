@@ -45,22 +45,25 @@
     }
     // (
       let
-        forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+        forAllPkgs =
+          f:
+          nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system: f nixpkgs.legacyPackages.${system});
       in
       {
-        formatter = forAllSystems (
-          system:
-          nixpkgs.legacyPackages.${system}.nixfmt-tree.override {
-            settings = {
-              tree-root-file = "release.json";
-            };
+        formatter = forAllPkgs (
+          pkgs:
+          pkgs.treefmt.withConfig {
+            runtimeInputs = with pkgs; [
+              nixfmt-rfc-style
+              keep-sorted
+            ];
+            settings = pkgs.lib.importTOML ./treefmt.toml;
           }
         );
 
-        packages = forAllSystems (
-          system:
+        packages = forAllPkgs (
+          pkgs:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
             releaseInfo = nixpkgs.lib.importJSON ./release.json;
             docs = import ./docs {
               inherit pkgs;
@@ -71,6 +74,10 @@
           {
             default = hmPkg;
             home-manager = hmPkg;
+
+            create-news-entry = pkgs.writeShellScriptBin "create-news-entry" ''
+              ./modules/misc/news/create-news-entry.sh
+            '';
 
             docs-html = docs.manual.html;
             docs-htmlOpenTool = docs.manual.htmlOpenTool;

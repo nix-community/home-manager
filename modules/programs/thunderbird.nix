@@ -275,7 +275,7 @@ in
                 feedAccounts = mkOption {
                   type = types.attrsOf (
                     types.submodule (
-                      { config, name, ... }:
+                      { name, ... }:
                       {
                         options = {
                           name = mkOption {
@@ -452,11 +452,11 @@ in
         type = types.bool;
         default = true;
         example = false;
-        visible = isDarwin;
+        visible = false;
         readOnly = !isDarwin;
         description = ''
-          Warn to set environment variables before using this module. Only
-          relevant on Darwin.
+          Using programs.thunderbird.darwinSetupWarning is deprecated. The
+          module is compatible with all Thunderbird installations.
         '';
       };
     };
@@ -611,6 +611,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    warnings = lib.optionals (!cfg.darwinSetupWarning) [
+      ''
+        Using programs.thunderbird.darwinSetupWarning is deprecated and will be
+        removed in the future. Thunderbird is now supported on Darwin.
+      ''
+    ];
+
     assertions = [
       (
         let
@@ -641,13 +648,6 @@ in
         }
       )
     ];
-
-    warnings = lib.optional (isDarwin && cfg.darwinSetupWarning) ''
-      Thunderbird packages are not yet supported on Darwin. You can still use
-      this module to manage your accounts and profiles by setting
-      'programs.thunderbird.package' to a dummy value, for example using
-      'pkgs.runCommand'.
-    '';
 
     home.packages = [
       cfg.package
@@ -704,7 +704,9 @@ in
                     "account1"
                   ];
                 in
-                accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds);
+                lib.optionals (accounts != [ ]) (
+                  accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
+                );
             in
             {
               text = mkUserJs (builtins.foldl' (a: b: a // b) { } (

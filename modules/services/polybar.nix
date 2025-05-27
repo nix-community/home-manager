@@ -5,10 +5,13 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatLists
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.services.polybar;
   opt = options.services.polybar;
@@ -24,8 +27,8 @@ let
     #   foo-0 = "a";
     #   foo-1 = "b";
     # }
-    if isList val then
-      concatLists (imap0 (i: convertPolybarKeyVal "${key}-${toString i}") val)
+    if lib.isList val then
+      concatLists (lib.imap0 (i: convertPolybarKeyVal "${key}-${toString i}") val)
     # Convert {
     #   foo.text = "a";
     #   foo.font = 1;
@@ -33,29 +36,29 @@ let
     #   foo = "a";
     #   foo-font = 1;
     # }
-    else if isAttrs val && !lib.isDerivation val then
+    else if lib.isAttrs val && !lib.isDerivation val then
       concatLists (
-        mapAttrsToList (k: convertPolybarKeyVal (if k == "text" then key else "${key}-${k}")) val
+        lib.mapAttrsToList (k: convertPolybarKeyVal (if k == "text" then key else "${key}-${k}")) val
       )
     # Base case
     else
-      [ (nameValuePair key val) ];
+      [ (lib.nameValuePair key val) ];
 
   convertPolybarSection =
-    _: attrs: listToAttrs (concatLists (mapAttrsToList convertPolybarKeyVal attrs));
+    _: attrs: lib.listToAttrs (concatLists (lib.mapAttrsToList convertPolybarKeyVal attrs));
 
   # Converts an attrset to INI text, quoting values as expected by polybar.
   # This does no more fancy conversion.
-  toPolybarIni = generators.toINI {
+  toPolybarIni = lib.generators.toINI {
     mkKeyValue =
       key: value:
       let
-        quoted = v: if hasPrefix " " v || hasSuffix " " v then ''"${v}"'' else v;
+        quoted = v: if lib.hasPrefix " " v || lib.hasSuffix " " v then ''"${v}"'' else v;
 
         value' =
-          if isBool value then
+          if lib.isBool value then
             (if value then "true" else "false")
-          else if (isString value && key != "include-file") then
+          else if (lib.isString value && key != "include-file") then
             quoted value
           else
             toString value;
@@ -73,7 +76,7 @@ let
     if isDeclarativeConfig then
       pkgs.writeText "polybar.conf" ''
         ${toPolybarIni cfg.config}
-        ${toPolybarIni (mapAttrs convertPolybarSection cfg.settings)}
+        ${toPolybarIni (lib.mapAttrs convertPolybarSection cfg.settings)}
         ${cfg.extraConfig}
       ''
     else
@@ -83,7 +86,7 @@ in
 {
   options = {
     services.polybar = {
-      enable = mkEnableOption "Polybar status bar";
+      enable = lib.mkEnableOption "Polybar status bar";
 
       package = lib.mkPackageOption pkgs "polybar" {
         example = ''
@@ -108,7 +111,7 @@ in
           See also {option}`services.polybar.settings` for a more nix-friendly format.
         '';
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             "bar/top" = {
               monitor = "\''${env:MONITOR:eDP1}";
@@ -177,7 +180,7 @@ in
           ```
         '';
         default = { };
-        example = literalExpression ''
+        example = lib.literalExpression ''
           {
             "module/volume" = {
               type = "internal/pulseaudio";
@@ -225,7 +228,7 @@ in
       (lib.hm.assertions.assertPlatform "services.polybar" pkgs lib.platforms.linux)
     ];
 
-    meta.maintainers = with maintainers; [ h7x4 ];
+    meta.maintainers = with lib.maintainers; [ h7x4 ];
 
     home.packages = [ cfg.package ];
     xdg.configFile."polybar/config.ini" = mkIf (configFile != null) { source = configFile; };

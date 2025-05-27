@@ -6,6 +6,8 @@
 }:
 
 let
+  inherit (lib) mkOption types;
+
   cfg = config.services.signaturepdf;
   extraConfigToArgs =
     extraConfig:
@@ -19,15 +21,10 @@ in
 {
   meta.maintainers = [ lib.maintainers.DamienCassou ];
 
-  options.services.signaturepdf = with lib; {
-    enable = mkEnableOption "signaturepdf; signing, organizing, editing metadatas or compressing PDFs";
+  options.services.signaturepdf = {
+    enable = lib.mkEnableOption "signaturepdf; signing, organizing, editing metadatas or compressing PDFs";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.signaturepdf;
-      defaultText = "pkgs.signaturepdf";
-      description = "signaturepdf derivation to use.";
-    };
+    package = lib.mkPackageOption pkgs "signaturepdf" { };
 
     port = mkOption {
       type = types.port;

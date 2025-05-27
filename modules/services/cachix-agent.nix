@@ -4,26 +4,24 @@
   lib,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption optional types;
 
   cfg = config.services.cachix-agent;
 
 in
 {
-  meta.maintainers = [ maintainers.rycee ];
+  meta.maintainers = [ lib.maintainers.rycee ];
 
   options.services.cachix-agent = {
-    enable = mkEnableOption "Cachix Deploy Agent: <https://docs.cachix.org/deploy/>";
+    enable = lib.mkEnableOption "Cachix Deploy Agent: <https://docs.cachix.org/deploy/>";
 
     name = mkOption {
       type = types.str;
       description = "The unique agent name.";
     };
 
-    verbose = mkEnableOption "verbose output";
+    verbose = lib.mkEnableOption "verbose output";
 
     profile = mkOption {
       type = types.str;
@@ -39,12 +37,12 @@ in
       description = "Cachix URI to use.";
     };
 
-    package = mkPackageOption pkgs "cachix" { };
+    package = lib.mkPackageOption pkgs "cachix" { };
 
     credentialsFile = mkOption {
       type = types.path;
       default = "${config.xdg.configHome}/cachix-agent.token";
-      defaultText = literalExpression ''"''${config.xdg.configHome}/cachix-agent.token"'';
+      defaultText = lib.literalExpression ''"''${config.xdg.configHome}/cachix-agent.token"'';
       description = ''
         Required file that needs to contain
         `CACHIX_AGENT_TOKEN=...`.
@@ -52,7 +50,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.cachix-agent" pkgs lib.platforms.linux)
     ];
@@ -71,7 +69,7 @@ in
         # We don't want to kill children processes as those are deployments.
         KillMode = "process";
         Restart = "on-failure";
-        ExecStart = escapeShellArgs (
+        ExecStart = lib.escapeShellArgs (
           [ "${cfg.package}/bin/cachix" ]
           ++ optional cfg.verbose "--verbose"
           ++ optional (cfg.host != null) "--host ${cfg.host}"

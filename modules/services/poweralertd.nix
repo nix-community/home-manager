@@ -4,35 +4,34 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) types;
   inherit (lib.strings) toJSON;
+
   cfg = config.services.poweralertd;
   escapeSystemdExecArg =
     arg:
     let
       s =
-        if isPath arg then
+        if lib.isPath arg then
           "${arg}"
-        else if isString arg then
+        else if lib.isString arg then
           arg
-        else if isInt arg || isFloat arg || isDerivation arg then
+        else if lib.isInt arg || lib.isFloat arg || lib.isDerivation arg then
           toString arg
         else
           throw "escapeSystemdExecArg only allows strings, paths, numbers and derivations";
     in
-    replaceStrings [ "%" "$" ] [ "%%" "$$" ] (toJSON s);
-  escapeSystemdExecArgs = concatMapStringsSep " " escapeSystemdExecArg;
+    lib.replaceStrings [ "%" "$" ] [ "%%" "$$" ] (toJSON s);
+  escapeSystemdExecArgs = lib.concatMapStringsSep " " escapeSystemdExecArg;
 in
 {
-  meta.maintainers = [ maintainers.thibautmarty ];
+  meta.maintainers = [ lib.maintainers.thibautmarty ];
 
   options.services.poweralertd = {
-    enable = mkEnableOption "the Upower-powered power alertd";
+    enable = lib.mkEnableOption "the Upower-powered power alertd";
 
-    extraArgs = mkOption {
+    extraArgs = lib.mkOption {
       type = with types; listOf str;
       default = [ ];
       example = [
@@ -45,7 +44,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.poweralertd" pkgs lib.platforms.linux)
     ];

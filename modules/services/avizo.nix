@@ -4,23 +4,20 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
   cfg = config.services.avizo;
   settingsFormat = pkgs.formats.ini { };
 in
 {
-  meta.maintainers = [ hm.maintainers.pltanton ];
+  meta.maintainers = [ lib.hm.maintainers.pltanton ];
 
   options.services.avizo = {
-    enable = mkEnableOption "avizo, a simple notification daemon";
+    enable = lib.mkEnableOption "avizo, a simple notification daemon";
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = (pkgs.formats.ini { }).type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           default = {
             time = 1.0;
@@ -36,23 +33,21 @@ in
       '';
     };
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.avizo;
-      defaultText = literalExpression "pkgs.avizo";
-      example = literalExpression ''
+    package = lib.mkPackageOption pkgs "avizo" {
+      example = ''
         pkgs.avizo.overrideAttrs (final: prev: {
           patchPhase = "cp ''${./images}/*.png data/images/";
         })
       '';
-      description = "The `avizo` package to use.";
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = [ (hm.assertions.assertPlatform "services.avizo" pkgs platforms.linux) ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.avizo" pkgs lib.platforms.linux)
+    ];
 
-    xdg.configFile."avizo/config.ini" = mkIf (cfg.settings != { }) {
+    xdg.configFile."avizo/config.ini" = lib.mkIf (cfg.settings != { }) {
       source = settingsFormat.generate "avizo-config.ini" cfg.settings;
     };
 

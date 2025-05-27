@@ -12,17 +12,15 @@
   xdgConfigFilePath,
   serviceDocumentation,
 }:
-
-with lib;
-
 let
+  inherit (lib) mkOption mkIf types;
 
   cfg = config.services.${moduleName};
   settingsFormat = pkgs.formats.ini { };
 
 in
 {
-  meta.maintainers = with maintainers; [
+  meta.maintainers = with lib.maintainers; [
     rycee
     thiagokokada
   ];
@@ -31,7 +29,7 @@ in
     let
       mkRenamed =
         old: new:
-        mkRenamedOptionModule
+        lib.mkRenamedOptionModule
           (
             [
               "services"
@@ -48,7 +46,7 @@ in
           ];
     in
     [
-      (mkRemovedOptionModule [ "services" moduleName "extraOptions" ]
+      (lib.mkRemovedOptionModule [ "services" moduleName "extraOptions" ]
         "All ${programName} configuration is now available through services.${moduleName}.settings instead."
       )
       (mkRenamed [ "brightness" "day" ] "brightness-day")
@@ -56,7 +54,7 @@ in
     ];
 
   options = {
-    enable = mkEnableOption programName;
+    enable = lib.mkEnableOption programName;
 
     dawnTime = mkOption {
       type = types.nullOr types.str;
@@ -134,13 +132,13 @@ in
     package = mkOption {
       type = types.package;
       default = defaultPackage;
-      defaultText = literalExpression examplePackage;
+      defaultText = lib.literalExpression examplePackage;
       description = ''
         ${programName} derivation to use.
       '';
     };
 
-    enableVerboseLogging = mkEnableOption "verbose service logging";
+    enableVerboseLogging = lib.mkEnableOption "verbose service logging";
 
     tray = mkOption {
       type = types.bool;
@@ -154,7 +152,7 @@ in
     settings = mkOption {
       type = types.submodule { freeformType = settingsFormat.type; };
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           ${mainSection} = {
             adjustment-method = "randr";
@@ -174,7 +172,7 @@ in
 
   config = {
     assertions = [
-      (hm.assertions.assertPlatform "services.${moduleName}" pkgs platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.${moduleName}" pkgs lib.platforms.linux)
 
       {
         assertion =
@@ -238,7 +236,7 @@ in
             configFullPath = config.xdg.configHome + "/${xdgConfigFilePath}";
           in
           "${cfg.package}/bin/${command} "
-          + cli.toGNUCommandLineShell { } {
+          + lib.cli.toGNUCommandLineShell { } {
             v = cfg.enableVerboseLogging;
             c = configFullPath;
           };

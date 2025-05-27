@@ -5,16 +5,19 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    mkOption
+    types
+    literalExpression
+    ;
 
   cfg = config.services.sxhkd;
 
-  keybindingsStr = concatStringsSep "\n" (
-    mapAttrsToList (
+  keybindingsStr = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (
       hotkey: command:
-      optionalString (command != null) ''
+      lib.optionalString (command != null) ''
         ${hotkey}
           ${command}
       ''
@@ -24,7 +27,7 @@ let
 in
 {
   imports = [
-    (mkRemovedOptionModule [
+    (lib.mkRemovedOptionModule [
       "services"
       "sxhkd"
       "extraPath"
@@ -32,13 +35,10 @@ in
   ];
 
   options.services.sxhkd = {
-    enable = mkEnableOption "simple X hotkey daemon";
+    enable = lib.mkEnableOption "simple X hotkey daemon";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.sxhkd;
-      defaultText = "pkgs.sxhkd";
-      description = "Package containing the {command}`sxhkd` executable.";
+    package = lib.mkPackageOption pkgs "sxhkd" {
+      extraDescription = "containing the sxhkd executable";
     };
 
     extraOptions = mkOption {
@@ -79,14 +79,14 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.sxhkd" pkgs lib.platforms.linux)
     ];
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."sxhkd/sxhkdrc".text = concatStringsSep "\n" [
+    xdg.configFile."sxhkd/sxhkdrc".text = lib.concatStringsSep "\n" [
       keybindingsStr
       cfg.extraConfig
     ];

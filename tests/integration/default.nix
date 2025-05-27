@@ -20,6 +20,7 @@ let
     nh = runTest ./standalone/nh.nix;
     nixos-basics = runTest ./nixos/basics.nix;
     rclone = runTest ./standalone/rclone;
+    restic = runTest ./standalone/restic.nix;
     standalone-flake-basics = runTest ./standalone/flake-basics.nix;
     standalone-standard-basics = runTest ./standalone/standard-basics.nix;
   };

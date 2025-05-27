@@ -4,10 +4,15 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib)
+    concatStringsSep
+    mapAttrsToList
+    mkIf
+    mkOption
+    optional
+    types
+    ;
 
   cfg = config.wayland.windowManager.sway;
 
@@ -70,7 +75,7 @@ let
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
-        default = mapAttrs (n: mkOptionDefault) {
+        default = lib.mapAttrs (n: lib.mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
           "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";
@@ -146,13 +151,43 @@ let
           Consider to use `lib.mkOptionDefault` function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
-        example = literalExpression ''
+        example = lib.literalExpression ''
           let
             modifier = config.wayland.windowManager.sway.config.modifier;
           in lib.mkOptionDefault {
             "''${modifier}+Return" = "exec ${cfg.config.terminal}";
             "''${modifier}+Shift+q" = "kill";
             "''${modifier}+d" = "exec ${cfg.config.menu}";
+          }
+        '';
+      };
+
+      bindswitches = mkOption {
+        type = types.attrsOf bindswitchOption;
+        default = { };
+        defaultText = "No bindswitches by default";
+        description = ''
+          Binds <switch> to execute the sway command command on state changes. Supported switches are lid (laptop
+          lid) and tablet (tablet mode) switches. Valid values for state are on, off and toggle. These switches are
+          on when the device lid is shut and when tablet mode is active respectively. toggle is also supported to run
+          a command both when the switch is toggled on or off.
+          See sway(5).
+        '';
+        example = lib.literalExpression ''
+          let
+            laptop = "eDP-1";
+          in
+          {
+            "lid:on" = {
+              reload = true;
+              locked = true;
+              action = "output ''${laptop} disable";
+            };
+            "lid:off" = {
+              reload = true;
+              locked = true;
+              action = "output ''${laptop} enable";
+            };
           }
         '';
       };
@@ -262,6 +297,42 @@ let
       };
   };
 
+  bindswitchOption = types.submodule {
+    options = {
+      action = mkOption {
+        type = types.str;
+        description = "The sway command to execute on state changes";
+      };
+
+      locked = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Unless the flag --locked is set, the command
+          will not be run when a screen locking program
+          is active. If there is a matching binding with
+          and without --locked, the one with will be preferred
+          when locked and the one without will be
+          preferred when unlocked.
+        '';
+      };
+
+      reload = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          If the --reload flag is given, the binding will
+          also be executed when the config is reloaded.
+          toggle bindings will not be executed on reload.
+          The --locked flag will operate as normal so if
+          the config is reloaded while locked and
+          --locked is not given, the binding will not be
+          executed.
+        '';
+      };
+    };
+  };
+
   commonFunctions = import ./lib/functions.nix {
     inherit config cfg lib;
     moduleName = "sway";
@@ -285,14 +356,35 @@ let
     ;
 
   startupEntryStr =
-    { command, always, ... }:
+    {
+      command,
+      always,
+      ...
+    }:
     ''
       ${if always then "exec_always" else "exec"} ${command}
     '';
 
+  bindswitchesStr =
+    bindswitches:
+    concatStringsSep "\n" (
+      mapAttrsToList (
+        event:
+        {
+          locked,
+          reload,
+          action,
+        }:
+        let
+          args = (lib.optionalString locked "--locked ") + (lib.optionalString reload "--reload ");
+        in
+        "bindswitch ${args} ${event} ${action}"
+      ) bindswitches
+    );
+
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
-    ${concatStringsSep "\n" (mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
+    ${concatStringsSep "\n" (lib.mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
     }
   '';
   inputStr = moduleStr "input";
@@ -353,6 +445,7 @@ let
               })
               (keycodebindingsStr keycodebindings)
             ]
+            ++ optional (builtins.attrNames bindswitches != [ ]) (bindswitchesStr bindswitches)
             ++ mapAttrsToList inputStr input
             ++ mapAttrsToList outputStr output # outputs
             ++ mapAttrsToList seatStr seat # seats
@@ -373,10 +466,9 @@ let
       ++ [ cfg.extraConfig ]
     );
   };
-
 in
 {
-  meta.maintainers = with maintainers; [
+  meta.maintainers = with lib.maintainers; [
     Scrumplex
     alexarice
     sumnerevans
@@ -392,7 +484,7 @@ in
       ];
     in
     [
-      (mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ]) (
+      (lib.mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ]) (
         modulePath
         ++ [
           "systemd"
@@ -402,7 +494,7 @@ in
     ];
 
   options.wayland.windowManager.sway = {
-    enable = mkEnableOption "sway wayland compositor";
+    enable = lib.mkEnableOption "sway wayland compositor";
 
     package = mkOption {
       type = with types; nullOr package;
@@ -412,7 +504,7 @@ in
         withBaseWrapper = cfg.wrapperFeatures.base;
         withGtkWrapper = cfg.wrapperFeatures.gtk;
       };
-      defaultText = literalExpression "${pkgs.sway}";
+      defaultText = lib.literalExpression "${pkgs.sway}";
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
@@ -477,7 +569,7 @@ in
         '';
       };
 
-      xdgAutostart = mkEnableOption ''
+      xdgAutostart = lib.mkEnableOption ''
         autostart of applications using
         {manpage}`systemd-xdg-autostart-generator(8)`
       '';
@@ -543,7 +635,7 @@ in
     checkConfig = mkOption {
       type = types.bool;
       default = cfg.package != null;
-      defaultText = literalExpression "wayland.windowManager.sway.package != null";
+      defaultText = lib.literalExpression "wayland.windowManager.sway.package != null";
       description = "If enabled, validates the generated config file.";
     };
 
@@ -560,54 +652,56 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    (mkIf (cfg.config != null) {
-      warnings =
-        (optional (isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
-        ++ flatten (
-          map (
-            b:
-            optional (isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
-          ) cfg.config.bars
-        )
-        ++ [
-          (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      (mkIf (cfg.config != null) {
+        warnings =
+          (optional (lib.isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
+          ++ lib.flatten (
+            map (
+              b:
+              optional (lib.isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
+            ) cfg.config.bars
+          )
+          ++ [
+            (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+          ];
+      })
+
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs lib.platforms.linux)
+          {
+            assertion = cfg.checkConfig -> cfg.package != null;
+            message = "programs.sway.checkConfig requires non-null programs.sway.package";
+          }
         ];
-    })
 
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs platforms.linux)
-        {
-          assertion = cfg.checkConfig -> cfg.package != null;
-          message = "programs.sway.checkConfig requires non-null programs.sway.package";
-        }
-      ];
+        home.packages = optional (cfg.package != null) cfg.package ++ optional cfg.xwayland pkgs.xwayland;
 
-      home.packages = optional (cfg.package != null) cfg.package ++ optional cfg.xwayland pkgs.xwayland;
-
-      xdg.configFile."sway/config" = {
-        source = configFile;
-        onChange = lib.optionalString (cfg.package != null) ''
-          swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
-          if [ -S "$swaySocket" ]; then
-            ${cfg.package}/bin/swaymsg -s $swaySocket reload
-          fi
-        '';
-      };
-
-      systemd.user.targets.sway-session = mkIf cfg.systemd.enable {
-        Unit = {
-          Description = "sway compositor session";
-          Documentation = [ "man:systemd.special(7)" ];
-          BindsTo = [ "graphical-session.target" ];
-          Wants = [
-            "graphical-session-pre.target"
-          ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
-          After = [ "graphical-session-pre.target" ];
-          Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+        xdg.configFile."sway/config" = {
+          source = configFile;
+          onChange = lib.optionalString (cfg.package != null) ''
+            swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x sway || true).sock"
+            if [ -S "$swaySocket" ]; then
+              ${cfg.package}/bin/swaymsg -s $swaySocket reload
+            fi
+          '';
         };
-      };
-    }
-  ]);
+
+        systemd.user.targets.sway-session = mkIf cfg.systemd.enable {
+          Unit = {
+            Description = "sway compositor session";
+            Documentation = [ "man:systemd.special(7)" ];
+            BindsTo = [ "graphical-session.target" ];
+            Wants = [
+              "graphical-session-pre.target"
+            ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+            After = [ "graphical-session-pre.target" ];
+            Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+          };
+        };
+      }
+    ]
+  );
 }

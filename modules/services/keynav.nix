@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
 
   cfg = config.services.keynav;
@@ -14,10 +11,10 @@ let
 in
 {
   options.services.keynav = {
-    enable = mkEnableOption "keynav";
+    enable = lib.mkEnableOption "keynav";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.keynav" pkgs lib.platforms.linux)
     ];

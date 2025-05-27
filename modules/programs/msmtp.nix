@@ -101,8 +101,8 @@ in
     xdg.configFile."msmtp/config".text = configFile msmtpAccounts;
 
     home.sessionVariables = {
-      MSMTP_QUEUE = "${config.xdg.dataHome}/msmtp/queue";
-      MSMTP_LOG = "${config.xdg.dataHome}/msmtp/queue.log";
+      MSMTPQ_Q = "${config.xdg.dataHome}/msmtp/queue";
+      MSMTPQ_LOG = "${config.xdg.dataHome}/msmtp/queue.log";
     };
   };
 }

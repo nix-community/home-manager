@@ -42,11 +42,7 @@ in
 
     style = mkOption {
       default = null;
-      type = types.nullOr types.lines;
-      description = ''
-        CSS style for wofi to use as a stylesheet. See
-        {manpage}`wofi(7)`.
-      '';
+      type = with types; nullOr (either lines path);
       example = ''
         * {
             font-family: monospace;
@@ -55,6 +51,10 @@ in
         window {
             background-color: #7c818c;
         }
+      '';
+      description = ''
+        CSS style for wofi to use as a stylesheet. See
+        {manpage}`wofi(7)`
       '';
     };
   };
@@ -70,7 +70,12 @@ in
       (mkIf (cfg.settings != { }) {
         "wofi/config".text = toConfig cfg.settings;
       })
-      (mkIf (cfg.style != null) { "wofi/style.css".text = cfg.style; })
+      (
+        let
+          styleFile = if lib.isString cfg.style then pkgs.writeText "wofi-style" cfg.style else cfg.style;
+        in
+        mkIf (cfg.style != null) { "wofi/style.css".source = styleFile; }
+      )
     ];
   };
 }

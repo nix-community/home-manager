@@ -11,9 +11,9 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       scss-reset,
+      ...
     }:
     let
       supportedSystems = [

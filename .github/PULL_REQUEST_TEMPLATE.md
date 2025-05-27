@@ -21,7 +21,8 @@ Also make sure to read the guidelines found at
 
 - [ ] Change is backwards compatible.
 
-- [ ] Code formatted with `./format`.
+- [ ] Code formatted with `nix fmt` or
+    `nix-shell -p treefmt nixfmt-rfc-style keep-sorted --run treefmt`.
 
 - [ ] Code tested through `nix-shell --pure tests -A run.all`
     or `nix build --reference-lock-file flake.lock ./tests#test-all` using Flakes.
@@ -40,7 +41,7 @@ Also make sure to read the guidelines found at
 
 - If this PR adds a new module
 
-  - [ ] Added myself as module maintainer. See [example](https://github.com/nix-community/home-manager/blob/068ff76a10e95820f886ac46957edcff4e44621d/modules/programs/lesspipe.nix#L6).
+  - [ ] Added myself as module maintainer. See [example](https://github.com/nix-community/home-manager/blob/a51598236f23c89e59ee77eb8e0614358b0e896c/modules/programs/lesspipe.nix#L11).
 
 #### Maintainer CC
 

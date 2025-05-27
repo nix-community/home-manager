@@ -4,10 +4,8 @@
   pkgs,
   ...
 }:
-
-with lib;
-
 let
+  inherit (lib) mkIf mkOption types;
 
   cfg = config.xsession.windowManager.i3;
 
@@ -45,7 +43,7 @@ let
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
-        default = mapAttrs (n: mkOptionDefault) {
+        default = lib.mapAttrs (n: lib.mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
           "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";
@@ -113,7 +111,7 @@ let
           Consider to use `lib.mkOptionDefault` function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
-        example = literalExpression ''
+        example = lib.literalExpression ''
           let
             modifier = config.xsession.windowManager.i3.config.modifier;
           in lib.mkOptionDefault {
@@ -177,14 +175,14 @@ let
       workspace,
       ...
     }:
-    concatStringsSep " " [
+    lib.concatStringsSep " " [
       (if always then "exec_always" else "exec")
       (if (notification && workspace == null) then "" else "--no-startup-id")
       (if (workspace == null) then command else "i3-msg 'workspace ${workspace}; exec ${command}'")
     ];
 
   configFile = pkgs.writeText "i3.conf" (
-    concatStringsSep "\n" (
+    lib.concatStringsSep "\n" (
       (
         if cfg.config != null then
           with cfg.config;
@@ -210,10 +208,10 @@ let
               (keybindingsStr { keybindings = keybindingsRest; })
               (keycodebindingsStr keycodebindings)
             ]
-            ++ mapAttrsToList (modeStr false) modes
-            ++ mapAttrsToList assignStr assigns
+            ++ lib.mapAttrsToList (modeStr false) modes
+            ++ lib.mapAttrsToList assignStr assigns
             ++ map barStr bars
-            ++ optional (gaps != null) gapsStr
+            ++ lib.optional (gaps != null) gapsStr
             ++ map floatingCriteriaStr floating.criteria
             ++ map windowCommandsStr window.commands
             ++ map startupEntryStr startup
@@ -242,13 +240,13 @@ let
 
 in
 {
-  meta.maintainers = with maintainers; [ sumnerevans ];
+  meta.maintainers = with lib.maintainers; [ sumnerevans ];
 
   options = {
     xsession.windowManager.i3 = {
-      enable = mkEnableOption "i3 window manager";
+      enable = lib.mkEnableOption "i3 window manager";
 
-      package = mkPackageOption pkgs "i3" { nullable = true; };
+      package = lib.mkPackageOption pkgs "i3" { nullable = true; };
 
       config = mkOption {
         type = types.nullOr configModule;
@@ -264,50 +262,52 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "xsession.windowManager.i3" pkgs platforms.linux)
-      ];
-
-      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-
-      xsession.windowManager.command = "${cfg.package}/bin/i3";
-
-      xdg.configFile."i3/config" = {
-        source = checkI3Config;
-        onChange = ''
-          # There may be several sockets after log out/log in, but the old ones
-          # will fail with "Connection refused".
-          for i3Socket in ''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*; do
-            if [[ -S $i3Socket ]]; then
-              ${cfg.package}/bin/i3-msg -s $i3Socket reload >/dev/null |& grep -v "Connection refused" || true
-            fi
-          done
-        '';
-      };
-    }
-
-    (mkIf (cfg.config != null) {
-      warnings =
-        (optional (isList cfg.config.fonts) "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
-        ++ flatten (
-          map (
-            b:
-            optional (isList b.fonts) "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
-          ) cfg.config.bars
-        )
-        ++ [
-          (mkIf (any (s: s.workspace != null) cfg.config.startup) (
-            "'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
-            + "use 'xsession.windowManager.i3.config.assigns' instead."
-            + "See https://github.com/nix-community/home-manager/issues/265."
-          ))
-          (mkIf cfg.config.focus.forceWrapping (
-            "'xsession.windowManager.i3.config.focus.forceWrapping' is deprecated, "
-            + "use 'xsession.windowManager.i3.config.focus.wrapping' instead."
-          ))
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "xsession.windowManager.i3" pkgs lib.platforms.linux)
         ];
-    })
-  ]);
+
+        home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+        xsession.windowManager.command = "${cfg.package}/bin/i3";
+
+        xdg.configFile."i3/config" = {
+          source = checkI3Config;
+          onChange = ''
+            # There may be several sockets after log out/log in, but the old ones
+            # will fail with "Connection refused".
+            for i3Socket in ''${XDG_RUNTIME_DIR:-/run/user/$UID}/i3/ipc-socket.*; do
+              if [[ -S $i3Socket ]]; then
+                ${cfg.package}/bin/i3-msg -s $i3Socket reload >/dev/null |& grep -v "Connection refused" || true
+              fi
+            done
+          '';
+        };
+      }
+
+      (mkIf (cfg.config != null) {
+        warnings =
+          (lib.optional (lib.isList cfg.config.fonts) "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
+          ++ lib.flatten (
+            map (
+              b:
+              lib.optional (lib.isList b.fonts) "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
+            ) cfg.config.bars
+          )
+          ++ [
+            (mkIf (lib.any (s: s.workspace != null) cfg.config.startup) (
+              "'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
+              + "use 'xsession.windowManager.i3.config.assigns' instead."
+              + "See https://github.com/nix-community/home-manager/issues/265."
+            ))
+            (mkIf cfg.config.focus.forceWrapping (
+              "'xsession.windowManager.i3.config.focus.forceWrapping' is deprecated, "
+              + "use 'xsession.windowManager.i3.config.focus.wrapping' instead."
+            ))
+          ];
+      })
+    ]
+  );
 }

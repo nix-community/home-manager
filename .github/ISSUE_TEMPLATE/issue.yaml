@@ -5,7 +5,7 @@ labels: [bug, triage]
 
 # We cannot use nix-community/home-manager
 # See https://github.com/dear-github/dear-github/issues/170
-assignees: [rycee, berbiche, sumnerevans]
+assignees: [rycee, berbiche]
 
 body:
 - type: checkboxes

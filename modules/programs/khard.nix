@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (lib) types;
+
   cfg = config.programs.khard;
 
   accounts = lib.filterAttrs (_: acc: acc.khard.enable) config.accounts.contact.accounts;
@@ -25,6 +27,7 @@ let
     };
 in
 {
+
   meta.maintainers = [
     lib.hm.maintainers.olmokramer
     lib.maintainers.antonmosich
@@ -84,16 +87,28 @@ in
     };
 
     accounts.contact.accounts = lib.mkOption {
-      type =
-        with lib.types;
-        attrsOf (submodule {
+      type = types.attrsOf (
+        types.submodule {
+          imports = [
+            (lib.mkRenamedOptionModule [ "khard" "defaultCollection" ] [ "khard" "addressbooks" ])
+          ];
           options.khard.enable = lib.mkEnableOption "khard access";
-          options.khard.defaultCollection = lib.mkOption {
-            type = types.str;
-            default = "";
-            description = "VCARD collection to be searched by khard.";
+          options.khard.addressbooks = lib.mkOption {
+            type = types.coercedTo types.str lib.toList (types.listOf types.str);
+            default = [ "" ];
+            description = ''
+              If provided, each item on this list will generate an
+              entry on khard configuration file as a separate addressbook
+              (vdir).
+
+              This is used for hardcoding sub-directories under the local
+              storage path
+              (accounts.contact.accounts.<name>.local.path) for khard. The
+              default value will set the aforementioned path as a single vdir.
+            '';
           };
-        });
+        }
+      );
     };
   };
 
@@ -103,21 +118,25 @@ in
     xdg.configFile."khard/khard.conf".text =
       let
         makePath =
-          anAccount:
+          baseDir: subDir:
           builtins.toString (
             /.
             + lib.concatStringsSep "/" [
-              anAccount.local.path
-              anAccount.khard.defaultCollection
+              baseDir
+              subDir
             ]
           );
+        makeName = accName: abookName: accName + lib.optionalString (abookName != "") "-${abookName}";
+        makeEntry = anAccount: anAbook: ''
+          [[${makeName anAccount.name anAbook}]]
+          path = ${makePath anAccount.local.path anAbook}
+        '';
       in
       ''
         [addressbooks]
-        ${lib.concatMapStringsSep "\n" (acc: ''
-          [[${acc.name}]]
-          path = ${makePath acc}
-        '') (lib.attrValues accounts)}
+        ${lib.concatMapStringsSep "\n" (
+          acc: lib.concatMapStringsSep "\n" (makeEntry acc) acc.khard.addressbooks
+        ) (lib.attrValues accounts)}
 
         ${renderSettings cfg.settings}
       '';

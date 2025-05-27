@@ -7,31 +7,37 @@
   ...
 }:
 
-with lib;
-
 let
+  inherit (lib)
+    literalExpression
+    mkEnableOption
+    mkOption
+    optionalString
+    types
+    ;
+
   cfg = config.services.xidlehook;
 
-  notEmpty = list: filter (x: x != "" && x != null) (flatten list);
+  notEmpty = list: lib.filter (x: x != "" && x != null) (lib.flatten list);
 
   timers =
     let
       toTimer =
         timer:
         "--timer ${toString timer.delay} ${
-          escapeShellArgs [
+          lib.escapeShellArgs [
             timer.command
             timer.canceller
           ]
         }";
     in
-    map toTimer (filter (timer: timer.command != null) cfg.timers);
+    map toTimer (lib.filter (timer: timer.command != null) cfg.timers);
 
   script = pkgs.writeShellScript "xidlehook" ''
-    ${concatStringsSep "\n" (
-      mapAttrsToList (name: value: "export ${name}=${value}") cfg.environment or { }
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (name: value: "export ${name}=${value}") cfg.environment or { }
     )}
-    ${concatStringsSep " " (notEmpty [
+    ${lib.concatStringsSep " " (notEmpty [
       "${cfg.package}/bin/xidlehook"
       (optionalString cfg.once "--once")
       (optionalString cfg.detect-sleep "--detect-sleep")
@@ -43,19 +49,14 @@ let
 in
 {
   meta.maintainers = [
-    maintainers.dschrempf
-    hm.maintainers.bertof
+    lib.maintainers.dschrempf
+    lib.hm.maintainers.bertof
   ];
 
   options.services.xidlehook = {
     enable = mkEnableOption "xidlehook systemd service";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.xidlehook;
-      defaultText = "pkgs.xidlehook";
-      description = "The package to use for xidlehook.";
-    };
+    package = lib.mkPackageOption pkgs "xidlehook" { };
 
     environment = mkOption {
       type = types.attrsOf types.str;
@@ -151,7 +152,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.xidlehook" pkgs lib.platforms.linux)
     ];

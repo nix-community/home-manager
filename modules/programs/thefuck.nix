@@ -24,6 +24,12 @@ in
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    alias = lib.mkOption {
+      type = lib.types.str;
+      default = "fuck";
+      description = "Alias used to invoke `thefuck`.";
+    };
   };
 
   config =
@@ -31,7 +37,7 @@ in
       cfg = config.programs.thefuck;
 
       cliArgs = lib.cli.toGNUCommandLineShell { } {
-        alias = true;
+        alias = cfg.alias;
         enable-experimental-instant-mode = cfg.enableInstantMode;
       };
 
@@ -49,7 +55,7 @@ in
           description = "Correct your previous console command";
           body = ''
             set -l fucked_up_command $history[1]
-            env TF_SHELL=fish TF_ALIAS=fuck PYTHONIOENCODING=utf-8 ${cfg.package}/bin/thefuck $fucked_up_command THEFUCK_ARGUMENT_PLACEHOLDER $argv | read -l unfucked_command
+            env TF_SHELL=fish TF_ALIAS=${cfg.alias} PYTHONIOENCODING=utf-8 ${cfg.package}/bin/thefuck $fucked_up_command THEFUCK_ARGUMENT_PLACEHOLDER $argv | read -l unfucked_command
             if [ "$unfucked_command" != "" ]
               eval $unfucked_command
               builtin history delete --exact --case-sensitive -- $fucked_up_command
@@ -63,7 +69,7 @@ in
 
       programs.nushell = mkIf cfg.enableNushellIntegration {
         extraConfig = ''
-          alias fuck = ${cfg.package}/bin/thefuck $"(history | last 1 | get command | get 0)"
+          alias ${cfg.alias} = ${cfg.package}/bin/thefuck $"(history | last 1 | get command | get 0)"
         '';
       };
     };

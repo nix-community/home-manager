@@ -16,12 +16,7 @@ in
   options.services.yubikey-agent = {
     enable = lib.mkEnableOption "Seamless ssh-agent for YubiKeys";
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.yubikey-agent;
-      defaultText = lib.literalExpression "pkgs.yubikey-agent";
-      description = "The yubikey-agent package to use.";
-    };
+    package = lib.mkPackageOption pkgs "yubikey-agent" { };
   };
 
   config = mkIf cfg.enable (
