@@ -72,11 +72,6 @@ in
         description = "meli package to use";
       };
 
-      extraConfig = mkOption {
-        type = types.lines;
-        default = "";
-        description = "Additional lines to add to meli config.toml";
-      };
       settings = mkOption {
         type = types.submodule {
           freeformType = (pkgs.formats.toml { }).type;
