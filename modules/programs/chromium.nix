@@ -7,19 +7,18 @@
 let
   inherit (lib) literalExpression mkOption types;
 
-  supportedBrowsers = [
-    "chromium"
-    "google-chrome"
-    "google-chrome-beta"
-    "google-chrome-dev"
-    "brave"
-    "vivaldi"
-  ];
+  supportedBrowsers = {
+    chromium = "Chromium";
+    google-chrome = "Google Chrome";
+    google-chrome-beta = "Google Chrome Beta";
+    google-chrome-dev = "Google Chrome Dev";
+    brave = "Brave Browser";
+    vivaldi = "Vivaldi Browser";
+  };
 
   browserModule =
-    defaultPkg: name: visible:
+    browser: name: visible:
     let
-      browser = (builtins.parseDrvName defaultPkg.name).name;
       isProprietaryChrome = lib.hasPrefix "Google Chrome" name;
     in
     {
@@ -33,8 +32,8 @@ let
 
       package = mkOption {
         inherit visible;
-        type = types.package;
-        default = defaultPkg;
+        type = types.nullOr types.package;
+        default = pkgs.${browser};
         defaultText = literalExpression "pkgs.${browser}";
         description = "The ${name} package to use.";
       };
@@ -163,12 +162,10 @@ let
     };
 
   browserConfig =
-    cfg:
+    browser: cfg:
     let
 
-      drvName = (builtins.parseDrvName cfg.package.name).name;
-      browser = if drvName == "ungoogled-chromium" then "chromium" else drvName;
-      isProprietaryChrome = lib.hasPrefix "google-chrome" drvName;
+      isProprietaryChrome = lib.hasPrefix "google-chrome" browser;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -213,21 +210,22 @@ let
       };
 
       nativeMessagingHostsJoined = pkgs.symlinkJoin {
-        name = "${drvName}-native-messaging-hosts";
+        name = "${browser}-native-messaging-hosts";
         paths = cfg.nativeMessagingHosts;
       };
 
-      package =
-        if cfg.commandLineArgs != [ ] then
-          cfg.package.override {
-            commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
-          }
-        else
-          cfg.package;
-
     in
     lib.mkIf cfg.enable {
-      home.packages = [ package ];
+      home.packages = lib.mkIf (cfg.package != null) [
+        (
+          if cfg.commandLineArgs != [ ] then
+            cfg.package.override {
+              commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
+            }
+          else
+            cfg.package
+        )
+      ];
       home.file = lib.optionalAttrs (!isProprietaryChrome) (
         lib.listToAttrs ((map extensionJson cfg.extensions) ++ (map dictionary cfg.dictionaries))
         // {
@@ -264,14 +262,13 @@ in
         ]
       ];
 
-  options.programs = {
-    chromium = browserModule pkgs.chromium "Chromium" true;
-    google-chrome = browserModule pkgs.google-chrome "Google Chrome" false;
-    google-chrome-beta = browserModule pkgs.google-chrome-beta "Google Chrome Beta" false;
-    google-chrome-dev = browserModule pkgs.google-chrome-dev "Google Chrome Dev" false;
-    brave = browserModule pkgs.brave "Brave Browser" false;
-    vivaldi = browserModule pkgs.vivaldi "Vivaldi Browser" false;
-  };
+  options.programs = builtins.mapAttrs (
+    browser: name: browserModule browser name (if browser == "chromium" then true else false)
+  ) supportedBrowsers;
 
-  config = lib.mkMerge (map (browser: browserConfig config.programs.${browser}) supportedBrowsers);
+  config = lib.mkMerge (
+    builtins.map (browser: browserConfig browser config.programs.${browser}) (
+      builtins.attrNames supportedBrowsers
+    )
+  );
 }
