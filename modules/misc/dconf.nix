@@ -76,13 +76,13 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    {
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
       home.packages = [ pkgs.dconf ];
       dbus.packages = [ pkgs.dconf ];
       home.sessionVariables.GIO_EXTRA_MODULES = "${pkgs.dconf.lib}/lib/gio/modules";
-    }
-    // lib.mkIf (cfg.settings != { }) {
+    })
+    (lib.mkIf (cfg.enable && cfg.settings != { }) {
       # Make sure the dconf directory exists.
       xdg.configFile."dconf/.keep".source = builtins.toFile "keep" "";
 
@@ -147,6 +147,6 @@ in
           unset DCONF_DBUS_RUN_SESSION
         ''
       );
-    }
-  );
+    })
+  ];
 }
