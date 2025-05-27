@@ -78,7 +78,7 @@ in
       };
 
       Service = {
-        ExecStart = "${cfg.package}/bin/dwm-status ${configFile}";
+        ExecStart = "${cfg.package}/bin/dwm-status ${configFile} --quiet";
       };
     };
   };
