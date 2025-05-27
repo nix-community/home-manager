@@ -165,6 +165,15 @@ in
         ```
       '';
     };
+    extraConfig = mkOption {
+      default = "";
+      type = lib.types.lines;
+      example = lib.literalExpression ''
+        [urgency=low]
+        border-color=#b8bb26
+      '';
+      description = "Additional configuration.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -198,15 +207,18 @@ in
 
     dbus.packages = [ cfg.package ];
 
-    xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.criteria != { }) {
-      onChange = "${cfg.package}/bin/makoctl reload || true";
-      text =
-        let
-          # Merge settings and criteria into a single attribute set
-          # where settings are at the top level and criteria are nested attributes
-          mergedConfig = cfg.settings // cfg.criteria;
-        in
-        generateConfig mergedConfig;
-    };
+    xdg.configFile."mako/config" =
+      mkIf (cfg.settings != { } || cfg.criteria != { } || cfg.extraConfig != "")
+        {
+          onChange = "${cfg.package}/bin/makoctl reload || true";
+          text =
+            let
+              # Merge settings and criteria into a single attribute set
+              # where settings are at the top level and criteria are nested attributes
+              mergedConfig = cfg.settings // cfg.criteria;
+              generatedConfig = generateConfig mergedConfig;
+            in
+            if cfg.extraConfig != "" then generatedConfig + cfg.extraConfig + "\n" else generatedConfig;
+        };
   };
 }
