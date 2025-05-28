@@ -82,9 +82,10 @@ let
         enable = mkEnableOption "hyprcursor config generation";
 
         size = mkOption {
-          type = types.nullOr types.int;
+          type = types.int;
           example = 32;
-          default = null;
+          default = config.home.pointerCursor.size;
+          defaultText = "config.home.pointerCursor.size";
           description = "The cursor size for hyprcursor.";
         };
       };
@@ -239,7 +240,7 @@ in
         (mkIf cfg.hyprcursor.enable {
           home.sessionVariables = {
             HYPRCURSOR_THEME = cfg.name;
-            HYPRCURSOR_SIZE = if cfg.hyprcursor.size != null then cfg.hyprcursor.size else cfg.size;
+            HYPRCURSOR_SIZE = cfg.hyprcursor.size;
           };
         })
 
