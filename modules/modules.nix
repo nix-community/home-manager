@@ -387,6 +387,7 @@ let
       ./services/hyprsunset.nix
       ./services/imapnotify.nix
       ./services/jankyborders.nix
+      ./services/jellyfin-mpv-shim.nix
       ./services/kanshi.nix
       ./services/kbfs.nix
       ./services/kdeconnect.nix

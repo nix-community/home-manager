@@ -734,6 +734,12 @@
       }
     ];
   };
+  repparw = {
+    name = "repparw";
+    email = "ubritos@gmail.com";
+    github = "repparw";
+    githubId = 45952970;
+  };
   rosuavio = {
     name = "Rosario Pulella";
     email = "RosarioPulella@gmail.com";
