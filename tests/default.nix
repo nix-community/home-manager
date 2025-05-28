@@ -262,6 +262,7 @@ import nmtSrc {
       ./modules/programs/nushell
       ./modules/programs/oh-my-posh
       ./modules/programs/onlyoffice
+      ./modules/programs/opencommit
       ./modules/programs/openstackclient
       ./modules/programs/pandoc
       ./modules/programs/papis
