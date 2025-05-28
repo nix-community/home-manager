@@ -8,8 +8,9 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-01-03 09:09+0100\n"
-"PO-Revision-Date: 2024-05-02 10:58+0000\n"
-"Last-Translator: Keivan <keyvan0082@gmail.com>\n"
+"PO-Revision-Date: 2025-05-28 12:05+0000\n"
+"Last-Translator: Parsa Nobahari "
+"<89968726+ParsaNobahari@users.noreply.github.com>\n"
 "Language-Team: Persian <https://hosted.weblate.org/projects/home-manager/cli/"
 "fa/>\n"
 "Language: fa\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.5.3-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -26,7 +27,7 @@ msgstr "%s: مقدار %s یافت نشد"
 
 #: home-manager/home-manager:69
 msgid "No configuration file found at %s"
-msgstr "هیچ فایل تنظیماتی در %s یافت نشد"
+msgstr "هیچ فایل کانفیگ در %s یافت نشد"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
@@ -36,12 +37,12 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
-"نگه داری %s در %s منسوخ شده است.\n"
+"نگه داری Home Manager شما %s در %s منسوخ شده است،\n"
 "لطفا آنرا به %s انتفال دهید"
 
 #: home-manager/home-manager:97
 msgid "No configuration file found. Please create one at %s"
-msgstr "هیچ فایل تنظیماتی پیدا نشد. لطفا یک فایل در %s بسازید"
+msgstr "هیچ فایل کانفیگ پیدا نشد. لطفا یک فایل در %s بسازید"
 
 #: home-manager/home-manager:112
 msgid "Home Manager not found at %s."
@@ -128,7 +129,7 @@ msgstr "درحال ساختن %s..."
 
 #: home-manager/home-manager:481
 msgid "Creating initial Home Manager generation..."
-msgstr "در حال ساخت نسخه اولیه Home Manager."
+msgstr "در حال ساخت نسل اولیه Home Manager..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:486
@@ -156,17 +157,16 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
-"ای بابا, فرایند نصب با شکست مواجه شد! اگر بنظرتان میاید مشکل از Home Manager "
-"است, لطفا یک issue در\n"
+"ای بابا، فرایند نصب با شکست مواجه شد! لطفا یک issue بسازید در\n"
 "\n"
 "    %s\n"
 "\n"
-"ایجاد کنید."
+"اگر بنظر می‌رسد مشکل از Home Manager است."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:502
 msgid "Can't instantiate a flake configuration"
-msgstr "عدم امکان نمونه‌سازی تنظیمات flake"
+msgstr "عدم امکان نمونه‌سازی کانفیگ flake"
 
 #: home-manager/home-manager:578
 msgid ""
@@ -197,7 +197,7 @@ msgstr "نمیتوان دستور build را در یک دایکتوری read-onl
 
 #: home-manager/home-manager:699
 msgid "No generation with ID %s"
-msgstr "هیچ نسل ای با شناسه %s یافت نشد"
+msgstr "هیچ نسل‌ای با شناسه %s یافت نشد"
 
 #: home-manager/home-manager:701
 msgid "Cannot remove the current generation %s"
@@ -233,7 +233,7 @@ msgstr "واقعا میخواهید Home Manager را حذف کنید؟"
 
 #: home-manager/home-manager:858
 msgid "Switching to empty Home Manager configuration..."
-msgstr "در حال انتقال به تنظیمات خالی Home Manager..."
+msgstr "در حال انتقال به کانفیگ خالی Home Manager..."
 
 #: home-manager/home-manager:873
 msgid "Yay!"
@@ -245,7 +245,7 @@ msgstr "Home Manager حذف نصب شد اما home.nix شما دست نخورد
 
 #: home-manager/home-manager:1101
 msgid "expire-generations expects one argument, got %d."
-msgstr "expire-generations یک پارامتر نیاز دارد, اما %d پارامتر دریافت کرد"
+msgstr "expire-generations یک پارامتر نیاز دارد, اما %d پارامتر دریافت کرد."
 
 #: home-manager/home-manager:1123
 msgid "Unknown command: %s"
