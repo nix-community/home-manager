@@ -143,13 +143,22 @@ in
 
           newGenFiles="$1"
           shift
+          if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" && -n "$HOME_MANAGER_BACKUP_EXT" ]]; then
+            errorEcho "Conflicting environment variables HOME_MANAGER_BACKUP_COMMAND and HOME_MANAGER_BACKUP_EXT both set."
+            exit 1
+          fi
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
-              # The target exists, back it up
-              backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-              run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
+            if [[ -e "$targetPath" && ! -L "$targetPath" ]] ; then
+              if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
+                verboseEcho "Running $HOME_MANAGER_BACKUP_COMMAND $targetPath."
+                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running `$HOME_MANAGER_BACKUP_COMMAND` on '$targetPath' failed."
+              elif [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+                # The target exists, back it up
+                backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
+                run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
+              fi
             fi
 
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then

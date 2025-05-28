@@ -81,6 +81,16 @@ in
       argument in Home Manager. This disables the Home Manager
       options {option}`nixpkgs.*`'';
 
+    backupCommand = mkOption {
+      type = types.nullOr (types.either types.str types.path);
+      default = null;
+      example = lib.literalExpression "''${pkgs.trash-cli}/bin/trash";
+      description = ''
+        On activation run this command on each existing file
+        rather than exiting with an error.
+      '';
+    };
+
     backupFileExtension = mkOption {
       type = types.nullOr types.str;
       default = null;
