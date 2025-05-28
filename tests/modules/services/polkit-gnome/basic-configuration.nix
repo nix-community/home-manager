@@ -13,7 +13,7 @@
       ExecStart=@polkit-gnome@/libexec/polkit-gnome-authentication-agent-1
 
       [Unit]
-      After=graphical-session-pre.target
+      After=graphical-session.target
       Description=GNOME PolicyKit Agent
       PartOf=graphical-session.target
     ''}
