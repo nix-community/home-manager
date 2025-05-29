@@ -186,6 +186,7 @@ let
       ./programs/matplotlib.nix
       ./programs/mbsync.nix
       ./programs/mcfly.nix
+      ./programs/meli.nix
       ./programs/mercurial.nix
       ./programs/mergiraf.nix
       ./programs/micro.nix
