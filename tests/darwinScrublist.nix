@@ -85,6 +85,7 @@ let
     "lieer"
     "lsd"
     "mbsync"
+    "meli"
     "mergiraf"
     "micro"
     "mise"
