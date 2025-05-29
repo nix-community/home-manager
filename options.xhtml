@@ -2309,6 +2309,11 @@ attribute set of (submodule)</p>
 </a></code>
 </td></tr>
 <tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+<tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mbsync.nix" target="_top">
 &lt;home-manager/modules/programs/mbsync.nix&gt;
 </a></code>
@@ -4797,6 +4802,105 @@ one of “Verbatim”, “Maildir++”, “Legacy”</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mbsync.nix" target="_top">
 &lt;home-manager/modules/programs/mbsync.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.meli.enable"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.meli.enable"><code class="option">accounts.email.accounts.&lt;name&gt;.meli.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the meli mail client for this account.
+Requires SMTP settings…</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.meli.mailboxAliases"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.meli.mailboxAliases"><code class="option">accounts.email.accounts.&lt;name&gt;.meli.mailboxAliases</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Folder display name</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (attribute set)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  INBOX = {
+    alias = &quot;📥 Inbox&quot;;
+  };
+  Sent = {
+    alias = &quot;📤 Sent&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.email.accounts._name_.meli.mailboxes"></a><a class="term" href="options.xhtml#opt-accounts.email.accounts._name_.meli.mailboxes"><code class="option">accounts.email.accounts.&lt;name&gt;.meli.mailboxes</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Mailboxes to show in meli</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;Inbox&quot;
+  &quot;Sent&quot;
+  &quot;Trash&quot;
+  &quot;Drafts&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;INBOX&quot;
+  &quot;Sent&quot;
+  &quot;Trash&quot;
+  &quot;Drafts&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
 </a></code>
 </td></tr>
 </table>
@@ -41363,6 +41467,257 @@ TOML value</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mcfly.nix" target="_top">
 &lt;home-manager/modules/programs/mcfly.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.enable"></a><a class="term" href="options.xhtml#opt-programs.meli.enable"><code class="option">programs.meli.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable meli email client.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.package"></a><a class="term" href="options.xhtml#opt-programs.meli.package"><code class="option">programs.meli.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>meli package to use</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&lt;derivation meli-0.8.12&gt;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.settings"></a><a class="term" href="options.xhtml#opt-programs.meli.settings"><code class="option">programs.meli.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Meli Configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.settings.shortcuts"></a><a class="term" href="options.xhtml#opt-programs.meli.settings.shortcuts"><code class="option">programs.meli.settings.shortcuts</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Shortcut Settings</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.settings.shortcuts.composing"></a><a class="term" href="options.xhtml#opt-programs.meli.settings.shortcuts.composing"><code class="option">programs.meli.settings.shortcuts.composing</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>composing shortcut configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  edit = &quot;m&quot;;
+  scroll_down = &quot;n&quot;;
+  scroll_up = &quot;e&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.settings.shortcuts.contact-list"></a><a class="term" href="options.xhtml#opt-programs.meli.settings.shortcuts.contact-list"><code class="option">programs.meli.settings.shortcuts.contact-list</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>contact-list shortcut configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  create_contact = &quot;c&quot;;
+  edit_contact = &quot;m&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.settings.shortcuts.general"></a><a class="term" href="options.xhtml#opt-programs.meli.settings.shortcuts.general"><code class="option">programs.meli.settings.shortcuts.general</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>general shortcut configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  next_page = &quot;C-d&quot;;
+  scroll_down = &quot;n&quot;;
+  scroll_up = &quot;e&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.settings.shortcuts.listing"></a><a class="term" href="options.xhtml#opt-programs.meli.settings.shortcuts.listing"><code class="option">programs.meli.settings.shortcuts.listing</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>general shortcut configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  new_mail = &quot;t&quot;;
+  set_seen = &quot;s&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.meli.settings.shortcuts.pager"></a><a class="term" href="options.xhtml#opt-programs.meli.settings.shortcuts.pager"><code class="option">programs.meli.settings.shortcuts.pager</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>general shortcut configuration</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  scroll_down = &quot;n&quot;;
+  scroll_up = &quot;e&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix" target="_top">
+&lt;home-manager/modules/programs/meli.nix&gt;
 </a></code>
 </td></tr>
 </table>
