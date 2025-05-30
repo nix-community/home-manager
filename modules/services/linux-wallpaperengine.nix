@@ -19,7 +19,8 @@ in
     package = lib.mkPackageOption pkgs "linux-wallpaperengine" { };
 
     assetsPath = mkOption {
-      type = types.path;
+      type = types.nullOr types.path;
+      default = null;
       description = "Path to the assets directory.";
     };
 
@@ -104,6 +105,10 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.linux-wallpaperengine" pkgs lib.platforms.linux)
+      ({
+        assertion = cfg.wallpapers != null;
+        message = "linux-wallpaperengine: You must set at least one wallpaper";
+      })
     ];
 
     home.packages = [ cfg.package ];
@@ -135,8 +140,8 @@ in
         Service = {
           ExecStart =
             lib.getExe cfg.package
-            + " --assets-dir ${cfg.assetsPath} "
-            + "--clamping ${cfg.clamping} "
+            + (lib.optionalString (cfg.assetsPath != null) " --assets-dir ${cfg.assetsPath} ")
+            + (lib.optionalString (cfg.clamping != null) "--clamping ${cfg.clamping} ")
             + (lib.strings.concatStringsSep " " args);
           Restart = "on-failure";
         };
