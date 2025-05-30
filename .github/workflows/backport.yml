@@ -1,0 +1,40 @@
+# Based on
+# https://github.com/NixOS/nixpkgs/blob/2566f9dc/.github/workflows/backport.yml
+#
+# NOTE: this uses the GH_TOKEN_FOR_UPDATES because pushing a backport PR using
+# GITHUB_TOKEN does not trigger CI.
+# TODO: consider switching to a GitHub App
+name: Backport
+
+on:
+  pull_request_target:
+    types:
+      - closed
+      - labeled
+
+jobs:
+  backport:
+    name: Backport Pull Request
+    if: >
+      secrets.GH_TOKEN_FOR_UPDATES
+      && github.event.pull_request.merged == true
+      && (
+        github.event.action != 'labeled'
+        || startsWith(github.event.label.name, 'backport')
+      )
+
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Create backport PRs
+        id: backport
+        uses: korthout/backport-action@v3
+        with:
+          # See https://github.com/korthout/backport-action#inputs
+          github_token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          branch_name: backport/${target_branch}/${pull_number}
+          copy_labels_pattern: .*
