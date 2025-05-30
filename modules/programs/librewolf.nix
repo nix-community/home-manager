@@ -34,6 +34,7 @@ in
       description = "LibreWolf is a privacy enhanced Firefox fork.";
       wrappedPackageName = "librewolf";
       unwrappedPackageName = "librewolf-unwrapped";
+      visible = true;
 
       platforms.linux = {
         configPath = ".librewolf";
@@ -68,5 +69,10 @@ in
     home.file.".librewolf/librewolf.overrides.cfg" = lib.mkIf (cfg.settings != { }) {
       text = mkOverridesFile cfg.settings;
     };
+
+    mozilla.librewolfNativeMessagingHosts =
+      cfg.nativeMessagingHosts
+      # package configured native messaging hosts (entire browser actually)
+      ++ (lib.optional (cfg.finalPackage != null) cfg.finalPackage);
   };
 }
