@@ -40094,8 +40094,7 @@ attribute set of (string or signed integer or list of (string or signed integer)
  </span>
 </dt>
 <dd>
-<p>Whether to enable LibreWolf. LibreWolf is a privacy enhanced Firefox fork.
-See <code class="literal">programs.librewolf</code> for more configuration options.</p>
+<p>Whether to enable LibreWolf. LibreWolf is a privacy enhanced Firefox fork.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
@@ -40105,6 +40104,93 @@ boolean</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.enableGnomeExtensions"></a><a class="term" href="options.xhtml#opt-programs.librewolf.enableGnomeExtensions"><code class="option">programs.librewolf.enableGnomeExtensions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the GNOME Shell native host connector. Note, you
+also need to set the NixOS option
+<code class="literal">services.gnome.gnome-browser-connector.enable</code> to
+<code class="literal">true</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.package"></a><a class="term" href="options.xhtml#opt-programs.librewolf.package"><code class="option">programs.librewolf.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The LibreWolf package to use. If state version ≥ 19.09 then
+this should be a wrapped LibreWolf package. For earlier state
+versions it should be an unwrapped LibreWolf package.
+Set to <code class="literal">null</code> to disable installing LibreWolf.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.librewolf</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">pkgs.librewolf.override {
+  # See nixpkgs&#x27; firefox/wrapper.nix to check which options you can use
+  nativeMessagingHosts = [
+    # Gnome shell native connector
+    pkgs.gnome-browser-connector
+    # Tridactyl native connector
+    pkgs.tridactyl-native
+  ];
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.finalPackage"></a><a class="term" href="options.xhtml#opt-programs.librewolf.finalPackage"><code class="option">programs.librewolf.finalPackage</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Resulting LibreWolf package.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package <span class="emphasis"><em>(read only)</em></span></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -40150,6 +40236,31 @@ list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.librewolf.nativeMessagingHosts"></a><a class="term" href="options.xhtml#opt-programs.librewolf.nativeMessagingHosts"><code class="option">programs.librewolf.nativeMessagingHosts</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Additional packages containing native messaging hosts that should be
+made available to LibreWolf extensions.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.librewolf.pkcs11Modules"></a><a class="term" href="options.xhtml#opt-programs.librewolf.pkcs11Modules"><code class="option">programs.librewolf.pkcs11Modules</code>
   </a>
  </span>
@@ -40162,6 +40273,982 @@ list of package</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.policies"></a><a class="term" href="options.xhtml#opt-programs.librewolf.policies"><code class="option">programs.librewolf.policies</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p><a class="link" href="https://mozilla.github.io/policy-templates/"  target="_top">See list of policies</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (JSON value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  BlockAboutConfig = true;
+  DefaultDownloadDirectory = &quot;\${home}/Downloads&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles"><code class="option">programs.librewolf.profiles</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of LibreWolf profiles.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.bookmarks.configFile"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.bookmarks.configFile"><code class="option">programs.librewolf.profiles.&lt;name&gt;.bookmarks.configFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration file to define custom bookmarks.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.bookmarks.force"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.bookmarks.force"><code class="option">programs.librewolf.profiles.&lt;name&gt;.bookmarks.force</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to force override existing custom bookmarks.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.bookmarks.settings"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.bookmarks.settings"><code class="option">programs.librewolf.profiles.&lt;name&gt;.bookmarks.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Custom bookmarks.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+(list of ((bookmark submodule) or (directory submodule))) or (attribute set of ((bookmark submodule) or (directory submodule))) convertible to it</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  {
+    name = &quot;wikipedia&quot;;
+    tags = [ &quot;wiki&quot; ];
+    keyword = &quot;wiki&quot;;
+    url = &quot;https://en.wikipedia.org/wiki/Special:Search?search=%s&amp;go=Go&quot;;
+  }
+  {
+    name = &quot;kernel.org&quot;;
+    url = &quot;https://www.kernel.org&quot;;
+  }
+  {
+    name = &quot;Nix sites&quot;;
+    toolbar = true;
+    bookmarks = [
+      {
+        name = &quot;homepage&quot;;
+        url = &quot;https://nixos.org/&quot;;
+      }
+      {
+        name = &quot;wiki&quot;;
+        tags = [ &quot;wiki&quot; &quot;nix&quot; ];
+        url = &quot;https://wiki.nixos.org/&quot;;
+      }
+    ];
+  }
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.containers"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.containers"><code class="option">programs.librewolf.profiles.&lt;name&gt;.containers</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of container configurations. See
+<a class="link" href="https://support.mozilla.org/en-US/kb/containers"  target="_top">Multi-Account
+Containers</a>
+for more information.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  dangerous = {
+    color = &quot;red&quot;;
+    icon = &quot;fruit&quot;;
+    id = 2;
+  };
+  shopping = {
+    color = &quot;blue&quot;;
+    icon = &quot;cart&quot;;
+    id = 1;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.containers._name_.color"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.containers._name_.color"><code class="option">programs.librewolf.profiles.&lt;name&gt;.containers.&lt;name&gt;.color</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Container color.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “blue”, “turquoise”, “green”, “yellow”, “orange”, “red”, “pink”, “purple”, “toolbar”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;pink&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.containers._name_.icon"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.containers._name_.icon"><code class="option">programs.librewolf.profiles.&lt;name&gt;.containers.&lt;name&gt;.icon</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Container icon.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “briefcase”, “cart”, “circle”, “dollar”, “fence”, “fingerprint”, “gift”, “vacation”, “food”, “fruit”, “pet”, “tree”, “chill”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;fruit&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.containers._name_.id"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.containers._name_.id"><code class="option">programs.librewolf.profiles.&lt;name&gt;.containers.&lt;name&gt;.id</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Container ID. This should be set to a unique number per container in this profile.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+unsigned integer, meaning &gt;=0</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">0</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.containers._name_.name"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.containers._name_.name"><code class="option">programs.librewolf.profiles.&lt;name&gt;.containers.&lt;name&gt;.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Container name, e.g., shopping.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.containersForce"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.containersForce"><code class="option">programs.librewolf.profiles.&lt;name&gt;.containersForce</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to force replace the existing containers configuration.
+This is recommended since LibreWolf will replace the symlink on
+every launch, but note that you’ll lose any existing configuration
+by enabling this.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.extensions"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.extensions"><code class="option">programs.librewolf.profiles.&lt;name&gt;.extensions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Submodule for installing and configuring extensions.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+(submodule) or (list of package) convertible to it</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  packages = with pkgs.nur.repos.rycee.firefox-addons; [
+    ublock-origin
+  ];
+  settings.&quot;uBlock0@raymondhill.net&quot;.settings = {
+    selectedFilterLists = [
+      &quot;ublock-filters&quot;
+      &quot;ublock-badware&quot;
+      &quot;ublock-privacy&quot;
+      &quot;ublock-unbreak&quot;
+      &quot;ublock-quick-fixes&quot;
+    ];
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.extensions.packages"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.extensions.packages"><code class="option">programs.librewolf.profiles.&lt;name&gt;.extensions.packages</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of ‹name› add-on packages to install for this profile.
+Some pre-packaged add-ons are accessible from the Nix User Repository.
+Once you have NUR installed run</p><pre><code class="programlisting console">$ nix-env -f &#x27;&lt;nixpkgs&gt;&#x27; -qaP -A nur.repos.rycee.firefox-addons
+</code></pre><p>to list the available ‹name› add-ons.</p><p>Note that it is necessary to manually enable these extensions
+inside ‹name› after the first installation.</p><p>To automatically enable extensions add
+<code class="literal">&quot;extensions.autoDisableScopes&quot; = 0;</code>
+to
+<a class="link" href="options.xhtml#opt-programs.librewolf.profiles._name_.settings"  ><code class="option">programs.librewolf.profiles.&lt;profile&gt;.settings</code></a></p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">with pkgs.nur.repos.rycee.firefox-addons; [
+  privacy-badger
+]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.extensions.force"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.extensions.force"><code class="option">programs.librewolf.profiles.&lt;name&gt;.extensions.force</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to override all previous firefox settings.</p><p>This is required when using <code class="literal">settings</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.extensions.settings"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.extensions.settings"><code class="option">programs.librewolf.profiles.&lt;name&gt;.extensions.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of options for each extension.
+The keys of the attribute set consist of the ID of the extension
+or its UUID wrapped in curly braces.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  # Example with uBlock origin&#x27;s extensionID
+  &quot;uBlock0@raymondhill.net&quot;.settings = {
+    selectedFilterLists = [
+      &quot;ublock-filters&quot;
+      &quot;ublock-badware&quot;
+      &quot;ublock-privacy&quot;
+      &quot;ublock-unbreak&quot;
+      &quot;ublock-quick-fixes&quot;
+    ];
+  };
+
+  # Example with Stylus&#x27; UUID-form extensionID
+  &quot;{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}&quot;.settings = {
+    dbInChromeStorage = true; # required for Stylus
+  }
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.extensions.settings._name_.force"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.extensions.settings._name_.force"><code class="option">programs.librewolf.profiles.&lt;name&gt;.extensions.settings.&lt;name&gt;.force</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Forcibly override any existing configuration for
+this extension.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.extensions.settings._name_.settings"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.extensions.settings._name_.settings"><code class="option">programs.librewolf.profiles.&lt;name&gt;.extensions.settings.&lt;name&gt;.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Json formatted options for the specified extensionID</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (JSON value)</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.extraConfig"><code class="option">programs.librewolf.profiles.&lt;name&gt;.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra preferences to add to <code class="filename">user.js</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.id"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.id"><code class="option">programs.librewolf.profiles.&lt;name&gt;.id</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Profile ID. This should be set to a unique number per profile.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+unsigned integer, meaning &gt;=0</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">0</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.isDefault"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.isDefault"><code class="option">programs.librewolf.profiles.&lt;name&gt;.isDefault</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether this is a default profile.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;true if profile ID is 0&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.name"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.name"><code class="option">programs.librewolf.profiles.&lt;name&gt;.name</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Profile name.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.path"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.path"><code class="option">programs.librewolf.profiles.&lt;name&gt;.path</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Profile path.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;‹name›&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.preConfig"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.preConfig"><code class="option">programs.librewolf.profiles.&lt;name&gt;.preConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra preferences to add to <code class="filename">user.js</code>, before
+<a class="xref" href="options.xhtml#opt-programs.firefox.profiles._name_.settings"  ><code class="option">programs.firefox.profiles.&lt;name&gt;.settings</code></a>.</p><p>Use <a class="xref" href="options.xhtml#opt-programs.firefox.profiles._name_.extraConfig"  ><code class="option">programs.firefox.profiles.&lt;name&gt;.extraConfig</code></a>, unless
+you want to overwrite in
+<a class="xref" href="options.xhtml#opt-programs.firefox.profiles._name_.settings"  ><code class="option">programs.firefox.profiles.&lt;name&gt;.settings</code></a>, then use this
+option.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.search"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.search"><code class="option">programs.librewolf.profiles.&lt;name&gt;.search</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Declarative search engine configuration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+submodule</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.search.default"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.search.default"><code class="option">programs.librewolf.profiles.&lt;name&gt;.search.default</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The default search engine used in the address bar and search
+bar.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;ddg&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.search.engines"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.search.engines"><code class="option">programs.librewolf.profiles.&lt;name&gt;.search.engines</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of search engine configurations. Engines that
+only have <code class="varname">metaData</code> specified will be treated as builtin
+to LibreWolf.</p><p>See <a class="link" href="https://searchfox.org/mozilla-central/rev/e3f42ec9320748b2aab3d474d1e47075def9000c/toolkit/components/search/SearchEngine.sys.mjs#890-923"  target="_top">SearchEngine.jsm</a>
+in LibreWolf’s source for available options. We maintain a
+mapping to let you specify all options in the referenced link
+without underscores, but it may fall out of date with future
+options.</p><p>Note, <code class="varname">icon</code> is also a special option added by Home
+Manager to make it convenient to specify absolute icon paths.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of attribute set of (JSON value)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  nix-packages = {
+    name = &quot;Nix Packages&quot;;
+    urls = [{
+      template = &quot;https://search.nixos.org/packages&quot;;
+      params = [
+        { name = &quot;type&quot;; value = &quot;packages&quot;; }
+        { name = &quot;query&quot;; value = &quot;{searchTerms}&quot;; }
+      ];
+    }];
+
+    icon = &quot;${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg&quot;;
+    definedAliases = [ &quot;@np&quot; ];
+  };
+
+  nixos-wiki = {
+    name = &quot;NixOS Wiki&quot;;
+    urls = [{ template = &quot;https://wiki.nixos.org/w/index.php?search={searchTerms}&quot;; }];
+    iconMapObj.&quot;16&quot; = &quot;https://wiki.nixos.org/favicon.ico&quot;;
+    definedAliases = [ &quot;@nw&quot; ];
+  };
+
+  bing.metaData.hidden = true;
+  google.metaData.alias = &quot;@g&quot;; # builtin engines only support specifying one additional alias
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.search.force"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.search.force"><code class="option">programs.librewolf.profiles.&lt;name&gt;.search.force</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to force replace the existing search
+configuration. This is recommended since LibreWolf will
+replace the symlink for the search configuration on every
+launch, but note that you’ll lose any existing configuration
+by enabling this.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.search.order"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.search.order"><code class="option">programs.librewolf.profiles.&lt;name&gt;.search.order</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The order the search engines are listed in. Any engines that
+aren’t included in this list will be listed after these in an
+unspecified order.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;ddg&quot;
+  &quot;google&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.search.privateDefault"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.search.privateDefault"><code class="option">programs.librewolf.profiles.&lt;name&gt;.search.privateDefault</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The default search engine used in the Private Browsing.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;ddg&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.settings"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.settings"><code class="option">programs.librewolf.profiles.&lt;name&gt;.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of LibreWolf preferences.</p><p>LibreWolf only supports int, bool, and string types for
+preferences, but home-manager will automatically
+convert all other JSON-compatible values into strings.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (LibreWolf preference (int, bool, string, and also attrs, list, float as a JSON string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;browser.startup.homepage&quot; = &quot;https://nixos.org&quot;;
+  &quot;browser.search.region&quot; = &quot;GB&quot;;
+  &quot;browser.search.isUS&quot; = false;
+  &quot;distribution.searchplugins.defaultLocale&quot; = &quot;en-GB&quot;;
+  &quot;general.useragent.locale&quot; = &quot;en-GB&quot;;
+  &quot;browser.bookmarks.showMobileBookmarks&quot; = true;
+  &quot;browser.newtabpage.pinned&quot; = [{
+    title = &quot;NixOS&quot;;
+    url = &quot;https://nixos.org&quot;;
+  }];
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.userChrome"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.userChrome"><code class="option">programs.librewolf.profiles.&lt;name&gt;.userChrome</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Custom LibreWolf user chrome CSS.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n” or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  /* Hide tab bar in FF Quantum */
+  @-moz-document url(chrome://browser/content/browser.xul), url(chrome://browser/content/browser.xhtml) {
+    #TabsToolbar {
+      visibility: collapse !important;
+      margin-bottom: 21px !important;
+    }
+  
+    #sidebar-box[sidebarcommand=&quot;treestyletab_piro_sakura_ne_jp-sidebar-action&quot;] #sidebar-header {
+      visibility: collapse !important;
+    }
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix" target="_top">
+&lt;home-manager/modules/programs/librewolf.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.librewolf.profiles._name_.userContent"></a><a class="term" href="options.xhtml#opt-programs.librewolf.profiles._name_.userContent"><code class="option">programs.librewolf.profiles.&lt;name&gt;.userContent</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Custom LibreWolf user content CSS.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n” or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  /* Hide scrollbar in FF Quantum */
+  *{scrollbar-width:none !important}
+&#x27;&#x27;
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
