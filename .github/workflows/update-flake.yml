@@ -17,5 +17,8 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v25
         with:
+          # NOTE: this uses the GH_TOKEN_FOR_UPDATES because pushing a flake
+          # update PR using GITHUB_TOKEN does not trigger CI.
+          # TODO: consider switching to a GitHub App
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
           pr-labels: dependencies
