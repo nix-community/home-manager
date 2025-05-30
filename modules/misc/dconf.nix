@@ -80,7 +80,9 @@ in
     (lib.mkIf cfg.enable {
       home.packages = [ pkgs.dconf ];
       dbus.packages = [ pkgs.dconf ];
-      home.sessionVariables.GIO_EXTRA_MODULES = "${pkgs.dconf.lib}/lib/gio/modules";
+      home.sessionVariablesExtra = ''
+        export GIO_EXTRA_MODULES="${pkgs.dconf.lib}/lib/gio/modules''${GIO_EXTRA_MODULES:+:}$GIO_EXTRA_MODULES"
+      '';
     })
     (lib.mkIf (cfg.enable && cfg.settings != { }) {
       # Make sure the dconf directory exists.

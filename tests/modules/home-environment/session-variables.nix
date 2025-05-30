@@ -9,7 +9,6 @@ let
     if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
-    export GIO_EXTRA_MODULES="${pkgs.dconf}/lib/gio/modules"
     export LOCALE_ARCHIVE_2_27="${config.i18n.glibcLocales}/lib/locale/locale-archive"
     export V1="v1"
     export V2="v2-v1"
@@ -18,6 +17,7 @@ let
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
 
+    export GIO_EXTRA_MODULES="${pkgs.dconf}/lib/gio/modules''${GIO_EXTRA_MODULES:+:}$GIO_EXTRA_MODULES"
   '';
 
   darwinExpected = ''
