@@ -6,7 +6,10 @@
 }:
 
 let
-  inherit (lib) mkIf;
+  inherit (lib)
+    mkIf
+    types
+    ;
   cfg = config.programs.numbat;
   tomlFormat = pkgs.formats.toml { };
   configDir =
@@ -40,13 +43,16 @@ in
     };
 
     initFile = lib.mkOption {
-      type = lib.types.str;
-      default = "";
+      type = types.nullOr (lib.hm.types.sourceFileOrLines ".config/numbat" "init.nbt");
+      default = null;
       example = ''
         unit kohm: ElectricResistance = kV/A
       '';
       description = ''
-        Text to add to {file}`init.nbt` for custom functions, constants, or units.
+        Add to {file}`init.nbt` for custom functions, constants, or units. Can be specified with:
+        - A string containing the direct contents
+        - The attribute `source` pointing to an .nbt file
+        - The attribute `text` containing the configuration
       '';
     };
   };
@@ -58,8 +64,15 @@ in
       source = tomlFormat.generate "numbat-config" cfg.settings;
     };
 
-    home.file."${configDir}/init.nbt" = mkIf (cfg.initFile != "") {
-      text = cfg.initFile;
-    };
+    home.file."${configDir}/init.nbt" = mkIf (cfg.initFile != null) (
+      if (cfg.initFile.source != null) then
+        {
+          source = cfg.initFile.source;
+        }
+      else
+        {
+          text = cfg.initFile.text;
+        }
+    );
   };
 }
