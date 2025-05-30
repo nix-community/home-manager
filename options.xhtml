@@ -32971,6 +32971,89 @@ attribute set of (boolean or signed integer or string or list of (signed integer
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.hwatch.enable"></a><a class="term" href="options.xhtml#opt-programs.hwatch.enable"><code class="option">programs.hwatch.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable hwatch, a modern alternative to the <span class="command"><strong>watch</strong></span> command
+.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hwatch.nix" target="_top">
+&lt;home-manager/modules/programs/hwatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hwatch.package"></a><a class="term" href="options.xhtml#opt-programs.hwatch.package"><code class="option">programs.hwatch.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The hwatch package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.hwatch</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hwatch.nix" target="_top">
+&lt;home-manager/modules/programs/hwatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hwatch.extraArgs"></a><a class="term" href="options.xhtml#opt-programs.hwatch.extraArgs"><code class="option">programs.hwatch.extraArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra command-line arguments to pass to <span class="command"><strong>hwatch</strong></span>.
+These will be used to populate the <code class="envar">HWATCH</code> environment variable.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--exec&quot;
+  &quot;--precise&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hwatch.nix" target="_top">
+&lt;home-manager/modules/programs/hwatch.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.hyfetch.enable"></a><a class="term" href="options.xhtml#opt-programs.hyfetch.enable"><code class="option">programs.hyfetch.enable</code>
   </a>
  </span>
