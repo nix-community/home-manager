@@ -16,7 +16,7 @@ jobs:
   backport:
     name: Backport Pull Request
     if: >
-      secrets.GH_TOKEN_FOR_UPDATES
+      github.repository_owner == 'nix-community'
       && github.event.pull_request.merged == true
       && (
         github.event.action != 'labeled'
