@@ -1,0 +1,167 @@
+name: Tag Module Maintainers
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+jobs:
+  tag-maintainers:
+    runs-on: ubuntu-latest
+    # if: github.repository_owner == 'nix-community' && github.event.pull_request.draft == false
+    if: github.repository_owner == 'nix-community'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Get changed files
+        id: changed-files
+        run: |
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '^modules/' | grep -v '^modules/\(po\|.*\/news\)/' || true)
+          echo "Changed module files:"
+          echo "$CHANGED_FILES"
+          echo "module_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Build module maintainers lookup
+        run: nix-build --show-trace -A docs.jsonModuleMaintainers
+      - name: Find maintainers for changed files
+        id: find-maintainers
+        if: steps.changed-files.outputs.module_files != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          MODULE_MAINTAINERS=$(cat ./result)
+
+          # Create array to store maintainers to notify
+          declare -A MAINTAINERS_TO_NOTIFY
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+
+          # Process each changed file
+          while IFS= read -r FILE; do
+            if [[ -z "$FILE" ]]; then
+              continue
+            fi
+
+            echo "Processing file: $FILE"
+
+            # Try different path formats to find the right one that matches the JSON
+            for PATH_FORMAT in \
+              "$FILE" \
+              "$GITHUB_WORKSPACE/$FILE" \
+              "/$PWD/$FILE" \
+              "$PWD/$FILE"
+            do
+              echo "Trying path format: $PATH_FORMAT"
+
+              # Get maintainers for this file using the current path format
+              MAINTAINERS=$(jq -r ".[\"$PATH_FORMAT\"] | if . != null then .[].github else empty end" <<< "$MODULE_MAINTAINERS" 2>/dev/null || true)
+
+              if [[ -n "$MAINTAINERS" ]]; then
+                echo "Found maintainers using path format: $PATH_FORMAT"
+                break
+              fi
+            done
+
+            # If no maintainers were found, try basename approach as fallback
+            if [[ -z "$MAINTAINERS" ]]; then
+              MODULE_NAME=$(basename "$FILE" .nix)
+              echo "Trying basename approach with: $MODULE_NAME"
+
+              # Try to find any key that ends with our module name
+              POTENTIAL_KEYS=$(jq -r "keys[] | select(endswith(\"/$MODULE_NAME.nix\"))" <<< "$MODULE_MAINTAINERS")
+
+              for KEY in $POTENTIAL_KEYS; do
+                echo "Found potential key: $KEY"
+                MAINTAINERS=$(jq -r ".[\"$KEY\"] | .[].github" <<< "$MODULE_MAINTAINERS" 2>/dev/null || true)
+                if [[ -n "$MAINTAINERS" ]]; then
+                  echo "Found maintainers via fallback approach"
+                  break
+                fi
+              done
+            fi
+
+            # Add maintainers to our notification list (except PR author)
+            for MAINTAINER in $MAINTAINERS; do
+              if [[ "$MAINTAINER" != "$PR_AUTHOR" ]]; then
+                MAINTAINERS_TO_NOTIFY["$MAINTAINER"]=1
+                echo "Found maintainer for $FILE: $MAINTAINER"
+              fi
+            done
+          done <<< "${{ steps.changed-files.outputs.module_files }}"
+
+          # If we found maintainers to notify, prepare the list
+          if [[ ${#MAINTAINERS_TO_NOTIFY[@]} -gt 0 ]]; then
+            # Check if maintainers are collaborators
+            REPO="${{ github.repository }}"
+            VALID_MAINTAINERS=()
+
+            for MAINTAINER in "${!MAINTAINERS_TO_NOTIFY[@]}"; do
+              echo "Checking if $MAINTAINER is a collaborator..."
+
+              if gh api \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "/repos/$REPO/collaborators/$MAINTAINER" &>/dev/null; then
+                echo "User $MAINTAINER is a collaborator, adding to reviewers list"
+                VALID_MAINTAINERS+=("$MAINTAINER")
+              else
+                echo "User $MAINTAINER is not a repository collaborator, probably missed the automated invite to the maintainers team, ignoring"
+              fi
+            done
+
+            # Only proceed if we have valid maintainers who are collaborators
+            if [[ ${#VALID_MAINTAINERS[@]} -gt 0 ]]; then
+              # Create JSON array of reviewers
+              REVIEWERS_JSON="["
+              first=true
+              for MAINTAINER in "${VALID_MAINTAINERS[@]}"; do
+                if [ "$first" = true ]; then
+                  REVIEWERS_JSON="$REVIEWERS_JSON\"$MAINTAINER\""
+                  first=false
+                else
+                  REVIEWERS_JSON="$REVIEWERS_JSON,\"$MAINTAINER\""
+                fi
+              done
+              REVIEWERS_JSON="$REVIEWERS_JSON]"
+
+              echo "Found valid maintainers to notify: $(echo $REVIEWERS_JSON | tr -d '[]\"')"
+              echo "reviewers_json=$REVIEWERS_JSON" >> $GITHUB_OUTPUT
+              echo "has_maintainers=true" >> $GITHUB_OUTPUT
+            else
+              echo "No valid collaborator maintainers found for the modified files."
+              echo "has_maintainers=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No module maintainers found for the modified files."
+            echo "has_maintainers=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Request reviews from maintainers
+        if: steps.find-maintainers.outputs.has_maintainers == 'true'
+        run: |
+          # Create full payload for GitHub API
+          PAYLOAD="{\"reviewers\":${{ steps.find-maintainers.outputs.reviewers_json }}}"
+
+          # Add maintainers as reviewers to the PR using GitHub API
+          REPO="${{ github.repository }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+
+          echo "Requesting reviews from maintainers: $(echo ${{ steps.find-maintainers.outputs.reviewers_json }} | tr -d '[]\"')"
+
+          # Request reviewers via GitHub API
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "/repos/$REPO/pulls/$PR_NUMBER/requested_reviewers" \
+            --input <(echo "$PAYLOAD")
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
