@@ -308,12 +308,6 @@
     github = "ipsavitsky";
     githubId = 33558632;
   };
-  jack5079 = {
-    name = "Jack W.";
-    email = "nix@jack.cab";
-    github = "jack5079";
-    githubId = 29169102;
-  };
   janik = {
     name = "Janik";
     email = "janik@aq0.de";
@@ -337,6 +331,12 @@
     github = "jkarlson";
     githubId = 1204734;
     name = "Emil Karlson";
+  };
+  jmmaloney4 = {
+    name = "Jack Maloney";
+    email = "jmmaloney4@gmail.com";
+    github = "jmmaloney4";
+    githubId = 5781547;
   };
   jonringer = {
     email = "jonringer117@gmail.com";
