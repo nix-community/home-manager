@@ -97,6 +97,14 @@ in
 
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
+    enableXonshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Xonsh integration.
+      '';
+    };
+
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     nix-direnv = {
@@ -204,6 +212,10 @@ in
             }
         )
       '');
+      programs.xonsh = mkIf cfg.enableXonshIntegration {
+        xonshrc = "xontrib load direnv";
+        extraPackages = ps: [ pkgs.xonsh.xontribs.xonsh-direnv ];
+      };
 
       home.sessionVariables = lib.mkIf (cfg.silent && !isVersion236orHigher) { DIRENV_LOG_FORMAT = ""; };
     };
