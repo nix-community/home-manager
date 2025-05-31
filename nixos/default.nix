@@ -26,18 +26,23 @@ in
         extraSpecialArgs.nixosConfig = config;
 
         sharedModules = [
-          {
-            key = "home-manager#nixos-shared-module";
+          (
+            { ... }@usercfg:
+            {
+              key = "home-manager#nixos-shared-module";
 
-            config = {
-              # The per-user directory inside /etc/profiles is not known by
-              # fontconfig by default.
-              fonts.fontconfig.enable = lib.mkDefault (cfg.useUserPackages && config.fonts.fontconfig.enable);
+              config = {
+                # The per-user directory inside /etc/profiles is not known by
+                # fontconfig by default.
+                fonts.fontconfig.enable = lib.mkDefault (
+                  usercfg.config.home.useUserPackages != { } && config.fonts.fontconfig.enable
+                );
 
-              # Inherit glibcLocales setting from NixOS.
-              i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
-            };
-          }
+                # Inherit glibcLocales setting from NixOS.
+                i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
+              };
+            }
+          )
         ];
       };
     }
