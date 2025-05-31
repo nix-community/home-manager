@@ -14,5 +14,6 @@ in
 
   nmt.script = ''
     assertPathNotExists 'home-files/${configDir}/config.toml'
+    assertPathNotExists 'home-files/${configDir}/init.nbt'
   '';
 }
