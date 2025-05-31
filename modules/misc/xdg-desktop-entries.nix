@@ -28,7 +28,7 @@ let
       # to match what's commonly used by other home manager modules.
 
       # Descriptions are taken from the desktop entry spec:
-      # https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys
+      # https://specifications.freedesktop.org/desktop-entry-spec/latest/recognized-keys.html
 
       type = mkOption {
         description = "The type of the desktop entry.";
@@ -208,7 +208,7 @@ in
 
       You can define entries for programs without entries or override existing entries.
 
-      See <https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys> for more information on options.
+      See <https://specifications.freedesktop.org/desktop-entry-spec/latest/recognized-keys.html> for more information on options.
     '';
     default = { };
     type = types.attrsOf (types.submodule desktopEntry);
