@@ -16,19 +16,15 @@ jobs:
   backport:
     name: Backport Pull Request
     if: >
-      github.event.pull_request.merged == true &&
-      ( github.event.action != 'labeled'
+      github.repository_owner == 'nix-community'
+      && github.event.pull_request.merged == true
+      && (
+        github.event.action != 'labeled'
         || startsWith(github.event.label.name, 'backport')
       )
 
     runs-on: ubuntu-24.04-arm
     steps:
-      - name: Check token
-        run: |
-          if [ -z "${{ secrets.GH_TOKEN_FOR_UPDATES }}" ]; then
-            echo "GH_TOKEN_FOR_UPDATES secret is not set"
-            exit 1
-          fi
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
