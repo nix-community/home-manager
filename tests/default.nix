@@ -374,6 +374,7 @@ import nmtSrc {
       ./modules/programs/bemenu
       ./modules/programs/boxxy
       ./modules/programs/cavalier
+      ./modules/programs/delta
       ./modules/programs/distrobox
       ./modules/programs/element-desktop/linux.nix
       ./modules/programs/eww

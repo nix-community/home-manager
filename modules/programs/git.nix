@@ -370,40 +370,6 @@ in
         };
       };
 
-      delta = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Whether to enable the {command}`delta` syntax highlighter.
-            See <https://github.com/dandavison/delta>.
-          '';
-        };
-
-        package = mkPackageOption pkgs "delta" { };
-
-        options = mkOption {
-          type =
-            with types;
-            let
-              primitiveType = either str (either bool int);
-              sectionType = attrsOf primitiveType;
-            in
-            attrsOf (either primitiveType sectionType);
-          default = { };
-          example = {
-            features = "decorations";
-            whitespace-error-style = "22 reverse";
-            decorations = {
-              commit-decoration-style = "bold yellow box ul";
-              file-style = "bold yellow ul";
-              file-decoration-style = "none";
-            };
-          };
-          description = ''
-            Options to configure delta.
-          '';
-        };
-      };
-
       diff-so-fancy = {
         enable = mkEnableOption "" // {
           description = ''
@@ -532,7 +498,7 @@ in
             assertion =
               let
                 enabled = [
-                  cfg.delta.enable
+                  (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
                   cfg.diff-so-fancy.enable
                   cfg.difftastic.enable
                   cfg.diff-highlight.enable
@@ -541,7 +507,7 @@ in
                 ];
               in
               lib.count lib.id enabled <= 1;
-            message = "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' or 'programs.git.patdiff' can be set to true at the same time.";
+            message = "Only one of 'programs.delta.enableGitIntegration', 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' or 'programs.git.patdiff' can be set to true at the same time.";
           }
         ];
 
@@ -856,22 +822,6 @@ in
             };
           })
         ])
-      )
-
-      (
-        let
-          deltaPackage = cfg.delta.package;
-          deltaCommand = "${deltaPackage}/bin/delta";
-        in
-        mkIf cfg.delta.enable {
-          home.packages = [ deltaPackage ];
-
-          programs.git.iniContent = {
-            core.pager = deltaCommand;
-            interactive.diffFilter = "${deltaCommand} --color-only";
-            delta = cfg.delta.options;
-          };
-        }
       )
 
       (mkIf cfg.diff-so-fancy.enable {
