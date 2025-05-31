@@ -178,6 +178,7 @@ import nmtSrc {
       ./modules/programs/bacon
       ./modules/programs/bash
       ./modules/programs/bat
+      ./modules/programs/blesh
       ./modules/programs/borgmatic
       ./modules/programs/bottom
       ./modules/programs/broot
