@@ -1,9 +1,5 @@
 # Based on
 # https://github.com/NixOS/nixpkgs/blob/2566f9dc/.github/workflows/backport.yml
-#
-# NOTE: this uses the GH_TOKEN_FOR_UPDATES because pushing a backport PR using
-# GITHUB_TOKEN does not trigger CI.
-# TODO: consider switching to a GitHub App
 name: Backport
 
 on:
@@ -16,7 +12,7 @@ jobs:
   backport:
     name: Backport Pull Request
     if: >
-      github.repository_owner == 'nix-community'
+      vars.CI_APP_ID
       && github.event.pull_request.merged == true
       && (
         github.event.action != 'labeled'
@@ -25,9 +21,16 @@ jobs:
 
     runs-on: ubuntu-24.04-arm
     steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Create backport PRs
@@ -35,6 +38,6 @@ jobs:
         uses: korthout/backport-action@v3
         with:
           # See https://github.com/korthout/backport-action#inputs
-          github_token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          github_token: ${{ steps.app-token.outputs.token }}
           branch_name: backport/${target_branch}/${pull_number}
           copy_labels_pattern: .*
