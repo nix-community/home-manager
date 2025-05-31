@@ -107,8 +107,20 @@ in
     ];
 
     xdg.configFile = {
+      # jellyfin-mpv-shim errors if the config file isn't writeable
+      # so, as a temporary workaround, we generate a hidden file (.conf.json)
+      # and make a writeable copy.
       "jellyfin-mpv-shim/conf.json" = lib.mkIf (cfg.settings != { }) {
         source = jsonFormat.generate "jellyfin-mpv-shim-conf" cfg.settings;
+        target = "jellyfin-mpv-shim/.conf.json";
+        onChange =
+          let
+            dir = "${config.xdg.configHome}/jellyfin-mpv-shim";
+          in
+          ''
+            cp --dereference ${dir}/.conf.json ${dir}/conf.json
+            chmod u+w ${dir}/conf.json
+          '';
       };
 
       "jellyfin-mpv-shim/mpv.conf" = lib.mkIf (cfg.mpvConfig != null) {
