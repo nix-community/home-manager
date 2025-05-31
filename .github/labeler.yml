@@ -172,6 +172,19 @@
     - modules/programs/swayimg.nix
     - modules/programs/zathura.nix
     - modules/programs/sioyek.nix
+    - modules/programs/cavalier.nix
+    - modules/programs/cava.nix
+    - modules/programs/clock-rs.nix
+    - modules/programs/gallery-dl.nix
+    - modules/programs/looking-glass-client.nix
+    - modules/programs/lutris.nix
+    - modules/programs/mangohud.nix
+    - modules/programs/mpvpaper.nix
+    - modules/programs/rmpc.nix
+    - modules/programs/streamlink.nix
+    - modules/programs/timidity.nix
+    - modules/programs/vinegar.nix
+    - modules/programs/wallust.nix
     - modules/services/mpd*.nix
     - modules/services/spotifyd.nix
     - modules/services/librespot.nix
@@ -190,6 +203,11 @@
     - modules/programs/wlogout.nix
     - modules/programs/waylogout.nix
     - modules/programs/swayr.nix
+    - modules/programs/bemenu.nix
+    - modules/programs/kickoff.nix
+    - modules/programs/onagre.nix
+    - modules/programs/sway-easyfocus.nix
+    - modules/programs/wayprompt.nix
     - modules/services/swayidle.nix
     - modules/services/swayosd.nix
     - modules/services/swaync.nix
@@ -205,6 +223,7 @@
     - modules/services/hyprpaper.nix
     - modules/services/hyprsunset.nix
     - modules/services/hyprpolkitagent.nix
+    - modules/services/shikane.nix
     - modules/programs/hyprlock.nix
     - tests/modules/programs/waybar/**/*
     - tests/modules/programs/swaylock/**/*
@@ -217,6 +236,7 @@
     - modules/programs/tint2.nix
     - modules/programs/xmobar.nix
     - modules/programs/eww.nix
+    - modules/programs/yambar.nix
     - modules/services/picom.nix
     - modules/services/polybar.nix
     - modules/services/dunst.nix
@@ -229,6 +249,10 @@
     - modules/services/stalonetray.nix
     - modules/services/trayer.nix
     - modules/services/taffybar.nix
+    - modules/services/dwm-status.nix
+    - modules/services/xcape.nix
+    - modules/services/xembed-sni-proxy.nix
+    - modules/services/sxhkd.nix
     - tests/modules/programs/rofi/**/*
     - tests/modules/programs/i3*/**/*
     - tests/modules/services/picom/**/*
@@ -263,6 +287,36 @@
     - modules/programs/navi.nix
     - modules/programs/just.nix
     - modules/programs/pls.nix
+    - modules/programs/antidote.nix
+    - modules/programs/autojump.nix
+    - modules/programs/bashmount.nix
+    - modules/programs/boxxy.nix
+    - modules/programs/broot.nix
+    - modules/programs/carapace.nix
+    - modules/programs/hstr.nix
+    - modules/programs/hwatch.nix
+    - modules/programs/keychain.nix
+    - modules/programs/less.nix
+    - modules/programs/lesspipe.nix
+    - modules/programs/man.nix
+    - modules/programs/nix-your-shell.nix
+    - modules/programs/pay-respects.nix
+    - modules/programs/pazi.nix
+    - modules/programs/pet.nix
+    - modules/programs/pistol.nix
+    - modules/programs/readline.nix
+    - modules/programs/scmpuff.nix
+    - modules/programs/script-directory.nix
+    - modules/programs/sesh.nix
+    - modules/programs/superfile.nix
+    - modules/programs/television.nix
+    - modules/programs/topgrade.nix
+    - modules/programs/translate-shell.nix
+    - modules/programs/uv.nix
+    - modules/programs/watson.nix
+    - modules/programs/z-lua.nix
+    - modules/programs/zk.nix
+    - modules/programs/zplug.nix
     - tests/modules/programs/tmux/**/*
     - tests/modules/programs/fzf/**/*
 
@@ -298,6 +352,31 @@
     - modules/programs/nh.nix
     - modules/programs/bacon.nix
     - modules/programs/sqls.nix
+    - modules/programs/darcs.nix
+    - modules/programs/earthly.nix
+    - modules/programs/eclipse.nix
+    - modules/programs/granted.nix
+    - modules/programs/jetbrains-remote.nix
+    - modules/programs/kubecolor.nix
+    - modules/programs/lazydocker.nix
+    - modules/programs/matplotlib.nix
+    - modules/programs/mercurial.nix
+    - modules/programs/mergiraf.nix
+    - modules/programs/mods.nix
+    - modules/programs/mr.nix
+    - modules/programs/numbat.nix
+    - modules/programs/octant.nix
+    - modules/programs/openstackclient.nix
+    - modules/programs/pgcli.nix
+    - modules/programs/piston-cli.nix
+    - modules/programs/poetry.nix
+    - modules/programs/pywal.nix
+    - modules/programs/sagemath.nix
+    - modules/programs/sftpman.nix
+    - modules/programs/smug.nix
+    - modules/programs/tex-fmt.nix
+    - modules/programs/vim-vint.nix
+    - modules/programs/visidata.nix
     - modules/services/lorri.nix
     - tests/modules/programs/go/**/*
     - tests/modules/programs/java/**/*
@@ -373,6 +452,13 @@
     - modules/programs/nheko.nix
     - modules/programs/iamb.nix
     - modules/programs/pidgin.nix
+    - modules/programs/chawan.nix
+    - modules/programs/discocss.nix
+    - modules/programs/element-desktop.nix
+    - modules/programs/halloy.nix
+    - modules/programs/havoc.nix
+    - modules/programs/tiny.nix
+    - modules/programs/vesktop.nix
     - modules/services/pantalaimon.nix
     - tests/modules/programs/irssi/**/*
     - tests/modules/programs/nheko/**/*
