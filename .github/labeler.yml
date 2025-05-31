@@ -1,25 +1,18 @@
-"applications":
-  - changed-files:
-      - any-glob-to-any-file:
-          - modules/programs/aerospace.nix
-          - modules/programs/aria2.nix
-          - modules/programs/beets.nix
-          - modules/programs/distrobox.nix
-          - modules/programs/gnome-shell.nix
-          - modules/programs/inori.nix
-          - modules/programs/meli.nix
-          - modules/programs/onedrive.nix
-          - modules/programs/onlyoffice.nix
-          - modules/programs/ptyxis.nix
-          - modules/programs/rtorrent.nix
-          - modules/programs/sketchybar.nix
-          - modules/programs/sm64ex.nix
-          - modules/programs/waveterm.nix
 "audio":
   - changed-files:
       - any-glob-to-any-file:
+          - modules/services/amberol.nix
+          - modules/programs/beets.nix
+          - modules/programs/cava.nix
+          - modules/programs/cavalier.nix
+          - modules/programs/cmus.nix
+          - modules/programs/ncmpcpp.nix
+          - modules/programs/ncspot.nix
+          - modules/programs/spotify-player.nix
+          - modules/programs/timidity.nix
           - modules/services/easyeffects.nix
           - modules/services/fluidsynth.nix
+          - modules/services/librespot.nix
           - modules/services/listenbrainz-mpd.nix
           - modules/services/mopidy.nix
           - modules/services/mpd-discord-rpc.nix
@@ -31,6 +24,8 @@
           - modules/services/pasystray.nix
           - modules/services/playerctld.nix
           - modules/services/pulseeffects.nix
+          - modules/services/spotifyd.nix
+          - tests/modules/services/mpd/**/*
 "automation":
   - changed-files:
       - any-glob-to-any-file:
@@ -49,6 +44,18 @@
           - modules/services/borgmatic.nix
           - tests/modules/programs/borgmatic/**/*
           - tests/modules/services/borgmatic/**/*
+"bars":
+  - changed-files:
+    -any-glob-to-any-file:
+      - modules/programs/eww.nix
+      - modules/programs/sketchybar.nix
+      - modules/programs/waybar.nix
+      - modules/programs/xmobar.nix
+      - modules/programs/yambar.nix
+      - modules/services/polybar.nix
+      - modules/services/taffybar.nix
+      - tests/modules/programs/waybar/**/*
+      - tests/modules/services/polybar/**/*
 "browsers":
   - changed-files:
       - any-glob-to-any-file:
@@ -68,17 +75,18 @@
           - modules/accounts/calendar.nix
           - modules/programs/khal*.nix
           - modules/programs/qcal.nix
-          - modules/programs/todoman.nix
           - tests/modules/programs/khal/**/*
 "clipboard":
   - changed-files:
       - any-glob-to-any-file:
+          - modules/services/clipcat.nix
           - modules/services/cliphist.nix
           - modules/services/clipman.nix
           - modules/services/clipmenu.nix
           - modules/services/clipse.nix
           - modules/services/copyq.nix
           - modules/services/parcellite.nix
+          - modules/services/pbgopy.nix
           - tests/modules/services/clipman/**/*
           - tests/modules/services/copyq/**/*
 "cli-tools":
@@ -142,15 +150,6 @@
           - modules/programs/zplug.nix
           - tests/modules/programs/fzf/**/*
           - tests/modules/programs/tmux/**/*
-"cloud":
-  - changed-files:
-      - any-glob-to-any-file:
-          - modules/services/davmail.nix
-          - modules/services/dropbox.nix
-          - modules/services/etesync-dav.nix
-          - modules/services/megasync.nix
-          - modules/services/nextcloud-client.nix
-          - modules/services/owncloud-client.nix
 "contacts":
   - changed-files:
       - any-glob-to-any-file:
@@ -163,6 +162,37 @@
   - changed-files:
       - any-glob-to-any-file:
           - modules/services/podman-linux/**/*
+          - modules/programs/distrobox.nix
+"desktop-ui":
+  - changed-files:
+      - any-glob-to-any-file:
+          - modules/services/avizo.nix
+          - modules/services/blanket.nix
+          - modules/services/flameshot.nix
+          - modules/programs/gnome-shell.nix
+          - modules/services/gromit-mpx.nix
+          - modules/services/linux-wallpaperengine.nix
+          - modules/services/random-background.nix
+          - modules/services/volnoti.nix
+          - modules/services/wob.nix
+          - modules/services/wpaperd.nix
+"desktop-utilities":
+  - changed-files:
+      - any-glob-to-any-file:
+          - modules/services/autorandr.nix
+          - modules/services/blueman-applet.nix
+          - modules/services/gnome-keyring.nix
+          - modules/services/lxqt-policykit-agent.nix
+          - modules/services/network-manager-applet.nix
+          - modules/services/polkit-gnome.nix
+          - modules/services/sctd.nix
+          - modules/services/snixembed.nix
+          - modules/services/status-notifier-watcher.nix
+          - modules/services/systembus-notify.nix
+          - modules/services/trayscale.nix
+          - modules/services/udiskie.nix
+          - modules/services/unclutter.nix
+          - modules/services/xembed-sni-proxy.nix
 "dev-tools":
   - changed-files:
       - any-glob-to-any-file:
@@ -179,6 +209,7 @@
           - modules/programs/kubecolor.nix
           - modules/programs/lazydocker.nix
           - modules/programs/matplotlib.nix
+          - modules/programs/meli.nix
           - modules/programs/mercurial.nix
           - modules/programs/mergiraf.nix
           - modules/programs/mise.nix
@@ -245,6 +276,14 @@
           - tests/modules/programs/nnn/**/*
           - tests/modules/programs/ranger/**/*
           - tests/modules/programs/yazi/**/*
+"gaming":
+  - changed-files:
+      - any-glob-to-any-file:
+          - modules/programs/kodi.nix
+          - modules/services/ludusavi.nix
+          - modules/programs/lutris.nix
+          - modules/programs/mangohud.nix
+          - modules/programs/sm64ex.nix
 "git":
   - changed-files:
       - any-glob-to-any-file:
@@ -281,11 +320,6 @@
           - tests/modules/programs/mujmap/*
           - tests/modules/programs/neomutt/*
           - tests/modules/programs/thunderbird/*
-"media-services":
-  - changed-files:
-      - any-glob-to-any-file:
-          - modules/services/jellyfin-mpv-shim.nix
-          - modules/services/plex-mpv-shim.nix
 "messaging":
   - changed-files:
       - any-glob-to-any-file:
@@ -314,11 +348,6 @@
           - modules/services/conky.nix
           - modules/services/glance.nix
           - modules/services/poweralertd.nix
-"neovim":
-  - changed-files:
-      - any-glob-to-any-file:
-          - modules/programs/neovim.nix
-          - tests/modules/programs/neovim/**/*
 "notification":
   - changed-files:
       - any-glob-to-any-file:
@@ -340,6 +369,7 @@
           - modules/programs/ledger.nix
           - modules/programs/newsboat.nix
           - modules/programs/obsidian.nix
+          - modules/programs/onlyoffice.nix
           - modules/programs/pandoc.nix
           - modules/programs/papis.nix
           - modules/programs/pubs.nix
@@ -349,51 +379,6 @@
           - modules/services/rsibreak.nix
           - modules/services/safeeyes.nix
           - modules/services/taskwarrior-sync.nix
-"program: firefox":
-  - changed-files:
-      - any-glob-to-any-file:
-          - modules/misc/mozilla-messaging-hosts.nix
-          - modules/programs/firefox/**/*
-          - modules/programs/floorp.nix
-          - modules/programs/librewolf.nix
-          - tests/modules/programs/firefox/**/*
-"media":
-  - changed-files:
-      - any-glob-to-any-file:
-          - modules/programs/cava.nix
-          - modules/programs/cavalier.nix
-          - modules/programs/clock-rs.nix
-          - modules/programs/cmus.nix
-          - modules/programs/feh.nix
-          - modules/programs/foliate.nix
-          - modules/programs/freetube.nix
-          - modules/programs/gallery-dl.nix
-          - modules/programs/imv.nix
-          - modules/programs/kodi.nix
-          - modules/programs/looking-glass-client.nix
-          - modules/programs/lutris.nix
-          - modules/programs/mangohud.nix
-          - modules/programs/mpv.nix
-          - modules/programs/mpvpaper.nix
-          - modules/programs/ncmpcpp.nix
-          - modules/programs/ncspot.nix
-          - modules/programs/obs-studio.nix
-          - modules/programs/pqiv.nix
-          - modules/programs/rmpc.nix
-          - modules/programs/sioyek.nix
-          - modules/programs/spotify-player.nix
-          - modules/programs/streamlink.nix
-          - modules/programs/swayimg.nix
-          - modules/programs/timidity.nix
-          - modules/programs/vinegar.nix
-          - modules/programs/wallust.nix
-          - modules/programs/yt-dlp.nix
-          - modules/programs/zathura.nix
-          - modules/services/librespot.nix
-          - modules/services/mpd*.nix
-          - modules/services/spotifyd.nix
-          - tests/modules/programs/mpv/**/*
-          - tests/modules/services/mpd/**/*
 "password-manager":
   - changed-files:
       - any-glob-to-any-file:
@@ -404,6 +389,15 @@
           - modules/services/pass-secret-service.nix
           - tests/modules/programs/keepassxc/**/*
           - tests/modules/programs/password-store/**/*
+"photo":
+  - changed-files:
+      - any-glob-to-any-file:
+          - modules/programs/feh.nix
+          - modules/programs/gallery-dl.nix
+          - modules/programs/imv.nix
+          - modules/programs/pqiv.nix
+          - modules/programs/swayimg.nix
+          - modules/programs/wallust.nix
 "shell":
   - changed-files:
       - any-glob-to-any-file:
@@ -423,10 +417,15 @@
 "sync":
   - changed-files:
       - any-glob-to-any-file:
+          - modules/services/davmail.nix
           - modules/services/dropbox.nix
+          - modules/services/etesync-dav.nix
           - modules/services/kdeconnect.nix
+          - modules/services/megasync.nix
           - modules/services/nextcloud-client.nix
+          - modules/programs/onedrive.nix
           - modules/services/owncloud-client.nix
+          - modules/programs/rtorrent.nix
           - modules/services/syncthing.nix
           - modules/services/unison.nix
           - tests/modules/services/dropbox/**/*
@@ -448,40 +447,23 @@
 "system-tools":
   - changed-files:
       - any-glob-to-any-file:
-          - modules/services/amberol.nix
+          - modules/programs/aria2.nix
           - modules/services/arrpc.nix
-          - modules/services/autorandr.nix
-          - modules/services/blueman-applet.nix
           - modules/services/cachix-agent.nix
-          - modules/services/clipcat.nix
           - modules/services/fusuma.nix
-          - modules/services/gnome-keyring.nix
           - modules/services/grobi.nix
           - modules/services/hound.nix
           - modules/services/jankyborders.nix
-          - modules/services/ludusavi.nix
-          - modules/services/lxqt-policykit-agent.nix
-          - modules/services/network-manager-applet.nix
           - modules/services/ollama.nix
           - modules/services/opensnitch-ui.nix
           - modules/services/osmscout-server.nix
-          - modules/services/pbgopy.nix
           - modules/services/plan9port.nix
-          - modules/services/polkit-gnome.nix
           - modules/services/psd.nix
           - modules/services/pueue.nix
           - modules/services/recoll.nix
-          - modules/services/sctd.nix
           - modules/services/signaturepdf.nix
-          - modules/services/snixembed.nix
-          - modules/services/status-notifier-watcher.nix
-          - modules/services/systembus-notify.nix
           - modules/services/tahoe-lafs.nix
           - modules/services/tldr-update.nix
-          - modules/services/trayscale.nix
-          - modules/services/udiskie.nix
-          - modules/services/unclutter.nix
-          - modules/services/xembed-sni-proxy.nix
 "terminal":
   - changed-files:
       - any-glob-to-any-file:
@@ -490,29 +472,32 @@
           - modules/programs/ghostty.nix
           - modules/programs/gnome-terminal.nix
           - modules/programs/kitty.nix
+          - modules/programs/ptyxis.nix
           - modules/programs/rio.nix
           - modules/programs/terminator.nix
           - modules/programs/termite.nix
           - modules/programs/urxvt.nix
+          - modules/programs/waveterm.nix
           - modules/programs/wezterm.nix
           - tests/modules/programs/alacritty/**/*
           - tests/modules/programs/foot/**/*
           - tests/modules/programs/kitty/**/*
-"ui":
+"video":
   - changed-files:
       - any-glob-to-any-file:
-          - modules/services/avizo.nix
-          - modules/services/blanket.nix
-          - modules/services/flameshot.nix
-          - modules/services/gromit-mpx.nix
-          - modules/services/linux-wallpaperengine.nix
-          - modules/services/random-background.nix
-          - modules/services/volnoti.nix
-          - modules/services/wob.nix
-          - modules/services/wpaperd.nix
-"virtualization":
+          - modules/programs/freetube.nix
+          - modules/programs/mpv.nix
+          - modules/programs/mpvpaper.nix
+          - modules/programs/obs-studio.nix
+          - modules/programs/streamlink.nix
+          - modules/programs/yt-dlp.nix
+          - modules/services/jellyfin-mpv-shim.nix
+          - modules/services/plex-mpv-shim.nix
+          - tests/modules/programs/mpv/**/*
+"remote-desktop":
   - changed-files:
       - any-glob-to-any-file:
+          - modules/programs/looking-glass-client.nix
           - modules/services/barrier.nix
           - modules/services/remmina.nix
           - modules/services/wayvnc.nix
@@ -555,6 +540,7 @@
 "window-managers":
   - changed-files:
       - any-glob-to-any-file:
+          - modules/programs/aerospace.nix
           - modules/programs/i3bar-river.nix
           - modules/programs/i3blocks.nix
           - modules/programs/i3status-rust.nix
@@ -563,7 +549,6 @@
 "x11":
   - changed-files:
       - any-glob-to-any-file:
-          - modules/programs/eww.nix
           - modules/programs/i3*.nix
           - modules/programs/rofi*.nix
           - modules/programs/tint2.nix
