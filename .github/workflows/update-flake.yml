@@ -42,3 +42,14 @@ jobs:
           git-author-name: ${{ steps.user-info.outputs.name }}
           git-author-email: ${{ steps.user-info.outputs.email }}
           pr-labels: dependencies
+          pr-body: |
+            Automated update by the [update-flake-lock] GitHub Action.
+
+            ```
+            {{ env.GIT_COMMIT_MESSAGE }}
+            ```
+
+            This PR was most recently updated by workflow run [${{ github.run_id }}].
+
+            [update-flake-lock]: https://github.com/DeterminateSystems/update-flake-lock
+            [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
