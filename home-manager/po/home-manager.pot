@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-05-30 15:05+0200\n"
+"POT-Creation-Date: 2025-05-30 15:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,11 +87,11 @@ msgid "Can't inspect options of a flake configuration"
 msgstr ""
 
 #: home-manager/home-manager:297 home-manager/home-manager:320
-#: home-manager/home-manager:1060
+#: home-manager/home-manager:662 home-manager/home-manager:1137
 msgid "%s: unknown option '%s'"
 msgstr ""
 
-#: home-manager/home-manager:302 home-manager/home-manager:1061
+#: home-manager/home-manager:302 home-manager/home-manager:1138
 msgid "Run '%s --help' for usage help"
 msgstr ""
 
@@ -156,59 +156,63 @@ msgstr ""
 msgid "Cannot run build in read-only directory"
 msgstr ""
 
-#: home-manager/home-manager:697
+#: home-manager/home-manager:759
 msgid "No generation with ID %s"
 msgstr ""
 
-#: home-manager/home-manager:699
+#: home-manager/home-manager:761
 msgid "Cannot remove the current generation %s"
 msgstr ""
 
-#: home-manager/home-manager:701
+#: home-manager/home-manager:763
 msgid "Removing generation %s"
 msgstr ""
 
-#: home-manager/home-manager:722
+#: home-manager/home-manager:784
 msgid "No generations to expire"
 msgstr ""
 
-#: home-manager/home-manager:733
+#: home-manager/home-manager:795
 msgid "No home-manager packages seem to be installed."
 msgstr ""
 
-#: home-manager/home-manager:818
+#: home-manager/home-manager:880
 msgid "Unknown argument %s"
 msgstr ""
 
-#: home-manager/home-manager:843
+#: home-manager/home-manager:905
 msgid "This will remove Home Manager from your system."
 msgstr ""
 
-#: home-manager/home-manager:846
+#: home-manager/home-manager:908
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr ""
 
-#: home-manager/home-manager:850
+#: home-manager/home-manager:912
 msgid "Really uninstall Home Manager?"
 msgstr ""
 
-#: home-manager/home-manager:856
+#: home-manager/home-manager:918
 msgid "Switching to empty Home Manager configuration..."
 msgstr ""
 
-#: home-manager/home-manager:871
+#: home-manager/home-manager:933
 msgid "Yay!"
 msgstr ""
 
-#: home-manager/home-manager:876
+#: home-manager/home-manager:938
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
 
-#: home-manager/home-manager:1100
+#: home-manager/home-manager:1104
+msgid "%s: \"--rollback\" can only be used after \"switch\""
+msgstr ""
+
+#: home-manager/home-manager:1185
 msgid "expire-generations expects one argument, got %d."
 msgstr ""
 
-#: home-manager/home-manager:1122
+#: home-manager/home-manager:1207
 msgid "Unknown command: %s"
 msgstr ""
 
