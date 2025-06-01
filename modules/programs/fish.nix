@@ -212,56 +212,68 @@ let
     };
   };
 
-  bindModule = types.submodule {
-    options = {
-      enable = mkEnableOption "enable the bind" // {
-        default = true;
+  bindModule = types.submodule (
+    { config, ... }:
+    {
+      options = {
+        enable = mkEnableOption "enable the bind. Set false if you want to ignore the bind" // {
+          default = true;
+        };
+        mode = mkOption {
+          description = "Specify the bind mode that the bind is used in";
+          type =
+            with types;
+            nullOr (enum [
+              "default"
+              "insert"
+              "paste"
+            ]);
+          default = null;
+        };
+        command = mkOption {
+          description = "command that will be execute";
+          type =
+            let
+              origin =
+                with types;
+                nullOr (oneOf [
+                  str
+                  (listOf str)
+                ]);
+            in
+            origin
+            // {
+              description = "string or list of string (optional when erase is set to true)";
+              check = x: if !config.erase && isNull x then false else origin.check x;
+            };
+          default = null;
+        };
+        setsMode = mkOption {
+          description = "Change current mode after bind is executed";
+          type =
+            with types;
+            nullOr (enum [
+              "default"
+              "insert"
+              "paste"
+            ]);
+          default = null;
+        };
+        erase = mkEnableOption "remove bind";
+        silent = mkEnableOption "Operate silently";
+        operate = mkOption {
+          description = "Operate on preset bindings or user bindings";
+          type =
+            with types;
+            nullOr (enum [
+              "preset"
+              "user"
+            ]);
+          default = null;
+        };
       };
-      mode = mkOption {
-        description = "Specify the bind mode that the bind is used in";
-        type =
-          with types;
-          nullOr (enum [
-            "default"
-            "insert"
-            "paste"
-          ]);
-        default = null;
-      };
-      command = mkOption {
-        description = "command that will be execute";
-        type =
-          with types;
-          oneOf [
-            str
-            (listOf str)
-          ];
-      };
-      setsMode = mkOption {
-        description = "Change current mode after bind is executed";
-        type =
-          with types;
-          nullOr (enum [
-            "default"
-            "insert"
-            "paste"
-          ]);
-        default = null;
-      };
-      erase = mkEnableOption "remove bind";
-      silent = mkEnableOption "Operate silently";
-      operate = mkOption {
-        description = "Operate on preset bindings or user bindings";
-        type =
-          with types;
-          nullOr (enum [
-            "preset"
-            "user"
-          ]);
-        default = null;
-      };
-    };
-  };
+    }
+  );
 
   abbrsStr = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (
@@ -306,39 +318,47 @@ let
   filteredBinds = lib.filterAttrs (_: { enable, ... }: enable) cfg.binds;
 
   bindsStr = lib.concatStringsSep "\n" (
-    lib.mapAttrsToList (
-      k:
-      {
-        silent,
-        erase,
-        operate,
-        mode,
-        setsMode,
-        command,
-        ...
-      }:
-      let
-        opts =
-          lib.optionals silent [ "-s" ]
-          ++ (
-            if erase then
-              [ "-e" ]
-            else
-              lib.optionals (!isNull operate) [ "--${operate}" ]
-              ++ lib.optionals (!isNull mode) [
-                "--mode"
-                mode
-              ]
-              ++ lib.optionals (!isNull setsMode) [
-                "--sets-mode"
-                setsMode
-              ]
+    lib.flatten (
+      lib.mapAttrsToList (
+        k:
+        {
+          silent,
+          erase,
+          operate,
+          mode,
+          setsMode,
+          command,
+          ...
+        }:
+        let
+          opts =
+            lib.optionals silent [ "-s" ]
+            ++ lib.optionals (!isNull operate) [ "--${operate}" ]
+            ++ lib.optionals (!isNull mode) [
+              "--mode"
+              mode
+            ]
+            ++ lib.optionals (!isNull setsMode) [
+              "--sets-mode"
+              setsMode
+            ];
+
+          cmdNormal = lib.concatStringsSep " " (
+            [ "bind" ] ++ opts ++ [ k ] ++ map lib.escapeShellArg (lib.flatten [ command ])
           );
-      in
-      lib.concatStringsSep " " (
-        [ "bind" ] ++ opts ++ [ k ] ++ map lib.escapeShellArg (lib.flatten [ command ])
-      )
-    ) filteredBinds
+
+          cmdErase = lib.concatStringsSep "  " (
+            [
+              "bind"
+              "-e"
+            ]
+            ++ opts
+            ++ [ k ]
+          );
+        in
+        lib.optionals erase [ cmdErase ] ++ lib.optionals (!isNull command) [ cmdNormal ]
+      ) filteredBinds
+    )
   );
 
   fishIndent =
@@ -434,8 +454,9 @@ in
           lib.literalExpression # nix
             ''
               {
-                "alt-s".command = "fish_commandline_prepend sudo";
                 "alt-shift-b".command = "fish_commandline_append bat";
+                "alt-s".erase = true;
+                "alt-s".operate = "preset";
               }
             '';
       };
