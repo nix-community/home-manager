@@ -27,14 +27,18 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    programs.git = {
-      attributes = [ "* merge=mergiraf" ];
-      extraConfig = {
-        merge.mergiraf = {
-          name = "mergiraf";
-          driver = "${mergiraf} merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+    programs = {
+      git = {
+        attributes = [ "* merge=mergiraf" ];
+        extraConfig = {
+          merge.mergiraf = {
+            name = "mergiraf";
+            driver = "${mergiraf} merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+          };
         };
       };
+
+      jujutsu.settings.ui.merge-editor = "mergiraf";
     };
   };
 }
