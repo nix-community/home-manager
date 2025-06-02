@@ -11,26 +11,21 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v31
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
-        extra_nix_config: |
-          experimental-features = nix-command flakes
-    - run: |
-        if grep -R --exclude stdlib-extended.nix literalExample modules ; then
-          echo "Error: literalExample should be replaced by literalExpression" > /dev/stderr
-          exit 1
-        fi
-    - run: nix-build --show-trace -A docs.jsonModuleMaintainers
-    - run: nix fmt -- --ci
-    - run: nix-shell --show-trace . -A install
-    - run: yes | home-manager -I home-manager=. uninstall
-    - name: Run tests
-      run: nix-build -j auto --show-trace --arg enableBig false --pure --option allow-import-from-derivation false tests -A build.all
-      env:
-        GC_INITIAL_HEAP_SIZE: 4294967296
-    - name: Run tests (with IFD)
-      run: nix-build -j auto --show-trace --arg enableBig false --pure --arg enableLegacyIfd true tests -A build.all
-      env:
-        GC_INITIAL_HEAP_SIZE: 4294967296
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - run: nix-build --show-trace -A docs.jsonModuleMaintainers
+      - run: nix fmt -- --ci
+      - run: nix-shell --show-trace . -A install
+      - run: yes | home-manager -I home-manager=. uninstall
+      - name: Run tests
+        run: nix-build -j auto --show-trace --arg enableBig false --pure --option allow-import-from-derivation false tests -A build.all
+        env:
+          GC_INITIAL_HEAP_SIZE: 4294967296
+      - name: Run tests (with IFD)
+        run: nix-build -j auto --show-trace --arg enableBig false --pure --arg enableLegacyIfd true tests -A build.all
+        env:
+          GC_INITIAL_HEAP_SIZE: 4294967296

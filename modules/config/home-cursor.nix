@@ -249,7 +249,7 @@ in
             config = {
               seat = {
                 "*" = {
-                  xcursor_theme = "${cfg.name} ${toString config.gtk.cursorTheme.size}";
+                  xcursor_theme = "${cfg.name} ${toString cfg.size}";
                 };
               };
             };

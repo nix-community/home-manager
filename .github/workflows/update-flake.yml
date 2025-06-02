@@ -10,6 +10,25 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
     steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+      - name: Get GitHub App user info
+        id: user-info
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          slug: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          name="$slug[bot]"
+          id=$(gh api "/users/$name" --jq .id)
+          {
+            echo "id=$id"
+            echo "name=$name"
+            echo "email=$id+$name@users.noreply.github.com"
+          } >> "$GITHUB_OUTPUT"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Nix
@@ -17,5 +36,20 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v25
         with:
-          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          token: ${{ steps.app-token.outputs.token }}
+          git-committer-name: ${{ steps.user-info.outputs.name }}
+          git-committer-email: ${{ steps.user-info.outputs.email }}
+          git-author-name: ${{ steps.user-info.outputs.name }}
+          git-author-email: ${{ steps.user-info.outputs.email }}
           pr-labels: dependencies
+          pr-body: |
+            Automated update by the [update-flake-lock] GitHub Action.
+
+            ```
+            {{ env.GIT_COMMIT_MESSAGE }}
+            ```
+
+            This PR was most recently updated by workflow run [${{ github.run_id }}].
+
+            [update-flake-lock]: https://github.com/DeterminateSystems/update-flake-lock
+            [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

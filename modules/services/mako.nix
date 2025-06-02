@@ -33,10 +33,13 @@ let
 
       sectionLines = lib.concatStringsSep "\n" (lib.mapAttrsToList formatSection sectionSettings);
     in
-    if sectionSettings != { } then globalLines + "\n" + sectionLines + "\n" else globalLines + "\n";
+    lib.mkMerge [
+      globalLines
+      (lib.mkIf (sectionSettings != { }) sectionLines)
+      (lib.mkIf (cfg.extraConfig != "") ("\n" + cfg.extraConfig))
+    ];
 
   iniFormat = pkgs.formats.ini { };
-  iniType = iniFormat.type;
   iniAtomType = iniFormat.lib.types.atom;
 in
 {
@@ -82,9 +85,13 @@ in
       (lib.mkRemovedOptionModule [
         "services"
         "mako"
-        "extraConfig"
-      ] "Use services.mako.settings instead.")
-      (lib.mkRenamedOptionModule [ "services" "mako" "criterias" ] [ "services" "mako" "criteria" ])
+        "criterias"
+      ] "Use services.mako.settings instead. If order is important, use `services.mako.extraConfig`.")
+      (lib.mkRemovedOptionModule [
+        "services"
+        "mako"
+        "criteria"
+      ] "Use services.mako.settings instead. If order is important, use `services.mako.extraConfig`.")
     ]
     ++ lib.hm.deprecations.mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) {
       transform = lib.hm.strings.toKebabCase;
@@ -130,40 +137,14 @@ in
         <https://github.com/emersion/mako/blob/master/doc/mako.5.scd>.
       '';
     };
-    criteria = mkOption {
-      visible = false;
-      type = iniType;
-      default = { };
-      example = {
-        "actionable=true" = {
-          anchor = "top-left";
-        };
-
-        "app-name=Google\\ Chrome" = {
-          max-visible = "5";
-        };
-
-        "field1=value field2=value" = {
-          text-alignment = "left";
-        };
-      };
-      description = ''
-        Criteria for mako's config. All the details can be found in the
-        CRITERIA section in the official documentation.
-
-        *Deprecated*: Use `settings` with nested attributes instead. For example:
-        ```nix
-        settings = {
-          # Global settings
-          anchor = "top-right";
-
-          # Criteria sections
-          "actionable=true" = {
-            anchor = "top-left";
-          };
-        };
-        ```
+    extraConfig = mkOption {
+      default = "";
+      type = lib.types.lines;
+      example = lib.literalExpression ''
+        [urgency=low]
+        border-color=#b8bb26
       '';
+      description = "Additional configuration lines to inject directly into the generated config file.";
     };
   };
 
@@ -172,41 +153,13 @@ in
       (lib.hm.assertions.assertPlatform "services.mako" pkgs lib.platforms.linux)
     ];
 
-    warnings = lib.optional (cfg.criteria != { }) ''
-      The option `services.mako.criteria` is deprecated and will be removed in a future release.
-      Please use `services.mako.settings` with nested attributes instead.
-
-      For example, instead of:
-        criteria = {
-          "actionable=true" = {
-            anchor = "top-left";
-          };
-        };
-
-      Use:
-        settings = {
-          # Global settings here...
-
-          # Criteria sections
-          "actionable=true" = {
-            anchor = "top-left";
-          };
-        };
-    '';
-
     home.packages = [ cfg.package ];
 
     dbus.packages = [ cfg.package ];
 
-    xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.criteria != { }) {
+    xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.extraConfig != "") {
       onChange = "${cfg.package}/bin/makoctl reload || true";
-      text =
-        let
-          # Merge settings and criteria into a single attribute set
-          # where settings are at the top level and criteria are nested attributes
-          mergedConfig = cfg.settings // cfg.criteria;
-        in
-        generateConfig mergedConfig;
+      text = generateConfig cfg.settings;
     };
   };
 }

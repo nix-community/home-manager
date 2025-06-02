@@ -139,6 +139,7 @@ let
       ./programs/home-manager.nix
       ./programs/hstr.nix
       ./programs/htop.nix
+      ./programs/hwatch.nix
       ./programs/hyfetch.nix
       ./programs/hyprlock.nix
       ./programs/i3bar-river.nix

@@ -216,6 +216,7 @@ import nmtSrc {
       ./modules/programs/helix
       ./modules/programs/himalaya
       ./modules/programs/htop
+      ./modules/programs/hwatch
       ./modules/programs/hyfetch
       ./modules/programs/i3status
       ./modules/programs/inori

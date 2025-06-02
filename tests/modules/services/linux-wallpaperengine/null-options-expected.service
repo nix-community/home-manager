@@ -1,0 +1,11 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@linux-wallpaperengine@/bin/linux-wallpaperengine
+Restart=on-failure
+
+[Unit]
+After=graphical-session.target
+Description=Implementation of Wallpaper Engine on Linux
+PartOf=graphical-session.target

@@ -58,7 +58,7 @@ in
             { run = "escape"; on = [ "<Esc>" ]; }
             { run = "backspace"; on = [ "<Backspace>" ]; }
           ];
-          manager.prepend_keymap = [
+          mgr.prepend_keymap = [
             { run = "escape"; on = [ "<Esc>" ]; }
             { run = "quit"; on = [ "q" ]; }
             { run = "close"; on = [ "<C-q>" ]; }
@@ -82,7 +82,7 @@ in
           log = {
             enabled = false;
           };
-          manager = {
+          mgr = {
             show_hidden = false;
             sort_by = "mtime";
             sort_dir_first = true;
