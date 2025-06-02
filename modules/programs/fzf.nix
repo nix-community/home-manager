@@ -40,7 +40,7 @@ let
     if hasShellIntegrationEmbedded then
       ''
         if [[ $options[zle] = on ]]; then
-          eval "$(${getExe cfg.package} --zsh)"
+          source <(${getExe cfg.package} --zsh)
         fi
       ''
     else
