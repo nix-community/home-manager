@@ -64,15 +64,6 @@ in
       source = tomlFormat.generate "numbat-config" cfg.settings;
     };
 
-    home.file."${configDir}/init.nbt" = mkIf (cfg.initFile != null) (
-      if (cfg.initFile.source != null) then
-        {
-          source = cfg.initFile.source;
-        }
-      else
-        {
-          text = cfg.initFile.text;
-        }
-    );
+    home.file."${configDir}/init.nbt" = mkIf (cfg.initFile != null) cfg.initFile;
   };
 }
