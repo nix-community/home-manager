@@ -8,12 +8,7 @@
         and rebuild your system.
 
         ``` nix
-        nix = {
-          package = pkgs.nixFlakes;
-          extraOptions = ''
-            experimental-features = nix-command flakes
-          '';
-        };
+        nix.settings.experimental-features = "nix-command flakes";
         ```
 
     -   If you are not using NixOS, add the following to `nix.conf`
