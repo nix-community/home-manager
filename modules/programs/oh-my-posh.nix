@@ -14,6 +14,8 @@ let
   configArgument =
     if cfg.settings != { } then
       "--config ${config.xdg.configHome}/oh-my-posh/config.json"
+    else if cfg.configFile != null then
+      "--config ${cfg.configFile}"
     else if cfg.useTheme != null then
       "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
     else
@@ -38,6 +40,18 @@ in
         <https://ohmyposh.dev/docs/configuration/overview>
         for details. The `useTheme` option is ignored when this
         option is used.
+      '';
+    };
+
+    configFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        Use a custom config file for oh-my-posh instead of the default theme.
+        This options corresponds to the `--config` option for the `oh-my-posh`
+        executable. See <https://ohmyposh.dev/docs/configuration/general> for
+        details. This option is ignored when the `settings` option is used. If
+        this option is set, `useTheme` will be ignored.
       '';
     };
 
