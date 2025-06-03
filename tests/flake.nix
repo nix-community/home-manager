@@ -51,8 +51,32 @@
               renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
             in
             lib.mapAttrs' renameTestPkg tests;
+
+          testAllNoBig =
+            let
+              tests = import ./. {
+                inherit pkgs;
+                enableBig = false;
+              };
+            in
+            lib.nameValuePair "test-all-no-big" tests.build.all;
+
+          testAllNoBigIfd =
+            let
+              tests = import ./. {
+                inherit pkgs;
+                enableBig = false;
+                enableLegacyIfd = true;
+              };
+            in
+            lib.nameValuePair "test-all-no-big-ifd" tests.build.all;
         in
-        testPackages // integrationTestPackages
+        testPackages
+        // integrationTestPackages
+        // (lib.listToAttrs [
+          testAllNoBig
+          testAllNoBigIfd
+        ])
       );
     };
 }
