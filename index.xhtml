@@ -474,12 +474,7 @@ description of this setup.</p></li><li class="listitem"><p>This allows the user 
 when running <code class="literal">darwin-rebuild</code>. See <a class="link" href="index.xhtml#sec-flakes-nix-darwin-module" title="nix-darwin module" >nix-darwin
 module</a> for a description of this
 setup.</p></li></ol></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-flakes-prerequisites">Prerequisites</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-standalone">Standalone setup</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nix-darwin-module">nix-darwin module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-flake-parts-module">flake-parts module</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-prerequisites" class="title" style="clear: both">Prerequisites   </h2>  </div> </div></div><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Install Nix 2.4 or later, or have it in <code class="literal">nix-shell</code>.</p></li><li class="listitem"><p>Enable experimental features <code class="literal">nix-command</code> and <code class="literal">flakes</code>.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p>When using NixOS, add the following to your <code class="literal">configuration.nix</code>
-and rebuild your system.</p><pre><code class="programlisting  nix">nix = {
-  package = pkgs.nixFlakes;
-  extraOptions = &#x27;&#x27;
-    experimental-features = nix-command flakes
-  &#x27;&#x27;;
-};
+and rebuild your system.</p><pre><code class="programlisting  nix">nix.settings.experimental-features = &quot;nix-command flakes&quot;;
 </code></pre></li><li class="listitem"><p>If you are not using NixOS, add the following to <code class="literal">nix.conf</code>
 (located at <code class="literal">~/.config/nix/</code> or <code class="literal">/etc/nix/nix.conf</code>).</p><pre><code class="programlisting  bash">experimental-features = nix-command flakes
 </code></pre><p>You may need to restart the Nix daemon with, for example,
