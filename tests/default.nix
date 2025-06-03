@@ -1,6 +1,7 @@
 {
   pkgs ? import <nixpkgs> { },
   enableBig ? true,
+  enableLegacyIfd ? false,
 }:
 
 let
@@ -142,6 +143,7 @@ let
           ];
 
           test.enableBig = enableBig;
+          test.enableLegacyIfd = enableLegacyIfd;
         }
       )
     ];
