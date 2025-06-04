@@ -14,18 +14,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v31
         with:
+          # TODO: Adjust uninstall to not need channel
           nix_path: nixpkgs=channel:nixos-unstable
           extra_nix_config: |
             experimental-features = nix-command flakes
-      - run: nix-build --show-trace -A docs.jsonModuleMaintainers
+      - run: nix build --show-trace .#docs-jsonModuleMaintainers
       - run: nix fmt -- --ci
-      - run: nix-shell --show-trace . -A install
-      - run: yes | home-manager -I home-manager=. uninstall
+      - run: nix run .#home-manager -- init --switch
+      - run: yes | nix run . -- uninstall
       - name: Run tests
-        run: nix-build -j auto --show-trace --arg enableBig false --pure --option allow-import-from-derivation false tests -A build.all
+        run: nix build -j auto --show-trace --option allow-import-from-derivation false --reference-lock-file flake.lock "./tests#test-all-no-big"
         env:
           GC_INITIAL_HEAP_SIZE: 4294967296
       - name: Run tests (with IFD)
-        run: nix-build -j auto --show-trace --arg enableBig false --pure --arg enableLegacyIfd true tests -A build.all
+        run: nix build -j auto --show-trace --reference-lock-file flake.lock "./tests#test-all-no-big"
         env:
           GC_INITIAL_HEAP_SIZE: 4294967296
