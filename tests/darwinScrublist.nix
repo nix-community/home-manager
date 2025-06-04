@@ -7,6 +7,7 @@ let
     # keep-sorted start case=no numeric=yes
     "aerc"
     "aerospace"
+    "aichat"
     "alacritty"
     "alot"
     "antidote"

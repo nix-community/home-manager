@@ -171,6 +171,7 @@ import nmtSrc {
       ./modules/misc/specialisation
       ./modules/misc/xdg
       ./modules/programs/aerc
+      ./modules/programs/aichat
       ./modules/programs/alacritty
       ./modules/programs/alot
       ./modules/programs/antidote
