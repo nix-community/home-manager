@@ -14,9 +14,11 @@ let
   );
 
   settingsIni = (lib.mapAttrs (n: v: v.settings) cfg.libraries) // {
-    settings = cfg.settings // {
-      "default-library" = lib.head defaultLibraries;
-    };
+    settings =
+      cfg.settings
+      // lib.optionalAttrs (cfg.libraries != { }) {
+        "default-library" = lib.head defaultLibraries;
+      };
   };
 
 in
@@ -70,8 +72,15 @@ in
                 default = false;
                 example = true;
                 description = ''
-                  Whether this is a default library. There must be exactly one
-                  default library.
+                  Whether this is a default library.
+
+                  For papis to function without explicit library selection
+                  (i.e. without `-l <library>` or `--pick-lib` flags) there
+                  must be a default library defined.
+
+                  Note this can be also defined (or overridden) on a local
+                  `$(pwd)/.papis.config` or via python
+                  `$XDG_CONFIG_HOME/papis/config.py` config file.
                 '';
               };
 
@@ -97,27 +106,14 @@ in
           }
         )
       );
+      default = { };
       description = "Attribute set of papis libraries.";
     };
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.libraries == { } || lib.length defaultLibraries == 1;
-        message =
-          "Must have exactly one default papis library, but found "
-          + toString (lib.length defaultLibraries)
-          + lib.optionalString (lib.length defaultLibraries > 1) (
-            ", namely " + lib.concatStringsSep "," defaultLibraries
-          );
-      }
-    ];
-
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."papis/config" = lib.mkIf (cfg.libraries != { }) {
-      text = lib.generators.toINI { } settingsIni;
-    };
+    xdg.configFile."papis/config".text = lib.generators.toINI { } settingsIni;
   };
 }
