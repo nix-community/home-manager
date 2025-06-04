@@ -1,0 +1,7 @@
+clients:
+- api_base: http://localhost:11434/v1
+  models:
+  - name: llama3.2:latest
+  name: Ollama
+  type: openai-compatible
+model: Ollama:mistral-small:latest

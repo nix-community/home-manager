@@ -61,6 +61,7 @@ let
       ./programs/aerc.nix
       ./programs/aerospace.nix
       ./programs/afew.nix
+      ./programs/aichat.nix
       ./programs/alacritty.nix
       ./programs/alot.nix
       ./programs/antidote.nix
