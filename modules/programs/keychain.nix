@@ -82,25 +82,47 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(SHELL=bash ${shellCommand})"
-    '';
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      SHELL=fish eval (${shellCommand})
-    '';
-    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-      eval "$(SHELL=zsh ${shellCommand})"
-    '';
-    programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration ''
-      let keychain_shell_command = (SHELL=bash ${shellCommand}| parse -r '(\w+)=(.*); export \1' | transpose -ird)
-      if not ($keychain_shell_command|is-empty) {
-        $keychain_shell_command | load-env
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      (lib.mkIf ((lib.versionAtLeast cfg.package.version "2.9.0") && cfg.agents != [ ]) {
+        warnings = [
+          ''
+            Option `programs.keychain.agents` is deprecated and will be removed in the future.
+            Please avoid using it.
+            See https://github.com/funtoo/keychain/releases/tag/2.9.0 for more information
+          ''
+        ];
+      })
+      (lib.mkIf ((lib.versionAtLeast cfg.package.version "2.9.0") && cfg.inheritType != null) {
+        warnings = [
+          ''
+            Option `programs.keychain.inheritType` is deprecated and will be removed in the future.
+            Please avoid using it.
+            See https://github.com/funtoo/keychain/releases/tag/2.9.0 for more information
+          ''
+        ];
+      })
+      {
+        home.packages = [ cfg.package ];
+        programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+          eval "$(SHELL=bash ${shellCommand})"
+        '';
+        programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+          SHELL=fish eval (${shellCommand})
+        '';
+        programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
+          eval "$(SHELL=zsh ${shellCommand})"
+        '';
+        programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration ''
+          let keychain_shell_command = (SHELL=bash ${shellCommand}| parse -r '(\w+)=(.*); export \1' | transpose -ird)
+          if not ($keychain_shell_command|is-empty) {
+            $keychain_shell_command | load-env
+          }
+        '';
+        xsession.initExtra = mkIf cfg.enableXsessionIntegration ''
+          eval "$(SHELL=bash ${shellCommand})"
+        '';
       }
-    '';
-    xsession.initExtra = mkIf cfg.enableXsessionIntegration ''
-      eval "$(SHELL=bash ${shellCommand})"
-    '';
-  };
+    ]
+  );
 }
