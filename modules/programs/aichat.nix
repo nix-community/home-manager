@@ -29,15 +29,17 @@ in
       defaultText = lib.literalExpression "{ }";
       example = lib.literalExpression ''
         {
-          model = "Ollama:mistral-small:latest";
+          model = "ollama:mistral-small3.1:latest";
           clients = [
             {
               type = "openai-compatible";
-              name = "Ollama";
+              name = "ollama";
               api_base = "http://localhost:11434/v1";
               models = [
                 {
-                  name = "llama3.2:latest";
+                  name = "mistral-small3.1:latest";
+                  supports_function_calling = true;
+                  supports_vision = true;
                 }
               ];
             }

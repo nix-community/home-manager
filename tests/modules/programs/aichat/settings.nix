@@ -3,15 +3,16 @@
   programs.aichat = {
     enable = true;
     settings = {
-      model = "Ollama:mistral-small:latest";
+      model = "ollama:llama3.2:latest";
       clients = [
         {
           type = "openai-compatible";
-          name = "Ollama";
+          name = "ollama";
           api_base = "http://localhost:11434/v1";
           models = [
             {
               name = "llama3.2:latest";
+              supports_function_calling = true;
             }
           ];
         }
