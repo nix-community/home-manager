@@ -17,7 +17,6 @@ let
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
 
-    export GIO_EXTRA_MODULES="${pkgs.dconf}/lib/gio/modules''${GIO_EXTRA_MODULES:+:}$GIO_EXTRA_MODULES"
   '';
 
   darwinExpected = ''
