@@ -44,6 +44,12 @@ in
         visible = false;
       };
 
+      provide = lib.mkOption {
+        type = with types; bool;
+        default = false;
+        description = "TODO";
+      };
+
       settings = lib.mkOption {
         type = with types; attrsOf (attrsOf lib.hm.types.gvariant);
         default = { };
@@ -77,7 +83,7 @@ in
   };
 
   config = lib.mkMerge [
-    (lib.mkIf cfg.enable {
+    (lib.mkIf (cfg.enable && cfg.provide) {
       home.packages = [ pkgs.dconf ];
       dbus.packages = [ pkgs.dconf ];
       home.sessionVariablesExtra = ''
