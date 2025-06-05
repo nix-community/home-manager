@@ -14281,15 +14281,17 @@ YAML value</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  model = &quot;Ollama:mistral-small:latest&quot;;
+  model = &quot;ollama:mistral-small3.1:latest&quot;;
   clients = [
     {
       type = &quot;openai-compatible&quot;;
-      name = &quot;Ollama&quot;;
+      name = &quot;ollama&quot;;
       api_base = &quot;http://localhost:11434/v1&quot;;
       models = [
         {
-          name = &quot;llama3.2:latest&quot;;
+          name = &quot;mistral-small3.1:latest&quot;;
+          supports_function_calling = true;
+          supports_vision = true;
         }
       ];
     }
