@@ -35,7 +35,9 @@ in
       "mc/ini" = lib.mkIf (cfg.settings != {}) {
         text = lib.generators.toINI { } cfg.settings;
       };
-      "mc/mc.keymap".text = cfg.keymapConfig;
+      "mc/mc.keymap" = lib.mkIf (cfg.keymapSettings != {}) {
+        text = lib.generators.toINI { } cfg.keymapSettings;
+      };
     };
   };
 }
