@@ -32,7 +32,9 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
-      "mc/ini".text = cfg.extraConfig;
+      "mc/ini" = lib.mkIf (cfg.settings != {}) {
+        text = lib.generators.toINI { } cfg.settings;
+      };
       "mc/mc.keymap".text = cfg.keymapConfig;
     };
   };
