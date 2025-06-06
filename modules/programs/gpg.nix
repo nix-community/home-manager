@@ -29,6 +29,16 @@ let
     listsAsDuplicateKeys = true;
   } cfg.scdaemonSettings;
 
+  dirmngrCfgText = lib.generators.toKeyValue {
+    inherit mkKeyValue;
+    listsAsDuplicateKeys = true;
+  } cfg.dirmngrSettings;
+
+  gpgsmCfgText = lib.generators.toKeyValue {
+    inherit mkKeyValue;
+    listsAsDuplicateKeys = true;
+  } cfg.gpgsmSettings;
+
   primitiveType = types.oneOf [
     types.str
     types.bool
@@ -207,6 +217,39 @@ in
       '';
     };
 
+    dirmngrSettings = mkOption {
+      type = types.attrsOf (types.either primitiveType (types.listOf types.str));
+      example = literalExpression ''
+        {
+          allow-version-check = true;
+          keyserver = "ldaps://ldap.example.com";
+        }
+      '';
+      description = ''
+        Dirmngr configuration options. Available options are described
+        in
+        [
+          {manpage}`dirmngr(1)`
+        ](https://www.gnupg.org/documentation/manuals/gnupg/Dirmngr-Options.html)
+      '';
+    };
+
+    gpgsmSettings = mkOption {
+      type = types.attrsOf (types.either primitiveType (types.listOf types.str));
+      example = literalExpression ''
+        {
+          with-key-data = true;
+        }
+      '';
+      description = ''
+        GPGSM configuration options. Available options are described
+        in
+        [
+          {manpage}`gpgsm(1)`
+        ](https://www.gnupg.org/documentation/manuals/gnupg/GPGSM-Options.html)
+      '';
+    };
+
     homedir = mkOption {
       type = types.path;
       example = literalExpression ''"''${config.xdg.dataHome}/gnupg"'';
@@ -267,8 +310,7 @@ in
       cert-digest-algo = mkDefault "SHA512";
       s2k-digest-algo = mkDefault "SHA512";
       s2k-cipher-algo = mkDefault "AES256";
-      charset = mkDefault "utf-8";
-      fixed-list-mode = mkDefault true;
+      display-charset = mkDefault "utf-8";
       no-comments = mkDefault true;
       no-emit-version = mkDefault true;
       keyid-format = mkDefault "0xlong";
@@ -277,11 +319,18 @@ in
       with-fingerprint = mkDefault true;
       require-cross-certification = mkDefault true;
       no-symkey-cache = mkDefault true;
-      use-agent = mkDefault true;
     };
 
     programs.gpg.scdaemonSettings = {
       # no defaults for scdaemon
+    };
+
+    programs.gpg.dirmngrSettings = {
+      # no defaults for dirmngr
+    };
+
+    programs.gpg.gpgsmSettings = {
+      # no defaults for gpgsm
     };
 
     home.packages = [ cfg.package ];
@@ -292,6 +341,10 @@ in
     home.file."${cfg.homedir}/gpg.conf".text = cfgText;
 
     home.file."${cfg.homedir}/scdaemon.conf".text = scdaemonCfgText;
+
+    home.file."${cfg.homedir}/dirmngr.conf".text = dirmngrCfgText;
+
+    home.file."${cfg.homedir}/gpgsm.conf".text = gpgsmCfgText;
 
     # Link keyring if keys are not mutable
     home.file."${cfg.homedir}/pubring.kbx" = mkIf (!cfg.mutableKeys && cfg.publicKeys != [ ]) {
