@@ -73097,16 +73097,6 @@ list of (submodule)</p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
   {
-    # will source zsh-autosuggestions.plugin.zsh
-    name = &quot;zsh-autosuggestions&quot;;
-    src = pkgs.fetchFromGitHub {
-      owner = &quot;zsh-users&quot;;
-      repo = &quot;zsh-autosuggestions&quot;;
-      rev = &quot;v0.4.0&quot;;
-      sha256 = &quot;0z6i9wjjklb4lvr7zjhbphibsyx51psv50gm07mbb0kj9058j6kc&quot;;
-    };
-  }
-  {
     name = &quot;enhancd&quot;;
     file = &quot;init.sh&quot;;
     src = pkgs.fetchFromGitHub {
@@ -73116,9 +73106,39 @@ list of (submodule)</p>
       sha256 = &quot;0iqa9j09fwm6nj5rpip87x3hnvbbz9w9ajgm6wkrd5fls8fn8i5g&quot;;
     };
   }
+{
+  name = &quot;wd&quot;;
+  src = pkgs.zsh-wd;
+  file = &quot;share/wd/wd.plugin.zsh&quot;;
+  completions = [ &quot;share/zsh/site-functions&quot; ];
+}
 ]
 
 </code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix" target="_top">
+&lt;home-manager/modules/programs/zsh.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.zsh.plugins._.completions"></a><a class="term" href="options.xhtml#opt-programs.zsh.plugins._.completions"><code class="option">programs.zsh.plugins.*.completions</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Paths of additional functions to add to <code class="envar">fpath</code>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -73136,7 +73156,9 @@ list of (submodule)</p>
  </span>
 </dt>
 <dd>
-<p>The plugin script to source.</p>
+<p>The plugin script to source.
+Required if the script name does not match <code class="filename">name.plugin.zsh</code>
+using the plugin <code class="option">name</code> from the plugin <code class="option">src</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 string</p>
@@ -73157,8 +73179,7 @@ string</p>
  </span>
 </dt>
 <dd>
-<p>The name of the plugin.</p><p>Don’t forget to add <code class="option">file</code>
-if the script name does not follow convention.</p>
+<p>The name of the plugin.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 string</p>
