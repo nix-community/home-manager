@@ -15,10 +15,10 @@ in
 
     package = lib.mkPackageOption pkgs "mc" { nullable = true; }};
 
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = "Extra contents for ~/.config/mc/ini";
+    settings = lib.mkOption {
+      type = (pkgs.formats.ini { }).type;
+      default = { };
+      description = "Settings for `Midnight Commander`.";
     };
 
     keymapConfig = mkOption {
