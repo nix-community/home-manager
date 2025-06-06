@@ -5,7 +5,6 @@
   ...
 }:
 
-
 let
   cfg = config.programs.mc;
 in
@@ -13,7 +12,7 @@ in
   options.programs.mc = {
     enable = mkEnableOption "Midnight Commander";
 
-    package = lib.mkPackageOption pkgs "mc" { nullable = true; }};
+    package = lib.mkPackageOption pkgs "mc" { nullable = true; };
 
     settings = lib.mkOption {
       type = (pkgs.formats.ini { }).type;
@@ -32,10 +31,10 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
-      "mc/ini" = lib.mkIf (cfg.settings != {}) {
+      "mc/ini" = lib.mkIf (cfg.settings != { }) {
         text = lib.generators.toINI { } cfg.settings;
       };
-      "mc/mc.keymap" = lib.mkIf (cfg.keymapSettings != {}) {
+      "mc/mc.keymap" = lib.mkIf (cfg.keymapSettings != { }) {
         text = lib.generators.toINI { } cfg.keymapSettings;
       };
     };
