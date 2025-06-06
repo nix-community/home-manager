@@ -10,7 +10,7 @@ let
 in
 {
   options.programs.mc = {
-    enable = mkEnableOption "Midnight Commander";
+    enable = lib.mkEnableOption "Midnight Commander";
 
     package = lib.mkPackageOption pkgs "mc" { nullable = true; };
 
