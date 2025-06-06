@@ -73,7 +73,7 @@ in
 
       userKeymaps = mkOption {
         type = jsonFormat.type;
-        default = { };
+        default = [ ];
         example = literalExpression ''
           [
             {
