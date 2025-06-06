@@ -1,1 +1,1 @@
-{ mc-basic-configuration = ./basic-configuration.nix; };
+{ mc-basic-configuration = ./basic-configuration.nix; }
