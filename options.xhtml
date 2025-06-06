@@ -84460,6 +84460,137 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.ludusavi.enable"></a><a class="term" href="options.xhtml#opt-services.ludusavi.enable"><code class="option">services.ludusavi.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Ludusavi game backup tool.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ludusavi.nix" target="_top">
+&lt;home-manager/modules/services/ludusavi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ludusavi.backupNotification"></a><a class="term" href="options.xhtml#opt-services.ludusavi.backupNotification"><code class="option">services.ludusavi.backupNotification</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Send a notification message after a successful backup.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ludusavi.nix" target="_top">
+&lt;home-manager/modules/services/ludusavi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ludusavi.configFile"></a><a class="term" href="options.xhtml#opt-services.ludusavi.configFile"><code class="option">services.ludusavi.configFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to a Ludusavi <code class="literal">config.yaml</code>. Mutually exclusive with the <code class="literal">settings</code> option.
+See https://github.com/mtkennerly/ludusavi/blob/master/docs/help/configuration-file.md for available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ludusavi.nix" target="_top">
+&lt;home-manager/modules/services/ludusavi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ludusavi.settings"></a><a class="term" href="options.xhtml#opt-services.ludusavi.settings"><code class="option">services.ludusavi.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Ludusavi configuration as an attribute set. See
+https://github.com/mtkennerly/ludusavi#configuration-file
+for available options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+YAML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">{
+  backup = {
+    path = &quot;$XDG_STATE_HOME/backups/ludusavi&quot;;
+  };
+  manifest = {
+    url = &quot;https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml&quot;;
+  };
+  restore = {
+    path = &quot;$XDG_STATE_HOME/backups/ludusavi&quot;;
+  };
+  roots = [ ];
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  backup = {
+    path = &quot;~/.local/state/backups/ludusavi&quot;;
+  };
+  language = &quot;en-US&quot;;
+  restore = {
+    path = &quot;~/.local/state/backups/ludusavi&quot;;
+  };
+  roots = [
+    {
+      path = &quot;~/.local/share/Steam&quot;;
+      store = &quot;steam&quot;;
+    }
+  ];
+  theme = &quot;light&quot;;
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ludusavi.nix" target="_top">
+&lt;home-manager/modules/services/ludusavi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.lxqt-policykit-agent.enable"></a><a class="term" href="options.xhtml#opt-services.lxqt-policykit-agent.enable"><code class="option">services.lxqt-policykit-agent.enable</code>
   </a>
  </span>
