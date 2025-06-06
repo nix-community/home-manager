@@ -13,12 +13,7 @@ in
   options.programs.mc = {
     enable = mkEnableOption "Midnight Commander";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.mc;
-      defaultText = literalExpression "pkgs.mc";
-      description = "The mc package to install.";
-    };
+    package = lib.mkPackageOption pkgs "mc" { nullable = true; }};
 
     extraConfig = mkOption {
       type = types.lines;
