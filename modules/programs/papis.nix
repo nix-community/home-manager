@@ -14,9 +14,11 @@ let
   );
 
   settingsIni = (lib.mapAttrs (n: v: v.settings) cfg.libraries) // {
-    settings = cfg.settings // {
-      "default-library" = lib.head defaultLibraries;
-    };
+    settings =
+      cfg.settings
+      // lib.optionalAttrs (cfg.libraries != { }) {
+        "default-library" = lib.head defaultLibraries;
+      };
   };
 
 in
@@ -97,6 +99,7 @@ in
           }
         )
       );
+      default = { };
       description = "Attribute set of papis libraries.";
     };
   };
@@ -116,8 +119,6 @@ in
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."papis/config" = lib.mkIf (cfg.libraries != { }) {
-      text = lib.generators.toINI { } settingsIni;
-    };
+    xdg.configFile."papis/config".text = lib.generators.toINI { } settingsIni;
   };
 }
