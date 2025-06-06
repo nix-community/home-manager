@@ -21,10 +21,10 @@ in
       description = "Settings for `Midnight Commander`.";
     };
 
-    keymapConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = "Extra contents for ~/.config/mc/mc.keymap";
+    keymapSettings = lib.mkOption {
+      type = (pkgs.formats.ini { }).type;
+      default = { };
+      description = "Settings for ~/.config/mc/mc.keymap";
     };
   };
 
