@@ -1,6 +1,10 @@
+{ config, ... }:
 {
   programs = {
-    thefuck.enable = true;
+    thefuck = {
+      enable = true;
+      package = config.lib.test.mkStubPackage { outPath = "@thefuck@"; };
+    };
     thefuck.enableBashIntegration = false;
     thefuck.enableFishIntegration = false;
     thefuck.enableZshIntegration = false;
