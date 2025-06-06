@@ -1,7 +1,9 @@
+{ config, ... }:
 {
   programs = {
     thefuck = {
       enable = true;
+      package = config.lib.test.mkStubPackage { outPath = "@thefuck@"; };
       enableInstantMode = true;
     };
     bash.enable = true;
