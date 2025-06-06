@@ -23,6 +23,26 @@ let
 
   extendedLib = import ../modules/lib/stdlib-extended.nix lib;
 
+  usersUsingUserPackages = lib.filterAttrs (
+    _username: usercfg: usercfg.home.useUserPackages
+  ) cfg.users;
+
+  # `defaultOverridePriority` (and its legacy counterpart `defaultPriority`)
+  # represents the priority of option definitions that do not explicity specify
+  # a priority; that is, definitions of the form `{ foo = "bar"; }`.
+  #
+  # Setting an option with `mkUserDefault` permits the module system to resolve
+  # the so-defined option's priority without evaluating its value.  We use this
+  # to define `home.username` and `home.homeDirectory` at the default priority,
+  # while also allowing consumers to override these values with `mkForce`, and,
+  # crucially, allowing consumers to define `home-manager.users` entries
+  # **without those users needing to have corresponding entries in
+  # `config.users.users`**.
+  #
+  # In other respects, `{ foo = mkUserDefault "bar"; }` quacks like
+  # `{ foo = "bar"; }`.
+  mkUserDefault = lib.mkOverride (lib.modules.defaultOverridePriority or lib.modules.defaultPriority);
+
   hmModule = types.submoduleWith {
     description = "Home Manager module";
     class = "homeManager";
@@ -34,7 +54,7 @@ let
     } // cfg.extraSpecialArgs;
     modules = [
       (
-        { name, ... }:
+        { name, ... }@usercfg:
         {
           imports = import ../modules/modules.nix {
             inherit pkgs;
@@ -44,10 +64,10 @@ let
 
           config = {
             submoduleSupport.enable = true;
-            submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+            submoduleSupport.externalPackageInstall = usercfg.config.home.useUserPackages;
 
-            home.username = config.users.users.${name}.name;
-            home.homeDirectory = config.users.users.${name}.home;
+            home.username = mkUserDefault config.users.users.${name}.name;
+            home.homeDirectory = mkUserDefault config.users.users.${name}.home;
 
             # Forward `nix.enable` from the OS configuration. The
             # conditional is to check whether nix-darwin is new enough
@@ -69,8 +89,8 @@ in
 {
   options.home-manager = {
     useUserPackages = mkEnableOption ''
-      installation of user packages through the
-      {option}`users.users.<name>.packages` option'';
+      the per-user option {option}`home-manager.users.<name>.useUserPackages`
+      by default'';
 
     useGlobalPkgs = mkEnableOption ''
       using the system configuration's `pkgs`
@@ -122,8 +142,10 @@ in
   config = (
     lib.mkMerge [
       # Fix potential recursion when configuring home-manager users based on values in users.users #594
-      (mkIf (cfg.useUserPackages && cfg.users != { }) {
-        users.users = (lib.mapAttrs (_username: usercfg: { packages = [ usercfg.home.path ]; }) cfg.users);
+      (mkIf (usersUsingUserPackages != { }) {
+        users.users = (
+          lib.mapAttrs (_username: usercfg: { packages = [ usercfg.home.path ]; }) usersUsingUserPackages
+        );
         environment.pathsToLink = [ "/etc/profile.d" ];
       })
       (mkIf (cfg.users != { }) {

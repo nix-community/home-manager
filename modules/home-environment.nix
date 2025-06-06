@@ -3,7 +3,7 @@
   lib,
   pkgs,
   ...
-}:
+}@args:
 
 let
   inherit (lib) literalExpression mkOption types;
@@ -525,6 +525,21 @@ in
         Whether to make programs use XDG directories whenever supported.
       '';
     };
+
+    home.useUserPackages = mkOption {
+      type = types.bool;
+      default = args.nixosConfig.home-manager.useUserPackages or false;
+      defaultText = lib.literalExpression "home-manager.useUserPackages";
+      description = ''
+        Enable installation of user packages through the
+        {option}`users.users.<name>.packages` option.
+
+        ::: {.warning}
+        This option is specific to NixOS configurations and has no effect
+        elsewhere.
+        :::
+      '';
+    };
   };
 
   config = {
@@ -544,6 +559,7 @@ in
         hmRelease = config.home.version.release;
         nixpkgsRelease = lib.trivial.release;
         releaseMismatch = config.home.enableNixpkgsReleaseCheck && hmRelease != nixpkgsRelease;
+        wronglyUsingUserPackages = cfg.useUserPackages && (!(args ? nixosConfig));
       in
       lib.optional releaseMismatch ''
         You are using
@@ -560,7 +576,8 @@ in
           home.enableNixpkgsReleaseCheck = false;
 
         to your configuration.
-      '';
+      ''
+      ++ lib.optional wronglyUsingUserPackages "You have enabled `home.useUserPackages`, but this option has no effect outside of NixOS configurations.";
 
     home.username = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
       lib.mkDefault (builtins.getEnv "USER")
