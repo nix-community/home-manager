@@ -472,7 +472,7 @@ in
                   luaRcContent =
                     lib.optionalString (
                       wrappedNeovim'.initRc != ""
-                    ) "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
+                    ) "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]\n"
                     + config.programs.neovim.extraLuaConfig
                     + lib.optionalString hasLuaConfig config.programs.neovim.generatedConfigs.lua;
                 in
