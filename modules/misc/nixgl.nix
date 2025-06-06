@@ -163,8 +163,8 @@ in
         # NixGL is imported.
         #
         # First, let's see if we have a flake.
-        if builtins.hasAttr pkgs.system cfg.packages then
-          cfg.packages.${pkgs.system}.${packageAttr}
+        if builtins.hasAttr pkgs.stdenv.hostPlatform.system cfg.packages then
+          cfg.packages.${pkgs.stdenv.hostPlatform.system}.${packageAttr}
         else
         # Next, let's see if we have a channel.
         if builtins.hasAttr packageAttr cfg.packages then
