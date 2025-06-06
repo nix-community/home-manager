@@ -30,7 +30,7 @@ in
             images = true;
             autofocus = true;
           };
-          pager."C-k" = "() => pager.load('https://duckduckgo.com/?=')";
+          page."C-k" = "() => pager.load('ddg:')";
         }
       '';
     };
