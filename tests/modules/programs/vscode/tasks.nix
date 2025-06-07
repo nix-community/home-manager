@@ -62,7 +62,12 @@ in
 {
   programs.vscode = {
     enable = true;
-    package = import ./fake-pkg.nix pkgs;
+    package = pkgs.writeScriptBin "vscode" "" // {
+      pname = "vscode";
+      version = "1.75.0";
+    };
+    nameShort = "Code";
+    dataFolderName = ".vscode";
     profiles = {
       default.userTasks = tasks;
       test.userTasks = tasks;
