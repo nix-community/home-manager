@@ -6,16 +6,6 @@
 }:
 
 let
-  inherit (lib)
-    getExe
-    maintainers
-    mkEnableOption
-    mkIf
-    mkOption
-    ;
-
-  inherit (lib.types) bool nullOr path;
-
   cfg = config.services.ludusavi;
   settingsFormat = pkgs.formats.yaml { };
 
@@ -28,16 +18,32 @@ in
 {
 
   options.services.ludusavi = {
-    enable = mkEnableOption "Ludusavi game backup tool";
-    configFile = mkOption {
-      type = nullOr path;
+    enable = lib.mkEnableOption "Ludusavi game backup tool";
+
+    package = lib.mkPackageOption pkgs "ludusavi" { };
+
+    configFile = lib.mkOption {
+      type = with lib.types; nullOr path;
       default = null;
       description = ''
         Path to a Ludusavi `config.yaml`. Mutually exclusive with the `settings` option.
         See https://github.com/mtkennerly/ludusavi/blob/master/docs/help/configuration-file.md for available options.
       '';
     };
-    settings = mkOption {
+
+    frequency = lib.mkOption {
+      type = lib.types.str;
+      default = "daily";
+      example = "*-*-* 8:00:00";
+      description = ''
+        How often to run ludusavi. This value is passed to the systemd
+        timer configuration as the onCalendar option.  See
+        {manpage}`systemd.time(7)`
+        for more information about the format.
+      '';
+    };
+
+    settings = lib.mkOption {
       type = settingsFormat.type;
       default = {
         manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
@@ -63,8 +69,9 @@ in
         for available options.
       '';
     };
-    backupNotification = mkOption {
-      type = bool;
+
+    backupNotification = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       description = ''
         Send a notification message after a successful backup.
@@ -72,7 +79,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       {
         assertion = (cfg.settings != { }) != (cfg.configFile != null);
@@ -86,23 +93,23 @@ in
         Service =
           {
             Type = "oneshot";
-            ExecStart = "${getExe pkgs.ludusavi} backup --force";
+            ExecStart = "${lib.getExe cfg.package} backup --force";
           }
           // lib.optionalAttrs cfg.backupNotification {
-            ExecStartPost = "${getExe pkgs.libnotify} 'Ludusavi' 'Backup completed' -i ludusavi -a 'Ludusavi'";
+            ExecStartPost = "${lib.getExe pkgs.libnotify} 'Ludusavi' 'Backup completed' -i com.mtkennerly.ludusavi -a 'Ludusavi'";
           };
       };
       timers.ludusavi = {
-        Unit.Description = "Run a game save backup with Ludusavi, daily";
-        Timer.OnCalendar = "daily";
+        Unit.Description = "Run a game save backup with Ludusavi";
+        Timer.OnCalendar = cfg.frequency;
         Install.WantedBy = [ "timers.target" ];
       };
     };
 
     xdg.configFile."ludusavi/config.yaml".source = configFile;
 
-    home.packages = [ pkgs.ludusavi ];
+    home.packages = [ cfg.package ];
   };
 
-  meta.maintainers = [ maintainers.PopeRigby ];
+  meta.maintainers = [ lib.maintainers.PopeRigby ];
 }
