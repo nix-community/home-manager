@@ -59,8 +59,10 @@ let
 
   snippetDir = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}snippets";
 
-  # TODO: On Darwin where are the extensions?
-  extensionPath = ".${extensionDir}/extensions";
+  extensionPath = if pkgs.stdenv.hostPlatform.isDarwin && vscodePname == "cursor" then
+    ".cursor/extensions"
+  else
+    ".${extensionDir}/extensions";
 
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
