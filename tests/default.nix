@@ -236,6 +236,7 @@ import nmtSrc {
       ./modules/programs/kubecolor
       ./modules/programs/lapce
       ./modules/programs/lazydocker
+      ./modules/programs/lazysql
       ./modules/programs/ledger
       ./modules/programs/less
       ./modules/programs/lesspipe
