@@ -1,0 +1,11 @@
+[main]
+Enter=Enter
+F3=View
+F4=Edit
+F5=Copy
+F6=RenameMove
+F7=MakeDir
+F8=Delete
+F10=Quit
+Insert=Select
+Ctrl-o=Shell

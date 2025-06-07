@@ -1,0 +1,10 @@
+[Midnight-Commander]
+show_hidden=true
+auto_save_setup=true
+confirm_exit=false
+use_internal_view=true
+use_internal_edit=true
+skin=default
+mouse_repeat_rate=100
+verbose=true
+mark_matches=true
