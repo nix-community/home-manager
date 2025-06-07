@@ -218,6 +218,7 @@ let
       ./programs/notmuch.nix
       ./programs/numbat.nix
       ./programs/nushell.nix
+      ./programs/nyxt.nix
       ./programs/obs-studio.nix
       ./programs/obsidian.nix
       ./programs/octant.nix
