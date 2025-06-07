@@ -37,6 +37,17 @@ in
         See https://github.com/mtkennerly/ludusavi/blob/master/docs/help/configuration-file.md for available options.
       '';
     };
+    frequency = mkOption {
+      type = lib.types.str;
+      default = "daily";
+      example = "*-*-* 8:00:00";
+      description = ''
+        How often to run ludusavi. This value is passed to the systemd
+        timer configuration as the onCalendar option.  See
+        {manpage}`systemd.time(7)`
+        for more information about the format.
+      '';
+    };
     settings = mkOption {
       type = settingsFormat.type;
       default = {
@@ -93,8 +104,8 @@ in
           };
       };
       timers.ludusavi = {
-        Unit.Description = "Run a game save backup with Ludusavi, daily";
-        Timer.OnCalendar = "daily";
+        Unit.Description = "Run a game save backup with Ludusavi";
+        Timer.OnCalendar = cfg.frequency;
         Install.WantedBy = [ "timers.target" ];
       };
     };
