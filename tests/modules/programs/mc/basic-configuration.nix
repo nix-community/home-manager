@@ -61,6 +61,6 @@
       ${./panels.ini}
     assertFileContent \
       "$mcFolder/filehighlight.ini"  \
-      ${./fileHighlight.ini}
+      ${./filehighlight.ini}
   '';
 }
