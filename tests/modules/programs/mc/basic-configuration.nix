@@ -21,7 +21,7 @@
         Shell = ".epub";
         Open = "fbreader %f &";
       };
-    }
+    };
 
     panelsSettings = {
       Dirs = {
