@@ -194,6 +194,14 @@
     github = "danjujan";
     githubId = 44864658;
   };
+  delafthi = {
+    name = "Thierry Delafontaine";
+    email = "delafthi@pm.me";
+    matrix = "@delafthi:matrix.org";
+    github = "delafthi";
+    githubId = 50531499;
+    keys = [ { fingerprint = "6DBB 0BB9 AEE6 2C2A 8059  7E1C 0092 6686 9818 63CB"; } ];
+  };
   Dines97 = {
     name = "Denis Kaynar";
     email = "19364873+Dines97@users.noreply.github.com";
