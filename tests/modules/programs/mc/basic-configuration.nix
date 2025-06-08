@@ -5,16 +5,34 @@
     enable = true;
 
     settings = {
-      "Midnight-Commander" = {
-        skin = "nicedark";
-        show_hidden = true;
-        auto_save_setup = true;
+      Panels = {
+        show_dot_files = false;
       };
     };
 
     keymapSettings = {
       panel = {
-        Enter = "Select";
+        Up = "up;ctrl-k";
+      };
+    };
+
+    extensionSettings = {
+      EPUB = {
+        Shell = ".epub";
+        Open = "fbreader %f &";
+      };
+    }
+
+    panelsSettings = {
+      Dirs = {
+        current_is_left = false;
+        other_dir = "/home";
+      };
+    };
+
+    fileHighlightSettings = {
+      lua = {
+        extensions = "lua;luac";
       };
     };
   };
@@ -25,14 +43,24 @@
 
     assertFileExists "$mcFolder/ini"
     assertFileExists "$mcFolder/mc.keymap"
+    assertFileExists "$mcFolder/mc.ext.ini"
+    assertFileExists "$mcFolder/panels.ini"
+    assertFileExists "$mcFolder/filehighlight.ini"
 
-    assertFileContains "$mcFolder/ini" "[Midnight-Commander]
-    skin=nicedark
-    show_hidden=true
-    auto_save_setup=true"
-
-    assertFileContains "$mcFolder/mc.keymap" "[panel]
-    Enter=Select"
-
+    assertFileContent \
+      "$mcFolder/ini" \
+      ${./basic-configuration}
+    assertFileContent \
+      "$mcFolder/mc.keymap" \
+      ${./mc.keymap}
+    assertFileContent \
+      "$mcFolder/mc.ext.ini" \
+      ${./mc.ext.ini}
+    assertFileContent \
+      "$mcFolder/panels.ini" \
+      ${./panels.ini}
+    assertFileContent \
+      "$mcFolder/filehighlight.ini"  \
+      ${./fileHighlight.ini}
   '';
 }
