@@ -266,6 +266,7 @@ import nmtSrc {
       ./modules/programs/nnn
       ./modules/programs/numbat
       ./modules/programs/nushell
+      ./modules/programs/nyxt
       ./modules/programs/oh-my-posh
       ./modules/programs/onlyoffice
       ./modules/programs/openstackclient

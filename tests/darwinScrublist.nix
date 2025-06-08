@@ -109,6 +109,7 @@ let
     "notmuch"
     "npth"
     "nushell"
+    "nyxt"
     "oh-my-posh"
     "ollama"
     "onlyoffice-desktopeditors"
