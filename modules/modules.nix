@@ -174,6 +174,7 @@ let
       ./programs/lapce.nix
       ./programs/lazydocker.nix
       ./programs/lazygit.nix
+      ./programs/lazysql.nix
       ./programs/ledger.nix
       ./programs/less.nix
       ./programs/lesspipe.nix
