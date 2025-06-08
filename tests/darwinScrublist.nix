@@ -29,6 +29,7 @@ let
     "cava"
     "clock-rs"
     "cmus"
+    "codex"
     "comodoro"
     "darcs"
     "delta"
