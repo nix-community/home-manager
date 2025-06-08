@@ -24,7 +24,8 @@ let
   meliAccounts = (lib.attrsets.mapAttrs (name: value: (mkMeliAccounts name value)) enabledAccounts);
 
   mkMeliAccounts = (
-    name: account: {
+    name: account:
+    {
       root_mailbox = "${config.accounts.email.maildirBasePath}/${account.maildir.path}";
       format = "Maildir";
       identity = account.address;
@@ -33,6 +34,7 @@ let
       send_mail = mkSmtp account;
       mailboxes = account.meli.mailboxAliases;
     }
+    // account.meli.settings
   );
 
   mkSmtp = account: {
@@ -153,6 +155,14 @@ in
                 };
                 description = "Folder display name";
               };
+
+              settings = mkOption {
+                type = types.submodule {
+                  freeformType = tomlFormat.type;
+                };
+                default = { };
+                description = "Account specific meli configuration";
+              };
             };
           }
         )
@@ -160,6 +170,15 @@ in
     };
   };
   config = mkIf config.programs.meli.enable {
+    assertions = [
+      {
+        assertion = cfg.settings ? accounts == false;
+        message = ''
+          programs.meli.settings.accounts override the accounts.email values.
+                      Use per-email accounts.email.<ACCOUNT>.meli.settings instead'';
+      }
+    ];
+
     home.packages = [ config.programs.meli.package ];
 
     # Generate meli configuration from email accounts
