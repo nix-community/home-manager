@@ -92,6 +92,7 @@ let
       ./programs/chromium.nix
       ./programs/clock-rs.nix
       ./programs/cmus.nix
+      ./programs/codex.nix
       ./programs/command-not-found/command-not-found.nix
       ./programs/comodoro.nix
       ./programs/darcs.nix

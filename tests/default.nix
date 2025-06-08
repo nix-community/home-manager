@@ -190,6 +190,7 @@ import nmtSrc {
       ./modules/programs/cava
       ./modules/programs/clock-rs
       ./modules/programs/cmus
+      ./modules/programs/codex
       ./modules/programs/comodoro
       ./modules/programs/darcs
       ./modules/programs/dircolors
