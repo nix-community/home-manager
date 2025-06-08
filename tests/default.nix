@@ -171,6 +171,7 @@ import nmtSrc {
       ./modules/misc/specialisation
       ./modules/misc/xdg
       ./modules/programs/aerc
+      ./modules/programs/aichat
       ./modules/programs/alacritty
       ./modules/programs/alot
       ./modules/programs/antidote
@@ -235,6 +236,7 @@ import nmtSrc {
       ./modules/programs/kubecolor
       ./modules/programs/lapce
       ./modules/programs/lazydocker
+      ./modules/programs/lazysql
       ./modules/programs/ledger
       ./modules/programs/less
       ./modules/programs/lesspipe
@@ -264,6 +266,7 @@ import nmtSrc {
       ./modules/programs/nnn
       ./modules/programs/numbat
       ./modules/programs/nushell
+      ./modules/programs/nyxt
       ./modules/programs/oh-my-posh
       ./modules/programs/onlyoffice
       ./modules/programs/openstackclient

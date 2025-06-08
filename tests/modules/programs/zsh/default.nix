@@ -7,6 +7,7 @@
   zsh-history-path-old-custom = ./history-path-old-custom.nix;
   zsh-history-path-old-default = ./history-path-old-default.nix;
   zsh-history-substring-search = ./history-substring-search.nix;
+  zsh-plugins = ./plugins.nix;
   zsh-prezto = ./prezto.nix;
   zsh-session-variables = ./session-variables.nix;
   zsh-syntax-highlighting = ./syntax-highlighting.nix;

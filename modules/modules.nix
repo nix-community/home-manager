@@ -61,6 +61,7 @@ let
       ./programs/aerc.nix
       ./programs/aerospace.nix
       ./programs/afew.nix
+      ./programs/aichat.nix
       ./programs/alacritty.nix
       ./programs/alot.nix
       ./programs/antidote.nix
@@ -173,6 +174,7 @@ let
       ./programs/lapce.nix
       ./programs/lazydocker.nix
       ./programs/lazygit.nix
+      ./programs/lazysql.nix
       ./programs/ledger.nix
       ./programs/less.nix
       ./programs/lesspipe.nix
@@ -217,6 +219,7 @@ let
       ./programs/notmuch.nix
       ./programs/numbat.nix
       ./programs/nushell.nix
+      ./programs/nyxt.nix
       ./programs/obs-studio.nix
       ./programs/obsidian.nix
       ./programs/octant.nix
@@ -400,6 +403,7 @@ let
       ./services/linux-wallpaperengine.nix
       ./services/listenbrainz-mpd.nix
       ./services/lorri.nix
+      ./services/ludusavi.nix
       ./services/lxqt-policykit-agent.nix
       ./services/macos-remap-keys
       ./services/mako.nix

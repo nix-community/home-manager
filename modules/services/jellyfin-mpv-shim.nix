@@ -107,10 +107,6 @@ in
     ];
 
     xdg.configFile = {
-      "jellyfin-mpv-shim/conf.json" = lib.mkIf (cfg.settings != { }) {
-        source = jsonFormat.generate "jellyfin-mpv-shim-conf" cfg.settings;
-      };
-
       "jellyfin-mpv-shim/mpv.conf" = lib.mkIf (cfg.mpvConfig != null) {
         text = renderOptions cfg.mpvConfig;
       };
@@ -136,5 +132,35 @@ in
         WantedBy = [ "graphical-session.target" ];
       };
     };
+
+    # Yoinked from programs/zed-editor.nix
+    # jellyfin-mpv-shim can't load the configuration file if it's not
+    # writeable. So we merge the settings defined here in Nix with the existing
+    # configuration, if any.
+    home.activation.jellyfinMpvShimSettingsActivation =
+      let
+        path = lib.escapeShellArg "${config.xdg.configHome}/jellyfin-mpv-shim/conf.json";
+        staticSettings = lib.escapeShellArg (jsonFormat.generate "jellyfin-mpv-shim-conf" cfg.settings);
+        cmd = "${lib.getExe pkgs.jq} -s '.[0] * .[1]' ${path} ${staticSettings}";
+      in
+      lib.mkIf (cfg.settings != { }) (
+        lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+          run mkdir -p "$(dirname ${path})"
+          if [ ! -e ${path} ]; then
+            # Create the file
+            if [[ -v DRY_RUN ]]; then
+              run echo '{}' '>' ${path}
+            else
+              echo '{}' > ${path}
+            fi
+          fi
+          if [[ -v DRY_RUN ]]; then
+            run ${cmd} '>' ${path}
+          else
+            config="$(${cmd})"
+            printf '%s\n' "$config" > ${path}
+          fi
+        ''
+      );
   };
 }

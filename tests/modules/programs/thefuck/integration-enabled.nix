@@ -1,6 +1,10 @@
+{ config, ... }:
 {
   programs = {
-    thefuck.enable = true;
+    thefuck = {
+      enable = true;
+      package = config.lib.test.mkStubPackage { outPath = "@thefuck@"; };
+    };
     bash.enable = true;
     fish.enable = true;
     zsh.enable = true;

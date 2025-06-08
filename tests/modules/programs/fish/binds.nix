@@ -21,6 +21,10 @@
             "repaint"
           ];
         };
+
+        "alt-s".erase = true;
+        "alt-s".operate = "preset";
+        "alt-s".command = "fish_commandline_prepend sudo";
       };
     };
 
@@ -40,6 +44,10 @@
           "bind --mode insert ctrl-c kill-whole-line repaint"
         assertFileContains home-files/.config/fish/functions/fish_user_key_bindings.fish \
           "bind ctrl-g 'git diff' repaint"
+        assertFileContains home-files/.config/fish/functions/fish_user_key_bindings.fish \
+          "bind -e --preset alt-s"
+        assertFileContains home-files/.config/fish/functions/fish_user_key_bindings.fish \
+          "bind --preset alt-s 'fish_commandline_prepend sudo"
       '';
     };
   };
