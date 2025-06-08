@@ -31,7 +31,24 @@
         ];
       };
 
-      aliases = [ "home-manager@example.com" ];
+      aliases = [
+        "home-manager@example.com"
+        {
+          realName = "Home Manager";
+          address = "homeManager@alias.example.com";
+          userName = "homeManager@alias.example.com";
+
+          signature = {
+            showSignature = "none";
+          };
+
+          smtp = {
+            host = "ml.example.com";
+            port = 465;
+            tls.enable = true;
+          };
+        }
+      ];
 
       gpg.key = "ABC";
 

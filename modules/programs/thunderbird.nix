@@ -85,29 +85,50 @@ let
     let
       id = getId account address;
       addressIsString = builtins.isString address;
+      identity = if addressIsString then account else address // { inherit id; };
     in
     {
-      "mail.identity.id_${id}.fullName" = if addressIsString then account.realName else address.realName;
+      "mail.identity.id_${id}.fullName" = identity.realName;
       "mail.identity.id_${id}.useremail" = if addressIsString then address else address.address;
       "mail.identity.id_${id}.valid" = true;
       "mail.identity.id_${id}.htmlSigText" =
-        if account.signature.showSignature == "none" then "" else account.signature.text;
+        if identity.signature.showSignature == "none" then "" else identity.signature.text;
     }
-    // optionalAttrs (account.gpg != null) {
+    // optionalAttrs (identity.gpg != null) {
       "mail.identity.id_${id}.attachPgpKey" = false;
       "mail.identity.id_${id}.autoEncryptDrafts" = true;
       "mail.identity.id_${id}.e2etechpref" = 0;
-      "mail.identity.id_${id}.encryptionpolicy" = if account.gpg.encryptByDefault then 2 else 0;
+      "mail.identity.id_${id}.encryptionpolicy" = if identity.gpg.encryptByDefault then 2 else 0;
       "mail.identity.id_${id}.is_gnupg_key_id" = true;
-      "mail.identity.id_${id}.last_entered_external_gnupg_key_id" = account.gpg.key;
-      "mail.identity.id_${id}.openpgp_key_id" = account.gpg.key;
+      "mail.identity.id_${id}.last_entered_external_gnupg_key_id" = identity.gpg.key;
+      "mail.identity.id_${id}.openpgp_key_id" = identity.gpg.key;
       "mail.identity.id_${id}.protectSubject" = true;
-      "mail.identity.id_${id}.sign_mail" = account.gpg.signByDefault;
+      "mail.identity.id_${id}.sign_mail" = identity.gpg.signByDefault;
     }
-    // optionalAttrs (account.smtp != null) {
-      "mail.identity.id_${id}.smtpServer" = "smtp_${account.id}";
+    // optionalAttrs (identity.smtp != null) {
+      "mail.identity.id_${id}.smtpServer" = "smtp_${identity.id}";
     }
     // account.thunderbird.perIdentitySettings id;
+
+  toThunderbirdSMTP =
+    account: address:
+    let
+      id = getId account address;
+      addressIsString = builtins.isString address;
+    in
+    optionalAttrs (!addressIsString && address.smtp != null) {
+      "mail.smtpserver.smtp_${id}.authMethod" = 3;
+      "mail.smtpserver.smtp_${id}.hostname" = address.smtp.host;
+      "mail.smtpserver.smtp_${id}.port" = if (address.smtp.port != null) then address.smtp.port else 587;
+      "mail.smtpserver.smtp_${id}.try_ssl" =
+        if !address.smtp.tls.enable then
+          0
+        else if address.smtp.tls.useStartTls then
+          2
+        else
+          3;
+      "mail.smtpserver.smtp_${id}.username" = address.userName;
+    };
 
   toThunderbirdAccount =
     account: profile:
@@ -154,6 +175,9 @@ let
           3;
       "mail.smtpserver.smtp_${id}.username" = account.userName;
     }
+    // builtins.foldl' (a: b: a // b) { } (
+      builtins.map (address: toThunderbirdSMTP account address) addresses
+    )
     // optionalAttrs (account.smtp != null && account.primary) {
       "mail.smtp.defaultserver" = "smtp_${id}";
     }
