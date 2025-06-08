@@ -63,7 +63,7 @@ in
                 description = ''
                   Regular configuration options as described in rclone's documentation
                   <https://rclone.org/docs/>. When specifying options follow the formatting
-                  process outlined here <https://rclone.org/docs/#config-config-file>, namley:
+                  process outlined here <https://rclone.org/docs/#config-config-file>, namely:
                    - Remove the leading double-dash (--) from the rclone option name
                    - Replace hyphens (-) with underscores (_)
                    - Convert to lowercase
