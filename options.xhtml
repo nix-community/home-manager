@@ -84569,6 +84569,30 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.ludusavi.package"></a><a class="term" href="options.xhtml#opt-services.ludusavi.package"><code class="option">services.ludusavi.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The ludusavi package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.ludusavi</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ludusavi.nix" target="_top">
+&lt;home-manager/modules/services/ludusavi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.ludusavi.backupNotification"></a><a class="term" href="options.xhtml#opt-services.ludusavi.backupNotification"><code class="option">services.ludusavi.backupNotification</code>
   </a>
  </span>
@@ -84606,6 +84630,36 @@ null or absolute path</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/ludusavi.nix" target="_top">
+&lt;home-manager/modules/services/ludusavi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.ludusavi.frequency"></a><a class="term" href="options.xhtml#opt-services.ludusavi.frequency"><code class="option">services.ludusavi.frequency</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>How often to run ludusavi. This value is passed to the systemd
+timer configuration as the onCalendar option.  See
+<a class="link" href="https://www.freedesktop.org/software/systemd/man/systemd.time.html" target="_top"><span class="citerefentry"><span class="refentrytitle">systemd.time</span>(7)</span></a>
+for more information about the format.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;daily&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;*-*-* 8:00:00&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
