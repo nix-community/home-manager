@@ -92,7 +92,7 @@ in
       "mc/mc.ext.ini" = lib.mkIf (cfg.extensionSettings != { }) {
         text = lib.generators.toINI { } cfg.extensionSettings;
       };
-      "mc/panel.ini" = lib.mkIf (cfg.panelsSettings != { }) {
+      "mc/panels.ini" = lib.mkIf (cfg.panelsSettings != { }) {
         text = lib.generators.toINI { } cfg.panelsSettings;
       };
       "mc/filehighlight.ini" = lib.mkIf (cfg.fileHighlightSettings != { }) {
