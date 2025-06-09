@@ -138,7 +138,7 @@
     email = "git+nix@cleslie.uk";
     github = "callumio";
     githubId = 16057677;
-    keys = [ { fingerprint = "BC82 4BB5 1656 D144 285E  A0EC D382 C4AF EECE AA90"; } ];
+    keys = [{fingerprint = "BC82 4BB5 1656 D144 285E  A0EC D382 C4AF EECE AA90";}];
   };
   CarlosLoboxyz = {
     name = "Carlos Lobo";
@@ -276,7 +276,7 @@
     email = "yiheng.he@proton.me";
     matrix = "@hey2022:matrix.org";
     github = "hey2022";
-    keys = [ { fingerprint = "128E 09C0 6F73 D678 6BB5  E551 5EA5 3C75 F7BE 3EDE"; } ];
+    keys = [{fingerprint = "128E 09C0 6F73 D678 6BB5  E551 5EA5 3C75 F7BE 3EDE";}];
   };
   HPsaucii = {
     name = "Holly Powell";
@@ -794,7 +794,7 @@
     matrix = "@soywod:matrix.org";
     github = "soywod";
     githubId = 10437171;
-    keys = [ { fingerprint = "75F0 AB7C FE01 D077 AEE6  CAFD 353E 4A18 EE0F AB72"; } ];
+    keys = [{fingerprint = "75F0 AB7C FE01 D077 AEE6  CAFD 353E 4A18 EE0F AB72";}];
   };
   t4ccer = {
     name = "t4ccer";
@@ -820,7 +820,7 @@
     github = "toastal";
     githubId = 561087;
     name = "toastal";
-    keys = [ { fingerprint = "7944 74B7 D236 DAB9 C9EF  E7F9 5CCE 6F14 66D4 7C9E"; } ];
+    keys = [{fingerprint = "7944 74B7 D236 DAB9 C9EF  E7F9 5CCE 6F14 66D4 7C9E";}];
   };
   tomodachi94 = {
     email = "tomodachi94+nixpkgs@protonmail.com";
@@ -829,7 +829,7 @@
     githubId = 68489118;
     name = "tomodachi94";
   };
-  vortiz = {
+  vortriz = {
     name = "Rishi Vora";
     email = "vorarishi22+nix@gmail.com";
     github = "Vortriz";
