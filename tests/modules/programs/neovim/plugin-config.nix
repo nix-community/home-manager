@@ -43,8 +43,6 @@ lib.mkIf config.test.enableBig {
     assertFileContains "$vimout" "HM_PLUGINS_CONFIG"
 
     initLua="$TESTED/home-files/.config/nvim/init.lua"
-    assertFileContains "$initLua" 'vim.cmd [[source '
-    assertFileContains "$initLua" 'function HM_PLUGIN_LUA_CONFIG ()'
     assertFileContent "$initLua" ${./plugin-config.expected}
   '';
 }
