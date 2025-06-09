@@ -51522,6 +51522,9 @@ null or package</p>
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set of (submodule)</p>
 
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
 <tr><td>
@@ -51538,8 +51541,11 @@ attribute set of (submodule)</p>
  </span>
 </dt>
 <dd>
-<p>Whether this is a default library. There must be exactly one
-default library.</p>
+<p>Whether this is a default library.</p><p>For papis to function without explicit library selection
+(i.e. without <code class="literal">-l &lt;library&gt;</code> or <code class="literal">--pick-lib</code> flags) there
+must be a default library defined.</p><p>Note this can be also defined (or overridden) on a local
+<code class="literal">$(pwd)/.papis.config</code> or via python
+<code class="literal">$XDG_CONFIG_HOME/papis/config.py</code> config file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
