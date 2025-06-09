@@ -42704,6 +42704,216 @@ attribute set of attribute set of list of string</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.mc.enable"></a><a class="term" href="options.xhtml#opt-programs.mc.enable"><code class="option">programs.mc.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Midnight Commander.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mc.nix" target="_top">
+&lt;home-manager/modules/programs/mc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mc.package"></a><a class="term" href="options.xhtml#opt-programs.mc.package"><code class="option">programs.mc.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The mc package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.mc</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mc.nix" target="_top">
+&lt;home-manager/modules/programs/mc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mc.extensionSettings"></a><a class="term" href="options.xhtml#opt-programs.mc.extensionSettings"><code class="option">programs.mc.extensionSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings for <code class="literal">mc/mc.ext.ini</code> file. This setting completely replaces the default <code class="literal">/etc/mc/mc.ext.ini</code>.</p><p>Midnight Commander does not merge this file with the system default,
+so you should copy the original if you want to preserve default behavior and add your changes there.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  EPUB = {
+    Open = &quot;fbreader %f &amp;&quot;;
+    Shell = &quot;.epub&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mc.nix" target="_top">
+&lt;home-manager/modules/programs/mc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mc.fileHighlightSettings"></a><a class="term" href="options.xhtml#opt-programs.mc.fileHighlightSettings"><code class="option">programs.mc.fileHighlightSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings for <code class="literal">mc/filehighlight.ini</code> file. This setting completely replaces the default <code class="literal">/etc/mc/filehighlight.ini</code>.</p><p>Midnight Commander does not merge this file with the system default, so you should copy the original if you want to preserve default behavior
+and add your changes there.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  lua = {
+    extensions = &quot;lua;luac&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mc.nix" target="_top">
+&lt;home-manager/modules/programs/mc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mc.keymapSettings"></a><a class="term" href="options.xhtml#opt-programs.mc.keymapSettings"><code class="option">programs.mc.keymapSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings for <code class="literal">mc/mc.keymap</code> file.</p><p>Any missing settings will fall back to the system default.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  panel = {
+    Up = &quot;up;ctrl-k&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mc.nix" target="_top">
+&lt;home-manager/modules/programs/mc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mc.panelsSettings"></a><a class="term" href="options.xhtml#opt-programs.mc.panelsSettings"><code class="option">programs.mc.panelsSettings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings for <code class="literal">mc/panels</code> file.</p><p>Any missing settings will fall back to the system default.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  Dirs = {
+    current_is_left = false;
+    other_dir = &quot;/home&quot;;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mc.nix" target="_top">
+&lt;home-manager/modules/programs/mc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.mc.settings"></a><a class="term" href="options.xhtml#opt-programs.mc.settings"><code class="option">programs.mc.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Settings for <code class="literal">mc/ini</code> file.</p><p>Any missing settings will fall back to the system default.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  Panels = {
+    show_dot_files = false;
+  };
+}
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mc.nix" target="_top">
+&lt;home-manager/modules/programs/mc.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.mcfly.enable"></a><a class="term" href="options.xhtml#opt-programs.mcfly.enable"><code class="option">programs.mcfly.enable</code>
   </a>
  </span>
