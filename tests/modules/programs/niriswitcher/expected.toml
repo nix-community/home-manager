@@ -1,0 +1,11 @@
+center_on_focus = true
+[appearance]
+icon_size = 64
+system_theme = "dark"
+
+[keys]
+modifier = "Super"
+
+[keys.switch]
+next = "Tab"
+prev = "Shift+Tab"

@@ -829,6 +829,12 @@
     githubId = 68489118;
     name = "tomodachi94";
   };
+  vortiz = {
+    name = "Rishi Vora";
+    email = "vorarishi22+nix@gmail.com";
+    github = "Vortriz";
+    githubId = 97402159;
+  };
   wcarlsen = {
     name = "Willi Carlsen";
     email = "carlsenwilli+nix@gmail.com";
