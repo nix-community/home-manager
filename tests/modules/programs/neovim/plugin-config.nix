@@ -45,9 +45,6 @@ lib.mkIf config.test.enableBig {
     initLua="$TESTED/home-files/.config/nvim/init.lua"
     assertFileContains "$initLua" 'vim.cmd [[source '
     assertFileContains "$initLua" 'function HM_PLUGIN_LUA_CONFIG ()'
-
-    flattened=$(mktemp)
-    sed ':a;N;$!ba;s/\n/__NL__/g' "$initLua" > "$flattened"
-    assertFileContains "$flattened" ']]__NL__function HM_PLUGIN_LUA_CONFIG ()__NL__end'
+    assertFileContent "$initLua" ${./plugin-config.expected}
   '';
 }
