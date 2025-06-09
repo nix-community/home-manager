@@ -18,7 +18,11 @@ in
     settings = lib.mkOption {
       inherit type;
       default = { };
-      description = "Settings for `mc/ini` file. Any missing settings will fall back to the system default.";
+      description = ''
+        Settings for `mc/ini` file.
+
+        Any missing settings will fall back to the system default.
+      '';
       example = {
         Panels = {
           show_dot_files = false;
@@ -29,7 +33,11 @@ in
     keymapSettings = lib.mkOption {
       inherit type;
       default = { };
-      description = "Settings for `mc/mc.keymap` file. Any missing settings will fall back to the system default.";
+      description = ''
+        Settings for `mc/mc.keymap` file.
+
+        Any missing settings will fall back to the system default.
+      '';
       example = {
         panel = {
           Up = "up;ctrl-k";
@@ -42,8 +50,10 @@ in
       default = { };
       description = ''
         Settings for `mc/mc.ext.ini` file. This setting completely replaces the default `/etc/mc/mc.ext.ini`.
-                Midnight Commander does not merge this file with the system default, so you should copy the original if you want to preserve default behavior
-                and add your changes there.'';
+
+        Midnight Commander does not merge this file with the system default,
+        so you should copy the original if you want to preserve default behavior and add your changes there.
+      '';
       example = {
         EPUB = {
           Shell = ".epub";
@@ -55,7 +65,11 @@ in
     panelsSettings = lib.mkOption {
       inherit type;
       default = { };
-      description = "Settings for `mc/panels` file. Any missing settings will fall back to the system default.";
+      description = ''
+        Settings for `mc/panels` file.
+
+        Any missing settings will fall back to the system default.
+      '';
       example = {
         Dirs = {
           current_is_left = false;
@@ -69,8 +83,10 @@ in
       default = { };
       description = ''
         Settings for `mc/filehighlight.ini` file. This setting completely replaces the default `/etc/mc/filehighlight.ini`.
-                Midnight Commander does not merge this file with the system default, so you should copy the original if you want to preserve default behavior
-                and add your changes there.'';
+
+        Midnight Commander does not merge this file with the system default, so you should copy the original if you want to preserve default behavior
+        and add your changes there.
+      '';
       example = {
         lua = {
           extensions = "lua;luac";
