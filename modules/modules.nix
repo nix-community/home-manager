@@ -174,6 +174,7 @@ let
       ./programs/lapce.nix
       ./programs/lazydocker.nix
       ./programs/lazygit.nix
+      ./programs/lazysql.nix
       ./programs/ledger.nix
       ./programs/less.nix
       ./programs/lesspipe.nix
@@ -219,6 +220,7 @@ let
       ./programs/notmuch.nix
       ./programs/numbat.nix
       ./programs/nushell.nix
+      ./programs/nyxt.nix
       ./programs/obs-studio.nix
       ./programs/obsidian.nix
       ./programs/octant.nix

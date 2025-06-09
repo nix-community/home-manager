@@ -41,7 +41,7 @@ in
     programs.zed-editor = {
       enable = lib.mkEnableOption "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
 
-      package = lib.mkPackageOption pkgs "zed-editor" { };
+      package = lib.mkPackageOption pkgs "zed-editor" { nullable = true; };
 
       extraPackages = mkOption {
         type = with types; listOf package;
@@ -138,7 +138,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages =
+    home.packages = mkIf (cfg.package != null) (
       if cfg.extraPackages != [ ] then
         [
           (pkgs.symlinkJoin {
@@ -153,7 +153,8 @@ in
           })
         ]
       else
-        [ cfg.package ];
+        [ cfg.package ]
+    );
 
     home.file = mkIf (cfg.installRemoteServer && (cfg.package ? remote_server)) (
       let
@@ -191,5 +192,12 @@ in
             jsonFormat.generate "zed-theme-${n}" v;
       }
     ) cfg.themes;
+
+    assertions = [
+      {
+        assertion = cfg.extraPackages != [ ] -> cfg.package != null;
+        message = "{option}programs.zed-editor.extraPackages requires non null {option}programs.zed-editor.package";
+      }
+    ];
   };
 }
