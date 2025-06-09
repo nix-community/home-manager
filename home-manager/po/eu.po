@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-05-30 15:05+0200\n"
-"PO-Revision-Date: 2025-06-09 14:08+0000\n"
+"PO-Revision-Date: 2025-06-09 15:44+0000\n"
 "Last-Translator: Muxutruk <benat.eigurenzu@elorrieta-errekamari.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/home-manager/cli/"
 "eu/>\n"
@@ -82,17 +82,17 @@ msgstr ""
 
 #: home-manager/home-manager:167
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Ezin izan da profil karpeta egokirik aurkitu, %s eta %s saiatu dira"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:222
 msgid "Can't inspect options of a flake configuration"
-msgstr ""
+msgstr "Ezin dira flake baten konfigurazio aukerak arakatu"
 
 #: home-manager/home-manager:297 home-manager/home-manager:320
 #: home-manager/home-manager:1060
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: aukera ezezaguna '%s'"
 
 #: home-manager/home-manager:302 home-manager/home-manager:1061
 msgid "Run '%s --help' for usage help"
