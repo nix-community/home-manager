@@ -20,6 +20,14 @@ lib.mkIf config.test.enableBig {
           let g:hmPlugins='HM_PLUGINS_CONFIG'
         '';
       }
+      {
+        plugin = vim-nix;
+        type = "lua";
+        config = ''
+          function HM_PLUGIN_LUA_CONFIG ()
+          end
+        '';
+      }
     ];
     extraLuaPackages = ps: [ ps.luautf8 ];
   };
@@ -33,5 +41,8 @@ lib.mkIf config.test.enableBig {
       > "$vimout" || true
     assertFileContains "$vimout" "HM_EXTRA_CONFIG"
     assertFileContains "$vimout" "HM_PLUGINS_CONFIG"
+
+    initLua="$TESTED/home-files/.config/nvim/init.lua"
+    assertFileContent "$initLua" ${./plugin-config.expected}
   '';
 }

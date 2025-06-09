@@ -1,0 +1,3 @@
+vim.cmd [[source /nix/store/szdyh45rf0rgiq35zgy5b3z99f8lx8f2-nvim-init-home-manager.vim]]
+function HM_PLUGIN_LUA_CONFIG ()
+end
