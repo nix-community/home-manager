@@ -4,13 +4,18 @@
     package = null;
     menu = [
       {
+        label = "pipemenu";
+        menuId = "menu";
+        execute = "/home/user/nix/scripts/pipe.sh";
+      }
+      {
         menuId = "client-menu";
         label = "Client Menu";
-        icon = "";
+        icon = "path";
         items = [
           {
             label = "Maximize";
-            icon = "";
+            icon = "Max";
             action = {
               name = "ToggleMaximize";
             };
@@ -61,17 +66,16 @@
       {
         menuId = "menu-two";
         label = "Client Menu Two";
-        icon = "";
+        icon = "menu-two";
         items = [
           {
             label = "Menu In Menu";
             menuId = "menu-in-menu";
-            icon = "";
             items = [
               {
                 label = "Menu In Menu In Menu";
                 menuId = "menu-in-menu-in-menu";
-                icon = "";
+                icon = "menu-in-menu-in-menu";
                 items = [
                   {
                     label = "Move Right";
@@ -80,12 +84,14 @@
                       to = "right";
                     };
                   }
+                  { menuId = "fourth"; }
                 ];
               }
             ];
           }
         ];
       }
+      #  <!-- A submenu defined elsewhere, uses external label and icon attributes -->
       { menuId = ""; }
     ];
   };

@@ -101,6 +101,11 @@ in
       example = lib.literalExpression ''
         [
           {
+            label = "pipemenu";
+            menuId = "menu";
+            execute = "/home/user/nix/scripts/pipe.sh";
+          }
+          {
             menuId = "client-menu";
             label = "Client Menu";
             icon = "";
@@ -116,12 +121,6 @@ in
                 label = "Fullscreen";
                 action = {
                   name = "ToggleFullscreen";
-                };
-              }
-              {
-                label = "Always on Top";
-                action = {
-                  name = "ToggleAlwaysOnTop";
                 };
               }
               {
