@@ -188,6 +188,7 @@ let
       ./programs/mangohud.nix
       ./programs/matplotlib.nix
       ./programs/mbsync.nix
+      ./programs/mc.nix
       ./programs/mcfly.nix
       ./programs/meli.nix
       ./programs/mercurial.nix
