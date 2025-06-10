@@ -212,6 +212,7 @@ let
       ./programs/newsboat.nix
       ./programs/nh.nix
       ./programs/nheko.nix
+      ./programs/niriswitcher.nix
       ./programs/nix-index.nix
       ./programs/nix-init.nix
       ./programs/nix-your-shell.nix
