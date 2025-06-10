@@ -47571,6 +47571,136 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.niriswitcher.enable"></a><a class="term" href="options.xhtml#opt-programs.niriswitcher.enable"><code class="option">programs.niriswitcher.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable niriswitcher, an application switcher for niri.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/niriswitcher.nix" target="_top">
+&lt;home-manager/modules/programs/niriswitcher.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.niriswitcher.package"></a><a class="term" href="options.xhtml#opt-programs.niriswitcher.package"><code class="option">programs.niriswitcher.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The niriswitcher package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.niriswitcher</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/niriswitcher.nix" target="_top">
+&lt;home-manager/modules/programs/niriswitcher.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.niriswitcher.settings"></a><a class="term" href="options.xhtml#opt-programs.niriswitcher.settings"><code class="option">programs.niriswitcher.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>niriswitcher configuration.
+For available settings see <a class="link" href="https://github.com/isaksamsten/niriswitcher/?tab=readme-ov-file#options"  target="_top">https://github.com/isaksamsten/niriswitcher/?tab=readme-ov-file#options</a>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or TOML value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  keys = {
+    modifier = &quot;Super&quot;;
+    switch = {
+      next = &quot;Tab&quot;;
+      prev = &quot;Shift+Tab&quot;;
+    };
+  };
+  center_on_focus = true;
+  appearance = {
+    system_theme = &quot;dark&quot;;
+    icon_size = 64;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/niriswitcher.nix" target="_top">
+&lt;home-manager/modules/programs/niriswitcher.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.niriswitcher.style"></a><a class="term" href="options.xhtml#opt-programs.niriswitcher.style"><code class="option">programs.niriswitcher.style</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>CSS style of the switcher.
+<a class="link" href="https://github.com/isaksamsten/niriswitcher/?tab=readme-ov-file#themes"  target="_top">https://github.com/isaksamsten/niriswitcher/?tab=readme-ov-file#themes</a>
+for the documentation.</p><p>If the value is set to a path literal, then the path will be used as the CSS file.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or absolute path or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  .application-name {
+    opacity: 1;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .application.selected .application-name {
+    color: rgba(255, 255, 255, 1);
+  }
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/niriswitcher.nix" target="_top">
+&lt;home-manager/modules/programs/niriswitcher.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.nix-index.enable"></a><a class="term" href="options.xhtml#opt-programs.nix-index.enable"><code class="option">programs.nix-index.enable</code>
   </a>
  </span>
