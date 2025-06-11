@@ -437,68 +437,78 @@ let
       }
     '';
 
-    text = concatStringsSep "\n" (
-      (optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
-      ++ (
-        if cfg.config != null then
-          with cfg.config;
-          (
-            [
-              (fontConfigStr fonts)
-              "floating_modifier ${floating.modifier}"
-              (windowBorderString window floating)
-              "hide_edge_borders ${window.hideEdgeBorders}"
-              "focus_wrapping ${focus.wrapping}"
-              "focus_follows_mouse ${focus.followMouse}"
-              "focus_on_window_activation ${focus.newWindow}"
-              "mouse_warping ${
-                if builtins.isString (focus.mouseWarping) then
-                  focus.mouseWarping
-                else if focus.mouseWarping then
-                  "output"
-                else
-                  "none"
-              }"
-              "workspace_layout ${workspaceLayout}"
-              "workspace_auto_back_and_forth ${lib.hm.booleans.yesNo workspaceAutoBackAndForth}"
-              "client.focused ${colorSetStr colors.focused}"
-              "client.focused_inactive ${colorSetStr colors.focusedInactive}"
-              "client.unfocused ${colorSetStr colors.unfocused}"
-              "client.urgent ${colorSetStr colors.urgent}"
-              "client.placeholder ${colorSetStr colors.placeholder}"
-              "client.background ${colors.background}"
-              (keybindingsStr {
-                keybindings = keybindingDefaultWorkspace;
-                bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-              })
-              (keybindingsStr {
-                keybindings = keybindingsRest;
-                bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-              })
-              (keycodebindingsStr keycodebindings)
-            ]
-            ++ optional (builtins.attrNames bindswitches != [ ]) (bindswitchesStr bindswitches)
-            ++ mapAttrsToList inputStr (filterAttrs (n: v: n == "*") input)
-            ++ mapAttrsToList inputStr (filterAttrs (n: v: hasPrefix "type:" n) input)
-            ++ mapAttrsToList inputStr (filterAttrs (n: v: n != "*" && !(hasPrefix "type:" n)) input)
-            ++ mapAttrsToList outputStr output # outputs
-            ++ mapAttrsToList seatStr seat # seats
-            ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
-            ++ mapAttrsToList assignStr assigns # assigns
-            ++ map barStr bars # bars
-            ++ optional (gaps != null) gapsStr # gaps
-            ++ map floatingCriteriaStr floating.criteria # floating
-            ++ map windowCommandsStr window.commands # window commands
-            ++ map startupEntryStr startup # startup
-            ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
-          )
-        else
-          [ ]
-      )
-      ++ (optional cfg.systemd.enable systemdActivation)
-      ++ (optional (!cfg.xwayland) "xwayland disable")
-      ++ [ cfg.extraConfig ]
-    );
+    text =
+      let
+        # include and set should be at the top of the configuration
+        setSettings = lib.filterAttrs (key: _: key == "set") cfg.settings;
+        includeSettings = lib.filterAttrs (key: _: key == "include") cfg.settings;
+        otherSettings = lib.filterAttrs (key: _: key != "set" && key != "include") cfg.settings;
+      in
+      lib.optionalString (setSettings != { }) (lib.hm.generators.toSwayConf { } setSettings)
+      + lib.optionalString (includeSettings != { }) (lib.hm.generators.toSwayConf { } includeSettings)
+      + lib.optionalString (otherSettings != { }) (lib.hm.generators.toSwayConf { } otherSettings)
+      + concatStringsSep "\n" (
+        (optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
+        ++ (
+          if cfg.config != null then
+            with cfg.config;
+            (
+              [
+                (fontConfigStr fonts)
+                "floating_modifier ${floating.modifier}"
+                (windowBorderString window floating)
+                "hide_edge_borders ${window.hideEdgeBorders}"
+                "focus_wrapping ${focus.wrapping}"
+                "focus_follows_mouse ${focus.followMouse}"
+                "focus_on_window_activation ${focus.newWindow}"
+                "mouse_warping ${
+                  if builtins.isString (focus.mouseWarping) then
+                    focus.mouseWarping
+                  else if focus.mouseWarping then
+                    "output"
+                  else
+                    "none"
+                }"
+                "workspace_layout ${workspaceLayout}"
+                "workspace_auto_back_and_forth ${lib.hm.booleans.yesNo workspaceAutoBackAndForth}"
+                "client.focused ${colorSetStr colors.focused}"
+                "client.focused_inactive ${colorSetStr colors.focusedInactive}"
+                "client.unfocused ${colorSetStr colors.unfocused}"
+                "client.urgent ${colorSetStr colors.urgent}"
+                "client.placeholder ${colorSetStr colors.placeholder}"
+                "client.background ${colors.background}"
+                (keybindingsStr {
+                  keybindings = keybindingDefaultWorkspace;
+                  bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+                })
+                (keybindingsStr {
+                  keybindings = keybindingsRest;
+                  bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+                })
+                (keycodebindingsStr keycodebindings)
+              ]
+              ++ optional (builtins.attrNames bindswitches != [ ]) (bindswitchesStr bindswitches)
+              ++ mapAttrsToList inputStr (filterAttrs (n: v: n == "*") input)
+              ++ mapAttrsToList inputStr (filterAttrs (n: v: hasPrefix "type:" n) input)
+              ++ mapAttrsToList inputStr (filterAttrs (n: v: n != "*" && !(hasPrefix "type:" n)) input)
+              ++ mapAttrsToList outputStr output # outputs
+              ++ mapAttrsToList seatStr seat # seats
+              ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
+              ++ mapAttrsToList assignStr assigns # assigns
+              ++ map barStr bars # bars
+              ++ optional (gaps != null) gapsStr # gaps
+              ++ map floatingCriteriaStr floating.criteria # floating
+              ++ map windowCommandsStr window.commands # window commands
+              ++ map startupEntryStr startup # startup
+              ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
+            )
+          else
+            [ ]
+        )
+        ++ (optional cfg.systemd.enable systemdActivation)
+        ++ (optional (!cfg.xwayland) "xwayland disable")
+        ++ [ cfg.extraConfig ]
+      );
   };
 in
 {
@@ -674,6 +684,30 @@ in
       description = ''
         Command line arguments passed to launch Sway. Please DO NOT report
         issues if you use an unsupported GPU (proprietary drivers).
+      '';
+    };
+
+    settings = lib.mkOption {
+      type =
+        with lib.types;
+        let
+          valueType =
+            oneOf [
+              int
+              float
+              str
+              path
+              (listOf str)
+              (attrsOf valueType)
+            ]
+            // {
+              description = "Sway configuration value";
+            };
+        in
+        valueType;
+      default = { };
+      description = ''
+        Configuration for `sway`. See `sway(5)` for supported values.
       '';
     };
 
