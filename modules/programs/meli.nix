@@ -13,6 +13,10 @@ let
     mkIf
     ;
 
+  cfg = config.programs.meli;
+
+  tomlFormat = pkgs.formats.toml { };
+
   enabledAccounts = lib.attrsets.filterAttrs (
     name: value: value.meli.enable or false
   ) config.accounts.email.accounts;
@@ -70,6 +74,12 @@ in
         type = types.package;
         default = pkgs.meli;
         description = "meli package to use";
+      };
+
+      includes = mkOption {
+        type = with types; listOf (str);
+        description = "Paths of the various meli configuration files to include.";
+        default = [ ];
       };
 
       settings = mkOption {
@@ -186,12 +196,26 @@ in
     home.packages = [ config.programs.meli.package ];
 
     # Generate meli configuration from email accounts
-    xdg.configFile."meli/config.toml".source = (pkgs.formats.toml { }).generate "meli-config" (
-      {
-        accounts = meliAccounts;
-      }
-      // config.programs.meli.settings
-    );
+    xdg.configFile."meli/config.toml" =
+      let
 
+        generatedToml = tomlFormat.generate "meli-config" (
+          {
+            accounts = meliAccounts;
+          }
+          // config.programs.meli.settings
+        );
+
+      in
+      if cfg.includes == [ ] then
+        {
+          source = generatedToml;
+        }
+      else
+        {
+          text = lib.concatStringsSep "\n" (
+            map (inc: "include(\"${inc}\")") (cfg.includes ++ [ generatedToml ])
+          );
+        };
   };
 }
