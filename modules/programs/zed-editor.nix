@@ -8,6 +8,7 @@ let
   inherit (lib)
     literalExpression
     mkIf
+    mkMerge
     mkOption
     types
     ;
@@ -166,19 +167,23 @@ in
       }
     );
 
-    home.activation = {
-      zedSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-        impureConfigMerger "{}" ".[0] * .[1]" "${config.xdg.configHome}/zed/settings.json" (
-          jsonFormat.generate "zed-user-settings" mergedSettings
-        )
-      );
-      zedKeymapActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-        impureConfigMerger "[]"
-          ".[0] + .[1] | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
-          "${config.xdg.configHome}/zed/keymap.json"
-          (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
-      );
-    };
+    home.activation = mkMerge [
+      (mkIf (mergedSettings != { }) {
+        zedSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          impureConfigMerger "{}" ".[0] * .[1]" "${config.xdg.configHome}/zed/settings.json" (
+            jsonFormat.generate "zed-user-settings" mergedSettings
+          )
+        );
+      })
+      (mkIf (cfg.userKeymaps != [ ]) {
+        zedKeymapActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          impureConfigMerger "[]"
+            ".[0] + .[1] | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
+            "${config.xdg.configHome}/zed/keymap.json"
+            (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
+        );
+      })
+    ];
 
     xdg.configFile = lib.mapAttrs' (
       n: v:
