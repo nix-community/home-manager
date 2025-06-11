@@ -46,16 +46,16 @@
           - tests/modules/services/borgmatic/**/*
 "bars":
   - changed-files:
-    -any-glob-to-any-file:
-      - modules/programs/eww.nix
-      - modules/programs/sketchybar.nix
-      - modules/programs/waybar.nix
-      - modules/programs/xmobar.nix
-      - modules/programs/yambar.nix
-      - modules/services/polybar.nix
-      - modules/services/taffybar.nix
-      - tests/modules/programs/waybar/**/*
-      - tests/modules/services/polybar/**/*
+      - any-glob-to-any-file:
+          - modules/programs/eww.nix
+          - modules/programs/sketchybar.nix
+          - modules/programs/waybar.nix
+          - modules/programs/xmobar.nix
+          - modules/programs/yambar.nix
+          - modules/services/polybar.nix
+          - modules/services/taffybar.nix
+          - tests/modules/programs/waybar/**/*
+          - tests/modules/services/polybar/**/*
 "browsers":
   - changed-files:
       - any-glob-to-any-file:
