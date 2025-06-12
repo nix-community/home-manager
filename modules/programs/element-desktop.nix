@@ -113,7 +113,7 @@ in
       let
         settings =
           if cfg.combineDefaultSettings then
-            (pkgs.runCommandLocal "element-desktop-default"
+            (pkgs.runCommandLocal "element-desktop-default.json"
               {
                 nativeBuildInputs = [ pkgs.jq ];
               }
@@ -122,7 +122,7 @@ in
               ''
             )
           else
-            (formatter.generate "element-desktop-default" cfg.settings);
+            (formatter.generate "element-desktop-default.json" cfg.settings);
         defaultConfig =
           if (settings != { }) then
             {
@@ -137,7 +137,7 @@ in
         let
           profile =
             if cfg.combineSettingsProfiles then
-              (pkgs.runCommandLocal "element-desktop-${name}"
+              (pkgs.runCommandLocal "element-desktop-${name}.json"
                 {
                   nativeBuildInputs = [ pkgs.jq ];
                 }
@@ -148,7 +148,7 @@ in
                 ''
               )
             else
-              (formatter.generate "element-desktop-${name}" cfg.profiles."${name}");
+              (formatter.generate "element-desktop-${name}.json" cfg.profiles."${name}");
         in
         lib.nameValuePair "${prefix}/Element-${name}/config.json" {
           source = profile;
