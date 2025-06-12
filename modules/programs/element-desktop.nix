@@ -124,7 +124,7 @@ in
           else
             (formatter.generate "element-desktop-default.json" cfg.settings);
         defaultConfig =
-          if (settings != { }) then
+          if (cfg.settings != { } || cfg.combineDefaultSettings) then
             {
               "${prefix}/Element/config.json".source = settings;
             }
