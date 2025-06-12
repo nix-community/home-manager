@@ -26,6 +26,20 @@ in
   options.programs.element-desktop = {
     enable = mkEnableOption "element-desktop";
     package = mkPackageOption pkgs "element-desktop" { nullable = true; };
+    combineDefaultSettings = mkOption {
+      type = lib.types.bool;
+      default = false; # true would be better, but a breaking change
+      description = ''
+        Use element-web default configuration as a basis for settings and profiles.
+      '';
+    };
+    combineSettingsProfiles = mkOption {
+      type = lib.types.bool;
+      default = false; # true would be better, but a breaking change
+      description = ''
+        Use settings as a basis for profiles.
+      '';
+    };
     settings = mkOption {
       type = formatter.type;
       default = { };
@@ -52,9 +66,7 @@ in
       '';
       description = ''
         Configuration settings for Element's default profiles.
-        WARNING: Element doesn't combine this config with the defaults,
-        so make sure to configure most options. For details about this
-        behavior and available configuration options see:
+        For details about this behavior and available configuration options see:
         <https://github.com/element-hq/element-web/blob/develop/docs/config.md>
       '';
     };
@@ -90,8 +102,7 @@ in
       '';
       description = ''
         Extra profiles for Element. Those can be accessed using the
-        "--profile $NAME" flag. The same warning and options apply
-        here.
+        "--profile $NAME" flag. The same options apply here.
       '';
     };
   };
@@ -100,12 +111,22 @@ in
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
     home.file =
       let
+        settings =
+          if cfg.combineDefaultSettings then
+            (pkgs.runCommandLocal "element-desktop-default"
+              {
+                nativeBuildInputs = [ pkgs.jq ];
+              }
+              ''
+                jq -s '.[0] * $conf' "${cfg.package}/share/element/webapp/config.json" --argjson "conf" ${lib.escapeShellArg (builtins.toJSON cfg.settings)} > $out
+              ''
+            )
+          else
+            (formatter.generate "element-desktop-default" cfg.settings);
         defaultConfig =
-          if (cfg.settings != { }) then
+          if (settings != { }) then
             {
-              "${prefix}/Element/config.json".source = (
-                formatter.generate "element-desktop-default" cfg.settings
-              );
+              "${prefix}/Element/config.json".source = settings;
             }
           else
             { };
@@ -113,8 +134,24 @@ in
       defaultConfig
       // (lib.mapAttrs' (
         name: value:
+        let
+          profile =
+            if cfg.combineSettingsProfiles then
+              (pkgs.runCommandLocal "element-desktop-${name}"
+                {
+                  nativeBuildInputs = [ pkgs.jq ];
+                }
+                ''
+                  jq -s '.[0] * $conf' "${settings}" --argjson "conf" ${
+                    lib.escapeShellArg (builtins.toJSON cfg.profiles."${name}")
+                  } > $out
+                ''
+              )
+            else
+              (formatter.generate "element-desktop-${name}" cfg.profiles."${name}");
+        in
         lib.nameValuePair "${prefix}/Element-${name}/config.json" {
-          source = (formatter.generate "element-desktop-${name}" cfg.profiles."${name}");
+          source = profile;
         }
       ) cfg.profiles);
   };
