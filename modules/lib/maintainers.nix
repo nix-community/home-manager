@@ -365,6 +365,12 @@
     githubId = 1553581;
     name = "Josh Robson Chase";
   };
+  justdeeevin = {
+    email = "devin.droddy@gmail.com";
+    github = "justdeeevin";
+    githubId = 90054389;
+    name = "Devin Droddy";
+  };
   justinlovinger = {
     name = "Justin Lovinger";
     email = "git@justinlovinger.com";
