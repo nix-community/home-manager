@@ -10,7 +10,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ ];
+  meta.maintainers = [ lib.maintainers.awwpotato ];
 
   options.programs.ncspot = {
     enable = lib.mkEnableOption "ncspot";
