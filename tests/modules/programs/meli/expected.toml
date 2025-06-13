@@ -27,14 +27,6 @@ PRDR = true
 danger_accept_invalid_certs = false
 type = "tls"
 
-[shortcuts.composing]
-
-[shortcuts.contact-list]
-
 [shortcuts.general]
 scroll_down = "j"
 scroll_up = "k"
-
-[shortcuts.listing]
-
-[shortcuts.pager]
