@@ -5,9 +5,7 @@
   ...
 }:
 let
-
   cfg = config.services.opensnitch-ui;
-
 in
 {
 
@@ -16,6 +14,7 @@ in
   options = {
     services.opensnitch-ui = {
       enable = lib.mkEnableOption "Opensnitch client";
+      package = lib.mkPackageOption pkgs "opensnitch-ui" { };
     };
   };
 
@@ -33,7 +32,7 @@ in
 
       Service = {
         Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
-        ExecStart = "${pkgs.opensnitch-ui}/bin/opensnitch-ui";
+        ExecStart = "${cfg.package}/bin/opensnitch-ui";
       };
 
       Install = {
