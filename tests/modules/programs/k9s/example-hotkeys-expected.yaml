@@ -1,4 +1,4 @@
-hotKey:
+hotKeys:
   shift-0:
     command: pods
     description: Viewing pods

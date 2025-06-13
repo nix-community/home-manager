@@ -1,4 +1,4 @@
-plugin:
+plugins:
   fred:
     args:
     - logs
