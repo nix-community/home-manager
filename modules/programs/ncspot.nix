@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (lib) mkIf;
+
   cfg = config.programs.ncspot;
 
   tomlFormat = pkgs.formats.toml { };
@@ -15,7 +17,7 @@ in
   options.programs.ncspot = {
     enable = lib.mkEnableOption "ncspot";
 
-    package = lib.mkPackageOption pkgs "ncspot" { };
+    package = lib.mkPackageOption pkgs "ncspot" { nullable = true; };
 
     settings = lib.mkOption {
       type = tomlFormat.type;
@@ -36,10 +38,10 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config = mkIf cfg.enable {
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."ncspot/config.toml" = lib.mkIf (cfg.settings != { }) {
+    xdg.configFile."ncspot/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "ncspot-config" cfg.settings;
     };
   };
