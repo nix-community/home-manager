@@ -35,13 +35,15 @@ in
         workspaces.visibilityMode = "MonitorSpecific";
       };
       description = ''
-        Ashell configuration written to `$XDG_CONFIG_HOME/ashell.yml`.
-        For available settings see <https://github.com/MalpenZibo/ashell/tree/0.4.1?tab=readme-ov-file#configuration>.
+        Ashell configuration written to {file}`$XDG_CONFIG_HOME/ashell.yml`.
+        For available settings see
+        <https://github.com/MalpenZibo/ashell/tree/0.4.1?tab=readme-ov-file#configuration>.
       '';
     };
 
     systemd = {
       enable = lib.mkEnableOption "ashell systemd service";
+
       target = lib.mkOption {
         type = lib.types.str;
         default = config.wayland.systemd.target;
@@ -50,7 +52,10 @@ in
         description = ''
           The systemd target that will automatically start ashell.
 
-          If you set this to a WM-specific target, make sure that systemd integration for that WM is enabled (e.g. `wayland.windowManager.hyprland.systemd.enable`). **This is typically true by default**.
+          If you set this to a WM-specific target, make sure that systemd
+          integration for that WM is enabled (for example,
+          [](#opt-wayland.windowManager.hyprland.systemd.enable)). This is
+          typically true by default.
         '';
       };
     };
