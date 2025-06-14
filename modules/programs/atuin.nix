@@ -84,7 +84,7 @@ in
         Configuration written to
         {file}`$XDG_CONFIG_HOME/atuin/config.toml`.
 
-        See <https://docs.atuin.sh/configuration/config//> for the full list
+        See <https://docs.atuin.sh/configuration/config/> for the full list
         of options.
       '';
     };
