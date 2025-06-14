@@ -86,7 +86,7 @@ in
         type = types.submodule {
           freeformType = tomlFormat.type;
         };
-        example = lib.literalExample ''
+        example = lib.literalExpression ''
           {
           shortcuts = {
           contact-list = {
