@@ -32,11 +32,14 @@ let
 
   moduleName = "programs.thunderbird";
 
-  enabledAccounts = attrValues (
-    lib.filterAttrs (_: a: a.thunderbird.enable) config.accounts.email.accounts
-  );
+  filterEnabled = accounts: attrValues (lib.filterAttrs (_: a: a.thunderbird.enable) accounts);
+  addId = map (a: a // { id = builtins.hashString "sha256" a.name; });
 
-  enabledAccountsWithId = map (a: a // { id = builtins.hashString "sha256" a.name; }) enabledAccounts;
+  enabledEmailAccounts = filterEnabled config.accounts.email.accounts;
+  enabledEmailAccountsWithId = addId enabledEmailAccounts;
+
+  enabledCalendarAccounts = filterEnabled config.accounts.calendar.accounts;
+  enabledCalendarAccountsWithId = addId enabledCalendarAccounts;
 
   thunderbirdConfigPath = if isDarwin then "Library/Thunderbird" else ".thunderbird";
 
@@ -159,6 +162,36 @@ let
     )
     // account.thunderbird.settings id;
 
+  toThunderbirdCalendar =
+    calendar: _:
+    let
+      inherit (calendar) id;
+    in
+    {
+      "calendar.registry.calendar_${id}.name" = calendar.name;
+      "calendar.registry.calendar_${id}.calendar-main-in-composite" = true;
+      "calendar.registry.calendar_${id}.cache.enabled" = true;
+    }
+    // optionalAttrs (calendar.remote == null) {
+      "calendar.registry.calendar_${id}.type" = "storage";
+      "calendar.registry.calendar_${id}.uri" = "moz-storage-calendar://";
+    }
+    // optionalAttrs (calendar.remote != null) {
+      "calendar.registry.calendar_${id}.type" =
+        if (calendar.remote.type == "http") then "ics" else calendar.remote.type;
+      "calendar.registry.calendar_${id}.uri" = calendar.remote.url;
+      "calendar.registry.calendar_${id}.username" = calendar.remote.userName;
+    }
+    // optionalAttrs calendar.primary {
+      "calendar.registry.calendar_${id}.calendar-main-default" = true;
+    }
+    // optionalAttrs calendar.thunderbird.readOnly {
+      "calendar.registry.calendar_${id}.readOnly" = true;
+    }
+    // optionalAttrs (calendar.thunderbird.color != "") {
+      "calendar.registry.calendar_${id}.color" = calendar.thunderbird.color;
+    };
+
   toThunderbirdFeed =
     feed: profile:
     let
@@ -212,7 +245,7 @@ let
     ''
     + lib.concatStrings (map (f: mkFilterToIniString f) filters);
 
-  getEmailAccountsForProfile =
+  getAccountsForProfile =
     profileName: accounts:
     (filter (
       a: a.thunderbird.profiles == [ ] || lib.any (p: p == profileName) a.thunderbird.profiles
@@ -342,6 +375,26 @@ in
                       "private"
                       "work"
                       "rss"
+                      /* Other accounts in arbitrary order */
+                    ]
+                  '';
+                };
+                calendarAccountsOrder = mkOption {
+                  type = types.listOf types.str;
+                  default = [ ];
+                  description = ''
+                    Custom ordering of calendar accounts. The accounts are specified
+                    by their name. For declarative accounts, it must be the name
+                    of their attribute in `config.accounts.calendar.accounts`.
+                    Enabled accounts that aren't listed here appear in an arbitrary
+                    order after the ordered accounts.
+                  '';
+                  example = ''
+                    [
+                      "my-awesome-account"
+                      "private"
+                      "work"
+                      "holidays"
                       /* Other accounts in arbitrary order */
                     ]
                   '';
@@ -608,6 +661,41 @@ in
         )
       );
     };
+    accounts.calendar.accounts = mkOption {
+      type =
+        with types;
+        attrsOf (submodule {
+          options.thunderbird = {
+            enable = lib.mkEnableOption "the Thunderbird mail client for this account";
+
+            profiles = mkOption {
+              type = with types; listOf str;
+              default = [ ];
+              example = literalExpression ''
+                [ "profile1" "profile2" ]
+              '';
+              description = ''
+                List of Thunderbird profiles for which this account should be
+                enabled. If this list is empty (the default), this account will
+                be enabled for all declared profiles.
+              '';
+            };
+
+            readOnly = mkOption {
+              type = bool;
+              default = false;
+              description = "Mark calendar as read only";
+            };
+
+            color = mkOption {
+              type = str;
+              default = "";
+              example = "#dc8add";
+              description = "Display color of the calendar in hex";
+            };
+          };
+        });
+    };
   };
 
   config = mkIf cfg.enable {
@@ -635,7 +723,9 @@ in
       (
         let
           profiles = lib.catAttrs "name" profilesWithId;
-          selectedProfiles = lib.concatMap (a: a.thunderbird.profiles) enabledAccounts;
+          selectedProfiles = lib.concatMap (a: a.thunderbird.profiles) (
+            enabledEmailAccounts ++ enabledCalendarAccounts
+          );
         in
         {
           assertion = (lib.intersectLists profiles selectedProfiles) == selectedProfiles;
@@ -645,6 +735,21 @@ in
             + (concatStringsSep "," profiles)
             + ", but the used profiles are "
             + (concatStringsSep "," selectedProfiles);
+        }
+      )
+
+      (
+        let
+          foundCalendars = filter (
+            a: a.remote != null && a.remote.type == "google_calendar"
+          ) enabledCalendarAccounts;
+        in
+        {
+          assertion = length foundCalendars == 0;
+          message =
+            '''accounts.calendar.accounts.<name>.remote.type = "google_calendar";' is not supported by Thunderbird, ''
+            + "but declared for these calendars: "
+            + (concatStringsSep ", " (lib.catAttrs "name" foundCalendars));
         }
       )
     ];
@@ -677,14 +782,14 @@ in
 
           "${thunderbirdProfilesPath}/${name}/user.js" =
             let
-              emailAccounts = getEmailAccountsForProfile name enabledAccountsWithId;
+              emailAccounts = getAccountsForProfile name enabledEmailAccountsWithId;
+              calendarAccounts = getAccountsForProfile name enabledCalendarAccountsWithId;
 
               smtp = filter (a: a.smtp != null) emailAccounts;
 
-              feedAccounts = map (f: f // { id = builtins.hashString "sha256" f.name; }) (
-                attrValues profile.feedAccounts
-              );
+              feedAccounts = addId (attrValues profile.feedAccounts);
 
+              # NOTE: `calendarAccounts` not added here as calendars are not part of the 'Mail' view
               accounts = emailAccounts ++ feedAccounts;
 
               orderedAccounts =
@@ -707,6 +812,23 @@ in
                 lib.optionals (accounts != [ ]) (
                   accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
                 );
+
+              orderedCalendarAccounts =
+                let
+                  accountNameToId = builtins.listToAttrs (
+                    map (a: {
+                      name = a.name;
+                      value = "calendar_${a.id}";
+                    }) calendarAccounts
+                  );
+
+                  accountsOrderIds = map (a: accountNameToId."${a}" or a) profile.calendarAccountsOrder;
+
+                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (name: value: value) accountNameToId);
+                in
+                lib.optionals (calendarAccounts != [ ]) (
+                  accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
+                );
             in
             {
               text = mkUserJs (builtins.foldl' (a: b: a // b) { } (
@@ -715,6 +837,10 @@ in
 
                   (optionalAttrs (length orderedAccounts != 0) {
                     "mail.accountmanager.accounts" = concatStringsSep "," orderedAccounts;
+                  })
+
+                  (optionalAttrs (length orderedCalendarAccounts != 0) {
+                    "calendar.list.sortOrder" = concatStringsSep " " orderedCalendarAccounts;
                   })
 
                   (optionalAttrs (length smtp != 0) {
@@ -726,6 +852,7 @@ in
                   profile.settings
                 ]
                 ++ (map (a: toThunderbirdAccount a profile) emailAccounts)
+                ++ (map (c: toThunderbirdCalendar c profile) calendarAccounts)
                 ++ (map (f: toThunderbirdFeed f profile) feedAccounts)
               )) profile.extraConfig;
             };
@@ -755,7 +882,7 @@ in
         let
           emailAccountsWithFilters = (
             filter (a: a.thunderbird.messageFilters != [ ]) (
-              getEmailAccountsForProfile name enabledAccountsWithId
+              getAccountsForProfile name enabledEmailAccountsWithId
             )
           );
         in
