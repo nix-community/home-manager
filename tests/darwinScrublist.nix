@@ -77,6 +77,7 @@ let
     "khard"
     "kitty"
     "kubecolor"
+    "kubeswitch"
     "lapce"
     "lazydocker"
     "lazygit"
