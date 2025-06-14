@@ -27,6 +27,9 @@ in
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableXonshIntegration = lib.mkEnableOption "Xonsh integration" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -39,6 +42,10 @@ in
 
       zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
         source <(${bin} _carapace zsh)
+      '';
+
+      xonsh.xonshrc = lib.mkIf cfg.enableXonshIntegration ''
+        execx($(${cfg.package}/bin/atuin init xonsh))
       '';
 
       fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
