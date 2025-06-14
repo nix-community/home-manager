@@ -84,7 +84,7 @@ in
         Configuration written to
         {file}`$XDG_CONFIG_HOME/atuin/config.toml`.
 
-        See <https://atuin.sh/docs/config/> for the full list
+        See <https://docs.atuin.sh/configuration/config/> for the full list
         of options.
       '';
     };
@@ -102,7 +102,7 @@ in
         {file}`$XDG_CONFIG_HOME/atuin/themes/theme-name.toml`
         where the name of each attribute is the theme-name
 
-        See <https://atuin.sh/guide/theming/> for the full list
+        See <https://docs.atuin.sh/guide/theming/> for the full list
         of options.
       '';
       default = { };
