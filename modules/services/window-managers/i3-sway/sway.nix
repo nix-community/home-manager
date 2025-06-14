@@ -393,7 +393,12 @@ let
 
   variables = concatStringsSep " " cfg.systemd.variables;
   extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
-  systemdActivation = ''exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+  systemdActivation =
+    {
+      broker = ''exec "systemctl --user import-environment ${variables}; ${extraCommands}"'';
+      dbus = ''exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+    }
+    .${cfg.systemd.dbusImplementation};
 
   configFile = pkgs.writeTextFile {
     name = "sway.conf";
@@ -553,6 +558,18 @@ in
         example = [ "--all" ];
         description = ''
           Environment variables imported into the systemd and D-Bus user environment.
+        '';
+      };
+
+      dbusImplementation = mkOption {
+        type = types.enum [
+          "dbus"
+          "broker"
+        ];
+        default = "dbus";
+        example = "broker";
+        description = ''
+          The implementation to use for the D-Bus activation.
         '';
       };
 
