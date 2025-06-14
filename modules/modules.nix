@@ -300,6 +300,7 @@ let
       ./programs/texlive.nix
       ./programs/thefuck.nix
       ./programs/thunderbird.nix
+      ./programs/timewarrior.nix
       ./programs/timidity.nix
       ./programs/tint2.nix
       ./programs/tiny.nix
