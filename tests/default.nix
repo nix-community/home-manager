@@ -235,6 +235,7 @@ import nmtSrc {
       ./modules/programs/khard
       ./modules/programs/kitty
       ./modules/programs/kubecolor
+      ./modules/programs/kubeswitch
       ./modules/programs/lapce
       ./modules/programs/lazydocker
       ./modules/programs/lazysql

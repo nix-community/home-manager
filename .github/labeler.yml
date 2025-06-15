@@ -207,6 +207,7 @@
           - modules/programs/java.nix
           - modules/programs/jetbrains-remote.nix
           - modules/programs/kubecolor.nix
+          - modules/programs/kubeswitch.nix
           - modules/programs/lazydocker.nix
           - modules/programs/matplotlib.nix
           - modules/programs/mercurial.nix
