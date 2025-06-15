@@ -216,6 +216,36 @@ in
       '';
     };
 
+    submaps = lib.mkOption {
+      description = "Attribute set of Hyprland submaps";
+      default = { };
+      type = lib.types.attrsOf (
+        lib.types.submodule (
+          { name, config, ... }:
+          {
+            options = {
+              settings = lib.mkOption {
+                type = (with lib.types; attrsOf (listOf str)) // {
+                  description = "Hyprland binds";
+                };
+                default = { };
+                description = ''
+                  Hyprland binds to be put in the submap
+                '';
+                example = lib.literalExpression ''
+                  {
+                    bind = [
+                      ", q, exec $terminal"
+                    ];
+                  }
+                '';
+              };
+            };
+          }
+        )
+      );
+    };
+
     extraConfig = lib.mkOption {
       type = lib.types.lines;
       default = "";
@@ -264,6 +294,10 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "wayland.windowManager.hyprland" pkgs lib.platforms.linux)
+      {
+        assertion = !builtins.hasAttr "reset" cfg.submaps;
+        message = "Submaps can't be named 'reset'. The name 'reset' is reserved in order to have a way to switch to the default submap; as if 'reset' was its name.";
+      }
     ];
 
     warnings =
@@ -271,8 +305,21 @@ in
         inconsistent =
           (cfg.systemd.enable || cfg.plugins != [ ]) && cfg.extraConfig == "" && cfg.settings == { };
         warning = "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake.";
+
+        filterNonBinds =
+          attrs:
+          builtins.filter (n: builtins.match ''bind[[:lower:]]*'' n == null) (builtins.attrNames attrs);
+
+        # attrset of { <submap name> = <list of non bind* keys>; } for all submaps
+        submapWarningsAttrset = builtins.mapAttrs (
+          name: submap: filterNonBinds submap.settings
+        ) cfg.submaps;
+
+        submapWarnings = lib.mapAttrsToList (submapName: nonBinds: ''
+          wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${builtins.toString nonBinds}], which probably will have no effect in a submap
+        '') (lib.filterAttrs (n: v: v != [ ]) submapWarningsAttrset);
       in
-      lib.optional inconsistent warning;
+      submapWarnings ++ lib.optional inconsistent warning;
 
     home.packages = lib.mkIf (cfg.package != null) (
       [ cfg.finalPackage ] ++ lib.optional cfg.xwayland.enable pkgs.xwayland
@@ -296,6 +343,17 @@ in
             };
             inherit (cfg) importantPrefixes;
           };
+
+        mkSubMap = name: attrs: ''
+          submap = ${name}
+          ${lib.hm.generators.toHyprconf {
+            attrs = attrs.settings;
+            indentLevel = 1;
+          }}
+          submap = reset
+        '';
+
+        submapsToHyprConf = lib.concatMapAttrsStringSep "\n" mkSubMap;
       in
       lib.mkIf shouldGenerate {
         text =
@@ -307,6 +365,7 @@ in
               inherit (cfg) importantPrefixes;
             }
           )
+          + lib.optionalString (cfg.submaps != { }) (submapsToHyprConf cfg.submaps)
           + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
         onChange = lib.mkIf (cfg.package != null) ''
