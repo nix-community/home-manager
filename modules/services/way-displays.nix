@@ -1,4 +1,5 @@
 {
+  options,
   config,
   lib,
   pkgs,
@@ -21,7 +22,10 @@ let
   yaml = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = [ maintainers.jolars ];
+  meta.maintainers = [
+    maintainers.jolars
+    maintainers.mightyiam
+  ];
 
   options.services.way-displays = {
     enable = mkEnableOption "way-displays";
@@ -29,7 +33,7 @@ in
     package = lib.mkPackageOption pkgs "way-displays" { };
 
     settings = mkOption {
-      type = yaml.type;
+      type = types.nullOr yaml.type;
       default = { };
       example = literalExpression ''
         {
@@ -61,6 +65,9 @@ in
         {file}`$XDG_CONFIG_HOME/way-displays/cfg.yml`. See
         <https://github.com/alex-courtis/way-displays/wiki/Configuration> for a
         description of available options.
+
+        When `null` a configuration file is not generated,
+        which allows way-displays to write its own configuration.
       '';
     };
 
@@ -79,14 +86,20 @@ in
       (lib.hm.assertions.assertPlatform "services.way-displays" pkgs lib.platforms.linux)
     ];
 
-    xdg.configFile."way-displays/cfg.yaml".source =
-      yaml.generate "way-displays-config.yaml"
-        (mergeSets [
-          {
-            CALLBACK_CMD = "${pkgs.libnotify}/bin/notify-send \"way-displays \${CALLBACK_LEVEL}\" \"\${CALLBACK_MSG}\"";
-          }
-          cfg.settings
-        ]);
+    home.packages = [ cfg.package ];
+
+    wayland.windowManager = lib.mapAttrs (name: _: {
+      systemd.variables = [ "XDG_VTNR" ];
+    }) options.wayland.windowManager;
+
+    xdg.configFile."way-displays/cfg.yaml" = mkIf (cfg.settings != null) {
+      source = yaml.generate "way-displays-config.yaml" (mergeSets [
+        {
+          CALLBACK_CMD = "${pkgs.libnotify}/bin/notify-send \"way-displays \${CALLBACK_LEVEL}\" \"\${CALLBACK_MSG}\"";
+        }
+        cfg.settings
+      ]);
+    };
 
     systemd.user.services.way-displays = {
       Unit = {
