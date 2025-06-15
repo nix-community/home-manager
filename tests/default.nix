@@ -174,6 +174,7 @@ import nmtSrc {
       ./modules/programs/aichat
       ./modules/programs/alacritty
       ./modules/programs/alot
+      ./modules/programs/anki
       ./modules/programs/antidote
       ./modules/programs/aria2
       ./modules/programs/atuin
