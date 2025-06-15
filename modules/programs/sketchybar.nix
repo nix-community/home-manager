@@ -247,6 +247,7 @@ in
           postBuild = ''
             wrapProgram $out/bin/sketchybar ${lib.escapeShellArgs makeWrapperArgs}
           '';
+          inherit (cfg.package) meta;
         }
       else
         cfg.package;
