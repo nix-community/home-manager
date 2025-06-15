@@ -1,0 +1,1 @@
+{ timewarrior = ./timewarrior.nix; }
