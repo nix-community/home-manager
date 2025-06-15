@@ -27,19 +27,27 @@ let
       let
         idAttr = " id=\"${escape item.menuId}\"";
         labelAttr = if item ? label then " label=\"${escape item.label}\"" else "";
+        iconAttr = if item ? icon then " icon=\"${escape item.icon}\"" else "";
         children = if item ? items then lib.concatMapStringsSep "\n" generateMenu item.items else "";
+        executeAttr = if item ? execute then " execute=\"${escape item.execute}\"" else "";
+        outputMenu =
+          if item ? execute || children == "" then
+            "<menu${idAttr}${labelAttr}${iconAttr}${executeAttr} />"
+          else
+            "<menu${idAttr}${labelAttr}${iconAttr}${executeAttr}>\n${indent 1 children}\n</menu>";
       in
-      "<menu${idAttr}${labelAttr}>\n${indent 1 children}\n</menu>"
+      outputMenu
 
     else
       let
         labelAttr = " label=\"${escape item.label}\"";
+        iconAttr = if item ? icon then " icon=\"${escape item.icon}\"" else "";
         action = item.action;
         nameAttr = " name=\"${escape action.name}\"";
         toAttr = if action ? to then " to=\"${escape action.to}\"" else "";
         commandAttr = if action ? command then " command=\"${escape action.command}\"" else "";
       in
-      "<item${labelAttr}>\n  <action${nameAttr}${toAttr}${commandAttr} />\n</item>";
+      "<item${labelAttr}${iconAttr}>\n  <action${nameAttr}${toAttr}${commandAttr} />\n</item>";
 
   # Get keys in a preferred order
   orderedKeys =
