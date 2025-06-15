@@ -44,7 +44,7 @@ in
 
     package = lib.mkPackageOption pkgs "aerospace" { nullable = true; };
 
-    userSettings = mkOption {
+    settings = mkOption {
       type = types.submodule {
         freeformType = tomlFormat.type;
         options = {
@@ -270,7 +270,7 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
       file.".config/aerospace/aerospace.toml".source = tomlFormat.generate "aerospace" (
-        filterNulls cfg.userSettings
+        filterNulls cfg.settings
       );
     };
   };
