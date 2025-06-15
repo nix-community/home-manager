@@ -688,6 +688,12 @@ in
 
       package = lib.mkPackageOption pkgs "kakoune-unwrapped" { nullable = true; };
 
+      finalPackage = mkOption {
+        type = types.nullOr types.package;
+        readOnly = true;
+        description = "Resulting customized kakoune package.";
+      };
+
       config = mkOption {
         type = types.nullOr configModule;
         default = { };
@@ -746,7 +752,9 @@ in
       The listed plugins will not be installed.
     '';
 
-    home.packages = lib.mkIf (cfg.package != null) [ kakouneWithPlugins ];
+    programs.kakoune.finalPackage = lib.mkIf (cfg.package != null) kakouneWithPlugins;
+
+    home.packages = lib.mkIf (cfg.finalPackage != null) [ cfg.finalPackage ];
     home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "kak"; };
     xdg.configFile = lib.mkMerge [
       { "kak/kakrc".source = configFile; }
