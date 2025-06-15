@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   services.espanso = {
     enable = true;
@@ -42,6 +43,9 @@
         ];
       };
     };
+    plugins = [
+      pkgs.espansoPlugins.dummy-package
+    ];
   };
 
   nmt.script = ''
