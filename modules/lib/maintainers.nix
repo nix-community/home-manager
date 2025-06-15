@@ -45,7 +45,7 @@
   };
   aguirre-matteo = {
     name = "aguirre-matteo";
-    email = "aguirre.matteo.nix@gmail.com";
+    email = "aguirre.matteo@proton.me";
     github = "aguirre-matteo";
     githubId = 158215792;
   };
