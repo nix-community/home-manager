@@ -88,6 +88,11 @@ attribute set of (submodule)</p>
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
 <tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+<tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qcal.nix" target="_top">
 &lt;home-manager/modules/programs/qcal.nix&gt;
 </a></code>
@@ -615,6 +620,114 @@ null or string</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/calendar.nix" target="_top">
 &lt;home-manager/modules/accounts/calendar.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.calendar.accounts._name_.thunderbird.enable"></a><a class="term" href="options.xhtml#opt-accounts.calendar.accounts._name_.thunderbird.enable"><code class="option">accounts.calendar.accounts.&lt;name&gt;.thunderbird.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable the Thunderbird mail client for this account.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.calendar.accounts._name_.thunderbird.color"></a><a class="term" href="options.xhtml#opt-accounts.calendar.accounts._name_.thunderbird.color"><code class="option">accounts.calendar.accounts.&lt;name&gt;.thunderbird.color</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Display color of the calendar in hex</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;#dc8add&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.calendar.accounts._name_.thunderbird.profiles"></a><a class="term" href="options.xhtml#opt-accounts.calendar.accounts._name_.thunderbird.profiles"><code class="option">accounts.calendar.accounts.&lt;name&gt;.thunderbird.profiles</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>List of Thunderbird profiles for which this account should be
+enabled. If this list is empty (the default), this account will
+be enabled for all declared profiles.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[ &quot;profile1&quot; &quot;profile2&quot; ]
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-accounts.calendar.accounts._name_.thunderbird.readOnly"></a><a class="term" href="options.xhtml#opt-accounts.calendar.accounts._name_.thunderbird.readOnly"><code class="option">accounts.calendar.accounts.&lt;name&gt;.thunderbird.readOnly</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Mark calendar as read only</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
 </a></code>
 </td></tr>
 </table>
@@ -65188,6 +65301,45 @@ list of string</p>
     &quot;private&quot;
     &quot;work&quot;
     &quot;rss&quot;
+    /* Other accounts in arbitrary order */
+  ]
+&#x27;&#x27;
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix" target="_top">
+&lt;home-manager/modules/programs/thunderbird.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.thunderbird.profiles._name_.calendarAccountsOrder"></a><a class="term" href="options.xhtml#opt-programs.thunderbird.profiles._name_.calendarAccountsOrder"><code class="option">programs.thunderbird.profiles.&lt;name&gt;.calendarAccountsOrder</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Custom ordering of calendar accounts. The accounts are specified
+by their name. For declarative accounts, it must be the name
+of their attribute in <code class="literal">config.accounts.calendar.accounts</code>.
+Enabled accounts that aren’t listed here appear in an arbitrary
+order after the ordered accounts.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  [
+    &quot;my-awesome-account&quot;
+    &quot;private&quot;
+    &quot;work&quot;
+    &quot;holidays&quot;
     /* Other accounts in arbitrary order */
   ]
 &#x27;&#x27;
