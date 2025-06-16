@@ -45,9 +45,16 @@ let
         ${allItemsToHTML (indentLevel + 1) directory.bookmarks}
         ${indent indentLevel}</DL><p>'';
 
+      separatorToHTML = indentLevel: "${indent indentLevel}<HR>";
+
       itemToHTMLOrRecurse =
         indentLevel: item:
-        if item ? "url" then bookmarkToHTML indentLevel item else directoryToHTML indentLevel item;
+        if item ? "url" then
+          bookmarkToHTML indentLevel item
+        else if item == "separator" then
+          separatorToHTML indentLevel
+        else
+          directoryToHTML indentLevel item;
 
       allItemsToHTML =
         indentLevel: bookmarks: lib.concatStringsSep "\n" (map (itemToHTMLOrRecurse indentLevel) bookmarks);
@@ -106,6 +113,7 @@ in
             name = "kernel.org";
             url = "https://www.kernel.org";
           }
+          "separator"
           {
             name = "Nix sites";
             toolbar = true;
