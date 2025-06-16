@@ -40,11 +40,11 @@ let
   accounts = import ./accounts.nix {
     inherit
       config
-      pkgs
       lib
       confSection
       confSections
       ;
+    inherit (pkgs) writeText writeShellScript;
   };
 
   aerc-accounts = attrsets.filterAttrs (_: v: v.aerc.enable) config.accounts.email.accounts;
@@ -211,20 +211,38 @@ in
     in
     mkIf cfg.enable {
       warnings =
-        if genAccountsConf && (cfg.extraConfig.general.unsafe-accounts-conf or false) == false then
-          [
-            ''
-              aerc: `programs.aerc.enable` is set, but `...extraConfig.general.unsafe-accounts-conf` is set to false or unset.
-              This will prevent aerc from starting; see `unsafe-accounts-conf` in the man page aerc-config(5):
-              > By default, the file permissions of accounts.conf must be restrictive and only allow reading by the file owner (0600).
-              > Set this option to true to ignore this permission check. Use this with care as it may expose your credentials.
-              These permissions are not possible with home-manager, since the generated file is in the nix-store (permissions 0444).
-              Therefore, please set `programs.aerc.extraConfig.general.unsafe-accounts-conf = true`.
-              This option is safe; if `passwordCommand` is properly set, no credentials will be written to the nix store.
-            ''
-          ]
-        else
-          [ ];
+        let
+          unsafeAccountsConf =
+            if genAccountsConf && (cfg.extraConfig.general.unsafe-accounts-conf or false) == false then
+              [
+                ''
+                  aerc: `programs.aerc.enable` is set, but `...extraConfig.general.unsafe-accounts-conf` is set to false or unset.
+                  This will prevent aerc from starting; see `unsafe-accounts-conf` in the man page aerc-config(5):
+                  > By default, the file permissions of accounts.conf must be restrictive and only allow reading by the file owner (0600).
+                  > Set this option to true to ignore this permission check. Use this with care as it may expose your credentials.
+                  These permissions are not possible with home-manager, since the generated file is in the nix-store (permissions 0444).
+                  Therefore, please set `programs.aerc.extraConfig.general.unsafe-accounts-conf = true`.
+                  This option is safe; if `passwordCommand` is properly set, no credentials will be written to the nix store.
+                ''
+              ]
+            else
+              [ ];
+
+          attachSignatureAccounts = builtins.attrNames (
+            lib.attrsets.filterAttrs (_: v: v.signature.showSignature == "attach") aerc-accounts
+          );
+
+          attachSignature =
+            if builtins.length attachSignatureAccounts > 0 then
+              [
+                ''
+                  aerc: `showSignature` is set to "attach" for ${attachSignatureAccounts}, which is not supported.
+                ''
+              ]
+            else
+              [ ];
+        in
+        unsafeAccountsConf ++ attachSignature;
 
       assertions = [
         {

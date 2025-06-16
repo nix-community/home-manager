@@ -10,13 +10,18 @@
             "home-files/.config/aerc";
       in
       ''
-        assertFileContent   ${dir}/accounts.conf     ${./extraAccounts.expected}
-        assertFileContent   ${dir}/binds.conf        ${./extraBinds.expected}
-        assertFileContent   ${dir}/aerc.conf         ${./extraConfig.expected}
-        assertFileContent   ${dir}/templates/bar     ${./templates.expected}
-        assertFileContent   ${dir}/templates/foo     ${./templates.expected}
-        assertFileContent   ${dir}/stylesets/default ${./stylesets.expected}
-        assertFileContent   ${dir}/stylesets/asLines ${./stylesets.expected}
+        assertFileContent   $(normalizeStorePaths ${dir}/accounts.conf)     ${./extraAccounts.expected}
+        assertFileContent   $(normalizeStorePaths ${dir}/binds.conf)        ${./extraBinds.expected}
+        assertFileContent   $(normalizeStorePaths ${dir}/aerc.conf)         ${./extraConfig.expected}
+        assertFileContent   $(normalizeStorePaths ${dir}/templates/bar)     ${./templates.expected}
+        assertFileContent   $(normalizeStorePaths ${dir}/templates/foo)     ${./templates.expected}
+        assertFileContent   $(normalizeStorePaths ${dir}/stylesets/default) ${./stylesets.expected}
+        assertFileContent   $(normalizeStorePaths ${dir}/stylesets/asLines) ${./stylesets.expected}
+        assertFileContent   $(normalizeStorePaths ${dir}/stylesets/asLines) ${./stylesets.expected}
+
+        assertFileContent   $(normalizeStorePaths /nix/store/*-aerc-signature.sh)  ${./signature-command.expected}
+        assertFileContent   $(normalizeStorePaths /nix/store/*-aerc-signature.txt) ${./signature-file.expected}
+        assertFileContent   $(normalizeStorePaths /nix/store/*-user-signature.sh)  ${./signature-command-script.expected}
       '';
 
     programs.aerc = {
@@ -289,6 +294,26 @@
               source = "smtp+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337";
               postpone = "dRaFts";
             };
+          };
+        };
+        q_signature_text = basics // {
+          signature = {
+            showSignature = "append";
+            delimiter = "~~~";
+            text = ''
+              some signature
+              goes here
+            '';
+          };
+        };
+        r_signature_command = basics // {
+          signature = {
+            showSignature = "append";
+            delimiter = "~~~";
+            command = pkgs.writeShellScript "user-signature.sh" ''
+              echo "some signature"
+              echo "goes here"
+            '';
           };
         };
       };
