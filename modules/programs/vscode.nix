@@ -438,7 +438,16 @@ in
             lib.concatMap toPaths (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
             ++
               lib.optional
-                ((lib.versionAtLeast vscodeVersion "1.74.0" || vscodePname == "cursor") && defaultProfile != { })
+                (
+                  (
+                    lib.versionAtLeast vscodeVersion "1.74.0"
+                    || builtins.elem vscodePname [
+                      "cursor"
+                      "windsurf"
+                    ]
+                  )
+                  && defaultProfile != { }
+                )
                 {
                   # Whenever our immutable extensions.json changes, force VSCode to regenerate
                   # extensions.json with both mutable and immutable extensions.
@@ -461,7 +470,14 @@ in
                   paths =
                     (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
                     ++ lib.optional (
-                      (lib.versionAtLeast vscodeVersion "1.74.0" || vscodePname == "cursor") && defaultProfile != { }
+                      (
+                        lib.versionAtLeast vscodeVersion "1.74.0"
+                        || builtins.elem vscodePname [
+                          "cursor"
+                          "windsurf"
+                        ]
+                      )
+                      && defaultProfile != { }
                     ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));
                 };
               in
