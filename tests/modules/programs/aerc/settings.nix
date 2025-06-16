@@ -72,6 +72,18 @@
         "ui:account=Test" = {
           sidebar-width = 1337;
         };
+
+        # https://github.com/nix-community/home-manager/issues/6059
+        filters = ''
+          text/plain=colorize
+          text/calendar=calendar
+          message/delivery-status=colorize
+          message/rfc822=colorize
+          text/html=pandoc -f html -t plain | colorize
+          text/html=html | colorize
+          text/*=bat -fP --file-name="$AERC_FILENAME"
+          .headers=colorize
+        '';
       };
 
       stylesets = {
