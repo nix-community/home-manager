@@ -1,11 +1,28 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) concatStringsSep mapAttrsToList mkIf mkOption optional types;
+  inherit (lib)
+    concatStringsSep
+    mapAttrsToList
+    mkIf
+    mkOption
+    optional
+    types
+    ;
 
   cfg = config.wayland.windowManager.swayfx;
 
   commonOptions = import ./lib/options.nix {
-    inherit config lib cfg pkgs;
+    inherit
+      config
+      lib
+      cfg
+      pkgs
+      ;
     moduleName = "swayfx";
     capitalModuleName = "SwayFX";
   };
@@ -13,9 +30,24 @@ let
   configModule = types.submodule {
     options = {
       inherit (commonOptions)
-        fonts window floating focus assigns workspaceLayout
-        workspaceAutoBackAndForth modifier keycodebindings colors bars startup
-        gaps menu terminal defaultWorkspace workspaceOutputAssign;
+        fonts
+        window
+        floating
+        focus
+        assigns
+        workspaceLayout
+        workspaceAutoBackAndForth
+        modifier
+        keycodebindings
+        colors
+        bars
+        startup
+        gaps
+        menu
+        terminal
+        defaultWorkspace
+        workspaceOutputAssign
+        ;
 
       # SwayFX specific options
       blur = mkOption {
@@ -30,8 +62,7 @@ let
             xray = mkOption {
               type = types.bool;
               default = false;
-              description =
-                "Whether to set floating windows to blur based on the background, not the windows below.";
+              description = "Whether to set floating windows to blur based on the background, not the windows below.";
             };
 
             passes = mkOption {
@@ -93,8 +124,7 @@ let
             onCsd = mkOption {
               type = types.bool;
               default = false;
-              description =
-                "Whether to enable shadows on client-side decorations.";
+              description = "Whether to enable shadows on client-side decorations.";
             };
 
             blurRadius = mkOption {
@@ -131,8 +161,7 @@ let
             inactiveColor = mkOption {
               type = types.str;
               default = "#0000007F";
-              description =
-                "Shadow color for inactive windows (hex with alpha).";
+              description = "Shadow color for inactive windows (hex with alpha).";
             };
           };
         };
@@ -141,51 +170,53 @@ let
       };
 
       layerEffects = mkOption {
-        type = types.attrsOf (types.submodule {
-          options = {
-            blur = mkOption {
-              type = types.submodule {
-                options = {
-                  enable = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Enable blur for this layer.";
-                  };
-                  xray = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Enable blur xray for this layer.";
-                  };
-                  ignoreTransparent = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Ignore transparent areas when blurring.";
+        type = types.attrsOf (
+          types.submodule {
+            options = {
+              blur = mkOption {
+                type = types.submodule {
+                  options = {
+                    enable = mkOption {
+                      type = types.bool;
+                      default = false;
+                      description = "Enable blur for this layer.";
+                    };
+                    xray = mkOption {
+                      type = types.bool;
+                      default = false;
+                      description = "Enable blur xray for this layer.";
+                    };
+                    ignoreTransparent = mkOption {
+                      type = types.bool;
+                      default = false;
+                      description = "Ignore transparent areas when blurring.";
+                    };
                   };
                 };
+                default = { };
+                description = "Blur effects for this layer.";
               };
-              default = { };
-              description = "Blur effects for this layer.";
-            };
 
-            shadows = mkOption {
-              type = types.bool;
-              default = false;
-              description = "Enable shadows for this layer.";
-            };
+              shadows = mkOption {
+                type = types.bool;
+                default = false;
+                description = "Enable shadows for this layer.";
+              };
 
-            cornerRadius = mkOption {
-              type = types.ints.unsigned;
-              default = 0;
-              description = "Corner radius for this layer.";
-            };
+              cornerRadius = mkOption {
+                type = types.ints.unsigned;
+                default = 0;
+                description = "Corner radius for this layer.";
+              };
 
-            reset = mkOption {
-              type = types.bool;
-              default = false;
-              description = "Reset all effects for this layer.";
+              reset = mkOption {
+                type = types.bool;
+                default = false;
+                description = "Reset all effects for this layer.";
+              };
             };
-          };
-        });
+          }
+        );
         default = { };
         example = {
           "waybar" = {
@@ -216,14 +247,12 @@ let
                   unfocused = mkOption {
                     type = types.str;
                     default = "#000000FF";
-                    description =
-                      "Dim color for unfocused windows (hex with alpha).";
+                    description = "Dim color for unfocused windows (hex with alpha).";
                   };
                   urgent = mkOption {
                     type = types.str;
                     default = "#900000FF";
-                    description =
-                      "Dim color for urgent windows (hex with alpha).";
+                    description = "Dim color for urgent windows (hex with alpha).";
                   };
                 };
               };
@@ -239,8 +268,7 @@ let
       titlebarSeparator = mkOption {
         type = types.bool;
         default = true;
-        description =
-          "Whether to show separator border between titlebar and content.";
+        description = "Whether to show separator border between titlebar and content.";
       };
 
       scratchpadMinimize = mkOption {
@@ -323,26 +351,16 @@ let
           "${cfg.config.modifier}+9" = "workspace number 9";
           "${cfg.config.modifier}+0" = "workspace number 10";
 
-          "${cfg.config.modifier}+Shift+1" =
-            "move container to workspace number 1";
-          "${cfg.config.modifier}+Shift+2" =
-            "move container to workspace number 2";
-          "${cfg.config.modifier}+Shift+3" =
-            "move container to workspace number 3";
-          "${cfg.config.modifier}+Shift+4" =
-            "move container to workspace number 4";
-          "${cfg.config.modifier}+Shift+5" =
-            "move container to workspace number 5";
-          "${cfg.config.modifier}+Shift+6" =
-            "move container to workspace number 6";
-          "${cfg.config.modifier}+Shift+7" =
-            "move container to workspace number 7";
-          "${cfg.config.modifier}+Shift+8" =
-            "move container to workspace number 8";
-          "${cfg.config.modifier}+Shift+9" =
-            "move container to workspace number 9";
-          "${cfg.config.modifier}+Shift+0" =
-            "move container to workspace number 10";
+          "${cfg.config.modifier}+Shift+1" = "move container to workspace number 1";
+          "${cfg.config.modifier}+Shift+2" = "move container to workspace number 2";
+          "${cfg.config.modifier}+Shift+3" = "move container to workspace number 3";
+          "${cfg.config.modifier}+Shift+4" = "move container to workspace number 4";
+          "${cfg.config.modifier}+Shift+5" = "move container to workspace number 5";
+          "${cfg.config.modifier}+Shift+6" = "move container to workspace number 6";
+          "${cfg.config.modifier}+Shift+7" = "move container to workspace number 7";
+          "${cfg.config.modifier}+Shift+8" = "move container to workspace number 8";
+          "${cfg.config.modifier}+Shift+9" = "move container to workspace number 9";
+          "${cfg.config.modifier}+Shift+0" = "move container to workspace number 10";
 
           "${cfg.config.modifier}+Shift+minus" = "move scratchpad";
           "${cfg.config.modifier}+minus" = "scratchpad show";
@@ -414,7 +432,11 @@ let
       input = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        example = { "*" = { xkb_variant = "dvorak"; }; };
+        example = {
+          "*" = {
+            xkb_variant = "dvorak";
+          };
+        };
         description = ''
           An attribute set that defines input modules. See
           {manpage}`sway-input(5)`
@@ -425,7 +447,11 @@ let
       output = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        example = { "HDMI-A-2" = { bg = "~/path/to/background.png fill"; }; };
+        example = {
+          "HDMI-A-2" = {
+            bg = "~/path/to/background.png fill";
+          };
+        };
         description = ''
           An attribute set that defines output modules. See
           {manpage}`sway-output(5)`
@@ -436,7 +462,11 @@ let
       seat = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
-        example = { "*" = { hide_cursor = "when-typing enable"; }; };
+        example = {
+          "*" = {
+            hide_cursor = "when-typing enable";
+          };
+        };
         description = ''
           An attribute set that defines seat modules. See
           {manpage}`sway-input(5)`
@@ -472,24 +502,27 @@ let
   };
 
   wrapperOptions = types.submodule {
-    options = let
-      mkWrapperFeature = default: description:
-        mkOption {
-          type = types.bool;
-          inherit default;
-          example = !default;
-          description = "Whether to make use of the ${description}";
-        };
-    in {
-      base = mkWrapperFeature true ''
-        base wrapper to execute extra session commands and prepend a
-        dbus-run-session to the sway command.
-      '';
-      gtk = mkWrapperFeature false ''
-        wrapGAppsHook wrapper to execute sway with required environment
-        variables for GTK applications.
-      '';
-    };
+    options =
+      let
+        mkWrapperFeature =
+          default: description:
+          mkOption {
+            type = types.bool;
+            inherit default;
+            example = !default;
+            description = "Whether to make use of the ${description}";
+          };
+      in
+      {
+        base = mkWrapperFeature true ''
+          base wrapper to execute extra session commands and prepend a
+          dbus-run-session to the sway command.
+        '';
+        gtk = mkWrapperFeature false ''
+          wrapGAppsHook wrapper to execute sway with required environment
+          variables for GTK applications.
+        '';
+      };
   };
 
   bindswitchOption = types.submodule {
@@ -534,26 +567,48 @@ let
   };
 
   inherit (commonFunctions)
-    keybindingsStr keycodebindingsStr modeStr assignStr barStr gapsStr
-    floatingCriteriaStr windowCommandsStr colorSetStr windowBorderString
-    fontConfigStr keybindingDefaultWorkspace keybindingsRest workspaceOutputStr;
+    keybindingsStr
+    keycodebindingsStr
+    modeStr
+    assignStr
+    barStr
+    gapsStr
+    floatingCriteriaStr
+    windowCommandsStr
+    colorSetStr
+    windowBorderString
+    fontConfigStr
+    keybindingDefaultWorkspace
+    keybindingsRest
+    workspaceOutputStr
+    ;
 
-  startupEntryStr = { command, always, ... }: ''
-    ${if always then "exec_always" else "exec"} ${command}
-  '';
+  startupEntryStr =
+    { command, always, ... }:
+    ''
+      ${if always then "exec_always" else "exec"} ${command}
+    '';
 
-  bindswitchesStr = bindswitches:
-    concatStringsSep "\n" (mapAttrsToList (event:
-      { locked, reload, action, }:
-      let
-        args = (lib.optionalString locked "--locked ")
-          + (lib.optionalString reload "--reload ");
-      in "bindswitch ${args} ${event} ${action}") bindswitches);
+  bindswitchesStr =
+    bindswitches:
+    concatStringsSep "\n" (
+      mapAttrsToList (
+        event:
+        {
+          locked,
+          reload,
+          action,
+        }:
+        let
+          args = (lib.optionalString locked "--locked ") + (lib.optionalString reload "--reload ");
+        in
+        "bindswitch ${args} ${event} ${action}"
+      ) bindswitches
+    );
 
   moduleStr = moduleType: name: attrs: ''
     ${moduleType} "${name}" {
-    ${concatStringsSep "\n"
-    (lib.mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
+    ${concatStringsSep "\n" (lib.mapAttrsToList (name: value: "  ${name} ${value}") attrs)}
     }
   '';
   inputStr = moduleStr "input";
@@ -562,67 +617,76 @@ let
 
   variables = concatStringsSep " " cfg.systemd.variables;
   extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
-  systemdActivation = ''
-    exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+  systemdActivation = ''exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
 
-  swayfxConfigStr = if cfg.config != null then
-    with cfg.config;
-    concatStringsSep "\n" ([ ] ++ optional (blur.enable != false)
-      "blur ${if blur.enable then "enable" else "disable"}"
-      ++ optional (blur.xray != false)
-      "blur_xray ${if blur.xray then "enable" else "disable"}"
-      ++ optional (blur.passes != 1) "blur_passes ${toString blur.passes}"
-      ++ optional (blur.radius != 5) "blur_radius ${toString blur.radius}"
-      ++ optional (blur.noise != 0.0) "blur_noise ${toString blur.noise}"
-      ++ optional (blur.brightness != 1.0)
-      "blur_brightness ${toString blur.brightness}"
-      ++ optional (blur.contrast != 1.0)
-      "blur_contrast ${toString blur.contrast}"
-      ++ optional (blur.saturation != 1.0)
-      "blur_saturation ${toString blur.saturation}"
-      ++ optional (cornerRadius != 0) "corner_radius ${toString cornerRadius}"
-      ++ optional (shadows.enable != false)
-      "shadows ${if shadows.enable then "enable" else "disable"}"
-      ++ optional (shadows.onCsd != false)
-      "shadows_on_csd ${if shadows.onCsd then "enable" else "disable"}"
-      ++ optional (shadows.blurRadius != 20)
-      "shadow_blur_radius ${toString shadows.blurRadius}"
-      ++ optional (shadows.color != "#0000007F") "shadow_color ${shadows.color}"
-      ++ optional (shadows.offset.x != 0 || shadows.offset.y != 0)
-      "shadow_offset ${toString shadows.offset.x} ${toString shadows.offset.y}"
-      ++ optional (shadows.inactiveColor != "#0000007F")
-      "shadow_inactive_color ${shadows.inactiveColor}"
-      ++ lib.filter (s: s != "") (mapAttrsToList (namespace: effects:
-        let
-          effectsList = [ ] ++ optional effects.reset "reset"
-            ++ optional effects.blur.enable "blur enable"
-            ++ optional effects.blur.xray "blur_xray enable"
-            ++ optional effects.blur.ignoreTransparent
-            "blur_ignore_transparent enable"
-            ++ optional effects.shadows "shadows enable"
-            ++ optional (effects.cornerRadius != 0)
-            "corner_radius ${toString effects.cornerRadius}";
-        in if effectsList != [ ] then ''
-          layer_effects "${namespace}" {
-          ${
-            concatStringsSep ''
-              ;
-            '' (map (e: "  " + e) effectsList)
-          };
-          }'' else
-          "") layerEffects) ++ optional (dimInactive.default != 0.0)
-      "default_dim_inactive ${builtins.toJSON dimInactive.default}"
-      ++ optional (dimInactive.colors.unfocused != "#000000FF")
-      "dim_inactive_colors.unfocused ${dimInactive.colors.unfocused}"
-      ++ optional (dimInactive.colors.urgent != "#900000FF")
-      "dim_inactive_colors.urgent ${dimInactive.colors.urgent}"
-      ++ optional (titlebarSeparator != true)
-      "titlebar_separator ${if titlebarSeparator then "enable" else "disable"}"
-      ++ optional (scratchpadMinimize != false) "scratchpad_minimize ${
-        if scratchpadMinimize then "enable" else "disable"
-      }")
-  else
-    "";
+  swayfxConfigStr =
+    if cfg.config != null then
+      with cfg.config;
+      concatStringsSep "\n" (
+        [ ]
+        ++ optional (blur.enable != false) "blur ${if blur.enable then "enable" else "disable"}"
+        ++ optional (blur.xray != false) "blur_xray ${if blur.xray then "enable" else "disable"}"
+        ++ optional (blur.passes != 1) "blur_passes ${toString blur.passes}"
+        ++ optional (blur.radius != 5) "blur_radius ${toString blur.radius}"
+        ++ optional (blur.noise != 0.0) "blur_noise ${toString blur.noise}"
+        ++ optional (blur.brightness != 1.0) "blur_brightness ${toString blur.brightness}"
+        ++ optional (blur.contrast != 1.0) "blur_contrast ${toString blur.contrast}"
+        ++ optional (blur.saturation != 1.0) "blur_saturation ${toString blur.saturation}"
+        ++ optional (cornerRadius != 0) "corner_radius ${toString cornerRadius}"
+        ++ optional (shadows.enable != false) "shadows ${if shadows.enable then "enable" else "disable"}"
+        ++
+          optional (shadows.onCsd != false)
+            "shadows_on_csd ${if shadows.onCsd then "enable" else "disable"}"
+        ++ optional (shadows.blurRadius != 20) "shadow_blur_radius ${toString shadows.blurRadius}"
+        ++ optional (shadows.color != "#0000007F") "shadow_color ${shadows.color}"
+        ++ optional (
+          shadows.offset.x != 0 || shadows.offset.y != 0
+        ) "shadow_offset ${toString shadows.offset.x} ${toString shadows.offset.y}"
+        ++ optional (shadows.inactiveColor != "#0000007F") "shadow_inactive_color ${shadows.inactiveColor}"
+        ++ lib.filter (s: s != "") (
+          mapAttrsToList (
+            namespace: effects:
+            let
+              effectsList =
+                [ ]
+                ++ optional effects.reset "reset"
+                ++ optional effects.blur.enable "blur enable"
+                ++ optional effects.blur.xray "blur_xray enable"
+                ++ optional effects.blur.ignoreTransparent "blur_ignore_transparent enable"
+                ++ optional effects.shadows "shadows enable"
+                ++ optional (effects.cornerRadius != 0) "corner_radius ${toString effects.cornerRadius}";
+            in
+            if effectsList != [ ] then
+              ''
+                layer_effects "${namespace}" {
+                ${
+                  concatStringsSep ''
+                    ;
+                  '' (map (e: "  " + e) effectsList)
+                };
+                }''
+            else
+              ""
+          ) layerEffects
+        )
+        ++ optional (
+          dimInactive.default != 0.0
+        ) "default_dim_inactive ${builtins.toJSON dimInactive.default}"
+        ++ optional (
+          dimInactive.colors.unfocused != "#000000FF"
+        ) "dim_inactive_colors.unfocused ${dimInactive.colors.unfocused}"
+        ++ optional (
+          dimInactive.colors.urgent != "#900000FF"
+        ) "dim_inactive_colors.urgent ${dimInactive.colors.urgent}"
+        ++
+          optional (titlebarSeparator != true)
+            "titlebar_separator ${if titlebarSeparator then "enable" else "disable"}"
+        ++
+          optional (scratchpadMinimize != false)
+            "scratchpad_minimize ${if scratchpadMinimize then "enable" else "disable"}"
+      )
+    else
+      "";
 
   configFile = pkgs.writeTextFile {
     name = "swayfx.conf";
@@ -634,49 +698,48 @@ let
       ${pkgs.xvfb-run}/bin/xvfb-run ${cfg.package}/bin/swayfx --config "$target" --validate --unsupported-gpu
     '';
 
-    text = concatStringsSep "\n"
-      ((optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
-        ++ (if cfg.config != null then
+    text = concatStringsSep "\n" (
+      (optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
+      ++ (
+        if cfg.config != null then
           with cfg.config;
-          ([
-            (fontConfigStr fonts)
-            "floating_modifier ${floating.modifier}"
-            (windowBorderString window floating)
-            "hide_edge_borders ${window.hideEdgeBorders}"
-            "focus_wrapping ${focus.wrapping}"
-            "focus_follows_mouse ${focus.followMouse}"
-            "focus_on_window_activation ${focus.newWindow}"
-            "mouse_warping ${
-              if builtins.isString (focus.mouseWarping) then
-                focus.mouseWarping
-              else if focus.mouseWarping then
-                "output"
-              else
-                "none"
-            }"
-            "workspace_layout ${workspaceLayout}"
-            "workspace_auto_back_and_forth ${
-              lib.hm.booleans.yesNo workspaceAutoBackAndForth
-            }"
-            "client.focused ${colorSetStr colors.focused}"
-            "client.focused_inactive ${colorSetStr colors.focusedInactive}"
-            "client.unfocused ${colorSetStr colors.unfocused}"
-            "client.urgent ${colorSetStr colors.urgent}"
-            "client.placeholder ${colorSetStr colors.placeholder}"
-            "client.background ${colors.background}"
-            (keybindingsStr {
-              keybindings = keybindingDefaultWorkspace;
-              bindsymArgs =
-                lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-            })
-            (keybindingsStr {
-              keybindings = keybindingsRest;
-              bindsymArgs =
-                lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-            })
-            (keycodebindingsStr keycodebindings)
-          ] ++ optional (builtins.attrNames bindswitches != [ ])
-            (bindswitchesStr bindswitches) ++ mapAttrsToList inputStr input
+          (
+            [
+              (fontConfigStr fonts)
+              "floating_modifier ${floating.modifier}"
+              (windowBorderString window floating)
+              "hide_edge_borders ${window.hideEdgeBorders}"
+              "focus_wrapping ${focus.wrapping}"
+              "focus_follows_mouse ${focus.followMouse}"
+              "focus_on_window_activation ${focus.newWindow}"
+              "mouse_warping ${
+                if builtins.isString (focus.mouseWarping) then
+                  focus.mouseWarping
+                else if focus.mouseWarping then
+                  "output"
+                else
+                  "none"
+              }"
+              "workspace_layout ${workspaceLayout}"
+              "workspace_auto_back_and_forth ${lib.hm.booleans.yesNo workspaceAutoBackAndForth}"
+              "client.focused ${colorSetStr colors.focused}"
+              "client.focused_inactive ${colorSetStr colors.focusedInactive}"
+              "client.unfocused ${colorSetStr colors.unfocused}"
+              "client.urgent ${colorSetStr colors.urgent}"
+              "client.placeholder ${colorSetStr colors.placeholder}"
+              "client.background ${colors.background}"
+              (keybindingsStr {
+                keybindings = keybindingDefaultWorkspace;
+                bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+              })
+              (keybindingsStr {
+                keybindings = keybindingsRest;
+                bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+              })
+              (keycodebindingsStr keycodebindings)
+            ]
+            ++ optional (builtins.attrNames bindswitches != [ ]) (bindswitchesStr bindswitches)
+            ++ mapAttrsToList inputStr input
             ++ mapAttrsToList outputStr output # outputs
             ++ mapAttrsToList seatStr seat # seats
             ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
@@ -689,21 +752,43 @@ let
             ++ map workspaceOutputStr workspaceOutputAssign # custom mapping
           )
         else
-          [ ]) ++ (optional cfg.systemd.enable systemdActivation)
-        ++ (optional (!cfg.xwayland) "xwayland disable")
-        ++ (optional (swayfxConfigStr != "") swayfxConfigStr)
-        ++ [ cfg.extraConfig ]);
+          [ ]
+      )
+      ++ (optional cfg.systemd.enable systemdActivation)
+      ++ (optional (!cfg.xwayland) "xwayland disable")
+      ++ (optional (swayfxConfigStr != "") swayfxConfigStr)
+      ++ [ cfg.extraConfig ]
+    );
   };
-in {
-  meta.maintainers = with lib.maintainers;
-    [ Scrumplex alexarice sumnerevans oxalica ]
+in
+{
+  meta.maintainers =
+    with lib.maintainers;
+    [
+      Scrumplex
+      alexarice
+      sumnerevans
+      oxalica
+    ]
     ++ (with lib.hm.maintainers; [ jeebuscrossaint ]);
 
-  imports = let modulePath = [ "wayland" "windowManager" "swayfx" ];
-  in [
-    (lib.mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ])
-      (modulePath ++ [ "systemd" "enable" ]))
-  ];
+  imports =
+    let
+      modulePath = [
+        "wayland"
+        "windowManager"
+        "swayfx"
+      ];
+    in
+    [
+      (lib.mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ]) (
+        modulePath
+        ++ [
+          "systemd"
+          "enable"
+        ]
+      ))
+    ];
 
   options.wayland.windowManager.swayfx = {
     enable = lib.mkEnableOption "swayfx wayland compositor";
@@ -798,7 +883,9 @@ in {
     wrapperFeatures = mkOption {
       type = wrapperOptions;
       default = { };
-      example = { gtk = true; };
+      example = {
+        gtk = true;
+      };
       description = ''
         Attribute set of features to enable in the wrapper.
       '';
@@ -845,76 +932,74 @@ in {
     checkConfig = mkOption {
       type = types.bool;
       default = cfg.package != null;
-      defaultText =
-        lib.literalExpression "wayland.windowManager.swayfx.package != null";
+      defaultText = lib.literalExpression "wayland.windowManager.swayfx.package != null";
       description = "If enabled, validates the generated config file.";
     };
 
     extraConfig = mkOption {
       type = types.lines;
       default = "";
-      description =
-        "Extra configuration lines to add to ~/.config/sway/config.";
+      description = "Extra configuration lines to add to ~/.config/sway/config.";
     };
 
     extraConfigEarly = mkOption {
       type = types.lines;
       default = "";
-      description =
-        "Like extraConfig, except lines are added to ~/.config/sway/config before all other configuration.";
+      description = "Like extraConfig, except lines are added to ~/.config/sway/config before all other configuration.";
     };
 
   };
 
-  config = mkIf cfg.enable (lib.mkMerge [
-    (mkIf (cfg.config != null) {
-      warnings = (optional (lib.isList cfg.config.fonts)
-        "Specifying swayfx.config.fonts as a list is deprecated. Use the attrset version instead.")
-        ++ lib.flatten (map (b:
-          optional (lib.isList b.fonts)
-          "Specifying swayfx.config.bars[].fonts as a list is deprecated. Use the attrset version instead.")
-          cfg.config.bars) ++ [
-            (mkIf cfg.config.focus.forceWrapping
-              "swayfx.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      (mkIf (cfg.config != null) {
+        warnings =
+          (optional (lib.isList cfg.config.fonts) "Specifying swayfx.config.fonts as a list is deprecated. Use the attrset version instead.")
+          ++ lib.flatten (
+            map (
+              b:
+              optional (lib.isList b.fonts) "Specifying swayfx.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
+            ) cfg.config.bars
+          )
+          ++ [
+            (mkIf cfg.config.focus.forceWrapping "swayfx.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
           ];
-    })
+      })
 
-    {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "wayland.windowManager.swayfx" pkgs
-          lib.platforms.linux)
-        {
-          assertion = cfg.checkConfig -> cfg.package != null;
-          message =
-            "wayland.windowManager.swayfx.checkConfig requires non-null wayland.windowManager.swayfx.package";
-        }
-      ];
+      {
+        assertions = [
+          (lib.hm.assertions.assertPlatform "wayland.windowManager.swayfx" pkgs lib.platforms.linux)
+          {
+            assertion = cfg.checkConfig -> cfg.package != null;
+            message = "wayland.windowManager.swayfx.checkConfig requires non-null wayland.windowManager.swayfx.package";
+          }
+        ];
 
-      home.packages = optional (cfg.package != null) cfg.package
-        ++ optional cfg.xwayland pkgs.xwayland;
+        home.packages = optional (cfg.package != null) cfg.package ++ optional cfg.xwayland pkgs.xwayland;
 
-      xdg.configFile."sway/config" = {
-        source = configFile;
-        onChange = lib.optionalString (cfg.package != null) ''
-          swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x swayfx || true).sock"
-          if [ -S "$swaySocket" ]; then
-            ${cfg.package}/bin/swaymsg -s $swaySocket reload
-          fi
-        '';
-      };
-
-      systemd.user.targets.swayfx-session = mkIf cfg.systemd.enable {
-        Unit = {
-          Description = "swayfx compositor session";
-          Documentation = [ "man:systemd.special(7)" ];
-          BindsTo = [ "graphical-session.target" ];
-          Wants = [ "graphical-session-pre.target" ]
-            ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
-          After = [ "graphical-session-pre.target" ];
-          Before =
-            optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+        xdg.configFile."sway/config" = {
+          source = configFile;
+          onChange = lib.optionalString (cfg.package != null) ''
+            swaySocket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep --uid $UID -x swayfx || true).sock"
+            if [ -S "$swaySocket" ]; then
+              ${cfg.package}/bin/swaymsg -s $swaySocket reload
+            fi
+          '';
         };
-      };
-    }
-  ]);
+
+        systemd.user.targets.swayfx-session = mkIf cfg.systemd.enable {
+          Unit = {
+            Description = "swayfx compositor session";
+            Documentation = [ "man:systemd.special(7)" ];
+            BindsTo = [ "graphical-session.target" ];
+            Wants = [
+              "graphical-session-pre.target"
+            ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+            After = [ "graphical-session-pre.target" ];
+            Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+          };
+        };
+      }
+    ]
+  );
 }
