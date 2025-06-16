@@ -49,12 +49,6 @@
     github = "aguirre-matteo";
     githubId = 158215792;
   };
-  jeebuscrossaint = {
-    name = "Amarnath Patel";
-    email = "apatel6ty@protonmail.com";
-    github = "jeebuscrossaint";
-    githubId = 96545104;
-  };
   aheaume = {
     name = "aheaume";
     email = "aheaume@users.noreply.github.com";
@@ -334,6 +328,12 @@
     matrix = "@janik0:matrix.org";
     github = "Janik-Haag";
     githubId = 80165193;
+  };
+  jeebuscrossaint = {
+  name = "Amarnath Patel";
+  email = "apatel6ty@protonmail.com";
+  github = "jeebuscrossaint";
+  githubId = 96545104;
   };
   jess = {
     name = "Jessica";
