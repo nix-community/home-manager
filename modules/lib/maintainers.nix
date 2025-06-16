@@ -49,6 +49,12 @@
     github = "aguirre-matteo";
     githubId = 158215792;
   };
+  jeebuscrossaint = {
+    name = "Amarnath Patel";
+    email = "apatel6ty@protonmail.com";
+    github = "jeebuscrossaint";
+    githubId = 96545104;
+  };
   aheaume = {
     name = "aheaume";
     email = "aheaume@users.noreply.github.com";
