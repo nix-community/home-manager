@@ -330,10 +330,10 @@
     githubId = 80165193;
   };
   jeebuscrossaint = {
-  name = "Amarnath Patel";
-  email = "apatel6ty@protonmail.com";
-  github = "jeebuscrossaint";
-  githubId = 96545104;
+    name = "Amarnath Patel";
+    email = "apatel6ty@protonmail.com";
+    github = "jeebuscrossaint";
+    githubId = 96545104;
   };
   jess = {
     name = "Jessica";
