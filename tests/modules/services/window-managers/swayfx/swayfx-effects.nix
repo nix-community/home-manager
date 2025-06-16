@@ -7,7 +7,7 @@
     checkConfig = false;
     config = {
       menu = "${pkgs.dmenu}/bin/dmenu_run";
-      
+
       # Test SwayFX-specific options
       blur = {
         enable = true;
@@ -19,9 +19,9 @@
         contrast = 0.9;
         saturation = 1.1;
       };
-      
+
       cornerRadius = 10;
-      
+
       shadows = {
         enable = true;
         onCsd = true;
@@ -33,7 +33,7 @@
         };
         inactiveColor = "#00000040";
       };
-      
+
       layerEffects = {
         "waybar" = {
           blur = {
@@ -49,7 +49,7 @@
           cornerRadius = 8;
         };
       };
-      
+
       dimInactive = {
         default = 0.3;
         colors = {
@@ -57,7 +57,7 @@
           urgent = "#FF3333FF";
         };
       };
-      
+
       titlebarSeparator = false;
       scratchpadMinimize = true;
     };
