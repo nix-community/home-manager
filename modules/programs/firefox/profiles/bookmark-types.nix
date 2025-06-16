@@ -50,6 +50,8 @@ rec {
 
   bookmarkType = types.addCheck bookmarkSubmodule (x: x ? "url");
 
+  separatorType = types.enum [ "separator" ];
+
   directoryType =
     types.submodule (
       { name, ... }:
@@ -83,5 +85,9 @@ rec {
       description = "directory submodule";
     };
 
-  nodeType = types.either bookmarkType directoryType;
+  nodeType = types.oneOf [
+    bookmarkType
+    directoryType
+    separatorType
+  ];
 }

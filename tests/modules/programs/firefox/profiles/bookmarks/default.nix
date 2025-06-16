@@ -38,6 +38,7 @@ in
               name = "kernel.org";
               url = "https://www.kernel.org";
             }
+            "separator"
             {
               name = "Nix sites";
               bookmarks = [
