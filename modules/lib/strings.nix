@@ -39,7 +39,7 @@ rec {
     "hm_" + safeName;
 
   /*
-    Convert a string from camelCase to another case format using a separator
+    Convert a string from camelCase or PascalCase to another case format using a separator
     Type: string -> string -> string
   */
   toCaseWithSeparator =
@@ -48,17 +48,18 @@ rec {
       splitByWords = builtins.split "([A-Z])";
       processWord = s: if lib.isString s then s else separator + lib.toLower (lib.elemAt s 0);
       words = splitByWords string;
+      converted = lib.concatStrings (map processWord words);
     in
-    lib.concatStrings (map processWord words);
+    lib.removePrefix separator converted;
 
   /*
-    Convert a string from camelCase to snake_case
+    Convert a string from camelCase or PascalCase to snake_case
     Type: string -> string
   */
   toSnakeCase = toCaseWithSeparator "_";
 
   /*
-    Convert a string from camelCase to kebab-case
+    Convert a string from camelCase or PascalCase to kebab-case
     Type: string -> string
   */
   toKebabCase = toCaseWithSeparator "-";
