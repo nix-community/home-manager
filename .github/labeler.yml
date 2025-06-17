@@ -209,7 +209,6 @@
           - modules/programs/kubecolor.nix
           - modules/programs/lazydocker.nix
           - modules/programs/matplotlib.nix
-          - modules/programs/meli.nix
           - modules/programs/mercurial.nix
           - modules/programs/mergiraf.nix
           - modules/programs/mise.nix
@@ -303,6 +302,7 @@
           - modules/programs/getmail*
           - modules/programs/himalaya.nix
           - modules/programs/lieer.nix
+          - modules/programs/meli.nix
           - modules/programs/msmtp*
           - modules/programs/mu.nix
           - modules/programs/mujmap.nix
