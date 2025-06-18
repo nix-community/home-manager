@@ -234,8 +234,15 @@ in
                 '';
                 example = lib.literalExpression ''
                   {
+                    binde = [
+                     ", right, resizeactive, 10 0"
+                     ", left, resizeactive, -10 0"
+                     ", up, resizeactive, 0 -10"
+                     ", down, resizeactive, 0 10"
+                    ];
+
                     bind = [
-                      ", q, exec $terminal"
+                      ", escape, submap, reset"
                     ];
                   }
                 '';
@@ -244,6 +251,29 @@ in
           }
         )
       );
+      example = lib.literalExpression ''
+        {
+          # submap to change window focus with vim keys
+          move_focus = {
+            settings = {
+              bind = [
+                ", h, movefocus, l"
+                ", j, movefocus, d"
+                ", k, movefocus, u"
+                ", l, movefocus, r"
+
+                ", escape, submap, reset"
+              ];
+            };
+          };
+
+          other_submap = {
+            settings = {
+              # ...
+            };
+          };
+        }
+      '';
     };
 
     extraConfig = lib.mkOption {
