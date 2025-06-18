@@ -13,16 +13,16 @@
 
     nmt.script = ''
       assertFileExists home-path/bin/oco
-      assertFileContent home-path/activate \
-        --substring "export OCO_API_KEY=sk-nohook"
-      assertFileContent home-path/activate \
-        --substring "export OCO_LANGUAGE=de"
-      assertFileContent home-path/activate \
-        --substring "export OCO_MODEL=claude-3"
-      assertFileContent home-path/activate \
-        --substring "export OCO_PROMPT_MODULE=conventional-commit"
-      assertFileNotContent home-path/activate \
-        --substring "oco hook set"
+      assertFileContains home-path/activate \
+        "export OCO_API_KEY=sk-nohook"
+      assertFileContains home-path/activate \
+        "export OCO_LANGUAGE=de"
+      assertFileContains home-path/activate \
+        "export OCO_MODEL=claude-3"
+      assertFileContains home-path/activate \
+        "export OCO_PROMPT_MODULE=conventional-commit"
+      assertFileNotContains home-path/activate \
+        "oco hook set"
     '';
   };
 }
