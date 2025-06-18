@@ -217,7 +217,11 @@ in
     };
 
     submaps = lib.mkOption {
-      description = "Attribute set of Hyprland submaps";
+      description = ''
+        Attribute set of Hyprland submaps.
+
+        See <https://wiki.hypr.land/Configuring/Binds#submaps> to learn about submaps
+      '';
       default = { };
       type = lib.types.attrsOf (
         lib.types.submodule (
