@@ -32,7 +32,7 @@ in
 
     (lib.mkRemovedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "xwayland" "hidpi" ]
-      "HiDPI patches are deprecated. Refer to https://wiki.hyprland.org/Configuring/XWayland"
+      "HiDPI patches are deprecated. Refer to https://wiki.hypr.land/Configuring/XWayland"
     )
 
     (lib.mkRemovedOptionModule # \
@@ -189,7 +189,7 @@ in
       description = ''
         Hyprland configuration written in Nix. Entries with the same key
         should be written as lists. Variables' and colors' names should be
-        quoted. See <https://wiki.hyprland.org> for more examples.
+        quoted. See <https://wiki.hypr.land> for more examples.
 
         ::: {.note}
         Use the [](#opt-wayland.windowManager.hyprland.plugins) option to

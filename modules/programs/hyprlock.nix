@@ -93,7 +93,7 @@ in
       description = ''
         Hyprlock configuration written in Nix. Entries with the same key should
         be written as lists. Variables' and colors' names should be quoted. See
-        <https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/> for more examples.
+        <https://wiki.hypr.land/Hypr-Ecosystem/hyprlock/> for more examples.
       '';
     };
 
