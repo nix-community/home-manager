@@ -94,7 +94,7 @@ in
 
         assertFileContent \
           $bookmarksFile \
-          ${./expected-bookmarks.html}
+          ${./expected-bookmarks-list.html}
       '';
     }
   );
