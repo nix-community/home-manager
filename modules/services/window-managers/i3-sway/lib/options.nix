@@ -179,8 +179,9 @@ let
               # If the user uses the "system" Sway (i.e. cfg.package == null) then the bar has
               # to come from a different package
               pkg = if isSway && isNull cfg.package then pkgs.sway else cfg.package;
+              barName = if moduleName == "swayfx" then "swaybar" else "${moduleName}bar";
             in
-            "${pkg}/bin/${moduleName}bar";
+            "${pkg}/bin/${barName}";
           defaultText = "i3bar";
           description = "Command that will be used to start a bar.";
           example = if isI3 then "\${pkgs.i3}/bin/i3bar -t" else "\${pkgs.waybar}/bin/waybar";
@@ -580,6 +581,8 @@ in
               # the sway module's logic was inverted and incorrect,
               # so preserve it for backwards compatibility purposes
               sway = if cfg.config.focus.forceWrapping then "yes" else "no";
+              # add swayfx support
+              swayfx = if cfg.config.focus.forceWrapping then "yes" else "no";
             }
             .${moduleName};
           description = ''
