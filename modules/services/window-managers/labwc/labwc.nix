@@ -101,6 +101,11 @@ in
       example = lib.literalExpression ''
         [
           {
+            label = "pipemenu";
+            menuId = "menu";
+            execute = "/home/user/nix/scripts/pipe.sh";
+          }
+          {
             menuId = "client-menu";
             label = "Client Menu";
             icon = "";
@@ -116,12 +121,6 @@ in
                 label = "Fullscreen";
                 action = {
                   name = "ToggleFullscreen";
-                };
-              }
-              {
-                label = "Always on Top";
-                action = {
-                  name = "ToggleAlwaysOnTop";
                 };
               }
               {
@@ -237,9 +236,13 @@ in
       [ cfg.package ] ++ lib.optional cfg.xwayland.enable pkgs.xwayland
     );
 
-    xdg.configFile."labwc/rc.xml".text = function.generateXML "labwc_config" cfg.rc cfg.extraConfig;
+    xdg.configFile."labwc/rc.xml" = lib.mkIf (cfg.rc != { }) {
+      text = function.generateXML "labwc_config" cfg.rc cfg.extraConfig;
+    };
 
-    xdg.configFile."labwc/menu.xml".text = function.generateXML "openbox_menu" cfg.menu "";
+    xdg.configFile."labwc/menu.xml" = lib.mkIf (cfg.menu != [ ]) {
+      text = function.generateXML "openbox_menu" cfg.menu "";
+    };
 
     xdg.configFile."labwc/autostart".source = pkgs.writeShellScript "autostart" (
       ''
@@ -255,9 +258,11 @@ in
       '')
     );
 
-    xdg.configFile."labwc/environment".text = lib.concatStringsSep "\n" (
-      cfg.environment ++ (lib.optionals (!cfg.xwayland.enable) [ "WLR_XWAYLAND=" ])
-    );
+    xdg.configFile."labwc/environment" = lib.mkIf (cfg.environment != [ ]) {
+      text = lib.concatStringsSep "\n" (
+        cfg.environment ++ (lib.optionals (!cfg.xwayland.enable) [ "WLR_XWAYLAND=" ])
+      );
+    };
 
     systemd.user.targets.labwc-session = lib.mkIf cfg.systemd.enable {
       Unit = {
