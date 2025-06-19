@@ -406,6 +406,7 @@ let
       ./services/lieer.nix
       ./services/linux-wallpaperengine.nix
       ./services/listenbrainz-mpd.nix
+      ./services/local-ai.nix
       ./services/lorri.nix
       ./services/ludusavi.nix
       ./services/lxqt-policykit-agent.nix
