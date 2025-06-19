@@ -24,6 +24,7 @@ let
     mkIf
     mkMerge
     mkOption
+    mkEnableOption
     optionalString
     optional
     setAttrByPath
@@ -198,6 +199,73 @@ let
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
   bookmarkTypes = import ./profiles/bookmark-types.nix { inherit lib; };
+
+  sourceFile =
+    targetDir: fileName:
+    let
+      targetFile = "${targetDir}/${fileName}";
+    in
+    types.submodule (
+      { config, ... }:
+      {
+        options = {
+          target = mkOption {
+            type = types.singleLineStr;
+            internal = true;
+          };
+          source = mkOption {
+            type = types.path;
+            description = ''
+              The path to be linked to `${targetDir}` if {option}`source` is a directory,
+              or to `${targetFile}` if it is a file.
+            '';
+          };
+          text = mkOption {
+            type = types.lines;
+            description = ''
+              Text to be included in `${targetFile}`.
+            '';
+          };
+          recursive = mkEnableOption ''
+            Whether to recursively link files from {option}`source` (if it is a directory) in `${targetDir}`.
+          '';
+        };
+        config = {
+          source = lib.mkDefault (
+            pkgs.writeTextFile {
+              name = targetFile;
+              inherit (config) text;
+            }
+          );
+          target = if lib.pathIsDirectory config.source then targetDir else targetFile;
+        };
+      }
+    );
+
+  sourceFileOrLines =
+    targetDir: fileName:
+    let
+      fileType = sourceFile targetDir fileName;
+      union = types.either types.lines fileType;
+    in
+    union
+    // {
+      check = x: !(lib.isPath x) && union.check x;
+      merge =
+        loc: defs:
+        fileType.merge loc (
+          map (
+            def:
+            if types.lines.check def.value then
+              {
+                inherit (def) file;
+                value.text = def.value;
+              }
+            else
+              def
+          ) defs
+        );
+    };
 in
 {
   options = setAttrByPath modulePath {
@@ -411,12 +479,16 @@ in
               };
 
               userChrome = mkOption {
-                type = types.oneOf [
-                  types.lines
-                  types.path
-                ];
-                default = "";
-                description = "Custom ${appName} user chrome CSS.";
+                type = types.nullOr (
+                  sourceFileOrLines "${cfg.profilesPath}/${config.path}/chrome" "userChrome.css"
+                );
+                default = null;
+                description = ''
+                  Custom ${appName} user chrome CSS.
+
+                  This can be a multi-line string, or a file entry similar to
+                  {option}`xdg.configFile` with `text`, `source`, and `recursive` options defined.
+                '';
                 example = ''
                   /* Hide tab bar in FF Quantum */
                   @-moz-document url(chrome://browser/content/browser.xul), url(chrome://browser/content/browser.xhtml) {
@@ -873,17 +945,13 @@ in
           # Merge the regular profile settings with extension settings
           mkMerge (
             [
+              (mkIf (profile.userChrome != null) {
+                "${profile.userChrome.target}" = {
+                  inherit (profile.userChrome) source recursive;
+                };
+              })
               {
                 "${cfg.profilesPath}/${profile.path}/.keep".text = "";
-
-                "${cfg.profilesPath}/${profile.path}/chrome/userChrome.css" = mkIf (profile.userChrome != "") (
-                  let
-                    key = if builtins.isString profile.userChrome then "text" else "source";
-                  in
-                  {
-                    "${key}" = profile.userChrome;
-                  }
-                );
 
                 "${cfg.profilesPath}/${profile.path}/chrome/userContent.css" = mkIf (profile.userContent != "") (
                   let
