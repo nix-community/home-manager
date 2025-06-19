@@ -233,6 +233,7 @@ let
       ./programs/onedrive.nix
       ./programs/onlyoffice.nix
       ./programs/opam.nix
+      ./programs/opencommit.nix
       ./programs/openstackclient.nix
       ./programs/pandoc.nix
       ./programs/papis.nix

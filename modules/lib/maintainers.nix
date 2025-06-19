@@ -346,6 +346,12 @@
     githubId = 1204734;
     name = "Emil Karlson";
   };
+  jmmaloney4 = {
+    name = "Jack Maloney";
+    email = "jmmaloney4@gmail.com";
+    github = "jmmaloney4";
+    githubId = 5781547;
+  };
   jonringer = {
     email = "jonringer117@gmail.com";
     matrix = "@jonringer:matrix.org";
