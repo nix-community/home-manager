@@ -393,7 +393,12 @@ let
 
   variables = concatStringsSep " " cfg.systemd.variables;
   extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
-  systemdActivation = ''exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+  systemdActivation =
+    {
+      broker = ''exec "systemctl --user import-environment ${variables}; ${extraCommands}"'';
+      dbus = ''exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+    }
+    .${cfg.systemd.dbusImplementation};
 
   configFile = pkgs.writeTextFile {
     name = "sway.conf";
@@ -553,6 +558,23 @@ in
         example = [ "--all" ];
         description = ''
           Environment variables imported into the systemd and D-Bus user environment.
+        '';
+      };
+
+      dbusImplementation = mkOption {
+        type = types.enum [
+          "dbus"
+          "broker"
+        ];
+        default = "dbus";
+        example = "broker";
+        description = ''
+          The D-Bus implementation used on the system.
+          This affects which tool is used to import environment variables when starting the Sway session.
+          On NixOS, this should match the value of the option [`services.dbus.implementation` (NixOS)](https://nixos.org/manual/nixos/stable/options#opt-services.dbus.implementation).
+          When set to `dbus`, `dbus-update-activation-environment --systemd <variables>` is run.
+          Otherwise, when set to `broker`, `systemctl --user import-environment <variables>` is run.
+          See <https://github.com/swaywm/sway/wiki#systemd-and-dbus-activation-environments> for more documentation.
         '';
       };
 
