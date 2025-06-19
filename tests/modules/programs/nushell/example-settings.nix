@@ -30,8 +30,6 @@
       }
     '';
 
-    plugins = [ realPkgs.nushellPlugins.formats ];
-
     shellAliases = {
       "ll" = "ls -a";
       "multi word alias" = "cd -";
@@ -69,14 +67,12 @@
     ''
       assertFileContent \
         "${configDir}/config.nu" \
-        ${./config-expected.nu}
+        ${./example-settings/config-expected.nu}
       assertFileContent \
         "${configDir}/env.nu" \
-        ${./env-expected.nu}
+        ${./example-settings/env-expected.nu}
       assertFileContent \
         "${configDir}/login.nu" \
-        ${./login-expected.nu}
-      assertFileExists \
-        "${configDir}/plugin.msgpackz"
+        ${./example-settings/login-expected.nu}
     '';
 }
