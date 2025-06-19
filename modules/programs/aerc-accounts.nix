@@ -3,6 +3,8 @@
   lib,
   confSections,
   confSection,
+  writeText,
+  writeShellScript,
   ...
 }:
 let
@@ -288,11 +290,36 @@ in
           pgp-opportunistic-encrypt = account.gpg.encryptByDefault;
         };
 
+      signatureCfg =
+        account:
+        if account.signature.showSignature == "append" then
+          if account.signature.command != null then
+            {
+              signature-cmd =
+                writeShellScript "aerc-signature.sh" # bash
+                  ''
+                    printf '%s\n' "${account.signature.delimiter}"
+                    ${account.signature.command}
+                  '';
+            }
+          else
+            {
+              signature-file = writeText "aerc-signature.txt" ''
+                ${account.signature.delimiter}
+                ${account.signature.text}
+              '';
+            }
+        else
+          { };
+
     in
-    (basicCfg account)
-    // (sourceCfg account)
-    // (outgoingCfg account)
-    // (gpgCfg account)
+    builtins.foldl' (acc: f: acc // f account) { } [
+      basicCfg
+      sourceCfg
+      outgoingCfg
+      gpgCfg
+      signatureCfg
+    ]
     // account.aerc.extraAccounts;
 
   mkAccountConfig = name: account: mapAttrNames (addAccountName name) account.aerc.extraConfig;
