@@ -1,4 +1,6 @@
-espansoExtraArgs: {
+espansoExtraArgs:
+{ pkgs, ... }:
+{
   services.espanso = {
     enable = true;
     configs = {
@@ -42,6 +44,9 @@ espansoExtraArgs: {
         ];
       };
     };
+    plugins = [
+      pkgs.espansoPlugins.dummy-package
+    ];
   } // espansoExtraArgs;
 
   nmt.script = ''
