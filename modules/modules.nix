@@ -173,6 +173,7 @@ let
       ./programs/kitty.nix
       ./programs/kodi.nix
       ./programs/kubecolor.nix
+      ./programs/kubeswitch.nix
       ./programs/lapce.nix
       ./programs/lazydocker.nix
       ./programs/lazygit.nix
