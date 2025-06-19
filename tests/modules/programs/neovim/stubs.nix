@@ -30,6 +30,7 @@
             mainProgram = stub;
             license = [ stub ];
             maintainers = [ stub ];
+            teams = [ stub ];
             platforms = lib.platforms.all;
           };
       };

@@ -14,8 +14,8 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [
-    farlion
     thiagokokada
+    workflow
   ];
 
   options.programs.i3status-rust = {
