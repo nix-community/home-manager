@@ -17,9 +17,12 @@
   };
 
   nmt.script = ''
+    assertFileExists home-files/.config/gammastep/config.ini
     assertFileContent \
         home-files/.config/gammastep/config.ini \
         ${./gammastep-basic-configuration-file-expected.conf}
+
+    assertFileExists home-files/.config/systemd/user/gammastep.service
     assertFileContent \
         home-files/.config/systemd/user/gammastep.service \
         ${./gammastep-tray-configuration-expected.service}
