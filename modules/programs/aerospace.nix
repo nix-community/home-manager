@@ -44,31 +44,63 @@ in
 
     package = lib.mkPackageOption pkgs "aerospace" { nullable = true; };
 
+    launchd = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Configure the launchd agent to manage the AeroSpace process.
+
+          The first time this is enabled, macOS will prompt you to allow this background
+          item in System Settings.
+
+          You can verify the service is running correctly from your terminal.
+          Run: `launchctl list | grep aerospace`
+
+          - A running process will show a Process ID (PID) and a status of 0, for example:
+            `12345	0	org.nix-community.home.aerospace`
+
+          - If the service has crashed or failed to start, the PID will be a dash and the
+            status will be a non-zero number, for example:
+            `-	1	org.nix-community.home.aerospace`
+
+          In case of failure, check the logs with `cat /tmp/aerospace.err.log`.
+
+          For more detailed service status, run `launchctl print gui/$(id -u)/org.nix-community.home.aerospace`.
+
+          NOTE: Enabling this option will configure AeroSpace to **not** manage its own
+          launchd agent. Specifically, it will set `start-at-login = false` and
+          `after-login-command = []` in the configuration file, as those are now handled
+          by Home Manager and launchd instead.
+        '';
+      };
+      keepAlive = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether the launchd service should be kept alive.";
+      };
+    };
+
     userSettings = mkOption {
       type = types.submodule {
         freeformType = tomlFormat.type;
         options = {
-          start-at-login = lib.mkOption {
-            type = types.bool;
-            default = false;
-            description = "Start AeroSpace at login.";
-          };
-          after-login-command = mkOption {
-            type = with types; listOf str;
-            default = [ ];
-            description = ''
-              You can use it to add commands that run after login to macOS user session.
-              'start-at-login' needs to be 'true' for 'after-login-command' to work.
-            '';
-          };
           after-startup-command = mkOption {
             type = with types; listOf str;
             default = [ ];
             description = ''
-              You can use it to add commands that run after AeroSpace startup.
-              'after-startup-command' is run after 'after-login-command'
+              A list of AeroSpace commands to execute immediately after the AeroSpace application starts.
+              These commands are written to your `aerospace.toml` config file and are run after the `after-login-command` sequence.
+
+              A list of all available commands can be found at <https://nikitabobko.github.io/AeroSpace/commands>.
+
+              While this module checks for valid command names, using incorrect *arguments* can still cause issues.
+              If AeroSpace is not behaving correctly after startup, check the logs for errors with `cat /tmp/aerospace.err.log`.
             '';
-            example = [ "layout tiles" ];
+            example = [
+              "exec-and-forget open -n /System/Applications/Utilities/Terminal.app"
+              "layout tiles accordion"
+            ];
           };
           enable-normalization-flatten-containers = mkOption {
             type = types.bool;
@@ -269,9 +301,28 @@ in
 
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
       file.".config/aerospace/aerospace.toml".source = tomlFormat.generate "aerospace" (
-        filterNulls cfg.userSettings
+        filterNulls (
+          cfg.userSettings
+          // lib.optionalAttrs cfg.launchd.enable {
+            # Override these to avoid launchd conflicts
+            start-at-login = false;
+            after-login-command = [ ];
+          }
+        )
       );
+    };
+
+    launchd.agents.aerospace = {
+      enable = cfg.launchd.enable;
+      config = {
+        Program = "${cfg.package}/Applications/AeroSpace.app/Contents/MacOS/AeroSpace";
+        KeepAlive = cfg.launchd.keepAlive;
+        RunAtLoad = true;
+        StandardOutPath = "/tmp/aerospace.log";
+        StandardErrorPath = "/tmp/aerospace.err.log";
+      };
     };
   };
 }
