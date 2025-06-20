@@ -137,7 +137,7 @@ in
 
       sessionVariables = mkOption {
         default = { };
-        type = types.attrs;
+        type = with types; lazyAttrsOf (either str int);
         example = {
           MAILCHECK = 30;
         };
