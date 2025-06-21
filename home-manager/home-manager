@@ -637,6 +637,28 @@ function doBuild() {
     presentNews
 }
 
+function doRepl() {
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        _i 'home-manager repl does not (yet) support flakes' >&2
+        return 1
+    fi
+
+    setConfigFile
+
+    extraArgs=()
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs+=(-I "$p")
+    done
+
+    exec nix repl \
+        --file '<home-manager/home-manager/home-manager.nix>' \
+        "${extraArgs[@]}" \
+        "${PASSTHROUGH_OPTS[@]}" \
+        --argstr confPath "$HOME_MANAGER_CONFIG" \
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+}
+
 function doSwitch() {
     setWorkDir
 
@@ -941,6 +963,9 @@ function doHelp() {
     echo "      Remove indicated generations. Use 'generations' command to"
     echo "      find suitable generation numbers."
     echo
+    echo "  repl"
+    echo "      Opens the configuration in \`nix repl\`"
+    echo
     echo "  expire-generations TIMESTAMP"
     echo "      Remove generations older than TIMESTAMP where TIMESTAMP is"
     echo "      interpreted as in the -d argument of the date tool. For"
@@ -964,7 +989,7 @@ while [[ $# -gt 0 ]]; do
     opt="$1"
     shift
     case $opt in
-        build|init|instantiate|option|edit|expire-generations|generations|help|news|packages|remove-generations|switch|uninstall)
+        build|init|instantiate|option|edit|expire-generations|generations|help|news|packages|remove-generations|repl|switch|uninstall)
             COMMAND="$opt"
             ;;
         -A)
@@ -1108,6 +1133,9 @@ case $COMMAND in
         ;;
     packages)
         doListPackages
+        ;;
+    repl)
+        doRepl
         ;;
     news)
         doShowNews --all

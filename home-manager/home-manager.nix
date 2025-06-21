@@ -16,5 +16,10 @@ let
 
 in
 {
-  inherit (env) activationPackage config;
+  inherit (env)
+    activationPackage
+    config
+    pkgs
+    options
+    ;
 }
