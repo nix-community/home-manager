@@ -209,6 +209,7 @@
 
           [theme]
           theme = "solarized-dark"
+
           [theme.overrides]
           idle_bg = "#123456"
           idle_fg = "#abcdef"
