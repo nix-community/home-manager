@@ -89,7 +89,7 @@ in
     home.packages = [ cfg.package ];
 
     wayland.windowManager = lib.mapAttrs (name: _: {
-      systemd.variables = [ "XDG_VTNR" ];
+      systemd.variables = lib.mkOptionDefault [ "XDG_VTNR" ];
     }) options.wayland.windowManager;
 
     xdg.configFile."way-displays/cfg.yaml" = mkIf (cfg.settings != null) {
