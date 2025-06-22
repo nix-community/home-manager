@@ -1,4 +1,5 @@
 theme = "base16"
+
 [editor]
 line-number = "relative"
 
