@@ -27,6 +27,7 @@ in
       ${builtins.toFile "expected.toml" ''
         intro-banner = "short"
         prompt = "> "
+
         [exchange-rates]
         fetching-policy = "on-first-use"
       ''}
