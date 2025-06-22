@@ -27,6 +27,7 @@
         commit = true
         maintainers = ["figsoda"]
         nixpkgs = "<nixpkgs>"
+
         [access-tokens]
         "github.com" = "ghp_blahblahblah..."
 
