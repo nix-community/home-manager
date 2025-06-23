@@ -6,6 +6,7 @@
   sway-followmouse = ./sway-followmouse.nix;
   sway-followmouse-legacy = ./sway-followmouse-legacy.nix;
   sway-check-config = ./sway-check-config.nix;
+  sway-settings = ./sway-settings.nix;
   sway-modules = ./sway-modules.nix;
   sway-no-xwayland = ./sway-no-xwayland.nix;
   sway-null-config = ./sway-null-config.nix;
