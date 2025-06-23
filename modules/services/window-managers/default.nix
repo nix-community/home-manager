@@ -1,15 +1,15 @@
 {
   imports = [
-    ./awesome
+    ./awesome.nix
     ./bspwm
-    ./fluxbox
-    ./herbstluftwm
-    ./hyprland
+    ./fluxbox.nix
+    ./herbstluftwm.nix
+    ./hyprland.nix
     ./i3-sway
     ./labwc
-    ./river
-    ./spectrwm
-    ./wayfire
-    ./xmonad
+    ./river.nix
+    ./spectrwm.nix
+    ./wayfire.nix
+    ./xmonad.nix
   ];
 }
