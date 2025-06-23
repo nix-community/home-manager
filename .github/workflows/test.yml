@@ -21,7 +21,11 @@ jobs:
       - run: nix build --show-trace .#docs-jsonModuleMaintainers
       - run: nix fmt -- --ci
       - run: nix run .#home-manager -- init --switch
+        # FIXME: nix broken on darwin on unstable
+        if: matrix.os != 'macos-latest'
       - run: yes | nix run . -- uninstall
+        # FIXME: nix broken on darwin on unstable
+        if: matrix.os != 'macos-latest'
       - name: Run tests
         run: nix build -j auto --show-trace --option allow-import-from-derivation false --reference-lock-file flake.lock "./tests#test-all-no-big"
         env:
