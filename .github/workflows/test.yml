@@ -20,7 +20,12 @@ jobs:
             experimental-features = nix-command flakes
       - run: nix build --show-trace .#docs-jsonModuleMaintainers
       - run: nix fmt -- --ci
-      - run: nix run .#home-manager -- init --switch
+      - name: Test init --switch with locked inputs
+        run: |
+          # Copy lock file to home directory for consistent testing
+          mkdir -p ~/.config/home-manager
+          cp flake.lock ~/.config/home-manager/
+          nix run .#home-manager -- init --switch --override-input home-manager .
         # FIXME: nix broken on darwin on unstable
         if: matrix.os != 'macos-latest'
       - run: yes | nix run . -- uninstall
