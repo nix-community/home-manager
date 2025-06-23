@@ -55,6 +55,22 @@
     github = "aheaume";
     githubId = 13830042;
   };
+  ajhalili2006 = {
+    name = "Andrei Jiroh Halili";
+    email = "ajhalili2006@andreijiroh.dev";
+    github = "ajhalili2006";
+    githubId = 34998342;
+    keys = [
+      {
+        longkeyid = "rsa4096/0x67BFC91B3DA12BE8";
+        fingerprint = "4D5E631758CB9CC45941B1CE67BFC91B3DA12BE8";
+      }
+      {
+        longkeyid = "rsa4096/0x2F384539C700B263";
+        fingerprint = "A715100E58CF60500EE159652F384539C700B263";
+      }
+    ];
+  };
   ALameLlama = {
     name = "Nicholas Ciechanowski";
     email = "NicholasACiechanowski@gmail.com";
