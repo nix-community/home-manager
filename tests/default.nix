@@ -314,6 +314,7 @@ import nmtSrc {
       ./modules/programs/texlive
       ./modules/programs/thefuck
       ./modules/programs/thunderbird
+      ./modules/programs/timewarrior
       ./modules/programs/tmate
       ./modules/programs/tmux
       ./modules/programs/topgrade
