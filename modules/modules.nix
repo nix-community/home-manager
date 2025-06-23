@@ -137,6 +137,7 @@ let
       ./programs/htop.nix
       ./programs/hyfetch.nix
       ./programs/hyprlock.nix
+      ./programs/hyprpanel.nix
       ./programs/i3bar-river.nix
       ./programs/i3blocks.nix
       ./programs/i3status-rust.nix
