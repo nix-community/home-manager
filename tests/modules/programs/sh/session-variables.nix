@@ -1,30 +1,28 @@
 { config, ... }:
 
 {
-  programs.bash = {
+  programs.sh = {
     enable = true;
-    enableCompletion = false;
 
     sessionVariables = {
       V1 = "v1";
-      V2 = "v2-${config.programs.bash.sessionVariables.V1}";
+      V2 = "v2-${config.programs.sh.sessionVariables.V1}";
     };
   };
 
   nmt.script = ''
-    assertFileExists home-files/.bash_profile
+    assertFileExists home-files/.profile
     assertFileContent \
-      home-files/.bash_profile \
+      home-files/.profile \
       ${builtins.toFile "session-variables-expected" ''
         . "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"
+
+        export ENV="$HOME/.shinit"
 
         export V1="v1"
         export V2="v2-v1"
 
 
-
-        # include .bashrc if it exists
-        [[ -f ~/.bashrc ]] && . ~/.bashrc
       ''}
   '';
 }
