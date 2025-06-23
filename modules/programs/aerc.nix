@@ -33,7 +33,7 @@ let
 
   confSection = types.attrsOf primitive;
 
-  confSections = types.attrsOf confSection;
+  confSections = types.attrsOf (types.either types.lines confSection);
 
   sectionsOrLines = types.either types.lines confSections;
 
@@ -132,30 +132,39 @@ in
     let
       joinCfg = cfgs: lib.concatStringsSep "\n" (lib.filter (v: v != "") cfgs);
 
-      toINI =
-        conf: # quirk: global section is prepended w/o section heading
+      sectionsToINI =
+        conf:
         let
           global = conf.global or { };
           local = removeAttrs conf [ "global" ];
-          mkValueString =
-            v:
-            if lib.isList v then # join with comma
-              lib.concatStringsSep "," (map (generators.mkValueStringDefault { }) v)
-            else
-              generators.mkValueStringDefault { } v;
-          mkKeyValue = generators.mkKeyValueDefault { inherit mkValueString; } " = ";
         in
-        joinCfg [
-          (generators.toKeyValue { inherit mkKeyValue; } global)
-          (generators.toINI { inherit mkKeyValue; } local)
-        ];
+        joinCfg ([ (sectionToINI "global" global) ] ++ (lib.mapAttrsToList sectionToINI local));
 
-      mkINI = conf: if lib.isString conf then conf else toINI conf;
+      sectionToINI =
+        name: section:
+        let
+          # quirk: global section is prepended w/o section heading
+          header = if name == "global" then "" else "[${lib.escape [ "[" "]" ] name}]\n";
+          content =
+            if lib.isString section then section else generators.toKeyValue { inherit mkKeyValue; } section;
+        in
+        if builtins.stringLength content > 0 then header + content else "";
+
+      mkValueString =
+        v:
+        if lib.isList v then # join with comma
+          lib.concatStringsSep "," (map (generators.mkValueStringDefault { }) v)
+        else
+          generators.mkValueStringDefault { } v;
+
+      mkINI = conf: if lib.isString conf then conf else sectionsToINI conf;
+
+      mkKeyValue = generators.mkKeyValueDefault { inherit mkValueString; } " = ";
 
       mkStyleset = attrsets.mapAttrs' (
         k: v:
         let
-          value = if lib.isString v then v else toINI { global = v; };
+          value = if lib.isString v then v else sectionsToINI { global = v; };
         in
         {
           name = "${configDir}/stylesets/${k}";
