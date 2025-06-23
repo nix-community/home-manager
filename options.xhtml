@@ -33843,6 +33843,160 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.hyprpanel.enable"></a><a class="term" href="options.xhtml#opt-programs.hyprpanel.enable"><code class="option">programs.hyprpanel.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable HyprPanel.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprpanel" target="_top">
+&lt;home-manager/modules/programs/hyprpanel&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprpanel.package"></a><a class="term" href="options.xhtml#opt-programs.hyprpanel.package"><code class="option">programs.hyprpanel.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The hyprpanel package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.hyprpanel</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprpanel" target="_top">
+&lt;home-manager/modules/programs/hyprpanel&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprpanel.dontAssertNotificationDaemons"></a><a class="term" href="options.xhtml#opt-programs.hyprpanel.dontAssertNotificationDaemons"><code class="option">programs.hyprpanel.dontAssertNotificationDaemons</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to check for other notification daemons.</p><p>You might want to set this to false, because hyprpanel’s notification
+daemon is buggy and you may prefer something else.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprpanel" target="_top">
+&lt;home-manager/modules/programs/hyprpanel&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprpanel.settings"></a><a class="term" href="options.xhtml#opt-programs.hyprpanel.settings"><code class="option">programs.hyprpanel.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to
+<code class="filename">$XDG_CONFIG_HOME/hyprpanel/config.json</code>.</p><p>See <a class="link" href="https://hyprpanel.com/configuration/settings.html#home-manager-module"  target="_top">https://hyprpanel.com/configuration/settings.html#home-manager-module</a>
+for the full list of options.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">bar.battery.label = true;
+bar.bluetooth.label = false;
+bar.clock.format = &quot;%H:%M:%S&quot;;
+bar.layouts = {
+  &quot;*&quot; = {
+    left = [
+      &quot;dashboard&quot;
+      &quot;workspaces&quot;
+      &quot;media&quot;
+    ];
+    middle = [ &quot;windowtitle&quot; ];
+    right = [
+      &quot;volume&quot;
+      &quot;network&quot;
+      &quot;bluetooth&quot;
+      &quot;notifications&quot;
+    ];
+  };
+};
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprpanel" target="_top">
+&lt;home-manager/modules/programs/hyprpanel&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.hyprpanel.systemd.enable"></a><a class="term" href="options.xhtml#opt-programs.hyprpanel.systemd.enable"><code class="option">programs.hyprpanel.systemd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable HyprPanel systemd integration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprpanel" target="_top">
+&lt;home-manager/modules/programs/hyprpanel&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.i3bar-river.enable"></a><a class="term" href="options.xhtml#opt-programs.i3bar-river.enable"><code class="option">programs.i3bar-river.enable</code>
   </a>
  </span>
