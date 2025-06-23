@@ -52,10 +52,10 @@
 
     configFile=home-files/.config/espanso/config/default.yml
     assertFileExists "$configFile"
-    assertFileContent "$configFile" ${../espanso/basic-configuration.yaml}
+    assertFileContent "$configFile" ${./basic-configuration.yaml}
 
     matchFile=home-files/.config/espanso/match/base.yml
     assertFileExists "$matchFile"
-    assertFileContent "$matchFile" ${../espanso/basic-matches.yaml}
+    assertFileContent "$matchFile" ${./basic-matches.yaml}
   '';
 }
