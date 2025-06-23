@@ -103434,6 +103434,11 @@ list of (XML value)</p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
   {
+    label = &quot;pipemenu&quot;;
+    menuId = &quot;menu&quot;;
+    execute = &quot;/home/user/nix/scripts/pipe.sh&quot;;
+  }
+  {
     menuId = &quot;client-menu&quot;;
     label = &quot;Client Menu&quot;;
     icon = &quot;&quot;;
@@ -103449,12 +103454,6 @@ list of (XML value)</p>
         label = &quot;Fullscreen&quot;;
         action = {
           name = &quot;ToggleFullscreen&quot;;
-        };
-      }
-      {
-        label = &quot;Always on Top&quot;;
-        action = {
-          name = &quot;ToggleAlwaysOnTop&quot;;
         };
       }
       {
