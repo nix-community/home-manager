@@ -1,0 +1,17 @@
+anchor: center
+background: '#282828d0'
+border: '#8ec07c'
+border_width: 2
+color: '#fbf1c7'
+corner_r: 10
+font: JetBrainsMono Nerd Font 12
+margin_bottom: 0
+margin_left: 0
+margin_right: 0
+margin_top: 0
+menu:
+  a:
+    cmd: echo aaah
+    desc: Say aaah
+padding: 15
+separator: ' ➜ '

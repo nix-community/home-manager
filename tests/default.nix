@@ -327,6 +327,7 @@ import nmtSrc {
       ./modules/programs/watson
       ./modules/programs/waveterm
       ./modules/programs/wezterm
+      ./modules/programs/wlr-which-key
       ./modules/programs/yazi
       ./modules/programs/zed-editor
       ./modules/programs/zellij
