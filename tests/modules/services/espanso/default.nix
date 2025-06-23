@@ -1,4 +1,6 @@
-{
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   espanso-basic-configuration = import ./basic-configuration.nix { };
   espanso-basic-configuration-wayland = import ./basic-configuration.nix {
     waylandSupport = true;

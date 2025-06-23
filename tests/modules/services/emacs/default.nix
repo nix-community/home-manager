@@ -1,4 +1,6 @@
-{
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   emacs-service-27 = ./emacs-service-27.nix;
   emacs-service-28 = ./emacs-service-28.nix;
   emacs-service-28-after-graphical-session-target = ./emacs-service-28-after-graphical-session-target.nix;

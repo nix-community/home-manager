@@ -1,4 +1,6 @@
-{
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   sway-bar-focused-colors = ./sway-bar-focused-colors.nix;
   sway-bindkeys-to-code-and-extra-config = ./sway-bindkeys-to-code-and-extra-config.nix;
   sway-bindswitches = ./sway-bindswitches.nix;

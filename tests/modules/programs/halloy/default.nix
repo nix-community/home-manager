@@ -1,1 +1,4 @@
-{ halloy-example-config = ./example-config.nix; }
+{ lib, pkgs, ... }:
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  halloy-example-config = ./example-config.nix;
+}

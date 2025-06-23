@@ -1,4 +1,6 @@
-{
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   i3-bar-focused-colors = ./i3-bar-focused-colors.nix;
   i3-followmouse = ./i3-followmouse.nix;
   i3-fonts = ./i3-fonts.nix;
