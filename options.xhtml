@@ -36201,10 +36201,10 @@ YAML 1.1 value</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">alias = {
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   # Use pp as an alias for Pod
   pp = &quot;v1/pods&quot;;
-};
+}
 
 </code></pre>
 
@@ -36219,7 +36219,7 @@ YAML 1.1 value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.k9s.hotkey"></a><a class="term" href="options.xhtml#opt-programs.k9s.hotkey"><code class="option">programs.k9s.hotkey</code>
+ <a id="opt-programs.k9s.hotKeys"></a><a class="term" href="options.xhtml#opt-programs.k9s.hotKeys"><code class="option">programs.k9s.hotKeys</code>
   </a>
  </span>
 </dt>
@@ -36234,16 +36234,13 @@ YAML 1.1 value</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">hotkey = {
-  # Make sure this is camel case
-  hotKey = {
-    shift-0 = {
-      shortCut = &quot;Shift-0&quot;;
-      description = &quot;Viewing pods&quot;;
-      command = &quot;pods&quot;;
-    };
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  shift-0 = {
+    shortCut = &quot;Shift-0&quot;;
+    description = &quot;Viewing pods&quot;;
+    command = &quot;pods&quot;;
   };
-};
+}
 
 </code></pre>
 
@@ -36258,7 +36255,7 @@ YAML 1.1 value</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.k9s.plugin"></a><a class="term" href="options.xhtml#opt-programs.k9s.plugin"><code class="option">programs.k9s.plugin</code>
+ <a id="opt-programs.k9s.plugins"></a><a class="term" href="options.xhtml#opt-programs.k9s.plugins"><code class="option">programs.k9s.plugins</code>
   </a>
  </span>
 </dt>
@@ -36273,7 +36270,7 @@ YAML 1.1 value</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">plugin = {
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   # Defines a plugin to provide a `ctrl-l` shortcut to
   # tail the logs while in pod view.
   fred = {
@@ -36292,7 +36289,7 @@ YAML 1.1 value</p>
       &quot;$CLUSTER&quot;
     ];
   };
-};
+}
 
 </code></pre>
 
@@ -36394,21 +36391,19 @@ YAML 1.1 value</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">k9s = {
-  views = {
-    &quot;v1/pods&quot; = {
-      columns = [
-        &quot;AGE&quot;
-        &quot;NAMESPACE&quot;
-        &quot;NAME&quot;
-        &quot;IP&quot;
-        &quot;NODE&quot;
-        &quot;STATUS&quot;
-        &quot;READY&quot;
-      ];
-    };
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  &quot;v1/pods&quot; = {
+    columns = [
+      &quot;AGE&quot;
+      &quot;NAMESPACE&quot;
+      &quot;NAME&quot;
+      &quot;IP&quot;
+      &quot;NODE&quot;
+      &quot;STATUS&quot;
+      &quot;READY&quot;
+    ];
   };
-};
+}
 
 </code></pre>
 
