@@ -1,4 +1,6 @@
-{
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-simple-config = ./simple-config.nix;
   hyprland-multiple-devices-config = ./multiple-devices-config.nix;
   hyprland-null-all-packages-config = ./null-all-packages-config.nix;

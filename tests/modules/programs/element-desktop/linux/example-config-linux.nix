@@ -48,21 +48,21 @@
   };
 
   nmt.script = ''
-    assertFileExists "home-files/Library/Application Support/Element/config.json"
-    assertFileExists "home-files/Library/Application Support/Element-work/config.json"
-    assertFileExists "home-files/Library/Application Support/Element-home/config.json"
-    assertFileExists "home-files/Library/Application Support/Element-other/config.json"
+    assertFileExists home-files/.config/Element/config.json
+    assertFileExists home-files/.config/Element-work/config.json
+    assertFileExists home-files/.config/Element-home/config.json
+    assertFileExists home-files/.config/Element-other/config.json
 
-    assertFileContent "home-files/Library/Application Support/Element/config.json" \
-    ${./cfg/default.json}
+    assertFileContent home-files/.config/Element/config.json \
+    ${../cfg/default.json}
 
-    assertFileContent "home-files/Library/Application Support/Element-work/config.json" \
-    ${./cfg/work.json}
+    assertFileContent home-files/.config/Element-work/config.json \
+    ${../cfg/work.json}
 
-    assertFileContent "home-files/Library/Application Support/Element-home/config.json" \
-    ${./cfg/home.json}
+    assertFileContent home-files/.config/Element-home/config.json \
+    ${../cfg/home.json}
 
-    assertFileContent "home-files/Library/Application Support/Element-other/config.json" \
-    ${./cfg/other.json}
+    assertFileContent home-files/.config/Element-other/config.json \
+    ${../cfg/other.json}
   '';
 }

@@ -1,4 +1,3 @@
-{ ... }:
 {
   services.jellyfin-mpv-shim = {
     enable = true;
@@ -28,12 +27,12 @@
   nmt.script = ''
     assertFileContent \
        home-files/.config/jellyfin-mpv-shim/conf.json \
-       ${./jellyfin-mpv-shim-example-settings-expected-settings}
+       ${./example-settings-expected-settings}
     assertFileContent \
        home-files/.config/jellyfin-mpv-shim/mpv.conf \
-       ${./jellyfin-mpv-shim-example-settings-expected-config}
+       ${./example-settings-expected-config}
     assertFileContent \
        home-files/.config/jellyfin-mpv-shim/input.conf \
-       ${./jellyfin-mpv-shim-example-settings-expected-bindings}
+       ${./example-settings-expected-bindings}
   '';
 }

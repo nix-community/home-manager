@@ -1,1 +1,4 @@
-{ distrobox-example-config = ./example-config.nix; }
+{ lib, pkgs, ... }:
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  distrobox-example-config = ./example-config.nix;
+}
