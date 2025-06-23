@@ -31,7 +31,11 @@ jobs:
         mkdir -p ~/.config/home-manager
         cp flake.lock ~/.config/home-manager/
         nix run .#home-manager -- init --switch --override-input home-manager .
+      # FIXME: nix broken on darwin
+      if: matrix.os != 'macos-latest'
     - run: yes | nix run . -- uninstall
+      # FIXME: nix broken on darwin
+      if: matrix.os != 'macos-latest'
     - name: Run tests
       run: nix build -j auto --show-trace --option allow-import-from-derivation false --reference-lock-file flake.lock "./tests#test-all-no-big"
       env:
