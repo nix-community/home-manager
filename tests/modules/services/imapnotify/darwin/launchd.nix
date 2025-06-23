@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ../../accounts/email-test-accounts.nix ];
+  imports = [ ../../../accounts/email-test-accounts.nix ];
 
   accounts.email.accounts = {
     "hm@example.com" = {
