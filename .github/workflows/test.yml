@@ -25,7 +25,12 @@ jobs:
         fi
     - run: nix build --show-trace .#docs-jsonModuleMaintainers
     - run: ./format --ci
-    - run: nix run .#home-manager -- init --switch
+    - name: Test init --switch with locked inputs
+      run: |
+        # Copy lock file to home directory for consistent testing
+        mkdir -p ~/.config/home-manager
+        cp flake.lock ~/.config/home-manager/
+        nix run .#home-manager -- init --switch --override-input home-manager .
     - run: yes | nix run . -- uninstall
     - name: Run tests
       run: nix build -j auto --show-trace --option allow-import-from-derivation false --reference-lock-file flake.lock "./tests#test-all-no-big"
