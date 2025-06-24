@@ -92,6 +92,36 @@ $ nix-build -A docs.manPages
 $ man ./result/share/man/man5/home-configuration.nix.5.gz
 ```
 
+## Module Auto-importing {#sec-module-auto-importing}
+
+Home Manager automatically imports all modules from the `modules/programs/` and
+`modules/services/` directories. This auto-importing behavior follows these
+rules:
+
+- **Nix files**: All `.nix` files in these directories are automatically
+  imported
+- **Directories**: All subdirectories are automatically imported (typically
+  containing a `default.nix` file)
+- **Exclusions**: Files and directories starting with an underscore (`_`) are
+  excluded from auto-importing
+
+This allows for flexible module organization:
+
+```
+modules/programs/
+├── git.nix              # Single-file module (imported)
+├── firefox/             # Multi-file module (imported)
+│   ├── default.nix
+│   └── addons.nix
+├── _experimental.nix    # Excluded (starts with _)
+└── _wip/                # Excluded directory (starts with _)
+    └── newfeature.nix
+```
+
+When adding a new module, simply place it in the appropriate directory
+(`programs/` for user programs, `services/` for user services) and it will be
+automatically discovered and included in the Home Manager module system.
+
 ## Add yourself as a module maintainer {#_add_yourself_as_a_module_maintainer}
 
 Every new module *must* include a named maintainer using the
