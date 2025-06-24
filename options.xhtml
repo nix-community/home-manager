@@ -13601,6 +13601,62 @@ null or package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.aerospace.launchd.enable"></a><a class="term" href="options.xhtml#opt-programs.aerospace.launchd.enable"><code class="option">programs.aerospace.launchd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configure the launchd agent to manage the AeroSpace process.</p><p>The first time this is enabled, macOS will prompt you to allow this background
+item in System Settings.</p><p>You can verify the service is running correctly from your terminal.
+Run: <code class="literal">launchctl list | grep aerospace</code></p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>A running process will show a Process ID (PID) and a status of 0, for example:
+<code class="literal">12345	0	org.nix-community.home.aerospace</code></p></li><li class="listitem"><p>If the service has crashed or failed to start, the PID will be a dash and the
+status will be a non-zero number, for example:
+<code class="literal">-	1	org.nix-community.home.aerospace</code></p></li></ul></div><p>In case of failure, check the logs with <code class="literal">cat /tmp/aerospace.err.log</code>.</p><p>For more detailed service status, run <code class="literal">launchctl print gui/$(id -u)/org.nix-community.home.aerospace</code>.</p><p>NOTE: Enabling this option will configure AeroSpace to <span class="strong"><strong>not</strong></span> manage its own
+launchd agent. Specifically, it will set <code class="literal">start-at-login = false</code> and
+<code class="literal">after-login-command = []</code> in the configuration file, as those are now handled
+by Home Manager and launchd instead.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.aerospace.launchd.keepAlive"></a><a class="term" href="options.xhtml#opt-programs.aerospace.launchd.keepAlive"><code class="option">programs.aerospace.launchd.keepAlive</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether the launchd service should be kept alive.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
+&lt;home-manager/modules/programs/aerospace.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.aerospace.userSettings"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings"><code class="option">programs.aerospace.userSettings</code>
   </a>
  </span>
@@ -13716,38 +13772,14 @@ signed integer</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.aerospace.userSettings.after-login-command"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.after-login-command"><code class="option">programs.aerospace.userSettings.after-login-command</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>You can use it to add commands that run after login to macOS user session.
-‘start-at-login’ needs to be ‘true’ for ‘after-login-command’ to work.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-list of string</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">[ ]</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
-&lt;home-manager/modules/programs/aerospace.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
  <a id="opt-programs.aerospace.userSettings.after-startup-command"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.after-startup-command"><code class="option">programs.aerospace.userSettings.after-startup-command</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>You can use it to add commands that run after AeroSpace startup.
-‘after-startup-command’ is run after ‘after-login-command’</p>
+<p>A list of AeroSpace commands to execute immediately after the AeroSpace application starts.
+These commands are written to your <code class="literal">aerospace.toml</code> config file and are run after the <code class="literal">after-login-command</code> sequence.</p><p>A list of all available commands can be found at <a class="link" href="https://nikitabobko.github.io/AeroSpace/commands"  target="_top">https://nikitabobko.github.io/AeroSpace/commands</a>.</p><p>While this module checks for valid command names, using incorrect <span class="emphasis"><em>arguments</em></span> can still cause issues.
+If AeroSpace is not behaving correctly after startup, check the logs for errors with <code class="literal">cat /tmp/aerospace.err.log</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 list of string</p>
@@ -13756,7 +13788,8 @@ list of string</p>
 <code class="literal">[ ]</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
-  &quot;layout tiles&quot;
+  &quot;exec-and-forget open -n /System/Applications/Utilities/Terminal.app&quot;
+  &quot;layout tiles accordion&quot;
 ]
 </code></pre>
 
@@ -14154,30 +14187,6 @@ string or list of string</p>
   &quot;resize-node&quot;
 ]
 </code></pre>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerospace.nix" target="_top">
-&lt;home-manager/modules/programs/aerospace.nix&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.aerospace.userSettings.start-at-login"></a><a class="term" href="options.xhtml#opt-programs.aerospace.userSettings.start-at-login"><code class="option">programs.aerospace.userSettings.start-at-login</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Start AeroSpace at login.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-boolean</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
