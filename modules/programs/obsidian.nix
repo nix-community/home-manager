@@ -542,8 +542,8 @@ in
           );
       };
 
-      xdg.configFile."obsidian/obsidian.json".source =
-        (pkgs.formats.json { }).generate "obsidian.json" {
+      xdg.configFile."obsidian/obsidian.json".source = lib.mkMerge [
+        ((pkgs.formats.json { }).generate "obsidian.json" {
           vaults = builtins.listToAttrs (
             builtins.map (vault: {
               name = builtins.hashString "md5" vault.target;
@@ -557,8 +557,9 @@ in
             }) vaults
           );
           updateDisabled = true;
-        }
-        // cfg.extraSettings;
+        })
+        cfg.extraSettings
+      ];
 
       assertions = [
         {
