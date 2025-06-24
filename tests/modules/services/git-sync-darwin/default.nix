@@ -1,1 +1,0 @@
-{ git-sync = ./basic.nix; }

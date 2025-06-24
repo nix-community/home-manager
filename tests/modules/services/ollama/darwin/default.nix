@@ -1,1 +1,3 @@
-{ ollama-darwin = ./basic.nix; }
+{
+  ollama-basic = ./basic.nix;
+}

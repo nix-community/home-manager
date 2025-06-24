@@ -140,9 +140,9 @@ in
       type = types.attrsOf (
         types.submodule [
           contactOpts
-          (import ../programs/vdirsyncer-accounts.nix)
-          (import ../programs/khal-accounts.nix)
-          (import ../programs/khal-contact-accounts.nix)
+          (import ../programs/vdirsyncer/accounts.nix)
+          (import ../programs/khal/accounts.nix)
+          (import ../programs/khal/contact-accounts.nix)
         ]
       );
       default = { };

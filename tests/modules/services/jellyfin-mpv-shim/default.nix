@@ -1,3 +1,5 @@
-{
-  jellyfin-mpv-shim-example-settings = ./jellyfin-mpv-shim-example-settings.nix;
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  jellyfin-mpv-shim-example-settings = ./example-settings.nix;
 }

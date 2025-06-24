@@ -1,0 +1,3 @@
+{
+  nix-gc = ./basic.nix;
+}

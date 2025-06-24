@@ -1,4 +1,6 @@
-{
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   gammastep-basic-configuration = ./gammastep-basic-configuration.nix;
   gammastep-tray-configuration = ./gammastep-tray-configuration.nix;
   redshift-basic-configuration = ./redshift-basic-configuration.nix;

@@ -229,24 +229,31 @@ in
 
     xdg.configFile =
       let
-        settings = {
-          "helix/config.toml" = mkIf (cfg.settings != { }) {
-            source =
-              let
-                configFile = tomlFormat.generate "config.toml" cfg.settings;
-                extraConfigFile = pkgs.writeText "extra-config.toml" ("\n" + cfg.extraConfig);
-              in
-              pkgs.runCommand "helix-config.toml" { } ''
-                cat ${configFile} ${extraConfigFile} >> $out
-              '';
+        settings =
+          let
+            hasSettings = cfg.settings != { };
+            hasExtraConfig = cfg.extraConfig != null;
+          in
+          {
+            "helix/config.toml" = mkIf (hasSettings || hasExtraConfig) {
+              source =
+                let
+                  configFile = tomlFormat.generate "config.toml" cfg.settings;
+                  extraConfigFile = pkgs.writeText "extra-config.toml" (
+                    lib.optionalString hasSettings "\n" + cfg.extraConfig
+                  );
+                in
+                pkgs.runCommand "helix-config.toml" { } ''
+                  cat ${configFile} ${extraConfigFile} >> $out
+                '';
+            };
+            "helix/languages.toml" = mkIf (cfg.languages != { }) {
+              source = tomlFormat.generate "helix-languages-config" cfg.languages;
+            };
+            "helix/ignore" = mkIf (cfg.ignores != [ ]) {
+              text = lib.concatStringsSep "\n" cfg.ignores + "\n";
+            };
           };
-          "helix/languages.toml" = mkIf (cfg.languages != { }) {
-            source = tomlFormat.generate "helix-languages-config" cfg.languages;
-          };
-          "helix/ignore" = mkIf (cfg.ignores != [ ]) {
-            text = lib.concatStringsSep "\n" cfg.ignores + "\n";
-          };
-        };
 
         themes = lib.mapAttrs' (
           n: v:

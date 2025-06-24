@@ -1,0 +1,38 @@
+{
+  "bar": {
+    "battery": {
+      "label": true
+    },
+    "bluetooth": {
+      "label": false
+    },
+    "clock": {
+      "format": "%H:%M:%S"
+    },
+    "customModules": {
+      "hypridle": {
+        "isActiveCommand": "systemctl --user status hypridle.service | grep -q 'Active: active (running)' && echo 'yes' || echo 'no'",
+        "startCommand": "systemctl --user start hypridle.service",
+        "stopCommand": "systemctl --user stop hypridle.service"
+      }
+    },
+    "layouts": {
+      "*": {
+        "left": [
+          "dashboard",
+          "workspaces",
+          "media"
+        ],
+        "middle": [
+          "windowtitle"
+        ],
+        "right": [
+          "volume",
+          "network",
+          "bluetooth",
+          "notifications"
+        ]
+      }
+    }
+  }
+}

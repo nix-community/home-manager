@@ -1,1 +1,4 @@
-{ mpvpaper-example-config = ./example-config.nix; }
+{ lib, pkgs, ... }:
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  mpvpaper-example-config = ./example-config.nix;
+}

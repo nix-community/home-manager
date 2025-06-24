@@ -1,4 +1,4 @@
 {
-  ollama-linux = ./basic.nix;
+  ollama-basic = ./basic.nix;
   ollama-set-environment-variables = ./set-environment-variables.nix;
 }

@@ -41,7 +41,7 @@ in
       description = ''
         Hypridle configuration written in Nix. Entries with the same key
         should be written as lists. Variables' and colors' names should be
-        quoted. See <https://wiki.hyprland.org/Hypr-Ecosystem/hypridle/> for more examples.
+        quoted. See <https://wiki.hypr.land/Hypr-Ecosystem/hypridle/> for more examples.
       '';
       example = lib.literalExpression ''
         {

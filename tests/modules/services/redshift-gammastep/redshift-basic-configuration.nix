@@ -16,9 +16,12 @@
   };
 
   nmt.script = ''
+    assertFileExists home-files/.config/redshift/redshift.conf
     assertFileContent \
         home-files/.config/redshift/redshift.conf \
         ${./redshift-basic-configuration-file-expected.conf}
+
+    assertFileExists home-files/.config/systemd/user/redshift.service
     assertFileContent \
         home-files/.config/systemd/user/redshift.service \
         ${./redshift-basic-configuration-expected.service}

@@ -18,6 +18,7 @@
       expectedConfigContent = pkgs.writeText "uv.config-custom.expected" ''
         python-downloads = "never"
         python-preference = "only-system"
+
         [pip]
         index-url = "https://test.pypi.org/simple"
       '';

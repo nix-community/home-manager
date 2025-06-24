@@ -1,1 +1,0 @@
-{ bspwm-configuration = ./configuration.nix; }

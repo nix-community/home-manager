@@ -12,7 +12,7 @@ in
 {
   meta.maintainers = [
     lib.maintainers.rycee
-    lib.maintainers.midirhee12
+    lib.maintainers.midischwarz12
   ];
 
   options = {

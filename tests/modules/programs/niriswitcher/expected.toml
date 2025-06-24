@@ -1,4 +1,5 @@
 center_on_focus = true
+
 [appearance]
 icon_size = 64
 system_theme = "dark"

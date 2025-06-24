@@ -1,1 +1,5 @@
-{ clipcat-example-config = ./example-config.nix; }
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  clipcat-example-config = ./example-config.nix;
+}

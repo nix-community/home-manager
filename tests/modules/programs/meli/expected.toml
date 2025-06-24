@@ -10,9 +10,11 @@ subscribed_mailboxes = ["Inbox", "Sent", "Trash", "Drafts"]
 [accounts."hm@example.com".send_mail]
 hostname = "smtp.example.com"
 port = 1848
+
 [accounts."hm@example.com".send_mail.auth]
 type = "auto"
 username = "home.manager"
+
 [accounts."hm@example.com".send_mail.auth.password]
 type = "command_eval"
 value = "password-command"
