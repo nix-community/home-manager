@@ -377,6 +377,7 @@ import nmtSrc {
       ./modules/programs/halloy
       ./modules/programs/hexchat
       ./modules/programs/hyprlock
+      ./modules/programs/hyprpanel
       ./modules/programs/i3bar-river
       ./modules/programs/i3blocks
       ./modules/programs/i3status-rust
