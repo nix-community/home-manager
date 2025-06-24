@@ -9,6 +9,9 @@ jobs:
   update:
     runs-on: ubuntu-latest
     if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
+    strategy:
+      matrix:
+        branch: [master, release-25.05]
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
@@ -31,6 +34,8 @@ jobs:
           } >> "$GITHUB_OUTPUT"
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
       - name: Install Nix
         uses: cachix/install-nix-action@v31
       - name: Update flake.lock
@@ -53,3 +58,4 @@ jobs:
 
             [update-flake-lock]: https://github.com/DeterminateSystems/update-flake-lock
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          base-branch: ${{ matrix.branch }}
