@@ -30,6 +30,7 @@
     let
       preexistingKeymaps = builtins.toFile "preexisting.json" ''
         [
+          // Things changed interactively
           {
             "bindings": {
               "down": "menu::SelectNext"
@@ -41,12 +42,14 @@
             },
             "context": "Terminal"
           },
+
+          /* Manually changed */
           {
             "bindings": {
               "enter": "newline"
             },
-            "context": "Editor"
-          }
+            "context": "Editor",
+          },
         ]
       '';
 
