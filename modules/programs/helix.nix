@@ -232,7 +232,7 @@ in
         settings =
           let
             hasSettings = cfg.settings != { };
-            hasExtraConfig = cfg.extraConfig != null;
+            hasExtraConfig = cfg.extraConfig != "";
           in
           {
             "helix/config.toml" = mkIf (hasSettings || hasExtraConfig) {
