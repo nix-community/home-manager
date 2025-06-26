@@ -17,4 +17,4 @@ test-install:
 	HOME=$(shell mktemp -d) NIX_PATH=${NIX_PATH} nix-shell . -A install
 
 format:
-	nix-shell -p treefmt nixfmt-rfc-style keep-sorted --run "treefmt --config-file ./treefmt.toml"
+	nix-shell -p treefmt nixfmt-rfc-style deadnix keep-sorted --run "treefmt --config-file ./treefmt.toml"

@@ -5,6 +5,11 @@ tree-root-file = "release.json"
 command = "nixfmt"
 includes = [ "*.nix" ]
 
+[formatter.deadnix]
+command = "deadnix"
+options = [ "--edit", "--no-lambda-arg" ]
+includes = [ "*.nix" ]
+
 [formatter.keep-sorted]
 command = "keep-sorted"
 includes = [ "*" ]

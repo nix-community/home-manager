@@ -187,28 +187,26 @@ in
 
                 corePlugins =
                   let
-                    corePluginsOptions =
-                      { config, ... }:
-                      {
-                        options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = true;
-                            description = "Whether to enable the plugin.";
-                          };
+                    corePluginsOptions = {
+                      options = {
+                        enable = mkOption {
+                          type = types.bool;
+                          default = true;
+                          description = "Whether to enable the plugin.";
+                        };
 
-                          name = mkOption {
-                            type = types.enum corePlugins;
-                            description = "The plugin.";
-                          };
+                        name = mkOption {
+                          type = types.enum corePlugins;
+                          description = "The plugin.";
+                        };
 
-                          settings = mkOption {
-                            type = with types; attrsOf anything;
-                            description = "Plugin settings to include.";
-                            default = { };
-                          };
+                        settings = mkOption {
+                          type = with types; attrsOf anything;
+                          description = "Plugin settings to include.";
+                          default = { };
                         };
                       };
+                    };
                   in
                   mkOption {
                     description = "Core plugins to activate.";
@@ -220,28 +218,26 @@ in
 
                 communityPlugins =
                   let
-                    communityPluginsOptions =
-                      { config, ... }:
-                      {
-                        options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = true;
-                            description = "Whether to enable the plugin.";
-                          };
+                    communityPluginsOptions = {
+                      options = {
+                        enable = mkOption {
+                          type = types.bool;
+                          default = true;
+                          description = "Whether to enable the plugin.";
+                        };
 
-                          pkg = mkOption {
-                            type = types.package;
-                            description = "The plugin package.";
-                          };
+                        pkg = mkOption {
+                          type = types.package;
+                          description = "The plugin package.";
+                        };
 
-                          settings = mkOption {
-                            type = with types; attrsOf anything;
-                            description = "Settings to include in the plugin's `data.json`.";
-                            default = { };
-                          };
+                        settings = mkOption {
+                          type = with types; attrsOf anything;
+                          description = "Settings to include in the plugin's `data.json`.";
+                          default = { };
                         };
                       };
+                    };
                   in
                   mkOption {
                     description = "Community plugins to install and activate.";
@@ -295,22 +291,20 @@ in
 
                 themes =
                   let
-                    themesOptions =
-                      { config, ... }:
-                      {
-                        options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = true;
-                            description = "Whether to set the theme as active.";
-                          };
+                    themesOptions = {
+                      options = {
+                        enable = mkOption {
+                          type = types.bool;
+                          default = true;
+                          description = "Whether to set the theme as active.";
+                        };
 
-                          pkg = mkOption {
-                            type = types.package;
-                            description = "The theme package.";
-                          };
+                        pkg = mkOption {
+                          type = types.package;
+                          description = "The theme package.";
                         };
                       };
+                    };
                   in
                   mkOption {
                     description = "Themes to install.";
@@ -320,22 +314,20 @@ in
 
                 hotkeys =
                   let
-                    hotkeysOptions =
-                      { config, ... }:
-                      {
-                        options = {
-                          modifiers = mkOption {
-                            type = with types; listOf str;
-                            description = "The hotkey modifiers.";
-                            default = [ ];
-                          };
+                    hotkeysOptions = {
+                      options = {
+                        modifiers = mkOption {
+                          type = with types; listOf str;
+                          description = "The hotkey modifiers.";
+                          default = [ ];
+                        };
 
-                          key = mkOption {
-                            type = types.str;
-                            description = "The hotkey.";
-                          };
+                        key = mkOption {
+                          type = types.str;
+                          description = "The hotkey.";
                         };
                       };
+                    };
                   in
                   mkOption {
                     description = "Hotkeys to configure.";
