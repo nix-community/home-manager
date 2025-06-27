@@ -33,6 +33,8 @@
 
       setopt HIST_FCNTL_LOCK
       unsetopt APPEND_HISTORY
+      unsetopt INC_APPEND_HISTORY
+      unsetopt INC_APPEND_HISTORY_TIME
       unsetopt HIST_EXPIRE_DUPS_FIRST
       unsetopt EXTENDED_HISTORY
       unsetopt HIST_FIND_NO_DUPS
