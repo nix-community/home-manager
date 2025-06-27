@@ -51,14 +51,14 @@
 
           setopt HIST_FCNTL_LOCK
           unsetopt APPEND_HISTORY
-          setopt HIST_IGNORE_DUPS
-          unsetopt HIST_IGNORE_ALL_DUPS
-          unsetopt HIST_SAVE_NO_DUPS
-          unsetopt HIST_FIND_NO_DUPS
-          setopt HIST_IGNORE_SPACE
           unsetopt HIST_EXPIRE_DUPS_FIRST
-          setopt SHARE_HISTORY
           unsetopt EXTENDED_HISTORY
+          unsetopt HIST_FIND_NO_DUPS
+          unsetopt HIST_IGNORE_ALL_DUPS
+          setopt HIST_IGNORE_DUPS
+          setopt HIST_IGNORE_SPACE
+          unsetopt HIST_SAVE_NO_DUPS
+          setopt SHARE_HISTORY
 
 
           # Default priority
