@@ -200,14 +200,14 @@ in
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.append then "setopt" else "unsetopt"} APPEND_HISTORY
-        ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
-        ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
-        ${if cfg.history.saveNoDups then "setopt" else "unsetopt"} HIST_SAVE_NO_DUPS
-        ${if cfg.history.findNoDups then "setopt" else "unsetopt"} HIST_FIND_NO_DUPS
-        ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
-        ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
         ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
+        ${if cfg.history.findNoDups then "setopt" else "unsetopt"} HIST_FIND_NO_DUPS
+        ${if cfg.history.ignoreAllDups then "setopt" else "unsetopt"} HIST_IGNORE_ALL_DUPS
+        ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+        ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
+        ${if cfg.history.saveNoDups then "setopt" else "unsetopt"} HIST_SAVE_NO_DUPS
+        ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
         ${if cfg.autocd != null then "${if cfg.autocd then "setopt" else "unsetopt"} autocd" else ""}
       '')
 
