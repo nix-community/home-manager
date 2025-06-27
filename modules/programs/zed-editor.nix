@@ -15,13 +15,16 @@ let
 
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
+  json5 = pkgs.python3Packages.toPythonApplication pkgs.python3Packages.json5;
   impureConfigMerger = empty: jqOperation: path: staticSettings: ''
     mkdir -p $(dirname ${lib.escapeShellArg path})
     if [ ! -e ${lib.escapeShellArg path} ]; then
       # No file? Create it
       echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
     fi
-    config="$(${pkgs.jq}/bin/jq -s ${lib.escapeShellArg jqOperation} ${lib.escapeShellArg path} ${lib.escapeShellArg staticSettings})"
+    dynamic="$(${lib.getExe json5} --as-json ${lib.escapeShellArg path})"
+    static="$(cat ${lib.escapeShellArg staticSettings})"
+    config="$(${lib.getExe pkgs.jq} -s ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
     printf '%s\n' "$config" > ${lib.escapeShellArg path}
     unset config
   '';
@@ -170,7 +173,7 @@ in
     home.activation = mkMerge [
       (mkIf (mergedSettings != { }) {
         zedSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "{}" ".[0] * .[1]" "${config.xdg.configHome}/zed/settings.json" (
+          impureConfigMerger "{}" "$dynamic * $static" "${config.xdg.configHome}/zed/settings.json" (
             jsonFormat.generate "zed-user-settings" mergedSettings
           )
         );
@@ -178,7 +181,7 @@ in
       (mkIf (cfg.userKeymaps != [ ]) {
         zedKeymapActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
           impureConfigMerger "[]"
-            ".[0] + .[1] | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
+            "$dynamic + $static | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
             "${config.xdg.configHome}/zed/keymap.json"
             (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
         );

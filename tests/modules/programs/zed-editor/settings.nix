@@ -27,7 +27,10 @@
     let
       preexistingSettings = builtins.toFile "preexisting.json" ''
         {
+          // I chose this theme interactively
           "theme": "Default",
+
+          /* I change AI settings interactively */
           "features": {
             "copilot": true,
             "ai_assist": true
