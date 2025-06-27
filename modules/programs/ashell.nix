@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.programs.ashell;
-  settingsFormat = pkgs.formats.yaml { };
+  settingsFormat = pkgs.formats.toml { };
 in
 {
   meta.maintainers = [ lib.hm.maintainers.justdeeevin ];
@@ -35,9 +35,9 @@ in
         workspaces.visibilityMode = "MonitorSpecific";
       };
       description = ''
-        Ashell configuration written to {file}`$XDG_CONFIG_HOME/ashell.yml`.
+        Ashell configuration written to {file}`$XDG_CONFIG_HOME/ashell/config.toml`.
         For available settings see
-        <https://github.com/MalpenZibo/ashell/tree/0.4.1?tab=readme-ov-file#configuration>.
+        <https://github.com/MalpenZibo/ashell/tree/0.5.0?tab=readme-ov-file#configuration>.
       '';
     };
 
@@ -69,7 +69,7 @@ in
         ];
 
         home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-        xdg.configFile."ashell.yml" = lib.mkIf (cfg.settings != { }) {
+        xdg.configFile."ashell/config.toml" = lib.mkIf (cfg.settings != { }) {
           source = settingsFormat.generate "ashell-config" cfg.settings;
         };
       }
