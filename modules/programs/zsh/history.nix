@@ -33,6 +33,36 @@ in
               '';
             };
 
+            appendInc = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                This option works like `programs.zsh.history.append` except that
+                new history lines are added to the $HISTFILE incrementally (as
+                soon as they are entered), rather than waiting until the shell
+                exits. The file will still be periodically re-written to trim it
+                when the number of lines grows 20% beyond the value specified by
+                `programs.zsh.history.save`.
+              '';
+            };
+
+            appendIncTime = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                This option is a variant of `programs.zsh.history.appendInc` in
+                which, where possible, the history entry is written out to the
+                file after the command is finished, so that the time taken by
+                the command is recorded correctly in the history file in
+                EXTENDED_HISTORY format. This means that the history entry will
+                not be available immediately from other instances of the shell
+                that are using the same history file.
+                This option is only useful if `programs.zsh.history.append` and
+                `programs.zsh.history.share` are turned off. The three options
+                should be considered mutually exclusive.
+              '';
+            };
+
             size = mkOption {
               type = types.int;
               default = 10000;
@@ -124,7 +154,16 @@ in
             share = mkOption {
               type = types.bool;
               default = true;
-              description = "Share command history between zsh sessions.";
+              description = ''
+                This option both imports new commands from the history file,
+                and also causes your typed commands to be appended to the
+                history file (the latter is like specifying
+                `programs.zsh.history.append`, which should be turned off
+                if this option is in effect). The history lines are also output
+                with timestamps ala `programs.zsh.history.extended` (which makes
+                it easier to find the spot where we left off reading the file
+                after it gets re-written).
+              '';
             };
           };
         }
@@ -171,6 +210,13 @@ in
     };
 
   config = {
+    assertions = with config.programs.zsh; [
+      {
+        assertion = history.appendIncTime -> !history.appendInc && !history.share;
+        message = "zsh.hist.appendIncTime can't be mixed with zsh.hist.appendInc or zsh.hist.share";
+      }
+    ];
+
     warnings =
       lib.optionals (!lib.hasPrefix "/" cfg.history.path && !lib.hasInfix "$" cfg.history.path)
         [
@@ -200,6 +246,8 @@ in
 
         setopt HIST_FCNTL_LOCK
         ${if cfg.history.append then "setopt" else "unsetopt"} APPEND_HISTORY
+        ${if cfg.history.appendInc then "setopt" else "unsetopt"} INC_APPEND_HISTORY
+        ${if cfg.history.appendIncTime then "setopt" else "unsetopt"} INC_APPEND_HISTORY_TIME
         ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
         ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
         ${if cfg.history.findNoDups then "setopt" else "unsetopt"} HIST_FIND_NO_DUPS
