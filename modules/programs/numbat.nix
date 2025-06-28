@@ -38,10 +38,25 @@ in
         <https://numbat.dev/doc/cli-customization.html#configuration> for options.
       '';
     };
+
+    initFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.lines;
+      default = null;
+      example = ''
+        unit kohm: ElectricResistance = kV/A
+      '';
+      description = ''
+        User initialization file ({file}`init.nbt`) contents.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
+
+    home.file."${configDir}/init.nbt" = mkIf (cfg.initFile != null) {
+      text = cfg.initFile;
+    };
 
     home.file."${configDir}/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "numbat-config" cfg.settings;
