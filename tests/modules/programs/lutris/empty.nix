@@ -1,4 +1,3 @@
-{ pkgs, lib, ... }:
 {
   programs.lutris.enable = true;
   nmt.script =

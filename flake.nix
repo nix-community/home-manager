@@ -55,6 +55,7 @@
           pkgs.treefmt.withConfig {
             runtimeInputs = with pkgs; [
               nixfmt-rfc-style
+              deadnix
               keep-sorted
             ];
             settings = pkgs.lib.importTOML ./treefmt.toml;
