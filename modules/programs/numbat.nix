@@ -40,13 +40,14 @@ in
     };
 
     initFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.lines;
+      type = lib.types.nullOr (lib.types.either lib.types.lines lib.types.path);
       default = null;
       example = ''
         unit kohm: ElectricResistance = kV/A
       '';
       description = ''
-        User initialization file ({file}`init.nbt`) contents.
+        User initialization file ({file}`init.nbt`) contents. May be specified
+        inline or as a path to a source file.
       '';
     };
   };
@@ -55,7 +56,7 @@ in
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${configDir}/init.nbt" = mkIf (cfg.initFile != null) {
-      text = cfg.initFile;
+      source = if lib.isString cfg.initFile then pkgs.writeText "init.nbt" cfg.initFile else cfg.initFile;
     };
 
     home.file."${configDir}/config.toml" = mkIf (cfg.settings != { }) {
