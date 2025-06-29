@@ -132,7 +132,7 @@ let
       )
     ];
 
-    xdg.configFile."tmux/tmux.conf".text = ''
+    home.file.".tmux.conf".text = ''
       # ============================================= #
       # Load plugins with Home Manager                #
       # --------------------------------------------- #
@@ -209,7 +209,7 @@ in
         default = "";
         description = ''
           Additional configuration to add to
-          {file}`tmux.conf`.
+          {file}`.tmux.conf`.
         '';
       };
 
@@ -363,8 +363,8 @@ in
           ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
       }
 
-      { xdg.configFile."tmux/tmux.conf".text = lib.mkBefore tmuxConf; }
-      { xdg.configFile."tmux/tmux.conf".text = lib.mkAfter cfg.extraConfig; }
+      { home.file.".tmux.conf".text = lib.mkBefore tmuxConf; }
+      { home.file.".tmux.conf".text = lib.mkAfter cfg.extraConfig; }
 
       (lib.mkIf cfg.secureSocket {
         home.sessionVariables = {
