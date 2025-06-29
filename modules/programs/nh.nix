@@ -8,7 +8,10 @@ let
   cfg = config.programs.nh;
 in
 {
-  meta.maintainers = with lib.maintainers; [ johnrtitor ];
+  meta.maintainers = with lib.maintainers; [
+    johnrtitor
+    a-jay98
+  ];
 
   options.programs.nh = {
     enable = lib.mkEnableOption "nh, yet another Nix CLI helper";
@@ -37,7 +40,9 @@ in
         description = ''
           How often cleanup is performed.
 
-          The format is described in {manpage}`systemd.time(7)`.
+          On linux the format is described in {manpage}`systemd.time(7)`.
+
+          ${lib.hm.darwin.intervalDocumentation}
         '';
       };
 
@@ -59,6 +64,10 @@ in
       lib.optional (cfg.clean.enable && config.nix.gc.automatic)
         "programs.nh.clean.enable and nix.gc.automatic (Home-Manager) are both enabled. Please use one or the other to avoid conflict.";
 
+    assertions = lib.optionals pkgs.stdenv.isDarwin [
+      (lib.hm.darwin.assertInterval "programs.nh.clean.dates" cfg.clean.dates pkgs)
+    ];
+
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
       sessionVariables = lib.mkIf (cfg.flake != null) (
@@ -70,7 +79,7 @@ in
       );
     };
 
-    systemd.user = lib.mkIf cfg.clean.enable {
+    systemd.user = lib.mkIf (cfg.clean.enable && pkgs.stdenv.isLinux) {
       services.nh-clean = {
         Unit.Description = "Nh clean (user)";
 
@@ -89,6 +98,21 @@ in
         };
 
         Install.WantedBy = [ "timers.target" ];
+      };
+
+    };
+
+    launchd.agents.nh-clean = lib.mkIf (cfg.clean.enable && pkgs.stdenv.isDarwin) {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          "${lib.getExe cfg.package}"
+          "clean"
+          "user"
+        ] ++ lib.optional (cfg.clean.extraArgs != "") cfg.clean.extraArgs;
+
+        StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.clean.dates;
+
       };
     };
   };
