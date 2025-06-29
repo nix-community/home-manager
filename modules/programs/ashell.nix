@@ -6,7 +6,23 @@
 }:
 let
   cfg = config.programs.ashell;
-  settingsFormat = pkgs.formats.toml { };
+  tomlFormat = pkgs.formats.toml { };
+  yamlFormat = pkgs.formats.yaml { };
+
+  packageVersion = if cfg.package != null then lib.getVersion cfg.package else "0.5.0";
+  isTomlConfig = lib.versionAtLeast packageVersion "0.5.0";
+  settingsFormat = if isTomlConfig then tomlFormat else yamlFormat;
+  configFileName = if isTomlConfig then "ashell/config.toml" else "ashell.yml";
+
+  # Create migration function for camelCase to snake_case conversion
+  migrateSettings = lib.hm.deprecations.remapAttrsRecursive {
+    pred = lib.hm.strings.isCamelCase;
+    transform = lib.hm.strings.toSnakeCase;
+  };
+
+  # Apply migration only for TOML config (ashell >= 0.5.0)
+  processedSettings =
+    if isTomlConfig then migrateSettings "programs.ashell.settings" cfg.settings else cfg.settings;
 in
 {
   meta.maintainers = [ lib.hm.maintainers.justdeeevin ];
@@ -17,7 +33,7 @@ in
     package = lib.mkPackageOption pkgs "ashell" { nullable = true; };
 
     settings = lib.mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       example = {
         modules = {
@@ -35,9 +51,10 @@ in
         workspaces.visibilityMode = "MonitorSpecific";
       };
       description = ''
-        Ashell configuration written to {file}`$XDG_CONFIG_HOME/ashell/config.toml`.
+        Ashell configuration written to {file}`$XDG_CONFIG_HOME/ashell/config.toml` (0.5.0+)
+        or {file}`$XDG_CONFIG_HOME/ashell/config.yaml` (<0.5.0).
         For available settings see
-        <https://github.com/MalpenZibo/ashell/tree/0.5.0?tab=readme-ov-file#configuration>.
+        <https://github.com/MalpenZibo/ashell?tab=readme-ov-file#configuration>.
       '';
     };
 
@@ -69,8 +86,8 @@ in
         ];
 
         home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-        xdg.configFile."ashell/config.toml" = lib.mkIf (cfg.settings != { }) {
-          source = settingsFormat.generate "ashell-config" cfg.settings;
+        xdg.configFile."${configFileName}" = lib.mkIf (cfg.settings != { }) {
+          source = settingsFormat.generate "ashell-config" processedSettings;
         };
       }
       (lib.mkIf cfg.systemd.enable {
