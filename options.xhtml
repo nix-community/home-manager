@@ -107517,6 +107517,38 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-wayland.windowManager.sway.systemd.dbusImplementation"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.systemd.dbusImplementation"><code class="option">wayland.windowManager.sway.systemd.dbusImplementation</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The D-Bus implementation used on the system.
+This affects which tool is used to import environment variables when starting the Sway session.
+On NixOS, this should match the value of the option <a class="link" href="https://nixos.org/manual/nixos/stable/options#opt-services.dbus.implementation"  target="_top"><code class="literal">services.dbus.implementation</code> (NixOS)</a>.
+When set to <code class="literal">dbus</code>, <code class="literal">dbus-update-activation-environment --systemd &lt;variables&gt;</code> is run.
+Otherwise, when set to <code class="literal">broker</code>, <code class="literal">systemctl --user import-environment &lt;variables&gt;</code> is run.
+See <a class="link" href="https://github.com/swaywm/sway/wiki#systemd-and-dbus-activation-environments"  target="_top">https://github.com/swaywm/sway/wiki#systemd-and-dbus-activation-environments</a> for more documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+one of “dbus”, “broker”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;dbus&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;broker&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix" target="_top">
+&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-wayland.windowManager.sway.systemd.extraCommands"></a><a class="term" href="options.xhtml#opt-wayland.windowManager.sway.systemd.extraCommands"><code class="option">wayland.windowManager.sway.systemd.extraCommands</code>
   </a>
  </span>
