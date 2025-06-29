@@ -14,12 +14,27 @@ let
   initFish = if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
 in
 {
-  meta.maintainers = [ ];
+  meta.maintainers = [ lib.maintainers.kpbaks ];
 
   options.programs.starship = {
     enable = lib.mkEnableOption "starship";
 
     package = lib.mkPackageOption pkgs "starship" { };
+
+    preset = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "jetpack";
+      description = ''
+        The community-submitted configuration preset to use.
+
+        See <https://starship.rs/presets/#presets> for previews
+        of each preset, and use `starship preset --list` to quickly
+        list the names of each of them.
+
+        Mutually exclusive with programs.starship.settings
+      '';
+    };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -46,6 +61,8 @@ in
 
         See <https://starship.rs/config/> for the full list
         of options.
+
+        Mutually exclusive with programs.starship.preset
       '';
     };
 
@@ -87,9 +104,29 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."starship.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "starship-config" cfg.settings;
-    };
+    warnings = lib.optional (
+      cfg.preset != null && cfg.settings != { }
+    ) "programs.starship.settings has no effect when programs.starship.preset != null";
+
+    xdg.configFile."starship.toml" =
+      if cfg.preset != null then
+        let
+          starshipGithub = pkgs.fetchFromGitHub {
+            owner = "starship";
+            repo = "starship";
+            tag = "v1.23.0";
+            hash = "sha256-fJbqKBRRLFNguRtHqwhPLNPmhJvXqcfdQi+vQIGmrBw=";
+          };
+        in
+        {
+          source = "${starshipGithub}/docs/public/presets/toml/${cfg.preset}.toml";
+        }
+      else if cfg.settings != { } then
+        {
+          source = tomlFormat.generate "starship-config" cfg.settings;
+        }
+      else
+        { };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
       if [[ $TERM != "dumb" ]]; then
