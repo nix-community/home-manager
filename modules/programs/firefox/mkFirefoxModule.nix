@@ -24,6 +24,7 @@ let
     mkIf
     mkMerge
     mkOption
+    mkOptionDefault
     optionalString
     optional
     setAttrByPath
@@ -233,6 +234,12 @@ in
         versions it should be an unwrapped ${appName} package.
         Set to `null` to disable installing ${appName}.
       '';
+    };
+
+    release = mkOption {
+      internal = true;
+      type = types.str;
+      description = "Upstream release version used to fetch from `releases.mozilla.org`.";
     };
 
     languagePacks = mkOption {
@@ -951,6 +958,7 @@ in
     }
     // setAttrByPath modulePath {
       finalPackage = wrapPackage cfg.package;
+      release = mkOptionDefault cfg.package.version;
 
       policies = {
         ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
@@ -959,7 +967,7 @@ in
               lang:
               lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
                 installation_mode = "normal_installed";
-                install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.package.version}/linux-x86_64/xpi/${lang}.xpi";
+                install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
               }
             ) cfg.languagePacks
           )
