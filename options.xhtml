@@ -54428,6 +54428,159 @@ positive integer, meaning &gt;0</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.quickshell.enable"></a><a class="term" href="options.xhtml#opt-programs.quickshell.enable"><code class="option">programs.quickshell.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable quickshell, a flexbile QtQuick-based desktop shell toolkit…</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/quickshell.nix" target="_top">
+&lt;home-manager/modules/programs/quickshell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.quickshell.package"></a><a class="term" href="options.xhtml#opt-programs.quickshell.package"><code class="option">programs.quickshell.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The quickshell package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.quickshell</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/quickshell.nix" target="_top">
+&lt;home-manager/modules/programs/quickshell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.quickshell.activeConfig"></a><a class="term" href="options.xhtml#opt-programs.quickshell.activeConfig"><code class="option">programs.quickshell.activeConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The name of the config to use.</p><p>If <code class="literal">null</code>, quickshell will attempt to use a config located in <code class="literal">$XDG_CONFIG_HOME/quickshell</code> instead of one of the named sub-directories.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/quickshell.nix" target="_top">
+&lt;home-manager/modules/programs/quickshell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.quickshell.configs"></a><a class="term" href="options.xhtml#opt-programs.quickshell.configs"><code class="option">programs.quickshell.configs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>A set of configs to include in the quickshell config directory. The key is the name of the config.</p><p>The configuration that quickshell should use can be specified with the <code class="literal">activeConfig</code> option.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/quickshell.nix" target="_top">
+&lt;home-manager/modules/programs/quickshell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.quickshell.systemd.enable"></a><a class="term" href="options.xhtml#opt-programs.quickshell.systemd.enable"><code class="option">programs.quickshell.systemd.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable quickshell systemd service.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/quickshell.nix" target="_top">
+&lt;home-manager/modules/programs/quickshell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.quickshell.systemd.target"></a><a class="term" href="options.xhtml#opt-programs.quickshell.systemd.target"><code class="option">programs.quickshell.systemd.target</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The systemd target that will automatically start quickshell.</p><p>If you set this to a WM-specific target, make sure that systemd integration for that WM is enabled (e.g. <code class="literal">wayland.windowManager.hyprland.systemd.enable</code>). <span class="strong"><strong>This is typically true by default</strong></span>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">config.wayland.systemd.target</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;hyprland-session.target&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/quickshell.nix" target="_top">
+&lt;home-manager/modules/programs/quickshell.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.qutebrowser.enable"></a><a class="term" href="options.xhtml#opt-programs.qutebrowser.enable"><code class="option">programs.qutebrowser.enable</code>
   </a>
  </span>
