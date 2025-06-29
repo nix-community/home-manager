@@ -32,8 +32,8 @@ in
 
     shellWrapperName = lib.mkOption {
       type = types.str;
-      default = "yy";
-      example = "y";
+      default = "y";
+      example = "yy";
       description = ''
         Name of the shell wrapper to be called.
       '';
