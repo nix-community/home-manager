@@ -4,7 +4,6 @@ on:
     # Update every Sunday and Wednesday
     - cron: "51 3 * * 0,3"
   workflow_dispatch:
-
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -58,4 +57,5 @@ jobs:
 
             [update-flake-lock]: https://github.com/DeterminateSystems/update-flake-lock
             [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          base-branch: ${{ matrix.branch }}
+          base: ${{ matrix.branch }}
+          branch: update/${{ matrix.branch }}
