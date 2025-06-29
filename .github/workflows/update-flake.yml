@@ -4,11 +4,16 @@ on:
     # Update every Sunday and Wednesday
     - cron: "51 3 * * 0,3"
   workflow_dispatch:
-
 jobs:
   update:
     runs-on: ubuntu-latest
     if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
+    env:
+      repo: ${{ github.repository }}
+      base_branch: ${{ github.ref_name }}
+      pr_branch: update/${{ github.ref_name }}
+      workflow_run_id: ${{ github.run_id }}
+      workflow_run_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     strategy:
       matrix:
         branch: [master, release-25.05]
