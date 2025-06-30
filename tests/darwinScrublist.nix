@@ -101,6 +101,7 @@ let
     "neovide"
     "neovim"
     "newsboat"
+    "nh"
     "nheko"
     "nix"
     "nix-direnv"
