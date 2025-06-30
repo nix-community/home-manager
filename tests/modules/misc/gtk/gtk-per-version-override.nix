@@ -1,5 +1,4 @@
 {
-  # Test that per-version settings override global defaults
   gtk = {
     enable = true;
     # Global defaults
@@ -35,26 +34,24 @@
 
   nmt.script = ''
     # GTK2 should use overridden font/theme, global icons/cursor
-    assertFileRegex home-files/.gtkrc-2.0 'gtk-font-name = "GTK2-Font 11"'
-    assertFileRegex home-files/.gtkrc-2.0 'gtk-theme-name = "GTK2-Theme"'
-    assertFileRegex home-files/.gtkrc-2.0 'gtk-icon-theme-name = "Global-Icons"'
-    assertFileRegex home-files/.gtkrc-2.0 'gtk-cursor-theme-name = "Global-Cursor"'
-    assertFileRegex home-files/.gtkrc-2.0 'gtk-can-change-accels = 1'
+    assertFileExists home-files/.gtkrc-2.0
+    assertFileContent home-files/.gtkrc-2.0 \
+      ${./gtk-per-version-override-gtk2-expected.conf}
 
     # GTK3 should use global font/theme, overridden icons/cursor
-    assertFileRegex home-files/.config/gtk-3.0/settings.ini 'gtk-font-name=Global Font 11'
-    assertFileRegex home-files/.config/gtk-3.0/settings.ini 'gtk-theme-name=Global-Theme'
-    assertFileRegex home-files/.config/gtk-3.0/settings.ini 'gtk-icon-theme-name=GTK3-Icons'
-    assertFileRegex home-files/.config/gtk-3.0/settings.ini 'gtk-cursor-theme-name=GTK3-Cursor'
-    assertFileRegex home-files/.config/gtk-3.0/settings.ini 'gtk-recent-files-limit=10'
-    assertFileRegex home-files/.config/gtk-3.0/gtk.css 'window { border: 1px solid red; }'
+    assertFileExists home-files/.config/gtk-3.0/settings.ini
+    assertFileContent home-files/.config/gtk-3.0/settings.ini \
+      ${./gtk-per-version-override-gtk3-expected.ini}
+    assertFileExists home-files/.config/gtk-3.0/gtk.css
+    assertFileContent home-files/.config/gtk-3.0/gtk.css \
+      ${./gtk-per-version-override-gtk3-css-expected.css}
 
     # GTK4 should use overridden font, global theme/icons/cursor
-    assertFileRegex home-files/.config/gtk-4.0/settings.ini 'gtk-font-name=GTK4-Font 11'
-    assertFileRegex home-files/.config/gtk-4.0/settings.ini 'gtk-theme-name=Global-Theme'
-    assertFileRegex home-files/.config/gtk-4.0/settings.ini 'gtk-icon-theme-name=Global-Icons'
-    assertFileRegex home-files/.config/gtk-4.0/settings.ini 'gtk-cursor-theme-name=Global-Cursor'
-    assertFileRegex home-files/.config/gtk-4.0/settings.ini 'gtk-recent-files-limit=20'
-    assertFileRegex home-files/.config/gtk-4.0/gtk.css 'window { border: 2px solid blue; }'
+    assertFileExists home-files/.config/gtk-4.0/settings.ini
+    assertFileContent home-files/.config/gtk-4.0/settings.ini \
+      ${./gtk-per-version-override-gtk4-expected.ini}
+    assertFileExists home-files/.config/gtk-4.0/gtk.css
+    assertFileContent home-files/.config/gtk-4.0/gtk.css \
+      ${./gtk-per-version-override-gtk4-css-expected.css}
   '';
 }

@@ -16,7 +16,8 @@
 
     # GTK3 should be configured
     assertFileExists home-files/.config/gtk-3.0/settings.ini
-    assertFileRegex home-files/.config/gtk-3.0/settings.ini 'gtk-theme-name=Test-Theme'
+    assertFileContent home-files/.config/gtk-3.0/settings.ini \
+      ${./gtk-selective-enable-gtk3-expected.ini}
 
     # GTK4 should not be configured
     assertPathNotExists home-files/.config/gtk-4.0/settings.ini
