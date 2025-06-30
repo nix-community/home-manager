@@ -187,13 +187,13 @@ in
                 | items {|key, value|
                     let value = do (
                         {
-                          "path": {
+                          "PATH": {
                             from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
                             to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
                           }
                         }
                         | merge ($env.ENV_CONVERSIONS? | default {})
-                        | get -i $key
+                        | get -i ([[value, optional, insensitive]; [$key, false, true]] | into cell-path)
                         | get -i from_string
                         | if ($in | is-empty) { {|x| $x} } else { $in }
                     ) $value
