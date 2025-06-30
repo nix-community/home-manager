@@ -8,7 +8,10 @@ let
   cfg = config.programs.nh;
 in
 {
-  meta.maintainers = with lib.maintainers; [ johnrtitor ];
+  meta.maintainers = with lib.maintainers; [
+    johnrtitor
+    a-jay98
+  ];
 
   options.programs.nh = {
     enable = lib.mkEnableOption "nh, yet another Nix CLI helper";
