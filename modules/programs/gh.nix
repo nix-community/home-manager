@@ -193,7 +193,10 @@ in
         map (
           host:
           lib.nameValuePair host {
-            helper = "${cfg.package}/bin/gh auth git-credential";
+            helper = [
+              ""
+              "${cfg.package}/bin/gh auth git-credential"
+            ];
           }
         ) cfg.gitCredentialHelper.hosts
       )
