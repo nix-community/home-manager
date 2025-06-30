@@ -20,10 +20,11 @@
     in
     ''
       assertFileExists ${gtk4Path}/settings.ini
-
       assertFileContent ${gtk4Path}/settings.ini \
         ${./gtk4-basic-settings-expected.ini}
 
       assertFileExists ${gtk4Path}/gtk.css
+      assertFileContent ${gtk4Path}/gtk.css \
+        ${./gtk4-basic-settings-expected.css}
     '';
 }
