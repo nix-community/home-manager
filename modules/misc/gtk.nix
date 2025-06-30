@@ -416,20 +416,9 @@ in
       })
 
       # GTK4 Configuration
-      (mkIf cfg4.enable (
-        let
-          gtk4Css =
-            lib.optionalString (cfg4.theme != null && cfg4.theme.package != null) ''
-              /**
-               * GTK 4 reads the theme configured by gtk-theme-name, but ignores it.
-               * It does however respect user CSS, so import the theme from here.
-              **/
-              @import url("file://${cfg4.theme.package}/share/themes/${cfg4.theme.name}/gtk-4.0/gtk.css");
-            ''
-            + cfg4.extraCss;
-        in
-        {
-          xdg.configFile."gtk-4.0/settings.ini" = {
+      (mkIf cfg4.enable {
+        xdg.configFile = {
+          "gtk-4.0/settings.ini" = {
             text = toIni {
               Settings =
                 mkGtkSettings {
@@ -443,11 +432,21 @@ in
                 // cfg4.extraConfig;
             };
           };
-          xdg.configFile."gtk-4.0/gtk.css" = mkIf (gtk4Css != "") {
-            text = gtk4Css;
-          };
-        }
-      ))
+          "gtk-4.0/gtk.css" =
+            mkIf (cfg4.extraCss != "" || (cfg4.theme != null && cfg4.theme.package != null))
+              {
+                text =
+                  lib.optionalString (cfg4.theme != null && cfg4.theme.package != null) ''
+                    /**
+                     * GTK 4 reads the theme configured by gtk-theme-name, but ignores it.
+                     * It does however respect user CSS, so import the theme from here.
+                    **/
+                    @import url("file://${cfg4.theme.package}/share/themes/${cfg4.theme.name}/gtk-4.0/gtk.css");
+                  ''
+                  + cfg4.extraCss;
+              };
+        };
+      })
     ]
   );
 }
