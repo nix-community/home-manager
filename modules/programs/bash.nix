@@ -137,7 +137,13 @@ in
 
       sessionVariables = mkOption {
         default = { };
-        type = with types; lazyAttrsOf (either str int);
+        type =
+          with types;
+          lazyAttrsOf (oneOf [
+            str
+            int
+            path
+          ]);
         example = {
           MAILCHECK = 30;
         };
