@@ -38,9 +38,6 @@ in
   meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (lib.mkRemovedOptionModule [ "gtk" "gtk3" "waylandSupport" ] ''
-      This options is not longer needed and can be removed.
-    '')
     ./gtk/gtk2.nix
     ./gtk/gtk3.nix
     ./gtk/gtk4.nix
