@@ -49,11 +49,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - name: Get Nixpkgs revision from flake.lock
+        id: get-nixpkgs
+        run: |
+          echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
       - uses: cachix/install-nix-action@v31
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.hm == 'true' || needs.changes.outputs.format == 'true'
         with:
-          # TODO: Adjust uninstall to not need channel
-          nix_path: nixpkgs=channel:nixos-unstable
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
           extra_nix_config: |
             experimental-features = nix-command flakes
       - name: Build docs
