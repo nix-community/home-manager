@@ -35,7 +35,10 @@ let
 in
 
 {
-  meta.maintainers = [ lib.maintainers.rycee ];
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    rycee
+  ];
 
   imports = [
     ./gtk/gtk2.nix
