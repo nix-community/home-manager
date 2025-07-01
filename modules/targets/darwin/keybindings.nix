@@ -8,7 +8,9 @@
 let
   cfg = config.targets.darwin;
   homeDir = config.home.homeDirectory;
-  confFile = pkgs.writeText "DefaultKeybinding.dict" (lib.generators.toPlist { } cfg.keybindings);
+  confFile = pkgs.writeText "DefaultKeybinding.dict" (
+    lib.generators.toPlist { escape = true; } cfg.keybindings
+  );
 in
 {
   options.targets.darwin.keybindings = lib.mkOption {
