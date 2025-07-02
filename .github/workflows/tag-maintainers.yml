@@ -1,0 +1,115 @@
+name: Tag Module Maintainers
+on:
+  pull_request_target:
+    types: [ready_for_review]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  tag-maintainers:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'nix-community'
+    steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v2
+        if: vars.CI_APP_ID
+        id: app-token
+        with:
+          app-id: ${{ vars.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - name: Get Nixpkgs revision from flake.lock
+        id: get-nixpkgs
+        run: |
+          echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Get changed files
+        id: changed-files
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+        run: |
+          CHANGED_FILES=$(gh pr diff ${{ github.event.pull_request.number }} --name-only | grep '^modules/' | grep -v '^modules/\(po\|.*\/news\)/' || true)
+          echo "Changed module files:"
+          echo "$CHANGED_FILES"
+          echo "module_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Build module maintainers lookup
+        run: nix build --show-trace .#docs-jsonModuleMaintainers
+      - name: Find and Request Reviewers
+        id: find-maintainers
+        if: steps.changed-files.outputs.module_files != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+        run: |
+          MODULE_MAINTAINERS=$(cat ./result)
+
+          declare -A MAINTAINERS_TO_NOTIFY
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+
+          while IFS= read -r FILE; do
+            if [[ -z "$FILE" ]]; then
+              continue
+            fi
+
+            echo "Processing file: $FILE"
+            MATCHING_KEY=$(jq -r 'keys[] | select(endswith($path))' --arg path "$FILE" <<< "$MODULE_MAINTAINERS")
+            MAINTAINERS=""
+            if [[ -n "$MATCHING_KEY" ]]; then
+              echo "Found matching key in maintainer list: $MATCHING_KEY"
+              MAINTAINERS=$(jq -r "(.[\"$MATCHING_KEY\"][] | .github) // empty" <<< "$MODULE_MAINTAINERS")
+            else
+              echo "Could not find a matching key for $FILE in the maintainer list."
+            fi
+
+            for MAINTAINER in $MAINTAINERS; do
+              if [[ "$MAINTAINER" != "$PR_AUTHOR" ]]; then
+                MAINTAINERS_TO_NOTIFY["$MAINTAINER"]=1
+                echo "Found maintainer for $FILE: $MAINTAINER"
+              fi
+            done
+          done <<< "${{ steps.changed-files.outputs.module_files }}"
+
+          if [[ ${#MAINTAINERS_TO_NOTIFY[@]} -gt 0 ]]; then
+            PENDING_REVIEWERS=$(gh pr view ${{ github.event.pull_request.number }} --json reviewRequests --jq '.reviewRequests[].login')
+            PAST_REVIEWERS=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" --jq '.[].user.login')
+            USERS_TO_EXCLUDE=$(printf "%s\n%s" "$PENDING_REVIEWERS" "$PAST_REVIEWERS" | sort -u)
+            echo "Complete list of users to exclude:"
+            echo "$USERS_TO_EXCLUDE"
+
+            # Check if maintainers are collaborators and not already reviewers
+            REPO="${{ github.repository }}"
+            NEW_REVIEWERS=()
+            for MAINTAINER in "${!MAINTAINERS_TO_NOTIFY[@]}"; do
+              if echo "$USERS_TO_EXCLUDE" | grep -q -w "$MAINTAINER"; then
+                echo "$MAINTAINER is already a reviewer, skipping."
+                continue
+              fi
+
+              echo "Checking if $MAINTAINER is a collaborator..."
+              if gh api "/repos/$REPO/collaborators/$MAINTAINER" --silent; then
+                echo "User $MAINTAINER is a collaborator, adding to new reviewers list"
+                NEW_REVIEWERS+=("$MAINTAINER")
+              else
+                echo "User $MAINTAINER is not a repository collaborator, probably missed the automated invite to the maintainers team, ignoring"
+              fi
+            done
+
+             if [[ ${#NEW_REVIEWERS[@]} -gt 0 ]]; then
+              REVIEWERS_CSV=$(printf "%s," "${NEW_REVIEWERS[@]}")
+              echo "Requesting reviews from: ${REVIEWERS_CSV%,}"
+              gh pr edit ${{ github.event.pull_request.number }} --add-reviewer "${REVIEWERS_CSV%,}"
+            else
+              echo "No new reviewers to add."
+            fi
+          else
+            echo "No module maintainers found for the modified files."
+          fi
