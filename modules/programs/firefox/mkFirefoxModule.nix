@@ -901,6 +901,7 @@ in
                       || profile.settings != { }
                       || profile.extraConfig != ""
                       || profile.bookmarks.configFile != null
+                      || profile.extensions.settings != { }
                     )
                     {
                       text =
