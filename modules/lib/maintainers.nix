@@ -324,6 +324,12 @@
     github = "miku4k";
     githubId = 89653242;
   };
+  m0nsterrr = {
+    name = "Ludovic Ortega";
+    email = "nix@mail.adminafk.fr";
+    github = "M0NsTeRRR";
+    githubId = 37785089;
+  };
   mager = {
     email = "andreas@mager.eu";
     github = "AndreasMager";
