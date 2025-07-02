@@ -313,6 +313,11 @@ in
         onChange = ''
           ${pkgs.procps}/bin/pkill -USR1 -u $USER kitty || true
         '';
+      }
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        onChange = ''
+          /usr/bin/pkill -USR1 -u $USER kitty || true
+        '';
       };
 
     home.activation.checkKittyTheme = mkIf (cfg.themeFile != null) (
