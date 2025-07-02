@@ -14,14 +14,16 @@ jobs:
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
+        if: vars.CI_APP_ID
         id: app-token
         with:
           app-id: ${{ vars.CI_APP_ID }}
           private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
       - name: Get GitHub App user info
+        if: vars.CI_APP_ID
         id: user-info
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token}}
           slug: ${{ steps.app-token.outputs.app-slug }}
         run: |
           name="$slug[bot]"
@@ -35,16 +37,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
       - name: Install Nix
         uses: cachix/install-nix-action@v31
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v25
         with:
-          token: ${{ steps.app-token.outputs.token }}
-          git-committer-name: ${{ steps.user-info.outputs.name }}
-          git-committer-email: ${{ steps.user-info.outputs.email }}
-          git-author-name: ${{ steps.user-info.outputs.name }}
-          git-author-email: ${{ steps.user-info.outputs.email }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          git-committer-name: ${{ steps.user-info.outputs.name || 'github-actions[bot]' }}
+          git-committer-email: ${{ steps.user-info.outputs.email || '41898282+github-actions[bot]@users.noreply.github.com' }}
+          git-author-name: ${{ steps.user-info.outputs.name || 'github-actions[bot]' }}
+          git-author-email: ${{ steps.user-info.outputs.email || '41898282+github-actions[bot]@users.noreply.github.com' }}
           pr-labels: dependencies
           pr-title: "[${{ matrix.branch }}] flake.lock: Update"
           pr-body: |
