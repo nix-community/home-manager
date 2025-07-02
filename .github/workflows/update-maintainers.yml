@@ -139,10 +139,13 @@ jobs:
               --label "dependencies" \
               --label "maintainers"
       - name: Summary
+        env:
+          has_changes: ${{ steps.check-changes.outputs.has_changes }}
+          changes: ${{ steps.check-changes.outputs.changes_summary }}
         run: |
-          if [[ "${{ steps.check-changes.outputs.has_changes }}" == "true" ]]; then
+          if [[ "$has_changes" == "true" ]]; then
             echo "✅ Successfully created PR with maintainer updates"
-            echo "📊 Changes: ${{ steps.check-changes.outputs.changes_summary }}"
+            echo "📊 Changes: $changes"
           else
             echo "ℹ️  No changes detected - maintainers list is up to date"
           fi
