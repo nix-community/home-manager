@@ -56,7 +56,18 @@ jobs:
           ./lib/python/generate-all-maintainers.py
       - name: Check for changes
         id: check-changes
-        run: "if git diff --quiet all-maintainers.nix; then\n  echo \"No changes to all-maintainers.nix\"\n  echo \"has_changes=false\" >> \"$GITHUB_OUTPUT\"\nelse\n  echo \"Changes detected in all-maintainers.nix\"\n  echo \"has_changes=true\" >> \"$GITHUB_OUTPUT\"\n  \n  # Get change statistics\n  added=$(git diff --numstat all-maintainers.nix | cut -f1)\n  removed=$(git diff --numstat all-maintainers.nix | cut -f2)\n  echo \"changes_summary=+$added -$removed lines\" >> \"$GITHUB_OUTPUT\"\nfi\n"
+        run: |
+          if git diff --quiet all-maintainers.nix; then
+            echo "No changes to all-maintainers.nix"
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changes detected in all-maintainers.nix"
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            # Get change statistics
+            added=$(git diff --numstat all-maintainers.nix | cut -f1)
+            removed=$(git diff --numstat all-maintainers.nix | cut -f2)
+            echo "changes_summary=+$added -$removed lines" >> "$GITHUB_OUTPUT"
+          fi
       - name: Validate generated file
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
