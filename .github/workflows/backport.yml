@@ -1,13 +1,11 @@
 # Based on
 # https://github.com/NixOS/nixpkgs/blob/2566f9dc/.github/workflows/backport.yml
 name: Backport
-
 on:
   pull_request_target:
     types:
       - closed
       - labeled
-
 jobs:
   backport:
     name: Backport Pull Request
@@ -23,21 +21,20 @@ jobs:
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
+        if: vars.CI_APP_ID
         id: app-token
         with:
           app-id: ${{ vars.CI_APP_ID }}
           private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
-
       - uses: actions/checkout@v4
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.pull_request.head.sha }}
-
       - name: Create backport PRs
         id: backport
         uses: korthout/backport-action@v3
         with:
           # See https://github.com/korthout/backport-action#inputs
-          github_token: ${{ steps.app-token.outputs.token }}
+          github_token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           branch_name: backport/${target_branch}/${pull_number}
           copy_labels_pattern: .*

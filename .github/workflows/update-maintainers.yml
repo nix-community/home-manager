@@ -17,12 +17,14 @@ jobs:
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
+        if: vars.CI_APP_ID
         id: app-token
         with:
           app-id: ${{ vars.CI_APP_ID }}
           private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
       - name: Get GitHub App user info
         id: user-info
+        if: vars.CI_APP_ID
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           slug: ${{ steps.app-token.outputs.app-slug }}
@@ -37,7 +39,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
       - name: Get Nixpkgs revision from flake.lock
         id: get-nixpkgs
         run: |
@@ -81,7 +83,7 @@ jobs:
       - name: Create Pull Request
         if: steps.check-changes.outputs.has_changes == 'true' || github.event.inputs.create_pr == 'true'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           title: "maintainers: update all-maintainers.nix"
           commit_body: |
             Automated update of the master maintainers list combining:
