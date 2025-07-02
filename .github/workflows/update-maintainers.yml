@@ -120,24 +120,24 @@ jobs:
 
             ---
             🤖 *This PR was automatically created by the [update-maintainers workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*
-          run: |
-            # Create a new branch for the update
-            branch_name="maintainers/update-$(date +%Y%m%d%H%M%S)"
-            git checkout -b "$branch_name"
+        run: |
+          # Create a new branch for the update
+          branch_name="maintainers/update-$(date +%Y%m%d%H%M%S)"
+          git checkout -b "$branch_name"
 
-            # Commit the changes
-            git add all-maintainers.nix
-            git commit -m "$title" -m "$commit_body"
+          # Commit the changes
+          git add all-maintainers.nix
+          git commit -m "$title" -m "$commit_body"
 
-            # Push the branch
-            git push origin "$branch_name"
+          # Push the branch
+          git push origin "$branch_name"
 
-            # Create the pull request
-            gh pr create \
-              --title "$title" \
-              --body "$pr_body" \
-              --label "dependencies" \
-              --label "maintainers"
+          # Create the pull request
+          gh pr create \
+            --title "$title" \
+            --body "$pr_body" \
+            --label "dependencies" \
+            --label "maintainers"
       - name: Summary
         env:
           has_changes: ${{ steps.check-changes.outputs.has_changes }}
