@@ -15,7 +15,7 @@
     name = "Eulalia del Sol";
     email = "3ulalia@proton.me";
     github = "3ulalia";
-    githubId = "179992797";
+    githubId = 179992797;
   };
   # home-manager
   "9p4" = {
@@ -323,7 +323,7 @@
   henrisota = {
     email = "henrisota@users.noreply.github.com";
     github = "henrisota";
-    githubId = "56848082";
+    githubId = 56848082;
     name = "Henri Sota";
   };
   # home-manager
@@ -332,6 +332,7 @@
     email = "yiheng.he@proton.me";
     matrix = "@hey2022:matrix.org";
     github = "hey2022";
+    githubId = 48553457;
     keys = [ { fingerprint = "128E 09C0 6F73 D678 6BB5  E551 5EA5 3C75 F7BE 3EDE"; } ];
   };
   # home-manager
@@ -388,6 +389,7 @@
     name = "Jessica";
     email = "jess+nix@jessie.cafe";
     githubId = 43591752;
+    github = "ttrssreal";
     keys = [
       {
         longkeyid = "rsa3072/0xBA3350686C918606";
@@ -677,7 +679,7 @@
   msfjarvis = {
     email = "me@msfjarvis.dev";
     github = "msfjarvis";
-    githubId = "13348378";
+    githubId = 13348378;
     name = "Harsh Shandilya";
     keys = [
       {
@@ -925,7 +927,7 @@
     name = "Silmar Pereira da Silva Junior";
     email = "silmarjr2@gmail.com";
     github = "silmarp";
-    githubID = 67292496;
+    githubId = 67292496;
   };
   # home-manager
   soywod = {
