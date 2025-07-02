@@ -46,7 +46,7 @@ jobs:
           git-author-name: ${{ steps.user-info.outputs.name }}
           git-author-email: ${{ steps.user-info.outputs.email }}
           pr-labels: dependencies
-          pr-title: "[${{ github.ref_name }}] flake.lock: Update"
+          pr-title: "[${{ matrix.branch }}] flake.lock: Update"
           pr-body: |
             Automated update by the [update-flake-lock] GitHub Action.
 
