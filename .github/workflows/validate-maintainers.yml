@@ -1,0 +1,91 @@
+name: Validate maintainers.nix
+on:
+  pull_request:
+    paths: ["modules/lib/maintainers.nix"]
+  workflow_dispatch:
+    inputs:
+      run_tests:
+        description: 'Run validation tests'
+        required: false
+        default: true
+        type: boolean
+jobs:
+  validate-maintainers:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'nix-community'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Get Nixpkgs revision from flake.lock
+        id: get-nixpkgs
+        run: |
+          echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
+      - name: Validate Nix syntax
+        run: |
+          echo "🔍 Validating maintainers.nix syntax..."
+          if nix eval --file modules/lib/maintainers.nix --json > /dev/null; then
+            echo "✅ Valid Nix syntax"
+          else
+            echo "❌ Invalid Nix syntax"
+            exit 1
+          fi
+      - name: Validate maintainer entries
+        run: |
+          echo "🔍 Validating maintainer entries..."
+          python3 -c "
+          import json
+          import re
+          import subprocess
+          import sys
+
+          # Get the maintainers data from the Nix file
+          result = subprocess.run(['nix', 'eval', '--file', 'modules/lib/maintainers.nix', '--json'],
+                                 capture_output=True, text=True, check=True)
+          maintainers = json.loads(result.stdout)
+          errors = []
+
+          for name, data in maintainers.items():
+            # Check REQUIRED fields - github and githubId are mandatory
+            if 'github' not in data:
+              errors.append(f'{name}: Missing required field \"github\"')
+            if 'githubId' not in data:
+              errors.append(f'{name}: Missing required field \"githubId\"')
+
+            # Validate GitHub ID is a positive integer (NOT a string)
+            if 'githubId' in data:
+              github_id = data['githubId']
+              if not isinstance(github_id, int):
+                errors.append(f'{name}: githubId must be a number, not a string: {github_id} (type: {type(github_id).__name__})')
+              elif github_id <= 0:
+                errors.append(f'{name}: githubId must be positive: {github_id}')
+
+          if errors:
+            print('❌ Validation errors found:')
+            for error in errors:
+              print(f'  - {error}')
+            sys.exit(1)
+          else:
+            print('✅ All maintainer entries are valid')
+            print(f'✅ Validated {len(maintainers)} maintainer entries')
+          "
+      - name: Test generation
+        if: inputs.run_tests == true
+        run: |
+          echo "🔍 Testing all-maintainers.nix generation..."
+          ./lib/python/generate-all-maintainers.py
+
+          echo "🔍 Validating generated file..."
+          if nix eval --file ./all-maintainers.nix --json > /dev/null; then
+            echo "✅ Generated file has valid Nix syntax"
+          else
+            echo "❌ Generated file has invalid Nix syntax"
+            exit 1
+          fi
+      - name: Summary
+        run: |
+          echo "✅ All validation checks passed!"
+          echo "📋 The maintainers.nix file is ready for merge"
