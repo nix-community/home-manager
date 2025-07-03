@@ -1,5 +1,8 @@
 name: Update maintainers list
 on:
+  push:
+    branches: ["master"]
+    paths: ["modules/lib/maintainers.nix"]
   schedule:
     # Update every Monday at 9 AM UTC
     - cron: "0 9 * * 1"
@@ -13,7 +16,7 @@ on:
 jobs:
   update-maintainers:
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
+    if: github.repository_owner == 'nix-community' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
