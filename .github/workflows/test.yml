@@ -3,10 +3,12 @@ on:
   pull_request:
   schedule:
     - cron: "30 2 * * *"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.run_id }}
+  cancel-in-progress: true
 jobs:
   changes:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
     outputs:
       docs: ${{ steps.changes.outputs.docs }}
       format: ${{ steps.changes.outputs.format }}
@@ -39,9 +41,6 @@ jobs:
               - 'home-manager/**'
   tests:
     needs: changes
-    # This job MUST always run to satisfy branch protection rules.
-    # The `always()` function ensures it runs even if `changes` is skipped (on a schedule).
-    if: always()
     strategy:
       fail-fast: false
       matrix:
