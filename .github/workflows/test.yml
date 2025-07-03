@@ -1,6 +1,6 @@
 name: Test
 on:
-  pull_request:
+  # pull_request:
   schedule:
     - cron: "30 2 * * *"
 concurrency:
