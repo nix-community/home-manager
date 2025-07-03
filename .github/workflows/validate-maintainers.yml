@@ -12,7 +12,7 @@ on:
 jobs:
   validate-maintainers:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'nix-community'
+    # if: github.repository_owner == 'nix-community'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
