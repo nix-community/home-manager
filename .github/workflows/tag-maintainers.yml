@@ -1,14 +1,17 @@
 name: Tag Module Maintainers
 on:
   pull_request_target:
-    types: [ready_for_review]
+    types: [opened, ready_for_review, reopened, synchronize]
 permissions:
   contents: read
   pull-requests: write
 jobs:
   tag-maintainers:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'nix-community'
+    if: |
+      github.repository_owner == 'nix-community' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.state == 'open'
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
