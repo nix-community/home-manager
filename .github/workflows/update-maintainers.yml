@@ -59,6 +59,8 @@ jobs:
         run: |
           echo "📋 Generating updated all-maintainers.nix..."
           ./lib/python/generate-all-maintainers.py
+          echo "🎨 Formatting with nixfmt..."
+          nix fmt all-maintainers.nix
       - name: Check for changes
         id: check-changes
         run: |
