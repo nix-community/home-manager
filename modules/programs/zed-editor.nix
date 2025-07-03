@@ -22,9 +22,9 @@ let
       # No file? Create it
       echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
     fi
-    dynamic="$(${lib.getExe json5} --as-json ${lib.escapeShellArg path})"
+    dynamic="$(${lib.getExe json5} --as-json ${lib.escapeShellArg path} 2>/dev/null || echo ${lib.escapeShellArg empty})"
     static="$(cat ${lib.escapeShellArg staticSettings})"
-    config="$(${lib.getExe pkgs.jq} -s ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
+    config="$(${lib.getExe pkgs.jq} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
     printf '%s\n' "$config" > ${lib.escapeShellArg path}
     unset config
   '';
