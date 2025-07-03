@@ -45,15 +45,37 @@ jobs:
           echo "module_files<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      - name: Setup maintainer evaluation
-        run: |
-          echo "Setting up dynamic maintainer evaluation..."
-      - name: Find and Request Reviewers
-        id: find-maintainers
-        if: steps.changed-files.outputs.module_files != ''
+      - name: Manage Reviewers
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
         run: |
+          remove_reviewers() {
+            local reviewers_to_remove="$1"
+            local reason="$2"
+
+            if [[ -n "$reviewers_to_remove" ]]; then
+              for REVIEWER in $reviewers_to_remove; do
+                echo "Removing review request from $REVIEWER ($reason)"
+                gh api --method DELETE "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
+                  --input - <<< "{\"reviewers\": [\"$REVIEWER\"]}"
+              done
+            fi
+          }
+
+          # Check if no module files changed - remove all reviewers
+          if [[ '${{ steps.changed-files.outputs.module_files }}' == '' ]]; then
+            echo "No module files changed, checking for outdated reviewers to remove..."
+            PENDING_REVIEWERS=$(gh pr view ${{ github.event.pull_request.number }} --json reviewRequests --jq '.reviewRequests[].login')
+            if [[ -n "$PENDING_REVIEWERS" ]]; then
+              echo "Found pending reviewers to remove: $PENDING_REVIEWERS"
+              remove_reviewers "$PENDING_REVIEWERS" "no module files changed"
+            else
+              echo "No pending reviewers to remove."
+            fi
+            exit 0
+          fi
+
+          # Process module files to find current maintainers
           declare -A MAINTAINERS_TO_NOTIFY
           PR_AUTHOR="${{ github.event.pull_request.user.login }}"
 
@@ -64,7 +86,6 @@ jobs:
 
             echo "Processing file: $FILE"
 
-            # Dynamically evaluate meta.maintainers for this specific file
             MAINTAINERS_JSON=$(nix eval --impure --expr "
               let
                 nixpkgs = import <nixpkgs> {};
@@ -100,6 +121,11 @@ jobs:
             USERS_TO_EXCLUDE=$(printf "%s\n%s" "$PENDING_REVIEWERS" "$PAST_REVIEWERS" | sort -u)
             echo "Complete list of users to exclude:"
             echo "$USERS_TO_EXCLUDE"
+
+            # Remove outdated review requests
+            CURRENT_MAINTAINERS=$(printf "%s\n" "${!MAINTAINERS_TO_NOTIFY[@]}" | sort -u)
+            OUTDATED_REVIEWERS=$(comm -23 <(echo "$PENDING_REVIEWERS" | sort) <(echo "$CURRENT_MAINTAINERS" | sort))
+            remove_reviewers "$OUTDATED_REVIEWERS" "no longer a maintainer of changed files"
 
             # Check if maintainers are collaborators and not already reviewers
             REPO="${{ github.repository }}"
