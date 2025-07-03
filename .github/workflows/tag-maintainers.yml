@@ -42,16 +42,15 @@ jobs:
           echo "module_files<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      - name: Build module maintainers lookup
-        run: nix build --show-trace .#docs-jsonModuleMaintainers
+      - name: Setup maintainer evaluation
+        run: |
+          echo "Setting up dynamic maintainer evaluation..."
       - name: Find and Request Reviewers
         id: find-maintainers
         if: steps.changed-files.outputs.module_files != ''
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
         run: |
-          MODULE_MAINTAINERS=$(cat ./result)
-
           declare -A MAINTAINERS_TO_NOTIFY
           PR_AUTHOR="${{ github.event.pull_request.user.login }}"
 
@@ -61,14 +60,28 @@ jobs:
             fi
 
             echo "Processing file: $FILE"
-            MATCHING_KEY=$(jq -r 'keys[] | select(endswith($path))' --arg path "$FILE" <<< "$MODULE_MAINTAINERS")
-            MAINTAINERS=""
-            if [[ -n "$MATCHING_KEY" ]]; then
-              echo "Found matching key in maintainer list: $MATCHING_KEY"
-              MAINTAINERS=$(jq -r "(.[\"$MATCHING_KEY\"][] | .github) // empty" <<< "$MODULE_MAINTAINERS")
-            else
-              echo "Could not find a matching key for $FILE in the maintainer list."
+
+            # Dynamically evaluate meta.maintainers for this specific file
+            MAINTAINERS_JSON=$(nix eval --impure --expr "
+              let
+                nixpkgs = import <nixpkgs> {};
+                lib = import ./modules/lib/stdlib-extended.nix nixpkgs.lib;
+                pkgs = nixpkgs;
+                config = {};
+                module = import ./$FILE { inherit lib pkgs config; };
+              in
+                module.meta.maintainers or []
+            " --json 2>/dev/null || echo "[]")
+
+            if [[ "$MAINTAINERS_JSON" == "[]" ]]; then
+              echo "No maintainers found for $FILE"
+              continue
             fi
+
+            echo "Found maintainers JSON for $FILE: $MAINTAINERS_JSON"
+
+            # Extract GitHub usernames from the maintainers
+            MAINTAINERS=$(echo "$MAINTAINERS_JSON" | jq -r '.[] | .github // empty' 2>/dev/null || echo "")
 
             for MAINTAINER in $MAINTAINERS; do
               if [[ "$MAINTAINER" != "$PR_AUTHOR" ]]; then
