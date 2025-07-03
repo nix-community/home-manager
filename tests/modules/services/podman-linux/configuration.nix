@@ -34,6 +34,7 @@
       policy = {
         default = [ { type = "insecureAcceptAnything"; } ];
       };
+      mounts = [ "/usr/share/secrets:/run/secrets" ];
     };
   };
 
@@ -43,20 +44,24 @@
     policyFile=$configPath/policy.json
     registriesFile=$configPath/registries.conf
     storageFile=$configPath/storage.conf
+    mountsFile=$configPath/mounts.conf
 
     assertFileExists $containersFile
     assertFileExists $policyFile
     assertFileExists $registriesFile
     assertFileExists $storageFile
+    assertFileExists $mountsFile
 
     containersFile=$(normalizeStorePaths $containersFile)
     policyFile=$(normalizeStorePaths $policyFile)
     registriesFile=$(normalizeStorePaths $registriesFile)
     storageFile=$(normalizeStorePaths $storageFile)
+    mountsFile=$(normalizeStorePaths $mountsFile)
 
     assertFileContent $containersFile ${./configuration-containers-expected.conf}
     assertFileContent $policyFile ${./configuration-policy-expected.json}
     assertFileContent $registriesFile ${./configuration-registries-expected.conf}
     assertFileContent $storageFile ${./configuration-storage-expected.conf}
+    assertFileContent $mountsFile ${./configuration-mounts-expected.conf}
   '';
 }

@@ -84,6 +84,12 @@ in
           `skopeo` will be used.
         '';
       };
+
+      mounts = lib.mkOption {
+        default = [ ];
+        type = lib.types.listOf lib.types.str;
+        description = "mounts.conf configuration";
+      };
     };
   };
 
@@ -107,6 +113,9 @@ in
       };
       "containers/storage.conf".source = toml.generate "storage.conf" cfg.settings.storage;
       "containers/containers.conf".source = toml.generate "containers.conf" cfg.settings.containers;
+      "containers/mounts.conf" = lib.mkIf (cfg.settings.mounts != [ ]) {
+        text = builtins.concatStringsSep "\n" cfg.settings.mounts;
+      };
     };
   };
 }
