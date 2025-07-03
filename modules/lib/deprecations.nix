@@ -47,4 +47,51 @@
       in
       lib.mkRenamedOptionModule (oldPrefix ++ finalSpec.old) (newPrefix ++ finalSpec.new)
     );
+
+  /*
+    Recursively transforms attribute set keys, issuing a warning for each transformation.
+
+    Example:
+      let
+        # Renames camelCase keys to snake_case.
+        migrateCamelCase = lib.hm.deprecations.remapAttrsRecursive {
+          # A key needs migration if it contains a lowercase letter followed by an uppercase one.
+          pred = key: builtins.match ".*[a-z][A-Z].*" key != null;
+          # The transformation to apply.
+          transform = lib.hm.strings.toSnakeCase;
+        };
+      in
+        # { my-key = { fooBar = 1; }; }
+        migrateCamelCase "programs.mymodule.settings" { my-key = { fooBar = 1; }; }
+        # => { my-key = { foo_bar = 1; }; }
+        # (with a warning about the fooBar -> foo_bar conversion)
+  */
+  remapAttrsRecursive =
+    { pred, transform }:
+    let
+      migrate =
+        path: value:
+        if builtins.isAttrs value then
+          lib.mapAttrs' (
+            name: val:
+            let
+              newName = if pred name then transform name else name;
+
+              warnOrId =
+                if newName != name then
+                  lib.warn "home-manager: The setting '${name}' in '${path}' was automatically renamed to '${newName}'. Please update your configuration."
+                else
+                  x: x;
+            in
+            warnOrId {
+              name = newName;
+              value = migrate "${path}.${name}" val;
+            }
+          ) value
+        else if builtins.isList value then
+          lib.imap0 (index: val: migrate "${path}.[${toString index}]" val) value
+        else
+          value;
+    in
+    pathStr: attrs: migrate pathStr attrs;
 }
