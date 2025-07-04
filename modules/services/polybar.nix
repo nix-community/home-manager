@@ -84,6 +84,8 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [ h7x4 ];
+
   options = {
     services.polybar = {
       enable = lib.mkEnableOption "Polybar status bar";
@@ -227,8 +229,6 @@ in
     assertions = [
       (lib.hm.assertions.assertPlatform "services.polybar" pkgs lib.platforms.linux)
     ];
-
-    meta.maintainers = with lib.maintainers; [ h7x4 ];
 
     home.packages = [ cfg.package ];
     xdg.configFile."polybar/config.ini" = mkIf (configFile != null) { source = configFile; };
