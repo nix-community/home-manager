@@ -439,6 +439,12 @@
     github = "kmaasrud";
     githubId = 54394333;
   };
+  kpbaks = {
+    name = "Kristoffer Plagborg Bak Sørensen";
+    email = "kristoffer.pbs@gmail.com";
+    github = "kpbaks";
+    githubId = 57013304;
+  };
   kranzes = {
     email = "personal@ilanjoselevich.com";
     github = "Kranzes";
