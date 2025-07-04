@@ -1,55 +1,18 @@
 # Extract maintainers from Home Manager modules using meta.maintainers
 # This script evaluates all Home Manager modules and extracts the merged maintainer information
 let
-  nixpkgs = import <nixpkgs> { };
-  lib = import ../../modules/lib/stdlib-extended.nix nixpkgs.lib;
+  pkgs = import <nixpkgs> { };
+  lib = import ../../modules/lib/stdlib-extended.nix pkgs.lib;
+  releaseInfo = pkgs.lib.importJSON ../../release.json;
 
-  # Scrub derivations to avoid instantiating them during evaluation
-  scrubDerivations =
-    prefixPath: attrs:
-    let
-      scrubDerivation =
-        name: value:
-        let
-          pkgAttrName = prefixPath + "." + name;
-        in
-        if lib.isAttrs value then
-          scrubDerivations pkgAttrName value
-          // lib.optionalAttrs (lib.isDerivation value) {
-            outPath = "\${${pkgAttrName}}";
-          }
-        else
-          value;
-    in
-    lib.mapAttrs scrubDerivation attrs;
-
-  # Make sure the used package is scrubbed to avoid instantiating derivations
-  scrubbedPkgsModule = {
-    imports = [
-      {
-        _module.args = {
-          pkgs = lib.mkForce (scrubDerivations "pkgs" nixpkgs);
-          pkgs_i686 = lib.mkForce { };
-        };
-      }
-    ];
+  docsLib = import ../../docs {
+    inherit lib pkgs;
+    inherit (releaseInfo) release isReleaseBranch;
   };
 
-  # Evaluate all Home Manager modules
-  hmModules = lib.evalModules {
-    modules =
-      import ../../modules/modules.nix {
-        inherit lib;
-        pkgs = nixpkgs;
-        check = false;
-      }
-      ++ [ scrubbedPkgsModule ];
-    class = "homeManager";
-  };
+  moduleMaintainersJson = builtins.fromJSON (builtins.readFile docsLib.jsonModuleMaintainers);
+  maintainers = moduleMaintainersJson;
 
-  inherit (hmModules.config.meta) maintainers;
-
-  # Also include maintainers from other files that aren't part of regular modules
   additionalFiles = [
     ../../docs/home-manager-manual.nix
   ];
@@ -64,7 +27,7 @@ let
           evaluated =
             if lib.isFunction fileContent then
               fileContent {
-                inherit (nixpkgs) stdenv lib;
+                inherit (pkgs) stdenv lib;
                 documentation-highlighter = { };
                 revision = "unknown";
                 home-manager-options = {
@@ -123,14 +86,12 @@ let
   formatMaintainer =
     name: info: source:
     let
-      # Handle identifiers that start with numbers or contain invalid characters
       quotedName =
         if lib.match "[0-9].*" name != null || lib.match "[^a-zA-Z0-9_-].*" name != null then
           ''"${name}"''
         else
           name;
 
-      # Filter out internal fields
       filteredInfo = lib.filterAttrs (k: v: !lib.hasPrefix "_" k) info;
     in
     "  # ${source}\n  ${quotedName} = ${
