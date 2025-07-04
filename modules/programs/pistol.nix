@@ -50,7 +50,7 @@ in
     ] "Pistol is now configured with programs.pistol.associations.")
   ];
 
-  meta.maintainers = [ lib.hm.maintainers.mtoohey ];
+  meta.maintainers = [ lib.maintainers.mtoohey ];
 
   options.programs.pistol = {
     enable = lib.mkEnableOption "file previewer for terminal file managers";

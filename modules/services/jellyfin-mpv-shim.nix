@@ -36,7 +36,7 @@ let
     bindings: lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "${name} ${value}") bindings);
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.repparw ];
+  meta.maintainers = [ lib.maintainers.repparw ];
 
   options = {
     services.jellyfin-mpv-shim = {

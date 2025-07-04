@@ -10,7 +10,7 @@ let
   cfgOptions = lib.concatStringsSep " " cfg.options;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.ALameLlama ];
+  meta.maintainers = [ lib.maintainers.ALameLlama ];
 
   options.programs.pay-respects = {
     enable = lib.mkEnableOption "pay-respects";

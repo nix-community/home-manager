@@ -106,5 +106,5 @@ in
     xdg.configFile."senpai/senpai.scfg".text = lib.hm.generators.toSCFG { } cfg.config;
   };
 
-  meta.maintainers = [ lib.hm.maintainers.malvo ];
+  meta.maintainers = [ lib.maintainers.malte-v ];
 }

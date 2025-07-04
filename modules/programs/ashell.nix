@@ -9,7 +9,7 @@ let
   settingsFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.justdeeevin ];
+  meta.maintainers = [ lib.maintainers.justdeeevin ];
 
   options.programs.ashell = {
     enable = lib.mkEnableOption "ashell, a ready to go wayland status bar for hyprland";

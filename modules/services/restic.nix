@@ -547,5 +547,5 @@ in
     ) (lib.filterAttrs (_: v: v.createWrapper) cfg.backups);
   };
 
-  meta.maintainers = [ lib.hm.maintainers.jess ];
+  meta.maintainers = [ lib.maintainers.jess ];
 }

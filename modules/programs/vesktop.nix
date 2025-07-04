@@ -12,9 +12,9 @@ let
 
 in
 {
-  meta.maintainers = [
-    lib.maintainers.Flameopathic
-    lib.hm.maintainers.LilleAila
+  meta.maintainers = with lib.maintainers; [
+    Flameopathic
+    LilleAila
   ];
 
   options.programs.vesktop = {

@@ -9,7 +9,7 @@ let
   cfg = config.programs.zsh.zsh-abbr;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.ilaumjd ];
+  meta.maintainers = [ lib.maintainers.ilaumjd ];
 
   options.programs.zsh.zsh-abbr = {
     enable = lib.mkEnableOption "zsh-abbr - zsh manager for auto-expanding abbreviations";

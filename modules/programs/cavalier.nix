@@ -15,7 +15,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.bricked ];
+  meta.maintainers = [ lib.maintainers.bricked ];
 
   options.programs.cavalier = {
     enable = lib.mkEnableOption "Cava audio visualizer GUI";

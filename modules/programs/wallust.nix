@@ -17,7 +17,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ kiara ];
+  meta.maintainers = with lib.maintainers; [ kiara ];
 
   options.programs.wallust = {
     enable = mkEnableOption "Wallust color scheme generator";

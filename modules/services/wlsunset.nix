@@ -14,7 +14,7 @@ let
   cfg = config.services.wlsunset;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.matrss ];
+  meta.maintainers = [ lib.maintainers.matrss ];
 
   options.services.wlsunset = {
     enable = lib.mkEnableOption "wlsunset";

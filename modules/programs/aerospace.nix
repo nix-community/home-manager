@@ -37,7 +37,7 @@ let
   filterNulls = filterListAndAttrsRecursive (v: v != null);
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ damidoug ];
+  meta.maintainers = with lib.maintainers; [ damidoug ];
 
   options.programs.aerospace = {
     enable = lib.mkEnableOption "AeroSpace window manager";

@@ -46,7 +46,7 @@ let
   );
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.britter ];
+  meta.maintainers = [ lib.maintainers.britter ];
 
   options.programs.gradle = {
     enable = lib.mkEnableOption "Gradle Build Tool";

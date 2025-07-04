@@ -14,9 +14,9 @@ let
   mkFirefoxModule = import ./mkFirefoxModule.nix;
 in
 {
-  meta.maintainers = [
-    lib.maintainers.rycee
-    lib.hm.maintainers.bricked
+  meta.maintainers = with lib.maintainers; [
+    bricked
+    rycee
     lib.hm.maintainers.HPsaucii
   ];
 

@@ -133,8 +133,8 @@ in
     ];
   };
 
-  meta.maintainers = [
-    lib.hm.maintainers.kranzes
-    lib.maintainers.awwpotato
+  meta.maintainers = with lib.maintainers; [
+    awwpotato
+    kranzes
   ];
 }

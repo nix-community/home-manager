@@ -8,9 +8,9 @@ let
   cfg = config.programs.nix-index;
 in
 {
-  meta.maintainers = [
-    lib.hm.maintainers.ambroisie
-    lib.maintainers.khaneliman
+  meta.maintainers = with lib.maintainers; [
+    ambroisie
+    khaneliman
   ];
 
   options.programs.nix-index = {

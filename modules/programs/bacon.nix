@@ -18,7 +18,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.shimunn ];
+  meta.maintainers = [ lib.maintainers.shimun ];
 
   options.programs.bacon = {
     enable = lib.mkEnableOption "bacon, a background rust code checker";

@@ -19,7 +19,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.michaelvanstraten ];
+  meta.maintainers = [ lib.maintainers.michaelvanstraten ];
 
   options.programs.sesh = {
     enable = mkEnableOption "the sesh terminal session manager";

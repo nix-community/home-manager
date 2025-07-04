@@ -12,7 +12,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.GaetanLepage ];
+  meta.maintainers = [ lib.maintainers.GaetanLepage ];
 
   options.programs.ruff = {
     enable = lib.mkEnableOption "ruff, an extremely fast Python linter and code formatter, written in Rust";
