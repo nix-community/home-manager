@@ -94,7 +94,7 @@ let
 
       filteredInfo = lib.filterAttrs (k: v: !lib.hasPrefix "_" k) info;
     in
-    "  # ${source}\n  ${quotedName} = ${
+    "  ${quotedName} = ${
         lib.generators.toPretty {
           multiline = true;
           indent = "    ";
