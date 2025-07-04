@@ -49,6 +49,42 @@ let
 
   inherit (hmModules.config.meta) maintainers;
 
+  # Also include maintainers from other files that aren't part of regular modules
+  additionalFiles = [
+    ../../docs/home-manager-manual.nix
+  ];
+
+  extractAdditionalMaintainers =
+    files:
+    lib.concatLists (
+      map (
+        file:
+        let
+          fileContent = import file;
+          evaluated =
+            if lib.isFunction fileContent then
+              fileContent {
+                inherit (nixpkgs) stdenv lib;
+                documentation-highlighter = { };
+                revision = "unknown";
+                home-manager-options = {
+                  home-manager = { };
+                  nixos = { };
+                  nix-darwin = { };
+                };
+                nixos-render-docs = { };
+              }
+            else
+              fileContent;
+
+          maintainersList = evaluated.meta.maintainers or [ ];
+        in
+        if lib.isList maintainersList then maintainersList else [ maintainersList ]
+      ) files
+    );
+
+  additionalMaintainerObjects = extractAdditionalMaintainers additionalFiles;
+
   extractMaintainerObjects =
     maintainerData:
     lib.pipe maintainerData [
@@ -57,7 +93,7 @@ let
       lib.unique
     ];
 
-  allMaintainerObjects = extractMaintainerObjects maintainers;
+  allMaintainerObjects = extractMaintainerObjects maintainers ++ additionalMaintainerObjects;
 
   getMaintainerName = maintainer: maintainer.github or maintainer.name or null;
 
