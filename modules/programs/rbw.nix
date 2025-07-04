@@ -64,7 +64,7 @@ let
   };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ ambroisie ];
+  meta.maintainers = with lib.maintainers; [ ambroisie ];
 
   options.programs.rbw = {
     enable = lib.mkEnableOption "rbw, a CLI Bitwarden client";

@@ -10,7 +10,7 @@ let
   mkFirefoxModule = import ./firefox/mkFirefoxModule.nix;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.bricked ];
+  meta.maintainers = [ lib.maintainers.bricked ];
 
   imports = [
     (mkFirefoxModule {

@@ -8,7 +8,7 @@ let
   cfg = config.programs.waylogout;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.noodlez ];
+  meta.maintainers = [ lib.maintainers.noodlez1232 ];
 
   options.programs.waylogout = {
     enable = lib.mkOption {

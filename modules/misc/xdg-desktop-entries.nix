@@ -200,7 +200,7 @@ let
     };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.cwyc ];
+  meta.maintainers = [ lib.maintainers.cwyc ];
 
   options.xdg.desktopEntries = mkOption {
     description = ''

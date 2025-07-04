@@ -48,9 +48,9 @@ let
   '';
 in
 {
-  meta.maintainers = [
-    lib.maintainers.dschrempf
-    lib.hm.maintainers.bertof
+  meta.maintainers = with lib.maintainers; [
+    bertof
+    dschrempf
   ];
 
   options.services.xidlehook = {

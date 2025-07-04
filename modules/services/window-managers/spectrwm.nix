@@ -35,7 +35,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.loicreynier ];
+  meta.maintainers = [ lib.maintainers.loicreynier ];
 
   options = {
     xsession.windowManager.spectrwm = {

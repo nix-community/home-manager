@@ -63,7 +63,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.iosmanthus ];
+  meta.maintainers = [ lib.maintainers.iosmanthus ];
 
   options.services.fusuma = {
     enable = lib.mkEnableOption "the fusuma systemd service to automatically enable touchpad gesture";

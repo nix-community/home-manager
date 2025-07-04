@@ -57,7 +57,7 @@ let
     lib.sort (a: b: comparator (pos a) (pos b)) (lib.attrNames set);
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.justinlovinger ];
+  meta.maintainers = [ lib.maintainers.justinlovinger ];
 
   options.programs.i3status = {
     enable = lib.mkEnableOption "i3status";

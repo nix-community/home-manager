@@ -25,7 +25,7 @@ let
 in
 {
 
-  meta.maintainers = [ lib.hm.maintainers.bmrips ];
+  meta.maintainers = [ lib.maintainers.bmrips ];
 
   options.services.davmail = {
 

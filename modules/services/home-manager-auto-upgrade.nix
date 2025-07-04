@@ -28,7 +28,7 @@ let
   };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.pinage404 ];
+  meta.maintainers = [ lib.maintainers.pinage404 ];
 
   options = {
     services.home-manager.autoUpgrade = {

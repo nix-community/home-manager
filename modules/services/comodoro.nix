@@ -15,7 +15,7 @@ let
 
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ soywod ];
+  meta.maintainers = with lib.maintainers; [ soywod ];
 
   options.services.comodoro = {
     enable = lib.mkEnableOption "Comodoro server";

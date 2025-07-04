@@ -291,5 +291,5 @@ in
     );
   };
 
-  meta.maintainers = with lib.hm.maintainers; [ jess ];
+  meta.maintainers = with lib.maintainers; [ jess ];
 }

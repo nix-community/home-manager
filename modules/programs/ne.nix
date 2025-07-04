@@ -27,7 +27,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.cwyc ];
+  meta.maintainers = [ lib.maintainers.cwyc ];
 
   options.programs.ne = {
     enable = lib.mkEnableOption "ne";

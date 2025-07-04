@@ -11,7 +11,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.amesgen ];
+  meta.maintainers = [ lib.maintainers.amesgen ];
 
   options.programs.timidity = {
     enable = lib.mkEnableOption "timidity, a software MIDI renderer";

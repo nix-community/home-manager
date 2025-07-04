@@ -16,7 +16,7 @@ let
   formatLine = n: v: "${n} ${toString v}";
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.justinlovinger ];
+  meta.maintainers = [ lib.maintainers.justinlovinger ];
 
   options.programs.dircolors = {
     enable = mkOption {

@@ -15,7 +15,7 @@ let
     "${n}=${formatValue v}";
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.justinlovinger ];
+  meta.maintainers = [ lib.maintainers.justinlovinger ];
 
   options.programs.aria2 = {
     enable = lib.mkEnableOption "aria2";

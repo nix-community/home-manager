@@ -16,7 +16,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.Philipp-M ];
+  meta.maintainers = [ lib.maintainers.Philipp-M ];
 
   options.programs.helix = {
     enable = lib.mkEnableOption "helix text editor";

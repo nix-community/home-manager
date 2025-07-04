@@ -8,7 +8,7 @@ let
   cfg = config.programs.quickshell;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.justdeeevin ];
+  meta.maintainers = [ lib.maintainers.justdeeevin ];
 
   options.programs.quickshell = {
     enable = lib.mkEnableOption "quickshell, a flexbile QtQuick-based desktop shell toolkit.";

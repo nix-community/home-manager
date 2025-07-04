@@ -9,9 +9,9 @@ let
   toml = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [
-    bamhm182
-    n-hass
+  meta.maintainers = [
+    lib.hm.maintainers.bamhm182
+    lib.maintainers.n-hass
   ];
 
   imports = [

@@ -9,7 +9,7 @@ let
   cfg = config.services.trayscale;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.callumio ];
+  meta.maintainers = [ lib.maintainers.callumio ];
 
   options.services.trayscale = {
     enable = lib.mkEnableOption "An unofficial GUI wrapper around the Tailscale CLI client.";
