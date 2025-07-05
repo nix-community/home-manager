@@ -51,6 +51,12 @@
   /*
     Recursively transforms attribute set keys, issuing a warning for each transformation.
 
+    The function takes an attribute set with the following keys:
+     - pred: (str -> bool) Predicate to detect which keys to transform.
+     - transform: (str -> str) Function to transform the key.
+     - ignore: (list of str) Optional. A list of keys to never transform,
+       even if they match `pred`.
+
     Example:
       let
         # Renames camelCase keys to snake_case.
@@ -59,15 +65,22 @@
           pred = key: builtins.match ".*[a-z][A-Z].*" key != null;
           # The transformation to apply.
           transform = lib.hm.strings.toSnakeCase;
+          # Keys we will not rename
+          ignore = [ "allowThisOne" ];
         };
       in
-        # { my-key = { fooBar = 1; }; }
-        migrateCamelCase "programs.mymodule.settings" { my-key = { fooBar = 1; }; }
-        # => { my-key = { foo_bar = 1; }; }
-        # (with a warning about the fooBar -> foo_bar conversion)
+        migrateCamelCase "programs.mymodule.settings" {
+          someSetting = 1;      # will be renamed
+          allowThisOne = 2;     # will be ignored
+        }
+        # => { some_setting = 1; allowThisOne = 2; }
   */
   remapAttrsRecursive =
-    { pred, transform }:
+    {
+      pred,
+      transform,
+      ignore ? [ ],
+    }:
     let
       migrate =
         path: value:
@@ -75,7 +88,7 @@
           lib.mapAttrs' (
             name: val:
             let
-              newName = if pred name then transform name else name;
+              newName = if pred name && !(builtins.elem name ignore) then transform name else name;
 
               warnOrId =
                 if newName != name then
