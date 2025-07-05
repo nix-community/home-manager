@@ -9,7 +9,8 @@ let
 
   cfg = config.programs.codex;
 
-  settingsFormat = pkgs.formats.yaml { };
+  tomlFormat = pkgs.formats.toml { };
+  yamlFormat = pkgs.formats.yaml { };
 in
 {
   meta.maintainers = [
@@ -24,7 +25,7 @@ in
     settings = lib.mkOption {
       inherit (settingsFormat) type;
       description = ''
-        Configuration written to {file}`~/.codex/config.yaml`.
+        Configuration written to {file}`~/.codex/config.toml`.
         See <https://github.com/openai/codex#configuration-guide> for supported values.
       '';
       default = { };
@@ -59,7 +60,7 @@ in
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
     home.file = {
-      ".codex/config.yaml".source = settingsFormat.generate "codex-config" cfg.settings;
+      ".codex/config.toml".source = settingsFormat.generate "codex-config" cfg.settings;
       ".codex/AGENTS.md".text = cfg.custom-instructions;
     };
   };
