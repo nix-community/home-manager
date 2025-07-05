@@ -53,11 +53,6 @@ Home Manager targets [NixOS][] unstable and NixOS version 25.05 (the current
 stable version), it may or may not work on other Linux distributions and NixOS
 versions.
 
-Also, the `home-manager` tool does not explicitly support rollbacks at the
-moment so if your home directory gets messed up you'll have to fix it yourself.
-See the [rollbacks][] section for instructions on how to manually perform a
-rollback.
-
 Now when your expectations have been built up and you are eager to try all this
 out you can go ahead and read the rest of this text.
 
