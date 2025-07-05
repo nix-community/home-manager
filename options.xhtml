@@ -46016,37 +46016,12 @@ package</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.msmtp.extraAccounts"></a><a class="term" href="options.xhtml#opt-programs.msmtp.extraAccounts"><code class="option">programs.msmtp.extraAccounts</code>
+ <a id="opt-programs.msmtp.configContent"></a><a class="term" href="options.xhtml#opt-programs.msmtp.configContent"><code class="option">programs.msmtp.configContent</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Extra configuration lines to add to the end of <code class="filename">~/.msmtprc</code>.
-See <a class="link" href="https://marlam.de/msmtp/msmtprc.txt"  target="_top">https://marlam.de/msmtp/msmtprc.txt</a> for examples.</p>
-
-<p><span class="emphasis"><em>Type:</em></span>
-strings concatenated with “\n”</p>
-
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">&quot;&quot;</code></p>
-
-<p><span class="emphasis"><em>Declared by:</em></span></p>
-<table border="0" summary="Simple list" class="simplelist">
-<tr><td>
-<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/msmtp" target="_top">
-&lt;home-manager/modules/programs/msmtp&gt;
-</a></code>
-</td></tr>
-</table>
-</dd>
-<dt>
- <span class="term">
- <a id="opt-programs.msmtp.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.msmtp.extraConfig"><code class="option">programs.msmtp.extraConfig</code>
-  </a>
- </span>
-</dt>
-<dd>
-<p>Extra configuration lines to add to <code class="filename">~/.msmtprc</code>.
+<p>Content added to msmtp config.
 See <a class="link" href="https://marlam.de/msmtp/msmtprc.txt"  target="_top">https://marlam.de/msmtp/msmtprc.txt</a> for examples.</p><p>Note, if running msmtp fails with the error message “account default
 was already defined” then you probably have an account command here.
 Account commands should be placed in
@@ -46057,6 +46032,12 @@ strings concatenated with “\n”</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">lib.mkOrder 1200 &#x27;&#x27;&#x27;
+  set syslog
+&#x27;&#x27;&#x27;;
+
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
