@@ -377,6 +377,12 @@ in
       );
       default = { };
     };
+
+    extraSettings = mkOption {
+      description = "Additional settings to include in obsidian.json.";
+      type = types.attrsOf types.anything;
+      default = { };
+    };
   };
 
   config =
@@ -528,21 +534,24 @@ in
           );
       };
 
-      xdg.configFile."obsidian/obsidian.json".source = (pkgs.formats.json { }).generate "obsidian.json" {
-        vaults = builtins.listToAttrs (
-          builtins.map (vault: {
-            name = builtins.hashString "md5" vault.target;
-            value =
-              {
-                path = "${config.home.homeDirectory}/${vault.target}";
-              }
-              // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
-                open = true;
-              });
-          }) vaults
-        );
-        updateDisabled = true;
-      };
+      xdg.configFile."obsidian/obsidian.json".source = lib.mkMerge [
+        ((pkgs.formats.json { }).generate "obsidian.json" {
+          vaults = builtins.listToAttrs (
+            builtins.map (vault: {
+              name = builtins.hashString "md5" vault.target;
+              value =
+                {
+                  path = "${config.home.homeDirectory}/${vault.target}";
+                }
+                // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
+                  open = true;
+                });
+            }) vaults
+          );
+          updateDisabled = true;
+        })
+        cfg.extraSettings
+      ];
 
       assertions = [
         {
@@ -567,5 +576,8 @@ in
       ];
     };
 
-  meta.maintainers = [ lib.hm.maintainers.karaolidis ];
+  meta.maintainers = with lib.hm.maintainers; [
+    karaolidis
+    azikx
+  ];
 }
