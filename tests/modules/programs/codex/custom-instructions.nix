@@ -9,6 +9,6 @@
   nmt.script = ''
     assertFileExists home-files/.codex/AGENTS.md
     assertFileContent home-files/.codex/AGENTS.md \
-      ${./custom-instructions.md}
+      ${./AGENTS.md}
   '';
 }
