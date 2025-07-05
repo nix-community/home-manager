@@ -93,7 +93,7 @@ in
     settings = mkOption {
       type = with types; nullOr (attrsOf (either str (either int (either bool (listOf str)))));
       default = null;
-      description = "Settings for sm64ex's {file}`$XDG_DATA_HOME/sm64pc/sm64config.txt` file.";
+      description = "Settings for sm64ex's {file}`$XDG_DATA_HOME/sm64ex/sm64config.txt` file.";
       example = literalExpression ''
         {
           fullscreen = false;
@@ -138,6 +138,6 @@ in
     lib.mkIf cfg.enable {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      xdg.dataFile."sm64pc/sm64config.txt" = lib.mkIf (cfg.settings != null) { text = configFile; };
+      xdg.dataFile."sm64ex/sm64config.txt" = lib.mkIf (cfg.settings != null) { text = configFile; };
     };
 }
