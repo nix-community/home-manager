@@ -52502,6 +52502,91 @@ package</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.opencode.enable"></a><a class="term" href="options.xhtml#opt-programs.opencode.enable"><code class="option">programs.opencode.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable opencode.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix" target="_top">
+&lt;home-manager/modules/programs/opencode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.opencode.package"></a><a class="term" href="options.xhtml#opt-programs.opencode.package"><code class="option">programs.opencode.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The opencode package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.opencode</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix" target="_top">
+&lt;home-manager/modules/programs/opencode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.opencode.settings"></a><a class="term" href="options.xhtml#opt-programs.opencode.settings"><code class="option">programs.opencode.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/opencode/config.json</code>.
+See <a class="link" href="https://opencode.ai/docs/config/"  target="_top">https://opencode.ai/docs/config/</a> for the documentation.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+JSON value</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  theme = &quot;opencode&quot;;
+  model = &quot;anthropic/claude-sonnet-4-20250514&quot;;
+  autoshare = false;
+  autoupdate = true;
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix" target="_top">
+&lt;home-manager/modules/programs/opencode.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.openstackclient.enable"></a><a class="term" href="options.xhtml#opt-programs.openstackclient.enable"><code class="option">programs.openstackclient.enable</code>
   </a>
  </span>
