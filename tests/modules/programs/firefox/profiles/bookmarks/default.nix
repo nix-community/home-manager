@@ -2,6 +2,7 @@ modulePath:
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -11,12 +12,17 @@ let
 
   firefoxMockOverlay = import ../../setup-firefox-mock-overlay.nix modulePath;
 
+  darwinPath = "Applications/${cfg.darwinAppName}.app/Contents/Resources";
 in
 {
   imports = [ firefoxMockOverlay ];
 
   config = lib.mkIf config.test.enableBig (
-    lib.setAttrByPath modulePath {
+    {
+      # Required for bookmark policy to get set
+      home.stateVersion = "19.09";
+    }
+    // lib.setAttrByPath modulePath {
       enable = true;
       profiles.bookmarks = {
         settings = {
@@ -80,22 +86,39 @@ in
       };
     }
     // {
-      nmt.script = ''
-        bookmarksUserJs=$(normalizeStorePaths \
-          "home-files/${cfg.profilesPath}/bookmarks/user.js")
+      nmt.script =
+        let
+          libDir =
+            if pkgs.stdenv.hostPlatform.isDarwin then
+              "${cfg.finalPackage}/${darwinPath}"
+            else
+              "${cfg.finalPackage}/lib/${cfg.wrappedPackageName}";
+          config_file = "${libDir}/distribution/policies.json";
+        in
+        ''
+          assertFileExists "${config_file}"
 
-        assertFileContent \
-          $bookmarksUserJs \
-          ${./expected-bookmarks-user.js}
+          noDefaultBookmarks_actual_value="$(${lib.getExe pkgs.jq} ".policies.NoDefaultBookmarks" ${config_file})"
 
-        bookmarksFile="$(sed -n \
-          '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \
-          "$TESTED/home-files/${cfg.profilesPath}/bookmarks/user.js")"
+          if [[ $noDefaultBookmarks_actual_value != "false" ]]; then
+            fail "Expected '${config_file}' to set 'policies.NoDefaultBookmarks' to false"
+          fi
 
-        assertFileContent \
-          $bookmarksFile \
-          ${./expected-bookmarks-list.html}
-      '';
+          bookmarksUserJs=$(normalizeStorePaths \
+            "home-files/${cfg.profilesPath}/bookmarks/user.js")
+
+          assertFileContent \
+            $bookmarksUserJs \
+            ${./expected-bookmarks-user.js}
+
+          bookmarksFile="$(sed -n \
+            '/browser.bookmarks.file/ {s|^.*\(/nix/store[^"]*\).*|\1|;p}' \
+            "$TESTED/home-files/${cfg.profilesPath}/bookmarks/user.js")"
+
+          assertFileContent \
+            $bookmarksFile \
+            ${./expected-bookmarks-list.html}
+        '';
     }
   );
 }
