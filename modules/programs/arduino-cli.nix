@@ -25,7 +25,14 @@ in
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
-      example = { };
+      example = {
+        board_manager = {
+          enable_unsafe_install = true;
+          additional_urls = [
+            "https://downloads.arduino.cc/packages/package_staging_index.json"
+          ];
+        };
+      };
       description = ''
         Configuration settings for arduino-cli. All the available options
         can be found here: <https://docs.arduino.cc/arduino-cli/configuration/>.
