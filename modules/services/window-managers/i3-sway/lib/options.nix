@@ -639,7 +639,7 @@ in
   };
 
   modifier = mkOption {
-    type = types.enum [
+    type = types.either (types.enum [
       "Shift"
       "Control"
       "Mod1"
@@ -647,7 +647,7 @@ in
       "Mod3"
       "Mod4"
       "Mod5"
-    ];
+    ]) types.str;
     default = "Mod1";
     description = "Modifier key that is used for all default keybindings.";
     example = "Mod4";
