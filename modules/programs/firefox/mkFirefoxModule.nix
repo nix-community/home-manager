@@ -88,7 +88,7 @@ let
           "browser.bookmarks.file" = toString bookmarksFile;
           "browser.places.importBookmarksHTML" = true;
         }
-        // lib.optionalAttrs (extensions != { }) {
+        // lib.optionalAttrs (builtins.any (ext: ext.settings != { }) (attrValues extensions)) {
           "extensions.webextensions.ExtensionStorageIDB.enabled" = false;
         }
         // prefs;
@@ -721,7 +721,15 @@ in
                                 options = {
                                   settings = mkOption {
                                     type = types.attrsOf jsonFormat.type;
-                                    description = "Json formatted options for the specified extensionID";
+                                    default = { };
+                                    description = "Json formatted options for this extension.";
+                                  };
+                                  permissions = mkOption {
+                                    type = types.nullOr (types.listOf types.str);
+                                    default = null;
+                                    example = [ "activeTab" ];
+                                    defaultText = "Any permissions";
+                                    description = "Allowed permissions for this extension.";
                                   };
                                   force = mkOption {
                                     type = types.bool;
@@ -763,36 +771,77 @@ in
             };
 
             config = {
-              assertions = [
-                (mkNoDuplicateAssertion config.containers "container")
-                {
-                  assertion = config.extensions.settings == { } || config.extensions.force;
-                  message = ''
-                    Using '${
-                      lib.showAttrPath (
-                        modulePath
-                        ++ [
-                          "profiles"
-                          config.name
-                          "extensions"
-                          "settings"
-                        ]
-                      )
-                    }' will override all previous extensions settings.
-                    Enable '${
-                      lib.showAttrPath (
-                        modulePath
-                        ++ [
-                          "profiles"
-                          config.name
-                          "extensions"
-                          "force"
-                        ]
-                      )
-                    }' to acknowledge this.
-                  '';
-                }
-              ] ++ config.bookmarks.assertions;
+              assertions =
+                [
+                  (mkNoDuplicateAssertion config.containers "container")
+                  {
+                    assertion =
+                      builtins.all (ext: ext.settings == { }) (attrValues config.extensions.settings)
+                      || config.extensions.force;
+                    message = ''
+                      Using '${
+                        lib.showAttrPath (
+                          modulePath
+                          ++ [
+                            "profiles"
+                            config.name
+                            "extensions"
+                            "settings"
+                          ]
+                        )
+                      }' will override all previous extensions settings.
+                      Enable '${
+                        lib.showAttrPath (
+                          modulePath
+                          ++ [
+                            "profiles"
+                            config.name
+                            "extensions"
+                            "force"
+                          ]
+                        )
+                      }' to acknowledge this.
+                    '';
+                  }
+                ]
+                ++ (builtins.concatMap (
+                  { name, value }:
+                  let
+                    packages = builtins.filter (pkg: pkg.addonId == name) config.extensions.packages;
+                    package = builtins.head packages;
+                    unauthorized = lib.subtractLists value.permissions package.meta.mozPermissions;
+                  in
+                  [
+                    {
+                      assertion = value.permissions == null || length packages == 1;
+                      message = ''
+                        Must have exactly one extension with addonId '${name}'
+                        in '${moduleName}.extensions.packages' but found
+                        ${toString (length packages)}.
+                      '';
+                    }
+
+                    {
+                      assertion = value.permissions == null || length packages != 1 || unauthorized == [ ];
+                      message = ''
+                        Extension ${name} requests permissions that weren't
+                        authorized: ${builtins.toJSON unauthorized}.
+                        Consider adding the missing permissions to
+                        '${
+                          lib.showAttrPath (
+                            modulePath
+                            ++ [
+                              "extensions"
+                              name
+                              "permissions"
+                            ]
+                          )
+                        }'.
+                      '';
+                    }
+                  ]
+                ) (lib.attrsToList config.extensions.settings))
+                ++ config.bookmarks.assertions;
             };
           }
         )
@@ -888,82 +937,80 @@ in
         ++ lib.flip mapAttrsToList cfg.profiles (
           _: profile:
           # Merge the regular profile settings with extension settings
-          mkMerge (
-            [
-              {
-                "${cfg.profilesPath}/${profile.path}/.keep".text = "";
+          mkMerge [
+            {
+              "${cfg.profilesPath}/${profile.path}/.keep".text = "";
 
-                "${cfg.profilesPath}/${profile.path}/chrome/userChrome.css" = mkIf (profile.userChrome != "") (
-                  let
-                    key = if builtins.isString profile.userChrome then "text" else "source";
-                  in
+              "${cfg.profilesPath}/${profile.path}/chrome/userChrome.css" = mkIf (profile.userChrome != "") (
+                let
+                  key = if builtins.isString profile.userChrome then "text" else "source";
+                in
+                {
+                  "${key}" = profile.userChrome;
+                }
+              );
+
+              "${cfg.profilesPath}/${profile.path}/chrome/userContent.css" = mkIf (profile.userContent != "") (
+                let
+                  key = if builtins.isString profile.userContent then "text" else "source";
+                in
+                {
+                  "${key}" = profile.userContent;
+                }
+              );
+
+              "${cfg.profilesPath}/${profile.path}/user.js" =
+                mkIf
+                  (
+                    profile.preConfig != ""
+                    || profile.settings != { }
+                    || profile.extraConfig != ""
+                    || profile.bookmarks.configFile != null
+                    || builtins.any (ext: ext.settings != { }) (attrValues profile.extensions.settings)
+                  )
                   {
-                    "${key}" = profile.userChrome;
-                  }
-                );
+                    text =
+                      mkUserJs profile.preConfig profile.settings profile.extraConfig profile.bookmarks.configFile
+                        profile.extensions.settings;
+                  };
 
-                "${cfg.profilesPath}/${profile.path}/chrome/userContent.css" = mkIf (profile.userContent != "") (
+              "${cfg.profilesPath}/${profile.path}/containers.json" = mkIf (profile.containers != { }) {
+                text = mkContainersJson profile.containers;
+                force = profile.containersForce;
+              };
+
+              "${cfg.profilesPath}/${profile.path}/search.json.mozlz4" = mkIf (profile.search.enable) {
+                enable = profile.search.enable;
+                force = profile.search.force;
+                source = profile.search.file;
+              };
+
+              "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
+                source =
                   let
-                    key = if builtins.isString profile.userContent then "text" else "source";
+                    extensionsEnvPkg = pkgs.buildEnv {
+                      name = "hm-firefox-extensions";
+                      paths = profile.extensions.packages;
+                    };
                   in
-                  {
-                    "${key}" = profile.userContent;
-                  }
-                );
+                  "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+                recursive = true;
+                force = true;
+              };
+            }
 
-                "${cfg.profilesPath}/${profile.path}/user.js" =
-                  mkIf
-                    (
-                      profile.preConfig != ""
-                      || profile.settings != { }
-                      || profile.extraConfig != ""
-                      || profile.bookmarks.configFile != null
-                      || profile.extensions.settings != { }
-                    )
-                    {
-                      text =
-                        mkUserJs profile.preConfig profile.settings profile.extraConfig profile.bookmarks.configFile
-                          profile.extensions.settings;
-                    };
-
-                "${cfg.profilesPath}/${profile.path}/containers.json" = mkIf (profile.containers != { }) {
-                  text = mkContainersJson profile.containers;
-                  force = profile.containersForce;
-                };
-
-                "${cfg.profilesPath}/${profile.path}/search.json.mozlz4" = mkIf (profile.search.enable) {
-                  enable = profile.search.enable;
-                  force = profile.search.force;
-                  source = profile.search.file;
-                };
-
-                "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
-                  source =
-                    let
-                      extensionsEnvPkg = pkgs.buildEnv {
-                        name = "hm-firefox-extensions";
-                        paths = profile.extensions.packages;
-                      };
-                    in
-                    "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-                  recursive = true;
-                  force = true;
-                };
-              }
-            ]
-            ++
-              # Add extension settings as separate attributes
-              optional (profile.extensions.settings != { }) (
-                mkMerge (
-                  mapAttrsToList (name: settingConfig: {
-                    "${cfg.profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" = {
-                      force = settingConfig.force || profile.extensions.force;
-                      text = lib.generators.toJSON { } settingConfig.settings;
-                    };
-                  }) profile.extensions.settings
-                )
-              )
-          )
+            (mkMerge (
+              mapAttrsToList (
+                name: settingConfig:
+                mkIf (settingConfig.settings != { }) {
+                  "${cfg.profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" = {
+                    force = settingConfig.force || profile.extensions.force;
+                    text = lib.generators.toJSON { } settingConfig.settings;
+                  };
+                }
+              ) profile.extensions.settings
+            ))
+          ]
         )
       );
     }
