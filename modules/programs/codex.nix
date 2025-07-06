@@ -9,7 +9,13 @@ let
 
   cfg = config.programs.codex;
 
-  settingsFormat = pkgs.formats.yaml { };
+  tomlFormat = pkgs.formats.toml { };
+  yamlFormat = pkgs.formats.yaml { };
+
+  packageVersion = if cfg.package != null then lib.getVersion cfg.package else "0.2.0";
+  isTomlConfig = lib.versionAtLeast packageVersion "0.2.0";
+  settingsFormat = if isTomlConfig then tomlFormat else yamlFormat;
+  configFileName = if isTomlConfig then ".codex/config.toml" else ".codex/config.yaml";
 in
 {
   meta.maintainers = [
@@ -24,16 +30,16 @@ in
     settings = lib.mkOption {
       inherit (settingsFormat) type;
       description = ''
-        Configuration written to {file}`~/.codex/config.yaml`.
-        See <https://github.com/openai/codex#configuration-guide> for supported values.
+        Configuration written to {file}`~/.codex/config.toml` (0.2.0+) or {file}`~/.codex/config.yaml` (<0.2.0).
+        See <https://github.com/openai/codex/blob/main/codex-rs/config.md> for supported values.
       '';
       default = { };
       defaultText = lib.literalExpression "{ }";
       example = lib.literalExpression ''
         {
           model = "gemma3:latest";
-          provider = "ollama";
-          providers = {
+          model_provider = "ollama";
+          model_providers = {
             ollama = {
               name = "Ollama";
               baseURL = "http://localhost:11434/v1";
@@ -59,8 +65,12 @@ in
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
     home.file = {
-      ".codex/config.yaml".source = settingsFormat.generate "codex-config" cfg.settings;
-      ".codex/AGENTS.md".text = cfg.custom-instructions;
+      "${configFileName}" = lib.mkIf (cfg.settings != { }) {
+        source = settingsFormat.generate "codex-config" cfg.settings;
+      };
+      ".codex/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
+        text = cfg.custom-instructions;
+      };
     };
   };
 
