@@ -1,0 +1,37 @@
+name: "✨ New Module Request"
+description: "Suggest an addition to Home Manager"
+title: "[New Module Request] "
+labels: ["new module request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing to Home Manager!
+
+        Before you open a new issue, please search the existing issues to see if your feature has already been requested or discussed.
+  - type: markdown
+    attributes:
+      value: "## ➕ New Program or Service"
+  - type: input
+    id: new-program-name
+    attributes:
+      label: Program/Service Name
+      description: "What is the name of the program or service you would like to add?"
+      placeholder: "e.g., my-cool-cli-tool"
+  - type: input
+    id: new-program-repo
+    attributes:
+      label: Upstream Repository
+      description: "Please provide a link to the source code repository."
+      placeholder: "https://github.com/user/repo"
+  - type: textarea
+    id: new-program-docs
+    attributes:
+      label: Configuration Documentation
+      description: "Please provide links to any relevant documentation for configuring this program."
+      placeholder: "e.g., man page, project wiki, configuration file examples, etc."
+  - type: textarea
+    id: new-program-reason
+    attributes:
+      label: Reason for Addition
+      description: "**Why do you want this program or service added to Home Manager?"
