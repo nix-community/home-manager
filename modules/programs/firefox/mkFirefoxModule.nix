@@ -972,6 +972,9 @@ in
       release = mkOptionDefault (builtins.head (lib.splitString "-" cfg.package.version));
 
       policies = {
+        NoDefaultBookmarks = lib.mkIf (builtins.any (profile: profile.bookmarks.enable) (
+          builtins.attrValues cfg.profiles
+        )) false;
         ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
           lib.listToAttrs (
             map (
