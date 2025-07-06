@@ -574,6 +574,12 @@
     ];
     name = "Olai";
   };
+  M0NsTeRRR = {
+    email = "nix@mail.adminafk.fr";
+    github = "M0NsTeRRR";
+    githubId = 37785089;
+    name = "Ludovic Ortega";
+  };
   MForster = {
     email = "email@michael-forster.de";
     github = "MForster";
@@ -1302,6 +1308,17 @@
     ];
     matrix = "@jola:mozilla.org";
     name = "Johan Larsson";
+  };
+  junestepp = {
+    email = "git@junestepp.me";
+    github = "junestepp";
+    githubId = 26205306;
+    keys = [
+      {
+        fingerprint = "2561 0243 2233 CFE6 E13E  3C33 348C 6EB3 39AE C582";
+      }
+    ];
+    name = "June Stepp";
   };
   justdeeevin = {
     email = "devin.droddy@gmail.com";
