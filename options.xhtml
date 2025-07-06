@@ -22025,8 +22025,8 @@ strings concatenated with “\n”</p>
  </span>
 </dt>
 <dd>
-<p>Configuration written to <code class="filename">~/.codex/config.yaml</code>.
-See <a class="link" href="https://github.com/openai/codex#configuration-guide"  target="_top">https://github.com/openai/codex#configuration-guide</a> for supported values.</p>
+<p>Configuration written to <code class="filename">~/.codex/config.toml</code> (0.2.0+) or <code class="filename">~/.codex/config.yaml</code> (&lt;0.2.0).
+See <a class="link" href="https://github.com/openai/codex/blob/main/codex-rs/config.md"  target="_top">https://github.com/openai/codex/blob/main/codex-rs/config.md</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 YAML 1.1 value</p>
@@ -22036,8 +22036,8 @@ YAML 1.1 value</p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   model = &quot;gemma3:latest&quot;;
-  provider = &quot;ollama&quot;;
-  providers = {
+  model_provider = &quot;ollama&quot;;
+  model_providers = {
     ollama = {
       name = &quot;Ollama&quot;;
       baseURL = &quot;http://localhost:11434/v1&quot;;
