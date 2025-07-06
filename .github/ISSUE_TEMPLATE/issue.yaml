@@ -3,10 +3,6 @@ description: File a bug/issue
 title: 'bug: '
 labels: [bug, triage]
 
-# We cannot use nix-community/home-manager
-# See https://github.com/dear-github/dear-github/issues/170
-assignees: [rycee, berbiche]
-
 body:
 - type: checkboxes
   attributes:
