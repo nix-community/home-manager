@@ -1,0 +1,38 @@
+name: "✨ Feature Request"
+description: "Suggest an improvement to Home Manager"
+title: "[Feature Request] "
+labels: ["feature request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing to Home Manager!
+
+        Before you open a new issue, please search the existing issues to see if your feature has already been requested or discussed.
+  - type: markdown
+    attributes:
+      value: "## 🔧 Existing Module Improvement"
+  - type: input
+    id: existing-module-name
+    attributes:
+      label: Module Name
+      description: "What is the name of the module?"
+      placeholder: "e.g., programs.git"
+  - type: textarea
+    id: existing-module-feature
+    attributes:
+      label: Requested Feature
+      description: "Please describe the new feature or improvement in detail."
+  - type: textarea
+    id: existing-module-limitation
+    attributes:
+      label: Current Limitations
+      description: "Why can't your goal be achieved with the current implementation? Please be specific."
+  - type: markdown
+    attributes:
+      value: "---"
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or configuration examples about the feature request here.
