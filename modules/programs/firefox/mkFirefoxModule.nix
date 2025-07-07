@@ -731,7 +731,7 @@ in
                                     defaultText = "Any permissions";
                                     description = ''
                                       Allowed permissions for this extension. See
-                                      https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions
+                                      <https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions>
                                       for a list of relevant permissions.
                                     '';
                                   };
