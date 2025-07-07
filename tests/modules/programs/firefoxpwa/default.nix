@@ -1,0 +1,3 @@
+{
+  firefoxpwa-config = ./config.nix;
+}
