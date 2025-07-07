@@ -10,6 +10,33 @@ let
   jsonFmt = pkgs.formats.json { };
 
   sites = lib.concatMapAttrs (_: profile: profile.sites) cfg.profiles;
+
+  mkUlidAssertions =
+    path:
+    lib.concatMap (
+      { name, value }:
+      let
+        length = 26;
+        allowed = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+        disallowed = lib.subtractLists (lib.stringToCharacters allowed) (lib.stringToCharacters name);
+      in
+      [
+        {
+          assertion = builtins.stringLength name == length;
+          message = ''
+            ULID '${name}' at 'programs.firefoxpwa.${lib.showOption path}' must be 26 characters, but is
+            ${toString (builtins.stringLength name)} characters long.
+          '';
+        }
+        {
+          assertion = disallowed == [ ];
+          message = ''
+            ULID '${name}' at 'programs.firefoxpwa.profiles' is only allowed to contain
+            characters '${allowed}', but contains '${lib.concatStrings disallowed}'.
+          '';
+        }
+      ]
+    ) (lib.attrsToList (lib.attrByPath path null cfg));
 in
 {
   meta.maintainers = [ lib.maintainers.bricked ];
@@ -168,6 +195,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions =
+      mkUlidAssertions [ "profiles" ]
+      ++ lib.concatMap (
+        name:
+        mkUlidAssertions [
+          "profiles"
+          name
+          "sites"
+        ]
+      ) (builtins.attrNames cfg.profiles);
+
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.dataFile."firefoxpwa/config.json" = lib.mkIf (cfg.settings != { }) {
