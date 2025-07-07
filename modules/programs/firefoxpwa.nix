@@ -168,7 +168,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.dataFile."firefoxpwa/config.json" = lib.mkIf (cfg.settings != { }) {
       text = lib.generators.toJSON { } cfg.settings;
