@@ -729,7 +729,11 @@ in
                                     default = null;
                                     example = [ "activeTab" ];
                                     defaultText = "Any permissions";
-                                    description = "Allowed permissions for this extension.";
+                                    description = ''
+                                      Allowed permissions for this extension. See
+                                      https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions
+                                      for a list of relevant permissions.
+                                    '';
                                   };
                                   force = mkOption {
                                     type = types.bool;
