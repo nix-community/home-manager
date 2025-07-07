@@ -65,7 +65,6 @@ in
         ULIDs. A ULID is made of 16 characters, each of which is one of
         '0123456789ABCDEFGHJKMNPQRSTVWXYZ' (Excluding I, L, O and U). See
         https://github.com/ulid/spec?tab=readme-ov-file#canonical-string-representation.
-        ULIDs must be unique across profiles and sites.
       '';
       example = lib.literalExpression ''
         {
@@ -99,7 +98,7 @@ in
                   consist of ULIDs. A ULID is made of 16 characters, each of which is one of
                   '0123456789ABCDEFGHJKMNPQRSTVWXYZ' (Excluding I, L, O and U). See
                   https://github.com/ulid/spec?tab=readme-ov-file#canonical-string-representation.
-                  ULIDs must be unique across profiles and sites.
+                  Site ULIDs must be unique across profiles.
                 '';
 
                 type = lib.types.attrsOf (
@@ -210,7 +209,20 @@ in
           name
           "sites"
         ]
-      ) (builtins.attrNames cfg.profiles);
+      ) (builtins.attrNames cfg.profiles)
+      ++ map (
+        name:
+        let
+          profiles = builtins.attrNames (lib.filterAttrs (_: profile: profile.sites ? ${name}) cfg.profiles);
+        in
+        {
+          assertion = builtins.length profiles == 1;
+          message = ''
+            Site with ULID '${name}' can only be present in one profile, but is present in
+            profiles ${lib.concatMapStringsSep ", " (x: "'${x}'") profiles}.
+          '';
+        }
+      ) (builtins.attrNames sites);
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
