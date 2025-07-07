@@ -53,7 +53,7 @@ in
       default = { };
       description = ''
         Settings to be written to the configuration file. See
-        https://github.com/filips123/PWAsForFirefox/blob/cb4fc76873cc51129d9290754768e6a340c521b2/native/src/storage.rs#L61-L77
+        <https://github.com/filips123/PWAsForFirefox/blob/cb4fc76873cc51129d9290754768e6a340c521b2/native/src/storage.rs#L61-L77>
         for a list of available options.
       '';
     };
@@ -64,7 +64,7 @@ in
         Attribute set of profile options. The keys of that attribute set consist of
         ULIDs. A ULID is made of 16 characters, each of which is one of
         '0123456789ABCDEFGHJKMNPQRSTVWXYZ' (Excluding I, L, O and U). See
-        https://github.com/ulid/spec?tab=readme-ov-file#canonical-string-representation.
+        <https://github.com/ulid/spec?tab=readme-ov-file#canonical-string-representation>.
       '';
       example = lib.literalExpression ''
         {
@@ -97,7 +97,7 @@ in
                   Attribute set of site options for this profile. The keys of that attribute set
                   consist of ULIDs. A ULID is made of 16 characters, each of which is one of
                   '0123456789ABCDEFGHJKMNPQRSTVWXYZ' (Excluding I, L, O and U). See
-                  https://github.com/ulid/spec?tab=readme-ov-file#canonical-string-representation.
+                  <https://github.com/ulid/spec?tab=readme-ov-file#canonical-string-representation>.
                   Site ULIDs must be unique across profiles.
                 '';
 
@@ -151,7 +151,7 @@ in
                           default = { };
                           description = ''
                             Settings for this site. See
-                            https://github.com/filips123/PWAsForFirefox/blob/cb4fc76873cc51129d9290754768e6a340c521b2/native/src/components/site.rs#L98-L115
+                            <https://github.com/filips123/PWAsForFirefox/blob/cb4fc76873cc51129d9290754768e6a340c521b2/native/src/components/site.rs#L98-L115>
                             for a list of available options.
                           '';
                           example = {
@@ -185,7 +185,7 @@ in
                 default = { };
                 description = ''
                   Settings for this profile. See
-                  https://github.com/filips123/PWAsForFirefox/blob/cb4fc76873cc51129d9290754768e6a340c521b2/native/src/components/profile.rs#L13-L34
+                  <https://github.com/filips123/PWAsForFirefox/blob/cb4fc76873cc51129d9290754768e6a340c521b2/native/src/components/profile.rs#L13-L34>
                   for a list of available options.
                 '';
               };
