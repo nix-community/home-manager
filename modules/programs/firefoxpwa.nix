@@ -9,6 +9,8 @@ let
 
   jsonFmt = pkgs.formats.json { };
 
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
+
   sites = lib.concatMapAttrs (_: profile: profile.sites) cfg.profiles;
 
   mkUlidAssertions =
@@ -137,9 +139,10 @@ in
                             }
                           '';
                         };
-                        desktopEntry.enable = lib.mkEnableOption "the desktop entry for this site" // {
-                          default = true;
-                          example = false;
+                        desktopEntry.enable = lib.mkOption {
+                          type = lib.types.bool;
+                          defaultText = "true if host platform is Linux";
+                          description = "Whether to enable the desktop entry for this site.";
                         };
                         settings = lib.mkOption {
                           type = jsonFmt.type;
@@ -155,17 +158,20 @@ in
                         };
                       };
 
-                      config.settings = {
-                        ulid = name;
-                        profile = profile.name;
-                        config = {
-                          name = config.name;
-                          document_url = config.url;
-                          manifest_url = config.manifestUrl;
-                        };
-                        manifest = {
-                          name = config.name;
-                          start_url = config.url;
+                      config = {
+                        desktopEntry.enable = lib.mkDefault isLinux;
+                        settings = {
+                          ulid = name;
+                          profile = profile.name;
+                          config = {
+                            name = config.name;
+                            document_url = config.url;
+                            manifest_url = config.manifestUrl;
+                          };
+                          manifest = {
+                            name = config.name;
+                            start_url = config.url;
+                          };
                         };
                       };
                     }
