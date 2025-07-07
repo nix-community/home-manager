@@ -41,7 +41,7 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v31
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v25
+        uses: DeterminateSystems/update-flake-lock@v26
         with:
           token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           git-committer-name: ${{ steps.user-info.outputs.name || 'github-actions[bot]' }}
