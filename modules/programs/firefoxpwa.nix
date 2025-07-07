@@ -72,7 +72,7 @@ in
             name = "MDN Web Docs";
             url = "https://developer.mozilla.org/";
             manifestUrl = "https://developer.mozilla.org/manifest.f42880861b394dd4dc9b.json";
-            icon = pkgs.fetchurl {
+            desktopEntry.icon = pkgs.fetchurl {
               url = "https://developer.mozilla.org/favicon-192x192.png";
               sha256 = "0p8zgf2ba48l2pq1gjcffwzmd9kfmj9qc0v7zpwf2qd54fndifxr";
             };
@@ -123,25 +123,28 @@ in
                           description = "URL of the site's web app manifest.";
                           example = "https://developer.mozilla.org/manifest.f42880861b394dd4dc9b.json";
                         };
-                        icon = lib.mkOption {
-                          type = with lib.types; nullOr (either str path);
-                          default = null;
-                          description = ''
-                            App icon of the site.
-
-                            This is currently only used for the desktop entry.
-                          '';
-                          example = lib.literalExpression ''
-                            pkgs.fetchurl {
-                              url = "https://developer.mozilla.org/favicon-192x192.png";
-                              sha256 = "0p8zgf2ba48l2pq1gjcffwzmd9kfmj9qc0v7zpwf2qd54fndifxr";
-                            }
-                          '';
-                        };
-                        desktopEntry.enable = lib.mkOption {
-                          type = lib.types.bool;
-                          defaultText = "true if host platform is Linux";
-                          description = "Whether to enable the desktop entry for this site.";
+                        desktopEntry = {
+                          enable = lib.mkOption {
+                            type = lib.types.bool;
+                            defaultText = "true if host platform is Linux";
+                            description = "Whether to enable the desktop entry for this site.";
+                          };
+                          icon = lib.mkOption {
+                            type = with lib.types; nullOr (either str path);
+                            default = null;
+                            description = "Icon to display in file manager, menus, etc.";
+                            example = lib.literalExpression ''
+                              pkgs.fetchurl {
+                                url = "https://developer.mozilla.org/favicon-192x192.png";
+                                sha256 = "0p8zgf2ba48l2pq1gjcffwzmd9kfmj9qc0v7zpwf2qd54fndifxr";
+                              }
+                            '';
+                          };
+                          categories = lib.mkOption {
+                            type = with lib.types; nullOr (listOf str);
+                            default = null;
+                            description = "Categories in which the entry should be shown in a menu.";
+                          };
                         };
                         settings = lib.mkOption {
                           type = jsonFmt.type;
@@ -233,8 +236,8 @@ in
     xdg.desktopEntries = lib.mkMerge (
       lib.mapAttrsToList (name: site: {
         "FFPWA-${name}" = lib.mkIf site.desktopEntry.enable {
+          inherit (site.desktopEntry) icon categories;
           name = site.settings.manifest.name;
-          icon = site.icon;
           exec = "firefoxpwa site launch ${name} --protocol %u";
           terminal = false;
         };
