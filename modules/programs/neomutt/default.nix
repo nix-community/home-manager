@@ -10,6 +10,7 @@ let
     concatStringsSep
     concatMapStringsSep
     filter
+    filterAttrs
     isString
     mkIf
     mkOption
@@ -19,7 +20,8 @@ let
 
   cfg = config.programs.neomutt;
 
-  neomuttAccounts = filter (a: a.neomutt.enable) (attrValues config.accounts.email.accounts);
+  neomuttAccountsCfg = filterAttrs (n: a: a.neomutt.enable) config.accounts.email.accounts;
+  neomuttAccounts = attrValues neomuttAccountsCfg;
 
   accountCommandNeeded = lib.any (
     a:
@@ -535,12 +537,17 @@ in
         );
     };
 
-    assertions = [
-      {
-        assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
-        message = "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
-      }
-    ];
+    assertions =
+      [
+        {
+          assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
+          message = "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
+        }
+      ]
+      ++ lib.mapAttrsToList (n: a: {
+        assertion = a.neomutt.sendMailCommand != null || a.passwordCommand != null;
+        message = "'accounts.email.accounts.${n}' needs either 'neomutt.sendMailCommand' or 'passwordCommand' set.";
+      }) neomuttAccountsCfg;
 
     warnings =
       let
