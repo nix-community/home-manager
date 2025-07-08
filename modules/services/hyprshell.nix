@@ -64,6 +64,7 @@ in
 
   config = mkIf cfg.enable {
     assertions = [
+      (lib.hm.assertions.assertPlatform "services.hyprshell" pkgs lib.platforms.linux)
       {
         assertion = if (cfg.package == null) then (if cfg.systemd.enable then false else true) else true;
         message = "Can't set programs.hyprshell.systemd.enable with the package set to null.";
