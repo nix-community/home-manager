@@ -356,6 +356,12 @@ in
       type = types.attrsOf (
         types.submodule (
           { config, name, ... }:
+          let
+            profilePath = modulePath ++ [
+              "profiles"
+              name
+            ];
+          in
           {
             imports = [ (pkgs.path + "/nixos/modules/misc/assertions.nix") ];
 
@@ -783,28 +789,9 @@ in
                       builtins.all (ext: ext.settings == { }) (attrValues config.extensions.settings)
                       || config.extensions.force;
                     message = ''
-                      Using '${
-                        lib.showAttrPath (
-                          modulePath
-                          ++ [
-                            "profiles"
-                            config.name
-                            "extensions"
-                            "settings"
-                          ]
-                        )
-                      }' will override all previous extensions settings.
-                      Enable '${
-                        lib.showAttrPath (
-                          modulePath
-                          ++ [
-                            "profiles"
-                            config.name
-                            "extensions"
-                            "force"
-                          ]
-                        )
-                      }' to acknowledge this.
+                      Using '${lib.showOption profilePath}.extensions.settings' will override all
+                      previous extensions settings. Enable
+                      '${lib.showOption profilePath}.extensions.force' to acknowledge this.
                     '';
                   }
                 ]
@@ -820,8 +807,7 @@ in
                       assertion = value.permissions == null || length packages == 1;
                       message = ''
                         Must have exactly one extension with addonId '${name}'
-                        in '${moduleName}.extensions.packages' but found
-                        ${toString (length packages)}.
+                        in '${lib.showOption profilePath}.extensions.packages' but found ${toString (length packages)}.
                       '';
                     }
 
@@ -833,14 +819,13 @@ in
                         Consider adding the missing permissions to
                         '${
                           lib.showAttrPath (
-                            modulePath
+                            profilePath
                             ++ [
                               "extensions"
                               name
-                              "permissions"
                             ]
                           )
-                        }'.
+                        }.permissions'.
                       '';
                     }
                   ]
