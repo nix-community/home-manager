@@ -1,0 +1,12 @@
+columns = 3
+sorting = false
+
+[key_map]
+down = "focus_down"
+h = "focus_left"
+j = "focus_up"
+k = "focus_down"
+l = "focus_right"
+left = "focus_left"
+right = "focus_right"
+up = "focus_up"
