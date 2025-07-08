@@ -154,6 +154,7 @@ let
     "tmux"
     "topgrade"
     "translate-shell"
+    "tray-tui"
     "vifm"
     "vim-vint"
     "vimPlugins"
