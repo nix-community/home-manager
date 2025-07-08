@@ -23,18 +23,15 @@ let
 
   accountCommandNeeded = lib.any (
     a:
-    a.neomutt.enable
-    && (
-      a.neomutt.mailboxType == "imap"
-      || (lib.any (m: !isString m && m.type == "imap") a.neomutt.extraMailboxes)
-    )
-  ) (attrValues config.accounts.email.accounts);
+    a.neomutt.mailboxType == "imap"
+    || (lib.any (m: !isString m && m.type == "imap") a.neomutt.extraMailboxes)
+  ) neomuttAccounts;
 
   accountCommand =
     let
       imapAccounts = filter (
-        a: a.neomutt.enable && a.imap.host != null && a.userName != null && a.passwordCommand != null
-      ) (attrValues config.accounts.email.accounts);
+        a: a.imap.host != null && a.userName != null && a.passwordCommand != null
+      ) neomuttAccounts;
       accountCase =
         account:
         let
