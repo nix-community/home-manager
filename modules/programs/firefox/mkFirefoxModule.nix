@@ -80,6 +80,9 @@ let
       if lib.isBool pref || lib.isInt pref || lib.isString pref then pref else builtins.toJSON pref
     );
 
+  extensionSettingsNeedForce =
+    extensionSettings: builtins.any (ext: ext.settings != { }) (attrValues extensionSettings);
+
   mkUserJs =
     prePrefs: prefs: extraPrefs: bookmarksFile: extensions:
     let
@@ -88,7 +91,7 @@ let
           "browser.bookmarks.file" = toString bookmarksFile;
           "browser.places.importBookmarksHTML" = true;
         }
-        // lib.optionalAttrs (builtins.any (ext: ext.settings != { }) (attrValues extensions)) {
+        // lib.optionalAttrs (extensionSettingsNeedForce extensions) {
           "extensions.webextensions.ExtensionStorageIDB.enabled" = false;
         }
         // prefs;
@@ -785,9 +788,7 @@ in
                 [
                   (mkNoDuplicateAssertion config.containers "container")
                   {
-                    assertion =
-                      builtins.all (ext: ext.settings == { }) (attrValues config.extensions.settings)
-                      || config.extensions.force;
+                    assertion = !(extensionSettingsNeedForce config.extensions.settings) || config.extensions.force;
                     message = ''
                       Using '${lib.showOption profilePath}.extensions.settings' will override all
                       previous extensions settings. Enable
@@ -955,7 +956,7 @@ in
                     || profile.settings != { }
                     || profile.extraConfig != ""
                     || profile.bookmarks.configFile != null
-                    || builtins.any (ext: ext.settings != { }) (attrValues profile.extensions.settings)
+                    || extensionSettingsNeedForce profile.extensions.settings
                   )
                   {
                     text =
