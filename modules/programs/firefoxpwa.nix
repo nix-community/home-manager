@@ -33,8 +33,8 @@ let
         {
           assertion = disallowed == [ ];
           message = ''
-            ULID '${name}' at 'programs.firefoxpwa.profiles' is only allowed to contain
-            characters '${allowed}', but contains '${lib.concatStrings disallowed}'.
+            ULID '${name}' at 'programs.firefoxpwa.profiles' must only contain characters
+            '${allowed}', but contains '${lib.concatStrings disallowed}'.
           '';
         }
       ]
@@ -221,8 +221,10 @@ in
         {
           assertion = builtins.length profiles == 1;
           message = ''
-            Site with ULID '${name}' can only be present in one profile, but is present in
-            profiles ${lib.concatMapStringsSep ", " (x: "'${x}'") profiles}.
+            Site with ULID '${name}' must be present in exactly one profile, but is present
+            in ${toString (builtins.length profiles)} profiles, namely ${
+              lib.concatMapStringsSep ", " (x: "'${x}'") profiles
+            }.
           '';
         }
       ) (builtins.attrNames sites);

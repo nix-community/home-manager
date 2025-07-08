@@ -22,12 +22,12 @@
       7 characters long.
     ''
     ''
-      ULID 'INVALID' at 'programs.firefoxpwa.profiles' is only allowed to contain
-      characters '0123456789ABCDEFGHJKMNPQRSTVWXYZ', but contains 'ILI'.
+      ULID 'INVALID' at 'programs.firefoxpwa.profiles' must only contain characters
+      '0123456789ABCDEFGHJKMNPQRSTVWXYZ', but contains 'ILI'.
     ''
     ''
-      Site with ULID '00000000000000000000000000' can only be present in one profile, but is present in
-      profiles '0123456789ABCDEFGHJKMNPQRS', 'ZYXWVTSRQPNMKJHGFEDCBA9876'.
+      Site with ULID '00000000000000000000000000' must be present in exactly one profile, but is present
+      in 2 profiles, namely '0123456789ABCDEFGHJKMNPQRS', 'ZYXWVTSRQPNMKJHGFEDCBA9876'.
     ''
   ];
 }
