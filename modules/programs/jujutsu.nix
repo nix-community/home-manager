@@ -66,6 +66,22 @@ in
         for options.
       '';
     };
+
+    includes = mkOption {
+      type = types.listOf types.lines;
+      default = [ ];
+      example = [
+        ''
+          --when.repositories = ["~/work"]
+
+          [user]
+          email = "NAME@WORK"
+        ''
+      ];
+      description = ''
+        List of additional configuration files to include. Similar to `programs.git.includes`.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -92,8 +108,23 @@ in
       })
     ];
 
-    home.file."${configDir}/jj/config.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "jujutsu-config" cfg.settings;
-    };
+    home.file = lib.mkMerge [
+      {
+        "${configDir}/jj/config.toml" = mkIf (cfg.settings != { }) {
+          source = tomlFormat.generate "jujutsu-config" cfg.settings;
+        };
+      }
+
+      (mkIf (cfg.includes != [ ]) (
+        let
+          files = lib.imap (i: conf: {
+            "${configDir}/jj/conf.d/include-${toString i}.toml" = {
+              text = conf;
+            };
+          }) cfg.includes;
+        in
+        lib.mergeAttrsList files
+      ))
+    ];
   };
 }
