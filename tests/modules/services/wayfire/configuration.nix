@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   wayland.windowManager.wayfire = {
     enable = true;
@@ -8,6 +9,7 @@
         binding_terminal = "alacritty";
         command_terminal = "alacritty";
       };
+      cube.skydome_texture = config.lib.test.mkStubPackage { };
     };
   };
 
