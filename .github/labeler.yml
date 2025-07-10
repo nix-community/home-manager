@@ -163,6 +163,7 @@
       - any-glob-to-any-file:
           - modules/services/podman-linux/**/*
           - modules/programs/distrobox.nix
+          - modules/programs/docker-cli.nix
 "desktop-ui":
   - changed-files:
       - any-glob-to-any-file:
