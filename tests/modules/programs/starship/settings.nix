@@ -46,6 +46,11 @@
   };
 
   nmt.script = ''
+    sessionVarsFile=home-path/etc/profile.d/hm-session-vars.sh
+    assertFileExists $sessionVarsFile
+    assertFileContains $sessionVarsFile \
+        'export STARSHIP_CONFIG="/home/hm-user/.config/starship.toml"'
+
     assertFileContent \
       home-files/.config/starship.toml \
       ${./settings-expected.toml}
