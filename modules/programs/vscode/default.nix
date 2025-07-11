@@ -54,6 +54,7 @@ let
     name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}settings.json";
   tasksFilePath =
     name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}tasks.json";
+  mcpFilePath = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}mcp.json";
   keybindingsFilePath =
     name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}keybindings.json";
 
@@ -119,6 +120,25 @@ let
         description = ''
           Configuration written to Visual Studio Code's
           {file}`tasks.json`.
+          This can be a JSON object or a path to a custom JSON file.
+        '';
+      };
+
+      userMcp = mkOption {
+        type = types.either types.path jsonFormat.type;
+        default = { };
+        example = literalExpression ''
+          {
+            "servers": {
+              "Github": {
+                "url": "https://api.githubcopilot.com/mcp/"
+              }
+            }
+          }
+        '';
+        description = ''
+          Configuration written to Visual Studio Code's
+          {file}`mcp.json`.
           This can be a JSON object or a path to a custom JSON file.
         '';
       };
@@ -270,6 +290,7 @@ in
         "enableExtensionUpdateCheck"
         "userSettings"
         "userTasks"
+        "userMcp"
         "keybindings"
         "extensions"
         "languageSnippets"
@@ -381,6 +402,11 @@ in
         (mkIf (v.userTasks != { }) {
           "${tasksFilePath n}".source =
             if isPath v.userTasks then v.userTasks else jsonFormat.generate "vscode-user-tasks" v.userTasks;
+        })
+
+        (mkIf (v.userMcp != { }) {
+          "${mcpFilePath n}".source =
+            if isPath v.userMcp then v.userMcp else jsonFormat.generate "vscode-user-mcp" v.userMcp;
         })
 
         (mkIf (v.keybindings != [ ]) {
