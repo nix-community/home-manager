@@ -35,6 +35,8 @@ in
       default = true;
     };
 
+    force = lib.mkEnableOption "GTK 2 config force overwrite without creating a backup";
+
     font = mkOption {
       type = types.nullOr lib.hm.types.fontType;
       default = cfg.font;
@@ -115,6 +117,8 @@ in
         ''
           ${settingsText}${cfg2.extraConfig}
         '';
+
+      inherit (cfg2) force;
     };
     home.sessionVariables.GTK2_RC_FILES = cfg2.configLocation;
   };
