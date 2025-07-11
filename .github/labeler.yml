@@ -1,4 +1,3 @@
-
 "mail":
 - changed-files:
   - any-glob-to-any-file:
@@ -462,16 +461,3 @@
     - modules/services/pantalaimon.nix
     - tests/modules/programs/irssi/**/*
     - tests/modules/programs/nheko/**/*
-
-"bars":
-  - changed-files:
-      - any-glob-to-any-file:
-          - modules/programs/eww.nix
-          - modules/programs/sketchybar.nix
-          - modules/programs/waybar.nix
-          - modules/programs/xmobar.nix
-          - modules/programs/yambar.nix
-          - modules/services/polybar.nix
-          - modules/services/taffybar.nix
-          - tests/modules/programs/waybar/**/*
-          - tests/modules/services/polybar/**/*
