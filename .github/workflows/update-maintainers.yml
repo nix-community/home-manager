@@ -1,15 +1,17 @@
 name: Update maintainers list
 on:
   push:
-    branches: ["master"]
-    paths: ["modules/lib/maintainers.nix"]
+    branches:
+      - main
+    paths:
+      - lib/maintainers.nix
   schedule:
     # Update every Monday at 9 AM UTC
     - cron: "0 9 * * 1"
   workflow_dispatch:
     inputs:
       create_pr:
-        description: 'Create PR even if no changes'
+        description: "Create PR even if no changes"
         required: false
         default: false
         type: boolean
@@ -17,6 +19,12 @@ jobs:
   update-maintainers:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'nix-community' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    env:
+      pr_branch: update/maintainers-${{ github.ref_name }}
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
@@ -42,7 +50,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token || github.token }}
       - name: Get Nixpkgs revision from flake.lock
         id: get-nixpkgs
         run: |
@@ -52,15 +60,20 @@ jobs:
         with:
           nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
       - name: Setup Git
+        env:
+          name: ${{ steps.user-info.outputs.name || 'github-actions[bot]' }}
+          email: ${{ steps.user-info.outputs.email || '41898282+github-actions[bot]@users.noreply.github.com' }}
         run: |
-          git config user.name "${{ steps.user-info.outputs.name }}"
-          git config user.email "${{ steps.user-info.outputs.email }}"
+          git config user.name "$name"
+          git config user.email "$email"
       - name: Generate updated maintainers list
         run: |
-          echo "📋 Generating updated all-maintainers.nix..."
+          echo "::group::📋 Generating updated generated/all-maintainers.nix..."
           ./lib/python/generate-all-maintainers.py
-          echo "🎨 Formatting with nixfmt..."
+          echo "::endgroup::"
+          echo "::group::🎨 Formatting with nixfmt..."
           nix fmt all-maintainers.nix
+          echo "::endgroup::"
       - name: Check for changes
         id: check-changes
         run: |
@@ -79,16 +92,57 @@ jobs:
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
           echo "🔍 Validating generated all-maintainers.nix..."
-          if nix eval --file ./all-maintainers.nix --json > /dev/null; then
+          if nix-instantiate --eval ./all-maintainers.nix --strict > /dev/null; then
             echo "✅ Generated file has valid Nix syntax"
           else
             echo "❌ Generated file has invalid Nix syntax"
             exit 1
           fi
+      - name: Create update branch
+        run: |
+          git branch -D "$pr_branch" || echo "Nothing to delete"
+          git switch -c "$pr_branch"
+      - name: Get info on the current PR
+        id: open_pr_info
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+        run: |
+          # Query for info about the already open update PR
+          info=$(
+            gh api graphql -F owner='{owner}' -F repo='{repo}' -F branch="$pr_branch" -f query='
+              query($owner:String!, $repo:String!, $branch:String!) {
+                repository(owner: $owner, name: $repo) {
+                  pullRequests(first: 1, states: OPEN, headRefName: $branch) {
+                    nodes {
+                      number
+                      url
+                    }
+                  }
+                }
+              }
+            ' | jq --raw-output '
+              .data.repository.pullRequests.nodes[]
+              | to_entries[]
+              | "\(.key)=\(.value)"
+            '
+          )
+          if [[ -n "$info" ]]; then
+            echo "PR info:"
+            echo "$info"
+            echo "$info" >> $GITHUB_OUTPUT
+          else
+            echo "No PR is currently open"
+          fi
+      - name: Fetch current PR's branch
+        if: steps.open_pr_info.outputs.number
+        run: |
+          git fetch origin "$pr_branch"
+          git branch --set-upstream-to "origin/$pr_branch"
       - name: Create Pull Request
+        id: create-pr
         if: steps.check-changes.outputs.has_changes == 'true' || github.event.inputs.create_pr == 'true'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
           title: "maintainers: update all-maintainers.nix"
           commit_body: |
             Automated update of the master maintainers list combining:
@@ -98,6 +152,8 @@ jobs:
             Changes: ${{ steps.check-changes.outputs.changes_summary || 'No content changes' }}
 
             Generated by: lib/python/generate-all-maintainers.py
+          pr_url: ${{ steps.open_pr_info.outputs.url }}
+          pr_num: ${{ steps.open_pr_info.outputs.number }}
           pr_body: |
             ## 📋 Summary
 
@@ -128,31 +184,54 @@ jobs:
             ---
             🤖 *This PR was automatically created by the [update-maintainers workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*
         run: |
-          # Create a new branch for the update
-          branch_name="maintainers/update-$(date +%Y%m%d%H%M%S)"
-          git checkout -b "$branch_name"
-
           # Commit the changes
           git add all-maintainers.nix
           git commit -m "$title" -m "$commit_body"
 
-          # Push the branch
-          git push origin "$branch_name"
+          echo "Pushing to remote branch $pr_branch"
+          git push --force --set-upstream origin "$pr_branch"
 
-          # Create the pull request
-          gh pr create \
-            --title "$title" \
-            --body "$pr_body" \
-            --label "dependencies" \
-            --label "maintainers"
+          if [ -z "$pr_num" ]; then
+            echo "Creating new pull request."
+            PR_URL=$(
+              gh pr create \
+                --title "$title" \
+                --body "$pr_body"
+            )
+          else
+            PR_URL=$pr_url
+            echo "Pull request already exists: $PR_URL"
+            gh pr edit "$pr_num" --body "$pr_body"
+          fi
+
+          echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
       - name: Summary
         env:
           has_changes: ${{ steps.check-changes.outputs.has_changes }}
           changes: ${{ steps.check-changes.outputs.changes_summary }}
+          pr_url: ${{ steps.create-pr.outputs.pr_url}}
+          pr_num: ${{ steps.open_pr_info.outputs.number }}
         run: |
           if [[ "$has_changes" == "true" ]]; then
-            echo "✅ Successfully created PR with maintainer updates"
-            echo "📊 Changes: $changes"
+              if [[ -n "$pr_num" ]]; then
+                echo "✅ Successfully updated PR with new changes."
+                echo "$changes"
+                echo "🔗 PR URL: $pr_url"
+                echo "### ✅ PR Updated" >> $GITHUB_STEP_SUMMARY
+                echo "[$pr_url]($pr_url)" >> $GITHUB_STEP_SUMMARY
+              elif [[ -n "$pr_url" ]]; then
+                echo "✅ Successfully created PR with maintainer updates."
+                echo "$changes"
+                echo "🔗 PR URL: $pr_url"
+                echo "### ✅ PR Created" >> $GITHUB_STEP_SUMMARY
+                echo "[$pr_url]($pr_url)" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "❌ Failed to create or update pull request."
+                echo "### ❌ PR Operation Failed" >> $GITHUB_STEP_SUMMARY
+                echo "A pull request was intended but the URL was not captured. Please check the logs." >> $GITHUB_STEP_SUMMARY
+              fi
           else
-            echo "ℹ️  No changes detected - maintainers list is up to date"
+            echo "ℹ️ No changes detected - maintainers list is up to date."
+            echo "### ℹ️ No Changes" >> $GITHUB_STEP_SUMMARY
+            echo "The maintainers list is up-to-date. No PR was created." >> $GITHUB_STEP_SUMMARY
           fi
