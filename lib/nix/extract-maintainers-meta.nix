@@ -13,6 +13,7 @@ let
   moduleMaintainersJson = builtins.fromJSON (builtins.readFile docsLib.jsonModuleMaintainers);
   maintainers = moduleMaintainersJson;
 
+  # TODO: Find a better solution for extracting maintainers outside `modules`
   additionalFiles = [
     ../../docs/home-manager-manual.nix
   ];
@@ -58,21 +59,29 @@ let
 
   allMaintainerObjects = extractMaintainerObjects maintainers ++ additionalMaintainerObjects;
 
-  getMaintainerName = maintainer: maintainer.github or maintainer.name or null;
-
-  allMaintainerNames = lib.filter (name: name != null) (map getMaintainerName allMaintainerObjects);
-
-  maintainerDetails = lib.pipe allMaintainerObjects [
-    (lib.filter (obj: getMaintainerName obj != null))
-    (map (obj: {
-      name = getMaintainerName obj;
-      value = obj;
-    }))
-    lib.listToAttrs
-  ];
+  allMaintainerNames = lib.filter (name: name != null) (
+    map (maintainer: maintainer.github or maintainer.name or null) allMaintainerObjects
+  );
 
   hmMaintainers = import ../../modules/lib/maintainers.nix;
   hmMaintainerNames = lib.attrNames hmMaintainers;
+
+  maintainerDetails = lib.pipe allMaintainerObjects [
+    (lib.filter (obj: (obj.github or obj.name or null) != null))
+    (map (obj: {
+      name = obj.github or obj.name;
+      value = obj // {
+        source =
+          if categorizedMaintainers.home-manager ? ${obj.github} then
+            "home-manager"
+          else if categorizedMaintainers.nixpkgs ? ${obj.github} then
+            "nixpkgs"
+          else
+            throw "${obj.github} is neither a home-manager or nixpkgs maintainer";
+      };
+    }))
+    lib.listToAttrs
+  ];
 
   partitionedMaintainers = lib.partition (nameValue: lib.elem nameValue.name hmMaintainerNames) (
     lib.attrsToList maintainerDetails
@@ -83,35 +92,10 @@ let
     nixpkgs = lib.listToAttrs partitionedMaintainers.wrong;
   };
 
-  formatMaintainer =
-    name: info: source:
-    let
-      quotedName =
-        if lib.match "[0-9].*" name != null || lib.match "[^a-zA-Z0-9_-].*" name != null then
-          ''"${name}"''
-        else
-          name;
-
-      filteredInfo = lib.filterAttrs (k: v: !lib.hasPrefix "_" k) info;
-    in
-    "  ${quotedName} = ${
-        lib.generators.toPretty {
-          multiline = true;
-          indent = "    ";
-        } filteredInfo
-      };";
-
-  formatAllMaintainers =
-    let
-      hmEntries = lib.mapAttrsToList (
-        name: info: formatMaintainer name info "home-manager"
-      ) categorizedMaintainers.home-manager;
-
-      nixpkgsEntries = lib.mapAttrsToList (
-        name: info: formatMaintainer name info "nixpkgs"
-      ) categorizedMaintainers.nixpkgs;
-    in
-    lib.concatStringsSep "\n" (hmEntries ++ nixpkgsEntries);
+  formattedMaintainers = lib.generators.toPretty {
+    multiline = true;
+    indent = "";
+  } maintainerDetails;
 
 in
 {
@@ -119,7 +103,7 @@ in
   names = allMaintainerNames;
   details = maintainerDetails;
   categorized = categorizedMaintainers;
-  formatted = formatAllMaintainers;
+  formatted = formattedMaintainers;
 
   stats = {
     totalFiles = lib.length (lib.attrNames maintainers);
