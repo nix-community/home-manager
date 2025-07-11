@@ -12,7 +12,6 @@ jobs:
   tag-maintainers:
     runs-on: ubuntu-latest
     if: |
-      github.repository_owner == 'nix-community' &&
       github.event.pull_request.draft == false &&
       github.event.pull_request.state == 'open'
     steps:
@@ -48,113 +47,41 @@ jobs:
           echo "module_files<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+      - name: Extract Maintainers
+        id: extract-maintainers
+        run: |
+          echo "Extracting maintainers from changed files..."
+          MAINTAINERS=$(lib/python/extract-maintainers.py \
+            --changed-files "${{ steps.changed-files.outputs.module_files }}" \
+            --pr-author "${{ github.event.pull_request.user.login }}")
+          echo "maintainers=$MAINTAINERS" >> $GITHUB_OUTPUT
+          echo "Found maintainers: $MAINTAINERS"
       - name: Manage Reviewers
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
         run: |
-          remove_reviewers() {
-            local reviewers_to_remove="$1"
-            local reason="$2"
-
-            if [[ -n "$reviewers_to_remove" ]]; then
-              for REVIEWER in $reviewers_to_remove; do
-                echo "Removing review request from $REVIEWER ($reason)"
-                gh api --method DELETE "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
-                  --input - <<< "{\"reviewers\": [\"$REVIEWER\"]}"
-              done
-            fi
-          }
-
-          # Check if no module files changed - remove all reviewers
+          # Handle case where no module files changed
           if [[ '${{ steps.changed-files.outputs.module_files }}' == '' ]]; then
-            echo "No module files changed, checking for outdated reviewers to remove..."
-            PENDING_REVIEWERS=$(gh pr view ${{ github.event.pull_request.number }} --json reviewRequests --jq '.reviewRequests[].login')
-            if [[ -n "$PENDING_REVIEWERS" ]]; then
-              echo "Found pending reviewers to remove: $PENDING_REVIEWERS"
-              remove_reviewers "$PENDING_REVIEWERS" "no module files changed"
-            else
-              echo "No pending reviewers to remove."
-            fi
+            echo "No module files changed, managing reviewers accordingly..."
+            lib/python/manage-reviewers.py \
+              --owner "${{ github.repository_owner }}" \
+              --repo "${{ github.event.repository.name }}" \
+              --pr-number "${{ github.event.pull_request.number }}" \
+              --pr-author "${{ github.event.pull_request.user.login }}" \
+              --no-module-files
             exit 0
           fi
 
-          # Process module files to find current maintainers
-          declare -A MAINTAINERS_TO_NOTIFY
-          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
-
-          while IFS= read -r FILE; do
-            if [[ -z "$FILE" ]]; then
-              continue
-            fi
-
-            echo "Processing file: $FILE"
-
-            MAINTAINERS_JSON=$(nix eval --impure --expr "
-              let
-                nixpkgs = import <nixpkgs> {};
-                lib = import ./modules/lib/stdlib-extended.nix nixpkgs.lib;
-                pkgs = nixpkgs;
-                config = {};
-                module = import ./$FILE { inherit lib pkgs config; };
-              in
-                module.meta.maintainers or []
-            " --json 2>/dev/null || echo "[]")
-
-            if [[ "$MAINTAINERS_JSON" == "[]" ]]; then
-              echo "No maintainers found for $FILE"
-              continue
-            fi
-
-            echo "Found maintainers JSON for $FILE: $MAINTAINERS_JSON"
-
-            # Extract GitHub usernames from the maintainers
-            MAINTAINERS=$(echo "$MAINTAINERS_JSON" | jq -r '.[] | .github // empty' 2>/dev/null || echo "")
-
-            for MAINTAINER in $MAINTAINERS; do
-              if [[ "$MAINTAINER" != "$PR_AUTHOR" ]]; then
-                MAINTAINERS_TO_NOTIFY["$MAINTAINER"]=1
-                echo "Found maintainer for $FILE: $MAINTAINER"
-              fi
-            done
-          done <<< "${{ steps.changed-files.outputs.module_files }}"
-
-          if [[ ${#MAINTAINERS_TO_NOTIFY[@]} -gt 0 ]]; then
-            PENDING_REVIEWERS=$(gh pr view ${{ github.event.pull_request.number }} --json reviewRequests --jq '.reviewRequests[].login')
-            PAST_REVIEWERS=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" --jq '.[].user.login')
-            USERS_TO_EXCLUDE=$(printf "%s\n%s" "$PENDING_REVIEWERS" "$PAST_REVIEWERS" | sort -u)
-            echo "Complete list of users to exclude:"
-            echo "$USERS_TO_EXCLUDE"
-
-            # Remove outdated review requests
-            CURRENT_MAINTAINERS=$(printf "%s\n" "${!MAINTAINERS_TO_NOTIFY[@]}" | sort -u)
-            OUTDATED_REVIEWERS=$(comm -23 <(echo "$PENDING_REVIEWERS" | sort) <(echo "$CURRENT_MAINTAINERS" | sort))
-            remove_reviewers "$OUTDATED_REVIEWERS" "no longer a maintainer of changed files"
-
-            # Check if maintainers are collaborators and not already reviewers
-            REPO="${{ github.repository }}"
-            NEW_REVIEWERS=()
-            for MAINTAINER in "${!MAINTAINERS_TO_NOTIFY[@]}"; do
-              if echo "$USERS_TO_EXCLUDE" | grep -q -w "$MAINTAINER"; then
-                echo "$MAINTAINER is already a reviewer, skipping."
-                continue
-              fi
-
-              echo "Checking if $MAINTAINER is a collaborator..."
-              if gh api "/repos/$REPO/collaborators/$MAINTAINER" --silent; then
-                echo "User $MAINTAINER is a collaborator, adding to new reviewers list"
-                NEW_REVIEWERS+=("$MAINTAINER")
-              else
-                echo "User $MAINTAINER is not a repository collaborator, probably missed the automated invite to the maintainers team, ignoring"
-              fi
-            done
-
-             if [[ ${#NEW_REVIEWERS[@]} -gt 0 ]]; then
-              REVIEWERS_CSV=$(printf "%s," "${NEW_REVIEWERS[@]}")
-              echo "Requesting reviews from: ${REVIEWERS_CSV%,}"
-              gh pr edit ${{ github.event.pull_request.number }} --add-reviewer "${REVIEWERS_CSV%,}"
-            else
-              echo "No new reviewers to add."
-            fi
+          # Handle case where module files changed
+          MAINTAINERS="${{ steps.extract-maintainers.outputs.maintainers }}"
+          if [[ -n "$MAINTAINERS" ]]; then
+            echo "Managing reviewers for maintainers: $MAINTAINERS"
+            lib/python/manage-reviewers.py \
+              --owner "${{ github.repository_owner }}" \
+              --repo "${{ github.event.repository.name }}" \
+              --pr-number "${{ github.event.pull_request.number }}" \
+              --pr-author "${{ github.event.pull_request.user.login }}" \
+              --current-maintainers "$MAINTAINERS"
           else
             echo "No module maintainers found for the modified files."
           fi
