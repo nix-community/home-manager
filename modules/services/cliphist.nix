@@ -86,7 +86,7 @@ in
 
         Service = {
           Type = "simple";
-          ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${cfg.package}/bin/cliphist ${extraOptionsStr} store";
+          ExecStart = "${lib.getExe' pkgs.wl-clipboard "wl-paste"} --watch ${lib.getExe cfg.package} ${extraOptionsStr} store";
           Restart = "on-failure";
         };
 
@@ -104,7 +104,7 @@ in
 
         Service = {
           Type = "simple";
-          ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${cfg.package}/bin/cliphist ${extraOptionsStr} store";
+          ExecStart = "${lib.getExe' pkgs.wl-clipboard "wl-paste"} --type image --watch ${lib.getExe cfg.package} ${extraOptionsStr} store";
           Restart = "on-failure";
         };
 
