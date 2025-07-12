@@ -82,13 +82,25 @@ in
         https://starship.rs/advanced-config/#transientprompt-and-transientrightprompt-in-cmd
       '';
     };
+
+    configPath = mkOption {
+      type = lib.types.str;
+      default = ".config/starship.toml";
+      description = ''
+        Relative path to the user's home directory where the Starship config should be stored.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home = {
+      packages = [ cfg.package ];
 
-    xdg.configFile."starship.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "starship-config" cfg.settings;
+      sessionVariables.STARSHIP_CONFIG = "${config.home.homeDirectory}/${cfg.configPath}";
+
+      file.${cfg.configPath} = mkIf (cfg.settings != { }) {
+        source = tomlFormat.generate "starship-config" cfg.settings;
+      };
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
