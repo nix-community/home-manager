@@ -6,6 +6,14 @@
     };
   };
 
+  test.stubs = {
+    zsh-abbr = {
+      outPath = null;
+      buildScript = ''
+        mkdir -p $out/share/zsh-abbr/runcoms
+      '';
+    };
+  };
   nmt.script = ''
     abbreviations=home-files/.config/zsh-abbr/user-abbreviations
 
