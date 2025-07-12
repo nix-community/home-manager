@@ -59,29 +59,19 @@ jobs:
       - name: Manage Reviewers
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          MAINTAINERS: ${{ steps.extract-maintainers.outputs.maintainers }}
+          CHANGED_FILES: ${{ steps.changed-files.outputs.changed_files }}
+          BOT_NAME: ${{ steps.app-token.outputs.app-slug || 'github-actions' }}
         run: |
-          # Handle case where no module files changed
-          if [[ '${{ steps.changed-files.outputs.module_files }}' == '' ]]; then
-            echo "No module files changed, managing reviewers accordingly..."
-            lib/python/manage-reviewers.py \
-              --owner "${{ github.repository_owner }}" \
-              --repo "${{ github.event.repository.name }}" \
-              --pr-number "${{ github.event.pull_request.number }}" \
-              --pr-author "${{ github.event.pull_request.user.login }}" \
-              --no-module-files
-            exit 0
-          fi
-
-          # Handle case where module files changed
-          MAINTAINERS="${{ steps.extract-maintainers.outputs.maintainers }}"
-          if [[ -n "$MAINTAINERS" ]]; then
-            echo "Managing reviewers for maintainers: $MAINTAINERS"
-            lib/python/manage-reviewers.py \
-              --owner "${{ github.repository_owner }}" \
-              --repo "${{ github.event.repository.name }}" \
-              --pr-number "${{ github.event.pull_request.number }}" \
-              --pr-author "${{ github.event.pull_request.user.login }}" \
-              --current-maintainers "$MAINTAINERS"
-          else
-            echo "No module maintainers found for the modified files."
-          fi
+          ./ci/tag-maintainers/manage-reviewers.py \
+            --owner "$OWNER" \
+            --repo "$REPO" \
+            --pr-number "$PR_NUMBER" \
+            --pr-author "$PR_AUTHOR" \
+            --current-maintainers "$MAINTAINERS" \
+            --changed-files "$CHANGED_FILES" \
+            --bot-user-name "$BOT_NAME"
