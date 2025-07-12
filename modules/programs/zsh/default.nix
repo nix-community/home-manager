@@ -28,19 +28,12 @@ let
 in
 {
   imports = [
+    ./deprecated.nix
     ./history.nix
     ./oh-my-zsh.nix
     ./prezto.nix
     ./zprof.nix
     ./zsh-abbr.nix
-    (lib.mkRenamedOptionModule
-      [ "programs" "zsh" "enableAutosuggestions" ]
-      [ "programs" "zsh" "autosuggestion" "enable" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "zsh" "enableSyntaxHighlighting" ]
-      [ "programs" "zsh" "syntaxHighlighting" "enable" ]
-    )
   ];
 
   options =
@@ -319,54 +312,6 @@ in
           '';
         };
 
-        initExtraBeforeCompInit = mkOption {
-          default = "";
-          type = types.lines;
-          apply =
-            x:
-            lib.warnIfNot (x == "") ''
-              `programs.zsh.initExtraBeforeCompInit` is deprecated, use `programs.zsh.initContent` with `lib.mkOrder 550` instead.
-
-              Example: programs.zsh.initContent = lib.mkOrder 550 "your content here";
-            '' x;
-          visible = false;
-          description = ''
-            Extra commands that should be added to {file}`.zshrc` before compinit.
-          '';
-        };
-
-        initExtra = mkOption {
-          default = "";
-          type = types.lines;
-          visible = false;
-          apply =
-            x:
-            lib.warnIfNot (x == "") ''
-              `programs.zsh.initExtra` is deprecated, use `programs.zsh.initContent` instead.
-
-              Example: programs.zsh.initContent = "your content here";
-            '' x;
-          description = ''
-            Extra commands that should be added to {file}`.zshrc`.
-          '';
-        };
-
-        initExtraFirst = mkOption {
-          default = "";
-          type = types.lines;
-          visible = false;
-          apply =
-            x:
-            lib.warnIfNot (x == "") ''
-              `programs.zsh.initExtraFirst` is deprecated, use `programs.zsh.initContent` with `lib.mkBefore` instead.
-
-              Example: programs.zsh.initContent = lib.mkBefore "your content here";
-            '' x;
-          description = ''
-            Commands that should be added to top of {file}`.zshrc`.
-          '';
-        };
-
         envExtra = mkOption {
           default = "";
           type = types.lines;
@@ -517,8 +462,6 @@ in
           home.packages = [ cfg.package ] ++ lib.optional cfg.enableCompletion pkgs.nix-zsh-completions;
 
           programs.zsh.initContent = lib.mkMerge [
-            (lib.mkIf (cfg.initExtraFirst != "") (lib.mkBefore cfg.initExtraFirst))
-
             (mkOrder 510 "typeset -U path cdpath fpath manpath")
 
             (lib.mkIf (cfg.cdpath != [ ]) (
@@ -543,8 +486,6 @@ in
             ))
 
             (lib.mkIf (localVarsStr != "") (mkOrder 540 localVarsStr))
-
-            (lib.mkIf (cfg.initExtraBeforeCompInit != "") (mkOrder 550 cfg.initExtraBeforeCompInit))
 
             (lib.mkIf (cfg.plugins != [ ]) (
               mkOrder 560 (
@@ -603,8 +544,6 @@ in
                 ${concatStringsSep "\n" (map (option: "setopt ${option}") cfg.setOptions)}
               ''
             ))
-
-            (lib.mkIf (cfg.initExtra != "") cfg.initExtra)
 
             (lib.mkIf (aliasesStr != "" || cfg.shellGlobalAliases != { }) (
               mkOrder 1100 (
