@@ -116,34 +116,34 @@
       convertAttrsToKDL =
         name: attrs:
         let
-          optArgsString = lib.optionalString (attrs ? "_args") (
-            lib.pipe attrs._args [
-              (map literalValueToString)
-              (lib.concatStringsSep " ")
-              (s: s + " ")
-            ]
+          optArgs = map literalValueToString (attrs._args or [ ]);
+          optProps = lib.mapAttrsToList (name: value: "${name}=${literalValueToString value}") (
+            attrs._props or { }
           );
 
-          optPropsString = lib.optionalString (attrs ? "_props") (
-            lib.pipe attrs._props [
-              (lib.mapAttrsToList (name: value: "${name}=${literalValueToString value}"))
-              (lib.concatStringsSep " ")
-              (s: s + " ")
-            ]
-          );
+          orderedChildren = lib.pipe (attrs._children or [ ]) [
+            (map (child: mapAttrsToList convertAttributeToKDL child))
+            lib.flatten
+          ];
+          unorderedChildren = lib.pipe attrs [
+            (lib.filterAttrs (
+              name: _:
+              !(elem name [
+                "_args"
+                "_props"
+                "_children"
+              ])
+            ))
+            (mapAttrsToList convertAttributeToKDL)
+          ];
+          children = orderedChildren ++ unorderedChildren;
+          optChildren = lib.optional (children != [ ]) ''
+            {
+            ${indentStrings children}
+            }'';
 
-          children = lib.filterAttrs (
-            name: _:
-            !(elem name [
-              "_args"
-              "_props"
-            ])
-          ) attrs;
         in
-        ''
-          ${name} ${optArgsString}${optPropsString}{
-          ${indentStrings (mapAttrsToList convertAttributeToKDL children)}
-          }'';
+        lib.concatStringsSep " " ([ name ] ++ optArgs ++ optProps ++ optChildren);
 
       # List Conversion
       # String -> ListOf (OneOf [Int Float String Bool Null])  -> String
