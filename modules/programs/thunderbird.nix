@@ -41,6 +41,9 @@ let
   enabledCalendarAccounts = filterEnabled config.accounts.calendar.accounts;
   enabledCalendarAccountsWithId = addId enabledCalendarAccounts;
 
+  enabledContactAccounts = filterEnabled config.accounts.contact.accounts;
+  enabledContactAccountsWithId = addId enabledContactAccounts;
+
   thunderbirdConfigPath = if isDarwin then "Library/Thunderbird" else ".thunderbird";
 
   thunderbirdProfilesPath =
@@ -215,6 +218,27 @@ let
     // optionalAttrs (calendar.thunderbird.color != "") {
       "calendar.registry.calendar_${id}.color" = calendar.thunderbird.color;
     };
+
+  toThunderbirdContact =
+    contact: _:
+    let
+      inherit (contact) id;
+    in
+    lib.filterAttrs (n: v: v != null) (
+      {
+        "ldap_2.servers.contact_${id}.description" = contact.name;
+        "ldap_2.servers.contact_${id}.filename" = "contact_${id}.sqlite"; # this is needed for carddav to work
+      }
+      // optionalAttrs (contact.remote == null) {
+        "ldap_2.servers.contact_${id}.dirType" = 101; # dirType 101 for local address book
+      }
+      // optionalAttrs (contact.remote != null && contact.remote.type == "carddav") {
+        "ldap_2.servers.contact_${id}.dirType" = 102; # dirType 102 for CardDAV
+        "ldap_2.servers.contact_${id}.carddav.url" = contact.remote.url;
+        "ldap_2.servers.contact_${id}.carddav.username" = contact.remote.userName;
+        "ldap_2.servers.contact_${id}.carddav.token" = contact.thunderbird.token;
+      }
+    );
 
   toThunderbirdFeed =
     feed: profile:
@@ -403,6 +427,7 @@ in
                     ]
                   '';
                 };
+
                 calendarAccountsOrder = mkOption {
                   type = types.listOf types.str;
                   default = [ ];
@@ -685,6 +710,7 @@ in
         )
       );
     };
+
     accounts.calendar.accounts = mkOption {
       type =
         with types;
@@ -716,6 +742,38 @@ in
               default = "";
               example = "#dc8add";
               description = "Display color of the calendar in hex";
+            };
+          };
+        });
+    };
+
+    accounts.contact.accounts = mkOption {
+      type =
+        with types;
+        attrsOf (submodule {
+          options.thunderbird = {
+            enable = lib.mkEnableOption "the Thunderbird mail client for this account";
+
+            profiles = mkOption {
+              type = with types; listOf str;
+              default = [ ];
+              example = literalExpression ''
+                [ "profile1" "profile2" ]
+              '';
+              description = ''
+                List of Thunderbird profiles for which this account should be
+                enabled. If this list is empty (the default), this account will
+                be enabled for all declared profiles.
+              '';
+            };
+
+            token = mkOption {
+              type = nullOr str;
+              default = null;
+              example = "secret_token";
+              description = ''
+                A token is generated when adding an address book manually to Thunderbird, this can be entered here.
+              '';
             };
           };
         });
@@ -782,6 +840,44 @@ in
             '';
         }
       )
+
+      (
+        let
+          foundContacts = filter (
+            a: a.remote != null && a.remote.type == "google_contacts"
+          ) enabledContactAccounts;
+        in
+        {
+          assertion = (length foundContacts == 0);
+          message =
+            '''accounts.contact.accounts.<name>.remote.type = "google_contacts";' is not directly supported by Thunderbird, ''
+            + "but declared for these address books: "
+            + (concatStringsSep ", " (lib.catAttrs "name" foundContacts))
+            + "\n"
+            + ''
+              To use google address books in Thunderbird choose 'type = "caldav"' instead.
+              The 'url' will be something like "https://www.googleapis.com/carddav/v1/principals/[YOUR-MAIL-ADDRESS]/lists/default/".
+              To get the exact URL, add the address book to Thunderbird manually and copy the URL from the "Advanced Preferences" section.
+            '';
+        }
+      )
+
+      (
+        let
+          foundContacts = filter (a: a.remote != null && a.remote.type == "http") enabledContactAccounts;
+        in
+        {
+          assertion = (length foundContacts == 0);
+          message =
+            '''accounts.contact.accounts.<name>.remote.type = "http";' is not supported by Thunderbird, ''
+            + "but declared for these address books: "
+            + (concatStringsSep ", " (lib.catAttrs "name" foundContacts))
+            + "\n"
+            + ''
+              Use a calendar of 'type = "caldav"' instead.
+            '';
+        }
+      )
     ];
 
     home.packages = [
@@ -814,6 +910,7 @@ in
             let
               emailAccounts = getAccountsForProfile name enabledEmailAccountsWithId;
               calendarAccounts = getAccountsForProfile name enabledCalendarAccountsWithId;
+              contactAccounts = getAccountsForProfile name enabledContactAccountsWithId;
 
               smtp = filter (a: a.smtp != null) emailAccounts;
 
@@ -882,8 +979,9 @@ in
                   profile.settings
                 ]
                 ++ (map (a: toThunderbirdAccount a profile) emailAccounts)
-                ++ (map (c: toThunderbirdCalendar c profile) calendarAccounts)
-                ++ (map (f: toThunderbirdFeed f profile) feedAccounts)
+                ++ (map (calendar: toThunderbirdCalendar calendar profile) calendarAccounts)
+                ++ (map (contact: toThunderbirdContact contact profile) contactAccounts)
+                ++ (map (feed: toThunderbirdFeed feed profile) feedAccounts)
               )) profile.extraConfig;
             };
 

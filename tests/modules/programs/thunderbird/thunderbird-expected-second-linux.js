@@ -14,6 +14,12 @@ user_pref("calendar.registry.calendar_474c12b01f4f765680ac3bb3e0b670b7ac817c9f71
 user_pref("calendar.registry.calendar_474c12b01f4f765680ac3bb3e0b670b7ac817c9f717997577cac3f12f1b5013a.uri", "https://www.thunderbird.net/media/caldata/autogen/GermanHolidays.ics");
 user_pref("calendar.registry.calendar_474c12b01f4f765680ac3bb3e0b670b7ac817c9f717997577cac3f12f1b5013a.username", null);
 user_pref("general.useragent.override", "");
+user_pref("ldap_2.servers.contact_00e13ed7af55b27622f1d6eab5bec0147e68efe28dc2b12461117afa1a5ed40e.description", "work");
+user_pref("ldap_2.servers.contact_00e13ed7af55b27622f1d6eab5bec0147e68efe28dc2b12461117afa1a5ed40e.dirType", 101);
+user_pref("ldap_2.servers.contact_00e13ed7af55b27622f1d6eab5bec0147e68efe28dc2b12461117afa1a5ed40e.filename", "contact_00e13ed7af55b27622f1d6eab5bec0147e68efe28dc2b12461117afa1a5ed40e.sqlite");
+user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.description", "shared");
+user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.dirType", 101);
+user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.filename", "contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.sqlite");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.identities", "id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.server", "server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.accountmanager.accounts", "account1,account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
