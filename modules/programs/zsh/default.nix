@@ -31,6 +31,7 @@ in
   imports = [
     ./oh-my-zsh.nix
     ./prezto.nix
+    ./zprof.nix
     ./zsh-abbr.nix
     (lib.mkRenamedOptionModule
       [ "programs" "zsh" "enableAutosuggestions" ]
@@ -40,7 +41,6 @@ in
       [ "programs" "zsh" "enableSyntaxHighlighting" ]
       [ "programs" "zsh" "syntaxHighlighting" "enable" ]
     )
-    (lib.mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
   ];
 
   options =
@@ -370,14 +370,6 @@ in
           type = types.lines;
         };
 
-        zprof.enable = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Enable zprof in your zshrc.
-          '';
-        };
-
         syntaxHighlighting = mkOption {
           type = syntaxHighlightingModule;
           default = { };
@@ -684,14 +676,6 @@ in
           home.packages = [ cfg.package ] ++ lib.optional cfg.enableCompletion pkgs.nix-zsh-completions;
 
           programs.zsh.initContent = lib.mkMerge [
-            # zprof must be loaded before everything else, since it
-            # benchmarks the shell initialization.
-            (lib.mkIf cfg.zprof.enable (
-              mkOrder 400 ''
-                zmodload zsh/zprof
-              ''
-            ))
-
             (lib.mkIf (cfg.initExtraFirst != "") (lib.mkBefore cfg.initExtraFirst))
 
             (mkOrder 510 "typeset -U path cdpath fpath manpath")
@@ -864,8 +848,6 @@ in
                   )}
                 ''
             ))
-
-            (lib.mkIf cfg.zprof.enable (mkOrder 1450 "zprof"))
           ];
 
           home.file."${relToDotDir ".zshrc"}".text = cfg.initContent;
