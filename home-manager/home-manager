@@ -212,6 +212,8 @@ function setFlakeAttribute() {
                 ;;
         esac
         export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$(printf %s "$name" | jq -sRr @uri)\""
+        export FLAKE_PATH="$flake"
+        export FLAKE_ATTR="homeConfigurations.\"$name\""
     fi
 }
 
@@ -639,9 +641,46 @@ function doBuild() {
 
 function doRepl() {
     setFlakeAttribute
+
     if [[ -v FLAKE_CONFIG_URI ]]; then
-        _i 'home-manager repl does not (yet) support flakes' >&2
-        return 1
+        printf -v bold '\033[1m'
+        printf -v blue '\033[34;1m'
+        printf -v reset '\033[0m'
+        exec nix repl --expr "
+            let
+                flake = builtins.getFlake ''$FLAKE_PATH'';
+                configuration = flake.$FLAKE_ATTR;
+                motd = ''
+
+
+                    Hello and welcome to the Home Manager configuration
+                        $FLAKE_ATTR
+                        in $FLAKE_PATH
+
+                    The following is loaded into nix repl's scope:
+
+                        - ${blue}config${reset}   All option values
+                        - ${blue}options${reset}  Option data and metadata
+                        - ${blue}pkgs${reset}     Nixpkgs package set
+                        - ${blue}lib${reset}      Nixpkgs library functions
+
+                        - ${blue}flake${reset}    Flake outputs, inputs and source info of $FLAKE_PATH
+
+                    Use tab completion to browse around ${blue}config${reset}.
+
+                    Use ${bold}:r${reset} to ${bold}reload${reset} everything after making a change in the flake.
+
+                    See ${bold}:?${reset} for more repl commands.
+                '';
+                scope =
+                    assert configuration.class or ''homeManager'' == ''homeManager'';
+                    {
+                        inherit (configuration) config options pkgs;
+                        inherit (configuration.pkgs) lib;
+                        inherit flake;
+                    };
+            in builtins.seq scope builtins.trace motd scope
+        " "${PASSTHROUGH_OPTS[@]}"
     fi
 
     setConfigFile
