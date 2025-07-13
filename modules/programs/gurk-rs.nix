@@ -45,7 +45,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.package = lib.mkIf (cfg.package != null) [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file."${
       if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome
