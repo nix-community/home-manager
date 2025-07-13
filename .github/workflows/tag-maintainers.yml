@@ -67,7 +67,7 @@ jobs:
           CHANGED_FILES: ${{ steps.changed-files.outputs.changed_files }}
           BOT_NAME: ${{ steps.app-token.outputs.app-slug || 'github-actions' }}
         run: |
-          ./ci/tag-maintainers/manage-reviewers.py \
+          ./lib/python/manage-reviewers.py \
             --owner "$OWNER" \
             --repo "$REPO" \
             --pr-number "$PR_NUMBER" \
