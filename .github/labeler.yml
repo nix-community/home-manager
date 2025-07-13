@@ -108,6 +108,7 @@
           - modules/programs/fastfetch.nix
           - modules/programs/fd.nix
           - modules/programs/fzf.nix
+          - modules/programs/gurk-rs.nix
           - modules/programs/hstr.nix
           - modules/programs/htop.nix
           - modules/programs/hwatch.nix
@@ -328,6 +329,7 @@
           - modules/programs/chawan.nix
           - modules/programs/discocss.nix
           - modules/programs/element-desktop.nix
+          - modules/programs/gurk-rs.nix
           - modules/programs/halloy.nix
           - modules/programs/havoc.nix
           - modules/programs/hexchat.nix
