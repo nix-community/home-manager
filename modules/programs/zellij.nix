@@ -147,6 +147,24 @@ in
         {
           theme = "custom";
           themes.custom.fg = "#ffffff";
+          keybinds._props.clear-defaults = true;
+          keybinds.pane._children = [
+            {
+              bind = {
+                _args = ["e"];
+                _children = [
+                  { TogglePaneEmbedOrFloating = {}; }
+                  { SwitchToMode._args = ["locked"]; }
+                ];
+              };
+            }
+            {
+              bind = {
+                _args = ["left"];
+                MoveFocus = ["left"];
+              };
+            }
+          ];
         }
       '';
       description = ''
