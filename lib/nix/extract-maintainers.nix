@@ -11,13 +11,15 @@ let
     file:
     let
       isNixFile = lib.hasSuffix ".nix" file;
+      filePath = ../../. + "/${file}";
+      fileExists = builtins.pathExists filePath;
 
       moduleResult =
-        if isNixFile then
+        if isNixFile && fileExists then
           let
             result = builtins.tryEval (
               let
-                fileContent = import (../../. + "/${file}");
+                fileContent = import filePath;
 
                 module =
                   if lib.isFunction fileContent then
