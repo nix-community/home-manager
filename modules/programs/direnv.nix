@@ -126,19 +126,15 @@ in
     mkIf cfg.enable {
       home.packages = [ cfg.package ];
 
-      xdg.configFile."direnv/direnv.toml" =
-        mkIf (cfg.config != { } || (cfg.silent && isVersion236orHigher))
-          {
-            source = tomlFormat.generate "direnv-config" (
-              cfg.config
-              // lib.optionalAttrs (cfg.silent && isVersion236orHigher) {
-                global = {
-                  log_format = "-";
-                  log_filter = "^$";
-                };
-              }
-            );
-          };
+      programs.direnv.config = {
+        global = mkIf (cfg.silent && isVersion236orHigher) {
+          log_format = "-";
+          log_filter = "^$";
+        };
+      };
+      xdg.configFile."direnv/direnv.toml" = mkIf (cfg.config != { }) {
+        source = tomlFormat.generate "direnv-config" cfg.config;
+      };
 
       xdg.configFile."direnv/lib/hm-nix-direnv.sh" = mkIf cfg.nix-direnv.enable {
         source = "${cfg.nix-direnv.package}/share/nix-direnv/direnvrc";
