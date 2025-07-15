@@ -53,6 +53,7 @@ If you're using Home Manager with Nix flakes, update your `flake.nix`:
   description = "Home Manager configuration";
 
   inputs = {
+    # Increment release branch for NixOS
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager = {
       # Follow corresponding `release` branch from Home Manager
