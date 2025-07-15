@@ -7,7 +7,7 @@ When upgrading NixOS to a new major version (e.g., from 24.11 to 25.05), you als
 ## Understanding Home Manager Versioning
 
 Home Manager follows NixOS release cycles and provides corresponding branches:
-- **release-25.05**: Stable branch for NixOS 25.05 (current stable)
+- **release-##.##**: Stable branch for NixOS ##.## (current stable)
 - **master**: Development branch (tracks nixos-unstable)
 
 > **Important**: Always use the Home Manager version that matches your NixOS version to avoid compatibility issues.
