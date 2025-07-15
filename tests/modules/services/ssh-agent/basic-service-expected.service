@@ -1,0 +1,9 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@openssh@/bin/ssh-agent -D -a %t/ssh-agent
+
+[Unit]
+Description=SSH authentication agent
+Documentation=man:ssh-agent(1)
