@@ -40,20 +40,24 @@ jobs:
         id: changed-files
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          CHANGED_FILES=$(gh pr diff ${{ github.event.pull_request.number }} --name-only | grep '^modules/' | grep -v '^modules/\(po\|.*\/news\)/' || true)
-          echo "Changed module files:"
+          CHANGED_FILES=$(gh pr diff $PR_NUMBER --name-only | grep '^modules/' | grep -v '^modules/\(po\|.*\/news\)/' || true)
+          echo "Changed files:"
           echo "$CHANGED_FILES"
-          echo "module_files<<EOF" >> $GITHUB_OUTPUT
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
       - name: Extract Maintainers
         id: extract-maintainers
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.changed_files }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
           echo "Extracting maintainers from changed files..."
           MAINTAINERS=$(lib/python/extract-maintainers.py \
-            --changed-files "${{ steps.changed-files.outputs.module_files }}" \
-            --pr-author "${{ github.event.pull_request.user.login }}")
+            --changed-files "$CHANGED_FILES" \
+            --pr-author "$PR_AUTHOR")
           echo "maintainers=$MAINTAINERS" >> $GITHUB_OUTPUT
           echo "Found maintainers: $MAINTAINERS"
       - name: Manage Reviewers
