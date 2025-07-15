@@ -115,7 +115,6 @@ The `stateVersion` is best to remain set to the NixOS version you **first instal
 
 ```nix
 {
-  # Keep your ORIGINAL stateVersion - don't change it!
   home.stateVersion = "24.11";  # Example: if you first installed on 24.11
 }
 ```
