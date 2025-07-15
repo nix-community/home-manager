@@ -108,9 +108,10 @@ sudo nixos-rebuild switch
 
 ## Important: State Version Management
 
-**⚠️ NEVER update your `home.stateVersion` when upgrading Home Manager channels!**
+> [!WARNING]      
+> ⚠️ Careful updating your `home.stateVersion` when upgrading Home Manager 
 
-The `stateVersion` must remain set to the NixOS version you **first installed** Home Manager with:
+The `stateVersion` is best to remain set to the NixOS version you **first installed** Home Manager   
 
 ```nix
 {
