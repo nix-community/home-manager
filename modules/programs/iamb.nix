@@ -34,7 +34,9 @@ in
       '';
       description = ''
         Configuration written to
-        {file}`$XDG_CONFIG_HOME/iamb/config.toml`.
+
+        {file}`$XDG_CONFIG_HOME/iamb/config.toml` on Linux
+        {file}`$HOME/Library/Application Support/iamb/config.toml` on macOS
 
         See <https://iamb.chat/configure.html> for the full list
         of options.
@@ -43,11 +45,23 @@ in
 
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+  config =
+    let
+      configFile = tomlFormat.generate "iamb-config" cfg.settings;
+    in
+    lib.mkIf cfg.enable {
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."iamb/config.toml" = lib.mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "iamb-config" cfg.settings;
+      xdg.configFile."iamb/config.toml" =
+        lib.mkIf (cfg.settings != { } && pkgs.stdenv.isDarwin == false)
+          {
+            source = configFile;
+          };
+
+      home.file."Library/Application Support/iamb/config.toml" =
+        lib.mkIf (cfg.settings != { } && pkgs.stdenv.isDarwin == true)
+          {
+            source = configFile;
+          };
     };
-  };
 }
