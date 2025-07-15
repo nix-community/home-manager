@@ -25,7 +25,7 @@
     ];
 
     settings = {
-      use-sandbox = true;
+      sandbox = true;
       show-trace = true;
       system-features = [
         "big-parallel"
