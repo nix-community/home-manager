@@ -1,0 +1,13 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@caffeine-ng@/bin/caffeine
+PrivateTmp=true
+ProtectSystem=full
+Restart=on-failure
+Slice=session.slice
+Type=exec
+
+[Unit]
+Description=caffeine
