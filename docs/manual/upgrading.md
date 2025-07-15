@@ -10,7 +10,8 @@ Home Manager follows NixOS release cycles and provides corresponding branches:
 - **release-##.##**: Stable branch for NixOS ##.## (current stable)
 - **master**: Development branch (tracks nixos-unstable)
 
-> **Important**: Always use the Home Manager version that matches your NixOS version to avoid compatibility issues.
+> [!IMPORTANT]
+> Always use the Home Manager version that matches your NixOS version to avoid compatibility issues.
 
 ## Method 1: Channel-Based Installation (Traditional)
 
