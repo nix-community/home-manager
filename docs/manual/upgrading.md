@@ -121,7 +121,7 @@ The `stateVersion` is best to remain set to the NixOS version you **first instal
 
 **Why?** The `stateVersion` ensures backward compatibility and prevents breaking changes from affecting your existing configuration.
 
-**Remember:** Channel version ≠ State version. Update the channel, keep the `stateVersion` unchanged.
+**Remember:** Channel version ≠ State version. Update the channel, keep the `stateVersion` unchanged. Advanced users can view the changes between releases and see if any of the `stateVersion` changes will affect them and increment, if they migrate their configurations to follow the changed evaluation. 
 
 ## Troubleshooting
 
