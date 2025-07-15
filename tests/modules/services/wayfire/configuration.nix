@@ -14,9 +14,7 @@
   };
 
   nmt.script = ''
-    wayfireConfig=home-files/.config/wayfire.ini
-
-    assertFileExists "$wayfireConfig"
-    assertFileContent "$wayfireConfig" "${./configuration.ini}"
+    assertFileExists home-files/.config/wayfire.ini
+    assertFileContent "$(normalizeStorePaths home-files/.config/wayfire.ini)" "${./configuration.ini}"
   '';
 }
