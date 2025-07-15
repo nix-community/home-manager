@@ -73,58 +73,6 @@ class MetaMaintainerGenerator:
             print(f"❌ Error extracting maintainers: {e}")
             sys.exit(1)
 
-    def format_maintainer_entry(self, name: str, info: dict, source: str) -> str:
-        """Format a single maintainer entry with nix fmt compatible formatting."""
-        lines = [f"  # {source}"]
-        lines.append(f"  {name} = {{")
-
-        key_order = ["name", "email", "github", "githubId", "matrix", "keys"]
-        sorted_keys = sorted(info.keys(), key=lambda k: key_order.index(k) if k in key_order else len(key_order))
-
-        for key in sorted_keys:
-            if key.startswith('_'):  # Skip internal fields
-                continue
-
-            value = info[key]
-            if isinstance(value, str):
-                lines.append(f'    {key} = "{value}";')
-            elif isinstance(value, int):
-                lines.append(f'    {key} = {value};')
-            elif isinstance(value, list) and value:
-                if all(isinstance(item, dict) for item in value):
-                    formatted_items = []
-                    for item in value:
-                        if isinstance(item, dict):
-                            # Handle dict items with proper spacing
-                            item_parts = []
-                            for k, v in item.items():
-                                if isinstance(v, str):
-                                    item_parts.append(f'{k} = "{v}"')
-                                else:
-                                    item_parts.append(f'{k} = {v}')
-                            formatted_items.append("{ " + "; ".join(item_parts) + "; }")
-                        else:
-                            formatted_items.append(f'"{item}"')
-                    if len(formatted_items) == 1:
-                        lines.append(f'    {key} = [ {formatted_items[0]} ];')
-                    else:
-                        lines.append(f'    {key} = [')
-                        for item in formatted_items:
-                            lines.append(f'      {item}')
-                        lines.append('    ];')
-                else:
-                    items = [f'"{item}"' if isinstance(item, str) else str(item) for item in value]
-                    if len(items) == 1:
-                        lines.append(f'    {key} = [ {items[0]} ];')
-                    else:
-                        lines.append(f'    {key} = [')
-                        for item in items:
-                            lines.append(f'      {item}')
-                        lines.append('    ];')
-
-        lines.append("  };")
-        return "\n".join(lines)
-
     def generate_maintainers_file(self) -> None:
         """Generate the complete all-maintainers.nix file."""
         print("📄 Generating all-maintainers.nix using meta.maintainers...")
