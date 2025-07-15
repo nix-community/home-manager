@@ -127,10 +127,10 @@ The `stateVersion` is best to remain set to the NixOS version you **first instal
 
 ### Common Issues
 
+Check the [Home Manager release notes](https://nix-community.github.io/home-manager/release-notes.xhtml) for breaking changes.
+
 1. **Version Mismatch Warning**: If you see warnings about version mismatches, ensure your Home Manager version matches your NixOS version.
-
-2. **Build Failures**: Some packages may have changed between versions. Check the [Home Manager release notes](https://nix-community.github.io/home-manager/release-notes.xhtml) for breaking changes.
-
+2. **Module Changes**: Modules are constantly being updated with new features to keep up with changes in upstream packaging or to fix bugs and add features. If you have an unexpected change, check if there was something noted in the release notes or news entries related. 
 3. **Channel Not Found**: If `nix-channel --list` shows no channels, you might be using a different installation method (like flakes or NixOS module).
 
 ### Verification
