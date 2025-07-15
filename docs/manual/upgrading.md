@@ -101,15 +101,22 @@ Then rebuild your system:
 sudo nixos-rebuild switch
 ```
 
-## Updating State Version
+## Important: State Version Management
 
-Don't forget to update your Home Manager state version in your configuration:
+**⚠️ NEVER update your `home.stateVersion` when upgrading Home Manager channels!**
+
+The `stateVersion` must remain set to the NixOS version you **first installed** Home Manager with:
 
 ```nix
 {
-  home.stateVersion = "25.05";
+  # Keep your ORIGINAL stateVersion - don't change it!
+  home.stateVersion = "24.11";  # Example: if you first installed on 24.11
 }
 ```
+
+**Why?** The `stateVersion` ensures backward compatibility and prevents breaking changes from affecting your existing configuration.
+
+**Remember:** Channel version ≠ State version. Update the channel, keep the `stateVersion` unchanged.
 
 ## Troubleshooting
 
