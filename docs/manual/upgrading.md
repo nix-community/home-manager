@@ -74,7 +74,10 @@ Then update and rebuild:
 
 ```bash
 nix flake update
+# Standalone
 home-manager switch --flake .
+# Nixos module 
+sudo nixos-rebuild switch
 ```
 
 ## Method 3: NixOS Module Integration
