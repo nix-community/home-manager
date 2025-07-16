@@ -23,6 +23,15 @@ in
           "'\\[?{" + ''"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"'' + "}[,\\]]?'";
         shellcommand_external_filtering = "False";
       };
+      defaultText = lib.literalExpression ''
+        {
+          type = "shellcommand";
+          command = "''\'''${pkgs.notmuch}/bin/notmuch address --format=json --output=recipients  date:6M..'";
+          regexp =
+          "'\\[?{" + '''"name": "(?P<name>.*)", "address": "(?P<email>.+)", "name-addr": ".*"''' + "}[,\\]]?'";
+          shellcommand_external_filtering = "False";
+        }
+      '';
       example = lib.literalExpression ''
         {
           type = "shellcommand";

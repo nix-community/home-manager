@@ -137,7 +137,7 @@ in
               description = ''
                 A command to run for the matching file.
               '';
-              example = literalExpression ''"${pkgs.vim}/bin/vim -- \"$@\""'';
+              example = literalExpression ''"''${pkgs.vim}/bin/vim -- \"$@\""'';
             };
           };
         }

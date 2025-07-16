@@ -98,7 +98,6 @@ let
               defaultText = literalExpression ''
                 null for state version ≥ 20.09, as example otherwise
               '';
-              example = default;
             }
           );
       in
@@ -181,7 +180,7 @@ let
               pkg = if isSway && isNull cfg.package then pkgs.sway else cfg.package;
             in
             "${pkg}/bin/${moduleName}bar";
-          defaultText = "i3bar";
+          defaultText = literalExpression "i3bar";
           description = "Command that will be used to start a bar.";
           example = if isI3 then "\${pkgs.i3}/bin/i3bar -t" else "\${pkgs.waybar}/bin/waybar";
         };
@@ -189,6 +188,7 @@ let
         statusCommand = mkNullableOption {
           type = types.str;
           default = "${pkgs.i3status}/bin/i3status";
+          defaultText = literalExpression "\${pkgs.i3status}/bin/i3status";
           description = "Command that will be used to get status lines.";
         };
 
@@ -959,6 +959,9 @@ in
   terminal = mkOption {
     type = types.str;
     default = if isI3 then "i3-sensible-terminal" else "${pkgs.foot}/bin/foot";
+    defaultText = literalExpression (
+      if isI3 then ''"i3-sensible-terminal"'' else "\${pkgs.foot}/bin/foot"
+    );
     description = "Default terminal to run.";
     example = "alacritty";
   };
@@ -970,6 +973,12 @@ in
         "${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs swaymsg exec --"
       else
         "${pkgs.dmenu}/bin/dmenu_run";
+    defaultText = literalExpression (
+      if isSway then
+        "\${pkgs.dmenu}/bin/dmenu_path | \${pkgs.dmenu}/bin/dmenu | \${pkgs.findutils}/bin/xargs swaymsg exec --"
+      else
+        "\${pkgs.dmenu}/bin/dmenu_run"
+    );
     description = "Default launcher to use.";
     example = "bemenu-run";
   };
