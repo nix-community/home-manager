@@ -43,8 +43,8 @@ in
               primary = true;
               atomic = true;
               execute_after = [
-                "${pkgs.xorg.xrandr}/bin/xrandr --dpi 96"
-                "${pkgs.xmonad-with-packages}/bin/xmonad --restart";
+                "''${pkgs.xorg.xrandr}/bin/xrandr --dpi 96"
+                "''${pkgs.xmonad-with-packages}/bin/xmonad --restart";
               ];
             }
             {
@@ -54,8 +54,8 @@ in
               primary = true;
               atomic = true;
               execute_after = [
-                "${pkgs.xorg.xrandr}/bin/xrandr --dpi 120"
-                "${pkgs.xmonad-with-packages}/bin/xmonad --restart";
+                "''${pkgs.xorg.xrandr}/bin/xrandr --dpi 120"
+                "''${pkgs.xmonad-with-packages}/bin/xmonad --restart";
               ];
             }
           ]
