@@ -19,7 +19,7 @@ let
 in
 {
   meta.maintainers = [
-    lib.hm.maintainers.delafthi
+    lib.maintainers.delafthi
   ];
 
   options.programs.codex = {
