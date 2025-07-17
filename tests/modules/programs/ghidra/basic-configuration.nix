@@ -9,7 +9,7 @@
 
     nmt.script = ''
       gdbConfigDir=home-files/.config/gdb
-      assertFileExists $configDir/gdbinit.d/ghidra-modules.gdb
+      assertFileExists $gdbConfigDir/gdbinit.d/ghidra-modules.gdb
     '';
   };
 }
