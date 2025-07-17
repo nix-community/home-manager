@@ -18,7 +18,7 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ delafthi ];
+  meta.maintainers = with lib.maintainers; [ delafthi ];
 
   options.programs.opencode = {
     enable = mkEnableOption "opencode";
