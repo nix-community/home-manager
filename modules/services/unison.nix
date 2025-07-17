@@ -42,6 +42,16 @@ let
           batch = "true";
           log = "false"; # don't log to file, handled by systemd
         };
+        defaultText = lib.literalExpression ''
+          {
+            repeat = "watch";
+            sshcmd = "''${pkgs.openssh}/bin/ssh";
+            ui = "text";
+            auto = "true";
+            batch = "true";
+            log = "false"; # don't log to file, handled by systemd
+          }
+        '';
         description = ''
           Additional command line options as a dictionary to pass to the
           `unison` program.

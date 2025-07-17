@@ -54,7 +54,7 @@ in
     extraConfig = mkOption {
       type = types.attrs;
       default = { };
-      example = literalExpression ''{ main.activation_command = "\${pkgs.hello}/bin/hello"; }'';
+      example = literalExpression ''{ main.activation_command = "''${pkgs.hello}/bin/hello"; }'';
       description = ''
         Extra configuration options to add to the twmnd config file. See
         <https://github.com/sboli/twmn/blob/master/README.md>

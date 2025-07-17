@@ -20,6 +20,9 @@ in
       soundFont = mkOption {
         type = types.path;
         default = "${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
+        defaultText = lib.literalExpression ''
+          "''${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
+        '';
         description = ''
           The soundfont file to use, in SoundFont 2 format.
         '';

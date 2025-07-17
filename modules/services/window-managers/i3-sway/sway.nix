@@ -155,9 +155,9 @@ let
           let
             modifier = config.wayland.windowManager.sway.config.modifier;
           in lib.mkOptionDefault {
-            "''${modifier}+Return" = "exec ${cfg.config.terminal}";
+            "''${modifier}+Return" = "exec ''${cfg.config.terminal}";
             "''${modifier}+Shift+q" = "kill";
-            "''${modifier}+d" = "exec ${cfg.config.menu}";
+            "''${modifier}+d" = "exec ''${cfg.config.menu}";
           }
         '';
       };
@@ -509,7 +509,7 @@ in
         withBaseWrapper = cfg.wrapperFeatures.base;
         withGtkWrapper = cfg.wrapperFeatures.gtk;
       };
-      defaultText = lib.literalExpression "${pkgs.sway}";
+      defaultText = lib.literalExpression "\${pkgs.sway}";
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
