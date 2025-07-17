@@ -93,6 +93,26 @@ in
         '';
       };
 
+      userTasks = mkOption {
+        type = jsonFormat.type;
+        default = [ ];
+        example = literalExpression ''
+          [
+            {
+              label = "Format Code";
+              command = "nix";
+              args = [ "fmt" "$ZED_WORKTREE_ROOT" ];
+            }
+          ]
+        '';
+        description = ''
+          Configuration written to Zed's {file}`tasks.json`.
+
+          [List of tasks](https://zed.dev/docs/tasks) that can be run from the
+          command palette.
+        '';
+      };
+
       extensions = mkOption {
         type = types.listOf types.str;
         default = [ ];
@@ -184,6 +204,14 @@ in
             "$dynamic + $static | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
             "${config.xdg.configHome}/zed/keymap.json"
             (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
+        );
+      })
+      (mkIf (cfg.userTasks != [ ]) {
+        zedTasksActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          impureConfigMerger "[]"
+            "$dynamic + $static | group_by(.label) | map(reduce .[] as $item ({}; . * $item))"
+            "${config.xdg.configHome}/zed/tasks.json"
+            (jsonFormat.generate "zed-user-tasks" cfg.userTasks)
         );
       })
     ];
