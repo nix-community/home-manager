@@ -40,11 +40,11 @@ let
   accounts = import ./accounts.nix {
     inherit
       config
-      pkgs
       lib
       confSection
       confSections
       ;
+    inherit (pkgs) writeText writeShellScript;
   };
 
   aerc-accounts = attrsets.filterAttrs (_: v: v.aerc.enable) config.accounts.email.accounts;
