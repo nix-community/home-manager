@@ -178,6 +178,38 @@ in
         list of options.
       '';
     };
+    extraConfig = lib.mkOption {
+      description = ''
+        Extra configuration lines to add to `$XDG_CONFIG_HOME/zellij/config.kdl`.
+
+        This does not support zellij.yaml and it's mostly a workaround for https://github.com/nix-community/home-manager/issues/4659.
+      '';
+      type = lib.types.lines;
+      default = "";
+      example = ''
+        keybinds {
+            // keybinds are divided into modes
+            normal {
+                // bind instructions can include one or more keys (both keys will be bound separately)
+                // bind keys can include one or more actions (all actions will be performed with no sequential guarantees)
+                bind "Ctrl g" { SwitchToMode "locked"; }
+                bind "Ctrl p" { SwitchToMode "pane"; }
+                bind "Alt n" { NewPane; }
+                bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
+            }
+            pane {
+                bind "h" "Left" { MoveFocus "Left"; }
+                bind "l" "Right" { MoveFocus "Right"; }
+                bind "j" "Down" { MoveFocus "Down"; }
+                bind "k" "Up" { MoveFocus "Up"; }
+                bind "p" { SwitchFocus; }
+            }
+            locked {
+                bind "Ctrl g" { SwitchToMode "normal"; }
+            }
+        }
+      '';
+    };
 
     attachExistingSession = mkOption {
       type = types.bool;
@@ -240,6 +272,7 @@ in
       # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
       xdg.configFile = lib.mkMerge [
         {
+
           "zellij/config.yaml" =
             mkIf (cfg.settings != { } && (lib.versionOlder cfg.package.version "0.32.0"))
               {
@@ -248,7 +281,16 @@ in
           "zellij/config.kdl" =
             mkIf (cfg.settings != { } && (lib.versionAtLeast cfg.package.version "0.32.0"))
               {
-                text = lib.hm.generators.toKDL { } cfg.settings;
+                text =
+                  (lib.hm.generators.toKDL { } cfg.settings)
+                  + lib.optionalString (cfg.extraConfig != "") (
+                    ''
+
+                      // extraConfig
+
+                    ''
+                    + cfg.extraConfig
+                  );
               };
         }
 
