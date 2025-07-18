@@ -175,8 +175,7 @@ in
                             }
                           }
                           | merge ($env.ENV_CONVERSIONS? | default {})
-                          | get ([[value, optional, insensitive]; [$key, true, true]] | into cell-path)
-                          | get from_string?
+                          | get ([[value, optional, insensitive]; [$key, true, true] [from_string, true, false]] | into cell-path)
                           | if ($in | is-empty) { {|x| $x} } else { $in }
                       ) $value
                       return [ $key $value ]
