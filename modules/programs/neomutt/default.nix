@@ -223,7 +223,7 @@ let
       {
         sendmail = "'${neomutt.sendMailCommand}'";
       }
-    else
+    else if passwordCommand != null then
       let
         smtpProto = if smtp.tls.enable && !smtp.tls.useStartTls then "smtps" else "smtp";
         smtpPort = if smtp.port != null then ":${toString smtp.port}" else "";
@@ -232,7 +232,9 @@ let
       {
         smtp_url = "'${smtpBaseUrl}'";
         smtp_pass = ''"`${passCmd}`"'';
-      };
+      }
+    else
+      { };
 
   genAccountConfig =
     account:
@@ -537,17 +539,12 @@ in
         );
     };
 
-    assertions =
-      [
-        {
-          assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
-          message = "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
-        }
-      ]
-      ++ lib.mapAttrsToList (n: a: {
-        assertion = a.neomutt.sendMailCommand != null || a.passwordCommand != null;
-        message = "'accounts.email.accounts.${n}' needs either 'neomutt.sendMailCommand' or 'passwordCommand' set.";
-      }) neomuttAccountsCfg;
+    assertions = [
+      {
+        assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
+        message = "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
+      }
+    ];
 
     warnings =
       let
