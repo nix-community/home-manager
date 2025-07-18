@@ -43,7 +43,7 @@ let
       };
     };
 
-  toAgent = config: pkgs.writeText "${config.Label}.plist" (toPlist { } config);
+  toAgent = config: pkgs.writeText "${config.Label}.plist" (toPlist { escape = true; } config);
 
   agentPlists = lib.mapAttrs' (n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent v.config)) (
     lib.filterAttrs (n: v: v.enable) cfg.agents
