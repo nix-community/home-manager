@@ -14,7 +14,7 @@
       configIniType =
         with types;
         let
-          primitiveType = either str (either bool number);
+          primitiveType = either (either str path) (either bool number);
           sectionType = attrsOf primitiveType;
         in
         attrsOf sectionType;

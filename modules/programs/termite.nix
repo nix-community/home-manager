@@ -124,7 +124,7 @@ in
       browser = mkOption {
         default = null;
         type = types.nullOr types.str;
-        example = "${pkgs.xdg-utils}/xdg-open";
+        example = "\${pkgs.xdg-utils}/xdg-open";
         description = ''
           Set the default browser for opening links. If its not set, $BROWSER is read.
           If that's not set, url hints will be disabled.

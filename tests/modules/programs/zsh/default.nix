@@ -9,6 +9,7 @@
   zsh-history-substring-search = ./history-substring-search.nix;
   zsh-plugins = ./plugins.nix;
   zsh-prezto = ./prezto.nix;
+  zsh-zprof = ./zprof.nix;
   zsh-session-variables = ./session-variables.nix;
   zsh-syntax-highlighting = ./syntax-highlighting.nix;
   zshrc-contents-priorities = ./zshrc-content-priorities.nix;

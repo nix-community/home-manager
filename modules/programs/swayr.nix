@@ -26,7 +26,7 @@ in
       default = { };
       example = lib.literalExpression ''
         menu = {
-          executable = "${pkgs.wofi}/bin/wofi";
+          executable = "''${pkgs.wofi}/bin/wofi";
           args = [
             "--show=dmenu"
             "--allow-markup"

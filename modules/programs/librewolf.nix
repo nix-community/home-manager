@@ -42,8 +42,6 @@ in
       platforms.darwin = {
         configPath = "Library/Application Support/LibreWolf";
       };
-
-      enableBookmarks = false;
     })
   ];
 

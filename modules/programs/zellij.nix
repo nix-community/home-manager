@@ -30,6 +30,116 @@ in
 
     package = lib.mkPackageOption pkgs "zellij" { };
 
+    layouts = lib.mkOption {
+      type = types.attrsOf (
+        types.oneOf [
+          yamlFormat.type
+          types.path
+          types.lines
+        ]
+      );
+      default = { };
+      example = lib.literalExpression ''
+        {
+          dev = {
+            layout = {
+              _children = [
+                {
+                  default_tab_template = {
+                    _children = [
+                      {
+                        pane = {
+                          size = 1;
+                          borderless = true;
+                          plugin = {
+                            location = "zellij:tab-bar";
+                          };
+                        };
+                      }
+                      { "children" = { }; }
+                      {
+                        pane = {
+                          size = 2;
+                          borderless = true;
+                          plugin = {
+                            location = "zellij:status-bar";
+                          };
+                        };
+                      }
+                    ];
+                  };
+                }
+                {
+                  tab = {
+                    _props = {
+                      name = "Project";
+                      focus = true;
+                    };
+                    _children = [
+                      {
+                        pane = {
+                          command = "nvim";
+                        };
+                      }
+                    ];
+                  };
+                }
+                {
+                  tab = {
+                    _props = {
+                      name = "Git";
+                    };
+                    _children = [
+                      {
+                        pane = {
+                          command = "lazygit";
+                        };
+                      }
+                    ];
+                  };
+                }
+                {
+                  tab = {
+                    _props = {
+                      name = "Files";
+                    };
+                    _children = [
+                      {
+                        pane = {
+                          command = "yazi";
+                        };
+                      }
+                    ];
+                  };
+                }
+                {
+                  tab = {
+                    _props = {
+                      name = "Shell";
+                    };
+                    _children = [
+                      {
+                        pane = {
+                          command = "zsh";
+                        };
+                      }
+                    ];
+                  };
+                }
+              ];
+            };
+          };
+        }
+      '';
+      description = ''
+        Configuration written to
+        {file}`$XDG_CONFIG_HOME/zellij/layouts/<layout>.kdl`.
+
+        See <https://zellij.dev/documentation> for the full
+        list of options.
+      '';
+    };
+
     settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
@@ -37,6 +147,24 @@ in
         {
           theme = "custom";
           themes.custom.fg = "#ffffff";
+          keybinds._props.clear-defaults = true;
+          keybinds.pane._children = [
+            {
+              bind = {
+                _args = ["e"];
+                _children = [
+                  { TogglePaneEmbedOrFloating = {}; }
+                  { SwitchToMode._args = ["locked"]; }
+                ];
+              };
+            }
+            {
+              bind = {
+                _args = ["left"];
+                MoveFocus = ["left"];
+              };
+            }
+          ];
         }
       '';
       description = ''
@@ -123,6 +251,20 @@ in
                 text = lib.hm.generators.toKDL { } cfg.settings;
               };
         }
+
+        (lib.mapAttrs' (
+          name: value:
+          lib.nameValuePair "zellij/layouts/${name}.kdl" {
+            source =
+              if builtins.isPath value || lib.isStorePath value then
+                value
+              else
+                pkgs.writeText "zellij-layout-${name}" (
+                  if lib.isString value then value else lib.hm.generators.toKDL { } value
+                );
+          }
+        ) cfg.layouts)
+
         (lib.mapAttrs' (
           name: value:
           lib.nameValuePair "zellij/themes/${name}.kdl" {

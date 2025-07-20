@@ -230,6 +230,81 @@ let
     }
   );
 
+  aliasSubmodule =
+    { accountConfig, ... }:
+    {
+      options = {
+        name = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            Friendly name for this alias.
+          '';
+        };
+
+        realName = mkOption {
+          type = types.str;
+          example = "John Doe";
+          description = "Name displayed when sending mails.";
+        };
+
+        userName = mkOption {
+          type = types.nullOr types.str;
+          default = accountConfig.userName;
+          defaultText = lib.literalExpression ''
+            # Inherits account configuration
+            accountConfig.userName
+          '';
+          description = ''
+            The server username of this alias. This will be used as
+            the SMTP, IMAP, and JMAP user name.
+          '';
+        };
+
+        address = mkOption {
+          type = types.strMatching ".*@.*";
+          example = "john.doe@example.org";
+          description = "The email address of this identity.";
+        };
+
+        signature = mkOption {
+          type = types.nullOr signatureModule;
+          default = accountConfig.signature;
+          defaultText = lib.literalExpression ''
+            # Inherits account configuration
+            accountConfig.signature
+          '';
+          description = ''
+            Signature configuration.
+          '';
+        };
+
+        gpg = mkOption {
+          type = types.nullOr gpgModule;
+          default = accountConfig.gpg;
+          defaultText = lib.literalExpression ''
+            # Inherits account configuration
+            accountConfig.gpg
+          '';
+          description = ''
+            GPG configuration.
+          '';
+        };
+
+        smtp = mkOption {
+          type = types.nullOr smtpModule;
+          default = accountConfig.smtp;
+          defaultText = lib.literalExpression ''
+            # Inherits account configuration
+            accountConfig.smtp
+          '';
+          description = ''
+            The SMTP configuration to use for this alias.
+          '';
+        };
+      };
+    };
+
   mailAccountOpts =
     { name, config, ... }:
     {
@@ -290,19 +365,10 @@ let
           type = types.listOf (
             types.oneOf [
               (types.strMatching ".*@.*")
-              (types.submodule {
-                options = {
-                  realName = mkOption {
-                    type = types.str;
-                    example = "Jane Doe";
-                    description = "Name displayed when sending mails.";
-                  };
-                  address = mkOption {
-                    type = types.strMatching ".*@.*";
-                    example = "jane.doe@example.org";
-                    description = "The email address of this identity.";
-                  };
-                };
+              (types.submoduleWith {
+                modules = [ aliasSubmodule ];
+                specialArgs.accountConfig = config;
+                shorthandOnlyDefinesConfig = true;
               })
             ]
           );

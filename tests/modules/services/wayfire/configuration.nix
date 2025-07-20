@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   wayland.windowManager.wayfire = {
     enable = true;
@@ -8,13 +9,12 @@
         binding_terminal = "alacritty";
         command_terminal = "alacritty";
       };
+      cube.skydome_texture = config.lib.test.mkStubPackage { };
     };
   };
 
   nmt.script = ''
-    wayfireConfig=home-files/.config/wayfire.ini
-
-    assertFileExists "$wayfireConfig"
-    assertFileContent "$wayfireConfig" "${./configuration.ini}"
+    assertFileExists home-files/.config/wayfire.ini
+    assertFileContent "$(normalizeStorePaths home-files/.config/wayfire.ini)" "${./configuration.ini}"
   '';
 }

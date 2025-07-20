@@ -10,7 +10,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.m0nsterrr ];
+  meta.maintainers = [ lib.maintainers.m0nsterrr ];
 
   options.programs.kubeswitch = {
     enable = lib.mkEnableOption "the kubectx for operators";

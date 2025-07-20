@@ -24,6 +24,7 @@ let
     mkIf
     mkMerge
     mkOption
+    mkOptionDefault
     optionalString
     optional
     setAttrByPath
@@ -79,6 +80,9 @@ let
       if lib.isBool pref || lib.isInt pref || lib.isString pref then pref else builtins.toJSON pref
     );
 
+  extensionSettingsNeedForce =
+    extensionSettings: builtins.any (ext: ext.settings != { }) (attrValues extensionSettings);
+
   mkUserJs =
     prePrefs: prefs: extraPrefs: bookmarksFile: extensions:
     let
@@ -87,7 +91,7 @@ let
           "browser.bookmarks.file" = toString bookmarksFile;
           "browser.places.importBookmarksHTML" = true;
         }
-        // lib.optionalAttrs (extensions != { }) {
+        // lib.optionalAttrs (extensionSettingsNeedForce extensions) {
           "extensions.webextensions.ExtensionStorageIDB.enabled" = false;
         }
         // prefs;
@@ -235,6 +239,12 @@ in
       '';
     };
 
+    release = mkOption {
+      internal = true;
+      type = types.str;
+      description = "Upstream release version used to fetch from `releases.mozilla.org`.";
+    };
+
     languagePacks = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -242,7 +252,9 @@ in
         The language packs to install. Available language codes can be found
         on the releases page:
         `https://releases.mozilla.org/pub/firefox/releases/''${version}/linux-x86_64/xpi/`,
-        replacing `''${version}` with the version of ${appName} you have.
+        replacing `''${version}` with the version of ${appName} you have. If
+        the version string of your Firefox derivative diverts from the upstream
+        version, try setting the `release` option.
       '';
       example = [
         "en-GB"
@@ -324,6 +336,14 @@ in
       example = {
         DefaultDownloadDirectory = "\${home}/Downloads";
         BlockAboutConfig = true;
+        ExtensionSettings = {
+          "uBlock0@raymondhill.net" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+            installation_mode = "force_installed";
+            default_area = "menupanel";
+            private_browsing = true;
+          };
+        };
       };
     });
 
@@ -339,6 +359,12 @@ in
       type = types.attrsOf (
         types.submodule (
           { config, name, ... }:
+          let
+            profilePath = modulePath ++ [
+              "profiles"
+              name
+            ];
+          in
           {
             imports = [ (pkgs.path + "/nixos/modules/misc/assertions.nix") ];
 
@@ -704,7 +730,19 @@ in
                                 options = {
                                   settings = mkOption {
                                     type = types.attrsOf jsonFormat.type;
-                                    description = "Json formatted options for the specified extensionID";
+                                    default = { };
+                                    description = "Json formatted options for this extension.";
+                                  };
+                                  permissions = mkOption {
+                                    type = types.nullOr (types.listOf types.str);
+                                    default = null;
+                                    example = [ "activeTab" ];
+                                    defaultText = "Any permissions";
+                                    description = ''
+                                      Allowed permissions for this extension. See
+                                      <https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions>
+                                      for a list of relevant permissions.
+                                    '';
                                   };
                                   force = mkOption {
                                     type = types.bool;
@@ -746,36 +784,54 @@ in
             };
 
             config = {
-              assertions = [
-                (mkNoDuplicateAssertion config.containers "container")
-                {
-                  assertion = config.extensions.settings == { } || config.extensions.force;
-                  message = ''
-                    Using '${
-                      lib.showAttrPath (
-                        modulePath
-                        ++ [
-                          "profiles"
-                          config.name
-                          "extensions"
-                          "settings"
-                        ]
-                      )
-                    }' will override all previous extensions settings.
-                    Enable '${
-                      lib.showAttrPath (
-                        modulePath
-                        ++ [
-                          "profiles"
-                          config.name
-                          "extensions"
-                          "force"
-                        ]
-                      )
-                    }' to acknowledge this.
-                  '';
-                }
-              ] ++ config.bookmarks.assertions;
+              assertions =
+                [
+                  (mkNoDuplicateAssertion config.containers "container")
+                  {
+                    assertion = !(extensionSettingsNeedForce config.extensions.settings) || config.extensions.force;
+                    message = ''
+                      Using '${lib.showOption profilePath}.extensions.settings' will override all
+                      previous extensions settings. Enable
+                      '${lib.showOption profilePath}.extensions.force' to acknowledge this.
+                    '';
+                  }
+                ]
+                ++ (builtins.concatMap (
+                  { name, value }:
+                  let
+                    packages = builtins.filter (pkg: pkg.addonId == name) config.extensions.packages;
+                    package = builtins.head packages;
+                    unauthorized = lib.subtractLists value.permissions package.meta.mozPermissions;
+                  in
+                  [
+                    {
+                      assertion = value.permissions == null || length packages == 1;
+                      message = ''
+                        Must have exactly one extension with addonId '${name}'
+                        in '${lib.showOption profilePath}.extensions.packages' but found ${toString (length packages)}.
+                      '';
+                    }
+
+                    {
+                      assertion = value.permissions == null || length packages != 1 || unauthorized == [ ];
+                      message = ''
+                        Extension ${name} requests permissions that weren't
+                        authorized: ${builtins.toJSON unauthorized}.
+                        Consider adding the missing permissions to
+                        '${
+                          lib.showAttrPath (
+                            profilePath
+                            ++ [
+                              "extensions"
+                              name
+                            ]
+                          )
+                        }.permissions'.
+                      '';
+                    }
+                  ]
+                ) (lib.attrsToList config.extensions.settings))
+                ++ config.bookmarks.assertions;
             };
           }
         )
@@ -871,96 +927,98 @@ in
         ++ lib.flip mapAttrsToList cfg.profiles (
           _: profile:
           # Merge the regular profile settings with extension settings
-          mkMerge (
-            [
-              {
-                "${cfg.profilesPath}/${profile.path}/.keep".text = "";
+          mkMerge [
+            {
+              "${cfg.profilesPath}/${profile.path}/.keep".text = "";
 
-                "${cfg.profilesPath}/${profile.path}/chrome/userChrome.css" = mkIf (profile.userChrome != "") (
-                  let
-                    key = if builtins.isString profile.userChrome then "text" else "source";
-                  in
+              "${cfg.profilesPath}/${profile.path}/chrome/userChrome.css" = mkIf (profile.userChrome != "") (
+                let
+                  key = if builtins.isString profile.userChrome then "text" else "source";
+                in
+                {
+                  "${key}" = profile.userChrome;
+                }
+              );
+
+              "${cfg.profilesPath}/${profile.path}/chrome/userContent.css" = mkIf (profile.userContent != "") (
+                let
+                  key = if builtins.isString profile.userContent then "text" else "source";
+                in
+                {
+                  "${key}" = profile.userContent;
+                }
+              );
+
+              "${cfg.profilesPath}/${profile.path}/user.js" =
+                mkIf
+                  (
+                    profile.preConfig != ""
+                    || profile.settings != { }
+                    || profile.extraConfig != ""
+                    || profile.bookmarks.configFile != null
+                    || extensionSettingsNeedForce profile.extensions.settings
+                  )
                   {
-                    "${key}" = profile.userChrome;
-                  }
-                );
+                    text =
+                      mkUserJs profile.preConfig profile.settings profile.extraConfig profile.bookmarks.configFile
+                        profile.extensions.settings;
+                  };
 
-                "${cfg.profilesPath}/${profile.path}/chrome/userContent.css" = mkIf (profile.userContent != "") (
+              "${cfg.profilesPath}/${profile.path}/containers.json" = mkIf (profile.containers != { }) {
+                text = mkContainersJson profile.containers;
+                force = profile.containersForce;
+              };
+
+              "${cfg.profilesPath}/${profile.path}/search.json.mozlz4" = mkIf (profile.search.enable) {
+                enable = profile.search.enable;
+                force = profile.search.force;
+                source = profile.search.file;
+              };
+
+              "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
+                source =
                   let
-                    key = if builtins.isString profile.userContent then "text" else "source";
+                    extensionsEnvPkg = pkgs.buildEnv {
+                      name = "hm-firefox-extensions";
+                      paths = profile.extensions.packages;
+                    };
                   in
-                  {
-                    "${key}" = profile.userContent;
-                  }
-                );
+                  "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+                recursive = true;
+                force = true;
+              };
+            }
 
-                "${cfg.profilesPath}/${profile.path}/user.js" =
-                  mkIf
-                    (
-                      profile.preConfig != ""
-                      || profile.settings != { }
-                      || profile.extraConfig != ""
-                      || profile.bookmarks.configFile != null
-                      || profile.extensions.settings != { }
-                    )
-                    {
-                      text =
-                        mkUserJs profile.preConfig profile.settings profile.extraConfig profile.bookmarks.configFile
-                          profile.extensions.settings;
-                    };
-
-                "${cfg.profilesPath}/${profile.path}/containers.json" = mkIf (profile.containers != { }) {
-                  text = mkContainersJson profile.containers;
-                  force = profile.containersForce;
-                };
-
-                "${cfg.profilesPath}/${profile.path}/search.json.mozlz4" = mkIf (profile.search.enable) {
-                  enable = profile.search.enable;
-                  force = profile.search.force;
-                  source = profile.search.file;
-                };
-
-                "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
-                  source =
-                    let
-                      extensionsEnvPkg = pkgs.buildEnv {
-                        name = "hm-firefox-extensions";
-                        paths = profile.extensions.packages;
-                      };
-                    in
-                    "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-                  recursive = true;
-                  force = true;
-                };
-              }
-            ]
-            ++
-              # Add extension settings as separate attributes
-              optional (profile.extensions.settings != { }) (
-                mkMerge (
-                  mapAttrsToList (name: settingConfig: {
-                    "${cfg.profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" = {
-                      force = settingConfig.force || profile.extensions.force;
-                      text = lib.generators.toJSON { } settingConfig.settings;
-                    };
-                  }) profile.extensions.settings
-                )
-              )
-          )
+            (mkMerge (
+              mapAttrsToList (
+                name: settingConfig:
+                mkIf (settingConfig.settings != { }) {
+                  "${cfg.profilesPath}/${profile.path}/browser-extension-data/${name}/storage.js" = {
+                    force = settingConfig.force || profile.extensions.force;
+                    text = lib.generators.toJSON { } settingConfig.settings;
+                  };
+                }
+              ) profile.extensions.settings
+            ))
+          ]
         )
       );
     }
     // setAttrByPath modulePath {
       finalPackage = wrapPackage cfg.package;
+      release = mkOptionDefault (builtins.head (lib.splitString "-" cfg.package.version));
 
       policies = {
+        NoDefaultBookmarks = lib.mkIf (builtins.any (profile: profile.bookmarks.enable) (
+          builtins.attrValues cfg.profiles
+        )) false;
         ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
           lib.listToAttrs (
             map (
               lang:
               lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
                 installation_mode = "normal_installed";
-                install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.package.version}/linux-x86_64/xpi/${lang}.xpi";
+                install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
               }
             ) cfg.languagePacks
           )

@@ -41,7 +41,7 @@ in
       example = lib.literalExpression ''
         {
           "default" = {
-            "credential_process" = "${pkgs.pass}/bin/pass show aws";
+            "credential_process" = "''${pkgs.pass}/bin/pass show aws";
           };
         };
       '';
