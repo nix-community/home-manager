@@ -39,6 +39,7 @@ in
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/opencode/config.json`.
         See <https://opencode.ai/docs/config/> for the documentation.
+        '"$schema": "https://opencode.ai/config.json"' is automatically added to the config.
       '';
     };
     rules = lib.mkOption {
@@ -79,7 +80,12 @@ in
 
     xdg.configFile = {
       "opencode/config.json" = mkIf (cfg.settings != { }) {
-        source = jsonFormat.generate "config.json" cfg.settings;
+        source = jsonFormat.generate "config.json" (
+          {
+            "$schema" = "https://opencode.ai/config.json";
+          }
+          // cfg.settings
+        );
       };
       "opencode/AGENTS.md" = mkIf (cfg.rules != "") {
         text = cfg.rules;
