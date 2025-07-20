@@ -82,30 +82,7 @@ home-manager switch --flake .
 sudo nixos-rebuild switch
 ```
 
-## Method 3: NixOS Module Integration
-
-If you're using Home Manager as a NixOS module, update your system configuration:
-
-```nix
-# In your configuration.nix or flake.nix
-{
-  imports = [
-    (builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz/nixos")
-  ];
-
-  # Your home-manager configuration
-  home-manager.users.yourusername = { pkgs, ... }: {
-    home.stateVersion = "25.05";
-    # ... rest of your configuration
-  };
-}
-```
-
-Then rebuild your system:
-
-```bash
-sudo nixos-rebuild switch
-```
+**Note:** If you're using Home Manager as a NixOS module (rather than standalone), you'll need to update your system configuration instead of running home-manager switch. Update the Home Manager input in your configuration.nix or flake, set home.stateVersion = "##.##" (current release) in your user configuration, and run sudo nixos-rebuild switch to apply the changes.
 
 ## Important: State Version Management
 
