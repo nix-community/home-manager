@@ -16,6 +16,14 @@ user_pref("calendar.registry.calendar_5152790e278eb89039f8bfaa354b944ec1b44c5d3f
 user_pref("calendar.registry.calendar_5152790e278eb89039f8bfaa354b944ec1b44c5d3fc144edc5720c3edc045c73.uri", "https://my.caldav.server/calendar");
 user_pref("calendar.registry.calendar_5152790e278eb89039f8bfaa354b944ec1b44c5d3fc144edc5720c3edc045c73.username", "testuser");
 user_pref("general.useragent.override", "");
+user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.description", "shared");
+user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.dirType", 101);
+user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.filename", "contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.sqlite");
+user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.carddav.url", "https://my.caldav.server/contact/");
+user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.carddav.username", "home-manager@example.com");
+user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.description", "family");
+user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.dirType", 102);
+user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.filename", "contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.sqlite");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.identities", "id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.server", "server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.account.account_c6cc42837ed0a8041f93ff12c579a4af0dbe702461c97eef069f9f5f8dc4bfab.server", "server_c6cc42837ed0a8041f93ff12c579a4af0dbe702461c97eef069f9f5f8dc4bfab");

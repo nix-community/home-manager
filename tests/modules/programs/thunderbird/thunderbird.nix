@@ -106,6 +106,29 @@
     };
   };
 
+  accounts.contact.accounts = {
+    family = {
+      remote = {
+        type = "carddav";
+        url = "https://my.caldav.server/contact/";
+        userName = "home-manager@example.com";
+      };
+      thunderbird = {
+        enable = true;
+        profiles = [ "first" ];
+      };
+    };
+    work = {
+      thunderbird = {
+        enable = true;
+        profiles = [ "second" ];
+      };
+    };
+    shared = {
+      thunderbird.enable = true;
+    };
+  };
+
   programs.thunderbird = {
     enable = true;
     package = config.lib.test.mkStubPackage {
