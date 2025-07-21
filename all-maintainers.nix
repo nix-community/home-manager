@@ -902,7 +902,7 @@
     ];
     matrix = "@delafthi:matrix.org";
     name = "Thierry Delafontaine";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   dermetfan = {
     email = "serverkorken@gmail.com";
@@ -2189,6 +2189,12 @@
     name = "Xavier Lambein";
     source = "nixpkgs";
   };
+  yethal = {
+    github = "yethal";
+    githubId = 26117918;
+    name = "Yethal";
+    source = "nixpkgs";
+  };
   zeratax = {
     email = "mail@zera.tax";
     github = "zeratax";
@@ -2202,7 +2208,7 @@
     source = "nixpkgs";
   };
   zorrobert = {
-    email = "zorrobert@mailbox.org";
+    email = "118135271+zorrobert@users.noreply.github.com";
     github = "zorrobert";
     githubId = 118135271;
     name = "zorrobert";
