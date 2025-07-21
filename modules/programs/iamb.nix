@@ -7,6 +7,11 @@
 let
   cfg = config.programs.iamb;
   tomlFormat = pkgs.formats.toml { };
+  configDir =
+    if pkgs.stdenv.isDarwin && !config.xdg.enable then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 in
 {
   options.programs.iamb = {
@@ -46,7 +51,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."iamb/config.toml" = lib.mkIf (cfg.settings != { }) {
+    home.file."${configDir}/iamb/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "iamb-config" cfg.settings;
     };
   };
