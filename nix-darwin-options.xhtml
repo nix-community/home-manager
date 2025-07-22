@@ -29,6 +29,35 @@
  <dl class="variablelist">
 <dt>
  <span class="term">
+ <a id="nix-darwin-opt-home-manager.enableLegacyProfileManagement"></a><a class="term" href="nix-darwin-options.xhtml#nix-darwin-opt-home-manager.enableLegacyProfileManagement"><code class="option">home-manager.enableLegacyProfileManagement</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable legacy profile (and garbage collection root)
+management during activation. When enabled, the Home Manager activation
+will produce a per-user <code class="literal">home-manager</code> Nix profile as well as a garbage
+collection root, just like in the standalone installation of Home
+Manager. Typically, this is not desired when Home Manager is embedded in
+the system configuration.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/nixos/common.nix" target="_top">
+&lt;home-manager/nixos/common.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="nix-darwin-opt-home-manager.backupFileExtension"></a><a class="term" href="nix-darwin-options.xhtml#nix-darwin-opt-home-manager.backupFileExtension"><code class="option">home-manager.backupFileExtension</code>
   </a>
  </span>

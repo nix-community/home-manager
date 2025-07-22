@@ -26,7 +26,32 @@
    <hr />
   </div><div class="appendix"> <div class="titlepage">  <div>   <div>    <h1 id="ch-release-notes" class="title" >Appendix D. Release Notes   </h1>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-25.11">Release 25.11</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-25.05">Release 25.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-24.11">Release 24.11</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-24.05">Release 24.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-23.11">Release 23.11</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-23.05">Release 23.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-22.11">Release 22.11</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-22.05">Release 22.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-21.11">Release 21.11</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-21.05">Release 21.05</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-20.09">Release 20.09</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-20.03">Release 20.03</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-19.09">Release 19.09</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-19.03">Release 19.03</a> </span></dt><dt> <span class="chapter">  <a href="release-notes.xhtml#sec-release-18.09">Release 18.09</a> </span></dt> </dl></div><p>This section lists the release notes for stable versions of Home Manager
 and the current unstable version.</p><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11" class="title" >Release 25.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-25.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-25.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>This is the current unstable branch and the information in this
-section is therefore not final.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11-highlights" class="title" style="clear: both">Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>No changes.</p></li></ul></div>
+section is therefore not final.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11-highlights" class="title" style="clear: both">Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Updating the <code class="literal">home-manager</code> Nix profile inside the activation script
+now deprecated. The profile update is instead the responsibility of
+the software calling the activation script, such as the
+<code class="literal">home-manager</code> tool.</p><p>The legacy behavior remains the default for backwards compatibility
+but may emit a deprecation warning in the future and in the longer
+term removed all together. If you have developed tooling that
+directly call the generated activation script, then you are
+encouraged to adapt to the new behavior. See the
+<a class="link" href="index.xhtml#sec-internals-activation" title="Activation" >Activation</a> section in the manual for
+details on how to call the activation script.</p></li><li class="listitem"><p>The <code class="literal">home-manager switch</code> command now offers a <code class="literal">--rollback</code> option.
+When given, the switch performs a rollback to the Home Manager
+generation prior to the current before activating. While it was
+previously possible to accomplish this by manually activating an old
+generation, it always created a new profile generation. The new
+behavior mirrors the behavior of <code class="literal">nixos-rebuild switch --rollback</code>.
+See the <a class="link" href="index.xhtml#sec-usage-rollbacks" title="Rollbacks" >Rollbacks</a> section for more.</p></li><li class="listitem"><p>The <code class="literal">home-manager switch</code> command now offers a
+<code class="literal">--specialisation NAME</code> option. When given, the switch activates the
+named specialisation. While it was previously possible to accomplish
+this by manually running the specialisation <code class="literal">activate</code> script it was
+quite cumbersome and always created a new profile generation. The
+new behavior mirrors the behavior of <code class="literal">nixos-rebuild switch --specialisation</code>.</p></li><li class="listitem"><p>When using Home Manager as a NixOS or nix-darwin module we
+previously created an unnecessary <code class="literal">home-manager</code> per-user “shadow
+profile” for the user. This no longer happens. You can restore the
+old behavior by adding</p><pre><code class="programlisting  nix">home-manager.enableLegacyProfileManagement = true;
+</code></pre><p>to your configuration. This option is likely to be deprecated in the
+future.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11-state-version-changes" class="title" style="clear: both">State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
 &quot;25.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>No changes.</p></li></ul></div>
