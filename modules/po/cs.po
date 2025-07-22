@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-05-30 15:05+0200\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
 "PO-Revision-Date: 2025-04-13 09:31+0000\n"
 "Last-Translator: max <weblate@p2502.net>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/home-manager/"
@@ -27,15 +27,15 @@ msgstr "Vytváření linků na domácí soubory v %s"
 msgid "Cleaning up orphan links from %s"
 msgstr "Čištění osiřelých linků z %s"
 
-#: modules/home-environment.nix:632
+#: modules/home-environment.nix:647
 msgid "Creating new profile generation"
 msgstr "Vytváření nových generací profilu"
 
-#: modules/home-environment.nix:635
+#: modules/home-environment.nix:650
 msgid "No change so reusing latest profile generation"
 msgstr "Žádná změna, zachovává se poslední generace profilu"
 
-#: modules/home-environment.nix:683
+#: modules/home-environment.nix:699
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,9 +63,13 @@ msgstr ""
 "\n"
 "Poté zkuste znova aktivovat vaši Home Manager konfiguraci."
 
-#: modules/home-environment.nix:719
+#: modules/home-environment.nix:735
 msgid "Activating %s"
 msgstr "Aktivuji %s"
+
+#: modules/home-environment.nix:807
+msgid "%s: unknown option '%s'"
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
