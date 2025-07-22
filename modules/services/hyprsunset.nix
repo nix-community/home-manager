@@ -72,7 +72,18 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.user =
+    assertions = [
+      {
+        assertion = (config.wayland.windowManager.hyprland.package != null);
+        message = ''
+          Can't set services.hyprsunset.enable if wayland.windowManager.hyprland.package
+          is set to null. If you are using Hyprland's upstream flake, see:
+          <https://github.com/nix-community/home-manager/issues/7484>.
+        '';
+      }
+    ];
+
+    systemd.user = lib.mkIf (config.wayland.windowManager.hyprland.package != null) (
       let
         # Create the main persistent service that maintains the IPC socket
         # Create a service for each transition in the transitions configuration
@@ -139,6 +150,7 @@ in
             };
           }
         ) cfg.transitions;
-      };
+      }
+    );
   };
 }
