@@ -61,7 +61,7 @@ in
         # This is the default configuration file location for pueue on
         # darwin (https://github.com/Nukesor/pueue/wiki/Configuration)
         home.file."Library/Application Support/pueue/pueue.yml".source = configFile;
-        launchd.agents.pueued = {
+        launchd.agents.pueued = lib.mkIf (cfg.package != null) {
           enable = true;
 
           config = {
