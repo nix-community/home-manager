@@ -95,6 +95,7 @@ let
       ./programs/direnv.nix
       ./programs/discocss.nix
       ./programs/distrobox.nix
+      ./programs/docker-cli.nix
       ./programs/earthly.nix
       ./programs/eclipse.nix
       ./programs/element-desktop.nix
