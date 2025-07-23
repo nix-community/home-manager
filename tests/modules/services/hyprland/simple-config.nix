@@ -10,6 +10,16 @@
     settings = {
       source = [ "sourced.conf" ];
 
+      monitorv2 = [
+        {
+          output = "desc:Monitor";
+          mode = "highres";
+          position = "auto-right";
+          scale = 1;
+          vrr = 1;
+        }
+      ];
+
       decoration = {
         shadow_offset = "0 5";
         "col.shadow" = "rgba(00000099)";

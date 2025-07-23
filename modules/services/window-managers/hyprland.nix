@@ -250,6 +250,7 @@ in
         "$"
         "bezier"
         "name"
+        "output"
       ] ++ lib.optionals cfg.sourceFirst [ "source" ];
       example = [
         "$"
