@@ -319,6 +319,7 @@ let
       ./programs/xmobar.nix
       ./programs/xplr.nix
       ./programs/yambar.nix
+      ./programs/yarn/default.nix
       ./programs/yazi.nix
       ./programs/yt-dlp.nix
       ./programs/z-lua.nix
