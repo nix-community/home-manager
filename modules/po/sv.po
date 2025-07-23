@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-02-08 08:17+0000\n"
-"Last-Translator: bittin1ddc447d824349b2 <bittin@reimu.nl>\n"
+"PO-Revision-Date: 2025-07-23 12:02+0000\n"
+"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/"
 "modules/sv/>\n"
 "Language: sv\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: modules/files.nix:206
 msgid "Creating home file links in %s"
@@ -69,7 +69,7 @@ msgstr "Aktiverar %s"
 
 #: modules/home-environment.nix:807
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: okänd flagga '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
