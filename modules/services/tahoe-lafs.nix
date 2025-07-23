@@ -4,13 +4,17 @@
   pkgs,
   ...
 }:
-
+let
+  cfg = config.services.tahoe-lafs;
+in
 {
   meta.maintainers = [ lib.maintainers.rycee ];
 
   options = {
     services.tahoe-lafs = {
       enable = lib.mkEnableOption "Tahoe-LAFS";
+
+      package = lib.mkPackageOption pkgs "tahoelafs" { };
     };
   };
 
@@ -25,7 +29,7 @@
       };
 
       Service = {
-        ExecStart = "${pkgs.tahoelafs}/bin/tahoe run -C %h/.tahoe";
+        ExecStart = "${lib.getExe' cfg.package "tahoe"} run -C %h/.tahoe";
       };
     };
   };

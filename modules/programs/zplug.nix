@@ -28,6 +28,8 @@ in
   options.programs.zsh.zplug = {
     enable = lib.mkEnableOption "zplug - a zsh plugin manager";
 
+    package = lib.mkPackageOption pkgs "zplug" { };
+
     plugins = mkOption {
       default = [ ];
       type = types.listOf pluginModule;
@@ -44,12 +46,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.zplug ];
+    home.packages = [ cfg.package ];
 
     programs.zsh.initContent = lib.mkOrder 550 ''
       export ZPLUG_HOME=${cfg.zplugHome}
 
-      source ${pkgs.zplug}/share/zplug/init.zsh
+      source ${cfg.package}/share/zplug/init.zsh
 
       ${optionalString (cfg.plugins != [ ]) ''
         ${lib.concatStrings (

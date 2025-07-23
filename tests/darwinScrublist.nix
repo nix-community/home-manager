@@ -146,6 +146,7 @@ let
     "smug"
     "spotify-player"
     "starship"
+    "superfile"
     "taskwarrior"
     "tealdeer"
     "texlive"

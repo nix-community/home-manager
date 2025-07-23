@@ -33,7 +33,8 @@ in
     package = lib.mkPackageOption pkgs "ashell" { nullable = true; };
 
     settings = lib.mkOption {
-      inherit (settingsFormat) type;
+      # NOTE: `yaml` type supports null, using `nullOr` for backwards compatibility period
+      type = lib.types.nullOr tomlFormat.type;
       default = { };
       example = {
         modules = {

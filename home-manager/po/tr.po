@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2024-04-19 17:07+0000\n"
-"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
+"PO-Revision-Date: 2025-07-29 05:02+0000\n"
+"Last-Translator: Silk <omerntuzun@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/home-manager/cli/"
 "tr/>\n"
 "Language: tr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -27,11 +27,11 @@ msgstr "%s: %s için argüman eksik"
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s: %s kullanmak için ilk %s kullanın"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
-msgstr "%s konumunda yapılandırma dosyası bulunamadı"
+msgstr "%s'te yapılandırma dosyası bulunamadı"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
@@ -41,17 +41,17 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
-"Home Managerı %s de tutmak artık desteklenmemektedir,\n"
-"lütfen % e taşıyın"
+"Ana Dizin Yöneticisi'yi %s'de tutmak artık desteklenmemektedir,\n"
+"lütfen %s'e taşıyın"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
 msgstr ""
-"Yapılandırma dosyası bulunamadı. Lütfen %s konumunda bir tane oluşturun"
+"Yapılandırma dosyası bulunamadı. Lütfen %s konumunda bir tane oluşturunuz"
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
-msgstr "%s konumunda Home Manager bulunamadı."
+msgstr "%s konumunda Ana Dizin Yöneticisi bulunamadı."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:122
@@ -59,7 +59,7 @@ msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
 msgstr ""
-"Yedek Ana Dizin Yöneticisi yolu %s kullanımdan kaldırıldı ve orada bir dosya/"
+"Yedek Ana Dizin Yöneticisi %s yolu kullanımdan kaldırıldı ve orada bir dosya/"
 "dizin bulundu."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
@@ -83,15 +83,15 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
-"Bu uyarıyı kaldırmak için aşağıdakilerden birini yapın.\n"
+"Bu uyarıyı kaldırmak için aşağıdakilerden birini yapınız.\n"
 "\n"
-"1. Ev Dizin Yöneticisi'ne yolu kullanmasını açıkça söyleyin, örneğin\n"
+"1. Ana Dizin Yöneticisi'ye yolu kullanmasını açıkça söyleyiniz, örneğin\n"
 "\n"
 "     { programs.home-manager.path = \"%s\"; }\n"
 "\n"
 "   şeklinde yapılandırmanıza ekleyebilirsiniz.\n"
 "\n"
-"  Ev Dizin Yöneticisi'ne doğrudan içe aktarırsanız, Ev Dizin Yöneticisi "
+"  Ana Dizin Yöneticisi'ye doğrudan içe aktarırsanız, Ana Dizin Yöneticisi "
 "paketini çağırırken\n"
 "\n"
 "     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
@@ -130,11 +130,11 @@ msgstr "%s dosyası zaten var, değişiklik yapılmıyor..."
 
 #: home-manager/home-manager:338 home-manager/home-manager:443
 msgid "Creating %s..."
-msgstr "Oluşturuluyor %s..."
+msgstr "%s oluşturuluyor ..."
 
 #: home-manager/home-manager:487
 msgid "Creating initial Home Manager generation..."
-msgstr "İlk Home Manager inşası oluşturuluyor..."
+msgstr "İlk Ana Dizin Yöneticisi inşası oluşturuluyor..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:492
@@ -146,11 +146,12 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
-"Herşey tamam! home-manager aracı kuruldu. Home Manager'ı yapılandırmak için\n"
+"Herşey tamam! Ana Dizin Yöneticisi'nin home-manager aracı kuruldu ve "
+"yapılandırmak için\n"
 "\n"
 "    %s\n"
 "\n"
-"dosyasını düzenleyin. Kullanılabilir seçenekleri görmek için:\n"
+"dosyasını düzenleyiniz. Kullanılabilir seçenekleri görmek için:\n"
 "'man home-configuration.nix'."
 
 #. translators: The "%s" specifier will be replaced by a URL.
@@ -162,8 +163,8 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
-"Eyvah, kurulum başarısız! Eğer hatanın Home Manager'dan kaynaklandığını "
-"düşünüyorsanız\n"
+"Eyvah, kurulum başarısız! Eğer hatanın Ana Dizin Yöneticisi'nden "
+"kaynaklandığını düşünüyorsanız\n"
 "\n"
 "    %s\n"
 "\n"
@@ -182,10 +183,10 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
-"%d tane okunmamış ilgili haber bulunmakta.\n"
+"%d tane okunmamış ilgili haber bulunmaktadır.\n"
 "Okumak için \"%s news\" komutunu kullanın."
 msgstr[1] ""
-"%d tane okunmamış ilgili haberler bulunmakta.\n"
+"%d tane okunmamış ilgili haberler bulunmaktadır.\n"
 "Okumak için \"%s news\" komutunu kullanın."
 
 #: home-manager/home-manager:598
@@ -195,7 +196,7 @@ msgstr "Bilinmeyen \"news.display\" seçeneği \"%s\"."
 #: home-manager/home-manager:606
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr "Lütfen $EDITOR veya $VISUAL ortam değişkenini ayarlayın"
+msgstr "Lütfen $EDITOR veya $VISUAL ortam değişkenini ayarlayınız"
 
 #: home-manager/home-manager:624
 msgid "Cannot run build in read-only directory"
@@ -203,7 +204,7 @@ msgstr "Sadece okuma izni olan bir dizinde inşa çalıştırılamaz"
 
 #: home-manager/home-manager:787
 msgid "The configuration did not contain the specialisation \"%s\""
-msgstr ""
+msgstr "Yapılandırmada \"%s\" özelleştirmesi yoktu"
 
 #: home-manager/home-manager:841
 msgid "No generation with ID %s"

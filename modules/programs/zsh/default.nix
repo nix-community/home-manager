@@ -18,13 +18,13 @@ let
 
   cfg = config.programs.zsh;
 
-  relToDotDir = file: (optionalString (cfg.dotDir != null) (cfg.dotDir + "/")) + file;
-
   bindkeyCommands = {
     emacs = "bindkey -e";
     viins = "bindkey -v";
     vicmd = "bindkey -a";
   };
+
+  inherit (import ./lib.nix { inherit config lib; }) homeDir dotDirAbs dotDirRel;
 in
 {
   imports = [
@@ -32,6 +32,8 @@ in
     ./deprecated.nix
     ./history.nix
   ];
+
+  meta.maintainers = [ lib.maintainers.khaneliman ];
 
   options =
     let
@@ -100,8 +102,9 @@ in
         };
 
         dotDir = mkOption {
-          default = null;
-          example = ".config/zsh";
+          default = homeDir;
+          defaultText = "`config.home.homeDirectory`";
+          example = "`\${config.xdg.configHome}/zsh`";
           description = ''
             Directory where the zsh configuration and more should be located,
             relative to the users home directory. The default is the home
@@ -144,9 +147,9 @@ in
           default = { };
           example = literalExpression ''
             {
-              docs  = "$HOME/Documents";
-              vids  = "$HOME/Videos";
-              dl    = "$HOME/Downloads";
+              docs  = "$\{config.home.homeDirectory}/Documents";
+              vids  = "$\{config.home.homeDirectory}/Videos";
+              dl    = "$\{config.home.homeDirectory}/Downloads";
             }
           '';
           description = ''
@@ -339,30 +342,62 @@ in
       dirHashesStr = concatStringsSep "\n" (
         lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
       );
-
-      zdotdir = "$HOME/" + lib.escapeShellArg cfg.dotDir;
     in
     mkIf cfg.enable (
       lib.mkMerge [
+        {
+          assertions = [
+            {
+              assertion = !lib.hasInfix "$" cfg.dotDir;
+              message = ''
+                programs.zsh.dotDir cannot contain shell variables as it is used for file creation at build time.
+                Current dotDir: ${cfg.dotDir}
+                Consider using an absolute path or home-manager config options instead.
+                You can replace shell variables with options like:
+                - config.home.homeDirectory (user's home directory)
+                - config.xdg.configHome (XDG config directory)
+                - config.xdg.dataHome (XDG data directory)
+                - config.xdg.cacheHome (XDG cache directory)
+              '';
+            }
+          ];
+
+          warnings =
+            lib.optionals
+              (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasInfix "$" cfg.dotDir)
+              [
+                ''
+                  Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
+                  Current dotDir: ${cfg.dotDir}
+                  Consider using absolute paths or home-manager config options instead.
+                  You can replace relative paths or environment variables with options like:
+                  - config.home.homeDirectory (user's home directory)
+                  - config.xdg.configHome (XDG config directory)
+                  - config.xdg.dataHome (XDG data directory)
+                  - config.xdg.cacheHome (XDG cache directory)
+                ''
+              ];
+        }
+
         (mkIf (cfg.envExtra != "") {
-          home.file."${relToDotDir ".zshenv"}".text = cfg.envExtra;
+          home.file."${dotDirRel}/.zshenv".text = cfg.envExtra;
         })
 
         (mkIf (cfg.profileExtra != "") {
-          home.file."${relToDotDir ".zprofile"}".text = cfg.profileExtra;
+          home.file."${dotDirRel}/.zprofile".text = cfg.profileExtra;
         })
 
         (mkIf (cfg.loginExtra != "") {
-          home.file."${relToDotDir ".zlogin"}".text = cfg.loginExtra;
+          home.file."${dotDirRel}/.zlogin".text = cfg.loginExtra;
         })
 
         (mkIf (cfg.logoutExtra != "") {
-          home.file."${relToDotDir ".zlogout"}".text = cfg.logoutExtra;
+          home.file."${dotDirRel}/.zlogout".text = cfg.logoutExtra;
         })
 
-        (mkIf (cfg.dotDir != null) {
-          home.file."${relToDotDir ".zshenv"}".text = ''
-            export ZDOTDIR=${zdotdir}
+        (mkIf (dotDirAbs != homeDir) {
+          home.file."${dotDirRel}/.zshenv".text = ''
+            export ZDOTDIR=${dotDirAbs}
           '';
 
           # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
@@ -370,12 +405,12 @@ in
           # already set correctly (by e.g. spawning a zsh inside a zsh), all env
           # vars still get exported
           home.file.".zshenv".text = ''
-            source ${zdotdir}/.zshenv
+            source ${dotDirAbs}/.zshenv
           '';
         })
 
         {
-          home.file."${relToDotDir ".zshenv"}".text = ''
+          home.file."${dotDirRel}/.zshenv".text = ''
             # Environment variables
             . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
@@ -486,7 +521,7 @@ in
             ))
           ];
 
-          home.file."${relToDotDir ".zshrc"}".text = cfg.initContent;
+          home.file."${dotDirRel}/.zshrc".text = cfg.initContent;
         }
       ]
     );

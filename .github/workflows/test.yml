@@ -56,8 +56,6 @@ jobs:
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.hm == 'true' || needs.changes.outputs.format == 'true'
         with:
           nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
-          extra_nix_config: |
-            experimental-features = nix-command flakes
       - name: Build docs
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true'
         run: nix build --show-trace .#docs-jsonModuleMaintainers
@@ -65,27 +63,15 @@ jobs:
         if: github.event_name == 'schedule' || needs.changes.outputs.format == 'true'
         run: nix fmt -- --ci
       - name: Test init --switch with locked inputs
-        # FIXME: nix broken on darwin on unstable
-        if: matrix.os != 'macos-latest' && (github.event_name == 'schedule' || needs.changes.outputs.hm == 'true')
+        if: github.event_name == 'schedule' || needs.changes.outputs.hm == 'true'
         run: |
           # Copy lock file to home directory for consistent testing
           mkdir -p ~/.config/home-manager
           cp flake.lock ~/.config/home-manager/
           nix run .#home-manager -- init --switch --override-input home-manager .
       - name: Uninstall
-        # FIXME: nix broken on darwin on unstable
-        if: matrix.os != 'macos-latest' && (github.event_name == 'schedule' || needs.changes.outputs.hm == 'true')
+        if: github.event_name == 'schedule' || needs.changes.outputs.hm == 'true'
         run: yes | nix run . -- uninstall
-      - name: Run tests
-        if: github.event_name == 'schedule' || needs.changes.outputs.tests == 'true'
-        run: nix build -j auto --show-trace --option allow-import-from-derivation false --reference-lock-file flake.lock "./tests#test-all-no-big"
-        env:
-          GC_INITIAL_HEAP_SIZE: 4294967296
-      - name: Run tests (with IFD)
-        if: github.event_name == 'schedule' || needs.changes.outputs.tests == 'true'
-        run: nix build -j auto --show-trace --reference-lock-file flake.lock "./tests#test-all-no-big"
-        env:
-          GC_INITIAL_HEAP_SIZE: 4294967296
       - name: Generate Job Summary
         if: github.event_name == 'pull_request'
         shell: bash

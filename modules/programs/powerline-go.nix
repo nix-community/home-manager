@@ -60,6 +60,8 @@ in
     programs.powerline-go = {
       enable = lib.mkEnableOption "Powerline-go, a beautiful and useful low-latency prompt for your shell";
 
+      package = lib.mkPackageOption pkgs "powerline-go" { };
+
       modules = mkOption {
         default = null;
         type = types.nullOr (types.listOf types.str);
@@ -157,7 +159,7 @@ in
         local old_exit_status=$?
         ${
           if evalMode then "eval " else "PS1="
-        }"$(${pkgs.powerline-go}/bin/powerline-go -error $old_exit_status -shell bash${commandLineArguments})"
+        }"$(${lib.getExe cfg.package} -error $old_exit_status -shell bash${commandLineArguments})"
         ${cfg.extraUpdatePS1}
         return $old_exit_status
       }
@@ -171,7 +173,7 @@ in
       function powerline_precmd() {
         ${
           if evalMode then "eval " else "PS1="
-        }"$(${pkgs.powerline-go}/bin/powerline-go -error $? -shell zsh${commandLineArguments})"
+        }"$(${lib.getExe cfg.package} -error $? -shell zsh${commandLineArguments})"
         ${cfg.extraUpdatePS1}
       }
 
@@ -192,7 +194,7 @@ in
     # https://github.com/justjanne/powerline-go#fish
     programs.fish.interactiveShellInit = mkIf (cfg.enable && config.programs.fish.enable) ''
       function fish_prompt
-          eval ${pkgs.powerline-go}/bin/powerline-go -error $status -jobs (count (jobs -p))${commandLineArguments}
+          eval ${lib.getExe cfg.package} -error $status -jobs (count (jobs -p))${commandLineArguments}
           ${cfg.extraUpdatePS1}
       end
     '';

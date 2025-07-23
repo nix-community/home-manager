@@ -24,9 +24,20 @@ MANUAL_REVIEW_REQUEST_QUERY: Final[str] = """
 query($owner: String!, $repo: String!, $prNumber: Int!) {
   repository(owner: $owner, name: $repo) {
     pullRequest(number: $prNumber) {
-      timelineItems(last: 250, itemTypes: [REVIEW_REQUESTED_EVENT]) {
+      timelineItems(last: 250, itemTypes: [REVIEW_REQUESTED_EVENT, REVIEW_REQUEST_REMOVED_EVENT]) {
         nodes {
+          __typename
           ... on ReviewRequestedEvent {
+            actor {
+              __typename
+              login
+            }
+            requestedReviewer {
+              ... on User { login }
+              ... on Bot { login }
+            }
+          }
+          ... on ReviewRequestRemovedEvent {
             actor {
               __typename
               login
@@ -71,10 +82,14 @@ def run_gh_command(
         raise GHError(f"Failed to execute gh command: {e}") from e
 
 
-def get_manually_requested_reviewers(
+def get_manual_reviewer_actions(
     owner: str, repo: str, pr_number: int, bot_user_name: str
-) -> set[str]:
-    """Fetches a set of reviewers who were manually requested by someone other than the bot."""
+) -> tuple[set[str], set[str]]:
+    """Fetches sets of reviewers who were manually requested or removed by someone other than the bot.
+
+    Returns:
+        tuple: (manually_requested, manually_removed) sets of usernames
+    """
     try:
         result = run_gh_command([
             "api", "graphql",
@@ -86,15 +101,30 @@ def get_manually_requested_reviewers(
         data = json.loads(result.stdout)
         nodes = data.get("data", {}).get("repository", {}).get("pullRequest", {}).get("timelineItems", {}).get("nodes", [])
 
-        manually_requested = {
-            node["requestedReviewer"]["login"]
-            for node in nodes
-            if node and node.get("requestedReviewer") and node.get("actor", {}).get("login") != bot_user_name
-        }
-        return manually_requested
+        manually_requested = set()
+        manually_removed = set()
+
+        for node in nodes:
+            if not node or not node.get("requestedReviewer") or not node.get("actor"):
+                continue
+
+            reviewer_login = node["requestedReviewer"]["login"]
+            actor_login = node["actor"].get("login")
+
+            # Skip bot actions
+            if actor_login == bot_user_name:
+                continue
+
+            # Check node type to determine if it's a request or removal
+            if node.get("__typename") == "ReviewRequestedEvent":
+                manually_requested.add(reviewer_login)
+            elif node.get("__typename") == "ReviewRequestRemovedEvent":
+                manually_removed.add(reviewer_login)
+
+        return manually_requested, manually_removed
     except (GHError, json.JSONDecodeError, KeyError) as e:
-        logging.error("Could not determine manually requested reviewers: %s", e)
-        return set()
+        logging.error("Could not determine manual reviewer actions: %s", e)
+        return set(), set()
 
 
 def get_users_from_gh(args: list[str], error_message: str) -> set[str]:
@@ -192,9 +222,10 @@ def main() -> None:
     parser.add_argument("--repo", required=True, help="Repository name.")
     parser.add_argument("--pr-number", type=int, required=True, help="Pull request number.")
     parser.add_argument("--pr-author", required=True, help="PR author's username.")
-    parser.add_argument("--current-maintainers", default="", help="Space-separated list of current maintainers.")
+    parser.add_argument("--current-maintainers", default="", help="Space-separated list of maintainers for the changed files.")
     parser.add_argument("--changed-files", default="", help="Newline-separated list of changed files.")
     parser.add_argument("--bot-user-name", default="", help="Bot user name to distinguish manual vs automated review requests.")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be done without making actual changes.")
     args = parser.parse_args()
 
     no_changed_files = not args.changed_files.strip()
@@ -203,12 +234,13 @@ def main() -> None:
     maintainers: set[str] = set(args.current_maintainers.split())
     pending_reviewers = get_pending_reviewers(args.pr_number)
     past_reviewers = get_past_reviewers(args.owner, args.repo, args.pr_number)
-    manually_requested = get_manually_requested_reviewers(args.owner, args.repo, args.pr_number, args.bot_user_name)
+    manually_requested, manually_removed = get_manual_reviewer_actions(args.owner, args.repo, args.pr_number, args.bot_user_name)
 
-    logging.info("Current Maintainers: %s", ' '.join(maintainers) or "None")
+    logging.info("File Maintainers: %s", ' '.join(maintainers) or "None")
     logging.info("Pending Reviewers: %s", ' '.join(pending_reviewers) or "None")
     logging.info("Past Reviewers: %s", ' '.join(past_reviewers) or "None")
     logging.info("Manually Requested: %s", ' '.join(manually_requested) or "None")
+    logging.info("Manually Removed: %s", ' '.join(manually_removed) or "None")
 
     # --- 2. Determine reviewers to remove ---
     reviewers_to_remove: set[str] = set()
@@ -221,19 +253,22 @@ def main() -> None:
         logging.info("Removing outdated bot-requested reviewers.")
 
     if reviewers_to_remove:
-        update_reviewers(
-            args.pr_number,
-            owner=args.owner,
-            repo=args.repo,
-            reviewers_to_remove=reviewers_to_remove
-        )
+        if args.dry_run:
+            logging.info("DRY RUN: Would remove reviewers: %s", ", ".join(reviewers_to_remove))
+        else:
+            update_reviewers(
+                args.pr_number,
+                owner=args.owner,
+                repo=args.repo,
+                reviewers_to_remove=reviewers_to_remove
+            )
     else:
         logging.info("No reviewers to remove.")
 
     # --- 3. Determine new reviewers to add ---
     reviewers_to_add: set[str] = set()
     if not no_changed_files and maintainers:
-        users_to_exclude = {args.pr_author} | past_reviewers | pending_reviewers
+        users_to_exclude = {args.pr_author} | past_reviewers | pending_reviewers | manually_removed
         potential_reviewers = maintainers - users_to_exclude
 
         reviewers_to_add = {
@@ -244,8 +279,16 @@ def main() -> None:
         if non_collaborators:
             logging.warning("Ignoring non-collaborators: %s", ", ".join(non_collaborators))
 
+        manually_removed_maintainers = reviewers_to_add & manually_removed
+        if manually_removed_maintainers:
+            logging.info("Not re-adding manually removed maintainers: %s", ", ".join(manually_removed_maintainers))
+            reviewers_to_add -= manually_removed
+
     if reviewers_to_add:
-        update_reviewers(args.pr_number, reviewers_to_add=reviewers_to_add)
+        if args.dry_run:
+            logging.info("DRY RUN: Would add reviewers: %s", ", ".join(reviewers_to_add))
+        else:
+            update_reviewers(args.pr_number, reviewers_to_add=reviewers_to_add)
     else:
         logging.info("No new reviewers to add.")
 

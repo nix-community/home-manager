@@ -14,6 +14,8 @@ in
     services.kbfs = {
       enable = lib.mkEnableOption "Keybase File System";
 
+      package = lib.mkPackageOption pkgs "kbfs" { };
+
       mountPoint = lib.mkOption {
         type = lib.types.str;
         default = "keybase";
@@ -59,7 +61,7 @@ in
             "KEYBASE_SYSTEMD=1"
           ];
           ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mountPoint}";
-          ExecStart = "${pkgs.kbfs}/bin/kbfsfuse ${toString cfg.extraFlags} ${mountPoint}";
+          ExecStart = "${lib.getExe' cfg.package "kbfsfuse"} ${toString cfg.extraFlags} ${mountPoint}";
           ExecStopPost = "/run/wrappers/bin/fusermount -u ${mountPoint}";
           Restart = "on-failure";
         };
@@ -67,7 +69,7 @@ in
       Install.WantedBy = [ "default.target" ];
     };
 
-    home.packages = [ pkgs.kbfs ];
+    home.packages = [ cfg.package ];
     services.keybase.enable = true;
   };
 }

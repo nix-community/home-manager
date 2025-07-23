@@ -581,6 +581,13 @@ in
               sway = if cfg.config.focus.forceWrapping then "yes" else "no";
             }
             .${moduleName};
+          defaultText =
+            literalExpression
+              {
+                i3 = ''if focus.forceWrapping then "force" else "yes"'';
+                sway = ''if focus.forceWrapping then "yes" else "no"'';
+              }
+              .${moduleName};
           description = ''
             Whether the window focus commands automatically wrap around the edge of containers.
 

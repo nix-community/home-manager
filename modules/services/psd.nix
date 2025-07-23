@@ -24,6 +24,8 @@ in
   options.services.psd = {
     enable = lib.mkEnableOption "Profile-sync-daemon service";
 
+    package = lib.mkPackageOption pkgs "profile-sync-daemon" { };
+
     resyncTimer = lib.mkOption {
       type = lib.types.str;
       default = "1h";
@@ -75,12 +77,12 @@ in
       (lib.hm.assertions.assertPlatform "services.psd" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ pkgs.profile-sync-daemon ];
+    home.packages = [ cfg.package ];
 
     systemd.user = {
       services =
         let
-          exe = "${pkgs.profile-sync-daemon}/bin/profile-sync-daemon";
+          exe = lib.getExe' cfg.package "profile-sync-daemon";
           envPath = lib.makeBinPath (
             with pkgs;
             [
@@ -93,7 +95,7 @@ in
               findutils
               nettools
               util-linux
-              profile-sync-daemon
+              cfg.package
             ]
           );
         in

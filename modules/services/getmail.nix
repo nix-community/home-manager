@@ -19,6 +19,8 @@ in
     services.getmail = {
       enable = lib.mkEnableOption "the getmail systemd service to automatically retrieve mail";
 
+      package = lib.mkPackageOption pkgs "getmail" { default = "getmail6"; };
+
       frequency = lib.mkOption {
         type = lib.types.str;
         default = "*:0/5";
@@ -45,7 +47,7 @@ in
         Description = "getmail email fetcher";
       };
       Service = {
-        ExecStart = "${pkgs.getmail6}/bin/getmail ${configFiles}";
+        ExecStart = "${lib.getExe cfg.package} ${configFiles}";
       };
     };
 

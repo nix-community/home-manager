@@ -76,9 +76,35 @@ let
       ...
     }:
     let
+      # to discourage references from option descriptions and defaults.
+      poisonModule =
+        let
+          poisonAttr = n: {
+            name = n;
+            value = abort ''
+              error: the option documentation has a dependency on the configuration.
+
+              You may, for example, have added an option attribute like
+
+                default = ''${config.some.value};
+
+              Since the default value is included in the Home Manager manual, this
+              would make the manual depend on the user's configuration.
+
+              To avoid this problem in this particular case, consider changing to
+
+                default = ''${config.some.value};
+                defaultText = lib.literalExpression "\\''${config.some.value}";'';
+          };
+        in
+        { options, ... }:
+        {
+          config = lib.listToAttrs (map poisonAttr (lib.filter (n: n != "_module") (lib.attrNames options)));
+        };
+
       options =
         (lib.evalModules {
-          inherit modules;
+          modules = modules ++ [ poisonModule ];
           class = "homeManager";
         }).options;
     in

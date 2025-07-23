@@ -31,6 +31,8 @@ in
   options.services.poweralertd = {
     enable = lib.mkEnableOption "the Upower-powered power alertd";
 
+    package = lib.mkPackageOption pkgs "poweralertd" { };
+
     extraArgs = lib.mkOption {
       type = with types; listOf str;
       default = [ ];
@@ -61,7 +63,7 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.poweralertd}/bin/poweralertd ${escapeSystemdExecArgs cfg.extraArgs}";
+        ExecStart = "${lib.getExe cfg.package} ${escapeSystemdExecArgs cfg.extraArgs}";
         Restart = "always";
       };
     };

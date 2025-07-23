@@ -12,7 +12,11 @@ in
 {
   meta.maintainers = [ lib.maintainers.thibautmarty ];
 
-  options.services.mpris-proxy.enable = lib.mkEnableOption "a proxy forwarding Bluetooth MIDI controls via MPRIS2 to control media players";
+  options.services.mpris-proxy = {
+    enable = lib.mkEnableOption "a proxy forwarding Bluetooth MIDI controls via MPRIS2 to control media players";
+
+    package = lib.mkPackageOption pkgs "bluez" { };
+  };
 
   config = lib.mkIf cfg.enable {
     assertions = [
@@ -30,7 +34,7 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
+        ExecStart = lib.getExe' cfg.package "mpris-proxy";
       };
     };
   };

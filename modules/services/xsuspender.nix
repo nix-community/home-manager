@@ -119,6 +119,8 @@ in
     services.xsuspender = {
       enable = lib.mkEnableOption "XSuspender";
 
+      package = lib.mkPackageOption pkgs "xsuspender" { };
+
       defaults = mkOption {
         description = "XSuspender defaults.";
         type = xsuspenderOptions;
@@ -182,7 +184,7 @@ in
       // lib.mapAttrs (_: mkSection) cfg.rules;
 
     # To make the xsuspender tool available.
-    home.packages = [ pkgs.xsuspender ];
+    home.packages = [ cfg.package ];
 
     xdg.configFile."xsuspender.conf".source = iniFormat.generate "xsuspender.conf" cfg.iniContent;
 
@@ -195,7 +197,7 @@ in
       };
 
       Service = {
-        ExecStart = "${pkgs.xsuspender}/bin/xsuspender";
+        ExecStart = lib.getExe cfg.package;
         Environment = lib.mkIf cfg.debug [ "G_MESSAGES_DEBUG=all" ];
       };
 
