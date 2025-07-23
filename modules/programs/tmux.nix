@@ -357,10 +357,11 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        home.packages =
-          [ cfg.package ]
-          ++ lib.optional cfg.tmuxinator.enable pkgs.tmuxinator
-          ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
+        home.packages = [
+          cfg.package
+        ]
+        ++ lib.optional cfg.tmuxinator.enable pkgs.tmuxinator
+        ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
       }
 
       { xdg.configFile."tmux/tmux.conf".text = lib.mkBefore tmuxConf; }

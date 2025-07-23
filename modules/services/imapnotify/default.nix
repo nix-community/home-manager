@@ -44,9 +44,10 @@ let
           Restart = "always";
           RestartSec = 30;
           Type = "simple";
-          Environment =
-            [ "PATH=${cfg.path}" ]
-            ++ lib.optional account.notmuch.enable "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
+          Environment = [
+            "PATH=${cfg.path}"
+          ]
+          ++ lib.optional account.notmuch.enable "NOTMUCH_CONFIG=${config.xdg.configHome}/notmuch/default/config";
         };
 
         Install = {
@@ -64,23 +65,22 @@ let
       name = "imapnotify-${name}";
       value = {
         enable = true;
-        config =
-          {
-            # Use the nix store path for config to ensure service restarts when it changes
-            ProgramArguments = [
-              "${lib.getExe cfg.package}"
-              "-conf"
-              "${genAccountConfig account}"
-            ];
-            KeepAlive = true;
-            ThrottleInterval = 30;
-            ExitTimeOut = 0;
-            ProcessType = "Background";
-            RunAtLoad = true;
-          }
-          // optionalAttrs account.notmuch.enable {
-            EnvironmentVariables.NOTMUCH_CONFIG = "${config.xdg.configHome}/notmuch/default/config";
-          };
+        config = {
+          # Use the nix store path for config to ensure service restarts when it changes
+          ProgramArguments = [
+            "${lib.getExe cfg.package}"
+            "-conf"
+            "${genAccountConfig account}"
+          ];
+          KeepAlive = true;
+          ThrottleInterval = 30;
+          ExitTimeOut = 0;
+          ProcessType = "Background";
+          RunAtLoad = true;
+        }
+        // optionalAttrs account.notmuch.enable {
+          EnvironmentVariables.NOTMUCH_CONFIG = "${config.xdg.configHome}/notmuch/default/config";
+        };
       };
     };
 

@@ -48,39 +48,38 @@ let
   };
 
   startupModule = types.submodule {
-    options =
-      {
-        command = mkOption {
-          type = types.str;
-          description = "Command that will be executed on startup.";
-        };
-
-        always = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether to run command on each ${moduleName} restart.";
-        };
-      }
-      // lib.optionalAttrs isI3 {
-        notification = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to enable startup-notification support for the command.
-            See {option}`--no-startup-id` option description in the i3 user guide.
-          '';
-        };
-
-        workspace = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = ''
-            Launch application on a particular workspace. DEPRECATED:
-            Use [](#opt-xsession.windowManager.i3.config.assigns)
-            instead. See <https://github.com/nix-community/home-manager/issues/265>.
-          '';
-        };
+    options = {
+      command = mkOption {
+        type = types.str;
+        description = "Command that will be executed on startup.";
       };
+
+      always = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether to run command on each ${moduleName} restart.";
+      };
+    }
+    // lib.optionalAttrs isI3 {
+      notification = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable startup-notification support for the command.
+          See {option}`--no-startup-id` option description in the i3 user guide.
+        '';
+      };
+
+      workspace = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Launch application on a particular workspace. DEPRECATED:
+          Use [](#opt-xsession.windowManager.i3.config.assigns)
+          instead. See <https://github.com/nix-community/home-manager/issues/265>.
+        '';
+      };
+    };
 
   };
 

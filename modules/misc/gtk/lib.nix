@@ -20,38 +20,36 @@ in
       nameExample ? "Adwaita",
     }:
     types.submodule {
-      options =
-        {
-          package = mkOption {
-            type = types.nullOr types.package;
-            default = null;
-            example = literalExpression packageExample;
-            description =
-              ''
-                Package providing the ${typeName}. This package will be installed
-                to your profile. If `null` then the ${typeName}
-                is assumed to already be available in your profile.
-              ''
-              + optionalString (typeName == "theme") ''
+      options = {
+        package = mkOption {
+          type = types.nullOr types.package;
+          default = null;
+          example = literalExpression packageExample;
+          description = ''
+            Package providing the ${typeName}. This package will be installed
+            to your profile. If `null` then the ${typeName}
+            is assumed to already be available in your profile.
+          ''
+          + optionalString (typeName == "theme") ''
 
-                For the theme to apply to GTK 4, this option is mandatory.
-              '';
-          };
-
-          name = mkOption {
-            type = types.str;
-            example = nameExample;
-            description = "The name of the ${typeName} within the package.";
-          };
-        }
-        // optionalAttrs hasSize {
-          size = mkOption {
-            type = types.nullOr types.int;
-            default = null;
-            example = 16;
-            description = "The size of the cursor.";
-          };
+            For the theme to apply to GTK 4, this option is mandatory.
+          '';
         };
+
+        name = mkOption {
+          type = types.str;
+          example = nameExample;
+          description = "The name of the ${typeName} within the package.";
+        };
+      }
+      // optionalAttrs hasSize {
+        size = mkOption {
+          type = types.nullOr types.int;
+          default = null;
+          example = 16;
+          description = "The size of the cursor.";
+        };
+      };
     };
 
   # Helper function to generate the settings attribute set for a given version

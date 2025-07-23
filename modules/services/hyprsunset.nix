@@ -120,7 +120,8 @@ in
               RestartSec = "10";
             };
           };
-        } // transitionServices;
+        }
+        // transitionServices;
 
         timers = lib.mapAttrs' (
           name: transitionCfg:

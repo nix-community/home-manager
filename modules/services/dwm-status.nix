@@ -22,7 +22,8 @@ let
 
   finalConfig = {
     inherit (cfg) order;
-  } // cfg.extraConfig;
+  }
+  // cfg.extraConfig;
 
   configFile = jsonFormat.generate "dwm-status.json" finalConfig;
 

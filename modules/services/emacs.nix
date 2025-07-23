@@ -129,63 +129,60 @@ in
       }
 
       (mkIf pkgs.stdenv.isLinux {
-        systemd.user.services.emacs =
-          {
-            Unit =
-              {
-                Description = "Emacs text editor";
-                Documentation = "info:emacs man:emacs(1) https://gnu.org/software/emacs/";
+        systemd.user.services.emacs = {
+          Unit = {
+            Description = "Emacs text editor";
+            Documentation = "info:emacs man:emacs(1) https://gnu.org/software/emacs/";
 
-                After = optional (cfg.startWithUserSession == "graphical") "graphical-session.target";
-                PartOf = optional (cfg.startWithUserSession == "graphical") "graphical-session.target";
+            After = optional (cfg.startWithUserSession == "graphical") "graphical-session.target";
+            PartOf = optional (cfg.startWithUserSession == "graphical") "graphical-session.target";
 
-                # Avoid killing the Emacs session, which may be full of
-                # unsaved buffers.
-                X-RestartIfChanged = false;
-              }
-              // optionalAttrs needsSocketWorkaround {
-                # Emacs deletes its socket when shutting down, which systemd doesn't
-                # handle, resulting in a server without a socket.
-                # See https://github.com/nix-community/home-manager/issues/2018
-                RefuseManualStart = true;
-              };
-
-            Service =
-              {
-                Type = "notify";
-
-                # We wrap ExecStart in a login shell so Emacs starts with the user's
-                # environment, most importantly $PATH and $NIX_PROFILES. It may be
-                # worth investigating a more targeted approach for user services to
-                # import the user environment.
-                ExecStart = ''${pkgs.runtimeShell} -l -c "${emacsBinPath}/emacs --fg-daemon${
-                  # In case the user sets 'server-directory' or 'server-name' in
-                  # their Emacs config, we want to specify the socket path explicitly
-                  # so launching 'emacs.service' manually doesn't break emacsclient
-                  # when using socket activation.
-                  lib.optionalString cfg.socketActivation.enable "=${lib.escapeShellArg socketPath}"
-                } ${lib.escapeShellArgs cfg.extraOptions}"'';
-
-                # Emacs will exit with status 15 after having received SIGTERM, which
-                # is the default "KillSignal" value systemd uses to stop services.
-                SuccessExitStatus = 15;
-
-                Restart = "on-failure";
-              }
-              // optionalAttrs needsSocketWorkaround {
-                # Use read-only directory permissions to prevent emacs from
-                # deleting systemd's socket file before exiting.
-                ExecStartPost = "${pkgs.coreutils}/bin/chmod --changes -w ${socketDir}";
-                ExecStopPost = "${pkgs.coreutils}/bin/chmod --changes +w ${socketDir}";
-              };
+            # Avoid killing the Emacs session, which may be full of
+            # unsaved buffers.
+            X-RestartIfChanged = false;
           }
-          // optionalAttrs (cfg.startWithUserSession != false) {
-            Install = {
-              WantedBy = [
-                (if cfg.startWithUserSession == true then "default.target" else "graphical-session.target")
-              ];
-            };
+          // optionalAttrs needsSocketWorkaround {
+            # Emacs deletes its socket when shutting down, which systemd doesn't
+            # handle, resulting in a server without a socket.
+            # See https://github.com/nix-community/home-manager/issues/2018
+            RefuseManualStart = true;
           };
+
+          Service = {
+            Type = "notify";
+
+            # We wrap ExecStart in a login shell so Emacs starts with the user's
+            # environment, most importantly $PATH and $NIX_PROFILES. It may be
+            # worth investigating a more targeted approach for user services to
+            # import the user environment.
+            ExecStart = ''${pkgs.runtimeShell} -l -c "${emacsBinPath}/emacs --fg-daemon${
+              # In case the user sets 'server-directory' or 'server-name' in
+              # their Emacs config, we want to specify the socket path explicitly
+              # so launching 'emacs.service' manually doesn't break emacsclient
+              # when using socket activation.
+              lib.optionalString cfg.socketActivation.enable "=${lib.escapeShellArg socketPath}"
+            } ${lib.escapeShellArgs cfg.extraOptions}"'';
+
+            # Emacs will exit with status 15 after having received SIGTERM, which
+            # is the default "KillSignal" value systemd uses to stop services.
+            SuccessExitStatus = 15;
+
+            Restart = "on-failure";
+          }
+          // optionalAttrs needsSocketWorkaround {
+            # Use read-only directory permissions to prevent emacs from
+            # deleting systemd's socket file before exiting.
+            ExecStartPost = "${pkgs.coreutils}/bin/chmod --changes -w ${socketDir}";
+            ExecStopPost = "${pkgs.coreutils}/bin/chmod --changes +w ${socketDir}";
+          };
+        }
+        // optionalAttrs (cfg.startWithUserSession != false) {
+          Install = {
+            WantedBy = [
+              (if cfg.startWithUserSession == true then "default.target" else "graphical-session.target")
+            ];
+          };
+        };
 
         home.packages = optional cfg.client.enable (lib.hiPrio clientDesktopItem);
       })
@@ -227,7 +224,8 @@ in
             ProgramArguments = [
               "${cfg.package}/bin/emacs"
               "--fg-daemon"
-            ] ++ cfg.extraOptions;
+            ]
+            ++ cfg.extraOptions;
             RunAtLoad = true;
             KeepAlive = {
               Crashed = true;

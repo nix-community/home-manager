@@ -63,13 +63,12 @@ let
       }
     )
     // {
-      General =
-        {
-          StartWithLastProfile = 1;
-        }
-        // lib.optionalAttrs (cfg.profileVersion != null) {
-          Version = cfg.profileVersion;
-        };
+      General = {
+        StartWithLastProfile = 1;
+      }
+      // lib.optionalAttrs (cfg.profileVersion != null) {
+        Version = cfg.profileVersion;
+      };
     };
 
   profilesIni = lib.generators.toINI { } profiles;
@@ -168,11 +167,10 @@ let
       in
       {
         assertion = duplicates == { };
-        message =
-          ''
-            Must not have a ${appName} ${entityKind} with an existing ID but
-          ''
-          + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
+        message = ''
+          Must not have a ${appName} ${entityKind} with an existing ID but
+        ''
+        + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
       }
     );
 
@@ -784,54 +782,53 @@ in
             };
 
             config = {
-              assertions =
+              assertions = [
+                (mkNoDuplicateAssertion config.containers "container")
+                {
+                  assertion = !(extensionSettingsNeedForce config.extensions.settings) || config.extensions.force;
+                  message = ''
+                    Using '${lib.showOption profilePath}.extensions.settings' will override all
+                    previous extensions settings. Enable
+                    '${lib.showOption profilePath}.extensions.force' to acknowledge this.
+                  '';
+                }
+              ]
+              ++ (builtins.concatMap (
+                { name, value }:
+                let
+                  packages = builtins.filter (pkg: pkg.addonId == name) config.extensions.packages;
+                  package = builtins.head packages;
+                  unauthorized = lib.subtractLists value.permissions package.meta.mozPermissions;
+                in
                 [
-                  (mkNoDuplicateAssertion config.containers "container")
                   {
-                    assertion = !(extensionSettingsNeedForce config.extensions.settings) || config.extensions.force;
+                    assertion = value.permissions == null || length packages == 1;
                     message = ''
-                      Using '${lib.showOption profilePath}.extensions.settings' will override all
-                      previous extensions settings. Enable
-                      '${lib.showOption profilePath}.extensions.force' to acknowledge this.
+                      Must have exactly one extension with addonId '${name}'
+                      in '${lib.showOption profilePath}.extensions.packages' but found ${toString (length packages)}.
+                    '';
+                  }
+
+                  {
+                    assertion = value.permissions == null || length packages != 1 || unauthorized == [ ];
+                    message = ''
+                      Extension ${name} requests permissions that weren't
+                      authorized: ${builtins.toJSON unauthorized}.
+                      Consider adding the missing permissions to
+                      '${
+                        lib.showAttrPath (
+                          profilePath
+                          ++ [
+                            "extensions"
+                            name
+                          ]
+                        )
+                      }.permissions'.
                     '';
                   }
                 ]
-                ++ (builtins.concatMap (
-                  { name, value }:
-                  let
-                    packages = builtins.filter (pkg: pkg.addonId == name) config.extensions.packages;
-                    package = builtins.head packages;
-                    unauthorized = lib.subtractLists value.permissions package.meta.mozPermissions;
-                  in
-                  [
-                    {
-                      assertion = value.permissions == null || length packages == 1;
-                      message = ''
-                        Must have exactly one extension with addonId '${name}'
-                        in '${lib.showOption profilePath}.extensions.packages' but found ${toString (length packages)}.
-                      '';
-                    }
-
-                    {
-                      assertion = value.permissions == null || length packages != 1 || unauthorized == [ ];
-                      message = ''
-                        Extension ${name} requests permissions that weren't
-                        authorized: ${builtins.toJSON unauthorized}.
-                        Consider adding the missing permissions to
-                        '${
-                          lib.showAttrPath (
-                            profilePath
-                            ++ [
-                              "extensions"
-                              name
-                            ]
-                          )
-                        }.permissions'.
-                      '';
-                    }
-                  ]
-                ) (lib.attrsToList config.extensions.settings))
-                ++ config.bookmarks.assertions;
+              ) (lib.attrsToList config.extensions.settings))
+              ++ config.bookmarks.assertions;
             };
           }
         )
@@ -902,7 +899,8 @@ in
         }
 
         (mkNoDuplicateAssertion cfg.profiles "profile")
-      ] ++ (lib.concatMap (profile: profile.assertions) (attrValues cfg.profiles));
+      ]
+      ++ (lib.concatMap (profile: profile.assertions) (attrValues cfg.profiles));
 
       warnings =
         optional (cfg.enableGnomeExtensions or false) ''

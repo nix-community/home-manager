@@ -615,21 +615,20 @@ in
     home.sessionVariablesPackage = pkgs.writeTextFile {
       name = "hm-session-vars.sh";
       destination = "/etc/profile.d/hm-session-vars.sh";
-      text =
-        ''
-          # Only source this once.
-          if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
-          export __HM_SESS_VARS_SOURCED=1
+      text = ''
+        # Only source this once.
+        if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+        export __HM_SESS_VARS_SOURCED=1
 
-          ${config.lib.shell.exportAll cfg.sessionVariables}
-        ''
-        + lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (
-            env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
-          ) cfg.sessionSearchVariables
-        )
-        + "\n"
-        + cfg.sessionVariablesExtra;
+        ${config.lib.shell.exportAll cfg.sessionVariables}
+      ''
+      + lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
+        ) cfg.sessionSearchVariables
+      )
+      + "\n"
+      + cfg.sessionVariablesExtra;
     };
 
     home.sessionSearchVariables.PATH = lib.mkIf (cfg.sessionPath != [ ]) cfg.sessionPath;

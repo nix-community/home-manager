@@ -395,87 +395,85 @@ in
           After = [ "network-online.target" ];
         };
 
-        Service =
-          {
-            Type = "oneshot";
+        Service = {
+          Type = "oneshot";
 
-            X-RestartIfChanged = true;
-            RuntimeDirectory = serviceName;
-            CacheDirectory = serviceName;
-            CacheDirectoryMode = "0700";
-            PrivateTmp = true;
+          X-RestartIfChanged = true;
+          RuntimeDirectory = serviceName;
+          CacheDirectory = serviceName;
+          CacheDirectoryMode = "0700";
+          PrivateTmp = true;
 
-            Environment =
-              [
-                "RESTIC_CACHE_DIR=%C"
-                "PATH=${backup.ssh-package}/bin"
-              ]
-              ++ attrsToEnvs (
-                {
-                  RESTIC_PROGRESS_FPS = backup.progressFps;
-                  RESTIC_PASSWORD_FILE = backup.passwordFile;
-                  RESTIC_REPOSITORY = backup.repository;
-                  RESTIC_REPOSITORY_FILE = backup.repositoryFile;
-                }
-                // backup.rcloneOptions
-              );
+          Environment = [
+            "RESTIC_CACHE_DIR=%C"
+            "PATH=${backup.ssh-package}/bin"
+          ]
+          ++ attrsToEnvs (
+            {
+              RESTIC_PROGRESS_FPS = backup.progressFps;
+              RESTIC_PASSWORD_FILE = backup.passwordFile;
+              RESTIC_REPOSITORY = backup.repository;
+              RESTIC_REPOSITORY_FILE = backup.repositoryFile;
+            }
+            // backup.rcloneOptions
+          );
 
-            ExecStart =
-              lib.optional doBackup backupCmd
-              ++ lib.optionals doPrune [
-                unlockCmd
-                forgetCmd
-              ]
-              ++ lib.optional doCheck checkCmd;
+          ExecStart =
+            lib.optional doBackup backupCmd
+            ++ lib.optionals doPrune [
+              unlockCmd
+              forgetCmd
+            ]
+            ++ lib.optional doCheck checkCmd;
 
-            ExecStartPre = lib.getExe (
-              pkgs.writeShellApplication {
-                name = "${serviceName}-exec-start-pre";
-                inherit runtimeInputs;
-                text = ''
-                  set -x
+          ExecStartPre = lib.getExe (
+            pkgs.writeShellApplication {
+              name = "${serviceName}-exec-start-pre";
+              inherit runtimeInputs;
+              text = ''
+                set -x
 
-                  ${lib.optionalString (backup.backupPrepareCommand != null) ''
-                    ${pkgs.writeScript "backupPrepareCommand" backup.backupPrepareCommand}
-                  ''}
+                ${lib.optionalString (backup.backupPrepareCommand != null) ''
+                  ${pkgs.writeScript "backupPrepareCommand" backup.backupPrepareCommand}
+                ''}
 
-                  ${lib.optionalString (backup.initialize) ''
-                    ${
-                      mkResticCmd [
-                        "cat"
-                        "config"
-                      ]
-                    } 2>/dev/null || ${mkResticCmd "init"}
-                  ''}
+                ${lib.optionalString (backup.initialize) ''
+                  ${
+                    mkResticCmd [
+                      "cat"
+                      "config"
+                    ]
+                  } 2>/dev/null || ${mkResticCmd "init"}
+                ''}
 
-                  ${lib.optionalString (backup.paths != null && backup.paths != [ ]) ''
-                    cat ${pkgs.writeText "staticPaths" (lib.concatLines backup.paths)} >> ${filesFromTmpFile}
-                  ''}
+                ${lib.optionalString (backup.paths != null && backup.paths != [ ]) ''
+                  cat ${pkgs.writeText "staticPaths" (lib.concatLines backup.paths)} >> ${filesFromTmpFile}
+                ''}
 
-                  ${lib.optionalString (backup.dynamicFilesFrom != null) ''
-                    ${pkgs.writeScript "dynamicFilesFromScript" backup.dynamicFilesFrom} >> ${filesFromTmpFile}
-                  ''}
-                '';
-              }
-            );
+                ${lib.optionalString (backup.dynamicFilesFrom != null) ''
+                  ${pkgs.writeScript "dynamicFilesFromScript" backup.dynamicFilesFrom} >> ${filesFromTmpFile}
+                ''}
+              '';
+            }
+          );
 
-            ExecStopPost = lib.getExe (
-              pkgs.writeShellApplication {
-                name = "${serviceName}-exec-stop-post";
-                inherit runtimeInputs;
-                text = ''
-                  set -x
+          ExecStopPost = lib.getExe (
+            pkgs.writeShellApplication {
+              name = "${serviceName}-exec-stop-post";
+              inherit runtimeInputs;
+              text = ''
+                set -x
 
-                  ${lib.optionalString (backup.backupCleanupCommand != null) ''
-                    ${pkgs.writeScript "backupCleanupCommand" backup.backupCleanupCommand}
-                  ''}
-                '';
-              }
-            );
-          }
-          // lib.optionalAttrs (backup.environmentFile != null) {
-            EnvironmentFile = backup.environmentFile;
-          };
+                ${lib.optionalString (backup.backupCleanupCommand != null) ''
+                  ${pkgs.writeScript "backupCleanupCommand" backup.backupCleanupCommand}
+                ''}
+              '';
+            }
+          );
+        }
+        // lib.optionalAttrs (backup.environmentFile != null) {
+          EnvironmentFile = backup.environmentFile;
+        };
       }
     ) cfg.backups;
 

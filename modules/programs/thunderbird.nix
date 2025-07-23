@@ -54,13 +54,12 @@ let
   profilesIni =
     lib.foldl lib.recursiveUpdate
       {
-        General =
-          {
-            StartWithLastProfile = 1;
-          }
-          // lib.optionalAttrs (cfg.profileVersion != null) {
-            Version = cfg.profileVersion;
-          };
+        General = {
+          StartWithLastProfile = 1;
+        }
+        // lib.optionalAttrs (cfg.profileVersion != null) {
+          Version = cfg.profileVersion;
+        };
       }
       (
         lib.flip map profilesWithId (profile: {
@@ -882,11 +881,13 @@ in
 
     home.packages = [
       cfg.package
-    ] ++ lib.optional (lib.any (p: p.withExternalGnupg) (attrValues cfg.profiles)) pkgs.gpgme;
+    ]
+    ++ lib.optional (lib.any (p: p.withExternalGnupg) (attrValues cfg.profiles)) pkgs.gpgme;
 
     mozilla.thunderbirdNativeMessagingHosts = [
       cfg.package # package configured native messaging hosts (entire mail app actually)
-    ] ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
+    ]
+    ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
 
     home.file = lib.mkMerge (
       [
