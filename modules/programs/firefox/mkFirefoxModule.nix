@@ -52,8 +52,10 @@ let
   # by future browser versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 
-  profiles =
-    lib.flip lib.mapAttrs' cfg.profiles (
+  enabledProfiles = lib.filterAttrs (_: profile: profile.enable) cfg.profiles;
+
+  profilesIni = lib.generators.toINI { } (
+    lib.flip lib.mapAttrs' enabledProfiles (
       _: profile:
       lib.nameValuePair "Profile${toString profile.id}" {
         Name = profile.name;
@@ -70,9 +72,8 @@ let
         // lib.optionalAttrs (cfg.profileVersion != null) {
           Version = cfg.profileVersion;
         };
-    };
-
-  profilesIni = lib.generators.toINI { } profiles;
+    }
+  );
 
   userPrefValue =
     pref:
@@ -381,6 +382,12 @@ in
                 description = ''
                   Profile ID. This should be set to a unique number per profile.
                 '';
+              };
+
+              enable = mkOption {
+                type = types.bool;
+                default = true;
+                description = "Enable profile.";
               };
 
               preConfig = mkOption {
@@ -868,10 +875,10 @@ in
 
         (
           let
-            defaults = lib.catAttrs "name" (lib.filter (a: a.isDefault) (attrValues cfg.profiles));
+            defaults = lib.catAttrs "name" (lib.filter (a: a.isDefault) (attrValues enabledProfiles));
           in
           {
-            assertion = cfg.profiles == { } || length defaults == 1;
+            assertion = enabledProfiles == { } || length defaults == 1;
             message =
               "Must have exactly one default ${appName} profile but found "
               + toString (length defaults)
@@ -888,7 +895,7 @@ in
               profiles: lib.filter (container: container.id >= 4294967294) (getContainers profiles);
           in
           {
-            assertion = cfg.profiles == { } || length (findInvalidContainerIds cfg.profiles) == 0;
+            assertion = enabledProfiles == { } || length (findInvalidContainerIds enabledProfiles) == 0;
             message = "Container id must be smaller than 4294967294 (2^32 - 2)";
           }
         )
@@ -901,8 +908,8 @@ in
           '';
         }
 
-        (mkNoDuplicateAssertion cfg.profiles "profile")
-      ] ++ (lib.concatMap (profile: profile.assertions) (attrValues cfg.profiles));
+        (mkNoDuplicateAssertion enabledProfiles "profile")
+      ] ++ (lib.concatMap (profile: profile.assertions) (attrValues enabledProfiles));
 
       warnings =
         optional (cfg.enableGnomeExtensions or false) ''
@@ -921,10 +928,10 @@ in
       home.file = mkMerge (
         [
           {
-            "${cfg.configPath}/profiles.ini" = mkIf (cfg.profiles != { }) { text = profilesIni; };
+            "${cfg.configPath}/profiles.ini" = mkIf (enabledProfiles != { }) { text = profilesIni; };
           }
         ]
-        ++ lib.flip mapAttrsToList cfg.profiles (
+        ++ lib.flip mapAttrsToList enabledProfiles (
           _: profile:
           # Merge the regular profile settings with extension settings
           mkMerge [
@@ -1010,7 +1017,7 @@ in
 
       policies = {
         NoDefaultBookmarks = lib.mkIf (builtins.any (profile: profile.bookmarks.enable) (
-          builtins.attrValues cfg.profiles
+          builtins.attrValues enabledProfiles
         )) false;
         ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
           lib.listToAttrs (
