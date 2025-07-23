@@ -414,6 +414,7 @@ import nmtSrc {
       ./modules/programs/wofi
       ./modules/programs/xmobar
       ./modules/programs/yambar
+      ./modules/programs/yarn
       ./modules/programs/yt-dlp
       ./modules/services/activitywatch
       ./modules/services/avizo
