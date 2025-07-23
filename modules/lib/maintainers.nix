@@ -67,6 +67,12 @@
     github = "Avimitin";
     githubId = 30021675;
   };
+  azikx = {
+    name = "azikx";
+    email = "xfalwa@gmail.com";
+    github = "mctrxw";
+    githubId = 189107707;
+  };
   bamhm182 = {
     name = "bamhm182";
     email = "bamhm182@gmail.com";
