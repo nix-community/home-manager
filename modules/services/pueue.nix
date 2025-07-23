@@ -5,11 +5,10 @@
   ...
 }:
 let
-
   cfg = config.services.pueue;
   yamlFormat = pkgs.formats.yaml { };
   configFile = yamlFormat.generate "pueue.yaml" ({ shared = { }; } // cfg.settings);
-
+  pueuedBin = "${cfg.package}/bin/pueued";
 in
 {
   meta.maintainers = [ lib.maintainers.AndersonTorres ];
@@ -36,28 +35,51 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.pueue" pkgs lib.platforms.linux)
-    ];
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      }
+      (lib.mkIf pkgs.stdenv.isLinux {
+        xdg.configFile."pueue/pueue.yml".source = configFile;
+        systemd.user = lib.mkIf (cfg.package != null) {
+          services.pueued = {
+            Unit = {
+              Description = "Pueue Daemon - CLI process scheduler and manager";
+            };
 
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+            Service = {
+              Restart = "on-failure";
+              ExecStart = "${pueuedBin} -v -c ${configFile}";
+            };
 
-    xdg.configFile."pueue/pueue.yml".source = configFile;
-
-    systemd.user = lib.mkIf (cfg.package != null) {
-      services.pueued = {
-        Unit = {
-          Description = "Pueue Daemon - CLI process scheduler and manager";
+            Install.WantedBy = [ "default.target" ];
+          };
         };
+      })
+      (lib.mkIf pkgs.stdenv.isDarwin {
+        # This is the default configuration file location for pueue on
+        # darwin (https://github.com/Nukesor/pueue/wiki/Configuration)
+        home.file."Library/Application Support/pueue/pueue.yml".source = configFile;
+        launchd.agents.pueued = lib.mkIf (cfg.package != null) {
+          enable = true;
 
-        Service = {
-          Restart = "on-failure";
-          ExecStart = "${cfg.package}/bin/pueued -v -c ${configFile}";
+          config = {
+            ProgramArguments = [
+              pueuedBin
+              "-v"
+              "-c"
+              "${configFile}"
+            ];
+            KeepAlive = {
+              Crashed = true;
+              SuccessfulExit = false;
+            };
+            ProcessType = "Background";
+            RunAtLoad = true;
+          };
         };
-
-        Install.WantedBy = [ "default.target" ];
-      };
-    };
-  };
+      })
+    ]
+  );
 }
