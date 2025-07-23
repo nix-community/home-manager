@@ -228,7 +228,8 @@ in
             (lib.getExe cfg.package)
             "--no-daemon"
             "${mpdConf}"
-          ] ++ cfg.extraArgs;
+          ]
+          ++ cfg.extraArgs;
           KeepAlive = true;
           ProcessType = "Interactive";
         };

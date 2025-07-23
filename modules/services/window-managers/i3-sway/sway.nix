@@ -718,7 +718,8 @@ in
             BindsTo = [ "graphical-session.target" ];
             Wants = [
               "graphical-session-pre.target"
-            ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+            ]
+            ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
             After = [ "graphical-session-pre.target" ];
             Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
           };

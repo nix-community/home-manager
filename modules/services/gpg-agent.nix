@@ -23,34 +23,30 @@ let
     ${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye > /dev/null
   '';
 
-  gpgInitStr =
-    ''
-      GPG_TTY="$(tty)"
-      export GPG_TTY
-    ''
-    + optionalString cfg.enableSshSupport gpgSshSupportStr;
+  gpgInitStr = ''
+    GPG_TTY="$(tty)"
+    export GPG_TTY
+  ''
+  + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
-  gpgZshInitStr =
-    ''
-      export GPG_TTY=$TTY
-    ''
-    + optionalString cfg.enableSshSupport gpgSshSupportStr;
+  gpgZshInitStr = ''
+    export GPG_TTY=$TTY
+  ''
+  + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
-  gpgFishInitStr =
-    ''
-      set -gx GPG_TTY (tty)
-    ''
-    + optionalString cfg.enableSshSupport gpgSshSupportStr;
+  gpgFishInitStr = ''
+    set -gx GPG_TTY (tty)
+  ''
+  + optionalString cfg.enableSshSupport gpgSshSupportStr;
 
-  gpgNushellInitStr =
-    ''
-      $env.GPG_TTY = (tty)
-    ''
-    + optionalString cfg.enableSshSupport ''
-      ${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye | ignore
+  gpgNushellInitStr = ''
+    $env.GPG_TTY = (tty)
+  ''
+  + optionalString cfg.enableSshSupport ''
+    ${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye | ignore
 
-      $env.SSH_AUTH_SOCK = ($env.SSH_AUTH_SOCK? | default (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket))
-    '';
+    $env.SSH_AUTH_SOCK = ($env.SSH_AUTH_SOCK? | default (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket))
+  '';
 
   # mimic `gpgconf` output for use in the service definitions.
   # we cannot use `gpgconf` directly because it heavily depends on system
@@ -439,7 +435,8 @@ in
               ProgramArguments = [
                 "${gpgPkg}/bin/gpg-agent"
                 "--supervised"
-              ] ++ optional cfg.verbose "--verbose";
+              ]
+              ++ optional cfg.verbose "--verbose";
               EnvironmentVariables = {
                 GNUPGHOME = homedir;
               };

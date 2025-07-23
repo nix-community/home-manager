@@ -259,20 +259,20 @@ let
   allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in
 {
-  imports =
-    [
-      ./haskell.nix
-      (lib.mkChangedOptionModule
-        [
-          "programs"
-          "vscode"
-          "immutableExtensionsDir"
-        ]
-        [ "programs" "vscode" "mutableExtensionsDir" ]
-        (config: !config.programs.vscode.immutableExtensionsDir)
-      )
-    ]
-    ++ map
+  imports = [
+    ./haskell.nix
+    (lib.mkChangedOptionModule
+      [
+        "programs"
+        "vscode"
+        "immutableExtensionsDir"
+      ]
+      [ "programs" "vscode" "mutableExtensionsDir" ]
+      (config: !config.programs.vscode.immutableExtensionsDir)
+    )
+  ]
+  ++
+    map
       (
         v:
         lib.mkRenamedOptionModule

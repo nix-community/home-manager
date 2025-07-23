@@ -118,7 +118,8 @@ in
           config = {
             ProgramArguments = [
               "${nixPackage}/bin/nix-collect-garbage"
-            ] ++ lib.optional (cfg.options != null) cfg.options;
+            ]
+            ++ lib.optional (cfg.options != null) cfg.options;
             StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
           };
         };

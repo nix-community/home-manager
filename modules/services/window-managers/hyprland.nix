@@ -250,7 +250,8 @@ in
         "$"
         "bezier"
         "name"
-      ] ++ lib.optionals cfg.sourceFirst [ "source" ];
+      ]
+      ++ lib.optionals cfg.sourceFirst [ "source" ];
       example = [
         "$"
         "bezier"
@@ -334,7 +335,8 @@ in
         BindsTo = [ "graphical-session.target" ];
         Wants = [
           "graphical-session-pre.target"
-        ] ++ lib.optional cfg.systemd.enableXdgAutostart "xdg-desktop-autostart.target";
+        ]
+        ++ lib.optional cfg.systemd.enableXdgAutostart "xdg-desktop-autostart.target";
         After = [ "graphical-session-pre.target" ];
         Before = lib.mkIf cfg.systemd.enableXdgAutostart [ "xdg-desktop-autostart.target" ];
       };

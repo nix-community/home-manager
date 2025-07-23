@@ -42,7 +42,8 @@ espansoExtraArgs: {
         ];
       };
     };
-  } // espansoExtraArgs;
+  }
+  // espansoExtraArgs;
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/espanso.service

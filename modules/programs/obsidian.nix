@@ -532,13 +532,12 @@ in
         vaults = builtins.listToAttrs (
           builtins.map (vault: {
             name = builtins.hashString "md5" vault.target;
-            value =
-              {
-                path = "${config.home.homeDirectory}/${vault.target}";
-              }
-              // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
-                open = true;
-              });
+            value = {
+              path = "${config.home.homeDirectory}/${vault.target}";
+            }
+            // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
+              open = true;
+            });
           }) vaults
         );
         updateDisabled = true;

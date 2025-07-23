@@ -120,7 +120,8 @@ in
         "bezier"
         "monitor"
         "size"
-      ] ++ lib.optionals cfg.sourceFirst [ "source" ];
+      ]
+      ++ lib.optionals cfg.sourceFirst [ "source" ];
       example = [
         "$"
         "bezier"

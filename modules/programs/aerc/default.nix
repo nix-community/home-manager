@@ -254,34 +254,33 @@ in
 
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      home.file =
-        {
-          "${configDir}/accounts.conf" = mkIf genAccountsConf {
-            text = joinCfg [
-              header
-              (mkINI cfg.extraAccounts)
-              (mkINI primaryAccountAccounts)
-              (mkINI accountsExtraAccounts)
-            ];
-          };
+      home.file = {
+        "${configDir}/accounts.conf" = mkIf genAccountsConf {
+          text = joinCfg [
+            header
+            (mkINI cfg.extraAccounts)
+            (mkINI primaryAccountAccounts)
+            (mkINI accountsExtraAccounts)
+          ];
+        };
 
-          "${configDir}/aerc.conf" = mkIf genAercConf {
-            text = joinCfg [
-              header
-              (mkINI cfg.extraConfig)
-              (joinContextual accountsExtraConfig)
-            ];
-          };
+        "${configDir}/aerc.conf" = mkIf genAercConf {
+          text = joinCfg [
+            header
+            (mkINI cfg.extraConfig)
+            (joinContextual accountsExtraConfig)
+          ];
+        };
 
-          "${configDir}/binds.conf" = mkIf genBindsConf {
-            text = joinCfg [
-              header
-              (mkINI cfg.extraBinds)
-              (joinContextual accountsExtraBinds)
-            ];
-          };
-        }
-        // (mkStyleset cfg.stylesets)
-        // (mkTemplates cfg.templates);
+        "${configDir}/binds.conf" = mkIf genBindsConf {
+          text = joinCfg [
+            header
+            (mkINI cfg.extraBinds)
+            (joinContextual accountsExtraBinds)
+          ];
+        };
+      }
+      // (mkStyleset cfg.stylesets)
+      // (mkTemplates cfg.templates);
     };
 }

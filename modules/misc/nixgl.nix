@@ -190,24 +190,23 @@ in
         "DRI_PRIME" = "${cfg.prime.card}";
       };
 
-      nvOffloadEnv =
-        {
-          "DRI_PRIME" = "${cfg.prime.card}";
-          "__NV_PRIME_RENDER_OFFLOAD" = "1";
-          "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
-          "__VK_LAYER_NV_optimus" = "NVIDIA_only";
-        }
-        // (
-          let
-            provider = cfg.prime.nvidiaProvider;
-          in
-          if !isNull provider then
-            {
-              "__NV_PRIME_RENDER_OFFLOAD_PROVIDER" = "${provider}";
-            }
-          else
-            { }
-        );
+      nvOffloadEnv = {
+        "DRI_PRIME" = "${cfg.prime.card}";
+        "__NV_PRIME_RENDER_OFFLOAD" = "1";
+        "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
+        "__VK_LAYER_NV_optimus" = "NVIDIA_only";
+      }
+      // (
+        let
+          provider = cfg.prime.nvidiaProvider;
+        in
+        if !isNull provider then
+          {
+            "__NV_PRIME_RENDER_OFFLOAD_PROVIDER" = "${provider}";
+          }
+        else
+          { }
+      );
 
       makePackageWrapper =
         vendor: environment: pkg:

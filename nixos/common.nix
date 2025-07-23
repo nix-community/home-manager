@@ -31,7 +31,8 @@ let
       osConfig = config;
       osClass = _class;
       modulesPath = builtins.toString ../modules;
-    } // cfg.extraSpecialArgs;
+    }
+    // cfg.extraSpecialArgs;
     modules = [
       (
         { name, ... }:
@@ -62,7 +63,8 @@ let
           };
         }
       )
-    ] ++ cfg.sharedModules;
+    ]
+    ++ cfg.sharedModules;
   };
 
 in
