@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-06-09 15:44+0000\n"
+"PO-Revision-Date: 2025-07-23 12:02+0000\n"
 "Last-Translator: Muxutruk <benat.eigurenzu@elorrieta-errekamari.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/home-manager/"
 "modules/eu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: modules/files.nix:206
 msgid "Creating home file links in %s"
@@ -50,18 +50,31 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"Ai! Nix-ek ezin izan du zure Home Manager porfil berria instalatu\n"
+"\n"
+"Posible da gatazka bat  izatea \"%s\" -(r)ekin instalatua izan den pakete "
+"batekin? Saiatu hau exekutatzen\n"
+"\n"
+"\n"
+"    %s\n"
+"\n"
+"eta gatazkadun pakete bat baldin badago, honela kendu dezakezu\n"
+"\n"
+"    %s\n"
+"\n"
+"Eta gero saiatu zure Home Manager ezarpenak berriro aktibatzen."
 
 #: modules/home-environment.nix:735
 msgid "Activating %s"
-msgstr ""
+msgstr "%s aktibatzen"
 
 #: modules/home-environment.nix:807
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: aukera ezezanguna '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "%s -tik %s -(r)a migratzen profila"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -81,20 +94,20 @@ msgstr "Home Manager-en aktibazioa hasten"
 
 #: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Nix ikuskatzen"
 
 #: modules/lib-bash/activation-init.sh:149
 msgid "This is a dry run"
-msgstr ""
+msgstr "Hau itxurazko exekuzioa da"
 
 #: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
-msgstr ""
+msgstr "Hau zuzenezko exekuzioa da"
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Nix bertsioa: %s"
 
 #: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"
-msgstr ""
+msgstr "Aktibazio aldagaiak:"

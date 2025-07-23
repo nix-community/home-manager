@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-06-09 15:44+0000\n"
+"PO-Revision-Date: 2025-07-23 12:02+0000\n"
 "Last-Translator: Muxutruk <benat.eigurenzu@elorrieta-errekamari.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/home-manager/cli/"
 "eu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -27,7 +27,7 @@ msgstr "%s: %s -(e)k argumentua falta du"
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s: %s %s -(r)en ondoren bakarrik erabili daiteke"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -83,7 +83,7 @@ msgstr ""
 
 #: home-manager/home-manager:153
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Nix ikuskatzen"
 
 #: home-manager/home-manager:173
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -97,23 +97,23 @@ msgstr "Ezin dira flake baten konfigurazio aukerak arakatu"
 #: home-manager/home-manager:305 home-manager/home-manager:328
 #: home-manager/home-manager:734 home-manager/home-manager:1237
 msgid "%s: unknown option '%s'"
-msgstr "%s: aukera ezezaguna '%s'"
+msgstr "%s: aukera ezezanguna '%s'"
 
 #: home-manager/home-manager:310 home-manager/home-manager:1238
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "'%s --help' exekutatu erabilera laguntzarako"
 
 #: home-manager/home-manager:336 home-manager/home-manager:441
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "%s fitxategia jada existitzen da, aldaketarik gabe uzten..."
 
 #: home-manager/home-manager:338 home-manager/home-manager:443
 msgid "Creating %s..."
-msgstr ""
+msgstr "%s sortzen..."
 
 #: home-manager/home-manager:487
 msgid "Creating initial Home Manager generation..."
-msgstr ""
+msgstr "Home Manager-en hasierako generazioa sortzen..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:492
@@ -125,6 +125,13 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Kito! home-manager erraminta instalatuta egon behar luke eta orain\n"
+"\n"
+"    %s\n"
+"\n"
+"editatu zenezake Home Manager konfiguratzeko. 'man home-configuration.nix' "
+"exekutatu\n"
+"aukera guztiak ikusteko."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:497
@@ -135,11 +142,16 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"Ai ene, instalazioak huts egin du! Mesedez jarkinarzi\n"
+"\n"
+"    %s\n"
+"\n"
+"webgunean arazoa Home Manager-ena badirudi."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:508
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "Ezin izan da flake ezarpen bat sortu"
 
 #: home-manager/home-manager:584
 msgid ""
@@ -149,81 +161,88 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"Irakurri gabeko berri aipagarri %d dago .\n"
+"Irakurri ezazu \"%s news\" exekutatzen."
 msgstr[1] ""
+"Irakurri gabeko berri aipagarri %d daude .\n"
+"Irakurri itzazu \"%s news\" exekutatzen."
 
 #: home-manager/home-manager:598
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+msgstr "\"news.display\" ezarpen ezezaguna \"%s\"."
 
 #: home-manager/home-manager:606
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Mesedez, ezarri $EDITOR edo $VISUAL ingurumen aldagaia"
 
 #: home-manager/home-manager:624
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "Ezin da konpilazioa exekutatu irakurtzeko soilik den direktorioan"
 
 #: home-manager/home-manager:787
 msgid "The configuration did not contain the specialisation \"%s\""
-msgstr ""
+msgstr "Konfigurazioa ez du \"%s\" espezializazioa izan"
 
 #: home-manager/home-manager:841
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "Ez dago generaziorik %s ID-arekin"
 
 #: home-manager/home-manager:843
 msgid "Cannot remove the current generation %s"
-msgstr ""
+msgstr "Ezin da oraingo generazioa %s ezabatu"
 
 #: home-manager/home-manager:845
 msgid "Removing generation %s"
-msgstr ""
+msgstr "%s generazioa ezabatzen"
 
 #: home-manager/home-manager:866
 msgid "No generations to expire"
-msgstr ""
+msgstr "Ez dago generaziorik iraungitzeko"
 
 #: home-manager/home-manager:877
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Ez dirudi home-manager paketerik instalatuta dagoenik."
 
 #: home-manager/home-manager:962
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Argumento ezezaguna: %s"
 
 #: home-manager/home-manager:987
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Home Manager zure sistematik ezabatuko da."
 
 #: home-manager/home-manager:990
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "Hau itxurazko exekuzioa da, benetan ez da ezer desinstalatuko."
 
 #: home-manager/home-manager:994
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Ziur zaude Home Manager desinstalatu nahi duzula?"
 
 #: home-manager/home-manager:1000
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "Home Manager konfigurazio hutsera aldatzen..."
 
 #: home-manager/home-manager:1015
 msgid "Yay!"
-msgstr ""
+msgstr "Primeran!"
 
 #: home-manager/home-manager:1020
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
+"Home Manager desinstalatua izan da baina zure home.nix fitxategia ez da "
+"ikutu."
 
 #: home-manager/home-manager:1285
 msgid "expire-generations expects one argument, got %d."
 msgstr ""
+"expire-generations argumentu bakarra espero izan du, baina %d jaso ditu."
 
 #: home-manager/home-manager:1310
 msgid "Unknown command: %s"
-msgstr ""
+msgstr "Komando ezezaguna: %s"
 
 #: home-manager/install.nix:21
 msgid "This derivation is not buildable, please run it using nix-shell."
-msgstr ""
+msgstr "Deribazioa ezin da konpilatu, mesedez exekutatu nix-shell erabiliz."
