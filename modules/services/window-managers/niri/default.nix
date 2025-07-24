@@ -27,6 +27,7 @@ in
   meta.maintainers = [ lib.maintainers.sodiboo ];
 
   imports = [
+    ./cursor.nix
     ./xwayland-satellite.nix
   ];
 
@@ -55,6 +56,7 @@ in
       readOnly = true;
 
       default = [
+        cfg.cursor.rendered
         cfg.xwayland-satellite.rendered
         cfg.extraConfig
       ];
