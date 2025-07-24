@@ -21,18 +21,18 @@ in
   options.programs.docker-cli = {
     enable = mkEnableOption "management of docker client config";
 
-    configPath = mkOption {
+    configDir = mkOption {
       type = lib.types.str;
-      default = ".docker/config.json";
+      default = ".docker";
       description = ''
-        Relative path to the user's home directory where the Docker CLI settings should be stored.
+        Folder relative to the user's home directory where the Docker CLI settings should be stored.
       '';
     };
 
     settings = mkOption {
       type = jsonFormat.type;
       default = { };
-      example = ''
+      example = lib.literalExpression ''
         {
           "proxies" = {
             "default" = {
@@ -52,11 +52,11 @@ in
   config = mkIf cfg.enable {
     home = {
       sessionVariables = {
-        DOCKER_CONFIG = "${config.home.homeDirectory}/${cfg.configPath}";
+        DOCKER_CONFIG = "${config.home.homeDirectory}/${cfg.configDir}";
       };
 
       file = {
-        "${cfg.configPath}" = {
+        "${cfg.configDir}/config.json" = {
           source = jsonFormat.generate "config.json" cfg.settings;
         };
       };

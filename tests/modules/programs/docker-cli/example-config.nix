@@ -6,7 +6,7 @@
   programs.docker-cli = {
     enable = true;
 
-    configPath = ".docker/config2.json";
+    configDir = ".docker2";
 
     settings = {
       "proxies" = {
@@ -22,8 +22,8 @@
   nmt.script =
     let
       cfgDocker = config.programs.docker-cli;
-      configTestPath = "home-files/${cfgDocker.configPath}";
-      configHomePath = "/home/hm-user/${cfgDocker.configPath}";
+      configTestPath = "home-files/${cfgDocker.configDir}/config.json";
+      configHomePath = "/home/hm-user/${cfgDocker.configDir}";
     in
     ''
       assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
