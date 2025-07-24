@@ -92,7 +92,7 @@ in
         home.packages = lib.mkIf (cfg.zoxidePackage != null) [ cfg.zoxidePackage ];
 
         programs.tmux.extraConfig = ''
-          bind-key "${cfg.tmuxKey}" run-shell "bash -c sesh connect \"$(
+          bind-key "${cfg.tmuxKey}" run-shell "sesh connect \"$(
             sesh list ${args} | fzf --tmux  55%,60% \
               --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
               --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
