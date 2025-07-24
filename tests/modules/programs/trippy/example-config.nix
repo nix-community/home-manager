@@ -1,4 +1,5 @@
 {
+
   programs.trippy = {
     enable = true;
     settings = {
