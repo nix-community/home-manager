@@ -11,7 +11,7 @@ in
   options = {
     xdg.terminal-exec = {
       enable = lib.mkEnableOption "xdg-terminal-exec, the [proposed](https://gitlab.freedesktop.org/xdg/xdg-specs/-/merge_requests/46) Default Terminal Execution Specification";
-      package = lib.mkPackageOption pkgs "xdg-terminal-exec" { };
+      package = lib.mkPackageOption pkgs "xdg-terminal-exec" { nullable = true; };
       settings = lib.mkOption {
         type = with lib.types; attrsOf (listOf str);
         default = { };
@@ -34,7 +34,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = lib.mapAttrs' (
       desktop: terminals:
