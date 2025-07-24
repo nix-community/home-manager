@@ -27,6 +27,7 @@ in
   meta.maintainers = [ lib.maintainers.sodiboo ];
 
   imports = [
+    ./xwayland-satellite.nix
   ];
 
   options.wayland.windowManager.niri = {
@@ -54,6 +55,7 @@ in
       readOnly = true;
 
       default = [
+        cfg.xwayland-satellite.rendered
         cfg.extraConfig
       ];
     };
