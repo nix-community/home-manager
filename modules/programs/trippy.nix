@@ -6,6 +6,7 @@
 }:
 let
   inherit (lib)
+    types
     mkIf
     mkEnableOption
     mkPackageOption
@@ -46,12 +47,27 @@ in
         here: <https://trippy.rs/reference/configuration/>
       '';
     };
+    forceUserConfig = mkOption {
+      type = types.bool;
+      default = true;
+      example = false;
+      description = ''
+        Whatever to force trippy to use user's config through the -c flag.
+        This will prevent certain commands such as 'sudo' ignoring
+        the configured settings. This will only work if you have
+        'programs.<shell>.enable' (bash, zsh, fish, ...), depending
+        on your shell.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
     xdg.configFile."trippy/trippy.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "trippy-config" cfg.settings;
+    };
+    home.shellAliases = mkIf cfg.forceUserConfig {
+      trip = "trip -c ${config.xdg.configHome}/trippy/trippy.toml";
     };
   };
 }
