@@ -7,12 +7,11 @@ let
 in
 {
   programs.docker-cli = {
-    configPath = ".docker/empty.json";
+    configDir = ".docker2";
   };
 
   nmt.script = ''
     assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'DOCKER_CONFIG'
-    assertPathNotExists home-files/.docker/config.json
-    assertPathNotExists home-files/${cfgDocker.configPath}
+    assertPathNotExists home-files/${cfgDocker.configDir}
   '';
 }
