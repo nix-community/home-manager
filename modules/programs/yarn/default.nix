@@ -24,7 +24,7 @@ in
     settings = mkOption {
       type = yamlFormat.type;
       default = { };
-      example = ''
+      example = lib.literalExpression ''
         {
           httpProxy = "http://proxy.example.org:3128";
           httpsProxy = "http://proxy.example.org:3128";
