@@ -389,6 +389,22 @@ in
       description = ''
         A list of paths that should be included in the home
         closure but generally not visible.
+
+        For built-time checks the `home.checks` option is more appropriate
+        for that purpose as checks should not leave a trace in the built
+        home configuration.
+      '';
+    };
+
+    home.checks = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      description = ''
+        Packages that are added as dependencies of the home's build, usually
+        for the purpose of validating some part of the configuration.
+
+        Unlike `home.extraDependencies`, these store paths do not
+        become part of the built home configuration.
       '';
     };
 
@@ -840,6 +856,15 @@ in
           preferLocalBuild = true;
           passAsFile = [ "extraDependencies" ];
           inherit (config.home) extraDependencies;
+
+          # Not actually used in the builder. `passedChecks` is just here to create
+          # the build dependencies. Checks are similar to build dependencies in the
+          # sense that if they fail, the home build fails. However, checks do not
+          # produce any output of value, so they are not used by the system builder.
+          # In fact, using them runs the risk of accidentally adding unneeded paths
+          # to the system closure, which defeats the purpose of the `home.checks`
+          # option, as opposed to `home.extraDependencies`.
+          passedChecks = lib.concatStringsSep " " config.home.checks;
         }
         ''
           mkdir -p $out
