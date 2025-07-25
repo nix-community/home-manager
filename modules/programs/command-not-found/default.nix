@@ -52,6 +52,16 @@ in
   config = lib.mkIf cfg.enable {
     programs.bash.initExtra = shInit "command_not_found_handle";
     programs.zsh.initContent = shInit "command_not_found_handler";
+    programs.xonsh.xonshrc = ''
+      @events.on_command_not_found
+      def _command_not_found_nix(cmd):
+        import os.path
+        if os.path.isfile(${builtins.toJSON cfg.dbPath}):
+          ${commandNotFound}/bin/command-not-found @(cmd)
+        else:
+          echo "$1: command not found" >&2
+          return 127
+    '';
 
     home.packages = [ commandNotFound ];
   };
