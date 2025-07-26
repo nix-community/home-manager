@@ -35,6 +35,14 @@
 
     Once finished, Home Manager should be active and available in your
     user environment.
+    
+::: {.note}
+If you are having issues here related to home-manager not being found and added the channel as a user earlier, try running
+``` shell
+$ nix-shell '<home-manager>' -A install -I ~/.nix-defexpr/channels
+```
+instead. This tells nix-shell to search the correct path.
+:::
 
 4.  If you do not plan on having Home Manager manage your shell
     configuration then you must source the
