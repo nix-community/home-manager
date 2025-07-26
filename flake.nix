@@ -1,7 +1,7 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:sodiboo/nixpkgs/ergonomic-kdl";
 
   outputs =
     {
