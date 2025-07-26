@@ -59,10 +59,20 @@ in
       example = lib.literalExpression ''
         {
           general = {
-            disable_loading_bar = true;
-            grace = 300;
             hide_cursor = true;
-            no_fade_in = false;
+            ignore_empty_input = true;
+          };
+
+          animations = {
+            enabled = true;
+            fade_in = {
+              duration = 300;
+              bezier = "easeOutQuint";
+            };
+            fade_out = {
+              duration = 300;
+              bezier = "easeOutQuint";
+            };
           };
 
           background = [
