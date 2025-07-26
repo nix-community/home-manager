@@ -177,12 +177,14 @@ in
                   description = "Settings to write to app.json.";
                   type = with types; attrsOf anything;
                   default = cfg.defaultSettings.app;
+                  defaultText = literalExpression "config.programs.obsidian.defaultSettings.app";
                 };
 
                 appearance = mkOption {
                   description = "Settings to write to appearance.json.";
                   type = with types; attrsOf anything;
                   default = cfg.defaultSettings.appearance;
+                  defaultText = literalExpression "config.programs.obsidian.defaultSettings.appearance";
                 };
 
                 corePlugins =
@@ -214,6 +216,7 @@ in
                       with types;
                       listOf (coercedTo (enum corePlugins) (p: { name = p; }) (submodule corePluginsOptions));
                     default = cfg.defaultSettings.corePlugins;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.corePlugins";
                   };
 
                 communityPlugins =
@@ -243,6 +246,7 @@ in
                     description = "Community plugins to install and activate.";
                     type = with types; listOf (coercedTo package (p: { pkg = p; }) (submodule communityPluginsOptions));
                     default = cfg.defaultSettings.communityPlugins;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.communityPlugins";
                   };
 
                 cssSnippets =
@@ -287,6 +291,7 @@ in
                       with types;
                       listOf (coercedTo (addCheck path checkCssPath) (p: { source = p; }) (submodule cssSnippetsOptions));
                     default = cfg.defaultSettings.cssSnippets;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.cssSnippets";
                   };
 
                 themes =
@@ -310,6 +315,7 @@ in
                     description = "Themes to install.";
                     type = with types; listOf (coercedTo package (p: { pkg = p; }) (submodule themesOptions));
                     default = cfg.defaultSettings.themes;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.themes";
                   };
 
                 hotkeys =
@@ -333,6 +339,7 @@ in
                     description = "Hotkeys to configure.";
                     type = with types; attrsOf (listOf (submodule hotkeysOptions));
                     default = cfg.defaultSettings.hotkeys;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.hotkeys";
                   };
 
                 extraFiles =
@@ -367,6 +374,7 @@ in
                     description = "Extra files to link to the vault directory.";
                     type = with types; attrsOf (submodule extraFilesOptions);
                     default = cfg.defaultSettings.extraFiles;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.extraFiles";
                   };
               };
             };

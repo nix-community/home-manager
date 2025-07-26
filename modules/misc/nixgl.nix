@@ -7,15 +7,16 @@
 
 let
   cfg = config.nixGL;
-  wrapperListMarkdown =
-    with builtins;
-    foldl' (
-      list: name:
-      list
-      + ''
-        - ${name}
-      ''
-    ) "" (attrNames config.lib.nixGL.wrappers);
+
+  wrapperAttrNames = [
+    "mesa"
+    "mesaPrime"
+    "nvidia"
+    "nvidiaPrime"
+  ];
+
+  wrapperListMarkdown = lib.concatMapStringsSep "\n" (v: "- ${v}") wrapperAttrNames;
+
 in
 {
   meta.maintainers = [ lib.maintainers.smona ];
@@ -42,7 +43,7 @@ in
     };
 
     defaultWrapper = lib.mkOption {
-      type = lib.types.enum (builtins.attrNames config.lib.nixGL.wrappers);
+      type = lib.types.enum wrapperAttrNames;
       default = "mesa";
       description = ''
         The package wrapper function available for use as `(config.lib.nixGL.wrap
@@ -58,7 +59,7 @@ in
     };
 
     offloadWrapper = lib.mkOption {
-      type = lib.types.enum (builtins.attrNames config.lib.nixGL.wrappers);
+      type = lib.types.enum wrapperAttrNames;
       default = "mesaPrime";
       description = ''
         The package wrapper function available for use as
@@ -124,7 +125,7 @@ in
     };
 
     installScripts = lib.mkOption {
-      type = with lib.types; nullOr (listOf (enum (builtins.attrNames config.lib.nixGL.wrappers)));
+      type = with lib.types; nullOr (listOf (enum wrapperAttrNames));
       default = null;
       example = [
         "mesa"
@@ -282,6 +283,8 @@ in
             override = args: makePackageWrapper vendor environment (pkg.override args);
           };
 
+      # Note, if you add/remove/alter attribute names here you need to make a
+      # corresponding change in the definition of `wrapperAttrNames`.
       wrappers = {
         mesa = makePackageWrapper "Intel" { };
         mesaPrime = makePackageWrapper "Intel" mesaOffloadEnv;

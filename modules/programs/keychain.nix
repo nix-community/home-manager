@@ -75,7 +75,6 @@ in
     enableXsessionIntegration = mkOption {
       default = true;
       type = types.bool;
-      visible = pkgs.stdenv.hostPlatform.isLinux;
       description = ''
         Whether to run keychain from your {file}`~/.xsession`.
       '';

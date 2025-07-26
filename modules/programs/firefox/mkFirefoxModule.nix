@@ -297,6 +297,7 @@ in
       internal = true;
       type = with types; nullOr str;
       default = null;
+      defaultText = literalExpression "platform specific vendor path";
       example = ".mozilla";
       description = "Directory containing the native messaging hosts directory.";
     };

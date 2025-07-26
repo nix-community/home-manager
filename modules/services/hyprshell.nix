@@ -50,6 +50,7 @@ in
       target = mkOption {
         type = types.str;
         default = config.wayland.systemd.target;
+        defaultText = lib.literalExpression "config.wayland.systemd.target";
         description = "The Systemd target that will start the hyprshell service";
       };
 
