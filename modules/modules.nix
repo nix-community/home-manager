@@ -53,6 +53,7 @@ let
     ./misc/xdg-mime.nix
     ./misc/xdg-portal.nix
     ./misc/xdg-system-dirs.nix
+    ./misc/xdg-terminal-exec.nix
     ./misc/xdg-user-dirs.nix
     ./misc/xdg.nix
     ./misc/xfconf.nix

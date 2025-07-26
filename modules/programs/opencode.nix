@@ -39,12 +39,13 @@ in
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/opencode/config.json`.
         See <https://opencode.ai/docs/config/> for the documentation.
-        '"$schema": "https://opencode.ai/config.json"' is automatically added to the config.
+
+        Note, `"$schema": "https://opencode.ai/config.json"` is automatically added to the configuration.
       '';
     };
+
     rules = lib.mkOption {
       type = lib.types.lines;
-      description = "You can provide global custom instructions to opencode; this value is written to {file}~/.config/opencode/AGENTS.md";
       default = "";
       example = lib.literalExpression ''
         '''
@@ -71,6 +72,10 @@ in
 
           Read the following file immediately as it's relevant to all workflows: @rules/general-guidelines.md.
         '''
+      '';
+      description = ''
+        You can provide global custom instructions to opencode; this value is
+        written to {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
       '';
     };
   };
