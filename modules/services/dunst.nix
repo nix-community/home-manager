@@ -154,11 +154,13 @@ in
               "/run/current-system/sw"
               config.home.profileDirectory
               cfg.iconTheme.package
-            ] ++ optional useCustomTheme hicolorTheme.package;
+            ]
+            ++ optional useCustomTheme hicolorTheme.package;
 
             themes = [
               cfg.iconTheme
-            ] ++ optional useCustomTheme (hicolorTheme // { size = cfg.iconTheme.size; });
+            ]
+            ++ optional useCustomTheme (hicolorTheme // { size = cfg.iconTheme.size; });
 
             categories = [
               "actions"

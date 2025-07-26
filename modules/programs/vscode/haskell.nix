@@ -62,6 +62,7 @@ in
 
     programs.vscode.profiles.default.extensions = [
       pkgs.vscode-extensions.justusadam.language-haskell
-    ] ++ lib.optional cfg.hie.enable pkgs.vscode-extensions.alanz.vscode-hie-server;
+    ]
+    ++ lib.optional cfg.hie.enable pkgs.vscode-extensions.alanz.vscode-hie-server;
   };
 }

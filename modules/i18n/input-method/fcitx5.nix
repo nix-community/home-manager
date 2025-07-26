@@ -199,19 +199,18 @@ in
     };
 
     home = {
-      sessionVariables =
-        {
-          GLFW_IM_MODULE = "ibus"; # IME support in kitty
-          SDL_IM_MODULE = "fcitx";
-          XMODIFIERS = "@im=fcitx";
-        }
-        // lib.optionalAttrs (!cfg.waylandFrontend) {
-          GTK_IM_MODULE = "fcitx";
-          QT_IM_MODULE = "fcitx";
-        }
-        // lib.optionalAttrs cfg.ignoreUserConfig {
-          SKIP_FCITX_USER_PATH = "1";
-        };
+      sessionVariables = {
+        GLFW_IM_MODULE = "ibus"; # IME support in kitty
+        SDL_IM_MODULE = "fcitx";
+        XMODIFIERS = "@im=fcitx";
+      }
+      // lib.optionalAttrs (!cfg.waylandFrontend) {
+        GTK_IM_MODULE = "fcitx";
+        QT_IM_MODULE = "fcitx";
+      }
+      // lib.optionalAttrs cfg.ignoreUserConfig {
+        SKIP_FCITX_USER_PATH = "1";
+      };
 
       sessionSearchVariables.QT_PLUGIN_PATH = [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
     };

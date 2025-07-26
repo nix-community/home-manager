@@ -19,15 +19,14 @@ let
   };
 
   mpdris2Conf = {
-    Connection =
-      {
-        host = cfg.mpd.host;
-        port = cfg.mpd.port;
-        music_dir = cfg.mpd.musicDirectory;
-      }
-      // lib.optionalAttrs (cfg.mpd.password != null) {
-        password = cfg.mpd.password;
-      };
+    Connection = {
+      host = cfg.mpd.host;
+      port = cfg.mpd.port;
+      music_dir = cfg.mpd.musicDirectory;
+    }
+    // lib.optionalAttrs (cfg.mpd.password != null) {
+      password = cfg.mpd.password;
+    };
 
     Bling = {
       notify = cfg.notifications;

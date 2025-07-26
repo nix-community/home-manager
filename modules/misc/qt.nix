@@ -386,12 +386,11 @@ in
         )
         ++ (lib.optionals (cfg.style.package != null) (lib.toList cfg.style.package));
 
-      xsession.importedVariables =
-        [
-          "QT_PLUGIN_PATH"
-          "QML2_IMPORT_PATH"
-        ]
-        ++ lib.optionals (platformTheme.name != null) [ "QT_QPA_PLATFORMTHEME" ]
-        ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
+      xsession.importedVariables = [
+        "QT_PLUGIN_PATH"
+        "QML2_IMPORT_PATH"
+      ]
+      ++ lib.optionals (platformTheme.name != null) [ "QT_QPA_PLATFORMTHEME" ]
+      ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
     };
 }

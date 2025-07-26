@@ -77,30 +77,26 @@ let
 
                 updateUrl = mkOption {
                   type = str;
+                  default = "https://clients2.google.com/service/update2/crx";
                   description = ''
                     URL of the extension's update manifest XML file. Linux only.
                   '';
-                  default = "https://clients2.google.com/service/update2/crx";
-                  visible = pkgs.stdenv.isLinux;
-                  readOnly = pkgs.stdenv.isDarwin;
                 };
 
                 crxPath = mkOption {
                   type = nullOr path;
+                  default = null;
                   description = ''
                     Path to the extension's crx file. Linux only.
                   '';
-                  default = null;
-                  visible = pkgs.stdenv.isLinux;
                 };
 
                 version = mkOption {
                   type = nullOr str;
+                  default = null;
                   description = ''
                     The extension's version, required for local installation. Linux only.
                   '';
-                  default = null;
-                  visible = pkgs.stdenv.isLinux;
                 };
               };
             };

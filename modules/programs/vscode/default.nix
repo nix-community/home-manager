@@ -259,20 +259,20 @@ let
   allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in
 {
-  imports =
-    [
-      ./haskell.nix
-      (lib.mkChangedOptionModule
-        [
-          "programs"
-          "vscode"
-          "immutableExtensionsDir"
-        ]
-        [ "programs" "vscode" "mutableExtensionsDir" ]
-        (config: !config.programs.vscode.immutableExtensionsDir)
-      )
-    ]
-    ++ map
+  imports = [
+    ./haskell.nix
+    (lib.mkChangedOptionModule
+      [
+        "programs"
+        "vscode"
+        "immutableExtensionsDir"
+      ]
+      [ "programs" "vscode" "mutableExtensionsDir" ]
+      (config: !config.programs.vscode.immutableExtensionsDir)
+    )
+  ]
+  ++
+    map
       (
         v:
         lib.mkRenamedOptionModule
@@ -308,6 +308,7 @@ in
     mutableExtensionsDir = mkOption {
       type = types.bool;
       default = allProfilesExceptDefault == { };
+      defaultText = lib.literalExpression "(removeAttrs config.programs.vscode.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
         Whether extensions can be installed or updated manually

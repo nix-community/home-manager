@@ -90,14 +90,13 @@ in
     systemd.user = {
       services.ludusavi = {
         Unit.Description = "Run a game save backup with Ludusavi";
-        Service =
-          {
-            Type = "oneshot";
-            ExecStart = "${lib.getExe cfg.package} backup --force";
-          }
-          // lib.optionalAttrs cfg.backupNotification {
-            ExecStartPost = "${lib.getExe pkgs.libnotify} 'Ludusavi' 'Backup completed' -i com.mtkennerly.ludusavi -a 'Ludusavi'";
-          };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${lib.getExe cfg.package} backup --force";
+        }
+        // lib.optionalAttrs cfg.backupNotification {
+          ExecStartPost = "${lib.getExe pkgs.libnotify} 'Ludusavi' 'Backup completed' -i com.mtkennerly.ludusavi -a 'Ludusavi'";
+        };
       };
       timers.ludusavi = {
         Unit.Description = "Run a game save backup with Ludusavi";

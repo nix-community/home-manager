@@ -84,17 +84,16 @@ in
       (mkIf (cfg.ignores != [ ] || cfg.ignoresRegexp != [ ]) {
         programs.mercurial.iniContent.ui.ignore = "${config.xdg.configHome}/hg/hgignore_global";
 
-        xdg.configFile."hg/hgignore_global".text =
-          ''
-            syntax: glob
-          ''
-          + lib.concatStringsSep "\n" cfg.ignores
-          + "\n"
-          + ''
-            syntax: regexp
-          ''
-          + lib.concatStringsSep "\n" cfg.ignoresRegexp
-          + "\n";
+        xdg.configFile."hg/hgignore_global".text = ''
+          syntax: glob
+        ''
+        + lib.concatStringsSep "\n" cfg.ignores
+        + "\n"
+        + ''
+          syntax: regexp
+        ''
+        + lib.concatStringsSep "\n" cfg.ignoresRegexp
+        + "\n";
       })
 
       (mkIf (cfg.aliases != { }) {

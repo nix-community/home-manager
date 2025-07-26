@@ -13,13 +13,11 @@ let
 
   dynDir = testDir.overrideAttrs (
     final: prev: {
-      buildCommand =
-        prev.buildCommand
-        + ''
-          echo more secret data > $out/top-secret
-          echo shhhh > $out/top-secret-v2
-          echo this isnt secret > $out/metadata
-        '';
+      buildCommand = prev.buildCommand + ''
+        echo more secret data > $out/top-secret
+        echo shhhh > $out/top-secret-v2
+        echo this isnt secret > $out/metadata
+      '';
     }
   );
 in

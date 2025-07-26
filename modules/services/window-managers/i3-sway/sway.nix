@@ -262,6 +262,26 @@ let
             "Return" = "mode default";
           };
         };
+        defaultText = lib.literalExpression ''
+          {
+            resize = {
+              # Binds arrow keys to resizing commands
+              ''${cfg.config.left}" = "resize shrink width 10 px";
+              ''${cfg.config.down}" = "resize grow height 10 px";
+              ''${cfg.config.up}" = "resize shrink height 10 px";
+              ''${cfg.config.right}" = "resize grow width 10 px";
+
+              "Left" = "resize shrink width 10 px";
+              "Down" = "resize grow height 10 px";
+              "Up" = "resize shrink height 10 px";
+              "Right" = "resize grow width 10 px";
+
+              # Exit resize mode
+              "Escape" = "mode default";
+              "Return" = "mode default";
+            };
+          }
+        '';
         description = ''
           An attribute set that defines binding modes and keybindings
           inside them
@@ -718,7 +738,8 @@ in
             BindsTo = [ "graphical-session.target" ];
             Wants = [
               "graphical-session-pre.target"
-            ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+            ]
+            ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
             After = [ "graphical-session-pre.target" ];
             Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
           };

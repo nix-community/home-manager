@@ -109,7 +109,8 @@ in
           "${lib.getExe cfg.package}"
           "clean"
           "user"
-        ] ++ lib.optional (cfg.clean.extraArgs != "") cfg.clean.extraArgs;
+        ]
+        ++ lib.optional (cfg.clean.extraArgs != "") cfg.clean.extraArgs;
 
         StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.clean.dates;
 

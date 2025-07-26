@@ -99,6 +99,7 @@ in
       ".ne/.keys" = mkIf (cfg.keybindings != "") { text = cfg.keybindings; };
       ".ne/.extensions" = mkIf (cfg.virtualExtensions != "") { text = cfg.virtualExtensions; };
       ".ne/.menus" = mkIf (cfg.menus != "") { text = cfg.menus; };
-    } // autoPrefFiles;
+    }
+    // autoPrefFiles;
   };
 }

@@ -106,13 +106,12 @@ in
       MANGOHUD_DLSYM = 1;
     };
 
-    xdg.configFile =
-      {
-        "MangoHud/MangoHud.conf" = mkIf (cfg.settings != { }) { text = renderSettings cfg.settings; };
-      }
-      // lib.mapAttrs' (
-        n: v: lib.nameValuePair "MangoHud/${n}.conf" { text = renderSettings v; }
-      ) cfg.settingsPerApplication;
+    xdg.configFile = {
+      "MangoHud/MangoHud.conf" = mkIf (cfg.settings != { }) { text = renderSettings cfg.settings; };
+    }
+    // lib.mapAttrs' (
+      n: v: lib.nameValuePair "MangoHud/${n}.conf" { text = renderSettings v; }
+    ) cfg.settingsPerApplication;
   };
 
   meta.maintainers = with lib.maintainers; [ zeratax ];

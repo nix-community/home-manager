@@ -99,6 +99,7 @@ in
     systemdTarget = mkOption {
       type = with types; str;
       default = config.wayland.systemd.target;
+      defaultText = lib.literalExpression "config.wayland.systemd.target";
       description = ''
         Systemd target to bind to.
       '';

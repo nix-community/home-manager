@@ -135,20 +135,19 @@ in
       { home.packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
 
       (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-        xdg.configFile =
-          {
-            "streamlink/config" = lib.mkIf (cfg.settings != { }) {
-              text = renderSettings cfg.settings;
-            };
-          }
-          // (lib.mapAttrs' (
-            name: value:
-            lib.nameValuePair "streamlink/config.${name}" (
-              lib.mkIf (value.settings != { }) {
-                text = renderSettings value.settings;
-              }
-            )
-          ) cfg.plugins);
+        xdg.configFile = {
+          "streamlink/config" = lib.mkIf (cfg.settings != { }) {
+            text = renderSettings cfg.settings;
+          };
+        }
+        // (lib.mapAttrs' (
+          name: value:
+          lib.nameValuePair "streamlink/config.${name}" (
+            lib.mkIf (value.settings != { }) {
+              text = renderSettings value.settings;
+            }
+          )
+        ) cfg.plugins);
 
         xdg.dataFile = lib.mapAttrs' (
           name: value:
@@ -168,35 +167,34 @@ in
       })
 
       (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-        home.file =
-          {
-            "Library/Application Support/streamlink/config" = lib.mkIf (cfg.settings != { }) {
-              text = renderSettings cfg.settings;
-            };
-          }
-          // (lib.mapAttrs' (
-            name: value:
-            lib.nameValuePair "Library/Application Support/streamlink/config.${name}" (
-              lib.mkIf (value.settings != { }) {
-                text = renderSettings value.settings;
-              }
+        home.file = {
+          "Library/Application Support/streamlink/config" = lib.mkIf (cfg.settings != { }) {
+            text = renderSettings cfg.settings;
+          };
+        }
+        // (lib.mapAttrs' (
+          name: value:
+          lib.nameValuePair "Library/Application Support/streamlink/config.${name}" (
+            lib.mkIf (value.settings != { }) {
+              text = renderSettings value.settings;
+            }
+          )
+        ) cfg.plugins)
+        // (lib.mapAttrs' (
+          name: value:
+          lib.nameValuePair "Library/Application Support/streamlink/plugins/${name}.py" (
+            lib.mkIf (value.src != null) (
+              if (builtins.isPath value.src) then
+                {
+                  source = value.src;
+                }
+              else
+                {
+                  text = value.src;
+                }
             )
-          ) cfg.plugins)
-          // (lib.mapAttrs' (
-            name: value:
-            lib.nameValuePair "Library/Application Support/streamlink/plugins/${name}.py" (
-              lib.mkIf (value.src != null) (
-                if (builtins.isPath value.src) then
-                  {
-                    source = value.src;
-                  }
-                else
-                  {
-                    text = value.src;
-                  }
-              )
-            )
-          ) cfg.plugins);
+          )
+        ) cfg.plugins);
       })
     ]
   );

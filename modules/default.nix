@@ -32,7 +32,8 @@ let
     class = "homeManager";
     specialArgs = {
       modulesPath = builtins.toString ./.;
-    } // extraSpecialArgs;
+    }
+    // extraSpecialArgs;
   };
 
   moduleChecks =

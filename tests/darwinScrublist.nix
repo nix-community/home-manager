@@ -116,6 +116,7 @@ let
     "oh-my-posh"
     "ollama"
     "onlyoffice-desktopeditors"
+    "opencode"
     "openstackclient"
     "papis"
     "patdiff"
