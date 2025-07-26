@@ -55,19 +55,25 @@ def extract_maintainers(changed_files: list[str], pr_author: str) -> list[str]:
 
     logging.info("Finding maintainers for changed files...")
     nix_file = Path(__file__).parent.parent / "nix" / "extract-maintainers.nix"
-    changed_files_json = json.dumps(changed_files)
 
-    try:
-        result_json = run_nix_eval(nix_file, "--argstr", "changedFilesJson", changed_files_json)
-        maintainers = set(json.loads(result_json))
-    except NixEvalError:
-        # Error is already logged by run_nix_eval
-        return []
-    except json.JSONDecodeError as e:
-        logging.error(f"Error parsing JSON output from Nix: {e}")
-        return []
+    all_maintainers = set()
 
-    filtered_maintainers = sorted(list(maintainers - {pr_author}))
+    for file in changed_files:
+        try:
+            result_json = run_nix_eval(nix_file, "--argstr", "file", file)
+            file_maintainers = json.loads(result_json)
+            all_maintainers.update(file_maintainers)
+            if file_maintainers:
+                logging.debug(f"Found maintainers for {file}: {file_maintainers}")
+        except NixEvalError:
+            # Error is already logged by run_nix_eval, just skip this file
+            logging.debug(f"Skipping {file} due to evaluation error")
+            continue
+        except json.JSONDecodeError as e:
+            logging.error(f"Error parsing JSON output from Nix for {file}: {e}")
+            continue
+
+    filtered_maintainers = sorted(list(all_maintainers - {pr_author}))
 
     if not filtered_maintainers:
         logging.info("No maintainers found (or only the PR author is a maintainer).")
