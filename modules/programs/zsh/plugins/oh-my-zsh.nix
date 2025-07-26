@@ -7,9 +7,7 @@
 let
   inherit (lib) mkOption optionalString types;
 
-  relToDotDir =
-    file:
-    (lib.optionalString (config.programs.zsh.dotDir != null) (config.programs.zsh.dotDir + "/")) + file;
+  inherit (import ../lib.nix { inherit config lib; }) dotDirRel;
 
   cfg = config.programs.zsh;
 
@@ -34,7 +32,7 @@ let
       custom = mkOption {
         default = "";
         type = types.str;
-        example = "$HOME/my_customizations";
+        example = "\${config.home.homeDirectory}/my_customizations";
         description = ''
           Path to a custom oh-my-zsh package to override config of
           oh-my-zsh. See <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization>
@@ -76,7 +74,7 @@ in
       packages = [ cfg.oh-my-zsh.package ];
 
       file = {
-        "${relToDotDir ".zshenv"}".text = ''
+        "${dotDirRel}/.zshenv".text = ''
           ZSH="${cfg.oh-my-zsh.package}/share/oh-my-zsh";
           ZSH_CACHE_DIR="${config.xdg.cacheHome}/oh-my-zsh";
         '';

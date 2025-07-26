@@ -53,7 +53,7 @@ in
         type = types.lines;
         default = "";
         description = ''
-          Extra directives added to to the end of MPD's configuration
+          Extra directives added to the end of MPD's configuration
           file, {file}`mpd.conf`. Basic configuration
           like file location and uid/gid is added automatically to the
           beginning of the file. For available options see

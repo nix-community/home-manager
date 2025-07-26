@@ -18,21 +18,6 @@ let
   commandNotFound = pkgs.runCommand "command-not-found" { } ''
     install -Dm555 ${cnfScript} $out/bin/command-not-found
   '';
-
-  shInit = commandNotFoundHandlerName: ''
-    # This function is called whenever a command is not found.
-    ${commandNotFoundHandlerName}() {
-      local p=${commandNotFound}/bin/command-not-found
-      if [ -x $p -a -f ${cfg.dbPath} ]; then
-        # Run the helper program.
-        $p "$@"
-      else
-        echo "$1: command not found" >&2
-        return 127
-      fi
-    }
-  '';
-
 in
 {
   options.programs.command-not-found = {
@@ -50,8 +35,24 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.bash.initExtra = shInit "command_not_found_handle";
-    programs.zsh.initContent = shInit "command_not_found_handler";
+    programs.bash.initExtra = ''
+      command_not_found_handle() {
+        '${commandNotFound}/bin/command-not-found' "$@"
+      }
+    '';
+
+    programs.zsh.initContent = ''
+      command_not_found_handler() {
+        '${commandNotFound}/bin/command-not-found' "$@"
+      }
+    '';
+
+    # NOTE: Fish by itself checks for nixos command-not-found, let's instead makes it explicit.
+    programs.fish.interactiveShellInit = ''
+      function fish_command_not_found
+        "${commandNotFound}/bin/command-not-found" $argv
+      end
+    '';
 
     home.packages = [ commandNotFound ];
   };

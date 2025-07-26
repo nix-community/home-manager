@@ -46,7 +46,7 @@
           HISTSIZE="10000"
           SAVEHIST="10000"
 
-          HISTFILE="$HOME/.zsh_history"
+          HISTFILE="/home/hm-user/.zsh_history"
           mkdir -p "$(dirname "$HISTFILE")"
 
           setopt HIST_FCNTL_LOCK
