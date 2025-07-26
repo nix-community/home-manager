@@ -250,8 +250,7 @@ in
         "$"
         "bezier"
         "name"
-      ]
-      ++ lib.optionals cfg.sourceFirst [ "source" ];
+      ];
       example = [
         "$"
         "bezier"
@@ -284,6 +283,8 @@ in
         shouldGenerate =
           cfg.systemd.enable || cfg.extraConfig != "" || cfg.settings != { } || cfg.plugins != [ ];
 
+        importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
+
         pluginsToHyprconf =
           plugins:
           lib.hm.generators.toHyprconf {
@@ -295,7 +296,7 @@ in
                 in
                 map (p: "hyprctl plugin load ${mkEntry p}") cfg.plugins;
             };
-            inherit (cfg) importantPrefixes;
+            inherit importantPrefixes;
           };
       in
       lib.mkIf shouldGenerate {
@@ -305,7 +306,7 @@ in
           + lib.optionalString (cfg.settings != { }) (
             lib.hm.generators.toHyprconf {
               attrs = cfg.settings;
-              inherit (cfg) importantPrefixes;
+              inherit importantPrefixes;
             }
           )
           + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;

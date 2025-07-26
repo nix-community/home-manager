@@ -308,6 +308,7 @@ in
     mutableExtensionsDir = mkOption {
       type = types.bool;
       default = allProfilesExceptDefault == { };
+      defaultText = lib.literalExpression "(removeAttrs config.programs.vscode.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
         Whether extensions can be installed or updated manually
