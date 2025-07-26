@@ -28,7 +28,8 @@ in
     package = lib.mkPackageOption pkgs "codex" { nullable = true; };
 
     settings = lib.mkOption {
-      inherit (settingsFormat) type;
+      # NOTE: `yaml` type supports null, using `nullOr` for backwards compatibility period
+      type = lib.types.nullOr tomlFormat.type;
       description = ''
         Configuration written to {file}`~/.codex/config.toml` (0.2.0+) or {file}`~/.codex/config.yaml` (<0.2.0).
         See <https://github.com/openai/codex/blob/main/codex-rs/config.md> for supported values.

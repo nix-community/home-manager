@@ -105,24 +105,13 @@ in
       '';
     };
 
-    sourceFirst =
-      lib.mkEnableOption ''
-        putting source entries at the top of the configuration
-      ''
-      // {
-        default = true;
-      };
+    sourceFirst = lib.mkEnableOption "putting source entries at the top of the configuration" // {
+      default = true;
+    };
 
     importantPrefixes = lib.mkOption {
       type = with lib.types; listOf str;
       default = [
-        "$"
-        "bezier"
-        "monitor"
-        "size"
-      ]
-      ++ lib.optionals cfg.sourceFirst [ "source" ];
-      example = [
         "$"
         "bezier"
         "monitor"
@@ -146,7 +135,7 @@ in
           lib.optionalString (cfg.settings != { }) (
             lib.hm.generators.toHyprconf {
               attrs = cfg.settings;
-              inherit (cfg) importantPrefixes;
+              importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
             }
           )
           + lib.optionalString (cfg.extraConfig != null) cfg.extraConfig;
