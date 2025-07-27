@@ -79,7 +79,7 @@ body {
     }
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
     color: var(--nmd-color0);
     font-family: "Lato", sans-serif;
     font-weight: 300;
@@ -104,6 +104,12 @@ h2 {
 
 h3 {
     font-size: 20px;
+    font-weight: 400;
+    margin: 0.5rem 0.25rem;
+}
+
+
+h4 {
     font-weight: 400;
     margin: 0.5rem 0.25rem;
 }
@@ -263,6 +269,10 @@ div.note, div.warning {
 
     h3 + p {
         margin-top: 0;
+    }
+
+    p {
+        min-height: 42px;
     }
 }
 
