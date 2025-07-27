@@ -89,8 +89,10 @@ in
     };
 
   config = lib.mkIf (cfg.plugins != [ ]) {
-    home.file = lib.foldl' (a: b: a // b) { } (
-      map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; }) cfg.plugins
+    home.file = lib.mkIf cfg.enable (
+      lib.foldl' (a: b: a // b) { } (
+        map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; }) cfg.plugins
+      )
     );
 
     programs.zsh = {
