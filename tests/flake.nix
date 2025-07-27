@@ -34,7 +34,10 @@
 
           integrationTestPackages =
             let
-              tests = import ./integration { inherit pkgs; };
+              tests = import ./integration {
+                inherit pkgs;
+                inherit (pkgs) lib;
+              };
               renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
             in
             lib.mapAttrs' renameTestPkg tests;
