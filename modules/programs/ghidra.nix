@@ -41,5 +41,5 @@ in
     };
   };
 
-  meta.maintainers = with lib.maintainers; [ ErrorTeaPot ];
+  meta.maintainers = with lib.hm.maintainers; [ ErrorTeaPot ];
 }
