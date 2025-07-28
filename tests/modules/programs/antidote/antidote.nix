@@ -1,10 +1,12 @@
+{ config, ... }:
 let
-  relToDotDirCustom = ".zshplugins";
+  dotDirCustom = "${config.home.homeDirectory}/.config/zsh";
+  relToDotDirCustom = ".config/zsh";
 in
 {
   programs.zsh = {
     enable = true;
-    dotDir = relToDotDirCustom;
+    dotDir = dotDirCustom;
     antidote = {
       enable = true;
       useFriendlyNames = true;
