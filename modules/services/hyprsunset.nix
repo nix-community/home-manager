@@ -22,7 +22,7 @@ in
       default = [ ];
       description = "Additional command-line arguments to pass to `hyprsunset`.";
       example = [
-        "--identity"
+        "--verbose"
       ];
     };
 
@@ -69,89 +69,166 @@ in
         }
       '';
     };
+
+    settings = lib.mkOption {
+      type =
+        with lib.types;
+        let
+          valueType =
+            nullOr (oneOf [
+              bool
+              int
+              float
+              str
+              path
+              (attrsOf valueType)
+              (listOf valueType)
+            ])
+            // {
+              description = "Hyprsunset configuration value";
+            };
+        in
+        valueType;
+      default = { };
+      description = ''
+        Hyprsunset configuration written in Nix. Entries with the same key
+        should be written as lists. Variables' and colors' names should be
+        quoted. See <https://wiki.hypr.land/Hypr-Ecosystem/hyprsunset/> for more examples.
+      '';
+      example = lib.literalExpression ''
+        {
+          max-gamma = 150;
+
+          profile = [
+            {
+              time = "7:30";
+              identity = true;
+            }
+            {
+              time = "21:00";
+              temperature = 5000;
+              gamma = 0.8;
+            }
+          ];
+        };
+      '';
+    };
+
+    importantPrefixes = lib.mkOption {
+      type = with lib.types; listOf str;
+      default = [ "$" ];
+      example = [ "$" ];
+      description = ''
+        List of prefix of attributes to source at the top of the config.
+      '';
+    };
+
+    systemdTarget = lib.mkOption {
+      type = lib.types.str;
+      default = config.wayland.systemd.target;
+      defaultText = lib.literalExpression "config.wayland.systemd.target";
+      example = "hyprland-session.target";
+      description = "Systemd target to bind to.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = (config.wayland.windowManager.hyprland.package != null);
+        assertion = (config.wayland.windowManager.hyprland.package != null || cfg.transitions == { });
         message = ''
-          Can't set services.hyprsunset.enable if wayland.windowManager.hyprland.package
-          is set to null. If you are using Hyprland's upstream flake, see:
+          Can't set services.hyprsunset.enable when using the deprecated option
+          services.hyprsunset.transitions if wayland.windowManager.hyprland.package
+          is set to null. Either migrate your configuration to use services.hyprsunset.settings
+          or, if you are using Hyprland's upstream flake, see:
           <https://github.com/nix-community/home-manager/issues/7484>.
         '';
       }
     ];
 
-    systemd.user = lib.mkIf (config.wayland.windowManager.hyprland.package != null) (
-      let
-        # Create the main persistent service that maintains the IPC socket
-        # Create a service for each transition in the transitions configuration
-        # These services will send requests to the persistent service via IPC
-        transitionServices = lib.mapAttrs' (
-          name: transitionCfg:
-          lib.nameValuePair "hyprsunset-${name}" {
-            Install = { };
 
-            Unit = {
-              ConditionEnvironment = "WAYLAND_DISPLAY";
-              Description = "hyprsunset transition for ${name}";
-              After = [ "hyprsunset.service" ];
-              Requires = [ "hyprsunset.service" ];
-            };
+    xdg.configFile."hypr/hyprsunset.conf" = lib.mkIf (cfg.settings != { }) {
+      text = lib.hm.generators.toHyprconf {
+        attrs = cfg.settings;
+        inherit (cfg) importantPrefixes;
+      };
+    };
 
-            Service = {
-              Type = "oneshot";
-              # Execute multiple requests sequentially
-              ExecStart = lib.concatMapStringsSep " && " (
-                cmd:
-                "${lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl"} hyprsunset ${lib.escapeShellArgs cmd}"
-              ) transitionCfg.requests;
-            };
+    systemd.user =
+      lib.mkIf (config.wayland.windowManager.hyprland.package != null || cfg.transitions == { })
+        (
+          let
+            # Handle deprecated transitions option
+            # If this is unused, no additional services will be created as transitions will be empty
+            # Create a service for each transition in the transitions configuration
+            # These services will send requests to the persistent service via IPC
+            transitionServices = lib.mapAttrs' (
+              name: transitionCfg:
+              lib.nameValuePair "hyprsunset-${name}" {
+                Install = { };
+
+                Unit = {
+                  ConditionEnvironment = "WAYLAND_DISPLAY";
+                  Description = "hyprsunset transition for ${name}";
+                  After = [ "hyprsunset.service" ];
+                  Requires = [ "hyprsunset.service" ];
+                };
+
+                Service = {
+                  Type = "oneshot";
+                  # Execute multiple requests sequentially
+                  ExecStart = lib.concatMapStringsSep " && " (
+                    cmd:
+                    "${lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl"} hyprsunset ${lib.escapeShellArgs cmd}"
+                  ) transitionCfg.requests;
+                };
+              }
+            ) cfg.transitions;
+          in
+          {
+            services = {
+              hyprsunset = {
+                Install = {
+                  WantedBy = [ cfg.systemdTarget ];
+                };
+
+                Unit = {
+                  ConditionEnvironment = "WAYLAND_DISPLAY";
+                  Description = "hyprsunset - Hyprland's blue-light filter";
+                  After = [ config.wayland.systemd.target ];
+                  PartOf = [ config.wayland.systemd.target ];
+                  X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
+                    "${config.xdg.configFile."hypr/hyprsunset.conf".source}"
+                  ];
+                };
+
+                Service = {
+                  ExecStart = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs}";
+                  Restart = "always";
+                  RestartSec = "10";
+                };
+              };
+            }
+            // transitionServices;
+
+            timers = lib.mapAttrs' (
+              name: transitionCfg:
+              lib.nameValuePair "hyprsunset-${name}" {
+                Install = {
+                  WantedBy = [ config.wayland.systemd.target ];
+                };
+
+                Unit = {
+                  Description = "Timer for hyprsunset transition (${name})";
+                };
+
+                Timer = {
+                  OnCalendar = transitionCfg.calendar;
+                  Persistent = true;
+                };
+              }
+            ) cfg.transitions;
           }
-        ) cfg.transitions;
-      in
-      {
-        services = {
-          hyprsunset = {
-            Install = {
-              WantedBy = [ config.wayland.systemd.target ];
-            };
-
-            Unit = {
-              ConditionEnvironment = "WAYLAND_DISPLAY";
-              Description = "hyprsunset - Hyprland's blue-light filter";
-              After = [ config.wayland.systemd.target ];
-              PartOf = [ config.wayland.systemd.target ];
-            };
-
-            Service = {
-              ExecStart = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs}";
-              Restart = "always";
-              RestartSec = "10";
-            };
-          };
-        }
-        // transitionServices;
-
-        timers = lib.mapAttrs' (
-          name: transitionCfg:
-          lib.nameValuePair "hyprsunset-${name}" {
-            Install = {
-              WantedBy = [ config.wayland.systemd.target ];
-            };
-
-            Unit = {
-              Description = "Timer for hyprsunset transition (${name})";
-            };
-
-            Timer = {
-              OnCalendar = transitionCfg.calendar;
-              Persistent = true;
-            };
-          }
-        ) cfg.transitions;
-      }
-    );
+        );
   };
 }
