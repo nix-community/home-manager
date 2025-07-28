@@ -33,6 +33,20 @@ rec {
   mkAbsPathStr =
     pathStr: cleanPathStr ((lib.optionalString (!lib.hasPrefix "/" pathStr) "${homeDir}/") + pathStr);
 
+  # For shell variable paths like history.path that get expanded at runtime
+  mkShellVarPathStr =
+    pathStr:
+    let
+      cleanPath = lib.removeSuffix "/" pathStr;
+      hasShellVars = lib.hasInfix "$" cleanPath;
+    in
+    if hasShellVars then
+      # Does not escape shell variables, allowing them to be expanded at runtime
+      cleanPath
+    else
+      # For literal paths, make them absolute if needed and escape them
+      cleanPathStr ((lib.optionalString (!lib.hasPrefix "/" cleanPath) "${homeDir}/") + cleanPath);
+
   dotDirAbs = mkAbsPathStr cfg.dotDir;
   dotDirRel = mkRelPathStr cfg.dotDir;
 
