@@ -344,6 +344,7 @@ in
                   };
 
                   Service = {
+                    Type = "notify";
                     Environment = [
                       # fusermount/fusermount3
                       "PATH=/run/wrappers/bin"
