@@ -9,7 +9,7 @@ let
 
   inherit (lib) literalExpression mkOption types;
 
-  inherit (import ./lib.nix { inherit config lib; }) dotDirAbs mkAbsPathStr;
+  inherit (import ./lib.nix { inherit config lib; }) dotDirAbs mkShellVarPathStr;
 in
 {
   options =
@@ -180,7 +180,7 @@ in
         ${lib.optionalString (
           cfg.history.ignorePatterns != [ ]
         ) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
-        HISTFILE="${mkAbsPathStr cfg.history.path}"
+        HISTFILE="${mkShellVarPathStr cfg.history.path}"
         mkdir -p "$(dirname "$HISTFILE")"
 
         setopt HIST_FCNTL_LOCK
