@@ -4,7 +4,7 @@
   zsh-dotdir-absolute = import ./dotdir.nix "absolute";
   zsh-dotdir-default = import ./dotdir.nix "default";
   zsh-dotdir-relative = import ./dotdir.nix "relative";
-  zsh-dotdir-xdg-variable = import ./dotdir.nix "xdg-variable";
+  zsh-dotdir-shell-variable = import ./dotdir.nix "shell-variable";
   zsh-history-ignore-pattern = ./history-ignore-pattern.nix;
   zsh-history-path-absolute = import ./history-path.nix "absolute";
   zsh-history-path-default = import ./history-path.nix "default";

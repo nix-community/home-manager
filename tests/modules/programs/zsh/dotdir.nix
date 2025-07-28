@@ -18,7 +18,7 @@ let
       subDir
     else if case == "default" then
       options.programs.zsh.dotDir.default
-    else if case == "xdg-variable" then
+    else if case == "shell-variable" then
       "\${XDG_CONFIG_HOME:-\$HOME/.config}/zsh"
     else
       abort "Test condition not provided.";
@@ -48,12 +48,24 @@ in
       ''
     ];
 
+    test.asserts.assertions.expected = lib.optionals (case == "shell-variable") [
+      ''
+        programs.zsh.dotDir cannot contain shell variables as it is used for file creation at build time.
+        Current dotDir: ''${XDG_CONFIG_HOME:-''$HOME/.config}/zsh
+        Consider using an absolute path or home-manager config options instead.
+        You can replace shell variables with options like:
+        - config.home.homeDirectory (user's home directory)
+        - config.xdg.configHome (XDG config directory)
+        - config.xdg.dataHome (XDG data directory)
+        - config.xdg.cacheHome (XDG cache directory)
+      ''
+    ];
+
     nmt.script =
-      if case == "xdg-variable" then
+      if case == "shell-variable" then
         ''
-          # For XDG variable case, check that shell variables are preserved in the generated shell code
-          # The fixed implementation should preserve variables without wrapping them in single quotes
-          assertFileContains home-files/.zshenv 'source ''${XDG_CONFIG_HOME:-''$HOME/.config}/zsh/.zshenv'
+          # Shell variable case should fail assertion, no files to check
+          echo "Shell variable case should trigger assertion failure"
         ''
       else
         lib.concatStringsSep "\n" [

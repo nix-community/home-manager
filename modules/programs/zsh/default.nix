@@ -344,9 +344,25 @@ in
     mkIf cfg.enable (
       lib.mkMerge [
         {
+          assertions = [
+            {
+              assertion = !lib.hasInfix "$" cfg.dotDir;
+              message = ''
+                programs.zsh.dotDir cannot contain shell variables as it is used for file creation at build time.
+                Current dotDir: ${cfg.dotDir}
+                Consider using an absolute path or home-manager config options instead.
+                You can replace shell variables with options like:
+                - config.home.homeDirectory (user's home directory)
+                - config.xdg.configHome (XDG config directory)
+                - config.xdg.dataHome (XDG data directory)
+                - config.xdg.cacheHome (XDG cache directory)
+              '';
+            }
+          ];
+
           warnings =
             lib.optionals
-              (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasPrefix "$" cfg.dotDir)
+              (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasInfix "$" cfg.dotDir)
               [
                 ''
                   Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
