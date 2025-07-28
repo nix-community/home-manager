@@ -18,6 +18,8 @@ let
       subDir
     else if case == "default" then
       options.programs.zsh.dotDir.default
+    else if case == "xdg-variable" then
+      "\${XDG_CONFIG_HOME:-\$HOME/.config}/zsh"
     else
       abort "Test condition not provided.";
 
@@ -33,20 +35,28 @@ in
 
     test.stubs.zsh = { };
 
-    nmt.script = lib.concatStringsSep "\n" [
-      # check dotDir entrypoint exists
-      "assertFileExists home-files/${relDotDir}/.zshenv"
+    nmt.script =
+      if case == "xdg-variable" then
+        ''
+          # For XDG variable case, check that shell variables are preserved in the generated shell code
+          # The fixed implementation should preserve variables without wrapping them in single quotes
+          assertFileContains home-files/.zshenv 'source ''${XDG_CONFIG_HOME:-''$HOME/.config}/zsh/.zshenv'
+        ''
+      else
+        lib.concatStringsSep "\n" [
+          # check dotDir entrypoint exists
+          "assertFileExists home-files/${relDotDir}/.zshenv"
 
-      # for non-default dotDir only:
-      (lib.optionalString (case != "default") ''
-        # check .zshenv in homeDirectory sources .zshenv in dotDir
-        assertFileRegex home-files/.zshenv \
-          "source [\"']\?${absDotDir}/.zshenv[\"']\?"
+          # for non-default dotDir only:
+          (lib.optionalString (case != "default") ''
+            # check .zshenv in homeDirectory sources .zshenv in dotDir
+            assertFileRegex home-files/.zshenv \
+              "source [\"']\?${absDotDir}/.zshenv[\"']\?"
 
-        # check that .zshenv in dotDir exports ZDOTDIR
-        assertFileRegex home-files/${relDotDir}/.zshenv \
-          "export ZDOTDIR=[\"']\?${absDotDir}[\"']\?"
-      '')
-    ];
+            # check that .zshenv in dotDir exports ZDOTDIR
+            assertFileRegex home-files/${relDotDir}/.zshenv \
+              "export ZDOTDIR=[\"']\?${absDotDir}[\"']\?"
+          '')
+        ];
   };
 }
