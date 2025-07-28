@@ -1,5 +1,5 @@
 case:
-{ config, ... }:
+{ config, lib, ... }:
 
 let
   homeDir = config.home.homeDirectory;
@@ -20,22 +20,46 @@ let
       customHistRelPath
     else if case == "default" then
       defaultHistPath
+    else if case == "xdg-variable" then
+      "\${XDG_STATE_HOME:-\$HOME/.local/state}/zsh/history"
+    else if case == "zdotdir-variable" then
+      "\$ZDOTDIR/.zsh_history"
     else
       abort "Test condition not provided";
 
-  expectedPath = if case == "default" then defaultHistPath else customHistAbsPath;
+  expectedPath =
+    if case == "default" then
+      defaultHistPath
+    else if case == "xdg-variable" then
+      "\${XDG_STATE_HOME:-\$HOME/.local/state}/zsh/history"
+    else if case == "zdotdir-variable" then
+      "\$ZDOTDIR/.zsh_history"
+    else
+      customHistAbsPath;
 in
 {
   config = {
     programs.zsh = {
       enable = true;
       history.path = testPath;
+      dotDir = lib.mkIf (case == "zdotdir-variable") "${homeDir}/.config/zsh";
     };
 
     test.stubs.zsh = { };
 
-    nmt.script = ''
-      assertFileRegex home-files/.zshrc '^HISTFILE="${expectedPath}"$'
-    '';
+    nmt.script =
+      if case == "xdg-variable" then
+        ''
+          assertFileContains home-files/.zshrc 'HISTFILE="''${XDG_STATE_HOME:-''$HOME/.local/state}/zsh/history"'
+        ''
+      else if case == "zdotdir-variable" then
+        ''
+          assertFileContains home-files/.config/zsh/.zshrc 'HISTFILE="$ZDOTDIR/.zsh_history"'
+          assertFileContains home-files/.config/zsh/.zshenv "export ZDOTDIR=${homeDir}/.config/zsh"
+        ''
+      else
+        ''
+          assertFileRegex home-files/.zshrc '^HISTFILE="${expectedPath}"$'
+        '';
   };
 }
