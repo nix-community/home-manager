@@ -35,6 +35,19 @@ in
 
     test.stubs.zsh = { };
 
+    test.asserts.warnings.expected = lib.optionals (case == "relative") [
+      ''
+        Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
+        Current dotDir: subdir/subdir2
+        Consider using absolute paths or home-manager config options instead.
+        You can replace relative paths or environment variables with options like:
+        - config.home.homeDirectory (user's home directory)
+        - config.xdg.configHome (XDG config directory)
+        - config.xdg.dataHome (XDG data directory)
+        - config.xdg.cacheHome (XDG cache directory)
+      ''
+    ];
+
     nmt.script =
       if case == "xdg-variable" then
         ''

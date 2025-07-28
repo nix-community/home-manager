@@ -343,6 +343,24 @@ in
     in
     mkIf cfg.enable (
       lib.mkMerge [
+        {
+          warnings =
+            lib.optionals
+              (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasPrefix "$" cfg.dotDir)
+              [
+                ''
+                  Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
+                  Current dotDir: ${cfg.dotDir}
+                  Consider using absolute paths or home-manager config options instead.
+                  You can replace relative paths or environment variables with options like:
+                  - config.home.homeDirectory (user's home directory)
+                  - config.xdg.configHome (XDG config directory)
+                  - config.xdg.dataHome (XDG data directory)
+                  - config.xdg.cacheHome (XDG cache directory)
+                ''
+              ];
+        }
+
         (mkIf (cfg.envExtra != "") {
           home.file."${dotDirRel}/.zshenv".text = cfg.envExtra;
         })
