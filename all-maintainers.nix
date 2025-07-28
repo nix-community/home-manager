@@ -1343,12 +1343,6 @@
     email = "nick@karaolidis.com";
     github = "karaolidis";
     githubId = 46189100;
-    keys = [
-      {
-        fingerprint = "E3E3 0A72 EBB3 4375 414B  23FD F854 9CDF 32F1 78F7";
-        longKeyId = "rsa4096/0xF8549CDF32F178F7";
-      }
-    ];
     name = "Nikolaos Karaolidis";
     source = "home-manager";
   };
@@ -1689,6 +1683,18 @@
     github = "nilp0inter";
     githubId = 1224006;
     name = "Roberto Abdelkader Martínez Pérez";
+    source = "nixpkgs";
+  };
+  nukdokplex = {
+    email = "nukdokplex@nukdokplex.ru";
+    github = "nukdokplex";
+    githubId = 25458915;
+    keys = [
+      {
+        fingerprint = "7CE2 4C42 942D 58EA 99F6  F00A A47E 7374 3EF6 FCC4";
+      }
+    ];
+    name = "Viktor Titov";
     source = "nixpkgs";
   };
   nurelin = {
