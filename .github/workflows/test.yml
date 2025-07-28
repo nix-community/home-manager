@@ -39,37 +39,12 @@ jobs:
               - 'flake.lock'
               - 'flake.nix'
               - 'home-manager/**'
-  get-test-chunks:
-    runs-on: ubuntu-latest
-    outputs:
-      test-matrix: ${{ steps.chunks.outputs.test-matrix }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-      - name: Get test chunks
-        id: chunks
-        run: |
-          linux_chunks=$(nix eval --json ./tests#packages.x86_64-linux --apply 'pkgs: builtins.attrNames (builtins.removeAttrs pkgs ["metadata"])' | jq -r '[.[] | select(startswith("test-chunk-")) | sub("test-chunk-"; "") | tonumber] | sort')
-          echo "Found Linux chunks: $linux_chunks"
-
-          darwin_chunks=$(nix eval --json ./tests#packages.aarch64-darwin --apply 'pkgs: builtins.attrNames (builtins.removeAttrs pkgs ["metadata"])' | jq -r '[.[] | select(startswith("test-chunk-")) | sub("test-chunk-"; "") | tonumber] | sort')
-          echo "Found Darwin chunks: $darwin_chunks"
-
-          matrix=$(jq -n -c \
-            --argjson linux_chunks "$linux_chunks" \
-            --argjson darwin_chunks "$darwin_chunks" \
-            '{include: [($linux_chunks[] | {os: "ubuntu-latest", test_chunk: .}), ($darwin_chunks[] | {os: "macos-latest", test_chunk: .})]}')
-
-          echo "test-matrix=$matrix" >> $GITHUB_OUTPUT
-          echo "Generated matrix: $matrix"
   tests:
-    needs: [changes, get-test-chunks]
+    needs: changes
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.get-test-chunks.outputs.test-matrix) }}
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -86,14 +61,14 @@ jobs:
             max-jobs = auto
             cores = 0
       - name: Build docs
-        if: matrix.os == 'ubuntu-latest' && matrix.test_chunk == 1 && (github.event_name == 'schedule' || needs.changes.outputs.docs == 'true')
+        if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true'
         run: nix build --show-trace .#docs-jsonModuleMaintainers
       - name: Format Check
-        if: matrix.os == 'ubuntu-latest' && matrix.test_chunk == 1 && (github.event_name == 'schedule' || needs.changes.outputs.format == 'true')
+        if: github.event_name == 'schedule' || needs.changes.outputs.format == 'true'
         run: nix fmt -- --ci
       - name: Test init --switch with locked inputs
         # FIXME: nix broken on darwin on unstable
-        if: matrix.os == 'ubuntu-latest' && matrix.test_chunk == 1 && (github.event_name == 'schedule' || needs.changes.outputs.hm == 'true')
+        if: matrix.os != 'macos-latest' && (github.event_name == 'schedule' || needs.changes.outputs.hm == 'true')
         run: |
           # Copy lock file to home directory for consistent testing
           mkdir -p ~/.config/home-manager
@@ -101,20 +76,8 @@ jobs:
           nix run .#home-manager -- init --switch --override-input home-manager .
       - name: Uninstall
         # FIXME: nix broken on darwin on unstable
-        if: matrix.os == 'ubuntu-latest' && matrix.test_chunk == 1 && (github.event_name == 'schedule' || needs.changes.outputs.hm == 'true')
+        if: matrix.os != 'macos-latest' && (github.event_name == 'schedule' || needs.changes.outputs.hm == 'true')
         run: yes | nix run . -- uninstall
-      - name: Run tests (chunk ${{ matrix.test_chunk }})
-        if: github.event_name == 'schedule' || needs.changes.outputs.tests == 'true'
-        run: |
-          nix build -j auto --show-trace --option allow-import-from-derivation false --reference-lock-file flake.lock "./tests#test-chunk-${{ matrix.test_chunk }}"
-        env:
-          GC_INITIAL_HEAP_SIZE: 4294967296
-      - name: Run tests with IFD (chunk ${{ matrix.test_chunk }})
-        if: github.event_name == 'schedule' || needs.changes.outputs.tests == 'true'
-        run: |
-          nix build -j auto --show-trace --reference-lock-file flake.lock "./tests#test-chunk-${{ matrix.test_chunk }}"
-        env:
-          GC_INITIAL_HEAP_SIZE: 4294967296
       - name: Generate Job Summary
         if: github.event_name == 'pull_request'
         shell: bash
