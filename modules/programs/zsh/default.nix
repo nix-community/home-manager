@@ -33,6 +33,8 @@ in
     ./history.nix
   ];
 
+  meta.maintainers = [ lib.maintainers.khaneliman ];
+
   options =
     let
       syntaxHighlightingModule = types.submodule {
