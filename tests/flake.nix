@@ -26,40 +26,11 @@
         "x86_64-linux"
       ];
 
-      tests =
+      ciTestChunks =
         system:
         let
-          inherit (pkgs) lib;
           pkgs = nixpkgs.legacyPackages.${system};
-
-          integrationTestPackages =
-            let
-              tests = import ./integration {
-                inherit pkgs;
-                inherit (pkgs) lib;
-              };
-              renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
-            in
-            lib.mapAttrs' renameTestPkg tests;
-
-          testAllNoBig =
-            let
-              tests = import ./. {
-                inherit pkgs;
-                enableBig = false;
-              };
-            in
-            lib.nameValuePair "test-all-no-big" tests.build.all;
-
-          testAllNoBigIfd =
-            let
-              tests = import ./. {
-                inherit pkgs;
-                enableBig = false;
-                enableLegacyIfd = true;
-              };
-            in
-            lib.nameValuePair "test-all-no-big-ifd" tests.build.all;
+          inherit (pkgs) lib;
 
           # Create chunked test packages for better CI parallelization
           testChunks =
@@ -98,16 +69,65 @@
               ) numChunks
             );
         in
-        integrationTestPackages
-        // testChunks
+        testChunks;
+
+      allPackagesAndTests =
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          inherit (pkgs) lib;
+
+          renamedBuildTests =
+            let
+              tests = import ./. { inherit pkgs; };
+              renameTestPkg = n: lib.nameValuePair "test-${n}";
+            in
+            lib.mapAttrs' renameTestPkg tests.build;
+
+          integrationTestPackages =
+            let
+              tests = import ./integration {
+                inherit pkgs;
+                inherit (pkgs) lib;
+              };
+              renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
+            in
+            lib.mapAttrs' renameTestPkg tests;
+
+          # Aggregate test set without big tests
+          testAllNoBig =
+            let
+              tests = import ./. {
+                inherit pkgs;
+                enableBig = false;
+              };
+            in
+            lib.nameValuePair "test-all-no-big" tests.build.all;
+
+          # Aggregate test set without big tests, with legacy IFD
+          testAllNoBigIfd =
+            let
+              tests = import ./. {
+                inherit pkgs;
+                enableBig = false;
+                enableLegacyIfd = true;
+              };
+            in
+            lib.nameValuePair "test-all-no-big-ifd" tests.build.all;
+        in
+        # Merge all the packages and tests meant for the 'packages' output
+        renamedBuildTests
+        // integrationTestPackages
         // (lib.listToAttrs [
           testAllNoBig
           testAllNoBigIfd
-        ]);
+        ])
+        // (ciTestChunks system);
 
     in
     {
-      buildbot = forCI (system: tests system);
+      # TODO: increase buildbot testing scope
+      buildbot = forCI ciTestChunks;
 
       devShells = forAllSystems (
         system:
@@ -118,22 +138,6 @@
         tests.run
       );
 
-      packages = forAllSystems (
-        system:
-        let
-          inherit (pkgs) lib;
-          pkgs = nixpkgs.legacyPackages.${system};
-
-          # testPackages: only included in packages
-          testPackages =
-            let
-              tests = import ./. { inherit pkgs; };
-              renameTestPkg = n: lib.nameValuePair "test-${n}";
-            in
-            lib.mapAttrs' renameTestPkg tests.build;
-
-        in
-        testPackages // tests system
-      );
+      packages = forAllSystems allPackagesAndTests;
     };
 }
