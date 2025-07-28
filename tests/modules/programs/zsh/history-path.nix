@@ -47,6 +47,19 @@ in
 
     test.stubs.zsh = { };
 
+    test.asserts.warnings.expected = lib.optionals (case == "relative") [
+      ''
+        Using relative paths in programs.zsh.history.path is deprecated and will be removed in a future release.
+        Consider using absolute paths or home-manager config options instead.
+        You can replace relative paths or environment variables with options like:
+        - config.home.homeDirectory (user's home directory)
+        - config.xdg.configHome (XDG config directory)
+        - config.xdg.dataHome (XDG data directory)
+        - config.xdg.cacheHome (XDG cache directory)
+        Current history.path: some/subdir/.zsh_history
+      ''
+    ];
+
     nmt.script =
       if case == "xdg-variable" then
         ''
