@@ -121,7 +121,7 @@ in
 
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
-      sessionVariables = lib.attrsets.mergeAttrsList [
+      sessionVariables = lib.mkMerge [
         (lib.mkIf (cfg.flake != null) (
           let
             packageVersion = lib.getVersion cfg.package;
