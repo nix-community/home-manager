@@ -5,10 +5,35 @@ in
 rec {
   homeDir = config.home.homeDirectory;
 
-  # escapes for shell and cleans trailing slashes that can mess with test regex
+  /*
+    Escape a path string for shell usage and remove trailing slashes.
+
+    This function prepares path strings for safe shell usage by escaping
+    special characters and removing trailing slashes that can interfere
+    with test regex patterns.
+
+    Type: String -> String
+
+    Example:
+      cleanPathStr "/path/to/dir/" => "'/path/to/dir'"
+      cleanPathStr "path with spaces" => "'path with spaces'"
+  */
   cleanPathStr = pathStr: lib.escapeShellArg (lib.removeSuffix "/" pathStr);
 
-  # strips home directory prefix from absolute path.
+  /*
+    Convert an absolute path to a relative path by stripping the home directory prefix.
+
+    This function converts absolute paths within the home directory to relative paths
+    by removing the home directory prefix. Paths already relative are returned as-is.
+    Absolute paths outside the home directory cause an error.
+
+    Type: String -> String
+
+    Example:
+      mkRelPathStr "/home/user/config" => "'config'"
+      mkRelPathStr "config" => "'config'"
+      mkRelPathStr "/etc/config" => <error>
+  */
   mkRelPathStr =
     pathStr:
     # is already a relative path
@@ -28,12 +53,36 @@ rec {
           ${homeDir}
       '';
 
-  # given a relative (or unknown) path, returns absolute by prepending home dir
-  # if path doesn't begin with "/"
+  /*
+    Convert a relative path to an absolute path by prepending the home directory.
+
+    This function ensures paths are absolute by prepending the home directory
+    to relative paths. Already absolute paths are returned unchanged (after cleaning).
+    This function does NOT support shell variables.
+
+    Type: String -> String
+
+    Example:
+      mkAbsPathStr "config" => "'/home/user/config'"
+      mkAbsPathStr "/absolute/path" => "'/absolute/path'"
+  */
   mkAbsPathStr =
     pathStr: cleanPathStr ((lib.optionalString (!lib.hasPrefix "/" pathStr) "${homeDir}/") + pathStr);
 
-  # For shell variable paths like history.path that get expanded at runtime
+  /*
+    Convert a path to absolute form while preserving shell variables for runtime expansion.
+
+    This function handles both literal paths and shell variable expressions.
+    Shell variables (containing '$') are preserved unescaped to allow runtime expansion.
+    Literal paths are made absolute and properly escaped for shell usage.
+
+    Type: String -> String
+
+    Example:
+      mkShellVarPathStr "config" => "'/home/user/config'"
+      mkShellVarPathStr "$HOME/config" => "$HOME/config"
+      mkShellVarPathStr "\${XDG_CONFIG_HOME:-$HOME/.config}/app" => "\${XDG_CONFIG_HOME:-$HOME/.config}/app"
+  */
   mkShellVarPathStr =
     pathStr:
     let
@@ -50,7 +99,13 @@ rec {
   dotDirAbs = mkAbsPathStr cfg.dotDir;
   dotDirRel = mkRelPathStr cfg.dotDir;
 
-  # If dotDir is default (i.e., the user's home dir) plugins are stored in
-  # ~/.zsh/plugins -- otherwise, in `programs.zsh.dotDir`/plugins
+  /*
+    Determine the plugins directory path based on dotDir configuration.
+
+    If dotDir is the default (user's home directory), plugins are stored in
+    ~/.zsh/plugins. Otherwise, they are stored in `dotDir`/plugins.
+
+    Type: String
+  */
   pluginsDir = dotDirAbs + (lib.optionalString (homeDir == dotDirAbs) "/.zsh") + "/plugins";
 }
