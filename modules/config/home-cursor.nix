@@ -93,6 +93,8 @@ let
       sway = {
         enable = mkEnableOption "sway config generation for {option}`home.pointerCursor`";
       };
+
+      niri.enable = mkEnableOption "niri config generation for {option}`home.pointerCursor`";
     };
   };
 
@@ -253,6 +255,13 @@ in
                 };
               };
             };
+          };
+        })
+
+        (mkIf cfg.niri.enable {
+          wayland.windowManager.niri.cursor = {
+            xcursor-theme = cfg.name;
+            xcursor-size = cfg.size;
           };
         })
       ]))
