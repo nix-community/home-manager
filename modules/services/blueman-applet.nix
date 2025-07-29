@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.services.blueman-applet;
+in
 {
   options = {
     services.blueman-applet = {
@@ -19,6 +22,8 @@
           ```
         '';
       };
+
+      package = lib.mkPackageOption pkgs "blueman" { };
     };
   };
 
@@ -43,7 +48,7 @@
       };
 
       Service = {
-        ExecStart = "${pkgs.blueman}/bin/blueman-applet";
+        ExecStart = "${lib.getExe' cfg.package "blueman-applet"}";
       };
     };
   };

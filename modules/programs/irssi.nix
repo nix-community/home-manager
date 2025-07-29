@@ -186,6 +186,8 @@ in
     programs.irssi = {
       enable = lib.mkEnableOption "the Irssi chat client";
 
+      package = lib.mkPackageOption pkgs "irssi" { nullable = true; };
+
       extraConfig = mkOption {
         default = "";
         description = "These lines are appended to the Irssi configuration.";
@@ -226,7 +228,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.irssi ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file.".irssi/config".text = ''
       settings = {

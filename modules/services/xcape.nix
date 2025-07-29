@@ -20,6 +20,8 @@ in
     services.xcape = {
       enable = lib.mkEnableOption "xcape";
 
+      package = lib.mkPackageOption pkgs "xcape" { };
+
       timeout = lib.mkOption {
         type = types.nullOr types.int;
         default = null;
@@ -80,7 +82,7 @@ in
       Service = {
         Type = "forking";
         ExecStart =
-          "${pkgs.xcape}/bin/xcape"
+          "${lib.getExe cfg.package}"
           + lib.optionalString (cfg.timeout != null) " -t ${toString cfg.timeout}"
           +
             lib.optionalString (cfg.mapExpression != { })

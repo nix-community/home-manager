@@ -4,13 +4,17 @@
   pkgs,
   ...
 }:
-
+let
+  cfg = config.services.systembus-notify;
+in
 {
   meta.maintainers = [ lib.maintainers.asymmetric ];
 
   options = {
     services.systembus-notify = {
       enable = lib.mkEnableOption "systembus-notify - system bus notification daemon";
+
+      package = lib.mkPackageOption pkgs "systembus-notify" { };
     };
   };
 
@@ -22,7 +26,7 @@
     systemd.user.services.systembus-notify = {
       Unit.Description = "systembus-notify daemon";
       Install.WantedBy = [ "graphical-session.target" ];
-      Service.ExecStart = "${pkgs.systembus-notify}/bin/systembus-notify";
+      Service.ExecStart = lib.getExe cfg.package;
     };
   };
 }

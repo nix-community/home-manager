@@ -16,6 +16,8 @@ in
     services.gnome-keyring = {
       enable = lib.mkEnableOption "GNOME Keyring";
 
+      package = lib.mkPackageOption pkgs "gnome-keyring" { };
+
       components = lib.mkOption {
         type = lib.types.listOf (
           lib.types.enum [
@@ -63,7 +65,7 @@ in
               ++ lib.optional (cfg.components != [ ]) ("--components=" + lib.concatStringsSep "," cfg.components)
             );
           in
-          "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon ${args}";
+          "${lib.getExe' cfg.package "gnome-keyring-daemon"} ${args}";
         Restart = "on-abort";
       };
 

@@ -26,12 +26,6 @@
 let
 
   cfg = config.programs.info;
-
-  # Installs this package -- the interactive just means that it
-  # includes the curses `info` program. We also use `install-info`
-  # from this package in the activation script.
-  infoPkg = pkgs.texinfoInteractive;
-
 in
 {
   imports = [
@@ -41,11 +35,18 @@ in
     '')
   ];
 
-  options.programs.info.enable = lib.mkEnableOption "GNU Info";
+  options.programs.info = {
+    enable = lib.mkEnableOption "GNU Info";
+
+    # Installs this package -- the interactive just means that it
+    # includes the curses `info` program. We also use `install-info`
+    # from this package in the activation script.
+    package = lib.mkPackageOption pkgs "texinfo" { default = "texinfoInteractive"; };
+  };
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      infoPkg
+      cfg.package
 
       # Make sure the target directory is a real directory.
       (pkgs.runCommandLocal "dummy-info-dir1" { } "mkdir -p $out/share/info")
@@ -63,7 +64,7 @@ in
           PATH="${
             lib.makeBinPath [
               pkgs.gzip
-              infoPkg
+              cfg.package
             ]
           }''${PATH:+:}$PATH" \
           find -L "${infoPath}" \( -name '*.info' -o -name '*.info.gz' \) \

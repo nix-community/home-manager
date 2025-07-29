@@ -37,6 +37,8 @@ in
         '';
       };
 
+      package = lib.mkPackageOption pkgs "feh" { };
+
       imageDirectory = mkOption {
         type = types.str;
         example = "%h/backgrounds";
@@ -98,7 +100,7 @@ in
 
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.feh}/bin/feh ${flags} ${cfg.imageDirectory}";
+            ExecStart = "${lib.getExe cfg.package} ${flags} ${cfg.imageDirectory}";
             IOSchedulingClass = "idle";
           };
 
