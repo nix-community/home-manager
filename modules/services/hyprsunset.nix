@@ -165,6 +165,8 @@ in
       ''
     ];
 
+    home.packages = [ cfg.package ];
+
     xdg.configFile."hypr/hyprsunset.conf" = lib.mkIf (cfg.settings != { }) {
       text = lib.hm.generators.toHyprconf {
         attrs = cfg.settings;
