@@ -33,6 +33,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    # NOTE: Currently only systemd implemented
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.arrpc" pkgs lib.platforms.linux)
+    ];
+
     systemd.user.services.arRPC = {
       Unit = {
         Description = "Discord Rich Presence for browsers, and some custom clients";
