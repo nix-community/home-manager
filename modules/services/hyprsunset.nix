@@ -34,6 +34,7 @@ in
               type = lib.types.str;
               description = ''
                 Deprecated - Use {option}`services.hyprsunset.settings` instead to manage transitions.
+
                 Systemd calendar expression for when to run this transition.
               '';
               example = "*-*-* 06:00:00";
@@ -44,6 +45,7 @@ in
               default = [ ];
               description = ''
                 Deprecated - Use {option}`services.hyprsunset.settings` instead to manage transitions.
+
                 List of requests to pass to `hyprctl hyprsunset` for this transition. Each inner list represents a separate command.
               '';
               example = lib.literalExpression ''
@@ -58,6 +60,7 @@ in
       default = { };
       description = ''
         Deprecated - Use {option}`services.hyprsunset.settings` instead to manage transitions.
+
         Set of transitions for different times of day (e.g., sunrise, sunset)
       '';
       example = lib.literalExpression ''
@@ -144,7 +147,7 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = (config.wayland.windowManager.hyprland.package != null || cfg.transitions == { });
+        assertion = config.wayland.windowManager.hyprland.package != null || cfg.transitions == { };
         message = ''
           Can't set services.hyprsunset.enable when using the deprecated option
           services.hyprsunset.transitions if wayland.windowManager.hyprland.package
@@ -169,81 +172,72 @@ in
       };
     };
 
-    systemd.user =
-      lib.mkIf (config.wayland.windowManager.hyprland.package != null || cfg.transitions == { })
-        (
-          let
-            # Handle deprecated transitions option
-            # If this is unused, no additional services will be created as transitions will be empty
-            # Create a service for each transition in the transitions configuration
-            # These services will send requests to the persistent service via IPC
-            transitionServices = lib.mapAttrs' (
-              name: transitionCfg:
-              lib.nameValuePair "hyprsunset-${name}" {
-                Install = { };
+    systemd.user = {
+      services = {
+        hyprsunset = {
+          Install = {
+            WantedBy = [ cfg.systemdTarget ];
+          };
 
-                Unit = {
-                  ConditionEnvironment = "WAYLAND_DISPLAY";
-                  Description = "hyprsunset transition for ${name}";
-                  After = [ "hyprsunset.service" ];
-                  Requires = [ "hyprsunset.service" ];
-                };
+          Unit = {
+            ConditionEnvironment = "WAYLAND_DISPLAY";
+            Description = "hyprsunset - Hyprland's blue-light filter";
+            After = [ config.wayland.systemd.target ];
+            PartOf = [ config.wayland.systemd.target ];
+            X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
+              "${config.xdg.configFile."hypr/hyprsunset.conf".source}"
+            ];
+          };
 
-                Service = {
-                  Type = "oneshot";
-                  # Execute multiple requests sequentially
-                  ExecStart = lib.concatMapStringsSep " && " (
-                    cmd:
-                    "${lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl"} hyprsunset ${lib.escapeShellArgs cmd}"
-                  ) transitionCfg.requests;
-                };
-              }
-            ) cfg.transitions;
-          in
-          {
-            services = {
-              hyprsunset = {
-                Install = {
-                  WantedBy = [ cfg.systemdTarget ];
-                };
+          Service = {
+            ExecStart = "${lib.getExe cfg.package}${
+              lib.optionalString (cfg.extraArgs != [ ]) " ${lib.escapeShellArgs cfg.extraArgs}"
+            }";
+            Restart = "always";
+            RestartSec = "10";
+          };
+        };
+      }
+      // lib.optionalAttrs (config.wayland.windowManager.hyprland.package != null) lib.mapAttrs' (
+        name: transitionCfg:
+        lib.nameValuePair "hyprsunset-${name}" {
+          Install = { };
 
-                Unit = {
-                  ConditionEnvironment = "WAYLAND_DISPLAY";
-                  Description = "hyprsunset - Hyprland's blue-light filter";
-                  After = [ config.wayland.systemd.target ];
-                  PartOf = [ config.wayland.systemd.target ];
-                  X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
-                    "${config.xdg.configFile."hypr/hyprsunset.conf".source}"
-                  ];
-                };
+          Unit = {
+            ConditionEnvironment = "WAYLAND_DISPLAY";
+            Description = "hyprsunset transition for ${name}";
+            After = [ "hyprsunset.service" ];
+            Requires = [ "hyprsunset.service" ];
+          };
 
-                Service = {
-                  ExecStart = "${lib.getExe cfg.package} ${lib.escapeShellArgs cfg.extraArgs}";
-                  Restart = "always";
-                  RestartSec = "10";
-                };
-              };
-            }
-            // transitionServices;
+          Service = {
+            Type = "oneshot";
+            # Execute multiple requests sequentially
+            ExecStart = lib.concatMapStringsSep " && " (
+              cmd:
+              "${lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl"} hyprsunset ${lib.escapeShellArgs cmd}"
+            ) transitionCfg.requests;
+          };
+        }
+      ) cfg.transitions;
 
-            timers = lib.mapAttrs' (
-              name: transitionCfg:
-              lib.nameValuePair "hyprsunset-${name}" {
-                Install = {
-                  WantedBy = [ config.wayland.systemd.target ];
-                };
+      timers = lib.mapAttrs' (
+        name: transitionCfg:
+        lib.nameValuePair "hyprsunset-${name}" {
+          Install = {
+            WantedBy = [ config.wayland.systemd.target ];
+          };
 
-                Unit = {
-                  Description = "Timer for hyprsunset transition (${name})";
-                };
+          Unit = {
+            Description = "Timer for hyprsunset transition (${name})";
+          };
 
-                Timer = {
-                  OnCalendar = transitionCfg.calendar;
-                  Persistent = true;
-                };
-              }
-            ) cfg.transitions;
-          }
-        );
+          Timer = {
+            OnCalendar = transitionCfg.calendar;
+            Persistent = true;
+          };
+        }
+      ) cfg.transitions;
+    };
   };
 }
