@@ -250,6 +250,7 @@ in
         "$"
         "bezier"
         "name"
+        "output"
       ];
       example = [
         "$"
