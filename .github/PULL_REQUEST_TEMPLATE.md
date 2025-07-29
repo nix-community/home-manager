@@ -42,10 +42,3 @@ Also make sure to read the guidelines found at
 - If this PR adds a new module
 
   - [ ] Added myself as module maintainer. See [example](https://github.com/nix-community/home-manager/blob/a51598236f23c89e59ee77eb8e0614358b0e896c/modules/programs/lesspipe.nix#L11).
-
-#### Maintainer CC
-
-<!--
-If you are updating a module, please @ people who are in its `meta.maintainers` list.
-If in doubt, check `git blame` for whoever last touched something.
--->
