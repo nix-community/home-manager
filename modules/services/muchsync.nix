@@ -139,6 +139,8 @@ in
   meta.maintainers = with lib.maintainers; [ euxane ];
 
   options.services.muchsync = {
+    package = lib.mkPackageOption pkgs "muchsync" { };
+
     remotes = mkOption {
       type = with types; attrsOf (submodule syncOptions);
       default = { };
@@ -190,7 +192,7 @@ in
               ''"NMBGIT=${config.home.sessionVariables.NMBGIT}"''
             ];
             ExecStart = lib.concatStringsSep " " (
-              [ "${pkgs.muchsync}/bin/muchsync" ]
+              [ (lib.getExe cfg.package) ]
               ++ [ "-s ${escapeShellArg remoteCfg.sshCommand}" ]
               ++ optional (!remoteCfg.upload) "--noup"
 

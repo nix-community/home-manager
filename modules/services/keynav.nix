@@ -12,6 +12,8 @@ in
 {
   options.services.keynav = {
     enable = lib.mkEnableOption "keynav";
+
+    package = lib.mkPackageOption pkgs "keynav" { };
   };
 
   config = lib.mkIf cfg.enable {
@@ -27,7 +29,7 @@ in
       };
 
       Service = {
-        ExecStart = "${pkgs.keynav}/bin/keynav";
+        ExecStart = lib.getExe cfg.package;
         RestartSec = 3;
         Restart = "always";
       };

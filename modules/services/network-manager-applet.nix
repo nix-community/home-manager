@@ -18,6 +18,8 @@ in
   options = {
     services.network-manager-applet = {
       enable = lib.mkEnableOption "the Network Manager applet (nm-applet)";
+
+      package = lib.mkPackageOption pkgs "networkmanagerapplet" { };
     };
   };
 
@@ -27,7 +29,7 @@ in
     ];
 
     # The package provides some icons that are good to have available.
-    xdg.systemDirs.data = [ "${pkgs.networkmanagerapplet}/share" ];
+    xdg.systemDirs.data = [ "${cfg.package}/share" ];
 
     systemd.user.services.network-manager-applet = {
       Unit = {
@@ -46,7 +48,7 @@ in
 
       Service = {
         ExecStart = toString (
-          [ "${pkgs.networkmanagerapplet}/bin/nm-applet" ]
+          [ (lib.getExe' cfg.package "nm-applet") ]
           ++ lib.optional config.xsession.preferStatusNotifierItems "--indicator"
         );
       };

@@ -12,6 +12,8 @@
     services.sctd = {
       enable = lib.mkEnableOption "sctd";
 
+      package = lib.mkPackageOption pkgs "sct" { };
+
       baseTemperature = lib.mkOption {
         type = lib.types.ints.between 2500 9000;
         default = 4500;
@@ -38,8 +40,8 @@
       Install.WantedBy = [ "graphical-session.target" ];
 
       Service = {
-        ExecStart = "${pkgs.sct}/bin/sctd ${toString config.services.sctd.baseTemperature}";
-        ExecStopPost = "${pkgs.sct}/bin/sct";
+        ExecStart = "${config.services.sctd.package}/bin/sctd ${toString config.services.sctd.baseTemperature}";
+        ExecStopPost = "${config.services.sctd.package}/bin/sct";
         Restart = "on-abnormal";
         SuccessExitStatus = 1;
 
@@ -61,7 +63,7 @@
                 pkgs.coreutils
                 pkgs.gnused
                 pkgs.which
-                pkgs.sct
+                config.services.sctd.package
                 logger
               ]
             }"

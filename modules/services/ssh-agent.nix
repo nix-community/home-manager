@@ -16,6 +16,8 @@ in
   options = {
     services.ssh-agent = {
       enable = lib.mkEnableOption "OpenSSH private key agent";
+
+      package = lib.mkPackageOption pkgs "openssh" { };
     };
   };
 
@@ -39,7 +41,7 @@ in
       };
 
       Service = {
-        ExecStart = "${pkgs.openssh}/bin/ssh-agent -D -a %t/ssh-agent";
+        ExecStart = "${lib.getExe' cfg.package "ssh-agent"} -D -a %t/ssh-agent";
       };
     };
   };
