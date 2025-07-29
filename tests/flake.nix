@@ -61,6 +61,7 @@
                 pkgs.symlinkJoin {
                   name = "test-chunk-${toString chunkNum}";
                   paths = lib.attrValues chunkAttrs;
+                  passthru.tests = chunkTests;
                 };
             in
             lib.listToAttrs (
