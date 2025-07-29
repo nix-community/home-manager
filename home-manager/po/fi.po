@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2024-12-03 13:00+0000\n"
-"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
+"PO-Revision-Date: 2025-07-29 05:02+0000\n"
+"Last-Translator: jarre johansson <jarre@johansson.today>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/home-manager/cli/"
 "fi/>\n"
 "Language: fi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -97,7 +97,7 @@ msgstr "Flake-konfiguraation asetuksia ei voi tarkastella"
 #: home-manager/home-manager:305 home-manager/home-manager:328
 #: home-manager/home-manager:734 home-manager/home-manager:1237
 msgid "%s: unknown option '%s'"
-msgstr "%s: tuntematon vaihtoehto '%s"
+msgstr "%s: tuntematon optio '%s'"
 
 #: home-manager/home-manager:310 home-manager/home-manager:1238
 msgid "Run '%s --help' for usage help"
@@ -166,7 +166,7 @@ msgstr "Aseta $EDITOR- tai $VISUAL-ympäristömuuttujaksi"
 
 #: home-manager/home-manager:624
 msgid "Cannot run build in read-only directory"
-msgstr ""
+msgstr "Käännöstä ei voi suorittaa kirjoitussuojatussa hakemistossa"
 
 #: home-manager/home-manager:787
 msgid "The configuration did not contain the specialisation \"%s\""
@@ -174,7 +174,7 @@ msgstr ""
 
 #: home-manager/home-manager:841
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "ID:llä %s ei löytynyt yhtään versiota"
 
 #: home-manager/home-manager:843
 msgid "Cannot remove the current generation %s"
@@ -186,7 +186,7 @@ msgstr "Generaatio %s poistetaan"
 
 #: home-manager/home-manager:866
 msgid "No generations to expire"
-msgstr ""
+msgstr "Ei vanhentuvia versioita"
 
 #: home-manager/home-manager:877
 msgid "No home-manager packages seem to be installed."
@@ -232,3 +232,4 @@ msgstr "Tuntematon komento: %s"
 #: home-manager/install.nix:21
 msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
+"Tätä derivointia ei voi rakentaa suoraan, suorita se käyttämällä nix-shelliä."
