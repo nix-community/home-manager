@@ -195,6 +195,7 @@ def main() -> None:
     parser.add_argument("--current-maintainers", default="", help="Space-separated list of current maintainers.")
     parser.add_argument("--changed-files", default="", help="Newline-separated list of changed files.")
     parser.add_argument("--bot-user-name", default="", help="Bot user name to distinguish manual vs automated review requests.")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be done without making actual changes.")
     args = parser.parse_args()
 
     no_changed_files = not args.changed_files.strip()
@@ -221,12 +222,15 @@ def main() -> None:
         logging.info("Removing outdated bot-requested reviewers.")
 
     if reviewers_to_remove:
-        update_reviewers(
-            args.pr_number,
-            owner=args.owner,
-            repo=args.repo,
-            reviewers_to_remove=reviewers_to_remove
-        )
+        if args.dry_run:
+            logging.info("DRY RUN: Would remove reviewers: %s", ", ".join(reviewers_to_remove))
+        else:
+            update_reviewers(
+                args.pr_number,
+                owner=args.owner,
+                repo=args.repo,
+                reviewers_to_remove=reviewers_to_remove
+            )
     else:
         logging.info("No reviewers to remove.")
 
@@ -245,7 +249,10 @@ def main() -> None:
             logging.warning("Ignoring non-collaborators: %s", ", ".join(non_collaborators))
 
     if reviewers_to_add:
-        update_reviewers(args.pr_number, reviewers_to_add=reviewers_to_add)
+        if args.dry_run:
+            logging.info("DRY RUN: Would add reviewers: %s", ", ".join(reviewers_to_add))
+        else:
+            update_reviewers(args.pr_number, reviewers_to_add=reviewers_to_add)
     else:
         logging.info("No new reviewers to add.")
 
