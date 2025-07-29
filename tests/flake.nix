@@ -44,7 +44,7 @@
               # Remove 'all' from the test list as it's a meta-package
               filteredTests = lib.filter (name: name != "all") allTests;
               # NOTE: Just a starting value, we can tweak this to find a good value.
-              targetTestsPerChunk = 250;
+              targetTestsPerChunk = 50;
               numChunks = lib.max 1 (
                 builtins.ceil ((builtins.length filteredTests) / (targetTestsPerChunk * 1.0))
               );
