@@ -38,49 +38,41 @@ in
           let
             dir =
               if isDarwin then
-                "Library/Application Support/BraveSoftware/Brave-Browser/NativeMessagingHosts"
+                "Library/Application Support/BraveSoftware/Brave-Browser"
               else
-                ".config/BraveSoftware/Brave-Browser/NativeMessagingHosts";
+                ".config/BraveSoftware/Brave-Browser";
           in
           [
             {
               # Policies are read from `/etc/brave/policies` only
               # https://github.com/brave/brave-browser/issues/19052
-              "${dir}/com.github.browserpass.native.json".source =
+              "${dir}/NativeMessagingHosts/com.github.browserpass.native.json".source =
                 "${pkgs.browserpass}/lib/browserpass/hosts/chromium/com.github.browserpass.native.json";
             }
           ]
         else if x == "chrome" then
           let
-            dir =
-              if isDarwin then
-                "Library/Application Support/Google/Chrome/NativeMessagingHosts"
-              else
-                ".config/google-chrome/NativeMessagingHosts";
+            dir = if isDarwin then "Library/Application Support/Google/Chrome" else ".config/google-chrome";
           in
           [
             {
-              "${dir}/com.github.browserpass.native.json".source =
+              "${dir}/NativeMessagingHosts/com.github.browserpass.native.json".source =
                 "${pkgs.browserpass}/lib/browserpass/hosts/chromium/com.github.browserpass.native.json";
-              "${dir}/../policies/managed/com.github.browserpass.native.json".source =
+              "${dir}/policies/managed/com.github.browserpass.native.json".source =
                 "${pkgs.browserpass}/lib/browserpass/policies/chromium/com.github.browserpass.native.json";
             }
           ]
         else if x == "chromium" then
           let
-            dir =
-              if isDarwin then
-                "Library/Application Support/Chromium/NativeMessagingHosts"
-              else
-                ".config/chromium/NativeMessagingHosts";
+            dir = if isDarwin then "Library/Application Support/Chromium" else ".config/chromium";
           in
           [
             {
-              "${dir}/com.github.browserpass.native.json".source =
+              "${dir}/NativeMessagingHosts/com.github.browserpass.native.json".source =
                 "${pkgs.browserpass}/lib/browserpass/hosts/chromium/com.github.browserpass.native.json";
             }
             {
-              "${dir}/../policies/managed/com.github.browserpass.native.json".source =
+              "${dir}/policies/managed/com.github.browserpass.native.json".source =
                 "${pkgs.browserpass}/lib/browserpass/policies/chromium/com.github.browserpass.native.json";
             }
           ]
@@ -115,17 +107,13 @@ in
 
         else if x == "vivaldi" then
           let
-            dir =
-              if isDarwin then
-                "Library/Application Support/Vivaldi/NativeMessagingHosts"
-              else
-                ".config/vivaldi/NativeMessagingHosts";
+            dir = if isDarwin then "Library/Application Support/Vivaldi" else ".config/vivaldi";
           in
           [
             {
-              "${dir}/com.github.browserpass.native.json".source =
+              "${dir}/NativeMessagingHosts/com.github.browserpass.native.json".source =
                 "${pkgs.browserpass}/lib/browserpass/hosts/chromium/com.github.browserpass.native.json";
-              "${dir}/../policies/managed/com.github.browserpass.native.json".source =
+              "${dir}/policies/managed/com.github.browserpass.native.json".source =
                 "${pkgs.browserpass}/lib/browserpass/policies/chromium/com.github.browserpass.native.json";
             }
           ]

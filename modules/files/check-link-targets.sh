@@ -7,17 +7,28 @@
 homeFilePattern="$(readlink -e @storeDir@)/*-home-manager-files/*"
 
 forcedPaths=(@forcedPaths@)
+copiedPaths=(@copiedPaths@)
 
 newGenFiles="$1"
-shift
+oldGenFiles="$2"
+shift 2
 for sourcePath in "$@" ; do
   relativePath="${sourcePath#$newGenFiles/}"
   targetPath="$HOME/$relativePath"
+  oldSourcePath="$oldGenFiles/$relativePath"
 
   forced=""
   for forcedPath in "${forcedPaths[@]}"; do
     if [[ $targetPath == $forcedPath* ]]; then
       forced="yeah"
+      break
+    fi
+  done
+
+  copied=""
+  for copiedPath in "${copiedPaths[@]}"; do
+    if [[ $targetPath == $copiedPath* ]]; then
+      copied="yeah"
       break
     fi
   done
@@ -29,14 +40,20 @@ for sourcePath in "$@" ; do
     # The target file already exists and it isn't a symlink owned by Home Manager.
     if cmp -s "$sourcePath" "$targetPath"; then
       # First compare the files' content. If they're equal, we're fine.
-      warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be skipped since they are the same"
+      [[ -z $copied ]] && warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be skipped since they are the same"
+    elif [[ -n $copied && ( ! -e "$oldSourcePath" || $(cmp -s "$oldSourcePath" "$targetPath") ) ]] ; then
+      # If copied, compare the files' content with the old generation. If it's
+      # the same, there were no modifications, and we'll clobber it.
+      :
     elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
       # Next, try to move the file to a backup location if configured and possible
       backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
       if [[ -e "$backup" ]]; then
         collisionErrors+=("Existing file '$backup' would be clobbered by backing up '$targetPath'")
-      else
+      elif [[ -z $copied ]]; then
         warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
+      else
+        warnEcho "Existing file '$targetPath' has been modified, it will be moved to '$backup'"
       fi
     else
       # Fail if nothing else works
