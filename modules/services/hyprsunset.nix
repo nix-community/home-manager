@@ -32,14 +32,20 @@ in
           options = {
             calendar = lib.mkOption {
               type = lib.types.str;
-              description = "Systemd calendar expression for when to run this transition.";
+              description = ''
+                Deprecated - Use {option}`services.hyprsunset.settings` instead to manage transitions.
+                Systemd calendar expression for when to run this transition.
+              '';
               example = "*-*-* 06:00:00";
             };
 
             requests = lib.mkOption {
               type = lib.types.listOf (lib.types.listOf lib.types.str);
               default = [ ];
-              description = "List of requests to pass to `hyprctl hyprsunset` for this transition. Each inner list represents a separate command.";
+              description = ''
+                Deprecated - Use {option}`services.hyprsunset.settings` instead to manage transitions.
+                List of requests to pass to `hyprctl hyprsunset` for this transition. Each inner list represents a separate command.
+              '';
               example = lib.literalExpression ''
                 [
                   [ "temperature" "3500" ]
@@ -50,7 +56,10 @@ in
         }
       );
       default = { };
-      description = "Set of transitions for different times of day (e.g., sunrise, sunset)";
+      description = ''
+        Deprecated - Use {option}`services.hyprsunset.settings` instead to manage transitions.
+        Set of transitions for different times of day (e.g., sunrise, sunset)
+      '';
       example = lib.literalExpression ''
         {
           sunrise = {
@@ -146,6 +155,12 @@ in
       }
     ];
 
+    warnings = lib.mkIf (cfg.transitions != { }) [
+      ''
+        Using services.hyprsunset.transitions is deprecated. Please use
+        services.hyprsunset.settings instead.
+      ''
+    ];
 
     xdg.configFile."hypr/hyprsunset.conf" = lib.mkIf (cfg.settings != { }) {
       text = lib.hm.generators.toHyprconf {
