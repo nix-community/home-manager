@@ -135,7 +135,7 @@ in
       };
 
       Service.ExecStart = toString (
-        [ (lib.getExe cfg.package) ]
+        [ (lib.getExe' cfg.package "udiskie") ]
         ++ lib.optional config.xsession.preferStatusNotifierItems "--appindicator"
       );
 
