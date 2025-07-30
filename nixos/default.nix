@@ -36,12 +36,6 @@ in
 
               # Inherit glibcLocales setting from NixOS.
               i18n.glibcLocales = lib.mkDefault config.i18n.glibcLocales;
-
-              # Legacy profile management is when the activation script
-              # generates GC root and home-manager profile. The modern way
-              # simply relies on the GC root that the system maintains, which
-              # should also protect the Home Manager activation package outputs.
-              home.activationGenerateGcRoot = cfg.enableLegacyProfileManagement;
             };
           }
         ];

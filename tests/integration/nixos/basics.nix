@@ -82,16 +82,15 @@
 
       logout_alice()
 
-    with subtest("no GC root and profile"):
-      # There should be no GC root and Home Manager profile since we are not
+    with subtest("no profile management"):
+      # There should be no Home Manager profile since we are not
       # using legacy profile management.
-      hmState = "/home/alice/.local/state/home-manager"
-      machine.succeed(f"test ! -e {hmState}")
-
       hmProfile = "/home/alice/.local/state/nix/profiles/home-manager"
       machine.succeed(f"test ! -e {hmProfile}")
 
+      # There should be a gcroot, however since we want to keep track of which
+      # generation is currently enabled.
       hmGcroot = "/home/alice/.local/state/home-manager/gcroots/current-home"
-      machine.succeed(f"test ! -e {hmGcroot}")
+      machine.succeed(f"test -e {hmGcroot}")
   '';
 }
