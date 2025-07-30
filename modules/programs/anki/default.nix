@@ -23,9 +23,9 @@ in
     package = lib.mkPackageOption pkgs "anki" { };
 
     language = lib.mkOption {
-      type = with lib.types; nullOr str;
-      default = null;
-      example = "en_US";
+      type = lib.types.nonEmptyStr;
+      default = "en_US";
+      example = "ja_JP";
       description = ''
         Display language. Should be an underscore separated language tag.
         See <https://github.com/ankitects/anki/blob/main/pylib/anki/lang.py> for
