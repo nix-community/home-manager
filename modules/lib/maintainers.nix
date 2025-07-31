@@ -139,6 +139,12 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
   };
+  elanora96 = {
+    name = "Elanora Manson";
+    email = "git@elanora.lol";
+    github = "elanora96";
+    githubId = 27848938;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";

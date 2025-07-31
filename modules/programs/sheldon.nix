@@ -1,42 +1,44 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  inherit (lib)
+    hm
+    mkEnableOption
+    mkIf
+    mkOption
+    ;
   cfg = config.programs.sheldon;
   tomlFormat = pkgs.formats.toml { };
-  sheldonCmd = "${config.home.profileDirectory}/bin/sheldon";
-in {
-  meta.maintainers = with maintainers; [ Kyure-A mainrs ];
+in
+{
+  meta.maintainers = with hm.maintainers; [
+    Kyure-A
+    mainrs
+    elanora96
+  ];
 
   options.programs.sheldon = {
     enable = mkEnableOption "sheldon";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.sheldon;
-      defaultText = literalExpression "pkgs.sheldon";
-      description = "The package to use for the sheldon binary.";
-    };
+    package = lib.mkPackageOption pkgs "sheldon" { };
 
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
       description = "";
-      example = literalExpression "";
+      example = lib.literalExpression "";
     };
 
-    enableZshCompletions = mkEnableOption "Zsh completions" // {
-      default = true;
-    };
+    enableZshIntegration = hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableBashCompletions = mkEnableOption "Bash completions" // {
-      default = true;
-    };
+    enableBashIntegration = hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishCompletions = mkEnableOption "Fish completions" // {
-      default = true;
-    };
+    enableFishIntegration = hm.shell.mkFishIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -46,37 +48,19 @@ in {
       source = tomlFormat.generate "sheldon-config" cfg.settings;
     };
 
-    programs.bash.initExtra = ''
-      ${optionalString (cfg.settings != { }) ''
-        eval "$(sheldon source)"
-      ''}
-      ${optionalString cfg.enableBashCompletions ''
-        if [[ $TERM != "dumb" ]]; then
-           eval "$(${sheldonCmd} completions --shell=bash)"
-        fi
-      ''}
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+      eval "$(sheldon source)"
+      eval "$(sheldon completions --shell=bash)"
     '';
 
-    programs.zsh.initExtra = ''
-      ${optionalString (cfg.settings != { }) ''
-        eval "$(sheldon source)"
-      ''}
-      ${optionalString cfg.enableZshCompletions ''
-        if [[ $TERM != "dumb" ]]; then
-           eval "$(${sheldonCmd} completions --shell=zsh)"
-        fi
-      ''}
+    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+      eval "$(sheldon source)"
+      eval "$(sheldon completions --shell=zsh)"
     '';
 
-    programs.fish.interactiveShellInit = ''
-      ${optionalString (cfg.settings != { }) ''
-        eval "$(sheldon source)"
-      ''}
-      ${optionalString cfg.enableFishCompletions ''
-        if test "$TERM" != "dumb"
-           eval "$(${sheldonCmd} completions --shell=fish)"
-        end
-      ''}
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      eval "$(sheldon source)"
+      eval "$(sheldon completions --shell=fish)"
     '';
   };
 }

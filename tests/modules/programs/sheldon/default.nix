@@ -21,7 +21,5 @@
 
   test.stubs.sheldon = { };
 
-  nmt.script = "assertFileContent home-files/.config/sheldon/plugins.toml ${
-      ./plugins.toml
-    }";
+  nmt.script = "assertFileContent home-files/.config/sheldon/plugins.toml ${./plugins.toml}";
 }
