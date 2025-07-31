@@ -104,20 +104,18 @@ in
       (lib.optionals pkgs.stdenv.isDarwin [
         (lib.hm.darwin.assertInterval "programs.nh.clean.dates" cfg.clean.dates pkgs)
       ])
-      ++ [
-        {
-          assertion = (cfg.osFlake != null) -> !(lib.hasSuffix ".nix" cfg.osFlake);
-          message = "nh.osFlake must be a directory, not a nix file";
-        }
-        {
-          assertion = (cfg.homeFlake != null) -> !(lib.hasSuffix ".nix" cfg.homeFlake);
-          message = "nh.homeFlake must be a directory, not a nix file";
-        }
-        {
-          assertion = (cfg.darwinFlake != null) -> !(lib.hasSuffix ".nix" cfg.darwinFlake);
-          message = "nh.darwinFlake must be a directory, not a nix file";
-        }
-      ];
+      ++
+        map
+          (name: {
+            assertion = (cfg.${name} != null) -> !(lib.hasSuffix ".nix" cfg.${name});
+            message = "nh.${name} must be a directory, not a nix file";
+          })
+          [
+            "darwinFlake"
+            "flake"
+            "homeFlake"
+            "osFlake"
+          ];
 
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
@@ -129,15 +127,20 @@ in
           in
           if isVersion4OrHigher then { NH_FLAKE = cfg.flake; } else { FLAKE = cfg.flake; }
         ))
-        (lib.mkIf (cfg.osFlake != null) {
-          NH_OS_FLAKE = cfg.osFlake;
-        })
-        (lib.mkIf (cfg.homeFlake != null) {
-          NH_HOME_FLAKE = cfg.homeFlake;
-        })
-        (lib.mkIf (cfg.darwinFlake != null) {
-          NH_DARWIN_FLAKE = cfg.darwinFlake;
-        })
+        (lib.mkMerge (
+          map
+            (
+              name:
+              (lib.mkIf (cfg."${name}Flake" != null) {
+                "NH_${lib.toUpper name}_FLAKE" = cfg."${name}Flake";
+              })
+            )
+            [
+              "darwin"
+              "home"
+              "os"
+            ]
+        ))
       ];
     };
 
