@@ -223,7 +223,7 @@ in
                                                  aqt.mw.pm.profile)
           if not details:
             return
-          
+
           message_box = QMessageBox(
             QMessageBox.Icon.Warning,
             "NixOS Info",
@@ -235,11 +235,11 @@ in
 
         aqt.mw.pm.save = on_preferences_save
 
-      def state_will_change(new_state: aqt.main.MainWindowState, 
+      def state_will_change(new_state: aqt.main.MainWindowState,
                             old_state: aqt.main.MainWindowState):
         if new_state != "profileManager":
           return
-        
+
         QMessageBox.warning(
           aqt.mw,
           "NixOS Info",
