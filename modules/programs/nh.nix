@@ -29,6 +29,42 @@ in
       '';
     };
 
+    osFlake = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        The string that will be used for the {env}`NH_OS_FLAKE` environment variable.
+
+        {env}`NH_OS_FLAKE` is used by nh as the default flake for performing {command}`nh os`
+        actions, such as {command}`nh os switch`.
+        Setting this will take priority over the `flake` option.
+      '';
+    };
+
+    homeFlake = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        The string that will be used for the {env}`NH_HOME_FLAKE` environment variable.
+
+        {env}`NH_HOME_FLAKE` is used by nh as the default flake for performing {command}`nh home`
+        actions, such as {command}`nh home switch`.
+        Setting this will take priority over the `flake` option.
+      '';
+    };
+
+    darwinFlake = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        The string that will be used for the {env}`NH_DARWIN_FLAKE` environment variable.
+
+        {env}`NH_DARWIN_FLAKE` is used by nh as the default flake for performing
+        {command}`nh darwin` actions, such as {command}`nh darwin switch`.
+        Setting this will take priority over the `flake` option.
+      '';
+    };
+
     clean = {
       enable = lib.mkEnableOption ''
         periodic garbage collection for user profile and nix store with nh clean
@@ -64,19 +100,48 @@ in
       lib.optional (cfg.clean.enable && config.nix.gc.automatic)
         "programs.nh.clean.enable and nix.gc.automatic (Home-Manager) are both enabled. Please use one or the other to avoid conflict.";
 
-    assertions = lib.optionals pkgs.stdenv.isDarwin [
-      (lib.hm.darwin.assertInterval "programs.nh.clean.dates" cfg.clean.dates pkgs)
-    ];
+    assertions =
+      (lib.optionals pkgs.stdenv.isDarwin [
+        (lib.hm.darwin.assertInterval "programs.nh.clean.dates" cfg.clean.dates pkgs)
+      ])
+      ++
+        map
+          (name: {
+            assertion = (cfg.${name} != null) -> !(lib.hasSuffix ".nix" cfg.${name});
+            message = "nh.${name} must be a directory, not a nix file";
+          })
+          [
+            "darwinFlake"
+            "flake"
+            "homeFlake"
+            "osFlake"
+          ];
 
     home = lib.mkIf cfg.enable {
       packages = [ cfg.package ];
-      sessionVariables = lib.mkIf (cfg.flake != null) (
-        let
-          packageVersion = lib.getVersion cfg.package;
-          isVersion4OrHigher = lib.versionAtLeast packageVersion "4.0.0";
-        in
-        if isVersion4OrHigher then { NH_FLAKE = cfg.flake; } else { FLAKE = cfg.flake; }
-      );
+      sessionVariables = lib.mkMerge [
+        (lib.mkIf (cfg.flake != null) (
+          let
+            packageVersion = lib.getVersion cfg.package;
+            isVersion4OrHigher = lib.versionAtLeast packageVersion "4.0.0";
+          in
+          if isVersion4OrHigher then { NH_FLAKE = cfg.flake; } else { FLAKE = cfg.flake; }
+        ))
+        (lib.mkMerge (
+          map
+            (
+              name:
+              (lib.mkIf (cfg."${name}Flake" != null) {
+                "NH_${lib.toUpper name}_FLAKE" = cfg."${name}Flake";
+              })
+            )
+            [
+              "darwin"
+              "home"
+              "os"
+            ]
+        ))
+      ];
     };
 
     systemd.user = lib.mkIf (cfg.clean.enable && pkgs.stdenv.isLinux) {
