@@ -1,4 +1,5 @@
-espansoExtraArgs: {
+espansoExtraArgs: { pkgs, ...} :
+{
   services.espanso = {
     enable = true;
     configs = {
@@ -42,6 +43,9 @@ espansoExtraArgs: {
         ];
       };
     };
+    plugins = [
+      pkgs.espansoPlugins.dummy-package
+    ];
   }
   // espansoExtraArgs;
 
@@ -63,5 +67,8 @@ espansoExtraArgs: {
     matchFile=home-files/.config/espanso/match/base.yml
     assertFileExists "$matchFile"
     assertFileContent "$matchFile" ${./basic-matches.yaml}
+
+    matchFile=home-files/.config/espanso/match/packages/dummy-package/package.yaml
+    assertFileExists "$matchFile"
   '';
 }
