@@ -268,6 +268,12 @@
     github = "kmaasrud";
     githubId = 54394333;
   };
+  Kyure-A = {
+    name = "Kyure_A";
+    email = "49436968+Kyure-A@users.noreply.github.com";
+    github = "Kyure-A";
+    githubId = 49436968;
+  };
   LesVu = {
     name = "John Ferse";
     email = "lesvu@ingressland.com";
