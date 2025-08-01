@@ -1,29 +1,49 @@
 {
+  config,
   lib,
   pkgs,
-  config,
   ...
 }:
 let
-  tomlFormat = pkgs.formats.toml { };
+  inherit (lib)
+    getExe
+    hm
+    literalExpression
+    maintainers
+    mapAttrs'
+    mkEnableOption
+    mkIf
+    mkMerge
+    mkOption
+    mkPackageOption
+    nameValuePair
+    ;
+
+  inherit (lib.types)
+    attrsOf
+    ;
+
   cfg = config.programs.television;
+  settingsFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ lib.maintainers.awwpotato ];
+  meta.maintainers = with maintainers; [
+    awwpotato
+    PopeRigby
+  ];
 
   options.programs.television = {
-    enable = lib.mkEnableOption "television";
-    package = lib.mkPackageOption pkgs "television" { nullable = true; };
-
-    settings = lib.mkOption {
-      type = tomlFormat.type;
+    enable = mkEnableOption "television";
+    package = mkPackageOption pkgs "television" { nullable = true; };
+    settings = mkOption {
+      type = settingsFormat.type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/television/config.toml`.
         See <https://github.com/alexpasmantier/television/blob/main/.config/config.toml>
         for the full list of options.
       '';
-      example = lib.literalExpression ''
+      example = literalExpression ''
         {
           tick_rate = 50;
           ui = {
@@ -37,67 +57,76 @@ in
         }
       '';
     };
-
-    channels = lib.mkOption {
-      type = lib.types.attrsOf tomlFormat.type;
+    channels = mkOption {
+      type = attrsOf settingsFormat.type;
       default = { };
       description = ''
         Each set of channels are written to
-        {file}`$XDG_CONFIG_HOME/television/NAME-channels.toml`
+        {file}`$XDG_CONFIG_HOME/television/cable/NAME.toml`
 
-        See <https://github.com/alexpasmantier/television/blob/main/docs/channels.md>
+        See <https://alexpasmantier.github.io/television/docs/Users/channels>
         for options
       '';
-      example = lib.literalExpression ''
-        {
-          my-custom = {
-            cable_channel = [
-              {
-                name = "git-log";
-                source_command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\"";
-                preview_command = "git show -p --stat --pretty=fuller --color=always {0}";
-              }
-              {
-                name = "git-log";
-                source_command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\"";
-                preview_command = "git show -p --stat --pretty=fuller --color=always {0}";
-              }
-            ];
+      example = {
+        git-diff = {
+          metadata = {
+            name = "git-diff";
+            description = "A channel to select files from git diff commands";
+            requirements = [ "git" ];
           };
-        }
-      '';
+          source = {
+            command = "git diff --name-only HEAD";
+          };
+          preview = {
+            command = "git diff HEAD --color=always -- '{}'";
+          };
+        };
+        git-log = {
+          metadata = {
+            name = "git-log";
+            description = "A channel to select from git log entries";
+            requirements = [ "git" ];
+          };
+          source = {
+            command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\"";
+            output = "{split: :0}";
+          };
+          preview = {
+            command = "git show -p --stat --pretty=fuller --color=always '{0}'";
+          };
+        };
+      };
     };
-
-    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
-    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
-    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableBashIntegration = hm.shell.mkBashIntegrationOption { inherit config; };
+    enableZshIntegration = hm.shell.mkZshIntegrationOption { inherit config; };
+    enableFishIntegration = hm.shell.mkFishIntegrationOption { inherit config; };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+  config = mkIf cfg.enable {
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile = lib.mkMerge [
+    xdg.configFile = mkMerge [
       {
-        "television/config.toml" = lib.mkIf (cfg.settings != { }) {
-          source = tomlFormat.generate "config.toml" cfg.settings;
+        "television/config.toml" = mkIf (cfg.settings != { }) {
+          source = settingsFormat.generate "config.toml" cfg.settings;
         };
       }
-      (lib.mapAttrs' (
+      (mapAttrs' (
         name: value:
-        lib.nameValuePair "television/${name}-channels.toml" {
-          source = tomlFormat.generate "television-${name}-channels" value;
+        nameValuePair "television/cable/${name}.toml" {
+          source = settingsFormat.generate "${name}-channel" value;
         }
       ) cfg.channels)
     ];
 
-    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
-      eval "$(${lib.getExe cfg.package} init bash)"
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+      eval "$(${getExe cfg.package} init bash)"
     '';
-    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
-      eval "$(${lib.getExe cfg.package} init zsh)"
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
+      eval "$(${getExe cfg.package} init zsh)"
     '';
-    programs.fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
-      ${lib.getExe cfg.package} init fish | source
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      ${getExe cfg.package} init fish | source
     '';
   };
 }
