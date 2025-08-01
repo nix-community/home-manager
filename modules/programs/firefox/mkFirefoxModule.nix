@@ -914,7 +914,14 @@ in
           Using '${moduleName}.vendorPath' has been deprecated and
           will be removed in the future. Native messaging hosts will function normally without specifying this path.
         '';
+      targets.darwin.defaults = (
+        mkIf (platforms.darwin.defaultsId != null) {
 
+          ${platforms.darwin.defaultsId} = {
+            EnterprisePoliciesEnabled = true;
+          } // cfg.policies;
+        }
+      );
       home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
       home.file = mkMerge (
@@ -927,6 +934,7 @@ in
           _: profile:
           # Merge the regular profile settings with extension settings
           mkMerge [
+
             {
               "${cfg.profilesPath}/${profile.path}/.keep".text = "";
 
