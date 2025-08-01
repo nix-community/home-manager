@@ -103,6 +103,8 @@ in
               --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list ${args} -z)' \
               --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
               --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list ${args})' \
+              --preview-window 'right:55%' \
+              --preview 'sesh preview {}' \
               -- ${fzf-args}
           )\""
         '';
