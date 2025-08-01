@@ -84,23 +84,17 @@ let
     ''}
 
     ${
-      if cfg.prefix != null then
-        ''
-          # rebind main key: ${cfg.prefix}
-          unbind C-${defaultShortcut}
-          set -g prefix ${cfg.prefix}
-          bind -N "Send the prefix key through to the application" \
-            ${cfg.prefix} send-prefix
-        ''
-      else
-        optionalString (cfg.shortcut != defaultShortcut) ''
-          # rebind main key: C-${cfg.shortcut}
-          unbind C-${defaultShortcut}
-          set -g prefix C-${cfg.shortcut}
-          bind -N "Send the prefix key through to the application" \
-            ${cfg.shortcut} send-prefix
-          bind C-${cfg.shortcut} last-window
-        ''
+      let
+        defaultPrefix = "C-${defaultShortcut}";
+        prefix = if cfg.prefix != null then cfg.prefix else "C-${cfg.shortcut}";
+      in
+      optionalString (prefix != defaultPrefix) ''
+        # rebind main key: ${prefix}
+        unbind ${defaultPrefix}
+        set -g prefix ${prefix}
+        bind -n -N "Send the prefix key through to the application" \
+          ${prefix} send-prefix
+      ''
     }
 
     ${optionalString cfg.disableConfirmationPrompt ''
