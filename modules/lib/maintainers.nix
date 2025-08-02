@@ -139,6 +139,12 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
   };
+  elanora96 = {
+    name = "Elanora Manson";
+    email = "git@elanora.lol";
+    github = "elanora96";
+    githubId = 27848938;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
@@ -261,6 +267,12 @@
     email = "km@aasrud.com";
     github = "kmaasrud";
     githubId = 54394333;
+  };
+  Kyure-A = {
+    name = "Kyure_A";
+    email = "k@kyre.moe";
+    github = "Kyure-A";
+    githubId = 49436968;
   };
   LesVu = {
     name = "John Ferse";
