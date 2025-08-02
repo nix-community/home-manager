@@ -33,12 +33,6 @@ in
       description = "";
       example = lib.literalExpression "";
     };
-
-    enableZshIntegration = hm.shell.mkZshIntegrationOption { inherit config; };
-
-    enableBashIntegration = hm.shell.mkBashIntegrationOption { inherit config; };
-
-    enableFishIntegration = hm.shell.mkFishIntegrationOption { inherit config; };
   };
 
   config = mkIf cfg.enable {
@@ -47,20 +41,5 @@ in
     xdg.configFile."sheldon/plugins.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "sheldon-config" cfg.settings;
     };
-
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      eval "$(sheldon source)"
-      eval "$(sheldon completions --shell=bash)"
-    '';
-
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
-      eval "$(sheldon source)"
-      eval "$(sheldon completions --shell=zsh)"
-    '';
-
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-      eval "$(sheldon source)"
-      eval "$(sheldon completions --shell=fish)"
-    '';
   };
 }
