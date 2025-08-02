@@ -89,6 +89,10 @@ let
     GPU_TIME = 131;
     GPU_PERCENT = 132;
     ISCONTAINER = 133;
+    SCHEDULERPOLICY = 54;
+    PROC_COMM = 123;
+    PROC_EXE = 124;
+    CWD = 125;
   };
 
   defaultFields = with fields; [
