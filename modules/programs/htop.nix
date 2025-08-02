@@ -79,6 +79,16 @@ let
     M_PSS = 118;
     M_SWAP = 119;
     M_PSSWP = 120;
+    CTXT = 121;
+    SECATTR = 122;
+    AUTOGROUP_ID = 126;
+    AUTOGROUP_NICE = 127;
+    CCGROUP = 128;
+    CONTAINER = 129;
+    M_PRIV = 130;
+    GPU_TIME = 131;
+    GPU_PERCENT = 132;
+    ISCONTAINER = 133;
   };
 
   defaultFields = with fields; [
