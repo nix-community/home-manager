@@ -116,12 +116,11 @@ in
       type = types.bool;
       default = false;
       description = ''
-        Whether to enable legacy profile (and garbage collection root)
-        management during activation. When enabled, the Home Manager activation
-        will produce a per-user `home-manager` Nix profile as well as a garbage
-        collection root, just like in the standalone installation of Home
-        Manager. Typically, this is not desired when Home Manager is embedded in
-        the system configuration.
+        Whether to enable legacy profile management during activation. When
+        enabled, the Home Manager activation will produce a per-user
+        `home-manager` Nix profile, just like in the standalone installation of
+        Home Manager. Typically, this is not desired when Home Manager is
+        embedded in the system configuration.
       '';
     };
 
