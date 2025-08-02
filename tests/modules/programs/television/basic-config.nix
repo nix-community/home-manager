@@ -10,19 +10,19 @@
         input_bar_position = "top";
       };
     };
-    channels.my-custom = {
-      cable_channel = [
-        {
-          name = "git-log";
-          source_command = ''git log --oneline --date=short --pretty="format:%h %s %an %cd" "$@"'';
-          preview_command = "git show -p --stat --pretty=fuller --color=always {0}";
-        }
-        {
-          name = "my-dotfiles";
-          source_command = "fd -t f . $HOME/.config";
-          preview_command = "bat -n --color=always {0}";
-        }
-      ];
+    channels.git-log = {
+      metadata = {
+        name = "git-log";
+        description = "A channel to select from git log entries";
+        requirements = [ "git" ];
+      };
+      source = {
+        command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\"";
+        output = "{split: :0}";
+      };
+      preview = {
+        command = "git show -p --stat --pretty=fuller --color=always '{0}'";
+      };
     };
   };
 
@@ -37,18 +37,20 @@
         show_preview_panel = true
         use_nerd_font_icons = false
       ''}
-    assertFileExists home-files/.config/television/my-custom-channels.toml
-    assertFileContent home-files/.config/television/my-custom-channels.toml \
+    assertFileExists home-files/.config/television/cable/git-log.toml
+    assertFileContent home-files/.config/television/cable/git-log.toml \
       ${pkgs.writeText "channels-expected" ''
-        [[cable_channel]]
+        [metadata]
+        description = "A channel to select from git log entries"
         name = "git-log"
-        preview_command = "git show -p --stat --pretty=fuller --color=always {0}"
-        source_command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\""
+        requirements = ["git"]
 
-        [[cable_channel]]
-        name = "my-dotfiles"
-        preview_command = "bat -n --color=always {0}"
-        source_command = "fd -t f . $HOME/.config"
+        [preview]
+        command = "git show -p --stat --pretty=fuller --color=always '{0}'"
+
+        [source]
+        command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\""
+        output = "{split: :0}"
       ''}
   '';
 }
