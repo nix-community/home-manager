@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-07-29 05:02+0000\n"
-"Last-Translator: jarre johansson <jarre@johansson.today>\n"
+"PO-Revision-Date: 2025-08-02 18:02+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/home-manager/"
 "modules/fi/>\n"
 "Language: fi\n"
@@ -33,7 +33,7 @@ msgstr "Luodaan uusi profiiliversio"
 
 #: modules/home-environment.nix:650
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Ei muutosta, joten käytetään uudelleen uusinta profiilin luomista"
 
 #: modules/home-environment.nix:699
 msgid ""
@@ -50,6 +50,19 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"Hupsista, Nix ei onnistunut asentamaan uutta Home Manager -profiiliasi!\n"
+"\n"
+"Ehkä kyseessä on ristiriita paketin kanssa, joka asennettiin käyttämällä "
+"\"%s\"?\n"
+"Kokeile suorittaa\n"
+"\n"
+"%s\n"
+"\n"
+"Jos ristiriitainen paketti on olemassa, voit poistaa sen käyttämällä\n"
+"\n"
+"%s\n"
+"\n"
+"Yritä sitten aktivoida Home Manager -määrityksesi uudelleen."
 
 #: modules/home-environment.nix:735
 msgid "Activating %s"
@@ -73,7 +86,7 @@ msgstr "Virhe: USER on asetettu arvoksi \"%s\", mutta odotettiin arvoa \"%s\""
 
 #: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Virhe: HOME on asetettu \"%s\":ksi, mutta odotamme \"%s\":ta"
 
 #: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
@@ -89,7 +102,7 @@ msgstr "Tämä on testiajo"
 
 #: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
-msgstr ""
+msgstr "Tämä on reaaliaikainen ajo"
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
