@@ -30,6 +30,7 @@ let
     PPID = 3;
     PGRP = 4;
     SESSION = 5;
+    TTY = 6;
     TTY_NR = 6;
     TPGID = 7;
     MINFLT = 9;
@@ -44,6 +45,7 @@ let
     NICE = 18;
     STARTTIME = 20;
     PROCESSOR = 37;
+    M_VIRT = 38;
     M_SIZE = 38;
     M_RESIDENT = 39;
     M_SHARE = 40;
