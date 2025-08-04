@@ -8,11 +8,40 @@ let
   jsonFormat = pkgs.formats.json { };
 
   cfg = config.programs.vscode-profiles;
+  vscodePname = cfg.package.pname;
+  vscodeVersion = cfg.package.version;
+
+  configDir =
+    {
+      "vscode" = "Code";
+      "vscode-insiders" = "Code - Insiders";
+      "vscodium" = "VSCodium";
+      "openvscode-server" = "OpenVSCode Server";
+      "windsurf" = "Windsurf";
+      "cursor" = "Cursor";
+    }
+    .${vscodePname};
+
+  userDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "${config.home.homeDirectory}/Library/Application Support/${configDir}/User"
+    else
+      "${config.xdg.configHome}/${configDir}/User";
+
+  profilePath = name: "${userDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
+
+  snippetDir = name: "${profilePath name}/snippets";
+
+  isPath = path: builtins.isPath path || lib.isStorePath path;
+
+  # Helper function to handle path vs JSON object logic
+  mkJsonSource =
+    name: value: if isPath value then value else jsonFormat.generate "vscode-${name}" value;
 in
 {
   options.programs.vscode-profiles = {
     enable = lib.mkEnableOption "VSCode profiles extension";
-    package = lib.mkPackageOption pkgs "hello" { };
+    package = lib.mkPackageOption pkgs "code-cursor" { };
 
     profiles = lib.mkOption {
       type = lib.types.attrsOf (
@@ -145,16 +174,39 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file = lib.mkMerge (
-      lib.mapAttrsToList (profile: profileConfig: {
-        "${config.xdg.configHome}/vscode-profiles/${profile}.json" = {
-          text = builtins.toJSON profileConfig.settings;
-        };
-      }) cfg.profiles
+      lib.flatten [
+        (lib.mapAttrsToList (name: profile: [
+          # settings
+          #
+          (lib.mkIf (profile.settings != { }) {
+            "${profilePath name}/settings.json".source = mkJsonSource "user-settings" profile.settings;
+          })
+
+          # keybindings
+          #
+          (lib.mkIf (profile.keybindings != [ ]) {
+            "${profilePath name}/keybindings.json".source = mkJsonSource "keybindings" (
+              map (lib.filterAttrs (_: v: v != null)) profile.keybindings
+            );
+          })
+
+          # tasks
+          #
+          (lib.mkIf (profile.tasks != [ ]) {
+            "${profilePath name}/tasks.json".source = mkJsonSource "user-tasks" profile.tasks;
+          })
+
+          # mcp
+          #
+          (lib.mkIf (profile.mcp != { }) {
+            "${profilePath name}/mcp.json".source = mkJsonSource "user-mcp" profile.mcp;
+          })
+        ]) cfg.profiles)
+      ]
     );
 
     # Keep our test activation
     home.activation.testVscodeProfiles = ''
-      echo "VSCode profiles module loaded successfully!"
       echo "Configured profiles: ${lib.concatStringsSep ", " (lib.attrNames cfg.profiles)}"
     '';
   };
