@@ -1,4 +1,4 @@
 {
-  less-custom-keys = ./custom-keys.nix;
-  less-no-keys = ./no-keys.nix;
+  less-custom-config = ./custom-config.nix;
+  less-no-config = ./no-config.nix;
 }
