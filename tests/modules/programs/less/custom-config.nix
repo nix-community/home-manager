@@ -1,5 +1,6 @@
 let
   config = ''
+    #command
     s        back-line
     t        forw-line
   '';

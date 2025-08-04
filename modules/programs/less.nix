@@ -24,6 +24,7 @@ in
         type = lib.types.lines;
         default = "";
         example = ''
+          #command
           s        back-line
           t        forw-line
         '';
@@ -32,6 +33,23 @@ in
           {file}`$XDG_CONFIG_HOME/lesskey`.
         '';
       };
+
+      options = lib.mkOption {
+        type =
+          with lib.types;
+          attrsOf (oneOf [
+            bool
+            int
+            str
+          ]);
+        default = { };
+        description = "GNU-style options to be set via {env}`$LESS`.";
+        example = {
+          RAW-CONTROL-CHARS = true;
+          quiet = true;
+          wheel-lines = 3;
+        };
+      };
     };
   };
 
@@ -39,5 +57,12 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."lesskey" = lib.mkIf (cfg.config != "") { text = cfg.config; };
+
+    programs.less.config = lib.mkIf (cfg.options != { }) (
+      lib.mkBefore ''
+        #env
+        LESS = ${lib.cli.toGNUCommandLineShell { } cfg.options}
+      ''
+    );
   };
 }
