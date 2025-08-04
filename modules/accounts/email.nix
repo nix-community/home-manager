@@ -355,13 +355,14 @@ let
 
         flavor = mkOption {
           type = types.enum [
-            "plain"
-            "gmail.com"
-            "runbox.com"
+            "davmail"
             "fastmail.com"
-            "yandex.com"
-            "outlook.office365.com"
+            "gmail.com"
             "migadu.com"
+            "outlook.office365.com"
+            "plain"
+            "runbox.com"
+            "yandex.com"
           ];
           default = "plain";
           description = ''
@@ -616,6 +617,20 @@ let
           smtp = {
             host = "mail.runbox.com";
             port = if config.smtp.tls.useStartTls then 587 else 465;
+          };
+        })
+
+        (mkIf (config.flavor == "davmail") {
+          imap = {
+            host = "localhost";
+            port = 1143;
+            authentication = "login";
+          };
+          smtp = {
+            host = "localhost";
+            port = 1025;
+            tls.enable = false;
+            authentication = "plain";
           };
         })
       ];
