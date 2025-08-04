@@ -17,7 +17,10 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.rycee ];
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    rycee
+  ];
 
   imports = [
     (lib.mkRenamedOptionModule
