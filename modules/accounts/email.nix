@@ -114,6 +114,28 @@ let
     };
   };
 
+  authenticationOption = mkOption {
+    type = types.nullOr (
+      types.either types.str (
+        types.enum [
+          "anonymous"
+          "apop"
+          "clear"
+          "cram_md5"
+          "digest_md5"
+          "gssapi"
+          "login"
+          "ntlm"
+          "plain"
+          "xoauth2"
+        ]
+      )
+    );
+    default = null;
+    example = "plain";
+    description = "The authentication mechanism.";
+  };
+
   imapModule = types.submodule {
     options = {
       host = mkOption {
@@ -133,6 +155,8 @@ let
           `null` then the default port is used.
         '';
       };
+
+      authentication = authenticationOption;
 
       tls = mkOption {
         type = tlsModule;
@@ -193,6 +217,8 @@ let
           `null` then the default port is used.
         '';
       };
+
+      authentication = authenticationOption;
 
       tls = mkOption {
         type = tlsModule;
