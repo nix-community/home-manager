@@ -34,6 +34,6 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."lesskey".text = cfg.keys;
+    xdg.configFile."lesskey" = lib.mkIf (cfg.keys != "") { text = cfg.keys; };
   };
 }

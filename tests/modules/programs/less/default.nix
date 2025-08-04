@@ -1,1 +1,4 @@
-{ less-with-custom-keys = ./less-with-custom-keys.nix; }
+{
+  less-custom-keys = ./custom-keys.nix;
+  less-no-keys = ./no-keys.nix;
+}
