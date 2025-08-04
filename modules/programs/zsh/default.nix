@@ -325,6 +325,23 @@ in
             To unset an option, prefix it with "NO_".
           '';
         };
+
+        siteFunctions = mkOption {
+          type = types.attrsOf types.lines;
+          default = { };
+          description = ''
+            Functions that are added to the Zsh environment and are subject to
+            {command}`autoload`ing. The key is the name and the value is the body of
+            the function to be autoloaded.
+
+            They are also already marked for autoloading through `autoload -Uz`.
+          '';
+          example = {
+            mkcd = ''
+              mkdir --parents "$1" && cd "$1"
+            '';
+          };
+        };
       };
     };
 
@@ -407,6 +424,15 @@ in
           home.file.".zshenv".text = ''
             source ${dotDirAbs}/.zshenv
           '';
+        })
+
+        (lib.mkIf (cfg.siteFunctions != { }) {
+          home.packages = lib.mapAttrsToList (
+            name: pkgs.writeTextDir "share/zsh/site-functions/${name}"
+          ) cfg.siteFunctions;
+          programs.zsh.initContent = concatStringsSep " " (
+            [ "autoload -Uz" ] ++ lib.attrNames cfg.siteFunctions
+          );
         })
 
         {
