@@ -2,6 +2,7 @@
   modulePath,
   name,
   package,
+  paths ? { },
   platforms ? { },
   multiProfile ? true,
 }:
@@ -28,13 +29,15 @@ let
 
   cfg = lib.getAttrFromPath modulePath config;
 
+  # User data directory
+  #
   appDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${appName}/User"
+      "${config.home.homeDirectory}/Library/Application Support/${appName}"
     else
       "${config.xdg.configHome}/${appName}/User";
 
-  pathForProfile = name: "${appName}${lib.optionalString (name != "default") "/profiles/${name}"}";
+  mkProfilePath = name: "${appDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
 
   # Helper function to handle path vs JSON object logic
   mkJsonSource =
@@ -43,10 +46,31 @@ let
       value
     else
       jsonFormat.generate "vscode-${name}" value;
+
+  getProfiles =
+    let
+      profiles = cfg.profiles or { };
+    in
+
+    # no profiles configured
+    if profiles == { } then
+      { }
+
+    # multi-profile: return all profiles
+    else if cfg.multiProfile then
+      profiles
+
+    # single profile: return default profile if it exists
+    else if profiles ? default then
+      { default = profiles.default; }
+
+    # all else return empty
+    else
+      { };
 in
 {
   options = lib.setAttrByPath modulePath {
-    enable = lib.mkEnableOption "VSCode profiles extension";
+    enable = lib.mkEnableOption appName;
     package = lib.mkPackageOption pkgs "vscode" { };
 
     name = lib.mkOption {
@@ -58,10 +82,60 @@ in
     };
 
     multiProfile = lib.mkOption {
+      internal = true;
       type = lib.types.bool;
-      default = false;
-      example = true;
+      default = multiProfile;
+      example = false;
       description = "Whether the VSCode fork supports multiple profiles.";
+    };
+
+    paths = lib.mkOption {
+      internal = true;
+      type = lib.types.submodule {
+        options = {
+          mcp = lib.mkOption {
+            type = lib.types.path;
+            default = paths.mcp or "${appDir}/User/mcp.json";
+            defaultText = lib.literalExpression ''"''${appDir}/User/mcp.json"'';
+            example = "Library/Application Support/${appName}/User/mcp.json";
+            description = "Path for MCP configuration file.";
+          };
+
+          tasks = lib.mkOption {
+            type = lib.types.path;
+            default = paths.tasks or "${appDir}/User/tasks.json";
+            defaultText = lib.literalExpression ''"''${appDir}/User/tasks.json"'';
+            example = "Library/Application Support/${appName}/User/tasks.json";
+            description = "Path for tasks file.";
+          };
+
+          keybindings = lib.mkOption {
+            type = lib.types.path;
+            default = paths.keybindings or "${appDir}/User/keybindings.json";
+            defaultText = lib.literalExpression ''"''${appDir}/User/keybindings.json"'';
+            example = "Library/Application Support/${appName}/User/keybindings.json";
+            description = "Path for keybindings file.";
+          };
+
+          extensions = lib.mkOption {
+            type = lib.types.path;
+            default = paths.extensions or "${appDir}/User/extensions";
+            defaultText = lib.literalExpression ''"''${appDir}/User/extensions"'';
+            example = "Library/Application Support/${appName}/User/extensions";
+            description = "Path for the extensions directory.";
+          };
+
+          settings = lib.mkOption {
+            type = lib.types.path;
+            default = paths.settings or "${appDir}/User/settings.json";
+            defaultText = lib.literalExpression ''"''${appDir}/User/settings.json"'';
+            example = "Library/Application Support/${appName}/User/settings.json";
+            description = "Path for settings file.";
+          };
+        };
+      };
+      default = { };
+      description = "Custom path configuration for different file types.";
     };
 
     profiles = lib.mkOption {
@@ -187,7 +261,7 @@ in
         }
       );
       default = { };
-      description = "VSCode profiles configuration";
+      description = "VSCode fork module configuration";
     };
   };
 
@@ -199,47 +273,36 @@ in
         (lib.mapAttrsToList (
           name: profile:
           let
-            profilePath = pathForProfile name;
+            profilePath = mkProfilePath name;
           in
           [
-            (builtins.trace "VSCode Profile: ${name} -> ${profilePath}" { })
-            (builtins.trace "${pkgs.stdenv.hostPlatform}" { })
+            (builtins.trace "Generating ${appName} profile: ${name} (${profilePath})" { })
 
             # settings
             #
-            (lib.mkIf (profile.settings != { }) (
-              builtins.trace "${name}.settings: ${profilePath}/settings.json" {
-                "${profilePath}/settings.json".source = mkJsonSource "user-settings" profile.settings;
-              }
-            ))
+            (lib.mkIf (profile.settings != { }) {
+              "${cfg.paths.settings}".source = mkJsonSource "user-settings" profile.settings;
+            })
 
             # keybindings
             #
-            (lib.mkIf (profile.keybindings != [ ]) (
-              builtins.trace "${name}.keybindings: ${profilePath}/keybindings.json" {
-                "${profilePath}/keybindings.json".source = mkJsonSource "keybindings" (
-                  map (lib.filterAttrs (_: v: v != null)) profile.keybindings
-                );
-              }
-            ))
+            (lib.mkIf (profile.keybindings != [ ]) {
+              "${cfg.paths.keybindings}".source = mkJsonSource "keybindings" profile.keybindings;
+            })
 
             # tasks
             #
-            (lib.mkIf (profile.tasks != [ ]) (
-              builtins.trace "${name}.tasks: ${profilePath}/tasks.json" {
-                "${profilePath}/tasks.json".source = mkJsonSource "user-tasks" profile.tasks;
-              }
-            ))
+            (lib.mkIf (profile.tasks != [ ]) {
+              "${cfg.paths.tasks}".source = mkJsonSource "user-tasks" profile.tasks;
+            })
 
             # mcp
             #
-            (lib.mkIf (profile.mcp != { }) (
-              builtins.trace "${name}.mcp: ${config.home.homeDirectory}/.${appName}/mcp.json" {
-                "${config.home.homeDirectory}/.${appName}/mcp.json".source = mkJsonSource "user-mcp" profile.mcp;
-              }
-            ))
+            (lib.mkIf (profile.mcp != { }) {
+              "${cfg.paths.mcp}".source = mkJsonSource "user-mcp" profile.mcp;
+            })
           ]
-        ) cfg.profiles)
+        ) getProfiles)
       ]
     );
 
