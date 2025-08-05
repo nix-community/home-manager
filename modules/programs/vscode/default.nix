@@ -46,7 +46,7 @@ let
 
   userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${configDir}/User"
+      "${config.home.homeDirectory}/Library/Application Support/${configDir}/User"
     else
       "${config.xdg.configHome}/${configDir}/User";
 
