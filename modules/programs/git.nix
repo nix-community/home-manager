@@ -566,7 +566,7 @@ in
       {
         programs.git.iniContent =
           let
-            hasSmtp = name: account: account.smtp != null;
+            hasSmtp = name: account: account.enable && account.smtp != null;
 
             genIdentity =
               name: account:

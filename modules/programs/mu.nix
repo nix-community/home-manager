@@ -14,7 +14,9 @@ let
   sortedAddresses =
     let
       # Set of email account sets where mu.enable = true.
-      muAccounts = lib.filter (a: a.mu.enable) (lib.attrValues config.accounts.email.accounts);
+      muAccounts = lib.filter (a: a.enable && a.mu.enable) (
+        lib.attrValues config.accounts.email.accounts
+      );
       addrs = map (a: a.address) muAccounts;
       # Construct list of lists containing email aliases, and flatten
       aliases = map (alias: alias.address or alias) (lib.flatten (map (a: a.aliases) muAccounts));
