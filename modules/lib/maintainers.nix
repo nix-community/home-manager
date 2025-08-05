@@ -424,6 +424,12 @@
     github = "pltanton";
     githubId = 4561823;
   };
+  poseidon-rises = {
+    name = "poseidon-rises";
+    email = "softwaredevelopment.stingray177@passinbox.com";
+    github = "poseidon-rises";
+    githubId = 179542264;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";
