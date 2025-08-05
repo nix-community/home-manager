@@ -18,7 +18,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 
   enabledAccounts = lib.attrsets.filterAttrs (
-    name: value: value.meli.enable or false
+    name: value: value.enable && (value.meli.enable or false)
   ) config.accounts.email.accounts;
 
   meliAccounts = (lib.attrsets.mapAttrs (name: value: (mkMeliAccounts name value)) enabledAccounts);

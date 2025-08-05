@@ -17,7 +17,9 @@ let
 
   cfg = config.programs.alot;
 
-  enabledAccounts = lib.filter (a: a.notmuch.enable) (lib.attrValues config.accounts.email.accounts);
+  enabledAccounts = lib.filter (a: a.enable && a.notmuch.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   # sorted: primary first
   alotAccounts = lib.sort (a: b: !(a.primary -> b.primary)) enabledAccounts;

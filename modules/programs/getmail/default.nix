@@ -5,7 +5,9 @@
   ...
 }:
 let
-  accounts = lib.filter (a: a.getmail.enable) (lib.attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.enable && a.getmail.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   renderAccountConfig =
     account:

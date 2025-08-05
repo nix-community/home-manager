@@ -47,7 +47,9 @@ let
       ;
   };
 
-  aerc-accounts = attrsets.filterAttrs (_: v: v.aerc.enable) config.accounts.email.accounts;
+  aerc-accounts = attrsets.filterAttrs (
+    _: v: v.enable && v.aerc.enable
+  ) config.accounts.email.accounts;
 
   configDir =
     if (pkgs.stdenv.isDarwin && !config.xdg.enable) then

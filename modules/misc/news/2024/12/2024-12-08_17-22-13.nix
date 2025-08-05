@@ -4,7 +4,9 @@
   time = "2024-12-08T17:22:13+00:00";
   condition =
     let
-      usingMbsync = lib.any (a: a.mbsync.enable) (lib.attrValues config.accounts.email.accounts);
+      usingMbsync = lib.any (a: a.enable && a.mbsync.enable) (
+        lib.attrValues config.accounts.email.accounts
+      );
     in
     usingMbsync;
   message = ''

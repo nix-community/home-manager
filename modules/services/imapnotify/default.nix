@@ -18,7 +18,7 @@ let
 
   configName = account: "imapnotify-${safeName account.name}-config.json";
 
-  imapnotifyAccounts = lib.filter (a: a.imapnotify.enable) (
+  imapnotifyAccounts = lib.filter (a: a.enable && a.imapnotify.enable) (
     lib.attrValues config.accounts.email.accounts
   );
 

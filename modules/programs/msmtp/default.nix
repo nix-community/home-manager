@@ -9,7 +9,9 @@ let
 
   cfg = config.programs.msmtp;
 
-  msmtpAccounts = lib.filter (a: a.msmtp.enable) (lib.attrValues config.accounts.email.accounts);
+  msmtpAccounts = lib.filter (a: a.enable && a.msmtp.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   onOff = p: if p then "on" else "off";
 

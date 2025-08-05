@@ -9,6 +9,7 @@ let
     ;
 
   cfg = config.accounts.email;
+  enabledAccounts = lib.filterAttrs (n: v: v.enable) cfg.accounts;
 
   gpgModule = types.submodule {
     options = {
@@ -353,6 +354,16 @@ let
           '';
         };
 
+        enable = mkOption {
+          type = types.bool;
+          default = true;
+          description = ''
+            Whether this account is enabled.  Potentially useful to allow
+            setting email configuration globally then enabling or disabling on
+            specific systems.
+          '';
+        };
+
         flavor = mkOption {
           type = types.enum [
             "davmail"
@@ -669,11 +680,11 @@ in
     };
   };
 
-  config = mkIf (cfg.accounts != { }) {
+  config = mkIf (enabledAccounts != { }) {
     assertions = [
       (
         let
-          primaries = lib.catAttrs "name" (lib.filter (a: a.primary) (lib.attrValues cfg.accounts));
+          primaries = lib.catAttrs "name" (lib.filter (a: a.primary) (lib.attrValues enabledAccounts));
         in
         {
           assertion = lib.length primaries == 1;
