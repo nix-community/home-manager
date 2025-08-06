@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  time = "2024-11-24T21:15:57+01:00";
+  time = "2024-11-24T20:15:57+00:00";
   condition = config.programs.zed-editor.enable;
   message = ''
     The 'programs.zed-editor' module now supports the 'extraPackages' option.

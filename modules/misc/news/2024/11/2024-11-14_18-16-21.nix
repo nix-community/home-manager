@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  time = "2024-11-14T18:16:21+01:00";
+  time = "2024-11-14T17:16:21+00:00";
   condition = config.programs.feh.enable;
   message = ''
     The 'programs.feh' module now supports custom themes configuration.
