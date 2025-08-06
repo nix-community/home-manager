@@ -4,6 +4,7 @@
   package,
   paths ? { },
   platforms ? { },
+  packageName,
   multiProfile ? true,
 }:
 {
@@ -28,6 +29,9 @@ let
   moduleName = lib.concatStringsSep "." modulePath;
 
   cfg = lib.getAttrFromPath modulePath config;
+
+  vscodePname = cfg.package.pname;
+  vscodeVersion = cfg.package.version;
 
   # User data directory
   #
@@ -71,7 +75,7 @@ in
 {
   options = lib.setAttrByPath modulePath {
     enable = lib.mkEnableOption appName;
-    package = lib.mkPackageOption pkgs "vscode" { };
+    package = lib.mkPackageOption pkgs packageName { };
 
     name = lib.mkOption {
       type = lib.types.str;
