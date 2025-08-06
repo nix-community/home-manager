@@ -1012,13 +1012,34 @@ has a message along the lines of</p><pre><code class="programlisting">A new modu
 systemd, then a condition like</p><pre><code class="programlisting  nix">condition = hostPlatform.isLinux;
 </code></pre><p>should be added. If you contribute a module then you don’t need to
 add this entry, the merger will create an entry for you.</p></li></ul></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-tests" class="title" style="clear: both">Tests   </h2>  </div> </div></div><p>Home Manager includes a basic test suite and it is highly recommended to
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-tests" class="title" style="clear: both">Tests   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-tests-command">Using the tests command</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests-manual">Manual test commands</a> </span></dt> </dl></div><p>Home Manager includes a basic test suite and it is highly recommended to
 include at least one test when adding a module. Tests are typically in
 the form of &quot;golden tests&quot; where, for example, a generated
 configuration file is compared to a known correct file.</p><p>It is relatively easy to create tests by modeling the existing tests,
 found in the <code class="literal">tests</code> project directory. For a full reference to the
 functions available in test scripts, you can look at NMT’s
-<a class="link" href="https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib"  target="_top">bash-lib</a>.</p><p>The full Home Manager test suite can be run by executing</p><pre><code class="programlisting  shell">$ nix-build --pure --option allow-import-from-derivation false tests -A build.all
+<a class="link" href="https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib"  target="_top">bash-lib</a>.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-tests-command" class="title" >Using the tests command   </h3>  </div> </div></div><p>Home Manager provides a convenient <code class="literal">tests</code> command for discovering and running tests:</p><pre><code class="programlisting  shell"># List all available tests
+$ nix run .#tests -- -l
+
+# List tests matching a pattern
+$ nix run .#tests -- -l alacritty
+
+# Run all tests matching a pattern
+$ nix run .#tests -- alacritty
+
+# Run a specific test
+$ nix run .#tests -- test-alacritty-empty-settings
+
+# Run integration tests
+$ nix run .#tests -- -t -l
+
+# Interactive test selection (requires fzf)
+$ python3 tests/tests.py -i
+
+# Pass additional nix build flags
+$ nix run .#tests -- alacritty -- --verbose
+</code></pre>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-tests-manual" class="title" >Manual test commands   </h3>  </div> </div></div><p>For advanced usage or CI environments, you can also run tests manually using nix build commands.</p><p>The full Home Manager test suite can be run by executing</p><pre><code class="programlisting  shell">$ nix-build --pure --option allow-import-from-derivation false tests -A build.all
 </code></pre><p>in the project root. List all test cases through</p><pre><code class="programlisting  shell">$ nix-build --pure tests --option allow-import-from-derivation false -A list
 </code></pre><p>and run an individual test, for example <code class="literal">alacritty-empty-settings</code>,
 through</p><pre><code class="programlisting  shell">$ nix-build --pure tests --option allow-import-from-derivation false -A build.alacritty-empty-settings
@@ -1028,6 +1049,8 @@ use instead e.g.</p><pre><code class="programlisting  shell">$ nix build --refer
 </code></pre><p>or</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-alacritty-empty-settings
 </code></pre><p>Some tests may be marked with <code class="literal">enableLegacyIfd</code>, those may be run by run with e.g.</p><pre><code class="programlisting  shell">$ nix-build --pure tests --arg enableLegacyIfd true -A build.mytest
 </code></pre>
+</div>
+
 </div>
 </div><div class="part"> <div class="titlepage">  <div>   <div>    <h1 id="ch-internals" class="title" >Home Manager Internals   </h1>  </div> </div></div><div class="partintro"><p>This chapter collects some documentation about the internal workings
 of Home Manager. The information here is mostly aimed to developers of
