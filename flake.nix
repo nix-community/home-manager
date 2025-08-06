@@ -80,6 +80,10 @@
               ./modules/misc/news/create-news-entry.sh
             '';
 
+            tests = pkgs.writeShellScriptBin "tests" ''
+              exec ${pkgs.python3}/bin/python3 ${self}/tests/tests.py "$@"
+            '';
+
             docs-html = docs.manual.html;
             docs-htmlOpenTool = docs.manual.htmlOpenTool;
             docs-json = docs.options.json;
