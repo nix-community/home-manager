@@ -10,7 +10,7 @@ let
 in
 {
 
-  meta.maintainer = [ lib.maintainers.bmrips ];
+  meta.maintainers = [ lib.maintainers.bmrips ];
 
   options.programs.git-credential-keepassxc = {
     enable = lib.mkEnableOption "{command}`git-credential-keepassxc`.";
