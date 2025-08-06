@@ -11,7 +11,10 @@ let
   iniFormat = pkgs.formats.ini { };
 in
 {
-  meta.maintainers = [ lib.maintainers.d-brasher ];
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    d-brasher
+  ];
 
   options.programs.keepassxc = {
     enable = lib.mkEnableOption "keepassxc";
