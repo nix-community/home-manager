@@ -10,6 +10,37 @@ found in the `tests` project directory. For a full reference to the
 functions available in test scripts, you can look at NMT's
 [bash-lib](https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib).
 
+## Using the tests command {#sec-tests-command}
+
+Home Manager provides a convenient `tests` command for discovering and running tests:
+
+``` shell
+# List all available tests
+$ nix run .#tests -- -l
+
+# List tests matching a pattern
+$ nix run .#tests -- -l alacritty
+
+# Run all tests matching a pattern
+$ nix run .#tests -- alacritty
+
+# Run a specific test
+$ nix run .#tests -- test-alacritty-empty-settings
+
+# Run integration tests
+$ nix run .#tests -- -t -l
+
+# Interactive test selection (requires fzf)
+$ python3 tests/tests.py -i
+
+# Pass additional nix build flags
+$ nix run .#tests -- alacritty -- --verbose
+```
+
+## Manual test commands {#sec-tests-manual}
+
+For advanced usage or CI environments, you can also run tests manually using nix build commands.
+
 The full Home Manager test suite can be run by executing
 
 ``` shell
