@@ -1,7 +1,7 @@
-{ fonts, ... }:
+{ config, ... }:
 {
   time = "2025-08-05T19:17:36+00:00";
-  condition = fonts.fontconfig.enable;
+  condition = config.fonts.fontconfig.enable;
   message = ''
     The 'fontconfig' module now supports font rendering configuration.
 
