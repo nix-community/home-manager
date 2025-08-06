@@ -296,6 +296,50 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
+    # The file `${appUserDir}/globalStorage/storage.json` needs to be writable by VSCode,
+    # since it contains other data, such as theme backgrounds, recently opened folders, etc.
+
+    # A caveat of adding profiles this way is, VSCode has to be closed
+    # when this file is being written, since the file is loaded into RAM
+    # and overwritten on closing VSCode.
+    home.activation = {
+      "vscodeProfilesFor${appName}" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+        let
+          modifyGlobalStorage = pkgs.writeShellScript "vscode-global-storage-modify" ''
+            PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
+            file="${appUserDir}/globalStorage/storage.json"
+            file_write=""
+            profiles=(${
+              lib.escapeShellArgs (lib.flatten (lib.mapAttrsToList (n: v: n) allProfilesExceptDefault))
+            })
+
+            if [ -f "$file" ]; then
+              existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
+
+              for profile in "''${profiles[@]}"; do
+                if [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile $profile '.[$profile]')" != "\"$profile\"" ]]; then
+                  file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
+                fi
+              done
+            else
+              for profile in "''${profiles[@]}"; do
+                file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
+              done
+
+              mkdir -p $(dirname "$file")
+              echo "{}" > "$file"
+            fi
+
+            if [ "$file_write" != "" ]; then
+              userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split("...") | map({ name: ., location: . })')" "$file")
+              echo $userDataProfiles > "$file"
+            fi
+          '';
+        in
+        modifyGlobalStorage.outPath
+      );
+    };
+
     home.file = lib.mkMerge (
       lib.flatten [
         (lib.mapAttrsToList (
@@ -404,10 +448,5 @@ in
 
       ]
     );
-
-    # Keep our test activation
-    home.activation.testVscodeProfiles = ''
-      echo "Configured profiles: ${lib.concatStringsSep ", " (lib.attrNames cfg.profiles)}"
-    '';
   };
 }
