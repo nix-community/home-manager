@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  time = "2025-05-08T17:45:24+02:00";
+  time = "2025-05-08T15:45:24+00:00";
   condition = pkgs.stdenv.hostPlatform.isLinux;
   message = ''
     A new module is available: 'programs.wayprompt'.

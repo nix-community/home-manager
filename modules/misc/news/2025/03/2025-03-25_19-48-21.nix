@@ -1,5 +1,5 @@
 {
-  time = "2025-03-25T19:48:21-04:00";
+  time = "2025-03-25T23:48:21+00:00";
   condition = true;
   message = ''
     A new module is available: `programs.ripgrep-all`
