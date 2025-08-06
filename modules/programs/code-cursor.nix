@@ -29,7 +29,7 @@ in
       #
       multiProfile = false;
 
-      paths = {
+      configPaths = {
         mcp = "${config.home.homeDirectory}/.cursor/mcp.json";
       };
     })

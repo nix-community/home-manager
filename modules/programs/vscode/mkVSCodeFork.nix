@@ -2,9 +2,8 @@
   modulePath,
   name,
   package,
-  paths ? { },
-  platforms ? { },
   packageName,
+  configPaths ? { },
   multiProfile ? true,
 }:
 {
@@ -35,13 +34,11 @@ let
 
   # User data directory
   #
-  appDir =
+  appUserDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "${config.home.homeDirectory}/Library/Application Support/${appName}"
+      "${config.home.homeDirectory}/Library/Application Support/${appName}/User"
     else
       "${config.xdg.configHome}/${appName}/User";
-
-  mkProfilePath = name: "${appDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
 
   # Helper function to handle path vs JSON object logic
   mkJsonSource =
@@ -93,46 +90,46 @@ in
       description = "Whether the VSCode fork supports multiple profiles.";
     };
 
-    paths = lib.mkOption {
+    configPaths = lib.mkOption {
       internal = true;
       type = lib.types.submodule {
         options = {
           mcp = lib.mkOption {
             type = lib.types.path;
-            default = paths.mcp or "${appDir}/User/mcp.json";
-            defaultText = lib.literalExpression ''"''${appDir}/User/mcp.json"'';
+            default = configPaths.mcp or "${appUserDir}/mcp.json";
+            defaultText = lib.literalExpression ''"''${appUserDir}/mcp.json"'';
             example = "Library/Application Support/${appName}/User/mcp.json";
             description = "Path for MCP configuration file.";
           };
 
           tasks = lib.mkOption {
             type = lib.types.path;
-            default = paths.tasks or "${appDir}/User/tasks.json";
-            defaultText = lib.literalExpression ''"''${appDir}/User/tasks.json"'';
+            default = configPaths.tasks or "${appUserDir}/tasks.json";
+            defaultText = lib.literalExpression ''"''${appUserDir}/tasks.json"'';
             example = "Library/Application Support/${appName}/User/tasks.json";
             description = "Path for tasks file.";
           };
 
           keybindings = lib.mkOption {
             type = lib.types.path;
-            default = paths.keybindings or "${appDir}/User/keybindings.json";
-            defaultText = lib.literalExpression ''"''${appDir}/User/keybindings.json"'';
+            default = configPaths.keybindings or "${appUserDir}/keybindings.json";
+            defaultText = lib.literalExpression ''"''${appUserDir}/keybindings.json"'';
             example = "Library/Application Support/${appName}/User/keybindings.json";
             description = "Path for keybindings file.";
           };
 
           extensions = lib.mkOption {
             type = lib.types.path;
-            default = paths.extensions or "${appDir}/User/extensions";
-            defaultText = lib.literalExpression ''"''${appDir}/User/extensions"'';
+            default = configPaths.extensions or "${appUserDir}/extensions";
+            defaultText = lib.literalExpression ''"''${appUserDir}/extensions"'';
             example = "Library/Application Support/${appName}/User/extensions";
             description = "Path for the extensions directory.";
           };
 
           settings = lib.mkOption {
             type = lib.types.path;
-            default = paths.settings or "${appDir}/User/settings.json";
-            defaultText = lib.literalExpression ''"''${appDir}/User/settings.json"'';
+            default = configPaths.settings or "${appUserDir}/settings.json";
+            defaultText = lib.literalExpression ''"''${appUserDir}/settings.json"'';
             example = "Library/Application Support/${appName}/User/settings.json";
             description = "Path for settings file.";
           };
@@ -285,25 +282,25 @@ in
             # settings
             #
             (lib.mkIf (profile.settings != { }) {
-              "${cfg.paths.settings}".source = mkJsonSource "user-settings" profile.settings;
+              "${cfg.configPaths.settings}".source = mkJsonSource "user-settings" profile.settings;
             })
 
             # keybindings
             #
             (lib.mkIf (profile.keybindings != [ ]) {
-              "${cfg.paths.keybindings}".source = mkJsonSource "keybindings" profile.keybindings;
+              "${cfg.configPaths.keybindings}".source = mkJsonSource "keybindings" profile.keybindings;
             })
 
             # tasks
             #
             (lib.mkIf (profile.tasks != [ ]) {
-              "${cfg.paths.tasks}".source = mkJsonSource "user-tasks" profile.tasks;
+              "${cfg.configPaths.tasks}".source = mkJsonSource "user-tasks" profile.tasks;
             })
 
             # mcp
             #
             (lib.mkIf (profile.mcp != { }) {
-              "${cfg.paths.mcp}".source = mkJsonSource "user-mcp" profile.mcp;
+              "${cfg.configPaths.mcp}".source = mkJsonSource "user-mcp" profile.mcp;
             })
           ]
         ) getProfiles)
