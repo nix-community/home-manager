@@ -132,7 +132,20 @@
     in
     {
       # TODO: increase buildbot testing scope
-      buildbot = forCI (system: (testChunks system));
+      buildbot = forCI (
+        system:
+        let
+          allIntegrationTests = integrationTests system;
+          workingIntegrationTests = nixpkgs.lib.filterAttrs (
+            name: _:
+            nixpkgs.lib.elem name [
+              "integration-nixos-basics"
+              "integration-nixos-legacy-profile-management"
+            ]
+          ) allIntegrationTests;
+        in
+        (testChunks system) // workingIntegrationTests
+      );
 
       devShells = forAllSystems (
         system:
