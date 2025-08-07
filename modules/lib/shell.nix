@@ -69,7 +69,9 @@ in
   # Given an attribute set containing shell variable names and their
   # assignment, this function produces a string containing an export
   # statement for each set entry.
-  exportAll = vars: lib.concatStringsSep "\n" (lib.mapAttrsToList export vars);
+  exportAll =
+    vars:
+    lib.concatStringsSep "\n" (lib.mapAttrsToList export (lib.filterAttrs (_k: v: v != null) vars));
 
   # Formats a list of items for shell array content with intelligent width optimization.
   # IMPORTANT: This formats the CONTENTS of an array (what goes inside parentheses),

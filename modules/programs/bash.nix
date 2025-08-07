@@ -135,17 +135,22 @@ in
         default = { };
         type =
           with types;
-          lazyAttrsOf (oneOf [
-            str
-            path
-            int
-            float
-          ]);
+          lazyAttrsOf (
+            nullOr (oneOf [
+              str
+              path
+              int
+              float
+            ])
+          );
         example = {
           MAILCHECK = 30;
         };
         description = ''
           Environment variables that will be set for the Bash session.
+
+          Setting a value to `null` will skip setting the variable at all, which
+          may be useful when overriding.
         '';
       };
 

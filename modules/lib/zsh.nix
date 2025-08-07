@@ -38,5 +38,7 @@ rec {
     let
       separator = if indent == "" then "\n" else "\n" + indent;
     in
-    lib.concatStringsSep separator (lib.mapAttrsToList export vars);
+    lib.concatStringsSep separator (
+      lib.mapAttrsToList export (lib.filterAttrs (_k: v: v != null) vars)
+    );
 }
