@@ -139,6 +139,12 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
   };
+  ErrorTeaPot = {
+    name = "ErrorTeaPot";
+    email = "home-manager.u7iqn@simplelogin.com";
+    github = "ErrorTeaPot";
+    githubId = 98967114;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
