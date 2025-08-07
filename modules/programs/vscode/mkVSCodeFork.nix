@@ -21,7 +21,6 @@ let
     "windsurf" = "Windsurf";
     "cursor" = "Cursor";
   };
-
   jsonFormat = pkgs.formats.json { };
 
   appName = name;
@@ -40,6 +39,8 @@ let
     else
       "${config.xdg.configHome}/${appName}/User";
 
+  appExtensionDir = "${config.home.homeDirectory}/.${lib.toLower appName}/extensions";
+
   # Helper function to handle path vs JSON object logic
   mkJsonSource =
     name: value:
@@ -53,7 +54,6 @@ let
 
   mkProfilePath = name: "${appUserDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
 
-  extensionPath = ".${appName}/extensions";
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
     name: text:
@@ -147,10 +147,10 @@ in
 
           extensions = lib.mkOption {
             type = lib.types.path;
-            default = configPaths.extensions or "${appUserDir}/extensions";
-            defaultText = lib.literalExpression ''"''${appUserDir}/extensions"'';
+            default = configPaths.extensions or appExtensionDir;
+            defaultText = lib.literalExpression ''"''${appExtensionDir}"'';
             example = "Library/Application Support/${appName}/User/extensions";
-            description = "Path for the extensions directory.";
+            description = "Path for the extensions *directory*.";
           };
 
           settings = lib.mkOption {
@@ -174,7 +174,7 @@ in
               type = lib.types.listOf lib.types.package;
               default = [ ];
               example = lib.literalExpression "[ pkgs.vscode-extensions.bbenoist.nix ]";
-              description = "The extensions VSCode should be started with.";
+              description = "The extensions to be installed in the profile.";
             };
 
             keybindings = lib.mkOption {
@@ -191,7 +191,7 @@ in
                       command = lib.mkOption {
                         type = lib.types.str;
                         example = "editor.action.clipboardCopyAction";
-                        description = "The VS Code command to execute.";
+                        description = "The command to execute.";
                       };
 
                       when = lib.mkOption {
@@ -225,8 +225,7 @@ in
                 ]
               '';
               description = ''
-                Keybindings written to Visual Studio Code's
-                {file}`keybindings.json`.
+                Keybindings written to the profile's {file}`keybindings.json`.
                 This can be a JSON object or a path to a custom JSON file.
               '';
             };
@@ -244,8 +243,7 @@ in
                 }
               '';
               description = ''
-                Configuration written to Visual Studio Code's
-                {file}`mcp.json`.
+                Configuration written to the profile's {file}`mcp.json`.
                 This can be a JSON object or a path to a custom JSON file.
               '';
             };
@@ -260,7 +258,7 @@ in
                 }
               '';
               description = ''
-                Configuration written to VSCode's {file}`settings.json`.
+                Configuration written to the profile's {file}`settings.json`.
                 This can be a JSON object or a path to a custom JSON file.
               '';
             };
@@ -281,7 +279,7 @@ in
                 }
               '';
               description = ''
-                Configuration written to VSCode's {file}`tasks.json`.
+                Configuration written to the profile's {file}`tasks.json`.
                 This can be a JSON object or a path to a custom JSON file.
               '';
             };
@@ -382,7 +380,7 @@ in
             subDir = "share/vscode/extensions";
             toPaths =
               ext:
-              map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
+              map (k: { "${cfg.configPaths.extensions}/${k}".source = "${ext}/${subDir}/${k}"; }) (
                 if ext ? vscodeExtUniqueId then
                   [ ext.vscodeExtUniqueId ]
                 else
@@ -410,13 +408,13 @@ in
                     && defaultProfile != { }
                   )
                   {
-                    # Whenever our immutable extensions.json changes, force VSCode to regenerate
+                    # Whenever our immutable extensions.json changes, force the profile to regenerate
                     # extensions.json with both mutable and immutable extensions.
-                    "${extensionPath}/.extensions-immutable.json" = {
+                    "${cfg.configPaths.extensions}/.extensions-immutable.json" = {
                       text = extensionJson defaultProfile.extensions;
                       onChange = ''
-                        run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
-                        verboseEcho "Regenerating VSCode extensions.json"
+                        run rm $VERBOSE_ARG -f ${cfg.configPaths.extensions}/{extensions.json,.init-default-profile-extensions}
+                        verboseEcho "Regenerating ${appName} extensions.json"
                         run ${lib.getExe cfg.package} --list-extensions > /dev/null
                       '';
                     };
@@ -424,7 +422,7 @@ in
             )
           else
             {
-              "${extensionPath}".source =
+              "${cfg.configPaths.extensions}".source =
                 let
                   combinedExtensionsDrv = pkgs.buildEnv {
                     name = "vscode-extensions";
@@ -445,7 +443,6 @@ in
                 "${combinedExtensionsDrv}/${subDir}";
             }
         ))
-
       ]
     );
   };
