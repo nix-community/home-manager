@@ -7,12 +7,8 @@ includes = [ "*.nix" ]
 
 [formatter.deadnix]
 command = "deadnix"
-options = [ "--edit", "--no-lambda-arg" ]
+options = [ "--edit", "--no-lambda-arg", "--no-lambda-pattern-names" ]
 includes = [ "*.nix" ]
-excludes = [
-  "tests/integration/standalone/alice-home-init.nix",
-  "tests/integration/standalone/home-with-symbols-init.nix"
-]
 
 [formatter.keep-sorted]
 command = "keep-sorted"
