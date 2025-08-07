@@ -7,6 +7,7 @@ let
   '';
 in
 {
+  home.preferXdgDirectories = true;
   programs.codex = {
     enable = true;
     package = codexPackage;
@@ -23,9 +24,10 @@ in
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.codex/config.toml
-    assertFileContent home-files/.codex/config.toml \
+    assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
+      'export CODEX_HOME="/home/hm-user/.config/codex"'
+    assertFileExists home-files/.config/codex/config.toml
+    assertFileContent home-files/.config/codex/config.toml \
       ${./config.toml}
-    assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'CODEX_HOME'
   '';
 }
