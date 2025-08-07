@@ -9,6 +9,7 @@ let
     if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
+    export IS_EMPTY=""
     export LOCALE_ARCHIVE_2_27="${config.i18n.glibcLocales}/lib/locale/locale-archive"
     export V1="v1"
     export V2="v2-v1"
@@ -25,6 +26,7 @@ let
     if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
+    export IS_EMPTY=""
     export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:$TERMINFO_DIRS''${TERMINFO_DIRS:+:}/usr/share/terminfo"
     export V1="v1"
     export V2="v2-v1"
@@ -45,6 +47,8 @@ in
   home.sessionVariables = {
     V1 = "v1";
     V2 = "v2-${config.home.sessionVariables.V1}";
+    IS_EMPTY = "";
+    IS_NULL = null;
   };
 
   nmt.script = ''

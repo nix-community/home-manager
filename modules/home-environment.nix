@@ -266,12 +266,14 @@ in
       default = { };
       type =
         with types;
-        lazyAttrsOf (oneOf [
-          str
-          path
-          int
-          float
-        ]);
+        lazyAttrsOf (
+          nullOr (oneOf [
+            str
+            path
+            int
+            float
+          ])
+        );
       example = {
         EDITOR = "emacs";
         GS_OPTIONS = "-sPAPERSIZE=a4";
@@ -307,6 +309,9 @@ in
           BAR = "''${config.home.sessionVariables.FOO} World!";
         };
         ```
+
+        Setting a value to `null` will skip setting the variable at all, which
+        may be useful when overriding.
       '';
     };
 

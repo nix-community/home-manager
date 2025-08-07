@@ -8,6 +8,8 @@
       PATH = "$HOME/bin:$PATH";
       V1 = "v1";
       V2 = "v2-${config.programs.zsh.sessionVariables.V1}";
+      IS_EMPTY = "";
+      IS_NULL = null;
     };
   };
 
