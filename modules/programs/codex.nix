@@ -15,7 +15,6 @@ let
   packageVersion = if cfg.package != null then lib.getVersion cfg.package else "0.2.0";
   isTomlConfig = lib.versionAtLeast packageVersion "0.2.0";
   settingsFormat = if isTomlConfig then tomlFormat else yamlFormat;
-  configFileName = if isTomlConfig then ".codex/config.toml" else ".codex/config.yaml";
 in
 {
   meta.maintainers = [
@@ -31,7 +30,9 @@ in
       # NOTE: `yaml` type supports null, using `nullOr` for backwards compatibility period
       type = lib.types.nullOr tomlFormat.type;
       description = ''
-        Configuration written to {file}`~/.codex/config.toml` (0.2.0+) or {file}`~/.codex/config.yaml` (<0.2.0).
+        Configuration written to {file}`CODEX_HOME/config.toml` (0.2.0+)
+        or {file}`~/.codex/config.yaml` (<0.2.0). Per default {env}`CODEX_HOME`
+        defaults to ~/.codex.
         See <https://github.com/openai/codex/blob/main/codex-rs/config.md> for supported values.
       '';
       default = { };
@@ -63,16 +64,27 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = mkIf (cfg.package != null) [ cfg.package ];
-    home.file = {
-      "${configFileName}" = lib.mkIf (cfg.settings != { }) {
-        source = settingsFormat.generate "codex-config" cfg.settings;
-      };
-      ".codex/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
-        text = cfg.custom-instructions;
+  config =
+    let
+      useXdgDirectories = (config.home.preferXdgDirectories && isTomlConfig);
+      xdgConfigHome = lib.removePrefix config.home.homeDirectory config.xdg.configHome;
+      configDir = if useXdgDirectories then "${xdgConfigHome}/codex" else ".codex";
+      configFileName = if isTomlConfig then "config.toml" else "config.yaml";
+    in
+    mkIf cfg.enable {
+      home = {
+        packages = mkIf (cfg.package != null) [ cfg.package ];
+        file = {
+          "${configDir}/${configFileName}" = lib.mkIf (cfg.settings != { }) {
+            source = settingsFormat.generate "codex-config" cfg.settings;
+          };
+          "${configDir}/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
+            text = cfg.custom-instructions;
+          };
+        };
+        sessionVariables = mkIf useXdgDirectories {
+          CODEX_HOME = "${config.xdg.configHome}/codex";
+        };
       };
     };
-  };
-
 }
