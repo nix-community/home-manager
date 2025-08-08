@@ -2,7 +2,6 @@
   modulePath,
   name,
   package,
-  packageName,
   configPaths ? { },
   multiProfile ? true,
 }:
@@ -21,6 +20,7 @@ let
     "windsurf" = "Windsurf";
     "cursor" = "Cursor";
   };
+
   jsonFormat = pkgs.formats.json { };
 
   appName = name;
@@ -30,6 +30,10 @@ let
 
   vscodePname = cfg.package.pname;
   vscodeVersion = cfg.package.version;
+
+  # only Cursor has different package name `code-cursor`
+  #
+  packageName = "${lib.optionalString (package.pname == "cursor") "code-"}${package.pname}";
 
   # User data directory
   #
