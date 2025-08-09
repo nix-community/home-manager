@@ -122,17 +122,11 @@ in
       internal = true;
       type = lib.types.submodule {
         options = {
-          mcpFile = lib.mkOption {
+          extensionsDir = lib.mkOption {
             type = lib.types.path;
-            example = "Library/Application Support/${appName}/User/mcp.json";
-            description = "Path for MCP configuration file.";
-          };
-
-          tasksFile = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
-            default = null;
-            example = "Library/Application Support/${appName}/User/tasks.json";
-            description = "Path for tasks file.";
+            default = ".${lib.toLower appName}/extensions";
+            example = "Library/Application Support/${appName}/User/extensions";
+            description = "Path for the extensions directory.";
           };
 
           keybindingsFile = lib.mkOption {
@@ -142,11 +136,11 @@ in
             description = "Path for keybindings file.";
           };
 
-          extensionsFile = lib.mkOption {
+          mcpFile = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "Library/Application Support/${appName}/User/extensions";
-            description = "Path for the extensions *directory*.";
+            example = "Library/Application Support/${appName}/User/mcp.json";
+            description = "Path for MCP configuration file.";
           };
 
           settingsFile = lib.mkOption {
@@ -154,6 +148,13 @@ in
             default = null;
             example = "Library/Application Support/${appName}/User/settings.json";
             description = "Path for settings file.";
+          };
+
+          tasksFile = lib.mkOption {
+            type = lib.types.nullOr lib.types.path;
+            default = null;
+            example = "Library/Application Support/${appName}/User/tasks.json";
+            description = "Path for tasks file.";
           };
         };
       };
@@ -382,7 +383,7 @@ in
             subDir = "share/vscode/extensions";
             toPaths =
               ext:
-              map (k: { "${cfg.overridePaths.extensions}/${k}".source = "${ext}/${subDir}/${k}"; }) (
+              map (k: { "${cfg.overridePaths.extensionsDir}/${k}".source = "${ext}/${subDir}/${k}"; }) (
                 if ext ? vscodeExtUniqueId then
                   [ ext.vscodeExtUniqueId ]
                 else
@@ -412,7 +413,7 @@ in
                   {
                     # Whenever our immutable extensions.json changes, force the profile to regenerate
                     # extensions.json with both mutable and immutable extensions.
-                    "${cfg.overridePaths.extensions}/.extensions-immutable.json" = {
+                    "${cfg.overridePaths.extensionsDir}/.extensions-immutable.json" = {
                       text = extensionJson defaultProfile.extensions;
                       onChange = ''
                         run rm $VERBOSE_ARG -f ${cfg.overridePaths.extensions}/{extensions.json,.init-default-profile-extensions}
@@ -424,7 +425,7 @@ in
             )
           else
             {
-              "${cfg.overridePaths.extensions}".source =
+              "${cfg.overridePaths.extensionsDir}".source =
                 let
                   combinedExtensionsDrv = pkgs.buildEnv {
                     name = "vscode-extensions";
