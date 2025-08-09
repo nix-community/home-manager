@@ -119,6 +119,13 @@ in
       '';
     };
 
+    debug = lib.mkOption {
+      type = lib.types.bool;
+      internal = true;
+      default = false;
+      description = "Enable verbose tracing during profile generation.";
+    };
+
     overridePaths = lib.mkOption {
       internal = true;
       type = lib.types.submodule {
@@ -289,6 +296,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !(cfg.mutableExtensionsDir && allProfilesExceptDefault != { });
+        message = "mutableExtensionsDir=true requires only a default profile; found additional profiles in ${lib.concatStringsSep ", " (builtins.attrNames allProfilesExceptDefault)}";
+      }
+    ];
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     # The file `${appUserDir}/globalStorage/storage.json` needs to be writable by VSCode,
@@ -301,6 +314,7 @@ in
       "vscodeProfilesFor${appName}" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
         let
           modifyGlobalStorage = pkgs.writeShellScript "vscode-global-storage-modify" ''
+            set -euo pipefail
             PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
             file="${appUserDir}/globalStorage/storage.json"
             file_write=""
@@ -348,7 +362,7 @@ in
                 "${profilePath}/${f}.json";
           in
           [
-            (builtins.trace "Generating ${appName} profile: ${name} (${profilePath})" { })
+            (lib.mkIf cfg.debug (builtins.trace "Generating ${appName} profile: ${name} (${profilePath})" { }))
 
             # settings
             #
