@@ -13,21 +13,9 @@
   ...
 }:
 let
-  supportedApps = {
-    "vscode" = "Code";
-    "vscode-insiders" = "Code - Insiders";
-    "vscodium" = "VSCodium";
-    "openvscode-server" = "OpenVSCode Server";
-    "windsurf" = "Windsurf";
-    "cursor" = "Cursor";
-  };
-
   jsonFormat = pkgs.formats.json { };
 
   cfg = lib.getAttrFromPath modulePath config;
-
-  vscodePname = cfg.package.pname;
-  vscodeVersion = cfg.package.version;
 
   appName = name;
   appPackageName = if (packageName != null) then packageName else package.pname;
@@ -39,8 +27,6 @@ let
       "${config.home.homeDirectory}/Library/Application Support/${appName}/User"
     else
       "${config.xdg.configHome}/${appName}/User";
-
-  appExtensionDir = "${config.home.homeDirectory}/.${lib.toLower appName}/extensions";
 
   # Helper function to handle path vs JSON object logic
   mkJsonSource =
@@ -63,6 +49,20 @@ let
       name = "extensions-json-${name}";
       destination = "/share/vscode/extensions/extensions.json";
     };
+
+  # Helpers/derived values
+  supportsProfileExtensionsJson =
+    lib.versionAtLeast cfg.package.version "1.74.0"
+    || builtins.elem cfg.package.pname [
+      "cursor"
+      "windsurf"
+    ];
+
+  hasDefaultProfile = defaultProfile != { };
+
+  subDir = "share/vscode/extensions";
+
+  allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
 
   availableProfiles =
     let
@@ -112,9 +112,10 @@ in
       defaultText = lib.literalExpression "(removeAttrs config.${lib.concatStringsSep "." modulePath}.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
-        Whether extensions can be installed or updated manually
-        or by Visual Studio Code. Mutually exclusive to
-        programs.vscode.profiles.
+        Whether extensions can be installed or updated manually or by Visual Studio Code only.
+        Mutually exclusive to {option}`profiles`.
+
+        It's automatically enabled by default if only default profile is set in {option}`profiles`.
       '';
     };
 
@@ -123,9 +124,9 @@ in
       type = lib.types.submodule {
         options = {
           extensionsDir = lib.mkOption {
-            type = lib.types.path;
-            default = ".${lib.toLower appName}/extensions";
-            example = "Library/Application Support/${appName}/User/extensions";
+            type = lib.types.either lib.types.str lib.types.path;
+            default = "~/.${lib.toLower appName}/extensions";
+            example = "~/.vscode/extensions";
             description = "Path for the extensions directory.";
           };
 
@@ -303,9 +304,7 @@ in
             PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
             file="${appUserDir}/globalStorage/storage.json"
             file_write=""
-            profiles=(${
-              lib.escapeShellArgs (lib.flatten (lib.mapAttrsToList (n: v: n) allProfilesExceptDefault))
-            })
+            profiles=(${lib.escapeShellArgs (builtins.attrNames allProfilesExceptDefault)})
 
             if [ -f "$file" ]; then
               existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
@@ -365,7 +364,7 @@ in
 
             # tasks
             #
-            (lib.mkIf (profile.tasks != [ ]) {
+            (lib.mkIf (profile.tasks != { }) {
               "${configFilePathFor "tasks"}".source = mkJsonSource "user-tasks" profile.tasks;
             })
 
@@ -380,7 +379,6 @@ in
         (lib.mkIf (cfg.profiles != { }) (
           let
             # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-            subDir = "share/vscode/extensions";
             toPaths =
               ext:
               map (k: { "${cfg.overridePaths.extensionsDir}/${k}".source = "${ext}/${subDir}/${k}"; }) (
@@ -397,31 +395,19 @@ in
             # causes VSCode to create the extensions.json with all the extensions
             # in the extension directory, which includes extensions from other profiles.
             lib.mkMerge (
-              lib.concatMap toPaths (lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles))
-              ++
-                lib.optional
-                  (
-                    (
-                      lib.versionAtLeast vscodeVersion "1.74.0"
-                      || builtins.elem vscodePname [
-                        "cursor"
-                        "windsurf"
-                      ]
-                    )
-                    && defaultProfile != { }
-                  )
-                  {
-                    # Whenever our immutable extensions.json changes, force the profile to regenerate
-                    # extensions.json with both mutable and immutable extensions.
-                    "${cfg.overridePaths.extensionsDir}/.extensions-immutable.json" = {
-                      text = extensionJson defaultProfile.extensions;
-                      onChange = ''
-                        run rm $VERBOSE_ARG -f ${cfg.overridePaths.extensions}/{extensions.json,.init-default-profile-extensions}
-                        verboseEcho "Regenerating ${appName} extensions.json"
-                        run ${lib.getExe cfg.package} --list-extensions > /dev/null
-                      '';
-                    };
-                  }
+              lib.concatMap toPaths allExtensions
+              ++ lib.optional (supportsProfileExtensionsJson && hasDefaultProfile) {
+                # Whenever our immutable extensions.json changes, force the profile to regenerate
+                # extensions.json with both mutable and immutable extensions.
+                "${cfg.overridePaths.extensionsDir}/.extensions-immutable.json" = {
+                  text = extensionJson defaultProfile.extensions;
+                  onChange = ''
+                    run rm $VERBOSE_ARG -f "${cfg.overridePaths.extensionsDir}"/{extensions.json,.init-default-profile-extensions}
+                    verboseEcho "Regenerating ${appName} extensions.json"
+                    run ${lib.getExe cfg.package} --list-extensions > /dev/null
+                  '';
+                };
+              }
             )
           else
             {
@@ -430,17 +416,10 @@ in
                   combinedExtensionsDrv = pkgs.buildEnv {
                     name = "vscode-extensions";
                     paths =
-                      (lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles))
-                      ++ lib.optional (
-                        (
-                          lib.versionAtLeast vscodeVersion "1.74.0"
-                          || builtins.elem vscodePname [
-                            "cursor"
-                            "windsurf"
-                          ]
-                        )
-                        && defaultProfile != { }
-                      ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));
+                      allExtensions
+                      ++ lib.optional (supportsProfileExtensionsJson && hasDefaultProfile) (
+                        extensionJsonFile "default" (extensionJson defaultProfile.extensions)
+                      );
                   };
                 in
                 "${combinedExtensionsDrv}/${subDir}";
