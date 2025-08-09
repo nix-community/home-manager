@@ -29,18 +29,24 @@ let
       "${config.xdg.configHome}/${appName}/User";
 
   # Helper function to handle path vs JSON object logic
-  mkJsonSource =
+  toJsonSource =
     name: value:
     if builtins.isPath value || lib.isStorePath value then
       value
     else
       jsonFormat.generate "vscode-${name}" value;
 
-  defaultProfile = if cfg.profiles ? default then cfg.profiles.default else { };
+  # profiles
+  #
+  hasDefaultProfile = cfg.profiles ? default;
+  defaultProfile = if hasDefaultProfile then cfg.profiles.default else { };
   allProfilesExceptDefault = lib.removeAttrs cfg.profiles [ "default" ];
 
   mkProfilePath = name: "${appUserDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
 
+  # extensions
+  #
+  allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
     name: text:
@@ -50,7 +56,6 @@ let
       destination = "/share/vscode/extensions/extensions.json";
     };
 
-  # Helpers/derived values
   supportsProfileExtensionsJson =
     lib.versionAtLeast cfg.package.version "1.74.0"
     || builtins.elem cfg.package.pname [
@@ -58,32 +63,6 @@ let
       "windsurf"
     ];
 
-  hasDefaultProfile = defaultProfile != { };
-
-  subDir = "share/vscode/extensions";
-
-  allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
-
-  availableProfiles =
-    let
-      profiles = cfg.profiles or { };
-    in
-
-    # no profiles configured
-    if profiles == { } then
-      { }
-
-    # multi-profile: return all profiles
-    else if cfg.multiProfile then
-      profiles
-
-    # single profile: return default profile if it exists
-    else if profiles ? default then
-      { default = profiles.default; }
-
-    # all else return empty
-    else
-      { };
 in
 {
   options = lib.setAttrByPath modulePath {
@@ -367,32 +346,34 @@ in
             # settings
             #
             (lib.mkIf (profile.settings != { }) {
-              "${configFilePathFor "settings"}".source = mkJsonSource "user-settings" profile.settings;
+              "${configFilePathFor "settings"}".source = toJsonSource "user-settings" profile.settings;
             })
 
             # keybindings
             #
             (lib.mkIf (profile.keybindings != [ ]) {
-              "${configFilePathFor "keybindings"}".source = mkJsonSource "keybindings" profile.keybindings;
+              "${configFilePathFor "keybindings"}".source = toJsonSource "keybindings" profile.keybindings;
             })
 
             # tasks
             #
             (lib.mkIf (profile.tasks != { }) {
-              "${configFilePathFor "tasks"}".source = mkJsonSource "user-tasks" profile.tasks;
+              "${configFilePathFor "tasks"}".source = toJsonSource "user-tasks" profile.tasks;
             })
 
             # mcp
             #
             (lib.mkIf (profile.mcp != { }) {
-              "${configFilePathFor "mcp"}".source = mkJsonSource "user-mcp" profile.mcp;
+              "${configFilePathFor "mcp"}".source = toJsonSource "user-mcp" profile.mcp;
             })
           ]
-        ) availableProfiles)
+        ) cfg.profiles)
 
         (lib.mkIf (cfg.profiles != { }) (
           let
             # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
+            subDir = "share/vscode/extensions";
+
             toPaths =
               ext:
               map (k: { "${cfg.overridePaths.extensionsDir}/${k}".source = "${ext}/${subDir}/${k}"; }) (
