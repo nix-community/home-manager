@@ -2,8 +2,9 @@
   modulePath,
   name,
   package,
-  configPaths ? { },
+  packageName ? null,
   multiProfile ? true,
+  overridePaths ? { },
 }:
 {
   config,
@@ -23,17 +24,13 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  appName = name;
-  moduleName = lib.concatStringsSep "." modulePath;
-
   cfg = lib.getAttrFromPath modulePath config;
 
   vscodePname = cfg.package.pname;
   vscodeVersion = cfg.package.version;
 
-  # only Cursor has different package name `code-cursor`
-  #
-  packageName = "${lib.optionalString (package.pname == "cursor") "code-"}${package.pname}";
+  appName = name;
+  appPackageName = if (packageName != null) then packageName else package.pname;
 
   # User data directory
   #
@@ -91,7 +88,7 @@ in
 {
   options = lib.setAttrByPath modulePath {
     enable = lib.mkEnableOption appName;
-    package = lib.mkPackageOption pkgs packageName { };
+    package = lib.mkPackageOption pkgs appPackageName { };
 
     name = lib.mkOption {
       type = lib.types.str;
@@ -112,7 +109,7 @@ in
     mutableExtensionsDir = lib.mkOption {
       type = lib.types.bool;
       default = allProfilesExceptDefault == { };
-      defaultText = lib.literalExpression "(removeAttrs config.${moduleName}.profiles [ \"default\" ]) == { }";
+      defaultText = lib.literalExpression "(removeAttrs config.${lib.concatStringsSep "." modulePath}.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
         Whether extensions can be installed or updated manually
@@ -121,46 +118,40 @@ in
       '';
     };
 
-    configPaths = lib.mkOption {
+    overridePaths = lib.mkOption {
       internal = true;
       type = lib.types.submodule {
         options = {
-          mcp = lib.mkOption {
+          mcpFile = lib.mkOption {
             type = lib.types.path;
-            default = configPaths.mcp or "${appUserDir}/mcp.json";
-            defaultText = lib.literalExpression ''"''${appUserDir}/mcp.json"'';
             example = "Library/Application Support/${appName}/User/mcp.json";
             description = "Path for MCP configuration file.";
           };
 
-          tasks = lib.mkOption {
-            type = lib.types.path;
-            default = configPaths.tasks or "${appUserDir}/tasks.json";
-            defaultText = lib.literalExpression ''"''${appUserDir}/tasks.json"'';
+          tasksFile = lib.mkOption {
+            type = lib.types.nullOr lib.types.path;
+            default = null;
             example = "Library/Application Support/${appName}/User/tasks.json";
             description = "Path for tasks file.";
           };
 
-          keybindings = lib.mkOption {
-            type = lib.types.path;
-            default = configPaths.keybindings or "${appUserDir}/keybindings.json";
-            defaultText = lib.literalExpression ''"''${appUserDir}/keybindings.json"'';
+          keybindingsFile = lib.mkOption {
+            type = lib.types.nullOr lib.types.path;
+            default = null;
             example = "Library/Application Support/${appName}/User/keybindings.json";
             description = "Path for keybindings file.";
           };
 
-          extensions = lib.mkOption {
-            type = lib.types.path;
-            default = configPaths.extensions or appExtensionDir;
-            defaultText = lib.literalExpression ''"''${appExtensionDir}"'';
+          extensionsFile = lib.mkOption {
+            type = lib.types.nullOr lib.types.path;
+            default = null;
             example = "Library/Application Support/${appName}/User/extensions";
             description = "Path for the extensions *directory*.";
           };
 
-          settings = lib.mkOption {
-            type = lib.types.path;
-            default = configPaths.settings or "${appUserDir}/settings.json";
-            defaultText = lib.literalExpression ''"''${appUserDir}/settings.json"'';
+          settingsFile = lib.mkOption {
+            type = lib.types.nullOr lib.types.path;
+            default = null;
             example = "Library/Application Support/${appName}/User/settings.json";
             description = "Path for settings file.";
           };
@@ -348,6 +339,13 @@ in
           name: profile:
           let
             profilePath = mkProfilePath name;
+
+            configFilePathFor =
+              f:
+              if (lib.getAttrFromPath [ "overridePaths" "${f}File" ] cfg) != null then
+                lib.getAttrFromPath [ "overridePaths" "${f}File" ] cfg
+              else
+                "${profilePath}/${f}.json";
           in
           [
             (builtins.trace "Generating ${appName} profile: ${name} (${profilePath})" { })
@@ -355,25 +353,25 @@ in
             # settings
             #
             (lib.mkIf (profile.settings != { }) {
-              "${cfg.configPaths.settings}".source = mkJsonSource "user-settings" profile.settings;
+              "${configFilePathFor "settings"}".source = mkJsonSource "user-settings" profile.settings;
             })
 
             # keybindings
             #
             (lib.mkIf (profile.keybindings != [ ]) {
-              "${cfg.configPaths.keybindings}".source = mkJsonSource "keybindings" profile.keybindings;
+              "${configFilePathFor "keybindings"}".source = mkJsonSource "keybindings" profile.keybindings;
             })
 
             # tasks
             #
             (lib.mkIf (profile.tasks != [ ]) {
-              "${cfg.configPaths.tasks}".source = mkJsonSource "user-tasks" profile.tasks;
+              "${configFilePathFor "tasks"}".source = mkJsonSource "user-tasks" profile.tasks;
             })
 
             # mcp
             #
             (lib.mkIf (profile.mcp != { }) {
-              "${cfg.configPaths.mcp}".source = mkJsonSource "user-mcp" profile.mcp;
+              "${configFilePathFor "mcp"}".source = mkJsonSource "user-mcp" profile.mcp;
             })
           ]
         ) availableProfiles)
@@ -384,7 +382,7 @@ in
             subDir = "share/vscode/extensions";
             toPaths =
               ext:
-              map (k: { "${cfg.configPaths.extensions}/${k}".source = "${ext}/${subDir}/${k}"; }) (
+              map (k: { "${cfg.overridePaths.extensions}/${k}".source = "${ext}/${subDir}/${k}"; }) (
                 if ext ? vscodeExtUniqueId then
                   [ ext.vscodeExtUniqueId ]
                 else
@@ -414,10 +412,10 @@ in
                   {
                     # Whenever our immutable extensions.json changes, force the profile to regenerate
                     # extensions.json with both mutable and immutable extensions.
-                    "${cfg.configPaths.extensions}/.extensions-immutable.json" = {
+                    "${cfg.overridePaths.extensions}/.extensions-immutable.json" = {
                       text = extensionJson defaultProfile.extensions;
                       onChange = ''
-                        run rm $VERBOSE_ARG -f ${cfg.configPaths.extensions}/{extensions.json,.init-default-profile-extensions}
+                        run rm $VERBOSE_ARG -f ${cfg.overridePaths.extensions}/{extensions.json,.init-default-profile-extensions}
                         verboseEcho "Regenerating ${appName} extensions.json"
                         run ${lib.getExe cfg.package} --list-extensions > /dev/null
                       '';
@@ -426,7 +424,7 @@ in
             )
           else
             {
-              "${cfg.configPaths.extensions}".source =
+              "${cfg.overridePaths.extensions}".source =
                 let
                   combinedExtensionsDrv = pkgs.buildEnv {
                     name = "vscode-extensions";
