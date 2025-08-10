@@ -20,7 +20,7 @@ let
   appName = name;
   appPackageName = if (packageName != null) then packageName else package.pname;
 
-  # User data directory
+  # app user directory
   #
   appUserDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -38,14 +38,24 @@ let
 
   # profiles
   #
-  hasDefaultProfile = cfg.profiles ? default;
-  defaultProfile = if hasDefaultProfile then cfg.profiles.default else { };
-  allProfilesExceptDefault = lib.removeAttrs cfg.profiles [ "default" ];
+  defaultProfile = if cfg.profiles ? default then cfg.profiles.default else { };
+  otherProfiles = lib.removeAttrs cfg.profiles [ "default" ];
 
-  mkProfilePath = name: "${appUserDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
+  hasDefaultProfile = builtins.trace "[debug] hasDefaultProfile = ${
+    builtins.toString (cfg.profiles ? default)
+  }" (cfg.profiles ? default);
+
+  buildProfilePath =
+    name: "${appUserDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
 
   # extensions
   #
+  appExtensionsPath =
+    if overridePaths ? extensionsDir && overridePaths.extensionsDir != null then
+      overridePaths.extensionsDir
+    else
+      "${config.home.homeDirectory}/.${lib.toLower appName}/extensions";
+
   allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
@@ -87,14 +97,13 @@ in
 
     mutableExtensionsDir = lib.mkOption {
       type = lib.types.bool;
-      default = allProfilesExceptDefault == { };
+      default = otherProfiles == { };
       defaultText = lib.literalExpression "(removeAttrs config.${lib.concatStringsSep "." modulePath}.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
         Whether extensions can be installed or updated manually or by Visual Studio Code only.
-        Mutually exclusive to {option}`profiles`.
-
-        It's automatically enabled by default if only default profile is set in {option}`profiles`.
+        This option is mutually exclusive to {option}`profiles` and it's automatically enabled
+        if only `default` profile is set in {option}`profiles`.
       '';
     };
 
@@ -110,9 +119,9 @@ in
       type = lib.types.submodule {
         options = {
           extensionsDir = lib.mkOption {
-            type = lib.types.either lib.types.str lib.types.path;
-            default = "~/.${lib.toLower appName}/extensions";
-            example = "~/.vscode/extensions";
+            type = lib.types.nullOr lib.types.path;
+            default = null;
+            example = "~/.${lib.toLower appName}/extensions";
             description = "Path for the extensions directory.";
           };
 
@@ -277,8 +286,8 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = !(cfg.mutableExtensionsDir && allProfilesExceptDefault != { });
-        message = "mutableExtensionsDir=true requires only a default profile; found additional profiles in ${lib.concatStringsSep ", " (builtins.attrNames allProfilesExceptDefault)}";
+        assertion = !(cfg.mutableExtensionsDir && otherProfiles != { });
+        message = "mutableExtensionsDir=true requires only a default profile; found additional profiles in ${lib.concatStringsSep ", " (builtins.attrNames otherProfiles)}";
       }
     ];
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -293,11 +302,11 @@ in
       "vscodeProfilesFor${appName}" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
         let
           modifyGlobalStorage = pkgs.writeShellScript "vscode-global-storage-modify" ''
-            set -euo pipefail
+            set -euxo pipefail
             PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
             file="${appUserDir}/globalStorage/storage.json"
             file_write=""
-            profiles=(${lib.escapeShellArgs (builtins.attrNames allProfilesExceptDefault)})
+            profiles=(${lib.escapeShellArgs (builtins.attrNames otherProfiles)})
 
             if [ -f "$file" ]; then
               existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
@@ -331,7 +340,7 @@ in
         (lib.mapAttrsToList (
           name: profile:
           let
-            profilePath = mkProfilePath name;
+            profilePath = buildProfilePath name;
 
             configFilePathFor =
               f:
@@ -376,14 +385,16 @@ in
 
             toPaths =
               ext:
-              map (k: { "${cfg.overridePaths.extensionsDir}/${k}".source = "${ext}/${subDir}/${k}"; }) (
-                if ext ? vscodeExtUniqueId then
-                  [ ext.vscodeExtUniqueId ]
-                else
-                  builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
-              );
+              map
+                (k: { "${appExtensionsPath}/${k}".source = "${ext}/${subDir}/${k}"; })
+                (
+                  if ext ? vscodeExtUniqueId then
+                    [ ext.vscodeExtUniqueId ]
+                  else
+                    builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
+                );
           in
-          if (cfg.mutableExtensionsDir && allProfilesExceptDefault == { }) then
+          if (cfg.mutableExtensionsDir && otherProfiles == { }) then
             # Mutable extensions dir can only occur when only default profile is set.
             #
             # Force regenerating extensions.json using the below method,
@@ -394,10 +405,10 @@ in
               ++ lib.optional (supportsProfileExtensionsJson && hasDefaultProfile) {
                 # Whenever our immutable extensions.json changes, force the profile to regenerate
                 # extensions.json with both mutable and immutable extensions.
-                "${cfg.overridePaths.extensionsDir}/.extensions-immutable.json" = {
+                "${appExtensionsPath}/.extensions-immutable.json" = {
                   text = extensionJson defaultProfile.extensions;
                   onChange = ''
-                    run rm $VERBOSE_ARG -f "${cfg.overridePaths.extensionsDir}"/{extensions.json,.init-default-profile-extensions}
+                    run rm $VERBOSE_ARG -f "${appExtensionsPath}"/{extensions.json,.init-default-profile-extensions}
                     verboseEcho "Regenerating ${appName} extensions.json"
                     run ${lib.getExe cfg.package} --list-extensions > /dev/null
                   '';
@@ -406,7 +417,7 @@ in
             )
           else
             {
-              "${cfg.overridePaths.extensionsDir}".source =
+              "${appExtensionsPath}".source =
                 let
                   combinedExtensionsDrv = pkgs.buildEnv {
                     name = "vscode-extensions";
