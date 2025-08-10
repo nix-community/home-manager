@@ -302,7 +302,7 @@ in
       "vscodeProfilesFor${appName}" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
         let
           modifyGlobalStorage = pkgs.writeShellScript "vscode-global-storage-modify" ''
-            set -euxo pipefail
+            set -euo pipefail
             PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
             file="${appUserDir}/globalStorage/storage.json"
             file_write=""
@@ -385,14 +385,12 @@ in
 
             toPaths =
               ext:
-              map
-                (k: { "${appExtensionsPath}/${k}".source = "${ext}/${subDir}/${k}"; })
-                (
-                  if ext ? vscodeExtUniqueId then
-                    [ ext.vscodeExtUniqueId ]
-                  else
-                    builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
-                );
+              map (k: { "${appExtensionsPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
+                if ext ? vscodeExtUniqueId then
+                  [ ext.vscodeExtUniqueId ]
+                else
+                  builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
+              );
           in
           if (cfg.mutableExtensionsDir && otherProfiles == { }) then
             # Mutable extensions dir can only occur when only default profile is set.
