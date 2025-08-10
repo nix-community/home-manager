@@ -62,7 +62,7 @@ in
       default = { };
       description = ''
         Attribute set of profile options. The keys of that attribute set consist of
-        ULIDs. A ULID is made of 16 characters, each of which is one of
+        ULIDs. A ULID is made of 26 characters, each of which is one of
         '0123456789ABCDEFGHJKMNPQRSTVWXYZ' (Excluding I, L, O and U). See
         <https://github.com/ulid/spec?tab=readme-ov-file#canonical-string-representation>.
       '';
@@ -95,7 +95,7 @@ in
                 default = { };
                 description = ''
                   Attribute set of site options for this profile. The keys of that attribute set
-                  consist of ULIDs. A ULID is made of 16 characters, each of which is one of
+                  consist of ULIDs. A ULID is made of 26 characters, each of which is one of
                   '0123456789ABCDEFGHJKMNPQRSTVWXYZ' (Excluding I, L, O and U). See
                   <https://github.com/ulid/spec?tab=readme-ov-file#canonical-string-representation>.
                   Site ULIDs must be unique across profiles.
