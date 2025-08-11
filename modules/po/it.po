@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2023-12-02 23:06+0000\n"
-"Last-Translator: Lorenzo Brzek <lorenzoservizi@proton.me>\n"
+"PO-Revision-Date: 2025-08-11 17:02+0000\n"
+"Last-Translator: Leonardo Randacio <leonardorandacio@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/home-manager/"
 "modules/it/>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: modules/files.nix:206
 msgid "Creating home file links in %s"
@@ -29,11 +29,11 @@ msgstr "Pulisco i collegamenti rimasti orfani da %s"
 
 #: modules/home-environment.nix:647
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "Creando nuova generazione di profilo"
 
 #: modules/home-environment.nix:650
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Nessun cambiamento quindi riutilizzo l'ultima generazionedi profilo"
 
 #: modules/home-environment.nix:699
 msgid ""
@@ -52,17 +52,16 @@ msgid ""
 msgstr ""
 "Ops, Nix non è riuscito ad installare il tuo nuovo profilo Home Manager!\n"
 "\n"
-"Potrebbe esserci un conflitto con un pacchetto che è stato installato "
-"utilizzando\n"
+"Forse c'è un conflitto con un pacchetto che è stato installato utilizzando\n"
 "\"%s\"? Provate ad eseguire\n"
 "\n"
 "· · · ·%s\n"
 "\n"
-"e se ci fosse un pacchetto in conflitto, potete rimuoverlo con\n"
+"e se ci fosse un pacchetto in conflitto, puoi rimuoverlo con\n"
 "\n"
 "· · · · %s\n"
 "\n"
-"Poi provate a riattivare la configurazione Home Manager."
+"Poi prova a riattivare la configurazione Home Manager."
 
 #: modules/home-environment.nix:735
 msgid "Activating %s"
@@ -70,7 +69,7 @@ msgstr "Attivando %s"
 
 #: modules/home-environment.nix:807
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: opzione non riconosciuta '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
@@ -79,15 +78,15 @@ msgstr "Migrazione del profilo da %s a %s"
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
-"Impossibile trovare la directory del profilo adatta, si è provato con %s e %s"
+"Impossibile trovare directory del profilo adatta, si è provato con %s e %s"
 
 #: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr "Errore: USER è impostato su \"%s\" ma era previsto \"%s\""
+msgstr "Errore: USER è impostato su \"%s\" ma ci aspettiamo \"%s\""
 
 #: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr "Errore: HOME è impostata su \"%s\" ma era previsto un valore di \"%s\""
+msgstr "Errore: HOME è impostata su \"%s\" ma ci aspettiamo \"%s\""
 
 #: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
