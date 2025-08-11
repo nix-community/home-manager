@@ -1012,13 +1012,103 @@ has a message along the lines of</p><pre><code class="programlisting">A new modu
 systemd, then a condition like</p><pre><code class="programlisting  nix">condition = hostPlatform.isLinux;
 </code></pre><p>should be added. If you contribute a module then you don’t need to
 add this entry, the merger will create an entry for you.</p></li></ul></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-tests" class="title" style="clear: both">Tests   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-tests-command">Using the tests command</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests-manual">Manual test commands</a> </span></dt> </dl></div><p>Home Manager includes a basic test suite and it is highly recommended to
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-tests" class="title" style="clear: both">Tests   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-tests-basic">Writing Basic Tests</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests-command">Using the tests command</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests-manual">Manual test commands</a> </span></dt> </dl></div><p>Home Manager includes a basic test suite and it is highly recommended to
 include at least one test when adding a module. Tests are typically in
 the form of &quot;golden tests&quot; where, for example, a generated
 configuration file is compared to a known correct file.</p><p>It is relatively easy to create tests by modeling the existing tests,
-found in the <code class="literal">tests</code> project directory. For a full reference to the
-functions available in test scripts, you can look at NMT’s
-<a class="link" href="https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib"  target="_top">bash-lib</a>.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-tests-command" class="title" >Using the tests command   </h3>  </div> </div></div><p>Home Manager provides a convenient <code class="literal">tests</code> command for discovering and running tests:</p><pre><code class="programlisting  shell"># List all available tests
+found in the <code class="literal">tests</code> project directory.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-tests-basic" class="title" >Writing Basic Tests   </h3>  </div> </div></div><p>Home Manager tests use the <span class="strong"><strong>NMT</strong></span> framework, which provides
+a set of assertion functions to verify that modules generate the expected files
+and configurations. Tests are written as Nix expressions that define both the
+Home Manager configuration and the test assertions.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-tests-structure" class="title" >Test Structure   </h4>  </div> </div></div><p>A basic test file structure looks like:</p><pre><code class="programlisting nix">{
+  # Home Manager configuration
+  programs.myprogram = {
+    enable = true;
+    settings = {
+      option = &quot;value&quot;;
+    };
+  };
+
+  # NMT test script with assertions
+  nmt.script = &#x27;&#x27;
+    assertFileExists &quot;home-files/.config/myprogram/config.toml&quot;
+    assertFileContent &quot;home-files/.config/myprogram/config.toml&quot; ${./expected-config.toml}
+  &#x27;&#x27;;
+}
+</code></pre>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-tests-organization" class="title" >Test Organization   </h4>  </div> </div></div><p>Tests are organized in the <code class="literal">tests</code> directory structure:</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p><code class="literal">tests/modules/programs/myprogram/default.nix</code> - Lists all test cases for the module</p></li><li class="listitem"><p><code class="literal">tests/modules/programs/myprogram/basic-configuration.nix</code> - A basic test case</p></li><li class="listitem"><p><code class="literal">tests/modules/programs/myprogram/expected-config.toml</code> - Expected output file</p></li></ul></div><p>The <code class="literal">default.nix</code> file should list all test cases:</p><pre><code class="programlisting nix">{
+  myprogram-basic-configuration = ./basic-configuration.nix;
+  myprogram-empty-settings = ./empty-settings.nix;
+}
+</code></pre>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-tests-assertions" class="title" >Common NMT Assertions   </h4>  </div> </div></div><p>NMT provides several assertion functions:</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p><code class="literal">assertFileExists &quot;path&quot;</code> - Verify a file was created</p></li><li class="listitem"><p><code class="literal">assertPathNotExists &quot;path&quot;</code> - Verify a file was NOT created</p></li><li class="listitem"><p><code class="literal">assertFileContent &quot;path&quot; expected-file</code> - Compare file contents</p></li><li class="listitem"><p><code class="literal">assertFileRegex &quot;path&quot; &quot;regex&quot;</code> - Check file matches regex</p></li></ul></div><p>For a full reference to the functions available in test scripts, you can look at NMT’s
+<a class="link" href="https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib"  target="_top">bash-lib</a>.</p>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-tests-examples" class="title" >Practical Examples   </h4>  </div> </div></div><p>Here are some real-world examples of common test patterns:</p><p><span class="strong"><strong>Testing that a configuration file is generated:</strong></span></p><pre><code class="programlisting nix">{
+  programs.alacritty = {
+    enable = true;
+    settings.font.size = 12;
+  };
+
+  nmt.script = &#x27;&#x27;
+    assertFileExists &quot;home-files/.config/alacritty/alacritty.yml&quot;
+    assertFileContains &quot;home-files/.config/alacritty/alacritty.yml&quot; &quot;size: 12&quot;
+  &#x27;&#x27;;
+}
+</code></pre><p><span class="strong"><strong>Testing that no files are created when disabled:</strong></span></p><pre><code class="programlisting nix">{
+  programs.alacritty.enable = false;
+
+  nmt.script = &#x27;&#x27;
+    assertPathNotExists &quot;home-files/.config/alacritty&quot;
+  &#x27;&#x27;;
+}
+</code></pre><p><span class="strong"><strong>Testing exact file content against expected output:</strong></span></p><pre><code class="programlisting nix">{
+  programs.fastfetch = {
+    enable = true;
+    settings.display.color = &quot;blue&quot;;
+  };
+
+  nmt.script =
+    let
+      configFile = &quot;home-files/.config/fastfetch/config.jsonc&quot;;
+    in
+    &#x27;&#x27;
+      assertFileExists &quot;${configFile}&quot;
+      assertFileContent &quot;${configFile}&quot; ${./expected-config.jsonc}
+    &#x27;&#x27;;
+}
+</code></pre><p><span class="strong"><strong>Testing multiple conditions in one test:</strong></span></p><pre><code class="programlisting nix">{
+  programs.myprogram = {
+    enable = true;
+    configFile = &quot;custom.conf&quot;;
+    extraConfig = &quot;debug = true&quot;;
+  };
+
+  nmt.script = &#x27;&#x27;
+    assertFileExists &quot;home-files/.config/myprogram/custom.conf&quot;
+    assertFileRegex &quot;home-files/.config/myprogram/custom.conf&quot; &quot;debug = true&quot;
+    assertFileRegex &quot;home-files/.config/myprogram/custom.conf&quot; &quot;^# Generated by Home Manager&quot;
+  &#x27;&#x27;;
+}
+</code></pre>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-tests-platform-specific" class="title" >Platform-Specific Tests   </h4>  </div> </div></div><p>When a module is platform-specific (Linux-only or Darwin-only), the test’s <code class="literal">default.nix</code>
+file should use <code class="literal">lib.optionalAttrs</code> to conditionally expose tests based on the platform.
+This prevents evaluation errors on unsupported platforms during the test suite runs.</p><p><span class="strong"><strong>Linux-only module tests:</strong></span></p><pre><code class="programlisting nix">{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  rofi-valid-config = ./valid-config.nix;
+  rofi-custom-theme = ./custom-theme.nix;
+}
+</code></pre><p><span class="strong"><strong>Darwin-only module tests:</strong></span></p><pre><code class="programlisting nix">{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+  sketchybar-basic = ./basic-configuration.nix;
+  sketchybar-lua-config = ./lua-config.nix;
+}
+</code></pre><p>For cross-platform modules that have packages which need to be stubbed on Darwin,
+add the package names to <code class="literal">tests/darwinScrublist.nix</code> to prevent build failures
+during cross-platform test runs.</p>
+</div>
+
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-tests-command" class="title" >Using the tests command   </h3>  </div> </div></div><p>Home Manager provides a convenient <code class="literal">tests</code> command for discovering and running tests:</p><pre><code class="programlisting  shell"># List all available tests
 $ nix run .#tests -- -l
 
 # List tests matching a pattern
