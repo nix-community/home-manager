@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@swww@/bin/swww-daemon
+ExecStart=@swww@/bin/swww-daemon --no-cache --layer bottom
 Restart=always
 RestartSec=10
 
