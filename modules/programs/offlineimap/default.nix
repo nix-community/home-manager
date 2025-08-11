@@ -9,7 +9,9 @@ let
 
   cfg = config.programs.offlineimap;
 
-  accounts = lib.filter (a: a.offlineimap.enable) (lib.attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.enable && a.offlineimap.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   toIni = lib.generators.toINI {
     mkKeyValue =

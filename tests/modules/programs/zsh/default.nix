@@ -12,6 +12,7 @@
   zsh-history-path-xdg-variable = import ./history-path.nix "xdg-variable";
   zsh-history-path-zdotdir-variable = import ./history-path.nix "zdotdir-variable";
   zsh-history-substring-search = ./history-substring-search.nix;
+  zsh-siteFunctions-mkcd = ./siteFunctions-mkcd.nix;
   zsh-plugins = ./plugins.nix;
   zsh-prezto = ./prezto.nix;
   zsh-session-variables = ./session-variables.nix;

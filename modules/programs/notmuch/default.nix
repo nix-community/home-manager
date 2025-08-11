@@ -47,7 +47,7 @@ let
 
     user =
       let
-        accounts = filter (a: a.notmuch.enable) (lib.attrValues config.accounts.email.accounts);
+        accounts = filter (a: a.enable && a.notmuch.enable) (lib.attrValues config.accounts.email.accounts);
         primary = filter (a: a.primary) accounts;
         secondaries = filter (a: !a.primary) accounts;
       in

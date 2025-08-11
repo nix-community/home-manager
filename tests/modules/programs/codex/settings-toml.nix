@@ -26,5 +26,6 @@ in
     assertFileExists home-files/.codex/config.toml
     assertFileContent home-files/.codex/config.toml \
       ${./config.toml}
+    assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'CODEX_HOME'
   '';
 }

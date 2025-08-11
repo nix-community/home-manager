@@ -15,7 +15,9 @@ let
 
   cfg = config.programs.lieer;
 
-  lieerAccounts = lib.filter (a: a.lieer.enable) (lib.attrValues config.accounts.email.accounts);
+  lieerAccounts = lib.filter (a: a.enable && a.lieer.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   nonGmailAccounts = map (a: a.name) (lib.filter (a: a.flavor != "gmail.com") lieerAccounts);
 

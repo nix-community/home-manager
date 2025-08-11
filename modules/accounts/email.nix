@@ -9,6 +9,7 @@ let
     ;
 
   cfg = config.accounts.email;
+  enabledAccounts = lib.filterAttrs (n: v: v.enable) cfg.accounts;
 
   gpgModule = types.submodule {
     options = {
@@ -114,6 +115,28 @@ let
     };
   };
 
+  authenticationOption = mkOption {
+    type = types.nullOr (
+      types.either types.str (
+        types.enum [
+          "anonymous"
+          "apop"
+          "clear"
+          "cram_md5"
+          "digest_md5"
+          "gssapi"
+          "login"
+          "ntlm"
+          "plain"
+          "xoauth2"
+        ]
+      )
+    );
+    default = null;
+    example = "plain";
+    description = "The authentication mechanism.";
+  };
+
   imapModule = types.submodule {
     options = {
       host = mkOption {
@@ -133,6 +156,8 @@ let
           `null` then the default port is used.
         '';
       };
+
+      authentication = authenticationOption;
 
       tls = mkOption {
         type = tlsModule;
@@ -193,6 +218,8 @@ let
           `null` then the default port is used.
         '';
       };
+
+      authentication = authenticationOption;
 
       tls = mkOption {
         type = tlsModule;
@@ -327,15 +354,26 @@ let
           '';
         };
 
+        enable = mkOption {
+          type = types.bool;
+          default = true;
+          description = ''
+            Whether this account is enabled.  Potentially useful to allow
+            setting email configuration globally then enabling or disabling on
+            specific systems.
+          '';
+        };
+
         flavor = mkOption {
           type = types.enum [
-            "plain"
-            "gmail.com"
-            "runbox.com"
+            "davmail"
             "fastmail.com"
-            "yandex.com"
-            "outlook.office365.com"
+            "gmail.com"
             "migadu.com"
+            "outlook.office365.com"
+            "plain"
+            "runbox.com"
+            "yandex.com"
           ];
           default = "plain";
           description = ''
@@ -592,6 +630,20 @@ let
             port = if config.smtp.tls.useStartTls then 587 else 465;
           };
         })
+
+        (mkIf (config.flavor == "davmail") {
+          imap = {
+            host = "localhost";
+            port = 1143;
+            authentication = "login";
+          };
+          smtp = {
+            host = "localhost";
+            port = 1025;
+            tls.enable = false;
+            authentication = "plain";
+          };
+        })
       ];
     };
 
@@ -628,11 +680,11 @@ in
     };
   };
 
-  config = mkIf (cfg.accounts != { }) {
+  config = mkIf (enabledAccounts != { }) {
     assertions = [
       (
         let
-          primaries = lib.catAttrs "name" (lib.filter (a: a.primary) (lib.attrValues cfg.accounts));
+          primaries = lib.catAttrs "name" (lib.filter (a: a.primary) (lib.attrValues enabledAccounts));
         in
         {
           assertion = lib.length primaries == 1;

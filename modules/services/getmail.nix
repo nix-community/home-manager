@@ -8,7 +8,9 @@ let
 
   cfg = config.services.getmail;
 
-  accounts = lib.filter (a: a.getmail.enable) (lib.attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.enable && a.getmail.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   # Note: The getmail service does not expect a path, but just the filename!
   renderConfigFilepath = a: if a.primary then "getmailrc" else "getmail${a.name}";

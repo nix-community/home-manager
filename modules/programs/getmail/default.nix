@@ -5,7 +5,9 @@
   ...
 }:
 let
-  accounts = lib.filter (a: a.getmail.enable) (lib.attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.enable && a.getmail.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   renderAccountConfig =
     account:
@@ -45,7 +47,7 @@ let
       delete = ${renderGetmailBoolean getmail.delete}
       read_all = ${renderGetmailBoolean getmail.readAll}
     '';
-  getmailEnabled = lib.length (lib.filter (a: a.getmail.enable) accounts) > 0;
+  getmailEnabled = lib.length accounts > 0;
   # Watch out! This is used by the getmail.service too!
   renderConfigFilepath = a: ".getmail/getmail${if a.primary then "rc" else a.name}";
 

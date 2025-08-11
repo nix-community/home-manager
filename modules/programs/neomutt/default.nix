@@ -20,7 +20,9 @@ let
 
   cfg = config.programs.neomutt;
 
-  neomuttAccountsCfg = filterAttrs (n: a: a.neomutt.enable) config.accounts.email.accounts;
+  neomuttAccountsCfg = filterAttrs (
+    n: a: a.enable && a.neomutt.enable
+  ) config.accounts.email.accounts;
   neomuttAccounts = attrValues neomuttAccountsCfg;
 
   accountCommandNeeded = lib.any (

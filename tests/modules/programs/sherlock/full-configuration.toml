@@ -1,0 +1,28 @@
+[appearance]
+gsk_renderer = "cairo"
+height = 600
+icon_size = 32
+opacity = 0.95
+width = 1000
+
+[caching]
+enable = true
+
+[default_apps]
+browser = "firefox"
+calendar_client = "thunderbird"
+teams = "teams-for-linux --enable-features=UseOzonePlatform --ozone-platform=wayland --url {meeting_url}"
+terminal = "kitty"
+
+[search_bar_icon]
+enable = true
+
+[status_bar]
+enable = true
+
+[units]
+currency = "usd"
+lengths = "feet"
+temperatures = "F"
+volumes = "oz"
+weights = "lb"

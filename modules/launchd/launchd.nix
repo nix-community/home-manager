@@ -155,6 +155,18 @@ in
         This key maps to the second argument of `execvp(3)`.  This key is required in the absence of the Program
         key. Please note: many people are confused by this key. Please read `execvp(3)` very carefully!
       '';
+      # TODO: Remove this some time after 25.01.
+      apply =
+        value:
+        if value != null then
+          map (
+            item:
+            lib.warnIf (lib.hasInfix "&amp;" item)
+              "A value for `ProgramArguments` contains the literal string `&amp;`. This is no longer necessary and will lead to double-escaping, as home-manager now automatically escapes special characters."
+              item
+          ) value
+        else
+          value;
     };
 
     EnableGlobbing = mkOption {

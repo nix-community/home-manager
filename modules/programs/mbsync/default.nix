@@ -20,7 +20,9 @@ let
   cfg = config.programs.mbsync;
 
   # Accounts for which mbsync is enabled.
-  mbsyncAccounts = lib.filter (a: a.mbsync.enable) (lib.attrValues config.accounts.email.accounts);
+  mbsyncAccounts = lib.filter (a: a.enable && a.mbsync.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   # Given a SINGLE group's channels attribute set, return true if ANY of the channel's
   # patterns use the invalidOption attribute set value name.

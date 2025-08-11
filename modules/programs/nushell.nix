@@ -45,7 +45,6 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [
-    Philipp-M
     joaquintrinanes
     aidalgol
   ];

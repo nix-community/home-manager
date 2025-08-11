@@ -1,7 +1,7 @@
 { config, ... }:
 
 {
-  time = "2025-06-27T18-53-10+00:00";
+  time = "2025-06-27T18:53:10+00:00";
   condition = config.programs.ashell.enable && (config.programs.ashell.settings != { });
   message = ''
     ashell 0.5.0 changes the configuration file location and format.

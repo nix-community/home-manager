@@ -11,7 +11,9 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  astroidAccounts = lib.filterAttrs (n: v: v.astroid.enable) config.accounts.email.accounts;
+  astroidAccounts = lib.filterAttrs (
+    n: v: v.enable && v.astroid.enable
+  ) config.accounts.email.accounts;
 
   boolOpt = b: if b then "true" else "false";
 

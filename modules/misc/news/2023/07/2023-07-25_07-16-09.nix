@@ -5,6 +5,6 @@
   condition = pkgs.stdenv.hostPlatform.isDarwin;
   message = ''
 
-    A new module is available: 'services.git-sync'.
+    The 'services.git-sync' module is now available on Darwin/macOS.
   '';
 }

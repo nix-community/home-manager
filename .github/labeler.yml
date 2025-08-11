@@ -24,6 +24,7 @@
           - modules/services/pasystray.nix
           - modules/services/playerctld.nix
           - modules/services/pulseeffects.nix
+          - modules/services/rescrobbled.nix
           - modules/services/spotifyd.nix
           - tests/modules/services/mpd/**/*
 "automation":

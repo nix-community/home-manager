@@ -7,7 +7,7 @@
 let
   cfg = config.services.lieer;
 
-  syncAccounts = lib.filter (a: a.lieer.enable && a.lieer.sync.enable) (
+  syncAccounts = lib.filter (a: a.enable && a.lieer.enable && a.lieer.sync.enable) (
     lib.attrValues config.accounts.email.accounts
   );
 

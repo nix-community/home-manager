@@ -11,7 +11,10 @@ let
   iniFormat = pkgs.formats.ini { };
 in
 {
-  meta.maintainers = [ lib.maintainers.d-brasher ];
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    d-brasher
+  ];
 
   options.programs.keepassxc = {
     enable = lib.mkEnableOption "keepassxc";
@@ -43,16 +46,36 @@ in
         for the full list of options.
       '';
     };
+
+    autostart = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to start Keepassxc automatically on login through the XDG autostart mechanism.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
 
       {
-        xdg.configFile = {
-          "keepassxc/keepassxc.ini" = lib.mkIf (cfg.settings != { }) {
-            source = iniFormat.generate "keepassxc-settings" cfg.settings;
-          };
+        assertions = [
+          {
+            assertion = cfg.autostart -> config.xdg.autostart.enable;
+            message = ''
+              {option}`xdg.autostart.enable` has to be enabled in order for
+              {option}`programs.keepassxc.autostart` to be effective.
+            '';
+          }
+        ];
+
+        xdg.autostart.entries = lib.mkIf cfg.autostart [
+          "${cfg.package}/share/applications/org.keepassxc.KeePassXC.desktop"
+        ];
+        xdg.configFile."keepassxc/keepassxc.ini" = lib.mkIf (cfg.settings != { }) {
+          source = iniFormat.generate "keepassxc-settings" cfg.settings;
         };
       }
 

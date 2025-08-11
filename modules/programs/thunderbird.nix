@@ -32,16 +32,21 @@ let
 
   moduleName = "programs.thunderbird";
 
-  filterEnabled = accounts: attrValues (lib.filterAttrs (_: a: a.thunderbird.enable) accounts);
   addId = map (a: a // { id = builtins.hashString "sha256" a.name; });
 
-  enabledEmailAccounts = filterEnabled config.accounts.email.accounts;
+  enabledEmailAccounts = filter (a: a.enable && a.thunderbird.enable) (
+    attrValues config.accounts.email.accounts
+  );
   enabledEmailAccountsWithId = addId enabledEmailAccounts;
 
-  enabledCalendarAccounts = filterEnabled config.accounts.calendar.accounts;
+  enabledCalendarAccounts = filter (a: a.thunderbird.enable) (
+    attrValues config.accounts.calendar.accounts
+  );
   enabledCalendarAccountsWithId = addId enabledCalendarAccounts;
 
-  enabledContactAccounts = filterEnabled config.accounts.contact.accounts;
+  enabledContactAccounts = filter (a: a.thunderbird.enable) (
+    attrValues config.accounts.contact.accounts
+  );
   enabledContactAccountsWithId = addId enabledContactAccounts;
 
   thunderbirdConfigPath = if isDarwin then "Library/Thunderbird" else ".thunderbird";

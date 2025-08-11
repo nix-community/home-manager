@@ -14,6 +14,7 @@
         };
         ProcessType = "Background";
         UnrecognizedByHomeManager = "should make it to the resulting plist";
+        "\"Special\" characters" = "<should be escaped>";
       };
     };
 

@@ -46,7 +46,7 @@ let
 
   userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${configDir}/User"
+      "${config.home.homeDirectory}/Library/Application Support/${configDir}/User"
     else
       "${config.xdg.configHome}/${configDir}/User";
 
@@ -373,7 +373,7 @@ in
               file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
             done
 
-            mkdir -p $(dirname "$file")
+            mkdir -p "$(dirname "$file")"
             echo "{}" > "$file"
           fi
 

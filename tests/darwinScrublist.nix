@@ -96,6 +96,7 @@ let
     "msmtp"
     "mu"
     "mujmap"
+    "mullvad-vpn"
     "ncmpcpp"
     "ne"
     "neomutt"
