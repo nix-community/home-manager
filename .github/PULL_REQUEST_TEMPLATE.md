@@ -38,11 +38,8 @@ Also make sure to read the guidelines found at
   {long description}
   ```
 
-  See
-  [CONTRIBUTING](https://nix-community.github.io/home-manager/#sec-commit-style)
-  for more information and
-  [recent commit messages](https://github.com/nix-community/home-manager/commits/master)
-  for examples.
+  See [CONTRIBUTING](https://nix-community.github.io/home-manager/#sec-commit-style) for more information and
+  [recent commit messages](https://github.com/nix-community/home-manager/commits/master) for examples.
 
 - If this PR adds a new module
 
