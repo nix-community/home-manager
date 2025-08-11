@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2024-11-18 15:00+0000\n"
-"Last-Translator: Lorenzo Bevilacqua <lorenzobevilacqua02@gmail.com>\n"
+"PO-Revision-Date: 2025-08-11 17:02+0000\n"
+"Last-Translator: Leonardo Randacio <leonardorandacio@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/home-manager/cli/"
 "it/>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -27,7 +27,7 @@ msgstr "%s: argomento mancante per %s"
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s: %s può essere usato solo dopo %s"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -41,8 +41,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
-"Mantere il tuo Home Manger su %s su %s è obsoleto,\n"
-"si raccomanda di spostarlo su %s"
+"Mantere il tuo Home Manger %s su %s è deprecato,\n"
+"Perfavore spostalo su %s"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
@@ -91,15 +91,14 @@ msgstr ""
 "\n"
 "nella tua configurazione.\n"
 "\n"
-"· · · Se hai importato Home Manager direttamente, puoi usare il parametro "
-"`path`\n"
+"· · · Se importi Home Manager direttamente, puoi usare il parametro `path`\n"
 "\n"
-"· · · · · pkgs.callPackage /percorso/di/home-manager-package { path = "
-"\"%s\";}\n"
+"· · · · · pkgs.callPackage /percorso/di/home-manager-package { path = \"%s\""
+";}\n"
 "\n"
 "· · · quando chiami il pacchetto Home Manager\n"
 "\n"
-"2. Rimuovi il percorso obsoleto\n"
+"2. Rimuovi il percorso deprecato\n"
 "\n"
 "· · · · · $ rm -r \"%s\""
 
@@ -110,17 +109,17 @@ msgstr "Controllando Nix"
 #: home-manager/home-manager:173
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
-"Impossibile trovare la directory del profilo adatta, si è provato con %s e %s"
+"Impossibile trovare directory del profilo adatta, si è provato con %s e %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:230
 msgid "Can't inspect options of a flake configuration"
-msgstr "Impossibile ispezionare le opzioni di configurazione flake"
+msgstr "Impossibile ispezionare le opzioni di configurazione di un flake"
 
 #: home-manager/home-manager:305 home-manager/home-manager:328
 #: home-manager/home-manager:734 home-manager/home-manager:1237
 msgid "%s: unknown option '%s'"
-msgstr "%s: opzione sconosciuta '%s'"
+msgstr "%s: opzione non riconosciuta '%s'"
 
 #: home-manager/home-manager:310 home-manager/home-manager:1238
 msgid "Run '%s --help' for usage help"
@@ -205,7 +204,7 @@ msgstr "Impossibile eseguire la build in una cartella in sola lettura"
 
 #: home-manager/home-manager:787
 msgid "The configuration did not contain the specialisation \"%s\""
-msgstr ""
+msgstr "La configurazione non contiene la specializzazione \"%s\""
 
 #: home-manager/home-manager:841
 msgid "No generation with ID %s"

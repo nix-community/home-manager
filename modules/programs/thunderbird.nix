@@ -304,9 +304,9 @@ let
     ) accounts);
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [
-    d-dervishi
-    jkarlson
+  meta.maintainers = [
+    lib.hm.maintainers.d-dervishi
+    lib.maintainers.jkarlson
   ];
 
   options = {

@@ -237,6 +237,13 @@
     name = "Kritnich";
     source = "nixpkgs";
   };
+  Kyure-A = {
+    email = "49436968+Kyure-A@users.noreply.github.com";
+    github = "Kyure-A";
+    githubId = 49436968;
+    name = "Kyure_A";
+    source = "home-manager";
+  };
   LesVu = {
     email = "lesvu@ingressland.com";
     github = "LesVu";
@@ -962,6 +969,13 @@
     name = "Emery Hemingway";
     source = "nixpkgs";
   };
+  elanora96 = {
+    email = "git@elanora.lol";
+    github = "elanora96";
+    githubId = 27848938;
+    name = "Elanora Manson";
+    source = "home-manager";
+  };
   elizagamedev = {
     email = "eliza@eliza.sh";
     github = "elizagamedev";
@@ -1483,6 +1497,14 @@
     name = "Matthias Riße";
     source = "nixpkgs";
   };
+  matthiasbeyer = {
+    email = "mail@beyermatthias.de";
+    github = "matthiasbeyer";
+    githubId = 427866;
+    matrix = "@musicmatze:beyermatthi.as";
+    name = "Matthias Beyer";
+    source = "nixpkgs";
+  };
   mbrgm = {
     email = "marius@yeai.de";
     github = "mbrgm";
@@ -1852,6 +1874,13 @@
     githubId = 20866468;
     name = "PopeRigby";
     source = "nixpkgs";
+  };
+  poseidon-rises = {
+    email = "softwaredevelopment.stingray177@passinbox.com";
+    github = "poseidon-rises";
+    githubId = 179542264;
+    name = "poseidon-rises";
+    source = "home-manager";
   };
   rasmus-kirk = {
     email = "mail@rasmuskirk.com";

@@ -225,12 +225,6 @@
     github = "Janik-Haag";
     githubId = 80165193;
   };
-  jkarlson = {
-    email = "jekarlson@gmail.com";
-    github = "jkarlson";
-    githubId = 1204734;
-    name = "Emil Karlson";
-  };
   jonringer = {
     email = "jonringer117@gmail.com";
     matrix = "@jonringer:matrix.org";
@@ -483,6 +477,18 @@
     email = "silmarjr2@gmail.com";
     github = "silmarp";
     githubId = 67292496;
+  };
+  swarsel = {
+    name = "Leon Schwarzäugl";
+    email = "leon@swarsel.win";
+    github = "Swarsel";
+    githubId = 32304731;
+    keys = [
+      {
+        longkeyid = "rsa4096/0x76FD3810215AE097";
+        fingerprint = "4BE7 9252 6228 9B47 6DBB  C17B 76FD 3810 215A E097";
+      }
+    ];
   };
   vortriz = {
     name = "Rishi Vora";
