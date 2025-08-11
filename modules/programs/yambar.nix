@@ -12,7 +12,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.carpinchomug ];
+  meta.maintainers = [ ];
 
   options.programs.yambar = {
     enable = lib.mkEnableOption "Yambar";
