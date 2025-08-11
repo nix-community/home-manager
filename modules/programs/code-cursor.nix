@@ -21,15 +21,10 @@ in
       package = pkgs.code-cursor;
       packageName = "code-cursor";
 
-      # Cursor stores MCP files in ~/.cursor instead of standard VSCode location
-      # which conflicts when multiple profiles have mcp configs.
+      # Cursor stores MCP files in ~/.cursor
       #
-      # We avoid this by only generating the default profile when fork is not `multiProfile`.
-      #
-      multiProfile = false;
-
       overridePaths = {
-        mcpFile = "${config.home.homeDirectory}/.cursor/mcp.json";
+        mcp = "${config.home.homeDirectory}/.cursor";
       };
     })
   ];

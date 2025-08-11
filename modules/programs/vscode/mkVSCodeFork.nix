@@ -3,7 +3,6 @@
   name,
   package,
   packageName ? null,
-  multiProfile ? true,
   overridePaths ? { },
 }:
 {
@@ -41,12 +40,20 @@ let
   defaultProfile = if cfg.profiles ? default then cfg.profiles.default else { };
   otherProfiles = lib.removeAttrs cfg.profiles [ "default" ];
 
-  hasDefaultProfile = builtins.trace "[debug] hasDefaultProfile = ${
-    builtins.toString (cfg.profiles ? default)
-  }" (cfg.profiles ? default);
+  hasDefaultProfile = cfg.profiles ? default;
 
   buildProfilePath =
     name: "${appUserDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
+
+  configFilePathFor =
+    profileName: key:
+    if overridePaths ? "${key}" && overridePaths.${key} != null then
+      builtins.trace "override path for ${profileName} -> ${key}: ${overridePaths.${key}}"
+        overridePaths.${key}
+    else
+      builtins.trace "default path for ${profileName} -> ${key}: ${buildProfilePath profileName}" (
+        buildProfilePath profileName
+      );
 
   # extensions
   #
@@ -87,14 +94,6 @@ in
       description = "The name of the VSCode fork.";
     };
 
-    multiProfile = lib.mkOption {
-      internal = true;
-      type = lib.types.bool;
-      default = multiProfile;
-      example = false;
-      description = "Whether the VSCode fork supports multiple profiles.";
-    };
-
     mutableExtensionsDir = lib.mkOption {
       type = lib.types.bool;
       default = otherProfiles == { };
@@ -107,50 +106,58 @@ in
       '';
     };
 
-    debug = lib.mkOption {
+    mutableProfile = lib.mkOption {
       type = lib.types.bool;
-      internal = true;
-      default = false;
-      description = "Enable verbose tracing during profile generation.";
+      default = otherProfiles == { };
+      defaultText = lib.literalExpression "(removeAttrs config.${lib.concatStringsSep "." modulePath}.profiles [ \"default\" ]) == { }";
+      example = false;
+      description = ''
+        Whether the profile supports mutable profile settings, keybindings, tasks, and MCP configuration.
+
+        This option allows to write settings to the profile's {file}`settings.json` file,
+        which is regenerated whenever the nix configuration for the profile's `settings` are changed.
+
+        This option is automatically enabled if only the {option}`profiles.default` profile is set.
+      '';
     };
 
     overridePaths = lib.mkOption {
       internal = true;
       type = lib.types.submodule {
         options = {
-          extensionsDir = lib.mkOption {
+          extensions = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "~/.${lib.toLower appName}/extensions";
-            description = "Path for the extensions directory.";
+            example = ".${lib.toLower appName}/extensions";
+            description = "Directory where extensions are stored.";
           };
 
-          keybindingsFile = lib.mkOption {
+          keybindings = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "Library/Application Support/${appName}/User/keybindings.json";
-            description = "Path for keybindings file.";
+            example = "Library/Application Support/${appName}/User";
+            description = "Path where keybindings file is stored.";
           };
 
-          mcpFile = lib.mkOption {
+          mcp = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "Library/Application Support/${appName}/User/mcp.json";
-            description = "Path for MCP configuration file.";
+            example = "Library/Application Support/${appName}/User";
+            description = "Path where MCP configuration file is stored.";
           };
 
-          settingsFile = lib.mkOption {
+          settings = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "Library/Application Support/${appName}/User/settings.json";
-            description = "Path for settings file.";
+            example = "Library/Application Support/${appName}/User";
+            description = "Path where settings file is stored.";
           };
 
-          tasksFile = lib.mkOption {
+          tasks = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "Library/Application Support/${appName}/User/tasks.json";
-            description = "Path for tasks file.";
+            example = "Library/Application Support/${appName}/User";
+            description = "Path where tasks file is stored.";
           };
         };
       };
@@ -338,42 +345,64 @@ in
     home.file = lib.mkMerge (
       lib.flatten [
         (lib.mapAttrsToList (
-          name: profile:
+          profileName: profile:
           let
-            profilePath = buildProfilePath name;
-
-            configFilePathFor =
-              f:
-              if (lib.getAttrFromPath [ "overridePaths" "${f}File" ] cfg) != null then
-                lib.getAttrFromPath [ "overridePaths" "${f}File" ] cfg
-              else
-                "${profilePath}/${f}.json";
+            settingsPath = configFilePathFor profileName "settings";
+            keybindingsPath = configFilePathFor profileName "keybindings";
+            tasksPath = configFilePathFor profileName "tasks";
+            mcpPath = configFilePathFor profileName "mcp";
           in
           [
-            (lib.mkIf cfg.debug (builtins.trace "Generating ${appName} profile: ${name} (${profilePath})" { }))
+            (builtins.trace "building ${appName} ${
+              if cfg.mutableProfile then "mutable" else "immutable"
+            } profile: ${profileName} (${buildProfilePath profileName})" { })
 
             # settings
             #
             (lib.mkIf (profile.settings != { }) {
-              "${configFilePathFor "settings"}".source = toJsonSource "user-settings" profile.settings;
+              "${settingsPath}/${lib.optionalString cfg.mutableProfile ".immutable-"}settings.json" = {
+                source = toJsonSource "user-settings" profile.settings;
+                onChange = lib.mkIf cfg.mutableProfile ''
+                  run cp -v "${settingsPath}/.immutable-settings.json" "${settingsPath}/settings.json"
+                  verboseEcho "Regenerating mutable ${settingsPath}/settings.json"
+                '';
+              };
             })
 
             # keybindings
             #
             (lib.mkIf (profile.keybindings != [ ]) {
-              "${configFilePathFor "keybindings"}".source = toJsonSource "keybindings" profile.keybindings;
+              "${keybindingsPath}/${lib.optionalString cfg.mutableProfile ".immutable-"}keybindings.json" = {
+                source = toJsonSource "user-keybindings" profile.keybindings;
+                onChange = lib.mkIf cfg.mutableProfile ''
+                  run cp -v "${keybindingsPath}/.immutable-keybindings.json" "${keybindingsPath}/keybindings.json"
+                  verboseEcho "Regenerating mutable ${keybindingsPath}/keybindings.json"
+                '';
+              };
             })
 
             # tasks
             #
             (lib.mkIf (profile.tasks != { }) {
-              "${configFilePathFor "tasks"}".source = toJsonSource "user-tasks" profile.tasks;
+              "${tasksPath}/${lib.optionalString cfg.mutableProfile ".immutable-"}tasks.json" = {
+                source = toJsonSource "user-tasks" profile.tasks;
+                onChange = lib.mkIf cfg.mutableProfile ''
+                  run cp -v "${tasksPath}/.immutable-tasks.json" "${tasksPath}/tasks.json"
+                  verboseEcho "Regenerating mutable ${tasksPath}/tasks.json"
+                '';
+              };
             })
 
             # mcp
             #
             (lib.mkIf (profile.mcp != { }) {
-              "${configFilePathFor "mcp"}".source = toJsonSource "user-mcp" profile.mcp;
+              "${mcpPath}/${lib.optionalString cfg.mutableProfile ".immutable-"}mcp.json" = {
+                source = toJsonSource "user-mcp" profile.mcp;
+                onChange = lib.mkIf cfg.mutableProfile ''
+                  run cp -v "${mcpPath}/.immutable-mcp.json" "${mcpPath}/mcp.json"
+                  verboseEcho "Regenerating mutable ${mcpPath}/mcp.json"
+                '';
+              };
             })
           ]
         ) cfg.profiles)
