@@ -219,12 +219,6 @@
     github = "Janik-Haag";
     githubId = 80165193;
   };
-  jkarlson = {
-    email = "jekarlson@gmail.com";
-    github = "jkarlson";
-    githubId = 1204734;
-    name = "Emil Karlson";
-  };
   jonringer = {
     email = "jonringer117@gmail.com";
     matrix = "@jonringer:matrix.org";
