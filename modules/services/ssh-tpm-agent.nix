@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
   ...
 }:
@@ -37,6 +38,23 @@ in
   config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.ssh-tpm-agent" pkgs lib.platforms.linux)
+      {
+        assertion =
+          let
+            onNixos = config.submoduleSupport.enable;
+            inherit (osConfig.security) tpm2;
+            groups = osConfig.users.users.${config.home.username}.extraGroups;
+          in
+          onNixos -> tpm2.enable && lib.elem tpm2.tssGroup groups;
+        message = ''
+          ssh-tpm-agent: The user has to be a member of the '${osConfig.security.tpm2.tssGroup}' group to access the TPM.
+          In your NixoS configuration, set:
+
+            security.tpm2.enable = true;
+            users.users.<your_username>.extraGroups = [ config.security.tpm2.tssGroup ];
+
+        '';
+      }
     ];
 
     home.packages = [ cfg.package ];
