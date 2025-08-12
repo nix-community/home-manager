@@ -17,7 +17,10 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.yethal ];
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    yethal
+  ];
 
   options.services.ssh-tpm-agent = {
     enable = mkEnableOption "SSH agent for TPMs";
