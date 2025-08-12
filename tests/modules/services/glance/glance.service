@@ -7,3 +7,4 @@ ExecStart=@glance@/bin/glance --config /home/hm-user/.config/glance/glance.yml
 [Unit]
 Description=Glance feed dashboard server
 PartOf=graphical-session.target
+X-Restart-Triggers=/nix/store/00000000000000000000000000000000-glance.yml
