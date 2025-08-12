@@ -11,7 +11,10 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.lheckemann ];
+  meta.maintainers = [
+    lib.maintainers.bmrips
+    lib.hm.maintainers.lheckemann
+  ];
 
   options = {
     services.ssh-agent = {
