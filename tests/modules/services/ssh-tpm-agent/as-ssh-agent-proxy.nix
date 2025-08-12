@@ -17,7 +17,7 @@
     assertFileContent $serviceFile ${builtins.toFile "expected-service" ''
       [Service]
       Environment=SSH_TPM_AUTH_SOCK=%t/ssh-tpm-agent.sock
-      ExecStart=@ssh-tpm-agent@/bin/dummy -l %t/ssh-tpm-agent.sock -A %t/ssh-agent
+      ExecStart=@ssh-tpm-agent@/bin/dummy -A %t/ssh-agent
       SuccessExitStatus=2
       Type=simple
 
@@ -27,7 +27,6 @@
       BindsTo=ssh-agent.service
       Description=ssh-tpm-agent service
       Documentation=https://github.com/Foxboron/ssh-tpm-agent
-      RefuseManualStart=yes
       Requires=ssh-tpm-agent.socket
     ''}
 
@@ -36,9 +35,7 @@
       WantedBy=sockets.target
 
       [Socket]
-      DirectoryMode=0700
       ListenStream=%t/ssh-tpm-agent.sock
-      RuntimeDirectory=ssh-tpm-agent
       Service=ssh-tpm-agent.service
       SocketMode=0600
 

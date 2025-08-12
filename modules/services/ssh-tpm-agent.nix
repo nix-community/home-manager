@@ -74,7 +74,6 @@ in
             Documentation = "https://github.com/Foxboron/ssh-tpm-agent";
             Requires = [ "ssh-tpm-agent.socket" ];
             After = [ "ssh-tpm-agent.socket" ];
-            RefuseManualStart = true;
           };
           Service = {
             Environment = "SSH_TPM_AUTH_SOCK=%t/ssh-tpm-agent.sock";
@@ -82,7 +81,7 @@ in
               let
                 inherit (config.services) ssh-agent;
               in
-              "${lib.getExe cfg.package} -l %t/ssh-tpm-agent.sock"
+              (lib.getExe cfg.package)
               + lib.optionalString (cfg.keyDir != null) " --key-dir ${cfg.keyDir}"
               + lib.optionalString ssh-agent.enable " -A %t/${ssh-agent.socket}";
             SuccessExitStatus = 2;
@@ -102,18 +101,12 @@ in
           Description = "SSH TPM agent socket";
           Documentation = "https://github.com/Foxboron/ssh-tpm-agent";
         };
-
         Socket = {
           ListenStream = "%t/ssh-tpm-agent.sock";
-          RuntimeDirectory = "ssh-tpm-agent";
-          SocketMode = "0600";
-          DirectoryMode = "0700";
           Service = "ssh-tpm-agent.service";
+          SocketMode = "0600";
         };
-
-        Install = {
-          WantedBy = [ "sockets.target" ];
-        };
+        Install.WantedBy = [ "sockets.target" ];
       };
     };
   };
