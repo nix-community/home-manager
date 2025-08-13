@@ -2,7 +2,7 @@
 WantedBy=default.target
 
 [Service]
-ExecStart=@openssh@/bin/ssh-agent -D -a %t/ssh-agent
+ExecStart=@openssh@/bin/ssh-agent -D -a %t/ssh-agent/socket
 
 [Unit]
 Description=SSH authentication agent
