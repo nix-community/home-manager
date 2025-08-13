@@ -1,6 +1,7 @@
 { config, ... }:
 
 {
+  services.ssh-agent.enable = true;
   services.ssh-tpm-agent = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@ssh-tpm-agent@"; };
@@ -16,16 +17,17 @@
     assertFileContent $serviceFile ${builtins.toFile "expected-service" ''
       [Service]
       Environment=SSH_TPM_AUTH_SOCK=%t/ssh-tpm-agent.sock
-      ExecStart=@ssh-tpm-agent@/bin/dummy -l %t/ssh-tpm-agent.sock
-      PassEnvironment=SSH_AGENT_PID
+      ExecStart=@ssh-tpm-agent@/bin/dummy -l %t/ssh-tpm-agent.sock -A %t/ssh-agent
       SuccessExitStatus=2
       Type=simple
 
       [Unit]
       After=ssh-tpm-agent.socket
+      After=ssh-agent.service
+      BindsTo=ssh-agent.service
       Description=ssh-tpm-agent service
       Documentation=https://github.com/Foxboron/ssh-tpm-agent
-      RefuseManualStart=true
+      RefuseManualStart=yes
       Requires=ssh-tpm-agent.socket
     ''}
 

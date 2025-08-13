@@ -41,30 +41,43 @@ in
 
     home.packages = [ cfg.package ];
 
-    systemd.user = {
-      services.ssh-tpm-agent = {
-        Unit = {
-          Description = "ssh-tpm-agent service";
-          Documentation = "https://github.com/Foxboron/ssh-tpm-agent";
-          Requires = "ssh-tpm-agent.socket";
-          After = "ssh-tpm-agent.socket";
-          RefuseManualStart = true;
-        };
+    home.sessionVariables = {
+      # Override ssh-agent's $SSH_AUTH_SOCK definition since ssh-tpm-agent is a
+      # proxy to it.
+      SSH_AUTH_SOCK = lib.mkOverride 90 "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock";
+      SSH_TPM_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock";
+    };
 
-        Service = {
-          Type = "simple";
-          SuccessExitStatus = 2;
-          ExecStart = "${lib.getExe cfg.package} -l %t/ssh-tpm-agent.sock${
-            lib.optionalString (cfg.keyDir != null) " --key-dir ${cfg.keyDir}"
-          }";
-          Environment = [
-            "SSH_TPM_AUTH_SOCK=%t/ssh-tpm-agent.sock"
-          ];
-          PassEnvironment = [
-            "SSH_AGENT_PID"
-          ];
-        };
-      };
+    systemd.user = {
+      services.ssh-tpm-agent = lib.mkMerge [
+        {
+          Unit = {
+            Description = "ssh-tpm-agent service";
+            Documentation = "https://github.com/Foxboron/ssh-tpm-agent";
+            Requires = [ "ssh-tpm-agent.socket" ];
+            After = [ "ssh-tpm-agent.socket" ];
+            RefuseManualStart = true;
+          };
+          Service = {
+            Environment = "SSH_TPM_AUTH_SOCK=%t/ssh-tpm-agent.sock";
+            ExecStart =
+              let
+                inherit (config.services) ssh-agent;
+              in
+              "${lib.getExe cfg.package} -l %t/ssh-tpm-agent.sock"
+              + lib.optionalString (cfg.keyDir != null) " --key-dir ${cfg.keyDir}"
+              + lib.optionalString ssh-agent.enable " -A %t/${ssh-agent.socket}";
+            SuccessExitStatus = 2;
+            Type = "simple";
+          };
+        }
+        (mkIf config.services.ssh-agent.enable {
+          Unit = {
+            BindsTo = [ "ssh-agent.service" ];
+            After = [ "ssh-agent.service" ];
+          };
+        })
+      ];
 
       sockets.ssh-tpm-agent = {
         Unit = {
@@ -84,11 +97,6 @@ in
           WantedBy = [ "sockets.target" ];
         };
       };
-    };
-
-    home.sessionVariables = {
-      SSH_AUTH_SOCK = "\${XDG_RUNTIME_DIR:-/run/user/$UID}/ssh-tpm-agent.sock";
-      SSH_TPM_AUTH_SOCK = "\${XDG_RUNTIME_DIR:-/run/user/$UID}/ssh-tpm-agent.sock";
     };
   };
 }
