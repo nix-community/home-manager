@@ -1,7 +1,7 @@
 {
   nix.gc = {
     automatic = true;
-    frequency = "monthly";
+    dates = "monthly";
     options = "--delete-older-than 30d";
   };
 

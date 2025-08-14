@@ -1,10 +1,16 @@
+{ lib, options, ... }:
+
 {
   nix.gc = {
     automatic = true;
-    dates = [ "monthly" ];
+    frequency = "monthly";
     randomizedDelaySec = "42min";
     options = "--delete-older-than 30d --max-freed $((64 * 1024**3))";
   };
+
+  test.asserts.warnings.expected = [
+    "The option `nix.gc.frequency' defined in ${lib.showFiles options.nix.gc.frequency.files} has been changed to `nix.gc.dates' that has a different type. Please read `nix.gc.dates' documentation and update your configuration accordingly."
+  ];
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/nix-gc.service
