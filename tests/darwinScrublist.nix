@@ -27,6 +27,7 @@ let
     "btop"
     "carapace"
     "cava"
+    "claude-code"
     "clock-rs"
     "cmus"
     "codex"
