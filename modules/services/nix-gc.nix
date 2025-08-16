@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkChangedOptionModule mkOption types;
 
   cfg = config.nix.gc;
 
@@ -14,6 +14,12 @@ let
 in
 {
   meta.maintainers = [ lib.maintainers.shivaraj-bh ];
+
+  imports = [
+    (mkChangedOptionModule [ "nix" "gc" "frequency" ] [ "nix" "gc" "dates" ] (
+      config: lib.toList (lib.getAttrFromPath [ "nix" "gc" "frequency" ] config)
+    ))
+  ];
 
   options = {
     nix.gc = {
@@ -27,8 +33,9 @@ in
         '';
       };
 
-      frequency = mkOption {
-        type = types.str;
+      dates = mkOption {
+        type = with types; either singleLineStr (listOf str);
+        apply = lib.toList;
         default = "weekly";
         example = "03:15";
         description = ''
@@ -97,7 +104,7 @@ in
             Description = "Nix Garbage Collector";
           };
           Timer = {
-            OnCalendar = "${cfg.frequency}";
+            OnCalendar = cfg.dates;
             RandomizedDelaySec = cfg.randomizedDelaySec;
             Persistent = cfg.persistent;
             Unit = "nix-gc.service";
@@ -110,7 +117,11 @@ in
 
       (lib.mkIf pkgs.stdenv.isDarwin {
         assertions = [
-          (lib.hm.darwin.assertInterval "nix.gc.frequency" cfg.frequency pkgs)
+          {
+            assertion = (lib.length cfg.dates) == 1;
+            message = "On Darwin, `nix.gc.dates` must contain a single element.";
+          }
+          (lib.hm.darwin.assertInterval "nix.gc.dates.*" (lib.elemAt cfg.dates 0) pkgs)
         ];
 
         launchd.agents.nix-gc = {
@@ -120,7 +131,7 @@ in
               "${nixPackage}/bin/nix-collect-garbage"
             ]
             ++ lib.optional (cfg.options != null) cfg.options;
-            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
+            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval (lib.elemAt cfg.dates 0);
           };
         };
       })
