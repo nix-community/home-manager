@@ -145,6 +145,12 @@
     github = "elanora96";
     githubId = 27848938;
   };
+  epixtm = {
+    name = "Epix";
+    email = "kami@epix.icu";
+    github = "epixtm";
+    githubId = 168025607;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
