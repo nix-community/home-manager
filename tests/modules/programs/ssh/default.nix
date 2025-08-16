@@ -1,9 +1,9 @@
 {
-  ssh-defaults = ./default-config.nix;
+  ssh-old-defaults = ./old-defaults.nix;
+  ssh-renamed-options = ./renamed-options.nix;
   ssh-includes = ./includes.nix;
   ssh-match-blocks = ./match-blocks-attrs.nix;
   ssh-match-blocks-match-and-hosts = ./match-blocks-match-and-hosts.nix;
-
   ssh-forwards-dynamic-valid-bind-no-asserts = ./forwards-dynamic-valid-bind-no-asserts.nix;
   ssh-forwards-dynamic-bind-path-with-port-asserts = ./forwards-dynamic-bind-path-with-port-asserts.nix;
   ssh-forwards-local-bind-path-with-port-asserts = ./forwards-local-bind-path-with-port-asserts.nix;
