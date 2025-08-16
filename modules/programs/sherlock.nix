@@ -52,6 +52,8 @@ in
       };
     };
 
+    systemd.enable = lib.mkEnableOption "sherlock as a daemon";
+
     aliases = mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -125,23 +127,37 @@ in
 
     xdg.configFile = {
       "sherlock/config.toml" = mkIf (cfg.settings != { }) {
+        onChange = mkIf cfg.systemd.enable "${lib.getExe' pkgs.systemd "systemctl"} --user restart sherlock.service";
         source = tomlFormat.generate "sherlock-config.toml" cfg.settings;
       };
 
       "sherlock/sherlock_alias.json" = mkIf (cfg.aliases != { }) {
+        onChange = mkIf cfg.systemd.enable "${lib.getExe' pkgs.systemd "systemctl"} --user restart sherlock.service";
         source = jsonFormat.generate "sherlock_alias.json" cfg.aliases;
       };
 
       "sherlock/fallback.json" = mkIf (cfg.launchers != [ ]) {
+        onChange = mkIf cfg.systemd.enable "${lib.getExe' pkgs.systemd "systemctl"} --user restart sherlock.service";
         source = jsonFormat.generate "sherlock-fallback.json" cfg.launchers;
       };
 
       "sherlock/sherlockignore" = mkIf (cfg.ignore != "") {
+        onChange = mkIf cfg.systemd.enable "${lib.getExe' pkgs.systemd "systemctl"} --user restart sherlock.service";
         text = cfg.ignore;
       };
 
       "sherlock/main.css" = mkIf (cfg.style != "") {
         text = cfg.style;
+      };
+    };
+
+    systemd.user.services.sherlock = lib.mkIf cfg.systemd.enable {
+      Unit.Description = "Sherlock - App Launcher";
+      Install.WantedBy = [ "graphical-session.target" ];
+      Service = {
+        Environment = [ "DISPLAY=:0" ];
+        ExecStart = "${lib.getExe cfg.package} --daemonize";
+        Restart = "on-failure";
       };
     };
   };
