@@ -225,6 +225,12 @@
     github = "Janik-Haag";
     githubId = 80165193;
   };
+  joker9944 = {
+    name = "Felix von Arx";
+    email = "github@shroud.mozmail.com";
+    github = "Joker9944";
+    githubId = 9194199;
+  };
   jonringer = {
     email = "jonringer117@gmail.com";
     matrix = "@jonringer:matrix.org";
