@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   services.espanso = {
     enable = true;
@@ -42,6 +43,9 @@
         ];
       };
     };
+    plugins = [
+      pkgs.espansoPlugins.dummy-package
+    ];
   };
 
   nmt.script = ''
@@ -57,5 +61,12 @@
     matchFile=home-files/.config/espanso/match/base.yml
     assertFileExists "$matchFile"
     assertFileContent "$matchFile" ${./basic-matches.yaml}
+
+    matchFile=home-files/.config/espanso/match/base.yml
+    assertFileExists "$matchFile"
+    assertFileContent "$matchFile" ${./basic-matches.yaml}
+
+    matchFile=home-files/.config/espanso/match/packages/dummy-package/package.yaml
+    assertFileExists "$matchFile"
   '';
 }
