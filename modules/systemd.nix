@@ -51,7 +51,9 @@ let
       source =
         pkgs.writeTextFile {
           name = pathSafeName;
-          text = toSystemdIni serviceCfg;
+          text = toSystemdIni (
+            lib.filterAttrs (_: v: v != { }) (lib.mapAttrs (_: lib.filterAttrs (_: v: v != null)) serviceCfg)
+          );
           destination = "/${filename}";
         }
         + "/${filename}";
@@ -73,21 +75,86 @@ let
 
   servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
 
-  unitType =
-    unitKind:
-    with types;
-    let
-      primitive = oneOf [
-        bool
-        int
-        str
-        path
+  unitBaseType =
+    unitKind: mod:
+    types.submodule {
+      freeformType =
+        with types;
+        let
+          primitive = oneOf [
+            bool
+            int
+            str
+            path
+          ];
+        in
+        attrsOf (attrsOf (either primitive (listOf primitive)))
+        // {
+          description = "systemd ${unitKind} unit configuration";
+        };
+
+      imports = [
+        {
+          options.Unit = {
+            Description = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              example = "My daily database backup";
+              description = "A short human-readable label of the unit.";
+            };
+
+            Documentation = mkOption {
+              type = with types; either str (listOf str);
+              apply = p: if builtins.isList p then p else [ p ];
+              example = [ "my-${unitKind}.${unitKind}" ];
+              default = [ ];
+              description = "List of URIs referencing documentation for the unit.";
+            };
+
+            # After = mkOption {
+            #   type = types.listOf types.str;
+            #   example = [ "my-${unitKind}.${unitKind}" ];
+            #   default = [ ];
+            #   description = "Units that should be started before this one.";
+            # };
+          };
+        }
+
+        mod
       ];
-    in
-    attrsOf (attrsOf (attrsOf (either primitive (listOf primitive))))
-    // {
-      description = "systemd ${unitKind} unit configuration";
     };
+
+  unitType = unitKind: types.attrsOf (unitBaseType unitKind { });
+
+  serviceType = types.attrsOf (
+    unitBaseType "service" {
+      options.Service = {
+        Environment = mkOption {
+          type = with types; either str (listOf str);
+          apply = p: if builtins.isList p then p else [ p ];
+          default = [ ];
+          example = [
+            "VAR1=foo"
+            "VAR2=\"bar baz\""
+          ];
+          description = "Environment variables available to executed processes.";
+        };
+
+        ExecStart = mkOption {
+          type =
+            with types;
+            let
+              primitive = either package str;
+            in
+            either primitive (listOf primitive);
+          apply = p: if builtins.isList p then p else [ p ];
+          default = [ ];
+          example = "/absolute/path/to/command arg1 arg2";
+          description = "Command that is executed when this service is started.";
+        };
+      };
+    }
+  );
 
   unitDescription = type: ''
     Definition of systemd per-user ${type} units. Attributes are
@@ -151,7 +218,7 @@ in
 
       services = mkOption {
         default = { };
-        type = unitType "service";
+        type = serviceType;
         description = (unitDescription "service");
         example = unitExample "Service";
       };
