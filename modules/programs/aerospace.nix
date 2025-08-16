@@ -263,6 +263,7 @@ in
             type = types.enum [
               "qwerty"
               "dvorak"
+              "colemak"
             ];
             default = "qwerty";
             description = "Keymapping preset.";
