@@ -145,6 +145,12 @@
     github = "elanora96";
     githubId = 27848938;
   };
+  emaiax = {
+    email = "emaiax@users.noreply.github.com";
+    github = "emaiax";
+    githubId = 1289661;
+    name = "Eduardo Maia";
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
