@@ -61,8 +61,8 @@ in
       )
 
       actual = succeed_as_alice("home-manager switch")
-      expected = "Activating createRcloneConfig"
-      assert expected in actual, \
+      expected = "rclone-config.service"
+      assert "Starting units: " in actual and expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 
       # remote -> machine

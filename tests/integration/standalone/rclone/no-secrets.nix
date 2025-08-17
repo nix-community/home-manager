@@ -27,8 +27,8 @@ in
       succeed_as_alice("install -m644 ${module} /home/alice/.config/home-manager/test-remote.nix")
 
       actual = succeed_as_alice("home-manager switch")
-      expected = "Activating createRcloneConfig"
-      assert expected in actual, \
+      expected = "rclone-config.service"
+      assert "Starting units: " in actual and expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 
       succeed_as_alice("diff -u ${expected} /home/alice/.config/rclone/rclone.conf")
