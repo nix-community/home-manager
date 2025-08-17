@@ -18,9 +18,9 @@ in
       succeed_as_alice("install -m644 ${module} /home/alice/.config/home-manager/test-remote.nix")
 
       actual = fail_as_alice("home-manager switch")
-      expected = "Activating createRcloneConfig"
+      expected = "rclone-config.service"
       assert expected not in actual, \
-        f"expected home-manager switch to contain {expected}, but got {actual}"
+        f"expected home-manager switch to not contain {expected}, but got {actual}"
 
       expected = "An attribute set containing a remote type and options."
       assert expected not in actual, \

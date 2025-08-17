@@ -24,6 +24,9 @@ in
     ./secrets-with-whitespace.nix
     ./no-type.nix
     ./mount.nix
+    ./shell.nix
+    ./atomic.nix
+    ./write-after.nix
   ];
 
   options.script = lib.mkOption {
