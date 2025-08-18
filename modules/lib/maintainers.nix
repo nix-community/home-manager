@@ -175,6 +175,11 @@
     github = "fpob";
     githubId = 6289078;
   };
+  gauthsvenkat = {
+    email = "gauthsvenkat+home-manager@gmail.com";
+    github = "gauthsvenkat";
+    githubId = 26820345;
+  };
   genericnerdyusername = {
     email = "genericnerdyusername@proton.me";
     github = "genericnerdyusername";
