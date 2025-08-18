@@ -34,7 +34,7 @@ jobs:
             echo "email=$id+$name@users.noreply.github.com"
           } >> "$GITHUB_OUTPUT"
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ matrix.branch }}
           token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}

@@ -15,7 +15,7 @@ jobs:
       hm: ${{ steps.changes.outputs.hm }}
       tests: ${{ steps.changes.outputs.tests }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dorny/paths-filter@v3
         id: changes
         with:
@@ -47,7 +47,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Get Nixpkgs revision from flake.lock
         id: get-nixpkgs
         run: |

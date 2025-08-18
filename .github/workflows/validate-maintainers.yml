@@ -15,7 +15,7 @@ jobs:
     if: github.repository_owner == 'nix-community'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Get Nixpkgs revision from flake.lock
         id: get-nixpkgs
         run: |
