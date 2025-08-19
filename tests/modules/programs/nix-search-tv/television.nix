@@ -13,7 +13,7 @@
         name = "nix-search-tv"
 
         [preview]
-        command = "${lib.getExe pkgs.nix-search-tv} preview {}"
+        command = "${lib.getExe pkgs.nix-search-tv} preview \"{}\""
 
         [source]
         command = "${lib.getExe pkgs.nix-search-tv} print"
