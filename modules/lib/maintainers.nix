@@ -13,6 +13,12 @@
     github = "3ulalia";
     githubId = 179992797;
   };
+  "74k1" = {
+    name = "Tim";
+    email = "git.t@betsumei.com";
+    github = "74k1";
+    githubId = 49000471;
+  };
   "9p4" = {
     name = "9p4";
     email = "vcs@ersei.net";

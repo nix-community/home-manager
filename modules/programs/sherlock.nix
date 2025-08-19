@@ -19,7 +19,10 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [ lib.maintainers.khaneliman ];
+  meta.maintainers = [
+    lib.maintainers.khaneliman
+    lib.hm.maintainers."74k1"
+  ];
 
   options.programs.sherlock = {
     enable = mkEnableOption "sherlock launcher" // {
@@ -150,11 +153,11 @@ in
     systemd.user.services.sherlock = lib.mkIf cfg.systemd.enable {
       Unit.Description = "Sherlock - App Launcher";
       Unit.X-Restart-Triggers = lib.mkMerge [
-        (lib.mkIf (cfg.settings != { }) ["${config.xdg.configFile."sherlock/config.toml".source}"])
-        (lib.mkIf (cfg.aliases != { }) ["${config.xdg.configFile."sherlock/sherlock_alias.json".source}"])
-        (lib.mkIf (cfg.launchers != [ ]) ["${config.xdg.configFile."sherlock/fallback.json".source}"])
-        (lib.mkIf (cfg.ignore != "") ["${config.xdg.configFile."sherlock/sherlockignore".source}"])
-        (lib.mkIf (cfg.style != "") ["${config.xdg.configFile."sherlock/main.css".source}"])
+        (lib.mkIf (cfg.settings != { }) [ "${config.xdg.configFile."sherlock/config.toml".source}" ])
+        (lib.mkIf (cfg.aliases != { }) [ "${config.xdg.configFile."sherlock/sherlock_alias.json".source}" ])
+        (lib.mkIf (cfg.launchers != [ ]) [ "${config.xdg.configFile."sherlock/fallback.json".source}" ])
+        (lib.mkIf (cfg.ignore != "") [ "${config.xdg.configFile."sherlock/sherlockignore".source}" ])
+        (lib.mkIf (cfg.style != "") [ "${config.xdg.configFile."sherlock/main.css".source}" ])
       ];
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
