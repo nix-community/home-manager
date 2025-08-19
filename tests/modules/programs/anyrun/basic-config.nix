@@ -72,6 +72,7 @@
         y: Fraction(0.020000),
         width: Absolute(800),
         height: Absolute(0),
+        margin: 0,
         hide_icons: false,
         ignore_exclusive_zones: false,
         layer: Overlay,

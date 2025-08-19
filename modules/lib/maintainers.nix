@@ -151,6 +151,12 @@
     githubId = 1289661;
     name = "Eduardo Maia";
   };
+  epixtm = {
+    name = "Epix";
+    email = "kami@epix.icu";
+    github = "epixtm";
+    githubId = 168025607;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
@@ -224,6 +230,12 @@
     matrix = "@janik0:matrix.org";
     github = "Janik-Haag";
     githubId = 80165193;
+  };
+  joker9944 = {
+    name = "Felix von Arx";
+    email = "github@shroud.mozmail.com";
+    github = "Joker9944";
+    githubId = 9194199;
   };
   jonringer = {
     email = "jonringer117@gmail.com";
@@ -465,6 +477,12 @@
     email = "RosarioPulella@gmail.com";
     github = "Rosuavio";
     githubId = 7164552;
+  };
+  rrvsh = {
+    name = "Mohammad Rafiq";
+    email = "rafiq@rrv.sh";
+    github = "rrvsh";
+    githubId = 20300874;
   };
   rszamszur = {
     name = "Radosław Szamszur";

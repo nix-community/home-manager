@@ -66,10 +66,7 @@ in
   config = mkIf cfg.enable {
 
     assertions = [
-      {
-        assertion = pkgs.stdenv.hostPlatform.isLinux;
-        message = "The DavMail service is only available on Linux.";
-      }
+      (lib.hm.assertions.assertPlatform "services.davmail" pkgs lib.platforms.linux)
     ];
 
     services.davmail.settings =
@@ -111,7 +108,7 @@ in
       };
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
-        Type = "simple";
+        Type = "exec";
         ExecStart = "${lib.getExe cfg.package} ${settingsFile}";
         Restart = "on-failure";
 
@@ -134,6 +131,7 @@ in
         RestrictAddressFamilies = [
           "AF_INET"
           "AF_INET6"
+          "AF_UNIX"
         ];
         RestrictNamespaces = true;
         RestrictRealtime = true;

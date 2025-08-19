@@ -17,7 +17,27 @@ in
   ];
 
   options.programs.keepassxc = {
-    enable = lib.mkEnableOption "keepassxc";
+    enable = lib.mkEnableOption "keepassxc" // {
+      description = ''
+        Whether to enable KeePassXC.
+
+        ::: {.note}
+        When this flag is set, KeePassXC' builtin native messaging manifest for
+        communication with its browser extension is automatically installed.
+        This conflicts with KeePassXC' builtin installation mechanism. To
+        prevent error messages, either set
+        {option}`programs.keepassxc.settings.Browser.UpdateBinaryPath` to
+        `false`, or untick the checkbox
+
+          Application Settings/
+            Browser Integration/
+              Advanced/
+                Update native messaging manifest files at startup
+
+        in the GUI.
+        :::
+      '';
+    };
 
     package = lib.mkPackageOption pkgs "keepassxc" { nullable = true; };
 
@@ -52,7 +72,7 @@ in
       default = false;
       example = true;
       description = ''
-        Whether to start Keepassxc automatically on login through the XDG autostart mechanism.
+        Whether to start KeePassXC automatically on login through the XDG autostart mechanism.
       '';
     };
   };

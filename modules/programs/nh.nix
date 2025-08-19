@@ -30,7 +30,7 @@ in
     };
 
     osFlake = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
+      type = with lib.types; nullOr (either singleLineStr path);
       default = null;
       description = ''
         The string that will be used for the {env}`NH_OS_FLAKE` environment variable.
@@ -42,7 +42,7 @@ in
     };
 
     homeFlake = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
+      type = with lib.types; nullOr (either singleLineStr path);
       default = null;
       description = ''
         The string that will be used for the {env}`NH_HOME_FLAKE` environment variable.
@@ -54,7 +54,7 @@ in
     };
 
     darwinFlake = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
+      type = with lib.types; nullOr (either singleLineStr path);
       default = null;
       description = ''
         The string that will be used for the {env}`NH_DARWIN_FLAKE` environment variable.

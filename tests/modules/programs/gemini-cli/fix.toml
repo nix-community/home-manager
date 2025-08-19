@@ -1,0 +1,2 @@
+description = "Generates a fix for a given GitHub issue."
+prompt = "Please analyze the staged git changes and provide a code fix for the issue described here: {{args}}."

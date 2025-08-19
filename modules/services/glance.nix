@@ -86,6 +86,9 @@ in
       Unit = {
         Description = "Glance feed dashboard server";
         PartOf = [ "graphical-session.target" ];
+        X-Restart-Triggers = [
+          settingsFile
+        ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
