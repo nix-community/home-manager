@@ -127,22 +127,18 @@ in
 
     xdg.configFile = {
       "sherlock/config.toml" = mkIf (cfg.settings != { }) {
-        onChange = mkIf cfg.systemd.enable "${lib.getExe' pkgs.systemd "systemctl"} --user restart sherlock.service";
         source = tomlFormat.generate "sherlock-config.toml" cfg.settings;
       };
 
       "sherlock/sherlock_alias.json" = mkIf (cfg.aliases != { }) {
-        onChange = mkIf cfg.systemd.enable "${lib.getExe' pkgs.systemd "systemctl"} --user restart sherlock.service";
         source = jsonFormat.generate "sherlock_alias.json" cfg.aliases;
       };
 
       "sherlock/fallback.json" = mkIf (cfg.launchers != [ ]) {
-        onChange = mkIf cfg.systemd.enable "${lib.getExe' pkgs.systemd "systemctl"} --user restart sherlock.service";
         source = jsonFormat.generate "sherlock-fallback.json" cfg.launchers;
       };
 
       "sherlock/sherlockignore" = mkIf (cfg.ignore != "") {
-        onChange = mkIf cfg.systemd.enable "${lib.getExe' pkgs.systemd "systemctl"} --user restart sherlock.service";
         text = cfg.ignore;
       };
 
@@ -153,6 +149,13 @@ in
 
     systemd.user.services.sherlock = lib.mkIf cfg.systemd.enable {
       Unit.Description = "Sherlock - App Launcher";
+      Unit.X-Restart-Triggers = lib.mkMerge [
+        (lib.mkIf (cfg.settings != { }) ["${config.xdg.configFile."sherlock/config.toml".source}"])
+        (lib.mkIf (cfg.aliases != { }) ["${config.xdg.configFile."sherlock/sherlock_alias.json".source}"])
+        (lib.mkIf (cfg.launchers != [ ]) ["${config.xdg.configFile."sherlock/fallback.json".source}"])
+        (lib.mkIf (cfg.ignore != "") ["${config.xdg.configFile."sherlock/sherlockignore".source}"])
+        (lib.mkIf (cfg.style != "") ["${config.xdg.configFile."sherlock/main.css".source}"])
+      ];
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
         Environment = [ "DISPLAY=:0" ];
