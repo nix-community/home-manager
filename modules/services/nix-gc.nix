@@ -92,11 +92,9 @@ in
           };
           Service = {
             Type = "oneshot";
-            ExecStart = toString (
-              pkgs.writeShellScript "nix-gc" "exec ${nixPackage}/bin/nix-collect-garbage ${
-                lib.optionalString (cfg.options != null) cfg.options
-              }"
-            );
+            ExecStart = pkgs.writeShellScript "nix-gc" "exec ${nixPackage}/bin/nix-collect-garbage ${
+              lib.optionalString (cfg.options != null) cfg.options
+            }";
           };
         };
         systemd.user.timers.nix-gc = {
