@@ -156,6 +156,36 @@ in
       };
     };
 
+    memory = {
+      text = lib.mkOption {
+        type = lib.types.nullOr lib.types.lines;
+        default = null;
+        description = ''
+          Inline memory content for CLAUDE.md.
+          This option is mutually exclusive with memory.source.
+        '';
+        example = ''
+          # Project Memory
+
+          ## Current Task
+          Implementing enhanced claude-code module for home-manager.
+
+          ## Key Files
+          - claude-code.nix: Main module implementation
+        '';
+      };
+
+      source = lib.mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        description = ''
+          Path to a file containing memory content for CLAUDE.md.
+          This option is mutually exclusive with memory.text.
+        '';
+        example = lib.literalExpression "./claude-memory.md";
+      };
+    };
+
     mcpServers = lib.mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
@@ -203,6 +233,10 @@ in
         assertion = cfg.mcpServers == { } || cfg.package != null;
         message = "`programs.claude-code.package` cannot be null when `mcpServers` is configured";
       }
+      {
+        assertion = !(cfg.memory.text != null && cfg.memory.source != null);
+        message = "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`";
+      }
     ];
 
     programs.claude-code.finalPackage =
@@ -243,6 +277,10 @@ in
             }
           );
         };
+
+        ".claude/CLAUDE.md" = lib.mkIf (cfg.memory.text != null || cfg.memory.source != null) (
+          if cfg.memory.text != null then { text = cfg.memory.text; } else { source = cfg.memory.source; }
+        );
       }
       // lib.mapAttrs' (
         name: content:
