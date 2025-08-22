@@ -196,6 +196,16 @@ in
       example = lib.literalExpression "./agents";
     };
 
+    commandsDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing command files for Claude Code.
+        Command files from this directory will be symlinked to .claude/commands/.
+      '';
+      example = lib.literalExpression "./commands";
+    };
+
     mcpServers = lib.mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
@@ -251,6 +261,10 @@ in
         assertion = !(cfg.agents != { } && cfg.agentsDir != null);
         message = "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`";
       }
+      {
+        assertion = !(cfg.commands != { } && cfg.commandsDir != null);
+        message = "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`";
+      }
     ];
 
     programs.claude-code.finalPackage =
@@ -298,6 +312,11 @@ in
 
         ".claude/agents" = lib.mkIf (cfg.agentsDir != null) {
           source = cfg.agentsDir;
+          recursive = true;
+        };
+
+        ".claude/commands" = lib.mkIf (cfg.commandsDir != null) {
+          source = cfg.commandsDir;
           recursive = true;
         };
       }

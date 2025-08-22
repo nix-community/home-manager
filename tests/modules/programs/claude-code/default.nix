@@ -6,4 +6,5 @@
   claude-code-memory-management = ./memory-management.nix;
   claude-code-memory-from-source = ./memory-from-source.nix;
   claude-code-agents-dir = ./agents-dir.nix;
+  claude-code-commands-dir = ./commands-dir.nix;
 }
