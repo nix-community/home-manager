@@ -32,6 +32,12 @@
       test-command = "test content";
     };
     commandsDir = ./commands;
+
+    # assert fail: cannot set hooks and hooksDir at the same time.
+    hooks = {
+      test-hook = "test content";
+    };
+    hooksDir = ./hooks;
   };
 
   test.asserts.assertions.expected = [
@@ -39,5 +45,6 @@
     "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`"
     "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`"
     "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`"
+    "Cannot specify both `programs.claude-code.hooks` and `programs.claude-code.hooksDir`"
   ];
 }
