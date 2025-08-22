@@ -213,7 +213,7 @@ in
         Path to a directory containing agent files for Claude Code.
         Agent files from this directory will be symlinked to .claude/agents/.
       '';
-      example = lib.literalExpression ./agents;
+      example = lib.literalExpression "./agents";
     };
 
     commandsDir = lib.mkOption {
@@ -223,7 +223,7 @@ in
         Path to a directory containing command files for Claude Code.
         Command files from this directory will be symlinked to .claude/commands/.
       '';
-      example = lib.literalExpression ./commands;
+      example = lib.literalExpression "./commands";
     };
 
     hooksDir = lib.mkOption {
@@ -233,7 +233,7 @@ in
         Path to a directory containing hook files for Claude Code.
         Hook files from this directory will be symlinked to .claude/hooks/.
       '';
-      example = lib.literalExpression ./hooks;
+      example = lib.literalExpression "./hooks";
     };
 
     mcpServers = lib.mkOption {
