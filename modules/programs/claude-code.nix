@@ -186,6 +186,16 @@ in
       };
     };
 
+    agentsDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing agent files for Claude Code.
+        Agent files from this directory will be symlinked to .claude/agents/.
+      '';
+      example = lib.literalExpression "./agents";
+    };
+
     mcpServers = lib.mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
@@ -237,6 +247,10 @@ in
         assertion = !(cfg.memory.text != null && cfg.memory.source != null);
         message = "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`";
       }
+      {
+        assertion = !(cfg.agents != { } && cfg.agentsDir != null);
+        message = "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`";
+      }
     ];
 
     programs.claude-code.finalPackage =
@@ -281,6 +295,11 @@ in
         ".claude/CLAUDE.md" = lib.mkIf (cfg.memory.text != null || cfg.memory.source != null) (
           if cfg.memory.text != null then { text = cfg.memory.text; } else { source = cfg.memory.source; }
         );
+
+        ".claude/agents" = lib.mkIf (cfg.agentsDir != null) {
+          source = cfg.agentsDir;
+          recursive = true;
+        };
       }
       // lib.mapAttrs' (
         name: content:
