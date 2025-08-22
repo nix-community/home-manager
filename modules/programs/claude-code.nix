@@ -156,6 +156,26 @@ in
       };
     };
 
+    hooks = lib.mkOption {
+      type = lib.types.attrsOf lib.types.lines;
+      default = { };
+      description = ''
+        Custom hooks for Claude Code.
+        The attribute name becomes the hook filename, and the value is the hook script content.
+        Hooks are stored in .claude/hooks/ directory.
+      '';
+      example = {
+        pre-edit = ''
+          #!/usr/bin/env bash
+          echo "About to edit file: $1"
+        '';
+        post-commit = ''
+          #!/usr/bin/env bash
+          echo "Committed with message: $1"
+        '';
+      };
+    };
+
     memory = {
       text = lib.mkOption {
         type = lib.types.nullOr lib.types.lines;
@@ -204,6 +224,16 @@ in
         Command files from this directory will be symlinked to .claude/commands/.
       '';
       example = lib.literalExpression "./commands";
+    };
+
+    hooksDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing hook files for Claude Code.
+        Hook files from this directory will be symlinked to .claude/hooks/.
+      '';
+      example = lib.literalExpression "./hooks";
     };
 
     mcpServers = lib.mkOption {
@@ -265,6 +295,10 @@ in
         assertion = !(cfg.commands != { } && cfg.commandsDir != null);
         message = "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`";
       }
+      {
+        assertion = !(cfg.hooks != { } && cfg.hooksDir != null);
+        message = "Cannot specify both `programs.claude-code.hooks` and `programs.claude-code.hooksDir`";
+      }
     ];
 
     programs.claude-code.finalPackage =
@@ -319,6 +353,11 @@ in
           source = cfg.commandsDir;
           recursive = true;
         };
+
+        ".claude/hooks" = lib.mkIf (cfg.hooksDir != null) {
+          source = cfg.hooksDir;
+          recursive = true;
+        };
       }
       // lib.mapAttrs' (
         name: content:
@@ -331,7 +370,13 @@ in
         lib.nameValuePair ".claude/commands/${name}.md" {
           text = content;
         }
-      ) cfg.commands;
+      ) cfg.commands
+      // lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair ".claude/hooks/${name}" {
+          text = content;
+        }
+      ) cfg.hooks;
     };
   };
 }
