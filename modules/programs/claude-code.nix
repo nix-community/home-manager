@@ -340,7 +340,7 @@ in
           );
         };
 
-        "CLAUDE.md" = lib.mkIf (cfg.memory.text != null || cfg.memory.source != null) (
+        ".claude/CLAUDE.md" = lib.mkIf (cfg.memory.text != null || cfg.memory.source != null) (
           if cfg.memory.text != null then { text = cfg.memory.text; } else { source = cfg.memory.source; }
         );
 

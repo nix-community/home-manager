@@ -10,13 +10,13 @@
 
         ## Key Context
         - This is a test configuration
-        - Memory should be created at ~/CLAUDE.md
+        - Memory should be created at ~/.claude/CLAUDE.md
       '';
     };
   };
 
   nmt.script = ''
-    assertFileExists home-files/CLAUDE.md
-    assertFileContent home-files/CLAUDE.md ${./expected-memory.md}
+    assertFileExists home-files/.claude/CLAUDE.md
+    assertFileContent home-files/.claude/CLAUDE.md ${./expected-memory.md}
   '';
 }
