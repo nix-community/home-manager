@@ -26,11 +26,18 @@
       test-agent = "test content";
     };
     agentsDir = ./agents;
+
+    # assert fail: cannot set commands and commandsDir at the same time.
+    commands = {
+      test-command = "test content";
+    };
+    commandsDir = ./commands;
   };
 
   test.asserts.assertions.expected = [
     "`programs.claude-code.package` cannot be null when `mcpServers` is configured"
     "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`"
     "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`"
+    "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`"
   ];
 }
