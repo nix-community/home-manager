@@ -7,6 +7,7 @@
   config = {
     programs.ssh = {
       enable = true;
+      enableDefaultConfig = false;
       includes = [
         "config.d/*"
         "other/dir"
