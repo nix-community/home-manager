@@ -194,14 +194,14 @@ let
       };
 
       serverAliveInterval = mkOption {
-        type = types.int;
-        default = 0;
+        type = types.nullOr types.int;
+        default = null;
         description = "Set timeout in seconds after which response will be requested.";
       };
 
       serverAliveCountMax = mkOption {
-        type = types.ints.positive;
-        default = 3;
+        type = types.nullOr types.ints.positive;
+        default = null;
         description = ''
           Sets the number of server alive messages which may be sent
           without SSH receiving any messages back from the server.
@@ -345,6 +345,65 @@ let
         default = { };
         description = "Extra configuration options for the host.";
       };
+
+      addKeysToAgent = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+            When enabled, a private key that is used during authentication will be
+          added to ssh-agent if it is running (with confirmation enabled if
+          set to 'confirm'). The argument must be 'no' (the default), 'yes', 'confirm'
+          (optionally followed by a time interval), 'ask' or a time interval (e.g. '1h').
+        '';
+      };
+
+      hashKnownHosts = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+           Indicates that
+           {manpage}`ssh(1)`
+           should hash host names and addresses when they are added to
+          the known hosts file.
+        '';
+      };
+
+      userKnownHostsFile = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Specifies one or more files to use for the user host key
+          database, separated by whitespace. The default is
+          {file}`~/.ssh/known_hosts`.
+        '';
+      };
+
+      controlMaster = mkOption {
+        default = null;
+        type = types.nullOr (
+          types.enum [
+            "yes"
+            "no"
+            "ask"
+            "auto"
+            "autoask"
+          ]
+        );
+        description = "Configure sharing of multiple sessions over a single network connection.";
+      };
+
+      controlPath = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Specify path to the control socket used for connection sharing.";
+      };
+
+      controlPersist = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "10m";
+        description = "Whether control socket should remain open in the background.";
+      };
     };
 
     #    config.host = mkDefault dagName;
@@ -368,12 +427,24 @@ let
       ++ optional (cf.addressFamily != null) "  AddressFamily ${cf.addressFamily}"
       ++ optional (cf.sendEnv != [ ]) "  SendEnv ${unwords cf.sendEnv}"
       ++ optional (cf.setEnv != { }) "  SetEnv ${mkSetEnvStr cf.setEnv}"
-      ++ optional (cf.serverAliveInterval != 0) "  ServerAliveInterval ${toString cf.serverAliveInterval}"
-      ++ optional (cf.serverAliveCountMax != 3) "  ServerAliveCountMax ${toString cf.serverAliveCountMax}"
+      ++ optional (
+        cf.serverAliveInterval != null
+      ) "  ServerAliveInterval ${toString cf.serverAliveInterval}"
+      ++ optional (
+        cf.serverAliveCountMax != null
+      ) "  ServerAliveCountMax ${toString cf.serverAliveCountMax}"
       ++ optional (cf.compression != null) "  Compression ${lib.hm.booleans.yesNo cf.compression}"
       ++ optional (!cf.checkHostIP) "  CheckHostIP no"
       ++ optional (cf.proxyCommand != null) "  ProxyCommand ${cf.proxyCommand}"
       ++ optional (cf.proxyJump != null) "  ProxyJump ${cf.proxyJump}"
+      ++ optional (cf.addKeysToAgent != null) "  AddKeysToAgent ${cf.addKeysToAgent}"
+      ++ optional (
+        cf.hashKnownHosts != null
+      ) "  HashKnownHosts ${lib.hm.booleans.yesNo cf.hashKnownHosts}"
+      ++ optional (cf.userKnownHostsFile != null) "  UserKnownHostsFile ${cf.userKnownHostsFile}"
+      ++ optional (cf.controlMaster != null) "  ControlMaster ${cf.controlMaster}"
+      ++ optional (cf.controlPath != null) "  ControlPath ${cf.controlPath}"
+      ++ optional (cf.controlPersist != null) "  ControlPersist ${cf.controlPersist}"
       ++ map (file: "  IdentityFile ${file}") cf.identityFile
       ++ map (file: "  IdentityAgent ${file}") cf.identityAgent
       ++ map (file: "  CertificateFile ${file}") cf.certificateFile
@@ -387,6 +458,35 @@ in
 {
   meta.maintainers = [ lib.maintainers.rycee ];
 
+  imports =
+    let
+      oldPrefix = [
+        "programs"
+        "ssh"
+      ];
+      newPrefix = [
+        "programs"
+        "ssh"
+        "matchBlocks"
+        "*"
+      ];
+      renamedOptions = [
+        "forwardAgent"
+        "addKeysToAgent"
+        "compression"
+        "serverAliveInterval"
+        "serverAliveCountMax"
+        "hashKnownHosts"
+        "userKnownHostsFile"
+        "controlMaster"
+        "controlPath"
+        "controlPersist"
+      ];
+    in
+    lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix {
+      transform = x: x;
+    } renamedOptions;
+
   options.programs.ssh = {
     enable = lib.mkEnableOption "SSH client configuration";
 
@@ -394,101 +494,6 @@ in
       nullable = true;
       default = null;
       extraDescription = "By default, the client provided by your system is used.";
-    };
-
-    forwardAgent = mkOption {
-      default = false;
-      type = types.bool;
-      description = ''
-        Whether the connection to the authentication agent (if any)
-        will be forwarded to the remote machine.
-      '';
-    };
-
-    addKeysToAgent = mkOption {
-      type = types.str;
-      default = "no";
-      description = ''
-        When enabled, a private key that is used during authentication will be
-        added to ssh-agent if it is running (with confirmation enabled if
-        set to 'confirm'). The argument must be 'no' (the default), 'yes', 'confirm'
-        (optionally followed by a time interval), 'ask' or a time interval (e.g. '1h').
-      '';
-    };
-
-    compression = mkOption {
-      default = false;
-      type = types.bool;
-      description = "Specifies whether to use compression.";
-    };
-
-    serverAliveInterval = mkOption {
-      type = types.int;
-      default = 0;
-      description = ''
-        Set default timeout in seconds after which response will be requested.
-      '';
-    };
-
-    serverAliveCountMax = mkOption {
-      type = types.ints.positive;
-      default = 3;
-      description = ''
-        Sets the default number of server alive messages which may be
-        sent without SSH receiving any messages back from the server.
-      '';
-    };
-
-    hashKnownHosts = mkOption {
-      default = false;
-      type = types.bool;
-      description = ''
-        Indicates that
-        {manpage}`ssh(1)`
-        should hash host names and addresses when they are added to
-        the known hosts file.
-      '';
-    };
-
-    userKnownHostsFile = mkOption {
-      type = types.str;
-      default = "~/.ssh/known_hosts";
-      description = ''
-        Specifies one or more files to use for the user host key
-        database, separated by whitespace. The default is
-        {file}`~/.ssh/known_hosts`.
-      '';
-    };
-
-    controlMaster = mkOption {
-      default = "no";
-      type = types.enum [
-        "yes"
-        "no"
-        "ask"
-        "auto"
-        "autoask"
-      ];
-      description = ''
-        Configure sharing of multiple sessions over a single network connection.
-      '';
-    };
-
-    controlPath = mkOption {
-      type = types.str;
-      default = "~/.ssh/master-%r@%n:%p";
-      description = ''
-        Specify path to the control socket used for connection sharing.
-      '';
-    };
-
-    controlPersist = mkOption {
-      type = types.str;
-      default = "no";
-      example = "10m";
-      description = ''
-        Whether control socket should remain open in the background.
-      '';
     };
 
     extraConfig = mkOption {
@@ -546,76 +551,108 @@ in
         for more information.
       '';
     };
-  };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion =
-          let
-            # `builtins.any`/`lib.lists.any` does not return `true` if there are no elements.
-            any' = pred: items: if items == [ ] then true else lib.any pred items;
-            # Check that if `entry.address` is defined, and is a path, that `entry.port` has not
-            # been defined.
-            noPathWithPort = entry: entry.address != null && isPath entry.address -> entry.port == null;
-            checkDynamic = block: any' noPathWithPort block.dynamicForwards;
-            checkBindAndHost = fwd: noPathWithPort fwd.bind && noPathWithPort fwd.host;
-            checkLocal = block: any' checkBindAndHost block.localForwards;
-            checkRemote = block: any' checkBindAndHost block.remoteForwards;
-            checkMatchBlock =
-              block:
-              lib.all (fn: fn block) [
-                checkLocal
-                checkRemote
-                checkDynamic
-              ];
-          in
-          any' checkMatchBlock (map (block: block.data) (builtins.attrValues cfg.matchBlocks));
-        message = "Forwarded paths cannot have ports.";
-      }
-    ];
-
-    home.packages = optional (cfg.package != null) cfg.package;
-
-    home.file.".ssh/config".text =
-      let
-        sortedMatchBlocks = lib.hm.dag.topoSort cfg.matchBlocks;
-        sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
-        matchBlocks =
-          if sortedMatchBlocks ? result then
-            sortedMatchBlocks.result
-          else
-            abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
-      in
-      ''
-        ${concatStringsSep "\n" (
-          (mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
-          ++ (optional (cfg.includes != [ ]) ''
-            Include ${concatStringsSep " " cfg.includes}
-          '')
-          ++ (map (block: matchBlockStr block.name block.data) matchBlocks)
-        )}
-
-        Host *
-          ForwardAgent ${lib.hm.booleans.yesNo cfg.forwardAgent}
-          AddKeysToAgent ${cfg.addKeysToAgent}
-          Compression ${lib.hm.booleans.yesNo cfg.compression}
-          ServerAliveInterval ${toString cfg.serverAliveInterval}
-          ServerAliveCountMax ${toString cfg.serverAliveCountMax}
-          HashKnownHosts ${lib.hm.booleans.yesNo cfg.hashKnownHosts}
-          UserKnownHostsFile ${cfg.userKnownHostsFile}
-          ControlMaster ${cfg.controlMaster}
-          ControlPath ${cfg.controlPath}
-          ControlPersist ${cfg.controlPersist}
-
-          ${lib.replaceStrings [ "\n" ] [ "\n  " ] cfg.extraConfig}
+    enableDefaultConfig = mkOption {
+      type = types.bool;
+      default = true;
+      example = false;
+      description = ''
+        Whether to enable or not the old default config values.
+        This option will become deprecated in the future.
       '';
-
-    warnings =
-      mapAttrsToList
-        (n: v: ''
-          The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
-          The match option takes precedence.'')
-        (lib.filterAttrs (n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
+    };
   };
+
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          {
+            assertion =
+              let
+                # `builtins.any`/`lib.lists.any` does not return `true` if there are no elements.
+                any' = pred: items: if items == [ ] then true else lib.any pred items;
+                # Check that if `entry.address` is defined, and is a path, that `entry.port` has not
+                # been defined.
+                noPathWithPort = entry: entry.address != null && isPath entry.address -> entry.port == null;
+                checkDynamic = block: any' noPathWithPort block.dynamicForwards;
+                checkBindAndHost = fwd: noPathWithPort fwd.bind && noPathWithPort fwd.host;
+                checkLocal = block: any' checkBindAndHost block.localForwards;
+                checkRemote = block: any' checkBindAndHost block.remoteForwards;
+                checkMatchBlock =
+                  block:
+                  lib.all (fn: fn block) [
+                    checkLocal
+                    checkRemote
+                    checkDynamic
+                  ];
+              in
+              any' checkMatchBlock (map (block: block.data) (builtins.attrValues cfg.matchBlocks));
+            message = "Forwarded paths cannot have ports.";
+          }
+          {
+            assertion = (cfg.extraConfig != "") -> (cfg.matchBlocks ? "*");
+            message = ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.matchBlocks."*"` (default host config) is not declared.'';
+          }
+        ];
+
+        home.packages = optional (cfg.package != null) cfg.package;
+
+        home.file.".ssh/config".text =
+          let
+            sortedMatchBlocks = lib.hm.dag.topoSort (lib.removeAttrs cfg.matchBlocks [ "*" ]);
+            sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
+            matchBlocks =
+              if sortedMatchBlocks ? result then
+                sortedMatchBlocks.result
+              else
+                abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
+
+            defaultHostBlock = cfg.matchBlocks."*" or null;
+          in
+          ''
+            ${concatStringsSep "\n" (
+              (mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
+              ++ (optional (cfg.includes != [ ]) ''
+                Include ${concatStringsSep " " cfg.includes}
+              '')
+              ++ (map (block: matchBlockStr block.name block.data) matchBlocks)
+            )}
+
+            ${if (defaultHostBlock != null) then (matchBlockStr "*" defaultHostBlock.data) else ""}
+              ${lib.replaceStrings [ "\n" ] [ "\n  " ] cfg.extraConfig}
+          '';
+
+        warnings =
+          mapAttrsToList
+            (n: v: ''
+              The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
+              The match option takes precedence.'')
+            (lib.filterAttrs (n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
+      }
+      (lib.mkIf cfg.enableDefaultConfig {
+        warnings = [
+          ''
+            `programs.ssh` default values will be removed in the future.
+            Consider setting `programs.ssh.enableDefaultConfig` to false,
+            and manually set the default values you want to keep at
+            `programs.ssh.matchBlocks."*"`.
+          ''
+        ];
+
+        programs.ssh.matchBlocks."*" = {
+          forwardAgent = lib.mkDefault false;
+          addKeysToAgent = lib.mkDefault "no";
+          compression = lib.mkDefault false;
+          serverAliveInterval = lib.mkDefault 0;
+          serverAliveCountMax = lib.mkDefault 3;
+          hashKnownHosts = lib.mkDefault false;
+          userKnownHostsFile = lib.mkDefault "~/.ssh/known_hosts";
+          controlMaster = lib.mkDefault "no";
+          controlPath = lib.mkDefault "~/.ssh/master-%r@%n:%p";
+          controlPersist = lib.mkDefault "no";
+        };
+      })
+    ]
+  );
 }
