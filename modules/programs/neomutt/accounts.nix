@@ -61,7 +61,11 @@ in
 
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
-      default = if config.msmtp.enable then "msmtpq --read-envelope-from --read-recipients" else null;
+      default =
+        if config.msmtp.enable then
+          "${config.msmtp.msmtpCommand} --read-envelope-from --read-recipients"
+        else
+          null;
       defaultText = lib.literalExpression ''
         if config.msmtp.enable then
           "msmtpq --read-envelope-from --read-recipients"

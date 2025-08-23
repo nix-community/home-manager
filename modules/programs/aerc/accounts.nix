@@ -243,7 +243,7 @@ in
           // optPwCmd "outgoing" passwordCommand;
 
         msmtp = cfg: {
-          outgoing = "msmtpq --read-envelope-from --read-recipients";
+          outgoing = "${config.msmtp.msmtpCommand} --read-envelope-from --read-recipients";
         };
 
       };
