@@ -114,6 +114,23 @@ in
           See <https://marlam.de/msmtp/msmtprc.txt> for examples.
         '';
       };
+
+      msmtpCommand = mkOption {
+        type = types.package;
+        internal = true;
+        readOnly = true;
+        default = if cfg.offlineSupport then "${pkgs.msmtp}/bin/msmtpq" else "${pkgs.msmtp}/bin/msmtp";
+      };
+
+      offlineSupport = lib.mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Use msmtpq script instead of msmtp. The script allows an offline
+          first workflow by adding all mails to a queue regardless of the
+          network status, and flushing them later.
+        '';
+      };
     };
 
     accounts.email.accounts = mkOption {
@@ -135,7 +152,7 @@ in
           (lib.mkIf (cfg.extraAccounts != "") (lib.mkAfter cfg.extraAccounts))
         ];
 
-        home.sessionVariables = {
+        home.sessionVariables = lib.optionalAttrs cfg.offlineSupport {
           MSMTPQ_Q = "${config.xdg.dataHome}/msmtp/queue";
           MSMTPQ_LOG = "${config.xdg.dataHome}/msmtp/queue.log";
         };
