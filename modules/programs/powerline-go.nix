@@ -165,7 +165,9 @@ in
       }
 
       if [ "$TERM" != "linux" ]; then
-        PROMPT_COMMAND="_update_ps1;$PROMPT_COMMAND"
+        if [[ ";''${PROMPT_COMMAND:-};" != *";_update_ps1;"* ]]; then
+          PROMPT_COMMAND="_update_ps1''${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+        fi
       fi
     '';
 
