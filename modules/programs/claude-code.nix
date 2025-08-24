@@ -156,6 +156,86 @@ in
       };
     };
 
+    hooks = lib.mkOption {
+      type = lib.types.attrsOf lib.types.lines;
+      default = { };
+      description = ''
+        Custom hooks for Claude Code.
+        The attribute name becomes the hook filename, and the value is the hook script content.
+        Hooks are stored in .claude/hooks/ directory.
+      '';
+      example = {
+        pre-edit = ''
+          #!/usr/bin/env bash
+          echo "About to edit file: $1"
+        '';
+        post-commit = ''
+          #!/usr/bin/env bash
+          echo "Committed with message: $1"
+        '';
+      };
+    };
+
+    memory = {
+      text = lib.mkOption {
+        type = lib.types.nullOr lib.types.lines;
+        default = null;
+        description = ''
+          Inline memory content for CLAUDE.md.
+          This option is mutually exclusive with memory.source.
+        '';
+        example = ''
+          # Project Memory
+
+          ## Current Task
+          Implementing enhanced claude-code module for home-manager.
+
+          ## Key Files
+          - claude-code.nix: Main module implementation
+        '';
+      };
+
+      source = lib.mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        description = ''
+          Path to a file containing memory content for CLAUDE.md.
+          This option is mutually exclusive with memory.text.
+        '';
+        example = lib.literalExpression "./claude-memory.md";
+      };
+    };
+
+    agentsDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing agent files for Claude Code.
+        Agent files from this directory will be symlinked to .claude/agents/.
+      '';
+      example = lib.literalExpression "./agents";
+    };
+
+    commandsDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing command files for Claude Code.
+        Command files from this directory will be symlinked to .claude/commands/.
+      '';
+      example = lib.literalExpression "./commands";
+    };
+
+    hooksDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing hook files for Claude Code.
+        Hook files from this directory will be symlinked to .claude/hooks/.
+      '';
+      example = lib.literalExpression "./hooks";
+    };
+
     mcpServers = lib.mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
@@ -203,6 +283,22 @@ in
         assertion = cfg.mcpServers == { } || cfg.package != null;
         message = "`programs.claude-code.package` cannot be null when `mcpServers` is configured";
       }
+      {
+        assertion = !(cfg.memory.text != null && cfg.memory.source != null);
+        message = "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`";
+      }
+      {
+        assertion = !(cfg.agents != { } && cfg.agentsDir != null);
+        message = "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`";
+      }
+      {
+        assertion = !(cfg.commands != { } && cfg.commandsDir != null);
+        message = "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`";
+      }
+      {
+        assertion = !(cfg.hooks != { } && cfg.hooksDir != null);
+        message = "Cannot specify both `programs.claude-code.hooks` and `programs.claude-code.hooksDir`";
+      }
     ];
 
     programs.claude-code.finalPackage =
@@ -243,6 +339,25 @@ in
             }
           );
         };
+
+        ".claude/CLAUDE.md" = lib.mkIf (cfg.memory.text != null || cfg.memory.source != null) (
+          if cfg.memory.text != null then { text = cfg.memory.text; } else { source = cfg.memory.source; }
+        );
+
+        ".claude/agents" = lib.mkIf (cfg.agentsDir != null) {
+          source = cfg.agentsDir;
+          recursive = true;
+        };
+
+        ".claude/commands" = lib.mkIf (cfg.commandsDir != null) {
+          source = cfg.commandsDir;
+          recursive = true;
+        };
+
+        ".claude/hooks" = lib.mkIf (cfg.hooksDir != null) {
+          source = cfg.hooksDir;
+          recursive = true;
+        };
       }
       // lib.mapAttrs' (
         name: content:
@@ -255,7 +370,13 @@ in
         lib.nameValuePair ".claude/commands/${name}.md" {
           text = content;
         }
-      ) cfg.commands;
+      ) cfg.commands
+      // lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair ".claude/hooks/${name}" {
+          text = content;
+        }
+      ) cfg.hooks;
     };
   };
 }
