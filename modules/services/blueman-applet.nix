@@ -31,10 +31,6 @@ in
         example = [ "sway-session.target" ];
         description = ''
           The systemd targets that will automatically start the cliphist service.
-
-          When setting this value to `["sway-session.target"]`,
-          make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
-          otherwise the service may never be started.
         '';
       };
     };
