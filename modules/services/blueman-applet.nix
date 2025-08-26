@@ -24,6 +24,19 @@ in
       };
 
       package = lib.mkPackageOption pkgs "blueman" { };
+
+      systemdTargets = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ "graphical-session.target" ];
+        example = [ "sway-session.target" ];
+        description = ''
+          The systemd targets that will automatically start the cliphist service.
+
+          When setting this value to `["sway-session.target"]`,
+          make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
+          otherwise the service may never be started.
+        '';
+      };
     };
   };
 
@@ -36,15 +49,12 @@ in
       Unit = {
         Description = "Blueman applet";
         Requires = [ "tray.target" ];
-        After = [
-          "graphical-session.target"
-          "tray.target"
-        ];
-        PartOf = [ "graphical-session.target" ];
+        After = cfg.systemdTargets ++ [ "tray.target" ];
+        PartOf = cfg.systemdTargets;
       };
 
       Install = {
-        WantedBy = [ "graphical-session.target" ];
+        WantedBy = cfg.systemdTargets;
       };
 
       Service = {

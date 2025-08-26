@@ -13,6 +13,12 @@
     github = "3ulalia";
     githubId = 179992797;
   };
+  "74k1" = {
+    name = "Tim";
+    email = "git.t@betsumei.com";
+    github = "74k1";
+    githubId = 49000471;
+  };
   "9p4" = {
     name = "9p4";
     email = "vcs@ersei.net";
@@ -180,6 +186,11 @@
     email = "fpob@proton.me";
     github = "fpob";
     githubId = 6289078;
+  };
+  gauthsvenkat = {
+    email = "gauthsvenkat+home-manager@gmail.com";
+    github = "gauthsvenkat";
+    githubId = 26820345;
   };
   genericnerdyusername = {
     email = "genericnerdyusername@proton.me";

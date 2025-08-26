@@ -10,9 +10,25 @@ let
   cfg = config.programs.rclone;
   iniFormat = pkgs.formats.ini { };
   replaceSlashes = builtins.replaceStrings [ "/" ] [ "." ];
+  isUsingSecretProvisioner = name: config ? "${name}" && config."${name}".secrets != { };
 
 in
 {
+  imports = [
+    (lib.mkRemovedOptionModule [ "programs" "rclone" "writeAfter" ] ''
+      The writeAfter option has been removed because rclone configuration is now handled by a
+      systemd service instead of an activation script.
+
+      For most users, no manual configuration is needed as the following secret provisioners are
+      automatically detected:
+       - agenix users: automatically uses agenix.service
+       - sops-nix users: automatically uses sops-nix.service
+
+      If you need custom service dependencies, use the requiresUnit option instead:
+      programs.rclone.requiresUnit = "your-service-name.service";
+    '')
+  ];
+
   options = {
     programs.rclone = {
       enable = lib.mkEnableOption "rclone";
@@ -76,11 +92,9 @@ in
                   must be provided as file paths to the secrets, which will be read at activation
                   time.
 
-                  Note: If using secret management solutions like agenix or sops-nix with
-                  home-manager, you need to ensure their services are activated before switching
-                  to this home-manager generation. Consider setting
-                  {option}`systemd.user.startServices` to `"sd-switch"` for automatic service
-                  startup.
+                  These values are expanded in a shell context within a systemd service, so
+                  you can use bash features like command substitution or variable expansion
+                  (e.g. "''${XDG_RUNTIME_DIR}" as used by agenix).
                 '';
                 example = lib.literalExpression ''
                   {
@@ -197,99 +211,175 @@ in
           }'';
       };
 
-      writeAfter = lib.mkOption {
-        type = lib.types.str;
-        default = "reloadSystemd";
+      requiresUnit = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default =
+          lib.foldlAttrs
+            (
+              acc: prov: svc:
+              if isUsingSecretProvisioner prov then svc else acc
+            )
+            null
+            {
+              "sops" = "sops-nix.service";
+              "age" = "agenix.service";
+            };
+        example = "agenix.service";
         description = ''
-          Controls when the rclone configuration is written during Home Manager activation.
-          You should not need to change this unless you have very specific activation order
-          requirements.
+          The name of a systemd user service that must complete before the rclone
+          configuration file is written.
+
+          This is typically used when secrets are managed by an external provisioner
+          whose service must run before the secrets are accessible.
+
+          When using sops-nix or agenix, this value is set automatically to
+          sops-nix.service or agenix.service, respectively. Set this manually if you
+          use a different secret provisioner.
         '';
       };
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home = {
-      packages = [ cfg.package ];
-
-      activation.createRcloneConfig =
+  config =
+    let
+      rcloneConfigService =
         let
           safeConfig = lib.pipe cfg.remotes [
             (lib.mapAttrs (_: v: v.config))
             (iniFormat.generate "rclone.conf@pre-secrets")
           ];
 
-          # https://github.com/rclone/rclone/issues/8190
           injectSecret =
             remote:
             lib.mapAttrsToList (secret: secretFile: ''
-              ${lib.getExe cfg.package} config update \
-                ${remote.name} config_refresh_token=false \
-                ${secret} "$(cat ${secretFile})" \
-                --quiet --non-interactive > /dev/null
+              if ! cat "${secretFile}"; then
+                echo "Secret \"${secretFile}\" not found"
+                cleanup
+              fi
+
+              if ! ${lib.getExe cfg.package} config update \
+                     ${remote.name} config_refresh_token=false \
+                     ${secret} "$(cat "${secretFile}")" \
+                     --non-interactive; then
+                echo "Failed to inject secret \"${secretFile}\""
+                cleanup
+              fi
             '') remote.value.secrets or { };
 
           injectAllSecrets = lib.concatMap injectSecret (lib.mapAttrsToList lib.nameValuePair cfg.remotes);
+          rcloneConfigPath = "${config.xdg.configHome}/rclone/rclone.conf";
         in
-        lib.mkIf (cfg.remotes != { }) (
-          lib.hm.dag.entryAfter [ "writeBoundary" cfg.writeAfter ] ''
-            run install $VERBOSE_ARG -D -m600 ${safeConfig} "${config.xdg.configHome}/rclone/rclone.conf"
-            ${lib.concatLines injectAllSecrets}
-          ''
-        );
-    };
+        lib.mkIf (cfg.remotes != { }) {
+          rclone-config = {
+            Unit = lib.mkMerge [
+              {
+                Description = "Install rclone configuration to ${rcloneConfigPath}";
+              }
 
-    systemd.user.services = lib.listToAttrs (
-      lib.concatMap
-        (
-          { name, value }:
-          let
-            remote-name = name;
-            remote = value;
-          in
-          lib.concatMap (
+              (lib.optionalAttrs (cfg.requiresUnit != null) {
+                Requires = [ cfg.requiresUnit ];
+                After = [ cfg.requiresUnit ];
+              })
+            ];
+
+            Service = {
+              Type = "oneshot";
+              ExecStart = lib.getExe (
+                pkgs.writeShellApplication {
+                  name = "rclone-config";
+
+                  runtimeInputs = [
+                    pkgs.coreutils
+                  ];
+
+                  text = ''
+                    configPath="${rcloneConfigPath}"
+                    configName="$(basename $configPath)"
+                    savedConfigPath="$(dirname $configPath)"/."$configName".orig
+
+                    cleanup() {
+                      echo "Failed to render config."
+                      if [ -f "$savedConfigPath" ]; then
+                        cp -v "$savedConfigPath" "${rcloneConfigPath}"
+                      fi
+                      exit 1
+                    }
+
+                    trap cleanup SIGINT
+
+                    if [ -f "${rcloneConfigPath}" ]; then
+                      cp -v "${rcloneConfigPath}" "$savedConfigPath"
+                    fi
+
+                    install -v -D -m600 "${safeConfig}" "${rcloneConfigPath}"
+                    ${lib.concatLines injectAllSecrets}
+                  '';
+                }
+              );
+              Restart = "on-abnormal";
+            };
+
+            Install.WantedBy = [ "default.target" ];
+          };
+        };
+
+      mountServices = lib.listToAttrs (
+        lib.concatMap
+          (
             { name, value }:
             let
-              mount-path = name;
-              mount = value;
+              remote-name = name;
+              remote = value;
             in
-            [
-              (lib.nameValuePair "rclone-mount:${replaceSlashes mount-path}@${remote-name}" {
-                Unit = {
-                  Description = "Rclone FUSE daemon for ${remote-name}:${mount-path}";
-                };
+            lib.concatMap (
+              { name, value }:
+              let
+                mount-path = name;
+                mount = value;
+              in
+              [
+                (lib.nameValuePair "rclone-mount:${replaceSlashes mount-path}@${remote-name}" {
+                  Unit = {
+                    Description = "Rclone FUSE daemon for ${remote-name}:${mount-path}";
+                  };
 
-                Service = {
-                  Environment = [
-                    # fusermount/fusermount3
-                    "PATH=/run/wrappers/bin"
-                  ];
-                  ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mount.mountPoint}";
-                  ExecStart = lib.concatStringsSep " " [
-                    (lib.getExe cfg.package)
-                    "mount"
-                    "-vv"
-                    (lib.cli.toGNUCommandLineShell { } mount.options)
-                    "${remote-name}:${mount-path}"
-                    "${mount.mountPoint}"
-                  ];
-                  Restart = "on-failure";
-                };
+                  Service = {
+                    Environment = [
+                      # fusermount/fusermount3
+                      "PATH=/run/wrappers/bin"
+                    ];
+                    ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mount.mountPoint}";
+                    ExecStart = lib.concatStringsSep " " [
+                      (lib.getExe cfg.package)
+                      "mount"
+                      "-vv"
+                      (lib.cli.toGNUCommandLineShell { } mount.options)
+                      "${remote-name}:${mount-path}"
+                      "${mount.mountPoint}"
+                    ];
+                    Restart = "on-failure";
+                  };
 
-                Install.WantedBy = [ "default.target" ];
-              })
+                  Install.WantedBy = [ "default.target" ];
+                })
+              ]
+            ) (lib.attrsToList remote.mounts)
+          )
+          (
+            lib.pipe cfg.remotes [
+              lib.attrsToList
+              (lib.filter (rem: rem.value ? mounts))
             ]
-          ) (lib.attrsToList remote.mounts)
-        )
-        (
-          lib.pipe cfg.remotes [
-            lib.attrsToList
-            (lib.filter (rem: rem.value ? mounts))
-          ]
-        )
-    );
-  };
+          )
+      );
+    in
+    lib.mkIf cfg.enable {
+      home.packages = [ cfg.package ];
+      systemd.user.services = lib.mkMerge [
+        rcloneConfigService
+        mountServices
+      ];
+    };
 
   meta.maintainers = with lib.maintainers; [ jess ];
 }

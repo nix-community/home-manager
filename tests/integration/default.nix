@@ -21,6 +21,8 @@ let
     nixos-basics = runTest ./nixos/basics.nix;
     nixos-legacy-profile-management = runTest ./nixos/legacy-profile-management.nix;
     rclone = runTest ./standalone/rclone;
+    rclone-sops-nix = runTest ./standalone/rclone/sops-nix.nix;
+    rclone-agenix = runTest ./standalone/rclone/agenix.nix;
     restic = runTest ./standalone/restic.nix;
     standalone-flake-basics = runTest ./standalone/flake-basics.nix;
     standalone-specialisation = runTest ./standalone/specialisation.nix;

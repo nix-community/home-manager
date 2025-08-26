@@ -130,7 +130,9 @@ in
         margin = mkOption {
           type = int;
           default = 0;
-          description = "Add a margin around the window to allow for CSS shadow styling";
+          description = ''
+            Add a margin around the window to allow for CSS shadow styling.
+          '';
         };
 
         hideIcons = mkOption {

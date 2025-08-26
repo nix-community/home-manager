@@ -72,7 +72,7 @@ in
         };
 
         source.command = "${path} print";
-        preview.command = "${path} preview {}";
+        preview.command = ''${path} preview "{}"'';
       }
     );
 
