@@ -975,10 +975,10 @@ contains the commit message</p><pre><code class="programlisting">
 </code></pre><p>which ticks all the boxes necessary to be accepted in Home Manager.</p><p>Finally, when adding a new module, say <code class="literal">programs/foo.nix</code>, we use the
 fixed commit format <code class="literal">foo: add module</code>. You can, of course, still include
 a long description if you wish.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-code-style" class="title" >Code Style   </h3>  </div> </div></div><p>The code in Home Manager is formatted by the
-<a class="link" href="https://github.com/serokell/nixfmt/"  target="_top">nixfmt</a> tool and the formatting is
-checked in the pull request tests. Run the <code class="literal">format</code> tool inside the
-project repository before submitting your pull request.</p><p>Keep lines at a reasonable width, ideally 80 characters or less. This
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-code-style" class="title" >Code Style   </h3>  </div> </div></div><p>The code in Home Manager is formatted by the <a class="link" href="https://treefmt.com"  target="_top">treefmt</a> tool
+and the formatting is checked in the pull request tests. Run <code class="literal">nix fmt</code> or
+<code class="literal">treefmt</code> (with required formatters which can be found in <code class="literal">treefmt.toml</code> in your
+<code class="literal">$PATH</code>) inside the project repository before submitting your pull request.</p><p>Keep lines at a reasonable width, ideally 80 characters or less. This
 also applies to string literals.</p><p>We prefer <code class="literal">lowerCamelCase</code> for variable and attribute names with the
 accepted exception of variables directly referencing packages in Nixpkgs
 which use a hyphenated style. For example, the Home Manager option
