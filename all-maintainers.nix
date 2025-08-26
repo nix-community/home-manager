@@ -30,6 +30,13 @@
     name = "Eulalia del Sol";
     source = "home-manager";
   };
+  "74k1" = {
+    email = "git.t@betsumei.com";
+    github = "74k1";
+    githubId = 49000471;
+    name = "Tim";
+    source = "home-manager";
+  };
   "9p4" = {
     email = "vcs@ersei.net";
     github = "9p4";
@@ -1095,6 +1102,12 @@
     githubId = 21362942;
     name = "Fugi";
     source = "nixpkgs";
+  };
+  gauthsvenkat = {
+    email = "gauthsvenkat+home-manager@gmail.com";
+    github = "gauthsvenkat";
+    githubId = 26820345;
+    source = "home-manager";
   };
   gepbird = {
     email = "gutyina.gergo.2@gmail.com";
