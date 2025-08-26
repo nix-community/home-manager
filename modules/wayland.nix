@@ -13,10 +13,6 @@
           The systemd target that will automatically start the graphical Wayland services.
           This option is a generalization of individual `systemd.target` or `systemdTarget`,
           and affect all Wayland services by default.
-
-          When setting this value to `"sway-session.target"`,
-          make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
-          otherwise the service may never be started.
         '';
       };
     };
