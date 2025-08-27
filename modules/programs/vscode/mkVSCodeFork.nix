@@ -58,8 +58,8 @@ let
   # extensions
   #
   appExtensionsPath =
-    if overridePaths ? extensionsDir && overridePaths.extensionsDir != null then
-      overridePaths.extensionsDir
+    if overridePaths ? extensions && overridePaths.extensions != null then
+      overridePaths.extensions
     else
       "${config.home.homeDirectory}/.${lib.toLower appName}/extensions";
 
