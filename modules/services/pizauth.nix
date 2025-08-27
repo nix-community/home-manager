@@ -60,7 +60,8 @@ in
             };
 
             clientSecret = mkOption {
-              type = types.str;
+              type = types.nullOr types.str;
+              default = null;
               description = ''
                 The OAuth2 client secret.
               '';
@@ -128,6 +129,8 @@ in
             ${indent}auth_uri = "${acc.authUri}";
             ${indent}token_uri = "${acc.tokenUri}";
             ${indent}client_id = "${acc.clientId}";
+          ''
+          + lib.optionalString (acc.clientSecret != "" && acc.clientSecret != null) ''
             ${indent}client_secret = "${acc.clientSecret}";
           ''
           + lib.optionalString (acc.scopes != [ ] && acc.scopes != null) ''
@@ -164,6 +167,7 @@ in
       Unit = {
         Description = "Pizauth OAuth2 token manager";
         After = [ "network.target" ];
+        X-Restart-Triggers = [ "${config.xdg.configFile."pizauth.conf".source}" ];
       };
 
       Service = {
