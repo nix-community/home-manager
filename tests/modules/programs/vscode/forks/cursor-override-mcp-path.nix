@@ -1,20 +1,4 @@
-{ pkgs, lib, ... }:
-
-let
-  # In mutable profile mode (default with only `default` profile),
-  # the file is written as `.immutable-mcp.json`.
-  mcpOutputPath = ".cursor/.immutable-mcp.json";
-
-  expectedMcp = pkgs.writeText "expected-mcp.json" ''
-    {
-      "servers": {
-        "Github": {
-          "url": "https://api.githubcopilot.com/mcp/"
-        }
-      }
-    }
-  '';
-in
+{ pkgs, ... }:
 {
   programs.cursor = {
     enable = true;
@@ -35,8 +19,24 @@ in
     };
   };
 
-  nmt.script = ''
-    assertFileExists "home-files/${mcpOutputPath}"
-    assertFileContent "home-files/${mcpOutputPath}" "${expectedMcp}"
-  '';
+  nmt.script =
+    let
+      # In mutable profile mode (default with only `default` profile),
+      # the file is written as `.immutable-mcp.json`.
+      mcpOutputPath = ".cursor/.immutable-mcp.json";
+
+      expectedMcp = pkgs.writeText "expected-mcp.json" ''
+        {
+          "servers": {
+            "Github": {
+              "url": "https://api.githubcopilot.com/mcp/"
+            }
+          }
+        }
+      '';
+    in
+    ''
+      assertFileExists "home-files/${mcpOutputPath}"
+      assertFileContent "home-files/${mcpOutputPath}" "${expectedMcp}"
+    '';
 }

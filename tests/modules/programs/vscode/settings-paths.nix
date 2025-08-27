@@ -1,15 +1,4 @@
 { pkgs, lib, ... }:
-
-let
-  settingsFilePath =
-    name:
-    if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/Cursor/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }settings.json"
-    else
-      ".config/Cursor/User/${lib.optionalString (name != "default") "profiles/${name}/"}settings.json";
-in
 {
   programs.cursor = {
     enable = true;
@@ -29,8 +18,23 @@ in
     };
   };
 
-  nmt.script = ''
-    assertFileExists "home-files/${settingsFilePath "default"}"
-    assertFileExists "home-files/${settingsFilePath "work"}"
-  '';
+  nmt.script =
+    let
+      settingsFilePath =
+        profileName:
+        lib.concatStringsSep "/" [
+          (
+            if pkgs.stdenv.hostPlatform.isDarwin then
+              "Library/Application Support/Cursor/User"
+            else
+              ".config/Cursor/User"
+          )
+          (lib.optionalString (profileName != "default") "profiles/${profileName}")
+          "settings.json"
+        ];
+    in
+    ''
+      assertFileExists "home-files/${settingsFilePath "default"}"
+      assertFileExists "home-files/${settingsFilePath "work"}"
+    '';
 }
