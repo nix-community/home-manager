@@ -30,7 +30,7 @@ in
         default = [ "graphical-session.target" ];
         example = [ "sway-session.target" ];
         description = ''
-          The systemd targets that will automatically start the cliphist service.
+          The systemd targets that will automatically start the blueman applet service.
 
           When setting this value to `["sway-session.target"]`,
           make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,

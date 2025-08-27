@@ -234,10 +234,10 @@ a long description if you wish.
 
 ## Code Style {#sec-code-style}
 
-The code in Home Manager is formatted by the
-[nixfmt](https://github.com/serokell/nixfmt/) tool and the formatting is
-checked in the pull request tests. Run the `format` tool inside the
-project repository before submitting your pull request.
+The code in Home Manager is formatted by the [treefmt](https://treefmt.com) tool
+and the formatting is checked in the pull request tests. Run `nix fmt` or
+`treefmt` (with required formatters which can be found in `treefmt.toml` in your
+`$PATH`) inside the project repository before submitting your pull request.
 
 Keep lines at a reasonable width, ideally 80 characters or less. This
 also applies to string literals.

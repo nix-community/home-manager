@@ -33,6 +33,13 @@ in
         ```nix
         security.pam.services.swaylock = {};
         ```
+
+        On non-NixOS, it is easiest to avoid incompatibility involving PAM by
+
+        1. stopping Home Manager from installing swaylock by setting
+           {option}`programs.swaylock.package` to `null`; and
+
+        2. instead installing swaylock from your distribution's repository.
       '';
     };
 
