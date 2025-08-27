@@ -114,12 +114,10 @@
     github = "d-dervishi";
     githubId = 61125355;
     name = "David Dervishi";
-    keys = [
-      {
-        longKeyId = "rsa4096/0xB1C012F0E7697195";
-        fingerprint = "4C92 E3B0 21B5 5562 A1E0  CE3D B1C0 12F0 E769 7195";
-      }
-    ];
+    keys = [{
+      longKeyId = "rsa4096/0xB1C012F0E7697195";
+      fingerprint = "4C92 E3B0 21B5 5562 A1E0  CE3D B1C0 12F0 E769 7195";
+    }];
   };
   danjujan = {
     name = "Jan Schmitz";
@@ -203,19 +201,18 @@
     matrix = "@hey2022:matrix.org";
     github = "hey2022";
     githubId = 48553457;
-    keys = [ { fingerprint = "128E 09C0 6F73 D678 6BB5  E551 5EA5 3C75 F7BE 3EDE"; } ];
+    keys =
+      [{ fingerprint = "128E 09C0 6F73 D678 6BB5  E551 5EA5 3C75 F7BE 3EDE"; }];
   };
   HPsaucii = {
     name = "Holly Powell";
     email = "me@hpsaucii.dev";
     github = "HPsaucii";
     githubId = 126502193;
-    keys = [
-      {
-        longkeyid = "rsa4096/0xEDB2C634166AE6AD";
-        fingerprint = "AD32 73D4 5E0E 9478 E826  543F EDB2 C634 166A E6AD";
-      }
-    ];
+    keys = [{
+      longkeyid = "rsa4096/0xEDB2C634166AE6AD";
+      fingerprint = "AD32 73D4 5E0E 9478 E826  543F EDB2 C634 166A E6AD";
+    }];
   };
   ipsavitsky = {
     name = "Ilya Savitsky";
@@ -254,6 +251,12 @@
     email = "contact@joygnu.org";
     github = "joygnu";
     githubId = 152063003;
+  };
+  jpoage = {
+    name = "Jason Poage";
+    email = "jpoage@jasonpoage.com";
+    github = "jpoage1";
+    githubId = 29345692;
   };
   jrobsonchase = {
     email = "josh@robsonchase.com";
@@ -380,12 +383,10 @@
     github = "msfjarvis";
     githubId = 13348378;
     name = "Harsh Shandilya";
-    keys = [
-      {
-        longkeyid = "rsa4096/0xB7843F823355E9B9";
-        fingerprint = "8F87 050B 0F9C B841 1515  7399 B784 3F82 3355 E9B9";
-      }
-    ];
+    keys = [{
+      longkeyid = "rsa4096/0xB7843F823355E9B9";
+      fingerprint = "8F87 050B 0F9C B841 1515  7399 B784 3F82 3355 E9B9";
+    }];
   };
   msyds = {
     name = "Madeleine Sydney Ślaga";
@@ -470,12 +471,10 @@
     email = "88944439+rcerc@users.noreply.github.com";
     github = "rcerc";
     githubId = 88944439;
-    keys = [
-      {
-        longkeyid = "ed25519/0x3F98EC7EC2B87ED1";
-        fingerprint = "D5D6 FD1F 0D9A 3284 FB9B  C26D 3F98 EC7E C2B8 7ED1";
-      }
-    ];
+    keys = [{
+      longkeyid = "ed25519/0x3F98EC7EC2B87ED1";
+      fingerprint = "D5D6 FD1F 0D9A 3284 FB9B  C26D 3F98 EC7E C2B8 7ED1";
+    }];
   };
   rosuavio = {
     name = "Rosario Pulella";
@@ -506,12 +505,10 @@
     email = "leon@swarsel.win";
     github = "Swarsel";
     githubId = 32304731;
-    keys = [
-      {
-        longkeyid = "rsa4096/0x76FD3810215AE097";
-        fingerprint = "4BE7 9252 6228 9B47 6DBB  C17B 76FD 3810 215A E097";
-      }
-    ];
+    keys = [{
+      longkeyid = "rsa4096/0x76FD3810215AE097";
+      fingerprint = "4BE7 9252 6228 9B47 6DBB  C17B 76FD 3810 215A E097";
+    }];
   };
   vortriz = {
     name = "Rishi Vora";
