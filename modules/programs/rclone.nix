@@ -259,7 +259,7 @@ in
 
               if ! ${lib.getExe cfg.package} config update \
                      ${remote.name} config_refresh_token=false \
-                     ${secret} "$(cat "${secretFile}")" \
+                     ${secret}="$(cat "${secretFile}")" \
                      --non-interactive; then
                 echo "Failed to inject secret \"${secretFile}\""
                 cleanup
