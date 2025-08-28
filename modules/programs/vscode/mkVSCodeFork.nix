@@ -3,6 +3,7 @@
   name,
   package,
   packageName ? null,
+  configDirName ? name,
   overridePaths ? { },
 }:
 {
@@ -19,13 +20,16 @@ let
   appName = name;
   appPackageName = if (packageName != null) then packageName else package.pname;
 
+  # https://code.visualstudio.com/docs/configure/settings#_settings-precedence
+  # https://code.visualstudio.com/docs/configure/settings#_settings-json-file
+  #
   # app user directory
   #
   appUserDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "${config.home.homeDirectory}/Library/Application Support/${appName}/User"
+      "${config.home.homeDirectory}/Library/Application Support/${configDirName}/User"
     else
-      "${config.xdg.configHome}/${appName}/User";
+      "${config.xdg.configHome}/${configDirName}/User";
 
   # Helper function to handle path vs JSON object logic
   toJsonSource =
