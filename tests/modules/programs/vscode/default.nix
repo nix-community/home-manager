@@ -15,4 +15,5 @@
 // (import ./tests.nix {
   programName = "cursor";
   packageName = "code-cursor";
+  configDirName = "Cursor";
 })

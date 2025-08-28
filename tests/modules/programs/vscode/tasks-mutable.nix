@@ -20,20 +20,25 @@
         version = "1.75.0";
       };
 
+      # when only default profile is defined, default profile is mutable by default
+      # this ensures that the profile can be modified by the user and the files are
+      # regenerated when the profile is changed.
+      #
       profiles = {
-        default.settings = {
-          "files.autoSave" = "off";
-        };
-        work.settings = {
-          "editor.tabSize" = 4;
-        };
+        default.tasks = [
+          {
+            type = "shell";
+            label = "Hello task";
+            command = "hello";
+          }
+        ];
       };
     })
     // {
       nmt.script =
         let
-          settingsFilePath =
-            profileName:
+          profilePath =
+            profileName: fileName:
             lib.concatStringsSep "/" [
               (
                 if pkgs.stdenv.hostPlatform.isDarwin then
@@ -42,12 +47,12 @@
                   ".config/${configDirName}/User"
               )
               (lib.optionalString (profileName != "default") "profiles/${profileName}")
-              "settings.json"
+              fileName
             ];
         in
         ''
-          assertFileExists "home-files/${settingsFilePath "default"}"
-          assertFileExists "home-files/${settingsFilePath "work"}"
+          assertFileExists "home-files/${profilePath "default" ".immutable-tasks.json"}"
+          assertPathNotExists "home-files/${profilePath "default" "tasks.json"}"
         '';
     };
 }
