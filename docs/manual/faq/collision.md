@@ -43,5 +43,5 @@ The solution is typically to uninstall the package from the environment
 using `nix-env --uninstall` and reattempt the Home Manager generation
 switch.
 
-You could also opt to unistall *all* of the packages from your profile
+You could also opt to uninstall *all* of the packages from your profile
 with `nix-env --uninstall '*'`.
