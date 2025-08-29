@@ -1209,7 +1209,7 @@ builder for ‘/nix/store/b37x3s7pzxbasfqhaca5dqbf3pjjw0ip-user-environment.drv�
 error: build of ‘/nix/store/b37x3s7pzxbasfqhaca5dqbf3pjjw0ip-user-environment.drv’ failed
 </code></pre><p>The solution is typically to uninstall the package from the environment
 using <code class="literal">nix-env --uninstall</code> and reattempt the Home Manager generation
-switch.</p><p>You could also opt to unistall <span class="emphasis"><em>all</em></span> of the packages from your profile
+switch.</p><p>You could also opt to uninstall <span class="emphasis"><em>all</em></span> of the packages from your profile
 with <code class="literal">nix-env --uninstall &#x27;*&#x27;</code>.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="_why_are_the_session_variables_not_set" class="title" style="clear: both">Why are the session variables not set?   </h2>  </div> </div></div><p>Home Manager is only able to set session variables automatically if it
 manages your Bash, Z shell, or fish shell configuration. To enable such
