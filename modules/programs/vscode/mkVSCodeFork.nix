@@ -35,9 +35,12 @@ let
   toJsonSource =
     name: value:
     if builtins.isPath value || lib.isStorePath value then
-      value
+      builtins.trace "is a path: ${value}" value
     else
-      jsonFormat.generate "vscode-${name}" value;
+      builtins.trace "is a json: ${jsonFormat.generate "${appPackageName}-${name}" value}"
+        jsonFormat.generate
+        "${appPackageName}-${name}"
+        value;
 
   # profiles
   #
