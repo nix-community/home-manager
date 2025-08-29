@@ -16,12 +16,8 @@ builtins.mapAttrs
     }
   )
   {
-    "vscode-forks-${programName}-keybindings-immutable" = ./keybindings-immutable.nix;
-    "vscode-forks-${programName}-keybindings-mutable" = ./keybindings-mutable.nix;
-    "vscode-forks-${programName}-mcp-immutable" = ./mcp-immutable.nix;
-    "vscode-forks-${programName}-mcp-mutable" = ./mcp-mutable.nix;
-    "vscode-forks-${programName}-settings-immutable" = ./settings-immutable.nix;
-    "vscode-forks-${programName}-settings-mutable" = ./settings-mutable.nix;
-    "vscode-forks-${programName}-tasks-immutable" = ./tasks-immutable.nix;
-    "vscode-forks-${programName}-tasks-mutable" = ./tasks-mutable.nix;
+    "vscode-forks-${programName}-empty-profiles" = ./empty-profiles.nix;
+    "vscode-forks-${programName}-extensions-mutable" = ./extensions-mutable.nix;
+    "vscode-forks-${programName}-profiles-immutable" = ./profiles-immutable.nix;
+    "vscode-forks-${programName}-profiles-mutable" = ./profiles-mutable.nix;
   }
