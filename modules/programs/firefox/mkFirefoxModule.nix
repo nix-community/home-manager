@@ -274,6 +274,12 @@ in
       default = wrappedPackageName;
       description = "Name of the wrapped browser package.";
     };
+    darwinDefaultsId = mkOption rec {
+      type = types.nullOr types.str;
+      default = if platforms.darwin ? "defaultsId" then platforms.darwin.defaultsId else null;
+      example = if default != null then default else "com.developer.app";
+      description = ''The id for the darwin defaults in order to set policies'';
+    };
 
     darwinAppName = mkOption {
       internal = true;
@@ -914,7 +920,15 @@ in
           Using '${moduleName}.vendorPath' has been deprecated and
           will be removed in the future. Native messaging hosts will function normally without specifying this path.
         '';
+      targets.darwin.defaults = (
+        mkIf (cfg.darwinDefaultsId != null && isDarwin) {
 
+          ${cfg.darwinDefaultsId} = {
+            EnterprisePoliciesEnabled = true;
+          }
+          // cfg.policies;
+        }
+      );
       home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
 
       home.file = mkMerge (
