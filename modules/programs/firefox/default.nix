@@ -33,6 +33,7 @@ in
       };
       platforms.darwin = {
         configPath = "Library/Application Support/Firefox";
+        defaultsId = "org.mozilla.firefox.plist";
       };
     })
 
