@@ -215,6 +215,7 @@ in
                 "lxqt"
                 "qtct"
                 "kde"
+                "kde6"
               ]) (lib.types.submodule { options = newOption; })
             );
           default = null;
@@ -290,11 +291,22 @@ in
 
   config =
     let
+      deprecateKde6 =
+        name: optionPath:
+        if name == "kde6" then
+          lib.warn ''
+            The ${optionPath} value "kde6" has been deprecated and renamed to "kde".
+            Please update your configuration:
+              ${optionPath} = "kde";
+          '' "kde"
+        else
+          name;
+
       platformTheme =
         if (builtins.isString cfg.platformTheme) then
           {
             option = "qt.platformTheme";
-            name = cfg.platformTheme;
+            name = deprecateKde6 cfg.platformTheme "qt.platformTheme";
             package = null;
           }
         else if cfg.platformTheme == null then
@@ -306,7 +318,7 @@ in
         else
           {
             option = "qt.platformTheme.name";
-            name = cfg.platformTheme.name;
+            name = deprecateKde6 cfg.platformTheme.name "qt.platformTheme.name";
             package = cfg.platformTheme.package;
           };
 
