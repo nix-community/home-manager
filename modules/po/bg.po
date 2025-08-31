@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
 "PO-Revision-Date: 2025-08-31 14:01+0000\n"
-"Last-Translator: Borislav Rangelov <borislav.y.rangelov@gmail.com>\n"
+"Last-Translator: Kiril Mihaylov <kiril195@hotmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/home-manager/"
 "modules/bg/>\n"
 "Language: bg\n"
@@ -57,7 +57,7 @@ msgstr "Активиране на %s"
 
 #: modules/home-environment.nix:807
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: непозната опция '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
@@ -65,23 +65,23 @@ msgstr "Мигриране на профил от %s към %s"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
+msgstr "Не беше намерена подходяща директория за профила, пробвано с %s и %s"
 
 #: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Грешка: USER е зададено като \"%s\", но се очаква да е \"%s\""
 
 #: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Грешка: HOME е зададено като \"%s\", но се очаква да е \"%s\""
 
 #: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
-msgstr "Стартиране на активацията на Home Manager"
+msgstr "Започване на активацията на Home Manager"
 
 #: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "Проверяване за коректността на Nix"
 
 #: modules/lib-bash/activation-init.sh:149
 msgid "This is a dry run"
@@ -93,7 +93,7 @@ msgstr ""
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Използване на Nix с версия: %s"
 
 #: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"
