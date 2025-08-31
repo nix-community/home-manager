@@ -23,11 +23,6 @@ let
       qt6Packages.qt6gtk2
     ];
     kde = [
-      libsForQt5.kio
-      libsForQt5.plasma-integration
-      libsForQt5.systemsettings
-    ];
-    kde6 = [
       kdePackages.kio
       kdePackages.plasma-integration
       kdePackages.systemsettings
@@ -46,7 +41,6 @@ let
   styleNames = {
     gtk = "gtk2";
     qtct = "qt5ct";
-    kde6 = "kde";
   };
 
   # Maps known lowercase style names to style packages. Non-exhaustive.
@@ -79,7 +73,10 @@ let
       adwaita-qt6
     ];
 
-    breeze = libsForQt5.breeze-qt5;
+    breeze = [
+      kdePackages.breeze
+      kdePackages.breeze.qt5
+    ];
 
     kvantum = [
       libsForQt5.qtstyleplugin-kvantum
@@ -191,10 +188,7 @@ in
                   applications
 
                 `kde`
-                : Use Qt settings from Plasma 5
-
-                `kde6`
-                : Use Qt settings from Plasma 6
+                : Use Qt settings from Plasma
               '';
             };
             package = lib.mkOption {
@@ -221,7 +215,6 @@ in
                 "lxqt"
                 "qtct"
                 "kde"
-                "kde6"
               ]) (lib.types.submodule { options = newOption; })
             );
           default = null;
