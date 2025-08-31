@@ -54,8 +54,8 @@ in
     };
 
     dontAssertNotificationDaemons = lib.mkOption {
-      default = true;
-      example = false;
+      default = false;
+      example = true;
       description = ''
         Whether to check for other notification daemons.
 
@@ -67,18 +67,27 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.dontAssertNotificationDaemons && !config.services.swaync.enable;
-        message = ''
-          Only one notification daemon can be enabled at once. You have enabled
-          swaync and hyprpanel at once.
+    assertions =
+      if !cfg.dontAssertNotificationDaemons then
+        let
+          notificationDaemons = [
+            "swaync"
+            "dunst"
+            "mako"
+          ];
+        in
+        builtins.map (name: {
+          assertion = !config.services.${name}.enable;
+          message = ''
+            Only one notification daemon can be enabled at once. You have enabled
+            ${name} and hyprpanel.
 
-          If you dont want to use hyprpanel's notification daemon, set
-          `programs.hyprpanel.dontAssertNotificationDaemons` to true.
-        '';
-      }
-    ];
+            If you dont want to use hyprpanel's notification daemon, set
+            `programs.hyprpanel.dontAssertNotificationDaemons` to true.
+          '';
+        }) notificationDaemons
+      else
+        [ ];
 
     home.packages = [ cfg.package ];
 
