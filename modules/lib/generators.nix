@@ -211,8 +211,14 @@
   toSCFG =
     { }:
     let
-      inherit (lib) concatStringsSep mapAttrsToList any;
+      inherit (lib) concatStringsSep any;
       inherit (builtins) typeOf replaceStrings elem;
+
+      filterNullDirectives = lib.filter (
+        directive:
+        !(directive ? "params" || directive ? "children")
+        || !(directive.params or [ null ] == [ null ] && directive.children or [ ] == [ ])
+      );
 
       # ListOf String -> String
       indentStrings =
@@ -221,8 +227,8 @@
           # the strings themselves *will* contain newlines, so you need
           # to normalize the list by joining and resplitting them.
           unlines = lib.splitString "\n";
-          lines = lib.concatStringsSep "\n";
-          indentAll = lines: concatStringsSep "\n" (map (x: "	" + x) lines);
+          lines = concatStringsSep "\n";
+          indentAll = lines: concatStringsSep "\n" (map (x: "\t" + x) lines);
         in
         stringsWithNewlines: indentAll (unlines (lines stringsWithNewlines));
 
@@ -256,7 +262,7 @@
         "\\"
         "\r"
         "\n"
-        "	"
+        "\t"
       ];
 
       # OneOf [Int Float String Bool] -> String
@@ -284,7 +290,7 @@
       # Bool -> ListOf (OneOf [Int Float String Bool]) -> String
       toOptParamsString =
         cond: list:
-        lib.optionalString (cond) (
+        lib.optionalString cond (
           lib.pipe list [
             (map literalValueToString)
             (concatStringsSep " ")
@@ -292,65 +298,25 @@
           ]
         );
 
-      # Attrset Conversion
-      # String -> AttrsOf Anything -> String
-      convertAttrsToSCFG =
-        name: attrs:
-        let
-          optParamsString = toOptParamsString (attrs ? "_params") attrs._params;
-        in
-        ''
-          ${name}${optParamsString} {
-          ${indentStrings (convertToAttrsSCFG' attrs)}
-          }'';
-
-      # Attrset Conversion
-      # AttrsOf Anything -> ListOf String
-      convertToAttrsSCFG' =
-        attrs:
-        mapAttrsToList convertAttributeToSCFG (
-          lib.filterAttrs (name: val: !isNull val && name != "_params") attrs
-        );
-
-      # List Conversion
-      # String -> ListOf (OneOf [Int Float String Bool]) -> String
-      convertListOfFlatAttrsToSCFG =
-        name: list:
-        let
-          optParamsString = toOptParamsString (list != [ ]) list;
-        in
-        "${name}${optParamsString}";
-
-      # Combined Conversion
-      # String -> Anything  -> String
-      convertAttributeToSCFG =
-        name: value:
-        lib.throwIf (name == "") "Directive must not be empty" (
-          let
-            vType = typeOf value;
-          in
-          if
-            elem vType [
-              "int"
-              "float"
-              "bool"
-              "string"
-            ]
-          then
-            "${name} ${literalValueToString value}"
-          else if vType == "set" then
-            convertAttrsToSCFG name value
-          else if vType == "list" then
-            convertListOfFlatAttrsToSCFG name value
-          else
-            throw ''
-              Cannot convert type `(${typeOf value})` to SCFG:
-                ${name} = ${toString value}
-            ''
-        );
+      # Directive Conversion
+      # ListOf NameParamChildrenTriplet -> ListOf String
+      convertDirectivesToSCFG =
+        directives:
+        map (
+          directive:
+          (literalValueToString directive.name)
+          + toOptParamsString (directive ? "params" && directive.params != null) directive.params
+          + lib.optionalString (directive ? "children" && directive.children != null) (
+            " "
+            + ''
+              {
+              ${indentStrings (convertDirectivesToSCFG directive.children)}
+              }''
+          )
+        ) (filterNullDirectives directives);
     in
-    attrs:
-    lib.optionalString (attrs != { }) ''
-      ${concatStringsSep "\n" (convertToAttrsSCFG' attrs)}
+    directives:
+    lib.optionalString (directives != [ ]) ''
+      ${lib.concatStringsSep "\n" (convertDirectivesToSCFG directives)}
     '';
 }

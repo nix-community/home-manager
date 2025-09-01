@@ -1,7 +1,7 @@
 { lib, ... }:
 
 {
-  home.file."toscfg-empty-result.txt".text = lib.hm.generators.toSCFG { } { };
+  home.file."toscfg-empty-result.txt".text = lib.hm.generators.toSCFG { } [ ];
 
   nmt.script = ''
     assertFileContent \
