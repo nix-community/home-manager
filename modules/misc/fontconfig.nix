@@ -15,6 +15,38 @@ let
 
   profileDirectory = config.home.profileDirectory;
 
+  fontconfigFileType = lib.types.submodule ({ name, ... }: {
+    options = {
+      enable = lib.mkEnableOption "Whether this font config file should be generated.";
+      text = lib.mkOption {
+        type = lib.types.nullOr lib.types.lines;
+        default = null;
+        description = "Verbatim contents of the config file. If this option is null then the 'source' option must be set.";
+      };
+      source = lib.mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        description = "Config file to source. Alternatively, use the 'text' option instead.";
+      };
+      label = lib.mkOption {
+        type = lib.types.str;
+        default = "name";
+        description = "Label to use for the name of the config file.";
+      };
+      priority = lib.mkOption {
+        type = lib.types.addCheck lib.types.int (x: x >= 0 && x <= 99);
+        default = 90;
+        description = ''
+          Determines the order in which configs are loaded.
+          Must be a value within the range of 0-99, where priority 0 is the highest priority and 99 is the lowest.
+        '';
+      };
+    };
+    config = {
+      label = lib.mkDefault name;
+    };
+  });
+
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -125,6 +157,30 @@ in
         example = "rgb";
       };
 
+      extraConfigFiles = lib.mkOption {
+        type = lib.types.attrsOf fontconfigFileType;
+        default = {};
+        description = ''
+          Extra font config files that will be added to `~/.config/fontconfig/conf.d/`.
+          Files are named like `fontconfig/conf.d/{priority}-{label}.conf`.
+        '';
+        example = ''
+          {
+            tamzen = {
+              enable = true;
+              label = "tamzen-disable-antialiasing";
+              text = tamzenFontConfig;  # Pretend this is defined elsewhere
+              priority = 90;
+            };  # => conf.d/90-tamzen-disable-antialiasing.conf
+            commit-mono-options = {
+              enable = true;
+              source = ./resources/fontconfig/commit-mono.conf;
+              priority = 80;
+            };  # => conf.d/80-commit-mono-options.conf
+          };
+        '';
+      };
+
     };
   };
 
@@ -176,6 +232,11 @@ in
           ${conf}
           </fontconfig>
         '';
+
+        fontconfigExtraConfs = lib.mapAttrs' (name: config:
+          lib.nameValuePair "fontconfig/conf.d/${builtins.toString config.priority}-${config.label}.conf"
+          { inherit (config) text; source = lib.mkIf (config.source != null) config.source; }
+        ) cfg.extraConfigFiles;
       in
       {
         "fontconfig/conf.d/10-hm-fonts.conf".text = mkFontconfigConf ''
@@ -252,6 +313,6 @@ in
             ${genDefault cfg.defaultFonts.monospace "monospace"}
             ${genDefault cfg.defaultFonts.emoji "emoji"}
           '';
-      };
+      } // fontconfigExtraConfs;
   };
 }
