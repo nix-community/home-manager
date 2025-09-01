@@ -45,15 +45,6 @@ in
         Use a custom Stylesheet file instead of looking for one.
       '';
     };
-
-    display = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "eDP-1";
-      description = ''
-        X display to use.
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -79,7 +70,6 @@ in
           Type = "simple";
           ExecStart =
             "${cfg.package}/bin/swayosd-server"
-            + (optionalString (cfg.display != null) " --display ${cfg.display}")
             + (optionalString (cfg.stylePath != null) " --style ${lib.escapeShellArg cfg.stylePath}")
             + (optionalString (cfg.topMargin != null) " --top-margin ${toString cfg.topMargin}");
           Restart = "always";
