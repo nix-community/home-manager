@@ -26,13 +26,20 @@
             ];
           }
           {
+            name = "sub2";
+            params = [
+              "arg1"
+              "arg2"
+            ];
+          }
+          {
             name = "sub3";
             params = [
               "arg31"
               "arg32"
             ];
             children = [
-              { name = "sub-sub1"; }
+              { name = "sub sub1"; }
               {
                 name = "sub-sub2";
                 params = [
