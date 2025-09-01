@@ -18,6 +18,14 @@ in
 {
   meta.maintainers = [ lib.hm.maintainers.pltanton ];
 
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "services"
+      "swayosd"
+      "display"
+    ] "This option had no impact.")
+  ];
+
   options.services.swayosd = {
     enable = lib.mkEnableOption ''
       swayosd, a GTK based on screen display for keyboard shortcuts like
