@@ -383,11 +383,12 @@ in
 
         mkSubMap = name: attrs: ''
           submap = ${name}
-          ${lib.hm.generators.toHyprconf {
-            attrs = attrs.settings;
-            indentLevel = 1;
-          }}
-          submap = reset
+          ${
+            lib.hm.generators.toHyprconf {
+              attrs = attrs.settings;
+              indentLevel = 0;
+            }
+          }submap = reset
         '';
 
         submapsToHyprConf = lib.concatMapAttrsStringSep "\n" mkSubMap;
