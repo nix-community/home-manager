@@ -1,0 +1,14 @@
+[Default]
+auto_save=false
+custom_color=rgba(193,125,17,1)
+early_exit=false
+fill_shape=false
+line_size=5
+paint_mode=brush
+save_dir=$HOME/Desktop
+save_filename_format=swappy-%Y%m%d-%H%M%S.png
+show_panel=false
+text_font=sans-serif
+text_size=20
+transparency=50
+transparent=false
