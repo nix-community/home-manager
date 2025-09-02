@@ -23,7 +23,7 @@ in
       "services"
       "swayosd"
       "display"
-    ] "This option had no impact.")
+    ] "The --display flag is no longer available in swayosd-server.")
   ];
 
   options.services.swayosd = {
