@@ -76,6 +76,18 @@ in
       description = "Cursor theme for GTK 4 applications.";
     };
 
+    colorScheme = mkOption {
+      type = types.nullOr (
+        types.enum [
+          "dark"
+          "light"
+        ]
+      );
+      default = cfg.colorScheme;
+      defaultText = literalExpression "config.gtk.colorScheme";
+      description = "Color scheme for GTK 4 applications.";
+    };
+
     extraConfig = mkOption {
       type =
         with types;
@@ -105,11 +117,13 @@ in
         text = toIni {
           Settings =
             gtkLib.mkGtkSettings {
+              gtkVersion = 4;
               inherit (cfg4)
                 font
                 theme
                 iconTheme
                 cursorTheme
+                colorScheme
                 ;
             }
             // cfg4.extraConfig;

@@ -103,12 +103,14 @@ in
       text =
         let
           settings = gtkLib.mkGtkSettings {
+            gtkVersion = 2;
             inherit (cfg2)
               font
               theme
               iconTheme
               cursorTheme
               ;
+            colorScheme = null;
           };
           settingsText = lib.concatMapStrings (n: "${formatGtk2Option n settings.${n}}\n") (
             lib.attrNames settings
