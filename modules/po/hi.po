@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
 "PO-Revision-Date: 2025-09-02 00:02+0000\n"
-"Last-Translator: Utkarsh Sharma <utkasharma19@gmail.com>\n"
+"Last-Translator: Fareesh Vijayarangam <fareesh@gmail.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/home-manager/"
 "modules/hi/>\n"
 "Language: hi\n"
@@ -29,7 +29,7 @@ msgstr "%s से ऑर्फे़न लिंक्स मिटाई ज�
 
 #: modules/home-environment.nix:647
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "नई प्रोफ़ाइल बनाई जा रही है"
 
 #: modules/home-environment.nix:650
 msgid "No change so reusing latest profile generation"
