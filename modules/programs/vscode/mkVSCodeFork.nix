@@ -68,7 +68,7 @@ let
     if overridePaths ? extensions && overridePaths.extensions != null then
       overridePaths.extensions
     else
-      "${config.home.homeDirectory}/.${lib.toLower appName}/extensions";
+      builtins.trace "appExtensionsPath: ${config.home.homeDirectory}/.${lib.toLower configDirName}/extensions" "${config.home.homeDirectory}/.${lib.toLower configDirName}/extensions";
 
   allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
@@ -81,11 +81,16 @@ let
     };
 
   supportsProfileExtensionsJson =
-    lib.versionAtLeast cfg.package.version "1.74.0"
-    || builtins.elem cfg.package.pname [
-      "cursor"
-      "windsurf"
-    ];
+    let
+      versionCheck = lib.versionAtLeast cfg.package.version "1.74.0";
+      pnameCheck = builtins.elem cfg.package.pname [
+        "code-cursor"
+        "windsurf"
+      ];
+    in
+    builtins.trace
+      "Checking profile extensions support for ${cfg.package.pname} ${cfg.package.version}: versionCheck=${toString versionCheck}, pnameCheck=${toString pnameCheck}"
+      (versionCheck || pnameCheck);
 
 in
 {
@@ -435,19 +440,29 @@ in
             # causes VSCode to create the extensions.json with all the extensions
             # in the extension directory, which includes extensions from other profiles.
             lib.mkMerge (
-              lib.concatMap toPaths allExtensions
-              ++ lib.optional (supportsProfileExtensionsJson && hasDefaultProfile) {
-                # Whenever our immutable extensions.json changes, force the profile to regenerate
-                # extensions.json with both mutable and immutable extensions.
-                "${appExtensionsPath}/.extensions-immutable.json" = {
-                  text = extensionJson defaultProfile.extensions;
-                  onChange = ''
-                    run rm $VERBOSE_ARG -f "${appExtensionsPath}"/{extensions.json,.init-default-profile-extensions}
-                    verboseEcho "Regenerating ${appName} extensions.json"
-                    run ${lib.getExe cfg.package} --list-extensions > /dev/null
-                  '';
-                };
-              }
+              builtins.trace "Mapping paths for extensions: ${toString allExtensions}" (
+                lib.concatMap toPaths allExtensions
+                ++
+                  lib.optional
+                    (builtins.trace
+                      "Checking profile extensions support: supportsProfileExtensionsJson=${toString supportsProfileExtensionsJson}, hasDefaultProfile=${toString hasDefaultProfile}"
+                      (supportsProfileExtensionsJson && hasDefaultProfile)
+                    )
+                    {
+                      # Whenever our immutable extensions.json changes, force the profile to regenerate
+                      # extensions.json with both mutable and immutable extensions.
+                      "${appExtensionsPath}/.extensions-immutable.json" = {
+                        text = builtins.trace "Generating extension JSON for default profile" (
+                          extensionJson defaultProfile.extensions
+                        );
+                        onChange = ''
+                          run rm $VERBOSE_ARG -f "${appExtensionsPath}"/{extensions.json,.init-default-profile-extensions}
+                          verboseEcho "Regenerating ${appName} extensions.json"
+                          run ${lib.getExe cfg.package} --list-extensions > /dev/null
+                        '';
+                      };
+                    }
+              )
             )
           else
             {
