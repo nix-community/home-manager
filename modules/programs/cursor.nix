@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
   mkVSCodeFork = import ./vscode/mkVSCodeFork.nix;
 in
@@ -19,12 +14,10 @@ in
 
       name = "Cursor";
       package = pkgs.code-cursor;
-      packageName = "code-cursor";
+      packageName = "code-cursor"; # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/co/code-cursor/package.nix#L43
 
-      # Cursor stores MCP files in ~/.cursor
-      #
       overridePaths = {
-        mcp = "${config.home.homeDirectory}/.cursor";
+        mcp = ".cursor";
       };
     })
   ];
