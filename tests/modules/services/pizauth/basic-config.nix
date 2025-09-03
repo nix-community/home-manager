@@ -28,6 +28,13 @@
             "offline_access"
           ];
         };
+        test3 = {
+          authUri = "authUri3";
+          tokenUri = "tokenUri3";
+          clientId = "clientId3";
+          scopes = [
+          ];
+        };
       };
     };
 
@@ -63,6 +70,12 @@
               "scope1",
               "offline_access"
             ];
+          }
+
+          account "test3" {
+            auth_uri = "authUri3";
+            token_uri = "tokenUri3";
+            client_id = "clientId3";
           }
         ''}
     '';

@@ -21,7 +21,7 @@ in
   imports = [
     ./no-secrets.nix
     ./with-secrets-in-store.nix
-    ./secrets-with-whitespace.nix
+    ./secrets-arbitrary-characters.nix
     ./no-type.nix
     ./mount.nix
     ./shell.nix

@@ -63,7 +63,7 @@ in
                 description = ''
                   Regular configuration options as described in rclone's documentation
                   <https://rclone.org/docs/>. When specifying options follow the formatting
-                  process outlined here <https://rclone.org/docs/#config-config-file>, namley:
+                  process outlined here <https://rclone.org/docs/#config-config-file>, namely:
                    - Remove the leading double-dash (--) from the rclone option name
                    - Replace hyphens (-) with underscores (_)
                    - Convert to lowercase
@@ -259,7 +259,7 @@ in
 
               if ! ${lib.getExe cfg.package} config update \
                      ${remote.name} config_refresh_token=false \
-                     ${secret} "$(cat "${secretFile}")" \
+                     ${secret}="$(cat "${secretFile}")" \
                      --non-interactive; then
                 echo "Failed to inject secret \"${secretFile}\""
                 cleanup
@@ -344,6 +344,7 @@ in
                   };
 
                   Service = {
+                    Type = "notify";
                     Environment = [
                       # fusermount/fusermount3
                       "PATH=/run/wrappers/bin"

@@ -23,11 +23,6 @@ let
       qt6Packages.qt6gtk2
     ];
     kde = [
-      libsForQt5.kio
-      libsForQt5.plasma-integration
-      libsForQt5.systemsettings
-    ];
-    kde6 = [
       kdePackages.kio
       kdePackages.plasma-integration
       kdePackages.systemsettings
@@ -46,7 +41,6 @@ let
   styleNames = {
     gtk = "gtk2";
     qtct = "qt5ct";
-    kde6 = "kde";
   };
 
   # Maps known lowercase style names to style packages. Non-exhaustive.
@@ -79,7 +73,10 @@ let
       adwaita-qt6
     ];
 
-    breeze = libsForQt5.breeze-qt5;
+    breeze = [
+      kdePackages.breeze
+      kdePackages.breeze.qt5
+    ];
 
     kvantum = [
       libsForQt5.qtstyleplugin-kvantum
@@ -191,10 +188,7 @@ in
                   applications
 
                 `kde`
-                : Use Qt settings from Plasma 5
-
-                `kde6`
-                : Use Qt settings from Plasma 6
+                : Use Qt settings from Plasma
               '';
             };
             package = lib.mkOption {
@@ -297,11 +291,22 @@ in
 
   config =
     let
+      deprecateKde6 =
+        name: optionPath:
+        if name == "kde6" then
+          lib.warn ''
+            The ${optionPath} value "kde6" has been deprecated and renamed to "kde".
+            Please update your configuration:
+              ${optionPath} = "kde";
+          '' "kde"
+        else
+          name;
+
       platformTheme =
         if (builtins.isString cfg.platformTheme) then
           {
             option = "qt.platformTheme";
-            name = cfg.platformTheme;
+            name = deprecateKde6 cfg.platformTheme "qt.platformTheme";
             package = null;
           }
         else if cfg.platformTheme == null then
@@ -313,7 +318,7 @@ in
         else
           {
             option = "qt.platformTheme.name";
-            name = cfg.platformTheme.name;
+            name = deprecateKde6 cfg.platformTheme.name "qt.platformTheme.name";
             package = cfg.platformTheme.package;
           };
 

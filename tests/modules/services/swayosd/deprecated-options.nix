@@ -1,4 +1,9 @@
-{ config, ... }:
+{
+  lib,
+  config,
+  options,
+  ...
+}:
 
 {
   services.swayosd = {
@@ -7,9 +12,17 @@
       name = "swayosd";
       outPath = "@swayosd@";
     };
+    display = "DISPLAY";
     stylePath = "/etc/xdg/swayosd/style.css";
     topMargin = 0.1;
   };
+
+  test.asserts.assertions.expected = [
+    ''
+      The option definition `services.swayosd.display' in ${lib.showFiles options.services.swayosd.display.files} no longer has any effect; please remove it.
+      The --display flag is no longer available in swayosd-server.
+    ''
+  ];
 
   nmt.script = ''
     assertFileContent \

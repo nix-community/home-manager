@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-04-16 07:20+0000\n"
-"Last-Translator: Hylke de Vries <hylke94+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-09-02 00:01+0000\n"
+"Last-Translator: Erwin Mintiens <erwin.mintiens@protonmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/"
 "modules/nl/>\n"
 "Language: nl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.1-dev\n"
+"X-Generator: Weblate 5.13.1-dev\n"
 
 #: modules/files.nix:206
 msgid "Creating home file links in %s"
@@ -70,7 +70,7 @@ msgstr "%s aan het activeren"
 
 #: modules/home-environment.nix:807
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: onbekende optie '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
@@ -90,7 +90,7 @@ msgstr "Fout: HOME heeft als waarde \"%s\" maar we verwachten \"%s\""
 
 #: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
-msgstr "Home manager activatie aan het starten"
+msgstr "Home Manager activatie aan het starten"
 
 #: modules/lib-bash/activation-init.sh:136
 msgid "Sanity checking Nix"
@@ -102,15 +102,15 @@ msgstr "Dit is een oefening"
 
 #: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
-msgstr "Dit is voor echt"
+msgstr "Dit is een echte run"
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
-msgstr "Nix versie %s wordt gebruikt"
+msgstr "Gebruikte Nix versie: %s"
 
 #: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"
-msgstr "Activatie variabelen:"
+msgstr "Activatievariabelen:"
 
 #~ msgid "Creating profile generation %s"
 #~ msgstr "Profiel generatie %s aan het maken"
