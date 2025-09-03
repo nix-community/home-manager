@@ -534,21 +534,36 @@ in
               ]) vaults
             )
           );
-      };
 
-      xdg.configFile."obsidian/obsidian.json".source = (pkgs.formats.json { }).generate "obsidian.json" {
-        vaults = builtins.listToAttrs (
-          builtins.map (vault: {
-            name = builtins.hashString "md5" vault.target;
-            value = {
-              path = "${config.home.homeDirectory}/${vault.target}";
-            }
-            // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
-              open = true;
-            });
-          }) vaults
-        );
-        updateDisabled = true;
+        activation.obsidian =
+          let
+            template = (pkgs.formats.json { }).generate "obsidian.json" {
+              vaults = builtins.listToAttrs (
+                builtins.map (vault: {
+                  name = builtins.hashString "md5" vault.target;
+                  value = {
+                    path = "${config.home.homeDirectory}/${vault.target}";
+                  }
+                  // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
+                    open = true;
+                  });
+                }) vaults
+              );
+              updateDisabled = true;
+            };
+          in
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            OBSIDIAN_CONFIG="$HOME/.config/obsidian/obsidian.json"
+            mkdir -p "$(dirname "$OBSIDIAN_CONFIG")"
+
+            if [ -f "$OBSIDIAN_CONFIG" ]; then
+              tmp=$(mktemp)
+              ${lib.getExe pkgs.jq} -s '.[0] * .[1]' "$OBSIDIAN_CONFIG" "${template}" > "$tmp"
+              mv "$tmp" "$OBSIDIAN_CONFIG"
+            else
+              cp "${template}" "$OBSIDIAN_CONFIG"
+            fi
+          '';
       };
 
       assertions = [
