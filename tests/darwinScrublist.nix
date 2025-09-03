@@ -124,6 +124,7 @@ let
     "patdiff"
     "pay-respects"
     "pet"
+    "pgcli"
     "pistol"
     "pls"
     "poetry"

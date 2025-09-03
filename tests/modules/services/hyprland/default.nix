@@ -8,4 +8,5 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-null-portal-package-config = ./null-portal-package-config.nix;
   hyprland-sourceFirst-false-config = ./sourceFirst-false-config.nix;
   hyprland-inconsistent-config = ./inconsistent-config.nix;
+  hyprland-submaps-config = ./submaps-config.nix;
 }

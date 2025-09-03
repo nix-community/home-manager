@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2024-10-09 14:31+0000\n"
-"Last-Translator: Utkarsh Sharma <utkasharma19@gmail.com>\n"
+"PO-Revision-Date: 2025-09-02 00:02+0000\n"
+"Last-Translator: Fareesh Vijayarangam <fareesh@gmail.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/home-manager/cli/"
 "hi/>\n"
 "Language: hi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.13.1-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -27,7 +27,7 @@ msgstr "%s: ‌%s के लिए कोई आर्ग्यूमेंट �
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s: %s का इस्तेमाल केवल %s के बाद ही किया जा सकता है"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"

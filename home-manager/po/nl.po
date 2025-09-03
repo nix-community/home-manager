@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-04-16 07:20+0000\n"
-"Last-Translator: Hylke de Vries <hylke94+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-09-02 00:01+0000\n"
+"Last-Translator: Erwin Mintiens <erwin.mintiens@protonmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/home-manager/cli/"
 "nl/>\n"
 "Language: nl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.1-dev\n"
+"X-Generator: Weblate 5.13.1-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -27,7 +27,7 @@ msgstr "%s: ontbrekend argument voor %s"
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s: %s kan alleen na %s gebruikt worden"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -99,7 +99,7 @@ msgstr "Kan de opties van een flake configuratie niet inspecteren"
 #: home-manager/home-manager:305 home-manager/home-manager:328
 #: home-manager/home-manager:734 home-manager/home-manager:1237
 msgid "%s: unknown option '%s'"
-msgstr "%s: onbekende keuze '%s'"
+msgstr "%s: onbekende optie '%s'"
 
 #: home-manager/home-manager:310 home-manager/home-manager:1238
 msgid "Run '%s --help' for usage help"
