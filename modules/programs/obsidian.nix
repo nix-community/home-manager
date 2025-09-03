@@ -19,6 +19,7 @@ let
   corePlugins = [
     "audio-recorder"
     "backlink"
+    "bases"
     "bookmarks"
     "canvas"
     "command-palette"
@@ -82,6 +83,7 @@ in
         type = types.raw;
         default = [
           "backlink"
+          "bases"
           "bookmarks"
           "canvas"
           "command-palette"
@@ -436,12 +438,6 @@ in
                 {
                   name = "${vault.target}/.obsidian/core-plugins.json";
                   value.source = (pkgs.formats.json { }).generate "core-plugins.json" (
-                    builtins.map (plugin: plugin.name) vault.settings.corePlugins
-                  );
-                }
-                {
-                  name = "${vault.target}/.obsidian/core-plugins-migration.json";
-                  value.source = (pkgs.formats.json { }).generate "core-plugins-migration.json" (
                     builtins.listToAttrs (
                       builtins.map (name: {
                         inherit name;
