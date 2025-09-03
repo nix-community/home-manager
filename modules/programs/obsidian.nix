@@ -550,17 +550,14 @@ in
           in
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             OBSIDIAN_CONFIG="$HOME/.config/obsidian/obsidian.json"
-            mkdir -p "$(dirname "$OBSIDIAN_CONFIG")"
-
             if [ -f "$OBSIDIAN_CONFIG" ]; then
               tmp=$(mktemp)
               ${lib.getExe pkgs.jq} -s '.[0] * .[1]' "$OBSIDIAN_CONFIG" "${template}" > "$tmp"
-              mv "$tmp" "$OBSIDIAN_CONFIG"
+              install -m644 "$tmp" "$OBSIDIAN_CONFIG"
+              rm -f "$tmp"
             else
-              cp "${template}" "$OBSIDIAN_CONFIG"
+              install -m644 ${template} "$OBSIDIAN_CONFIG"
             fi
-
-            chmod 644 "$OBSIDIAN_CONFIG"
           '';
       };
 
