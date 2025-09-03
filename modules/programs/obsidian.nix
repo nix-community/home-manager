@@ -536,7 +536,7 @@ in
             template = (pkgs.formats.json { }).generate "obsidian.json" {
               vaults = builtins.listToAttrs (
                 builtins.map (vault: {
-                  name = builtins.hashString "md5" vault.target;
+                  name = builtins.substring 0 16 (builtins.hashString "md5" vault.target);
                   value = {
                     path = "${config.home.homeDirectory}/${vault.target}";
                   }
@@ -559,6 +559,8 @@ in
             else
               cp "${template}" "$OBSIDIAN_CONFIG"
             fi
+
+            chmod 644 "$OBSIDIAN_CONFIG"
           '';
       };
 
