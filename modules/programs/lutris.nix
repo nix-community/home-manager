@@ -224,8 +224,7 @@ in
         nameValuePair "lutris/runners/${runner_name}.yml" {
           source = settingsFormat.generate "${runner_name}.yml" (buildRunnerConfig runner_name runner_config);
         }
-      )
-      (recursiveUpdate wine_extra cfg.runners);
+      ) (recursiveUpdate wine_extra cfg.runners);
 
     xdg.dataFile =
       let
