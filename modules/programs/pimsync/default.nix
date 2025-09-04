@@ -90,12 +90,18 @@ in
     let
       cfg = config.programs.pimsync;
       applyDefaults =
-        acc:
+        _: acc:
         let
-          # Select values that can't be set in programs.pimsync.defaults or are null
-          pimsyncValues = lib.filterAttrs (n: v: !(v == null && cfg.defaults ? n)) acc.pimsync;
+          # Select values that could be set in programs.pimsync.defaults and aren't null
+          specifiedValues = lib.filterAttrs (n: v: (v != null && cfg.defaults ? n)) acc.pimsync;
+
+          defaults = {
+            inherit (acc.remote) userName url;
+            password = lib.singleton "cmd" ++ acc.remote.passwordCommand;
+          };
+
           finalPimsync = {
-            pimsync = cfg.defaults // pimsyncValues;
+            pimsync = acc.pimsync // cfg.defaults // defaults // specifiedValues;
           };
         in
         acc // finalPimsync;
@@ -106,7 +112,152 @@ in
         lib.mapAttrs applyDefaults config.accounts.contact.accounts
       );
 
-      localStorage = acc: "";
+      # Convert a non-nesting attribute set to a list of directives including
+      # handling pimsyncs "dynamic parameters"
+      attrsToDirectives = lib.mapAttrsToList (
+        name: value:
+        {
+          inherit name;
+        }
+        // (
+          if builtins.typeOf value == "list" then
+            {
+              children = lib.singleton {
+                name = lib.head value;
+                params = lib.drop 1 value;
+              };
+            }
+          else
+            { params = lib.singleton value; }
+        )
+      );
+
+      localStorage = calendar: name: acc: {
+        name = "storage";
+        params = [ "${name}-local" ];
+        children =
+          (attrsToDirectives {
+            inherit (acc.local) path;
+            inherit (acc.pimsync) interval;
+            fileext = acc.local.fileExt;
+            type = if calendar then "vdir/icalendar" else "vdir/vcard";
+          })
+          ++ (lib.optional acc.pimsync.localReadOnly { name = "readonly"; });
+      };
+
+      remoteStorage = calendar: name: acc: {
+        name = "storage";
+        params = [ "${name}-remote" ];
+        children =
+          (attrsToDirectives {
+            inherit (acc.pimsync) interval url password;
+            username = acc.pimsync.userName;
+            collection_id = acc.pimsync.collectionId;
+            user_agent = acc.pimsync.userAgent;
+            type =
+              if !calendar then
+                "carddav"
+              else if acc.remote.type == "caldav" then
+                acc.remote.type
+              else
+                "webcal";
+          })
+          ++ (lib.optional acc.pimsync.remoteReadOnly { name = "readonly"; });
+      };
+
+      getCollections =
+        acc:
+        let
+          inherit (acc.pimsync) collection;
+        in
+        if builtins.typeOf collection == "string" then
+          let
+            names = {
+              all = lib.singleton "all";
+              fromLocal = [
+                "from"
+                "a"
+              ];
+              fromRemote = [
+                "from"
+                "b"
+              ];
+            };
+          in
+          lib.singleton {
+            name = "collections";
+            params = names.${collection};
+          }
+        else
+          map (
+            col:
+            if builtins.typeOf col == "string" then
+              {
+                name = "collection";
+                params = lib.singleton col;
+              }
+            else
+              {
+                name = "collection";
+                children = attrsToDirectives col;
+              }
+          ) collection;
+
+      pair = name: acc: {
+        name = "pair";
+        params = lib.singleton name;
+        children =
+          (attrsToDirectives {
+            storage_a = "${name}-local";
+            storage_b = "${name}-remote";
+            on_empty = acc.pimsync.onEmpty;
+            on_delete = acc.pimsync.onDelete;
+          })
+          # Needs to be separate, because this could be a list that's not a dynamic parameter
+          ++ (lib.singleton {
+            name = "conflict_resolution";
+            params =
+              let
+                cr = acc.pimsync.conflictResolution;
+              in
+              if cr == "keepLocal" then
+                [
+                  "keep"
+                  "a"
+                ]
+              else if cr == "keepRemote" then
+                [
+                  "keep"
+                  "b"
+                ]
+              else if cr == null then
+                [ null ]
+              else
+                cr;
+          })
+          ++ (getCollections acc);
+      };
+
+      multiMapAttrsToList = attrs: lib.concatMap (f: lib.mapAttrsToList f attrs);
+
+      globalConfig = lib.singleton {
+        name = "status_path";
+        params = lib.singleton cfg.statusPath;
+      };
+
+      calendarConfig = multiMapAttrsToList calendarAccounts [
+        (localStorage true)
+        (remoteStorage true)
+        pair
+      ];
+
+      contactConfig = multiMapAttrsToList contactAccounts [
+        (localStorage false)
+        (remoteStorage false)
+        pair
+      ];
+
+      finalConfig = globalConfig ++ calendarConfig ++ contactConfig;
     in
     lib.mkIf cfg.enable {
       assertions =
@@ -149,6 +300,9 @@ in
           (sharedAsserts contactAccounts)
           (sharedAsserts calendarAccounts)
         ];
+
       home.packages = [ cfg.package ];
+
+      xdg.configFile."pimsync/pimsync.conf".text = lib.hm.generators.toSCFG { } finalConfig;
     };
 }
