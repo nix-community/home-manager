@@ -139,7 +139,7 @@ in
     home.packages = [ cfg.package ];
 
     xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
-      "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
+      "${cfg.package}/share/dbus-1/services/org.knopwob.dunst.service";
 
     xdg.configFile."dunst/dunstrc" = lib.mkIf (cfg.settings != { }) {
       text = toDunstIni cfg.settings;
