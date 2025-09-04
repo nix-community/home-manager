@@ -539,10 +539,7 @@ in
                   name = builtins.substring 0 16 (builtins.hashString "md5" vault.target);
                   value = {
                     path = "${config.home.homeDirectory}/${vault.target}";
-                  }
-                  // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
-                    open = true;
-                  });
+                  };
                 }) vaults
               );
               updateDisabled = true;
