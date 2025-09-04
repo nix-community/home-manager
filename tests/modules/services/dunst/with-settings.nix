@@ -14,9 +14,9 @@ in
     };
     settings = {
       global = {
-        width = 300;
-        height = 300;
-        offset = "30x50";
+        width = "(200,300)";
+        height = "(0,150)";
+        offset = "(30,50)";
         origin = "top-right";
         transparency = 10;
         frame_color = "#eceff1";
