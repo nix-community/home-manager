@@ -15,6 +15,7 @@ let
     nameValuePair
     mapAttrs'
     filterAttrs
+    filterAttrsRecursive
     attrNames
     concatStringsSep
     toLower
@@ -170,18 +171,13 @@ in
       let
         buildRunnerConfig = (
           runner_name: runner_config:
-          {
+          filterAttrsRecursive (name: value: value != { } && value != null && value != "") {
             "${runner_name}" =
-              (optionalAttrs (runner_config.settings.runner != { }) runner_config.settings.runner)
-              // (optionalAttrs
-                (runner_config.package != null && runner_config.settings.runner.runner_executable == "")
-                {
-                  runner_executable = getExe runner_config.package;
-                }
-              );
-          }
-          // optionalAttrs (runner_config.settings.system != { }) {
-            system = runner_config.settings.system;
+              runner_config.settings.runner
+              // (optionalAttrs (runner_config.package != null) {
+                runner_executable = getExe runner_config.package;
+              });
+            inherit (runner_config.settings) system;
           }
         );
       in
