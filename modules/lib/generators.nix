@@ -215,7 +215,9 @@
       inherit (builtins) typeOf replaceStrings elem;
 
       filterNullDirectives = lib.filter (
-        directive: !(directive.params or [ null ] == [ null ] && directive.children or [ ] == [ ])
+        directive:
+        !(directive ? "params" || directive ? "children")
+        || !(directive.params or [ null ] == [ null ] && directive.children or [ ] == [ ])
       );
 
       # ListOf String -> String
