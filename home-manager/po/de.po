@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2024-05-21 18:02+0000\n"
-"Last-Translator: halbGefressen <chzi@pm.me>\n"
+"PO-Revision-Date: 2025-09-04 09:01+0000\n"
+"Last-Translator: Josef Dalibor <josefkruse@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/cli/"
 "de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.13.1-rc\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -27,7 +27,7 @@ msgstr "%s: Fehlendes Argument für %s"
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s: %s kann nur nach %s verwerdet werden"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -41,8 +41,8 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
-"Das Beibehalten Ihres Home Manager %s in %s ist veraltet.\n"
-"Bitte verschieben Sie es nach %s"
+"Das Speichern des Home Managers %s in %s ist veraltet,\n"
+"Bitte nach %s verschieben"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
@@ -87,18 +87,20 @@ msgstr ""
 "1. Weisen Sie Home Manager explizit an, den Pfad zu verwenden, indem Sie z. "
 "B. :\n"
 "\n"
-"     { programs.home-manager.path = \"%s\"; }\n"
+". . . . . { programs.home-manager.path = \"%s\"; }\n"
 "\n"
-"   zu Ihrer Konfiguration hinzufügen.\n"
+". . . zu Ihrer Konfiguration hinzufügen.\n"
 "\n"
-"   Sollten Sie Home Manager direkt importieren, können Sie den Parameter "
-"`path` verwenden, wenn Sie das Home Manager-Paket aufrufen:\n"
+". . . Sollten Sie Home Manager direkt importieren, können Sie den Parameter "
+"`path`\n"
 "\n"
-"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+". . . . . pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+". . . verwenden, wenn Sie das Home Manager-Paket aufrufen:\n"
 "\n"
 "2. Entfernen Sie den veralteten Pfad:\n"
 "\n"
-"     $ rm -r \"%s\""
+". . . . . $ rm -r \"%s\""
 
 #: home-manager/home-manager:153
 msgid "Sanity checking Nix"
@@ -148,11 +150,11 @@ msgid ""
 msgstr ""
 "Alles fertig! Das Home Manager Tool sollte nun installiert sein. Sie können\n"
 "\n"
-"    %s\n"
+". . . . %s\n"
 "\n"
-"bearbeiten um Home Manager zu konfigurieren. Führen Sie\n"
-"'man home-configuration.nix' aus, um alle verfügbaren Optionen zu\n"
-"sehen."
+"bearbeiten um Home Manager zu konfigurieren. Führen Sie 'man home-"
+"configuration.nix' aus,\n"
+"um alle verfügbaren Optionen zu sehen."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:497
@@ -195,7 +197,7 @@ msgstr "Unbekannte \"news.display\" Einstellung \"%s\"."
 #: home-manager/home-manager:606
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr "Bitte definieren Sie die $EDITOR oder $VISUAL Umgebungsvariable"
+msgstr "Bitte setzen Sie die Umgebungsvariablen $EDITOR oder $VISUAL"
 
 #: home-manager/home-manager:624
 msgid "Cannot run build in read-only directory"
@@ -203,7 +205,7 @@ msgstr "Build kann nicht im schreibgeschützten Ordner ausgeführt werden"
 
 #: home-manager/home-manager:787
 msgid "The configuration did not contain the specialisation \"%s\""
-msgstr ""
+msgstr "Die Konfiguration enthält keine Spezialisierung für \"%s\""
 
 #: home-manager/home-manager:841
 msgid "No generation with ID %s"
