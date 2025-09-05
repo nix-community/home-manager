@@ -1,0 +1,7 @@
+CXX=g++
+GCCGO=gccgo
+GOAMD64=v1
+GOARCH=amd64
+GOAUTH=netrc
+GOPATH=/home/hm-user/mygo:/another/go:/yet/another/go
+GOPRIVATE=*.corp.example.com,rsc.io/private
