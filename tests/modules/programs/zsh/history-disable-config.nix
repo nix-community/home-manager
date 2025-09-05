@@ -5,6 +5,6 @@
   };
 
   nmt.script = ''
-    assertFileNotRegex home-files/.zshrc "setopt HIST_FCNTL_LOCK"
+    assertFileNotRegex home-files/.zshrc "setopt HIST_.*"
   '';
 }
