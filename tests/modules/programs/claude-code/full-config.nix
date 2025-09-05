@@ -104,6 +104,17 @@
         Focus on user-friendly explanations and examples.
       '';
     };
+
+    hooks = {
+      pre-edit = ''
+        #!/usr/bin/env bash
+        echo "About to edit file: $1"
+      '';
+      post-commit = ''
+        #!/usr/bin/env bash
+        echo "Committed with message: $1"
+      '';
+    };
   };
 
   nmt.script = ''
@@ -122,5 +133,11 @@
 
     assertFileExists home-files/.claude/commands/commit.md
     assertFileContent home-files/.claude/commands/commit.md ${./expected-commit}
+
+    assertFileExists home-files/.claude/hooks/pre-edit
+    assertFileRegex home-files/.claude/hooks/pre-edit "About to edit file"
+
+    assertFileExists home-files/.claude/hooks/post-commit
+    assertFileRegex home-files/.claude/hooks/post-commit "Committed with message"
   '';
 }
