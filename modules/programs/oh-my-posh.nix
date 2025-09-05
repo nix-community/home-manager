@@ -94,5 +94,21 @@ in
         }
       '';
     };
+
+    # Clear oh-my-posh cache when the oh-my-posh package derivation changes
+    home.activation.ohMyPoshClearCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      set -eu
+      nixver="${config.programs.oh-my-posh.package}"
+      cache="${config.xdg.cacheHome}/oh-my-posh"
+      state="$cache/pkg-path"
+
+      if [ ! -f "$state" ] || [ "$(cat "$state")" != "$nixver" ]; then
+        rm -rf "$cache"
+      fi
+
+      mkdir -p "$cache"
+      printf '%s' "$nixver" > "$state"
+    '';
+
   };
 }
