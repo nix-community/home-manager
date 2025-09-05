@@ -2,7 +2,12 @@
 {
   programs.lutris = {
     enable = true;
+    defaultWinePackage = pkgs.proton-ge-bin;
     runners = {
+      wine.settings = {
+        runner.system_winetricks = true;
+        system.disable_runtime = true;
+      };
       cemu.package = pkgs.cemu;
       pcsx2.settings = {
         system.disable_screen_saver = true;
@@ -38,6 +43,13 @@
         system:
           disable_screen_saver: true
       '';
+      expectedWine = builtins.toFile "wine.yml" ''
+        system:
+          disable_runtime: true
+        wine:
+          system_winetricks: true
+          version: ${lib.toLower pkgs.proton-ge-bin.name}
+      '';
     in
     ''
       assertFileExists ${runnersDir}/cemu.yml
@@ -46,5 +58,7 @@
       assertFileContent ${runnersDir}/pcsx2.yml ${expectedPcsx2}
       assertFileExists ${runnersDir}/rpcs3.yml
       assertFileContent ${runnersDir}/rpcs3.yml ${expectedRpcs3}
+      assertFileExists ${runnersDir}/wine.yml
+      assertFileContent ${runnersDir}/wine.yml ${expectedWine}
     '';
 }
