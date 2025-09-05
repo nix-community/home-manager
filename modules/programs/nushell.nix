@@ -45,7 +45,6 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [
-    Philipp-M
     joaquintrinanes
     aidalgol
   ];
@@ -211,6 +210,8 @@ in
     '';
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+    home.extraDependencies = cfg.plugins; # make sure the plugins are not garbage-collected
 
     home.file = lib.mkMerge [
       (

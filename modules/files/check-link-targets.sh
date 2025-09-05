@@ -40,7 +40,7 @@ for sourcePath in "$@" ; do
       fi
     else
       # Fail if nothing else works
-      collisionErrors+=("Existing file '$backup' would be clobbered by backing up '$targetPath'")
+      collisionErrors+=("Existing file '$targetPath' would be clobbered")
     fi
   fi
 done

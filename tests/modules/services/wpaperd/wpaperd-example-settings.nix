@@ -15,6 +15,7 @@
   };
 
   nmt.script = ''
+    assertFileExists home-files/.config/wpaperd/wallpaper.toml
     assertFileContent home-files/.config/wpaperd/wallpaper.toml \
       ${./wpaperd-expected-settings.toml}
   '';

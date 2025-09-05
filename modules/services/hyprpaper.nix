@@ -41,7 +41,7 @@ in
       description = ''
         hyprpaper configuration written in Nix. Entries with the same key
         should be written as lists. Variables' and colors' names should be
-        quoted. See <https://wiki.hyprland.org/Hypr-Ecosystem/hyprpaper/> for more examples.
+        quoted. See <https://wiki.hypr.land/Hypr-Ecosystem/hyprpaper/> for more examples.
       '';
       example = lib.literalExpression ''
         {

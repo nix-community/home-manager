@@ -217,7 +217,7 @@ let
     );
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.timon-schelling ];
+  meta.maintainers = [ lib.maintainers.timon ];
 
   options.programs.lapce = options;
 

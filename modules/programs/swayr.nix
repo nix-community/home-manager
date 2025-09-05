@@ -26,7 +26,7 @@ in
       default = { };
       example = lib.literalExpression ''
         menu = {
-          executable = "${pkgs.wofi}/bin/wofi";
+          executable = "''${pkgs.wofi}/bin/wofi";
           args = [
             "--show=dmenu"
             "--allow-markup"
@@ -98,6 +98,7 @@ in
     systemd.target = mkOption {
       type = types.str;
       default = config.wayland.systemd.target;
+      defaultText = lib.literalExpression "config.wayland.systemd.target";
       description = ''
         Systemd target to bind to.
       '';

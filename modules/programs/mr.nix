@@ -12,7 +12,7 @@ let
   iniFormat = pkgs.formats.ini { inherit listToValue; };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.nilp0inter ];
+  meta.maintainers = [ lib.maintainers.nilp0inter ];
 
   options.programs.mr = {
     enable = lib.mkEnableOption "mr, a tool to manage all your version control repositories";

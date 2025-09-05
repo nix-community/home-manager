@@ -48,39 +48,38 @@ let
   };
 
   startupModule = types.submodule {
-    options =
-      {
-        command = mkOption {
-          type = types.str;
-          description = "Command that will be executed on startup.";
-        };
-
-        always = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether to run command on each ${moduleName} restart.";
-        };
-      }
-      // lib.optionalAttrs isI3 {
-        notification = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to enable startup-notification support for the command.
-            See {option}`--no-startup-id` option description in the i3 user guide.
-          '';
-        };
-
-        workspace = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = ''
-            Launch application on a particular workspace. DEPRECATED:
-            Use [](#opt-xsession.windowManager.i3.config.assigns)
-            instead. See <https://github.com/nix-community/home-manager/issues/265>.
-          '';
-        };
+    options = {
+      command = mkOption {
+        type = types.str;
+        description = "Command that will be executed on startup.";
       };
+
+      always = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether to run command on each ${moduleName} restart.";
+      };
+    }
+    // lib.optionalAttrs isI3 {
+      notification = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable startup-notification support for the command.
+          See {option}`--no-startup-id` option description in the i3 user guide.
+        '';
+      };
+
+      workspace = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Launch application on a particular workspace. DEPRECATED:
+          Use [](#opt-xsession.windowManager.i3.config.assigns)
+          instead. See <https://github.com/nix-community/home-manager/issues/265>.
+        '';
+      };
+    };
 
   };
 
@@ -98,7 +97,6 @@ let
               defaultText = literalExpression ''
                 null for state version ≥ 20.09, as example otherwise
               '';
-              example = default;
             }
           );
       in
@@ -181,7 +179,7 @@ let
               pkg = if isSway && isNull cfg.package then pkgs.sway else cfg.package;
             in
             "${pkg}/bin/${moduleName}bar";
-          defaultText = "i3bar";
+          defaultText = literalExpression "i3bar";
           description = "Command that will be used to start a bar.";
           example = if isI3 then "\${pkgs.i3}/bin/i3bar -t" else "\${pkgs.waybar}/bin/waybar";
         };
@@ -189,6 +187,7 @@ let
         statusCommand = mkNullableOption {
           type = types.str;
           default = "${pkgs.i3status}/bin/i3status";
+          defaultText = literalExpression "\${pkgs.i3status}/bin/i3status";
           description = "Command that will be used to get status lines.";
         };
 
@@ -582,6 +581,13 @@ in
               sway = if cfg.config.focus.forceWrapping then "yes" else "no";
             }
             .${moduleName};
+          defaultText =
+            literalExpression
+              {
+                i3 = ''if focus.forceWrapping then "force" else "yes"'';
+                sway = ''if focus.forceWrapping then "yes" else "no"'';
+              }
+              .${moduleName};
           description = ''
             Whether the window focus commands automatically wrap around the edge of containers.
 
@@ -639,7 +645,7 @@ in
   };
 
   modifier = mkOption {
-    type = types.enum [
+    type = types.either (types.enum [
       "Shift"
       "Control"
       "Mod1"
@@ -647,7 +653,7 @@ in
       "Mod3"
       "Mod4"
       "Mod5"
-    ];
+    ]) types.str;
     default = "Mod1";
     description = "Modifier key that is used for all default keybindings.";
     example = "Mod4";
@@ -959,6 +965,9 @@ in
   terminal = mkOption {
     type = types.str;
     default = if isI3 then "i3-sensible-terminal" else "${pkgs.foot}/bin/foot";
+    defaultText = literalExpression (
+      if isI3 then ''"i3-sensible-terminal"'' else "\${pkgs.foot}/bin/foot"
+    );
     description = "Default terminal to run.";
     example = "alacritty";
   };
@@ -970,6 +979,12 @@ in
         "${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs swaymsg exec --"
       else
         "${pkgs.dmenu}/bin/dmenu_run";
+    defaultText = literalExpression (
+      if isSway then
+        "\${pkgs.dmenu}/bin/dmenu_path | \${pkgs.dmenu}/bin/dmenu | \${pkgs.findutils}/bin/xargs swaymsg exec --"
+      else
+        "\${pkgs.dmenu}/bin/dmenu_run"
+    );
     description = "Default launcher to use.";
     example = "bemenu-run";
   };

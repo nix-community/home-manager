@@ -389,6 +389,22 @@ in
       description = ''
         A list of paths that should be included in the home
         closure but generally not visible.
+
+        For built-time checks the `home.checks` option is more appropriate
+        for that purpose as checks should not leave a trace in the built
+        home configuration.
+      '';
+    };
+
+    home.checks = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      description = ''
+        Packages that are added as dependencies of the home's build, usually
+        for the purpose of validating some part of the configuration.
+
+        Unlike `home.extraDependencies`, these store paths do not
+        become part of the built home configuration.
       '';
     };
 
@@ -475,6 +491,18 @@ in
       internal = true;
       type = types.package;
       description = "The package containing the complete activation script.";
+    };
+
+    home.activationGenerateGcRoot = mkOption {
+      internal = true;
+      type = types.bool;
+      default = true;
+      description = ''
+        Whether the activation script should create a GC root to avoid being
+        garbage collected. Typically you want this but if you know for certain
+        that the Home Manager generation is referenced from some other GC root,
+        then it may be appropriate to not create our own root.
+      '';
     };
 
     home.extraActivationPath = mkOption {
@@ -607,21 +635,20 @@ in
     home.sessionVariablesPackage = pkgs.writeTextFile {
       name = "hm-session-vars.sh";
       destination = "/etc/profile.d/hm-session-vars.sh";
-      text =
-        ''
-          # Only source this once.
-          if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
-          export __HM_SESS_VARS_SOURCED=1
+      text = ''
+        # Only source this once.
+        if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+        export __HM_SESS_VARS_SOURCED=1
 
-          ${config.lib.shell.exportAll cfg.sessionVariables}
-        ''
-        + lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (
-            env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
-          ) cfg.sessionSearchVariables
-        )
-        + "\n"
-        + cfg.sessionVariablesExtra;
+        ${config.lib.shell.exportAll cfg.sessionVariables}
+      ''
+      + lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
+        ) cfg.sessionSearchVariables
+      )
+      + "\n"
+      + cfg.sessionVariablesExtra;
     };
 
     home.sessionSearchVariables.PATH = lib.mkIf (cfg.sessionPath != [ ]) cfg.sessionPath;
@@ -631,12 +658,16 @@ in
     # The entry acting as a boundary between the activation script's "check" and
     # the "write" phases. This is where we commit to attempting to actually
     # activate the configuration.
+    #
+    # Note, if we are run by a version 0 driver then we update the profile here.
     home.activation.writeBoundary = lib.hm.dag.entryAnywhere ''
-      if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
-        _i "Creating new profile generation"
-        run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
-      else
-        _i "No change so reusing latest profile generation"
+      if (( $hmDriverVersion < 1 )); then
+        if [[ ! -v oldGenPath || "$oldGenPath" != "$newGenPath" ]] ; then
+          _i "Creating new profile generation"
+          run nix-env $VERBOSE_ARG --profile "$genProfilePath" --set "$newGenPath"
+        else
+          _i "No change so reusing latest profile generation"
+        fi
       fi
     '';
 
@@ -769,6 +800,38 @@ in
           export PATH="${activationBinPaths}"
           ${config.lib.bash.initHomeManagerLib}
 
+          # The driver version indicates the behavior expected by the caller of
+          # this script.
+          #
+          # - 0 : legacy behavior
+          # - 1 : the script will not attempt to update the Home Manager Nix profile.
+          hmDriverVersion=0
+
+          while (( $# > 0 )); do
+            opt="$1"
+            shift
+
+            case $opt in
+              --driver-version)
+                if (( $# == 0 )); then
+                  errorEcho "$0: no driver version specified" >&2
+                  exit 1
+                elif (( 0 <= $1 && $1 <= 1 )); then
+                  hmDriverVersion=$1
+                else
+                  errorEcho "$0: unexpected driver version $1" >&2
+                  exit 1
+                fi
+                shift
+                ;;
+              *)
+                _iError "%s: unknown option '%s'" "$0" "$opt" >&2
+                exit 1
+                ;;
+            esac
+          done
+          unset opt
+
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
           if [[ ! -v SKIP_SANITY_CHECKS ]]; then
@@ -776,13 +839,15 @@ in
             checkHomeDirectory ${lib.escapeShellArg config.home.homeDirectory}
           fi
 
-          # Create a temporary GC root to prevent collection during activation.
-          trap 'run rm -f $VERBOSE_ARG "$newGenGcPath"' EXIT
-          run --silence nix-store --realise "$newGenPath" --add-root "$newGenGcPath"
+          ${lib.optionalString config.home.activationGenerateGcRoot ''
+            # Create a temporary GC root to prevent collection during activation.
+            trap 'run rm -f $VERBOSE_ARG "$newGenGcPath"' EXIT
+            run --silence nix-store --realise "$newGenPath" --add-root "$newGenGcPath"
+          ''}
 
           ${activationCmds}
 
-          ${lib.optionalString (!config.uninstall) ''
+          ${lib.optionalString (config.home.activationGenerateGcRoot && !config.uninstall) ''
             # Create the "current generation" GC root.
             run --silence nix-store --realise "$newGenPath" --add-root "$currentGenGcPath"
 
@@ -797,11 +862,25 @@ in
           preferLocalBuild = true;
           passAsFile = [ "extraDependencies" ];
           inherit (config.home) extraDependencies;
+
+          # Not actually used in the builder. `passedChecks` is just here to create
+          # the build dependencies. Checks are similar to build dependencies in the
+          # sense that if they fail, the home build fails. However, checks do not
+          # produce any output of value, so they are not used by the system builder.
+          # In fact, using them runs the risk of accidentally adding unneeded paths
+          # to the system closure, which defeats the purpose of the `home.checks`
+          # option, as opposed to `home.extraDependencies`.
+          passedChecks = lib.concatStringsSep " " config.home.checks;
         }
         ''
           mkdir -p $out
 
           echo "${config.home.version.full}" > $out/hm-version
+
+          # The gen-version indicates the format of the generation package
+          # itself. It allows us to make backwards incompatible changes in the
+          # package output and have surrounding tooling adapt.
+          echo 1 > $out/gen-version
 
           cp ${activationScript} $out/activate
 

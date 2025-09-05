@@ -188,7 +188,10 @@ in
         hm-graphical-session = {
           Unit = {
             Description = "Home Manager X session";
-            Requires = [ "graphical-session-pre.target" ];
+            Requires = [
+              "graphical-session-pre.target"
+              "xdg-desktop-autostart.target"
+            ];
             BindsTo = [
               "graphical-session.target"
               "tray.target"

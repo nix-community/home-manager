@@ -13,6 +13,20 @@ in
   options.services.swww = {
     enable = lib.mkEnableOption "swww, a Solution to your Wayland Wallpaper Woes";
     package = lib.mkPackageOption pkgs "swww" { };
+    extraArgs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [
+        "--no-cache"
+        "--layer"
+        "bottom"
+      ];
+      description = ''
+        Options given to swww-daemon when the service is run.
+
+        See `swww-daemon --help` for more information.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -35,7 +49,7 @@ in
       };
 
       Service = {
-        ExecStart = "${lib.getExe' cfg.package "swww-daemon"}";
+        ExecStart = "${lib.getExe' cfg.package "swww-daemon"} ${lib.escapeShellArgs cfg.extraArgs}";
         Restart = "always";
         RestartSec = 10;
       };

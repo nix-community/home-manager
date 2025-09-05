@@ -86,7 +86,7 @@ in
 
         assertFileContent \
           $bookmarksFile \
-          ${./expected-bookmarks.html}
+          ${./expected-bookmarks-attrset.html}
       '';
     }
   );

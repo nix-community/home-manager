@@ -155,9 +155,9 @@ let
           let
             modifier = config.wayland.windowManager.sway.config.modifier;
           in lib.mkOptionDefault {
-            "''${modifier}+Return" = "exec ${cfg.config.terminal}";
+            "''${modifier}+Return" = "exec ''${cfg.config.terminal}";
             "''${modifier}+Shift+q" = "kill";
-            "''${modifier}+d" = "exec ${cfg.config.menu}";
+            "''${modifier}+d" = "exec ''${cfg.config.menu}";
           }
         '';
       };
@@ -262,6 +262,26 @@ let
             "Return" = "mode default";
           };
         };
+        defaultText = lib.literalExpression ''
+          {
+            resize = {
+              # Binds arrow keys to resizing commands
+              ''${cfg.config.left}" = "resize shrink width 10 px";
+              ''${cfg.config.down}" = "resize grow height 10 px";
+              ''${cfg.config.up}" = "resize shrink height 10 px";
+              ''${cfg.config.right}" = "resize grow width 10 px";
+
+              "Left" = "resize shrink width 10 px";
+              "Down" = "resize grow height 10 px";
+              "Up" = "resize shrink height 10 px";
+              "Right" = "resize grow width 10 px";
+
+              # Exit resize mode
+              "Escape" = "mode default";
+              "Return" = "mode default";
+            };
+          }
+        '';
         description = ''
           An attribute set that defines binding modes and keybindings
           inside them
@@ -393,7 +413,12 @@ let
 
   variables = concatStringsSep " " cfg.systemd.variables;
   extraCommands = concatStringsSep " && " cfg.systemd.extraCommands;
-  systemdActivation = ''exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+  systemdActivation =
+    {
+      broker = ''exec "systemctl --user import-environment ${variables}; ${extraCommands}"'';
+      dbus = ''exec "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}"'';
+    }
+    .${cfg.systemd.dbusImplementation};
 
   configFile = pkgs.writeTextFile {
     name = "sway.conf";
@@ -504,7 +529,7 @@ in
         withBaseWrapper = cfg.wrapperFeatures.base;
         withGtkWrapper = cfg.wrapperFeatures.gtk;
       };
-      defaultText = lib.literalExpression "${pkgs.sway}";
+      defaultText = lib.literalExpression "\${pkgs.sway}";
       description = ''
         Sway package to use. Will override the options
         'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
@@ -553,6 +578,23 @@ in
         example = [ "--all" ];
         description = ''
           Environment variables imported into the systemd and D-Bus user environment.
+        '';
+      };
+
+      dbusImplementation = mkOption {
+        type = types.enum [
+          "dbus"
+          "broker"
+        ];
+        default = "dbus";
+        example = "broker";
+        description = ''
+          The D-Bus implementation used on the system.
+          This affects which tool is used to import environment variables when starting the Sway session.
+          On NixOS, this should match the value of the option [`services.dbus.implementation` (NixOS)](https://nixos.org/manual/nixos/stable/options#opt-services.dbus.implementation).
+          When set to `dbus`, `dbus-update-activation-environment --systemd <variables>` is run.
+          Otherwise, when set to `broker`, `systemctl --user import-environment <variables>` is run.
+          See <https://github.com/swaywm/sway/wiki#systemd-and-dbus-activation-environments> for more documentation.
         '';
       };
 
@@ -696,7 +738,8 @@ in
             BindsTo = [ "graphical-session.target" ];
             Wants = [
               "graphical-session-pre.target"
-            ] ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
+            ]
+            ++ optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
             After = [ "graphical-session-pre.target" ];
             Before = optional cfg.systemd.xdgAutostart "xdg-desktop-autostart.target";
           };

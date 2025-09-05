@@ -8,7 +8,9 @@ let
 
   cfg = config.services.getmail;
 
-  accounts = lib.filter (a: a.getmail.enable) (lib.attrValues config.accounts.email.accounts);
+  accounts = lib.filter (a: a.enable && a.getmail.enable) (
+    lib.attrValues config.accounts.email.accounts
+  );
 
   # Note: The getmail service does not expect a path, but just the filename!
   renderConfigFilepath = a: if a.primary then "getmailrc" else "getmail${a.name}";
@@ -18,6 +20,8 @@ in
   options = {
     services.getmail = {
       enable = lib.mkEnableOption "the getmail systemd service to automatically retrieve mail";
+
+      package = lib.mkPackageOption pkgs "getmail" { default = "getmail6"; };
 
       frequency = lib.mkOption {
         type = lib.types.str;
@@ -45,7 +49,7 @@ in
         Description = "getmail email fetcher";
       };
       Service = {
-        ExecStart = "${pkgs.getmail6}/bin/getmail ${configFiles}";
+        ExecStart = "${lib.getExe cfg.package} ${configFiles}";
       };
     };
 

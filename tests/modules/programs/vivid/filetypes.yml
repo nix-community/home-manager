@@ -1,0 +1,11 @@
+text:
+  licenses:
+  - LICENCE
+  - COPYRIGHT
+  special:
+  - CHANGELOG.md
+  - CODE_OF_CONDUCT.md
+  - CONTRIBUTING.md
+  todo:
+  - TODO.md
+  - TODO.txt

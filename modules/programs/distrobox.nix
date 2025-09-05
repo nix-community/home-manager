@@ -14,56 +14,84 @@ let
 
   cfg = config.programs.distrobox;
 
-  formatter = pkgs.formats.ini { listsAsDuplicateKeys = true; };
+  generateConfig = lib.generators.toKeyValue {
+    mkKeyValue =
+      name: value:
+      if lib.isString value then ''${name}="${value}"'' else "${name}=${builtins.toString value}";
+  };
+
+  iniFormat = pkgs.formats.ini { listsAsDuplicateKeys = true; };
+  iniAtomType = iniFormat.lib.types.atom;
 in
 {
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.distrobox = {
     enable = mkEnableOption "distrobox";
-    package = mkPackageOption pkgs "distrobox" { };
+    package = mkPackageOption pkgs "distrobox" { nullable = true; };
     enableSystemdUnit = mkOption {
       type = lib.types.bool;
-      default = true;
+      default = cfg.containers != { } && cfg.package != null;
+      defaultText = "config.programs.distrobox.containers != { } && config.programs.distrobox.package != null";
       example = false;
       description = ''
         Whatever to enable a Systemd Unit that automatically rebuilds your
         containers when changes are detected.
       '';
     };
-    containers = mkOption {
-      type = formatter.type;
+    settings = mkOption {
+      type = lib.types.attrsOf iniAtomType;
       default = { };
-      example = ''
-        {
-          python-project = {
-            image = "fedora:40";
-            additional_packages = "python3 git";
-            init_hooks = "pip3 install numpy pandas torch torchvision";
-          };
-
-          common-debian = {
-            image = "debian:13";
-            entry = true;
-            additional_packages = "git";
-            init_hooks = [
-              "ln -sf /usr/bin/distrobox-host-exec /usr/local/bin/docker"
-              "ln -sf /usr/bin/distrobox-host-exec /usr/local/bin/docker-compose"
-            ];
-          };
-
-          office = {
-            clone = "common-debian";
-            additional_packages = "libreoffice onlyoffice";
-            entry = true;
-          };
-
-          random-things = {
-            clone = "common-debian";
-            entry = false;
-          };
-        }
+      example = {
+        container_always_pull = "1";
+        container_generate_entry = 0;
+        container_manager = "docker";
+        container_image_default = "registry.opensuse.org/opensuse/toolbox:latest";
+        container_name_default = "test-name-1";
+        container_user_custom_home = "$HOME/.local/share/container-home-test";
+        container_init_hook = "~/.local/distrobox/a_custom_default_init_hook.sh";
+        container_pre_init_hook = "~/a_custom_default_pre_init_hook.sh";
+        container_manager_additional_flags = "--env-file /path/to/file --custom-flag";
+        container_additional_volumes = "/example:/example1 /example2:/example3:ro";
+        non_interactive = "1";
+        skip_workdir = "0";
+      };
+      description = ''
+        Configuration settings for Distrobox. All the available options can be found here:
+        <https://github.com/89luca89/distrobox?tab=readme-ov-file#configure-distrobox>
       '';
+    };
+    containers = mkOption {
+      inherit (iniFormat) type;
+      default = { };
+      example = {
+        python-project = {
+          image = "fedora:40";
+          additional_packages = "python3 git";
+          init_hooks = "pip3 install numpy pandas torch torchvision";
+        };
+
+        common-debian = {
+          image = "debian:13";
+          entry = true;
+          additional_packages = "git";
+          init_hooks = [
+            "ln -sf /usr/bin/distrobox-host-exec /usr/local/bin/docker"
+            "ln -sf /usr/bin/distrobox-host-exec /usr/local/bin/docker-compose"
+          ];
+        };
+
+        office = {
+          clone = "common-debian";
+          additional_packages = "libreoffice onlyoffice";
+          entry = true;
+        };
+
+        random-things = {
+          clone = "common-debian";
+          entry = false;
+        };
+      };
       description = ''
         A set of containers and all its respective configurations. Each option can be either a
         bool, string or a list of strings. If passed a list, the option will be repeated for each element.
@@ -76,15 +104,28 @@ in
   config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.distrobox" pkgs lib.platforms.linux)
+      {
+        assertion = cfg.enableSystemdUnit -> (cfg.containers != { });
+        message = "Cannot set `programs.distrobox.enableSystemdUnit` if `programs.distrobox.containers` is unset.";
+      }
+      {
+        assertion = cfg.enableSystemdUnit -> (cfg.package != null);
+        message = "Cannot set `programs.distrobox.enableSystemdUnit` if `programs.distrobox.package` is set to null.";
+      }
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."distrobox/containers.ini".source = (
-      formatter.generate "containers.ini" cfg.containers
-    );
+    xdg.configFile = {
+      "distrobox/containers.ini" = mkIf (cfg.containers != { }) {
+        source = iniFormat.generate "distrobox-containers.ini" cfg.containers;
+      };
+      "distrobox/distrobox.conf" = mkIf (cfg.settings != { }) {
+        text = generateConfig cfg.settings;
+      };
+    };
 
-    systemd.user.services.distrobox-home-manager = mkIf cfg.enableSystemdUnit {
+    systemd.user.services.distrobox-home-manager = mkIf (cfg.enableSystemdUnit && cfg.package != null) {
       Unit.Description = "Build the containers declared in ~/.config/distrobox/containers.ini";
       Install.WantedBy = [ "default.target" ];
 

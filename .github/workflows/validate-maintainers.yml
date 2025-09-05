@@ -1,0 +1,49 @@
+name: Validate maintainers.nix
+on:
+  pull_request:
+    paths: ["modules/lib/maintainers.nix"]
+  workflow_dispatch:
+    inputs:
+      run_tests:
+        description: 'Run validation tests'
+        required: false
+        default: true
+        type: boolean
+jobs:
+  validate-maintainers:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'nix-community'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Get Nixpkgs revision from flake.lock
+        id: get-nixpkgs
+        run: |
+          echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
+      - name: Validate Nix syntax
+        run: ./lib/python/validate-maintainers-syntax.py
+      - name: Validate maintainer entries
+        run: ./lib/python/validate-maintainer-entries.py
+      - name: Check for duplicate maintainers
+        run: ./lib/python/check-duplicate-maintainers.py
+      - name: Test generation
+        if: inputs.run_tests == true
+        run: |
+          echo "🔍 Testing all-maintainers.nix generation..."
+          ./lib/python/generate-all-maintainers.py
+
+          echo "🔍 Validating generated file..."
+          if nix eval --file ./all-maintainers.nix --json > /dev/null; then
+            echo "✅ Generated file has valid Nix syntax"
+          else
+            echo "❌ Generated file has invalid Nix syntax"
+            exit 1
+          fi
+      - name: Summary
+        run: |
+          echo "✅ All validation checks passed!"
+          echo "📋 The maintainers.nix file is ready for merge"

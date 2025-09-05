@@ -1,1 +1,5 @@
-{ cachix = ./basic-setup.nix; }
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  cachix = ./basic-setup.nix;
+}

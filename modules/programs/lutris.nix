@@ -137,6 +137,7 @@ in
   config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.lutris" pkgs lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "programs.lutris" pkgs lib.platforms.x86_64)
     ];
     warnings =
       let

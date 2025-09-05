@@ -8,7 +8,7 @@ let
   inherit (lib) mkIf;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.ilaumjd ];
+  meta.maintainers = [ lib.maintainers.ilaumjd ];
 
   options.programs.thefuck = {
     enable = lib.mkEnableOption "thefuck - magnificent app that corrects your previous console command";

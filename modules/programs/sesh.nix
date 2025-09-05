@@ -19,7 +19,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.michaelvanstraten ];
+  meta.maintainers = [ lib.maintainers.michaelvanstraten ];
 
   options.programs.sesh = {
     enable = mkEnableOption "the sesh terminal session manager";
@@ -93,7 +93,7 @@ in
 
         programs.tmux.extraConfig = ''
           bind-key "${cfg.tmuxKey}" run-shell "sesh connect \"$(
-            sesh list ${args} | fzf-tmux -p 55%,60% \
+            sesh list ${args} | fzf --tmux 80%,70% \
               --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
               --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
               --bind 'tab:down,btab:up' \
@@ -102,7 +102,9 @@ in
               --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list ${args} -c)' \
               --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list ${args} -z)' \
               --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
-              --bind 'ctrl-d:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list ${args})' \
+              --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list ${args})' \
+              --preview-window 'right:55%' \
+              --preview 'sesh preview {}' \
               -- ${fzf-args}
           )\""
         '';

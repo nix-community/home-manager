@@ -34,6 +34,10 @@ in
         assertFileContent \
           "home-files/${cfg.profilesPath}/extensions/browser-extension-data/uBlock0@raymondhill.net/storage.js" \
           ${./expected-storage.js}
+
+        assertFileContent \
+          "home-files/${cfg.profilesPath}/extensions/user.js" \
+          ${./expected-user.js}
       '';
     }
   );

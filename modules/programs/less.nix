@@ -10,23 +10,45 @@ in
 {
   meta.maintainers = [ lib.maintainers.pamplemousse ];
 
+  imports = [
+    (lib.mkRenamedOptionModule [ "programs" "less" "keys" ] [ "programs" "less" "config" ])
+  ];
+
   options = {
     programs.less = {
       enable = lib.mkEnableOption "less, opposite of more";
 
       package = lib.mkPackageOption pkgs "less" { nullable = true; };
 
-      keys = lib.mkOption {
+      config = lib.mkOption {
         type = lib.types.lines;
         default = "";
         example = ''
+          #command
           s        back-line
           t        forw-line
         '';
         description = ''
-          Extra configuration for {command}`less` written to
+          Configuration for {command}`less`, written to
           {file}`$XDG_CONFIG_HOME/lesskey`.
         '';
+      };
+
+      options = lib.mkOption {
+        type =
+          with lib.types;
+          attrsOf (oneOf [
+            bool
+            int
+            str
+          ]);
+        default = { };
+        description = "GNU-style options to be set via {env}`$LESS`.";
+        example = {
+          RAW-CONTROL-CHARS = true;
+          quiet = true;
+          wheel-lines = 3;
+        };
       };
     };
   };
@@ -34,6 +56,13 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."lesskey".text = cfg.keys;
+    xdg.configFile."lesskey" = lib.mkIf (cfg.config != "") { text = cfg.config; };
+
+    programs.less.config = lib.mkIf (cfg.options != { }) (
+      lib.mkBefore ''
+        #env
+        LESS = ${lib.cli.toGNUCommandLineShell { } cfg.options}
+      ''
+    );
   };
 }

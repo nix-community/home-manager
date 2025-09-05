@@ -44,6 +44,8 @@ in
         '';
       };
 
+      package = lib.mkPackageOption pkgs "udiskie" { };
+
       settings = mkOption {
         type = yaml.type;
         default = { };
@@ -133,7 +135,7 @@ in
       };
 
       Service.ExecStart = toString (
-        [ "${pkgs.udiskie}/bin/udiskie" ]
+        [ (lib.getExe' cfg.package "udiskie") ]
         ++ lib.optional config.xsession.preferStatusNotifierItems "--appindicator"
       );
 

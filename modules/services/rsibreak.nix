@@ -12,9 +12,9 @@ let
 in
 {
   options.services.rsibreak = {
-
     enable = lib.mkEnableOption "rsibreak";
 
+    package = lib.mkPackageOption pkgs "rsibreak" { };
   };
 
   config = lib.mkIf cfg.enable {
@@ -22,7 +22,7 @@ in
       (lib.hm.assertions.assertPlatform "services.rsibreak" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ pkgs.rsibreak ];
+    home.packages = [ cfg.package ];
     systemd.user.services.rsibreak = {
       Unit = {
         Description = "RSI break timer";
@@ -36,7 +36,7 @@ in
 
       Service = {
         Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
-        ExecStart = "${pkgs.rsibreak}/bin/rsibreak";
+        ExecStart = lib.getExe cfg.package;
       };
     };
   };

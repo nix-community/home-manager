@@ -16,6 +16,8 @@ in
         Devilspie2, a window matching utility, allowing the user to
         perform scripted actions on windows as they are created'';
 
+      package = lib.mkPackageOption pkgs "devilspie2" { };
+
       config = lib.mkOption {
         type = lib.types.lines;
         default = "";
@@ -37,7 +39,7 @@ in
     ];
 
     systemd.user.services.devilspie2 = {
-      Service.ExecStart = "${pkgs.devilspie2}/bin/devilspie2";
+      Service.ExecStart = "${lib.getExe cfg.package}";
       Unit = {
         Description = "devilspie2";
         After = [ "graphical-session.target" ];

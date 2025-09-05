@@ -3,10 +3,6 @@ description: File a bug/issue
 title: 'bug: '
 labels: [bug, triage]
 
-# We cannot use nix-community/home-manager
-# See https://github.com/dear-github/dear-github/issues/170
-assignees: [rycee, berbiche]
-
 body:
 - type: checkboxes
   attributes:
@@ -40,7 +36,6 @@ body:
     label: Maintainer CC
     description: |
       Please @ people who are in the `meta.maintainers` list of the offending module.
-      If in doubt, check `git blame` for whoever last touched something.
   validations:
     required: false
 - type: textarea

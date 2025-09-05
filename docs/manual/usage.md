@@ -61,4 +61,5 @@ usage/dotfiles.md
 usage/graphical.md
 usage/gpu-non-nixos.md
 usage/updating.md
+usage/upgrading.md
 ```

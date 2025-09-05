@@ -15,6 +15,8 @@ in
     services.pasystray = {
       enable = lib.mkEnableOption "PulseAudio system tray";
 
+      package = lib.mkPackageOption pkgs "pasystray" { };
+
       extraOptions = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
@@ -54,7 +56,7 @@ in
             ];
           in
           [ "PATH=${toolPaths}" ];
-        ExecStart = lib.escapeShellArgs ([ "${pkgs.pasystray}/bin/pasystray" ] ++ cfg.extraOptions);
+        ExecStart = lib.escapeShellArgs ([ (lib.getExe cfg.package) ] ++ cfg.extraOptions);
       };
     };
   };

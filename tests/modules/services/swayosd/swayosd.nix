@@ -7,7 +7,6 @@
       name = "swayosd";
       outPath = "@swayosd@";
     };
-    display = "DISPLAY";
     stylePath = "/etc/xdg/swayosd/style.css";
     topMargin = 0.1;
   };
@@ -20,7 +19,7 @@
         WantedBy=graphical-session.target
 
         [Service]
-        ExecStart=@swayosd@/bin/swayosd-server --display DISPLAY --style /etc/xdg/swayosd/style.css --top-margin 0.100000
+        ExecStart=@swayosd@/bin/swayosd-server --style /etc/xdg/swayosd/style.css --top-margin 0.100000
         Restart=always
         RestartSec=2s
         Type=simple

@@ -177,38 +177,38 @@ in
                   description = "Settings to write to app.json.";
                   type = with types; attrsOf anything;
                   default = cfg.defaultSettings.app;
+                  defaultText = literalExpression "config.programs.obsidian.defaultSettings.app";
                 };
 
                 appearance = mkOption {
                   description = "Settings to write to appearance.json.";
                   type = with types; attrsOf anything;
                   default = cfg.defaultSettings.appearance;
+                  defaultText = literalExpression "config.programs.obsidian.defaultSettings.appearance";
                 };
 
                 corePlugins =
                   let
-                    corePluginsOptions =
-                      { config, ... }:
-                      {
-                        options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = true;
-                            description = "Whether to enable the plugin.";
-                          };
+                    corePluginsOptions = {
+                      options = {
+                        enable = mkOption {
+                          type = types.bool;
+                          default = true;
+                          description = "Whether to enable the plugin.";
+                        };
 
-                          name = mkOption {
-                            type = types.enum corePlugins;
-                            description = "The plugin.";
-                          };
+                        name = mkOption {
+                          type = types.enum corePlugins;
+                          description = "The plugin.";
+                        };
 
-                          settings = mkOption {
-                            type = with types; attrsOf anything;
-                            description = "Plugin settings to include.";
-                            default = { };
-                          };
+                        settings = mkOption {
+                          type = with types; attrsOf anything;
+                          description = "Plugin settings to include.";
+                          default = { };
                         };
                       };
+                    };
                   in
                   mkOption {
                     description = "Core plugins to activate.";
@@ -216,37 +216,37 @@ in
                       with types;
                       listOf (coercedTo (enum corePlugins) (p: { name = p; }) (submodule corePluginsOptions));
                     default = cfg.defaultSettings.corePlugins;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.corePlugins";
                   };
 
                 communityPlugins =
                   let
-                    communityPluginsOptions =
-                      { config, ... }:
-                      {
-                        options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = true;
-                            description = "Whether to enable the plugin.";
-                          };
+                    communityPluginsOptions = {
+                      options = {
+                        enable = mkOption {
+                          type = types.bool;
+                          default = true;
+                          description = "Whether to enable the plugin.";
+                        };
 
-                          pkg = mkOption {
-                            type = types.package;
-                            description = "The plugin package.";
-                          };
+                        pkg = mkOption {
+                          type = types.package;
+                          description = "The plugin package.";
+                        };
 
-                          settings = mkOption {
-                            type = with types; attrsOf anything;
-                            description = "Settings to include in the plugin's `data.json`.";
-                            default = { };
-                          };
+                        settings = mkOption {
+                          type = with types; attrsOf anything;
+                          description = "Settings to include in the plugin's `data.json`.";
+                          default = { };
                         };
                       };
+                    };
                   in
                   mkOption {
                     description = "Community plugins to install and activate.";
                     type = with types; listOf (coercedTo package (p: { pkg = p; }) (submodule communityPluginsOptions));
                     default = cfg.defaultSettings.communityPlugins;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.communityPlugins";
                   };
 
                 cssSnippets =
@@ -291,56 +291,55 @@ in
                       with types;
                       listOf (coercedTo (addCheck path checkCssPath) (p: { source = p; }) (submodule cssSnippetsOptions));
                     default = cfg.defaultSettings.cssSnippets;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.cssSnippets";
                   };
 
                 themes =
                   let
-                    themesOptions =
-                      { config, ... }:
-                      {
-                        options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = true;
-                            description = "Whether to set the theme as active.";
-                          };
+                    themesOptions = {
+                      options = {
+                        enable = mkOption {
+                          type = types.bool;
+                          default = true;
+                          description = "Whether to set the theme as active.";
+                        };
 
-                          pkg = mkOption {
-                            type = types.package;
-                            description = "The theme package.";
-                          };
+                        pkg = mkOption {
+                          type = types.package;
+                          description = "The theme package.";
                         };
                       };
+                    };
                   in
                   mkOption {
                     description = "Themes to install.";
                     type = with types; listOf (coercedTo package (p: { pkg = p; }) (submodule themesOptions));
                     default = cfg.defaultSettings.themes;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.themes";
                   };
 
                 hotkeys =
                   let
-                    hotkeysOptions =
-                      { config, ... }:
-                      {
-                        options = {
-                          modifiers = mkOption {
-                            type = with types; listOf str;
-                            description = "The hotkey modifiers.";
-                            default = [ ];
-                          };
+                    hotkeysOptions = {
+                      options = {
+                        modifiers = mkOption {
+                          type = with types; listOf str;
+                          description = "The hotkey modifiers.";
+                          default = [ ];
+                        };
 
-                          key = mkOption {
-                            type = types.str;
-                            description = "The hotkey.";
-                          };
+                        key = mkOption {
+                          type = types.str;
+                          description = "The hotkey.";
                         };
                       };
+                    };
                   in
                   mkOption {
                     description = "Hotkeys to configure.";
                     type = with types; attrsOf (listOf (submodule hotkeysOptions));
                     default = cfg.defaultSettings.hotkeys;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.hotkeys";
                   };
 
                 extraFiles =
@@ -375,6 +374,7 @@ in
                     description = "Extra files to link to the vault directory.";
                     type = with types; attrsOf (submodule extraFilesOptions);
                     default = cfg.defaultSettings.extraFiles;
+                    defaultText = literalExpression "config.programs.obsidian.defaultSettings.extraFiles";
                   };
               };
             };
@@ -540,13 +540,12 @@ in
         vaults = builtins.listToAttrs (
           builtins.map (vault: {
             name = builtins.hashString "md5" vault.target;
-            value =
-              {
-                path = "${config.home.homeDirectory}/${vault.target}";
-              }
-              // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
-                open = true;
-              });
+            value = {
+              path = "${config.home.homeDirectory}/${vault.target}";
+            }
+            // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
+              open = true;
+            });
           }) vaults
         );
         updateDisabled = true;

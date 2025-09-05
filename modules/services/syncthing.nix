@@ -199,6 +199,9 @@ let
       syncthing_password=$(${cat} ${cfg.passwordFile})
       curl -X PATCH -d '{"password": "'$syncthing_password'"}' ${curlAddressArgs "/rest/config/gui"}
     ''
+    + lib.optionalString (cfg.guiAddress != null) ''
+      curl -X PATCH -d '{"address": "'${cfg.guiAddress}'"}' ${curlAddressArgs "/rest/config/gui"}
+    ''
     + ''
       # restart Syncthing if required
       if curl ${curlAddressArgs "/rest/config/restart-required"} |

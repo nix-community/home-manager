@@ -6,6 +6,7 @@
 }:
 let
   inherit (lib)
+    getExe'
     mkEnableOption
     mkOption
     optional
@@ -25,6 +26,8 @@ in
   ];
 
   options.services.barrier = {
+
+    package = lib.mkPackageOption pkgs "barrier" { };
 
     client = {
 
@@ -81,7 +84,7 @@ in
       Service.ExecStart =
         with cfg.client;
         toString (
-          [ "${pkgs.barrier}/bin/barrierc" ]
+          [ "${getExe' cfg.package "barrierc"}" ]
           ++ optional (name != null) "--name ${name}"
           ++ optional (!enableCrypto) "--disable-crypto"
           ++ optional enableDragDrop "--enable-drag-drop"

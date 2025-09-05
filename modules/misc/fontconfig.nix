@@ -17,7 +17,10 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.rycee ];
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    rycee
+  ];
 
   imports = [
     (lib.mkRenamedOptionModule
@@ -87,6 +90,41 @@ in
           '';
         };
       };
+
+      antialiasing = lib.mkOption {
+        type = with lib.types; nullOr bool;
+        default = null;
+        description = "Whether to enable font antialiasing.";
+        example = true;
+      };
+      hinting = lib.mkOption {
+        type =
+          with lib.types;
+          nullOr (enum [
+            "none"
+            "slight"
+            "medium"
+            "full"
+          ]);
+        default = null;
+        description = "The font hinting mode.";
+        example = "slight";
+      };
+      subpixelRendering = lib.mkOption {
+        type =
+          with lib.types;
+          nullOr (enum [
+            "none"
+            "rgb"
+            "bgr"
+            "vertical-rgb"
+            "vertical-bgr"
+          ]);
+        default = null;
+        description = "The sub-pixel rendering mode.";
+        example = "rgb";
+      };
+
     };
   };
 
@@ -153,6 +191,42 @@ in
 
           <cachedir>${config.home.path}/lib/fontconfig/cache</cachedir>
         '';
+
+        "fontconfig/conf.d/10-hm-rendering.conf" =
+          let
+            set =
+              name: value:
+              let
+                xmlValue =
+                  if builtins.isBool value then
+                    "<bool>${lib.boolToString value}</bool>"
+                  else if builtins.isString value then
+                    "<const>${value}</const>"
+                  else
+                    throw ("expected bool or string but got ${builtins.typeOf value}: ${toString value}");
+              in
+              ''
+                <match target="font">
+                  <edit mode="assign" name="${name}">
+                    ${xmlValue}
+                  </edit>
+                </match>
+              '';
+            content =
+              lib.optional (cfg.antialiasing != null) (set "antialias" cfg.antialiasing)
+              ++ lib.optionals (cfg.hinting != null) [
+                (set "hinting" true)
+                (set "hintstyle" ("hint" + cfg.hinting))
+              ]
+              ++ lib.optional (cfg.subpixelRendering != null) (
+                set "rgba" (builtins.replaceStrings [ "ertical-" ] [ "" ] cfg.subpixelRendering)
+              );
+          in
+          lib.mkIf (builtins.length content > 0) {
+            text = mkFontconfigConf (
+              lib.concatStrings ([ "<description>Set the rendering mode</description>\n" ] ++ content)
+            );
+          };
 
         "fontconfig/conf.d/52-hm-default-fonts.conf".text =
           let

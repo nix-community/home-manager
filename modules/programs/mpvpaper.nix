@@ -55,7 +55,11 @@ in
     ];
 
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
-    xdg.configFile."mpvpaper/pauselist".text = mkIf (cfg.pauseList != "") cfg.pauseList;
-    xdg.configFile."mpvpaper/stoplist".text = mkIf (cfg.stopList != "") cfg.stopList;
+    xdg.configFile."mpvpaper/pauselist" = mkIf (cfg.pauseList != "") {
+      text = cfg.pauseList;
+    };
+    xdg.configFile."mpvpaper/stoplist" = mkIf (cfg.stopList != "") {
+      text = cfg.stopList;
+    };
   };
 }

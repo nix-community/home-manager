@@ -38,6 +38,10 @@
       [ ]
       [ null ]
     ];
+    duplicateChildren._children = [
+      { child = [ 2 ]; }
+      { child = [ 1 ]; }
+    ];
     extraAttrs = {
       _args = [
         2
@@ -50,6 +54,15 @@
       nested = {
         a = 1;
         b = null;
+      };
+    };
+    argsAndProps = {
+      _args = [
+        1
+        2
+      ];
+      _props = {
+        a = 3;
       };
     };
     listInAttrsInList = {

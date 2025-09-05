@@ -40,7 +40,7 @@ let
     if hasShellIntegrationEmbedded then
       ''
         if [[ $options[zle] = on ]]; then
-          eval "$(${getExe cfg.package} --zsh)"
+          source <(${getExe cfg.package} --zsh)
         fi
       ''
     else
@@ -203,8 +203,7 @@ in
         FZF_CTRL_T_OPTS = cfg.fileWidgetOptions;
         FZF_DEFAULT_COMMAND = cfg.defaultCommand;
         FZF_DEFAULT_OPTS =
-          cfg.defaultOptions
-          ++ lib.optionals (cfg.colors != { }) [ "--color ${renderedColors cfg.colors}" ];
+          cfg.defaultOptions ++ lib.optionals (cfg.colors != { }) [ "--color ${renderedColors cfg.colors}" ];
         FZF_TMUX = if cfg.tmux.enableShellIntegration then "1" else null;
         FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
       }

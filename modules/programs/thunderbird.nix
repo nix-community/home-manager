@@ -32,11 +32,22 @@ let
 
   moduleName = "programs.thunderbird";
 
-  enabledAccounts = attrValues (
-    lib.filterAttrs (_: a: a.thunderbird.enable) config.accounts.email.accounts
-  );
+  addId = map (a: a // { id = builtins.hashString "sha256" a.name; });
 
-  enabledAccountsWithId = map (a: a // { id = builtins.hashString "sha256" a.name; }) enabledAccounts;
+  enabledEmailAccounts = filter (a: a.enable && a.thunderbird.enable) (
+    attrValues config.accounts.email.accounts
+  );
+  enabledEmailAccountsWithId = addId enabledEmailAccounts;
+
+  enabledCalendarAccounts = filter (a: a.thunderbird.enable) (
+    attrValues config.accounts.calendar.accounts
+  );
+  enabledCalendarAccountsWithId = addId enabledCalendarAccounts;
+
+  enabledContactAccounts = filter (a: a.thunderbird.enable) (
+    attrValues config.accounts.contact.accounts
+  );
+  enabledContactAccountsWithId = addId enabledContactAccounts;
 
   thunderbirdConfigPath = if isDarwin then "Library/Thunderbird" else ".thunderbird";
 
@@ -48,13 +59,12 @@ let
   profilesIni =
     lib.foldl lib.recursiveUpdate
       {
-        General =
-          {
-            StartWithLastProfile = 1;
-          }
-          // lib.optionalAttrs (cfg.profileVersion != null) {
-            Version = cfg.profileVersion;
-          };
+        General = {
+          StartWithLastProfile = 1;
+        }
+        // lib.optionalAttrs (cfg.profileVersion != null) {
+          Version = cfg.profileVersion;
+        };
       }
       (
         lib.flip map profilesWithId (profile: {
@@ -82,29 +92,50 @@ let
     let
       id = getId account address;
       addressIsString = builtins.isString address;
+      identity = if addressIsString then account else address // { inherit id; };
     in
     {
-      "mail.identity.id_${id}.fullName" = if addressIsString then account.realName else address.realName;
+      "mail.identity.id_${id}.fullName" = identity.realName;
       "mail.identity.id_${id}.useremail" = if addressIsString then address else address.address;
       "mail.identity.id_${id}.valid" = true;
       "mail.identity.id_${id}.htmlSigText" =
-        if account.signature.showSignature == "none" then "" else account.signature.text;
+        if identity.signature.showSignature == "none" then "" else identity.signature.text;
     }
-    // optionalAttrs (account.gpg != null) {
+    // optionalAttrs (identity.gpg != null) {
       "mail.identity.id_${id}.attachPgpKey" = false;
       "mail.identity.id_${id}.autoEncryptDrafts" = true;
       "mail.identity.id_${id}.e2etechpref" = 0;
-      "mail.identity.id_${id}.encryptionpolicy" = if account.gpg.encryptByDefault then 2 else 0;
+      "mail.identity.id_${id}.encryptionpolicy" = if identity.gpg.encryptByDefault then 2 else 0;
       "mail.identity.id_${id}.is_gnupg_key_id" = true;
-      "mail.identity.id_${id}.last_entered_external_gnupg_key_id" = account.gpg.key;
-      "mail.identity.id_${id}.openpgp_key_id" = account.gpg.key;
+      "mail.identity.id_${id}.last_entered_external_gnupg_key_id" = identity.gpg.key;
+      "mail.identity.id_${id}.openpgp_key_id" = identity.gpg.key;
       "mail.identity.id_${id}.protectSubject" = true;
-      "mail.identity.id_${id}.sign_mail" = account.gpg.signByDefault;
+      "mail.identity.id_${id}.sign_mail" = identity.gpg.signByDefault;
     }
-    // optionalAttrs (account.smtp != null) {
-      "mail.identity.id_${id}.smtpServer" = "smtp_${account.id}";
+    // optionalAttrs (identity.smtp != null) {
+      "mail.identity.id_${id}.smtpServer" = "smtp_${identity.id}";
     }
     // account.thunderbird.perIdentitySettings id;
+
+  toThunderbirdSMTP =
+    account: address:
+    let
+      id = getId account address;
+      addressIsString = builtins.isString address;
+    in
+    optionalAttrs (!addressIsString && address.smtp != null) {
+      "mail.smtpserver.smtp_${id}.authMethod" = 3;
+      "mail.smtpserver.smtp_${id}.hostname" = address.smtp.host;
+      "mail.smtpserver.smtp_${id}.port" = if (address.smtp.port != null) then address.smtp.port else 587;
+      "mail.smtpserver.smtp_${id}.try_ssl" =
+        if !address.smtp.tls.enable then
+          0
+        else if address.smtp.tls.useStartTls then
+          2
+        else
+          3;
+      "mail.smtpserver.smtp_${id}.username" = address.userName;
+    };
 
   toThunderbirdAccount =
     account: profile:
@@ -151,6 +182,9 @@ let
           3;
       "mail.smtpserver.smtp_${id}.username" = account.userName;
     }
+    // builtins.foldl' (a: b: a // b) { } (
+      builtins.map (address: toThunderbirdSMTP account address) addresses
+    )
     // optionalAttrs (account.smtp != null && account.primary) {
       "mail.smtp.defaultserver" = "smtp_${id}";
     }
@@ -158,6 +192,57 @@ let
       builtins.map (address: toThunderbirdIdentity account address) addresses
     )
     // account.thunderbird.settings id;
+
+  toThunderbirdCalendar =
+    calendar: _:
+    let
+      inherit (calendar) id;
+    in
+    {
+      "calendar.registry.calendar_${id}.name" = calendar.name;
+      "calendar.registry.calendar_${id}.calendar-main-in-composite" = true;
+      "calendar.registry.calendar_${id}.cache.enabled" = true;
+    }
+    // optionalAttrs (calendar.remote == null) {
+      "calendar.registry.calendar_${id}.type" = "storage";
+      "calendar.registry.calendar_${id}.uri" = "moz-storage-calendar://";
+    }
+    // optionalAttrs (calendar.remote != null) {
+      "calendar.registry.calendar_${id}.type" =
+        if (calendar.remote.type == "http") then "ics" else calendar.remote.type;
+      "calendar.registry.calendar_${id}.uri" = calendar.remote.url;
+      "calendar.registry.calendar_${id}.username" = calendar.remote.userName;
+    }
+    // optionalAttrs calendar.primary {
+      "calendar.registry.calendar_${id}.calendar-main-default" = true;
+    }
+    // optionalAttrs calendar.thunderbird.readOnly {
+      "calendar.registry.calendar_${id}.readOnly" = true;
+    }
+    // optionalAttrs (calendar.thunderbird.color != "") {
+      "calendar.registry.calendar_${id}.color" = calendar.thunderbird.color;
+    };
+
+  toThunderbirdContact =
+    contact: _:
+    let
+      inherit (contact) id;
+    in
+    lib.filterAttrs (n: v: v != null) (
+      {
+        "ldap_2.servers.contact_${id}.description" = contact.name;
+        "ldap_2.servers.contact_${id}.filename" = "contact_${id}.sqlite"; # this is needed for carddav to work
+      }
+      // optionalAttrs (contact.remote == null) {
+        "ldap_2.servers.contact_${id}.dirType" = 101; # dirType 101 for local address book
+      }
+      // optionalAttrs (contact.remote != null && contact.remote.type == "carddav") {
+        "ldap_2.servers.contact_${id}.dirType" = 102; # dirType 102 for CardDAV
+        "ldap_2.servers.contact_${id}.carddav.url" = contact.remote.url;
+        "ldap_2.servers.contact_${id}.carddav.username" = contact.remote.userName;
+        "ldap_2.servers.contact_${id}.carddav.token" = contact.thunderbird.token;
+      }
+    );
 
   toThunderbirdFeed =
     feed: profile:
@@ -212,16 +297,16 @@ let
     ''
     + lib.concatStrings (map (f: mkFilterToIniString f) filters);
 
-  getEmailAccountsForProfile =
+  getAccountsForProfile =
     profileName: accounts:
     (filter (
       a: a.thunderbird.profiles == [ ] || lib.any (p: p == profileName) a.thunderbird.profiles
     ) accounts);
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [
-    d-dervishi
-    jkarlson
+  meta.maintainers = [
+    lib.hm.maintainers.d-dervishi
+    lib.maintainers.jkarlson
   ];
 
   options = {
@@ -342,6 +427,27 @@ in
                       "private"
                       "work"
                       "rss"
+                      /* Other accounts in arbitrary order */
+                    ]
+                  '';
+                };
+
+                calendarAccountsOrder = mkOption {
+                  type = types.listOf types.str;
+                  default = [ ];
+                  description = ''
+                    Custom ordering of calendar accounts. The accounts are specified
+                    by their name. For declarative accounts, it must be the name
+                    of their attribute in `config.accounts.calendar.accounts`.
+                    Enabled accounts that aren't listed here appear in an arbitrary
+                    order after the ordered accounts.
+                  '';
+                  example = ''
+                    [
+                      "my-awesome-account"
+                      "private"
+                      "work"
+                      "holidays"
                       /* Other accounts in arbitrary order */
                     ]
                   '';
@@ -608,6 +714,74 @@ in
         )
       );
     };
+
+    accounts.calendar.accounts = mkOption {
+      type =
+        with types;
+        attrsOf (submodule {
+          options.thunderbird = {
+            enable = lib.mkEnableOption "the Thunderbird mail client for this account";
+
+            profiles = mkOption {
+              type = with types; listOf str;
+              default = [ ];
+              example = literalExpression ''
+                [ "profile1" "profile2" ]
+              '';
+              description = ''
+                List of Thunderbird profiles for which this account should be
+                enabled. If this list is empty (the default), this account will
+                be enabled for all declared profiles.
+              '';
+            };
+
+            readOnly = mkOption {
+              type = bool;
+              default = false;
+              description = "Mark calendar as read only";
+            };
+
+            color = mkOption {
+              type = str;
+              default = "";
+              example = "#dc8add";
+              description = "Display color of the calendar in hex";
+            };
+          };
+        });
+    };
+
+    accounts.contact.accounts = mkOption {
+      type =
+        with types;
+        attrsOf (submodule {
+          options.thunderbird = {
+            enable = lib.mkEnableOption "the Thunderbird mail client for this account";
+
+            profiles = mkOption {
+              type = with types; listOf str;
+              default = [ ];
+              example = literalExpression ''
+                [ "profile1" "profile2" ]
+              '';
+              description = ''
+                List of Thunderbird profiles for which this account should be
+                enabled. If this list is empty (the default), this account will
+                be enabled for all declared profiles.
+              '';
+            };
+
+            token = mkOption {
+              type = nullOr str;
+              default = null;
+              example = "secret_token";
+              description = ''
+                A token is generated when adding an address book manually to Thunderbird, this can be entered here.
+              '';
+            };
+          };
+        });
+    };
   };
 
   config = mkIf cfg.enable {
@@ -635,7 +809,9 @@ in
       (
         let
           profiles = lib.catAttrs "name" profilesWithId;
-          selectedProfiles = lib.concatMap (a: a.thunderbird.profiles) enabledAccounts;
+          selectedProfiles = lib.concatMap (a: a.thunderbird.profiles) (
+            enabledEmailAccounts ++ enabledCalendarAccounts
+          );
         in
         {
           assertion = (lib.intersectLists profiles selectedProfiles) == selectedProfiles;
@@ -647,15 +823,76 @@ in
             + (concatStringsSep "," selectedProfiles);
         }
       )
+
+      (
+        let
+          foundCalendars = filter (
+            a: a.remote != null && a.remote.type == "google_calendar"
+          ) enabledCalendarAccounts;
+        in
+        {
+          assertion = length foundCalendars == 0;
+          message =
+            '''accounts.calendar.accounts.<name>.remote.type = "google_calendar";' is not directly supported by Thunderbird, ''
+            + "but declared for these calendars: "
+            + (concatStringsSep ", " (lib.catAttrs "name" foundCalendars))
+            + "\n"
+            + ''
+              To use google calendars in Thunderbird choose 'type = "caldav"' instead.
+              The 'url' will be "https://apidata.googleusercontent.com/caldav/v2/ID/events/", replace ID with the "Calendar ID".
+              The ID can be found in the Google Calendar web app: Settings > Settings for my calendars > scroll to "Integrate calendar" > copy the "Calendar ID".
+            '';
+        }
+      )
+
+      (
+        let
+          foundContacts = filter (
+            a: a.remote != null && a.remote.type == "google_contacts"
+          ) enabledContactAccounts;
+        in
+        {
+          assertion = (length foundContacts == 0);
+          message =
+            '''accounts.contact.accounts.<name>.remote.type = "google_contacts";' is not directly supported by Thunderbird, ''
+            + "but declared for these address books: "
+            + (concatStringsSep ", " (lib.catAttrs "name" foundContacts))
+            + "\n"
+            + ''
+              To use google address books in Thunderbird choose 'type = "caldav"' instead.
+              The 'url' will be something like "https://www.googleapis.com/carddav/v1/principals/[YOUR-MAIL-ADDRESS]/lists/default/".
+              To get the exact URL, add the address book to Thunderbird manually and copy the URL from the "Advanced Preferences" section.
+            '';
+        }
+      )
+
+      (
+        let
+          foundContacts = filter (a: a.remote != null && a.remote.type == "http") enabledContactAccounts;
+        in
+        {
+          assertion = (length foundContacts == 0);
+          message =
+            '''accounts.contact.accounts.<name>.remote.type = "http";' is not supported by Thunderbird, ''
+            + "but declared for these address books: "
+            + (concatStringsSep ", " (lib.catAttrs "name" foundContacts))
+            + "\n"
+            + ''
+              Use a calendar of 'type = "caldav"' instead.
+            '';
+        }
+      )
     ];
 
     home.packages = [
       cfg.package
-    ] ++ lib.optional (lib.any (p: p.withExternalGnupg) (attrValues cfg.profiles)) pkgs.gpgme;
+    ]
+    ++ lib.optional (lib.any (p: p.withExternalGnupg) (attrValues cfg.profiles)) pkgs.gpgme;
 
     mozilla.thunderbirdNativeMessagingHosts = [
       cfg.package # package configured native messaging hosts (entire mail app actually)
-    ] ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
+    ]
+    ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
 
     home.file = lib.mkMerge (
       [
@@ -677,14 +914,15 @@ in
 
           "${thunderbirdProfilesPath}/${name}/user.js" =
             let
-              emailAccounts = getEmailAccountsForProfile name enabledAccountsWithId;
+              emailAccounts = getAccountsForProfile name enabledEmailAccountsWithId;
+              calendarAccounts = getAccountsForProfile name enabledCalendarAccountsWithId;
+              contactAccounts = getAccountsForProfile name enabledContactAccountsWithId;
 
               smtp = filter (a: a.smtp != null) emailAccounts;
 
-              feedAccounts = map (f: f // { id = builtins.hashString "sha256" f.name; }) (
-                attrValues profile.feedAccounts
-              );
+              feedAccounts = addId (attrValues profile.feedAccounts);
 
+              # NOTE: `calendarAccounts` not added here as calendars are not part of the 'Mail' view
               accounts = emailAccounts ++ feedAccounts;
 
               orderedAccounts =
@@ -707,6 +945,23 @@ in
                 lib.optionals (accounts != [ ]) (
                   accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
                 );
+
+              orderedCalendarAccounts =
+                let
+                  accountNameToId = builtins.listToAttrs (
+                    map (a: {
+                      name = a.name;
+                      value = "calendar_${a.id}";
+                    }) calendarAccounts
+                  );
+
+                  accountsOrderIds = map (a: accountNameToId."${a}" or a) profile.calendarAccountsOrder;
+
+                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (name: value: value) accountNameToId);
+                in
+                lib.optionals (calendarAccounts != [ ]) (
+                  accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
+                );
             in
             {
               text = mkUserJs (builtins.foldl' (a: b: a // b) { } (
@@ -715,6 +970,10 @@ in
 
                   (optionalAttrs (length orderedAccounts != 0) {
                     "mail.accountmanager.accounts" = concatStringsSep "," orderedAccounts;
+                  })
+
+                  (optionalAttrs (length orderedCalendarAccounts != 0) {
+                    "calendar.list.sortOrder" = concatStringsSep " " orderedCalendarAccounts;
                   })
 
                   (optionalAttrs (length smtp != 0) {
@@ -726,7 +985,9 @@ in
                   profile.settings
                 ]
                 ++ (map (a: toThunderbirdAccount a profile) emailAccounts)
-                ++ (map (f: toThunderbirdFeed f profile) feedAccounts)
+                ++ (map (calendar: toThunderbirdCalendar calendar profile) calendarAccounts)
+                ++ (map (contact: toThunderbirdContact contact profile) contactAccounts)
+                ++ (map (feed: toThunderbirdFeed feed profile) feedAccounts)
               )) profile.extraConfig;
             };
 
@@ -755,7 +1016,7 @@ in
         let
           emailAccountsWithFilters = (
             filter (a: a.thunderbird.messageFilters != [ ]) (
-              getEmailAccountsForProfile name enabledAccountsWithId
+              getAccountsForProfile name enabledEmailAccountsWithId
             )
           );
         in

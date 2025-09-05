@@ -1,0 +1,286 @@
+name: Update maintainers list
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - lib/maintainers.nix
+  schedule:
+    # Update every Monday at 9 AM UTC
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+    inputs:
+      create_pr:
+        description: "Create PR even if no changes"
+        required: false
+        default: false
+        type: boolean
+jobs:
+  update-maintainers:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'nix-community' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    env:
+      pr_branch: update/maintainers-${{ github.ref_name }}
+    steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v2
+        if: vars.CI_APP_ID
+        id: app-token
+        with:
+          app-id: ${{ vars.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+      - name: Get GitHub App user info
+        id: user-info
+        if: vars.CI_APP_ID
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          slug: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          name="$slug[bot]"
+          id=$(gh api "/users/$name" --jq .id)
+          {
+            echo "id=$id"
+            echo "name=$name"
+            echo "email=$id+$name@users.noreply.github.com"
+          } >> "$GITHUB_OUTPUT"
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          token: ${{ steps.app-token.outputs.token || github.token }}
+      - name: Get Nixpkgs revision from flake.lock
+        id: get-nixpkgs
+        run: |
+          echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
+      - name: Setup Git
+        env:
+          name: ${{ steps.user-info.outputs.name || 'github-actions[bot]' }}
+          email: ${{ steps.user-info.outputs.email || '41898282+github-actions[bot]@users.noreply.github.com' }}
+        run: |
+          git config user.name "$name"
+          git config user.email "$email"
+      - name: Save old maintainers
+        id: old-maintainers
+        run: |
+          echo "📄 Saving old maintainers file for comparison..."
+          echo "old_maintainers=$(nix eval --file all-maintainers.nix --apply 'builtins.attrNames' --json 2>/dev/null || echo '[]')" >> "$GITHUB_OUTPUT"
+      - name: Generate updated maintainers list
+        run: |
+          echo "::group::📋 Generating updated generated/all-maintainers.nix..."
+          ./lib/python/generate-all-maintainers.py
+          echo "::endgroup::"
+          echo "::group::🎨 Formatting with nixfmt..."
+          nix fmt all-maintainers.nix
+          echo "::endgroup::"
+      - name: Check for changes and compare maintainers
+        id: check-changes
+        env:
+          old_maintainers: ${{ steps.old-maintainers.outputs.old_maintainers }}
+        run: |
+          if git diff --quiet all-maintainers.nix; then
+            echo "No changes to all-maintainers.nix"
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "maintainer_changes=No changes detected" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changes detected in all-maintainers.nix"
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            # Get change statistics
+            added=$(git diff --numstat all-maintainers.nix | cut -f1)
+            removed=$(git diff --numstat all-maintainers.nix | cut -f2)
+            echo "changes_summary=+$added -$removed lines" >> "$GITHUB_OUTPUT"
+
+            # Compare old and new maintainers using nix eval
+            echo "🔍 Comparing maintainers..."
+
+            # Extract maintainer names from new file
+            new_maintainers=$(nix eval --file all-maintainers.nix --apply 'builtins.attrNames' --json)
+
+            # Compare using nix eval
+            comparison=$(nix eval --expr "
+              let
+                old = builtins.fromJSON ''$old_maintainers'';
+                new = builtins.fromJSON ''$new_maintainers'';
+                oldSet = builtins.listToAttrs (map (name: { name = name; value = true; }) old);
+                newSet = builtins.listToAttrs (map (name: { name = name; value = true; }) new);
+                added = builtins.filter (name: !(oldSet ? \${name})) new;
+                removed = builtins.filter (name: !(newSet ? \${name})) old;
+              in {
+                added = added;
+                removed = removed;
+                total_old = builtins.length old;
+                total_new = builtins.length new;
+              }
+            " --json)
+
+            # Format comparison output
+            added_count=$(echo "$comparison" | jq '.added | length')
+            removed_count=$(echo "$comparison" | jq '.removed | length')
+            total_old=$(echo "$comparison" | jq '.total_old')
+            total_new=$(echo "$comparison" | jq '.total_new')
+
+            maintainer_summary="**Added:** $added_count maintainers"
+            maintainer_summary="$maintainer_summary\n**Removed:** $removed_count maintainers"
+            maintainer_summary="$maintainer_summary\n**Total:** $total_old → $total_new maintainers"
+
+            if [ "$added_count" -gt 0 ]; then
+              added_names=$(echo "$comparison" | jq -r '.added | join(", ")')
+              maintainer_summary="$maintainer_summary\n\n**✅ Added:** $added_names"
+            fi
+
+            if [ "$removed_count" -gt 0 ]; then
+              removed_names=$(echo "$comparison" | jq -r '.removed | join(", ")')
+              maintainer_summary="$maintainer_summary\n\n**❌ Removed:** $removed_names"
+            fi
+
+            echo "maintainer_changes<<EOF" >> "$GITHUB_OUTPUT"
+            echo -e "$maintainer_summary" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Validate generated file
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          echo "🔍 Validating generated all-maintainers.nix..."
+          if nix-instantiate --eval ./all-maintainers.nix --strict > /dev/null; then
+            echo "✅ Generated file has valid Nix syntax"
+          else
+            echo "❌ Generated file has invalid Nix syntax"
+            exit 1
+          fi
+      - name: Create update branch
+        run: |
+          git branch -D "$pr_branch" || echo "Nothing to delete"
+          git switch -c "$pr_branch"
+      - name: Get info on the current PR
+        id: open_pr_info
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+        run: |
+          # Query for info about the already open update PR
+          info=$(
+            gh api graphql -F owner='{owner}' -F repo='{repo}' -F branch="$pr_branch" -f query='
+              query($owner:String!, $repo:String!, $branch:String!) {
+                repository(owner: $owner, name: $repo) {
+                  pullRequests(first: 1, states: OPEN, headRefName: $branch) {
+                    nodes {
+                      number
+                      url
+                    }
+                  }
+                }
+              }
+            ' | jq --raw-output '
+              .data.repository.pullRequests.nodes[]
+              | to_entries[]
+              | "\(.key)=\(.value)"
+            '
+          )
+          if [[ -n "$info" ]]; then
+            echo "PR info:"
+            echo "$info"
+            echo "$info" >> $GITHUB_OUTPUT
+          else
+            echo "No PR is currently open"
+          fi
+      - name: Fetch current PR's branch
+        if: steps.open_pr_info.outputs.number
+        run: |
+          git fetch origin "$pr_branch"
+          git branch --set-upstream-to "origin/$pr_branch"
+      - name: Create Pull Request
+        id: create-pr
+        if: steps.check-changes.outputs.has_changes == 'true' || github.event.inputs.create_pr == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+          title: "maintainers: update all-maintainers.nix"
+          commit_body: |
+            Automated update of the master maintainers list combining:
+            - Home Manager specific maintainers from modules/lib/maintainers.nix
+            - Nixpkgs maintainers referenced in Home Manager modules
+
+            ${{ steps.check-changes.outputs.maintainer_changes }}
+
+            Generated by: lib/python/generate-all-maintainers.py
+          pr_url: ${{ steps.open_pr_info.outputs.url }}
+          pr_num: ${{ steps.open_pr_info.outputs.number }}
+          pr_body: |
+            ## 📋 Summary
+
+            This PR updates the master maintainers list (`all-maintainers.nix`) which combines:
+            - **Home Manager specific maintainers** from `modules/lib/maintainers.nix`
+            - **Nixpkgs maintainers** referenced in Home Manager modules
+
+            ## 🔄 Changes
+
+            **Statistics:** ${{ steps.check-changes.outputs.changes_summary || 'No content changes (format/comment updates only)' }}
+
+            ${{ steps.check-changes.outputs.maintainer_changes }}
+
+            The updated list includes all maintainers needed for review assignments across the Home Manager project.
+
+            ## 🤖 Automation
+
+            - **Generated by:** `lib/python/generate-all-maintainers.py`
+            - **Trigger:** ${{ github.event_name == 'schedule' && 'Scheduled weekly update' || 'Manual workflow dispatch' }}
+            - **Validation:** File syntax verified with `nix eval`
+
+            ---
+            🤖 *This PR was automatically created by the [update-maintainers workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*
+        run: |
+          # Commit the changes
+          git add all-maintainers.nix
+          git commit -m "$title" -m "$commit_body"
+
+          echo "Pushing to remote branch $pr_branch"
+          git push --force --set-upstream origin "$pr_branch"
+
+          if [ -z "$pr_num" ]; then
+            echo "Creating new pull request."
+            PR_URL=$(
+              gh pr create \
+                --title "$title" \
+                --body "$pr_body"
+            )
+          else
+            PR_URL=$pr_url
+            echo "Pull request already exists: $PR_URL"
+            gh pr edit "$pr_num" --body "$pr_body"
+          fi
+
+          echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+      - name: Summary
+        env:
+          has_changes: ${{ steps.check-changes.outputs.has_changes }}
+          changes: ${{ steps.check-changes.outputs.changes_summary }}
+          pr_url: ${{ steps.create-pr.outputs.pr_url}}
+          pr_num: ${{ steps.open_pr_info.outputs.number }}
+        run: |
+          if [[ "$has_changes" == "true" ]]; then
+              if [[ -n "$pr_num" ]]; then
+                echo "✅ Successfully updated PR with new changes."
+                echo "$changes"
+                echo "🔗 PR URL: $pr_url"
+                echo "### ✅ PR Updated" >> $GITHUB_STEP_SUMMARY
+                echo "[$pr_url]($pr_url)" >> $GITHUB_STEP_SUMMARY
+              elif [[ -n "$pr_url" ]]; then
+                echo "✅ Successfully created PR with maintainer updates."
+                echo "$changes"
+                echo "🔗 PR URL: $pr_url"
+                echo "### ✅ PR Created" >> $GITHUB_STEP_SUMMARY
+                echo "[$pr_url]($pr_url)" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "❌ Failed to create or update pull request."
+                echo "### ❌ PR Operation Failed" >> $GITHUB_STEP_SUMMARY
+                echo "A pull request was intended but the URL was not captured. Please check the logs." >> $GITHUB_STEP_SUMMARY
+              fi
+          else
+            echo "ℹ️ No changes detected - maintainers list is up to date."
+            echo "### ℹ️ No Changes" >> $GITHUB_STEP_SUMMARY
+            echo "The maintainers list is up-to-date. No PR was created." >> $GITHUB_STEP_SUMMARY
+          fi

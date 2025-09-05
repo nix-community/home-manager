@@ -14,7 +14,7 @@ let
   cfg = config.services.wlsunset;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.matrss ];
+  meta.maintainers = [ lib.maintainers.matrss ];
 
   options.services.wlsunset = {
     enable = lib.mkEnableOption "wlsunset";
@@ -99,6 +99,7 @@ in
     systemdTarget = mkOption {
       type = with types; str;
       default = config.wayland.systemd.target;
+      defaultText = lib.literalExpression "config.wayland.systemd.target";
       description = ''
         Systemd target to bind to.
       '';

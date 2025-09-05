@@ -9,7 +9,10 @@ let
   cfg = config.programs.television;
 in
 {
-  meta.maintainers = [ lib.maintainers.awwpotato ];
+  meta.maintainers = with lib.maintainers; [
+    awwpotato
+    PopeRigby
+  ];
 
   options.programs.television = {
     enable = lib.mkEnableOption "television";
@@ -43,29 +46,41 @@ in
       default = { };
       description = ''
         Each set of channels are written to
-        {file}`$XDG_CONFIG_HOME/television/NAME-channels.toml`
+        {file}`$XDG_CONFIG_HOME/television/cable/NAME.toml`
 
-        See <https://github.com/alexpasmantier/television/blob/main/docs/channels.md>
+        See <https://alexpasmantier.github.io/television/docs/Users/channels>
         for options
       '';
-      example = lib.literalExpression ''
-        {
-          my-custom = {
-            cable_channel = [
-              {
-                name = "git-log";
-                source_command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\"";
-                preview_command = "git show -p --stat --pretty=fuller --color=always {0}";
-              }
-              {
-                name = "git-log";
-                source_command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\"";
-                preview_command = "git show -p --stat --pretty=fuller --color=always {0}";
-              }
-            ];
+      example = {
+        git-diff = {
+          metadata = {
+            name = "git-diff";
+            description = "A channel to select files from git diff commands";
+            requirements = [ "git" ];
           };
-        }
-      '';
+          source = {
+            command = "git diff --name-only HEAD";
+          };
+          preview = {
+            command = "git diff HEAD --color=always -- '{}'";
+          };
+        };
+        git-log = {
+          metadata = {
+            name = "git-log";
+            description = "A channel to select from git log entries";
+            requirements = [ "git" ];
+          };
+          source = {
+            command = "git log --oneline --date=short --pretty=\"format:%h %s %an %cd\" \"$@\"";
+            output = "{split: :0}";
+          };
+          preview = {
+            command = "git show -p --stat --pretty=fuller --color=always '{0}'";
+          };
+        };
+      };
+
     };
 
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
@@ -84,7 +99,7 @@ in
       }
       (lib.mapAttrs' (
         name: value:
-        lib.nameValuePair "television/${name}-channels.toml" {
+        lib.nameValuePair "television/cable/${name}.toml" {
           source = tomlFormat.generate "television-${name}-channels" value;
         }
       ) cfg.channels)

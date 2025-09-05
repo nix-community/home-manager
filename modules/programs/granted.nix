@@ -8,7 +8,7 @@ let
   cfg = config.programs.granted;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.wcarlsen ];
+  meta.maintainers = [ lib.maintainers.wcarlsen ];
 
   options.programs.granted = {
     enable = lib.mkEnableOption "granted";

@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-01-03 09:09+0100\n"
-"PO-Revision-Date: 2024-05-31 17:09+0000\n"
-"Last-Translator: jarre johansson <jarre@johansson.today>\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2025-08-02 18:02+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/home-manager/"
 "modules/fi/>\n"
 "Language: fi\n"
@@ -17,25 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
-#: modules/files.nix:188
+#: modules/files.nix:206
 msgid "Creating home file links in %s"
 msgstr "Luodaan kotitiedostolinkkejä sijaintiin %s"
 
-#: modules/files.nix:201
+#: modules/files.nix:219
 msgid "Cleaning up orphan links from %s"
 msgstr "Siivotaan orpoja linkkejä sijainnista %s"
 
-#: modules/home-environment.nix:591
+#: modules/home-environment.nix:647
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "Luodaan uusi profiiliversio"
 
-#: modules/home-environment.nix:594
+#: modules/home-environment.nix:650
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Ei muutosta, joten käytetään uudelleen uusinta profiilin luomista"
 
-#: modules/home-environment.nix:643
+#: modules/home-environment.nix:699
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -50,10 +50,27 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"Hupsista, Nix ei onnistunut asentamaan uutta Home Manager -profiiliasi!\n"
+"\n"
+"Ehkä kyseessä on ristiriita paketin kanssa, joka asennettiin käyttämällä "
+"\"%s\"?\n"
+"Kokeile suorittaa\n"
+"\n"
+"%s\n"
+"\n"
+"Jos ristiriitainen paketti on olemassa, voit poistaa sen käyttämällä\n"
+"\n"
+"%s\n"
+"\n"
+"Yritä sitten aktivoida Home Manager -määrityksesi uudelleen."
 
-#: modules/home-environment.nix:676
+#: modules/home-environment.nix:735
 msgid "Activating %s"
 msgstr "Aktivoidaan %s"
+
+#: modules/home-environment.nix:807
+msgid "%s: unknown option '%s'"
+msgstr "%s: tuntematon optio '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
@@ -65,11 +82,11 @@ msgstr "Sopivaa profiilihakemistoa ei löytynyt, yritettiin %s ja %s"
 
 #: modules/lib-bash/activation-init.sh:106
 msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Virhe: USER on asetettu arvoksi \"%s\", mutta odotettiin arvoa \"%s\""
 
 #: modules/lib-bash/activation-init.sh:115
 msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Virhe: HOME on asetettu \"%s\":ksi, mutta odotamme \"%s\":ta"
 
 #: modules/lib-bash/activation-init.sh:132
 msgid "Starting Home Manager activation"
@@ -85,11 +102,11 @@ msgstr "Tämä on testiajo"
 
 #: modules/lib-bash/activation-init.sh:153
 msgid "This is a live run"
-msgstr ""
+msgstr "Tämä on reaaliaikainen ajo"
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Käytössä oleva Nix-versio: %s"
 
 #: modules/lib-bash/activation-init.sh:162
 msgid "Activation variables:"

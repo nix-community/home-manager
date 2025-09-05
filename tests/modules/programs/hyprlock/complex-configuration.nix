@@ -4,12 +4,20 @@
 
     settings = {
       general = {
-        disable_loading_bar = true;
         hide_cursor = true;
         ignore_empty_input = false;
-        grace = 300;
-        no_fade_in = false;
-        no_fade_out = false;
+      };
+
+      animations = {
+        enabled = true;
+        fade_in = {
+          duration = 300;
+          bezier = "easeOutQuint";
+        };
+        fade_out = {
+          duration = 300;
+          bezier = "easeOutQuint";
+        };
       };
 
       background = [

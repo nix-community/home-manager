@@ -19,6 +19,9 @@ in
       prompt = "> ";
       exchange-rates.fetching-policy = "on-first-use";
     };
+    initFile = ''
+      unit kohm: ElectricResistance = kV/A
+    '';
   };
 
   nmt.script = ''
@@ -27,8 +30,14 @@ in
       ${builtins.toFile "expected.toml" ''
         intro-banner = "short"
         prompt = "> "
+
         [exchange-rates]
         fetching-policy = "on-first-use"
+      ''}
+    assertFileExists 'home-files/${configDir}/init.nbt'
+    assertFileContent $(normalizeStorePaths 'home-files/${configDir}/init.nbt') \
+      ${builtins.toFile "expected-init.nbt" ''
+        unit kohm: ElectricResistance = kV/A
       ''}
   '';
 }

@@ -1,4 +1,6 @@
-{
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
   sketchybar = ./sketchybar.nix;
   sketchybar-directory-config = ./sketchybar-directory-config.nix;
   sketchybar-invalid-lua-config = ./sketchybar-invalid-lua-config.nix;

@@ -11,7 +11,7 @@ let
 
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ soywod ];
+  meta.maintainers = with lib.maintainers; [ soywod ];
 
   options.programs.comodoro = {
     enable = lib.mkEnableOption "Comodoro, a CLI to manage your time";

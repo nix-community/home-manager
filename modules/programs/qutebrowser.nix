@@ -65,7 +65,7 @@ in
   options.programs.qutebrowser = {
     enable = lib.mkEnableOption "qutebrowser";
 
-    package = lib.mkPackageOption pkgs "qutebrowser" { };
+    package = lib.mkPackageOption pkgs "qutebrowser" { nullable = true; };
 
     aliases = mkOption {
       type = types.attrsOf types.str;
@@ -338,7 +338,7 @@ in
       ) pkgs.linkFarmFromDrvs "greasemonkey-userscripts" cfg.greasemonkey;
     in
     mkIf cfg.enable {
-      home.packages = [ cfg.package ];
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
       home.file.".qutebrowser/config.py" = mkIf pkgs.stdenv.hostPlatform.isDarwin {
         text = qutebrowserConfig;

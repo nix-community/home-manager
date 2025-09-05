@@ -35,17 +35,16 @@
       };
     };
 
-    nmt.script =
-      ''
-        assertFileExists home-files/.config/kitty/kitty.conf
-        assertFileContent \
-          home-files/.config/kitty/kitty.conf \
-          ${./example-settings-expected.conf}
-      ''
-      + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
-        assertFileContent \
-          home-files/.config/kitty/macos-launch-services-cmdline \
-          ${./example-macos-launch-services-cmdline}
-      '';
+    nmt.script = ''
+      assertFileExists home-files/.config/kitty/kitty.conf
+      assertFileContent \
+        home-files/.config/kitty/kitty.conf \
+        ${./example-settings-expected.conf}
+    ''
+    + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+      assertFileContent \
+        home-files/.config/kitty/macos-launch-services-cmdline \
+        ${./example-macos-launch-services-cmdline}
+    '';
   };
 }

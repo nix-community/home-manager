@@ -1,0 +1,1 @@
+{ meli = ./meli.nix; }

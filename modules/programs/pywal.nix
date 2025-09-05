@@ -27,7 +27,7 @@ in
       (cat ${config.xdg.cacheHome}/wal/sequences &)
     '';
 
-    programs.kitty.extraConfig = ''
+    programs.kitty.extraConfig = lib.mkBefore ''
       include ${config.xdg.cacheHome}/wal/colors-kitty.conf
     '';
 

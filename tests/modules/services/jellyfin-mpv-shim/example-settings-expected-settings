@@ -1,0 +1,8 @@
+{
+     "allow_transcode_to_h265": false,
+     "always_transcode": false,
+     "audio_output": "hdmi",
+     "auto_play": true,
+     "fullscreen": true,
+     "player_name": "mpv-shim"
+}

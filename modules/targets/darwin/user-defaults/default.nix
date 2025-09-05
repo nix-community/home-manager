@@ -11,7 +11,8 @@ let
   mkActivationCmds =
     isLocal: settings:
     let
-      toDefaultsFile = domain: attrs: pkgs.writeText "${domain}.plist" (lib.generators.toPlist { } attrs);
+      toDefaultsFile =
+        domain: attrs: pkgs.writeText "${domain}.plist" (lib.generators.toPlist { escape = true; } attrs);
 
       cliFlags = lib.optionalString isLocal "-currentHost";
 

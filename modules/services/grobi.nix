@@ -19,6 +19,8 @@ in
     services.grobi = {
       enable = lib.mkEnableOption "the grobi display setup daemon";
 
+      package = lib.mkPackageOption pkgs "grobi" { };
+
       executeAfter = mkOption {
         type = with types; listOf str;
         default = [ ];
@@ -43,8 +45,8 @@ in
               primary = true;
               atomic = true;
               execute_after = [
-                "${pkgs.xorg.xrandr}/bin/xrandr --dpi 96"
-                "${pkgs.xmonad-with-packages}/bin/xmonad --restart";
+                "''${pkgs.xorg.xrandr}/bin/xrandr --dpi 96"
+                "''${pkgs.xmonad-with-packages}/bin/xmonad --restart";
               ];
             }
             {
@@ -54,8 +56,8 @@ in
               primary = true;
               atomic = true;
               execute_after = [
-                "${pkgs.xorg.xrandr}/bin/xrandr --dpi 120"
-                "${pkgs.xmonad-with-packages}/bin/xmonad --restart";
+                "''${pkgs.xorg.xrandr}/bin/xrandr --dpi 120"
+                "''${pkgs.xmonad-with-packages}/bin/xmonad --restart";
               ];
             }
           ]
@@ -87,7 +89,7 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.grobi}/bin/grobi watch -v";
+        ExecStart = "${lib.getExe cfg.package} watch -v";
         Restart = "always";
         RestartSec = "2s";
         Environment = [ "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.bash}/bin" ];

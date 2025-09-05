@@ -1,5 +1,6 @@
 finder = "rofi"
 server_endpoint = "/run/user/<user-id>/clipcat/grpc.sock"
+
 [dmenu]
 line_length = 100
 menu_length = 30

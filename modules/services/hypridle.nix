@@ -41,7 +41,7 @@ in
       description = ''
         Hypridle configuration written in Nix. Entries with the same key
         should be written as lists. Variables' and colors' names should be
-        quoted. See <https://wiki.hyprland.org/Hypr-Ecosystem/hypridle/> for more examples.
+        quoted. See <https://wiki.hypr.land/Hypr-Ecosystem/hypridle/> for more examples.
       '';
       example = lib.literalExpression ''
         {
@@ -74,6 +74,14 @@ in
         List of prefix of attributes to source at the top of the config.
       '';
     };
+
+    systemdTarget = lib.mkOption {
+      type = lib.types.str;
+      default = config.wayland.systemd.target;
+      defaultText = lib.literalExpression "config.wayland.systemd.target";
+      example = "hyprland-session.target";
+      description = "Systemd target to bind to.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -86,14 +94,14 @@ in
 
     systemd.user.services.hypridle = lib.mkIf (cfg.package != null) {
       Install = {
-        WantedBy = [ config.wayland.systemd.target ];
+        WantedBy = [ cfg.systemdTarget ];
       };
 
       Unit = {
         ConditionEnvironment = "WAYLAND_DISPLAY";
         Description = "hypridle";
-        After = [ config.wayland.systemd.target ];
-        PartOf = [ config.wayland.systemd.target ];
+        After = [ cfg.systemdTarget ];
+        PartOf = [ cfg.systemdTarget ];
         X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
           "${config.xdg.configFile."hypr/hypridle.conf".source}"
         ];

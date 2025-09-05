@@ -27,7 +27,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.cwyc ];
+  meta.maintainers = [ lib.maintainers.cwyc ];
 
   options.programs.ne = {
     enable = lib.mkEnableOption "ne";
@@ -99,6 +99,7 @@ in
       ".ne/.keys" = mkIf (cfg.keybindings != "") { text = cfg.keybindings; };
       ".ne/.extensions" = mkIf (cfg.virtualExtensions != "") { text = cfg.virtualExtensions; };
       ".ne/.menus" = mkIf (cfg.menus != "") { text = cfg.menus; };
-    } // autoPrefFiles;
+    }
+    // autoPrefFiles;
   };
 }

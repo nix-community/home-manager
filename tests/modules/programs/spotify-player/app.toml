@@ -1,5 +1,6 @@
 playback_window_position = "Top"
 theme = "default"
+
 [copy_command]
 args = []
 command = "wl-copy"

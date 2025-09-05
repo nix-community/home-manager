@@ -22,7 +22,8 @@ let
 
   finalConfig = {
     inherit (cfg) order;
-  } // cfg.extraConfig;
+  }
+  // cfg.extraConfig;
 
   configFile = jsonFormat.generate "dwm-status.json" finalConfig;
 
@@ -78,7 +79,7 @@ in
       };
 
       Service = {
-        ExecStart = "${cfg.package}/bin/dwm-status ${configFile}";
+        ExecStart = "${cfg.package}/bin/dwm-status ${configFile} --quiet";
       };
     };
   };

@@ -54,7 +54,8 @@
           pkgs:
           pkgs.treefmt.withConfig {
             runtimeInputs = with pkgs; [
-              nixfmt-rfc-style
+              nixfmt
+              deadnix
               keep-sorted
             ];
             settings = pkgs.lib.importTOML ./treefmt.toml;
@@ -77,6 +78,10 @@
 
             create-news-entry = pkgs.writeShellScriptBin "create-news-entry" ''
               ./modules/misc/news/create-news-entry.sh
+            '';
+
+            tests = pkgs.writeShellScriptBin "tests" ''
+              exec ${pkgs.python3}/bin/python3 ${self}/tests/tests.py "$@"
             '';
 
             docs-html = docs.manual.html;

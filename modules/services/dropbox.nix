@@ -8,7 +8,7 @@ let
 
   cfg = config.services.dropbox;
   baseDir = ".dropbox-hm";
-  dropboxCmd = "${pkgs.dropbox-cli}/bin/dropbox";
+  dropboxCmd = "${lib.getExe' cfg.package "dropbox"}";
   homeBaseDir = "${config.home.homeDirectory}/${baseDir}";
 
 in
@@ -18,6 +18,8 @@ in
   options = {
     services.dropbox = {
       enable = lib.mkEnableOption "Dropbox daemon";
+
+      package = lib.mkPackageOption pkgs "dropbox-cli" { };
 
       path = lib.mkOption {
         type = lib.types.path;
@@ -34,7 +36,7 @@ in
       (lib.hm.assertions.assertPlatform "services.dropbox" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ pkgs.dropbox-cli ];
+    home.packages = [ cfg.package ];
 
     systemd.user.services.dropbox = {
       Unit = {

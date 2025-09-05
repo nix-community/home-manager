@@ -86,7 +86,9 @@ in
         Description = "wpaperd";
         PartOf = [ config.wayland.systemd.target ];
         After = [ config.wayland.systemd.target ];
-        X-Restart-Triggers = [ "${config.xdg.configFile."wpaperd/wallpaper.toml".source}" ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."wpaperd/wallpaper.toml".source}"
+        ];
       };
 
       Service = {

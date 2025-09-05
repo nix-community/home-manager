@@ -58,7 +58,7 @@ in
             { run = "escape"; on = [ "<Esc>" ]; }
             { run = "backspace"; on = [ "<Backspace>" ]; }
           ];
-          manager.prepend_keymap = [
+          mgr.prepend_keymap = [
             { run = "escape"; on = [ "<Esc>" ]; }
             { run = "quit"; on = [ "q" ]; }
             { run = "close"; on = [ "<C-q>" ]; }
@@ -82,7 +82,7 @@ in
           log = {
             enabled = false;
           };
-          manager = {
+          mgr = {
             show_hidden = false;
             sort_by = "mtime";
             sort_dir_first = true;
@@ -227,34 +227,33 @@ in
         nushell.extraConfig = mkIf cfg.enableNushellIntegration nushellIntegration;
       };
 
-    xdg.configFile =
-      {
-        "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
-          source = tomlFormat.generate "yazi-keymap" cfg.keymap;
-        };
-        "yazi/yazi.toml" = mkIf (cfg.settings != { }) {
-          source = tomlFormat.generate "yazi-settings" cfg.settings;
-        };
-        "yazi/theme.toml" = mkIf (cfg.theme != { }) {
-          source = tomlFormat.generate "yazi-theme" cfg.theme;
-        };
-        "yazi/init.lua" = mkIf (cfg.initLua != null) (
-          if builtins.isPath cfg.initLua then
-            {
-              source = cfg.initLua;
-            }
-          else
-            {
-              text = cfg.initLua;
-            }
-        );
-      }
-      // (lib.mapAttrs' (
-        name: value: lib.nameValuePair "yazi/flavors/${name}.yazi" { source = value; }
-      ) cfg.flavors)
-      // (lib.mapAttrs' (
-        name: value: lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value; }
-      ) cfg.plugins);
+    xdg.configFile = {
+      "yazi/keymap.toml" = mkIf (cfg.keymap != { }) {
+        source = tomlFormat.generate "yazi-keymap" cfg.keymap;
+      };
+      "yazi/yazi.toml" = mkIf (cfg.settings != { }) {
+        source = tomlFormat.generate "yazi-settings" cfg.settings;
+      };
+      "yazi/theme.toml" = mkIf (cfg.theme != { }) {
+        source = tomlFormat.generate "yazi-theme" cfg.theme;
+      };
+      "yazi/init.lua" = mkIf (cfg.initLua != null) (
+        if builtins.isPath cfg.initLua then
+          {
+            source = cfg.initLua;
+          }
+        else
+          {
+            text = cfg.initLua;
+          }
+      );
+    }
+    // (lib.mapAttrs' (
+      name: value: lib.nameValuePair "yazi/flavors/${name}.yazi" { source = value; }
+    ) cfg.flavors)
+    // (lib.mapAttrs' (
+      name: value: lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value; }
+    ) cfg.plugins);
 
     warnings = lib.filter (s: s != "") (
       lib.concatLists [

@@ -46,6 +46,7 @@ in
         _: usercfg:
         let
           username = usercfg.home.username;
+          driverVersion = if cfg.enableLegacyProfileManagement then "0" else "1";
         in
         lib.nameValuePair "home-manager-${utils.escapeSystemdPath username}" {
           description = "Home Manager environment for ${username}";
@@ -94,7 +95,7 @@ in
                     | ${sed} -En '/^(${exportedSystemdVariables})=/s/^/export /p'
                   )"
 
-                  exec "$1/activate"
+                  exec "$1/activate" --driver-version ${driverVersion}
                 '';
               in
               "${setupEnv} ${usercfg.home.activationPackage}";

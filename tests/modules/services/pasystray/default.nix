@@ -1,1 +1,5 @@
-{ pasystray-service = ./service.nix; }
+{ lib, pkgs, ... }:
+
+lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  pasystray-service = ./service.nix;
+}

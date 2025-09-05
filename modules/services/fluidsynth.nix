@@ -17,9 +17,14 @@ in
     services.fluidsynth = {
       enable = lib.mkEnableOption "fluidsynth midi synthesizer";
 
+      package = lib.mkPackageOption pkgs "fluidsynth" { };
+
       soundFont = mkOption {
         type = types.path;
         default = "${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
+        defaultText = lib.literalExpression ''
+          "''${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
+        '';
         description = ''
           The soundfont file to use, in SoundFont 2 format.
         '';
@@ -68,7 +73,7 @@ in
       };
 
       Service = {
-        ExecStart = "${pkgs.fluidsynth}/bin/fluidsynth -a pulseaudio -si ${lib.concatStringsSep " " cfg.extraOptions} ${cfg.soundFont}";
+        ExecStart = "${lib.getExe cfg.package} -a pulseaudio -si ${lib.concatStringsSep " " cfg.extraOptions} ${cfg.soundFont}";
       };
     };
   };

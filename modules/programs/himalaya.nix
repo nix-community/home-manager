@@ -34,7 +34,7 @@ let
   mkAccountConfig =
     _: account:
     let
-      notmuchEnabled = account.notmuch.enable;
+      notmuchEnabled = account.enable && account.notmuch.enable;
       imapEnabled = !isNull account.imap && !notmuchEnabled;
       maildirEnabled = !isNull account.maildir && !imapEnabled && !notmuchEnabled;
 
@@ -107,7 +107,7 @@ let
 
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [
+  meta.maintainers = with lib.maintainers; [
     soywod
     toastal
   ];
@@ -165,7 +165,7 @@ in
       configFile."himalaya/config.toml".source =
         let
           enabledAccounts = lib.filterAttrs (
-            _: account: account.himalaya.enable
+            _: account: account.enable && account.himalaya.enable
           ) config.accounts.email.accounts;
           accountsConfig = lib.mapAttrs mkAccountConfig enabledAccounts;
           globalConfig = compactAttrs himalaya.settings;

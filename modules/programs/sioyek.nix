@@ -81,5 +81,5 @@ in
     ]
   );
 
-  meta.maintainers = [ lib.hm.maintainers.podocarp ];
+  meta.maintainers = [ lib.maintainers.podocarp ];
 }

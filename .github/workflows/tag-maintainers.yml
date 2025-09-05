@@ -1,0 +1,81 @@
+name: Tag Module Maintainers
+on:
+  pull_request_target:
+    types: [opened, ready_for_review, reopened, synchronize]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.run_id }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  tag-maintainers:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.state == 'open'
+    steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v2
+        if: vars.CI_APP_ID
+        id: app-token
+        with:
+          app-id: ${{ vars.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - name: Get Nixpkgs revision from flake.lock
+        id: get-nixpkgs
+        run: |
+          echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Get changed files
+        id: changed-files
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          CHANGED_FILES=$(gh pr diff $PR_NUMBER --name-only | grep '^modules/' | grep -v '^modules/\(po\|.*\/news\)/' || true)
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Extract Maintainers
+        id: extract-maintainers
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.changed_files }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          echo "Extracting maintainers from changed files..."
+          MAINTAINERS=$(lib/python/extract-maintainers.py \
+            --changed-files "$CHANGED_FILES" \
+            --pr-author "$PR_AUTHOR")
+          echo "maintainers=$MAINTAINERS" >> $GITHUB_OUTPUT
+          echo "Found maintainers: $MAINTAINERS"
+      - name: Manage Reviewers
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          MAINTAINERS: ${{ steps.extract-maintainers.outputs.maintainers }}
+          CHANGED_FILES: ${{ steps.changed-files.outputs.changed_files }}
+          BOT_NAME: ${{ steps.app-token.outputs.app-slug || 'github-actions' }}
+        run: |
+          ./lib/python/manage-reviewers.py \
+            --owner "$OWNER" \
+            --repo "$REPO" \
+            --pr-number "$PR_NUMBER" \
+            --pr-author "$PR_AUTHOR" \
+            --current-maintainers "$MAINTAINERS" \
+            --changed-files "$CHANGED_FILES" \
+            --bot-user-name "$BOT_NAME"

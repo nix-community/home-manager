@@ -52,5 +52,5 @@ in
     xdg.configFile."xmobar/.xmobarrc".text = cfg.extraConfig;
   };
 
-  meta.maintainers = [ lib.hm.maintainers.t4ccer ];
+  meta.maintainers = [ lib.maintainers.t4ccer ];
 }

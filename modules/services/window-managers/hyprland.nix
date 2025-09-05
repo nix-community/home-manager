@@ -32,7 +32,7 @@ in
 
     (lib.mkRemovedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "xwayland" "hidpi" ]
-      "HiDPI patches are deprecated. Refer to https://wiki.hyprland.org/Configuring/XWayland"
+      "HiDPI patches are deprecated. Refer to https://wiki.hypr.land/Configuring/XWayland"
     )
 
     (lib.mkRemovedOptionModule # \
@@ -189,7 +189,7 @@ in
       description = ''
         Hyprland configuration written in Nix. Entries with the same key
         should be written as lists. Variables' and colors' names should be
-        quoted. See <https://wiki.hyprland.org> for more examples.
+        quoted. See <https://wiki.hypr.land> for more examples.
 
         ::: {.note}
         Use the [](#opt-wayland.windowManager.hyprland.plugins) option to
@@ -212,6 +212,70 @@ in
             "$mod, mouse:273, resizewindow"
             "$mod ALT, mouse:272, resizewindow"
           ];
+        }
+      '';
+    };
+
+    submaps = lib.mkOption {
+      description = ''
+        Attribute set of Hyprland submaps.
+
+        See <https://wiki.hypr.land/Configuring/Binds#submaps> to learn about submaps
+      '';
+      default = { };
+      type = lib.types.attrsOf (
+        lib.types.submodule (
+          { name, config, ... }:
+          {
+            options = {
+              settings = lib.mkOption {
+                type = (with lib.types; attrsOf (listOf str)) // {
+                  description = "Hyprland binds";
+                };
+                default = { };
+                description = ''
+                  Hyprland binds to be put in the submap
+                '';
+                example = lib.literalExpression ''
+                  {
+                    binde = [
+                     ", right, resizeactive, 10 0"
+                     ", left, resizeactive, -10 0"
+                     ", up, resizeactive, 0 -10"
+                     ", down, resizeactive, 0 10"
+                    ];
+
+                    bind = [
+                      ", escape, submap, reset"
+                    ];
+                  }
+                '';
+              };
+            };
+          }
+        )
+      );
+      example = lib.literalExpression ''
+        {
+          # submap to change window focus with vim keys
+          move_focus = {
+            settings = {
+              bind = [
+                ", h, movefocus, l"
+                ", j, movefocus, d"
+                ", k, movefocus, u"
+                ", l, movefocus, r"
+
+                ", escape, submap, reset"
+              ];
+            };
+          };
+
+          other_submap = {
+            settings = {
+              # ...
+            };
+          };
         }
       '';
     };
@@ -250,7 +314,8 @@ in
         "$"
         "bezier"
         "name"
-      ] ++ lib.optionals cfg.sourceFirst [ "source" ];
+        "output"
+      ];
       example = [
         "$"
         "bezier"
@@ -264,6 +329,10 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "wayland.windowManager.hyprland" pkgs lib.platforms.linux)
+      {
+        assertion = !builtins.hasAttr "reset" cfg.submaps;
+        message = "Submaps can't be named 'reset'. The name 'reset' is reserved in order to have a way to switch to the default submap; as if 'reset' was its name.";
+      }
     ];
 
     warnings =
@@ -271,8 +340,21 @@ in
         inconsistent =
           (cfg.systemd.enable || cfg.plugins != [ ]) && cfg.extraConfig == "" && cfg.settings == { };
         warning = "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake.";
+
+        filterNonBinds =
+          attrs:
+          builtins.filter (n: builtins.match ''bind[[:lower:]]*'' n == null) (builtins.attrNames attrs);
+
+        # attrset of { <submap name> = <list of non bind* keys>; } for all submaps
+        submapWarningsAttrset = builtins.mapAttrs (
+          name: submap: filterNonBinds submap.settings
+        ) cfg.submaps;
+
+        submapWarnings = lib.mapAttrsToList (submapName: nonBinds: ''
+          wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${builtins.toString nonBinds}], which will have no effect in a submap
+        '') (lib.filterAttrs (n: v: v != [ ]) submapWarningsAttrset);
       in
-      lib.optional inconsistent warning;
+      submapWarnings ++ lib.optional inconsistent warning;
 
     home.packages = lib.mkIf (cfg.package != null) (
       [ cfg.finalPackage ] ++ lib.optional cfg.xwayland.enable pkgs.xwayland
@@ -282,6 +364,8 @@ in
       let
         shouldGenerate =
           cfg.systemd.enable || cfg.extraConfig != "" || cfg.settings != { } || cfg.plugins != [ ];
+
+        importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
 
         pluginsToHyprconf =
           plugins:
@@ -294,8 +378,20 @@ in
                 in
                 map (p: "hyprctl plugin load ${mkEntry p}") cfg.plugins;
             };
-            inherit (cfg) importantPrefixes;
+            inherit importantPrefixes;
           };
+
+        mkSubMap = name: attrs: ''
+          submap = ${name}
+          ${
+            lib.hm.generators.toHyprconf {
+              attrs = attrs.settings;
+              indentLevel = 0;
+            }
+          }submap = reset
+        '';
+
+        submapsToHyprConf = lib.concatMapAttrsStringSep "\n" mkSubMap;
       in
       lib.mkIf shouldGenerate {
         text =
@@ -304,9 +400,10 @@ in
           + lib.optionalString (cfg.settings != { }) (
             lib.hm.generators.toHyprconf {
               attrs = cfg.settings;
-              inherit (cfg) importantPrefixes;
+              inherit importantPrefixes;
             }
           )
+          + lib.optionalString (cfg.submaps != { }) (submapsToHyprConf cfg.submaps)
           + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
         onChange = lib.mkIf (cfg.package != null) ''
@@ -334,7 +431,8 @@ in
         BindsTo = [ "graphical-session.target" ];
         Wants = [
           "graphical-session-pre.target"
-        ] ++ lib.optional cfg.systemd.enableXdgAutostart "xdg-desktop-autostart.target";
+        ]
+        ++ lib.optional cfg.systemd.enableXdgAutostart "xdg-desktop-autostart.target";
         After = [ "graphical-session-pre.target" ];
         Before = lib.mkIf cfg.systemd.enableXdgAutostart [ "xdg-desktop-autostart.target" ];
       };

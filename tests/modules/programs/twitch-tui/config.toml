@@ -1,0 +1,12 @@
+[terminal]
+delay = 30
+first_state = "dashboard"
+log_file = ""
+log_level = "info"
+maximum_messages = 500
+
+[twitch]
+channel = ""
+server = "wss://eventsub.wss.twitch.tv/ws"
+token = ""
+username = ""

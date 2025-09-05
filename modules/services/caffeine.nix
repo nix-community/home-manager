@@ -13,6 +13,8 @@ in
   options = {
     services.caffeine = {
       enable = lib.mkEnableOption "Caffeine service";
+
+      package = lib.mkPackageOption pkgs "caffeine-ng" { };
     };
   };
 
@@ -36,7 +38,7 @@ in
         ProtectSystem = "full";
         Type = "exec";
         Slice = "session.slice";
-        ExecStart = "${pkgs.caffeine-ng}/bin/caffeine";
+        ExecStart = "${lib.getExe' cfg.package "caffeine"}";
       };
     };
   };

@@ -27,7 +27,7 @@ in
     systemd.user.services.polkit-gnome = {
       Unit = {
         Description = "GNOME PolicyKit Agent";
-        After = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
       };
 

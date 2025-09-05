@@ -10,7 +10,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.tensor5 ];
+  meta.maintainers = [ lib.maintainers.tensor5 ];
 
   options.programs.openstackclient = {
     enable = lib.mkEnableOption "OpenStack command-line client";

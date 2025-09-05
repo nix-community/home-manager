@@ -8,12 +8,26 @@ let
   inherit (lib)
     literalExpression
     mkIf
+    mkMerge
     mkOption
     types
     ;
 
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
+  json5 = pkgs.python3Packages.toPythonApplication pkgs.python3Packages.json5;
+  impureConfigMerger = empty: jqOperation: path: staticSettings: ''
+    mkdir -p $(dirname ${lib.escapeShellArg path})
+    if [ ! -e ${lib.escapeShellArg path} ]; then
+      # No file? Create it
+      echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
+    fi
+    dynamic="$(${lib.getExe json5} --as-json ${lib.escapeShellArg path} 2>/dev/null || echo ${lib.escapeShellArg empty})"
+    static="$(cat ${lib.escapeShellArg staticSettings})"
+    config="$(${lib.getExe pkgs.jq} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
+    printf '%s\n' "$config" > ${lib.escapeShellArg path}
+    unset config
+  '';
 
   mergedSettings =
     cfg.userSettings
@@ -31,7 +45,7 @@ in
     programs.zed-editor = {
       enable = lib.mkEnableOption "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
 
-      package = lib.mkPackageOption pkgs "zed-editor" { };
+      package = lib.mkPackageOption pkgs "zed-editor" { nullable = true; };
 
       extraPackages = mkOption {
         type = with types; listOf package;
@@ -63,7 +77,7 @@ in
 
       userKeymaps = mkOption {
         type = jsonFormat.type;
-        default = { };
+        default = [ ];
         example = literalExpression ''
           [
             {
@@ -76,6 +90,26 @@ in
         '';
         description = ''
           Configuration written to Zed's {file}`keymap.json`.
+        '';
+      };
+
+      userTasks = mkOption {
+        type = jsonFormat.type;
+        default = [ ];
+        example = literalExpression ''
+          [
+            {
+              label = "Format Code";
+              command = "nix";
+              args = [ "fmt" "$ZED_WORKTREE_ROOT" ];
+            }
+          ]
+        '';
+        description = ''
+          Configuration written to Zed's {file}`tasks.json`.
+
+          [List of tasks](https://zed.dev/docs/tasks) that can be run from the
+          command palette.
         '';
       };
 
@@ -128,7 +162,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages =
+    home.packages = mkIf (cfg.package != null) (
       if cfg.extraPackages != [ ] then
         [
           (pkgs.symlinkJoin {
@@ -143,7 +177,8 @@ in
           })
         ]
       else
-        [ cfg.package ];
+        [ cfg.package ]
+    );
 
     home.file = mkIf (cfg.installRemoteServer && (cfg.package ? remote_server)) (
       let
@@ -155,34 +190,50 @@ in
       }
     );
 
-    xdg.configFile =
-      lib.attrsets.unionOfDisjoint
-        {
-          "zed/settings.json" = (
-            mkIf (mergedSettings != { }) {
-              source = jsonFormat.generate "zed-user-settings" mergedSettings;
-            }
-          );
-
-          "zed/keymap.json" = (
-            mkIf (cfg.userKeymaps != { }) {
-              source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
-            }
-          );
-        }
-        (
-          lib.mapAttrs' (
-            n: v:
-            lib.nameValuePair "zed/themes/${n}.json" {
-              source =
-                if lib.isString v then
-                  pkgs.writeText "zed-theme-${n}" v
-                else if builtins.isPath v || lib.isStorePath v then
-                  v
-                else
-                  jsonFormat.generate "zed-theme-${n}" v;
-            }
-          ) cfg.themes
+    home.activation = mkMerge [
+      (mkIf (mergedSettings != { }) {
+        zedSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          impureConfigMerger "{}" "$dynamic * $static" "${config.xdg.configHome}/zed/settings.json" (
+            jsonFormat.generate "zed-user-settings" mergedSettings
+          )
         );
+      })
+      (mkIf (cfg.userKeymaps != [ ]) {
+        zedKeymapActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          impureConfigMerger "[]"
+            "$dynamic + $static | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
+            "${config.xdg.configHome}/zed/keymap.json"
+            (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
+        );
+      })
+      (mkIf (cfg.userTasks != [ ]) {
+        zedTasksActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          impureConfigMerger "[]"
+            "$dynamic + $static | group_by(.label) | map(reduce .[] as $item ({}; . * $item))"
+            "${config.xdg.configHome}/zed/tasks.json"
+            (jsonFormat.generate "zed-user-tasks" cfg.userTasks)
+        );
+      })
+    ];
+
+    xdg.configFile = lib.mapAttrs' (
+      n: v:
+      lib.nameValuePair "zed/themes/${n}.json" {
+        source =
+          if lib.isString v then
+            pkgs.writeText "zed-theme-${n}" v
+          else if builtins.isPath v || lib.isStorePath v then
+            v
+          else
+            jsonFormat.generate "zed-theme-${n}" v;
+      }
+    ) cfg.themes;
+
+    assertions = [
+      {
+        assertion = cfg.extraPackages != [ ] -> cfg.package != null;
+        message = "{option}programs.zed-editor.extraPackages requires non null {option}programs.zed-editor.package";
+      }
+    ];
   };
 }

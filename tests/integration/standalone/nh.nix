@@ -80,8 +80,11 @@ in
         "cp -v ${./alice-home-next.nix} ${home}/.config/home-manager/home.nix"
       ]))
 
+      # The default configuration creates this link on activation.
+      machine.fail("test -L '${home}/.cache/.keep'")
+
       actual = succeed_as_alice("nh home switch --no-nom '${home}/.config/home-manager'")
-      expected = "Starting Home Manager activation"
+      expected = "home-manager-generation.drv"
       assert expected in actual, \
         f"expected nh home switch to contain {expected}, but got {actual}"
 

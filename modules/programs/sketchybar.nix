@@ -176,10 +176,11 @@ in
       let
         resolvedExtraLuaPackages = cfg.extraLuaPackages pkgs.lua54Packages;
 
-        pathPackages =
-          [ cfg.package ]
-          ++ cfg.extraPackages
-          ++ lib.optional (cfg.configType == "lua" && cfg.luaPackage != null) cfg.luaPackage;
+        pathPackages = [
+          cfg.package
+        ]
+        ++ cfg.extraPackages
+        ++ lib.optional (cfg.configType == "lua" && cfg.luaPackage != null) cfg.luaPackage;
 
         luaPaths = lib.filter (x: x != "") [
           (lib.optionalString (cfg.configType == "lua" && resolvedExtraLuaPackages != [ ]) (
@@ -247,6 +248,7 @@ in
           postBuild = ''
             wrapProgram $out/bin/sketchybar ${lib.escapeShellArgs makeWrapperArgs}
           '';
+          inherit (cfg.package) meta;
         }
       else
         cfg.package;

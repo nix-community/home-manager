@@ -31,16 +31,20 @@ let
       osConfig = config;
       osClass = _class;
       modulesPath = builtins.toString ../modules;
-    } // cfg.extraSpecialArgs;
+    }
+    // cfg.extraSpecialArgs;
+
     modules = [
       (
         { name, ... }:
         {
-          imports = import ../modules/modules.nix {
-            inherit pkgs;
-            lib = extendedLib;
-            useNixpkgsModule = !cfg.useGlobalPkgs;
-          };
+          imports =
+            import ../modules/modules.nix {
+              inherit pkgs;
+              lib = extendedLib;
+              useNixpkgsModule = !cfg.useGlobalPkgs;
+            }
+            ++ cfg.sharedModules;
 
           config = {
             submoduleSupport.enable = true;
@@ -62,7 +66,7 @@ let
           };
         }
       )
-    ] ++ cfg.sharedModules;
+    ];
   };
 
 in
@@ -107,6 +111,18 @@ in
     };
 
     verbose = mkEnableOption "verbose output on activation";
+
+    enableLegacyProfileManagement = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to enable legacy profile management during activation. When
+        enabled, the Home Manager activation will produce a per-user
+        `home-manager` Nix profile, just like in the standalone installation of
+        Home Manager. Typically, this is not desired when Home Manager is
+        embedded in the system configuration.
+      '';
+    };
 
     users = mkOption {
       type = types.attrsOf hmModule;
