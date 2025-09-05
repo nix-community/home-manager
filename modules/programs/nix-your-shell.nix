@@ -22,29 +22,45 @@ in
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    nix-output-monitor = {
+      enable = lib.mkEnableOption ''
+        [nix-output-monitor](https://github.com/maralorn/nix-output-monitor).
+        Pipe your nix-build output through the nix-output-monitor a.k.a nom to get additional information while building
+      '';
+
+      package = lib.mkPackageOption pkgs "nix-output-monitor" { };
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = [
+      cfg.package
+      (lib.mkIf cfg.nix-output-monitor.enable cfg.nix-output-monitor.package)
+    ];
 
-    programs = {
-      fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
-        ${lib.getExe cfg.package} fish | source
-      '';
+    programs =
+      let
+        nom = if cfg.nix-output-monitor.enable then "--nom" else "";
+      in
+      {
+        fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
+          ${lib.getExe cfg.package} ${nom} fish | source
+        '';
 
-      nushell = lib.mkIf cfg.enableNushellIntegration {
-        extraConfig = ''
-          source ${
-            pkgs.runCommand "nix-your-shell-nushell-config.nu" { } ''
-              ${lib.getExe cfg.package} nu >> "$out"
-            ''
-          }
+        nushell = lib.mkIf cfg.enableNushellIntegration {
+          extraConfig = ''
+            source ${
+              pkgs.runCommand "nix-your-shell-nushell-config.nu" { } ''
+                ${lib.getExe cfg.package} ${nom} nu >> "$out"
+              ''
+            }
+          '';
+        };
+
+        zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
+          ${lib.getExe cfg.package} ${nom} zsh | source /dev/stdin
         '';
       };
-
-      zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
-        ${lib.getExe cfg.package} zsh | source /dev/stdin
-      '';
-    };
   };
 }
