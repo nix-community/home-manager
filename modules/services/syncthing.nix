@@ -213,11 +213,11 @@ let
 
   defaultSyncthingArgs = [
     "${syncthing}"
-    "-no-browser"
-    "-no-restart"
-    "-no-upgrade"
-    "-gui-address=${if isUnixGui then "unix://" else ""}${cfg.guiAddress}"
-    "-logflags=0"
+    "serve"
+    "--no-browser"
+    "--no-restart"
+    "--no-upgrade"
+    "--gui-address=${if isUnixGui then "unix://" else ""}${cfg.guiAddress}"
   ];
 
   syncthingArgs = defaultSyncthingArgs ++ cfg.extraOptions;

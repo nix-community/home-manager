@@ -55,10 +55,12 @@ in
   # Helper function to generate the settings attribute set for a given version
   mkGtkSettings =
     {
+      gtkVersion,
       font,
       theme,
       iconTheme,
       cursorTheme,
+      colorScheme,
     }:
     optionalAttrs (font != null) {
       gtk-font-name =
@@ -72,7 +74,10 @@ in
     // optionalAttrs (cursorTheme != null) { "gtk-cursor-theme-name" = cursorTheme.name; }
     // optionalAttrs (cursorTheme != null && cursorTheme.size != null) {
       "gtk-cursor-theme-size" = cursorTheme.size;
-    };
+    }
+    // optionalAttrs (colorScheme == "dark") { "gtk-application-prefer-dark-theme" = true; }
+    // optionalAttrs (gtkVersion == 4 && colorScheme == "dark") { "gtk-interface-color-scheme" = 2; }
+    // optionalAttrs (gtkVersion == 4 && colorScheme == "light") { "gtk-interface-color-scheme" = 3; };
 
   # Package collection helper for all GTK versions
   collectGtkPackages =

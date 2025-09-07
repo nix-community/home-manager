@@ -73,6 +73,17 @@ in
       default = null;
       description = "Default cursor theme for all GTK versions.";
     };
+
+    colorScheme = mkOption {
+      type = types.nullOr (
+        types.enum [
+          "dark"
+          "light"
+        ]
+      );
+      default = null;
+      description = "Default color scheme for all GTK versions";
+    };
   };
 
   config = mkIf cfg.enable {

@@ -76,6 +76,18 @@ in
       description = "Cursor theme for GTK 3 applications.";
     };
 
+    colorScheme = mkOption {
+      type = types.nullOr (
+        types.enum [
+          "dark"
+          "light"
+        ]
+      );
+      default = cfg.colorScheme;
+      defaultText = literalExpression "config.gtk.colorScheme";
+      description = "Color scheme for GTK 3 applications.";
+    };
+
     extraConfig = mkOption {
       type =
         with types;
@@ -112,11 +124,13 @@ in
         text = toIni {
           Settings =
             gtkLib.mkGtkSettings {
+              gtkVersion = 3;
               inherit (cfg3)
                 font
                 theme
                 iconTheme
                 cursorTheme
+                colorScheme
                 ;
             }
             // cfg3.extraConfig;
@@ -134,11 +148,13 @@ in
     dconf.settings."org/gnome/desktop/interface" =
       let
         settings = gtkLib.mkGtkSettings {
+          gtkVersion = 3;
           inherit (cfg3)
             font
             theme
             iconTheme
             cursorTheme
+            colorScheme
             ;
         };
       in
@@ -148,6 +164,7 @@ in
         "icon-theme" = settings."gtk-icon-theme-name" or null;
         "cursor-theme" = settings."gtk-cursor-theme-name" or null;
         "cursor-size" = settings."gtk-cursor-theme-size" or null;
+        "color-scheme" = if cfg3.colorScheme != null then "prefer-${cfg3.colorScheme}" else null;
       };
   };
 }

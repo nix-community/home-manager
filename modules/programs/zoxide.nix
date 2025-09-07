@@ -46,7 +46,7 @@ in
 
     programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration (
       # After `compInit` in `zsh`
-      lib.mkOrder 600 ''
+      lib.mkOrder 851 ''
         eval "$(${lib.getExe cfg.package} init zsh ${cfgOptions})"
       ''
     );
