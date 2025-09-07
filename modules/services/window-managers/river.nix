@@ -71,7 +71,7 @@ in
   options.wayland.windowManager.river = {
     enable = lib.mkEnableOption "the river window manager";
 
-    package = lib.mkPackageOption pkgs "river" {
+    package = lib.mkPackageOption pkgs "river-classic" {
       nullable = true;
       extraDescription = ''
         Set to `null` to not add any river package to your path.
