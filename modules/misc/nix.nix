@@ -21,7 +21,6 @@ let
     isList
     isString
     literalExpression
-    maintainers
     mapAttrsToList
     mkDefault
     mkEnableOption
