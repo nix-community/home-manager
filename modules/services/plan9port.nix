@@ -10,7 +10,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.ehmry ];
+  meta.maintainers = [ ];
 
   options.services.plan9port = {
     package = lib.mkPackageOption pkgs "plan9port" { };
