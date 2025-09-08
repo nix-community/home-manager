@@ -989,13 +989,6 @@
     name = "Daniel Wagenknecht";
     source = "home-manager";
   };
-  ehmry = {
-    email = "ehmry@posteo.net";
-    github = "ehmry";
-    githubId = 537775;
-    name = "Emery Hemingway";
-    source = "nixpkgs";
-  };
   elanora96 = {
     email = "git@elanora.lol";
     github = "elanora96";
