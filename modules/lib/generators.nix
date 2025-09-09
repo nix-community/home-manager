@@ -305,8 +305,8 @@
         map (
           directive:
           (literalValueToString directive.name)
-          + toOptParamsString (directive ? "params") directive.params
-          + lib.optionalString (directive ? "children") (
+          + toOptParamsString (directive ? "params" && directive.params != null) directive.params
+          + lib.optionalString (directive ? "children" && directive.children != null) (
             " "
             + ''
               {
