@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2024-06-17 09:46+0000\n"
-"Last-Translator: Mateusz P <medan1993@gmail.com>\n"
+"PO-Revision-Date: 2025-09-10 01:01+0000\n"
+"Last-Translator: Mateusz Kubica <mw.kubica@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/home-manager/cli/"
 "pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -28,7 +28,7 @@ msgstr "%s: brakuje wartości dla %s"
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s: %s może być użyte tylko po %s"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -119,7 +119,7 @@ msgstr "Nie mogę sprawdzić konfiguracji flake'a"
 #: home-manager/home-manager:305 home-manager/home-manager:328
 #: home-manager/home-manager:734 home-manager/home-manager:1237
 msgid "%s: unknown option '%s'"
-msgstr "%s: nieznana opcja „%s”"
+msgstr "%s: nieznana opcja '%s'"
 
 #: home-manager/home-manager:310 home-manager/home-manager:1238
 msgid "Run '%s --help' for usage help"
@@ -207,7 +207,7 @@ msgstr "Nie mogę uruchomić budowania w katalogu tylko-do-odczytu"
 
 #: home-manager/home-manager:787
 msgid "The configuration did not contain the specialisation \"%s\""
-msgstr ""
+msgstr "Konfiguracja nie zawierała specjalności \"%s\""
 
 #: home-manager/home-manager:841
 msgid "No generation with ID %s"
