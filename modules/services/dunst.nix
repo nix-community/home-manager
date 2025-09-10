@@ -59,7 +59,6 @@ let
     name = "hicolor";
     size = "32x32";
   };
-
 in
 {
   meta.maintainers = [ lib.maintainers.rycee ];
@@ -126,6 +125,16 @@ in
               timeout = 10;
             };
           };
+        '';
+      };
+
+      systemdTargets = mkOption {
+        type = with types; listOf str;
+        default = [ config.wayland.systemd.target ];
+        defaultText = literalExpression "config.wayland.systemd.target";
+        example = [ "sway-session.target" ];
+        description = ''
+          The systemd targets that will automatically start the dunst service.
         '';
       };
     };
@@ -198,8 +207,8 @@ in
         systemd.user.services.dunst = {
           Unit = {
             Description = "Dunst notification daemon";
-            After = [ config.wayland.systemd.target ];
-            PartOf = [ config.wayland.systemd.target ];
+            After = cfg.systemdTargets;
+            PartOf = cfg.systemdTargets;
           };
 
           Service = {
