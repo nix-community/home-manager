@@ -73,6 +73,10 @@ let
     (lib.mkRemovedOptionModule [ "services" "keepassx" ] ''
       KeePassX is no longer maintained.
     '')
+    (lib.mkRemovedOptionModule [ "programs" "thefuck" ] ''
+      The corresponding package was removed from nixpkgs,
+      consider using `programs.pay-respects` instead.
+    '')
   ]
   ++ (lib.concatMap
     (
