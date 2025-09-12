@@ -11,7 +11,10 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ lib.maintainers.khaneliman ];
+  meta.maintainers = with lib.maintainers; [
+    adda
+    khaneliman
+  ];
 
   options.programs.jjui = {
     enable = lib.mkEnableOption "jjui - A terminal user interface for jujutsu";
