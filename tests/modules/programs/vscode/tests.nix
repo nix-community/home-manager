@@ -1,14 +1,14 @@
 {
   programName,
   packageName ? programName,
-  configDirName ? programName,
   ...
 }:
 builtins.mapAttrs
   (
     test: module:
     import module {
-      inherit packageName configDirName;
+      inherit programName packageName;
+
       modulePath = [
         "programs"
         programName
@@ -16,9 +16,9 @@ builtins.mapAttrs
     }
   )
   {
-    "vscode-forks-${programName}-empty-profiles" = ./empty-profiles.nix;
-    "vscode-forks-${programName}-extensions-mutable" = ./extensions-mutable.nix;
-    "vscode-forks-${programName}-extensions-immutable" = ./extensions-immutable.nix;
-    "vscode-forks-${programName}-profiles-immutable" = ./profiles-immutable.nix;
-    "vscode-forks-${programName}-profiles-mutable" = ./profiles-mutable.nix;
+    "${programName}-vscode-forks-empty-profiles" = ./empty-profiles.nix;
+    "${programName}-vscode-forks-extensions-mutable" = ./extensions-mutable.nix;
+    "${programName}-vscode-forks-extensions-immutable" = ./extensions-immutable.nix;
+    "${programName}-vscode-forks-profiles-immutable" = ./profiles-immutable.nix;
+    "${programName}-vscode-forks-profiles-mutable" = ./profiles-mutable.nix;
   }

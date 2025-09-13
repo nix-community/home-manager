@@ -9,11 +9,8 @@
 }
 // (import ./tests.nix {
   programName = "vscode";
-  packageName = "vscode";
-  configDirName = "Code";
 })
 // (import ./tests.nix {
   programName = "cursor";
   packageName = "code-cursor";
-  configDirName = "Cursor";
 })

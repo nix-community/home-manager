@@ -1,8 +1,4 @@
-{
-  modulePath,
-  packageName,
-  configDirName,
-}:
+{ modulePath, packageName, ... }:
 {
   config,
   lib,
@@ -10,9 +6,17 @@
   ...
 }:
 let
+  extensionsPath =
+    {
+      vscode = ".vscode/extensions";
+      code-cursor = ".cursor/extensions";
+    }
+    .${packageName};
+
   # Create dummy VS Code extensions with different identification modes
   # - extA: has vscodeExtUniqueId → single extension id
   # - extB: has vscodeExtUniqueId → single extension id
+  #
   makeExt =
     name: extId: extraAttrs:
     pkgs.runCommand "${packageName}-${name}" ({ } // extraAttrs) ''
@@ -34,9 +38,6 @@ let
     vscodeExtUniqueId = extBId;
     vscodeExtPublisher = "publisherB";
   };
-
-  # Compute the extensions directory root for the target program
-  extensionRoot = ".${lib.toLower configDirName}/extensions";
 in
 {
   config =
@@ -46,6 +47,7 @@ in
 
       # Use a stub package and keep version >= 1.74.0 so that the
       # extensions.json logic is enabled for this test.
+      #
       package = config.lib.test.mkStubPackage {
         name = packageName;
         version = "1.75.0";
@@ -65,20 +67,17 @@ in
       nmt.script = ''
         # extensions are installed as directories with a .placeholder file
         #
-        assertDirectoryExists "home-files/${extensionRoot}"
-        assertDirectoryExists "home-files/${extensionRoot}/${extAId}"
-        assertDirectoryExists "home-files/${extensionRoot}/${extBId}"
+        assertDirectoryExists "home-files/${extensionsPath}"
+        assertDirectoryExists "home-files/${extensionsPath}/${extAId}"
+        assertDirectoryExists "home-files/${extensionsPath}/${extBId}"
 
-        assertFileExists "home-files/${extensionRoot}/${extAId}/.placeholder"
-        assertFileExists "home-files/${extensionRoot}/${extBId}/.placeholder"
+        assertFileExists "home-files/${extensionsPath}/${extAId}/.placeholder"
+        assertFileExists "home-files/${extensionsPath}/${extBId}/.placeholder"
 
-        # extensions.json is provided by the immutable combined tree
+        # extensions.json is immutable by default
         #
-        assertFileExists "home-files/${extensionRoot}/extensions.json"
-
-        # .extensions-immutable.json is not created in immutable mode
-        #
-        assertPathNotExists "home-files/${extensionRoot}/.extensions-immutable.json"
+        assertFileExists "home-files/${extensionsPath}/extensions.json"
+        assertPathNotExists "home-files/${extensionsPath}/.immutable-extensions.json"
       '';
     };
 }

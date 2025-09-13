@@ -1,8 +1,4 @@
-{
-  modulePath,
-  packageName,
-  configDirName,
-}:
+{ modulePath, packageName, ... }:
 {
   config,
   lib,
@@ -10,13 +6,21 @@
   ...
 }:
 let
-  overridePaths = {
-    code-cursor = {
-      mcp = ".cursor";
-    };
-  };
+  helpers = import ./test-helpers.nix { inherit lib pkgs packageName; };
 
-  hasOverridePath = pname: key: overridePaths ? "${pname}" && overridePaths.${pname} ? "${key}";
+  configPath =
+    {
+      vscode = helpers.mkTestAppUserDir; # user settings path
+      code-cursor = helpers.mkTestAppConfigDir; # fallback to user settings path
+    }
+    .${packageName};
+
+  mcpPath =
+    {
+      vscode = configPath; # user settings path
+      code-cursor = ".cursor"; # override mcp path to: .cursor
+    }
+    .${packageName};
 
   keybindings = [
     {
@@ -33,7 +37,7 @@ let
     }
   ];
 
-  keybindingsJson = builtins.toFile "${packageName}-keybindings.expected" ''
+  keybindingsJson = builtins.toFile "${packageName}-immutable-keybindings.json.expected" ''
     [
       {
         "key": "ctrl+c",
@@ -58,7 +62,7 @@ let
     };
   };
 
-  mcpJson = builtins.toFile "${packageName}-mcp.expected" ''
+  mcpJson = builtins.toFile "${packageName}-immutable-mcp.json.expected" ''
     {
       "servers": {
         "echo": {
@@ -72,7 +76,7 @@ let
     "files.autoSave" = "on";
   };
 
-  settingsJson = builtins.toFile "${packageName}-settings.expected" ''
+  settingsJson = builtins.toFile "${packageName}-immutable-settings.json.expected" ''
     {
       "files.autoSave": "on"
     }
@@ -89,7 +93,7 @@ let
     ];
   };
 
-  tasksJson = builtins.toFile "${packageName}-tasks.expected" ''
+  tasksJson = builtins.toFile "${packageName}-immutable-tasks.json.expected" ''
     {
       "tasks": [
         {
@@ -127,51 +131,26 @@ in
       };
     })
     // {
-      nmt.script =
-        let
-          cfg = lib.getAttrFromPath modulePath config;
+      nmt.script = ''
+        # immutable-mcp.json (dynamic path based on the package name)
+        #
+        assertFileExists "home-files/${mcpPath}/.immutable-mcp.json"
+        assertFileContent "home-files/${mcpPath}/.immutable-mcp.json" "${mcpJson}"
 
-          profileConfig =
-            profileName: key:
-            lib.concatStringsSep "/" [
-              (
-                if hasOverridePath cfg.package.pname key then
-                  overridePaths.${cfg.package.pname}.${key}
-                else if pkgs.stdenv.hostPlatform.isDarwin then
-                  "Library/Application Support/${configDirName}/User"
-                else
-                  ".config/${configDirName}/User"
-              )
-              (lib.optionalString (profileName != "default") "profiles/${profileName}")
-            ];
-        in
-        ''
-          # immutable-keybindings.json
-          #
-          assertFileExists "home-files/${profileConfig "default" "keybindings"}/.immutable-keybindings.json"
-          assertFileContent "home-files/${profileConfig "default" "keybindings"}/.immutable-keybindings.json" "${keybindingsJson}"
+        # immutable-keybindings.json
+        #
+        assertFileExists "home-files/${configPath}/.immutable-keybindings.json"
+        assertFileContent "home-files/${configPath}/.immutable-keybindings.json" "${keybindingsJson}"
 
-          # immutable-mcp.json
-          #
-          assertFileExists "home-files/${profileConfig "default" "mcp"}/.immutable-mcp.json"
-          assertFileContent "home-files/${profileConfig "default" "mcp"}/.immutable-mcp.json" "${mcpJson}"
+        # immutable-settings.json
+        #
+        assertFileExists "home-files/${configPath}/.immutable-settings.json"
+        assertFileContent "home-files/${configPath}/.immutable-settings.json" "${settingsJson}"
 
-          # immutable-settings.json
-          #
-          assertFileExists "home-files/${profileConfig "default" "settings"}/.immutable-settings.json"
-          assertFileContent "home-files/${profileConfig "default" "settings"}/.immutable-settings.json" "${settingsJson}"
-
-          # immutable-tasks.json
-          #
-          assertFileExists "home-files/${profileConfig "default" "tasks"}/.immutable-tasks.json"
-          assertFileContent "home-files/${profileConfig "default" "tasks"}/.immutable-tasks.json" "${tasksJson}"
-
-          # the mutable versions are copied only during activation
-          #
-          assertPathNotExists "home-files/${profileConfig "default" "keybindings"}keybindings.json"
-          assertPathNotExists "home-files/${profileConfig "default" "settings"}settings.json"
-          assertPathNotExists "home-files/${profileConfig "default" "mcp"}mcp.json"
-          assertPathNotExists "home-files/${profileConfig "default" "tasks"}tasks.json"
-        '';
+        # immutable-tasks.json
+        #
+        assertFileExists "home-files/${configPath}/.immutable-tasks.json"
+        assertFileContent "home-files/${configPath}/.immutable-tasks.json" "${tasksJson}"
+      '';
     };
 }
