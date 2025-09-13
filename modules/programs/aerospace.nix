@@ -255,7 +255,7 @@ in
             example = [
               "/bin/bash"
               "-c"
-              "sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE"
+              "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
             ];
             description = "Commands to run every time workspace changes.";
           };

@@ -237,7 +237,7 @@ in
       Unit = {
         Description = "Polybar status bar";
         PartOf = [ "tray.target" ];
-        X-Restart-Triggers = mkIf (configFile != null) "${configFile}";
+        X-Restart-Triggers = mkIf (configFile != null) [ "${configFile}" ];
       };
 
       Service = {

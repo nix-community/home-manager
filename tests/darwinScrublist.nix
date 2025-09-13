@@ -82,6 +82,7 @@ let
     "lapce"
     "lazydocker"
     "lazygit"
+    "lazysql"
     "ledger"
     "less"
     "lesspipe"

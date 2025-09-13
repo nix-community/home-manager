@@ -200,28 +200,30 @@ in
           };
         };
       }
-      // lib.optionalAttrs (config.wayland.windowManager.hyprland.package != null) lib.mapAttrs' (
-        name: transitionCfg:
-        lib.nameValuePair "hyprsunset-${name}" {
-          Install = { };
+      // lib.optionalAttrs (config.wayland.windowManager.hyprland.package != null) (
+        lib.mapAttrs' (
+          name: transitionCfg:
+          lib.nameValuePair "hyprsunset-${name}" {
+            Install = { };
 
-          Unit = {
-            ConditionEnvironment = "WAYLAND_DISPLAY";
-            Description = "hyprsunset transition for ${name}";
-            After = [ "hyprsunset.service" ];
-            Requires = [ "hyprsunset.service" ];
-          };
+            Unit = {
+              ConditionEnvironment = "WAYLAND_DISPLAY";
+              Description = "hyprsunset transition for ${name}";
+              After = [ "hyprsunset.service" ];
+              Requires = [ "hyprsunset.service" ];
+            };
 
-          Service = {
-            Type = "oneshot";
-            # Execute multiple requests sequentially
-            ExecStart = lib.concatMapStringsSep " && " (
-              cmd:
-              "${lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl"} hyprsunset ${lib.escapeShellArgs cmd}"
-            ) transitionCfg.requests;
-          };
-        }
-      ) cfg.transitions;
+            Service = {
+              Type = "oneshot";
+              # Execute multiple requests sequentially
+              ExecStart = lib.concatMapStringsSep " && " (
+                cmd:
+                "${lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl"} hyprsunset ${lib.escapeShellArgs cmd}"
+              ) transitionCfg.requests;
+            };
+          }
+        ) cfg.transitions
+      );
 
       timers = lib.mapAttrs' (
         name: transitionCfg:

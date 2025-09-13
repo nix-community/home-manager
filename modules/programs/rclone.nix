@@ -252,7 +252,7 @@ in
           injectSecret =
             remote:
             lib.mapAttrsToList (secret: secretFile: ''
-              if ! cat "${secretFile}"; then
+              if [[ ! -r "${secretFile}" ]]; then
                 echo "Secret \"${secretFile}\" not found"
                 cleanup
               fi

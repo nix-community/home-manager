@@ -353,7 +353,7 @@ in
             ];
             After = [ cfg.systemd.target ];
             ConditionEnvironment = "WAYLAND_DISPLAY";
-            X-Restart-Triggers =
+            X-Reload-Triggers =
               optional (settings != [ ]) "${config.xdg.configFile."waybar/config".source}"
               ++ optional (cfg.style != null) "${config.xdg.configFile."waybar/style.css".source}";
           };

@@ -3,6 +3,9 @@
   gtk-per-version-override = ./gtk-per-version-override.nix;
   gtk-selective-enable = ./gtk-selective-enable.nix;
 
+  # ColorScheme tests
+  gtk-colorscheme = ./gtk-colorscheme.nix;
+
   # GTK2
   gtk2-basic-config = ./gtk2/gtk2-basic-config.nix;
   gtk2-config-file-location = ./gtk2/gtk2-config-file-location.nix;
