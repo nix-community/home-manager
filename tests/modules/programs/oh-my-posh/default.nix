@@ -3,4 +3,5 @@
   oh-my-posh-zsh = ./zsh.nix;
   oh-my-posh-fish = ./fish.nix;
   oh-my-posh-nushell = ./nushell.nix;
+  oh-my-posh-config-file = ./config-file.nix;
 }
