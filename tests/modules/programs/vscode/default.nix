@@ -4,8 +4,6 @@
   vscode-mcp = ./mcp.nix;
   vscode-update-checks = ./update-checks.nix;
   vscode-snippets = ./snippets.nix;
-
-  vscode-forks-cursor-override-mcp-path = ./forks/cursor-override-mcp-path.nix;
 }
 // (import ./tests.nix {
   programName = "vscode";

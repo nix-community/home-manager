@@ -61,25 +61,25 @@ in
         #
         assertFileExists "home-files/${mcpPath}/mcp.json"
         assertFileContent "home-files/${mcpPath}/mcp.json" "${helpers.mcpJsonPath}"
-        assertPathNotExists "home-files/${mcpPath}/.immutable-mcp.json"
+        assertPathNotExists "home-files/${mcpPath}/.mcp-immutable.json"
 
         # keybindings.json
         #
         assertFileExists "home-files/${configPath}/keybindings.json"
         assertFileContent "home-files/${configPath}/keybindings.json" "${helpers.keybindingsJsonPath}"
-        assertPathNotExists "home-files/${configPath}/.immutable-keybindings.json"
+        assertPathNotExists "home-files/${configPath}/.keybindings-immutable.json"
 
         # settings.json
         #
         assertFileExists "home-files/${configPath}/settings.json"
         assertFileContent "home-files/${configPath}/settings.json" "${helpers.settingsJsonPath}"
-        assertPathNotExists "home-files/${configPath}/.immutable-settings.json"
+        assertPathNotExists "home-files/${configPath}/.settings-immutable.json"
 
         # tasks.json
         #
         assertFileExists "home-files/${configPath}/tasks.json"
         assertFileContent "home-files/${configPath}/tasks.json" "${helpers.tasksJsonPath}"
-        assertPathNotExists "home-files/${configPath}/.immutable-tasks.json"
+        assertPathNotExists "home-files/${configPath}/.tasks-immutable.json"
       '';
     };
 }

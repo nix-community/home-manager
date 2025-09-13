@@ -77,7 +77,7 @@ in
         # extensions.json is immutable by default
         #
         assertFileExists "home-files/${extensionsPath}/extensions.json"
-        assertPathNotExists "home-files/${extensionsPath}/.immutable-extensions.json"
+        assertPathNotExists "home-files/${extensionsPath}/.extensions-immutable.json"
       '';
     };
 }

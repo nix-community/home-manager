@@ -50,23 +50,23 @@ in
       nmt.script = ''
         # immutable-mcp.json (dynamic path based on the package name)
         #
-        assertFileExists "home-files/${mcpPath}/.immutable-mcp.json"
-        assertFileContent "home-files/${mcpPath}/.immutable-mcp.json" "${helpers.mcpJsonPath}"
+        assertFileExists "home-files/${mcpPath}/.mcp-immutable.json"
+        assertFileContent "home-files/${mcpPath}/.mcp-immutable.json" "${helpers.mcpJsonPath}"
 
         # immutable-keybindings.json
         #
-        assertFileExists "home-files/${configPath}/.immutable-keybindings.json"
-        assertFileContent "home-files/${configPath}/.immutable-keybindings.json" "${helpers.keybindingsJsonPath}"
+        assertFileExists "home-files/${configPath}/.keybindings-immutable.json"
+        assertFileContent "home-files/${configPath}/.keybindings-immutable.json" "${helpers.keybindingsJsonPath}"
 
         # immutable-settings.json
         #
-        assertFileExists "home-files/${configPath}/.immutable-settings.json"
-        assertFileContent "home-files/${configPath}/.immutable-settings.json" "${helpers.settingsJsonPath}"
+        assertFileExists "home-files/${configPath}/.settings-immutable.json"
+        assertFileContent "home-files/${configPath}/.settings-immutable.json" "${helpers.settingsJsonPath}"
 
         # immutable-tasks.json
         #
-        assertFileExists "home-files/${configPath}/.immutable-tasks.json"
-        assertFileContent "home-files/${configPath}/.immutable-tasks.json" "${helpers.tasksJsonPath}"
+        assertFileExists "home-files/${configPath}/.tasks-immutable.json"
+        assertFileContent "home-files/${configPath}/.tasks-immutable.json" "${helpers.tasksJsonPath}"
       '';
     };
 }

@@ -23,18 +23,18 @@ in
       nmt.script = ''
         # no profile files are created
         #
-        assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/.immutable-keybindings.json"
+        assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/.keybindings-immutable.json"
         assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/keybindings.json"
 
-        assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/.immutable-settings.json"
+        assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/.settings-immutable.json"
         assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/settings.json"
 
-        assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/.immutable-tasks.json"
+        assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/.tasks-immutable.json"
         assertPathNotExists "home-files/${helpers.mkTestAppUserDir}/tasks.json"
 
         # mcp is stored in the config directory
         #
-        assertPathNotExists "home-files/${helpers.mkTestAppConfigDir}/.immutable-mcp.json"
+        assertPathNotExists "home-files/${helpers.mkTestAppConfigDir}/.mcp-immutable.json"
         assertPathNotExists "home-files/${helpers.mkTestAppConfigDir}/mcp.json"
       '';
     };

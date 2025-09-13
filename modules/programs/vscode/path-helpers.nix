@@ -48,8 +48,8 @@ rec {
   mkProfileConfigPathBuilder =
     profileName: key: immutable:
     if immutable then
-      builtins.trace "Building ${profileName}/.immutable-${key}.json" (
-        mkProfilePathBuilder profileName key + "/.immutable-${key}.json"
+      builtins.trace "Building ${profileName}/.${key}-immutable.json" (
+        mkProfilePathBuilder profileName key + "/.${key}-immutable.json"
       )
     else
       builtins.trace "Building ${profileName}/${key}.json" (
