@@ -15,7 +15,8 @@ in
       name = "VSCode";
       package = pkgs.vscode;
 
-      configDirName = "Code";
+      # configDirectory = ".vscode";
+      userDirectory = "Code";
     })
   ];
 }

@@ -3,7 +3,8 @@
   name,
   package,
   packageName ? null,
-  configDirName ? name,
+  configDirectory ? ".${name}",
+  userDirectory ? name,
   overridePaths ? { },
 }:
 {
@@ -13,23 +14,52 @@
   ...
 }:
 let
-  jsonFormat = pkgs.formats.json { };
+  cfg = lib.getAttrFromPath modulePath config // {
+    inherit overridePaths configDirectory userDirectory;
+  };
 
-  cfg = lib.getAttrFromPath modulePath config;
+  helpers = import ./path-helpers.nix { inherit cfg lib pkgs; };
+
+  # configs per profile that are supported by this module
+  #
+  configsPerProfile = [
+    "settings"
+    "keybindings"
+    "tasks"
+    "mcp"
+  ];
+
+  # Generates configuration files for each profile key that exists and is non-empty
+  #
+  # For each key in configsPerProfile:
+  # - If the profile has the key AND the value is not an empty set
+  # - Creates a config file with the appropriate path (mutable/immutable)
+  # - Sets up change handler for mutable profiles to regenerate configs
+  #
+  # Returns: List of attribute sets ready for home-manager file configuration
+  mkConfigsPerProfile =
+    profileName: profile:
+    lib.concatMap (
+      key:
+      lib.optionals ((profile ? "${key}") && (profile.${key} != { })) [
+        {
+          "${helpers.mkProfileConfigPathBuilder profileName key cfg.mutableProfile}" = {
+            source = toJsonSource "user-${key}" profile.${key};
+
+            onChange = lib.mkIf cfg.mutableProfile ''
+              run cp -v "${helpers.mkImmutableConfigPath profileName key}" "${helpers.mkMutableConfigPath profileName key}"
+
+              verboseEcho "Regenerating mutable: ${helpers.mkMutableConfigPath profileName key}"
+            '';
+          };
+        }
+      ]
+    ) configsPerProfile;
 
   appName = name;
   appPackageName = if (packageName != null) then packageName else package.pname;
 
-  # https://code.visualstudio.com/docs/configure/settings#_settings-precedence
-  # https://code.visualstudio.com/docs/configure/settings#_settings-json-file
-  #
-  # app user directory
-  #
-  appUserDir =
-    if pkgs.stdenv.hostPlatform.isDarwin then
-      "${config.home.homeDirectory}/Library/Application Support/${configDirName}/User"
-    else
-      "${config.xdg.configHome}/${configDirName}/User";
+  jsonFormat = pkgs.formats.json { };
 
   # Helper function to handle path vs JSON object logic
   toJsonSource =
@@ -39,7 +69,7 @@ let
     else
       builtins.trace "is a json: ${jsonFormat.generate "${appPackageName}-${name}" value}"
         jsonFormat.generate
-        "${appPackageName}-${name}"
+        "${appPackageName}-${name}-json"
         value;
 
   # profiles
@@ -49,26 +79,13 @@ let
 
   hasDefaultProfile = cfg.profiles ? default;
 
-  buildProfilePath =
-    name: "${appUserDir}${lib.optionalString (name != "default") "/profiles/${name}"}";
-
-  configFilePathFor =
-    profileName: key:
-    if overridePaths ? "${key}" && overridePaths.${key} != null then
-      builtins.trace "override path for ${profileName} -> ${key}: ${overridePaths.${key}}"
-        overridePaths.${key}
-    else
-      builtins.trace "default path for ${profileName} -> ${key}: ${buildProfilePath profileName}" (
-        buildProfilePath profileName
-      );
-
   # extensions
   #
   appExtensionsPath =
     if overridePaths ? extensions && overridePaths.extensions != null then
       overridePaths.extensions
     else
-      builtins.trace "appExtensionsPath: ${config.home.homeDirectory}/.${lib.toLower configDirName}/extensions" "${config.home.homeDirectory}/.${lib.toLower configDirName}/extensions";
+      "${configDirectory}/extensions";
 
   allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
@@ -88,10 +105,7 @@ let
         "windsurf"
       ];
     in
-    builtins.trace
-      "Checking profile extensions support for ${cfg.package.pname} ${cfg.package.version}: versionCheck=${toString versionCheck}, pnameCheck=${toString pnameCheck}"
-      (versionCheck || pnameCheck);
-
+    (versionCheck || pnameCheck);
 in
 {
   options = lib.setAttrByPath modulePath {
@@ -323,7 +337,7 @@ in
           modifyGlobalStorage = pkgs.writeShellScript "vscode-global-storage-modify" ''
             set -euo pipefail
             PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
-            file="${appUserDir}/globalStorage/storage.json"
+            file="${helpers.mkAppUserDir}/globalStorage/storage.json"
             file_write=""
             profiles=(${lib.escapeShellArgs (builtins.attrNames otherProfiles)})
 
@@ -356,68 +370,7 @@ in
 
     home.file = lib.mkMerge (
       lib.flatten [
-        (lib.mapAttrsToList (
-          profileName: profile:
-          let
-            settingsPath = configFilePathFor profileName "settings";
-            keybindingsPath = configFilePathFor profileName "keybindings";
-            tasksPath = configFilePathFor profileName "tasks";
-            mcpPath = configFilePathFor profileName "mcp";
-          in
-          [
-            (builtins.trace "building ${appName} ${
-              if cfg.mutableProfile then "mutable" else "immutable"
-            } profile: ${profileName} (${buildProfilePath profileName})" { })
-
-            # settings
-            #
-            (lib.mkIf (profile.settings != { }) {
-              "${settingsPath}/${lib.optionalString cfg.mutableProfile ".immutable-"}settings.json" = {
-                source = toJsonSource "user-settings" profile.settings;
-                onChange = lib.mkIf cfg.mutableProfile ''
-                  run cp -v "${settingsPath}/.immutable-settings.json" "${settingsPath}/settings.json"
-                  verboseEcho "Regenerating mutable ${settingsPath}/settings.json"
-                '';
-              };
-            })
-
-            # keybindings
-            #
-            (lib.mkIf (profile.keybindings != [ ]) {
-              "${keybindingsPath}/${lib.optionalString cfg.mutableProfile ".immutable-"}keybindings.json" = {
-                source = toJsonSource "user-keybindings" profile.keybindings;
-                onChange = lib.mkIf cfg.mutableProfile ''
-                  run cp -v "${keybindingsPath}/.immutable-keybindings.json" "${keybindingsPath}/keybindings.json"
-                  verboseEcho "Regenerating mutable ${keybindingsPath}/keybindings.json"
-                '';
-              };
-            })
-
-            # tasks
-            #
-            (lib.mkIf (profile.tasks != { }) {
-              "${tasksPath}/${lib.optionalString cfg.mutableProfile ".immutable-"}tasks.json" = {
-                source = toJsonSource "user-tasks" profile.tasks;
-                onChange = lib.mkIf cfg.mutableProfile ''
-                  run cp -v "${tasksPath}/.immutable-tasks.json" "${tasksPath}/tasks.json"
-                  verboseEcho "Regenerating mutable ${tasksPath}/tasks.json"
-                '';
-              };
-            })
-
-            # mcp
-            #
-            (lib.mkIf (profile.mcp != { }) {
-              "${mcpPath}/${lib.optionalString cfg.mutableProfile ".immutable-"}mcp.json" = {
-                source = toJsonSource "user-mcp" profile.mcp;
-                onChange = lib.mkIf cfg.mutableProfile ''
-                  run cp -v "${mcpPath}/.immutable-mcp.json" "${mcpPath}/mcp.json"
-                  verboseEcho "Regenerating mutable ${mcpPath}/mcp.json"
-                '';
-              };
-            })
-          ]
-        ) cfg.profiles)
+        (lib.mapAttrsToList mkConfigsPerProfile cfg.profiles)
 
         (lib.mkIf (cfg.profiles != { }) (
           let
