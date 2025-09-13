@@ -15,103 +15,14 @@ let
     }
     .${packageName};
 
+  # cursor stores mcp.json in the config directory
+  #
   mcpPath =
     {
       vscode = configPath; # user settings path
       code-cursor = ".cursor"; # override mcp path to: .cursor
     }
     .${packageName};
-
-  keybindings = [
-    {
-      key = "ctrl+c";
-      command = "editor.action.clipboardCopyAction";
-      when = "textInputFocus && false";
-    }
-    {
-      key = "ctrl+r";
-      command = "run";
-      args = {
-        command = "echo file";
-      };
-    }
-  ];
-
-  keybindingsJson = builtins.toFile "${packageName}-keybindings.expected" ''
-    [
-      {
-        "key": "ctrl+c",
-        "command": "editor.action.clipboardCopyAction",
-        "when": "textInputFocus && false"
-      },
-      {
-        "key": "ctrl+r",
-        "command": "run",
-        "args": {
-          "command": "echo file"
-        }
-      }
-    ]
-  '';
-
-  mcp = {
-    servers = {
-      echo = {
-        command = "echo";
-      };
-    };
-  };
-
-  mcpJson = builtins.toFile "${packageName}-mcp.expected" ''
-    {
-      "servers": {
-        "echo": {
-          "command": "echo"
-        }
-      }
-    }
-  '';
-
-  settings = {
-    "files.autoSave" = "on";
-  };
-
-  settingsJson = builtins.toFile "${packageName}-settings.expected" ''
-    {
-      "files.autoSave": "on"
-    }
-  '';
-
-  tasks = {
-    version = "2.0.0";
-    tasks = [
-      {
-        type = "shell";
-        label = "Hello task";
-        command = "hello";
-      }
-    ];
-  };
-
-  tasksJson = builtins.toFile "${packageName}-tasks.expected" ''
-    {
-      "tasks": [
-        {
-          "command": "hello",
-          "label": "Hello task",
-          "type": "shell"
-        }
-      ],
-      "version": "2.0.0"
-    }
-  '';
-
-  profile = {
-    keybindings = keybindingsJson; # file path
-    mcp = mcp; # json object
-    settings = settings; # json object
-    tasks = tasks; # json object
-  };
 in
 {
   config =
@@ -129,9 +40,19 @@ in
       # are read-only enforced by the nix store.
       #
       profiles = {
-        default = profile;
-        work = profile;
-        test = profile;
+        default = {
+          keybindings = helpers.keybindingsJsonPath;
+          mcp = helpers.mcpJsonObject;
+          settings = helpers.settingsJsonPath;
+          tasks = helpers.tasksJsonObject;
+        };
+
+        work = {
+          keybindings = helpers.keybindingsJsonObject;
+          mcp = helpers.mcpJsonPath;
+          settings = helpers.settingsJsonObject;
+          tasks = helpers.tasksJsonPath;
+        };
       };
     })
     // {
@@ -139,25 +60,25 @@ in
         # mcp.json (dynamic path based on the package name)
         #
         assertFileExists "home-files/${mcpPath}/mcp.json"
-        assertFileContent "home-files/${mcpPath}/mcp.json" "${mcpJson}"
+        assertFileContent "home-files/${mcpPath}/mcp.json" "${helpers.mcpJsonPath}"
         assertPathNotExists "home-files/${mcpPath}/.immutable-mcp.json"
 
         # keybindings.json
         #
         assertFileExists "home-files/${configPath}/keybindings.json"
-        assertFileContent "home-files/${configPath}/keybindings.json" "${keybindingsJson}"
+        assertFileContent "home-files/${configPath}/keybindings.json" "${helpers.keybindingsJsonPath}"
         assertPathNotExists "home-files/${configPath}/.immutable-keybindings.json"
 
         # settings.json
         #
         assertFileExists "home-files/${configPath}/settings.json"
-        assertFileContent "home-files/${configPath}/settings.json" "${settingsJson}"
+        assertFileContent "home-files/${configPath}/settings.json" "${helpers.settingsJsonPath}"
         assertPathNotExists "home-files/${configPath}/.immutable-settings.json"
 
         # tasks.json
         #
         assertFileExists "home-files/${configPath}/tasks.json"
-        assertFileContent "home-files/${configPath}/tasks.json" "${tasksJson}"
+        assertFileContent "home-files/${configPath}/tasks.json" "${helpers.tasksJsonPath}"
         assertPathNotExists "home-files/${configPath}/.immutable-tasks.json"
       '';
     };

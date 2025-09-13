@@ -9,14 +9,6 @@ rec {
 
   hasValue = attrs: key: (attrs ? "${key}") && (attrs.${key} != null);
 
-  # default per-fork path overrides
-  #
-  defaultOverridePaths = {
-    code-cursor = {
-      mcp = ".cursor";
-    };
-  };
-
   # default fork configuration
   #
   forkConfig =
@@ -49,8 +41,7 @@ rec {
 
   # App Config directory: default to the app configuration (also where extensions are stored)
   #
-  # if the config directory is set, use it
-  # otherwise, use the user directory
+  # config directory or user directory
   #
   mkTestAppConfigDir =
     if hasValue forkConfig "configDirectory" then
@@ -70,4 +61,110 @@ rec {
 
   # Write expected JSON content to a file for assertions
   writeExpected = name: value: pkgs.writeText name (toJSONText value);
+
+  ##
+  ## mocks
+  ##
+
+  # keybindings configuration (json object)
+  #
+  keybindingsJsonObject = [
+    {
+      key = "ctrl+c";
+      command = "editor.action.clipboardCopyAction";
+      when = "textInputFocus && false";
+    }
+    {
+      key = "ctrl+r";
+      command = "run";
+      args = {
+        command = "echo file";
+      };
+    }
+  ];
+
+  # keybindings configuration (json path)
+  #
+  keybindingsJsonPath = builtins.toFile "${packageName}-keybindings.json.test" ''
+    [
+      {
+        "args": null,
+        "command": "editor.action.clipboardCopyAction",
+        "key": "ctrl+c",
+        "when": "textInputFocus && false"
+      },
+      {
+        "args": {
+          "command": "echo file"
+        },
+        "command": "run",
+        "key": "ctrl+r",
+        "when": null
+      }
+    ]
+  '';
+
+  # mcp configuration (json object)
+  #
+  mcpJsonObject = {
+    servers = {
+      echo = {
+        command = "echo";
+      };
+    };
+  };
+
+  # mcp configuration (json path)
+  #
+  mcpJsonPath = builtins.toFile "${packageName}-mcp.json.test" ''
+    {
+      "servers": {
+        "echo": {
+          "command": "echo"
+        }
+      }
+    }
+  '';
+
+  # settings configuration (json object)
+  #
+  settingsJsonObject = {
+    "files.autoSave" = "on";
+  };
+
+  # settings configuration (json path)
+  #
+  settingsJsonPath = builtins.toFile "${packageName}-settings.json.test" ''
+    {
+      "files.autoSave": "on"
+    }
+  '';
+
+  # tasks configuration (json object)
+  #
+  tasksJsonObject = {
+    version = "2.0.0";
+    tasks = [
+      {
+        type = "shell";
+        label = "Hello task";
+        command = "hello";
+      }
+    ];
+  };
+
+  # tasks configuration (json path)
+  #
+  tasksJsonPath = builtins.toFile "${packageName}-tasks.json.test" ''
+    {
+      "tasks": [
+        {
+          "command": "hello",
+          "label": "Hello task",
+          "type": "shell"
+        }
+      ],
+      "version": "2.0.0"
+    }
+  '';
 }

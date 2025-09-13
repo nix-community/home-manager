@@ -21,90 +21,6 @@ let
       code-cursor = ".cursor"; # override mcp path to: .cursor
     }
     .${packageName};
-
-  keybindings = [
-    {
-      key = "ctrl+c";
-      command = "editor.action.clipboardCopyAction";
-      when = "textInputFocus && false";
-    }
-    {
-      key = "ctrl+r";
-      command = "run";
-      args = {
-        command = "echo file";
-      };
-    }
-  ];
-
-  keybindingsJson = builtins.toFile "${packageName}-immutable-keybindings.json.expected" ''
-    [
-      {
-        "key": "ctrl+c",
-        "command": "editor.action.clipboardCopyAction",
-        "when": "textInputFocus && false"
-      },
-      {
-        "key": "ctrl+r",
-        "command": "run",
-        "args": {
-          "command": "echo file"
-        }
-      }
-    ]
-  '';
-
-  mcp = {
-    servers = {
-      echo = {
-        command = "echo";
-      };
-    };
-  };
-
-  mcpJson = builtins.toFile "${packageName}-immutable-mcp.json.expected" ''
-    {
-      "servers": {
-        "echo": {
-          "command": "echo"
-        }
-      }
-    }
-  '';
-
-  settings = {
-    "files.autoSave" = "on";
-  };
-
-  settingsJson = builtins.toFile "${packageName}-immutable-settings.json.expected" ''
-    {
-      "files.autoSave": "on"
-    }
-  '';
-
-  tasks = {
-    version = "2.0.0";
-    tasks = [
-      {
-        type = "shell";
-        label = "Hello task";
-        command = "hello";
-      }
-    ];
-  };
-
-  tasksJson = builtins.toFile "${packageName}-immutable-tasks.json.expected" ''
-    {
-      "tasks": [
-        {
-          "command": "hello",
-          "label": "Hello task",
-          "type": "shell"
-        }
-      ],
-      "version": "2.0.0"
-    }
-  '';
 in
 {
   config =
@@ -123,10 +39,10 @@ in
       #
       profiles = {
         default = {
-          keybindings = keybindingsJson; # file path
-          mcp = mcp; # json object
-          settings = settings; # json object
-          tasks = tasks; # json object
+          keybindings = helpers.keybindingsJsonPath;
+          mcp = helpers.mcpJsonObject;
+          settings = helpers.settingsJsonPath;
+          tasks = helpers.tasksJsonObject;
         };
       };
     })
@@ -135,22 +51,22 @@ in
         # immutable-mcp.json (dynamic path based on the package name)
         #
         assertFileExists "home-files/${mcpPath}/.immutable-mcp.json"
-        assertFileContent "home-files/${mcpPath}/.immutable-mcp.json" "${mcpJson}"
+        assertFileContent "home-files/${mcpPath}/.immutable-mcp.json" "${helpers.mcpJsonPath}"
 
         # immutable-keybindings.json
         #
         assertFileExists "home-files/${configPath}/.immutable-keybindings.json"
-        assertFileContent "home-files/${configPath}/.immutable-keybindings.json" "${keybindingsJson}"
+        assertFileContent "home-files/${configPath}/.immutable-keybindings.json" "${helpers.keybindingsJsonPath}"
 
         # immutable-settings.json
         #
         assertFileExists "home-files/${configPath}/.immutable-settings.json"
-        assertFileContent "home-files/${configPath}/.immutable-settings.json" "${settingsJson}"
+        assertFileContent "home-files/${configPath}/.immutable-settings.json" "${helpers.settingsJsonPath}"
 
         # immutable-tasks.json
         #
         assertFileExists "home-files/${configPath}/.immutable-tasks.json"
-        assertFileContent "home-files/${configPath}/.immutable-tasks.json" "${tasksJson}"
+        assertFileContent "home-files/${configPath}/.immutable-tasks.json" "${helpers.tasksJsonPath}"
       '';
     };
 }
