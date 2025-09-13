@@ -141,6 +141,7 @@ in
         types.submodule [
           contactOpts
           (import ../programs/vdirsyncer/accounts.nix)
+          (import ../programs/pimsync/accounts.nix)
           (import ../programs/khal/accounts.nix)
           (import ../programs/khal/contact-accounts.nix)
         ]
