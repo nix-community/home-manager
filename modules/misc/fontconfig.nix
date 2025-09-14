@@ -32,7 +32,8 @@ let
         };
         label = lib.mkOption {
           type = lib.types.str;
-          default = "name";
+          default = name;
+          defaultText = "<name>";
           description = "Label to use for the name of the config file.";
         };
         priority = lib.mkOption {
@@ -43,9 +44,6 @@ let
             Must be a value within the range of 0-99, where priority 0 is the highest priority and 99 is the lowest.
           '';
         };
-      };
-      config = {
-        label = lib.mkDefault name;
       };
     }
   );
