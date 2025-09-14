@@ -167,21 +167,35 @@ in
           Extra font config files that will be added to `~/.config/fontconfig/conf.d/`.
           Files are named like `fontconfig/conf.d/{priority}-{label}.conf`.
         '';
-        example = ''
-          {
-            tamzen = {
-              enable = true;
-              label = "tamzen-disable-antialiasing";
-              text = tamzenFontConfig;  # Pretend this is defined elsewhere
-              priority = 90;
-            };  # => conf.d/90-tamzen-disable-antialiasing.conf
-            commit-mono-options = {
-              enable = true;
-              source = ./resources/fontconfig/commit-mono.conf;
-              priority = 80;
-            };  # => conf.d/80-commit-mono-options.conf
-          };
-        '';
+        example = {
+          tamzen = {
+            enable = true;
+            label = "tamzen-disable-antialiasing";
+            text = ''
+              <?xml version="1.0"?>
+              <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+
+              <fontconfig>
+                <description>Disable anti-aliasing for Tamzen since it is a bitmap font</description>
+                <match target="pattern">
+                  <test name="family" compare="eq" qual="any">
+                    <string>Tamzen</string>
+                  </test>
+                  <edit name="antialias" mode="assign">
+                    <bool>false</bool>
+                  </edit>
+                </match>
+              </fontconfig>
+            '';
+            priority = 90;
+          }; # => conf.d/90-tamzen-disable-antialiasing.conf
+          commit-mono-options = {
+            enable = true;
+            source = "./resources/fontconfig/commit-mono.conf";
+            priority = 80;
+          }; # => conf.d/80-commit-mono-options.conf
+        };
+
       };
 
     };
