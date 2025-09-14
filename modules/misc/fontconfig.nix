@@ -252,6 +252,7 @@ in
         fonts = {
           enable = true;
           priority = 10;
+          source = null; # Set the source as null explicitly so that it cannot be overwritten by mistake by a user
           text = mkFontconfigConf ''
             <description>Add fonts in the Nix user profile</description>
 
@@ -299,6 +300,7 @@ in
           {
             enable = builtins.length content > 0;
             priority = 10;
+            source = null;
             text = mkFontconfigConf (
               lib.concatStrings ([ "<description>Set the rendering mode</description>\n" ] ++ content)
             );
@@ -323,6 +325,7 @@ in
           {
             enable = true;
             priority = 52;
+            source = null;
             text = mkFontconfigConf ''
               <!-- Default fonts -->
               ${genDefault cfg.defaultFonts.sansSerif "sans-serif"}
