@@ -36,7 +36,7 @@ let
           description = "Label to use for the name of the config file.";
         };
         priority = lib.mkOption {
-          type = lib.types.addCheck lib.types.int (x: x >= 0 && x <= 99);
+          type = lib.types.ints.between 0 99;
           default = 90;
           description = ''
             Determines the order in which configs are loaded.
