@@ -13,11 +13,7 @@ let
     }
     .${packageName};
 
-  # Create dummy VS Code extensions. extA lacks vscodeExtUniqueId to exercise
-  # directory enumeration when JSON support is disabled.
-  # - extA: no vscodeExtUniqueId (enumeration path)
-  # - extB: has vscodeExtUniqueId (id path)
-  #
+  # Create dummy VS Code extensions
   makeExt =
     name: extId: extraAttrs:
     pkgs.runCommand "${packageName}-${name}" ({ } // extraAttrs) ''
@@ -30,6 +26,7 @@ let
 
   extA = makeExt "extA" extAId {
     version = "1.0.0";
+    vscodeExtUniqueId = extAId;
     vscodeExtPublisher = "publisherA";
   };
 
@@ -45,28 +42,23 @@ in
     // lib.setAttrByPath modulePath ({
       enable = true;
 
-      # Disable profile extensions JSON support by using version < 1.74.0 and
-      # a package name outside the allowlist (e.g., not "code-cursor").
-      # This ensures no extensions.json/.extensions-immutable.json are generated.
+      # Disable profile extensions JSON support (version < 1.74.0)
       package = config.lib.test.mkStubPackage {
         # force a pname outside the allowlist to disable JSON support even for Cursor
         name = "vscode";
-
         # profile extensions JSON not supported by this version
         version = "1.73.0";
       };
 
-      # Only default profile → mutable extensions directory behavior
+      # Multiple profiles → immutable extensions directory behavior
       profiles = {
-        default.extensions = [
-          extA
-          extB
-        ];
+        default.extensions = [ extA ];
+        work.extensions = [ extB ];
       };
     })
     // {
       nmt.script = ''
-        # extensions are installed as directories with a .placeholder file
+        # extensions installed via buildEnv should appear as directories
         #
         assertDirectoryExists "home-files/${extensionsPath}"
         assertDirectoryExists "home-files/${extensionsPath}/${extAId}"

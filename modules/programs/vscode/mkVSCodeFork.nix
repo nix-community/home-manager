@@ -106,6 +106,59 @@ let
       ];
     in
     (versionCheck || pnameCheck);
+
+  # Consolidated flags and helpers for extensions handling
+  supportsDefaultProfileJson = supportsProfileExtensionsJson && hasDefaultProfile;
+
+  # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
+  subDir = "share/vscode/extensions";
+
+  toExtensionPathAttrs =
+    ext:
+    map (k: { "${appExtensionsPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
+      if ext ? vscodeExtUniqueId then
+        [ ext.vscodeExtUniqueId ]
+      else
+        builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
+    );
+
+  mkMutableExtensionsFiles = lib.mkMerge (
+    builtins.trace "Mapping paths for extensions: ${toString allExtensions}" (
+      lib.concatMap toExtensionPathAttrs allExtensions
+      ++
+        lib.optional
+          (builtins.trace "Checking profile extensions support: supportsProfileExtensionsJson=${toString supportsProfileExtensionsJson}, hasDefaultProfile=${toString hasDefaultProfile}" supportsDefaultProfileJson)
+          {
+            # Whenever our immutable extensions.json changes, force the profile to regenerate
+            # extensions.json with both mutable and immutable extensions.
+            "${appExtensionsPath}/.extensions-immutable.json" = {
+              text = builtins.trace "Generating extension JSON for default profile" (
+                extensionJson defaultProfile.extensions
+              );
+              onChange = ''
+                run rm $VERBOSE_ARG -f "${appExtensionsPath}"/{extensions.json,.init-default-profile-extensions}
+                verboseEcho "Regenerating ${appName} extensions.json"
+                run ${lib.getExe cfg.package} --list-extensions > /dev/null
+              '';
+            };
+          }
+    )
+  );
+
+  mkImmutableExtensionsFiles = {
+    "${appExtensionsPath}".source =
+      let
+        combinedExtensionsDrv = pkgs.buildEnv {
+          name = "vscode-extensions";
+          paths =
+            allExtensions
+            ++ lib.optional supportsDefaultProfileJson (
+              extensionJsonFile "default" (extensionJson defaultProfile.extensions)
+            );
+        };
+      in
+      "${combinedExtensionsDrv}/${subDir}";
+  };
 in
 {
   options = lib.setAttrByPath modulePath {
@@ -373,65 +426,10 @@ in
         (lib.mapAttrsToList mkConfigsPerProfile cfg.profiles)
 
         (lib.mkIf (cfg.profiles != { }) (
-          let
-            # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-            subDir = "share/vscode/extensions";
-
-            toPaths =
-              ext:
-              map (k: { "${appExtensionsPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
-                if ext ? vscodeExtUniqueId then
-                  [ ext.vscodeExtUniqueId ]
-                else
-                  builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
-              );
-          in
           if (cfg.mutableExtensionsDir && otherProfiles == { }) then
-            # Mutable extensions dir can only occur when only default profile is set.
-            #
-            # Force regenerating extensions.json using the below method,
-            # causes VSCode to create the extensions.json with all the extensions
-            # in the extension directory, which includes extensions from other profiles.
-            lib.mkMerge (
-              builtins.trace "Mapping paths for extensions: ${toString allExtensions}" (
-                lib.concatMap toPaths allExtensions
-                ++
-                  lib.optional
-                    (builtins.trace
-                      "Checking profile extensions support: supportsProfileExtensionsJson=${toString supportsProfileExtensionsJson}, hasDefaultProfile=${toString hasDefaultProfile}"
-                      (supportsProfileExtensionsJson && hasDefaultProfile)
-                    )
-                    {
-                      # Whenever our immutable extensions.json changes, force the profile to regenerate
-                      # extensions.json with both mutable and immutable extensions.
-                      "${appExtensionsPath}/.extensions-immutable.json" = {
-                        text = builtins.trace "Generating extension JSON for default profile" (
-                          extensionJson defaultProfile.extensions
-                        );
-                        onChange = ''
-                          run rm $VERBOSE_ARG -f "${appExtensionsPath}"/{extensions.json,.init-default-profile-extensions}
-                          verboseEcho "Regenerating ${appName} extensions.json"
-                          run ${lib.getExe cfg.package} --list-extensions > /dev/null
-                        '';
-                      };
-                    }
-              )
-            )
+            mkMutableExtensionsFiles
           else
-            {
-              "${appExtensionsPath}".source =
-                let
-                  combinedExtensionsDrv = pkgs.buildEnv {
-                    name = "vscode-extensions";
-                    paths =
-                      allExtensions
-                      ++ lib.optional (supportsProfileExtensionsJson && hasDefaultProfile) (
-                        extensionJsonFile "default" (extensionJson defaultProfile.extensions)
-                      );
-                  };
-                in
-                "${combinedExtensionsDrv}/${subDir}";
-            }
+            mkImmutableExtensionsFiles
         ))
       ]
     );
