@@ -250,7 +250,7 @@ in
 
         fontconfigExtraConfs = lib.mapAttrs' (
           name: config:
-          lib.nameValuePair "fontconfig/conf.d/${builtins.toString config.priority}-${config.label}.conf" {
+          lib.nameValuePair "fontconfig/conf.d/${builtins.toString config.priority}-hm-ext-${config.label}.conf" {
             inherit (config) text;
             source = lib.mkIf (config.source != null) config.source;
           }
