@@ -5,7 +5,7 @@ in
 {
   fonts.fontconfig = {
     enable = true;
-    extraConfigFiles = {
+    configFile = {
       text-label-test = {
         enable = true;
         label = "sample-text-config";
@@ -22,12 +22,12 @@ in
   nmt.script = ''
     assertDirectoryExists ${fcConfD}
 
-    assertFileExists  ${fcConfD}/55-hm-ext-sample-text-config.conf
-    assertFileContent ${fcConfD}/55-hm-ext-sample-text-config.conf \
+    assertFileExists  ${fcConfD}/55-hm-sample-text-config.conf
+    assertFileContent ${fcConfD}/55-hm-sample-text-config.conf \
       ${builtins.toFile "sample-text-config" sampleTextContent}
 
-    assertFileExists  ${fcConfD}/90-hm-ext-source-nolabel-test.conf
-    assertFileContent ${fcConfD}/90-hm-ext-source-nolabel-test.conf \
+    assertFileExists  ${fcConfD}/90-hm-source-nolabel-test.conf
+    assertFileContent ${fcConfD}/90-hm-source-nolabel-test.conf \
       ${./sample-extra-config.conf}
   '';
 }

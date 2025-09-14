@@ -15,7 +15,7 @@ let
 
   profileDirectory = config.home.profileDirectory;
 
-  fontconfigFileType = lib.types.submodule (
+  fontConfigFileType = lib.types.submodule (
     { name, ... }:
     {
       options = {
@@ -158,8 +158,8 @@ in
         example = "rgb";
       };
 
-      extraConfigFiles = lib.mkOption {
-        type = lib.types.attrsOf fontconfigFileType;
+      configFile = lib.mkOption {
+        type = lib.types.attrsOf fontConfigFileType;
         default = { };
         description = ''
           Extra font config files that will be added to `~/.config/fontconfig/conf.d/`.
@@ -235,7 +235,7 @@ in
       fi
     '';
 
-    xdg.configFile =
+    fonts.fontconfig.configFile =
       let
         mkFontconfigConf = conf: ''
           <?xml version='1.0'?>
@@ -247,33 +247,26 @@ in
           ${conf}
           </fontconfig>
         '';
-
-        fontconfigExtraConfs = lib.mapAttrs' (
-          name: config:
-          lib.nameValuePair
-            "fontconfig/conf.d/${builtins.toString config.priority}-hm-ext-${config.label}.conf"
-            {
-              inherit (config) text;
-              source = lib.mkIf (config.source != null) config.source;
-            }
-        ) cfg.extraConfigFiles;
       in
       {
-        "fontconfig/conf.d/10-hm-fonts.conf".text = mkFontconfigConf ''
-          <description>Add fonts in the Nix user profile</description>
+        fonts = {
+          enable = true;
+          priority = 10;
+          text = mkFontconfigConf ''
+            <description>Add fonts in the Nix user profile</description>
 
-          <include ignore_missing="yes">${config.home.path}/etc/fonts/conf.d</include>
-          <include ignore_missing="yes">${config.home.path}/etc/fonts/fonts.conf</include>
+            <include ignore_missing="yes">${config.home.path}/etc/fonts/conf.d</include>
+            <include ignore_missing="yes">${config.home.path}/etc/fonts/fonts.conf</include>
 
-          <dir>${config.home.path}/lib/X11/fonts</dir>
-          <dir>${config.home.path}/share/fonts</dir>
-          <dir>${profileDirectory}/lib/X11/fonts</dir>
-          <dir>${profileDirectory}/share/fonts</dir>
+            <dir>${config.home.path}/lib/X11/fonts</dir>
+            <dir>${config.home.path}/share/fonts</dir>
+            <dir>${profileDirectory}/lib/X11/fonts</dir>
+            <dir>${profileDirectory}/share/fonts</dir>
 
-          <cachedir>${config.home.path}/lib/fontconfig/cache</cachedir>
-        '';
-
-        "fontconfig/conf.d/10-hm-rendering.conf" =
+            <cachedir>${config.home.path}/lib/fontconfig/cache</cachedir>
+          '';
+        };
+        rendering =
           let
             set =
               name: value:
@@ -303,13 +296,14 @@ in
                 set "rgba" (builtins.replaceStrings [ "ertical-" ] [ "" ] cfg.subpixelRendering)
               );
           in
-          lib.mkIf (builtins.length content > 0) {
+          {
+            enable = builtins.length content > 0;
+            priority = 10;
             text = mkFontconfigConf (
               lib.concatStrings ([ "<description>Set the rendering mode</description>\n" ] ++ content)
             );
           };
-
-        "fontconfig/conf.d/52-hm-default-fonts.conf".text =
+        default-fonts =
           let
             genDefault =
               fonts: name:
@@ -326,14 +320,25 @@ in
                 </alias>
               '';
           in
-          mkFontconfigConf ''
-            <!-- Default fonts -->
-            ${genDefault cfg.defaultFonts.sansSerif "sans-serif"}
-            ${genDefault cfg.defaultFonts.serif "serif"}
-            ${genDefault cfg.defaultFonts.monospace "monospace"}
-            ${genDefault cfg.defaultFonts.emoji "emoji"}
-          '';
+          {
+            enable = true;
+            priority = 52;
+            text = mkFontconfigConf ''
+              <!-- Default fonts -->
+              ${genDefault cfg.defaultFonts.sansSerif "sans-serif"}
+              ${genDefault cfg.defaultFonts.serif "serif"}
+              ${genDefault cfg.defaultFonts.monospace "monospace"}
+              ${genDefault cfg.defaultFonts.emoji "emoji"}
+            '';
+          };
+      };
+
+    xdg.configFile = lib.mapAttrs' (
+      name: config:
+      lib.nameValuePair "fontconfig/conf.d/${builtins.toString config.priority}-hm-${config.label}.conf" {
+        inherit (config) enable text;
+        source = lib.mkIf (config.source != null) config.source;
       }
-      // fontconfigExtraConfs;
+    ) cfg.configFile;
   };
 }
