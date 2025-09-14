@@ -24,7 +24,7 @@ in
 
     assertFileExists  ${fcConfD}/55-hm-ext-sample-text-config.conf
     assertFileContent ${fcConfD}/55-hm-ext-sample-text-config.conf \
-      ${builtins.toFile sampleTextContent}
+      ${builtins.toFile "sample-text-config" sampleTextContent}
 
     assertFileExists  ${fcConfD}/90-hm-ext-source-nolabel-test.conf
     assertFileContent ${fcConfD}/90-hm-ext-source-nolabel-test.conf \
