@@ -393,6 +393,7 @@ import nmtSrc {
       ./modules/programs/mpvpaper
       ./modules/programs/ncmpcpp-linux
       ./modules/programs/nh
+      ./modules/programs/nvchecker
       ./modules/programs/onagre
       ./modules/programs/onedrive
       ./modules/programs/pqiv
