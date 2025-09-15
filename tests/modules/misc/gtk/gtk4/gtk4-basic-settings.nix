@@ -2,11 +2,11 @@
 {
   gtk = {
     enable = true;
-    theme = {
-      name = "catppuccin-macchiato-blue-standard";
-      package = pkgs.catppuccin-gtk;
-    };
     gtk4 = {
+      theme = {
+        name = "catppuccin-macchiato-blue-standard";
+        package = pkgs.catppuccin-gtk;
+      };
       extraConfig = {
         gtk-cursor-blink = false;
         gtk-recent-files-limit = 20;
