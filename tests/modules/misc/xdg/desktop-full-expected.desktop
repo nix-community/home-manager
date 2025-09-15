@@ -14,7 +14,7 @@ PrefersNonDefaultGPU=false
 StartupNotify=false
 Terminal=true
 Type=Application
-Version=1.4
+Version=1.5
 
 [Desktop Action Default]
 Exec=test --default
