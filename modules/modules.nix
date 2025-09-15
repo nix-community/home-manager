@@ -213,6 +213,7 @@ let
       ./programs/notmuch.nix
       ./programs/numbat.nix
       ./programs/nushell.nix
+      ./programs/nvchecker.nix
       ./programs/obs-studio.nix
       ./programs/octant.nix
       ./programs/offlineimap.nix
