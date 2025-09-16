@@ -497,7 +497,6 @@ in
     Scrumplex
     alexarice
     sumnerevans
-    oxalica
   ];
 
   imports =
