@@ -120,30 +120,31 @@ in
 
         type = submodule {
           freeformType = configFile.format.type;
+          options = {
+            publicExplorer = mkOption {
+              type = str;
+              description = "HTTPS URL pattern used to generate links to view content on Radicle via the browser.";
+              default = "https://app.radicle.xyz/nodes/$host/$rid$path";
+              example = "https://radicle.example.com/nodes/seed.example.com/$rid$path";
+            };
 
-          options.publicExplorer = mkOption {
-            type = str;
-            description = "HTTPS URL pattern used to generate links to view content on Radicle via the browser.";
-            default = "https://app.radicle.xyz/nodes/$host/$rid$path";
-            example = "https://radicle.example.com/nodes/seed.example.com/$rid$path";
-          };
-
-          options.node.alias = mkOption {
-            type = str;
-            description = "Human readable alias for your node.";
-            default = config.home.username;
-            defaultText = lib.literalExpression "config.home.username";
-          };
-          options.node.listen = mkOption {
-            type = listOf str;
-            description = "Addresses to bind to and listen for inbound connections.";
-            default = [ ];
-            example = [ "127.0.0.1:58776" ];
+            node = {
+              alias = mkOption {
+                type = str;
+                description = "Human readable alias for your node.";
+                default = config.home.username;
+                defaultText = lib.literalExpression "config.home.username";
+              };
+              listen = mkOption {
+                type = listOf str;
+                description = "Addresses to bind to and listen for inbound connections.";
+                default = [ ];
+                example = [ "127.0.0.1:58776" ];
+              };
+            };
           };
         };
-
       };
-
     };
   };
 
