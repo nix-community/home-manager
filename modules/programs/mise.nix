@@ -116,19 +116,19 @@ in
     };
 
     programs = {
-      bash.initExtra = mkIf cfg.enableBashIntegration ''
+      bash.initExtra = mkIf (cfg.enableBashIntegration && cfg.package != null) ''
         eval "$(${getExe cfg.package} activate bash)"
       '';
 
-      zsh.initContent = mkIf cfg.enableZshIntegration ''
+      zsh.initContent = mkIf (cfg.enableZshIntegration && cfg.package != null) ''
         eval "$(${getExe cfg.package} activate zsh)"
       '';
 
-      fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      fish.interactiveShellInit = mkIf (cfg.enableFishIntegration && cfg.package != null) ''
         ${getExe cfg.package} activate fish | source
       '';
 
-      nushell = mkIf cfg.enableNushellIntegration {
+      nushell = mkIf (cfg.enableNushellIntegration && cfg.package != null) {
         extraEnv = ''
           let mise_path = $nu.default-config-dir | path join mise.nu
           ^mise activate nu | save $mise_path --force
