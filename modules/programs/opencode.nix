@@ -78,6 +78,73 @@ in
         written to {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
       '';
     };
+
+    commands = lib.mkOption {
+      type = lib.types.attrsOf lib.types.lines;
+      default = { };
+      description = ''
+        Custom commands for opencode.
+        The attribute name becomes the command filename, and the value is the file content.
+        Commands are stored in ~/.config/opencode/command/ directory.
+      '';
+      example = {
+        changelog = ''
+          # Update Changelog Command
+
+          Update CHANGELOG.md with a new entry for the specified version.
+          Usage: /changelog [version] [change-type] [message]
+        '';
+        fix-issue = ''
+          # Fix Issue Command
+
+          Fix a GitHub issue following coding standards.
+          Usage: /fix-issue [issue-number]
+        '';
+        commit = ''
+          # Commit Command
+
+          Create a git commit with proper message formatting.
+          Usage: /commit [message]
+        '';
+      };
+    };
+
+    agents = lib.mkOption {
+      type = lib.types.attrsOf lib.types.lines;
+      default = { };
+      description = ''
+        Custom agents for opencode.
+        The attribute name becomes the agent filename, and the value is the file content.
+        Agents are stored in ~/.config/opencode/agent/ directory.
+      '';
+      example = {
+        code-reviewer = ''
+          # Code Reviewer Agent
+
+          You are a senior software engineer specializing in code reviews.
+          Focus on code quality, security, and maintainability.
+
+          ## Guidelines
+          - Review for potential bugs and edge cases
+          - Check for security vulnerabilities
+          - Ensure code follows best practices
+          - Suggest improvements for readability and performance
+        '';
+        documentation = ''
+          # Documentation Agent
+
+          You are a technical writer who creates clear, comprehensive documentation.
+          Focus on user-friendly explanations and examples.
+
+          ## Guidelines
+          - Write clear, concise documentation
+          - Include practical examples
+          - Use proper formatting and structure
+          - Consider the target audience
+        '';
+      };
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -92,9 +159,22 @@ in
           // cfg.settings
         );
       };
+
       "opencode/AGENTS.md" = mkIf (cfg.rules != "") {
         text = cfg.rules;
       };
-    };
+    }
+    // lib.mapAttrs' (
+      name: content:
+      lib.nameValuePair "opencode/command/${name}.md" {
+        text = content;
+      }
+    ) cfg.commands
+    // lib.mapAttrs' (
+      name: content:
+      lib.nameValuePair "opencode/agent/${name}.md" {
+        text = content;
+      }
+    ) cfg.agents;
   };
 }
