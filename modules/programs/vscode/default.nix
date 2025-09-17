@@ -30,6 +30,7 @@ let
       "openvscode-server" = "OpenVSCode Server";
       "windsurf" = "Windsurf";
       "cursor" = "Cursor";
+      "kiro" = "Kiro";
     }
     .${vscodePname};
 
@@ -41,6 +42,7 @@ let
       "openvscode-server" = "openvscode-server";
       "windsurf" = "windsurf";
       "cursor" = "cursor";
+      "kiro" = "kiro";
     }
     .${vscodePname};
 
