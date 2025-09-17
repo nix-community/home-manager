@@ -80,69 +80,61 @@ in
     };
 
     commands = lib.mkOption {
-      type = lib.types.attrsOf lib.types.lines;
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
       default = { };
       description = ''
         Custom commands for opencode.
-        The attribute name becomes the command filename, and the value is the file content.
+        The attribute name becomes the command filename, and the value is either:
+        - Inline content as a string
+        - A path to a file containing the command content
         Commands are stored in ~/.config/opencode/command/ directory.
       '';
-      example = {
-        changelog = ''
-          # Update Changelog Command
+      example = lib.literalExpression ''
+        {
+          changelog = '''
+            # Update Changelog Command
 
-          Update CHANGELOG.md with a new entry for the specified version.
-          Usage: /changelog [version] [change-type] [message]
-        '';
-        fix-issue = ''
-          # Fix Issue Command
+            Update CHANGELOG.md with a new entry for the specified version.
+            Usage: /changelog [version] [change-type] [message]
+          ''';
+          fix-issue = ./commands/fix-issue.md;
+          commit = '''
+            # Commit Command
 
-          Fix a GitHub issue following coding standards.
-          Usage: /fix-issue [issue-number]
-        '';
-        commit = ''
-          # Commit Command
-
-          Create a git commit with proper message formatting.
-          Usage: /commit [message]
-        '';
-      };
+            Create a git commit with proper message formatting.
+            Usage: /commit [message]
+          ''';
+        }
+      '';
     };
 
     agents = lib.mkOption {
-      type = lib.types.attrsOf lib.types.lines;
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
       default = { };
       description = ''
         Custom agents for opencode.
-        The attribute name becomes the agent filename, and the value is the file content.
+        The attribute name becomes the agent filename, and the value is either:
+        - Inline content as a string  
+        - A path to a file containing the agent content
         Agents are stored in ~/.config/opencode/agent/ directory.
       '';
-      example = {
-        code-reviewer = ''
-          # Code Reviewer Agent
+      example = lib.literalExpression ''
+        {
+          code-reviewer = '''
+            # Code Reviewer Agent
 
-          You are a senior software engineer specializing in code reviews.
-          Focus on code quality, security, and maintainability.
+            You are a senior software engineer specializing in code reviews.
+            Focus on code quality, security, and maintainability.
 
-          ## Guidelines
-          - Review for potential bugs and edge cases
-          - Check for security vulnerabilities
-          - Ensure code follows best practices
-          - Suggest improvements for readability and performance
-        '';
-        documentation = ''
-          # Documentation Agent
-
-          You are a technical writer who creates clear, comprehensive documentation.
-          Focus on user-friendly explanations and examples.
-
-          ## Guidelines
-          - Write clear, concise documentation
-          - Include practical examples
-          - Use proper formatting and structure
-          - Consider the target audience
-        '';
-      };
+            ## Guidelines
+            - Review for potential bugs and edge cases
+            - Check for security vulnerabilities
+            - Ensure code follows best practices
+            - Suggest improvements for readability and performance
+          ''';
+          documentation = ./agents/documentation.md;
+        }
+      '';
     };
 
   };
@@ -166,15 +158,15 @@ in
     }
     // lib.mapAttrs' (
       name: content:
-      lib.nameValuePair "opencode/command/${name}.md" {
-        text = content;
-      }
+      lib.nameValuePair "opencode/command/${name}.md" (
+        if lib.isPath content then { source = content; } else { text = content; }
+      )
     ) cfg.commands
     // lib.mapAttrs' (
       name: content:
-      lib.nameValuePair "opencode/agent/${name}.md" {
-        text = content;
-      }
+      lib.nameValuePair "opencode/agent/${name}.md" (
+        if lib.isPath content then { source = content; } else { text = content; }
+      )
     ) cfg.agents;
   };
 }
