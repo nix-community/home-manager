@@ -22,4 +22,5 @@
 
   fontconfig-default-rendering = ./default-rendering.nix;
   fontconfig-custom-rendering = ./custom-rendering.nix;
+  fontconfig-extra-config-files = ./extra-config-files.nix;
 }
