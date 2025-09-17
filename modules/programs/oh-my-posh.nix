@@ -72,6 +72,18 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          lib.count (x: x) [
+            (cfg.settings != { })
+            (cfg.useTheme != null)
+            (cfg.configFile != null)
+          ] <= 1;
+        message = "oh-my-posh: Only one of 'settings', 'useTheme', or 'configFile' can be configured at a time.";
+      }
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."oh-my-posh/config.json" = mkIf (cfg.settings != { }) {
