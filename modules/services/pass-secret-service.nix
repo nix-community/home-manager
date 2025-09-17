@@ -28,10 +28,11 @@ in
       defaultText = "$HOME/.password-store";
       example = "/home/user/.local/share/password-store";
       description = ''
-        Absolute path to password store. Defaults to
-        {file}`$HOME/.password-store` if the
-        {option}`programs.password-store` module is not enabled, and
-        {option}`programs.password-store.settings.PASSWORD_STORE_DIR` if it is.
+        Absolute path to password store, default upstream value of which is
+        {file}`$HOME/.password-store`. If the
+        {option}`programs.password-store` module is enabled and
+        {option}`programs.password-store.settings.PASSWORD_STORE_DIR` is set,
+        it will inherit the value from the latter.
       '';
     };
   };

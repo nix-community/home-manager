@@ -24,15 +24,20 @@ in
     settings = mkOption rec {
       type = with types; attrsOf str;
       apply = lib.mergeAttrs default;
-      default = {
-        PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
-      };
+      default =
+        if lib.versionOlder config.home.stateVersion "25.11" then
+          {
+            PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
+          }
+        else
+          { };
       defaultText = literalExpression ''
-        { PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; }
+        { }                                                       for state version ≥ 25.11
+        { PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; } for state version < 25.11
       '';
       example = literalExpression ''
         {
-          PASSWORD_STORE_DIR = "/some/directory";
+          PASSWORD_STORE_DIR = "$\{config.xdg.dataHome\}/password-store";
           PASSWORD_STORE_KEY = "12345678";
           PASSWORD_STORE_CLIP_TIME = "60";
         }
@@ -52,7 +57,9 @@ in
     home.packages = [ cfg.package ];
     home.sessionVariables = cfg.settings;
 
-    services.pass-secret-service.storePath = lib.mkDefault cfg.settings.PASSWORD_STORE_DIR;
+    services.pass-secret-service = lib.mkIf (builtins.hasAttr "PASSWORD_STORE_DIR" cfg.settings) {
+      storePath = cfg.settings.PASSWORD_STORE_DIR;
+    };
 
     xsession.importedVariables = lib.mkIf config.xsession.enable (
       lib.mapAttrsToList (name: value: name) cfg.settings
