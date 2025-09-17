@@ -55,7 +55,7 @@ in
     };
 
     configFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
+      type = with lib.types; nullOr (either str path);
       default = null;
       description = ''
         Path to a custom configuration path, can be json, yaml or toml.
