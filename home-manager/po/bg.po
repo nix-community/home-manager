@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-09-17 16:01+0000\n"
-"Last-Translator: Kiril Mihaylov <kiril195@hotmail.com>\n"
+"PO-Revision-Date: 2025-09-17 16:02+0000\n"
+"Last-Translator: Borislav Rangelov <borislav.y.rangelov@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/home-manager/"
 "cli/bg/>\n"
 "Language: bg\n"
@@ -104,7 +104,7 @@ msgstr ""
 
 #: home-manager/home-manager:153
 msgid "Sanity checking Nix"
-msgstr "Проверяване за коректността на Nix"
+msgstr "Бърза проверка на Nix"
 
 #: home-manager/home-manager:173
 msgid "Could not find suitable profile directory, tried %s and %s"
