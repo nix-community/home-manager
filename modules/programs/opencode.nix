@@ -78,6 +78,65 @@ in
         written to {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
       '';
     };
+
+    commands = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Custom commands for opencode.
+        The attribute name becomes the command filename, and the value is either:
+        - Inline content as a string
+        - A path to a file containing the command content
+        Commands are stored in ~/.config/opencode/command/ directory.
+      '';
+      example = lib.literalExpression ''
+        {
+          changelog = '''
+            # Update Changelog Command
+
+            Update CHANGELOG.md with a new entry for the specified version.
+            Usage: /changelog [version] [change-type] [message]
+          ''';
+          fix-issue = ./commands/fix-issue.md;
+          commit = '''
+            # Commit Command
+
+            Create a git commit with proper message formatting.
+            Usage: /commit [message]
+          ''';
+        }
+      '';
+    };
+
+    agents = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Custom agents for opencode.
+        The attribute name becomes the agent filename, and the value is either:
+        - Inline content as a string  
+        - A path to a file containing the agent content
+        Agents are stored in ~/.config/opencode/agent/ directory.
+      '';
+      example = lib.literalExpression ''
+        {
+          code-reviewer = '''
+            # Code Reviewer Agent
+
+            You are a senior software engineer specializing in code reviews.
+            Focus on code quality, security, and maintainability.
+
+            ## Guidelines
+            - Review for potential bugs and edge cases
+            - Check for security vulnerabilities
+            - Ensure code follows best practices
+            - Suggest improvements for readability and performance
+          ''';
+          documentation = ./agents/documentation.md;
+        }
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -92,9 +151,22 @@ in
           // cfg.settings
         );
       };
+
       "opencode/AGENTS.md" = mkIf (cfg.rules != "") {
         text = cfg.rules;
       };
-    };
+    }
+    // lib.mapAttrs' (
+      name: content:
+      lib.nameValuePair "opencode/command/${name}.md" (
+        if lib.isPath content then { source = content; } else { text = content; }
+      )
+    ) cfg.commands
+    // lib.mapAttrs' (
+      name: content:
+      lib.nameValuePair "opencode/agent/${name}.md" (
+        if lib.isPath content then { source = content; } else { text = content; }
+      )
+    ) cfg.agents;
   };
 }

@@ -384,6 +384,14 @@
     name = "Rosario Pulella";
     source = "nixpkgs";
   };
+  S0AndS0 = {
+    email = "S0AndS0@digital-mercenaries.com";
+    github = "S0AndS0";
+    githubId = 4116150;
+    matrix = "@s0ands0:matrix.org";
+    name = "S0AndS0";
+    source = "nixpkgs";
+  };
   Scrumplex = {
     email = "contact@scrumplex.net";
     github = "Scrumplex";
@@ -514,6 +522,14 @@
     githubId = 21103047;
     name = "Yomi";
     source = "home-manager";
+  };
+  adda0 = {
+    email = "chocholaty.david@protonmail.com";
+    github = "adda0";
+    githubId = 52529234;
+    matrix = "@adda0:matrix.org";
+    name = "David Chocholatý";
+    source = "nixpkgs";
   };
   adisbladis = {
     email = "adisbladis@gmail.com";
@@ -1800,18 +1816,6 @@
     githubId = 7798336;
     name = "Owen McGrath";
     source = "home-manager";
-  };
-  oxalica = {
-    email = "oxalicc@pm.me";
-    github = "oxalica";
-    githubId = 14816024;
-    keys = [
-      {
-        fingerprint = "F90F FD6D 585C 2BA1 F13D  E8A9 7571 654C F88E 31C2";
-      }
-    ];
-    name = "oxalica";
-    source = "nixpkgs";
   };
   pacien = {
     email = "r9uhdi.nixpkgs@euxane.net";

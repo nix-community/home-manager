@@ -1,0 +1,3 @@
+GOBIN=/home/hm-user/.local/bin.go
+GOPATH=/home/hm-user/mygo:/home/hm-user/another/go:/home/hm-user/yet/another/go
+GOPRIVATE=*.corp.example.com,rsc.io/private

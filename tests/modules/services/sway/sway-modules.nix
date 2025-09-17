@@ -13,6 +13,12 @@
         "*" = {
           xkb_variant = "dvorak";
         };
+        "type:pointer" = {
+          accel_profile = "flat";
+        };
+        "2:10:TPPS/2_Elan_TrackPoint" = {
+          accel_profile = "adaptive";
+        };
       };
       output = {
         "HDMI-A-2" = {

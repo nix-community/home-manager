@@ -22,8 +22,8 @@
       Type=simple
 
       [Unit]
-      After=ssh-tpm-agent.socket
       After=ssh-agent.service
+      After=ssh-tpm-agent.socket
       BindsTo=ssh-agent.service
       Description=ssh-tpm-agent service
       Documentation=https://github.com/Foxboron/ssh-tpm-agent

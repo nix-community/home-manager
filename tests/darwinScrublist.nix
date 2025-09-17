@@ -32,6 +32,7 @@ let
     "cmus"
     "codex"
     "comodoro"
+    "cudatext"
     "darcs"
     "delta"
     "dircolors"

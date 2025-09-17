@@ -16,6 +16,8 @@ let
       "--config ${config.xdg.configHome}/oh-my-posh/config.json"
     else if cfg.useTheme != null then
       "--config ${cfg.package}/share/oh-my-posh/themes/${cfg.useTheme}.omp.json"
+    else if cfg.configFile != null then
+      "--config ${cfg.configFile}"
     else
       "";
 
@@ -52,6 +54,14 @@ in
       '';
     };
 
+    configFile = lib.mkOption {
+      type = with lib.types; nullOr (either str path);
+      default = null;
+      description = ''
+        Path to a custom configuration path, can be json, yaml or toml.
+      '';
+    };
+
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
@@ -62,6 +72,18 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          lib.count (x: x) [
+            (cfg.settings != { })
+            (cfg.useTheme != null)
+            (cfg.configFile != null)
+          ] <= 1;
+        message = "oh-my-posh: Only one of 'settings', 'useTheme', or 'configFile' can be configured at a time.";
+      }
+    ];
+
     home.packages = [ cfg.package ];
 
     xdg.configFile."oh-my-posh/config.json" = mkIf (cfg.settings != { }) {

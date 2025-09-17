@@ -7,6 +7,8 @@
 let
   inherit (lib)
     concatStringsSep
+    filterAttrs
+    hasPrefix
     mapAttrsToList
     mkIf
     mkOption
@@ -471,7 +473,9 @@ let
               (keycodebindingsStr keycodebindings)
             ]
             ++ optional (builtins.attrNames bindswitches != [ ]) (bindswitchesStr bindswitches)
-            ++ mapAttrsToList inputStr input
+            ++ mapAttrsToList inputStr (filterAttrs (n: v: n == "*") input)
+            ++ mapAttrsToList inputStr (filterAttrs (n: v: hasPrefix "type:" n) input)
+            ++ mapAttrsToList inputStr (filterAttrs (n: v: n != "*" && !(hasPrefix "type:" n)) input)
             ++ mapAttrsToList outputStr output # outputs
             ++ mapAttrsToList seatStr seat # seats
             ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
@@ -497,7 +501,6 @@ in
     Scrumplex
     alexarice
     sumnerevans
-    oxalica
   ];
 
   imports =

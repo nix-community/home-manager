@@ -51,7 +51,11 @@ let
       source =
         pkgs.writeTextFile {
           name = pathSafeName;
-          text = toSystemdIni serviceCfg;
+          text = toSystemdIni (
+            lib.filterAttrs (_: v: v != { }) (
+              lib.mapAttrs (_: lib.filterAttrs (_: v: v != null && v != [ ])) serviceCfg
+            )
+          );
           destination = "/${filename}";
         }
         + "/${filename}";
@@ -73,21 +77,117 @@ let
 
   servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
 
-  unitType =
-    unitKind:
-    with types;
-    let
-      primitive = oneOf [
-        bool
-        int
-        str
-        path
+  unitBaseType =
+    unitKind: mod:
+    types.submodule {
+      freeformType =
+        with types;
+        let
+          primitive = oneOf [
+            bool
+            int
+            str
+            path
+          ];
+        in
+        attrsOf (attrsOf (either primitive (listOf primitive)))
+        // {
+          description = "systemd ${unitKind} unit configuration";
+        };
+
+      imports = [
+        {
+          options.Unit = {
+            Description = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              example = "My daily database backup";
+              description = "A short human-readable label of the unit.";
+            };
+
+            Documentation = mkOption {
+              type = with types; coercedTo str lib.toList (listOf str);
+              example = [ "my-${unitKind}.${unitKind}" ];
+              default = [ ];
+              description = "List of URIs referencing documentation for the unit.";
+            };
+          };
+        }
+
+        mod
       ];
-    in
-    attrsOf (attrsOf (attrsOf (either primitive (listOf primitive))))
-    // {
-      description = "systemd ${unitKind} unit configuration";
     };
+
+  unitType = unitKind: types.attrsOf (unitBaseType unitKind { });
+
+  serviceType = types.attrsOf (
+    unitBaseType "service" {
+      options = {
+        Unit = {
+          X-Reload-Triggers = mkOption {
+            type = with types; listOf (either package str);
+            default = [ ];
+            example = literalExpression ''[ config.xdg.configFile."service.conf".source ]'';
+            description = ''
+              List of free form strings that can be used to trigger a service
+              reload during Home Manager activation.
+            '';
+          };
+
+          X-Restart-Triggers = mkOption {
+            type = with types; listOf (either package str);
+            default = [ ];
+            example = literalExpression ''[ config.xdg.configFile."service.conf".source ]'';
+            description = ''
+              List of free form strings that can be used to trigger a service
+              restart during Home Manager activation.
+            '';
+          };
+
+          X-SwitchMethod = mkOption {
+            type = types.enum [
+              null
+              "reload"
+              "restart"
+              "stop-start"
+              "keep-old"
+            ];
+            default = null;
+            example = literalExpression ''[ "''${config.xdg.configFile."service.conf".source}" ]'';
+            description = ''
+              The preferred method to use when switching from an old to a new
+              version of this service.
+            '';
+          };
+        };
+
+        Service = {
+          Environment = mkOption {
+            type = with types; coercedTo str lib.toList (listOf str);
+            default = [ ];
+            example = [
+              "VAR1=foo"
+              "VAR2=\"bar baz\""
+            ];
+            description = "Environment variables available to executed processes.";
+          };
+
+          ExecStart = mkOption {
+            type =
+              with types;
+              let
+                primitive = either package str;
+              in
+              either primitive (listOf primitive);
+            apply = lib.toList;
+            default = [ ];
+            example = "/absolute/path/to/command arg1 arg2";
+            description = "Command that is executed when this service is started.";
+          };
+        };
+      };
+    }
+  );
 
   unitDescription = type: ''
     Definition of systemd per-user ${type} units. Attributes are
@@ -151,7 +251,7 @@ in
 
       services = mkOption {
         default = { };
-        type = unitType "service";
+        type = serviceType;
         description = (unitDescription "service");
         example = unitExample "Service";
       };
