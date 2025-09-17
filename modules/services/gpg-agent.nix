@@ -377,7 +377,7 @@ in
         programs.zsh.initContent = mkIf cfg.enableZshIntegration gpgZshInitStr;
         programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration gpgFishInitStr;
 
-        programs.nushell.extraEnv = mkIf cfg.enableNushellIntegration gpgNushellInitStr;
+        programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration gpgNushellInitStr;
       }
 
       (mkIf (cfg.sshKeys != null) {
