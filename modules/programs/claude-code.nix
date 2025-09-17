@@ -80,80 +80,71 @@ in
     };
 
     agents = lib.mkOption {
-      type = lib.types.attrsOf lib.types.lines;
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
       default = { };
       description = ''
         Custom agents for Claude Code.
-        The attribute name becomes the agent filename, and the value is the file content with frontmatter.
+        The attribute name becomes the agent filename, and the value is either:
+        - Inline content as a string with frontmatter
+        - A path to a file containing the agent content with frontmatter
         Agents are stored in .claude/agents/ directory.
       '';
-      example = {
-        code-reviewer = ''
-          ---
-          name: code-reviewer
-          description: Specialized code review agent
-          tools: Read, Edit, Grep
-          ---
+      example = lib.literalExpression ''
+        {
+          code-reviewer = '''
+            ---
+            name: code-reviewer
+            description: Specialized code review agent
+            tools: Read, Edit, Grep
+            ---
 
-          You are a senior software engineer specializing in code reviews.
-          Focus on code quality, security, and maintainability.
-        '';
-        documentation = ''
-          ---
-          name: documentation
-          description: Documentation writing assistant
-          model: claude-3-5-sonnet-20241022
-          tools: Read, Write, Edit
-          ---
-
-          You are a technical writer who creates clear, comprehensive documentation.
-          Focus on user-friendly explanations and examples.
-        '';
-      };
+            You are a senior software engineer specializing in code reviews.
+            Focus on code quality, security, and maintainability.
+          ''';
+          documentation = ./agents/documentation.md;
+        }
+      '';
     };
 
     commands = lib.mkOption {
-      type = lib.types.attrsOf lib.types.lines;
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
       default = { };
       description = ''
         Custom commands for Claude Code.
-        The attribute name becomes the command filename, and the value is the file content.
+        The attribute name becomes the command filename, and the value is either:
+        - Inline content as a string
+        - A path to a file containing the command content
         Commands are stored in .claude/commands/ directory.
       '';
-      example = {
-        changelog = ''
-          ---
-          allowed-tools: Bash(git log:*), Bash(git diff:*)
-          argument-hint: [version] [change-type] [message]
-          description: Update CHANGELOG.md with new entry
-          ---
-          Parse the version, change type, and message from the input
-          and update the CHANGELOG.md file accordingly.
-        '';
-        fix-issue = ''
-          ---
-          allowed-tools: Bash(git status:*), Read
-          argument-hint: [issue-number]
-          description: Fix GitHub issue following coding standards
-          ---
-          Fix issue #$ARGUMENTS following our coding standards and best practices.
-        '';
-        commit = ''
-          ---
-          allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
-          description: Create a git commit with proper message
-          ---
-          ## Context
+      example = lib.literalExpression ''
+        {
+          changelog = '''
+            ---
+            allowed-tools: Bash(git log:*), Bash(git diff:*)
+            argument-hint: [version] [change-type] [message]
+            description: Update CHANGELOG.md with new entry
+            ---
+            Parse the version, change type, and message from the input
+            and update the CHANGELOG.md file accordingly.
+          ''';
+          fix-issue = ./commands/fix-issue.md;
+          commit = '''
+            ---
+            allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+            description: Create a git commit with proper message
+            ---
+            ## Context
 
-          - Current git status: !`git status`
-          - Current git diff: !`git diff HEAD`
-          - Recent commits: !`git log --oneline -5`
+            - Current git status: !`git status`
+            - Current git diff: !`git diff HEAD`
+            - Recent commits: !`git log --oneline -5`
 
-          ## Task
+            ## Task
 
-          Based on the changes above, create a single atomic git commit with a descriptive message.
-        '';
-      };
+            Based on the changes above, create a single atomic git commit with a descriptive message.
+          ''';
+        }
+      '';
     };
 
     hooks = lib.mkOption {
@@ -361,15 +352,15 @@ in
       }
       // lib.mapAttrs' (
         name: content:
-        lib.nameValuePair ".claude/agents/${name}.md" {
-          text = content;
-        }
+        lib.nameValuePair ".claude/agents/${name}.md" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
       ) cfg.agents
       // lib.mapAttrs' (
         name: content:
-        lib.nameValuePair ".claude/commands/${name}.md" {
-          text = content;
-        }
+        lib.nameValuePair ".claude/commands/${name}.md" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
       ) cfg.commands
       // lib.mapAttrs' (
         name: content:
