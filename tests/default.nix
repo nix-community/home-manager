@@ -181,6 +181,7 @@ import nmtSrc {
           ./modules/misc/manual
           ./modules/misc/news
           ./modules/misc/nix
+          ./modules/misc/nix-remote-build
           ./modules/misc/specialisation
           ./modules/misc/xdg
           ./modules/xresources
