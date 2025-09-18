@@ -26,8 +26,8 @@ in
 
     enableNixOutputMonitorIntegration = lib.mkOption {
       type = lib.types.bool;
-      # Disabled by default. Using `config.programs.nix-output-monitor.enable` might be too intrusive.
-      default = false;
+      default = config.programs.nix-output-monitor.enable;
+      defaultText = lib.literalExpression "config.programs.nix-output-monitor.enable";
       description = ''
         Enable integration with nix-output-monitor, to use `nom` (`nix-output-monitor`) instead of `nix` for running
         commands.
