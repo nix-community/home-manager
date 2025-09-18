@@ -50,6 +50,7 @@ let
       inner = self: super: {
         inherit (pkgs)
           coreutils
+          crudini
           jq
           desktop-file-utils
           diffutils
