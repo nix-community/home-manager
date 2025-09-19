@@ -30,6 +30,22 @@ in
 
     package = lib.mkPackageOption pkgs "yazi" { nullable = true; };
 
+    extraPackages = mkOption {
+      type = with types; listOf package;
+      default = [ ];
+      example = literalExpression ''
+        with pkgs; [
+          glow
+          ouch
+        ]
+      '';
+      description = ''
+        Extra packages to make available to yazi.
+
+        These packages will be added to the yazi wrapper's PATH.
+      '';
+    };
+
     shellWrapperName = lib.mkOption {
       type = types.str;
       default = "yy";
@@ -178,10 +194,26 @@ in
         }
       '';
     };
+
+    finalPackage = mkOption {
+      type = types.package;
+      readOnly = true;
+      visible = false;
+      default =
+        let
+          yaziWithExtraPackages = cfg.package.override (old: {
+            extraPackages = (old.extraPackages or [ ]) ++ cfg.extraPackages;
+          });
+        in
+        if cfg.package ? override && cfg.extraPackages != [ ] then yaziWithExtraPackages else cfg.package;
+      description = ''
+        The yazi package with extraPackages applied.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+    home.packages = mkIf (cfg.package != null) [ cfg.finalPackage ];
 
     programs =
       let
