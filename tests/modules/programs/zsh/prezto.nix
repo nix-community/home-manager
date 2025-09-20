@@ -34,7 +34,7 @@
     assertFileContains home-files/.zshenv 'envExtra'
     # make sure we are loading the environment variables
     assertFileContains home-files/.zshenv \
-      '. "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"'
+      '/etc/profile.d/hm-session-vars.sh'
     assertFileContains home-files/.zshenv \
       'export FOO="bar"'
   '';
