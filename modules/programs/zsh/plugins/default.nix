@@ -102,31 +102,46 @@ in
 
       initContent = lib.mkMerge [
         (lib.mkOrder 560 (
-          lib.concatStrings (
-            map (plugin: ''
-              path+="${pluginsDir}/${plugin.name}"
-              fpath+="${pluginsDir}/${plugin.name}"
-              ${
-                (lib.optionalString (plugin.completions != [ ]) ''
-                  fpath+=(${
-                    lib.concatMapStringsSep " " (
-                      completion: "\"${pluginsDir}/${plugin.name}/${completion}\""
-                    ) plugin.completions
-                  })
-                '')
-              }
-            '') cfg.plugins
-          )
+          let
+            pluginNames = map (plugin: plugin.name) cfg.plugins;
+            completionPaths = lib.flatten (
+              map (plugin: map (completion: "${plugin.name}/${completion}") plugin.completions) cfg.plugins
+            );
+          in
+          ''
+            # Add plugin directories to PATH and fpath
+            plugin_dirs=(
+              ${lib.concatMapStringsSep "\n  " (name: ''"${name}"'') pluginNames}
+            )
+            for plugin_dir in "''${plugin_dirs[@]}"; do
+              path+="${pluginsDir}/$plugin_dir"
+              fpath+="${pluginsDir}/$plugin_dir"
+            done
+            ${lib.optionalString (completionPaths != [ ]) ''
+              # Add completion paths to fpath
+              completion_paths=(
+                ${lib.concatMapStringsSep "\n  " (path: ''"${path}"'') completionPaths}
+              )
+              for completion_path in "''${completion_paths[@]}"; do
+                fpath+="${pluginsDir}/$completion_path"
+              done
+            ''}
+          ''
         ))
 
         (lib.mkOrder 900 (
-          lib.concatStrings (
-            map (plugin: ''
-              if [[ -f "${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
-                source "${pluginsDir}/${plugin.name}/${plugin.file}"
-              fi
-            '') cfg.plugins
-          )
+          let
+            pluginPaths = map (plugin: "${plugin.name}/${plugin.file}") cfg.plugins;
+          in
+          ''
+            # Source plugins
+            plugins=(
+              ${lib.concatMapStringsSep "\n  " (path: ''"${path}"'') pluginPaths}
+            )
+            for plugin in "''${plugins[@]}"; do
+              [[ -f "${pluginsDir}/$plugin" ]] && source "${pluginsDir}/$plugin"
+            done
+          ''
         ))
       ];
     };
