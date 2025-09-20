@@ -11,6 +11,7 @@ let
     "alacritty"
     "alot"
     "antidote"
+    "arduino-ide"
     "aria2"
     "atuin"
     "autojump"
