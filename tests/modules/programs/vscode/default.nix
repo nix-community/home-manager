@@ -5,3 +5,10 @@
   vscode-update-checks = ./update-checks.nix;
   vscode-snippets = ./snippets.nix;
 }
+// (import ./tests.nix {
+  programName = "vscode";
+})
+// (import ./tests.nix {
+  programName = "cursor";
+  packageName = "code-cursor";
+})
