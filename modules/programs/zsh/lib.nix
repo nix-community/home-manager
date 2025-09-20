@@ -3,7 +3,7 @@ let
   cfg = config.programs.zsh;
 in
 rec {
-  homeDir = config.home.homeDirectory;
+  homeDir = cleanPathStr config.home.homeDirectory;
 
   /*
     Escape a path string for shell usage and remove trailing slashes.
