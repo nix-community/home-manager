@@ -120,13 +120,18 @@ in
         ))
 
         (lib.mkOrder 900 (
-          lib.concatStrings (
-            map (plugin: ''
-              if [[ -f "${pluginsDir}/${plugin.name}/${plugin.file}" ]]; then
-                source "${pluginsDir}/${plugin.name}/${plugin.file}"
-              fi
-            '') cfg.plugins
-          )
+          let
+            pluginPaths = map (plugin: "${plugin.name}/${plugin.file}") cfg.plugins;
+          in
+          ''
+            # Source plugins
+            plugins=(
+              ${lib.concatMapStringsSep "\n  " (path: ''"${path}"'') pluginPaths}
+            )
+            for plugin in "''${plugins[@]}"; do
+              [[ -f "${pluginsDir}/$plugin" ]] && source "${pluginsDir}/$plugin"
+            done
+          ''
         ))
       ];
     };
