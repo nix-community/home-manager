@@ -1,0 +1,5 @@
+disable_exit_confirmation: false
+sort:
+  by: NAME
+  isReversed: false
+theme: Cobalt
