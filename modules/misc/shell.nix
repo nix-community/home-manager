@@ -19,6 +19,11 @@
       '';
     };
 
+    enableShIntegration = lib.hm.shell.mkShIntegrationOption {
+      inherit config;
+      baseName = "Shell";
+    };
+
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption {
       inherit config;
       baseName = "Shell";
