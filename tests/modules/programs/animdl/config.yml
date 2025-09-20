@@ -1,0 +1,9 @@
+default_player: mpv
+default_provider: animixplay
+ffmpeg:
+  executable: ffmpeg
+  hls_download: false
+  submerge: true
+quality_string: best[subtitle]/best
+site_urls:
+  animixplay: https://www.animixplay.to/
