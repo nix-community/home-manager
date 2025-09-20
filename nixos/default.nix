@@ -14,6 +14,9 @@ let
     lib.optionalAttrs (cfg.backupFileExtension != null) {
       HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
     }
+    // lib.optionalAttrs (cfg.backupCommand != null) {
+      HOME_MANAGER_BACKUP_COMMAND = cfg.backupCommand;
+    }
     // lib.optionalAttrs cfg.verbose { VERBOSE = "1"; };
 
 in
