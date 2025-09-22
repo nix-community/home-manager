@@ -78,6 +78,9 @@ let
       The corresponding package was removed from nixpkgs,
       consider using `programs.pay-respects` instead.
     '')
+    (lib.mkRemovedOptionModule [ "programs" "octant" ] ''
+      Octant is no longer maintained and project was archived.
+    '')
   ]
   ++ (lib.concatMap
     (
