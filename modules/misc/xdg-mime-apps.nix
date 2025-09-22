@@ -161,7 +161,7 @@ in
 
               existing="$(crudini --get $out 'Default Applications' "$mime" 2>/dev/null || true)"
               local value="$existing''${existing:+;}''$name"
-              crudini --inplace --set $out 'Default Applications' "$mime" "$value"
+              crudini --ini-options=nospace --inplace --set $out 'Default Applications' "$mime" "$value"
             }
 
             install -m644 ${baseFile} $out
