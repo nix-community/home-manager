@@ -1561,6 +1561,13 @@
     name = "Marius Bergmann";
     source = "nixpkgs";
   };
+  mdaniels5757 = {
+    email = "nix@mdaniels.me";
+    github = "mdaniels5757";
+    githubId = 8762511;
+    name = "Michael Daniels";
+    source = "nixpkgs";
+  };
   michaelvanstraten = {
     email = "michael@vanstraten.de";
     github = "michaelvanstraten";
