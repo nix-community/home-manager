@@ -174,9 +174,9 @@ in
           if username:
             aqt.mw.pm.set_sync_username(username)
           elif username_file and username_file.exists():
-              aqt.mw.pm.set_sync_username(username_file.read_text())
+              aqt.mw.pm.set_sync_username(username_file.read_text().strip())
           if key_file and key_file.exists():
-              aqt.mw.pm.set_sync_key(key_file.read_text())
+              aqt.mw.pm.set_sync_key(key_file.read_text().strip())
 
       aqt.gui_hooks.profile_did_open.append(set_server)
     '';
