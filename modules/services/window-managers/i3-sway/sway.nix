@@ -430,7 +430,7 @@ let
       ${pkgs.xvfb-run}/bin/xvfb-run ${cfg.package}/bin/sway --config "$target" --validate --unsupported-gpu || {
         echo "Checking the sway config file failed. Normally, this happens because there are errors in the config file."
         echo "But the check can also fail if the sway config file has dependencies on configuration that is not available in the Nix build sandbox (e.g. custom keyboard layouts defined in the NixOS configuration; background images in the user's home directory)."
-        echo "In that case, it may be necessary to set 'config.wayland.windowManager.sway.checkConfig = false;'."
+        echo "In that case, it may be necessary to set 'wayland.windowManager.sway.checkConfig = false;'."
         exit 1
       }
     '';
