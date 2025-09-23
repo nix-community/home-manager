@@ -282,6 +282,7 @@ in
             config = {
               again_button_name = "not quite";
               good_button_name = "excellent";
+              toggle_names_textcolors = 1;
             };
             user_files = ./dir-to-be-merged-into-addon-user-files-dir;
           };
