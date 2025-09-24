@@ -61,6 +61,12 @@
     github = "aheaume";
     githubId = 13830042;
   };
+  aionescu = {
+    name = "Alex Ionescu";
+    email = "github@ionescu.sh";
+    github = "aionescu";
+    githubId = 48064242;
+  };
   austreelis = {
     email = "github@accounts.austreelis.net";
     github = "Austreelis";
