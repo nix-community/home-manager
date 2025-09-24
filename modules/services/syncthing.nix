@@ -866,6 +866,8 @@ in
         (lib.hm.assertions.assertPlatform "services.syncthing.tray" pkgs lib.platforms.linux)
       ];
 
+      home.packages = [ cfg.tray.package ];
+
       systemd.user.services = {
         ${cfg.tray.package.pname} = {
           Unit = {
