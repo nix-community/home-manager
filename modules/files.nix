@@ -149,6 +149,9 @@ in
             if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
               # The target exists, back it up
               backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
+              if [[ -e "$backup" && -n "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
+                run rm $VERBOSE_ARG "$backup"
+              fi
               run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
             fi
 
