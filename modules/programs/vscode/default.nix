@@ -31,9 +31,8 @@ let
       "${cfg.package}/product.json";
   productInfo = lib.importJSON productInfoPath;
 
-  configDir = if cfg.nameShort != null then cfg.nameShort else productInfo.nameShort;
-  extensionDir =
-    if cfg.dataFolderName != null then cfg.dataFolderName else productInfo.dataFolderName;
+  configDir = cfg.nameShort;
+  extensionDir = cfg.dataFolderName;
 
   userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -309,8 +308,9 @@ in
     };
 
     nameShort = mkOption {
-      type = types.nullOr types.str;
-      default = null;
+      type = types.str;
+      default = productInfo.nameShort;
+      defaultText = "(derived from product.json)";
       example = "MyCoolVSCodeFork";
       description = ''
         Override for package "short name", used for generating configuration.
@@ -320,14 +320,15 @@ in
     };
 
     dataFolderName = mkOption {
-      type = types.nullOr types.str;
+      type = types.str;
+      default = productInfo.dataFolderName;
+      defaultText = "(derived from product.json)";
       example = ".cool-vscode";
       description = ''
         Override for extensions directory.
 
         This should match the `dataFolderName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
       '';
-      default = null;
     };
 
     profiles = mkOption {
