@@ -293,7 +293,10 @@ let
   syncthingArgs = defaultSyncthingArgs ++ cfg.extraOptions;
 in
 {
-  meta.maintainers = [ lib.maintainers.rycee ];
+  meta.maintainers = [
+    lib.maintainers.rycee
+    lib.hm.maintainers.aionescu
+  ];
 
   options = {
     services.syncthing = {
