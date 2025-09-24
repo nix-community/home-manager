@@ -23,12 +23,15 @@ let
   jsonFormat = pkgs.formats.json { };
 
   productInfoPath =
-    if lib.pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "${cfg.package}/Applications/${cfg.package.passthru.longName}.app/Contents/Resources/app/product.json"
+    else if lib.pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
       # Visual Studio Code, VSCodium, Windsurf, Cursor
       "${cfg.package}/lib/vscode/resources/app/product.json"
     else
       # OpenVSCode Server
       "${cfg.package}/product.json";
+
   productInfo = lib.importJSON productInfoPath;
 
   configDir = cfg.nameShort;
