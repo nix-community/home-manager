@@ -27,7 +27,7 @@ in
       '';
     };
 
-    defaultTimeout = lib.mkOption {
+    defaultMaximumIdentityLifetime = lib.mkOption {
       type = lib.types.nullOr lib.types.ints.positive;
       default = null;
       example = 3600;
@@ -55,7 +55,9 @@ in
         Documentation = "man:ssh-agent(1)";
       };
       Service.ExecStart = "${lib.getExe' cfg.package "ssh-agent"} -D -a %t/${cfg.socket}${
-        lib.optionalString (cfg.defaultTimeout != null) " -t ${toString cfg.defaultTimeout}"
+        lib.optionalString (
+          cfg.defaultMaximumIdentityLifetime != null
+        ) " -t ${toString cfg.defaultMaximumIdentityLifetime}"
       }";
     };
   };

@@ -1,7 +1,7 @@
 {
   services.ssh-agent = {
     enable = true;
-    defaultTimeout = 1337;
+    defaultMaximumIdentityLifetime = 1337;
   };
 
   nmt.script = ''
