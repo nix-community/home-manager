@@ -738,38 +738,28 @@ in
 
       package = lib.mkPackageOption pkgs "syncthing" { };
 
-      tray = mkOption {
-        type =
-          with types;
-          either bool (submodule {
-            options = {
-              enable = mkOption {
-                type = bool;
-                default = false;
-                description = "Whether to enable a syncthing tray service.";
-              };
-
-              command = mkOption {
-                type = str;
-                default = "syncthingtray --wait";
-                defaultText = literalExpression "syncthingtray --wait";
-                example = literalExpression "qsyncthingtray";
-                description = "Syncthing tray command to use.";
-              };
-
-              package = mkOption {
-                type = package;
-                default = pkgs.syncthingtray-minimal;
-                defaultText = literalExpression "pkgs.syncthingtray-minimal";
-                example = literalExpression "pkgs.qsyncthingtray";
-                description = "Syncthing tray package to use.";
-              };
-            };
-          });
-        default = {
-          enable = false;
+      tray = {
+        enable = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Whether to enable a syncthing tray service.";
         };
-        description = "Syncthing tray service configuration.";
+
+        command = mkOption {
+          type = types.str;
+          default = "syncthingtray --wait";
+          defaultText = literalExpression "syncthingtray --wait";
+          example = literalExpression "qsyncthingtray";
+          description = "Syncthing tray command to use.";
+        };
+
+        package = mkOption {
+          type = types.package;
+          default = pkgs.syncthingtray-minimal;
+          defaultText = literalExpression "pkgs.syncthingtray-minimal";
+          example = literalExpression "pkgs.qsyncthingtray";
+          description = "Syncthing tray package to use.";
+        };
       };
     };
   };
@@ -871,7 +861,7 @@ in
         };
     })
 
-    (lib.mkIf (lib.isAttrs cfg.tray && cfg.tray.enable) {
+    (lib.mkIf cfg.tray.enable {
       assertions = [
         (lib.hm.assertions.assertPlatform "services.syncthing.tray" pkgs lib.platforms.linux)
       ];
@@ -897,38 +887,6 @@ in
           };
         };
       };
-    })
-
-    # deprecated
-    (lib.mkIf (lib.isBool cfg.tray && cfg.tray) {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "services.syncthing.tray" pkgs lib.platforms.linux)
-      ];
-
-      systemd.user.services = {
-        "syncthingtray" = {
-          Unit = {
-            Description = "syncthingtray";
-            Requires = [ "tray.target" ];
-            After = [
-              "graphical-session.target"
-              "tray.target"
-            ];
-            PartOf = [ "graphical-session.target" ];
-          };
-
-          Service = {
-            ExecStart = "${pkgs.syncthingtray-minimal}/bin/syncthingtray --wait";
-          };
-
-          Install = {
-            WantedBy = [ "graphical-session.target" ];
-          };
-        };
-      };
-      warnings = [
-        "Specifying 'services.syncthing.tray' as a boolean is deprecated, set 'services.syncthing.tray.enable' instead. See https://github.com/nix-community/home-manager/pull/1257."
-      ];
     })
   ];
 }
