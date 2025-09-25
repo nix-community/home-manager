@@ -8,14 +8,6 @@
 # To regenerate: ./lib/python/generate-all-maintainers.py
 #
 {
-  "06kellyjac" = {
-    email = "hello+nixpkgs@j-k.io";
-    github = "06kellyjac";
-    githubId = 9866621;
-    matrix = "@j-k:matrix.org";
-    name = "Jack";
-    source = "nixpkgs";
-  };
   "0x5a4" = {
     email = "bej86nug@hhu.de";
     github = "0x5a4";
