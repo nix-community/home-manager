@@ -11,7 +11,7 @@ let
 
   settingsFormat = pkgs.formats.yaml { };
 
-  inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
 in
 {
   meta.maintainers = [
@@ -56,19 +56,53 @@ in
         for supported values.
       '';
     };
-  };
 
-  config = mkIf cfg.enable {
-    home.packages = mkIf (cfg.package != null) [ cfg.package ];
-
-    home.file."Library/Application Support/aichat/config.yaml" =
-      mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable))
-        {
-          source = settingsFormat.generate "aichat-config" cfg.settings;
+    agents = lib.mkOption {
+      type = lib.types.attrsOf settingsFormat.type;
+      default = { };
+      example = {
+        openai = {
+          model = "openai:gpt-4o";
+          temperature = 0.5;
+          top_p = 0.7;
+          use_tools = "fs,web_search";
+          agent_prelude = "default";
         };
 
-    xdg.configFile."aichat/config.yaml" = mkIf (cfg.settings != { } && (isLinux || config.xdg.enable)) {
-      source = settingsFormat.generate "aichat-config" cfg.settings;
+        llama = {
+          model = "llama3.2:latest";
+          temperature = 0.5;
+          use_tools = "web_search";
+        };
+      };
+      description = ''
+        Agent-specific configurations. See
+        <https://github.com/sigoden/aichat/wiki/Configuration-Guide#agent-specific>
+        for supported values.
+      '';
     };
   };
+
+  config =
+    let
+      aichatConfigPath =
+        if (isDarwin && !config.xdg.enable) then
+          "Library/Application Support/aichat"
+        else
+          "${lib.removePrefix config.home.homeDirectory config.xdg.configHome}/aichat";
+    in
+    mkIf cfg.enable {
+      home.packages = mkIf (cfg.package != null) [ cfg.package ];
+      home.file = {
+        "${aichatConfigPath}/config.yaml" = mkIf (cfg.settings != { }) {
+          source = settingsFormat.generate "aichat-config" cfg.settings;
+        };
+      }
+      // (lib.mapAttrs' (
+        k: v:
+        lib.nameValuePair "${aichatConfigPath}/agents/${k}/config.yaml" {
+          source = settingsFormat.generate "aichat-agent-${k}" v;
+        }
+      ) cfg.agents);
+    };
 }
