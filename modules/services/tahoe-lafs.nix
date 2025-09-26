@@ -14,7 +14,7 @@ in
     services.tahoe-lafs = {
       enable = lib.mkEnableOption "Tahoe-LAFS";
 
-      package = lib.mkPackageOption pkgs "tahoelafs" { };
+      package = lib.mkPackageOption pkgs "tahoe-lafs" { };
     };
   };
 

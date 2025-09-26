@@ -8,14 +8,6 @@
 # To regenerate: ./lib/python/generate-all-maintainers.py
 #
 {
-  "06kellyjac" = {
-    email = "hello+nixpkgs@j-k.io";
-    github = "06kellyjac";
-    githubId = 9866621;
-    matrix = "@j-k:matrix.org";
-    name = "Jack";
-    source = "nixpkgs";
-  };
   "0x5a4" = {
     email = "bej86nug@hhu.de";
     github = "0x5a4";
@@ -594,6 +586,14 @@
     githubId = 15369874;
     matrix = "@amesgen:amesgen.de";
     name = "Alexander Esgen";
+    source = "nixpkgs";
+  };
+  andre4ik3 = {
+    email = "andre4ik3@fastmail.com";
+    github = "andre4ik3";
+    githubId = 62390580;
+    matrix = "@andre4ik3:matrix.org";
+    name = "andre4ik3";
     source = "nixpkgs";
   };
   anthonyroussel = {
@@ -1559,6 +1559,13 @@
     github = "mbrgm";
     githubId = 2971615;
     name = "Marius Bergmann";
+    source = "nixpkgs";
+  };
+  mdaniels5757 = {
+    email = "nix@mdaniels.me";
+    github = "mdaniels5757";
+    githubId = 8762511;
+    name = "Michael Daniels";
     source = "nixpkgs";
   };
   michaelvanstraten = {

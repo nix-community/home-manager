@@ -164,7 +164,7 @@ in
         if cfg.sync.usernameFile == null then "None" else "Path('${cfg.sync.usernameFile}')"
       }
       key_file: Path | None = ${
-        if cfg.sync.passwordFile == null then "None" else "Path('${cfg.sync.passwordFile}')"
+        if cfg.sync.keyFile == null then "None" else "Path('${cfg.sync.keyFile}')"
       }
       custom_sync_url: str | None = ${if cfg.sync.url == null then "None" else "'${cfg.sync.url}'"}
 
@@ -174,9 +174,9 @@ in
           if username:
             aqt.mw.pm.set_sync_username(username)
           elif username_file and username_file.exists():
-              aqt.mw.pm.set_sync_username(username_file.read_text())
+              aqt.mw.pm.set_sync_username(username_file.read_text().strip())
           if key_file and key_file.exists():
-              aqt.mw.pm.set_sync_key(key_file.read_text())
+              aqt.mw.pm.set_sync_key(key_file.read_text().strip())
 
       aqt.gui_hooks.profile_did_open.append(set_server)
     '';

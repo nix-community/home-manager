@@ -4,10 +4,8 @@
   pkgs,
   ...
 }:
-
 let
   cfg = config.services.ssh-agent;
-
 in
 {
   meta.maintainers = [
@@ -26,6 +24,15 @@ in
       example = "ssh-agent/socket";
       description = ''
         The agent's socket; interpreted as a suffix to {env}`$XDG_RUNTIME_DIR`.
+      '';
+    };
+
+    defaultMaximumIdentityLifetime = lib.mkOption {
+      type = lib.types.nullOr lib.types.ints.positive;
+      default = null;
+      example = 3600;
+      description = ''
+        Set a default value for the maximum lifetime in seconds of identities added to the agent.
       '';
     };
   };
@@ -47,7 +54,11 @@ in
         Description = "SSH authentication agent";
         Documentation = "man:ssh-agent(1)";
       };
-      Service.ExecStart = "${lib.getExe' cfg.package "ssh-agent"} -D -a %t/${cfg.socket}";
+      Service.ExecStart = "${lib.getExe' cfg.package "ssh-agent"} -D -a %t/${cfg.socket}${
+        lib.optionalString (
+          cfg.defaultMaximumIdentityLifetime != null
+        ) " -t ${toString cfg.defaultMaximumIdentityLifetime}"
+      }";
     };
   };
 }

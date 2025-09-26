@@ -31,7 +31,7 @@ in
       '';
       description = ''
         List of program names that will cause mpvpaper to pause.
-        Programs must be separed by spaces or newlines.
+        Programs must be separated by spaces or newlines.
       '';
     };
     stopList = mkOption {
@@ -44,7 +44,7 @@ in
       '';
       description = ''
         List of program names that will cause mpvpaper to stop.
-        Programs must be separed by spaces or newlines.
+        Programs must be separated by spaces or newlines.
       '';
     };
   };

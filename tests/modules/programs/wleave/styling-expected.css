@@ -1,0 +1,16 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: Source Code Pro;
+    font-weight: bold;
+    color: #abb2bf;
+    font-size: 18px;
+    min-height: 0px;
+}
+window {
+    background: #16191C;
+    color: #aab2bf;
+}
+#window {
+    padding: 0 0px;
+}

@@ -1,0 +1,2 @@
+ssh-ng://bob@foo.example.com aarch64-linux /path/to/ssh-key 2 4 benchmark,big-parallel,kvm,nixos-test,big-parallel big-parallel PUBLIC_HOST_KEY
+ssh://alice@192.168.1.42 aarch64-darwin,x86_64-darwin ~/.ssh/id_rsa 1 1 apple-virt,big-parallel,nixos-test - PUBLIC_HOST_KEY_2

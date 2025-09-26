@@ -1,0 +1,7 @@
+[Plugin]
+Module=plugin-a
+Loader=python3
+Name=Test
+Description=Test
+Hidden=false
+X-ActionName=TestPlugin

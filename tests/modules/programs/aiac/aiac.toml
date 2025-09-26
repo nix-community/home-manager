@@ -1,0 +1,10 @@
+default_backend = "official_openai"
+
+[backends.localhost]
+type = "ollama"
+url = "http://localhost:11434/api"
+
+[backends.official_openai]
+api_key = "API KEY"
+default_model = "gpt-4o"
+type = "openai"
