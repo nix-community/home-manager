@@ -17,7 +17,6 @@ let
     ;
 
   cfg = config.programs.zsh;
-
   bindkeyCommands = {
     emacs = "bindkey -e";
     viins = "bindkey -v";
@@ -501,7 +500,12 @@ in
 
             (lib.mkIf (cfg.setOptions != [ ]) (
               mkOrder 950 ''
-                ${concatStringsSep "\n" (map (option: "setopt ${option}") cfg.setOptions)}
+                # Set shell options
+                ${lib.hm.zsh.define "set_opts" cfg.setOptions}
+                for opt in "''${set_opts[@]}"; do
+                  setopt "$opt"
+                done
+                unset opt set_opts
               ''
             ))
 
