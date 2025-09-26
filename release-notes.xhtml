@@ -51,7 +51,10 @@ previously created an unnecessary <code class="literal">home-manager</code> per-
 profile” for the user. This no longer happens. You can restore the
 old behavior by adding</p><pre><code class="programlisting  nix">home-manager.enableLegacyProfileManagement = true;
 </code></pre><p>to your configuration. This option is likely to be deprecated in the
-future.</p></li></ul></div>
+future.</p></li><li class="listitem"><p>The use of <code class="literal">services.syncthing.tray</code> as a Boolean option was removed
+after being deprecated in 2021. You are now expected to use
+<a class="xref" href="options.xhtml#opt-services.syncthing.tray.enable"  ><code class="option">services.syncthing.tray.enable</code></a> to enable the Syncthing tray
+service.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11-state-version-changes" class="title" style="clear: both">State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
 &quot;25.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>No changes.</p></li></ul></div>
