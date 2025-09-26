@@ -12,7 +12,7 @@
 
   nmt.script = ''
     assertFileExists home-files/.zshenv
-    assertFileRegex home-files/.zshenv 'export V1="v1"'
-    assertFileRegex home-files/.zshenv 'export V2="v2-v1"'
+    assertFileRegex home-files/.zshenv 'export V1=v1'
+    assertFileRegex home-files/.zshenv 'export V2=v2-v1'
   '';
 }

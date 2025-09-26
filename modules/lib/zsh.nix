@@ -7,9 +7,12 @@ rec {
     if builtins.isBool v then
       if v then "true" else "false"
     else if builtins.isString v then
-      ''"${v}"''
+      lib.escapeShellArg v
     else if builtins.isList v then
-      "(${lib.concatStringsSep " " (map toZshValue v)})"
+      let
+        shell = import ./shell.nix { inherit lib; };
+      in
+      "(${shell.formatShellArrayContent (map toString v)})"
     else
       ''"${toString v}"'';
 

@@ -36,6 +36,6 @@
     assertFileContains home-files/.zshenv \
       '. "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"'
     assertFileContains home-files/.zshenv \
-      'export FOO="bar"'
+      'export FOO=bar'
   '';
 }
