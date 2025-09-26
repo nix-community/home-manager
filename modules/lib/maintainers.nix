@@ -217,12 +217,6 @@
       }
     ];
   };
-  ipsavitsky = {
-    name = "Ilya Savitsky";
-    email = "ipsavitsky234@gmail.com";
-    github = "ipsavitsky";
-    githubId = 33558632;
-  };
   jack5079 = {
     name = "Jack W.";
     email = "nix@jack.cab";
