@@ -16,7 +16,10 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [ lib.maintainers.friedrichaltheide ];
+  meta.maintainers = [
+    lib.maintainers.friedrichaltheide
+    lib.hm.maintainers.will-lol
+  ];
 
   options.programs.docker-cli = {
     enable = mkEnableOption "management of docker client config";
