@@ -103,7 +103,34 @@ in
       }
     ];
     home.packages = [ cfg.package ];
-    xdg.configFile."senpai/senpai.scfg".text = lib.hm.generators.toSCFG { } cfg.config;
+    xdg.configFile."senpai/senpai.scfg".text =
+      let
+        attrsToDirectiveList = lib.mapAttrsToList (
+          name: value:
+          {
+            inherit name;
+          }
+          // (
+            if (builtins.typeOf value != "set") then
+              {
+                params = lib.toList value;
+              }
+            else
+              let
+                children = lib.filterAttrs (n: _: n != "_params") value;
+              in
+              (
+                lib.optionalAttrs (value ? "_params") {
+                  params = value._params;
+                }
+                // lib.optionalAttrs (children != { }) {
+                  children = attrsToDirectiveList children;
+                }
+              )
+          )
+        );
+      in
+      lib.hm.generators.toSCFG { } (attrsToDirectiveList cfg.config);
   };
 
   meta.maintainers = [ lib.maintainers.malte-v ];
