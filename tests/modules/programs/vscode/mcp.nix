@@ -51,6 +51,8 @@ in
       pname = "vscode";
       version = "1.75.0";
     };
+    nameShort = "Code";
+    dataFolderName = ".vscode";
     profiles = {
       default.userMcp = mcp;
       test.userMcp = mcp;

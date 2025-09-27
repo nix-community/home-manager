@@ -123,6 +123,8 @@ in
       pname = "vscode";
       version = "1.75.0";
     };
+    nameShort = "Code";
+    dataFolderName = ".vscode";
   };
 
   nmt.script = ''
