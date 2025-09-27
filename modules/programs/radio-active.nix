@@ -187,9 +187,7 @@ in
       xdg.configFile."radio-active/configs.ini" =
         lib.mkIf (cfg.settings != { } && cfg.settings.AppConfig != { })
           {
-            source = iniFormat.generate "radio-active-config" {
-              inherit (cfg.settings) AppConfig;
-            };
+            source = iniFormat.generate "radio-active-config" cfg.settings;
           };
 
       home.file.".radio-active-alias" = mkIf (cfg.settings != { } && cfg.aliases != { }) {
