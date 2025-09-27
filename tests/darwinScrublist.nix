@@ -179,6 +179,7 @@ let
     "zoxide"
     "zplug"
     "zsh"
+    "zsh-history-substring-search"
     # keep-sorted end
   ];
 
