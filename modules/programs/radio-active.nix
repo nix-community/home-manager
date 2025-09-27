@@ -19,7 +19,6 @@ let
 
   inherit (lib.types)
     nonEmptyStr
-    submodule
     attrsOf
     oneOf
     ;
@@ -52,60 +51,46 @@ in
       default = { };
 
       description = ''
-        Declare-able configurations for radio-active written to;
-
-        - ''${xdg.configFile."radio-active/configs.ini"}
-        - ''${home.file.".radio-active-alias"}
+        Declare-able configurations for radio-active written to; ''${xdg.configFile."radio-active/configs.ini"}
       '';
 
-      type = submodule {
-        options = {
-          AppConfig = mkOption {
-            default = { };
+      example = ''
+        ## Input
 
-            description = ''
-              Declare-able configurations for radio-active under "AppConfig" name-space
-            '';
-
-            example = ''
-              ## Input
-
-              ```nix
-              programs.radio-active.settings.AppConfig = {
-                loglevel = "debug";
-                limit = 41;
-                sort = "votes";
-                filter = "none";
-                volume = 68;
-                filepath = "/home/{user}/recordings/radioactive/";
-                filetype = "mp3";
-                player = "ffplay";
-              };
-              ```
-
-              ## Output
-
-              ```
-              [AppConfig]
-              loglevel = debug
-              limit = 41
-              sort = votes
-              filter = none
-              volume = 68
-              filepath = /home/{user}/recordings/radioactive/
-              filetype = mp3
-              player = ffplay
-              ```
-            '';
-
-            type = attrsOf (oneOf [
-              nonEmptyStr
-              nonnegative
-            ]);
-          };
-
+        ```nix
+        programs.radio-active.settings.AppConfig = {
+          loglevel = "debug";
+          limit = 41;
+          sort = "votes";
+          filter = "none";
+          volume = 68;
+          filepath = "/home/{user}/recordings/radioactive/";
+          filetype = "mp3";
+          player = "ffplay";
         };
-      };
+        ```
+
+        ## Output
+
+        ```
+        [AppConfig]
+        loglevel = debug
+        limit = 41
+        sort = votes
+        filter = none
+        volume = 68
+        filepath = /home/{user}/recordings/radioactive/
+        filetype = mp3
+        player = ffplay
+        ```
+      '';
+
+      type = attrsOf (
+        attrsOf (oneOf [
+          nonEmptyStr
+          nonnegative
+        ])
+      );
     };
 
     aliases = mkOption {
