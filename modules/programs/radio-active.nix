@@ -175,7 +175,7 @@ in
             source = iniFormat.generate "radio-active-config" cfg.settings;
           };
 
-      home.file.".radio-active-alias" = mkIf (cfg.settings != { } && cfg.aliases != { }) {
+      home.file.".radio-active-alias" = mkIf (cfg.aliases != { }) {
         text = ''
           ${builtins.concatStringsSep "\n" (mapAttrsToList (name: value: "${name}==${value}") cfg.aliases)}
         '';
