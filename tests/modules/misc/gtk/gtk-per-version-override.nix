@@ -46,7 +46,7 @@
     assertFileContent home-files/.config/gtk-3.0/gtk.css \
       ${./gtk-per-version-override-gtk3-css-expected.css}
 
-    # GTK4 should use overridden font, global theme/icons/cursor
+    # GTK4 should use overridden font, global icons/cursor
     assertFileExists home-files/.config/gtk-4.0/settings.ini
     assertFileContent home-files/.config/gtk-4.0/settings.ini \
       ${./gtk-per-version-override-gtk4-expected.ini}

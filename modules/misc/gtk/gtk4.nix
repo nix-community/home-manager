@@ -45,9 +45,12 @@ in
           packageExample = "pkgs.gnome.gnome-themes-extra";
         }
       );
-      default = cfg.theme;
-      defaultText = literalExpression "config.gtk.theme";
-      description = "Theme for GTK 4 applications.";
+      default = null;
+      description = ''
+        Theme for GTK 4 applications.
+
+        Warning: This is not officially supported and applied using a workaround, and may cause issues.
+      '';
     };
 
     iconTheme = mkOption {
