@@ -25,6 +25,12 @@
     github = "9p4";
     githubId = 17993169;
   };
+  "will-lol" = {
+    name = "William Bradshaw";
+    email = "will.bradshaw50@gmail.com";
+    github = "will-lol";
+    githubId = 65345408;
+  };
   aabccd021 = {
     name = "Muhamad Abdurahman";
     email = "aabccd021@gmail.com";
