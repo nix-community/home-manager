@@ -32,6 +32,38 @@ in
       '';
     };
 
+    contexts = mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule (
+          { name, config, ... }:
+          {
+            freeformType = jsonFormat.type;
+            options = {
+              Name = mkOption {
+                type = lib.types.str;
+                readOnly = true;
+                description = "Name of the Docker context. Defaults to the attribute name (the <name> in programs.docker-cli.contexts.<name>). Overriding requires lib.mkForce.";
+              };
+            };
+            config.Name = name;
+          }
+        )
+      );
+      default = { };
+      example = lib.literalExpression ''
+        {
+          example = {
+            Metadata = { Description = "example1"; };
+            Endpoints.docker.Host = "unix://example2";
+          };
+        }
+      '';
+      description = ''
+        Attribute set of Docker context configurations. Each attribute name becomes the context Name; overriding requires lib.mkForce. See:
+        <https://docs.docker.com/engine/manage-resources/contexts/
+      '';
+    };
+
     settings = mkOption {
       type = jsonFormat.type;
       default = { };
@@ -62,7 +94,19 @@ in
         "${cfg.configDir}/config.json" = {
           source = jsonFormat.generate "config.json" cfg.settings;
         };
-      };
+      }
+      // lib.mapAttrs' (
+        n: ctx:
+        let
+          path = "${cfg.configDir}/contexts/meta/${builtins.hashString "sha256" ctx.Name}/meta.json";
+        in
+        {
+          name = path;
+          value = {
+            source = jsonFormat.generate "config.json" (ctx);
+          };
+        }
+      ) cfg.contexts;
     };
   };
 }
