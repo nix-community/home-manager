@@ -346,7 +346,7 @@ in
 
   config =
     let
-      envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
+      envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables { indent = "  "; };
       localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
       aliasesStr = concatStringsSep "\n" (
