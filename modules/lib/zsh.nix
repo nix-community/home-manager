@@ -7,7 +7,7 @@ rec {
     if builtins.isBool v then
       if v then "true" else "false"
     else if builtins.isString v then
-      lib.escapeShellArg v
+      ''"${v}"''
     else if builtins.isList v then
       let
         shell = import ./shell.nix { inherit lib; };
