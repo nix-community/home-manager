@@ -14,11 +14,11 @@ let
     shell:
     if (shell == "fish") then
       ''
-        ${lib.getExe pkgs.git-worktree-switcher} init ${shell} | source
+        ${lib.getExe cfg.package} init ${shell} | source
       ''
     else
       ''
-        eval "$(${lib.getExe pkgs.git-worktree-switcher} init ${shell})"
+        eval "$(${lib.getExe cfg.package} init ${shell})"
       '';
 in
 {
