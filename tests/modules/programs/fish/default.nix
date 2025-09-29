@@ -6,4 +6,5 @@
   fish-plugins = ./plugins.nix;
   fish-manpage = ./manpage.nix;
   fish-binds = ./binds.nix;
+  fish-themes = ./themes.nix;
 }
