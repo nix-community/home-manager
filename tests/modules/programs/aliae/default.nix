@@ -1,0 +1,1 @@
+{ aliae-settings = ./settings.nix; }
