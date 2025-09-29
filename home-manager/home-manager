@@ -232,7 +232,29 @@ function doInspectOption() {
     fi
     setConfigFile
 
-    local extraArgs=("$@")
+    local paths=()
+    local recursive=false
+
+    while (( $# > 0 )); do
+        local opt="$1"
+        shift
+
+        case $opt in
+            --recursive)
+                recursive=true;;
+            *)
+                # Remove trailing dot if exists, match the behavior of
+                # old nixos-option and make shell completions happy
+                paths+=("${opt%.}")
+                ;;
+        esac
+    done
+
+    if [[ ${#paths[@]} -eq 0 ]]; then
+        paths=("")
+    fi
+
+    local extraArgs=()
 
     for p in "${EXTRA_NIX_PATH[@]}"; do
         extraArgs=("${extraArgs[@]}" "-I" "$p")
@@ -256,11 +278,24 @@ function doInspectOption() {
     modulesExpr+=" configuration = if confAttr == \"\" then confPath else (import confPath).\${confAttr};"
     modulesExpr+=" pkgs = import <nixpkgs> {}; check = true; })"
 
-    nixos-option \
-        --options_expr "$modulesExpr.options" \
-        --config_expr "$modulesExpr.config" \
-        "${extraArgs[@]}" \
-        "${PASSTHROUGH_OPTS[@]}"
+    local NIXOS_OPTION_CMD NIXOS_OPTION_REAL NIXOS_OPTION_DIR NIXOS_OPTION_NIX
+    NIXOS_OPTION_CMD=$(command -v nixos-option)
+    NIXOS_OPTION_REAL=$(realpath "${NIXOS_OPTION_CMD}")
+    NIXOS_OPTION_NIX=$(nix-store -q --references "${NIXOS_OPTION_REAL}" | grep 'nixos-option\.nix$')
+
+    if [[ ! -f "$NIXOS_OPTION_NIX" ]]; then
+        _iError "nixos-option.nix not found."
+        exit 1
+    fi
+
+    for path in "${paths[@]}"; do
+        nix-instantiate --eval --json \
+            --arg nixos "$modulesExpr" \
+            --argstr path "$path" \
+            --arg recursive "$recursive" \
+            "$NIXOS_OPTION_NIX" \
+        | jq -r
+    done
 }
 
 function doInit() {
@@ -1063,8 +1098,10 @@ function doHelp() {
     echo
     echo "  edit         Open the home configuration in \$VISUAL or \$EDITOR"
     echo
-    echo "  option OPTION.NAME"
+    echo "  option [--recursive] OPTION.NAME"
     echo "               Inspect configuration option named OPTION.NAME."
+    echo
+    echo "      --recursive   Print all the values at or below the option name recursively."
     echo
     echo "  build        Build configuration into result directory"
     echo
@@ -1203,6 +1240,16 @@ while [[ $# -gt 0 ]]; do
                     ;;
                 *)
                     errTopLevelSubcommandOpt "--specialisation" "switch"
+                    ;;
+            esac
+            ;;
+        --recursive)
+            case $COMMAND in
+                option)
+                    COMMAND_ARGS+=("$opt")
+                    ;;
+                *)
+                    errTopLevelSubcommandOpt "--recursive" "option"
                     ;;
             esac
             ;;
