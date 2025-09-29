@@ -137,8 +137,9 @@ in
           with types;
           lazyAttrsOf (oneOf [
             str
-            int
             path
+            int
+            float
           ]);
         example = {
           MAILCHECK = 30;
