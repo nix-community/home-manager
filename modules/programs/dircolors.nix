@@ -36,6 +36,8 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+
     settings = mkOption {
       type = with types; attrsOf str;
       default = { };
@@ -67,11 +69,13 @@ in
       dircolorsPath =
         if config.home.preferXdgDirectories then "${config.xdg.configHome}/dir_colors" else "~/.dir_colors";
 
-      dircolorsConfig = lib.concatStringsSep "\n" (
+      dircolorsConfigText = lib.concatStringsSep "\n" (
         lib.mapAttrsToList formatLine cfg.settings
         ++ [ "" ]
         ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
       );
+
+      dircolorsConfig = pkgs.writeText "dir_colors" dircolorsConfigText;
     in
     mkIf cfg.enable (
       lib.mkMerge [
@@ -223,12 +227,21 @@ in
               eval $(${lib.getExe' cfg.package "dircolors"} -b ${dircolorsPath})
             ''
           );
+
+          programs.nushell.extraEnv = mkIf cfg.enableNushellIntegration ''
+            source ${
+              pkgs.runCommand "dircolors.nu" { } ''
+                eval "$(${lib.getExe' cfg.package "dircolors"} -b ${dircolorsConfig})"
+                echo "export-env { \$env.LS_COLORS = \"$LS_COLORS\" }" >> $out
+              ''
+            }
+          '';
         }
         (mkIf (!config.home.preferXdgDirectories) {
-          home.file.".dir_colors".text = dircolorsConfig;
+          home.file.".dir_colors".source = dircolorsConfig;
         })
         (mkIf config.home.preferXdgDirectories {
-          xdg.configFile.dir_colors.text = dircolorsConfig;
+          xdg.configFile.dir_colors.source = dircolorsConfig;
         })
       ]
     );
