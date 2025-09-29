@@ -68,8 +68,7 @@ in
         if config.home.preferXdgDirectories then "${config.xdg.configHome}/dir_colors" else "~/.dir_colors";
 
       dircolorsConfig = lib.concatStringsSep "\n" (
-        [ ]
-        ++ lib.mapAttrsToList formatLine cfg.settings
+        lib.mapAttrsToList formatLine cfg.settings
         ++ [ "" ]
         ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
       );
