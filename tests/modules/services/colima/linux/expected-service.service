@@ -1,0 +1,19 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+Environment=PATH=@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin
+ExecStart=@colima@/bin/colima start default \
+  -f \
+  --activate=true \
+  --save-config=false
+
+Restart=always
+RestartSec=2
+StandardError=append:/home/hm-user/.local/state/colima-default.log
+StandardOutput=append:/home/hm-user/.local/state/colima-default.log
+
+[Unit]
+After=network-online.target
+Description=Colima container runtime (default profile)
+Wants=network-online.target
