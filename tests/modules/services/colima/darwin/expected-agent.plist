@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin:@DarwinTools@/bin</string>
+	</dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>org.nix-community.home.colima-default</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@colima@/bin/colima</string>
+		<string>start</string>
+		<string>default</string>
+		<string>-f</string>
+		<string>--activate=true</string>
+		<string>--save-config=false</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/home/hm-user/.local/state/colima-default.log</string>
+	<key>StandardOutPath</key>
+	<string>/home/hm-user/.local/state/colima-default.log</string>
+</dict>
+</plist>
