@@ -7,6 +7,7 @@
       enableAsDifftool = true;
       background = "dark";
       color = "always";
+      context = 5;
       display = "inline";
     };
   };
