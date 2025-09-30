@@ -356,6 +356,15 @@ in
           '';
         };
 
+        context = mkOption {
+          type = types.ints.u32;
+          default = 3;
+          example = 5;
+          description = ''
+            Determines the number of contextual lines to show around changed lines.
+          '';
+        };
+
         display = mkOption {
           type = types.enum [
             "side-by-side"
@@ -833,6 +842,7 @@ in
             "--color ${cfg.difftastic.color}"
             "--background ${cfg.difftastic.background}"
             "--display ${cfg.difftastic.display}"
+            "--context ${toString cfg.difftastic.context}"
           ];
         in
         (lib.mkMerge [
