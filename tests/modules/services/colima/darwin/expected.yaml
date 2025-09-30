@@ -1,0 +1,32 @@
+arch: host
+autoActivate: true
+binfmt: true
+cpu: 2
+cpuType: ''
+disk: 100
+diskImage: ''
+docker: {}
+env: {}
+forwardAgent: false
+hostname: colima
+kubernetes:
+  enabled: false
+  k3sArgs:
+  - --disable=traefik
+  version: v1.33.3+k3s1
+memory: 2
+mountInotify: true
+mountType: virtiofs
+mounts: []
+nestedVirtualization: false
+network:
+  address: false
+  dns: []
+  dnsHosts: {}
+  hostAddresses: false
+provision: []
+rosetta: false
+runtime: docker
+sshConfig: true
+sshPort: 0
+vmType: vz
