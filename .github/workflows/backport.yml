@@ -17,7 +17,7 @@ jobs:
         || startsWith(github.event.label.name, 'backport')
       )
 
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
