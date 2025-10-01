@@ -48,11 +48,11 @@ done
 if [[ ${#collisionErrors[@]} -gt 0 ]] ; then
   errorEcho "Please do one of the following:
 - Move or remove the files below and try again.
-- In standalone mode, use 'home-manager switch -b backup' to back up
-  files automatically.
-- When used as a NixOS or nix-darwin module, set
-    'home-manager.backupFileExtension'
-  to, for example, 'backup' and rebuild."
+- In standalone mode, use 'home-manager switch -b backup' to back up"\
+" files automatically.
+- When used as a NixOS or nix-darwin module, set"\
+" 'home-manager.backupFileExtension'"\
+" to, for example, 'backup' and rebuild."
   for error in "${collisionErrors[@]}" ; do
     errorEcho "$error"
   done
