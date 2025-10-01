@@ -13,6 +13,6 @@
 
   nmt.script = ''
     assertFileExists home-files/.zshenv
-    assertFileContent home-files/.zshenv ${./session-variables.zshenv}
+    assertFileContent $(normalizeStorePaths home-files/.zshenv) ${./session-variables.zshenv}
   '';
 }
