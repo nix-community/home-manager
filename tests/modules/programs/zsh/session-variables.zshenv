@@ -1,5 +1,5 @@
 # Environment variables
-. "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"
+. "/nix/store/00000000000000000000000000000000-hm-session-vars.sh/etc/profile.d/hm-session-vars.sh"
 
 # Only source this once
 if [[ -z "$__HM_ZSH_SESS_VARS_SOURCED" ]]; then
