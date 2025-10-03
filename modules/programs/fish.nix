@@ -765,30 +765,6 @@ in
           }) cfg.plugins
         );
       })
-      (
-        let
-          themes = lib.foldl (
-            themeList: plugin:
-            if lib.pathIsDirectory "${plugin.src}/themes" then
-              themeList ++ lib.filesystem.listFilesRecursive "${plugin.src}/themes"
-            else
-              themeList
-          ) [ ] cfg.plugins;
-        in
-        (mkIf (lib.length themes > 0) {
-          xdg.configFile = lib.mkMerge (
-            map (
-              theme:
-              let
-                basename = lib.last (builtins.split "/" (toString theme));
-              in
-              {
-                "fish/themes/${basename}".source = theme;
-              }
-            ) themes
-          );
-        })
-      )
     ]
   );
 }
