@@ -9,6 +9,10 @@
       color = "always";
       context = 5;
       display = "inline";
+      extraArgs = [
+        "--tab-width=8"
+        "--sort-paths"
+      ];
     };
   };
 
