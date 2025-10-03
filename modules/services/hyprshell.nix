@@ -77,7 +77,7 @@ in
       source = jsonFormat.generate "hyprshell-config" cfg.settings;
     };
 
-    xdg.configFile."hyprshell/style.css" = mkIf (cfg.style != "") {
+    xdg.configFile."hyprshell/styles.css" = mkIf (cfg.style != "") {
       source = if lib.isString cfg.style then pkgs.writeText "hyprshell-style" cfg.style else cfg.style;
     };
 
