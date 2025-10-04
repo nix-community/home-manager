@@ -734,34 +734,50 @@ in
       (mkIf (lib.length cfg.plugins > 0) {
         xdg.configFile = lib.mkMerge (
           map (plugin: {
-            "fish/conf.d/plugin-${plugin.name}.fish".source = fishIndent "${plugin.name}.fish" ''
-              # Plugin ${plugin.name}
-              set -l plugin_dir ${plugin.src}
+            "fish/conf.d/plugin-${plugin.name}.fish" = {
+              onChange = ''
+                ${lib.getExe cfg.package} -c '
+                set -l plugin_dir ${plugin.src}
+                # https://github.com/fish-shell/fish-shell/issues/9456
+                set -l dest_dir $__fish_config_dir/themes
 
-              # Set paths to import plugin components
-              if test -d $plugin_dir/functions
-                set fish_function_path $fish_function_path[1] $plugin_dir/functions $fish_function_path[2..-1]
-              end
+                  if test -d $plugin_dir/themes
+                    mkdir -p $dest_dir
+                    for f in $plugin_dir/themes/*.theme
+                      ln -sf $f $dest_dir/(basename $f)
+                    end
+                  end
+                '
+              '';
+              source = fishIndent "${plugin.name}.fish" ''
+                # Plugin ${plugin.name}
+                set -l plugin_dir ${plugin.src}
 
-              if test -d $plugin_dir/completions
-                set fish_complete_path $fish_complete_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
-              end
-
-              # Source initialization code if it exists.
-              if test -d $plugin_dir/conf.d
-                for f in $plugin_dir/conf.d/*.fish
-                  source $f
+                # Set paths to import plugin components
+                if test -d $plugin_dir/functions
+                  set fish_function_path $fish_function_path[1] $plugin_dir/functions $fish_function_path[2..-1]
                 end
-              end
 
-              if test -f $plugin_dir/key_bindings.fish
-                source $plugin_dir/key_bindings.fish
-              end
+                if test -d $plugin_dir/completions
+                  set fish_complete_path $fish_complete_path[1] $plugin_dir/completions $fish_complete_path[2..-1]
+                end
 
-              if test -f $plugin_dir/init.fish
-                source $plugin_dir/init.fish
-              end
-            '';
+                # Source initialization code if it exists.
+                if test -d $plugin_dir/conf.d
+                  for f in $plugin_dir/conf.d/*.fish
+                    source $f
+                  end
+                end
+
+                if test -f $plugin_dir/key_bindings.fish
+                  source $plugin_dir/key_bindings.fish
+                end
+
+                if test -f $plugin_dir/init.fish
+                  source $plugin_dir/init.fish
+                end
+              '';
+            };
           }) cfg.plugins
         );
       })
