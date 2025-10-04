@@ -1,7 +1,17 @@
 # Test that keybindings.json is created correctly.
-{ pkgs, lib, ... }:
+package:
+
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
+  cfg = config.programs.vscode;
+  willUseIfd = package.pname != "vscode";
+
   bindings = [
     {
       key = "ctrl+c";
@@ -30,20 +40,24 @@ let
   keybindingsPath =
     name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/Code/User/${
+      "Library/Application Support/${cfg.nameShort}/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }keybindings.json"
     else
-      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}keybindings.json";
+      ".config/${cfg.nameShort}/User/${
+        lib.optionalString (name != "default") "profiles/${name}/"
+      }keybindings.json";
 
   settingsPath =
     name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/Code/User/${
+      "Library/Application Support/${cfg.nameShort}/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }settings.json"
     else
-      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}settings.json";
+      ".config/${cfg.nameShort}/User/${
+        lib.optionalString (name != "default") "profiles/${name}/"
+      }settings.json";
 
   content = ''
     [
@@ -109,9 +123,9 @@ let
   '';
 
   expectedCustomKeybindings = pkgs.writeText "custom-expected.json" content;
-
 in
-{
+
+lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
   programs.vscode = {
     enable = true;
     profiles = {
@@ -119,10 +133,7 @@ in
       test.keybindings = bindings;
       custom.keybindings = customBindingsPath;
     };
-    package = pkgs.writeScriptBin "vscode" "" // {
-      pname = "vscode";
-      version = "1.75.0";
-    };
+    inherit package;
   };
 
   nmt.script = ''
