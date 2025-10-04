@@ -1,0 +1,3 @@
+{
+  pimsync-basic = ./basic.nix;
+}
