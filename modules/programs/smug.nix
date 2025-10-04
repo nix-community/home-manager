@@ -59,6 +59,14 @@ in
                           '';
                         };
 
+                        selected = lib.mkOption {
+                          type = lib.types.nullOr lib.types.bool;
+                          default = null;
+                          description = ''
+                            Whether this windows should be selected by default at session start.
+                          '';
+                        };
+
                         root = mkOptionRoot "Root path of window. This is relative to the path of the smug project.";
 
                         commands = mkOptionCommands "Commands to execute when window starts.";
