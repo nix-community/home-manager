@@ -1,0 +1,11 @@
+{
+  "Endpoints": {
+    "docker": {
+      "Host": "unix://example2"
+    }
+  },
+  "Metadata": {
+    "Description": "example1"
+  },
+  "Name": "example"
+}
