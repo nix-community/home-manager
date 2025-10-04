@@ -356,6 +356,15 @@ in
           '';
         };
 
+        context = mkOption {
+          type = types.ints.u32;
+          default = 3;
+          example = 5;
+          description = ''
+            Determines the number of contextual lines to show around changed lines.
+          '';
+        };
+
         display = mkOption {
           type = types.enum [
             "side-by-side"
@@ -366,6 +375,18 @@ in
           example = "inline";
           description = ''
             Determines how the output displays - in one column or two columns.
+          '';
+        };
+
+        extraArgs = mkOption {
+          type = types.nullOr (types.listOf types.str);
+          default = null;
+          example = [
+            "--tab-width=8"
+            "--sort-paths"
+          ];
+          description = ''
+            Extra command line arguments to pass to {command}`difft`.
           '';
         };
       };
@@ -828,12 +849,16 @@ in
 
       (
         let
-          difftCommand = concatStringsSep " " [
-            "${lib.getExe cfg.difftastic.package}"
-            "--color ${cfg.difftastic.color}"
-            "--background ${cfg.difftastic.background}"
-            "--display ${cfg.difftastic.display}"
-          ];
+          difftCommand = concatStringsSep " " (
+            [
+              "${lib.getExe cfg.difftastic.package}"
+              "--color ${cfg.difftastic.color}"
+              "--background ${cfg.difftastic.background}"
+              "--display ${cfg.difftastic.display}"
+              "--context ${toString cfg.difftastic.context}"
+            ]
+            ++ (lib.optionals (cfg.difftastic.extraArgs != null) cfg.difftastic.extraArgs)
+          );
         in
         (lib.mkMerge [
           (mkIf cfg.difftastic.enable {

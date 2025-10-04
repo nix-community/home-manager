@@ -35,6 +35,7 @@ let
     "cudatext"
     "darcs"
     "delta"
+    "difftastic"
     "dircolors"
     "direnv"
     "earthly"
