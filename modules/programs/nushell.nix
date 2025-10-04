@@ -40,7 +40,6 @@ in
 {
   meta.maintainers = with lib.maintainers; [
     joaquintrinanes
-    aidalgol
   ];
 
   options.programs.nushell = {
