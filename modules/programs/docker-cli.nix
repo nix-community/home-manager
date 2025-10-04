@@ -16,7 +16,10 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [ lib.maintainers.friedrichaltheide ];
+  meta.maintainers = [
+    lib.maintainers.friedrichaltheide
+    lib.hm.maintainers.will-lol
+  ];
 
   options.programs.docker-cli = {
     enable = mkEnableOption "management of docker client config";
@@ -26,6 +29,27 @@ in
       default = ".docker";
       description = ''
         Folder relative to the user's home directory where the Docker CLI settings should be stored.
+      '';
+    };
+
+    contexts = mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          freeformType = jsonFormat.type;
+        }
+      );
+      default = { };
+      example = lib.literalExpression ''
+        {
+          example = {
+            Metadata = { Description = "example1"; };
+            Endpoints.docker.Host = "unix://example2";
+          };
+        }
+      '';
+      description = ''
+        Attrset of docker context configurations keyed by context name. See:
+        <https://docs.docker.com/engine/manage-resources/contexts/
       '';
     };
 
@@ -59,7 +83,20 @@ in
         "${cfg.configDir}/config.json" = {
           source = jsonFormat.generate "config.json" cfg.settings;
         };
-      };
+      }
+      // lib.mapAttrs' (
+        n: ctx:
+        let
+          name = if ctx ? Name then ctx.Name else n;
+          path = "${cfg.configDir}/contexts/meta/${builtins.hashString "sha256" name}/meta.json";
+        in
+        {
+          name = path;
+          value = {
+            source = jsonFormat.generate "config.json" (ctx // { Name = name; });
+          };
+        }
+      ) cfg.contexts;
     };
   };
 }
