@@ -1,0 +1,33 @@
+style:
+  body:
+    bgColor: black
+    borderColor: white
+    fgColor: white
+    secondaryTextColor: yellow
+    tertiaryTextColor: green
+  dialog:
+    bgColor: black
+    buttonBgColor: lightskyblue
+    buttonFgColor: black
+    buttonFocusBgColor: dodgerblue
+    buttonFocusFgColor: black
+    fgColor: cadetblue
+    fieldBgColor: lightskyblue
+    fieldFgColor: black
+    labelFgColor: yellow
+  help:
+    categoryFgColor: lightskyblue
+    fgColor: black
+    hlColor: green
+    keyColor: white
+  proc_table:
+    fgColor: lightskyblue
+    fgCompleted: lightgreen
+    fgError: red
+    fgPending: grey
+    fgWarning: yellow
+    headerFgColor: white
+  stat_table:
+    keyFgColor: yellow
+    logoColor: yellow
+    valueFgColor: white
