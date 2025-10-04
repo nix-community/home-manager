@@ -103,10 +103,33 @@ in
       defaultText = literalExpression "{ }";
       example = literalExpression ''
         {
-          XDG_MISC_DIR = "''${config.home.homeDirectory}/Misc";
+          MISC = "''${config.home.homeDirectory}/Misc";
         }
       '';
-      description = "Other user directories.";
+      apply =
+        if lib.versionOlder config.home.stateVersion "26.05" then
+          lib.mapAttrs' (
+            k:
+            let
+              matches = lib.match "XDG_(.*)_DIR" k;
+            in
+            lib.nameValuePair (
+              if matches == null then
+                k
+              else
+                let
+                  name = lib.elemAt matches 0;
+                in
+                lib.warn "using keys like ‘${k}’ for xdg.userDirs.extraConfig is deprecated in favor of keys like ‘${name}’" name
+            )
+          )
+        else
+          lib.id;
+      description = ''
+        Other user directories.
+
+        The key ‘MISC’ corresponds to the user-dirs entry ‘XDG_MISC_DIR’.
+      '';
     };
 
     createDirectories = lib.mkEnableOption "automatic creation of the XDG user directories";
@@ -136,22 +159,24 @@ in
     let
       directories =
         (lib.filterAttrs (n: v: !isNull v) {
-          XDG_DESKTOP_DIR = cfg.desktop;
-          XDG_DOCUMENTS_DIR = cfg.documents;
-          XDG_DOWNLOAD_DIR = cfg.download;
-          XDG_MUSIC_DIR = cfg.music;
-          XDG_PICTURES_DIR = cfg.pictures;
-          XDG_PUBLICSHARE_DIR = cfg.publicShare;
-          XDG_TEMPLATES_DIR = cfg.templates;
-          XDG_VIDEOS_DIR = cfg.videos;
+          DESKTOP = cfg.desktop;
+          DOCUMENTS = cfg.documents;
+          DOWNLOAD = cfg.download;
+          MUSIC = cfg.music;
+          PICTURES = cfg.pictures;
+          PUBLICSHARE = cfg.publicShare;
+          TEMPLATES = cfg.templates;
+          VIDEOS = cfg.videos;
         })
         // cfg.extraConfig;
+
+      bindings = lib.mapAttrs' (k: lib.nameValuePair "XDG_${k}_DIR") directories;
     in
     lib.mkIf cfg.enable {
       xdg.configFile."user-dirs.dirs".text =
         let
           # For some reason, these need to be wrapped with quotes to be valid.
-          wrapped = lib.mapAttrs (_: value: ''"${value}"'') directories;
+          wrapped = lib.mapAttrs (_: value: ''"${value}"'') bindings;
         in
         lib.generators.toKeyValue { } wrapped;
 
@@ -159,7 +184,7 @@ in
 
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      home.sessionVariables = lib.mkIf cfg.setSessionVariables directories;
+      home.sessionVariables = lib.mkIf cfg.setSessionVariables bindings;
 
       home.activation.createXdgUserDirectories = lib.mkIf cfg.createDirectories (
         let
