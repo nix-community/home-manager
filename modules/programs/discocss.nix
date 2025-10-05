@@ -50,6 +50,8 @@ in
       ))
     ];
 
-    xdg.configFile."discocss/custom.css".text = cfg.css;
+    xdg.configFile."discocss/custom.css" = lib.mkIf (cfg.css != "") {
+      text = cfg.css;
+    };
   };
 }
