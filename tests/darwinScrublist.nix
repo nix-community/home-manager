@@ -37,6 +37,8 @@ let
     "delta"
     "dircolors"
     "direnv"
+    "discord"
+    "discoss"
     "earthly"
     "element-desktop"
     "emacs"
