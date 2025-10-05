@@ -19,6 +19,7 @@
       name = "Adwaita";
       size = 24;
     };
+    colorScheme = "dark";
   };
 
   nmt.script = ''

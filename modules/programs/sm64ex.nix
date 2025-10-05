@@ -8,26 +8,10 @@ let
   inherit (lib)
     literalExpression
     mkOption
-    optionalAttrs
     types
     ;
 
   cfg = config.programs.sm64ex;
-
-  # This is required for tests, we cannot overwrite the dummy package.
-  package =
-    if cfg.region == null && cfg.baserom == null && cfg.extraCompileFlags == null then
-      cfg.package
-    else
-      cfg.package.override (
-        attrs:
-        { }
-        // optionalAttrs (cfg.region != null) { region = cfg.region; }
-        // optionalAttrs (cfg.baserom != null) { baseRom = cfg.baserom; }
-        // optionalAttrs (cfg.extraCompileFlags != null) {
-          compileFlags = cfg.extraCompileFlags;
-        }
-      );
 
   mkConfig =
     key: value:

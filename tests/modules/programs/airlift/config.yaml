@@ -1,0 +1,11 @@
+cluster_config_file: /path/to/cluster/config.yaml
+dag_path: /path/to/dags
+extra_volume_mounts:
+- hostPath=/my/cool/path,containerPath=/my/mounted/path,name=a_unique_name
+helm_chart_version: 1.0.0
+helm_values_file: /path/to/values.yaml
+image: apache/airflow:2.6.0
+plugin_path: /path/to/plugins
+port: 8080
+post_start_dag_id: example_dag_id
+requirements_file: /path/to/requirements.txt

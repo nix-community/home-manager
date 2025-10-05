@@ -121,6 +121,7 @@ let
                 builtins.concatStringsSep ":" [
                   "/run/wrappers/bin"
                   "/run/current-system/sw/bin"
+                  "${pkgs.nftables}/bin"
                   "${config.home.homeDirectory}/.nix-profile/bin"
                   "${pkgs.systemd}/bin"
                 ]

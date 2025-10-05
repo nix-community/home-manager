@@ -152,7 +152,7 @@ in
         f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
 
     with subtest("Using an rclone backend"):
-      systemctl_succeed_as_alice("start restic-backups-rclone.service")
+      systemctl_succeed_as_alice("start rclone-config.service restic-backups-rclone.service")
       actual = succeed_as_alice("restic-rclone ls latest")
       assert_list("restic-rclone ls latest", expectedIncluded, actual)
 

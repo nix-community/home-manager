@@ -1,15 +1,26 @@
-{ pkgs, lib, ... }:
+package:
+
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
+  cfg = config.programs.vscode;
+  willUseIfd = package.pname != "vscode";
 
   tasksFilePath =
     name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/Code/User/${
+      "Library/Application Support/${cfg.nameShort}/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }tasks.json"
     else
-      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}tasks.json";
+      ".config/${cfg.nameShort}/User/${
+        lib.optionalString (name != "default") "profiles/${name}/"
+      }tasks.json";
 
   content = ''
     {
@@ -57,15 +68,12 @@ let
   '';
 
   expectedCustomTasks = pkgs.writeText "custom-expected.json" content;
-
 in
-{
+
+lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
   programs.vscode = {
     enable = true;
-    package = pkgs.writeScriptBin "vscode" "" // {
-      pname = "vscode";
-      version = "1.75.0";
-    };
+    inherit package;
     profiles = {
       default.userTasks = tasks;
       test.userTasks = tasks;

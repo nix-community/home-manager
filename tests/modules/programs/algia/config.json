@@ -1,0 +1,10 @@
+{
+  "privatekey": "nsecXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  "relays": {
+    "wss =//relay-jp.nostr.wirednet.jp": {
+      "read": true,
+      "search": false,
+      "write": true
+    }
+  }
+}

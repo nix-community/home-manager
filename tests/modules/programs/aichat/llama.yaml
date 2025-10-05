@@ -1,0 +1,3 @@
+model: llama3.2:latest
+temperature: 0.5
+use_tools: web_search

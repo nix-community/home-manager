@@ -94,7 +94,7 @@ in
       }
 
       (mkIf (cfg.associations != [ ] && pkgs.stdenv.hostPlatform.isDarwin) {
-        home.file."Library/Application Support/pistol/pistol.conf".text = configFile;
+        home.file."Library/Preferences/pistol/pistol.conf".text = configFile;
       })
 
       (mkIf (cfg.associations != [ ] && !pkgs.stdenv.hostPlatform.isDarwin) {

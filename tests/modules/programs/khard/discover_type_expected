@@ -1,0 +1,9 @@
+[addressbooks]
+[[test]]
+path = /home/hm-user/.contacts/test/*
+type = discover
+
+
+[general]
+default_action=list
+

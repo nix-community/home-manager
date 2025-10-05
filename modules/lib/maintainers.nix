@@ -61,6 +61,12 @@
     github = "aheaume";
     githubId = 13830042;
   };
+  aionescu = {
+    name = "Alex Ionescu";
+    email = "github@ionescu.sh";
+    github = "aionescu";
+    githubId = 48064242;
+  };
   austreelis = {
     email = "github@accounts.austreelis.net";
     github = "Austreelis";
@@ -216,12 +222,6 @@
         fingerprint = "AD32 73D4 5E0E 9478 E826  543F EDB2 C634 166A E6AD";
       }
     ];
-  };
-  ipsavitsky = {
-    name = "Ilya Savitsky";
-    email = "ipsavitsky234@gmail.com";
-    github = "ipsavitsky";
-    githubId = 33558632;
   };
   jack5079 = {
     name = "Jack W.";

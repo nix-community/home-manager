@@ -111,9 +111,9 @@ in
         example = literalExpression ''
           {
             global = {
-              width = 300;
-              height = 300;
-              offset = "30x50";
+              width = "(200,300)";
+              height = "(0,150)";
+              offset = "(30,50)";
               origin = "top-right";
               transparency = 10;
               frame_color = "#eceff1";
@@ -131,102 +131,97 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        assertions = [
-          (lib.hm.assertions.assertPlatform "services.dunst" pkgs lib.platforms.linux)
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.dunst" pkgs lib.platforms.linux)
+    ];
+
+    home.packages = [ cfg.package ];
+
+    xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
+      "${cfg.package}/share/dbus-1/services/org.knopwob.dunst.service";
+
+    xdg.configFile."dunst/dunstrc" = lib.mkIf (cfg.settings != { }) {
+      text = toDunstIni cfg.settings;
+    };
+
+    services.dunst.settings.global.icon_path =
+      let
+        useCustomTheme =
+          cfg.iconTheme.package != hicolorTheme.package
+          || cfg.iconTheme.name != hicolorTheme.name
+          || cfg.iconTheme.size != hicolorTheme.size;
+
+        basePaths = [
+          "/run/current-system/sw"
+          config.home.profileDirectory
+          cfg.iconTheme.package
+        ]
+        ++ optional useCustomTheme hicolorTheme.package;
+
+        themes = [
+          cfg.iconTheme
+        ]
+        ++ optional useCustomTheme (hicolorTheme // { size = cfg.iconTheme.size; });
+
+        categories = [
+          "actions"
+          "animations"
+          "apps"
+          "categories"
+          "devices"
+          "emblems"
+          "emotes"
+          "filesystem"
+          "intl"
+          "legacy"
+          "mimetypes"
+          "places"
+          "status"
+          "stock"
         ];
 
-        home.packages = [ cfg.package ];
+        mkPath =
+          {
+            basePath,
+            theme,
+            category,
+          }:
+          "${basePath}/share/icons/${theme.name}/${theme.size}/${category}";
+      in
+      lib.concatMapStringsSep ":" mkPath (
+        lib.cartesianProduct {
+          basePath = basePaths;
+          theme = themes;
+          category = categories;
+        }
+      );
 
-        xdg.dataFile."dbus-1/services/org.knopwob.dunst.service".source =
-          "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
+    systemd.user.services.dunst = {
+      Unit = {
+        Description = "Dunst notification daemon";
+        After = [ config.wayland.systemd.target ];
+        PartOf = [ config.wayland.systemd.target ];
+        X-Reload-Triggers = lib.mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."dunst/dunstrc".source}"
+        ];
+      };
 
-        services.dunst.settings.global.icon_path =
-          let
-            useCustomTheme =
-              cfg.iconTheme.package != hicolorTheme.package
-              || cfg.iconTheme.name != hicolorTheme.name
-              || cfg.iconTheme.size != hicolorTheme.size;
-
-            basePaths = [
-              "/run/current-system/sw"
-              config.home.profileDirectory
-              cfg.iconTheme.package
+      Service = {
+        Type = "dbus";
+        BusName = "org.freedesktop.Notifications";
+        ExecStart = lib.escapeShellArgs (
+          [ "${cfg.package}/bin/dunst" ]
+          ++
+            # Using `-config` breaks dunst's drop-ins, so only use it when an alternative path is set
+            lib.optionals (cfg.configFile != null) [
+              "-config"
+              cfg.configFile
             ]
-            ++ optional useCustomTheme hicolorTheme.package;
-
-            themes = [
-              cfg.iconTheme
-            ]
-            ++ optional useCustomTheme (hicolorTheme // { size = cfg.iconTheme.size; });
-
-            categories = [
-              "actions"
-              "animations"
-              "apps"
-              "categories"
-              "devices"
-              "emblems"
-              "emotes"
-              "filesystem"
-              "intl"
-              "legacy"
-              "mimetypes"
-              "places"
-              "status"
-              "stock"
-            ];
-
-            mkPath =
-              {
-                basePath,
-                theme,
-                category,
-              }:
-              "${basePath}/share/icons/${theme.name}/${theme.size}/${category}";
-          in
-          lib.concatMapStringsSep ":" mkPath (
-            lib.cartesianProduct {
-              basePath = basePaths;
-              theme = themes;
-              category = categories;
-            }
-          );
-
-        systemd.user.services.dunst = {
-          Unit = {
-            Description = "Dunst notification daemon";
-            After = [ config.wayland.systemd.target ];
-            PartOf = [ config.wayland.systemd.target ];
-          };
-
-          Service = {
-            Type = "dbus";
-            BusName = "org.freedesktop.Notifications";
-            ExecStart = lib.escapeShellArgs (
-              [ "${cfg.package}/bin/dunst" ]
-              ++
-                # Using `-config` breaks dunst's drop-ins, so only use it when an alternative path is set
-                lib.optionals (cfg.configFile != null) [
-                  "-config"
-                  cfg.configFile
-                ]
-            );
-            Environment = lib.optionalString (cfg.waylandDisplay != "") "WAYLAND_DISPLAY=${cfg.waylandDisplay}";
-          };
-        };
-      }
-
-      (lib.mkIf (cfg.settings != { }) {
-        xdg.configFile."dunst/dunstrc" = {
-          text = toDunstIni cfg.settings;
-          onChange = ''
-            ${pkgs.procps}/bin/pkill -u "$USER" ''${VERBOSE+-e} dunst || true
-          '';
-        };
-      })
-    ]
-  );
+        );
+        ExecReload = "${cfg.package}/bin/dunstctl reload";
+        Environment = lib.optionalString (cfg.waylandDisplay != "") "WAYLAND_DISPLAY=${cfg.waylandDisplay}";
+      };
+    };
+  };
 }

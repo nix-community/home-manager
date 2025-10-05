@@ -188,6 +188,8 @@ in
         Watchers to be included with the service alongside with their
         configuration.
 
+        Check with `systemctl --user status "*aw*"`
+
         If a configuration is set, a file will be generated in
         {file}`$XDG_CONFIG_HOME/activitywatch/$WATCHER_NAME/$WATCHER_SETTINGS_FILENAME`.
 
@@ -210,7 +212,7 @@ in
             };
           };
 
-          aw-watcher-windows = {
+          aw-watcher-window = {
             package = pkgs.activitywatch;
             settings = {
               poll_time = 1;

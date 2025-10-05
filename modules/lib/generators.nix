@@ -65,7 +65,6 @@
     let
       inherit (lib)
         concatStringsSep
-        splitString
         mapAttrsToList
         any
         ;

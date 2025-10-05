@@ -102,7 +102,7 @@
           };
         in
         {
-          test-all-no-big = tests.build.all;
+          test-all-enableBig-false-enableLegacyIfd-false = tests.build.all;
         };
 
       buildTestsNoBigIfd =
@@ -116,7 +116,7 @@
           };
         in
         {
-          test-all-no-big-ifd = tests.build.all;
+          test-all-enableBig-false-enableLegacyIfd-true = tests.build.all;
         };
 
       integrationTestPackages =

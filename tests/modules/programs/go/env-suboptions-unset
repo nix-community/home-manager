@@ -1,0 +1,5 @@
+CXX=g++
+GCCGO=gccgo
+GOAMD64=v1
+GOARCH=amd64
+GOAUTH=netrc

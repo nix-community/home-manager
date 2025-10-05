@@ -32,6 +32,7 @@ let
     "cmus"
     "codex"
     "comodoro"
+    "cudatext"
     "darcs"
     "delta"
     "dircolors"
@@ -82,6 +83,7 @@ let
     "lapce"
     "lazydocker"
     "lazygit"
+    "lazysql"
     "ledger"
     "less"
     "lesspipe"
@@ -177,6 +179,7 @@ let
     "zoxide"
     "zplug"
     "zsh"
+    "zsh-history-substring-search"
     # keep-sorted end
   ];
 
