@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
     flatten
@@ -17,58 +22,29 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  productInfoPath =
-    if
-      lib.pathExists "${cfg.package}/Applications/${
-        cfg.package.passthru.longName or "Code"
-      }.app/Contents/Resources/app/product.json"
-    then
-      "${cfg.package}/Applications/${
-        cfg.package.passthru.longName or "Code"
-      }.app/Contents/Resources/app/product.json"
-    else if lib.pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
-      # Visual Studio Code, VSCodium, Windsurf, Cursor
-      "${cfg.package}/lib/vscode/resources/app/product.json"
-    else
-      # OpenVSCode Server
-      "${cfg.package}/product.json";
+  configDir =
+    {
+      "vscode" = "Code";
+      "vscode-insiders" = "Code - Insiders";
+      "vscodium" = "VSCodium";
+      "openvscode-server" = "OpenVSCode Server";
+      "windsurf" = "Windsurf";
+      "cursor" = "Cursor";
+      "kiro" = "Kiro";
+    }
+    .${vscodePname};
 
-  productInfo = lib.importJSON productInfoPath;
-
-  # Use preset names for known products to avoid IFD loading it from product.json
-  knownProducts = {
-    cursor = {
-      dataFolderName = ".cursor";
-      nameShort = "Cursor";
-    };
-    kiro = {
-      dataFolderName = ".kiro";
-      nameShort = "Kiro";
-    };
-    openvscode-server = {
-      dataFolderName = ".openvscode-server";
-      nameShort = "OpenVSCode Server";
-    };
-    vscode = {
-      dataFolderName = ".vscode";
-      nameShort = "Code";
-    };
-    vscode-insiders = {
-      dataFolderName = ".vscode-insiders";
-      nameShort = "Code - Insiders";
-    };
-    vscodium = {
-      dataFolderName = ".vscode-oss";
-      nameShort = "VSCodium";
-    };
-    windsurf = {
-      dataFolderName = ".windsurf";
-      nameShort = "Windsurf";
-    };
-  };
-
-  configDir = cfg.nameShort;
-  extensionDir = cfg.dataFolderName;
+  extensionDir =
+    {
+      "vscode" = "vscode";
+      "vscode-insiders" = "vscode-insiders";
+      "vscodium" = "vscode-oss";
+      "openvscode-server" = "openvscode-server";
+      "windsurf" = "windsurf";
+      "cursor" = "cursor";
+      "kiro" = "kiro";
+    }
+    .${vscodePname};
 
   userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -86,7 +62,8 @@ let
 
   snippetDir = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}snippets";
 
-  extensionPath = "${extensionDir}/extensions";
+  # TODO: On Darwin where are the extensions?
+  extensionPath = ".${extensionDir}/extensions";
 
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
@@ -284,59 +261,71 @@ let
   allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in
 {
-  meta.maintainers = [ lib.maintainers.emaiax ];
+  imports = [
+    ./haskell.nix
+    (lib.mkChangedOptionModule
+      [
+        "programs"
+        "vscode"
+        "immutableExtensionsDir"
+      ]
+      [ "programs" "vscode" "mutableExtensionsDir" ]
+      (config: !config.programs.vscode.immutableExtensionsDir)
+    )
+  ]
+  ++
+    map
+      (
+        v:
+        lib.mkRenamedOptionModule
+          [ "programs" "vscode" v ]
+          [
+            "programs"
+            "vscode"
+            "profiles"
+            "default"
+            v
+          ]
+      )
+      [
+        "enableUpdateCheck"
+        "enableExtensionUpdateCheck"
+        "userSettings"
+        "userTasks"
+        "userMcp"
+        "keybindings"
+        "extensions"
+        "languageSnippets"
+        "globalSnippets"
+      ];
 
-  optios = {
-    programs.vscode = {
-      package = lib.mkPackageOption pkgs "vscode" {
-        example = "pkgs.vscodium";
-        extraDescription = "Version of Visual Studio Code to install.";
-      };
+  options.programs.vscode = {
+    enable = lib.mkEnableOption "Visual Studio Code";
 
-      mutableExtensionsDir = mkOption {
-        type = types.bool;
-        default = allProfilesExceptDefault == { };
-        defaultText = lib.literalExpression "(removeAttrs config.programs.vscode.profiles [ \"default\" ]) == { }";
-        example = false;
-        description = ''
-          Whether extensions can be installed or updated manually
-          or by Visual Studio Code. Mutually exclusive to
-          programs.vscode.profiles.
-        '';
-      };
+    package = lib.mkPackageOption pkgs "vscode" {
+      example = "pkgs.vscodium";
+      extraDescription = "Version of Visual Studio Code to install.";
+    };
 
-      nameShort = mkOption {
-        type = types.str;
-        default = knownProducts.${vscodePname}.nameShort or productInfo.nameShort;
-        defaultText = "(derived from product.json)";
-        example = "MyCoolVSCodeFork";
-        description = ''
-          Override for package "short name", used for generating configuration.
+    mutableExtensionsDir = mkOption {
+      type = types.bool;
+      default = allProfilesExceptDefault == { };
+      defaultText = lib.literalExpression "(removeAttrs config.programs.vscode.profiles [ \"default\" ]) == { }";
+      example = false;
+      description = ''
+        Whether extensions can be installed or updated manually
+        or by Visual Studio Code. Mutually exclusive to
+        programs.vscode.profiles.
+      '';
+    };
 
-          This should match the `shortName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
-        '';
-      };
-
-      dataFolderName = mkOption {
-        type = types.str;
-        default = knownProducts.${vscodePname}.dataFolderName or productInfo.dataFolderName;
-        defaultText = "(derived from product.json)";
-        example = ".cool-vscode";
-        description = ''
-          Override for extensions directory.
-
-          This should match the `dataFolderName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
-        '';
-      };
-
-      profiles = mkOption {
-        type = types.attrsOf profileType;
-        default = { };
-        description = ''
-          A list of all VSCode profiles. Mutually exclusive
-          to programs.vscode.mutableExtensionsDir
-        '';
-      };
+    profiles = mkOption {
+      type = types.attrsOf profileType;
+      default = { };
+      description = ''
+        A list of all VSCode profiles. Mutually exclusive
+        to programs.vscode.mutableExtensionsDir
+      '';
     };
   };
 
