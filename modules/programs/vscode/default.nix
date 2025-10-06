@@ -22,29 +22,58 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  configDir =
-    {
-      "vscode" = "Code";
-      "vscode-insiders" = "Code - Insiders";
-      "vscodium" = "VSCodium";
-      "openvscode-server" = "OpenVSCode Server";
-      "windsurf" = "Windsurf";
-      "cursor" = "Cursor";
-      "kiro" = "Kiro";
-    }
-    .${vscodePname};
+  productInfoPath =
+    if
+      lib.pathExists "${cfg.package}/Applications/${
+        cfg.package.passthru.longName or "Code"
+      }.app/Contents/Resources/app/product.json"
+    then
+      "${cfg.package}/Applications/${
+        cfg.package.passthru.longName or "Code"
+      }.app/Contents/Resources/app/product.json"
+    else if lib.pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
+      # Visual Studio Code, VSCodium, Windsurf, Cursor
+      "${cfg.package}/lib/vscode/resources/app/product.json"
+    else
+      # OpenVSCode Server
+      "${cfg.package}/product.json";
 
-  extensionDir =
-    {
-      "vscode" = "vscode";
-      "vscode-insiders" = "vscode-insiders";
-      "vscodium" = "vscode-oss";
-      "openvscode-server" = "openvscode-server";
-      "windsurf" = "windsurf";
-      "cursor" = "cursor";
-      "kiro" = "kiro";
-    }
-    .${vscodePname};
+  productInfo = lib.importJSON productInfoPath;
+
+  # Use preset names for known products to avoid IFD loading it from product.json
+  knownProducts = {
+    cursor = {
+      dataFolderName = ".cursor";
+      nameShort = "Cursor";
+    };
+    kiro = {
+      dataFolderName = ".kiro";
+      nameShort = "Kiro";
+    };
+    openvscode-server = {
+      dataFolderName = ".openvscode-server";
+      nameShort = "OpenVSCode Server";
+    };
+    vscode = {
+      dataFolderName = ".vscode";
+      nameShort = "Code";
+    };
+    vscode-insiders = {
+      dataFolderName = ".vscode-insiders";
+      nameShort = "Code - Insiders";
+    };
+    vscodium = {
+      dataFolderName = ".vscode-oss";
+      nameShort = "VSCodium";
+    };
+    windsurf = {
+      dataFolderName = ".windsurf";
+      nameShort = "Windsurf";
+    };
+  };
+
+  configDir = cfg.nameShort;
+  extensionDir = cfg.dataFolderName;
 
   userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -62,8 +91,7 @@ let
 
   snippetDir = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}snippets";
 
-  # TODO: On Darwin where are the extensions?
-  extensionPath = ".${extensionDir}/extensions";
+  extensionPath = "${extensionDir}/extensions";
 
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
@@ -316,6 +344,30 @@ in
         Whether extensions can be installed or updated manually
         or by Visual Studio Code. Mutually exclusive to
         programs.vscode.profiles.
+      '';
+    };
+
+    nameShort = mkOption {
+      type = types.str;
+      default = knownProducts.${vscodePname}.nameShort or productInfo.nameShort;
+      defaultText = "(derived from product.json)";
+      example = "MyCoolVSCodeFork";
+      description = ''
+        Override for package "short name", used for generating configuration.
+
+        This should match the `shortName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
+      '';
+    };
+
+    dataFolderName = mkOption {
+      type = types.str;
+      default = knownProducts.${vscodePname}.dataFolderName or productInfo.dataFolderName;
+      defaultText = "(derived from product.json)";
+      example = ".cool-vscode";
+      description = ''
+        Override for extensions directory.
+
+        This should match the `dataFolderName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
       '';
     };
 
