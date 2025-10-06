@@ -17,7 +17,6 @@ let
     ;
 
   cfg = config.programs.zsh;
-
   bindkeyCommands = {
     emacs = "bindkey -e";
     viins = "bindkey -v";
@@ -347,7 +346,7 @@ in
 
   config =
     let
-      envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
+      envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables { indent = "  "; };
       localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
       aliasesStr = concatStringsSep "\n" (
@@ -438,7 +437,7 @@ in
         {
           home.file."${dotDirRel}/.zshenv".text = ''
             # Environment variables
-            . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+            . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
 
             # Only source this once
             if [[ -z "$__HM_ZSH_SESS_VARS_SOURCED" ]]; then
@@ -501,7 +500,12 @@ in
 
             (lib.mkIf (cfg.setOptions != [ ]) (
               mkOrder 950 ''
-                ${concatStringsSep "\n" (map (option: "setopt ${option}") cfg.setOptions)}
+                # Set shell options
+                ${lib.hm.zsh.define "set_opts" cfg.setOptions}
+                for opt in "''${set_opts[@]}"; do
+                  setopt "$opt"
+                done
+                unset opt set_opts
               ''
             ))
 

@@ -1,0 +1,9 @@
+alias:
+- name: a
+  value: aliae
+- name: hello-world
+  type: function
+  value: echo "hello world"
+env:
+- name: EDITOR
+  value: code-insiders --wait

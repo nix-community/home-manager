@@ -32,16 +32,25 @@
       mkdir -p "$(dirname "$HISTFILE")"
 
       setopt HIST_FCNTL_LOCK
-      unsetopt APPEND_HISTORY
-      setopt HIST_IGNORE_DUPS
-      unsetopt HIST_IGNORE_ALL_DUPS
-      unsetopt HIST_SAVE_NO_DUPS
-      unsetopt HIST_FIND_NO_DUPS
-      setopt HIST_IGNORE_SPACE
-      unsetopt HIST_EXPIRE_DUPS_FIRST
-      setopt SHARE_HISTORY
-      unsetopt EXTENDED_HISTORY
 
+      # Enabled history options
+      enabled_opts=(
+        HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
+      )
+      for opt in "''${enabled_opts[@]}"; do
+        setopt "$opt"
+      done
+      unset opt enabled_opts
+
+      # Disabled history options
+      disabled_opts=(
+        APPEND_HISTORY EXTENDED_HISTORY HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS
+        HIST_IGNORE_ALL_DUPS HIST_SAVE_NO_DUPS
+      )
+      for opt in "''${disabled_opts[@]}"; do
+        unsetopt "$opt"
+      done
+      unset opt disabled_opts
 
       alias -- test1=alias
       alias -- test2=alias2

@@ -91,6 +91,10 @@ in
       '';
     };
 
+    overwriteBackup = mkEnableOption ''
+      forced overwriting of existing backup files when using `backupFileExtension`
+    '';
+
     extraSpecialArgs = mkOption {
       type = types.attrs;
       default = { };

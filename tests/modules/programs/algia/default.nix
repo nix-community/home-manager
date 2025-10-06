@@ -1,0 +1,1 @@
+{ algia-settings = ./settings.nix; }

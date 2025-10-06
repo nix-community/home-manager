@@ -45,6 +45,8 @@ let
     Dot = "0x37";
     Slash = "0x38";
     Capslock = "0x39";
+    # Section ('§') -- key below Escape on the non-US keyboards
+    NonUSBackslash = "0x64";
   };
 
   fKeys1To12 = {

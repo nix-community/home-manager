@@ -30,9 +30,15 @@ in
     };
   };
 
-  config.home = lib.mkIf cfg.enable {
-    packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.hyprshot" pkgs lib.platforms.linux)
+    ];
 
-    sessionVariables = lib.mkIf (cfg.saveLocation != null) { HYPRSHOT_DIR = cfg.saveLocation; };
+    home = {
+      packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+      sessionVariables = lib.mkIf (cfg.saveLocation != null) { HYPRSHOT_DIR = cfg.saveLocation; };
+    };
   };
 }

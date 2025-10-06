@@ -33,8 +33,10 @@ for sourcePath in "$@" ; do
     elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
       # Next, try to move the file to a backup location if configured and possible
       backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-      if [[ -e "$backup" ]]; then
+      if [[ -e "$backup" && -z "$HOME_MANAGER_BACKUP_OVERWRITE" ]] ; then
         collisionErrors+=("Existing file '$backup' would be clobbered by backing up '$targetPath'")
+      elif [[ -e "$backup" && -n "$HOME_MANAGER_BACKUP_OVERWRITE" ]] ; then
+        warnEcho "Existing file '$targetPath' is in the way of '$sourcePath' and '$backup' exists. Backup will be clobbered due to HOME_MANAGER_BACKUP_OVERWRITE=1"
       else
         warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be moved to '$backup'"
       fi
@@ -48,11 +50,11 @@ done
 if [[ ${#collisionErrors[@]} -gt 0 ]] ; then
   errorEcho "Please do one of the following:
 - Move or remove the files below and try again.
-- In standalone mode, use 'home-manager switch -b backup' to back up
-  files automatically.
-- When used as a NixOS or nix-darwin module, set
-    'home-manager.backupFileExtension'
-  to, for example, 'backup' and rebuild."
+- In standalone mode, use 'home-manager switch -b backup' to back up"\
+" files automatically.
+- When used as a NixOS or nix-darwin module, set"\
+" 'home-manager.backupFileExtension'"\
+" to, for example, 'backup' and rebuild."
   for error in "${collisionErrors[@]}" ; do
     errorEcho "$error"
   done

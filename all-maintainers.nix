@@ -552,12 +552,12 @@
     name = "aheaume";
     source = "home-manager";
   };
-  aidalgol = {
-    email = "aidalgol+nixpkgs@fastmail.net";
-    github = "aidalgol";
-    githubId = 2313201;
-    name = "Aidan Gauland";
-    source = "nixpkgs";
+  aionescu = {
+    email = "github@ionescu.sh";
+    github = "aionescu";
+    githubId = 48064242;
+    name = "Alex Ionescu";
+    source = "home-manager";
   };
   ajgon = {
     email = "igor@rzegocki.pl";
@@ -1239,7 +1239,7 @@
     github = "ipsavitsky";
     githubId = 33558632;
     name = "Ilya Savitsky";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   iynaix = {
     email = "iynaix@gmail.com";

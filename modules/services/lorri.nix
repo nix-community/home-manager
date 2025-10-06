@@ -133,6 +133,10 @@ in
             in
             "PATH=${path}";
         };
+
+        Install = {
+          WantedBy = [ "lorri.service" ];
+        };
       };
     };
   };

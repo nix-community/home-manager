@@ -37,6 +37,8 @@ let
     "delta"
     "dircolors"
     "direnv"
+    "discord"
+    "discoss"
     "earthly"
     "element-desktop"
     "emacs"
@@ -179,6 +181,7 @@ let
     "zoxide"
     "zplug"
     "zsh"
+    "zsh-history-substring-search"
     # keep-sorted end
   ];
 

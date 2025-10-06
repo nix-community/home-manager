@@ -1,0 +1,5 @@
+{
+  "default_user": "spanish_inquisition",
+  "listenbrainz_url": "https://api.listenbrainz.org/1/",
+  "musicbrainz_url": "http://musicbrainz.org/ws/2"
+}

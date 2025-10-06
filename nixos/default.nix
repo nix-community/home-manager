@@ -7,15 +7,18 @@
 }:
 
 let
-
+  inherit (lib) mkIf;
   cfg = config.home-manager;
 
-  serviceEnvironment =
-    lib.optionalAttrs (cfg.backupFileExtension != null) {
-      HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
-    }
-    // lib.optionalAttrs cfg.verbose { VERBOSE = "1"; };
+  serviceEnvironment = lib.mkMerge [
+    (mkIf cfg.verbose { VERBOSE = "1"; })
 
+    (mkIf (cfg.backupFileExtension != null) {
+      HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
+    })
+
+    (mkIf cfg.overwriteBackup { HOME_MANAGER_BACKUP_OVERWRITE = "1"; })
+  ];
 in
 {
   imports = [ ./common.nix ];
@@ -41,7 +44,7 @@ in
         ];
       };
     }
-    (lib.mkIf (cfg.users != { }) {
+    (mkIf (cfg.users != { }) {
       systemd.services = lib.mapAttrs' (
         _: usercfg:
         let
