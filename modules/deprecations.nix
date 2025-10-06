@@ -18,5 +18,20 @@
       The corresponding package was removed from nixpkgs,
       consider using `deskflow` or `input-leap` instead.
     '')
-  ];
+  ]
+  # Just module removal
+  ++ (map
+    (
+      opt:
+      lib.mkRemovedOptionModule [ "programs" "just" opt ] ''
+        'program.just' is deprecated, simply add 'pkgs.just' to 'home.packages' instead.
+        See https://github.com/nix-community/home-manager/issues/3449#issuecomment-1329823502''
+    )
+    [
+      "enable"
+      "enableBashIntegration"
+      "enableZshIntegration"
+      "enableFishIntegration"
+    ]
+  );
 }
