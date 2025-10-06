@@ -63,7 +63,7 @@ in
                           type = lib.types.nullOr lib.types.bool;
                           default = null;
                           description = ''
-                            Whether this windows should be selected by default at session start.
+                            Whether this window should be selected by default at session start.
                           '';
                         };
 
