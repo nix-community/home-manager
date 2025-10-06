@@ -5,14 +5,14 @@
     difftastic = {
       enable = true;
       enableAsDifftool = true;
-      background = "dark";
-      color = "always";
-      context = 5;
-      display = "inline";
-      extraArgs = [
-        "--tab-width=8"
-        "--sort-paths"
-      ];
+      options = {
+        background = "dark";
+        color = "always";
+        context = 5;
+        display = "inline";
+        tab-width = 8;
+        sort-paths = true;
+      };
     };
   };
 

@@ -330,64 +330,21 @@ in
           '';
         };
 
-        background = mkOption {
-          type = types.enum [
-            "light"
-            "dark"
-          ];
-          default = "light";
-          example = "dark";
-          description = ''
-            Determines whether difftastic should use the lighter or darker colors
-            for syntax highlighting.
-          '';
-        };
-
-        color = mkOption {
-          type = types.enum [
-            "always"
-            "auto"
-            "never"
-          ];
-          default = "auto";
-          example = "always";
-          description = ''
-            Determines when difftastic should color its output.
-          '';
-        };
-
-        context = mkOption {
-          type = types.ints.u32;
-          default = 3;
-          example = 5;
-          description = ''
-            Determines the number of contextual lines to show around changed lines.
-          '';
-        };
-
-        display = mkOption {
-          type = types.enum [
-            "side-by-side"
-            "side-by-side-show-both"
-            "inline"
-          ];
-          default = "side-by-side";
-          example = "inline";
-          description = ''
-            Determines how the output displays - in one column or two columns.
-          '';
-        };
-
-        extraArgs = mkOption {
-          type = types.nullOr (types.listOf types.str);
-          default = null;
-          example = [
-            "--tab-width=8"
-            "--sort-paths"
-          ];
-          description = ''
-            Extra command line arguments to pass to {command}`difft`.
-          '';
+        options = mkOption {
+          type =
+            with lib.types;
+            attrsOf (oneOf [
+              str
+              number
+              bool
+            ]);
+          default = { };
+          example = {
+            color = "dark";
+            sort-path = true;
+            tab-width = 8;
+          };
+          description = "Configuration options for {command}`difftastic`. See {command}`difft --help`";
         };
       };
 
@@ -541,6 +498,26 @@ in
         "signer"
       ]
     )
+  ]
+  ++ (
+    let
+      mkRenamed =
+        opt:
+        lib.mkRenamedOptionModule
+          [ "programs" "git" "difftastic" opt ]
+          [ "programs" "git" "difftastic" "options" opt ];
+    in
+    map mkRenamed [
+      "background"
+      "color"
+      "context"
+      "display"
+    ]
+  )
+  ++ [
+    (lib.mkRemovedOptionModule [ "programs" "git" "difftastic" "extraArgs" ] ''
+      'programs.git.difftastic.extraArgs' has been replaced by 'programs.git.difftastic.options'
+    '')
   ];
 
   config = mkIf cfg.enable (
@@ -849,16 +826,9 @@ in
 
       (
         let
-          difftCommand = concatStringsSep " " (
-            [
-              "${lib.getExe cfg.difftastic.package}"
-              "--color ${cfg.difftastic.color}"
-              "--background ${cfg.difftastic.background}"
-              "--display ${cfg.difftastic.display}"
-              "--context ${toString cfg.difftastic.context}"
-            ]
-            ++ (lib.optionals (cfg.difftastic.extraArgs != null) cfg.difftastic.extraArgs)
-          );
+          difftCommand = "${lib.getExe cfg.difftastic.package} ${
+            lib.cli.toGNUCommandLineShell { } cfg.difftastic.options
+          }";
         in
         (lib.mkMerge [
           (mkIf cfg.difftastic.enable {
