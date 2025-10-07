@@ -6,4 +6,5 @@
   systemd-empty-user-config = ./empty-user-config.nix;
   systemd-slices = ./slices.nix;
   systemd-timers = ./timers.nix;
+  systemd-user-environment-generators = ./user-environment-generators.nix;
 }
