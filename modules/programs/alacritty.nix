@@ -7,6 +7,26 @@
 let
   cfg = config.programs.alacritty;
   tomlFormat = pkgs.formats.toml { };
+
+  alacrittyTheme = pkgs.alacritty-theme.overrideAttrs (prevAttrs: {
+    name = "alacritty-theme-for-home-manager";
+    postInstall =
+      let
+        inherit (config.programs.alacritty) theme;
+      in
+      lib.concatStringsSep "\n" [
+        prevAttrs.postInstall
+        (lib.optionalString (theme != null)
+          # bash
+          ''
+            if [ ! -f "$out/share/alacritty-theme/${theme}.toml" ]; then
+              echo "error: alacritty theme '${theme}' does not exist"
+              exit 1
+            fi
+          ''
+        )
+      ];
+  });
 in
 {
   options = {
@@ -62,29 +82,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        # If using the theme option, ensure that theme exists in the
-        # alacritty-theme package.
-        assertion =
-          let
-            available = lib.pipe "${pkgs.alacritty-theme}/share/alacritty-theme" [
-              builtins.readDir
-              (lib.filterAttrs (name: type: type == "regular" && lib.hasSuffix ".toml" name))
-              lib.attrNames
-              (lib.map (lib.removeSuffix ".toml"))
-            ];
-          in
-          cfg.theme == null || (builtins.elem cfg.theme available);
-        message = "The alacritty theme '${cfg.theme}' does not exist.";
-      }
-    ];
-
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     programs.alacritty.settings =
       let
-        theme = "${pkgs.alacritty-theme}/share/alacritty-theme/${cfg.theme}.toml";
+        theme = "${alacrittyTheme}/share/alacritty-theme/${cfg.theme}.toml";
       in
       lib.mkIf (cfg.theme != null) {
         general.import = lib.mkIf (lib.versionAtLeast cfg.package.version "0.14") [ theme ];
