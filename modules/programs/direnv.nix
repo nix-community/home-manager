@@ -150,9 +150,12 @@ in
           ''
         );
 
-        zsh.initContent = mkIf cfg.enableZshIntegration ''
-          eval "$(${getExe cfg.package} hook zsh)"
-        '';
+        zsh.initContent = mkIf cfg.enableZshIntegration (
+          # Using `mkAfter` to make it more likely to appear after other
+          # manipulations of the prompt.
+          ''
+            eval "$(${getExe cfg.package} hook zsh)"
+          '');
 
         # Using `mkAfter` to make it more likely to appear after other
         # manipulations of the prompt.
