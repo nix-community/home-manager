@@ -6,3 +6,6 @@
 error.fg = red
 header.bold = true
 title.reverse = true
+
+[ui]
+tab.selected.reverse = toggle
