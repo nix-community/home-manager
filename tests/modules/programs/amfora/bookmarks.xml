@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbel
+  PUBLIC "+//IDN python.org//DTD XML Bookmark Exchange Language 1.1//EN//XML"
+         "http://www.python.org/topics/xml/dtds/xbel-1.1.dtd">
+<xbel version="1.1">
+    <bookmark href="gemini://example.com/">
+        <title>Example Bookmark</title>
+    </bookmark>
+</xbel>

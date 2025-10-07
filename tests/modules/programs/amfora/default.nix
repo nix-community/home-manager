@@ -1,0 +1,1 @@
+{ amfora-settings = ./settings.nix; }

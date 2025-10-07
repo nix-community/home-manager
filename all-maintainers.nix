@@ -181,9 +181,10 @@
     source = "home-manager";
   };
   HeitorAugustoLN = {
-    email = "IAm.HeitorALN@proton.me";
+    email = "nixpkgs.woven713@passmail.net";
     github = "HeitorAugustoLN";
     githubId = 44377258;
+    matrix = "@heitoraugusto:matrix.org";
     name = "Heitor Augusto";
     source = "nixpkgs";
   };
@@ -241,13 +242,6 @@
     github = "Kranzes";
     githubId = 56614642;
     name = "Ilan Joselevich";
-    source = "nixpkgs";
-  };
-  Kritnich = {
-    email = "kritnich@kritni.ch";
-    github = "Kritnich";
-    githubId = 22116767;
-    name = "Kritnich";
     source = "nixpkgs";
   };
   Kyure-A = {
