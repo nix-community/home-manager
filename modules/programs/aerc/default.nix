@@ -104,10 +104,10 @@ in
     };
 
     stylesets = mkOption {
-      type = with types; attrsOf (either confSection lines);
+      type = with types; attrsOf (sectionsOrLines);
       default = { };
       example = literalExpression ''
-        { default = { ui = { "tab.selected.reverse" = toggle; }; }; };
+        { default = { ui = { "tab.selected.reverse" = "toggle"; }; }; };
       '';
       description = ''
         Stylesets added to {file}`$HOME/.config/aerc/stylesets/`.
@@ -166,7 +166,7 @@ in
       mkStyleset = attrsets.mapAttrs' (
         k: v:
         let
-          value = if lib.isString v then v else sectionsToINI { global = v; };
+          value = if lib.isString v then v else sectionsToINI v;
         in
         {
           name = "${configDir}/stylesets/${k}";
