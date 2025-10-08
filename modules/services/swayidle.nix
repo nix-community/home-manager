@@ -118,6 +118,8 @@ in
       (lib.hm.assertions.assertPlatform "services.swayidle" pkgs lib.platforms.linux)
     ];
 
+    home.packages = [ cfg.package ];
+
     systemd.user.services.swayidle = {
       Unit = {
         Description = "Idle manager for Wayland";
