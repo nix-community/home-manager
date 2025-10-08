@@ -110,6 +110,22 @@ in
     };
 
     createDirectories = lib.mkEnableOption "automatic creation of the XDG user directories";
+
+    setSessionVariables = mkOption {
+      type = with types; bool;
+      default = lib.versionOlder config.home.stateVersion "25.11";
+      defaultText = literalExpression ''
+        lib.versionOlder config.home.stateVersion "25.11"
+      '';
+      description = ''
+        Whether to set the XDG user dir environment variables, like
+        `XDG_DESKTOP_DIR`. The recommended way to get these values is via the
+        `xdg-user-dir` command or by processing
+        `$XDG_CONFIG_HOME/user-dirs.dirs` directly in your application.
+
+        This defaults to `true` for state version < 25.11 and `false` otherwise.
+      '';
+    };
   };
 
   config =
@@ -139,7 +155,7 @@ in
 
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      home.sessionVariables = directories;
+      home.sessionVariables = lib.mkIf cfg.setSessionVariables directories;
 
       home.activation.createXdgUserDirectories = lib.mkIf cfg.createDirectories (
         let
