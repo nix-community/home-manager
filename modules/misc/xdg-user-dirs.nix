@@ -36,6 +36,8 @@ in
       '';
     };
 
+    package = lib.mkPackageOption pkgs "xdg-user-dirs" { nullable = true; };
+
     # Well-known directory list from
     # https://gitlab.freedesktop.org/xdg/xdg-user-dirs/blob/master/man/user-dirs.dirs.xml
 
@@ -134,6 +136,8 @@ in
         lib.generators.toKeyValue { } wrapped;
 
       xdg.configFile."user-dirs.conf".text = "enabled=False";
+
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
       home.sessionVariables = directories;
 
