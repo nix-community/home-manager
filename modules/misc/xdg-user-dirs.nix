@@ -126,10 +126,6 @@ in
         // cfg.extraConfig;
     in
     lib.mkIf cfg.enable {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "xdg.userDirs" pkgs lib.platforms.linux)
-      ];
-
       xdg.configFile."user-dirs.dirs".text =
         let
           # For some reason, these need to be wrapped with quotes to be valid.
