@@ -139,6 +139,7 @@ let
     "qcal"
     "qutebrowser"
     "ranger"
+    "retext"
     "rio"
     "ripgrep"
     "ruff"
