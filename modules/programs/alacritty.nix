@@ -77,7 +77,7 @@ in
               inherit (config.programs.alacritty) theme;
             in
             lib.concatStringsSep "\n" [
-              prevAttrs.postInstall
+              (prevAttrs.postInstall or "")
               (lib.optionalString (theme != null)
                 # bash
                 ''
