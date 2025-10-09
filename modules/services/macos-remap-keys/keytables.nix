@@ -147,7 +147,9 @@ let
   page7Keys = mapToInt (lib.fromHexString "700000000") (
     letters // numbers // specialKeys // fKeys1To12 // fKeys13To24 // navigationKeys // modifierKeys
   );
-  pageFFKeys = mapToInt (lib.fromHexString "FF00000000") { Fn = "0x3"; };
+  pageFFKeys = mapToInt (lib.fromHexString "FF00000000") {
+    Fn = "0x3";
+  };
 in
 {
   keyboard = page7Keys // pageFFKeys;
