@@ -247,28 +247,12 @@ in
           # https://github.com/zsh-users/zsh-history-substring-search#usage
           ''
             source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-            ${
-              let
-                upKeys = lib.toList cfg.historySubstringSearch.searchUpKey;
-                downKeys = lib.toList cfg.historySubstringSearch.searchDownKey;
-              in
-              ''
-                # Bind search up keys
-                ${lib.hm.zsh.define "search_up_keys" upKeys}
-                 for key in "''${search_up_keys[@]}"; do
-                   bindkey "$key" history-substring-search-up
-                 done
-                 unset key search_up_keys
-
-                # Bind search down keys
-                ${lib.hm.zsh.define "search_down_keys" downKeys}
-                 for key in "''${search_down_keys[@]}"; do
-                   bindkey "$key" history-substring-search-down
-                 done
-                 unset key search_down_keys
-              ''
-            }
+            ${lib.concatMapStringsSep "\n" (upKey: ''bindkey "${upKey}" history-substring-search-up'') (
+              lib.toList cfg.historySubstringSearch.searchUpKey
+            )}
+            ${lib.concatMapStringsSep "\n" (downKey: ''bindkey "${downKey}" history-substring-search-down'') (
+              lib.toList cfg.historySubstringSearch.searchDownKey
+            )}
           ''
       ))
     ];
