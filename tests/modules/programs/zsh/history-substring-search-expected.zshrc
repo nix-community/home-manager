@@ -36,22 +36,6 @@ done
 unset opt disabled_opts
 
 source @zsh-history-substring-search@/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-# Bind search up keys
-search_up_keys=(
-  '^[[A' '\eOA'
-)
- for key in "${search_up_keys[@]}"; do
-   bindkey "$key" history-substring-search-up
- done
- unset key search_up_keys
-
-# Bind search down keys
-search_down_keys=(
-  '^[[B'
-)
- for key in "${search_down_keys[@]}"; do
-   bindkey "$key" history-substring-search-down
- done
- unset key search_down_keys
-
+bindkey "^[[A" history-substring-search-up
+bindkey "\eOA" history-substring-search-up
+bindkey "^[[B" history-substring-search-down
