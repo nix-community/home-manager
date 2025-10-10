@@ -9,6 +9,10 @@ let
 
   cfg = config.systemd.user;
 
+  nixPkg = if config.nix.package == null then pkgs.nix else config.nix.package;
+
+  profileDirectory = config.home.profileDirectory;
+
   inherit (lib)
     any
     attrValues
@@ -214,6 +218,17 @@ let
         };
       };
     '';
+
+  hmSessionVarsUserEnvGenerator = {
+    "systemd/user-environment-generators/05-home-manager.sh" = {
+      text = ''
+        . "${nixPkg}/etc/profile.d/nix.sh"
+        . "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
+      '';
+      executable = true;
+      force = true;
+    };
+  };
 
   sessionVariables = mkIf (cfg.sessionVariables != { }) {
     "environment.d/10-home-manager.conf".text =
@@ -447,6 +462,8 @@ in
         ++ (buildServices "mount" cfg.mounts)
         ++ (buildServices "automount" cfg.automounts)
       ))
+
+      hmSessionVarsUserEnvGenerator
 
       sessionVariables
 
