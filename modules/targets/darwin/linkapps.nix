@@ -23,14 +23,26 @@ in
 
   config = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.linkApps.enable) {
     # Install MacOS applications to the user environment.
-    home.file.${cfg.linkApps.directory}.source =
+    home.file =
       let
-        apps = pkgs.buildEnv {
-          name = "home-manager-applications";
-          paths = config.home.packages;
-          pathsToLink = "/Applications";
-        };
+        packagesWithApps = builtins.filter (
+          pkg: builtins.pathExists "${pkg}/Applications"
+        ) config.home.packages;
+        apps = lib.flatten (
+          map (
+            pkg:
+            map (
+              { name, ... }:
+              {
+                name = "${cfg.linkApps.directory}/${name}/Contents";
+                value = {
+                  source = "${pkg}/Applications/${name}/Contents";
+                };
+              }
+            ) (lib.attrsToList (builtins.readDir "${pkg}/Applications"))
+          ) packagesWithApps
+        );
       in
-      "${apps}/Applications";
+      (builtins.listToAttrs apps);
   };
 }
