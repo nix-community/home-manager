@@ -33,6 +33,7 @@ in
     package = mkPackageOption pkgs "superfile" { nullable = true; };
 
     metadataPackage = mkPackageOption pkgs "exiftool" { nullable = true; };
+    zoxidePackage = mkPackageOption pkgs "zoxide" { nullable = true; };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -150,6 +151,9 @@ in
         ++ optional (
           cfg.metadataPackage != null && cfg.settings ? metadata && cfg.settings.metadata
         ) cfg.metadataPackage
+        ++ optional (
+          cfg.zoxidePackage != null && cfg.settings ? zoxide_support && cfg.settings.zoxide_support
+        ) cfg.zoxidePackage
       );
 
       xdg.configFile = mkIf enableXdgConfig configFiles;
