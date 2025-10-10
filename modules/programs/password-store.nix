@@ -24,15 +24,10 @@ in
     settings = mkOption rec {
       type = with types; attrsOf str;
       apply = lib.mergeAttrs default;
-      default = {
-        PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
-      };
-      defaultText = literalExpression ''
-        { PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; }
-      '';
+      default = { };
       example = literalExpression ''
         {
-          PASSWORD_STORE_DIR = "/some/directory";
+          PASSWORD_STORE_DIR = "$\{config.xdg.dataHome\}/password-store";
           PASSWORD_STORE_KEY = "12345678";
           PASSWORD_STORE_CLIP_TIME = "60";
         }
