@@ -14,7 +14,20 @@
       settings = lib.mkOption {
         description = "test";
         type = lib.hm.types.SCFGDirectives;
-        default = [ ];
+        default = [
+          {
+            name = "status_path";
+            params = [ "${config.xdg.dataHome}/pimsync/status" ];
+          }
+        ];
+        defaultText = lib.literalExpression ''
+          [
+            {
+              name = "status_path";
+              params = [ "''${config.xdg.dataHome}/pimsync/status" ];
+            }
+          ]
+        '';
       };
     };
   };
