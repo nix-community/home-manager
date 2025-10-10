@@ -830,9 +830,15 @@ in
                 }
               ]
               ++ (builtins.concatMap (
-                { addonId, meta, ... }:
+                {
+                  addonId ? null,
+                  name,
+                  meta,
+                  ...
+                }:
                 let
-                  permissions = config.extensions.settings.${addonId}.permissions or null;
+                  safeAddonId = if addonId != null then addonId else name;
+                  permissions = config.extensions.settings.${safeAddonId}.permissions or null;
                   requireCheck = config.extensions.exhaustivePermissions || permissions != null;
                   authorizedPermissions = lib.optionals (permissions != null) permissions;
                   missingPermissions = lib.subtractLists authorizedPermissions meta.mozPermissions;
@@ -847,20 +853,20 @@ in
                       config.extensions.exactPermissions && missingPermissions != [ ] && redundantPermissions != [ ]
                     then
                       ''
-                        Extension ${addonId} requests permissions that weren't
+                        Extension ${safeAddonId} requests permissions that weren't
                         authorized: ${builtins.toJSON missingPermissions}.
                         Additionally, the following permissions were authorized,
-                        but extension ${addonId} did not request them:
+                        but extension ${safeAddonId} did not request them:
                         ${builtins.toJSON redundantPermissions}.
                         Consider adjusting the permissions in''
                     else if config.extensions.exactPermissions && redundantPermissions != [ ] then
                       ''
                         The following permissions were authorized, but extension
-                        ${addonId} did not request them: ${builtins.toJSON redundantPermissions}.
+                        ${safeAddonId} did not request them: ${builtins.toJSON redundantPermissions}.
                         Consider removing the redundant permissions from''
                     else
                       ''
-                        Extension ${addonId} requests permissions that weren't
+                        Extension ${safeAddonId} requests permissions that weren't
                         authorized: ${builtins.toJSON missingPermissions}.
                         Consider adding the missing permissions to'';
                 in
@@ -874,7 +880,7 @@ in
                           profilePath
                           ++ [
                             "extensions"
-                            addonId
+                            safeAddonId
                           ]
                         )
                       }.permissions'.
@@ -885,7 +891,7 @@ in
               ++ (builtins.concatMap (
                 { name, value }:
                 let
-                  packages = builtins.filter (pkg: pkg.addonId == name) config.extensions.packages;
+                  packages = builtins.filter (pkg: (pkg.addonId or pkg.name) == name) config.extensions.packages;
                 in
                 [
                   {
