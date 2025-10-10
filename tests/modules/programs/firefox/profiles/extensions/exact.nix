@@ -8,7 +8,6 @@ let
   uBlockStubPkg = config.lib.test.mkStubPackage {
     name = "ublock-origin-dummy";
     extraAttrs = {
-      addonId = "uBlock0@raymondhill.net";
       meta.mozPermissions = [
         "privacy"
         "storage"
@@ -69,7 +68,7 @@ in
           ];
           exactPermissions = true;
           settings = {
-            ${uBlockStubPkg.addonId} = {
+            ${uBlockStubPkg.name} = {
               permissions = [
                 "privacy"
                 "storage"
@@ -104,10 +103,10 @@ in
     // {
       test.asserts.assertions.expected = [
         ''
-          Extension ${uBlockStubPkg.addonId} requests permissions that weren't
+          Extension ${uBlockStubPkg.name} requests permissions that weren't
           authorized: ["tabs"].
           Consider adding the missing permissions to
-          '${lib.showOption modulePath}.profiles.extensions.extensions."${uBlockStubPkg.addonId}".permissions'.
+          '${lib.showOption modulePath}.profiles.extensions.extensions.${uBlockStubPkg.name}.permissions'.
         ''
         ''
           The following permissions were authorized, but extension
