@@ -3,6 +3,8 @@ WantedBy=default.target
 
 [Service]
 ExecStart=@openssh@/bin/ssh-agent -D -a %t/ssh-agent -t 1337
+ExecStartPost=@dbus@/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK=%t/ssh-agent
+
 
 [Unit]
 Description=SSH authentication agent
