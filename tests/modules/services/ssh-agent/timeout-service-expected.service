@@ -3,6 +3,7 @@ WantedBy=default.target
 
 [Service]
 ExecStart=@openssh@/bin/ssh-agent -D -a %t/ssh-agent -t 1337
+ExecStartPost=/nix/store/00000000000000000000000000000000-update-ssh-agent-env SSH_AUTH_SOCK=%t/ssh-agent
 
 [Unit]
 Description=SSH authentication agent

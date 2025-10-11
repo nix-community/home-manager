@@ -6,7 +6,7 @@
 
   nmt.script = ''
     assertFileContent \
-      home-files/.config/systemd/user/ssh-agent.service \
+      $(normalizeStorePaths home-files/.config/systemd/user/ssh-agent.service) \
       ${./timeout-service-expected.service}
   '';
 }

@@ -86,11 +86,18 @@ in
         Description = "SSH authentication agent";
         Documentation = "man:ssh-agent(1)";
       };
-      Service.ExecStart = "${lib.getExe' cfg.package "ssh-agent"} -D -a %t/${cfg.socket}${
-        lib.optionalString (
-          cfg.defaultMaximumIdentityLifetime != null
-        ) " -t ${toString cfg.defaultMaximumIdentityLifetime}"
-      }";
+      Service = {
+        ExecStart = "${lib.getExe' cfg.package "ssh-agent"} -D -a %t/${cfg.socket}${
+          lib.optionalString (
+            cfg.defaultMaximumIdentityLifetime != null
+          ) " -t ${toString cfg.defaultMaximumIdentityLifetime}"
+        }";
+        ExecStartPost = "${pkgs.writeShellScript "update-ssh-agent-env" ''
+          if [ -z "$SSH_AUTH_SOCK" ]; then
+            ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd "$@"
+          fi
+        ''} SSH_AUTH_SOCK=%t/${cfg.socket}";
+      };
     };
   };
 }
