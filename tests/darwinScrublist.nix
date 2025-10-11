@@ -11,6 +11,7 @@ let
     "alacritty"
     "alot"
     "antidote"
+    "anvil-editor"
     "aria2"
     "atuin"
     "autojump"
