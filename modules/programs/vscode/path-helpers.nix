@@ -35,6 +35,22 @@ rec {
       ++ lib.optionals (profileName != "default") [ "profiles/${profileName}" ]
     );
 
+  # Build a function to compute snippets paths
+  #
+  # Example usage:
+  #   mkSnippetsPathBuilder "default" (global)
+  #   mkSnippetsPathBuilder "default" "haskell"
+  #   mkSnippetsPathBuilder "work" "nix"
+  #
+  mkSnippetsPathBuilder =
+    profileName: language:
+    lib.concatStringsSep "/" (
+      [ mkAppUserDir ]
+      ++ lib.optionals (profileName != "default") [ "profiles/${profileName}" ]
+      ++ [ "snippets" ]
+      ++ [ "${language}.json" ]
+    );
+
   # Build a function to compute profile-scoped config paths for a given key
   #
   # Example usage:
@@ -56,7 +72,8 @@ rec {
         mkProfilePathBuilder profileName key + "/${key}.json"
       );
 
+  # helpers to build immutable and mutable config paths
+  #
   mkImmutableConfigPath = profileName: key: mkProfileConfigPathBuilder profileName key true;
   mkMutableConfigPath = profileName: key: mkProfileConfigPathBuilder profileName key false;
-
 }

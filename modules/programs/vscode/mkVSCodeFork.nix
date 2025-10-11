@@ -14,6 +14,8 @@
   ...
 }:
 let
+  jsonFormat = pkgs.formats.json { };
+
   cfg = lib.getAttrFromPath modulePath config // {
     inherit overridePaths configDirectory userDirectory;
   };
@@ -23,18 +25,19 @@ let
   # configs per profile that are supported by this module
   #
   configsPerProfile = [
-    "settings"
     "keybindings"
-    "tasks"
     "mcp"
+    "settings"
+    "tasks"
   ];
 
   # Generates configuration files for each profile key that exists and is non-empty
   #
   # For each key in configsPerProfile:
-  # - If the profile has the key AND the value is not an empty set
-  # - Creates a config file with the appropriate path (mutable/immutable)
-  # - Sets up change handler for mutable profiles to regenerate configs
+  #
+  # - if the profile has the key AND the value is not an empty set
+  # - create a config file with the appropriate path, either mutable or immutable
+  # - setup onChange handler for mutable profiles to regenerate configs when the config changes
   #
   # Returns: List of attribute sets ready for home-manager file configuration
   mkConfigsPerProfile =
@@ -56,10 +59,26 @@ let
       ]
     ) configsPerProfile;
 
+  mkSnippetsPerProfile =
+    profileName: profile: lib.flatten [
+      lib.optionals (profile ? "languageSnippets") [
+        (
+          lib.mapAttrsToList (language: snippet: {
+            "${helpers.mkSnippetsPathBuilder profileName language}" = {
+              source = toJsonSource "user-${language}-snippets" snippet;
+            }
+          }) profile.languageSnippets
+        )
+      ]
+      ++ lib.optionals (profile ? "globalSnippets") [
+        "${helpers.mkSnippetsPathBuilder profileName}" = {
+          source = toJsonSource "user-global-snippets" profile.globalSnippets;
+        }
+      ]
+    ];
+
   appName = name;
   appPackageName = if (packageName != null) then packageName else package.pname;
-
-  jsonFormat = pkgs.formats.json { };
 
   # Helper function to handle path vs JSON object logic
   toJsonSource =
@@ -255,6 +274,19 @@ in
               description = "The extensions to be installed in the profile.";
             };
 
+            globalSnippets = lib.mkOption {
+              type = jsonFormat.type;
+              default = { };
+              example = {
+                fixme = {
+                  prefix = [ "fixme" ];
+                  body = [ "$LINE_COMMENT FIXME: $0" ];
+                  description = "Insert a FIXME remark";
+                };
+              };
+              description = "Defines global user snippets.";
+            };
+
             keybindings = lib.mkOption {
               type = lib.types.either lib.types.path (
                 lib.types.listOf (
@@ -306,6 +338,21 @@ in
                 Keybindings written to the profile's {file}`keybindings.json`.
                 This can be a JSON object or a path to a custom JSON file.
               '';
+            };
+
+            languageSnippets = lib.mkOption {
+              type = jsonFormat.type;
+              default = { };
+              example = {
+                haskell = {
+                  fixme = {
+                    prefix = [ "fixme" ];
+                    body = [ "$LINE_COMMENT FIXME: $0" ];
+                    description = "Insert a FIXME remark";
+                  };
+                };
+              };
+              description = "Defines user snippets for different languages.";
             };
 
             mcp = lib.mkOption {
@@ -361,6 +408,7 @@ in
                 This can be a JSON object or a path to a custom JSON file.
               '';
             };
+
           };
         }
       );
@@ -424,6 +472,7 @@ in
     home.file = lib.mkMerge (
       lib.flatten [
         (lib.mapAttrsToList mkConfigsPerProfile cfg.profiles)
+        (lib.mapAttrsToList mkSnippetsPerProfile cfg.profiles)
 
         (lib.mkIf (cfg.profiles != { }) (
           if (cfg.mutableExtensionsDir && otherProfiles == { }) then
