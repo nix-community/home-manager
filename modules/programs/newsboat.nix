@@ -157,6 +157,21 @@ in
           '';
         };
       };
+
+      auto-vacuum = {
+        enable = lib.mkEnableOption "automatic cleaning of the newsboat cache";
+
+        onCalendar = lib.mkOption {
+          type = lib.types.str;
+          default = "weekly";
+          example = "monthly";
+          description = ''
+            How often to run the cleaning command.
+
+            See {manpage}`systemd.time(7)` for more information about the format.
+          '';
+        };
+      };
     };
   };
 
@@ -173,6 +188,12 @@ in
         assertion = cfg.auto-fetch-articles.enable -> cfg.package != null;
         message = ''
           Cannot fetch articles if package is unset.
+        '';
+      }
+      {
+        assertion = cfg.auto-vacuum.enable -> cfg.package != null;
+        message = ''
+          Cannot clean newsboat cache if package is unset.
         '';
       }
     ];
@@ -216,6 +237,39 @@ in
       Timer = {
         Unit = "newsboat-fetch-articles.service";
         OnCalendar = cfg.auto-fetch-articles.onCalendar;
+        Persistent = true;
+      };
+
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
+    };
+
+    systemd.user.services.newsboat-vacuum = lib.mkIf cfg.auto-vacuum.enable {
+      Unit = {
+        Description = "Automatic Newsboat Cache Cleaner";
+        Documentation = [ "man:newsboat(1)" ];
+      };
+
+      Service = {
+        Type = "oneshot";
+        Slice = "background.slice";
+        CPUSchedulingPolicy = "idle";
+        IOSchedulingClass = "idle";
+        RuntimeDirectory = "newsboat";
+        ExecStart = "${lib.getExe pkgs.flock} %t/newsboat.lock ${lib.getExe cfg.package} --vacuum";
+      };
+    };
+
+    systemd.user.timers.newsboat-vacuum = lib.mkIf cfg.auto-vacuum.enable {
+      Unit = {
+        Description = "Automatic Newsboat Cache Cleaner";
+        Documentation = [ "man:newsboat(1)" ];
+      };
+
+      Timer = {
+        Unit = "newsboat-vacuum.service";
+        OnCalendar = cfg.auto-vacuum.onCalendar;
         Persistent = true;
       };
 
