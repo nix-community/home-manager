@@ -2,7 +2,7 @@
 #
 # This attribute set contains Home Manager module maintainers that do
 # not have an entry in the Nixpkgs maintainer list [1]. Entries here
-# are expected to be follow the same format as described in [1].
+# are expected to follow the same format as described in [1].
 #
 # [1] https://github.com/NixOS/nixpkgs/blob/737449404589e4a80b3fa99ecbc6d4d803c1f6dc/maintainers/maintainer-list.nix#LC1
 {
