@@ -169,6 +169,22 @@
     githubId = 46252070;
     name = "Sara Johnsson";
   };
+  fk29g = {
+    name = "nicknb";
+    email = "nicknb@posteo.com";
+    github = "fk29g";
+    githubId = 205353326;
+    keys = [
+      {
+        longKeyId = "ed25519/0xD90384C807BC1FE6";
+        fingerprint = "8FF0 1BEE BCBF 1D20 ECD3  5FFA D903 84C8 07BC 1FE6";
+      }
+      {
+        longKeyId = "ed25519/0x2BF0FBB405AD6A7C";
+        fingerprint = "6F9B 47B6 FFB0 823D 2ACF  9ED8 2BF0 FBB4 05AD 6A7C";
+      }
+    ];
+  };
   florpe = {
     email = "jens.krewald@gmail.com";
     github = "florpe";
