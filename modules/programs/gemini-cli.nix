@@ -91,29 +91,41 @@ in
     };
 
     context = lib.mkOption {
-      type = lib.types.nullOr (lib.types.either lib.types.lines lib.types.path);
-      default = null;
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
       example = lib.literalExpression ''
-        # Inline content example:
-        '''
-        # Global Context
+        {
+          GEMINI = '''
+            # Global Context
 
-        You are a helpful AI assistant for software development.
+            You are a helpful AI assistant for software development.
 
-        ## Coding Standards
+            ## Coding Standards
 
-        - Follow consistent code style
-        - Write clear comments
-        - Test your changes
-        '''
+            - Follow consistent code style
+            - Write clear comments
+            - Test your changes
+          ''';
 
-        # Or reference an existing file:
-        # ./path/to/GEMINI.md
+          AGENTS = ./path/to/agents.md;
+
+          CONTEXT = '''
+            Additional context instructions here.
+          ''';
+        }
       '';
       description = ''
-        Global context instructions that will be available across all projects.
+        An attribute set of context files to create in `~/.gemini/`.
+        The attribute name becomes the filename with `.md` extension automatically added.
+        The value is either inline content or a path to a file.
 
-        This will be written to `~/.gemini/GEMINI.md`.
+        Note: You can customize which context file names gemini-cli looks for by setting
+        `settings.context.fileName`. For example:
+        ```nix
+        settings = {
+          context.fileName = ["AGENTS.md", "CONTEXT.md", "GEMINI.md"];
+        };
+        ```
       '';
     };
   };
@@ -126,11 +138,13 @@ in
           file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
           };
-          file.".gemini/GEMINI.md" = lib.mkIf (cfg.context != null) (
-            if lib.isPath cfg.context then { source = cfg.context; } else { text = cfg.context; }
-          );
           sessionVariables.GEMINI_MODEL = cfg.defaultModel;
         };
+      }
+      {
+        home.file = lib.mapAttrs' (
+          n: v: lib.nameValuePair ".gemini/${n}.md" (if lib.isPath v then { source = v; } else { text = v; })
+        ) cfg.context;
       }
       {
         home.file = lib.mapAttrs' (
