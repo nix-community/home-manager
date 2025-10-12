@@ -4,7 +4,7 @@
 # not have an entry in the Nixpkgs maintainer list [1]. Entries here
 # are expected to be follow the same format as described in [1].
 #
-# [1] https://github.com/NixOS/nixpkgs/blob/fca0d6e093c82b31103dc0dacc48da2a9b06e24b/maintainers/maintainer-list.nix#LC1
+# [1] https://github.com/NixOS/nixpkgs/blob/737449404589e4a80b3fa99ecbc6d4d803c1f6dc/maintainers/maintainer-list.nix#LC1
 {
   # keep-sorted start case=no numeric=no block=yes
   "3ulalia" = {
