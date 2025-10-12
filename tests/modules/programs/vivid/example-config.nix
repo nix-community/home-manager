@@ -26,6 +26,7 @@
     themes = {
       ayu = ./themes/ayu.yml;
       mocha = ./themes/mocha.yml;
+      tiny = import ./themes/tiny.nix;
     };
   };
 
@@ -41,5 +42,9 @@
     assertFileExists home-files/.config/vivid/themes/mocha.yml
     assertFileContent home-files/.config/vivid/themes/mocha.yml \
     ${./themes/mocha.yml}
+
+    assertFileExists home-files/.config/vivid/themes/tiny.yml
+    assertFileContent home-files/.config/vivid/themes/tiny.yml \
+    ${./themes/tiny.yml}
   '';
 }
