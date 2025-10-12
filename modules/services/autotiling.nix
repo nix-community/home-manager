@@ -15,7 +15,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.swarsel ];
+  meta.maintainers = [ lib.maintainers.swarsel ];
 
   options.services.autotiling = {
     enable = lib.mkEnableOption "enable autotiling service";
