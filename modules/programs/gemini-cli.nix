@@ -89,6 +89,33 @@ in
         Will be set as $GEMINI_MODEL.
       '';
     };
+
+    context = lib.mkOption {
+      type = lib.types.nullOr (lib.types.either lib.types.lines lib.types.path);
+      default = null;
+      example = lib.literalExpression ''
+        # Inline content example:
+        '''
+        # Global Context
+
+        You are a helpful AI assistant for software development.
+
+        ## Coding Standards
+
+        - Follow consistent code style
+        - Write clear comments
+        - Test your changes
+        '''
+
+        # Or reference an existing file:
+        # ./path/to/GEMINI.md
+      '';
+      description = ''
+        Global context instructions that will be available across all projects.
+
+        This will be written to `~/.gemini/GEMINI.md`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -99,6 +126,9 @@ in
           file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
           };
+          file.".gemini/GEMINI.md" = lib.mkIf (cfg.context != null) (
+            if lib.isPath cfg.context then { source = cfg.context; } else { text = cfg.context; }
+          );
           sessionVariables.GEMINI_MODEL = cfg.defaultModel;
         };
       }
