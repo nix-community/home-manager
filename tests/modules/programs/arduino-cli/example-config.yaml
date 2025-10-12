@@ -1,0 +1,4 @@
+board_manager:
+  additional_urls:
+  - https://downloads.arduino.cc/packages/package_staging_index.json
+  enable_unsafe_install: true
