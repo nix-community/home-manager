@@ -501,6 +501,12 @@
     github = "silmarp";
     githubId = 67292496;
   };
+  stijnruts = {
+    name = "Stijn Ruts";
+    email = "nix@stijnruts.be";
+    github = "StijnRuts";
+    githubId = 1696566;
+  };
   swarsel = {
     name = "Leon Schwarzäugl";
     email = "leon@swarsel.win";
