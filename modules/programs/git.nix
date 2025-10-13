@@ -348,40 +348,6 @@ in
         };
       };
 
-      delta = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Whether to enable the {command}`delta` syntax highlighter.
-            See <https://github.com/dandavison/delta>.
-          '';
-        };
-
-        package = mkPackageOption pkgs "delta" { };
-
-        options = mkOption {
-          type =
-            with types;
-            let
-              primitiveType = either str (either bool int);
-              sectionType = attrsOf primitiveType;
-            in
-            attrsOf (either primitiveType sectionType);
-          default = { };
-          example = {
-            features = "decorations";
-            whitespace-error-style = "22 reverse";
-            decorations = {
-              commit-decoration-style = "bold yellow box ul";
-              file-style = "bold yellow ul";
-              file-decoration-style = "none";
-            };
-          };
-          description = ''
-            Options to configure delta.
-          '';
-        };
-      };
-
       diff-so-fancy = {
         enable = mkEnableOption "" // {
           description = ''
@@ -530,7 +496,7 @@ in
             assertion =
               let
                 enabled = [
-                  cfg.delta.enable
+                  (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
                   cfg.diff-so-fancy.enable
                   cfg.difftastic.enable
                   cfg.diff-highlight.enable
@@ -851,22 +817,6 @@ in
             };
           })
         ])
-      )
-
-      (
-        let
-          deltaPackage = cfg.delta.package;
-          deltaCommand = "${deltaPackage}/bin/delta";
-        in
-        mkIf cfg.delta.enable {
-          home.packages = [ deltaPackage ];
-
-          programs.git.iniContent = {
-            core.pager = deltaCommand;
-            interactive.diffFilter = "${deltaCommand} --color-only";
-            delta = cfg.delta.options;
-          };
-        }
       )
 
       (mkIf cfg.diff-so-fancy.enable {
