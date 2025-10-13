@@ -50,7 +50,7 @@ in
 {
   options.programs.obsidian = {
     enable = mkEnableOption "obsidian";
-    package = mkPackageOption pkgs "obsidian" { };
+    package = mkPackageOption pkgs "obsidian" { nullable = true; };
 
     defaultSettings = {
       app = mkOption {
@@ -399,7 +399,7 @@ in
     in
     lib.mkIf cfg.enable {
       home = {
-        packages = [ cfg.package ];
+        packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
         file =
           let
