@@ -30,9 +30,12 @@ in
     programs.git = {
       attributes = [ "* merge=mergiraf" ];
       extraConfig = {
-        merge.mergiraf = {
-          name = "mergiraf";
-          driver = "${mergiraf} merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+        merge = {
+          mergiraf = {
+            name = "mergiraf";
+            driver = "${mergiraf} merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+          };
+          conflictStyle = "diff3";
         };
       };
     };
