@@ -10,128 +10,138 @@ let
   # The configuration options in the SQLite database take the form of Python
   # Pickle data.
   # A simple "gldriver6" file is also generated for the `videoDriver` option.
-  buildAnkiConfig = pkgs.writers.writeText "buildAnkiConfig" ''
-    import sys
+  buildAnkiConfig =
+    let
+      nullOrBoolToString = val: if (val != null) then (toString val) else "null";
+    in
+    pkgs.writers.writeText "buildAnkiConfig" ''
+      import sys
 
-    from aqt.profiles import ProfileManager, VideoDriver
-    from aqt.theme import Theme, WidgetStyle, theme_manager
-    from aqt.toolbar import HideMode
+      from aqt.profiles import ProfileManager, VideoDriver
+      from aqt.theme import Theme, WidgetStyle, theme_manager
+      from aqt.toolbar import HideMode
 
-    profile_manager = ProfileManager(
-      ProfileManager.get_created_base_folder(sys.argv[1])
-    )
-    _ = profile_manager.setupMeta()
-    profile_manager.meta["firstRun"] = False
+      def is_bool(input: str):
+        if input == "1" or input == "":
+          return True
+        else:
+          return False
 
-    # Video driver. Option is stored in a separate file from other options.
-    video_driver_str: str = "${toString cfg.videoDriver}"
-    if video_driver_str:
-      # The enum value for OpenGL isn't "opengl"
-      if video_driver_str == "opengl":
-        video_driver = VideoDriver.OpenGL
-      else:
-        video_driver = VideoDriver(video_driver_str)
-      profile_manager.set_video_driver(video_driver)
+      profile_manager = ProfileManager(
+        ProfileManager.get_created_base_folder(sys.argv[1])
+      )
+      _ = profile_manager.setupMeta()
+      profile_manager.meta["firstRun"] = False
+
+      # Video driver. Option is stored in a separate file from other options.
+      video_driver_str: str = "${toString cfg.videoDriver}"
+      if video_driver_str:
+        # The enum value for OpenGL isn't "opengl"
+        if video_driver_str == "opengl":
+          video_driver = VideoDriver.OpenGL
+        else:
+          video_driver = VideoDriver(video_driver_str)
+        profile_manager.set_video_driver(video_driver)
 
 
-    # Shared options
+      # Shared options
 
-    profile_manager.setLang("${cfg.language}")
+      profile_manager.setLang("${cfg.language}")
 
-    theme_str: str = "${toString cfg.theme}"
-    if theme_str:
-      theme: Theme = {
-        "followSystem": Theme.FOLLOW_SYSTEM,
-        "light": Theme.LIGHT,
-        "dark": Theme.DARK
-      }[theme_str]
-      profile_manager.set_theme(theme)
+      theme_str: str = "${toString cfg.theme}"
+      if theme_str:
+        theme: Theme = {
+          "followSystem": Theme.FOLLOW_SYSTEM,
+          "light": Theme.LIGHT,
+          "dark": Theme.DARK
+        }[theme_str]
+        profile_manager.set_theme(theme)
 
-    style_str: str = "${toString cfg.style}"
-    if style_str:
-      style: WidgetStyle = {
-        "anki": WidgetStyle.ANKI, "native": WidgetStyle.NATIVE
-      }[style_str]
-      # Fix error from there being no main window to update the style of
-      theme_manager.apply_style = lambda: None
-      profile_manager.set_widget_style(style)
+      style_str: str = "${toString cfg.style}"
+      if style_str:
+        style: WidgetStyle = {
+          "anki": WidgetStyle.ANKI, "native": WidgetStyle.NATIVE
+        }[style_str]
+        # Fix error from there being no main window to update the style of
+        theme_manager.apply_style = lambda: None
+        profile_manager.set_widget_style(style)
 
-    ui_scale_str: str = "${toString cfg.uiScale}"
-    if ui_scale_str:
-      profile_manager.setUiScale(float(ui_scale_str))
+      ui_scale_str: str = "${toString cfg.uiScale}"
+      if ui_scale_str:
+        profile_manager.setUiScale(float(ui_scale_str))
 
-    hide_top_bar_str: str = "${toString cfg.hideTopBar}"
-    if hide_top_bar_str:
-      profile_manager.set_hide_top_bar(bool(hide_top_bar_str))
+      hide_top_bar_str: str = "${nullOrBoolToString cfg.hideTopBar}"
+      if is_bool(hide_top_bar_str):
+        profile_manager.set_hide_top_bar(bool(hide_top_bar_str))
 
-    hide_top_bar_mode_str: str = "${toString cfg.hideTopBarMode}"
-    if hide_top_bar_mode_str:
-      hide_mode: HideMode = {
-        "fullscreen": HideMode.FULLSCREEN,
-        "always": HideMode.ALWAYS,
-      }[hide_top_bar_mode_str]
-      profile_manager.set_top_bar_hide_mode(hide_mode)
+      hide_top_bar_mode_str: str = "${toString cfg.hideTopBarMode}"
+      if hide_top_bar_mode_str:
+        hide_mode: HideMode = {
+          "fullscreen": HideMode.FULLSCREEN,
+          "always": HideMode.ALWAYS,
+        }[hide_top_bar_mode_str]
+        profile_manager.set_top_bar_hide_mode(hide_mode)
 
-    hide_bottom_bar_str: str = "${toString cfg.hideBottomBar}"
-    if hide_bottom_bar_str:
-      profile_manager.set_hide_bottom_bar(bool(hide_bottom_bar_str))
+      hide_bottom_bar_str: str = "${nullOrBoolToString cfg.hideBottomBar}"
+      if is_bool(hide_bottom_bar_str):
+        profile_manager.set_hide_bottom_bar(bool(hide_bottom_bar_str))
 
-    hide_bottom_bar_mode_str: str = "${toString cfg.hideBottomBarMode}"
-    if hide_bottom_bar_mode_str:
-      hide_mode: HideMode = {
-        "fullscreen": HideMode.FULLSCREEN,
-        "always": HideMode.ALWAYS,
-      }[hide_bottom_bar_mode_str]
-      profile_manager.set_bottom_bar_hide_mode(hide_mode)
+      hide_bottom_bar_mode_str: str = "${toString cfg.hideBottomBarMode}"
+      if hide_bottom_bar_mode_str:
+        hide_mode: HideMode = {
+          "fullscreen": HideMode.FULLSCREEN,
+          "always": HideMode.ALWAYS,
+        }[hide_bottom_bar_mode_str]
+        profile_manager.set_bottom_bar_hide_mode(hide_mode)
 
-    reduce_motion_str: str = "${toString cfg.reduceMotion}"
-    if reduce_motion_str:
-      profile_manager.set_reduce_motion(bool(reduce_motion_str))
+      reduce_motion_str: str = "${nullOrBoolToString cfg.reduceMotion}"
+      if is_bool(reduce_motion_str):
+        profile_manager.set_reduce_motion(bool(reduce_motion_str))
 
-    minimalist_mode_str: str = "${toString cfg.minimalistMode}"
-    if minimalist_mode_str:
-      profile_manager.set_minimalist_mode(bool(minimalist_mode_str))
+      minimalist_mode_str: str = "${nullOrBoolToString cfg.minimalistMode}"
+      if is_bool(minimalist_mode_str):
+        profile_manager.set_minimalist_mode(bool(minimalist_mode_str))
 
-    spacebar_rates_card_str: str = "${toString cfg.spacebarRatesCard}"
-    if spacebar_rates_card_str:
-      profile_manager.set_spacebar_rates_card(bool(spacebar_rates_card_str))
+      spacebar_rates_card_str: str = "${nullOrBoolToString cfg.spacebarRatesCard}"
+      if is_bool(spacebar_rates_card_str):
+        profile_manager.set_spacebar_rates_card(bool(spacebar_rates_card_str))
 
-    legacy_import_export_str: str = "${toString cfg.legacyImportExport}"
-    if legacy_import_export_str:
-      profile_manager.set_legacy_import_export(bool(legacy_import_export_str))
+      legacy_import_export_str: str = "${nullOrBoolToString cfg.legacyImportExport}"
+      if is_bool(legacy_import_export_str):
+        profile_manager.set_legacy_import_export(bool(legacy_import_export_str))
 
-    answer_keys: tuple[tuple[int, str], ...] = (${
-      lib.strings.concatMapStringsSep ", " (val: "(${toString val.ease}, '${val.key}')") cfg.answerKeys
-    })
-    for ease, key in answer_keys:
-      profile_manager.set_answer_key(ease, key)
+      answer_keys: tuple[tuple[int, str], ...] = (${
+        lib.strings.concatMapStringsSep ", " (val: "(${toString val.ease}, '${val.key}')") cfg.answerKeys
+      })
+      for ease, key in answer_keys:
+        profile_manager.set_answer_key(ease, key)
 
-    # Profile specific options
+      # Profile specific options
 
-    profile_manager.create("User 1")
-    profile_manager.openProfile("User 1")
+      profile_manager.create("User 1")
+      profile_manager.openProfile("User 1")
 
-    # Without this, the collection DB won't get automatically optimized.
-    profile_manager.profile["lastOptimize"] = None
+      # Without this, the collection DB won't get automatically optimized.
+      profile_manager.profile["lastOptimize"] = None
 
-    auto_sync_str: str = "${toString cfg.sync.autoSync}"
-    if auto_sync_str:
-      profile_manager.profile["autoSync"] = bool(auto_sync_str)
+      auto_sync_str: str = "${nullOrBoolToString cfg.sync.autoSync}"
+      if is_bool(auto_sync_str):
+        profile_manager.profile["autoSync"] = bool(auto_sync_str)
 
-    sync_media_str: str = "${toString cfg.sync.syncMedia}"
-    if sync_media_str:
-      profile_manager.profile["syncMedia"] = bool(sync_media_str)
+      sync_media_str: str = "${nullOrBoolToString cfg.sync.syncMedia}"
+      if is_bool(sync_media_str):
+        profile_manager.profile["syncMedia"] = bool(sync_media_str)
 
-    media_sync_minutes_str: str = "${toString cfg.sync.autoSyncMediaMinutes}"
-    if media_sync_minutes_str:
-      profile_manager.set_periodic_sync_media_minutes = int(media_sync_minutes_str)
+      media_sync_minutes_str: str = "${toString cfg.sync.autoSyncMediaMinutes}"
+      if media_sync_minutes_str:
+        profile_manager.set_periodic_sync_media_minutes = int(media_sync_minutes_str)
 
-    network_timeout_str: str = "${toString cfg.sync.networkTimeout}"
-    if network_timeout_str:
-      profile_manager.set_network_timeout = int(network_timeout_str)
+      network_timeout_str: str = "${toString cfg.sync.networkTimeout}"
+      if network_timeout_str:
+        profile_manager.set_network_timeout = int(network_timeout_str)
 
-    profile_manager.save()
-  '';
+      profile_manager.save()
+    '';
 in
 {
   ankiConfig =
