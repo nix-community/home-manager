@@ -138,7 +138,7 @@ in
       // (lib.mapAttrs' (
         name: value:
         lib.nameValuePair "vivid/themes/${name}.yml" {
-          source = if lib.isAttrs value then yamlFormat.generate "${name}.yml" value else value;
+          source = if lib.isAttrs value then pkgs.writeText "${name}.json" (builtins.toJSON value) else value;
         }
       ) cfg.themes);
 
