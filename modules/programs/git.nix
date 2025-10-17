@@ -293,29 +293,6 @@ in
         };
       };
 
-      riff = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Enable the <command>riff</command> diff highlighter.
-            See <link xlink:href="https://github.com/walles/riff" />.
-          '';
-        };
-
-        package = mkPackageOption pkgs "riffdiff" { };
-
-        commandLineOptions = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          example = literalExpression ''[ "--no-adds-only-special" ]'';
-          apply = lib.concatStringsSep " ";
-          description = ''
-            Command line arguments to include in the <command>RIFF</command> environment variable.
-
-            Run <command>riff --help</command> for a full list of options
-          '';
-        };
-      };
-
     };
   };
 
@@ -346,7 +323,7 @@ in
                   (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
                   (config.programs.difftastic.enable && config.programs.difftastic.git.enable)
                   (config.programs.patdiff.enable && config.programs.patdiff.enableGitIntegration)
-                  cfg.riff.enable
+                  (config.programs.riff.enable && config.programs.riff.enableGitIntegration)
                 ];
               in
               lib.count lib.id enabled <= 1;
@@ -624,29 +601,6 @@ in
           };
       })
 
-      (
-        let
-          riffExe = baseNameOf (lib.getExe cfg.riff.package);
-        in
-        mkIf cfg.riff.enable {
-          home.packages = [ cfg.riff.package ];
-
-          # https://github.com/walles/riff/blob/b17e6f17ce807c8652bc59cd46758661d23ce358/README.md#usage
-          programs.git.iniContent = {
-            pager = {
-              diff = riffExe;
-              log = riffExe;
-              show = riffExe;
-            };
-
-            interactive.diffFilter = "${riffExe} --color=on";
-          };
-        }
-      )
-
-      (mkIf (cfg.riff.enable && cfg.riff.commandLineOptions != "") {
-        home.sessionVariables.RIFF = cfg.riff.commandLineOptions;
-      })
     ]
   );
 }
