@@ -292,27 +292,6 @@ in
         };
       };
 
-      diff-highlight = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Enable the contrib {command}`diff-highlight` syntax highlighter.
-            See <https://github.com/git/git/blob/master/contrib/diff-highlight/README>,
-          '';
-        };
-
-        pagerOpts = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          example = [
-            "--tabs=4"
-            "-RFX"
-          ];
-          description = ''
-            Arguments to be passed to {command}`less`.
-          '';
-        };
-      };
-
       difftastic = {
         enable = mkEnableOption "" // {
           description = ''
@@ -497,9 +476,9 @@ in
               let
                 enabled = [
                   (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
+                  (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
                   cfg.diff-so-fancy.enable
                   cfg.difftastic.enable
-                  cfg.diff-highlight.enable
                   cfg.riff.enable
                   cfg.patdiff.enable
                 ];
@@ -776,17 +755,6 @@ in
                 ];
               };
             };
-          };
-      })
-
-      (mkIf cfg.diff-highlight.enable {
-        programs.git.iniContent =
-          let
-            dhCommand = "${cfg.package}/share/git/contrib/diff-highlight/diff-highlight";
-          in
-          {
-            core.pager = "${dhCommand} | ${lib.getExe pkgs.less} ${lib.escapeShellArgs cfg.diff-highlight.pagerOpts}";
-            interactive.diffFilter = dhCommand;
           };
       })
 
