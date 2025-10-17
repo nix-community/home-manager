@@ -327,76 +327,6 @@ in
         };
       };
 
-      diff-so-fancy = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Enable the {command}`diff-so-fancy` diff colorizer.
-            See <https://github.com/so-fancy/diff-so-fancy>.
-          '';
-        };
-
-        pagerOpts = mkOption {
-          type = types.listOf types.str;
-          default = [
-            "--tabs=4"
-            "-RFX"
-          ];
-          description = ''
-            Arguments to be passed to {command}`less`.
-          '';
-        };
-
-        markEmptyLines = mkOption {
-          type = types.bool;
-          default = true;
-          example = false;
-          description = ''
-            Whether the first block of an empty line should be colored.
-          '';
-        };
-
-        changeHunkIndicators = mkOption {
-          type = types.bool;
-          default = true;
-          example = false;
-          description = ''
-            Simplify git header chunks to a more human readable format.
-          '';
-        };
-
-        stripLeadingSymbols = mkOption {
-          type = types.bool;
-          default = true;
-          example = false;
-          description = ''
-            Whether the `+` or `-` at
-            line-start should be removed.
-          '';
-        };
-
-        useUnicodeRuler = mkOption {
-          type = types.bool;
-          default = true;
-          example = false;
-          description = ''
-            By default, the separator for the file header uses Unicode
-            line-drawing characters. If this is causing output errors on
-            your terminal, set this to false to use ASCII characters instead.
-          '';
-        };
-
-        rulerWidth = mkOption {
-          type = types.nullOr types.int;
-          default = null;
-          example = false;
-          description = ''
-            By default, the separator for the file header spans the full
-            width of the terminal. Use this setting to set the width of
-            the file header manually.
-          '';
-        };
-      };
-
       riff = {
         enable = mkEnableOption "" // {
           description = ''
@@ -477,7 +407,7 @@ in
                 enabled = [
                   (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
                   (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
-                  cfg.diff-so-fancy.enable
+                  (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
                   cfg.difftastic.enable
                   cfg.riff.enable
                   cfg.patdiff.enable
@@ -786,26 +716,6 @@ in
           })
         ])
       )
-
-      (mkIf cfg.diff-so-fancy.enable {
-        home.packages = [ pkgs.diff-so-fancy ];
-
-        programs.git.iniContent =
-          let
-            dsfCommand = "${pkgs.diff-so-fancy}/bin/diff-so-fancy";
-          in
-          {
-            core.pager = "${dsfCommand} | ${pkgs.less}/bin/less ${lib.escapeShellArgs cfg.diff-so-fancy.pagerOpts}";
-            interactive.diffFilter = "${dsfCommand} --patch";
-            diff-so-fancy = {
-              markEmptyLines = cfg.diff-so-fancy.markEmptyLines;
-              changeHunkIndicators = cfg.diff-so-fancy.changeHunkIndicators;
-              stripLeadingSymbols = cfg.diff-so-fancy.stripLeadingSymbols;
-              useUnicodeRuler = cfg.diff-so-fancy.useUnicodeRuler;
-              rulerWidth = mkIf (cfg.diff-so-fancy.rulerWidth != null) (cfg.diff-so-fancy.rulerWidth);
-            };
-          };
-      })
 
       (
         let
