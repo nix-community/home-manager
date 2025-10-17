@@ -13,83 +13,10 @@ let
     mkIf
     mkOption
     mkOptionDefault
-    mkPackageOption
     types
     ;
 
   cfg = config.programs.git;
-
-  gitIniType =
-    with types;
-    let
-      primitiveType = either str (either bool int);
-      multipleType = either primitiveType (listOf primitiveType);
-      sectionType = attrsOf multipleType;
-      supersectionType = attrsOf (either multipleType sectionType);
-    in
-    attrsOf supersectionType;
-
-  includeModule = types.submodule (
-    { config, ... }:
-    {
-      options = {
-        condition = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = ''
-            Include this configuration only when {var}`condition`
-            matches. Allowed conditions are described in
-            {manpage}`git-config(1)`.
-          '';
-        };
-
-        path = mkOption {
-          type = with types; either str path;
-          description = "Path of the configuration file to include.";
-        };
-
-        contents = mkOption {
-          type = types.attrsOf types.anything;
-          default = { };
-          example = literalExpression ''
-            {
-              user = {
-                email = "bob@work.example.com";
-                name = "Bob Work";
-                signingKey = "1A2B3C4D5E6F7G8H";
-              };
-              commit = {
-                gpgSign = true;
-              };
-            };
-          '';
-          description = ''
-            Configuration to include. If empty then a path must be given.
-
-            This follows the configuration structure as described in
-            {manpage}`git-config(1)`.
-          '';
-        };
-
-        contentSuffix = mkOption {
-          type = types.str;
-          default = "gitconfig";
-          description = ''
-            Nix store name for the git configuration text file,
-            when generating the configuration text from nix options.
-          '';
-
-        };
-      };
-      config.path = mkIf (config.contents != { }) (
-        mkDefault (
-          pkgs.writeText (lib.hm.strings.storeFileName config.contentSuffix) (
-            lib.generators.toGitINI config.contents
-          )
-        )
-      );
-    }
-  );
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -97,204 +24,277 @@ in
     rycee
   ];
 
-  options = {
-    programs.git = {
-      enable = mkEnableOption "Git";
+  options =
+    let
+      gitIniType =
+        with types;
+        let
+          primitiveType = either str (either bool int);
+          multipleType = either primitiveType (listOf primitiveType);
+          sectionType = attrsOf multipleType;
+          supersectionType = attrsOf (either multipleType sectionType);
+        in
+        attrsOf supersectionType;
+    in
+    {
+      programs.git = {
+        enable = mkEnableOption "Git";
 
-      package = lib.mkPackageOption pkgs "git" {
-        example = "pkgs.gitFull";
-        extraDescription = ''
-          Use {var}`pkgs.gitFull`
-          to gain access to {command}`git send-email` for instance.
-        '';
-      };
-
-      userName = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "Default user name to use.";
-      };
-
-      userEmail = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "Default user email to use.";
-      };
-
-      aliases = mkOption {
-        type = types.attrsOf types.str;
-        default = { };
-        example = {
-          co = "checkout";
+        package = lib.mkPackageOption pkgs "git" {
+          example = "pkgs.gitFull";
+          extraDescription = ''
+            Use {var}`pkgs.gitFull`
+            to gain access to {command}`git send-email` for instance.
+          '';
         };
-        description = "Git aliases to define.";
-      };
 
-      signing = {
-        key = mkOption {
+        userName = mkOption {
           type = types.nullOr types.str;
           default = null;
-          description = ''
-            The default signing key fingerprint.
-
-            Set to `null` to let the signer decide what signing key
-            to use depending on commit’s author.
-          '';
+          description = "Default user name to use.";
         };
 
-        format = mkOption {
-          type = types.nullOr (
-            types.enum [
-              "openpgp"
-              "ssh"
-              "x509"
-            ]
-          );
-          defaultText = literalExpression ''
-            "openpgp" for state version < 25.05,
-            undefined for state version ≥ 25.05
-          '';
-          description = ''
-            The signing method to use when signing commits and tags.
-            Valid values are `openpgp` (OpenPGP/GnuPG), `ssh` (SSH), and `x509` (X.509 certificates).
-          '';
-        };
-
-        signByDefault = mkOption {
-          type = types.nullOr types.bool;
-          default = null;
-          description = "Whether commits and tags should be signed by default.";
-        };
-
-        signer = mkOption {
+        userEmail = mkOption {
           type = types.nullOr types.str;
-          description = "Path to signer binary to use.";
-        };
-      };
-
-      extraConfig = mkOption {
-        type = types.either types.lines gitIniType;
-        default = { };
-        example = {
-          core = {
-            whitespace = "trailing-space,space-before-tab";
-          };
-          url."ssh://git@host".insteadOf = "otherhost";
-        };
-        description = ''
-          Additional configuration to add. The use of string values is
-          deprecated and will be removed in the future.
-        '';
-      };
-
-      hooks = mkOption {
-        type = types.attrsOf types.path;
-        default = { };
-        example = literalExpression ''
-          {
-            pre-commit = ./pre-commit-script;
-          }
-        '';
-        description = ''
-          Configuration helper for Git hooks.
-          See <https://git-scm.com/docs/githooks>
-          for reference.
-        '';
-      };
-
-      iniContent = mkOption {
-        type = gitIniType;
-        internal = true;
-      };
-
-      ignores = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = [
-          "*~"
-          "*.swp"
-        ];
-        description = "List of paths that should be globally ignored.";
-      };
-
-      attributes = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = [ "*.pdf diff=pdf" ];
-        description = "List of defining attributes set globally.";
-      };
-
-      includes = mkOption {
-        type = types.listOf includeModule;
-        default = [ ];
-        example = literalExpression ''
-          [
-            { path = "~/path/to/config.inc"; }
-            {
-              path = "~/path/to/conditional.inc";
-              condition = "gitdir:~/src/dir";
-            }
-          ]
-        '';
-        description = "List of configuration files to include.";
-      };
-
-      lfs = {
-        enable = mkEnableOption "Git Large File Storage";
-
-        package = lib.mkPackageOption pkgs "git-lfs" { nullable = true; };
-
-        skipSmudge = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Skip automatic downloading of objects on clone or pull.
-            This requires a manual {command}`git lfs pull`
-            every time a new commit is checked out on your repository.
-          '';
-        };
-      };
-
-      maintenance = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Enable the automatic {command}`git maintenance`.
-
-            If you have SSH remotes, set {option}`programs.git.package` to a
-            git version with SSH support (eg: `pkgs.gitFull`).
-
-            See <https://git-scm.com/docs/git-maintenance>.
-          '';
+          default = null;
+          description = "Default user email to use.";
         };
 
-        repositories = mkOption {
-          type = with types; listOf str;
-          default = [ ];
-          description = ''
-            Repositories on which {command}`git maintenance` should run.
-
-            Should be a list of absolute paths.
-          '';
-        };
-
-        timers = mkOption {
+        aliases = mkOption {
           type = types.attrsOf types.str;
-          default = {
-            hourly = "*-*-* 1..23:53:00";
-            daily = "Tue..Sun *-*-* 0:53:00";
-            weekly = "Mon 0:53:00";
+          default = { };
+          example = {
+            co = "checkout";
+          };
+          description = "Git aliases to define.";
+        };
+
+        signing = {
+          key = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = ''
+              The default signing key fingerprint.
+
+              Set to `null` to let the signer decide what signing key
+              to use depending on commit’s author.
+            '';
+          };
+
+          format = mkOption {
+            type = types.nullOr (
+              types.enum [
+                "openpgp"
+                "ssh"
+                "x509"
+              ]
+            );
+            defaultText = literalExpression ''
+              "openpgp" for state version < 25.05,
+              undefined for state version ≥ 25.05
+            '';
+            description = ''
+              The signing method to use when signing commits and tags.
+              Valid values are `openpgp` (OpenPGP/GnuPG), `ssh` (SSH), and `x509` (X.509 certificates).
+            '';
+          };
+
+          signByDefault = mkOption {
+            type = types.nullOr types.bool;
+            default = null;
+            description = "Whether commits and tags should be signed by default.";
+          };
+
+          signer = mkOption {
+            type = types.nullOr types.str;
+            description = "Path to signer binary to use.";
+          };
+        };
+
+        extraConfig = mkOption {
+          type = types.either types.lines gitIniType;
+          default = { };
+          example = {
+            core = {
+              whitespace = "trailing-space,space-before-tab";
+            };
+            url."ssh://git@host".insteadOf = "otherhost";
           };
           description = ''
-            Systemd timers to create for scheduled {command}`git maintenance`.
-
-            Key is passed to `--schedule` argument in {command}`git maintenance run`
-            and value is passed to `Timer.OnCalendar` in `systemd.user.timers`.
+            Additional configuration to add. The use of string values is
+            deprecated and will be removed in the future.
           '';
         };
-      };
 
+        hooks = mkOption {
+          type = types.attrsOf types.path;
+          default = { };
+          example = literalExpression ''
+            {
+              pre-commit = ./pre-commit-script;
+            }
+          '';
+          description = ''
+            Configuration helper for Git hooks.
+            See <https://git-scm.com/docs/githooks>
+            for reference.
+          '';
+        };
+
+        iniContent = mkOption {
+          type = gitIniType;
+          internal = true;
+        };
+
+        ignores = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [
+            "*~"
+            "*.swp"
+          ];
+          description = "List of paths that should be globally ignored.";
+        };
+
+        attributes = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [ "*.pdf diff=pdf" ];
+          description = "List of defining attributes set globally.";
+        };
+
+        includes = mkOption {
+          type = types.listOf (
+            types.submodule (
+              { config, ... }:
+              {
+                options = {
+                  condition = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = ''
+                      Include this configuration only when {var}`condition`
+                      matches. Allowed conditions are described in
+                      {manpage}`git-config(1)`.
+                    '';
+                  };
+
+                  path = mkOption {
+                    type = with types; either str path;
+                    description = "Path of the configuration file to include.";
+                  };
+
+                  contents = mkOption {
+                    type = types.attrsOf types.anything;
+                    default = { };
+                    example = literalExpression ''
+                      {
+                        user = {
+                          email = "bob@work.example.com";
+                          name = "Bob Work";
+                          signingKey = "1A2B3C4D5E6F7G8H";
+                        };
+                        commit = {
+                          gpgSign = true;
+                        };
+                      };
+                    '';
+                    description = ''
+                      Configuration to include. If empty then a path must be given.
+
+                      This follows the configuration structure as described in
+                      {manpage}`git-config(1)`.
+                    '';
+                  };
+
+                  contentSuffix = mkOption {
+                    type = types.str;
+                    default = "gitconfig";
+                    description = ''
+                      Nix store name for the git configuration text file,
+                      when generating the configuration text from nix options.
+                    '';
+
+                  };
+                };
+                config.path = mkIf (config.contents != { }) (
+                  mkDefault (
+                    pkgs.writeText (lib.hm.strings.storeFileName config.contentSuffix) (
+                      lib.generators.toGitINI config.contents
+                    )
+                  )
+                );
+              }
+            )
+          );
+          default = [ ];
+          example = literalExpression ''
+            [
+              { path = "~/path/to/config.inc"; }
+              {
+                path = "~/path/to/conditional.inc";
+                condition = "gitdir:~/src/dir";
+              }
+            ]
+          '';
+          description = "List of configuration files to include.";
+        };
+
+        lfs = {
+          enable = mkEnableOption "Git Large File Storage";
+
+          package = lib.mkPackageOption pkgs "git-lfs" { nullable = true; };
+
+          skipSmudge = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Skip automatic downloading of objects on clone or pull.
+              This requires a manual {command}`git lfs pull`
+              every time a new commit is checked out on your repository.
+            '';
+          };
+        };
+
+        maintenance = {
+          enable = mkEnableOption "" // {
+            description = ''
+              Enable the automatic {command}`git maintenance`.
+
+              If you have SSH remotes, set {option}`programs.git.package` to a
+              git version with SSH support (eg: `pkgs.gitFull`).
+
+              See <https://git-scm.com/docs/git-maintenance>.
+            '';
+          };
+
+          repositories = mkOption {
+            type = with types; listOf str;
+            default = [ ];
+            description = ''
+              Repositories on which {command}`git maintenance` should run.
+
+              Should be a list of absolute paths.
+            '';
+          };
+
+          timers = mkOption {
+            type = types.attrsOf types.str;
+            default = {
+              hourly = "*-*-* 1..23:53:00";
+              daily = "Tue..Sun *-*-* 0:53:00";
+              weekly = "Mon 0:53:00";
+            };
+            description = ''
+              Systemd timers to create for scheduled {command}`git maintenance`.
+
+              Key is passed to `--schedule` argument in {command}`git maintenance run`
+              and value is passed to `Timer.OnCalendar` in `systemd.user.timers`.
+            '';
+          };
+        };
+      };
     };
-  };
 
   imports = [
     (lib.mkRenamedOptionModule
@@ -352,7 +352,7 @@ in
       {
         programs.git.iniContent =
           let
-            hasSmtp = name: account: account.enable && account.smtp != null;
+            hasSmtp = _name: account: account.enable && account.smtp != null;
 
             genIdentity =
               name: account:
@@ -600,7 +600,6 @@ in
             };
           };
       })
-
     ]
   );
 }
