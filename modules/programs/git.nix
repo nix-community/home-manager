@@ -322,8 +322,8 @@ in
                   (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
                   (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
                   (config.programs.difftastic.enable && config.programs.difftastic.git.enable)
+                  (config.programs.patdiff.enable && config.programs.patdiff.enableGitIntegration)
                   cfg.riff.enable
-                  cfg.patdiff.enable
                 ];
               in
               lib.count lib.id enabled <= 1;
