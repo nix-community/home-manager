@@ -339,7 +339,7 @@ in
                 enabled = [
                   (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
                   (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
-                  cfg.diff-so-fancy.enable
+                  (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
                   cfg.difftastic.enable
                   cfg.riff.enable
                   cfg.patdiff.enable
