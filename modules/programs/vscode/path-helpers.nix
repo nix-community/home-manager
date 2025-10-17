@@ -4,76 +4,208 @@
   pkgs,
 }:
 rec {
-  setHasValue = attrs: key: (attrs ? "${key}") && (attrs.${key} != null);
+  ## VS Code directories and config paths
+  #
+  # DISCLAIMER: most of the apps use the same paths to store their data adapted
+  # to the app name and other options, however there are some specific
+  # exceptions, which we must support by using the `overridePaths` option in
+  # the `mkVSCodeFork` function.
+  #
+  ## Supported VS Code forks:
+  #
+  # | package          | pname    | executableName  | longName            |
+  # |------------------|----------|-----------------|---------------------|
+  # | pkgs.vscode      | vscode   | code            | Visual Studio Code  |
+  # | pkgs.code-cursor | cursor   | cursor          | Cursor              |
+  # | pkgs.windsurf    | windsurf | windsurf        | Windsurf            |
+  #
+  ## Home config directory: per app
+  #
+  #  Home config directory is inferred by the `package.pname`.
+  #
+  #  - cursor: ~/.cursor
+  #  - vscode: ~/.vscode
+  #  - windsurf: ~/.windsurf
+  #
+  ## User directory: per system
+  #
+  #  User directory depends on the system it's running on.
+  #  The application folder name is inferred by the `package.executableName`.
+  #
+  #  - darwin
+  #    - cursor: ~/Library/Application Support/Cursor/User
+  #    - vscode: ~/Library/Application Support/Code/User
+  #    - windsurf: ~/Library/Application Support/Windsurf/User
+  #  - linux
+  #    - cursor: ~/.config/Cursor/User
+  #    - vscode: ~/.config/Code/User
+  #    - windsurf: ~/.config/Windsurf/User
+  #
+  ## Extensions directory: per app (home config directory + /extensions)
+  #
+  #  Extensions are installed in the home config directory.
+  #  It can be overridden using the `overridePaths.extensions` option.
+  #
+  #  - cursor: ~/.cursor/extensions
+  #  - vscode: ~/.vscode/extensions
+  #  - windsurf: ~/.windsurf/extensions
+  #
+  ## Profile directory: per profile (user directory + /profiles/ + profile name)
+  #
+  #  Profiles are stored in the user directory and depends on the profile name.
+  #
+  #  Default profile is stored in the user directory and other profiles are
+  #  stored in the user directory under the `profiles` directory.
+  #
+  #  - default: ~/Library/Application Support/Code/User
+  #  - library: ~/Library/Application Support/Code/User/profiles/library
+  #
+  ## Snippets directory: per profile (user directory + /profiles/ + profile name + /snippets)
+  #
+  #  - default: ~/Library/Application Support/Code/User/snippets
+  #  - library: ~/Library/Application Support/Code/User/profiles/library/snippets
+  #
+  ## Config files: per profile
+  #
+  #  - settings: per profile (user directory + /profiles/ + profile name + /settings.json)
+  #    - default: ~/Library/Application Support/Code/User/settings.json
+  #    - library: ~/Library/Application Support/Code/User/profiles/library/settings.json
+  #
+  #  - keybindings: per profile (user directory + /profiles/ + profile name + /keybindings.json)
+  #    - default: ~/Library/Application Support/Code/User/keybindings.json
+  #    - library: ~/Library/Application Support/Code/User/profiles/library/keybindings.json
+  #
+  #  - tasks: per profile (user directory + /profiles/ + profile name + /tasks.json)
+  #    - default: ~/Library/Application Support/Code/User/tasks.json
+  #    - library: ~/Library/Application Support/Code/User/profiles/library/tasks.json
+  #
+  #  - mcp: per profile (user directory + /profiles/ + profile name + /mcp.json)
+  #    - default: ~/Library/Application Support/Code/User/mcp.json
+  #    - library: ~/Library/Application Support/Code/User/profiles/library/mcp.json
+  #
+  #  - snippets
+  #    - global: per profile (user directory + /profiles/ + profile name + /snippets/global.json)
+  #      - default: ~/Library/Application Support/Code/User/snippets/global.json
+  #      - library: ~/Library/Application Support/Code/User/profiles/library/snippets/global.json
+  #    - language: per profile (user directory + /profiles/ + profile name + /snippets/language.json)
+  #      - default: ~/Library/Application Support/Code/User/snippets/haskell.json
+  #      - library: ~/Library/Application Support/Code/User/profiles/library/snippets/haskell.json
+  #
+  inherit (builtins) substring stringLength;
+  inherit (lib.strings) toLower toUpper;
 
-  # App Config directory - also where extensions are stored
-  #
-  mkAppConfigDir = cfg.configDirectory;
+  capitalize =
+    string: toUpper (substring 0 1 string) + toLower (substring 1 ((stringLength string) - 1) string);
 
-  # https://code.visualstudio.com/docs/configure/settings#_settings-precedence
-  # https://code.visualstudio.com/docs/configure/settings#_settings-json-file
+  jsonFormat = pkgs.formats.json { };
+
+  jsonSource =
+    name: value:
+    if builtins.isPath value || lib.isStorePath value then
+      value
+    else
+      jsonFormat.generate "${cfg.package.pname}-${name}-json" value;
+
+  hasValue = value: value != null && value != "" && value != [ ] && value != { };
+  hasAttrKey = key: attrs: (builtins.hasAttr key attrs) && (hasValue attrs.${key});
+  getAttrKey = key: attrs: if (hasAttrKey key attrs) then attrs.${key} else null;
+
+  joinPaths = paths: lib.concatStringsSep "/" (lib.filter (value: value != "") paths);
+
+  ## Home config directory: per app
   #
-  # App User directory
+  #  Home config directory is inferred by the `package.pname` (lowercase).
   #
-  mkAppUserDir =
+  #  - cursor: ~/.cursor
+  #  - vscode: ~/.vscode
+  #  - windsurf: ~/.windsurf
+  #
+  homeConfigDirectory = ".${toLower cfg.package.pname}";
+
+  ## Application user directory
+  #
+  #  Application user directory depends on the system it's running on and the application name.
+  #  The application name is inferred by the `package.executableName` (capitalized).
+  #
+  #  - darwin
+  #    - cursor: ~/Library/Application Support/Cursor/User
+  #    - vscode: ~/Library/Application Support/Code/User
+  #    - windsurf: ~/Library/Application Support/Windsurf/User
+  #  - linux
+  #    - cursor: ~/.config/Cursor/User
+  #    - vscode: ~/.config/Code/User
+  #    - windsurf: ~/.config/Windsurf/User
+  #
+  appName = capitalize cfg.package.executableName;
+
+  userDirectory =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${cfg.userDirectory}/User"
+      "Library/Application Support/${appName}/User"
     else
-      ".config/${cfg.userDirectory}/User";
+      ".config/${appName}/User";
 
-  # Build a function to compute profile-scoped config paths
+  ## Extensions directory
   #
-  # Example usage:
-  #   mkProfilePathBuilder "default" "settings"
+  #  Extensions are installed in the home config directory.
+  #  It can be overridden using the `overridePaths.extensions` option.
   #
-  mkProfilePathBuilder =
-    profileName: key:
-    lib.concatStringsSep "/" (
-      [
-        (if (setHasValue cfg.overridePaths key) then cfg.overridePaths.${key} else mkAppUserDir)
-      ]
-      ++ lib.optionals (profileName != "default") [ "profiles/${profileName}" ]
-    );
+  #  - cursor: ~/.cursor/extensions
+  #  - vscode: ~/.vscode/extensions
+  #  - windsurf: ~/.windsurf/extensions
+  #
+  extensionsDirectory = "${homeConfigDirectory}/extensions";
 
-  # Build a function to compute snippets paths
+  ## Profile directory
   #
-  # Example usage:
-  #   mkSnippetsPathBuilder "default" (global)
-  #   mkSnippetsPathBuilder "default" "haskell"
-  #   mkSnippetsPathBuilder "work" "nix"
+  #  Profiles are stored in the user directory and depends on the profile name.
   #
-  mkSnippetsPathBuilder =
-    profileName: language:
-    lib.concatStringsSep "/" (
-      [ mkAppUserDir ]
-      ++ lib.optionals (profileName != "default") [ "profiles/${profileName}" ]
-      ++ [ "snippets" ]
-      ++ [ "${language}.json" ]
-    );
+  #  Default profile is stored in the user directory and other profiles are
+  #  stored in the user directory under the `profiles` directory.
+  #
+  #  - default: ~/Library/Application Support/Code/User
+  #  - library: ~/Library/Application Support/Code/User/profiles/library
+  #
+  profileFolder = profileName: if profileName == "default" then "" else "profiles/${profileName}";
 
-  # Build a function to compute profile-scoped config paths for a given key
-  #
-  # Example usage:
-  #   mkProfileConfigPathBuilder "default" "settings" cfg.mutableProfile
-  #
-  # If mutable is true, the path will be an immutable path that is enforced by the nix store
-  # and the mutable path will be regenerated whenever the configuration for the profile is changed.
-  #
-  # This happens only during activation via the `onChange` hook.
-  #
-  mkProfileConfigPathBuilder =
-    profileName: key: immutable:
-    if immutable then
-      builtins.trace "Building ${profileName}/.${key}-immutable.json" (
-        mkProfilePathBuilder profileName key + "/.${key}-immutable.json"
-      )
-    else
-      builtins.trace "Building ${profileName}/${key}.json" (
-        mkProfilePathBuilder profileName key + "/${key}.json"
+  profileDirectory =
+    profileName:
+    let
+      path = lib.concatStringsSep "/" (
+        lib.filter (value: value != "") [
+          userDirectory
+          (profileFolder profileName)
+        ]
       );
+    in
+    builtins.trace "[profileDir: ${profileName}] ${path}" path;
 
-  # helpers to build immutable and mutable config paths
+  ## Snippets directory
   #
-  mkImmutableConfigPath = profileName: key: mkProfileConfigPathBuilder profileName key true;
-  mkMutableConfigPath = profileName: key: mkProfileConfigPathBuilder profileName key false;
+  #  Snippets are stored in the profile directory.
+  #
+  #  Global snippets are saved as `global.json` and language snippets are saved as `${language}.json`.
+  #
+  #  - default: ~/Library/Application Support/Code/User/snippets
+  #  - library: ~/Library/Application Support/Code/User/profiles/library/snippets
+  #
+  snippetsDirectory =
+    profileName:
+    let
+      path = lib.concatStringsSep "/" [
+        (profileDirectory profileName)
+        "snippets"
+      ];
+    in
+    builtins.trace "[snippetsDir: ${profileName}] ${path}" path;
+
+  settingsDirectory =
+    profileName: settingsKey:
+    let
+      isCursorMcp = cfg.packageName == "code-cursor" && settingsKey == "mcp";
+      isDefaultProfile = profileName == "default";
+    in
+    if isCursorMcp then
+      if isDefaultProfile then "${cfg.homeDirectory}/${homeConfigDirectory}" else null
+    else
+      (profileDirectory profileName);
 }

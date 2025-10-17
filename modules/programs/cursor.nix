@@ -1,27 +1,26 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}@inputs:
 let
-  mkVSCodeFork = import ./vscode/mkVSCodeFork.nix;
+  # forks: packageName -> package
+  #
+  supportedForks = {
+    code-cursor = {
+      package = pkgs.code-cursor;
+      packageName = "code-cursor";
+    };
+
+    kiro.package = pkgs.kiro;
+    windsurf.package = pkgs.windsurf;
+  };
 in
 {
   meta.maintainers = [ lib.maintainers.emaiax ];
 
-  imports = [
-    (mkVSCodeFork {
-      modulePath = [
-        "programs"
-        "cursor"
-      ];
-
-      name = "Cursor";
-      package = pkgs.code-cursor;
-      packageName = "code-cursor"; # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/co/code-cursor/package.nix#L43
-
-      # configDirectory = ".cursor";
-      # userDirectory = "Cursor";
-
-      overridePaths = {
-        mcp = ".cursor";
-      };
-    })
-  ];
+  imports = lib.mapAttrsToList (
+    packageName: fork: import ./vscode/mkVSCodeFork.nix (inputs // fork)
+  ) supportedForks;
 }

@@ -1,200 +1,149 @@
 {
-  modulePath,
-  name,
-  package,
-  packageName ? null,
-  configDirectory ? ".${name}",
-  userDirectory ? name,
-  overridePaths ? { },
-}:
-{
   config,
   lib,
   pkgs,
+  package,
+  packageName ? package.pname,
   ...
 }:
 let
   jsonFormat = pkgs.formats.json { };
+  prettyPrint = lib.generators.toPretty { };
+
+  modulePath = [
+    "programs"
+    package.pname
+  ];
 
   cfg = lib.getAttrFromPath modulePath config // {
-    inherit overridePaths configDirectory userDirectory;
+    inherit (config.home) homeDirectory;
+    inherit packageName;
   };
 
   helpers = import ./path-helpers.nix { inherit cfg lib pkgs; };
+  snippetsHelpers = import ./profiles/snippets.nix { inherit cfg lib pkgs; };
+  settingsHelpers = import ./profiles/settings.nix { inherit cfg lib pkgs; };
 
-  # configs per profile that are supported by this module
-  #
-  configsPerProfile = [
-    "keybindings"
-    "mcp"
-    "settings"
-    "tasks"
-  ];
+  homeFilenames = lib.flatten (lib.map builtins.attrNames homeFiles.contents);
 
-  # Generates configuration files for each profile key that exists and is non-empty
-  #
-  # For each key in configsPerProfile:
-  #
-  # - if the profile has the key AND the value is not an empty set
-  # - create a config file with the appropriate path, either mutable or immutable
-  # - setup onChange handler for mutable profiles to regenerate configs when the config changes
-  #
-  # Returns: List of attribute sets ready for home-manager file configuration
-  mkConfigsPerProfile =
-    profileName: profile:
-    lib.concatMap (
-      key:
-      lib.optionals ((profile ? "${key}") && (profile.${key} != { })) [
-        {
-          "${helpers.mkProfileConfigPathBuilder profileName key cfg.mutableProfile}" = {
-            source = toJsonSource "user-${key}" profile.${key};
-
-            onChange = lib.mkIf cfg.mutableProfile ''
-              run cp -v "${helpers.mkImmutableConfigPath profileName key}" "${helpers.mkMutableConfigPath profileName key}"
-
-              verboseEcho "Regenerating mutable: ${helpers.mkMutableConfigPath profileName key}"
-            '';
-          };
-        }
-      ]
-    ) configsPerProfile;
-
-  mkSnippetsPerProfile =
-    profileName: profile: lib.flatten [
-      lib.optionals (profile ? "languageSnippets") [
-        (
-          lib.mapAttrsToList (language: snippet: {
-            "${helpers.mkSnippetsPathBuilder profileName language}" = {
-              source = toJsonSource "user-${language}-snippets" snippet;
-            }
-          }) profile.languageSnippets
-        )
-      ]
-      ++ lib.optionals (profile ? "globalSnippets") [
-        "${helpers.mkSnippetsPathBuilder profileName}" = {
-          source = toJsonSource "user-global-snippets" profile.globalSnippets;
-        }
-      ]
-    ];
-
-  appName = name;
-  appPackageName = if (packageName != null) then packageName else package.pname;
-
-  # Helper function to handle path vs JSON object logic
-  toJsonSource =
-    name: value:
-    if builtins.isPath value || lib.isStorePath value then
-      builtins.trace "is a path: ${value}" value
-    else
-      builtins.trace "is a json: ${jsonFormat.generate "${appPackageName}-${name}" value}"
-        jsonFormat.generate
-        "${appPackageName}-${name}-json"
-        value;
-
-  # profiles
-  #
-  defaultProfile = if cfg.profiles ? default then cfg.profiles.default else { };
-  otherProfiles = lib.removeAttrs cfg.profiles [ "default" ];
-
-  hasDefaultProfile = cfg.profiles ? default;
-
-  # extensions
-  #
-  appExtensionsPath =
-    if overridePaths ? extensions && overridePaths.extensions != null then
-      overridePaths.extensions
-    else
-      "${configDirectory}/extensions";
-
-  allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
-  extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
-  extensionJsonFile =
-    name: text:
-    pkgs.writeTextFile {
-      inherit text;
-      name = "extensions-json-${name}";
-      destination = "/share/vscode/extensions/extensions.json";
-    };
-
-  supportsProfileExtensionsJson =
+  homeFiles = lib.mkMerge (
     let
-      versionCheck = lib.versionAtLeast cfg.package.version "1.74.0";
-      pnameCheck = builtins.elem cfg.package.pname [
-        "code-cursor"
-        "windsurf"
-      ];
+      settingsFiles = lib.mapAttrsToList settingsHelpers.profileSettingsFiles cfg.profiles;
+      snippetsFiles = lib.mapAttrsToList snippetsHelpers.profileSnippetsFiles cfg.profiles;
     in
-    (versionCheck || pnameCheck);
+    lib.flatten [
+      # (builtins.trace "settingsFiles: ${prettyPrint settingsFiles}" settingsFiles)
+      # (builtins.trace "snippetsFiles: ${prettyPrint snippetsFiles}" snippetsFiles)
+      settingsFiles
+      snippetsFiles
 
-  # Consolidated flags and helpers for extensions handling
-  supportsDefaultProfileJson = supportsProfileExtensionsJson && hasDefaultProfile;
-
-  # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-  subDir = "share/vscode/extensions";
-
-  toExtensionPathAttrs =
-    ext:
-    map (k: { "${appExtensionsPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
-      if ext ? vscodeExtUniqueId then
-        [ ext.vscodeExtUniqueId ]
-      else
-        builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
-    );
-
-  mkMutableExtensionsFiles = lib.mkMerge (
-    builtins.trace "Mapping paths for extensions: ${toString allExtensions}" (
-      lib.concatMap toExtensionPathAttrs allExtensions
-      ++
-        lib.optional
-          (builtins.trace "Checking profile extensions support: supportsProfileExtensionsJson=${toString supportsProfileExtensionsJson}, hasDefaultProfile=${toString hasDefaultProfile}" supportsDefaultProfileJson)
-          {
-            # Whenever our immutable extensions.json changes, force the profile to regenerate
-            # extensions.json with both mutable and immutable extensions.
-            "${appExtensionsPath}/.extensions-immutable.json" = {
-              text = builtins.trace "Generating extension JSON for default profile" (
-                extensionJson defaultProfile.extensions
-              );
-              onChange = ''
-                run rm $VERBOSE_ARG -f "${appExtensionsPath}"/{extensions.json,.init-default-profile-extensions}
-                verboseEcho "Regenerating ${appName} extensions.json"
-                run ${lib.getExe cfg.package} --list-extensions > /dev/null
-              '';
-            };
-          }
-    )
+      # (lib.mapAttrsToList extensionsHelpers.profileExtensionsFiles cfg.profiles)
+      # (lib.mkIf (cfg.profiles != { }) (
+      #   if (cfg.mutableExtensionsDir && settingsHelpers.otherProfiles == { }) then
+      #     mkMutableExtensionsFiles
+      #   else
+      #     mkImmutableExtensionsFiles
+      # ))
+    ]
   );
 
-  mkImmutableExtensionsFiles = {
-    "${appExtensionsPath}".source =
-      let
-        combinedExtensionsDrv = pkgs.buildEnv {
-          name = "vscode-extensions";
-          paths =
-            allExtensions
-            ++ lib.optional supportsDefaultProfileJson (
-              extensionJsonFile "default" (extensionJson defaultProfile.extensions)
-            );
-        };
-      in
-      "${combinedExtensionsDrv}/${subDir}";
-  };
+  # # extensions
+  # #
+  # appExtensionsPath =
+  #   if cfg.overridePaths ? extensions && cfg.overridePaths.extensions != null then
+  #     cfg.overridePaths.extensions
+  #   else
+  #     "${cfg.configDirectory}/extensions";
+
+  # allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
+  # extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
+  # extensionJsonFile =
+  #   name: text:
+  #   pkgs.writeTextFile {
+  #     inherit text;
+  #     name = "extensions-json-${name}";
+  #     destination = "/share/vscode/extensions/extensions.json";
+  #   };
+
+  # supportsProfileExtensionsJson =
+  #   let
+  #     versionCheck = lib.versionAtLeast cfg.package.version "1.74.0";
+  #     pnameCheck = builtins.elem cfg.package.pname [
+  #       "code-cursor"
+  #       "windsurf"
+  #     ];
+  #   in
+  #   (versionCheck || pnameCheck);
+
+  # # Consolidated flags and helpers for extensions handling
+  # supportsDefaultProfileJson = supportsProfileExtensionsJson && hasDefaultProfile;
+
+  # # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
+  # subDir = "share/vscode/extensions";
+
+  # toExtensionPathAttrs =
+  #   ext:
+  #   map (k: { "${appExtensionsPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
+  #     if ext ? vscodeExtUniqueId then
+  #       [ ext.vscodeExtUniqueId ]
+  #     else
+  #       builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
+  #   );
+
+  # mkMutableExtensionsFiles = lib.mkMerge (
+  #   builtins.trace "Mapping paths for extensions: ${toString allExtensions}" (
+  #     lib.concatMap toExtensionPathAttrs allExtensions
+  #     ++
+  #       lib.optional
+  #         (builtins.trace "Checking profile extensions support: supportsProfileExtensionsJson=${toString supportsProfileExtensionsJson}, hasDefaultProfile=${toString hasDefaultProfile}" supportsDefaultProfileJson)
+  #         {
+  #           # Whenever our immutable extensions.json changes, force the profile to regenerate
+  #           # extensions.json with both mutable and immutable extensions.
+  #           "${appExtensionsPath}/.extensions-immutable.json" = {
+  #             text = builtins.trace "Generating extension JSON for default profile" (
+  #               extensionJson defaultProfile.extensions
+  #             );
+  #             onChange = ''
+  #               run rm $VERBOSE_ARG -f "${appExtensionsPath}"/{extensions.json,.init-default-profile-extensions}
+  #               verboseEcho "Regenerating ${appName} extensions.json"
+  #               run ${lib.getExe cfg.package} --list-extensions > /dev/null
+  #             '';
+  #           };
+  #         }
+  #   )
+  # );
+
+  # mkImmutableExtensionsFiles = {
+  #   "${appExtensionsPath}".source =
+  #     let
+  #       combinedExtensionsDrv = pkgs.buildEnv {
+  #         name = "vscode-extensions";
+  #         paths =
+  #           allExtensions
+  #           ++ lib.optional supportsDefaultProfileJson (
+  #             extensionJsonFile "default" (extensionJson defaultProfile.extensions)
+  #           );
+  #       };
+  #     in
+  #     "${combinedExtensionsDrv}/${subDir}";
+  # };
 in
 {
   options = lib.setAttrByPath modulePath {
-    enable = lib.mkEnableOption appName;
-    package = lib.mkPackageOption pkgs appPackageName { };
+    enable = lib.mkEnableOption package.longName;
+    package = lib.mkPackageOption pkgs packageName { };
 
     name = lib.mkOption {
       type = lib.types.str;
       internal = true;
-      default = name;
+      default = helpers.appName;
       example = "VSCode";
       description = "The name of the VSCode fork.";
     };
 
     mutableExtensionsDir = lib.mkOption {
       type = lib.types.bool;
-      default = otherProfiles == { };
+      default = settingsHelpers.otherProfiles == { };
       defaultText = lib.literalExpression "(removeAttrs config.${lib.concatStringsSep "." modulePath}.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
@@ -206,7 +155,7 @@ in
 
     mutableProfile = lib.mkOption {
       type = lib.types.bool;
-      default = otherProfiles == { };
+      default = settingsHelpers.otherProfiles == { };
       defaultText = lib.literalExpression "(removeAttrs config.${lib.concatStringsSep "." modulePath}.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
@@ -224,37 +173,42 @@ in
       type = lib.types.submodule {
         options = {
           extensions = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
+            type = lib.types.nullOr (
+              lib.types.oneOf [
+                lib.types.str
+                lib.types.path
+              ]
+            );
             default = null;
-            example = ".${lib.toLower appName}/extensions";
+            # example = lib.literalExpression ".${lib.toLower helpers.appName}/extensions";
             description = "Directory where extensions are stored.";
           };
 
           keybindings = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "Library/Application Support/${appName}/User";
+            # example = "Library/Application Support/${helpers.appName}/User";
             description = "Path where keybindings file is stored.";
           };
 
           mcp = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
+            type = lib.types.nullOr lib.types.str;
             default = null;
-            example = "Library/Application Support/${appName}/User";
+            # example = "Library/Application Support/${helpers.appName}/User";
             description = "Path where MCP configuration file is stored.";
           };
 
           settings = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "Library/Application Support/${appName}/User";
+            # example = "Library/Application Support/${helpers.appName}/User";
             description = "Path where settings file is stored.";
           };
 
           tasks = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            example = "Library/Application Support/${appName}/User";
+            # example = "Library/Application Support/${helpers.appName}/User";
             description = "Path where tasks file is stored.";
           };
         };
@@ -420,8 +374,8 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = !(cfg.mutableExtensionsDir && otherProfiles != { });
-        message = "mutableExtensionsDir=true requires only a default profile; found additional profiles in ${lib.concatStringsSep ", " (builtins.attrNames otherProfiles)}";
+        assertion = !(cfg.mutableExtensionsDir && settingsHelpers.otherProfiles != { });
+        message = "mutableExtensionsDir=true requires only a default profile; found additional profiles in ${lib.concatStringsSep ", " (builtins.attrNames settingsHelpers.otherProfiles)}";
       }
     ];
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -433,14 +387,14 @@ in
     # when this file is being written, since the file is loaded into RAM
     # and overwritten on closing VSCode.
     home.activation = {
-      "vscodeProfilesFor${appName}" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+      "vscodeProfilesFor${helpers.appName}" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
         let
           modifyGlobalStorage = pkgs.writeShellScript "vscode-global-storage-modify" ''
             set -euo pipefail
             PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
-            file="${helpers.mkAppUserDir}/globalStorage/storage.json"
+            file="${helpers.userDirectory}/globalStorage/storage.json"
             file_write=""
-            profiles=(${lib.escapeShellArgs (builtins.attrNames otherProfiles)})
+            profiles=(${lib.escapeShellArgs (builtins.attrNames settingsHelpers.otherProfiles)})
 
             if [ -f "$file" ]; then
               existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
@@ -469,18 +423,7 @@ in
       );
     };
 
-    home.file = lib.mkMerge (
-      lib.flatten [
-        (lib.mapAttrsToList mkConfigsPerProfile cfg.profiles)
-        (lib.mapAttrsToList mkSnippetsPerProfile cfg.profiles)
-
-        (lib.mkIf (cfg.profiles != { }) (
-          if (cfg.mutableExtensionsDir && otherProfiles == { }) then
-            mkMutableExtensionsFiles
-          else
-            mkImmutableExtensionsFiles
-        ))
-      ]
-    );
+    # home.file = builtins.trace "[homeFiles] ${prettyPrint homeFiles}" homeFiles;
+    home.file = builtins.trace "[homeFilenames] ${prettyPrint homeFilenames}" homeFiles;
   };
 }
