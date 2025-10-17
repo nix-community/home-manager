@@ -90,7 +90,6 @@ let
       );
     }
   );
-
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -305,26 +304,6 @@ in
         "signer"
       ]
     )
-  ]
-  ++ (
-    let
-      mkRenamed =
-        opt:
-        lib.mkRenamedOptionModule
-          [ "programs" "git" "difftastic" opt ]
-          [ "programs" "git" "difftastic" "options" opt ];
-    in
-    map mkRenamed [
-      "background"
-      "color"
-      "context"
-      "display"
-    ]
-  )
-  ++ [
-    (lib.mkRemovedOptionModule [ "programs" "git" "difftastic" "extraArgs" ] ''
-      'programs.git.difftastic.extraArgs' has been replaced by 'programs.git.difftastic.options'
-    '')
   ];
 
   config = mkIf cfg.enable (
@@ -340,7 +319,7 @@ in
                   (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
                   (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
                   (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
-                  cfg.difftastic.enable
+                  (config.programs.difftastic.enable && config.programs.difftastic.git.enable)
                   cfg.riff.enable
                   cfg.patdiff.enable
                 ];
