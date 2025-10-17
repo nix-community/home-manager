@@ -34,4 +34,4 @@ let
   ) tests;
 in
 
-knownTests // unknownTests
+knownTests // unknownTests // (import ./default-vscode-forks.nix { inherit pkgs lib; })

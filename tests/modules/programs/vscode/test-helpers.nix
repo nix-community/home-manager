@@ -1,62 +1,25 @@
 {
   lib,
+  package,
+  packageName ? package.pname,
   pkgs,
-  packageName,
   ...
 }:
 rec {
-  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  inherit (builtins) substring stringLength;
+  inherit (lib.strings) toLower toUpper;
 
-  hasValue = attrs: key: (attrs ? "${key}") && (attrs.${key} != null);
+  capitalize =
+    string: toUpper (substring 0 1 string) + toLower (substring 1 ((stringLength string) - 1) string);
 
-  # default fork configuration
-  #
-  forkConfig =
-    {
-      vscode = {
-        appName = "Code";
-        extensionsDirectory = ".vscode/extensions";
-        # configDirectory = null # defaults to mkTestAppUserDir
-      };
-      code-cursor = {
-        appName = "Cursor";
-        extensionsDirectory = ".cursor/extensions";
-        # configDirectory = null # defaults to mkTestAppUserDir
-      };
-    }
-    .${packageName};
+  appName = capitalize package.executableName;
 
-  # Default per-fork path overrides used by tests.
-  #
-  # App User directory: default to the user configuration
-  #
-  # linux: ~/.config/Cursor/User
-  # macos: ~/Library/Application Support/Cursor/User
-  #
-  mkTestAppUserDir =
-    if isDarwin then
-      builtins.trace "[userDirectory] macOS path: Library/Application Support/${forkConfig.appName}/User" "Library/Application Support/${forkConfig.appName}/User"
+  userDirectory =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "Library/Application Support/${appName}/User"
     else
-      builtins.trace "[userDirectory] Linux path: ${forkConfig.appName}/User" "${forkConfig.appName}/User";
+      ".config/${appName}/User";
 
-  # App Config directory: default to the app configuration (also where extensions are stored)
-  #
-  # config directory or user directory
-  #
-  mkTestAppConfigDir =
-    if hasValue forkConfig "configDirectory" then
-      builtins.trace "[configDirectory] custom config directory: ${forkConfig.configDirectory}" forkConfig.configDirectory
-    else
-      builtins.trace "[configDirectory] user directory: ${mkTestAppUserDir}" mkTestAppUserDir;
-
-  # Compute the root directory for extensions for a given program
-  mkTestAppExtensionsDir =
-    if hasValue forkConfig "extensionsDirectory" then
-      builtins.trace "[extensionsDirectory] custom extensions directory: ${forkConfig.extensionsDirectory}" forkConfig.extensionsDirectory
-    else
-      builtins.trace "[extensionsDirectory] user directory: ${mkTestAppConfigDir}/extensions" "${mkTestAppConfigDir}/extensions";
-
-  # Generate stable JSON text for expected content
   toJSONText = value: lib.generators.toJSON { } value;
 
   # Write expected JSON content to a file for assertions
@@ -165,6 +128,89 @@ rec {
         }
       ],
       "version": "2.0.0"
+    }
+  '';
+
+  # snippets configuration (json object)
+  #
+  globalSnippetsObject = {
+    todo = {
+      prefix = [ "todo" ];
+      body = [ "# TODO: $0" ];
+      description = "Insert a TODO comment";
+    };
+  };
+
+  globalSnippetsJsonPath = builtins.toFile "${packageName}-user-global-snippets.json.test" ''
+    {
+      "todo": {
+        "body": [
+          "# TODO: $0"
+        ],
+        "description": "Insert a TODO comment",
+        "prefix": [
+          "todo"
+        ]
+      }
+    }
+  '';
+
+  elixirSnippetsObject = {
+    pry = {
+      prefix = [ "pry" ];
+      body = [ "require IEx; IEx.pry" ];
+      description = "Insert a debug Pry statement for a function";
+    };
+
+    pipepry = {
+      prefix = [ "ppry" ];
+      body = [ "|> tap(fn input -> IO.inspect(input); require IEx; IEx.pry(); end)" ];
+      description = "Insert a debug Pry statement for a pipe";
+    };
+  };
+
+  elixirSnippetsJsonPath = builtins.toFile "${packageName}-user-elixir-snippets.json.test" ''
+    {
+      "pipepry": {
+        "body": [
+          "|> tap(fn input -> IO.inspect(input); require IEx; IEx.pry(); end)"
+        ],
+        "description": "Insert a debug Pry statement for a pipe",
+        "prefix": [
+          "ppry"
+        ]
+      },
+      "pry": {
+        "body": [
+          "require IEx; IEx.pry"
+        ],
+        "description": "Insert a debug Pry statement for a function",
+        "prefix": [
+          "pry"
+        ]
+      }
+    }
+  '';
+
+  haskellSnippetsObject = {
+    impl = {
+      prefix = [ "impl" ];
+      body = [ "impl body in user haskell snippet" ];
+      description = "Insert an implementation stub";
+    };
+  };
+
+  haskellSnippetsJsonPath = builtins.toFile "${packageName}-user-haskell-snippets.json.test" ''
+    {
+      "impl": {
+        "body": [
+          "impl body in user haskell snippet"
+        ],
+        "description": "Insert an implementation stub",
+        "prefix": [
+          "impl"
+        ]
+      }
     }
   '';
 }

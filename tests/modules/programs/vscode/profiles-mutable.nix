@@ -50,6 +50,11 @@ in
       nmt.script = ''
         # immutable-mcp.json (dynamic path based on the package name)
         #
+        # FIXME: home-files/${profilePath "default"}/.cursor/.mcp-immutable.json
+        # if [[ "${mcpPath}" == "${profilePath "default"}/.cursor/.mcp-immutable.json" ]]; then
+        #   fail "Paths are identical: ${mcpPath}"
+        # fi
+
         assertFileExists "home-files/${mcpPath}/.mcp-immutable.json"
         assertFileContent "home-files/${mcpPath}/.mcp-immutable.json" "${helpers.mcpJsonPath}"
 
