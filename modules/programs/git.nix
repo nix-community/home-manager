@@ -90,7 +90,6 @@ let
       );
     }
   );
-
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -292,41 +291,6 @@ in
         };
       };
 
-      difftastic = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Enable the {command}`difftastic` syntax highlighter.
-            See <https://github.com/Wilfred/difftastic>.
-          '';
-        };
-
-        package = mkPackageOption pkgs "difftastic" { };
-
-        enableAsDifftool = mkEnableOption "" // {
-          description = ''
-            Enable the {command}`difftastic` syntax highlighter as a git difftool.
-            See <https://github.com/Wilfred/difftastic>.
-          '';
-        };
-
-        options = mkOption {
-          type =
-            with lib.types;
-            attrsOf (oneOf [
-              str
-              number
-              bool
-            ]);
-          default = { };
-          example = {
-            color = "dark";
-            sort-path = true;
-            tab-width = 8;
-          };
-          description = "Configuration options for {command}`difftastic`. See {command}`difft --help`";
-        };
-      };
-
       riff = {
         enable = mkEnableOption "" // {
           description = ''
@@ -373,26 +337,6 @@ in
         "signer"
       ]
     )
-  ]
-  ++ (
-    let
-      mkRenamed =
-        opt:
-        lib.mkRenamedOptionModule
-          [ "programs" "git" "difftastic" opt ]
-          [ "programs" "git" "difftastic" "options" opt ];
-    in
-    map mkRenamed [
-      "background"
-      "color"
-      "context"
-      "display"
-    ]
-  )
-  ++ [
-    (lib.mkRemovedOptionModule [ "programs" "git" "difftastic" "extraArgs" ] ''
-      'programs.git.difftastic.extraArgs' has been replaced by 'programs.git.difftastic.options'
-    '')
   ];
 
   config = mkIf cfg.enable (
@@ -408,7 +352,7 @@ in
                   (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
                   (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
                   (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
-                  cfg.difftastic.enable
+                  (config.programs.difftastic.enable && config.programs.difftastic.git.enable)
                   cfg.riff.enable
                   cfg.patdiff.enable
                 ];
@@ -687,35 +631,6 @@ in
             };
           };
       })
-
-      (
-        let
-          difftCommand = "${lib.getExe cfg.difftastic.package} ${
-            lib.cli.toGNUCommandLineShell { } cfg.difftastic.options
-          }";
-        in
-        (lib.mkMerge [
-          (mkIf cfg.difftastic.enable {
-            home.packages = [ cfg.difftastic.package ];
-            programs.git.iniContent = {
-              diff.external = difftCommand;
-            };
-          })
-          (mkIf cfg.difftastic.enableAsDifftool {
-            home.packages = [ cfg.difftastic.package ];
-            programs.git.iniContent = {
-              diff = {
-                tool = lib.mkDefault "difftastic";
-              };
-              difftool = {
-                difftastic = {
-                  cmd = "${difftCommand} $LOCAL $REMOTE";
-                };
-              };
-            };
-          })
-        ])
-      )
 
       (
         let
