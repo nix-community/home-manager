@@ -316,16 +316,6 @@ in
         };
       };
 
-      patdiff = {
-        enable = mkEnableOption "" // {
-          description = ''
-            Whether to enable the {command}`patdiff` differ.
-            See <https://opensource.janestreet.com/patdiff/>
-          '';
-        };
-
-        package = mkPackageOption pkgs "patdiff" { };
-      };
     };
   };
 
@@ -355,8 +345,8 @@ in
                   (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
                   (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
                   (config.programs.difftastic.enable && config.programs.difftastic.git.enable)
+                  (config.programs.patdiff.enable && config.programs.patdiff.enableGitIntegration)
                   cfg.riff.enable
-                  cfg.patdiff.enable
                 ];
               in
               lib.count lib.id enabled <= 1;
@@ -650,20 +640,6 @@ in
             };
 
             interactive.diffFilter = "${riffExe} --color=on";
-          };
-        }
-      )
-
-      (
-        let
-          patdiffPackage = cfg.patdiff.package;
-          patdiffCommand = "${lib.getExe' patdiffPackage "patdiff-git-wrapper"}";
-        in
-        mkIf cfg.patdiff.enable {
-          home.packages = [ patdiffPackage ];
-
-          programs.git.iniContent = {
-            diff.external = patdiffCommand;
           };
         }
       )
