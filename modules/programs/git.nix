@@ -242,6 +242,8 @@ in
       lfs = {
         enable = mkEnableOption "Git Large File Storage";
 
+        package = lib.mkPackageOption pkgs "git-lfs" { nullable = true; };
+
         skipSmudge = mkOption {
           type = types.bool;
           default = false;
@@ -506,7 +508,7 @@ in
       })
 
       (mkIf cfg.lfs.enable {
-        home.packages = [ pkgs.git-lfs ];
+        home.packages = lib.mkIf (cfg.lfs.package != null) [ cfg.lfs.package ];
 
         programs.git.iniContent.filter.lfs =
           let
