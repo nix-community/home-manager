@@ -62,4 +62,6 @@ rec {
         '';
       }
     ) (getProfileSnippets profile);
+
+  profilesSnippetsFiles = [ ];
 }

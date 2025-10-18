@@ -7,9 +7,6 @@
   ...
 }:
 let
-  jsonFormat = pkgs.formats.json { };
-  prettyPrint = lib.generators.toPretty { };
-
   modulePath = [
     "programs"
     package.pname
@@ -21,28 +18,23 @@ let
   };
 
   helpers = import ./path-helpers.nix { inherit cfg lib pkgs; };
-  snippetsHelpers = import ./profiles/snippets.nix { inherit cfg lib pkgs; };
-  settingsHelpers = import ./profiles/settings.nix { inherit cfg lib pkgs; };
+  profiles = import ./profiles/settings.nix { inherit cfg lib pkgs; };
+  snippets = import ./profiles/snippets.nix { inherit cfg lib pkgs; };
 
-  homeFilenames = lib.flatten (lib.map builtins.attrNames homeFiles.contents);
+  inherit (helpers) jsonFormat toPretty;
 
-  settingsFiles = lib.mapAttrsToList settingsHelpers.profileSettingsFiles cfg.profiles;
-  snippetsFiles = lib.mapAttrsToList snippetsHelpers.profileSnippetsFiles cfg.profiles;
+  profilesExtensionsFiles = [ ];
 
-  homeFiles = lib.mkMerge (
-    lib.flatten [
-      settingsFiles
-      snippetsFiles
+  # ++ extensions.profilesExtensionsFiles
+  # (snippets.profilesSnippetsFiles cfg.profiles)
 
-      # (lib.mapAttrsToList extensionsHelpers.profileExtensionsFiles cfg.profiles)
-      # (lib.mkIf (cfg.profiles != { }) (
-      #   if (cfg.mutableExtensionsDir && settingsHelpers.otherProfiles == { }) then
-      #     mkMutableExtensionsFiles
-      #   else
-      #     mkImmutableExtensionsFiles
-      # ))
-    ]
-  );
+  # (lib.mapAttrsToList extensionsHelpers.profileExtensionsFiles cfg.profiles)
+  # (lib.mkIf (cfg.profiles != { }) (
+  #   if (cfg.mutableExtensionsDir && profiles.otherProfiles == { }) then
+  #     mkMutableExtensionsFiles
+  #   else
+  #     mkImmutableExtensionsFiles
+  # ))
 
   # # extensions
   # #
@@ -140,7 +132,7 @@ in
 
     mutableExtensionsDir = lib.mkOption {
       type = lib.types.bool;
-      default = settingsHelpers.otherProfiles == { };
+      default = profiles.otherProfiles == { };
       defaultText = lib.literalExpression "(removeAttrs config.${lib.concatStringsSep "." modulePath}.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
@@ -152,7 +144,7 @@ in
 
     mutableProfile = lib.mkOption {
       type = lib.types.bool;
-      default = settingsHelpers.otherProfiles == { };
+      default = profiles.otherProfiles == { };
       defaultText = lib.literalExpression "(removeAttrs config.${lib.concatStringsSep "." modulePath}.profiles [ \"default\" ]) == { }";
       example = false;
       description = ''
@@ -371,8 +363,8 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = !(cfg.mutableExtensionsDir && settingsHelpers.otherProfiles != { });
-        message = "mutableExtensionsDir=true requires only a default profile; found additional profiles in ${lib.concatStringsSep ", " (builtins.attrNames settingsHelpers.otherProfiles)}";
+        assertion = !(cfg.mutableExtensionsDir && profiles.otherProfiles != { });
+        message = "mutableExtensionsDir=true requires only a default profile; found additional profiles in ${lib.concatStringsSep ", " (builtins.attrNames profiles.otherProfiles)}";
       }
     ];
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -391,7 +383,7 @@ in
             PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
             file="${helpers.userDirectory}/globalStorage/storage.json"
             file_write=""
-            profiles=(${lib.escapeShellArgs (builtins.attrNames settingsHelpers.otherProfiles)})
+            profiles=(${lib.escapeShellArgs (builtins.attrNames profiles.otherProfiles)})
 
             if [ -f "$file" ]; then
               existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
@@ -420,7 +412,14 @@ in
       );
     };
 
-    # home.file = builtins.trace "[homeFiles] ${prettyPrint homeFiles}" homeFiles;
-    home.file = builtins.trace "[homeFilenames] ${prettyPrint homeFilenames}" homeFiles;
+    # home.file = builtins.trace "[homeFiles] ${toPretty homeFiles}, [homeFilenames] ${toPretty homeFilenames}" homeFiles;
+    # homeFilenames = lib.flatten (lib.map builtins.attrNames homeFiles.contents);
+    home.file = lib.mkMerge (
+      lib.flatten [
+        profiles.configFiles
+        snippets.profilesSnippetsFiles
+        profilesExtensionsFiles
+      ]
+    );
   };
 }

@@ -94,10 +94,11 @@ rec {
   inherit (builtins) substring stringLength;
   inherit (lib.strings) toLower toUpper;
 
+  jsonFormat = pkgs.formats.json { };
+  toPretty = lib.generators.toPretty { };
+
   capitalize =
     string: toUpper (substring 0 1 string) + toLower (substring 1 ((stringLength string) - 1) string);
-
-  jsonFormat = pkgs.formats.json { };
 
   jsonSource =
     name: value:
@@ -110,7 +111,7 @@ rec {
   hasAttrKey = key: attrs: (builtins.hasAttr key attrs) && (hasValue attrs.${key});
   getAttrKey = key: attrs: if (hasAttrKey key attrs) then attrs.${key} else null;
 
-  joinPaths = paths: lib.concatStringsSep "/" (lib.filter (value: value != "") paths);
+  joinPaths = paths: lib.concatStringsSep "/" (lib.filter hasValue paths);
 
   ## Home config directory: per app
   #
@@ -169,15 +170,10 @@ rec {
 
   profileDirectory =
     profileName:
-    let
-      path = lib.concatStringsSep "/" (
-        lib.filter (value: value != "") [
-          userDirectory
-          (profileFolder profileName)
-        ]
-      );
-    in
-    builtins.trace "[profileDir: ${profileName}] ${path}" path;
+    joinPaths [
+      userDirectory
+      (profileFolder profileName)
+    ];
 
   ## Snippets directory
   #
@@ -190,22 +186,42 @@ rec {
   #
   snippetsDirectory =
     profileName:
-    let
-      path = lib.concatStringsSep "/" [
-        (profileDirectory profileName)
-        "snippets"
-      ];
-    in
-    builtins.trace "[snippetsDir: ${profileName}] ${path}" path;
+    joinPaths [
+      (profileDirectory profileName)
+      "snippets"
+    ];
 
   settingsDirectory =
-    profileName: settingsKey:
-    let
-      isCursorMcp = cfg.packageName == "code-cursor" && settingsKey == "mcp";
-      isDefaultProfile = profileName == "default";
-    in
-    if isCursorMcp then
-      if isDefaultProfile then "${cfg.homeDirectory}/${homeConfigDirectory}" else null
+    profileName: configKey:
+    if isCursorMcp configKey && isDefaultProfile profileName then
+      joinPaths [
+        cfg.homeDirectory
+        homeConfigDirectory
+      ]
     else
       (profileDirectory profileName);
+
+  isCursorMcp = configKey: cfg.packageName == "code-cursor" && configKey == "mcp";
+  isDefaultProfile = profileName: profileName == "default";
+
+  mkConfigFilePair =
+    profileName: storeDir: configKey: configValue:
+    let
+      sourceFilename = configKey;
+      sourceFilePath = "${storeDir}/${sourceFilename}.json";
+
+      storeFilename = "${lib.optionalString cfg.mutableProfile ".immutable-"}${sourceFilename}";
+      storeFilePath = "${storeDir}/${storeFilename}.json";
+
+      configFile = {
+        source = jsonSource "${profileName}-user-${configKey}" configValue;
+
+        onChange = lib.mkIf cfg.mutableProfile ''
+          echo "Regenerating file from source: ${storeFilename}.json -> ${sourceFilename}.json"
+          run cp -vf "$HOME/${storeFilePath}" "$HOME/${sourceFilePath}"
+        '';
+      };
+    in
+    lib.nameValuePair storeFilePath configFile;
+
 }
