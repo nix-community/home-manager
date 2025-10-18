@@ -26,14 +26,11 @@ let
 
   homeFilenames = lib.flatten (lib.map builtins.attrNames homeFiles.contents);
 
+  settingsFiles = lib.mapAttrsToList settingsHelpers.profileSettingsFiles cfg.profiles;
+  snippetsFiles = lib.mapAttrsToList snippetsHelpers.profileSnippetsFiles cfg.profiles;
+
   homeFiles = lib.mkMerge (
-    let
-      settingsFiles = lib.mapAttrsToList settingsHelpers.profileSettingsFiles cfg.profiles;
-      snippetsFiles = lib.mapAttrsToList snippetsHelpers.profileSnippetsFiles cfg.profiles;
-    in
     lib.flatten [
-      # (builtins.trace "settingsFiles: ${prettyPrint settingsFiles}" settingsFiles)
-      # (builtins.trace "snippetsFiles: ${prettyPrint snippetsFiles}" snippetsFiles)
       settingsFiles
       snippetsFiles
 
