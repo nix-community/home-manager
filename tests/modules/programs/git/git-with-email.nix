@@ -7,8 +7,12 @@
 
   programs.git = {
     enable = true;
-    userEmail = "hm@example.com";
-    userName = "H. M. Test";
+    settings = {
+      user = {
+        email = "hm@example.com";
+        name = "H. M. Test";
+      };
+    };
   };
 
   home.stateVersion = "20.09";

@@ -29,15 +29,19 @@ in
     {
       enable = true;
       package = pkgs.gitMinimal;
-      aliases = {
-        a1 = "foo";
-        a2 = "bar";
-        escapes = ''"\n	'';
-      };
-      extraConfig = {
+      settings = {
+        alias = {
+          a1 = "foo";
+          a2 = "bar";
+          escapes = ''"\n	'';
+        };
         extra = {
           name = "value";
           multiple = [ 1 ];
+        };
+        user = {
+          email = "user@example.org";
+          name = "John Doe";
         };
       };
       ignores = [
@@ -66,13 +70,10 @@ in
         key = "00112233445566778899AABBCCDDEEFF";
         signByDefault = true;
       };
-      userEmail = "user@example.org";
-      userName = "John Doe";
       lfs.enable = true;
     }
 
     {
-      aliases.a2 = lib.mkForce "baz";
       settings.alias.a2 = lib.mkForce "baz";
       settings."extra \"backcompat.with.dots\"".previously = "worked";
       settings.extra.boolean = true;
