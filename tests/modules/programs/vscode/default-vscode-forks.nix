@@ -1,32 +1,9 @@
 { lib, pkgs, ... }:
 let
-  #
-  #   {
-  #     "vscode-factory-${programName}-snippets-immutable" = ./snippets/immutable.nix;
-  #     "vscode-factory-${programName}-snippets-mutable" = ./snippets/mutable.nix;
-  #     # "${programName}-vscode-forks-empty-profiles" = ./empty-profiles.nix;
-  #     # "${programName}-vscode-forks-extensions-mutable" = ./extensions-mutable.nix;
-  #     # "${programName}-vscode-forks-extensions-mutable-no-json-support" =
-  #     #   ./extensions-mutable-no-json-support.nix;
-  #     # "${programName}-vscode-forks-extensions-immutable-unsupported" =
-  #     #   ./extensions-immutable-unsupported.nix;
-  #     # "${programName}-vscode-forks-extensions-immutable" = ./extensions-immutable.nix;
-  #     # "${programName}-vscode-forks-profiles-immutable" = ./profiles-immutable.nix;
-  #     # "${programName}-vscode-forks-profiles-mutable" = ./profiles-mutable.nix;
-  #   }
-
   supportedForks = {
-    code-cursor = {
-      executableName = "cursor";
-      longName = "Cursor";
-      pname = "cursor";
-    };
-
-    kiro = {
-      executableName = "kiro";
-      longName = "Kiro";
-      pname = "kiro";
-    };
+    code-cursor = pkgs.code-cursor;
+    # kiro = pkgs.kiro;
+    # windsurf = pkgs.windsurf;
   };
 
   # currently only applies to Cursor and Windsurf
@@ -77,6 +54,8 @@ let
   #   k: v: lib.nameValuePair "vscode-${k}-unknown" (v unknownPackage)
   # ) tests;
   tests = {
+    empty-profiles = import ./profiles/empty-profiles.nix;
+    full-profiles = import ./profiles/full-profiles.nix;
     keybindings-immutable = import ./profiles/keybindings-immutable.nix;
     keybindings-mutable = import ./profiles/keybindings-mutable.nix;
     mcp-immutable = import ./profiles/mcp-immutable.nix;
@@ -87,7 +66,6 @@ let
     snippets-mutable = import ./profiles/snippets-mutable.nix;
     tasks-immutable = import ./profiles/tasks-immutable.nix;
     tasks-mutable = import ./profiles/tasks-mutable.nix;
-    empty-profiles = import ./profiles/empty-profiles.nix;
   };
 
   buildTestListForPackage =

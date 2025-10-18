@@ -22,19 +22,10 @@ let
     userDirectory
     ;
 
-  # when multiple profiles are defined, the profiles are immutable by default.
-  # this ensures that the profiles are not modified by mistake, so the files
-  # are read-only enforced by the nix store.
-  #
+  # when multiple profiles are defined, they are immutable by default.
   # however we can override this to make the profiles mutable
   #
-  forkConfig = {
-    inherit package packageName;
-
-    enable = true;
-
-    # when multiple profiles are defined, the profiles are immutable by default.
-    # but we can override this to force the profiles mutable instead.
+  forkConfig = forkInputs // {
     mutableProfile = true;
 
     profiles = {

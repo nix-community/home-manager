@@ -22,13 +22,9 @@ let
     userDirectory
     ;
 
-  forkConfig = {
-    inherit package packageName;
-
-    enable = true;
-
-    # when multiple profiles are defined, the profiles are immutable by default.
-    #
+  # when multiple profiles are defined, they are immutable by default.
+  #
+  forkConfig = forkInputs // {
     profiles = {
       default = {
         globalSnippets = globalSnippetsObject;

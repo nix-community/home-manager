@@ -20,7 +20,7 @@ let
     ;
 
   # when multiple profiles are defined, they are immutable by default.
-  # but we can override this to force the profiles mutable instead.
+  # however we can override this to make the profiles mutable
   #
   forkConfig = forkInputs // {
     mutableProfile = true;

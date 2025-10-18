@@ -14,13 +14,9 @@ let
 
   inherit (helpers) keybindingsJsonPath userDirectory;
 
-  forkConfig = {
-    inherit (forkInputs) package packageName;
-
-    enable = true;
-
-    # when multiple profiles are defined, they are immutable by default.
-    #
+  # when multiple profiles are defined, they are immutable by default.
+  #
+  forkConfig = forkInputs // {
     profiles = {
       default.keybindings = keybindingsJsonPath;
       work.keybindings = keybindingsJsonPath;

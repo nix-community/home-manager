@@ -14,14 +14,10 @@ let
 
   inherit (helpers) settingsJsonPath userDirectory;
 
-  forkConfig = {
-    inherit (forkInputs) package packageName;
-
-    enable = true;
-
-    # when multiple profiles are defined, they are immutable by default,
-    # but we can force the profiles to be mutable instead.
-    #
+  # when multiple profiles are defined, they are immutable by default.
+  # however we can override this to make the profiles mutable
+  #
+  forkConfig = forkInputs // {
     mutableProfile = true;
 
     profiles = {

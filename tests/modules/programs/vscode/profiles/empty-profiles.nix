@@ -14,11 +14,7 @@ let
 
   inherit (helpers) userDirectory;
 
-  forkConfig = {
-    inherit (forkInputs) package packageName;
-
-    enable = true;
-
+  forkConfig = forkInputs // {
     profiles = {
       default = { };
       work = { };
@@ -37,12 +33,12 @@ in
       assertPathNotExists "home-files/${userDirectory}/.immutable-mcp.json"
       assertPathNotExists "home-files/${userDirectory}/.immutable-settings.json"
       assertPathNotExists "home-files/${userDirectory}/.immutable-tasks.json"
-      assertPathNotExists "home-files/${userDirectory}/snippets/.immutable-global.code-snippets"
       assertPathNotExists "home-files/${userDirectory}/keybindings.json"
       assertPathNotExists "home-files/${userDirectory}/mcp.json"
       assertPathNotExists "home-files/${userDirectory}/settings.json"
-      assertPathNotExists "home-files/${userDirectory}/tasks.json"
+      assertPathNotExists "home-files/${userDirectory}/snippets/.immutable-global.code-snippets"
       assertPathNotExists "home-files/${userDirectory}/snippets/global.code-snippets"
+      assertPathNotExists "home-files/${userDirectory}/tasks.json"
 
       # work profile: no files
       #
@@ -50,12 +46,12 @@ in
       assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-mcp.json"
       assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-settings.json"
       assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-tasks.json"
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/.immutable-global.code-snippets"
       assertPathNotExists "home-files/${userDirectory}/profiles/work/keybindings.json"
       assertPathNotExists "home-files/${userDirectory}/profiles/work/mcp.json"
       assertPathNotExists "home-files/${userDirectory}/profiles/work/settings.json"
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/tasks.json"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/.immutable-global.code-snippets"
       assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/global.code-snippets"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/tasks.json"
     '';
   };
 }
