@@ -188,7 +188,7 @@ in
         fi
       '';
 
-    programs.git.extraConfig.credential = mkIf cfg.gitCredentialHelper.enable (
+    programs.git.settings.credential = mkIf cfg.gitCredentialHelper.enable (
       builtins.listToAttrs (
         map (
           host:

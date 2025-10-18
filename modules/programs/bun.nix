@@ -64,7 +64,7 @@ in
     programs.git.attributes = lib.mkIf (cfg.enableGitIntegration && (cfg.package != null)) [
       "*.lockb binary diff=lockb"
     ];
-    programs.git.extraConfig.diff.lockb = lib.mkIf (cfg.enableGitIntegration && (cfg.package != null)) {
+    programs.git.settings.diff.lockb = lib.mkIf (cfg.enableGitIntegration && (cfg.package != null)) {
       textconv = lib.getExe cfg.package;
       binary = true;
     };

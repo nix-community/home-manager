@@ -111,8 +111,8 @@ in
           };
         };
 
-        extraConfig = mkOption {
-          type = types.either types.lines gitIniType;
+        settings = mkOption {
+          type = gitIniType;
           default = { };
           example = {
             core = {
@@ -121,8 +121,8 @@ in
             url."ssh://git@host".insteadOf = "otherhost";
           };
           description = ''
-            Additional configuration to add. The use of string values is
-            deprecated and will be removed in the future.
+            Configuration written to {file}`$XDG_CONFIG_HOME/git/config`.
+            See {manpage}`git-config(1)` for details.
           '';
         };
 
@@ -440,20 +440,8 @@ in
 
       (mkIf (cfg.aliases != { }) { programs.git.iniContent.alias = cfg.aliases; })
 
-      (mkIf (lib.isAttrs cfg.extraConfig) {
-        programs.git.iniContent = cfg.extraConfig;
-      })
-
-      (mkIf (lib.isString cfg.extraConfig) {
-        warnings = [
-          ''
-            Using programs.git.extraConfig as a string option is
-            deprecated and will be removed in the future. Please
-            change to using it as an attribute set instead.
-          ''
-        ];
-
-        xdg.configFile."git/config".text = cfg.extraConfig;
+      (mkIf (cfg.settings != { }) {
+        programs.git.iniContent = cfg.settings;
       })
 
       (mkIf (cfg.includes != [ ]) {
