@@ -10,7 +10,7 @@ let
   cfg = config.services.pizauth;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.swarsel ];
+  meta.maintainers = [ lib.maintainers.swarsel ];
 
   options.services.pizauth = {
     enable = lib.mkEnableOption ''

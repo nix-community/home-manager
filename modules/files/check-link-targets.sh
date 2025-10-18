@@ -54,7 +54,10 @@ if [[ ${#collisionErrors[@]} -gt 0 ]] ; then
 " files automatically.
 - When used as a NixOS or nix-darwin module, set"\
 " 'home-manager.backupFileExtension'"\
-" to, for example, 'backup' and rebuild."
+" to, for example, 'backup' and rebuild.
+- Set 'force = true' on the related file options to forcefully overwrite"\
+" the files below. eg. 'xdg.configFile.\"mimeapps.list\".force = true'"
+
   for error in "${collisionErrors[@]}" ; do
     errorEcho "$error"
   done

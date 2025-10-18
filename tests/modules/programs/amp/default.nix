@@ -1,0 +1,1 @@
+{ amp-settings = ./settings.nix; }

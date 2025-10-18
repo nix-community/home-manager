@@ -327,10 +327,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = lib.mapAttrsToList (n: v: {
-      assertion = lib.xor (v.repository == null) (v.repositoryFile == null);
-      message = "services.restic.backups.${n}: exactly one of repository or repositoryFile should be set";
-    }) cfg.backups;
+    assertions = lib.flatten [
+      (lib.mapAttrsToList (n: v: {
+        assertion = lib.xor (v.repository == null) (v.repositoryFile == null);
+        message = "services.restic.backups.${n}: exactly one of repository or repositoryFile should be set";
+      }) cfg.backups)
+
+      {
+        assertion = pkgs.stdenv.hostPlatform.isLinux;
+        message = "services.restic: linux is currently the only supported platform";
+      }
+    ];
 
     systemd.user.services = lib.mapAttrs' (
       name: backup:
