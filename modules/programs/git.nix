@@ -48,27 +48,6 @@ in
           '';
         };
 
-        userName = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "Default user name to use.";
-        };
-
-        userEmail = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "Default user email to use.";
-        };
-
-        aliases = mkOption {
-          type = types.attrsOf types.str;
-          default = { };
-          example = {
-            co = "checkout";
-          };
-          description = "Git aliases to define.";
-        };
-
         signing = {
           key = mkOption {
             type = types.nullOr types.str;
@@ -296,17 +275,55 @@ in
       };
     };
 
-  imports = [
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "signing" "gpgPath" ]
-      [
+  imports =
+    let
+      oldPrefix = [
         "programs"
         "git"
-        "signing"
-        "signer"
+      ];
+      newPrefix = [
+        "programs"
+        "git"
+        "settings"
+      ];
+    in
+    [
+      (lib.mkRenamedOptionModule
+        [ "programs" "git" "signing" "gpgPath" ]
+        [
+          "programs"
+          "git"
+          "signing"
+          "signer"
+        ]
+      )
+      (lib.mkRenamedOptionModule [ "programs" "git" "extraConfig" ] [ "programs" "git" "settings" ])
+    ]
+    ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix
+      {
+        transform = x: x;
+      }
+      [
+        {
+          old = [ "userName" ];
+          new = [
+            "user"
+            "name"
+          ];
+        }
+        {
+          old = [ "userEmail" ];
+          new = [
+            "user"
+            "email"
+          ];
+        }
+        {
+          old = [ "aliases" ];
+          new = [ "alias" ];
+        }
       ]
-    )
-  ];
+    );
 
   config = mkIf cfg.enable (
     lib.mkMerge [
@@ -330,11 +347,6 @@ in
             message = "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' or 'programs.git.patdiff' can be set to true at the same time.";
           }
         ];
-
-        programs.git.iniContent.user = {
-          name = mkIf (cfg.userName != null) cfg.userName;
-          email = mkIf (cfg.userEmail != null) cfg.userEmail;
-        };
 
         xdg.configFile = {
           "git/config".text = lib.generators.toGitINI cfg.iniContent;
@@ -437,8 +449,6 @@ in
             toString (pkgs.linkFarm "git-hooks" entries);
         };
       })
-
-      (mkIf (cfg.aliases != { }) { programs.git.iniContent.alias = cfg.aliases; })
 
       (mkIf (cfg.settings != { }) {
         programs.git.iniContent = cfg.settings;

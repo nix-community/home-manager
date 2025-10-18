@@ -1,8 +1,12 @@
 {
   programs.git = {
     enable = true;
-    userName = "John Doe";
-    userEmail = "user@example.org";
+    settings = {
+      user = {
+        name = "John Doe";
+        email = "user@example.org";
+      };
+    };
 
     signing = {
       signer = "path-to-ssh";
