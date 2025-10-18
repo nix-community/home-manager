@@ -1,8 +1,10 @@
 {
   programs.diff-so-fancy = {
     enable = true;
-    markEmptyLines = false;
-    changeHunkIndicators = true;
+    settings = {
+      markEmptyLines = false;
+      changeHunkIndicators = true;
+    };
   };
   programs.git.enable = true;
 
