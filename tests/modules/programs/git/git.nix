@@ -29,15 +29,19 @@ in
     {
       enable = true;
       package = pkgs.gitMinimal;
-      aliases = {
-        a1 = "foo";
-        a2 = "bar";
-        escapes = ''"\n	'';
-      };
-      extraConfig = {
+      settings = {
+        alias = {
+          a1 = "foo";
+          a2 = "bar";
+          escapes = ''"\n	'';
+        };
         extra = {
           name = "value";
           multiple = [ 1 ];
+        };
+        user = {
+          email = "user@example.org";
+          name = "John Doe";
         };
       };
       ignores = [
@@ -66,30 +70,16 @@ in
         key = "00112233445566778899AABBCCDDEEFF";
         signByDefault = true;
       };
-      userEmail = "user@example.org";
-      userName = "John Doe";
       lfs.enable = true;
-      delta = {
-        enable = true;
-        options = {
-          features = "decorations";
-          whitespace-error-style = "22 reverse";
-          decorations = {
-            commit-decoration-style = "bold yellow box ul";
-            file-style = "bold yellow ul";
-            file-decoration-style = "none";
-          };
-        };
-      };
     }
 
     {
-      aliases.a2 = lib.mkForce "baz";
-      extraConfig."extra \"backcompat.with.dots\"".previously = "worked";
-      extraConfig.extra.boolean = true;
-      extraConfig.extra.integer = 38;
-      extraConfig.extra.multiple = [ 2 ];
-      extraConfig.extra.subsection.value = "test";
+      settings.alias.a2 = lib.mkForce "baz";
+      settings."extra \"backcompat.with.dots\"".previously = "worked";
+      settings.extra.boolean = true;
+      settings.extra.integer = 38;
+      settings.extra.multiple = [ 2 ];
+      settings.extra.subsection.value = "test";
     }
   ];
 

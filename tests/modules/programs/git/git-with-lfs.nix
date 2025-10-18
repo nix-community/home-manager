@@ -8,15 +8,14 @@
       };
     };
 
-    signing = {
-      signer = "path-to-gpg";
-      key = null;
-      signByDefault = true;
+    lfs = {
+      enable = true;
+      skipSmudge = true;
     };
   };
 
   nmt.script = ''
     assertFileExists home-files/.config/git/config
-    assertFileContent home-files/.config/git/config ${./git-without-signing-key-id-expected.conf}
+    assertFileContent home-files/.config/git/config ${./git-with-lfs-expected.conf}
   '';
 }

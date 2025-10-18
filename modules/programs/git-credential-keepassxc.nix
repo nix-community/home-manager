@@ -35,7 +35,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
-    programs.git.extraConfig.credential =
+    programs.git.settings.credential =
       let
         helperConfig =
           let
