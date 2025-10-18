@@ -9,4 +9,5 @@
   git-with-hooks = ./git-with-hooks.nix;
   git-with-lfs = ./git-with-lfs.nix;
   git-with-maintenance = ./git-with-maintenance.nix;
+  git-settings-deprecations = ./git-settings-deprecations.nix;
 }
