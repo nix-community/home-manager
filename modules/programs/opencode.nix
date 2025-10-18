@@ -114,7 +114,7 @@ in
       description = ''
         Custom agents for opencode.
         The attribute name becomes the agent filename, and the value is either:
-        - Inline content as a string  
+        - Inline content as a string
         - A path to a file containing the agent content
         Agents are stored in ~/.config/opencode/agent/ directory.
       '';
@@ -137,6 +137,16 @@ in
       '';
     };
 
+    themes = mkOption {
+      inherit (jsonFormat) type;
+      default = { };
+      description = ''
+        Custom themes for opencode. The attribute name becomes the theme filename.
+        Themes are stored in {file}`$XDG_CONFIG_HOME/opencode/themes/` directory.
+        Set `programs.opencode.settings.theme` to enable the custom theme.
+        See <https://opencode.ai/docs/themes/> for the documentation.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -167,6 +177,17 @@ in
       lib.nameValuePair "opencode/agent/${name}.md" (
         if lib.isPath content then { source = content; } else { text = content; }
       )
-    ) cfg.agents;
+    ) cfg.agents
+    // lib.mapAttrs' (
+      name: content:
+      lib.nameValuePair "opencode/themes/${name}.json" {
+        source = jsonFormat.generate "opencode-${name}.json" (
+          {
+            "$schema" = "https://opencode.ai/theme.json";
+          }
+          // content
+        );
+      }
+    ) cfg.themes;
   };
 }
