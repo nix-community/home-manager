@@ -2,8 +2,8 @@
 let
   supportedForks = {
     code-cursor = pkgs.code-cursor;
-    # kiro = pkgs.kiro;
-    # windsurf = pkgs.windsurf;
+    kiro = pkgs.kiro;
+    windsurf = pkgs.windsurf;
   };
 
   # currently only applies to Cursor and Windsurf
@@ -20,11 +20,11 @@ let
     };
 
   singleProfilePackages = lib.mapAttrs (
-    packageName: fork: mkPackageWithVersion packageName singleProfilePackageVersion
+    packageName: package: mkPackageWithVersion packageName singleProfilePackageVersion
   ) supportedForks;
 
   multipleProfilePackages = lib.mapAttrs (
-    packageName: fork: mkPackageWithVersion packageName multipleProfilePackageVersion
+    packageName: package: mkPackageWithVersion packageName multipleProfilePackageVersion
   ) supportedForks;
 
   # unknownPackage = pkgs.writeTextFile rec {
@@ -54,8 +54,8 @@ let
   #   k: v: lib.nameValuePair "vscode-${k}-unknown" (v unknownPackage)
   # ) tests;
   tests = {
-    empty-profiles = import ./profiles/empty-profiles.nix;
-    full-profiles = import ./profiles/full-profiles.nix;
+    profiles-empty = import ./profiles/profiles-empty.nix;
+    profiles-full = import ./profiles/profiles-full.nix;
     keybindings-immutable = import ./profiles/keybindings-immutable.nix;
     keybindings-mutable = import ./profiles/keybindings-mutable.nix;
     mcp-immutable = import ./profiles/mcp-immutable.nix;
