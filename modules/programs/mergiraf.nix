@@ -29,7 +29,7 @@ in
 
     programs.git = {
       attributes = [ "* merge=mergiraf" ];
-      extraConfig = {
+      settings = {
         merge = {
           mergiraf = {
             name = "mergiraf";

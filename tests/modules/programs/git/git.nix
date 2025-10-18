@@ -73,11 +73,12 @@ in
 
     {
       aliases.a2 = lib.mkForce "baz";
-      extraConfig."extra \"backcompat.with.dots\"".previously = "worked";
-      extraConfig.extra.boolean = true;
-      extraConfig.extra.integer = 38;
-      extraConfig.extra.multiple = [ 2 ];
-      extraConfig.extra.subsection.value = "test";
+      settings.alias.a2 = lib.mkForce "baz";
+      settings."extra \"backcompat.with.dots\"".previously = "worked";
+      settings.extra.boolean = true;
+      settings.extra.integer = 38;
+      settings.extra.multiple = [ 2 ];
+      settings.extra.subsection.value = "test";
     }
   ];
 
