@@ -29,9 +29,7 @@ in
 
     package = lib.mkPackageOption pkgs "cliphist" { };
 
-    clipboardPackage = lib.mkPackageOption pkgs "wl-clipboard" {
-      example = "pkgs.wl-clipboard-rs";
-    };
+    clipboardPackage = lib.mkPackageOption pkgs "wl-clipboard" { };
 
     allowImages = lib.mkOption {
       type = lib.types.bool;
