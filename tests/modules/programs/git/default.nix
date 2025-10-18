@@ -8,6 +8,7 @@
   git-without-signing-key-id = ./git-without-signing-key-id.nix;
   git-without-signing = ./git-without-signing.nix;
   git-with-hooks = ./git-with-hooks.nix;
+  git-with-lfs = ./git-with-lfs.nix;
   git-with-maintenance = ./git-with-maintenance.nix;
   git-patdiff = ./git-patdiff.nix;
 }
