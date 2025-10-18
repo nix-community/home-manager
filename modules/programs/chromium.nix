@@ -10,8 +10,6 @@ let
   supportedBrowsers = {
     chromium = "Chromium";
     google-chrome = "Google Chrome";
-    google-chrome-beta = "Google Chrome Beta";
-    google-chrome-dev = "Google Chrome Dev";
     brave = "Brave Browser";
     vivaldi = "Vivaldi Browser";
   };
@@ -166,8 +164,6 @@ let
       darwinDirs = {
         chromium = "Chromium";
         google-chrome = "Google/Chrome";
-        google-chrome-beta = "Google/Chrome Beta";
-        google-chrome-dev = "Google/Chrome Dev";
         brave = "BraveSoftware/Brave-Browser";
       };
 
@@ -244,16 +240,6 @@ in
         [
           "programs"
           "google-chrome"
-          "extensions"
-        ]
-        [
-          "programs"
-          "google-chrome-beta"
-          "extensions"
-        ]
-        [
-          "programs"
-          "google-chrome-dev"
           "extensions"
         ]
       ];
