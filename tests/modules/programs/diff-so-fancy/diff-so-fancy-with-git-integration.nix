@@ -2,9 +2,11 @@
   programs.diff-so-fancy = {
     enable = true;
     enableGitIntegration = true;
-    markEmptyLines = false;
-    changeHunkIndicators = true;
-    stripLeadingSymbols = false;
+    settings = {
+      markEmptyLines = false;
+      changeHunkIndicators = true;
+      stripLeadingSymbols = false;
+    };
   };
 
   programs.git.enable = true;
