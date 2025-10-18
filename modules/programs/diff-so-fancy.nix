@@ -18,36 +18,43 @@ in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
-  imports = [
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-so-fancy" "enable" ]
-      [ "programs" "diff-so-fancy" "enable" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-so-fancy" "pagerOpts" ]
-      [ "programs" "diff-so-fancy" "pagerOpts" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-so-fancy" "markEmptyLines" ]
-      [ "programs" "diff-so-fancy" "markEmptyLines" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-so-fancy" "changeHunkIndicators" ]
-      [ "programs" "diff-so-fancy" "changeHunkIndicators" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-so-fancy" "stripLeadingSymbols" ]
-      [ "programs" "diff-so-fancy" "stripLeadingSymbols" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-so-fancy" "useUnicodeRuler" ]
-      [ "programs" "diff-so-fancy" "useUnicodeRuler" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-so-fancy" "rulerWidth" ]
-      [ "programs" "diff-so-fancy" "rulerWidth" ]
-    )
-  ];
+  imports =
+    let
+      oldPrefix = [
+        "programs"
+        "diff-so-fancy"
+      ];
+      newPrefix = [
+        "programs"
+        "diff-so-fancy"
+        "settings"
+      ];
+      renamedOptions = [
+        "markEmptyLines"
+        "changeHunkIndicators"
+        "stripLeadingSymbols"
+        "useUnicodeRuler"
+        "rulerWidth"
+      ];
+    in
+    [
+      (lib.mkRenamedOptionModule
+        [ "programs" "git" "diff-so-fancy" "enable" ]
+        [ "programs" "diff-so-fancy" "enable" ]
+      )
+      (lib.mkRenamedOptionModule
+        [ "programs" "git" "diff-so-fancy" "pagerOpts" ]
+        [ "programs" "diff-so-fancy" "pagerOpts" ]
+      )
+    ]
+    ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix {
+      transform = x: x;
+    } renamedOptions)
+    ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules [
+      "programs"
+      "git"
+      "diff-so-fancy"
+    ] newPrefix { transform = x: x; } renamedOptions);
 
   options.programs.diff-so-fancy = {
     enable = mkEnableOption "diff-so-fancy, a diff colorizer";
@@ -63,53 +70,28 @@ in
       '';
     };
 
-    markEmptyLines = mkOption {
-      type = types.bool;
-      default = true;
-      example = false;
+    settings = mkOption {
+      type =
+        with types;
+        let
+          primitiveType = oneOf [
+            str
+            bool
+            int
+          ];
+        in
+        attrsOf primitiveType;
+      default = { };
+      example = {
+        markEmptyLines = true;
+        changeHunkIndicators = true;
+        stripLeadingSymbols = true;
+        useUnicodeRuler = true;
+        rulerWidth = 80;
+      };
       description = ''
-        Whether the first block of an empty line should be colored.
-      '';
-    };
-
-    changeHunkIndicators = mkOption {
-      type = types.bool;
-      default = true;
-      example = false;
-      description = ''
-        Simplify git header chunks to a more human readable format.
-      '';
-    };
-
-    stripLeadingSymbols = mkOption {
-      type = types.bool;
-      default = true;
-      example = false;
-      description = ''
-        Whether the `+` or `-` at
-        line-start should be removed.
-      '';
-    };
-
-    useUnicodeRuler = mkOption {
-      type = types.bool;
-      default = true;
-      example = false;
-      description = ''
-        By default, the separator for the file header uses Unicode
-        line-drawing characters. If this is causing output errors on
-        your terminal, set this to false to use ASCII characters instead.
-      '';
-    };
-
-    rulerWidth = mkOption {
-      type = types.nullOr types.int;
-      default = null;
-      example = false;
-      description = ''
-        By default, the separator for the file header spans the full
-        width of the terminal. Use this setting to set the width of
-        the file header manually.
+        Options to configure diff-so-fancy. See
+        <https://github.com/so-fancy/diff-so-fancy#configuration> for available options.
       '';
     };
 
@@ -155,13 +137,7 @@ in
             {
               core.pager = "${dsfCommand} | ${pkgs.less}/bin/less ${lib.escapeShellArgs cfg.pagerOpts}";
               interactive.diffFilter = "${dsfCommand} --patch";
-              diff-so-fancy = {
-                markEmptyLines = cfg.markEmptyLines;
-                changeHunkIndicators = cfg.changeHunkIndicators;
-                stripLeadingSymbols = cfg.stripLeadingSymbols;
-                useUnicodeRuler = cfg.useUnicodeRuler;
-                rulerWidth = mkIf (cfg.rulerWidth != null) cfg.rulerWidth;
-              };
+              diff-so-fancy = cfg.settings;
             };
         };
       })
