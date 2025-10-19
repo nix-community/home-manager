@@ -222,7 +222,7 @@ let
   hmSessionVarsUserEnvGenerator = {
     "systemd/user-environment-generators/05-home-manager.sh" = {
       text = ''
-        #!/bin/sh
+        #!${pkgs.bash}/bin/bash
 
         # Displays added or modified environment variables from sourcing one or more scripts.
         # Outputs in a clean KEY=VALUE format.
@@ -244,24 +244,12 @@ let
             before_env["$key"]="$value"
           done < <(env)
 
-          # Build the command to source all scripts and then print the env
-          local source_command=""
-          for script in "$@"; do
-            if [[ ! -f "$script" ]]; then
-              echo "Error: Script not found: $script" >&2
-              return 1
-            fi
-            source_command+=". '$script'; "
-          done
-          source_command+="env"
-
-          # Source scripts in a subshell and capture the "after" state
           declare -A after_env
           while IFS= read -r line; do
             local key="''${line%%=*}"
             local value="''${line#*=}"
             after_env["$key"]="$value"
-          done < <(bash -c "$source_command")
+          done < <(for f in "$@"; do source "$f"; done; env)
 
           # Compare maps and print added or modified variables
           for key in "''${!after_env[@]}"; do
