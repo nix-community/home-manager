@@ -54,8 +54,8 @@ let
   #   k: v: lib.nameValuePair "vscode-${k}-unknown" (v unknownPackage)
   # ) tests;
   tests = {
-    profiles-empty = import ./profiles/profiles-empty.nix;
-    profiles-full = import ./profiles/profiles-full.nix;
+    extensions-immutable = import ./profiles/extensions-immutable.nix;
+    extensions-mutable = import ./profiles/extensions-mutable.nix;
     keybindings-immutable = import ./profiles/keybindings-immutable.nix;
     keybindings-mutable = import ./profiles/keybindings-mutable.nix;
     mcp-immutable = import ./profiles/mcp-immutable.nix;

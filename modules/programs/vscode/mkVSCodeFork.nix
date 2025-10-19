@@ -24,99 +24,13 @@ let
   snippets = import ./profiles/snippets.nix { inherit cfg lib pkgs; };
   extensions = import ./profiles/extensions.nix { inherit cfg lib pkgs; };
 
-  inherit (helpers) jsonFormat toPretty;
-
-  # ++ extensions.profilesExtensionsFiles
-  # (snippets.profilesSnippetsFiles cfg.profiles)
-
-  # (lib.mapAttrsToList extensionsHelpers.profileExtensionsFiles cfg.profiles)
-  # (lib.mkIf (cfg.profiles != { }) (
-  #   if (cfg.mutableExtensionsDir && profiles.otherProfiles == { }) then
-  #     mkMutableExtensionsFiles
-  #   else
-  #     mkImmutableExtensionsFiles
-  # ))
-
-  # # extensions
-  # #
-  # appExtensionsPath =
-  #   if cfg.overridePaths ? extensions && cfg.overridePaths.extensions != null then
-  #     cfg.overridePaths.extensions
-  #   else
-  #     "${cfg.configDirectory}/extensions";
-
-  # allExtensions = lib.flatten (lib.mapAttrsToList (n: v: v.extensions) cfg.profiles);
-  # extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
-  # extensionJsonFile =
-  #   name: text:
-  #   pkgs.writeTextFile {
-  #     inherit text;
-  #     name = "extensions-json-${name}";
-  #     destination = "/share/vscode/extensions/extensions.json";
-  #   };
-
-  # supportsProfileExtensionsJson =
-  #   let
-  #     versionCheck = lib.versionAtLeast cfg.package.version "1.74.0";
-  #     pnameCheck = builtins.elem cfg.package.pname [
-  #       "code-cursor"
-  #       "windsurf"
-  #     ];
-  #   in
-  #   (versionCheck || pnameCheck);
-
-  # # Consolidated flags and helpers for extensions handling
-  # supportsDefaultProfileJson = supportsProfileExtensionsJson && hasDefaultProfile;
-
-  # # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-  # subDir = "share/vscode/extensions";
-
-  # toExtensionPathAttrs =
-  #   ext:
-  #   map (k: { "${appExtensionsPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
-  #     if ext ? vscodeExtUniqueId then
-  #       [ ext.vscodeExtUniqueId ]
-  #     else
-  #       builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
-  #   );
-
-  # mkMutableExtensionsFiles = lib.mkMerge (
-  #   builtins.trace "Mapping paths for extensions: ${toString allExtensions}" (
-  #     lib.concatMap toExtensionPathAttrs allExtensions
-  #     ++
-  #       lib.optional
-  #         (builtins.trace "Checking profile extensions support: supportsProfileExtensionsJson=${toString supportsProfileExtensionsJson}, hasDefaultProfile=${toString hasDefaultProfile}" supportsDefaultProfileJson)
-  #         {
-  #           # Whenever our immutable extensions.json changes, force the profile to regenerate
-  #           # extensions.json with both mutable and immutable extensions.
-  #           "${appExtensionsPath}/.extensions-immutable.json" = {
-  #             text = builtins.trace "Generating extension JSON for default profile" (
-  #               extensionJson defaultProfile.extensions
-  #             );
-  #             onChange = ''
-  #               run rm $VERBOSE_ARG -f "${appExtensionsPath}"/{extensions.json,.init-default-profile-extensions}
-  #               verboseEcho "Regenerating ${appName} extensions.json"
-  #               run ${lib.getExe cfg.package} --list-extensions > /dev/null
-  #             '';
-  #           };
-  #         }
-  #   )
-  # );
-
-  # mkImmutableExtensionsFiles = {
-  #   "${appExtensionsPath}".source =
-  #     let
-  #       combinedExtensionsDrv = pkgs.buildEnv {
-  #         name = "vscode-extensions";
-  #         paths =
-  #           allExtensions
-  #           ++ lib.optional supportsDefaultProfileJson (
-  #             extensionJsonFile "default" (extensionJson defaultProfile.extensions)
-  #           );
-  #       };
-  #     in
-  #     "${combinedExtensionsDrv}/${subDir}";
-  # };
+  homeFiles = lib.mkMerge (
+    lib.flatten [
+      profiles.configFiles
+      snippets.snippetFiles
+      extensions.extensionFiles
+    ]
+  );
 in
 {
   options = lib.setAttrByPath modulePath {
@@ -370,13 +284,7 @@ in
     ];
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file = lib.mkMerge (
-      lib.flatten [
-        profiles.configFiles
-        snippets.snippetFiles
-        extensions.extensionFiles
-      ]
-    );
+    home.file = homeFiles;
 
     # The file `${appUserDir}/globalStorage/storage.json` needs to be writable by VSCode,
     # since it contains other data, such as theme backgrounds, recently opened folders, etc.
