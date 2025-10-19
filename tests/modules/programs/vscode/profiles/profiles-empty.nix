@@ -1,18 +1,6 @@
-{
-  package,
-  packageName ? package.pname,
-  ...
-}@forkInputs:
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}@inputs:
+{ forkInputs, lib, ... }@inputs:
 let
-  helpers = import ../test-helpers.nix (forkInputs // inputs);
-
-  inherit (helpers) userDirectory;
+  inherit (import ../test-helpers.nix inputs) userDirectory;
 
   forkConfig = forkInputs // {
     profiles = {
@@ -20,38 +8,58 @@ let
       work = { };
     };
   };
+
+  mcpDirectory = if forkInputs.package.pname == "cursor" then ".cursor" else userDirectory;
 in
 {
-  config = lib.setAttrByPath [ "programs" package.pname ] forkConfig // {
+  config = lib.setAttrByPath [ "programs" forkInputs.package.pname ] forkConfig // {
     nmt.script = ''
-      echo "pname: ${package.pname}, packageName: ${packageName}"
-      echo "userDirectory: ${userDirectory}"
-
       # default profile: no files
       #
-      assertPathNotExists "home-files/${userDirectory}/.immutable-keybindings.json"
-      assertPathNotExists "home-files/${userDirectory}/.immutable-mcp.json"
-      assertPathNotExists "home-files/${userDirectory}/.immutable-settings.json"
-      assertPathNotExists "home-files/${userDirectory}/.immutable-tasks.json"
       assertPathNotExists "home-files/${userDirectory}/keybindings.json"
-      assertPathNotExists "home-files/${userDirectory}/mcp.json"
+      assertPathNotExists "home-files/${userDirectory}/.immutable-keybindings.json"
+
+      assertPathNotExists "home-files/${mcpDirectory}/mcp.json"
+      assertPathNotExists "home-files/${mcpDirectory}/.immutable-mcp.json"
+
       assertPathNotExists "home-files/${userDirectory}/settings.json"
-      assertPathNotExists "home-files/${userDirectory}/snippets/.immutable-global.code-snippets"
-      assertPathNotExists "home-files/${userDirectory}/snippets/global.code-snippets"
+      assertPathNotExists "home-files/${userDirectory}/.immutable-settings.json"
+
       assertPathNotExists "home-files/${userDirectory}/tasks.json"
+      assertPathNotExists "home-files/${userDirectory}/.immutable-tasks.json"
+
+      assertPathNotExists "home-files/${userDirectory}/snippets/global.code-snippets"
+      assertPathNotExists "home-files/${userDirectory}/snippets/.immutable-global.code-snippets"
+
+      assertPathNotExists "home-files/${userDirectory}/snippets/elixir.json"
+      assertPathNotExists "home-files/${userDirectory}/snippets/.immutable-elixir.json"
+
+      assertPathNotExists "home-files/${userDirectory}/snippets/haskell.json"
+      assertPathNotExists "home-files/${userDirectory}/snippets/.immutable-haskell.json"
 
       # work profile: no files
       #
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-keybindings.json"
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-mcp.json"
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-settings.json"
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-tasks.json"
       assertPathNotExists "home-files/${userDirectory}/profiles/work/keybindings.json"
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/mcp.json"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-keybindings.json"
+
+      assertPathNotExists "home-files/${mcpDirectory}/profiles/work/mcp.json"
+      assertPathNotExists "home-files/${mcpDirectory}/profiles/work/.immutable-mcp.json"
+
       assertPathNotExists "home-files/${userDirectory}/profiles/work/settings.json"
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/.immutable-global.code-snippets"
-      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/global.code-snippets"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/settings.json"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-settings.json"
+
       assertPathNotExists "home-files/${userDirectory}/profiles/work/tasks.json"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/.immutable-tasks.json"
+
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/global.code-snippets"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/.immutable-global.code-snippets"
+
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/elixir.json"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/.immutable-elixir.json"
+
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/haskell.json"
+      assertPathNotExists "home-files/${userDirectory}/profiles/work/snippets/.immutable-haskell.json"
     '';
   };
 }

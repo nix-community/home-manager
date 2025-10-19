@@ -1,32 +1,5 @@
 { lib, pkgs, ... }:
 let
-  supportedForks = {
-    code-cursor = pkgs.code-cursor;
-    kiro = pkgs.kiro;
-    windsurf = pkgs.windsurf;
-  };
-
-  # currently only applies to Cursor and Windsurf
-  #
-  singleProfilePackageVersion = "1.75.0";
-  multipleProfilePackageVersion = "1.74.0";
-
-  mkPackageWithVersion =
-    packageName: version:
-    pkgs.writeScriptBin packageName ""
-    // {
-      inherit version;
-      inherit (supportedForks.${packageName}) executableName longName pname;
-    };
-
-  singleProfilePackages = lib.mapAttrs (
-    packageName: package: mkPackageWithVersion packageName singleProfilePackageVersion
-  ) supportedForks;
-
-  multipleProfilePackages = lib.mapAttrs (
-    packageName: package: mkPackageWithVersion packageName multipleProfilePackageVersion
-  ) supportedForks;
-
   # unknownPackage = pkgs.writeTextFile rec {
   #   name = "${derivationArgs.pname}-${derivationArgs.version}";
   #   derivationArgs = {
@@ -40,76 +13,106 @@ let
   #   destination = "/lib/vscode/resources/app/product.json";
   #   passthru.longName = "Test VSCode Fork";
   # };
-
-  # tests = {
-  #   keybindings = import ./keybindings.nix;
-  #   tasks = import ./tasks.nix;
-  #   mcp = import ./mcp.nix;
-  #   update-checks = import ./update-checks.nix;
-  #   snippets = import ./snippets.nix;
-  # };
-
-  # knownTests = lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}-known" (v knownPackage)) tests;
-  # unknownTests = lib.mapAttrs' (
-  #   k: v: lib.nameValuePair "vscode-${k}-unknown" (v unknownPackage)
-  # ) tests;
-  tests = {
-    extensions-immutable = import ./profiles/extensions-immutable.nix;
-    extensions-mutable = import ./profiles/extensions-mutable.nix;
-    keybindings-immutable = import ./profiles/keybindings-immutable.nix;
-    keybindings-mutable = import ./profiles/keybindings-mutable.nix;
-    mcp-immutable = import ./profiles/mcp-immutable.nix;
-    mcp-mutable = import ./profiles/mcp-mutable.nix;
-    profiles-empty = import ./profiles/profiles-empty.nix;
-    profiles-full = import ./profiles/profiles-full.nix;
-    settings-immutable = import ./profiles/settings-immutable.nix;
-    settings-mutable = import ./profiles/settings-mutable.nix;
-    snippets-immutable = import ./profiles/snippets-immutable.nix;
-    snippets-mutable = import ./profiles/snippets-mutable.nix;
-    tasks-immutable = import ./profiles/tasks-immutable.nix;
-    tasks-mutable = import ./profiles/tasks-mutable.nix;
-    update-checks = import ./profiles/update-checks.nix;
-    update-checks-static = import ./profiles/update-checks-static.nix;
+  testModules = {
+    empty-profiles = import ./profiles/profiles-empty.nix;
+    extensions = import ./profiles/extensions.nix;
+    full-profiles = import ./profiles/profiles-full.nix;
+    keybindings = import ./profiles/keybindings.nix;
+    mcp = import ./profiles/mcp.nix;
+    settings = import ./profiles/settings.nix;
+    snippets = import ./profiles/snippets.nix;
+    tasks = import ./profiles/tasks.nix;
+    update-checks-file-path = import ./profiles/update-checks-file-path.nix;
+    update-checks-object = import ./profiles/update-checks-object.nix;
   };
 
-  buildTestListForPackage =
-    packageName: package:
-    lib.mapAttrs' (
-      testName: module:
-      lib.nameValuePair "vscode-factory-${package.pname}-${testName}" (module {
-        inherit package packageName;
+  supportedForks = {
+    # vscode = pkgs.vscode;
+    # vscodium = pkgs.vscodium;
+    # vscode-server = pkgs.openvscode-server;
+    # vscode-insiders = pkgs.vscode-insiders;
 
+    code-cursor = pkgs.code-cursor;
+    kiro = pkgs.kiro;
+    windsurf = pkgs.windsurf;
+  };
+
+  # Creates a mock VSCode fork package with specified version
+  #
+  mkPackageWithVersion =
+    packageName: version:
+    pkgs.writeScriptBin "${packageName}-${version}" ""
+    // {
+      inherit version;
+      inherit (supportedForks.${packageName})
+        executableName
+        longName
+        pname
+        ;
+    };
+
+  singleProfilePackages = lib.mapAttrs (
+    packageName: package: mkPackageWithVersion packageName "1.73.0"
+  ) supportedForks;
+
+  multiProfilePackages = lib.mapAttrs (
+    packageName: package: mkPackageWithVersion packageName "1.74.0"
+  ) supportedForks;
+
+  buildTest =
+    testName: forkConfig: testModule:
+    lib.nameValuePair "vscode-forks-${forkConfig.package.pname}-${testName}" (testModule {
+      inherit lib pkgs;
+
+      forkInputs = forkConfig // {
         enable = true;
-      })
-    ) tests;
+      };
+    });
 
-  singleProfileTests =
-    let
-      result = lib.mapAttrs buildTestListForPackage singleProfilePackages;
-      flattened = lib.foldl' (acc: tests: acc // tests) { } (lib.attrValues result);
-    in
-    # builtins.trace "singleProfileTests: ${builtins.toJSON result}" flattened;
-    flattened;
+  buildTestSuite =
+    groupName: forkConfig: testModules:
+    lib.mapAttrs' (
+      testName: testModule: buildTest "${groupName}-${testName}" forkConfig testModule
+    ) testModules;
 
-  multipleProfileTests =
-    let
-      result = lib.mapAttrs buildTestListForPackage multipleProfilePackages;
-      flattened = lib.foldl' (acc: tests: acc // tests) { } (lib.attrValues result);
-    in
-    # builtins.trace "multipleProfileTests: ${builtins.toJSON result}" flattened;
-    flattened;
+  buildTestSuiteForPackages =
+    groupName: forkConfig: packages:
+    lib.foldl' (acc: pkgTests: acc // pkgTests) { } (
+      lib.attrValues (
+        lib.mapAttrs (
+          packageName: package:
+          buildTestSuite groupName (forkConfig // { inherit package packageName; }) testModules
+        ) packages
+      )
+    );
+
+  singleProfileTests = buildTestSuiteForPackages "single-profile" { } singleProfilePackages;
+  multiProfileTests = buildTestSuiteForPackages "multi-profile" { } multiProfilePackages;
+
+  mutableProfileTests = buildTestSuiteForPackages "mutable-profile" {
+    mutableProfile = true;
+  } multiProfilePackages;
+
+  immutableProfileTests = buildTestSuiteForPackages "immutable-profile" {
+    mutableProfile = false;
+  } multiProfilePackages;
 
   # knownTests = lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}-known" (v knownPackage)) tests;
   # unknownTests = lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}-unknown" (v unknownPackage)) tests;
 
+  individualTests = lib.listToAttrs [
+    # (buildTest "my-individual-test" {
+    #   package = multiProfilePackages.code-cursor;
+    #   packageName = "code-cursor";
+    # } testModules.profiles-full)
+  ];
+
+  fullTestSuite = lib.foldl' (acc: tests: acc // tests) { } [
+    individualTests
+    singleProfileTests
+    multiProfileTests
+    mutableProfileTests
+    immutableProfileTests
+  ];
 in
-singleProfileTests // multipleProfileTests
-
-# {
-#   "vscode-factory-cursor-snippets-immutable" = import ./snippets/immutable.nix {
-#     inherit lib pkgs;
-
-#     package = multipleProfilePackages.code-cursor;
-#     packageName = "code-cursor"; # custom package name is required because code-cursor.pname = "cursor"
-#   };
-# }
+fullTestSuite

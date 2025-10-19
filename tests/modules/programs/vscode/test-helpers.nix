@@ -1,13 +1,15 @@
 {
+  forkInputs,
   lib,
-  package,
-  packageName ? package.pname,
   pkgs,
   ...
 }:
 rec {
   inherit (builtins) substring stringLength;
   inherit (lib.strings) toLower toUpper;
+  inherit (forkInputs) package;
+
+  isMutableProfile = ((forkInputs ? mutableProfile) && forkInputs.mutableProfile);
 
   capitalize =
     string: toUpper (substring 0 1 string) + toLower (substring 1 ((stringLength string) - 1) string);
@@ -48,7 +50,7 @@ rec {
 
   # keybindings configuration (json path)
   #
-  keybindingsJsonPath = builtins.toFile "${packageName}-keybindings.json.test" ''
+  keybindingsJsonPath = builtins.toFile "${package.pname}-keybindings.json.test" ''
     [
       {
         "args": null,
@@ -79,7 +81,7 @@ rec {
 
   # mcp configuration (json path)
   #
-  mcpJsonPath = builtins.toFile "${packageName}-mcp.json.test" ''
+  mcpJsonPath = builtins.toFile "${package.pname}-mcp.json.test" ''
     {
       "servers": {
         "echo": {
@@ -97,7 +99,7 @@ rec {
 
   # settings configuration (json path)
   #
-  settingsJsonPath = builtins.toFile "${packageName}-settings.json.test" ''
+  settingsJsonPath = builtins.toFile "${package.pname}-settings.json.test" ''
     {
       "files.autoSave": "on"
     }
@@ -118,7 +120,7 @@ rec {
 
   # tasks configuration (json path)
   #
-  tasksJsonPath = builtins.toFile "${packageName}-tasks.json.test" ''
+  tasksJsonPath = builtins.toFile "${package.pname}-tasks.json.test" ''
     {
       "tasks": [
         {
@@ -141,7 +143,7 @@ rec {
     };
   };
 
-  globalSnippetsJsonPath = builtins.toFile "${packageName}-user-global-snippets.json.test" ''
+  globalSnippetsJsonPath = builtins.toFile "${package.pname}-user-global-snippets.json.test" ''
     {
       "todo": {
         "body": [
@@ -169,7 +171,7 @@ rec {
     };
   };
 
-  elixirSnippetsJsonPath = builtins.toFile "${packageName}-user-elixir-snippets.json.test" ''
+  elixirSnippetsJsonPath = builtins.toFile "${package.pname}-user-elixir-snippets.json.test" ''
     {
       "pipepry": {
         "body": [
@@ -200,7 +202,7 @@ rec {
     };
   };
 
-  haskellSnippetsJsonPath = builtins.toFile "${packageName}-user-haskell-snippets.json.test" ''
+  haskellSnippetsJsonPath = builtins.toFile "${package.pname}-user-haskell-snippets.json.test" ''
     {
       "impl": {
         "body": [
