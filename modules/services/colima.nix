@@ -109,7 +109,6 @@ in
 
     programs.docker-cli.settings.currentContext = mkIf cfg.useAsDefaultContext "colima";
 
-    # Darwin configuration
     launchd.agents.colima = mkIf pkgs.stdenv.isDarwin {
       enable = true;
       config = {
@@ -127,7 +126,6 @@ in
       };
     };
 
-    # Linux configuration
     systemd.user.services.colima = mkIf pkgs.stdenv.isLinux {
       Unit = {
         Description = "Colima container runtime";
