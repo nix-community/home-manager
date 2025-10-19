@@ -68,6 +68,8 @@ let
     snippets-mutable = import ./profiles/snippets-mutable.nix;
     tasks-immutable = import ./profiles/tasks-immutable.nix;
     tasks-mutable = import ./profiles/tasks-mutable.nix;
+    update-checks = import ./profiles/update-checks.nix;
+    update-checks-static = import ./profiles/update-checks-static.nix;
   };
 
   buildTestListForPackage =

@@ -76,6 +76,26 @@ in
       type = lib.types.attrsOf (
         lib.types.submodule {
           options = {
+            enableUpdateCheck = lib.mkOption {
+              type = lib.types.nullOr lib.types.bool;
+              default = null;
+              description = ''
+                Whether to enable update checks/notifications.
+                Can only be set for the default profile, but
+                it applies to all profiles.
+              '';
+            };
+
+            enableExtensionUpdateCheck = lib.mkOption {
+              type = lib.types.nullOr lib.types.bool;
+              default = null;
+              description = ''
+                Whether to enable update notifications for extensions.
+                Can only be set for the default profile, but
+                it applies to all profiles.
+              '';
+            };
+
             extensions = lib.mkOption {
               type = lib.types.listOf lib.types.package;
               default = [ ];

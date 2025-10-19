@@ -48,6 +48,22 @@ rec {
       buildConfigContent =
         configKey: configValue:
         let
+          # store and path files cannot be modified, we can only modify object values that will
+          # be persisted in the store by this module.  the user must manage settings in the
+          # source file manually.
+          #
+          canUpdateConfig = !(isStorePath configValue);
+
+          # update checks/notifications are set for default profile only but apply to all profiles
+          #
+          disableUpdateCheck = (getAttrKey "enableUpdateCheck" profile) == false;
+          disableExtensionUpdateCheck = (getAttrKey "enableExtensionUpdateCheck" profile) == false;
+        in
+        if canUpdateConfig && isDefaultProfile && configKey == "settings" then
+          configValue
+          // lib.optionalAttrs (disableUpdateCheck) { "update.mode" = "none"; }
+          // lib.optionalAttrs (disableExtensionUpdateCheck) { "extensions.autoCheckUpdates" = false; }
+        else
           configValue;
     in
     {
