@@ -12,9 +12,11 @@ let
     package.pname
   ];
 
+  homeDirectory =
+    if pkgs.stdenv.hostPlatform.isDarwin then config.home.homeDirectory else config.xdg.configHome;
+
   cfg = lib.getAttrFromPath modulePath config // {
-    inherit (config.home) homeDirectory;
-    inherit packageName;
+    inherit homeDirectory packageName;
   };
 
   helpers = import ./path-helpers.nix { inherit cfg lib pkgs; };

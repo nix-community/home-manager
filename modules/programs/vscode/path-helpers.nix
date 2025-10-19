@@ -100,12 +100,11 @@ rec {
   capitalize =
     string: toUpper (substring 0 1 string) + toLower (substring 1 ((stringLength string) - 1) string);
 
+  isStorePath = value: builtins.isPath value || lib.isStorePath value;
+
   jsonSource =
     name: value:
-    if builtins.isPath value || lib.isStorePath value then
-      value
-    else
-      jsonFormat.generate "${cfg.package.pname}-${name}-json" value;
+    if isStorePath value then value else jsonFormat.generate "${cfg.package.pname}-${name}-json" value;
 
   hasValue = value: value != null && value != "" && value != [ ] && value != { };
   hasAttrKey = key: attrs: (builtins.hasAttr key attrs) && (hasValue attrs.${key});
@@ -113,15 +112,16 @@ rec {
 
   joinPaths = paths: lib.concatStringsSep "/" (lib.filter hasValue paths);
 
-  ## Home config directory: per app
-  #
-  #  Home config directory is inferred by the `package.pname` (lowercase).
-  #
-  #  - cursor: ~/.cursor
-  #  - vscode: ~/.vscode
-  #  - windsurf: ~/.windsurf
-  #
-  homeConfigDirectory = ".${toLower cfg.package.pname}";
+  getDefaultProfile = getAttrKey "default" cfg.profiles;
+  # getDefaultProfile = getAttrKey "default" cfg.profiles || { };
+  getOtherProfiles = lib.removeAttrs cfg.profiles [ "default" ];
+
+  hasDefaultProfile = hasAttrKey "default" cfg.profiles;
+  isDefaultProfile = profileName: profileName == "default";
+
+  isCursorMcp = configKey: cfg.packageName == "code-cursor" && configKey == "mcp";
+
+  globalSnippetKey = "global.code-snippets";
 
   ## Application user directory
   #
@@ -138,12 +138,13 @@ rec {
   #    - windsurf: ~/.config/Windsurf/User
   #
   appName = capitalize cfg.package.executableName;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 
-  userDirectory =
-    if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${appName}/User"
-    else
-      ".config/${appName}/User";
+  userDirectory = joinPaths [
+    cfg.homeDirectory
+    (if isDarwin then "Library/Application Support" else ".config")
+    "${appName}/User"
+  ];
 
   ## Extensions directory
   #
@@ -154,7 +155,15 @@ rec {
   #  - vscode: ~/.vscode/extensions
   #  - windsurf: ~/.windsurf/extensions
   #
-  extensionsDirectory = "${homeConfigDirectory}/extensions";
+  homeConfigDirectory = joinPaths [
+    cfg.homeDirectory
+    ".${toLower cfg.package.pname}"
+  ];
+
+  extensionsDirectory = joinPaths [
+    homeConfigDirectory
+    "extensions"
+  ];
 
   ## Profile directory
   #
@@ -194,17 +203,9 @@ rec {
   settingsDirectory =
     profileName: configKey:
     if isCursorMcp configKey && isDefaultProfile profileName then
-      joinPaths [
-        cfg.homeDirectory
-        homeConfigDirectory
-      ]
+      homeConfigDirectory
     else
       (profileDirectory profileName);
-
-  isCursorMcp = configKey: cfg.packageName == "code-cursor" && configKey == "mcp";
-  isDefaultProfile = profileName: profileName == "default";
-
-  globalSnippetKey = "global.code-snippets";
 
   mkConfigFile =
     {
