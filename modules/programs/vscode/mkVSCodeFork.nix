@@ -20,10 +20,9 @@ let
   helpers = import ./path-helpers.nix { inherit cfg lib pkgs; };
   profiles = import ./profiles/settings.nix { inherit cfg lib pkgs; };
   snippets = import ./profiles/snippets.nix { inherit cfg lib pkgs; };
+  extensions = import ./profiles/extensions.nix { inherit cfg lib pkgs; };
 
   inherit (helpers) jsonFormat toPretty;
-
-  profilesExtensionsFiles = [ ];
 
   # ++ extensions.profilesExtensionsFiles
   # (snippets.profilesSnippetsFiles cfg.profiles)
@@ -369,6 +368,14 @@ in
     ];
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
+    home.file = lib.mkMerge (
+      lib.flatten [
+        profiles.configFiles
+        snippets.snippetFiles
+        extensions.extensionFiles
+      ]
+    );
+
     # The file `${appUserDir}/globalStorage/storage.json` needs to be writable by VSCode,
     # since it contains other data, such as theme backgrounds, recently opened folders, etc.
 
@@ -411,15 +418,5 @@ in
         modifyGlobalStorage.outPath
       );
     };
-
-    # home.file = builtins.trace "[homeFiles] ${toPretty homeFiles}, [homeFilenames] ${toPretty homeFilenames}" homeFiles;
-    # homeFilenames = lib.flatten (lib.map builtins.attrNames homeFiles.contents);
-    home.file = lib.mkMerge (
-      lib.flatten [
-        profiles.configFiles
-        snippets.snippetFiles
-        profilesExtensionsFiles
-      ]
-    );
   };
 }

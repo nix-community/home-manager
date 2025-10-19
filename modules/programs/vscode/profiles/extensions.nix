@@ -1,0 +1,9 @@
+{
+  cfg,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  extensionFiles = [ ];
+}
