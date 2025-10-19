@@ -19,6 +19,8 @@ in
     enable = mkEnableOption "Colima, a container runtime";
 
     package = mkPackageOption pkgs "colima" { };
+    dockerPackage = lib.mkPackageOption pkgs "docker" { };
+    perlPackage = lib.mkPackageOption pkgs "perl" { };
 
     addDockerContext = mkOption {
       type = types.bool;
@@ -137,7 +139,7 @@ in
         Restart = "always";
         RestartSec = 2;
         Environment = [
-          "PATH=${cfg.package}/bin:${pkgs.perl}/bin:${pkgs.docker}/bin:/usr/bin:/usr/sbin:/sbin"
+          "PATH=${cfg.package}/bin:${cfg.perlPackage}/bin:${cfg.dockerPackage}/bin:/usr/bin:/usr/sbin:/sbin"
         ];
         StandardOutput = "append:${cfg.logFile}";
         StandardError = "append:${cfg.logFile}";
