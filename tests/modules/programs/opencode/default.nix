@@ -9,5 +9,6 @@
   opencode-agents-path = ./agents-path.nix;
   opencode-commands-path = ./commands-path.nix;
   opencode-mixed-content = ./mixed-content.nix;
-  opencode-themes = ./themes.nix;
+  opencode-themes-inline = ./themes-inline.nix;
+  opencode-themes-path = ./themes-path.nix;
 }
