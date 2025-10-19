@@ -141,10 +141,13 @@ in
     };
 
     themes = mkOption {
-      inherit (jsonFormat) type;
+      type = lib.types.attrsOf (lib.types.either jsonFormat.type lib.types.path);
       default = { };
       description = ''
-        Custom themes for opencode. The attribute name becomes the theme filename.
+        Custom themes for opencode. The attribute name becomes the theme
+        filename, and the value is either:
+        - An attribute set, that is converted to a json
+        - A path to a file conaining the content
         Themes are stored in {file}`$XDG_CONFIG_HOME/opencode/themes/` directory.
         Set `programs.opencode.settings.theme` to enable the custom theme.
         See <https://opencode.ai/docs/themes/> for the documentation.
@@ -188,14 +191,21 @@ in
     ) cfg.agents
     // lib.mapAttrs' (
       name: content:
-      lib.nameValuePair "opencode/themes/${name}.json" {
-        source = jsonFormat.generate "opencode-${name}.json" (
+      lib.nameValuePair "opencode/themes/${name}.json" (
+        if lib.isPath content then
           {
-            "$schema" = "https://opencode.ai/theme.json";
+            source = content;
           }
-          // content
-        );
-      }
+        else
+          {
+            source = jsonFormat.generate "opencode-${name}.json" (
+              {
+                "$schema" = "https://opencode.ai/theme.json";
+              }
+              // content
+            );
+          }
+      )
     ) cfg.themes;
   };
 }
