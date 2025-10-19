@@ -98,16 +98,6 @@ in
       source = yamlFormat.generate "colima.yaml" cfg.settings;
     };
 
-    # Set dynamic default for mountType based on vmType (Darwin/Linux-safe)
-    services.colima.settings.mountType = mkDefault (
-      if pkgs.stdenv.isDarwin && cfg.settings.vmType == "vz" then
-        "virtiofs"
-      else if cfg.settings.vmType == "qemu" then
-        "9p"
-      else
-        "sshfs"
-    );
-
     programs.docker-cli.contexts = mkIf cfg.addDockerContext {
       colima = {
         Metadata = {
