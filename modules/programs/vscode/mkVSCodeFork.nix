@@ -72,55 +72,6 @@ in
       '';
     };
 
-    overridePaths = lib.mkOption {
-      internal = true;
-      type = lib.types.submodule {
-        options = {
-          extensions = lib.mkOption {
-            type = lib.types.nullOr (
-              lib.types.oneOf [
-                lib.types.str
-                lib.types.path
-              ]
-            );
-            default = null;
-            # example = lib.literalExpression ".${lib.toLower helpers.appName}/extensions";
-            description = "Directory where extensions are stored.";
-          };
-
-          keybindings = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
-            default = null;
-            # example = "Library/Application Support/${helpers.appName}/User";
-            description = "Path where keybindings file is stored.";
-          };
-
-          mcp = lib.mkOption {
-            type = lib.types.nullOr lib.types.str;
-            default = null;
-            # example = "Library/Application Support/${helpers.appName}/User";
-            description = "Path where MCP configuration file is stored.";
-          };
-
-          settings = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
-            default = null;
-            # example = "Library/Application Support/${helpers.appName}/User";
-            description = "Path where settings file is stored.";
-          };
-
-          tasks = lib.mkOption {
-            type = lib.types.nullOr lib.types.path;
-            default = null;
-            # example = "Library/Application Support/${helpers.appName}/User";
-            description = "Path where tasks file is stored.";
-          };
-        };
-      };
-      default = { };
-      description = "Custom path configuration for different file types.";
-    };
-
     profiles = lib.mkOption {
       type = lib.types.attrsOf (
         lib.types.submodule {

@@ -7,9 +7,7 @@ rec {
   ## VS Code directories and config paths
   #
   # DISCLAIMER: most of the apps use the same paths to store their data adapted
-  # to the app name and other options, however there are some specific
-  # exceptions, which we must support by using the `overridePaths` option in
-  # the `mkVSCodeFork` function.
+  # to the app name and other options.
   #
   ## Supported VS Code forks:
   #
@@ -44,7 +42,6 @@ rec {
   ## Extensions directory: per app (home config directory + /extensions)
   #
   #  Extensions are installed in the home config directory.
-  #  It can be overridden using the `overridePaths.extensions` option.
   #
   #  - cursor: ~/.cursor/extensions
   #  - vscode: ~/.vscode/extensions
@@ -149,7 +146,6 @@ rec {
   ## Extensions directory
   #
   #  Extensions are installed in the home config directory.
-  #  It can be overridden using the `overridePaths.extensions` option.
   #
   #  - cursor: ~/.cursor/extensions
   #  - vscode: ~/.vscode/extensions
