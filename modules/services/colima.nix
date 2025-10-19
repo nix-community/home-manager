@@ -39,220 +39,55 @@ in
       description = "Combined stdout and stderr log file for the Colima service.";
     };
 
-    settings = mkOption {
-      type = types.submodule {
-        freeformType = yamlFormat.type;
-        options = {
-          cpu = mkOption {
-            type = types.int;
-            default = 2;
-            description = "Number of CPUs to be allocated to the virtual machine.";
-          };
-          disk = mkOption {
-            type = types.int;
-            default = 100;
-            description = "Size of the disk in GiB to be allocated to the virtual machine.";
-          };
-          memory = mkOption {
-            type = types.int;
-            default = 2;
-            description = "Size of the memory in GiB to be allocated to the virtual machine.";
-          };
-          arch = mkOption {
-            type = types.enum [
-              "x86_64"
-              "aarch64"
-              "host"
-            ];
-            default = "host";
-            description = "Architecture of the virtual machine.";
-          };
-          runtime = mkOption {
-            type = types.enum [
-              "docker"
-              "containerd"
-              "incus"
-            ];
-            default = "docker";
-            description = "Container runtime to be used.";
-          };
-          hostname = mkOption {
-            type = types.str;
-            default = "colima";
-            description = "Set custom hostname for the virtual machine.";
-          };
-          kubernetes = mkOption {
-            type = types.submodule {
-              options = {
-                enabled = mkOption {
-                  type = types.bool;
-                  default = false;
-                  description = "Enable kubernetes.";
-                };
-                version = mkOption {
-                  type = types.str;
-                  default = "v1.33.3+k3s1";
-                  description = "Kubernetes version to use.";
-                };
-                k3sArgs = mkOption {
-                  type = types.listOf types.str;
-                  default = [ "--disable=traefik" ];
-                  description = "Additional args to pass to k3s.";
-                };
-              };
-            };
-            default = { };
-            description = "Kubernetes configuration for the virtual machine.";
-          };
-          autoActivate = mkOption {
-            type = types.bool;
-            default = true;
-            description = "Auto-activate on the Host for client access.";
-          };
-          network = mkOption {
-            type = types.submodule {
-              options = {
-                address = mkOption {
-                  type = types.bool;
-                  default = false;
-                  description = "Assign reachable IP address to the virtual machine.";
-                };
-                dns = mkOption {
-                  type = types.listOf types.str;
-                  default = [ ];
-                  description = "Custom DNS resolvers for the virtual machine.";
-                };
-                dnsHosts = mkOption {
-                  type = types.attrsOf types.str;
-                  default = { };
-                  description = "DNS hostnames to resolve to custom targets.";
-                };
-                hostAddresses = mkOption {
-                  type = types.bool;
-                  default = false;
-                  description = "Replicate host IP addresses in the VM.";
-                };
-              };
-            };
-            default = { };
-            description = "Network configurations for the virtual machine.";
-          };
-          forwardAgent = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Forward the host's SSH agent to the virtual machine.";
-          };
-          docker = mkOption {
-            type = types.attrs;
-            default = { };
-            description = "Docker daemon configuration.";
-          };
-          vmType = mkOption {
-            type = types.enum [
-              "qemu"
-              "vz"
-            ];
-            default = if pkgs.stdenv.isDarwin then "vz" else "qemu";
-            defaultText = lib.literalExpression "\${if pkgs.stdenv.isDarwin then \"vz\" else \"qemu\"}";
-            description = "Virtual Machine type (vz only valid on macOS 13+).";
-          };
-          rosetta = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Utilise rosetta for amd64 emulation (Apple Silicon + vmType=vz only).";
-          };
-          binfmt = mkOption {
-            type = types.bool;
-            default = true;
-            description = "Enable foreign architecture emulation via binfmt.";
-          };
-          nestedVirtualization = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Enable nested virtualization.";
-          };
-          mountType = mkOption {
-            type = types.enum [
-              "virtiofs"
-              "9p"
-              "sshfs"
-            ];
-            description = "Volume mount driver for the virtual machine.";
-          };
-          mountInotify = mkOption {
-            type = types.bool;
-            default = true;
-            description = "Propagate inotify file events to the VM.";
-          };
-          cpuType = mkOption {
-            type = types.str;
-            default = "";
-            description = "The CPU type for the virtual machine.";
-          };
-          provision = mkOption {
-            type = types.listOf (
-              types.submodule {
-                options = {
-                  mode = mkOption {
-                    type = types.enum [
-                      "system"
-                      "user"
-                    ];
-                    description = "Mode for the provision script.";
-                  };
-                  script = mkOption {
-                    type = types.str;
-                    description = "The provision script.";
-                  };
-                };
-              }
-            );
-            default = [ ];
-            description = "Custom provision scripts for the virtual machine.";
-          };
-          sshConfig = mkOption {
-            type = types.bool;
-            default = true;
-            description = "Modify ~/.ssh/config automatically.";
-          };
-          sshPort = mkOption {
-            type = types.int;
-            default = 0;
-            description = "The port number for the SSH server.";
-          };
-          mounts = mkOption {
-            type = types.listOf (
-              types.submodule {
-                options = {
-                  location = mkOption {
-                    type = types.str;
-                    description = "Location to mount.";
-                  };
-                  writable = mkOption {
-                    type = types.bool;
-                    default = true;
-                    description = "Whether the mount is writable.";
-                  };
-                };
-              }
-            );
-            default = [ ];
-            description = "Configure volume mounts for the virtual machine.";
-          };
-          diskImage = mkOption {
-            type = types.str;
-            default = "";
-            description = "Specify a custom disk image.";
-          };
-          env = mkOption {
-            type = types.attrsOf types.str;
-            default = { };
-            description = "Environment variables for the virtual machine.";
-          };
-        };
-      };
+    settings = lib.mkOption {
+      type = lib.yamlFormat.type;
       default = { };
-      description = "Colima configuration settings.";
+      description = "Colima configuration settings, see <https://github.com/abiosoft/colima/blob/main/embedded/defaults/colima.yaml> or run `colima template`.";
+      example = lib.literalExpression ''
+        {
+          cpu = 2;
+          disk = 100;
+          memory = 2;
+          arch = "host";
+          runtime = "docker";
+          hostname = null;
+          kubernetes = {
+            enabled = false;
+            version = "v1.33.3+k3s1";
+            k3sArgs = [ "--disable=traefik" ];
+            port = 0;
+          };
+          autoActivate = true;
+          network = {
+            address = false;
+            mode = "shared";
+            interface = "en0";
+            preferredRoute = false;
+            dns = [ ];
+            dnsHosts = {
+              "host.docker.internal" = "host.lima.internal";
+            };
+            hostAddresses = false;
+          };
+          forwardAgent = false;
+          docker = { };
+          vmType = "qemu";
+          portForwarder = "ssh";
+          rosetta = false;
+          binfmt = true;
+          nestedVirtualization = false;
+          mountType = "sshfs";
+          mountInotify = false;
+          cpuType = "host";
+          provision = [ ];
+          sshConfig = true;
+          sshPort = 0;
+          mounts = [ ];
+          diskImage = "";
+          rootDisk = 20;
+          env = { };
+        }
+      '';
     };
   };
 
