@@ -113,7 +113,7 @@ in
       enable = true;
       config = {
         ProgramArguments = [
-          "${cfg.package}/bin/colima"
+          "${lib.getExe cfg.package}"
           "start"
           "-f"
           "--save-config=false"
@@ -133,7 +133,7 @@ in
         Wants = [ "network-online.target" ];
       };
       Service = {
-        ExecStart = "${cfg.package}/bin/colima start -f --save-config=false";
+        ExecStart = "${lib.getExe cfg.package} start -f --save-config=false";
         Restart = "always";
         RestartSec = 2;
         Environment = [
