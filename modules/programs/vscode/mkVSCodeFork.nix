@@ -417,7 +417,7 @@ in
     home.file = lib.mkMerge (
       lib.flatten [
         profiles.configFiles
-        snippets.profilesSnippetsFiles
+        snippets.snippetFiles
         profilesExtensionsFiles
       ]
     );

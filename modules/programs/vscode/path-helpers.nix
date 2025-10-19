@@ -204,17 +204,25 @@ rec {
   isCursorMcp = configKey: cfg.packageName == "code-cursor" && configKey == "mcp";
   isDefaultProfile = profileName: profileName == "default";
 
-  mkConfigFilePair =
-    profileName: storeDir: configKey: configValue:
+  globalSnippetKey = "global.code-snippets";
+
+  mkConfigFile =
+    {
+      storeKey,
+      storeDirectory,
+      sourceFilename,
+      content,
+    }:
     let
-      sourceFilename = configKey;
-      sourceFilePath = "${storeDir}/${sourceFilename}.json";
+      fileExtension = lib.optionalString (sourceFilename != globalSnippetKey) ".json";
 
       storeFilename = "${lib.optionalString cfg.mutableProfile ".immutable-"}${sourceFilename}";
-      storeFilePath = "${storeDir}/${storeFilename}.json";
 
-      configFile = {
-        source = jsonSource "${profileName}-user-${configKey}" configValue;
+      sourceFilePath = "${storeDirectory}/${sourceFilename}${fileExtension}";
+      storeFilePath = "${storeDirectory}/${storeFilename}${fileExtension}";
+
+      file = {
+        source = jsonSource (lib.replaceString "." "-" "${storeKey}-${storeFilename}") content;
 
         onChange = lib.mkIf cfg.mutableProfile ''
           echo "Regenerating file from source: ${storeFilename}.json -> ${sourceFilename}.json"
@@ -222,6 +230,5 @@ rec {
         '';
       };
     in
-    lib.nameValuePair storeFilePath configFile;
-
+    lib.nameValuePair storeFilePath file;
 }

@@ -8,7 +8,7 @@ rec {
     hasValue
     isCursorMcp
     isDefaultProfile
-    mkConfigFilePair
+    mkConfigFile
     settingsDirectory
     ;
 
@@ -19,23 +19,29 @@ rec {
   buildProfile =
     profileName: profile:
     let
+      storeKey = "profile-${profileName}-settings";
+
       isValidConfig =
         configKey: configValue:
         if isCursorMcp configKey && !isDefaultProfile profileName then false else hasValue configValue;
 
       profileConfigs = lib.filterAttrs isValidConfig profile;
-
-      buildConfigFile =
-        configKey: configValue:
-        mkConfigFilePair profileName (settingsDirectory profileName configKey) configKey configValue;
-
-      # debugging helpers for tracing
-      #
-      # profileConfigFiles = lib.mapAttrs' mkConfigFile profileAttrs;
-      # validProfileConfigKeys = lib.attrNames profileAttrs;
     in
     {
-      files = lib.mapAttrs' buildConfigFile profileConfigs;
+      files = lib.mapAttrs' (
+        sourceFilename: content:
+        let
+          storeDirectory = settingsDirectory profileName sourceFilename;
+        in
+        mkConfigFile {
+          inherit
+            storeKey
+            storeDirectory
+            sourceFilename
+            content
+            ;
+        }
+      ) profileConfigs;
     };
 
   configFiles = lib.map (profile: profile.files) (lib.mapAttrsToList buildProfile cfg.profiles);
