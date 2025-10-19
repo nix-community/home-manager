@@ -22,10 +22,12 @@ rec {
   # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
   extensionsSubDir = "share/${cfg.package.pname}/extensions";
 
-  # determines if the VS Code fork supports profile-based extensions.
+  # determines if the VS Code fork supports multiple profiles.
+  # this feature is available since VSCode v1.74.0.
   #
-  supportsProfileExtensions =
+  supportsMultiProfiles =
     let
+      # minVersionCheck = lib.versionAtLeast cfg.package.vscodeVersion "1.74.0";
       minVersionCheck = lib.versionAtLeast cfg.package.version "1.74.0";
 
       forkCheck = builtins.elem cfg.package.pname [
@@ -75,7 +77,7 @@ rec {
       extensionsFiles =
         [ ]
         ++ (lib.concatMap buildExtensionsPaths profilesExtensionsList)
-        ++ (lib.optional supportsProfileExtensions immutableExtensionsLinkFile);
+        ++ (lib.optional supportsMultiProfiles immutableExtensionsLinkFile);
     in
     {
       files = extensionsFiles;
@@ -114,9 +116,9 @@ rec {
               [ ]
               # add all the extensions from all profiles
               ++ profilesExtensionsList
-              # if the profile extensions are supported and the default profile is set
+              # if multiple profiles are supported and the default profile is set
               # then also add the default profile extensions json file
-              ++ lib.optional (supportsProfileExtensions && hasDefaultProfile) defaultProfileExtensionsJsonFile;
+              ++ lib.optional (supportsMultiProfiles && hasDefaultProfile) defaultProfileExtensionsJsonFile;
           };
         in
         {

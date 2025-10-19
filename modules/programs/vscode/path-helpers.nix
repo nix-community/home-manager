@@ -116,7 +116,7 @@ rec {
   hasDefaultProfile = hasAttrKey "default" cfg.profiles;
   isDefaultProfile = profileName: profileName == "default";
 
-  isCursorMcp = configKey: cfg.packageName == "code-cursor" && configKey == "mcp";
+  isCursorMcp = configKey: cfg.package.pname == "cursor" && configKey == "mcp";
 
   globalSnippetKey = "global.code-snippets";
 
