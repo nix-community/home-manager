@@ -4,8 +4,6 @@
   pkgs,
   ...
 }:
-
-with lib;
 let
   cfg = config.services.colima;
   yamlFormat = pkgs.formats.yaml { };
@@ -16,33 +14,33 @@ in
   ];
 
   options.services.colima = {
-    enable = mkEnableOption "Colima, a container runtime";
+    enable = lib.mkEnableOption "Colima, a container runtime";
 
-    package = mkPackageOption pkgs "colima" { };
+    package = lib.mkPackageOption pkgs "colima" { };
     dockerPackage = lib.mkPackageOption pkgs "docker" { };
     perlPackage = lib.mkPackageOption pkgs "perl" { };
 
-    addDockerContext = mkOption {
-      type = types.bool;
+    addDockerContext = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "Whether to add a Docker context for Colima.";
     };
 
-    useAsDefaultContext = mkOption {
-      type = types.bool;
+    useAsDefaultContext = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       description = "Whether to set Colima docker context as default";
     };
 
-    logFile = mkOption {
-      type = types.path;
+    logFile = lib.mkOption {
+      type = lib.types.path;
       default = "${config.home.homeDirectory}/.local/state/colima.log";
       defaultText = lib.literalExpression "\${config.home.homeDirectory}/.local/state/colima.log";
       description = "Combined stdout and stderr log file for the Colima service.";
     };
 
     settings = lib.mkOption {
-      type = lib.yamlFormat.type;
+      type = yamlFormat.type;
       default = { };
       description = "Colima configuration settings, see <https://github.com/abiosoft/colima/blob/main/embedded/defaults/colima.yaml> or run `colima template`.";
       example = lib.literalExpression ''
@@ -93,14 +91,14 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.file.".colima/default/colima.yaml" = {
+    home.file.".colima/default/colima.yaml" = lib.mkIf (cfg.settings != { }) {
       source = yamlFormat.generate "colima.yaml" cfg.settings;
     };
 
-    programs.docker-cli.contexts = mkIf cfg.addDockerContext {
+    programs.docker-cli.contexts = lib.mkIf cfg.addDockerContext {
       colima = {
         Metadata = {
           Description = "Colima container runtime";
@@ -109,9 +107,9 @@ in
       };
     };
 
-    programs.docker-cli.settings.currentContext = mkIf cfg.useAsDefaultContext "colima";
+    programs.docker-cli.settings.currentContext = lib.mkIf cfg.useAsDefaultContext "colima";
 
-    launchd.agents.colima = mkIf pkgs.stdenv.isDarwin {
+    launchd.agents.colima = lib.mkIf pkgs.stdenv.isDarwin {
       enable = true;
       config = {
         ProgramArguments = [
@@ -128,7 +126,7 @@ in
       };
     };
 
-    systemd.user.services.colima = mkIf pkgs.stdenv.isLinux {
+    systemd.user.services.colima = lib.mkIf pkgs.stdenv.isLinux {
       Unit = {
         Description = "Colima container runtime";
         After = [ "network-online.target" ];
