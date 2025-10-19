@@ -4,9 +4,7 @@
   pkgs,
 }@inputs:
 rec {
-  helpers = import ../path-helpers.nix inputs;
-
-  inherit (helpers)
+  inherit (import ../path-helpers.nix inputs)
     getAttrKey
     globalSnippetKey
     hasValue
@@ -17,9 +15,6 @@ rec {
   buildProfileSnippets =
     profileName: profile:
     let
-      storeKey = "profile-${profileName}-snippets";
-      storeDirectory = snippetsDirectory profileName;
-
       globalSnippets = (getAttrKey "globalSnippets" profile);
       languageSnippets = (getAttrKey "languageSnippets" profile);
 
@@ -28,6 +23,9 @@ rec {
         // (lib.optionalAttrs (hasValue globalSnippets) { "${globalSnippetKey}" = globalSnippets; })
         // (lib.optionalAttrs (hasValue languageSnippets) languageSnippets)
       );
+
+      storeDirectory = snippetsDirectory profileName;
+      storeKey = "profile-${profileName}-snippets";
     in
     {
       files = lib.mapAttrs' (
