@@ -5,9 +5,11 @@
 }@inputs:
 rec {
   inherit (import ../path-helpers.nix inputs)
+    getAttrKey
     hasValue
     isCursorMcp
     isDefaultProfile
+    isStorePath
     mkConfigFile
     settingsDirectory
     ;
@@ -19,28 +21,37 @@ rec {
   buildProfile =
     profileName: profile:
     let
+      isDefaultProfile = profileName == "default";
+
+      # cursor mcp settings are only valid for default profile
+      #
       isValidConfig =
         configKey: configValue:
-        if isCursorMcp configKey && !isDefaultProfile profileName then false else hasValue configValue;
+        if isCursorMcp configKey && !isDefaultProfile then false else hasValue configValue;
 
       profileConfigs = lib.filterAttrs isValidConfig profile;
 
       configStoreDirectory = settingsDirectory profileName;
       storeKey = "profile-${profileName}-settings";
+
+      buildConfig =
+        configKey: configValue:
+        mkConfigFile {
+          inherit storeKey;
+
+          sourceFilename = configKey;
+          storeDirectory = configStoreDirectory configKey;
+
+          content = buildConfigContent configKey configValue;
+        };
+
+      buildConfigContent =
+        configKey: configValue:
+        let
+          configValue;
     in
     {
-      files = lib.mapAttrs' (
-        sourceFilename: content:
-        mkConfigFile {
-          inherit
-            content
-            sourceFilename
-            storeKey
-            ;
-
-          storeDirectory = configStoreDirectory sourceFilename;
-        }
-      ) profileConfigs;
+      files = lib.mapAttrs' buildConfig profileConfigs;
     };
 
   configFiles = lib.map (profile: profile.files) (lib.mapAttrsToList buildProfile cfg.profiles);

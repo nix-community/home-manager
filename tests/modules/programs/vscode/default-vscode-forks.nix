@@ -60,6 +60,8 @@ let
     keybindings-mutable = import ./profiles/keybindings-mutable.nix;
     mcp-immutable = import ./profiles/mcp-immutable.nix;
     mcp-mutable = import ./profiles/mcp-mutable.nix;
+    profiles-empty = import ./profiles/profiles-empty.nix;
+    profiles-full = import ./profiles/profiles-full.nix;
     settings-immutable = import ./profiles/settings-immutable.nix;
     settings-mutable = import ./profiles/settings-mutable.nix;
     snippets-immutable = import ./profiles/snippets-immutable.nix;
