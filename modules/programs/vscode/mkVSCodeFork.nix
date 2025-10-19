@@ -84,7 +84,7 @@ in
             };
 
             globalSnippets = lib.mkOption {
-              type = jsonFormat.type;
+              type = helpers.jsonFormat.type;
               default = { };
               example = {
                 fixme = {
@@ -122,7 +122,7 @@ in
 
                       # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
                       args = lib.mkOption {
-                        type = lib.types.nullOr (jsonFormat.type);
+                        type = lib.types.nullOr (helpers.jsonFormat.type);
                         default = null;
                         example = {
                           direction = "up";
@@ -150,7 +150,7 @@ in
             };
 
             languageSnippets = lib.mkOption {
-              type = jsonFormat.type;
+              type = helpers.jsonFormat.type;
               default = { };
               example = {
                 haskell = {
@@ -165,7 +165,7 @@ in
             };
 
             mcp = lib.mkOption {
-              type = lib.types.either lib.types.path jsonFormat.type;
+              type = lib.types.either lib.types.path helpers.jsonFormat.type;
               default = { };
               example = lib.literalExpression ''
                 {
@@ -183,7 +183,7 @@ in
             };
 
             settings = lib.mkOption {
-              type = lib.types.either lib.types.path jsonFormat.type;
+              type = lib.types.either lib.types.path helpers.jsonFormat.type;
               default = { };
               example = lib.literalExpression ''
                 {
@@ -198,7 +198,7 @@ in
             };
 
             tasks = lib.mkOption {
-              type = lib.types.either lib.types.path jsonFormat.type;
+              type = lib.types.either lib.types.path helpers.jsonFormat.type;
               default = { };
               example = lib.literalExpression ''
                 {
@@ -217,7 +217,6 @@ in
                 This can be a JSON object or a path to a custom JSON file.
               '';
             };
-
           };
         }
       );
