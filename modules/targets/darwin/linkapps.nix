@@ -11,7 +11,8 @@ in
 {
   options.targets.darwin.linkApps = {
     enable = lib.mkEnableOption "linking macOS applications to the user environment" // {
-      default = pkgs.stdenv.hostPlatform.isDarwin;
+      default = pkgs.stdenv.hostPlatform.isDarwin && (lib.versionOlder config.home.stateVersion "25.11");
+      defaultText = lib.literalExpression ''pkgs.stdenv.hostPlatform.isDarwin && (lib.versionOlder config.home.stateVersion "25.11")'';
     };
 
     directory = lib.mkOption {
@@ -23,6 +24,10 @@ in
 
   config = lib.mkIf cfg.enable {
     assertions = [
+      {
+        assertion = !config.targets.darwin.copyApps.enable;
+        message = "This modules conflicts with `targets.darwin.copyApps`.";
+      }
       (lib.hm.assertions.assertPlatform "targets.darwin.linkApps" pkgs lib.platforms.darwin)
     ];
 
