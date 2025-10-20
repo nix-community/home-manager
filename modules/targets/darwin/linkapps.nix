@@ -6,12 +6,12 @@
 }:
 
 let
-  cfg = config.targets.darwin;
+  cfg = config.targets.darwin.linkApps;
 in
 {
   options.targets.darwin.linkApps = {
     enable = lib.mkEnableOption "linking macOS applications to the user environment" // {
-      default = true;
+      default = pkgs.stdenv.hostPlatform.isDarwin;
     };
 
     directory = lib.mkOption {
@@ -21,9 +21,13 @@ in
     };
   };
 
-  config = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.linkApps.enable) {
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "targets.darwin.linkApps" pkgs lib.platforms.darwin)
+    ];
+
     # Install MacOS applications to the user environment.
-    home.file.${cfg.linkApps.directory}.source =
+    home.file.${cfg.directory}.source =
       let
         apps = pkgs.buildEnv {
           name = "home-manager-applications";
