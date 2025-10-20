@@ -81,8 +81,9 @@ in
             '';
             inherit (cfg.package) meta;
           };
+          hasGitConfig = cfg.enableGitIntegration && config.programs.git.enable;
         in
-        if !cfg.enableGitIntegration && cfg.options != { } then wrappedDelta else cfg.package;
+        if !hasGitConfig && cfg.options != { } then wrappedDelta else cfg.package;
       description = ''
         The delta package with configuration wrapper applied.
 
