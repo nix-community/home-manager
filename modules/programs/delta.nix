@@ -79,6 +79,7 @@ in
               wrapProgram $out/bin/delta \
                 --add-flags "--config ${configFile}"
             '';
+            inherit (cfg.package) meta;
           };
         in
         if !cfg.enableGitIntegration && cfg.options != { } then wrappedDelta else cfg.package;
