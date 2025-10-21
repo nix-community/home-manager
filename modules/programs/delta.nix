@@ -100,29 +100,26 @@ in
       oldOptionEnabled =
         oldOption != null && oldOption.isDefined && (builtins.length oldOption.files) > 0;
     in
-    lib.mkMerge [
-      (lib.mkIf cfg.enable {
-        home.packages = [ cfg.finalPackage ];
+    lib.mkIf cfg.enable {
+      home.packages = [ cfg.finalPackage ];
 
-        programs.delta.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
+      programs.delta.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
 
-        warnings =
-          lib.optional
-            (cfg.enableGitIntegration && options.programs.delta.enableGitIntegration.highestPrio == 1490)
-            "`programs.delta.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.delta.enableGitIntegration = true`.";
+      warnings =
+        lib.optional
+          (cfg.enableGitIntegration && options.programs.delta.enableGitIntegration.highestPrio == 1490)
+          "`programs.delta.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.delta.enableGitIntegration = true`.";
 
-        programs.git.iniContent =
-          let
-            deltaCommand = lib.getExe cfg.package;
-          in
-          lib.mkMerge [
-            { delta = cfg.options; }
-            (lib.mkIf cfg.enableGitIntegration {
-              core.pager = deltaCommand;
-              interactive.diffFilter = "${deltaCommand} --color-only";
-            })
-          ];
-      })
-
-    ];
+      programs.git.iniContent =
+        let
+          deltaCommand = lib.getExe cfg.package;
+        in
+        lib.mkMerge [
+          { delta = cfg.options; }
+          (lib.mkIf cfg.enableGitIntegration {
+            core.pager = deltaCommand;
+            interactive.diffFilter = "${deltaCommand} --color-only";
+          })
+        ];
+    };
 }
