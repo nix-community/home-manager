@@ -110,18 +110,19 @@ in
           lib.optional
             (cfg.enableGitIntegration && options.programs.delta.enableGitIntegration.highestPrio == 1490)
             "`programs.delta.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.delta.enableGitIntegration = true`.";
-      })
 
-      (lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
         programs.git.iniContent =
           let
             deltaCommand = lib.getExe cfg.package;
           in
-          {
-            core.pager = deltaCommand;
-            interactive.diffFilter = "${deltaCommand} --color-only";
-            delta = cfg.options;
-          };
+          lib.mkMerge [
+            { delta = cfg.options; }
+            (lib.mkIf cfg.enableGitIntegration {
+              core.pager = deltaCommand;
+              interactive.diffFilter = "${deltaCommand} --color-only";
+            })
+          ];
       })
+
     ];
 }

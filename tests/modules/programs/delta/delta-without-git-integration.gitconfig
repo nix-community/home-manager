@@ -1,0 +1,14 @@
+[delta]
+	features = "line-numbers decorations"
+	syntax-theme = "Dracula"
+
+[delta "decorations"]
+	commit-decoration-style = "bold yellow box ul"
+	file-decoration-style = "none"
+	file-style = "bold yellow ul"
+
+[gpg]
+	format = "openpgp"
+
+[gpg "openpgp"]
+	program = "@gnupg@/bin/gpg"
