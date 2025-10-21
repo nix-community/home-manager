@@ -223,7 +223,7 @@ rec {
 
         onChange = lib.mkIf cfg.mutableProfile ''
           echo "Regenerating file from source: ${storeFilename}.json -> ${sourceFilename}.json"
-          run cp -vf "$HOME/${storeFilePath}" "$HOME/${sourceFilePath}"
+          run cp -vf "${storeFilePath}" "${sourceFilePath}"
         '';
       };
     in

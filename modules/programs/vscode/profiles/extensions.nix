@@ -20,7 +20,7 @@ rec {
   );
 
   # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-  extensionsSubDir = "share/${cfg.package.pname}/extensions";
+  extensionsSubDir = "share/vscode/extensions";
 
   # determines if the VS Code fork supports multiple profiles.
   # this feature is available since VSCode v1.74.0.
@@ -124,7 +124,7 @@ rec {
         {
           # immutable extensions directory: adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
           #
-          # ~/.cursor/extensions -> /nix/store/cursor-immutable-extensions-drv/share/cursor/extensions/extensions.json
+          # ~/.cursor/extensions -> /nix/store/cursor-immutable-extensions-drv/share/vscode/extensions/extensions.json
           "${extensionsDirectory}".source = joinPaths [
             immutableExtensionsJsonDrv
             extensionsSubDir
