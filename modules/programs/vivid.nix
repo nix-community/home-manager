@@ -37,7 +37,14 @@ in
     enableFishIntegration = mkFishIntegrationOption { inherit config; };
 
     colorMode = mkOption {
-      type = with types; nullOr str;
+      type =
+        with types;
+        nullOr (
+          either str (enum [
+            "8-bit"
+            "24-bit"
+          ])
+        );
       default = null;
       example = "8-bit";
       description = ''
