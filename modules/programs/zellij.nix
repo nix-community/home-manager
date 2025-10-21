@@ -274,12 +274,15 @@ in
         {
 
           "zellij/config.yaml" =
-            mkIf (cfg.settings != { } && (lib.versionOlder cfg.package.version "0.32.0"))
+            mkIf ((lib.versionOlder cfg.package.version "0.32.0") && cfg.settings != { })
               {
                 source = yamlFormat.generate "zellij.yaml" cfg.settings;
               };
           "zellij/config.kdl" =
-            mkIf (cfg.settings != { } && (lib.versionAtLeast cfg.package.version "0.32.0"))
+            mkIf
+              (
+                (lib.versionAtLeast cfg.package.version "0.32.0") && (cfg.settings != { } || cfg.extraConfig != "")
+              )
               {
                 text =
                   (lib.hm.generators.toKDL { } cfg.settings)

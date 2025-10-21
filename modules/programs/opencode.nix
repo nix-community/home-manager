@@ -45,8 +45,15 @@ in
     };
 
     rules = lib.mkOption {
-      type = lib.types.lines;
+      type = lib.types.either lib.types.lines lib.types.path;
       default = "";
+      description = ''
+         You can provide global custom instructions to opencode.
+         The value is either:
+         - Inline content as a string
+         - A path to a file containing the content
+        This value is written to {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
+      '';
       example = lib.literalExpression ''
         '''
           # TypeScript Project Rules
@@ -72,10 +79,6 @@ in
 
           Read the following file immediately as it's relevant to all workflows: @rules/general-guidelines.md.
         '''
-      '';
-      description = ''
-        You can provide global custom instructions to opencode; this value is
-        written to {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
       '';
     };
 
@@ -138,10 +141,13 @@ in
     };
 
     themes = mkOption {
-      inherit (jsonFormat) type;
+      type = lib.types.attrsOf (lib.types.either jsonFormat.type lib.types.path);
       default = { };
       description = ''
-        Custom themes for opencode. The attribute name becomes the theme filename.
+        Custom themes for opencode. The attribute name becomes the theme
+        filename, and the value is either:
+        - An attribute set, that is converted to a json
+        - A path to a file conaining the content
         Themes are stored in {file}`$XDG_CONFIG_HOME/opencode/themes/` directory.
         Set `programs.opencode.settings.theme` to enable the custom theme.
         See <https://opencode.ai/docs/themes/> for the documentation.
@@ -162,9 +168,14 @@ in
         );
       };
 
-      "opencode/AGENTS.md" = mkIf (cfg.rules != "") {
-        text = cfg.rules;
-      };
+      "opencode/AGENTS.md" = (
+        if lib.isPath cfg.rules then
+          { source = cfg.rules; }
+        else
+          (mkIf (cfg.rules != "") {
+            text = cfg.rules;
+          })
+      );
     }
     // lib.mapAttrs' (
       name: content:
@@ -180,14 +191,21 @@ in
     ) cfg.agents
     // lib.mapAttrs' (
       name: content:
-      lib.nameValuePair "opencode/themes/${name}.json" {
-        source = jsonFormat.generate "opencode-${name}.json" (
+      lib.nameValuePair "opencode/themes/${name}.json" (
+        if lib.isPath content then
           {
-            "$schema" = "https://opencode.ai/theme.json";
+            source = content;
           }
-          // content
-        );
-      }
+        else
+          {
+            source = jsonFormat.generate "opencode-${name}.json" (
+              {
+                "$schema" = "https://opencode.ai/theme.json";
+              }
+              // content
+            );
+          }
+      )
     ) cfg.themes;
   };
 }

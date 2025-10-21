@@ -237,4 +237,41 @@ rec {
           ) defs
         );
     };
+
+  SCFGDirectives =
+    let
+      inherit (types)
+        listOf
+        nullOr
+        submodule
+        ;
+      primType =
+        with types;
+        oneOf [
+          int
+          float
+          str
+          bool
+        ];
+      directive =
+        (submodule {
+          options = {
+            name = mkOption { type = types.str; };
+            params = mkOption {
+              type = nullOr (listOf primType);
+              default = null;
+            };
+            children = mkOption {
+              type = nullOr directives;
+              default = null;
+            };
+          };
+        })
+        // {
+          description = "test";
+        };
+      directives = listOf directive;
+    in
+    # directives;
+    lib.types.anything;
 }
