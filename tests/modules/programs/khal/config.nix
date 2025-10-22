@@ -58,6 +58,17 @@
           url = "https://example.com/events.ical";
         };
       };
+      testSinglefile = {
+        khal = {
+          enable = true;
+          readOnly = true;
+          addresses = [ "study@university.edu" ];
+        };
+        local = {
+          type = "singlefile";
+          path = "$XDG_CONFIG_HOME/cal/timetable.ics";
+        };
+      };
     };
   };
 
