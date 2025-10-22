@@ -23,6 +23,13 @@ priority=10
 type=calendar
 
 
+[[testSinglefile]]
+path = $XDG_CONFIG_HOME/cal/timetable.ics
+readonly = True
+addresses= study@university.edu
+priority=10
+type=calendar
+
 
 [[testcontacts-automaticallyCollected]]
 path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontacts/automaticallyCollected
