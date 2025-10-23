@@ -219,14 +219,7 @@ let
       };
     '';
 
-  systemdConfig = {
-    "systemd/user.conf".text = ''
-      [Manager]
-      ManagerEnvironment=SYSTEMD_ENVIRONMENT_GENERATOR_PATH=%h/.config/systemd/user-environment-generators:/run/systemd/user-environment-generators:/etc/systemd/user-environment-generators:/usr/local/lib/systemd/user-environment-generators:/usr/lib/systemd/user-environment-generators
-    '';
-  };
-
-  systemdSessionVarsUserEnvGenerator = {
+  hmSessionVarsUserEnvGenerator = {
     "systemd/user-environment-generators/05-home-manager.sh" = {
       text = ''
         #!${pkgs.bash}/bin/bash
@@ -418,12 +411,20 @@ in
       settings = mkOption {
         apply =
           sections:
+          let
+            generatorPath = "SYSTEMD_ENVIRONMENT_GENERATOR_PATH=%h/.config/systemd/user-environment-generators:/run/systemd/user-environment-generators:/etc/systemd/user-environment-generators:/usr/local/lib/systemd/user-environment-generators:/usr/lib/systemd/user-environment-generators";
+            managerEnv = sections.Manager.ManagerEnvironment or "";
+            finalManagerEnv = generatorPath + (if managerEnv == "" then "" else " " + managerEnv);
+            newManager = (sections.Manager or { }) // {
+              ManagerEnvironment = finalManagerEnv;
+            };
+          in
           sections
           // {
             # Setting one of these to an empty value would reset any
             # previous settings, so we’ll remove them instead if they
             # are not explicitly set.
-            Manager = removeIfEmpty sections.Manager [
+            Manager = removeIfEmpty newManager [
               "ManagerEnvironment"
               "DefaultEnvironment"
             ];
@@ -509,13 +510,11 @@ in
         ++ (buildServices "automount" cfg.automounts)
       ))
 
+      hmSessionVarsUserEnvGenerator
+
       sessionVariables
 
       settings
-
-      systemdConfig
-
-      systemdSessionVarsUserEnvGenerator
     ];
 
     # Run systemd service reload if user is logged in. If we're
