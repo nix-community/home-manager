@@ -232,7 +232,14 @@ let
       };
     '';
 
-  hmSessionVarsUserEnvGenerator = {
+  systemdConfig = {
+    "systemd/user.conf".text = ''
+      [Manager]
+      ManagerEnvironment=SYSTEMD_ENVIRONMENT_GENERATOR_PATH=%h/.config/systemd/user-environment-generators:/run/systemd/user-environment-generators:/etc/systemd/user-environment-generators:/usr/local/lib/systemd/user-environment-generators:/usr/lib/systemd/user-environment-generators
+    '';
+  };
+
+  systemdSessionVarsUserEnvGenerator = {
     "systemd/user-environment-generators/05-home-manager.sh" = {
       text = ''
         #!${pkgs.bash}/bin/bash
@@ -521,11 +528,13 @@ in
         ++ (buildServices "automount" cfg.automounts)
       ))
 
-      hmSessionVarsUserEnvGenerator
-
       sessionVariables
 
       settings
+
+      systemdConfig
+
+      systemdSessionVarsUserEnvGenerator
     ];
 
     xdg.dataFile = lib.mkIf (cfg.packages != [ ]) {
