@@ -124,7 +124,7 @@ in
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
 
-    package = lib.mkPackageOption pkgs "kitty" { };
+    package = lib.mkPackageOption pkgs "kitty" { nullable = true; };
 
     darwinLaunchOptions = mkOption {
       type = types.nullOr (types.listOf types.str);
@@ -293,7 +293,7 @@ in
       }
     ];
 
-    home.packages = [ cfg.package ] ++ optionalPackage cfg.font;
+    home.packages = (optionalPackage cfg) ++ (optionalPackage cfg.font);
 
     programs.kitty.extraConfig = mkMerge [
       (mkIf (cfg.font != null) (
