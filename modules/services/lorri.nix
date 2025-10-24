@@ -111,6 +111,7 @@ in
               '';
 
               notifyScript = pkgs.writeShellScript "lorri-notify" ''
+                set -o pipefail
                 lorri internal stream-events --kind live \
                   | jq --unbuffered '${jqFile}' \
                   | xargs -n 1 notify-send "Lorri Build"
