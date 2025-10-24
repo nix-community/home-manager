@@ -112,6 +112,7 @@ in
               '';
 
               notifyScript = pkgs.writeShellScript "lorri-notify" ''
+                set -o pipefail
                 lorri internal stream-events --kind live \
                   | jq --unbuffered -r '${jqFile}' \
                   | while IFS=$'\t' read -r status nixFile icon; do
