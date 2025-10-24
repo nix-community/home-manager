@@ -26,7 +26,7 @@ in
     assertions = [
       {
         assertion = !config.targets.darwin.copyApps.enable;
-        message = "This modules conflicts with `targets.darwin.copyApps`.";
+        message = "`targets.darwin.linkApps.enable` conflicts with `targets.darwin.copyApps.enable`. Please disable one of them.";
       }
       (lib.hm.assertions.assertPlatform "targets.darwin.linkApps" pkgs lib.platforms.darwin)
     ];
