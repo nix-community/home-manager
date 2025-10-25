@@ -1,6 +1,5 @@
 { lib, pkgs, ... }:
 let
-  inherit (builtins) toJSON trace;
 
   unknownPackage = pkgs.writeTextFile rec {
     name = "${derivationArgs.pname}-${derivationArgs.version}";
@@ -100,8 +99,6 @@ let
   };
 
   extensionsTests = lib.filterAttrs (n: v: lib.hasPrefix "extensions" n) testModules;
-  profilesTests = lib.filterAttrs (n: v: lib.hasPrefix "profile" n) testModules;
-  snippetsTests = lib.filterAttrs (n: v: lib.hasPrefix "snippets" n) testModules;
 in
 lib.foldl' (acc: tests: acc // tests) { } [
   (buildTestSuiteFor "single-profile-support-with-defaults" testModules singleProfilePackages { })
