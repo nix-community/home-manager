@@ -90,6 +90,7 @@ rec {
   #
   inherit (builtins) substring stringLength;
   inherit (lib.strings) toLower toUpper;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   jsonFormat = pkgs.formats.json { };
   toPretty = lib.generators.toPretty { };
@@ -110,10 +111,11 @@ rec {
   joinPaths = paths: lib.concatStringsSep "/" (lib.filter hasValue paths);
 
   getDefaultProfile = getAttrKey "default" cfg.profiles;
-  # getDefaultProfile = getAttrKey "default" cfg.profiles || { };
-  getOtherProfiles = lib.removeAttrs cfg.profiles [ "default" ];
+  hasDefaultProfile = getDefaultProfile != null;
 
-  hasDefaultProfile = hasAttrKey "default" cfg.profiles;
+  getOtherProfiles = lib.removeAttrs cfg.profiles [ "default" ];
+  hasOtherProfiles = getOtherProfiles != { };
+
   isDefaultProfile = profileName: profileName == "default";
 
   isCursorMcp = configKey: cfg.package.pname == "cursor" && configKey == "mcp";
@@ -135,7 +137,6 @@ rec {
   #    - windsurf: ~/.config/Windsurf/User
   #
   appName = capitalize cfg.package.executableName;
-  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 
   userDirectory = joinPaths [
     cfg.homeDirectory
@@ -151,12 +152,10 @@ rec {
   #  - vscode: ~/.vscode/extensions
   #  - windsurf: ~/.windsurf/extensions
   #
-  homeConfigDirectory = joinPaths [
-    cfg.homeDirectory
-    ".${toLower cfg.package.pname}"
-  ];
+  homeConfigDirectory = ".${toLower cfg.package.pname}";
 
-  extensionsDirectory = joinPaths [
+  extensionsDirectory = builtins.trace "homeConfigDirectory: ${homeConfigDirectory}" joinPaths [
+    cfg.homeDirectory
     homeConfigDirectory
     "extensions"
   ];
@@ -199,7 +198,7 @@ rec {
   settingsDirectory =
     profileName: configKey:
     if isCursorMcp configKey && isDefaultProfile profileName then
-      homeConfigDirectory
+      "${cfg.homeDirectory}/${homeConfigDirectory}"
     else
       (profileDirectory profileName);
 

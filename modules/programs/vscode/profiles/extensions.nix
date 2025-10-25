@@ -7,6 +7,7 @@
 rec {
   inherit (import ../path-helpers.nix inputs)
     extensionsDirectory
+    getAttrKey
     getDefaultProfile
     getOtherProfiles
     hasDefaultProfile
@@ -19,6 +20,7 @@ rec {
     lib.mapAttrsToList (n: profile: profile.extensions) cfg.profiles
   );
 
+  # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vscode/with-extensions.nix#L58
   # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
   extensionsSubDir = "share/vscode/extensions";
 
@@ -27,15 +29,14 @@ rec {
   #
   supportsMultiProfiles =
     let
-      # minVersionCheck = lib.versionAtLeast cfg.package.vscodeVersion "1.74.0";
-      minVersionCheck = lib.versionAtLeast cfg.package.version "1.74.0";
+      packageVersion =
+        if cfg.package ? vscodeVersion then cfg.package.vscodeVersion else cfg.package.version;
 
-      forkCheck = builtins.elem cfg.package.pname [
-        "cursor"
-        "windsurf"
-      ];
+      result = builtins.trace "packageVersion: ${packageVersion}" (
+        lib.versionAtLeast packageVersion "1.74.0"
+      );
     in
-    (minVersionCheck || forkCheck);
+    builtins.trace "supportsMultiProfiles: ${toString result}" result;
 
   buildExtensionsPaths =
     ext:
@@ -80,7 +81,7 @@ rec {
         ++ (lib.optional supportsMultiProfiles immutableExtensionsLinkFile);
     in
     {
-      files = extensionsFiles;
+      files = builtins.trace "mutable extensionsFiles: ${lib.generators.toPretty { } extensionsFiles}" extensionsFiles;
     };
 
   buildImmutableExtensionsFiles =
@@ -111,7 +112,7 @@ rec {
           # nix store derivation for the immutable extensions
           #
           immutableExtensionsJsonDrv = pkgs.buildEnv {
-            name = "${cfg.package.pname}-immutable-extensions-drv";
+            name = "${cfg.package.pname}-${storeKey}-drv";
             paths =
               [ ]
               # add all the extensions from all profiles
@@ -126,21 +127,32 @@ rec {
           #
           # ~/.cursor/extensions -> /nix/store/cursor-immutable-extensions-drv/share/vscode/extensions/extensions.json
           "${extensionsDirectory}".source = joinPaths [
-            immutableExtensionsJsonDrv
-            extensionsSubDir
+            (builtins.trace "immutableExtensionsJsonDrv: ${toString immutableExtensionsJsonDrv}" immutableExtensionsJsonDrv)
+            (builtins.trace "extensionsSubDir: ${extensionsSubDir}" extensionsSubDir)
           ];
         };
     in
     {
-      files = extensionsFiles;
+      files = builtins.trace "immutable extensionsFiles: ${lib.generators.toPretty { } extensionsFiles}" extensionsFiles;
     };
 
+  #   Core Decision Tree:
+  # - Single profile + mutable flag? → Mutable mode
+  # - Multiple profiles? → Immutable mode
+  # - Otherwise → Immutable mode
   extensionFiles =
     # mutable extensions are only supported for the default profile if no other profiles are set
     #
-    if (cfg.mutableExtensionsDir && getOtherProfiles == { }) then
-      lib.map (extensions: extensions.files) (lib.mapAttrsToList buildMutableExtensionsFiles cfg.profiles)
+    let
+      isMutableExtensionsDir = (cfg.mutableExtensionsDir && getOtherProfiles == { });
+    in
+    if
+      builtins.trace "isMutableExtensionsDir: ${toString isMutableExtensionsDir}" isMutableExtensionsDir
+    then
+      builtins.trace "building mutable extensions files" lib.map (extensions: extensions.files) (
+        lib.mapAttrsToList buildMutableExtensionsFiles cfg.profiles
+      )
     else
-      [ buildImmutableExtensionsFiles.files ];
+      builtins.trace "building immutable extensions files" [ buildImmutableExtensionsFiles.files ];
 
 }
