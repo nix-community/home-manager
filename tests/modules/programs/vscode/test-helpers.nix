@@ -9,6 +9,22 @@ rec {
   inherit (lib.strings) toLower toUpper;
   inherit (forkInputs) package;
 
+  # !! this is a hack to make the test module work for unknown forks
+  #
+  # mkVSCodeFork requires an existing/supported package name to apply its configuration,
+  # so we fallback to "vscode" for unknown forks.
+  #
+  vscodePackageName =
+    if forkInputs.package.pname == "unknown-fork" then "kiro" else forkInputs.package.pname;
+
+  vscodePackageVersion =
+    if forkInputs.package ? vscodeVersion then
+      forkInputs.package.vscodeVersion
+    else
+      forkInputs.package.version;
+
+  supportsMultiProfiles = lib.versionAtLeast vscodePackageVersion "1.74.0";
+
   isMutableProfile = ((forkInputs ? mutableProfile) && forkInputs.mutableProfile);
 
   capitalize =
