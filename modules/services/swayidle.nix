@@ -21,49 +21,45 @@ in
   options.services.swayidle =
     let
 
-      timeoutModule =
-        { ... }:
-        {
-          options = {
-            timeout = mkOption {
-              type = types.ints.positive;
-              example = 60;
-              description = "Timeout in seconds.";
-            };
+      timeoutModule = {
+        options = {
+          timeout = mkOption {
+            type = types.ints.positive;
+            example = 60;
+            description = "Timeout in seconds.";
+          };
 
-            command = mkOption {
-              type = types.str;
-              description = "Command to run after timeout seconds of inactivity.";
-            };
+          command = mkOption {
+            type = types.str;
+            description = "Command to run after timeout seconds of inactivity.";
+          };
 
-            resumeCommand = mkOption {
-              type = with types; nullOr str;
-              default = null;
-              description = "Command to run when there is activity again.";
-            };
+          resumeCommand = mkOption {
+            type = with types; nullOr str;
+            default = null;
+            description = "Command to run when there is activity again.";
           };
         };
+      };
 
-      eventModule =
-        { ... }:
-        {
-          options = {
-            event = mkOption {
-              type = types.enum [
-                "before-sleep"
-                "after-resume"
-                "lock"
-                "unlock"
-              ];
-              description = "Event name.";
-            };
+      eventModule = {
+        options = {
+          event = mkOption {
+            type = types.enum [
+              "before-sleep"
+              "after-resume"
+              "lock"
+              "unlock"
+            ];
+            description = "Event name.";
+          };
 
-            command = mkOption {
-              type = types.str;
-              description = "Command to run when event occurs.";
-            };
+          command = mkOption {
+            type = types.str;
+            description = "Command to run when event occurs.";
           };
         };
+      };
 
     in
     {

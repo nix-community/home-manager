@@ -17,23 +17,21 @@
         lib
         pkgs
         ;
-      configuration =
-        { ... }:
-        {
-          imports = modules ++ [
-            {
-              programs.home-manager.path = builtins.path {
-                path = ../.;
-                name = "source";
-              };
-            }
-          ];
+      configuration = {
+        imports = modules ++ [
+          {
+            programs.home-manager.path = builtins.path {
+              path = ../.;
+              name = "source";
+            };
+          }
+        ];
 
-          nixpkgs = {
-            config = lib.mkDefault pkgs.config;
+        nixpkgs = {
+          config = lib.mkDefault pkgs.config;
 
-            inherit (pkgs) overlays;
-          };
+          inherit (pkgs) overlays;
         };
+      };
     };
 }

@@ -1,20 +1,11 @@
 {
-  imports = [
-    (
-      { ... }:
-      {
-        config.programs.zsh.history.ignorePatterns = [ "echo *" ];
-      }
-    )
-    (
-      { ... }:
-      {
-        config.programs.zsh.history.ignorePatterns = [ "rm *" ];
-      }
-    )
-  ];
-
-  programs.zsh.enable = true;
+  programs.zsh = {
+    enable = true;
+    history.ignorePatterns = [
+      "echo *"
+      "rm *"
+    ];
+  };
 
   nmt.script = ''
     assertFileContains home-files/.zshrc "HISTORY_IGNORE='(echo *|rm *)'"

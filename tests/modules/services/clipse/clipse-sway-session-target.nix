@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.clipse = {
     enable = true;
