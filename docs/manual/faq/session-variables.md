@@ -17,8 +17,11 @@ way. In Bash and Z shell this can be done by adding
 to your `.profile` and `.zshrc` files, respectively. The
 `hm-session-vars.sh` file should work in most Bourne-like shells. For
 fish shell, it is possible to source it using [the foreign-env
-plugin](https://github.com/oh-my-fish/plugin-foreign-env)
+plugin](https://github.com/oh-my-fish/plugin-foreign-env) or using the builtin
+[babelfish](https://github.com/bouk/babelfish)-translated variables:
 
 ``` bash
 fenv source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" > /dev/null
+# or
+source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.fish"
 ```
