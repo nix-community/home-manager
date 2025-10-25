@@ -19,6 +19,7 @@ let
     tasksJsonObject
     tasksJsonPath
     userDirectory
+    vscodePackageName
     ;
 
   forkConfig = forkInputs // {
@@ -56,7 +57,7 @@ let
   mcpDirectory = if forkInputs.package.pname == "cursor" then ".cursor" else userDirectory;
 in
 {
-  config = lib.setAttrByPath [ "programs" forkInputs.package.pname ] forkConfig // {
+  config = lib.setAttrByPath [ "programs" vscodePackageName ] forkConfig // {
     nmt.script = ''
       # mutable profiles create immutable nix store files and mutable copies on activation
       # immutable profiles create immutable nix store files linked to the files themselves

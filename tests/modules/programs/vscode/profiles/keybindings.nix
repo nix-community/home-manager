@@ -5,6 +5,7 @@ let
     keybindingsJsonObject
     keybindingsJsonPath
     userDirectory
+    vscodePackageName
     ;
 
   # when multiple profiles are defined, they are immutable by default.
@@ -18,7 +19,7 @@ let
   };
 in
 {
-  config = lib.setAttrByPath [ "programs" forkInputs.package.pname ] forkConfig // {
+  config = lib.setAttrByPath [ "programs" vscodePackageName ] forkConfig // {
     nmt.script = ''
       # mutable profiles create immutable nix store files and mutable copies on activation
       # immutable profiles create immutable nix store files linked to the files themselves
