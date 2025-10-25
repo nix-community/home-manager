@@ -28,6 +28,9 @@ in
               ${lib.optionalString (
                 cfg.backupFileExtension != null
               ) "export HOME_MANAGER_BACKUP_EXT=${lib.escapeShellArg cfg.backupFileExtension}"}
+              ${lib.optionalString (
+                cfg.backupCommand != null
+              ) "export HOME_MANAGER_BACKUP_COMMAND=${lib.escapeShellArg cfg.backupCommand}"}
               ${lib.optionalString cfg.overwriteBackup "export HOME_MANAGER_BACKUP_OVERWRITE=1"}
               ${lib.optionalString cfg.verbose "export VERBOSE=1"}
               exec ${usercfg.home.activationPackage}/activate --driver-version ${driverVersion} >&2
