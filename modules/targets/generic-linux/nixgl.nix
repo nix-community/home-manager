@@ -6,7 +6,7 @@
 }:
 
 let
-  cfg = config.nixGL;
+  cfg = config.targets.genericLinux.nixGL;
 
   wrapperAttrNames = [
     "mesa"
@@ -21,7 +21,7 @@ in
 {
   meta.maintainers = [ lib.maintainers.smona ];
 
-  options.nixGL = {
+  options.targets.genericLinux.nixGL = {
     packages = lib.mkOption {
       type = with lib.types; nullOr attrs;
       default = null;

@@ -10,7 +10,7 @@
 }:
 
 {
-  options.nonNixosGpu =
+  options.targets.genericLinux.gpu =
     let
       inherit (lib)
         mkOption
@@ -22,8 +22,8 @@
     {
       enable = mkOption {
         type = types.bool;
-        default = config.targets.genericLinux.enable && config.nixGL.packages == null;
-        defaultText = literalExpression "config.targets.genericLinux.enable && config.nixGL.packages == null";
+        default = config.targets.genericLinux.enable && config.targets.genericLinux.nixGL.packages == null;
+        defaultText = literalExpression "config.targets.genericLinux.enable && config.targets.genericLinux.nixGL.packages == null";
         example = true;
         description = "Whether to enable GPU driver integration for non-NixOS systems.";
       };
@@ -69,7 +69,7 @@
 
   config =
     let
-      cfg = config.nonNixosGpu;
+      cfg = config.targets.genericLinux.gpu;
 
       # This builds the driver archive downloaded from download.nvidia.com
       nvidia =
@@ -85,12 +85,12 @@
             kernel = null;
           };
 
-      drivers = cfg.packages.callPackage ./non-nixos-gpu/gpu-libs-env.nix {
+      drivers = cfg.packages.callPackage ./gpu-libs-env.nix {
         addNvidia = cfg.nvidia.enable;
         nvidia_x11 = nvidia; # Only used if addNvidia is enabled
       };
 
-      setupPackage = cfg.packages.callPackage ./non-nixos-gpu/setup {
+      setupPackage = cfg.packages.callPackage ./setup {
         non-nixos-gpu-env = drivers;
       };
 
@@ -101,14 +101,14 @@
           assertion = !isNull cfg.nvidia.version;
           message = ''
             Nvidia proprietary driver is enabled, version must be given.
-            Please set nonNixosGpu.nvidia.version.
+            Please set targets.genericLinux.gpu.nvidia.version.
           '';
         }
         {
           assertion = !isNull cfg.nvidia.sha256;
           message = ''
             Nvidia proprietary driver is enabled, driver hash must be given.
-            Please set nonNixosGpu.nvidia.sha256.
+            Please set targets.genericLinux.gpu.nvidia.sha256.
           '';
         }
       ];

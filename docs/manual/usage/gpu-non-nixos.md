@@ -18,10 +18,11 @@ impossible to launch programs of the host OS from wrapped programs.
 
 ## When sudo is available: fixing the host OS {#sec-usage-gpu-sudo}
 
-The {option}`nonNixosGpu` module is automatically enabled whenever the option
-{option}`targets.genericLinux.enable` is set, which is recommended for non-NixOS
-Linux distributions in any case. The module can also be explicitly enabled by
-setting {option}`nonNixosGpu.enable`.
+The {option}`targets.genericLinux.gpu` module is automatically enabled whenever
+the option {option}`targets.genericLinux.enable` is set (unless
+[NixGL](#sec-usage-gpu-nosudo) is used instead), which is recommended for
+non-NixOS Linux distributions in any case. The module can also be explicitly
+enabled by setting {option}`targets.genericLinux.gpu.enable`.
 
 This module builds a directory containing GPU libraries. When activating the
 home configuration by `home-manager switch`, the host system is examined: for
@@ -52,11 +53,12 @@ sudo rm /etc/systemd/system/non-nixos-gpu.service
 
 ### GPU offloading {#sec-usage-gpu-offloading}
 
-You can use the {option}`nixGL.prime` module. It installs the `prime-offload`
-script which is configured through options under {option}`nixGL.prime`. This
-functionality is independent from the rest of NixGL and can be used when
-{option}`nixGL.packages` is left `null`, which it should be when using drivers
-from `/run/opengl-driver`.
+You can use the {option}`targets.genericLinux.nixGL.prime.installScript` option.
+It installs the `prime-offload` script which is configured through options under
+{option}`targets.genericLinux.nixGL.prime`. This functionality is independent
+from the rest of NixGL and can be used when
+{option}`targets.genericLinux.nixGL.packages` is left `null`, which it should be
+when using drivers from `/run/opengl-driver`.
 
 
 ### Nvidia drivers {#sec-usage-gpu-nvidia}
@@ -80,7 +82,7 @@ involved. You need to:
 1. Put this information into your home configuration. Example:
 
    ```nix
-   nonNixosGpu.nvidia = {
+   targets.genericLinux.gpu.nvidia = {
      enable = true;
      version = "550.163.01";
      sha256 = "sha256-74FJ9bNFlUYBRen7+C08ku5Gc1uFYGeqlIh7l1yrmi4=";
@@ -122,7 +124,8 @@ The problem typically manifests with errors similar to
 
 To enable the integration, import NixGL into your home configuration, either as
 a channel, or as a flake input passed via `extraSpecialArgs`. Then, set the
-`nixGL.packages` option to the package set provided by NixGL.
+`targets.genericLinux.nixGL.packages` option to the package set provided by
+NixGL.
 
 Once integration is enabled, it can be used in two ways: as Nix functions for
 wrapping programs installed via Home Manager, and as shell commands for running
@@ -150,10 +153,11 @@ different hardware. There is also the `config.lib.nixGL.wrapOffload` alias for
 two-GPU systems.
 
 Another convenience is that all wrapper functions are always available. However,
-when `nixGL.packages` option is unset, they are no-ops. This allows them to be
-used even when the home configuration is used on NixOS machines. The exception
-is the `prime-offload` script which ignores `nixGL.packages` and is installed
-into the environment whenever `nixGL.prime.installScript` is set. This script,
+when `targets.genericLinux.nixGL.packages` option is unset, they are no-ops.
+This allows them to be used even when the home configuration is used on NixOS
+machines. The exception is the `prime-offload` script which ignores
+`targets.genericLinux.nixGL.packages` and is installed into the environment
+whenever `targets.genericLinux.nixGL.prime.installScript` is set. This script,
 which can be used to start a program on a secondary GPU, does not depend on
 NixGL and is useful on NixOS systems as well.
 
@@ -167,10 +171,12 @@ demonstration purposes.
 ```nix
 { config, lib, pkgs, nixgl, ... }:
 {
-  nixGL.packages = nixgl.packages;
-  nixGL.defaultWrapper = "mesa";
-  nixGL.offloadWrapper = "nvidiaPrime";
-  nixGL.installScripts = [ "mesa" "nvidiaPrime" ];
+  targets.genericLinux.nixGL = {
+    packages = nixgl.packages;
+    defaultWrapper = "mesa";
+    offloadWrapper = "nvidiaPrime";
+    installScripts = [ "mesa" "nvidiaPrime" ];
+  };
 
   programs.mpv = {
     enable = true;
@@ -190,7 +196,7 @@ flake. When using channels, the example would instead begin with
 ```nix
 { config, lib, pkgs, ... }:
 {
-  nixGL.packages = import <nixgl> { inherit pkgs; };
+  targets.genericLinux.nixGL.packages = import <nixgl> { inherit pkgs; };
   # The rest is the same as above
   ...
 ```
