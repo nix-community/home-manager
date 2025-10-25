@@ -13,24 +13,30 @@ let
   ];
 
   homeDirectory =
-    if pkgs.stdenv.hostPlatform.isDarwin then config.home.homeDirectory else config.xdg.configHome;
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "${config.home.homeDirectory}"
+    else
+      "${config.xdg.configHome}";
 
   cfg = lib.getAttrFromPath modulePath config // {
     inherit homeDirectory;
   };
 
   helpers = import ./path-helpers.nix { inherit cfg lib pkgs; };
-  profiles = import ./profiles/settings.nix { inherit cfg lib pkgs; };
+  profiles = import ./profiles/profiles.nix { inherit cfg lib pkgs; };
   snippets = import ./profiles/snippets.nix { inherit cfg lib pkgs; };
   extensions = import ./profiles/extensions.nix { inherit cfg lib pkgs; };
 
+  files = lib.flatten [
+    profiles.configFiles
+    snippets.snippetFiles
+    extensions.extensionFiles
+  ];
+
   homeFiles = lib.mkMerge (
-    lib.flatten [
-      profiles.configFiles
-      snippets.snippetFiles
-      extensions.extensionFiles
-    ]
+    builtins.trace "profiles: ${builtins.toJSON (lib.attrNames cfg.profiles)}" files
   );
+  # homeFiles = lib.mkMerge files;
 in
 {
   options = lib.setAttrByPath modulePath {
