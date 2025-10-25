@@ -23,11 +23,22 @@ rec {
     let
       isDefaultProfile = profileName == "default";
 
-      # cursor mcp settings are only valid for default profile
-      #
+      validConfigKeys = [
+        "keybindings"
+        "mcp"
+        "settings"
+        "tasks"
+      ];
+
       isValidConfig =
         configKey: configValue:
-        if isCursorMcp configKey && !isDefaultProfile then false else hasValue configValue;
+        if builtins.elem configKey validConfigKeys then
+          # cursor mcp settings are only valid for default profile
+          # other config keys (settings, mcp) are valid for all profiles
+          #
+          if (isCursorMcp configKey) && !isDefaultProfile then false else hasValue configValue
+        else
+          false;
 
       profileConfigs = lib.filterAttrs isValidConfig profile;
 
@@ -67,7 +78,9 @@ rec {
           configValue;
     in
     {
-      files = lib.mapAttrs' buildConfig profileConfigs;
+      files = lib.mapAttrs' buildConfig (
+        builtins.trace "profileConfigs: ${builtins.toJSON profileConfigs}" profileConfigs
+      );
     };
 
   configFiles = lib.map (profile: profile.files) (lib.mapAttrsToList buildProfile cfg.profiles);
