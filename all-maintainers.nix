@@ -1019,6 +1019,13 @@
     name = "Fedi Jamoussi";
     source = "nixpkgs";
   };
+  emaiax = {
+    email = "emaiax@users.noreply.github.com";
+    github = "emaiax";
+    githubId = 1289661;
+    name = "Eduardo Maia";
+    source = "home-manager";
+  };
   epixtm = {
     email = "kami@epix.icu";
     github = "epixtm";

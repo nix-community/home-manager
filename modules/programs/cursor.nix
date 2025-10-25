@@ -14,7 +14,7 @@ let
   };
 in
 {
-  meta.maintainers = [ lib.maintainers.emaiax ];
+  meta.maintainers = [ lib.hm.maintainers.emaiax ];
 
   imports = lib.mapAttrsToList (
     packageName: package: import ./vscode/mkVSCodeFork.nix (inputs // { inherit package packageName; })
