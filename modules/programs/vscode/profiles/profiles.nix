@@ -78,9 +78,7 @@ rec {
           configValue;
     in
     {
-      files = lib.mapAttrs' buildConfig (
-        builtins.trace "profileConfigs: ${builtins.toJSON profileConfigs}" profileConfigs
-      );
+      files = lib.mapAttrs' buildConfig profileConfigs;
     };
 
   configFiles = lib.map (profile: profile.files) (lib.mapAttrsToList buildProfile cfg.profiles);

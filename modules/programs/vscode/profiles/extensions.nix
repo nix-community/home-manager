@@ -31,12 +31,8 @@ rec {
     let
       packageVersion =
         if cfg.package ? vscodeVersion then cfg.package.vscodeVersion else cfg.package.version;
-
-      result = builtins.trace "packageVersion: ${packageVersion}" (
-        lib.versionAtLeast packageVersion "1.74.0"
-      );
     in
-    builtins.trace "supportsMultiProfiles: ${toString result}" result;
+    lib.versionAtLeast packageVersion "1.74.0";
 
   buildExtensionsPaths =
     ext:
@@ -81,7 +77,7 @@ rec {
         ++ (lib.optional supportsMultiProfiles immutableExtensionsLinkFile);
     in
     {
-      files = builtins.trace "mutable extensionsFiles: ${lib.generators.toPretty { } extensionsFiles}" extensionsFiles;
+      files = extensionsFiles;
     };
 
   buildImmutableExtensionsFiles =
@@ -127,32 +123,22 @@ rec {
           #
           # ~/.cursor/extensions -> /nix/store/cursor-immutable-extensions-drv/share/vscode/extensions/extensions.json
           "${extensionsDirectory}".source = joinPaths [
-            (builtins.trace "immutableExtensionsJsonDrv: ${toString immutableExtensionsJsonDrv}" immutableExtensionsJsonDrv)
-            (builtins.trace "extensionsSubDir: ${extensionsSubDir}" extensionsSubDir)
+            immutableExtensionsJsonDrv
+            extensionsSubDir
           ];
         };
     in
     {
-      files = builtins.trace "immutable extensionsFiles: ${lib.generators.toPretty { } extensionsFiles}" extensionsFiles;
+      files = extensionsFiles;
     };
 
-  #   Core Decision Tree:
-  # - Single profile + mutable flag? → Mutable mode
-  # - Multiple profiles? → Immutable mode
-  # - Otherwise → Immutable mode
+  # mutable extensions are only supported for the default profile
+  # if no other profiles are set
+  #
   extensionFiles =
-    # mutable extensions are only supported for the default profile if no other profiles are set
-    #
-    let
-      isMutableExtensionsDir = (cfg.mutableExtensionsDir && getOtherProfiles == { });
-    in
-    if
-      builtins.trace "isMutableExtensionsDir: ${toString isMutableExtensionsDir}" isMutableExtensionsDir
-    then
-      builtins.trace "building mutable extensions files" lib.map (extensions: extensions.files) (
-        lib.mapAttrsToList buildMutableExtensionsFiles cfg.profiles
-      )
+    if (cfg.mutableExtensionsDir && getOtherProfiles == { }) then
+      lib.map (extensions: extensions.files) (lib.mapAttrsToList buildMutableExtensionsFiles cfg.profiles)
     else
-      builtins.trace "building immutable extensions files" [ buildImmutableExtensionsFiles.files ];
+      [ buildImmutableExtensionsFiles.files ];
 
 }

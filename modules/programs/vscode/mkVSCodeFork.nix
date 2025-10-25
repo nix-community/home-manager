@@ -27,16 +27,13 @@ let
   snippets = import ./profiles/snippets.nix { inherit cfg lib pkgs; };
   extensions = import ./profiles/extensions.nix { inherit cfg lib pkgs; };
 
-  files = lib.flatten [
-    profiles.configFiles
-    snippets.snippetFiles
-    extensions.extensionFiles
-  ];
-
   homeFiles = lib.mkMerge (
-    builtins.trace "profiles: ${builtins.toJSON (lib.attrNames cfg.profiles)}" files
+    lib.flatten [
+      profiles.configFiles
+      snippets.snippetFiles
+      extensions.extensionFiles
+    ]
   );
-  # homeFiles = lib.mkMerge files;
 in
 {
   options = lib.setAttrByPath modulePath {

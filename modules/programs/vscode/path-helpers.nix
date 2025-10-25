@@ -154,7 +154,7 @@ rec {
   #
   homeConfigDirectory = ".${toLower cfg.package.pname}";
 
-  extensionsDirectory = builtins.trace "homeConfigDirectory: ${homeConfigDirectory}" joinPaths [
+  extensionsDirectory = joinPaths [
     cfg.homeDirectory
     homeConfigDirectory
     "extensions"
