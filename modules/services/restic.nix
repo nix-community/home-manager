@@ -491,7 +491,7 @@ in
                     set -x
 
                     ${lib.optionalString (backup.backupPrepareCommand != null) ''
-                      ${pkgs.writeScript "backupPrepareCommand" backup.backupPrepareCommand}
+                      ${pkgs.writeShellScript "backupPrepareCommand" backup.backupPrepareCommand}
                     ''}
 
                     ${lib.optionalString (backup.initialize) ''
@@ -508,7 +508,7 @@ in
                     ''}
 
                     ${lib.optionalString (backup.dynamicFilesFrom != null) ''
-                      ${pkgs.writeScript "dynamicFilesFromScript" backup.dynamicFilesFrom} >> ${filesFromTmpFile}
+                      ${pkgs.writeShellScript "dynamicFilesFromScript" backup.dynamicFilesFrom} >> ${filesFromTmpFile}
                     ''}
                   '';
                 }
@@ -522,7 +522,7 @@ in
                     set -x
 
                     ${lib.optionalString (backup.backupCleanupCommand != null) ''
-                      ${pkgs.writeScript "backupCleanupCommand" backup.backupCleanupCommand}
+                      ${pkgs.writeShellScript "backupCleanupCommand" backup.backupCleanupCommand}
                     ''}
                   '';
                 }

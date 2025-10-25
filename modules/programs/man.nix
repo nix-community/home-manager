@@ -23,6 +23,16 @@ in
 
       package = lib.mkPackageOption pkgs "man" { };
 
+      extraConfig = mkOption {
+        type = types.lines;
+        default = "";
+        description = "Additional fields to be added to the end of the user manpath config file.";
+        example = ''
+          MANDATORY_MANPATH /usr/man
+          SECTION 1 n l 8 3 0 2 3type 5 4 9 6 7
+        '';
+      };
+
       generateCaches = mkOption {
         type = types.bool;
         default = false;
@@ -75,7 +85,8 @@ in
         in
         ''
           MANDB_MAP ${config.home.profileDirectory}/share/man ${manualCache}
-        '';
+        ''
+        + lib.optionalString (cfg.extraConfig != "") "\n${cfg.extraConfig}";
     };
   };
 }

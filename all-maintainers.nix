@@ -2257,6 +2257,13 @@
     name = "Willi Carlsen";
     source = "nixpkgs";
   };
+  will-lol = {
+    email = "will.bradshaw50@gmail.com";
+    github = "will-lol";
+    githubId = 65345408;
+    name = "William Bradshaw";
+    source = "home-manager";
+  };
   workflow = {
     email = "4farlion@gmail.com";
     github = "workflow";

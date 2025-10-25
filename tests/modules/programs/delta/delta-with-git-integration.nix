@@ -28,5 +28,8 @@
     assertFileContains home-files/.config/git/config 'commit-decoration-style = "bold yellow box ul"'
     assertFileContains home-files/.config/git/config 'file-decoration-style = "none"'
     assertFileContains home-files/.config/git/config 'file-style = "bold yellow ul"'
+
+    # the wrapper should be created only if git integration is disabled
+    assertPathNotExists home-path/bin/.delta-wrapped
   '';
 }

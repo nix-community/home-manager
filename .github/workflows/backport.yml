@@ -6,6 +6,11 @@ on:
     types:
       - closed
       - labeled
+
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   backport:
     name: Backport Pull Request
