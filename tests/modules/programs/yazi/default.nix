@@ -5,4 +5,5 @@
   yazi-zsh-integration-enabled = ./zsh-integration-enabled.nix;
   yazi-fish-integration-enabled = ./fish-integration-enabled.nix;
   yazi-nushell-integration-enabled = ./nushell-integration-enabled.nix;
+  yazi-xonsh-integration-enabled = ./xonsh-integration-enabled.nix;
 }
