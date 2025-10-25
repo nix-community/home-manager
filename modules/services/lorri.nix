@@ -100,6 +100,12 @@ in
         };
 
         Service = {
+          # Don't start until lorri daemon is actually running
+          ExecStartPre = pkgs.writeShellScript "lorri-notify-check" ''
+            lorri info --shell-file . | grep 'Lorri Daemon Status:.*running'
+          '';
+          RestartSec = "5s";
+
           ExecStart =
             let
               jqFile = ''
@@ -112,6 +118,7 @@ in
               '';
 
               notifyScript = pkgs.writeShellScript "lorri-notify" ''
+                set -o pipefail
                 lorri internal stream-events --kind live \
                   | jq --unbuffered -r '${jqFile}' \
                   | while IFS=$'\t' read -r status nixFile icon; do
@@ -128,6 +135,7 @@ in
                 with pkgs;
                 [
                   bash
+                  gnugrep
                   jq
                   libnotify
                   cfg.package
