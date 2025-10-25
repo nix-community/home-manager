@@ -29,6 +29,12 @@ let
     unset config
   '';
 
+  copyWritableFile = path: source: ''
+    mkdir -p $(dirname ${lib.escapeShellArg path})
+    cp ${lib.escapeShellArg source} ${lib.escapeShellArg path}
+    chmod 644 ${lib.escapeShellArg path}
+  '';
+
   mergedSettings =
     cfg.userSettings
     // (lib.optionalAttrs (builtins.length cfg.extensions > 0) {
@@ -113,6 +119,36 @@ in
         '';
       };
 
+      preserveUserSettings = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to preserve existing user settings when rebuilding.
+          When false, settings will be completely overwritten.
+          When true, existing settings will be merged with the configured ones.
+        '';
+      };
+
+      preserveUserKeymaps = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to preserve existing user keymaps when rebuilding.
+          When false, keymaps will be completely overwritten.
+          When true, existing keymaps will be merged with the configured ones.
+        '';
+      };
+
+      preserveUserTasks = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to preserve existing user tasks when rebuilding.
+          When false, tasks will be completely overwritten.
+          When true, existing tasks will be merged with the configured ones.
+        '';
+      };
+
       extensions = mkOption {
         type = types.listOf types.str;
         default = [ ];
@@ -193,25 +229,40 @@ in
     home.activation = mkMerge [
       (mkIf (mergedSettings != { }) {
         zedSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "{}" "$dynamic * $static" "${config.xdg.configHome}/zed/settings.json" (
-            jsonFormat.generate "zed-user-settings" mergedSettings
-          )
+          if cfg.preserveUserSettings then
+            impureConfigMerger "{}" "$dynamic * $static" "${config.xdg.configHome}/zed/settings.json" (
+              jsonFormat.generate "zed-user-settings" mergedSettings
+            )
+          else
+            copyWritableFile "${config.xdg.configHome}/zed/settings.json" (
+              jsonFormat.generate "zed-user-settings" mergedSettings
+            )
         );
       })
       (mkIf (cfg.userKeymaps != [ ]) {
         zedKeymapActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "[]"
-            "$dynamic + $static | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
-            "${config.xdg.configHome}/zed/keymap.json"
-            (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
+          if cfg.preserveUserKeymaps then
+            impureConfigMerger "[]"
+              "$dynamic + $static | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
+              "${config.xdg.configHome}/zed/keymap.json"
+              (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
+          else
+            copyWritableFile "${config.xdg.configHome}/zed/keymap.json" (
+              jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps
+            )
         );
       })
       (mkIf (cfg.userTasks != [ ]) {
         zedTasksActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "[]"
-            "$dynamic + $static | group_by(.label) | map(reduce .[] as $item ({}; . * $item))"
-            "${config.xdg.configHome}/zed/tasks.json"
-            (jsonFormat.generate "zed-user-tasks" cfg.userTasks)
+          if cfg.preserveUserTasks then
+            impureConfigMerger "[]"
+              "$dynamic + $static | group_by(.label) | map(reduce .[] as $item ({}; . * $item))"
+              "${config.xdg.configHome}/zed/tasks.json"
+              (jsonFormat.generate "zed-user-tasks" cfg.userTasks)
+          else
+            copyWritableFile "${config.xdg.configHome}/zed/tasks.json" (
+              jsonFormat.generate "zed-user-tasks" cfg.userTasks
+            )
         );
       })
     ];
