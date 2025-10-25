@@ -36,6 +36,8 @@ in
       '';
     };
 
+    package = lib.mkPackageOption pkgs "xdg-user-dirs" { nullable = true; };
+
     # Well-known directory list from
     # https://gitlab.freedesktop.org/xdg/xdg-user-dirs/blob/master/man/user-dirs.dirs.xml
 
@@ -101,45 +103,76 @@ in
       defaultText = literalExpression "{ }";
       example = literalExpression ''
         {
-          XDG_MISC_DIR = "''${config.home.homeDirectory}/Misc";
+          MISC = "''${config.home.homeDirectory}/Misc";
         }
       '';
-      description = "Other user directories.";
+      description = ''
+        Other user directories.
+
+        Prior to 25.11, these should be named like `XDG_MISC_DIR`.
+      '';
     };
 
     createDirectories = lib.mkEnableOption "automatic creation of the XDG user directories";
+
+    setSessionVariables = mkOption {
+      type = with types; bool;
+      default = lib.versionOlder config.home.stateVersion "25.11";
+      defaultText = literalExpression ''
+        lib.versionOlder config.home.stateVersion "25.11"
+      '';
+      description = ''
+        Whether to set the XDG user dir environment variables, like
+        `XDG_DESKTOP_DIR`. The recommended way to get these values is via the
+        `xdg-user-dir` command or by processing
+        `$XDG_CONFIG_HOME/user-dirs.dirs` directly in your application.
+
+        This defaults to `true` for state version < 25.11 and `false` otherwise.
+      '';
+    };
   };
 
   config =
     let
       directories =
         (lib.filterAttrs (n: v: !isNull v) {
-          XDG_DESKTOP_DIR = cfg.desktop;
-          XDG_DOCUMENTS_DIR = cfg.documents;
-          XDG_DOWNLOAD_DIR = cfg.download;
-          XDG_MUSIC_DIR = cfg.music;
-          XDG_PICTURES_DIR = cfg.pictures;
-          XDG_PUBLICSHARE_DIR = cfg.publicShare;
-          XDG_TEMPLATES_DIR = cfg.templates;
-          XDG_VIDEOS_DIR = cfg.videos;
+          DESKTOP = cfg.desktop;
+          DOCUMENTS = cfg.documents;
+          DOWNLOAD = cfg.download;
+          MUSIC = cfg.music;
+          PICTURES = cfg.pictures;
+          PUBLICSHARE = cfg.publicShare;
+          TEMPLATES = cfg.templates;
+          VIDEOS = cfg.videos;
         })
-        // cfg.extraConfig;
+        // (
+          if lib.versionOlder config.home.stateVersion "25.11" then
+            lib.mapAttrs' (
+              k:
+              let
+                name = lib.match "XDG_(.*)_DIR" k;
+              in
+              lib.nameValuePair (if name == null then k else lib.elemAt name 0)
+            ) cfg.extraConfig
+          else
+            cfg.extraConfig
+        );
+
+      bindings = lib.mapAttrs' (k: lib.nameValuePair "XDG_${k}_DIR") directories;
     in
     lib.mkIf cfg.enable {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "xdg.userDirs" pkgs lib.platforms.linux)
-      ];
-
       xdg.configFile."user-dirs.dirs".text =
         let
           # For some reason, these need to be wrapped with quotes to be valid.
-          wrapped = lib.mapAttrs (_: value: ''"${value}"'') directories;
+          wrapped = lib.mapAttrs (_: value: ''"${value}"'') bindings;
         in
         lib.generators.toKeyValue { } wrapped;
 
       xdg.configFile."user-dirs.conf".text = "enabled=False";
 
-      home.sessionVariables = directories;
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+      home.sessionVariables = lib.mkIf cfg.setSessionVariables bindings;
 
       home.activation.createXdgUserDirectories = lib.mkIf cfg.createDirectories (
         let
