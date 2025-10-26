@@ -1,15 +1,17 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
+
 {
-  config = {
-    home.packages = [
-      pkgs.comic-relief
-      pkgs.unifont
-    ];
+  fonts.fontconfig.enable = true;
 
-    fonts.fontconfig.enable = true;
+  # Use `realPkgs` here since the creation of the fontconfig cache relies on the
+  # `fc-cache` binary and actual (non-stubbed) fonts.
+  test.unstubs = [ (self: super: { inherit (realPkgs) fontconfig; }) ];
+  home.packages = [
+    realPkgs.comic-relief
+    realPkgs.unifont
+  ];
 
-    nmt.script = ''
-      assertDirectoryNotEmpty home-path/lib/fontconfig/cache
-    '';
-  };
+  nmt.script = ''
+    assertDirectoryNotEmpty home-path/lib/fontconfig/cache
+  '';
 }
