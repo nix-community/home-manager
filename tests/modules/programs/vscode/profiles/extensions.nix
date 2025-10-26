@@ -82,25 +82,11 @@ in
 {
   config = lib.setAttrByPath [ "programs" vscodePackageName ] forkConfig // {
     nmt.script = ''
-      echo "package: ${forkConfig.package.pname}, packageName: ${forkConfig.packageName}, vscodePackageName: ${vscodePackageName}"
-
       assertDirectoryExists "home-files/${extensionsPath}"
 
       if [[ -n "${toString isMutableExtensionsDir}" ]]; then
-        echo "!! MUTABLE !!"
-
-        if [[ -n "${toString supportsMultiProfiles}" ]]; then
-          echo "!! SUPPORTS MULTIPLE PROFILES !!"
-
-          assertFileExists "home-files/${extensionsPath}/.immutable-extensions.json"
-        else
-          echo "!! SUPPORTS SINGLE PROFILE !!"
-
-          assertPathNotExists "home-files/${extensionsPath}/.immutable-extensions.json"
-        fi;
+        assertFileExists "home-files/${extensionsPath}/.immutable-extensions.json"
       else
-        echo "!!IMMUTABLE !!"
-
         # the extensions directory is immutable and linked to the nix store derivation,
         # e.g. /nix/store/<hash>/package-name-profile-immutable-extensions-drv/share/vscode/extensions
         #
@@ -124,8 +110,6 @@ in
       # work profile: extensionB is only installed in the work profile
       #
       if [[ -n "${toString hasMultipleProfiles}" ]]; then
-        echo "!! HAS WORK PROFILE !!"
-
         assertDirectoryExists "home-files/${extensionsPath}/${extensionBId}"
         assertLinkExists "home-files/${extensionsPath}/${extensionBId}"
         assertLinkPointsTo "home-files/${extensionsPath}/${extensionBId}" "${extensionB}/share/vscode/extensions/${extensionBId}"
