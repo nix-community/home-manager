@@ -92,6 +92,11 @@ rec {
   inherit (lib.strings) toLower toUpper;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
+  vscodePackageVersion =
+    if cfg.package ? vscodeVersion then cfg.package.vscodeVersion else cfg.package.version;
+
+  supportsMultiProfiles = lib.versionAtLeast vscodePackageVersion "1.74.0";
+
   jsonFormat = pkgs.formats.json { };
   toPretty = lib.generators.toPretty { };
 
@@ -117,7 +122,6 @@ rec {
   hasOtherProfiles = getOtherProfiles != { };
 
   isDefaultProfile = profileName: profileName == "default";
-
   isCursorMcp = configKey: cfg.package.pname == "cursor" && configKey == "mcp";
 
   globalSnippetKey = "global.code-snippets";

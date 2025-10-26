@@ -5,140 +5,142 @@
   ...
 }@inputs:
 rec {
+  inherit (pkgs.vscode-utils) toExtensionJson;
+
   inherit (import ../path-helpers.nix inputs)
     extensionsDirectory
-    getAttrKey
     getDefaultProfile
     getOtherProfiles
     hasDefaultProfile
+    hasOtherProfiles
+    supportsMultiProfiles
     joinPaths
+    profileDirectory
     ;
 
-  inherit (pkgs.vscode-utils) toExtensionJson;
-
-  profilesExtensionsList = lib.flatten (
-    lib.mapAttrsToList (n: profile: profile.extensions) cfg.profiles
-  );
-
-  # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vscode/with-extensions.nix#L58
-  # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-  extensionsSubDir = "share/vscode/extensions";
-
-  # determines if the VS Code fork supports multiple profiles.
-  # this feature is available since VSCode v1.74.0.
+  # vscode extensions directory: https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vscode/with-extensions.nix#L60
+  # also adapted from: https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
   #
-  supportsMultiProfiles =
-    let
-      packageVersion =
-        if cfg.package ? vscodeVersion then cfg.package.vscodeVersion else cfg.package.version;
-    in
-    lib.versionAtLeast packageVersion "1.74.0";
+  vscodeShareExtensionsDirectory = "share/vscode/extensions";
 
+  # builds the extensions paths for a given extension
+  #
+  # - symlinks from the immutable extension directory to the nix store extension directory
+  # - extensions can be updated because it downloads a new version into the mutable extensions directory
+  #
   buildExtensionsPaths =
     ext:
     let
-      extensionPath = "${ext}/${extensionsSubDir}";
+      extensionPath = "${ext}/${vscodeShareExtensionsDirectory}";
 
       extensionsPaths =
         if ext ? vscodeExtUniqueId then
           [ ext.vscodeExtUniqueId ]
         else
           builtins.attrNames (builtins.readDir extensionPath);
-    in
-    lib.map (extPath: {
-      "${extensionsDirectory}/${extPath}".source = "${extensionPath}/${extPath}";
-    }) extensionsPaths;
 
-  buildMutableExtensionsFiles =
-    profileName: profile:
-    let
-      immutableExtensionsLinkFile = {
-        "${extensionsDirectory}/.immutable-extensions.json" = {
-          text = toExtensionJson profile.extensions;
-
-          onChange = ''
-            echo "Regenerating ${cfg.package.pname} ${extensionsDirectory}/extensions.json"
-
-            run rm $VERBOSE_ARG -f "${extensionsDirectory}"/{extensions.json,.init-default-profile-extensions}
-            run ${lib.getExe cfg.package} --list-extensions > /dev/null
-          '';
-        };
-      };
-
-      # mutable extensions (nix and user-managed extensions)
-      #
-      # - symlinks the extensions directory to the nix-store extensions directory (in the build environment)
-      # - creates a symlink to the immutable extensions.json file in the nix-store extensions directory
-      # - the extensions directory is mutable and can be modified by the user
-      #
-      extensionsFiles =
-        [ ]
-        ++ (lib.concatMap buildExtensionsPaths profilesExtensionsList)
-        ++ (lib.optional supportsMultiProfiles immutableExtensionsLinkFile);
-    in
-    {
-      files = extensionsFiles;
-    };
-
-  buildImmutableExtensionsFiles =
-    let
-      storeKey = "profile-immutable-extensions";
-
-      mkVSCodeExtensionFile =
-        name: text:
-        pkgs.writeTextFile {
-          inherit text;
-
-          name = "${name}-extensions-json";
-          destination = "/${extensionsSubDir}/extensions.json";
-        };
-
-      # immutable extensions (only nix-managed extensions)
-      #
-      # - creates a single build environment containing all extensions
-      # - symlinks the entire extensions directory to this build environment
-      # - no user extensions allowed - purely nix-managed
-      #
-      extensionsFiles =
+      buildPath =
+        extPath:
         let
-          defaultProfileExtensionsJsonFile = mkVSCodeExtensionFile "default" (
-            toExtensionJson getDefaultProfile.extensions
-          );
-
-          # nix store derivation for the immutable extensions
-          #
-          immutableExtensionsJsonDrv = pkgs.buildEnv {
-            name = "${cfg.package.pname}-${storeKey}-drv";
-            paths =
-              [ ]
-              # add all the extensions from all profiles
-              ++ profilesExtensionsList
-              # if multiple profiles are supported and the default profile is set
-              # then also add the default profile extensions json file
-              ++ lib.optional (supportsMultiProfiles && hasDefaultProfile) defaultProfileExtensionsJsonFile;
-          };
+          pathKey = joinPaths [
+            extensionsDirectory
+            extPath
+          ];
+          pathValue = joinPaths [
+            extensionPath
+            extPath
+          ];
         in
         {
-          # immutable extensions directory: adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-          #
-          # ~/.cursor/extensions -> /nix/store/cursor-immutable-extensions-drv/share/vscode/extensions/extensions.json
-          "${extensionsDirectory}".source = joinPaths [
-            immutableExtensionsJsonDrv
-            extensionsSubDir
-          ];
+          "${pathKey}".source = pathValue;
         };
     in
-    {
-      files = extensionsFiles;
+    lib.map buildPath extensionsPaths;
+
+  allExtensions = lib.flatten (lib.mapAttrsToList (n: profile: profile.extensions) cfg.profiles);
+
+  createExtensionSymlinks = extensions: lib.concatMap buildExtensionsPaths extensions;
+
+  createExtensionJsonFile =
+    profileName: extensions:
+    pkgs.writeTextFile {
+      name = "${profileName}-extensions-json";
+      text = toExtensionJson extensions;
+      destination = "/${vscodeShareExtensionsDirectory}/extensions.json";
     };
 
-  # mutable extensions are only supported for the default profile
-  # if no other profiles are set
-  #
-  extensionFiles =
-    if (cfg.mutableExtensionsDir && getOtherProfiles == { }) then
-      lib.map (extensions: extensions.files) (lib.mapAttrsToList buildMutableExtensionsFiles cfg.profiles)
-    else
-      [ buildImmutableExtensionsFiles.files ];
+  createImmutableProfileExtensionsJson =
+    profiles:
+    lib.mapAttrs' (
+      profileName: profile:
+      let
+        extensionJsonFile = createExtensionJsonFile profileName profile.extensions;
+      in
+      lib.nameValuePair "${profileDirectory profileName}/extensions.json" {
+        source = (
+          joinPaths [
+            extensionJsonFile
+            vscodeShareExtensionsDirectory
+            "extensions.json"
+          ]
+        );
+      }
+    ) profiles;
 
+  createMutableProfileExtensionsJson =
+    profiles:
+    lib.mapAttrs' (
+      profileName: profile:
+      lib.nameValuePair "${extensionsDirectory}/.immutable-extensions.json" {
+        text = toExtensionJson profile.extensions;
+
+        onChange = ''
+          echo "Regenerating ${cfg.package.pname} ${extensionsDirectory}/extensions.json"
+
+          run rm $VERBOSE_ARG -f "${extensionsDirectory}"/{extensions.json,.init-default-profile-extensions}
+          run $VERBOSE_ARG ${lib.getExe cfg.package} --list-extensions > /dev/null
+        '';
+      }
+    ) profiles;
+
+  createCombinedBuildEnvironment =
+    extensionsPaths:
+    let
+      combinedBuildEnv = pkgs.buildEnv {
+        name = "${cfg.package.pname}-profile-immutable-combined-extensions-drv";
+        paths = extensionsPaths;
+      };
+    in
+    {
+      "${extensionsDirectory}".source = joinPaths [
+        combinedBuildEnv
+        vscodeShareExtensionsDirectory
+      ];
+    };
+
+  mutableExtensionsFiles = [
+    (createExtensionSymlinks allExtensions) # symlinks from the immutable extension directory to the nix store extension directory
+    (createMutableProfileExtensionsJson { default = getDefaultProfile; }) # mutable profile extensions.json file
+  ];
+
+  immutableExtensionsFiles =
+    let
+      combinedExtensionsPaths = lib.flatten ([
+        allExtensions
+        (lib.optional (supportsMultiProfiles && hasDefaultProfile) (
+          createExtensionJsonFile "default" getDefaultProfile.extensions
+        ))
+      ]);
+    in
+    [
+      (createExtensionSymlinks allExtensions) # symlinks from the immutable ext-dir to the nix store ext-dir
+      (createImmutableProfileExtensionsJson getOtherProfiles) # immutable profiles' extensions.json files
+      (createCombinedBuildEnvironment combinedExtensionsPaths) # combined build drv for all extensions (and maybe default profile too)
+    ];
+
+  extensionFiles =
+    if (cfg.mutableExtensionsDir && !hasOtherProfiles) then
+      mutableExtensionsFiles
+    else
+      immutableExtensionsFiles;
 }
