@@ -29,6 +29,16 @@
       "unredir-if-possible" = true;
       "dbe" = true;
     };
+    extraConfig = ''
+      animations = (
+        {
+        	triggers = [ "open", "show" ];
+        	preset = "slide-in";
+        	direction = "up";
+          duration = 0.2;
+        }
+      )
+    '';
     extraArgs = [ "--legacy-backends" ];
   };
 
