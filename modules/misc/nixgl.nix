@@ -346,7 +346,7 @@ in
             ''
           ))
 
-          (lib.mkIf (wantsWrapper "nvidia") (
+          (lib.mkIf (wantsWrapper "nvidiaPrime") (
             pkgs.writeShellScriptBin "nixGLNvidiaPrime" ''
               ${envVarsAsScript nvOffloadEnv}
               exec ${getWrapperExe "Nvidia"} "$@"
