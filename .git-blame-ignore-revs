@@ -40,3 +40,10 @@ c90cd85b04ff3348978b05ba73ffc8e1b74b9fce
 
 # Treewide replace usage of literalExample
 bd11e2c5e67385970e59e55ba7a4c35d1ffaee4d
+
+# Treewide nix fmt change
+b4752b0eda6302b92a6d5dd554c83f188bc3ae6d
+9136120c369d91144910a985262e3c3b8e8872d6
+
+# Treewide remove noops
+f2f1076c1f789595c2a2b18b76466fbd691025dd
