@@ -1,7 +1,7 @@
 name:
 builtins.mapAttrs
   (
-    test: module:
+    _test: module:
     import module [
       "programs"
       name

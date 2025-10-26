@@ -21,7 +21,7 @@ lib.mkIf config.test.enableLegacyIfd {
     )
   ];
 
-  nixpkgs.overlays = [ (self: super: { inherit (realPkgs) kitty-themes; }) ];
+  nixpkgs.overlays = [ (_self: _super: { inherit (realPkgs) kitty-themes; }) ];
 
   nmt.script = ''
     assertFileExists home-files/.config/kitty/kitty.conf

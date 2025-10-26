@@ -77,7 +77,7 @@ let
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
-        default = lib.mapAttrs (n: lib.mkOptionDefault) {
+        default = lib.mapAttrs (_n: lib.mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
           "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";
@@ -478,9 +478,9 @@ let
               (keycodebindingsStr keycodebindings)
             ]
             ++ optional (builtins.attrNames bindswitches != [ ]) (bindswitchesStr bindswitches)
-            ++ mapAttrsToList inputStr (filterAttrs (n: v: n == "*") input)
-            ++ mapAttrsToList inputStr (filterAttrs (n: v: hasPrefix "type:" n) input)
-            ++ mapAttrsToList inputStr (filterAttrs (n: v: n != "*" && !(hasPrefix "type:" n)) input)
+            ++ mapAttrsToList inputStr (filterAttrs (n: _v: n == "*") input)
+            ++ mapAttrsToList inputStr (filterAttrs (n: _v: hasPrefix "type:" n) input)
+            ++ mapAttrsToList inputStr (filterAttrs (n: _v: n != "*" && !(hasPrefix "type:" n)) input)
             ++ mapAttrsToList outputStr output # outputs
             ++ mapAttrsToList seatStr seat # seats
             ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes

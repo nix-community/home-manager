@@ -481,7 +481,7 @@ in
       suppressIncompatibleConfig =
         p:
         lib.filterAttrs (
-          n: v:
+          n: _v:
           builtins.elem n [
             "plugin"
             "optional"

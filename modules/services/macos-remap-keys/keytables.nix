@@ -137,7 +137,7 @@ let
   mapToInt =
     keyPage: attrs:
     lib.mapAttrs (
-      name: value:
+      _name: value:
       let
         keycode = lib.fromHexString (lib.removePrefix "0x" value);
       in

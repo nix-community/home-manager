@@ -43,7 +43,7 @@ let
         ${concatStrings (lib.mapAttrsToList (name: value: "${name}: ${value}") value)}
       '';
 
-  renderRepositories = repos: ''
+  renderRepositories = _repos: ''
     [repositories]
     ${concatStrings (map renderRepository cfg.repositories)}'';
 

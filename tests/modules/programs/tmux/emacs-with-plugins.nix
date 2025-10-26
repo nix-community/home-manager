@@ -17,7 +17,7 @@
     };
 
     nixpkgs.overlays = [
-      (self: super: {
+      (_self: super: {
         tmuxPlugins = super.tmuxPlugins // {
           fzf-tmux-url = super.tmuxPlugins.fzf-tmux-url // {
             rtp = "@tmuxplugin_fzf_tmux_url_rtp@";

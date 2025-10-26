@@ -23,7 +23,7 @@ let
 
   settingsFormat = pkgs.formats.toml { };
 
-  filterNull = attrs: lib.attrsets.filterAttrs (n: v: v != null) attrs;
+  filterNull = attrs: lib.attrsets.filterAttrs (_n: v: v != null) attrs;
 
   configFile =
     account:

@@ -420,9 +420,9 @@ let
         "onSignal"
         "onEvent"
       ];
-      isHandler = name: def: isAttrs def && builtins.any (attr: builtins.hasAttr attr def) handlerAttrs;
+      isHandler = _name: def: isAttrs def && builtins.any (attr: builtins.hasAttr attr def) handlerAttrs;
       handlerFunctions = lib.filterAttrs isHandler cfg.functions;
-      sourceFunction = name: def: "source ${config.xdg.configHome}/fish/functions/${name}.fish";
+      sourceFunction = name: _def: "source ${config.xdg.configHome}/fish/functions/${name}.fish";
     in
     builtins.concatStringsSep "\n" (lib.mapAttrsToList sourceFunction handlerFunctions);
 

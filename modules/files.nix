@@ -100,7 +100,7 @@ in
       (
         let
           dups = lib.attrNames (
-            lib.filterAttrs (n: v: v > 1) (
+            lib.filterAttrs (_n: v: v > 1) (
               lib.foldAttrs (acc: v: acc + v) 0 (map (v: { ${v.target} = 1; }) cfg)
             )
           );
