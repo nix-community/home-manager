@@ -289,7 +289,16 @@ let
   allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in
 {
+
+  # # Import vscode-forks module to provide cursor, kiro, and windsurf modules
+  # imports = lib.optional (
+  #   (pkgs ? code-cursor) && (pkgs ? kiro) && (pkgs ? windsurf)
+  # ) ./vscode-forks.nix;
+
   imports = [
+    (import ./vscode-forks.nix { inherit config lib pkgs; })
+  ]
+  ++ [
     ./haskell.nix
     (lib.mkChangedOptionModule
       [
