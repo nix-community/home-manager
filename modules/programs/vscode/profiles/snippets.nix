@@ -15,8 +15,9 @@ rec {
   buildProfileSnippets =
     profileName: profile:
     let
-      globalSnippets = (getAttrKey "globalSnippets" profile);
-      languageSnippets = (getAttrKey "languageSnippets" profile);
+      snippets = (getAttrKey "snippets" profile);
+      globalSnippets = if (hasValue snippets) then (getAttrKey "global" snippets) else { };
+      languageSnippets = if (hasValue snippets) then (getAttrKey "languages" snippets) else { };
 
       profileSnippets = lib.filterAttrs (key: snippet: (hasValue snippet)) (
         { }

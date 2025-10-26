@@ -15,20 +15,24 @@ let
   forkConfig = forkInputs // {
     profiles = {
       default = {
-        globalSnippets = globalSnippetsObject;
+        snippets = {
+          global = globalSnippetsObject;
 
-        languageSnippets = {
-          elixir = elixirSnippetsJsonPath;
-          haskell = haskellSnippetsJsonPath;
+          languages = {
+            elixir = elixirSnippetsJsonPath;
+            haskell = haskellSnippetsJsonPath;
+          };
         };
       };
 
       work = {
-        globalSnippets = globalSnippetsJsonPath;
+        snippets = {
+          global = globalSnippetsJsonPath;
 
-        languageSnippets = {
-          elixir = elixirSnippetsObject;
-          haskell = haskellSnippetsObject;
+          languages = {
+            elixir = elixirSnippetsObject;
+            haskell = haskellSnippetsObject;
+          };
         };
       };
     };

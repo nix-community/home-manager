@@ -106,19 +106,6 @@ in
               description = "The extensions to be installed in the profile.";
             };
 
-            globalSnippets = lib.mkOption {
-              type = helpers.jsonFormat.type;
-              default = { };
-              example = {
-                fixme = {
-                  prefix = [ "fixme" ];
-                  body = [ "$LINE_COMMENT FIXME: $0" ];
-                  description = "Insert a FIXME remark";
-                };
-              };
-              description = "Defines global user snippets.";
-            };
-
             keybindings = lib.mkOption {
               type = lib.types.either lib.types.path (
                 lib.types.listOf (
@@ -172,21 +159,6 @@ in
               '';
             };
 
-            languageSnippets = lib.mkOption {
-              type = helpers.jsonFormat.type;
-              default = { };
-              example = {
-                haskell = {
-                  fixme = {
-                    prefix = [ "fixme" ];
-                    body = [ "$LINE_COMMENT FIXME: $0" ];
-                    description = "Insert a FIXME remark";
-                  };
-                };
-              };
-              description = "Defines user snippets for different languages.";
-            };
-
             mcp = lib.mkOption {
               type = lib.types.either lib.types.path helpers.jsonFormat.type;
               default = { };
@@ -218,6 +190,43 @@ in
                 Configuration written to the profile's {file}`settings.json`.
                 This can be a JSON object or a path to a custom JSON file.
               '';
+            };
+
+            snippets = lib.mkOption {
+              type = lib.types.submodule {
+                options = {
+                  global = lib.mkOption {
+                    type = lib.types.either lib.types.path helpers.jsonFormat.type;
+                    default = { };
+                    description = "Global user snippets";
+                  };
+                  languages = lib.mkOption {
+                    type = lib.types.attrsOf (lib.types.either lib.types.path helpers.jsonFormat.type);
+                    default = { };
+                    description = "Language-specific user snippets";
+                  };
+                };
+              };
+              default = { };
+              example = {
+                global = {
+                  fixme = {
+                    prefix = [ "fixme" ];
+                    body = [ "$LINE_COMMENT FIXME: $0" ];
+                    description = "Insert a FIXME remark";
+                  };
+                };
+                languages = {
+                  haskell = {
+                    fixme = {
+                      prefix = [ "fixme" ];
+                      body = [ "$LINE_COMMENT FIXME: $0" ];
+                      description = "Insert a FIXME remark";
+                    };
+                  };
+                };
+              };
+              description = "Defines user snippets (both global and language-specific).";
             };
 
             tasks = lib.mkOption {

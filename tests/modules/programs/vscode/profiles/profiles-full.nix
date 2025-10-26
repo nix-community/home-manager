@@ -30,11 +30,13 @@ let
         settings = settingsJsonPath;
         tasks = tasksJsonObject;
 
-        globalSnippets = globalSnippetsJsonPath;
+        snippets = {
+          global = globalSnippetsJsonPath;
 
-        languageSnippets = {
-          elixir = elixirSnippetsJsonPath;
-          haskell = haskellSnippetsJsonPath;
+          languages = {
+            elixir = elixirSnippetsJsonPath;
+            haskell = haskellSnippetsJsonPath;
+          };
         };
       };
 
@@ -44,11 +46,13 @@ let
         settings = settingsJsonObject;
         tasks = tasksJsonPath;
 
-        globalSnippets = globalSnippetsObject;
+        snippets = {
+          global = globalSnippetsObject;
 
-        languageSnippets = {
-          elixir = elixirSnippetsObject;
-          haskell = haskellSnippetsObject;
+          languages = {
+            elixir = elixirSnippetsObject;
+            haskell = haskellSnippetsObject;
+          };
         };
       };
     };
