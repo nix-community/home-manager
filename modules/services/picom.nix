@@ -41,7 +41,7 @@ let
       description = "pair of ${x.description}";
     };
 
-  mkDefaultAttrs = mapAttrs (n: mkDefault);
+  mkDefaultAttrs = mapAttrs (_n: mkDefault);
 
   # Basically a tinkered lib.generators.mkKeyValueDefault
   # It either serializes a top-level definition "key: { values };"

@@ -12,7 +12,7 @@ let
   cfg = config.services.activitywatch;
 
   mkWatcherService =
-    name: cfg:
+    _name: cfg:
     let
       jobName = "activitywatch-watcher-${cfg.name}";
     in
@@ -122,7 +122,7 @@ let
     };
 
   generateWatchersConfig =
-    name: cfg:
+    _name: cfg:
     let
       # We're only assuming the generated filepath this since most watchers
       # uses the ActivityWatch client library which has `load_config_toml`

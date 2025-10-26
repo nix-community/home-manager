@@ -548,7 +548,7 @@ in
             if isPathLikeContent content then { source = content; } else { text = content; }
           );
 
-      mkMarketplaceEntry = name: content: {
+      mkMarketplaceEntry = _name: content: {
         source = {
           source = "directory";
           path = content;

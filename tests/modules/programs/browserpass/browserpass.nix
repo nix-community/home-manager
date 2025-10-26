@@ -13,7 +13,7 @@
     ];
   };
 
-  nixpkgs.overlays = [ (self: super: { inherit (realPkgs) browserpass; }) ];
+  nixpkgs.overlays = [ (_self: _super: { inherit (realPkgs) browserpass; }) ];
 
   nmt.script =
     if realPkgs.stdenv.hostPlatform.isDarwin then

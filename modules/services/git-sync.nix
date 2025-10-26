@@ -106,7 +106,7 @@ in
 
   config = mkIf cfg.enable {
     launchd.agents = services (
-      name: repo: {
+      _name: repo: {
         enable = true;
         config = {
           StartInterval = repo.interval;

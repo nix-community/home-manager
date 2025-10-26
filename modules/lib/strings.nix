@@ -29,7 +29,7 @@ rec {
       ++ upperChars
       ++ stringToCharacters "0123456789";
 
-      empties = l: genList (x: "") (length l);
+      empties = l: genList (_x: "") (length l);
 
       unsafeInName = stringToCharacters (replaceStrings safeChars (empties safeChars) path);
 

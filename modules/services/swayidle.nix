@@ -184,7 +184,7 @@ in
               command
             ];
 
-            nonemptyEvents = lib.filterAttrs (event: command: command != null) cfg.events;
+            nonemptyEvents = lib.filterAttrs (_event: command: command != null) cfg.events;
 
             args =
               cfg.extraArgs

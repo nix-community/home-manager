@@ -394,7 +394,7 @@ in
         };
 
         "${dconfPath}/profiles:" = {
-          default = lib.head (lib.attrNames (lib.filterAttrs (n: v: v.default) cfg.profile));
+          default = lib.head (lib.attrNames (lib.filterAttrs (_n: v: v.default) cfg.profile));
           list = lib.attrNames cfg.profile;
         };
       }

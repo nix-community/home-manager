@@ -51,7 +51,7 @@ let
         let
           # Filters out fields that are set to `null` or empty list.
           shouldKeepField =
-            section: key: value:
+            _section: _key: value:
             value != null && value != [ ];
 
           # Filters out empty sections.

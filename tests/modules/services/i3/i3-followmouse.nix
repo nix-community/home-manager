@@ -6,7 +6,7 @@
   };
 
   nixpkgs.overlays = [
-    (self: super: {
+    (_self: super: {
       dmenu = super.dmenu // {
         outPath = "@dmenu@";
       };
