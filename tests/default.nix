@@ -42,7 +42,7 @@ let
       if lib.isDerivation value then scrubbedValue // newDrvAttrs else scrubbedValue
     else
       value;
-  scrubDerivations = attrs: lib.mapAttrs scrubDerivation attrs;
+  scrubDerivations = lib.mapAttrs scrubDerivation;
 
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
   whitelist =
@@ -111,10 +111,7 @@ let
             pkgs =
               let
                 overlays =
-                  config.test.stubOverlays
-                  ++ lib.optionals (
-                    config.nixpkgs.overlays != null && config.nixpkgs.overlays != [ ]
-                  ) config.nixpkgs.overlays;
+                  config.test.stubOverlays ++ lib.optionals (config.nixpkgs.overlays != null) config.nixpkgs.overlays;
                 stubbedPkgs =
                   if overlays == [ ] then
                     scrubbedPkgs

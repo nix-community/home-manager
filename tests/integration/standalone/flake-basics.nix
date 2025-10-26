@@ -4,28 +4,26 @@
   name = "standalone-flake-basics";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine =
-    { ... }:
-    {
-      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-      virtualisation.memorySize = 3072;
-      nix = {
-        registry.home-manager.to = {
-          type = "path";
-          path = ../../..;
-        };
-        settings.extra-experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
+  nodes.machine = {
+    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+    virtualisation.memorySize = 3072;
+    nix = {
+      registry.home-manager.to = {
+        type = "path";
+        path = ../../..;
       };
-      users.users.alice = {
-        isNormalUser = true;
-        description = "Alice Foobar";
-        password = "foobar";
-        uid = 1000;
-      };
+      settings.extra-experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
     };
+    users.users.alice = {
+      isNormalUser = true;
+      description = "Alice Foobar";
+      password = "foobar";
+      uid = 1000;
+    };
+  };
 
   testScript = ''
     start_all()
