@@ -136,4 +136,6 @@
           fi
         '';
     };
+
+  meta.maintainers = with lib.hm.maintainers; [ exzombie ];
 }
