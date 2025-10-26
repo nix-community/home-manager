@@ -234,44 +234,41 @@ in
       '';
       default = { };
       type = lib.types.attrsOf (
-        lib.types.submodule (
-          { name, config, ... }:
-          {
-            options = {
-              onDispatch = lib.mkOption {
-                type = lib.types.str;
-                default = "";
-                description = ''
-                  Submap to use after a dispatch. Can either be a name or `reset` to disable submap after any dispatch.
-                '';
-                example = "reset";
-              };
-              settings = lib.mkOption {
-                type = (with lib.types; attrsOf (listOf str)) // {
-                  description = "Hyprland binds";
-                };
-                default = { };
-                description = ''
-                  Hyprland binds to be put in the submap
-                '';
-                example = lib.literalExpression ''
-                  {
-                    binde = [
-                     ", right, resizeactive, 10 0"
-                     ", left, resizeactive, -10 0"
-                     ", up, resizeactive, 0 -10"
-                     ", down, resizeactive, 0 10"
-                    ];
-
-                    bind = [
-                      ", escape, submap, reset"
-                    ];
-                  }
-                '';
-              };
+        lib.types.submodule {
+          options = {
+            onDispatch = lib.mkOption {
+              type = lib.types.str;
+              default = "";
+              description = ''
+                Submap to use after a dispatch. Can either be a name or `reset` to disable submap after any dispatch.
+              '';
+              example = "reset";
             };
-          }
-        )
+            settings = lib.mkOption {
+              type = (with lib.types; attrsOf (listOf str)) // {
+                description = "Hyprland binds";
+              };
+              default = { };
+              description = ''
+                Hyprland binds to be put in the submap
+              '';
+              example = lib.literalExpression ''
+                {
+                  binde = [
+                   ", right, resizeactive, 10 0"
+                   ", left, resizeactive, -10 0"
+                   ", up, resizeactive, 0 -10"
+                   ", down, resizeactive, 0 10"
+                  ];
+
+                  bind = [
+                    ", escape, submap, reset"
+                  ];
+                }
+              '';
+            };
+          };
+        }
       );
       example = lib.literalExpression ''
         {

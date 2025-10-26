@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   config = {
     services.home-manager.autoUpgrade = {

@@ -193,7 +193,6 @@ in
             userName,
             imap,
             passwordCommand,
-            aerc,
             ...
           }@cfg:
           let

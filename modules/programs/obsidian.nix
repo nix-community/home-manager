@@ -178,7 +178,7 @@ let
   hotkeysSettingsType = with types; nullOr (attrsOf (listOf (submodule hotkeysOptions)));
 
   extraFilesOptions =
-    { name, config, ... }:
+    { name, ... }:
     {
       options = {
         source = mkOption {
@@ -303,7 +303,7 @@ in
       description = "List of vaults to create.";
       type = types.attrsOf (
         types.submodule (
-          { name, config, ... }:
+          { name, ... }:
           {
             options = {
               enable = mkOption {

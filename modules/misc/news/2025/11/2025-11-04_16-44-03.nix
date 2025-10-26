@@ -1,10 +1,4 @@
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-{
   time = "2025-11-04T15:44:03+00:00";
   condition = true;
   message = ''

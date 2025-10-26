@@ -1,8 +1,8 @@
 {
   cfg,
-  config,
   lib,
   moduleName,
+  ...
 }:
 let
   inherit (lib) concatStringsSep mapAttrsToList optionalString;
