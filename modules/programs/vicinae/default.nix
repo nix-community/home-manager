@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.programs.vicinae;
-  vicinaeLib = import ./lib.nix { inherit lib pkgs; };
+  vicinaeLib = import ./lib.nix { inherit pkgs; };
 
   jsonFormat = pkgs.formats.json { };
   tomlFormat = pkgs.formats.toml { };

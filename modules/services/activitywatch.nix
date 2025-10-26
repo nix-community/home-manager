@@ -1,6 +1,5 @@
 {
   config,
-  options,
   lib,
   pkgs,
   ...
@@ -46,7 +45,6 @@ let
     {
       name,
       config,
-      options,
       ...
     }:
     {

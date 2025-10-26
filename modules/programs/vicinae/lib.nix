@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
 }:
 {
   mkExtension =

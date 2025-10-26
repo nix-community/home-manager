@@ -1,4 +1,3 @@
-{ config, pkgs, ... }:
 {
   time = "2026-03-25T17:18:02+00:00";
   condition = true;
