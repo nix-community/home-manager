@@ -64,8 +64,8 @@ let
       # There's a possibility of attributes with attrsets overriding other
       # top-level attributes with non-attrsets so we're forcing the attrsets to
       # come last.
-      _config = lib.mapAttrsToList convert (lib.filterAttrs (k: v: !isAttrs v) attr);
-      _config' = lib.mapAttrsToList convert (lib.filterAttrs (k: v: isAttrs v) attr);
+      _config = lib.mapAttrsToList convert (lib.filterAttrs (_k: v: !isAttrs v) attr);
+      _config' = lib.mapAttrsToList convert (lib.filterAttrs (_k: v: isAttrs v) attr);
       config = _config ++ _config';
     in
     lib.concatStringsSep "\n" config;

@@ -18,7 +18,7 @@ in
     (lib.mkIf (cfg.users != { }) {
       system.activationScripts.postActivation.text = lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
-          username: usercfg:
+          _username: usercfg:
           let
             driverVersion = if cfg.enableLegacyProfileManagement then "0" else "1";
           in

@@ -112,7 +112,7 @@ in
       in
       defaultConfig
       // (lib.mapAttrs' (
-        name: value:
+        name: _value:
         lib.nameValuePair "${prefix}/Element-${name}/config.json" {
           source = (formatter.generate "element-desktop-${name}" cfg.profiles."${name}");
         }

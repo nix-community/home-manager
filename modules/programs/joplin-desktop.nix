@@ -98,7 +98,7 @@ in
       activateJoplinDesktopConfig =
         let
           newConfig = jsonFormat.generate "joplin-settings.json" (
-            lib.attrsets.filterAttrs (n: v: (v != null) && (v != "")) (
+            lib.attrsets.filterAttrs (_n: v: (v != null) && (v != "")) (
               {
                 # TODO: find a better way to convert nix attribute names to strings:
                 # sync.interval = ... -> "sync.interval" = ...

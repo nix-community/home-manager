@@ -21,7 +21,7 @@ let
   cfg = config.programs.neomutt;
 
   neomuttAccountsCfg = filterAttrs (
-    n: a: a.enable && a.neomutt.enable
+    _n: a: a.enable && a.neomutt.enable
   ) config.accounts.email.accounts;
   neomuttAccounts = attrValues neomuttAccountsCfg;
 

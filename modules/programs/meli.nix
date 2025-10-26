@@ -18,13 +18,13 @@ let
   tomlFormat = pkgs.formats.toml { };
 
   enabledAccounts = lib.attrsets.filterAttrs (
-    name: value: value.enable && (value.meli.enable or false)
+    _name: value: value.enable && (value.meli.enable or false)
   ) config.accounts.email.accounts;
 
   meliAccounts = (lib.attrsets.mapAttrs (name: value: (mkMeliAccounts name value)) enabledAccounts);
 
   mkMeliAccounts = (
-    name: account: {
+    _name: account: {
       root_mailbox = "${config.accounts.email.maildirBasePath}/${account.maildir.path}";
       format = "Maildir";
       identity = account.address;

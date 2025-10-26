@@ -6,7 +6,7 @@
 
 let
   hmPkgs = pkgs.extend (
-    self: super: {
+    _self: _super: {
       sketchybar = config.lib.test.mkStubPackage {
         name = "sketchybar";
         buildScript = ''

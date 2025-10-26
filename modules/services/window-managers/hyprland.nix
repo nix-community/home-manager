@@ -347,12 +347,12 @@ in
 
         # attrset of { <submap name> = <list of non bind* keys>; } for all submaps
         submapWarningsAttrset = builtins.mapAttrs (
-          name: submap: filterNonBinds submap.settings
+          _name: submap: filterNonBinds submap.settings
         ) cfg.submaps;
 
         submapWarnings = lib.mapAttrsToList (submapName: nonBinds: ''
           wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${builtins.toString nonBinds}], which will have no effect in a submap
-        '') (lib.filterAttrs (n: v: v != [ ]) submapWarningsAttrset);
+        '') (lib.filterAttrs (_n: v: v != [ ]) submapWarningsAttrset);
       in
       submapWarnings ++ lib.optional inconsistent warning;
 
@@ -368,7 +368,7 @@ in
         importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
 
         pluginsToHyprconf =
-          plugins:
+          _plugins:
           lib.hm.generators.toHyprconf {
             attrs = {
               "exec-once" =

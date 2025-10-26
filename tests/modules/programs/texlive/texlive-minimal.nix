@@ -5,7 +5,7 @@
 
     # Set up a minimal mocked texlive package set.
     nixpkgs.overlays = [
-      (self: super: {
+      (_self: _super: {
         texlive = {
           collection-basic = pkgs.writeTextDir "collection-basic" "";
           combine =

@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 let
   hmPkgs = pkgs.extend (
-    self: super: {
+    _self: _super: {
       aerospace = config.lib.test.mkStubPackage {
         name = "aerospace";
         buildScript = ''

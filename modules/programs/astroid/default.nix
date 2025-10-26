@@ -12,7 +12,7 @@ let
   jsonFormat = pkgs.formats.json { };
 
   astroidAccounts = lib.filterAttrs (
-    n: v: v.enable && v.astroid.enable
+    _n: v: v.enable && v.astroid.enable
   ) config.accounts.email.accounts;
 
   boolOpt = b: if b then "true" else "false";
@@ -51,7 +51,7 @@ let
       astroidConfig = lib.foldl' lib.recursiveUpdate template [
         {
           astroid.notmuch_config = "${config.xdg.configHome}/notmuch/default/config";
-          accounts = lib.mapAttrs (n: accountAttr) astroidAccounts;
+          accounts = lib.mapAttrs (_n: accountAttr) astroidAccounts;
           crypto.gpg.path = "${pkgs.gnupg}/bin/gpg";
         }
         cfg.extraConfig

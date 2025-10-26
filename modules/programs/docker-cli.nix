@@ -96,7 +96,7 @@ in
         };
       }
       // lib.mapAttrs' (
-        n: ctx:
+        _n: ctx:
         let
           path = "${cfg.configDir}/contexts/meta/${builtins.hashString "sha256" ctx.Name}/meta.json";
         in

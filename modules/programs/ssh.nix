@@ -640,10 +640,10 @@ in
 
         warnings =
           mapAttrsToList
-            (n: v: ''
+            (n: _v: ''
               The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
               The match option takes precedence.'')
-            (lib.filterAttrs (n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
+            (lib.filterAttrs (_n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
       }
       (lib.mkIf cfg.enableDefaultConfig {
         warnings = [

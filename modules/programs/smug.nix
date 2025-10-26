@@ -148,7 +148,7 @@ in
 
   config =
     let
-      cleanedProjects = lib.filterAttrsRecursive (name: value: value != null) cfg.projects;
+      cleanedProjects = lib.filterAttrsRecursive (_name: value: value != null) cfg.projects;
 
       mkProjects = lib.attrsets.mapAttrs' (
         k: v: {
@@ -163,7 +163,7 @@ in
                 // {
                   session = k;
                   windows = lib.lists.forEach v.windows (
-                    winprop: (lib.filterAttrsRecursive (name: value: value != null) winprop)
+                    winprop: (lib.filterAttrsRecursive (_name: value: value != null) winprop)
                   );
                 };
             in

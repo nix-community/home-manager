@@ -7,7 +7,7 @@
     };
 
     nixpkgs.overlays = [
-      (self: super: {
+      (_self: super: {
         tmuxPlugins = super.tmuxPlugins // {
           sensible = super.tmuxPlugins.sensible // {
             rtp = "@sensible_rtp@";

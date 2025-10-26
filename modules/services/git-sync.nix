@@ -42,7 +42,7 @@ let
     };
   };
 
-  mkAgent = name: repo: {
+  mkAgent = _name: repo: {
     enable = true;
     config = {
       StartInterval = repo.interval;

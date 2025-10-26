@@ -232,7 +232,7 @@ let
     }
   );
 
-  removeNullValues = attrSet: lib.filterAttrs (key: value: value != null) attrSet;
+  removeNullValues = attrSet: lib.filterAttrs (_key: value: value != null) attrSet;
 
   hmFiles = builtins.attrValues config.home.file;
   hmSymlinks = (lib.filter (file: !file.recursive) hmFiles);

@@ -18,7 +18,7 @@
     };
 
     nixpkgs.overlays = [
-      (self: super: {
+      (_self: super: {
         xorg = super.xorg // {
           setxkbmap = super.xorg.setxkbmap // {
             outPath = "@setxkbmap@";

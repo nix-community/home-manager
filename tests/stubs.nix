@@ -109,7 +109,7 @@ in
 
     test.stubOverlays =
       lib.optional (config.test.stubs != { }) (
-        self: super:
+        _self: super:
         lib.mapAttrs (
           n: v:
           builtins.traceVerbose "${n} - stubbed" (

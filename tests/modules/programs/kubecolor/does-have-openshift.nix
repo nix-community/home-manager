@@ -17,7 +17,7 @@
     };
   };
   nixpkgs.overlays = [
-    (self: super: rec {
+    (_self: _super: rec {
       openshift = config.lib.test.mkStubPackage {
         name = "openshift";
         version = "4.16.0";

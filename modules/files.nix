@@ -7,7 +7,7 @@
 
 let
 
-  cfg = lib.filterAttrs (n: f: f.enable) config.home.file;
+  cfg = lib.filterAttrs (_n: f: f.enable) config.home.file;
 
   homeDirectory = config.home.homeDirectory;
 
@@ -52,8 +52,8 @@ in
       (
         let
           dups = lib.attrNames (
-            lib.filterAttrs (n: v: v > 1) (
-              lib.foldAttrs (acc: v: acc + v) 0 (lib.mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)
+            lib.filterAttrs (_n: v: v > 1) (
+              lib.foldAttrs (acc: v: acc + v) 0 (lib.mapAttrsToList (_n: v: { ${v.target} = 1; }) cfg)
             )
           );
           dupsStr = lib.concatStringsSep ", " dups;
@@ -96,7 +96,7 @@ in
         # Paths that should be forcibly overwritten by Home Manager.
         # Caveat emptor!
         forcedPaths = lib.concatMapStringsSep " " (p: ''"$HOME"/${lib.escapeShellArg p}'') (
-          lib.mapAttrsToList (n: v: v.target) (lib.filterAttrs (n: v: v.force) cfg)
+          lib.mapAttrsToList (_n: v: v.target) (lib.filterAttrs (_n: v: v.force) cfg)
         );
 
         storeDir = lib.escapeShellArg builtins.storeDir;
@@ -358,7 +358,7 @@ in
             }
           ''
           + lib.concatStrings (
-            lib.mapAttrsToList (n: v: ''
+            lib.mapAttrsToList (_n: v: ''
               insertFile ${
                 lib.escapeShellArgs [
                   (sourceStorePath v)

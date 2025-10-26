@@ -55,7 +55,7 @@ in
     services.pass-secret-service.storePath = lib.mkDefault cfg.settings.PASSWORD_STORE_DIR;
 
     xsession.importedVariables = lib.mkIf config.xsession.enable (
-      lib.mapAttrsToList (name: value: name) cfg.settings
+      lib.mapAttrsToList (name: _value: name) cfg.settings
     );
   };
 }

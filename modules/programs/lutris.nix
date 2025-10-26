@@ -188,7 +188,7 @@ in
         lutris-overrides = {
           # This only adds pkgs.steam to the extraPkgs, I see no reason to ever enable it.
           steamSupport = false;
-          extraPkgs = (prev: cfg.extraPackages ++ optional (cfg.steamPackage != null) cfg.steamPackage);
+          extraPkgs = (_prev: cfg.extraPackages ++ optional (cfg.steamPackage != null) cfg.steamPackage);
         };
       in
       [ (cfg.package.override lutris-overrides) ];
@@ -198,7 +198,7 @@ in
         buildRunnerConfig = (
           runner_name: runner_config:
           # Remove the unset values so they don't end up on the final config.
-          filterAttrsRecursive (name: value: value != { } && value != null && value != "") {
+          filterAttrsRecursive (_name: value: value != { } && value != null && value != "") {
             "${runner_name}" =
               runner_config.settings.runner
               # If set translate .package to runner_executable

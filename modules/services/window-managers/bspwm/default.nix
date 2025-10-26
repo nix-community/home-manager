@@ -59,7 +59,7 @@ let
       formatDirective = n: v: "${camelToSnake n}=${formatValue v}";
 
       directivesStr = escapeShellArgs (
-        mapAttrsToList formatDirective (lib.filterAttrs (n: v: v != null) directives)
+        mapAttrsToList formatDirective (lib.filterAttrs (_n: v: v != null) directives)
       );
     in
     "bspc rule -a ${escapeShellArg target} ${directivesStr}";

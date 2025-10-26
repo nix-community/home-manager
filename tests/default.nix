@@ -47,7 +47,7 @@ let
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
   whitelist =
     let
-      inner = self: super: {
+      inner = _self: super: {
         inherit (pkgs)
           coreutils
           crudini
@@ -66,7 +66,7 @@ let
           fish
           ;
 
-        xorg = super.xorg.overrideScope (self: super: { inherit (pkgs.xorg) lndir; });
+        xorg = super.xorg.overrideScope (_self: _super: { inherit (pkgs.xorg) lndir; });
       };
 
       outer =
@@ -85,12 +85,12 @@ let
     # TODO: fix darwin stdenv stubbing
     if isDarwin then
       let
-        rawPkgs = lib.makeExtensible (final: pkgs);
+        rawPkgs = lib.makeExtensible (_final: pkgs);
       in
       builtins.traceVerbose "eval scrubbed darwin nixpkgs" (rawPkgs.extend darwinScrublist)
     else
       let
-        rawScrubbedPkgs = lib.makeExtensible (final: scrubDerivations pkgs);
+        rawScrubbedPkgs = lib.makeExtensible (_final: scrubDerivations pkgs);
       in
       builtins.traceVerbose "eval scrubbed nixpkgs" (rawScrubbedPkgs.extend whitelist);
 

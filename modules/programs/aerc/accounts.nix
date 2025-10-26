@@ -145,7 +145,7 @@ in
   };
 
   mkAccount =
-    name: account:
+    _name: account:
     let
       nullOrMap = f: v: if v == null then v else f v;
 
@@ -168,7 +168,7 @@ in
           "?"
           + builtins.concatStringsSep "&" (
             lib.attrsets.mapAttrsToList (k: v: k + "=" + lib.strings.escapeURL v) (
-              lib.attrsets.filterAttrs (k: v: v != null) params
+              lib.attrsets.filterAttrs (_k: v: v != null) params
             )
           )
         else
@@ -242,7 +242,7 @@ in
           }
           // optPwCmd "outgoing" passwordCommand;
 
-        msmtp = cfg: {
+        msmtp = _cfg: {
           outgoing = "msmtpq --read-envelope-from --read-recipients";
         };
 

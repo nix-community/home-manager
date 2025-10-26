@@ -43,7 +43,7 @@ let
 
       keybindings = mkOption {
         type = types.attrsOf (types.nullOr types.str);
-        default = lib.mapAttrs (n: lib.mkOptionDefault) {
+        default = lib.mapAttrs (_n: lib.mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
           "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";

@@ -323,7 +323,7 @@ in
           };
 
       # Necessary because home.sessionVariables doesn't support mkIf
-      envVars = lib.filterAttrs (n: v: v != null) {
+      envVars = lib.filterAttrs (_n: v: v != null) {
         QT_QPA_PLATFORMTHEME =
           if (platformTheme.name != null) then
             styleNames.${platformTheme.name} or platformTheme.name
