@@ -224,8 +224,7 @@ in
       '';
       default = { };
       type = lib.types.attrsOf (
-        lib.types.submodule
-        {
+        lib.types.submodule {
           options = {
             settings = lib.mkOption {
               type = (with lib.types; attrsOf (listOf str)) // {
@@ -233,21 +232,21 @@ in
               };
               default = { };
               description = ''
-                  Hyprland binds to be put in the submap
+                Hyprland binds to be put in the submap
               '';
               example = lib.literalExpression ''
-                  {
-                    binde = [
-                     ", right, resizeactive, 10 0"
-                     ", left, resizeactive, -10 0"
-                     ", up, resizeactive, 0 -10"
-                     ", down, resizeactive, 0 10"
-                    ];
+                {
+                  binde = [
+                   ", right, resizeactive, 10 0"
+                   ", left, resizeactive, -10 0"
+                   ", up, resizeactive, 0 -10"
+                   ", down, resizeactive, 0 10"
+                  ];
 
-                    bind = [
-                      ", escape, submap, reset"
-                    ];
-                  }
+                  bind = [
+                    ", escape, submap, reset"
+                  ];
+                }
               '';
             };
           };

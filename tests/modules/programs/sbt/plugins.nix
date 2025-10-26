@@ -28,17 +28,15 @@ let
 
 in
 {
-  config = {
-    programs.sbt = {
-      enable = true;
-      plugins = plugins;
-      pluginsExtra = pluginsExtra;
-      package = pkgs.writeScriptBin "sbt" "";
-    };
-
-    nmt.script = ''
-      assertFileExists "home-files/${pluginsSbtPath}"
-      assertFileContent "home-files/${pluginsSbtPath}" "${expectedPluginsSbt}"
-    '';
+  programs.sbt = {
+    enable = true;
+    plugins = plugins;
+    pluginsExtra = pluginsExtra;
+    package = pkgs.writeScriptBin "sbt" "";
   };
+
+  nmt.script = ''
+    assertFileExists "home-files/${pluginsSbtPath}"
+    assertFileContent "home-files/${pluginsSbtPath}" "${expectedPluginsSbt}"
+  '';
 }

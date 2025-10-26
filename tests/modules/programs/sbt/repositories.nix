@@ -23,16 +23,14 @@ let
   repositoriesSbtPath = ".sbt/repositories";
 in
 {
-  config = {
-    programs.sbt = {
-      enable = true;
-      repositories = repositories;
-      package = pkgs.writeScriptBin "sbt" "";
-    };
-
-    nmt.script = ''
-      assertFileExists "home-files/${repositoriesSbtPath}"
-      assertFileContent "home-files/${repositoriesSbtPath}" "${expectedRepositories}"
-    '';
+  programs.sbt = {
+    enable = true;
+    repositories = repositories;
+    package = pkgs.writeScriptBin "sbt" "";
   };
+
+  nmt.script = ''
+    assertFileExists "home-files/${repositoriesSbtPath}"
+    assertFileContent "home-files/${repositoriesSbtPath}" "${expectedRepositories}"
+  '';
 }

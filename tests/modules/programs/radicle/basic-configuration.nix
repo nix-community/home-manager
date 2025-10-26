@@ -1,11 +1,9 @@
 {
-  config = {
-    programs.radicle.enable = true;
+  programs.radicle.enable = true;
 
-    nmt.script = ''
-      assertFileContent \
-        home-files/.radicle/config.json \
-        ${./basic-configuration.json}
-    '';
-  };
+  nmt.script = ''
+    assertFileContent \
+      home-files/.radicle/config.json \
+      ${./basic-configuration.json}
+  '';
 }

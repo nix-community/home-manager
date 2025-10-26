@@ -6,11 +6,9 @@ let
   '';
 in
 {
-  config = {
-    home.packages = [ darwinTestApp ];
+  home.packages = [ darwinTestApp ];
 
-    nmt.script = ''
-      assertFileExists 'home-files/Applications/Home Manager Apps/example-app'
-    '';
-  };
+  nmt.script = ''
+    assertFileExists 'home-files/Applications/Home Manager Apps/example-app'
+  '';
 }

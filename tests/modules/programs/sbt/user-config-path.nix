@@ -23,20 +23,18 @@ let
   baseSbtPath = ".config/sbt";
 in
 {
-  config = {
-    programs.sbt = {
-      enable = true;
-      plugins = plugins;
-      credentials = credentials;
-      repositories = repositories;
-      baseUserConfigPath = ".config/sbt";
-      package = pkgs.writeScriptBin "sbt" "";
-    };
-
-    nmt.script = ''
-      assertFileExists "home-files/${baseSbtPath}/1.0/plugins/plugins.sbt"
-      assertFileExists "home-files/${baseSbtPath}/1.0/credentials.sbt"
-      assertFileExists "home-files/${baseSbtPath}/repositories"
-    '';
+  programs.sbt = {
+    enable = true;
+    plugins = plugins;
+    credentials = credentials;
+    repositories = repositories;
+    baseUserConfigPath = ".config/sbt";
+    package = pkgs.writeScriptBin "sbt" "";
   };
+
+  nmt.script = ''
+    assertFileExists "home-files/${baseSbtPath}/1.0/plugins/plugins.sbt"
+    assertFileExists "home-files/${baseSbtPath}/1.0/credentials.sbt"
+    assertFileExists "home-files/${baseSbtPath}/repositories"
+  '';
 }
