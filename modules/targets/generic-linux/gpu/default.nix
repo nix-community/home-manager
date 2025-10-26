@@ -113,6 +113,12 @@
         }
       ];
 
+      warnings = lib.optional (config.targets.genericLinux.nixGL.packages != null) ''
+        Both targets.genericLinux.gpu and targets.genericLinux.nixGL are enabled.
+        This is an unsupported configuration. Only mix the two if you know what
+        you are doing!
+      '';
+
       home.packages = [ setupPackage ];
 
       home.activation.checkExistingGpuDrivers =
