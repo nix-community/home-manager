@@ -14,7 +14,7 @@ let
   dstDir = "${config.home.homeDirectory}/Library/LaunchAgents";
 
   launchdConfig =
-    { config, name, ... }:
+    { name, ... }:
     {
       options = {
         enable = lib.mkEnableOption name;

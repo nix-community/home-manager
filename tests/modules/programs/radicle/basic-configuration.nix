@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   config = {
     programs.radicle.enable = true;

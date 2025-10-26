@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   config = {
     services.gnome-keyring = {

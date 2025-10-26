@@ -35,7 +35,7 @@ in
     contexts = mkOption {
       type = lib.types.attrsOf (
         lib.types.submodule (
-          { name, config, ... }:
+          { name, ... }:
           {
             freeformType = jsonFormat.type;
             options = {

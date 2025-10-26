@@ -7,7 +7,7 @@ includes = [ "*.nix" ]
 
 [formatter.deadnix]
 command = "deadnix"
-options = [ "--edit", "--no-lambda-pattern-names" ]
+options = [ "--edit" ]
 includes = [ "*.nix" ]
 
 [formatter.keep-sorted]

@@ -157,7 +157,7 @@ in
       description = "List of vaults to create.";
       type = types.attrsOf (
         types.submodule (
-          { name, config, ... }:
+          { name, ... }:
           {
             options = {
               enable = mkOption {
@@ -345,7 +345,7 @@ in
                 extraFiles =
                   let
                     extraFilesOptions =
-                      { name, config, ... }:
+                      { name, ... }:
                       {
                         options = {
                           source = mkOption {

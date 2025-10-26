@@ -224,19 +224,18 @@ in
       '';
       default = { };
       type = lib.types.attrsOf (
-        lib.types.submodule (
-          { name, config, ... }:
-          {
-            options = {
-              settings = lib.mkOption {
-                type = (with lib.types; attrsOf (listOf str)) // {
-                  description = "Hyprland binds";
-                };
-                default = { };
-                description = ''
+        lib.types.submodule
+        {
+          options = {
+            settings = lib.mkOption {
+              type = (with lib.types; attrsOf (listOf str)) // {
+                description = "Hyprland binds";
+              };
+              default = { };
+              description = ''
                   Hyprland binds to be put in the submap
-                '';
-                example = lib.literalExpression ''
+              '';
+              example = lib.literalExpression ''
                   {
                     binde = [
                      ", right, resizeactive, 10 0"
@@ -249,11 +248,11 @@ in
                       ", escape, submap, reset"
                     ];
                   }
-                '';
-              };
+              '';
             };
-          }
-        )
+          };
+        }
+
       );
       example = lib.literalExpression ''
         {
