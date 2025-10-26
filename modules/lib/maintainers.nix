@@ -169,6 +169,12 @@
     github = "epixtm";
     githubId = 168025607;
   };
+  exzombie = {
+    name = "Jure Varlec";
+    email = "jure@varlec.si";
+    github = "exzombie";
+    githubId = 11456290;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
