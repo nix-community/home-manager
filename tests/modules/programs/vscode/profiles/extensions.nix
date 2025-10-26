@@ -43,7 +43,7 @@ let
     vscodeExtPublisher = "publisherC";
   };
 
-  # modules/programs/vscode/mkVSCodeFork.nix#L51
+  # modules/programs/vscode/vscodeFork.nix#L51
   #
   # mutableExtensionsDir is only supported for the default profile if no other profiles
   # are set, otherwise extensions are immutable by default.
@@ -82,10 +82,7 @@ in
 {
   config = lib.setAttrByPath [ "programs" vscodePackageName ] forkConfig // {
     nmt.script = ''
-      echo "extensionsPath: home-files/${extensionsPath}"
-      echo "isMutableExtensionsDir: ${toString isMutableExtensionsDir}"
-      echo "supportsMultiProfiles: ${toString supportsMultiProfiles}"
-      echo "hasMultipleProfiles: ${toString hasMultipleProfiles}"
+      echo "package: ${forkConfig.package.pname}, packageName: ${forkConfig.packageName}, vscodePackageName: ${vscodePackageName}"
 
       assertDirectoryExists "home-files/${extensionsPath}"
 

@@ -1,26 +1,25 @@
 { lib, pkgs, ... }:
 let
+  # unknownPackage = pkgs.writeTextFile rec {
+  #   name = "${derivationArgs.pname}-${derivationArgs.version}";
+  #   destination = "/lib/vscode/resources/app/product.json";
 
-  unknownPackage = pkgs.writeTextFile rec {
-    name = "${derivationArgs.pname}-${derivationArgs.version}";
-    destination = "/lib/vscode/resources/app/product.json";
+  #   passthru.longName = "Unknown Fork";
 
-    passthru.longName = "Unknown Fork";
+  #   derivationArgs = {
+  #     version = "0.1.0";
 
-    derivationArgs = {
-      version = "0.1.0";
+  #     pname = "unknown-fork";
+  #     executableName = "unknown";
+  #     longName = passthru.longName;
+  #     meta.mainProgram = "unknown";
+  #   };
 
-      pname = "unknown-fork";
-      executableName = "unknown";
-      longName = passthru.longName;
-      meta.mainProgram = "unknown";
-    };
-
-    text = builtins.toJSON {
-      dataFolderName = ".unknown";
-      nameShort = passthru.longName;
-    };
-  };
+  #   text = builtins.toJSON {
+  #     dataFolderName = ".unknown";
+  #     nameShort = passthru.longName;
+  #   };
+  # };
 
   # Creates a mock VSCode fork package with specified version
   #
@@ -36,16 +35,39 @@ let
         ;
     };
 
+  # packageName: package
+  #
   supportedForks = {
-    # vscode = pkgs.vscode;
-    # vscodium = pkgs.vscodium;
-    # vscode-server = pkgs.openvscode-server;
-    # vscode-insiders = pkgs.vscode-insiders;
+    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/co/code-cursor/package.nix
+    #
+    # cursor has a different package name than the actual pname
+    #
+    code-cursor = {
+      pname = "cursor";
+      executableName = "cursor";
+      longName = "Cursor";
+    };
 
-    code-cursor = pkgs.code-cursor;
-    kiro = pkgs.kiro;
-    unknown-code = unknownPackage;
-    windsurf = pkgs.windsurf;
+    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/ki/kiro/package.nix
+    kiro = {
+      pname = "kiro";
+      executableName = "kiro";
+      longName = "Kiro";
+    };
+
+    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/wi/windsurf/package.nix
+    windsurf = {
+      pname = "windsurf";
+      executableName = "windsurf";
+      longName = "Windsurf";
+    };
+
+    # unknown fork is a mock package for testing unknown forks
+    unknown-fork = {
+      pname = "vscode-unknown-fork";
+      executableName = "unknown-code";
+      longName = "Unknown Fork";
+    };
   };
 
   buildTestSuiteFor =
@@ -66,6 +88,7 @@ let
                   inherit package packageName;
 
                   enable = true;
+                  moduleName = package.pname;
                 };
               };
             in
@@ -128,9 +151,9 @@ lib.foldl' (acc: tests: acc // tests) { } [
     }
   )
 
-  # mutableExtensionsDir defaults to `true` when a single profile is set,
-  # then we set it to false to test multiple profiles
-  #
+  # # mutableExtensionsDir defaults to `true` when a single profile is set,
+  # # then we set it to false to test multiple profiles
+  # #
   (buildTestSuiteFor "multi-profile-support-with-default-profile-only" extensionsTests
     multiProfilePackages
     {

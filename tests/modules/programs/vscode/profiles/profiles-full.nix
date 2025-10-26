@@ -54,7 +54,9 @@ let
     };
   };
 
-  mcpDirectory = if forkInputs.package.pname == "cursor" then ".cursor" else userDirectory;
+  mcpDirectory = builtins.trace "forkInputs: ${builtins.toJSON forkInputs}" (
+    if forkInputs.package.pname == "cursor" then ".cursor" else userDirectory
+  );
 in
 {
   config = lib.setAttrByPath [ "programs" vscodePackageName ] forkConfig // {

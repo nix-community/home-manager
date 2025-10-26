@@ -11,11 +11,11 @@ rec {
 
   # !! this is a hack to make the test module work for unknown forks
   #
-  # mkVSCodeFork requires an existing/supported package name to apply its configuration,
+  # vscodeFork requires an existing/supported package name to apply its configuration,
   # so we fallback to "vscode" for unknown forks.
   #
   vscodePackageName =
-    if forkInputs.package.pname == "unknown-fork" then "kiro" else forkInputs.package.pname;
+    if forkInputs.package.pname == "vscode-unknown-fork" then "kiro" else forkInputs.package.pname;
 
   vscodePackageVersion =
     if forkInputs.package ? vscodeVersion then
