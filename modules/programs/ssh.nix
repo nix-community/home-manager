@@ -383,6 +383,18 @@ let
         example = "10m";
         description = "Whether control socket should remain open in the background.";
       };
+
+      kexAlgorithms = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        example = [
+          "curve25519-sha256@libssh.org"
+          "diffie-hellman-group-exchange-sha256"
+        ];
+        description = ''
+          Specifies the available KEX (Key Exchange) algorithms.
+        '';
+      };
     };
 
     #    config.host = mkDefault dagName;
@@ -430,6 +442,9 @@ let
       ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.localForwards
       ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.remoteForwards
       ++ map (f: "  DynamicForward" + addressPort f) cf.dynamicForwards
+      ++ optional (
+        cf.kexAlgorithms != null
+      ) "  KexAlgorithms ${builtins.concatStringsSep "," cf.kexAlgorithms}"
       ++ [
         (lib.generators.toKeyValue {
           mkKeyValue = lib.generators.mkKeyValueDefault { } " ";
