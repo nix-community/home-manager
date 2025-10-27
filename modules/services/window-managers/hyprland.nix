@@ -366,7 +366,7 @@ in
         importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
 
         pluginsToHyprconf =
-          _plugins:
+          plugins:
           lib.hm.generators.toHyprconf {
             attrs = {
               "exec-once" =
@@ -374,7 +374,7 @@ in
                   mkEntry =
                     entry: if lib.types.package.check entry then "${entry}/lib/lib${entry.pname}.so" else entry;
                 in
-                map (p: "hyprctl plugin load ${mkEntry p}") cfg.plugins;
+                map (p: "hyprctl plugin load ${mkEntry p}") plugins;
             };
             inherit importantPrefixes;
           };
