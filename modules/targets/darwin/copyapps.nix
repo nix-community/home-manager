@@ -18,11 +18,9 @@ in
         defaultText = lib.literalExpression ''pkgs.stdenv.hostPlatform.isDarwin && (lib.versionAtLeast config.home.stateVersion "25.11")'';
       };
 
-    enableChecks =
-      lib.mkEnableOption "enable App Management checks (needs sudo; may ask sudo twice with nix-darwin)"
-      // {
-        default = true;
-      };
+    enableChecks = lib.mkEnableOption "enable App Management checks" // {
+      default = true;
+    };
 
     directory = lib.mkOption {
       type = lib.types.str;
@@ -48,7 +46,7 @@ in
             ensureAppManagement() {
               for appBundle in '${cfg.directory}/'*.app; do
                 if [[ -d "$appBundle" ]]; then
-                  if ! run /usr/bin/sudo /usr/bin/touch "$appBundle/.DS_Store" &> /dev/null; then
+                  if ! run /usr/bin/touch "$appBundle/.DS_Store" &> /dev/null; then
                     return 1
                   fi
                 fi
@@ -61,16 +59,16 @@ in
               if [[ "$(/bin/launchctl managername)" != Aqua ]]; then
                 # It is possible to grant the App Management permission to `sshd-keygen-wrapper`, however
                 # there are many pitfalls like requiring the primary user to grant the permission and to
-                # be logged in when `darwin-rebuild` is run over SSH and it will still fail sometimes...
+                # be logged in when home-manager is run over SSH and it will still fail sometimes...
                 printf >&2 '\e[1;31merror: permission denied when trying to update apps over SSH, aborting activation\e[0m\n'
-                printf >&2 'Apps could not be updated as `darwin-rebuild` requires Full Disk Access to work over SSH.\n'
+                printf >&2 'Apps could not be updated as home-manager requires Full Disk Access to work over SSH.\n'
                 printf >&2 'You can either:\n'
                 printf >&2 '\n'
                 printf >&2 '  grant Full Disk Access to all programs run over SSH\n'
                 printf >&2 '\n'
                 printf >&2 'or\n'
                 printf >&2 '\n'
-                printf >&2 '  run `darwin-rebuild` in a graphical session.\n'
+                printf >&2 '  run home-manager in a graphical session.\n'
                 printf >&2 '\n'
                 printf >&2 'The option "Allow full disk access for remote users" can be found by\n'
                 printf >&2 'navigating to System Settings > General > Sharing > Remote Login\n'
@@ -83,7 +81,7 @@ in
 
                 if ! ensureAppManagement; then
                   printf >&2 '\e[1;31merror: permission denied when trying to update apps, aborting activation\e[0m\n'
-                  printf >&2 '`darwin-rebuild` requires permission to update your apps, please accept the notification\n'
+                  printf >&2 'home-manager requires permission to update your apps, please accept the notification\n'
                   printf >&2 'and grant the permission for your terminal emulator in System Settings.\n'
                   printf >&2 '\n'
                   printf >&2 'If you did not get a notification, you can navigate to System Settings > Privacy & Security > App Management.\n'
