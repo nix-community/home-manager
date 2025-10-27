@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "context7": {
+      "enabled": true,
+      "headers": {
+        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+      },
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "custom-server": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://example.com"
+    },
+    "everything": {
+      "command": [
+        "custom-command"
+      ],
+      "enabled": false,
+      "type": "local"
+    }
+  },
+  "model": "anthropic/claude-sonnet-4-20250514",
+  "theme": "opencode"
+}

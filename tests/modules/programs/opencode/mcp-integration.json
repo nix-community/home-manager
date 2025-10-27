@@ -1,0 +1,30 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "context7": {
+      "enabled": true,
+      "headers": {
+        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+      },
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "disabled-server": {
+      "command": [
+        "echo",
+        "test"
+      ],
+      "enabled": false,
+      "type": "local"
+    },
+    "everything": {
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-everything"
+      ],
+      "enabled": true,
+      "type": "local"
+    }
+  }
+}
