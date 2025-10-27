@@ -29,7 +29,4 @@ let
     standalone-standard-basics = runTest ./standalone/standard-basics.nix;
   };
 in
-tests
-// {
-  all = pkgs.linkFarm "all" (pkgs.lib.mapAttrsToList (name: path: { inherit name path; }) tests);
-}
+tests // { all = pkgs.linkFarm "all" tests; }
