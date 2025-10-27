@@ -36,14 +36,16 @@ in
 
     # Use `systemd-tmpfiles` since glab requires its configuration file to have
     # mode 0600.
-    systemd.user.tmpfiles.rules =
+    systemd.user.tmpfiles =
       let
         target = "${config.xdg.configHome}/glab-cli/config.yml";
       in
-      lib.mkIf (cfg.settings != { }) [
-        "C+ ${target} - - - - ${yaml.generate "glab-config" cfg.settings}"
-        "z  ${target} 0600"
-      ];
+      lib.mkIf (cfg.settings != { }) {
+        rules = [ "z ${target} 0600" ];
+        rulesToPurgeOnChange = [
+          "C+$ ${target} - - - - ${yaml.generate "glab-config" cfg.settings}"
+        ];
+      };
 
     xdg.configFile."glab-cli/aliases.yml" = lib.mkIf (cfg.aliases != { }) {
       source = yaml.generate "glab-aliases" cfg.aliases;
