@@ -143,10 +143,6 @@ in
 
           newGenFiles="$1"
           shift
-          if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" && -n "$HOME_MANAGER_BACKUP_EXT" ]]; then
-            errorEcho "Conflicting environment variables HOME_MANAGER_BACKUP_COMMAND and HOME_MANAGER_BACKUP_EXT both set."
-            exit 1
-          fi
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
