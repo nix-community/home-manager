@@ -9,9 +9,7 @@ let
 
   cfg = config.services.home-manager.autoExpire;
 
-  homeManagerPackage = pkgs.callPackage ../../home-manager {
-    path = config.programs.home-manager.path;
-  };
+  homeManagerPackage = config.programs.home-manager.package;
 
   script = pkgs.writeShellScript "home-manager-auto-expire" (
     ''
