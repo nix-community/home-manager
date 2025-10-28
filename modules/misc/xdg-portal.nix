@@ -33,10 +33,16 @@ in
         Whether to enable [XDG desktop integration](https://github.com/flatpak/xdg-desktop-portal).
 
         Note, if you installed Home Manager via its NixOS and
-        'home-manager.useUserPackages' is enabled, make sure to add
+        'home-manager.useUserPackages' is enabled, make sure to add either
 
         ``` nix
         environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
+        ```
+
+        or
+
+        ```nix
+        home-manager.enableOSConfigurationChanges = true;
         ```
 
         to your NixOS configuration so that the portal definitions and DE
@@ -158,9 +164,13 @@ in
             -> isLinked "/share/applications" && isLinked "/share/xdg-desktop-portal";
           message = ''
             xdg.portal: since you installed Home Manager via its NixOS module and
-            'home-manager.useUserPackages' is enabled, you need to add
+            'home-manager.useUserPackages' is enabled, you need to add either
 
             environment.pathsToLink = [ `/share/applications` `/share/xdg-desktop-portal` ];
+
+            or
+
+            home-manager.enableOSConfigurationChanges = true;
 
             to your NixOS configuration so that the portal definitions and DE
             provided configurations get linked.
