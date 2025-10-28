@@ -190,7 +190,7 @@ let
 
   # Create an overlay that scrubs packages in the scrublist
   packageScrubOverlay =
-    self: super:
+    _self: super:
     lib.mapAttrs (
       name: value:
       if lib.elem name packagesToScrub then

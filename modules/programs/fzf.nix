@@ -194,8 +194,8 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = lib.mapAttrs (n: v: toString v) (
-      lib.filterAttrs (n: v: v != [ ] && v != null) {
+    home.sessionVariables = lib.mapAttrs (_n: v: toString v) (
+      lib.filterAttrs (_n: v: v != [ ] && v != null) {
         FZF_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         FZF_ALT_C_OPTS = cfg.changeDirWidgetOptions;
         FZF_CTRL_R_OPTS = cfg.historyWidgetOptions;

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 let
 
@@ -20,32 +20,30 @@ let
 
 in
 {
-  config = {
-    programs.fish = {
-      enable = true;
+  programs.fish = {
+    enable = true;
 
-      formatFishScripts = true;
+    formatFishScripts = true;
 
-      functions = {
-        func = ''echo "foo"'';
-        func-multi = ''
-              echo bar
-          if foo
-              bar
-                  baz
-                end
-        '';
-      };
+    functions = {
+      func = ''echo "foo"'';
+      func-multi = ''
+            echo bar
+        if foo
+            bar
+                baz
+              end
+      '';
     };
-
-    nmt.script = ''
-      assertFileExists home-files/.config/fish/functions/func.fish
-      echo ${expectedFunc}
-      assertFileContent home-files/.config/fish/functions/func.fish ${expectedFunc}
-
-      assertFileExists home-files/.config/fish/functions/func-multi.fish
-      echo ${expectedFuncMulti}
-      assertFileContent home-files/.config/fish/functions/func-multi.fish ${expectedFuncMulti}
-    '';
   };
+
+  nmt.script = ''
+    assertFileExists home-files/.config/fish/functions/func.fish
+    echo ${expectedFunc}
+    assertFileContent home-files/.config/fish/functions/func.fish ${expectedFunc}
+
+    assertFileExists home-files/.config/fish/functions/func-multi.fish
+    echo ${expectedFuncMulti}
+    assertFileContent home-files/.config/fish/functions/func-multi.fish ${expectedFuncMulti}
+  '';
 }

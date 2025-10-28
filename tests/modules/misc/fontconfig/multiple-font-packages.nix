@@ -1,15 +1,13 @@
 { pkgs, ... }:
 {
-  config = {
-    home.packages = [
-      pkgs.comic-relief
-      pkgs.unifont
-    ];
+  home.packages = [
+    pkgs.comic-relief
+    pkgs.unifont
+  ];
 
-    fonts.fontconfig.enable = true;
+  fonts.fontconfig.enable = true;
 
-    nmt.script = ''
-      assertDirectoryNotEmpty home-path/lib/fontconfig/cache
-    '';
-  };
+  nmt.script = ''
+    assertDirectoryNotEmpty home-path/lib/fontconfig/cache
+  '';
 }

@@ -298,7 +298,7 @@ in
           in
           mapAttrsToList
             (
-              a: v':
+              a: _v':
               [
                 {
                   assertion = (lib.elem a allowed);
@@ -325,7 +325,7 @@ in
               ++ map (
                 attrs:
                 let
-                  defined = lib.attrNames (filterAttrs (n: v: v != null) (lib.genAttrs attrs (a: v.${a} or null)));
+                  defined = lib.attrNames (filterAttrs (_n: v: v != null) (lib.genAttrs attrs (a: v.${a} or null)));
                 in
                 {
                   assertion = lib.length defined <= 1;

@@ -11,7 +11,7 @@ lib.mkIf config.test.enableBig {
     checkConfig = true;
   };
 
-  nixpkgs.overlays = [ (self: super: { inherit (realPkgs) xvfb-run; }) ];
+  nixpkgs.overlays = [ (_self: _super: { inherit (realPkgs) xvfb-run; }) ];
 
   nmt.script = ''
     assertFileExists home-files/.config/sway/config

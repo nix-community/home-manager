@@ -7,7 +7,7 @@ let
   mkHmLib = import ./.;
 in
 nixpkgsLib.extend (
-  self: super: {
+  self: _super: {
     hm = mkHmLib { lib = self; };
   }
 )

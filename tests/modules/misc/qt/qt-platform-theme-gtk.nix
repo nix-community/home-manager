@@ -12,15 +12,15 @@
   };
 
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: prev: {
       libsForQt5 = prev.libsForQt5.overrideScope (
-        qt5final: qt5prev: {
+        _qt5final: _qt5prev: {
           qtstyleplugins = config.lib.test.mkStubPackage { outPath = null; };
         }
       );
 
       qt6Packages = prev.qt6Packages.overrideScope (
-        qt6final: qt6prev: {
+        _qt6final: _qt6prev: {
           qt6gtk2 = config.lib.test.mkStubPackage { outPath = null; };
         }
       );

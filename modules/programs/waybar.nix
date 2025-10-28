@@ -24,7 +24,7 @@ let
   jsonFormat = pkgs.formats.json { };
 
   mkMargin =
-    name:
+    _name:
     mkOption {
       type = types.nullOr types.int;
       default = null;

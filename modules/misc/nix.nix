@@ -269,7 +269,7 @@ in
                   path = config.flake.outPath;
                 }
                 // lib.filterAttrs (
-                  n: v: n == "lastModified" || n == "rev" || n == "revCount" || n == "narHash"
+                  n: _v: n == "lastModified" || n == "rev" || n == "revCount" || n == "narHash"
                 ) config.flake
               );
             };
@@ -345,7 +345,7 @@ in
     (mkIf (cfg.registry != { }) {
       xdg.configFile."nix/registry.json".source = jsonFormat.generate "registry.json" {
         version = cfg.registryVersion;
-        flakes = mapAttrsToList (n: v: { inherit (v) from to exact; }) cfg.registry;
+        flakes = mapAttrsToList (_n: v: { inherit (v) from to exact; }) cfg.registry;
       };
     })
 

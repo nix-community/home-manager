@@ -1,9 +1,7 @@
 {
-  config = {
-    programs.jjui.enable = true;
+  programs.jjui.enable = true;
 
-    nmt.script = ''
-      assertPathNotExists home-files/.config/jjui
-    '';
-  };
+  nmt.script = ''
+    assertPathNotExists home-files/.config/jjui
+  '';
 }

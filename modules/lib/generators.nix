@@ -28,7 +28,7 @@
       toHyprconf' =
         indent: attrs:
         let
-          sections = filterAttrs (n: v: isAttrs v || (isList v && all isAttrs v)) attrs;
+          sections = filterAttrs (_n: v: isAttrs v || (isList v && all isAttrs v)) attrs;
 
           mkSection =
             n: attrs:
@@ -45,7 +45,7 @@
             inherit indent;
           };
 
-          allFields = filterAttrs (n: v: !(isAttrs v || (isList v && all isAttrs v))) attrs;
+          allFields = filterAttrs (_n: v: !(isAttrs v || (isList v && all isAttrs v))) attrs;
 
           isImportantField =
             n: _: foldl (acc: prev: if hasPrefix prev n then true else acc) false importantPrefixes;

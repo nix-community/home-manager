@@ -37,7 +37,7 @@
           accountAttrOptions = options.accounts.email.accounts.type.nestedTypes.elemType.getSubOptions [ ];
 
           throwOnAttrAccess =
-            baseName: builtins.mapAttrs (n: v: throw "Unexpected access of ${baseName}.${n}");
+            baseName: builtins.mapAttrs (n: _v: throw "Unexpected access of ${baseName}.${n}");
 
           # Don't want to do anything with these account attributes.
           ignoredAttrNames = [

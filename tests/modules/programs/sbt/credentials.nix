@@ -25,16 +25,14 @@ let
   credentialsSbtPath = ".sbt/1.0/credentials.sbt";
 in
 {
-  config = {
-    programs.sbt = {
-      enable = true;
-      credentials = credentials;
-      package = pkgs.writeScriptBin "sbt" "";
-    };
-
-    nmt.script = ''
-      assertFileExists "home-files/${credentialsSbtPath}"
-      assertFileContent "home-files/${credentialsSbtPath}" "${expectedCredentialsSbt}"
-    '';
+  programs.sbt = {
+    enable = true;
+    credentials = credentials;
+    package = pkgs.writeScriptBin "sbt" "";
   };
+
+  nmt.script = ''
+    assertFileExists "home-files/${credentialsSbtPath}"
+    assertFileContent "home-files/${credentialsSbtPath}" "${expectedCredentialsSbt}"
+  '';
 }

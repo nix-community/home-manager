@@ -144,7 +144,7 @@ in
     );
 
     systemd.user.timers = makeDefs (
-      name: pairCfg: {
+      name: _pairCfg: {
         Unit.Description = "Unison pair sync auto-restart (${name})";
         Install.WantedBy = [ "timers.target" ];
         Timer = {

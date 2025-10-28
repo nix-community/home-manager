@@ -224,36 +224,34 @@ in
       '';
       default = { };
       type = lib.types.attrsOf (
-        lib.types.submodule (
-          { name, config, ... }:
-          {
-            options = {
-              settings = lib.mkOption {
-                type = (with lib.types; attrsOf (listOf str)) // {
-                  description = "Hyprland binds";
-                };
-                default = { };
-                description = ''
-                  Hyprland binds to be put in the submap
-                '';
-                example = lib.literalExpression ''
-                  {
-                    binde = [
-                     ", right, resizeactive, 10 0"
-                     ", left, resizeactive, -10 0"
-                     ", up, resizeactive, 0 -10"
-                     ", down, resizeactive, 0 10"
-                    ];
-
-                    bind = [
-                      ", escape, submap, reset"
-                    ];
-                  }
-                '';
+        lib.types.submodule {
+          options = {
+            settings = lib.mkOption {
+              type = (with lib.types; attrsOf (listOf str)) // {
+                description = "Hyprland binds";
               };
+              default = { };
+              description = ''
+                Hyprland binds to be put in the submap
+              '';
+              example = lib.literalExpression ''
+                {
+                  binde = [
+                   ", right, resizeactive, 10 0"
+                   ", left, resizeactive, -10 0"
+                   ", up, resizeactive, 0 -10"
+                   ", down, resizeactive, 0 10"
+                  ];
+
+                  bind = [
+                    ", escape, submap, reset"
+                  ];
+                }
+              '';
             };
-          }
-        )
+          };
+        }
+
       );
       example = lib.literalExpression ''
         {
@@ -347,12 +345,12 @@ in
 
         # attrset of { <submap name> = <list of non bind* keys>; } for all submaps
         submapWarningsAttrset = builtins.mapAttrs (
-          name: submap: filterNonBinds submap.settings
+          _name: submap: filterNonBinds submap.settings
         ) cfg.submaps;
 
         submapWarnings = lib.mapAttrsToList (submapName: nonBinds: ''
           wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${builtins.toString nonBinds}], which will have no effect in a submap
-        '') (lib.filterAttrs (n: v: v != [ ]) submapWarningsAttrset);
+        '') (lib.filterAttrs (_n: v: v != [ ]) submapWarningsAttrset);
       in
       submapWarnings ++ lib.optional inconsistent warning;
 
@@ -376,7 +374,7 @@ in
                   mkEntry =
                     entry: if lib.types.package.check entry then "${entry}/lib/lib${entry.pname}.so" else entry;
                 in
-                map (p: "hyprctl plugin load ${mkEntry p}") cfg.plugins;
+                map (p: "hyprctl plugin load ${mkEntry p}") plugins;
             };
             inherit importantPrefixes;
           };

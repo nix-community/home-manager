@@ -1,7 +1,5 @@
 {
-  config = {
-    nmt.script = ''
-      assertPathNotExists home-files/.yubico/authorized_yubikeys
-    '';
-  };
+  nmt.script = ''
+    assertPathNotExists home-files/.yubico/authorized_yubikeys
+  '';
 }

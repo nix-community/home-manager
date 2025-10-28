@@ -14,7 +14,7 @@ let
   dstDir = "${config.home.homeDirectory}/Library/LaunchAgents";
 
   launchdConfig =
-    { config, name, ... }:
+    { name, ... }:
     {
       options = {
         enable = lib.mkEnableOption name;
@@ -45,9 +45,9 @@ let
 
   toAgent = config: pkgs.writeText "${config.Label}.plist" (toPlist { escape = true; } config);
 
-  agentPlists = lib.mapAttrs' (n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent v.config)) (
-    lib.filterAttrs (n: v: v.enable) cfg.agents
-  );
+  agentPlists = lib.mapAttrs' (
+    _n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent v.config)
+  ) (lib.filterAttrs (_n: v: v.enable) cfg.agents);
 
   agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
     mkdir -p "$out"

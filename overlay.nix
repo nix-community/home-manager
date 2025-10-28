@@ -1,3 +1,3 @@
-final: prev: {
+_final: prev: {
   home-manager = prev.callPackage ./home-manager { path = toString ./.; };
 }

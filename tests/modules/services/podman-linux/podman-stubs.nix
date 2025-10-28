@@ -1,5 +1,5 @@
 { realPkgs, ... }:
 
 {
-  nixpkgs.overlays = [ (self: super: { inherit (realPkgs) podman skopeo; }) ];
+  nixpkgs.overlays = [ (_self: _super: { inherit (realPkgs) podman skopeo; }) ];
 }

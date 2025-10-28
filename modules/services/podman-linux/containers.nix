@@ -63,7 +63,7 @@ let
             let
               quadletName = extractQuadletReference type value;
               quadletsOfType = lib.filterAttrs (
-                n: v: v.quadletData.resourceType == type
+                _n: v: v.quadletData.resourceType == type
               ) cfg.internal.builtQuadlets;
             in
             if (lib.hasAttr quadletName quadletsOfType) then

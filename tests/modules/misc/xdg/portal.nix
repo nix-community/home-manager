@@ -21,7 +21,7 @@ lib.mkIf config.test.enableBig {
     };
   };
 
-  test.unstubs = [ (self: super: { inherit (realPkgs) xdg-desktop-portal; }) ];
+  test.unstubs = [ (_self: _super: { inherit (realPkgs) xdg-desktop-portal; }) ];
 
   nmt.script = ''
     assertFileExists home-path/share/systemd/user/xdg-desktop-portal.service

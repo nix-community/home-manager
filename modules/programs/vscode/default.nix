@@ -389,7 +389,7 @@ in
       (mkIf
         (
           (lib.filterAttrs (
-            n: v:
+            _n: v:
             (v ? enableExtensionUpdateCheck || v ? enableUpdateCheck)
             && (v.enableExtensionUpdateCheck != null || v.enableUpdateCheck != null)
           ) allProfilesExceptDefault) != { }
@@ -412,7 +412,7 @@ in
           PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
           file="${userDir}/globalStorage/storage.json"
           file_write=""
-          profiles=(${lib.escapeShellArgs (flatten (mapAttrsToList (n: v: n) allProfilesExceptDefault))})
+          profiles=(${lib.escapeShellArgs (flatten (mapAttrsToList (n: _v: n) allProfilesExceptDefault))})
 
           if [ -f "$file" ]; then
             existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
@@ -517,7 +517,7 @@ in
           # causes VSCode to create the extensions.json with all the extensions
           # in the extension directory, which includes extensions from other profiles.
           lib.mkMerge (
-            lib.concatMap toPaths (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
+            lib.concatMap toPaths (flatten (mapAttrsToList (_n: v: v.extensions) cfg.profiles))
             ++
               lib.optional
                 (
@@ -550,7 +550,7 @@ in
                 combinedExtensionsDrv = pkgs.buildEnv {
                   name = "vscode-extensions";
                   paths =
-                    (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
+                    (flatten (mapAttrsToList (_n: v: v.extensions) cfg.profiles))
                     ++ lib.optional (
                       (
                         lib.versionAtLeast vscodeVersion "1.74.0"

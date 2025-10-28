@@ -109,7 +109,7 @@ in
         else
           "${pkgs.skopeo.policy}/default-policy.json";
       "containers/registries.conf".source = toml.generate "registries.conf" {
-        registries = lib.mapAttrs (n: v: { registries = v; }) cfg.settings.registries;
+        registries = lib.mapAttrs (_n: v: { registries = v; }) cfg.settings.registries;
       };
       "containers/storage.conf".source = toml.generate "storage.conf" cfg.settings.storage;
       "containers/containers.conf".source = toml.generate "containers.conf" cfg.settings.containers;

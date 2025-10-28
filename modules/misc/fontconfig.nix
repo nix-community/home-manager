@@ -337,7 +337,7 @@ in
       };
 
     xdg.configFile = lib.mapAttrs' (
-      name: config:
+      _name: config:
       lib.nameValuePair "fontconfig/conf.d/${builtins.toString config.priority}-hm-${config.label}.conf" {
         inherit (config) enable text;
         source = lib.mkIf (config.source != null) config.source;

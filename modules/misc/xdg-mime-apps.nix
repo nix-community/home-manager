@@ -142,7 +142,7 @@ in
 
       xdg.configFile."mimeapps.list".source =
         let
-          joinValues = lib.mapAttrs (n: lib.concatStringsSep ";");
+          joinValues = lib.mapAttrs (_n: lib.concatStringsSep ";");
 
           baseFile = (pkgs.formats.ini { }).generate "mimeapps.list" {
             "Added Associations" = joinValues cfg.associations.added;

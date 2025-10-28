@@ -113,7 +113,7 @@ in
   config =
     let
       directories =
-        (lib.filterAttrs (n: v: !isNull v) {
+        (lib.filterAttrs (_n: v: !isNull v) {
           XDG_DESKTOP_DIR = cfg.desktop;
           XDG_DOCUMENTS_DIR = cfg.documents;
           XDG_DOWNLOAD_DIR = cfg.download;
