@@ -9,9 +9,7 @@ let
 
   cfg = config.services.home-manager.autoUpgrade;
 
-  homeManagerPackage = pkgs.callPackage ../../home-manager {
-    path = config.programs.home-manager.path;
-  };
+  homeManagerPackage = config.programs.home-manager.package;
 
   autoUpgradeApp = pkgs.writeShellApplication {
     name = "home-manager-auto-upgrade";
