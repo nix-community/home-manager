@@ -58,7 +58,7 @@ let
         "[[${name}]]"
         "path = ${
           value.local.path
-          + "/" # TODO: dont add slash if type is "singlefile"
+          + (if value.local.type == "singlefile" then "" else "/")
           + (optionalString (value.khal.type == "discover") value.khal.glob)
           + (optionalString (
             value.khal.type == "birthdays" && value.khal ? thisCollection

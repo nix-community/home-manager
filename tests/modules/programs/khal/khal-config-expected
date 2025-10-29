@@ -8,6 +8,15 @@ type=calendar
 
 
 
+[[testSinglefile]]
+path = $XDG_CONFIG_HOME/cal/timetable.ics
+readonly = True
+addresses= study@university.edu
+priority=10
+type=calendar
+
+
+
 [[testWithAddresss]]
 path = /home/hm-user/$XDG_CONFIG_HOME/cal/testWithAddresss/
 addresses= john.doe@email.com
@@ -22,13 +31,6 @@ addresses= john.doe@email.com, another.brick@on.the.wall
 priority=10
 type=calendar
 
-
-[[testSinglefile]]
-path = $XDG_CONFIG_HOME/cal/timetable.ics
-readonly = True
-addresses= study@university.edu
-priority=10
-type=calendar
 
 
 [[testcontacts-automaticallyCollected]]
