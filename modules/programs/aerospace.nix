@@ -320,7 +320,7 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      file.".config/aerospace/aerospace.toml".text =
+      file.".config/aerospace/aerospace.toml".source =
         let
           generatedConfig = tomlFormat.generate "aerospace" (
             filterNulls (
@@ -332,8 +332,15 @@ in
               }
             )
           );
+          extraConfig = pkgs.writeText "aerospace-extra-config" cfg.extraConfig;
         in
-        builtins.readFile generatedConfig + lib.optionalString (cfg.extraConfig != "") "${cfg.extraConfig}";
+        pkgs.runCommandLocal "aerospace.toml"
+          {
+            inherit generatedConfig extraConfig;
+          }
+          ''
+            cat "$generatedConfig" "$extraConfig" > "$out"
+          '';
     };
 
     launchd.agents.aerospace = {
