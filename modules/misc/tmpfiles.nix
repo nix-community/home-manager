@@ -11,7 +11,10 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.dawidsowa ];
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    dawidsowa
+  ];
 
   options.systemd.user.tmpfiles = {
     rules = lib.mkOption {
