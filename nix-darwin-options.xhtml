@@ -57,6 +57,34 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="nix-darwin-opt-home-manager.backupCommand"></a><a class="term" href="nix-darwin-options.xhtml#nix-darwin-opt-home-manager.backupCommand"><code class="option">home-manager.backupCommand</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>On activation run this command on each existing file
+rather than exiting with an error.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string or absolute path</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&#x27;&#x27;${pkgs.trash-cli}/bin/trash</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/nixos/common.nix" target="_top">
+&lt;home-manager/nixos/common.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="nix-darwin-opt-home-manager.backupFileExtension"></a><a class="term" href="nix-darwin-options.xhtml#nix-darwin-opt-home-manager.backupFileExtension"><code class="option">home-manager.backupFileExtension</code>
   </a>
  </span>
