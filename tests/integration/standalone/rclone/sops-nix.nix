@@ -28,9 +28,12 @@ in
       uid = 1000;
     };
 
-    systemd.tmpfiles.rules = [
-      "f /home/alice/age-key 400 alice users - ${ageKey}"
-    ];
+    systemd.tmpfiles.settings.age."/home/alice/age-key".f = {
+      mode = "400";
+      user = "alice";
+      group = "users";
+      argument = ageKey;
+    };
 
     home-manager.users.alice =
       { config, ... }:
