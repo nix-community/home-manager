@@ -8,7 +8,6 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 exec-on-workspace-change = []
 on-focus-changed = []
 on-focused-monitor-changed = ["move-mouse monitor-lazy-center"]
-on-window-detected = []
 start-at-login = false
 
 [gaps.outer]
