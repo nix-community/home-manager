@@ -1132,6 +1132,11 @@ while [[ $# -gt 0 ]]; do
             EXTRA_NIX_PATH+=("$1")
             shift
             ;;
+        -B)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            export HOME_MANAGER_BACKUP_COMMAND="$1"
+            shift
+            ;;
         -b)
             [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             export HOME_MANAGER_BACKUP_EXT="$1"
