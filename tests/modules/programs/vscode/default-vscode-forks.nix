@@ -1,43 +1,42 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, ... }@inputs:
 let
-  # unknownPackage = pkgs.writeTextFile rec {
-  #   name = "${derivationArgs.pname}-${derivationArgs.version}";
-  #   destination = "/lib/vscode/resources/app/product.json";
-
-  #   passthru.longName = "Unknown Fork";
-
-  #   derivationArgs = {
-  #     version = "0.1.0";
-
-  #     pname = "unknown-fork";
-  #     executableName = "unknown";
-  #     longName = passthru.longName;
-  #     meta.mainProgram = "unknown";
-  #   };
-
-  #   text = builtins.toJSON {
-  #     dataFolderName = ".unknown";
-  #     nameShort = passthru.longName;
-  #   };
-  # };
-
-  # Creates a mock VSCode fork package with specified version
-  #
-  mkPackageWithVersion =
-    packageName: version:
-    pkgs.writeScriptBin "${packageName}-${version}" ""
-    // {
-      inherit version;
-      inherit (supportedForks.${packageName})
-        executableName
-        longName
-        pname
-        ;
-    };
-
   # packageName: package
   #
   supportedForks = {
+    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vscode/vscode.nix
+    #
+    vscode = {
+      pname = "vscode";
+      executableName = "code";
+      longName = "Code";
+    };
+
+    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vscode/vscode.nix
+    #
+    vscode-insiders = {
+      pname = "vscode-insiders";
+      executableName = "code-insiders";
+      longName = "Code - Insiders";
+    };
+
+    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/op/openvscode-server/package.nix
+    #
+    openvscode-server = {
+      pname = "openvscode-server";
+      executableName = "openvscode-server";
+      longName = "OpenVSCode Server";
+      dataFolderName = ".vscode-server";
+    };
+
+    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vscode/vscodium.nix
+    #
+    vscodium = {
+      pname = "vscodium";
+      executableName = "codium";
+      longName = "VSCodium";
+      dataFolderName = ".vscode-oss";
+    };
+
     # https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/co/code-cursor/package.nix
     #
     # cursor has a different package name than the actual pname
@@ -64,11 +63,26 @@ let
 
     # unknown fork is a mock package for testing unknown forks
     unknown-fork = {
-      pname = "vscode-unknown-fork";
+      pname = "another-unknown-fork";
       executableName = "unknown-code";
       longName = "Unknown Fork";
+      dataFolderName = ".unknown-fork";
     };
   };
+
+  # Creates a mock VSCode fork package with specified version
+  #
+  mkPackageWithVersion =
+    packageName: version:
+    pkgs.writeScriptBin "${packageName}-${version}" ""
+    // {
+      inherit version;
+      inherit (supportedForks.${packageName})
+        executableName
+        longName
+        pname
+        ;
+    };
 
   buildTestSuiteFor =
     groupName: tests: packages: forkConfig:
@@ -81,18 +95,39 @@ let
             let
               testKey = "vscode-forks-${package.pname}-${groupName}-${testName}";
 
-              testConfig = {
-                inherit lib pkgs;
+              # !! this is a hack to make the test module work for unknown forks
+              #
+              # "programs.unknown-fork" is not a supported moduleName so we fallback to the
+              # "vscode" module config for unknown forks with a custom package.
+              #
+              moduleName = (if packageName == "unknown-fork" then "vscode" else package.pname);
 
-                forkInputs = forkConfig // {
-                  inherit package packageName;
+              hasDataFolderName =
+                supportedForks.${packageName} ? dataFolderName
+                && supportedForks.${packageName}.dataFolderName != null;
 
-                  enable = true;
-                  moduleName = package.pname;
-                };
-              };
+              dataFolderName = if hasDataFolderName then supportedForks.${packageName}.dataFolderName else null;
             in
-            lib.nameValuePair testKey (testModule testConfig)
+            lib.nameValuePair testKey (
+              testModule (
+                inputs
+                // {
+                  forkInputs =
+                    forkConfig
+                    # // lib.optionalAttrs hasDataFolderName { dataFolderName = dataFolderName; }
+                    // {
+                      enable = true;
+
+                      inherit
+                        dataFolderName
+                        moduleName
+                        packageName
+                        package
+                        ;
+                    };
+                }
+              )
+            )
 
           ) tests
 
@@ -151,9 +186,9 @@ lib.foldl' (acc: tests: acc // tests) { } [
     }
   )
 
-  # # mutableExtensionsDir defaults to `true` when a single profile is set,
-  # # then we set it to false to test multiple profiles
-  # #
+  # mutableExtensionsDir defaults to `true` when a single profile is set,
+  # then we set it to false to test multiple profiles
+  #
   (buildTestSuiteFor "multi-profile-support-with-default-profile-only" extensionsTests
     multiProfilePackages
     {

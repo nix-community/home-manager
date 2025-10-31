@@ -5,7 +5,6 @@ let
     settingsJsonObject
     settingsJsonPath
     userDirectory
-    vscodePackageName
     ;
 
   forkConfig = forkInputs // {
@@ -27,7 +26,7 @@ let
   };
 in
 {
-  config = lib.setAttrByPath [ "programs" vscodePackageName ] forkConfig // {
+  config = lib.setAttrByPath [ "programs" forkInputs.moduleName ] forkConfig // {
     nmt.script = ''
       # mutable profiles create immutable nix store files and mutable copies on activation
       # immutable profiles create immutable nix store files linked to the files themselves

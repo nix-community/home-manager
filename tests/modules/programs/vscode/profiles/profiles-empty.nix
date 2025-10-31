@@ -1,6 +1,6 @@
 { forkInputs, lib, ... }@inputs:
 let
-  inherit (import ../test-helpers.nix inputs) userDirectory vscodePackageName;
+  inherit (import ../test-helpers.nix inputs) userDirectory;
 
   forkConfig = forkInputs // {
     profiles = {
@@ -12,7 +12,7 @@ let
   mcpDirectory = if forkInputs.package.pname == "cursor" then ".cursor" else userDirectory;
 in
 {
-  config = lib.setAttrByPath [ "programs" vscodePackageName ] forkConfig // {
+  config = lib.setAttrByPath [ "programs" forkInputs.moduleName ] forkConfig // {
     nmt.script = ''
       # default profile: no files
       #

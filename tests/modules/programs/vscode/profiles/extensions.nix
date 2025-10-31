@@ -5,10 +5,7 @@
   ...
 }@inputs:
 let
-  inherit (import ../test-helpers.nix inputs)
-    supportsMultiProfiles
-    vscodePackageName
-    ;
+  inherit (import ../test-helpers.nix inputs) supportsMultiProfiles;
 
   makeExt =
     extName: extId: extraAttrs:
@@ -77,10 +74,14 @@ let
     };
   };
 
-  extensionsPath = ".${lib.toLower forkConfig.package.pname}/extensions";
+  extensionsPath =
+    if forkInputs ? dataFolderName && forkInputs.dataFolderName != null then
+      "${forkInputs.dataFolderName}/extensions"
+    else
+      ".${lib.toLower forkInputs.moduleName}/extensions";
 in
 {
-  config = lib.setAttrByPath [ "programs" vscodePackageName ] forkConfig // {
+  config = lib.setAttrByPath [ "programs" forkInputs.moduleName ] forkConfig // {
     nmt.script = ''
       assertDirectoryExists "home-files/${extensionsPath}"
 

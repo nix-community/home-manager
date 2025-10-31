@@ -5,17 +5,9 @@
   ...
 }:
 rec {
-  inherit (builtins) substring stringLength;
-  inherit (lib.strings) toLower toUpper;
-  inherit (forkInputs) package;
+  # inherit (builtins) trace toJSON;
 
-  # !! this is a hack to make the test module work for unknown forks
-  #
-  # vscodeFork requires an existing/supported package name to apply its configuration,
-  # so we fallback to "vscode" for unknown forks.
-  #
-  vscodePackageName =
-    if forkInputs.package.pname == "vscode-unknown-fork" then "kiro" else forkInputs.package.pname;
+  # toPretty = lib.generators.toPretty { };
 
   vscodePackageVersion =
     if forkInputs.package ? vscodeVersion then
@@ -27,16 +19,11 @@ rec {
 
   isMutableProfile = ((forkInputs ? mutableProfile) && forkInputs.mutableProfile);
 
-  capitalize =
-    string: toUpper (substring 0 1 string) + toLower (substring 1 ((stringLength string) - 1) string);
-
-  appName = capitalize package.executableName;
-
   userDirectory =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${appName}/User"
+      "Library/Application Support/${forkInputs.package.longName}/User"
     else
-      ".config/${appName}/User";
+      ".config/${forkInputs.package.longName}/User";
 
   toJSONText = value: lib.generators.toJSON { } value;
 
@@ -66,7 +53,7 @@ rec {
 
   # keybindings configuration (json path)
   #
-  keybindingsJsonPath = builtins.toFile "${package.pname}-keybindings.json.test" ''
+  keybindingsJsonPath = builtins.toFile "${forkInputs.package.pname}-keybindings.json.test" ''
     [
       {
         "args": null,
@@ -97,7 +84,7 @@ rec {
 
   # mcp configuration (json path)
   #
-  mcpJsonPath = builtins.toFile "${package.pname}-mcp.json.test" ''
+  mcpJsonPath = builtins.toFile "${forkInputs.package.pname}-mcp.json.test" ''
     {
       "servers": {
         "echo": {
@@ -115,7 +102,7 @@ rec {
 
   # settings configuration (json path)
   #
-  settingsJsonPath = builtins.toFile "${package.pname}-settings.json.test" ''
+  settingsJsonPath = builtins.toFile "${forkInputs.package.pname}-settings.json.test" ''
     {
       "files.autoSave": "on"
     }
@@ -136,7 +123,7 @@ rec {
 
   # tasks configuration (json path)
   #
-  tasksJsonPath = builtins.toFile "${package.pname}-tasks.json.test" ''
+  tasksJsonPath = builtins.toFile "${forkInputs.package.pname}-tasks.json.test" ''
     {
       "tasks": [
         {
@@ -159,7 +146,7 @@ rec {
     };
   };
 
-  globalSnippetsJsonPath = builtins.toFile "${package.pname}-user-global-snippets.json.test" ''
+  globalSnippetsJsonPath = builtins.toFile "${forkInputs.package.pname}-user-global-snippets.json.test" ''
     {
       "todo": {
         "body": [
@@ -187,7 +174,7 @@ rec {
     };
   };
 
-  elixirSnippetsJsonPath = builtins.toFile "${package.pname}-user-elixir-snippets.json.test" ''
+  elixirSnippetsJsonPath = builtins.toFile "${forkInputs.package.pname}-user-elixir-snippets.json.test" ''
     {
       "pipepry": {
         "body": [
@@ -218,7 +205,7 @@ rec {
     };
   };
 
-  haskellSnippetsJsonPath = builtins.toFile "${package.pname}-user-haskell-snippets.json.test" ''
+  haskellSnippetsJsonPath = builtins.toFile "${forkInputs.package.pname}-user-haskell-snippets.json.test" ''
     {
       "impl": {
         "body": [
