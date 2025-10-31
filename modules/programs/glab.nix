@@ -38,7 +38,7 @@ in
     # mode 0600.
     systemd.user.tmpfiles.settings.glab = lib.mkIf (cfg.settings != { }) {
       rules."${config.xdg.configHome}/glab-cli/config.yml" = {
-        "C+".argument = yaml.generate "glab-config" cfg.settings;
+        "C+$".argument = yaml.generate "glab-config" cfg.settings;
         z.mode = "0600";
       };
     };
