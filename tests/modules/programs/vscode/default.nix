@@ -156,11 +156,6 @@ let
   extensionsTests = lib.filterAttrs (n: v: lib.hasPrefix "extensions" n) testModules;
 in
 lib.foldl' (acc: tests: acc // tests) { } [
-  (buildTestSuiteFor "with-haskell-support" {
-    haskell = import ./haskell.nix;
-  } (lib.filterAttrs (packageName: p: packageName == "vscode") singleProfilePackages) { })
-
-  (buildTestSuiteFor "single-profile-support-with-defaults" testModules singleProfilePackages { })
   (buildTestSuiteFor "single-profile-support-with-defaults" testModules singleProfilePackages { })
   (buildTestSuiteFor "multi-profile-support-with-defaults" testModules multiProfilePackages { })
 
