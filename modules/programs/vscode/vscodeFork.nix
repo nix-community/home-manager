@@ -3,7 +3,9 @@
   lib,
   pkgs,
   moduleName,
-  packageName,
+  packageName ? moduleName,
+  dataFolderName ? ".${moduleName}",
+  isInsiders ? false,
   ...
 }:
 let
@@ -11,18 +13,47 @@ let
     "programs"
     moduleName
   ];
+  moduleConfig = lib.getAttrFromPath modulePath config;
 
-  homeDirectory =
-    if pkgs.stdenv.hostPlatform.isDarwin then
-      "${config.home.homeDirectory}"
-    else
-      "${config.xdg.configHome}";
+  cfg = moduleConfig // {
+    inherit isInsiders;
 
-  cfg = lib.getAttrFromPath modulePath config // {
-    inherit homeDirectory;
+    dataFolderName =
+      if moduleConfig ? dataFolderName && moduleConfig.dataFolderName != null then
+        moduleConfig.dataFolderName
+      else
+        dataFolderName;
+
+    homeDirectory =
+      if pkgs.stdenv.hostPlatform.isDarwin then
+        "${config.home.homeDirectory}"
+      else
+        "${config.xdg.configHome}";
+
+    packageName =
+      if moduleConfig ? packageName && moduleConfig.packageName != null then
+        moduleConfig.packageName
+      else
+        packageName;
   };
 
-  helpers = import ./path-helpers.nix { inherit cfg lib pkgs; };
+  helpers = import ./path-helpers.nix {
+    inherit lib pkgs;
+
+    cfg = cfg // {
+      package =
+        if (moduleConfig ? package && moduleConfig.package != null) then
+          moduleConfig.package
+        else
+          {
+            version = "0.0.1";
+            pname = packageName;
+            longName = "${packageName} (VSCode Fork)";
+            executableName = "${packageName}-fork";
+          };
+    };
+  };
+
   profiles = import ./profiles/profiles.nix { inherit cfg lib pkgs; };
   snippets = import ./profiles/snippets.nix { inherit cfg lib pkgs; };
   extensions = import ./profiles/extensions.nix { inherit cfg lib pkgs; };
@@ -37,15 +68,31 @@ let
 in
 {
   options = lib.setAttrByPath modulePath {
-    enable = lib.mkEnableOption "VSCode Fork: ${moduleName}";
+    enable = lib.mkEnableOption "VSCode Fork: ${moduleName})";
     package = lib.mkPackageOption pkgs packageName { nullable = true; };
 
     name = lib.mkOption {
-      type = lib.types.str;
       internal = true;
+      type = lib.types.str;
       default = helpers.appName;
       example = "VSCode";
-      description = "The name of the VSCode fork.";
+      description = "The name of the VSCode fork. Used for internal purposes.";
+    };
+
+    packageName = lib.mkOption {
+      internal = true;
+      type = lib.types.nullOr lib.types.str;
+      default = packageName;
+      example = "code-cursor";
+      description = "The name of the VSCode fork package. Used for internal purposes.";
+    };
+
+    dataFolderName = lib.mkOption {
+      internal = true;
+      type = lib.types.nullOr lib.types.str;
+      default = dataFolderName;
+      example = ".vscode-oss";
+      description = "The name of the VSCode fork data folder. Used for internal purposes.";
     };
 
     mutableExtensionsDir = lib.mkOption {

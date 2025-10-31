@@ -23,20 +23,25 @@ rec {
     let
       isDefaultProfile = profileName == "default";
 
-      validConfigKeys = [
-        "keybindings"
-        "mcp"
-        "settings"
-        "tasks"
-      ];
-
       isValidConfig =
         configKey: configValue:
-        if builtins.elem configKey validConfigKeys then
-          # cursor mcp settings are only valid for default profile
-          # other config keys (settings, mcp) are valid for all profiles
+        let
+          isValidConfigKey = (
+            builtins.elem configKey [
+              "keybindings"
+              "mcp"
+              "settings"
+              "tasks"
+            ]
+          );
+
+          skipConfig = (isCursorMcp configKey) && !isDefaultProfile;
+        in
+        if (isValidConfigKey && !skipConfig) then
+          # cursor mcp configuration is only valid for default profile
+          # other configuration keys (keybindings, settings, tasks) are valid for all profiles
           #
-          if (isCursorMcp configKey) && !isDefaultProfile then false else hasValue configValue
+          if skipConfig then false else (hasValue configValue)
         else
           false;
 

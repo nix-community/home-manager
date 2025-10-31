@@ -92,8 +92,9 @@ rec {
   inherit (lib.strings) toLower toUpper;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  vscodePackageVersion =
-    if cfg.package ? vscodeVersion then cfg.package.vscodeVersion else cfg.package.version;
+  vscodePackageVersion = builtins.trace "cfg.package: ${lib.generators.toPretty { } cfg.package}" (
+    if cfg.package ? vscodeVersion then cfg.package.vscodeVersion else cfg.package.version
+  );
 
   supportsMultiProfiles = lib.versionAtLeast vscodePackageVersion "1.74.0";
 
@@ -122,7 +123,7 @@ rec {
   hasOtherProfiles = getOtherProfiles != { };
 
   isDefaultProfile = profileName: profileName == "default";
-  isCursorMcp = configKey: cfg.package.pname == "cursor" && configKey == "mcp";
+  isCursorMcp = configKey: cfg.packageName == "code-cursor" && configKey == "mcp";
 
   globalSnippetKey = "global.code-snippets";
 
@@ -140,7 +141,7 @@ rec {
   #    - vscode: ~/.config/Code/User
   #    - windsurf: ~/.config/Windsurf/User
   #
-  appName = capitalize cfg.package.executableName;
+  appName = cfg.package.longName;
 
   userDirectory = joinPaths [
     cfg.homeDirectory
@@ -156,11 +157,9 @@ rec {
   #  - vscode: ~/.vscode/extensions
   #  - windsurf: ~/.windsurf/extensions
   #
-  homeConfigDirectory = ".${toLower cfg.package.pname}";
-
   extensionsDirectory = joinPaths [
     cfg.homeDirectory
-    homeConfigDirectory
+    cfg.dataFolderName
     "extensions"
   ];
 
@@ -202,7 +201,10 @@ rec {
   settingsDirectory =
     profileName: configKey:
     if isCursorMcp configKey && isDefaultProfile profileName then
-      "${cfg.homeDirectory}/${homeConfigDirectory}"
+      joinPaths [
+        cfg.homeDirectory
+        cfg.dataFolderName
+      ]
     else
       (profileDirectory profileName);
 
