@@ -17,17 +17,14 @@ let
     let
       baseType = types.attrsOf jsonFormat.type;
     in
-    baseType
-    // {
-      check =
-        v:
-        baseType.check v
-        && lib.elem (lib.head (lib.attrNames v)) [
-          "input"
-          "output"
-        ];
-      description = "EasyEffects input or output JSON preset";
-    };
+    types.addCheck baseType (
+      v:
+      baseType.check v
+      && lib.elem (lib.head (lib.attrNames v)) [
+        "input"
+        "output"
+      ]
+    );
 
   presetOptionType = mkOption {
     type = types.nullOr (types.attrsOf presetType);
