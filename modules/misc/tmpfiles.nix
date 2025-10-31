@@ -180,7 +180,10 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.dawidsowa ];
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    dawidsowa
+  ];
 
   imports = [
     (lib.mkRemovedOptionModule [ "systemd" "user" "tmpfiles" "rules" ] ''
