@@ -81,6 +81,15 @@ in
         '';
       };
 
+      mutableUserDebug = mkOption {
+        type = types.bool;
+        default = true;
+        example = false;
+        description = ''
+          Whether user debug configurations (debug.json) can be updated by zed.
+        '';
+      };
+
       userSettings = mkOption {
         type = jsonFormat.type;
         default = { };
@@ -137,6 +146,27 @@ in
 
           [List of tasks](https://zed.dev/docs/tasks) that can be run from the
           command palette.
+        '';
+      };
+
+      userDebug = mkOption {
+        type = jsonFormat.type;
+        default = [ ];
+        example = literalExpression ''
+          [
+            {
+              label = "Go (Delve)";
+              adapter = "Delve";
+              program = "$ZED_FILE";
+              request = "launch";
+              mode = "debug";
+            }
+          ]
+        '';
+        description = ''
+          Configuration written to Zed's {file}`debug.json`.
+
+          Global debug configurations for Zed's [Debugger](https://zed.dev/docs/debugger).
         '';
       };
 
@@ -241,6 +271,14 @@ in
             (jsonFormat.generate "zed-user-tasks" cfg.userTasks)
         );
       })
+      (mkIf (cfg.mutableUserDebug && cfg.userDebug != [ ]) {
+        zedDebugActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          impureConfigMerger "[]"
+            "$dynamic + $static | group_by(.label) | map(reduce .[] as $item ({}; . * $item))"
+            "${config.xdg.configHome}/zed/debug.json"
+            (jsonFormat.generate "zed-user-debug" cfg.userDebug)
+        );
+      })
     ];
 
     xdg.configFile = mkMerge [
@@ -264,6 +302,9 @@ in
       })
       (mkIf (!cfg.mutableUserTasks && cfg.userTasks != [ ]) {
         "zed/tasks.json".source = jsonFormat.generate "zed-user-tasks" cfg.userTasks;
+      })
+      (mkIf (!cfg.mutableUserDebug && cfg.userDebug != [ ]) {
+        "zed/debug.json".source = jsonFormat.generate "zed-user-debug" cfg.userDebug;
       })
     ];
 

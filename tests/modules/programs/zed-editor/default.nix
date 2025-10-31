@@ -11,5 +11,8 @@
   zed-tasks = ./tasks.nix;
   zed-tasks-immutable = ./tasks-immutable.nix;
   zed-tasks-empty = ./tasks-empty.nix;
+  zed-debug = ./debug.nix;
+  zed-debug-immutable = ./debug-immutable.nix;
+  zed-debug-empty = ./debug-empty.nix;
   zed-themes = ./themes;
 }
