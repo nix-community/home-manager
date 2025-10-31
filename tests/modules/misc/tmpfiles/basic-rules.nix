@@ -2,8 +2,8 @@
   imports = [ ./common-stubs.nix ];
 
   systemd.user.tmpfiles.settings = {
-    cache."%C".d.age = "4 weeks";
-    myTool."%h/.config/myTool.conf"."f+" = {
+    cache.rules."%C".d.age = "4 weeks";
+    myTool.rules."%h/.config/myTool.conf"."f+" = {
       mode = "0644";
       user = "alice";
       group = "users";
@@ -12,6 +12,8 @@
   };
 
   nmt.script = ''
+    assertPathNotExists home-files/.config/user-tmpfiles.d/home-manager-purge-on-change.conf
+
     cacheRulesFile=home-files/.config/user-tmpfiles.d/home-manager-cache.conf
     assertFileExists $cacheRulesFile
     assertFileRegex $cacheRulesFile "^'d' '%C' '-' '-' '-' '4 weeks' $"
