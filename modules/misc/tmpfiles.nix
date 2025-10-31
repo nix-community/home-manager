@@ -37,7 +37,9 @@ in
           # Please change the option ‘systemd.user.tmpfiles.rules’ instead.
           ${lib.concatStringsSep "\n" cfg.rules}
         '';
-        onChange = "${pkgs.systemd}/bin/systemd-tmpfiles --user --remove --create";
+        onChange = ''
+          run ${pkgs.systemd}/bin/systemd-tmpfiles --user --remove --create ''${DRY_RUN:+--dry-run}
+        '';
       };
       "systemd/user/basic.target.wants/systemd-tmpfiles-setup.service".source =
         "${pkgs.systemd}/example/systemd/user/systemd-tmpfiles-setup.service";

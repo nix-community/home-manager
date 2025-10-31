@@ -64,6 +64,16 @@ in
       '';
     };
 
+    enableJujutsuIntegration = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to enable jujutsu integration for delta.
+
+        When enabled, delta will be configured as jujutsus's pager, diff filter, and merge tool.
+      '';
+    };
+
     finalPackage = mkOption {
       type = types.package;
       readOnly = true;
@@ -122,6 +132,19 @@ in
             interactive.diffFilter = "${deltaCommand} --color-only";
             delta = cfg.options;
           };
+      })
+
+      (lib.mkIf (cfg.enable && cfg.enableJujutsuIntegration) {
+        programs.jujutsu.settings = {
+          merge-tools.delta.diff-expected-exit-codes = [
+            0
+            1
+          ];
+          ui = {
+            diff-formatter = ":git";
+            pager = "${lib.getExe cfg.package}";
+          };
+        };
       })
     ];
 }

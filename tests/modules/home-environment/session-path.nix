@@ -1,22 +1,8 @@
-{ ... }:
-
 {
-  imports = [
-    (
-      { ... }:
-      {
-        config.home.sessionPath = [ "foo" ];
-      }
-    )
-    (
-      { ... }:
-      {
-        config.home.sessionPath = [
-          "bar"
-          "baz"
-        ];
-      }
-    )
+  home.sessionPath = [
+    "bar"
+    "baz"
+    "foo"
   ];
 
   nmt.script = ''

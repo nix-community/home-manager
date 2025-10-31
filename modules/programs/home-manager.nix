@@ -25,10 +25,20 @@ in
           {file}`$HOME/.nixpkgs/home-manager` will be attempted.
         '';
       };
+
+      package = lib.mkOption {
+        type = lib.types.package;
+        readOnly = true;
+        description = "The {command}`home-manager` package.";
+        default = pkgs.callPackage ../../home-manager { inherit (cfg) path; };
+        defaultText = lib.literalExpression ''
+          pkgs.callPackage ../../home-manager { inherit (config.programs.home-manager) path; };
+        '';
+      };
     };
   };
 
   config = lib.mkIf (cfg.enable && !config.submoduleSupport.enable) {
-    home.packages = [ (pkgs.callPackage ../../home-manager { inherit (cfg) path; }) ];
+    home.packages = [ cfg.package ];
   };
 }

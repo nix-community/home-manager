@@ -1,0 +1,6 @@
+collect_anonymous_telemetry: false
+log:
+  level: info
+  timestamps: false
+  type: fancy
+no_check_updates: true

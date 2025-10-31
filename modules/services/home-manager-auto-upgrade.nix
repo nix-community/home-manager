@@ -9,18 +9,32 @@ let
 
   cfg = config.services.home-manager.autoUpgrade;
 
-  homeManagerPackage = pkgs.callPackage ../../home-manager {
-    path = config.programs.home-manager.path;
-  };
+  homeManagerPackage = config.programs.home-manager.package;
 
   autoUpgradeApp = pkgs.writeShellApplication {
     name = "home-manager-auto-upgrade";
-    text = ''
-      echo "Update Nix's channels"
-      nix-channel --update
-      echo "Upgrade Home Manager"
-      home-manager switch
-    '';
+    text =
+      if cfg.useFlake then
+        ''
+          set -e
+          if [[ ! -f "$FLAKE_DIR/flake.nix" ]]; then
+              echo "No flake.nix found in $FLAKE_DIR." >&2
+              exit 1
+          fi
+          echo "Changing to flake directory $FLAKE_DIR"
+          cd "$FLAKE_DIR"
+          echo "Update flake inputs"
+          nix flake update
+          echo "Upgrade Home Manager"
+          home-manager switch --flake .
+        ''
+      else
+        ''
+          echo "Update Nix's channels"
+          nix-channel --update
+          echo "Upgrade Home Manager"
+          home-manager switch
+        '';
     runtimeInputs = with pkgs; [
       homeManagerPackage
       nix
@@ -47,6 +61,20 @@ in
           {manpage}`systemd.time(7)`.
         '';
       };
+
+      useFlake = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Whether to use 'nix flake update' instead of 'nix-channel --update'.";
+      };
+
+      flakeDir = lib.mkOption {
+        type = lib.types.str;
+        default = "${config.xdg.configHome}/home-manager";
+        defaultText = lib.literalExpression ''"''${config.xdg.configHome}/home-manager"'';
+        example = "/home/user/dotfiles";
+        description = "The directory of the flake to update.";
+      };
     };
   };
 
@@ -70,7 +98,10 @@ in
 
       services.home-manager-auto-upgrade = {
         Unit.Description = "Home Manager upgrade";
-        Service.ExecStart = "${autoUpgradeApp}/bin/home-manager-auto-upgrade";
+        Service = {
+          ExecStart = "${autoUpgradeApp}/bin/home-manager-auto-upgrade";
+          Environment = lib.mkIf cfg.useFlake [ "FLAKE_DIR=${cfg.flakeDir}" ];
+        };
       };
     };
   };

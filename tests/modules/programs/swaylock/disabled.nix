@@ -1,4 +1,3 @@
-{ ... }:
 {
   programs.swaylock.settings = { };
 

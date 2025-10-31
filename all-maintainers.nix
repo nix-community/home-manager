@@ -1486,10 +1486,17 @@
     source = "nixpkgs";
   };
   loicreynier = {
-    email = "loic@loicreynier.fr";
+    email = "contact@loicreynier.fr";
     github = "loicreynier";
     githubId = 88983487;
     name = "Loïc Reynier";
+    source = "nixpkgs";
+  };
+  lorenzleutgeb = {
+    email = "lorenz@leutgeb.xyz";
+    github = "lorenzleutgeb";
+    githubId = 542154;
+    name = "Lorenz Leutgeb";
     source = "nixpkgs";
   };
   lowlevl = {

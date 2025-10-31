@@ -1,4 +1,3 @@
-{ ... }:
 {
   imports = [ ../../../nixos ]; # Import the HM NixOS module.
 
@@ -9,11 +8,9 @@
   };
 
   home-manager = {
-    users.alice =
-      { ... }:
-      {
-        home.stateVersion = "24.11";
-        home.file.test.text = "testfile new profile";
-      };
+    users.alice = {
+      home.stateVersion = "24.11";
+      home.file.test.text = "testfile new profile";
+    };
   };
 }
