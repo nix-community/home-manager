@@ -1,7 +1,7 @@
 {
   config,
-  pkgs,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -12,20 +12,18 @@ in
   meta.maintainers = [
     lib.hm.maintainers.bamhm182
     lib.maintainers.n-hass
+    lib.maintainers.delafthi
   ];
 
   imports = [
-    ./builds.nix
-    ./containers.nix
-    ./images.nix
-    ./install-quadlet.nix
-    ./networks.nix
-    ./services.nix
-    ./volumes.nix
+    ./linux/default.nix
+    ./darwin.nix
   ];
 
   options.services.podman = {
     enable = lib.mkEnableOption "Podman, a daemonless container engine";
+
+    package = lib.mkPackageOption pkgs "podman" { };
 
     settings = {
       containers = lib.mkOption {
@@ -94,14 +92,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [ (lib.hm.assertions.assertPlatform "podman" pkgs lib.platforms.linux) ];
-
     home.packages = [ cfg.package ];
 
-    services.podman.settings.storage = {
-      storage.driver = lib.mkDefault "overlay";
-    };
+    services.podman.settings.storage.storage.driver = lib.mkDefault "overlay";
 
+    # Configuration files are written to `$XDG_CONFIG_HOME/.config/containers`
+    # On Linux: podman reads them directly from this location
+    # On Darwin: these files are automatically mounted into the podman machine VM
+    #            (see darwin.nix for the volume mount configuration)
     xdg.configFile = {
       "containers/policy.json".source =
         if cfg.settings.policy != { } then
