@@ -67,7 +67,10 @@ let
   );
 in
 {
-  imports =
+  imports = [
+    ./vscode-haskell.nix # add haskell support if enabled (only vscode is supported)
+  ]
+  ++
     # api.v2: migrate immutableExtensionsDir to mutableExtensionsDir
     [
       (lib.mkChangedOptionModule (modulePath ++ [ "immutableExtensionsDir" ]) (
