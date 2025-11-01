@@ -152,7 +152,7 @@ in
     assertions = [
       {
         assertion =
-          !pkgs.hostPlatform.isLinux
+          !pkgs.stdenv.hostPlatform.isLinux
           -> (
             (filter id [
               cfg.uri.rad.browser.enable
