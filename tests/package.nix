@@ -1,8 +1,14 @@
 {
   flake,
   python3,
-  writeShellScriptBin,
+  writeShellApplication,
 }:
-writeShellScriptBin "tests" ''
-  exec ${python3}/bin/python3 ${flake}/tests/tests.py "$@"
-''
+writeShellApplication {
+  name = "tests";
+  runtimeInputs = [
+    python3
+  ];
+  text = ''
+    exec python3 ${flake}/tests/tests.py "$@"
+  '';
+}
