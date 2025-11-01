@@ -23,7 +23,10 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
+  meta.maintainers = [
+    lib.hm.maintainers.aguirre-matteo
+    lib.maintainers.arunoruto
+  ];
 
   options.programs.vivid = {
     enable = mkEnableOption "vivid";
@@ -34,8 +37,11 @@ in
     enableFishIntegration = mkFishIntegrationOption { inherit config; };
 
     colorMode = mkOption {
-      type = with types; nullOr str;
-      default = null;
+      type = types.enum [
+        "8-bit"
+        "24-bit"
+      ];
+      default = "24-bit";
       example = "8-bit";
       description = ''
         Color mode for vivid.
@@ -135,7 +141,9 @@ in
       // (lib.mapAttrs' (
         name: value:
         lib.nameValuePair "vivid/themes/${name}.yml" {
-          source = if lib.isAttrs value then yamlFormat.generate "${name}.yml" value else value;
+          # Values like 1e2030 will be treated as a string by Nix, but in YAML are read as a number in scientific notation
+          # Since JSON is a YAML subset and has a better support in Nix, it can be used to populate the config file
+          source = if lib.isAttrs value then pkgs.writeText "${name}.json" (builtins.toJSON value) else value;
         }
       ) cfg.themes);
 
