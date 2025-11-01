@@ -99,7 +99,7 @@ in
 {
   imports = [ ./options.nix ];
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home.file = generateSystemdFileLinks allUnitFiles;
 
     # if the length of builtQuadlets is 0, then we don't need register the activation script
