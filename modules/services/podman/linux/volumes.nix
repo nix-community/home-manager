@@ -5,7 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkMerge
+    types
+    ;
+  assertions = import ../assertions.nix { inherit lib; };
 
   cfg = config.services.podman;
 
@@ -192,10 +198,17 @@ in
     let
       volumeQuadlets = lib.mapAttrsToList toQuadletInternal cfg.volumes;
     in
-    lib.mkIf cfg.enable {
-      services.podman.internal.quadletDefinitions = volumeQuadlets;
-      assertions = lib.flatten (map (volume: volume.assertions) volumeQuadlets);
+    mkIf cfg.enable (mkMerge [
+      {
+        assertions = [
+          (assertions.assertPlatform "services.podman.volumes" config pkgs lib.platforms.linux)
+        ];
+      }
+      (mkIf pkgs.stdenv.hostPlatform.isLinux {
+        services.podman.internal.quadletDefinitions = volumeQuadlets;
+        assertions = lib.flatten (map (volume: volume.assertions) volumeQuadlets);
 
-      xdg.configFile."podman/volumes.manifest".text = podman-lib.generateManifestText volumeQuadlets;
-    };
+        xdg.configFile."podman/volumes.manifest".text = podman-lib.generateManifestText volumeQuadlets;
+      })
+    ]);
 }
