@@ -5,7 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkMerge
+    types
+    ;
+  assertions = import ../assertions.nix { inherit lib; };
 
   cfg = config.services.podman;
 
@@ -401,12 +407,19 @@ in
     let
       containerQuadlets = lib.mapAttrsToList toQuadletInternal cfg.containers;
     in
-    lib.mkIf cfg.enable {
-      services.podman.internal.quadletDefinitions = containerQuadlets;
-      assertions = lib.flatten (map (container: container.assertions) containerQuadlets);
+    mkIf cfg.enable (mkMerge [
+      {
+        assertions = [
+          (assertions.assertPlatform "services.podman.containers" config pkgs lib.platforms.linux)
+        ];
+      }
+      (mkIf pkgs.stdenv.hostPlatform.isLinux {
+        services.podman.internal.quadletDefinitions = containerQuadlets;
+        assertions = lib.flatten (map (container: container.assertions) containerQuadlets);
 
-      # manifest file
-      xdg.configFile."podman/containers.manifest".text =
-        podman-lib.generateManifestText containerQuadlets;
-    };
+        # manifest file
+        xdg.configFile."podman/containers.manifest".text =
+          podman-lib.generateManifestText containerQuadlets;
+      })
+    ]);
 }
