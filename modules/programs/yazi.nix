@@ -221,7 +221,7 @@ in
           function ${cfg.shellWrapperName}() {
             local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
             yazi "$@" --cwd-file="$tmp"
-            if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+            if cwd="$(<"$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
               builtin cd -- "$cwd"
             fi
             rm -f -- "$tmp"
@@ -231,7 +231,7 @@ in
         fishIntegration = ''
           set -l tmp (mktemp -t "yazi-cwd.XXXXX")
           command yazi $argv --cwd-file="$tmp"
-          if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+          if read cwd < "$tmp"; and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
             builtin cd -- "$cwd"
           end
           rm -f -- "$tmp"
