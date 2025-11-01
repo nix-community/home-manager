@@ -126,6 +126,10 @@ in
 
     verbose = mkEnableOption "verbose output on activation";
 
+    enableOSConfigurationChanges = mkEnableOption ''
+      Home Manager changing the OS configuration if necessary to make a Home Manager option work
+    '';
+
     enableLegacyProfileManagement = mkOption {
       type = types.bool;
       default = false;

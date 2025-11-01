@@ -108,5 +108,15 @@ in
         }
       ) cfg.users;
     })
+    (lib.mkIf cfg.enableOSConfigurationChanges {
+      # See the `xdg.portal` module.
+      environment.pathsToLink =
+        lib.mkIf
+          (cfg.useUserPackages && lib.any (usercfg: usercfg.xdg.portal.enable) (lib.attrValues cfg.users))
+          [
+            "/share/applications"
+            "/share/xdg-desktop-portal"
+          ];
+    })
   ];
 }
