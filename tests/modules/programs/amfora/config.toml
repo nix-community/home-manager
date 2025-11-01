@@ -1,0 +1,10 @@
+[a-general]
+ansi = true
+auto_redirect = false
+bullets = true
+color = true
+highlight_code = true
+highlight_style = "monokai"
+home = "gemini://geminiprotocol.net"
+http = "default"
+search = "gemini://geminispace.info/search"

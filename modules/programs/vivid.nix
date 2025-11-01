@@ -80,7 +80,7 @@ in
     };
 
     themes = mkOption {
-      type = with types; attrsOf path;
+      type = with types; attrsOf (either path yamlFormat.type);
       default = { };
       example = lib.literalExpression ''
         {
@@ -93,10 +93,27 @@ in
             url = "https://raw.githubusercontent.com/NearlyTRex/Vivid/refs/heads/master/themes/catppuccin-mocha.yml";
             hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
           };
+
+          my-custom-theme = {
+            colors = {
+              blue = "0000ff";
+            };
+            core = {
+              directory = {
+                foreground = "blue";
+                font-style = "bold";
+              };
+            };
+          };
         }
       '';
-      description = "Theme for vivid";
+      description = ''
+        An attribute set of vivid themes.
+        Each value can either be a path to a theme file or an attribute set
+        defining the theme directly (which will be converted from Nix to YAML).
+      '';
     };
+
   };
 
   config =
@@ -116,7 +133,10 @@ in
         };
       }
       // (lib.mapAttrs' (
-        name: path: lib.nameValuePair "vivid/themes/${name}.yml" { source = path; }
+        name: value:
+        lib.nameValuePair "vivid/themes/${name}.yml" {
+          source = if lib.isAttrs value then yamlFormat.generate "${name}.yml" value else value;
+        }
       ) cfg.themes);
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''

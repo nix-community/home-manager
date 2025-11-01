@@ -29,6 +29,8 @@ in
 
     package = lib.mkPackageOption pkgs "cliphist" { };
 
+    clipboardPackage = lib.mkPackageOption pkgs "wl-clipboard" { };
+
     allowImages = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -87,7 +89,7 @@ in
 
         Service = {
           Type = "simple";
-          ExecStart = "${lib.getExe' pkgs.wl-clipboard "wl-paste"} --watch ${lib.getExe cfg.package} ${extraOptionsStr} store";
+          ExecStart = "${lib.getExe' cfg.clipboardPackage "wl-paste"} --watch ${lib.getExe cfg.package} ${extraOptionsStr} store";
           Restart = "on-failure";
         };
 
@@ -105,7 +107,7 @@ in
 
         Service = {
           Type = "simple";
-          ExecStart = "${lib.getExe' pkgs.wl-clipboard "wl-paste"} --type image --watch ${lib.getExe cfg.package} ${extraOptionsStr} store";
+          ExecStart = "${lib.getExe' cfg.clipboardPackage "wl-paste"} --type image --watch ${lib.getExe cfg.package} ${extraOptionsStr} store";
           Restart = "on-failure";
         };
 

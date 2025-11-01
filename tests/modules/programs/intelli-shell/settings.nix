@@ -27,13 +27,13 @@
     let
       configPath =
         if pkgs.stdenv.hostPlatform.isDarwin then
-          "Library/Preferences/org.IntelliShell.Intelli-Shell"
+          "Library/Application Support/org.IntelliShell.Intelli-Shell"
         else
           ".config/intelli-shell";
     in
     ''
-      assertFileExists home-files/${configPath}/config.toml
-      assertFileContent home-files/${configPath}/config.toml \
+      assertFileExists 'home-files/${configPath}/config.toml'
+      assertFileContent 'home-files/${configPath}/config.toml' \
         ${./config.toml}
     '';
 }

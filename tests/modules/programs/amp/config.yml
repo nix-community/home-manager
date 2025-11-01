@@ -1,0 +1,11 @@
+line_length_guide:
+- 80
+- 100
+line_wrapping: true
+open_mode:
+  exclusions:
+  - '**/.git'
+  - '**/.svn'
+soft_tabs: true
+tab_width: 2
+theme: solarized_dark

@@ -4,52 +4,46 @@
   name = "nixos-legacy-profile-management";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine =
-    { ... }:
-    {
-      imports = [
-        # Make the nixpkgs channel available.
-        "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix"
-        # Import the HM NixOS module.
-        ../../../nixos
-      ];
+  nodes.machine = {
+    imports = [
+      # Make the nixpkgs channel available.
+      "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix"
+      # Import the HM NixOS module.
+      ../../../nixos
+    ];
 
-      system.stateVersion = "24.11";
+    system.stateVersion = "24.11";
 
-      users.users.alice = {
-        isNormalUser = true;
-      };
+    users.users.alice = {
+      isNormalUser = true;
+    };
 
-      specialisation = {
-        legacy.configuration = {
-          home-manager = {
-            # Force legacy profile management.
-            enableLegacyProfileManagement = true;
+    specialisation = {
+      legacy.configuration = {
+        home-manager = {
+          # Force legacy profile management.
+          enableLegacyProfileManagement = true;
 
-            users.alice =
-              { ... }:
-              {
-                home.stateVersion = "24.11";
-                home.file.test.text = "testfile legacy";
-              };
+          users.alice = {
+            home.stateVersion = "24.11";
+            home.file.test.text = "testfile legacy";
           };
         };
+      };
 
-        modern.configuration = {
-          home-manager = {
-            # Assert that we expect the option to default to false.
-            enableLegacyProfileManagement = pkgs.lib.mkOptionDefault false;
+      modern.configuration = {
+        home-manager = {
+          # Assert that we expect the option to default to false.
+          enableLegacyProfileManagement = pkgs.lib.mkOptionDefault false;
 
-            users.alice =
-              { ... }:
-              {
-                home.stateVersion = "24.11";
-                home.file.test.text = "testfile modern";
-              };
+          users.alice = {
+            home.stateVersion = "24.11";
+            home.file.test.text = "testfile modern";
           };
         };
       };
     };
+  };
 
   testScript =
     { nodes, ... }:

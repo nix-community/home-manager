@@ -181,9 +181,10 @@
     source = "home-manager";
   };
   HeitorAugustoLN = {
-    email = "IAm.HeitorALN@proton.me";
+    email = "nixpkgs.woven713@passmail.net";
     github = "HeitorAugustoLN";
     githubId = 44377258;
+    matrix = "@heitoraugusto:matrix.org";
     name = "Heitor Augusto";
     source = "nixpkgs";
   };
@@ -241,13 +242,6 @@
     github = "Kranzes";
     githubId = 56614642;
     name = "Ilan Joselevich";
-    source = "nixpkgs";
-  };
-  Kritnich = {
-    email = "kritnich@kritni.ch";
-    github = "Kritnich";
-    githubId = 22116767;
-    name = "Kritnich";
     source = "nixpkgs";
   };
   Kyure-A = {
@@ -431,7 +425,6 @@
     keys = [
       {
         fingerprint = "4BE7 9252 6228 9B47 6DBB  C17B 76FD 3810 215A E097";
-        longkeyid = "rsa4096/0x76FD3810215AE097";
       }
     ];
     name = "Leon Schwarzäugl";
@@ -551,13 +544,6 @@
     githubId = 13830042;
     name = "aheaume";
     source = "home-manager";
-  };
-  aidalgol = {
-    email = "aidalgol+nixpkgs@fastmail.net";
-    github = "aidalgol";
-    githubId = 2313201;
-    name = "Aidan Gauland";
-    source = "nixpkgs";
   };
   aionescu = {
     email = "github@ionescu.sh";
@@ -1493,10 +1479,17 @@
     source = "nixpkgs";
   };
   loicreynier = {
-    email = "loic@loicreynier.fr";
+    email = "contact@loicreynier.fr";
     github = "loicreynier";
     githubId = 88983487;
     name = "Loïc Reynier";
+    source = "nixpkgs";
+  };
+  lorenzleutgeb = {
+    email = "lorenz@leutgeb.xyz";
+    github = "lorenzleutgeb";
+    githubId = 542154;
+    name = "Lorenz Leutgeb";
     source = "nixpkgs";
   };
   lowlevl = {
@@ -2270,6 +2263,13 @@
     githubId = 17003032;
     name = "Willi Carlsen";
     source = "nixpkgs";
+  };
+  will-lol = {
+    email = "will.bradshaw50@gmail.com";
+    github = "will-lol";
+    githubId = 65345408;
+    name = "William Bradshaw";
+    source = "home-manager";
   };
   workflow = {
     email = "4farlion@gmail.com";

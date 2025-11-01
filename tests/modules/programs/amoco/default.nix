@@ -1,0 +1,1 @@
+{ amoco-settings = ./settings.nix; }

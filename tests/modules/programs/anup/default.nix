@@ -1,0 +1,1 @@
+{ anup-settings = ./settings.nix; }

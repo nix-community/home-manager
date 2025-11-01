@@ -4,29 +4,25 @@
   name = "nixos-basics";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine =
-    { ... }:
-    {
-      imports = [ ../../../nixos ]; # Import the HM NixOS module.
+  nodes.machine = {
+    imports = [ ../../../nixos ]; # Import the HM NixOS module.
 
-      virtualisation.memorySize = 2048;
+    virtualisation.memorySize = 2048;
 
-      users.users.alice = {
-        isNormalUser = true;
-        description = "Alice Foobar";
-        password = "foobar";
-        uid = 1000;
-      };
-
-      home-manager.users.alice =
-        { ... }:
-        {
-          home.stateVersion = "24.11";
-          home.file.test.text = "testfile";
-          # Enable a light-weight systemd service.
-          services.pueue.enable = true;
-        };
+    users.users.alice = {
+      isNormalUser = true;
+      description = "Alice Foobar";
+      password = "foobar";
+      uid = 1000;
     };
+
+    home-manager.users.alice = {
+      home.stateVersion = "24.11";
+      home.file.test.text = "testfile";
+      # Enable a light-weight systemd service.
+      services.pueue.enable = true;
+    };
+  };
 
   testScript = ''
     def login_as_alice():

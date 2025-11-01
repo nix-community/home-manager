@@ -94,14 +94,20 @@
           error.fg = red
           header.bold = true
           title.reverse = true
+
+          [ui]
+          tab.selected.reverse = toggle
         '';
         default = {
-          "*.default" = "true";
-          "*error.bold" = "true";
-          "error.fg" = "red";
-          "header.bold" = "true";
-          "*.selected.reverse" = "toggle";
-          "title.reverse" = "true";
+          global = {
+            "*.default" = "true";
+            "*error.bold" = "true";
+            "error.fg" = "red";
+            "header.bold" = "true";
+            "*.selected.reverse" = "toggle";
+            "title.reverse" = "true";
+          };
+          ui."tab.selected.reverse" = "toggle";
         };
       };
 

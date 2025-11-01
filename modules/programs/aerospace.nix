@@ -81,6 +81,23 @@ in
       };
     };
 
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Extra configuration to append to the aerospace.toml file.
+        This allows you to add raw TOML content, including multiline strings.
+      '';
+      example = lib.literalExpression ''
+        alt-enter = ''''exec-and-forget osascript -e '
+          tell application "Terminal"
+              do script
+              activate
+          end tell'
+        ''''
+      '';
+    };
+
     userSettings = mkOption {
       type = types.submodule {
         freeformType = tomlFormat.type;
@@ -303,16 +320,27 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      file.".config/aerospace/aerospace.toml".source = tomlFormat.generate "aerospace" (
-        filterNulls (
-          cfg.userSettings
-          // lib.optionalAttrs cfg.launchd.enable {
-            # Override these to avoid launchd conflicts
-            start-at-login = false;
-            after-login-command = [ ];
+      file.".config/aerospace/aerospace.toml".source =
+        let
+          generatedConfig = tomlFormat.generate "aerospace" (
+            filterNulls (
+              cfg.userSettings
+              // lib.optionalAttrs cfg.launchd.enable {
+                # Override these to avoid launchd conflicts
+                start-at-login = false;
+                after-login-command = [ ];
+              }
+            )
+          );
+          extraConfig = pkgs.writeText "aerospace-extra-config" cfg.extraConfig;
+        in
+        pkgs.runCommandLocal "aerospace.toml"
+          {
+            inherit generatedConfig extraConfig;
           }
-        )
-      );
+          ''
+            cat "$generatedConfig" "$extraConfig" > "$out"
+          '';
     };
 
     launchd.agents.aerospace = {

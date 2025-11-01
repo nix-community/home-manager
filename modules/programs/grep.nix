@@ -29,9 +29,9 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-    home.sessionVariables.GREP_COLORS = lib.mkIf (cfg.colors != { }) (
-      lib.concatStringsSep ":" (lib.mapAttrsToList (n: v: "${n}=${v}") cfg.colors)
-    );
+    home.sessionVariables = lib.mkIf (cfg.colors != { }) {
+      GREP_COLORS = lib.concatStringsSep ":" (lib.mapAttrsToList (n: v: "${n}=${v}") cfg.colors);
+    };
   };
 
 }

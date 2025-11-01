@@ -67,20 +67,8 @@ let
     # keep-sorted end
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
-
-    (lib.mkRemovedOptionModule [ "services" "password-store-sync" ] ''
-      Use services.git-sync instead.
-    '')
-    (lib.mkRemovedOptionModule [ "services" "keepassx" ] ''
-      KeePassX is no longer maintained.
-    '')
-    (lib.mkRemovedOptionModule [ "programs" "thefuck" ] ''
-      The corresponding package was removed from nixpkgs,
-      consider using `programs.pay-respects` instead.
-    '')
-    (lib.mkRemovedOptionModule [ "programs" "octant" ] ''
-      Octant is no longer maintained and project was archived.
-    '')
+    # Module deprecations and removals
+    ./deprecations.nix
   ]
   ++ (lib.concatMap
     (

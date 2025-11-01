@@ -1,7 +1,8 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   config = {
     programs.zsh.enable = true;
+    programs.nushell.enable = true;
 
     programs.dircolors = {
       enable = true;
@@ -17,15 +18,27 @@
       '';
     };
 
-    nmt.script = ''
-      assertFileContent \
-        home-files/.dir_colors \
-        ${./settings-expected.conf}
+    nmt.script =
+      let
+        nushellConfigDir =
+          if pkgs.stdenv.isDarwin && !config.xdg.enable then
+            "home-files/Library/Application Support/nushell"
+          else
+            "home-files/.config/nushell";
+      in
+      ''
+        assertFileContent \
+          home-files/.dir_colors \
+          ${./settings-expected.conf}
 
 
-      assertFileRegex  \
-        home-files/.zshrc \
-        "eval \$(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)"
-    '';
+        assertFileRegex \
+          home-files/.zshrc \
+          "eval \$(${pkgs.coreutils}/bin/dircolors -b ~/.dir_colors)"
+
+        assertFileExists "${nushellConfigDir}/env.nu"
+        assertFileRegex  "${nushellConfigDir}/env.nu" \
+          "source /nix/store/[^/]*-dircolors.nu"
+      '';
   };
 }

@@ -1,0 +1,12 @@
+[env]
+BAR = "FOO"
+FOO = "BAR"
+
+[general]
+exec = ["aad", "ado"]
+
+[layout]
+column-tag = "New Cut Paste Snarf Zerox Delcol"
+
+[typesetting]
+replace-cr-with-tofu = false

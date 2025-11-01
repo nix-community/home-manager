@@ -1,0 +1,31 @@
+storage caldav-local {
+	fileext .ics
+	path /home/hm-user/.local/state/calendar/caldav
+	type vdir/icalendar
+}
+storage http-local {
+	fileext .ics
+	path /home/hm-user/.local/state/calendar/http
+	type vdir/icalendar
+}
+storage caldav-remote {
+	type caldav
+	url https://caldav.example.com
+	username alice
+	password {
+		cmd pass caldav
+	}
+}
+storage http-remote {
+	type webcal
+	url https://example.com/calendar
+}
+pair calendar-caldav {
+	storage_a caldav-local
+	storage_b caldav-remote
+}
+pair calendar-http {
+	storage_a http-local
+	storage_b http-remote
+}
+status_path /test/dir

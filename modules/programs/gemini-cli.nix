@@ -89,6 +89,45 @@ in
         Will be set as $GEMINI_MODEL.
       '';
     };
+
+    context = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      example = lib.literalExpression ''
+        {
+          GEMINI = '''
+            # Global Context
+
+            You are a helpful AI assistant for software development.
+
+            ## Coding Standards
+
+            - Follow consistent code style
+            - Write clear comments
+            - Test your changes
+          ''';
+
+          AGENTS = ./path/to/agents.md;
+
+          CONTEXT = '''
+            Additional context instructions here.
+          ''';
+        }
+      '';
+      description = ''
+        An attribute set of context files to create in `~/.gemini/`.
+        The attribute name becomes the filename with `.md` extension automatically added.
+        The value is either inline content or a path to a file.
+
+        Note: You can customize which context file names gemini-cli looks for by setting
+        `settings.context.fileName`. For example:
+        ```nix
+        settings = {
+          context.fileName = ["AGENTS.md", "CONTEXT.md", "GEMINI.md"];
+        };
+        ```
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -101,6 +140,11 @@ in
           };
           sessionVariables.GEMINI_MODEL = cfg.defaultModel;
         };
+      }
+      {
+        home.file = lib.mapAttrs' (
+          n: v: lib.nameValuePair ".gemini/${n}.md" (if lib.isPath v then { source = v; } else { text = v; })
+        ) cfg.context;
       }
       {
         home.file = lib.mapAttrs' (
