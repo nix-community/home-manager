@@ -35,6 +35,14 @@ in
         Set a default value for the maximum lifetime in seconds of identities added to the agent.
       '';
     };
+
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
@@ -42,11 +50,35 @@ in
       (lib.hm.assertions.assertPlatform "services.ssh-agent" pkgs lib.platforms.linux)
     ];
 
-    home.sessionVariablesExtra = ''
-      if [ -z "$SSH_AUTH_SOCK" ]; then
-        export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/${cfg.socket}
-      fi
-    '';
+    programs =
+      let
+        bashIntegration = ''
+          if [ -z "$SSH_AUTH_SOCK" ]; then
+            export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/${cfg.socket}
+          fi
+        '';
+
+        fishIntegration = ''
+          if test -z "$SSH_AUTH_SOCK"
+            set -x SSH_AUTH_SOCK $XDG_RUNTIME_DIR/${cfg.socket}
+          end
+        '';
+
+        nushellIntegration = ''
+          if "SSH_AUTH_SOCK" not-in $env {
+            $env.SSH_AUTH_SOCK = $"($env.XDG_RUNTIME_DIR)/${cfg.socket}"
+          }
+        '';
+      in
+      {
+        bash.initExtra = lib.mkIf cfg.enableBashIntegration bashIntegration;
+
+        zsh.initContent = lib.mkIf cfg.enableZshIntegration bashIntegration;
+
+        fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration fishIntegration;
+
+        nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration nushellIntegration;
+      };
 
     systemd.user.services.ssh-agent = {
       Install.WantedBy = [ "default.target" ];
