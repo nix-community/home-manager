@@ -196,6 +196,26 @@ in
 
       };
 
+      mutablePlaceholder = lib.mkOption {
+        default = { };
+        description = ''
+          This can be required for Desktop Environments that will otherwise overwrite symlinks managed by home-manager.
+          For example, [KDE](https://bugs.kde.org/show_bug.cgi?id=498694).'';
+
+        type = lib.types.submodule {
+          options = {
+            enable = lib.mkEnableOption "a mutable placeholder config file";
+
+            file = lib.mkOption {
+              type = lib.types.str;
+              default = "${config.xdg.configHome}/fontconfig/conf.d/00-aaa-mutable.conf";
+              internal = true;
+              readOnly = true;
+              description = "The mutable placeholder file to create.";
+            };
+          };
+        };
+      };
     };
   };
 
@@ -343,5 +363,9 @@ in
         source = lib.mkIf (config.source != null) config.source;
       }
     ) cfg.configFile;
+
+    systemd.user.tmpfiles.rules = lib.mkIf cfg.mutablePlaceholder.enable [
+      "f ${cfg.mutablePlaceholder.file} - - - -"
+    ];
   };
 }
