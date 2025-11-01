@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   services.podman = {
     enable = true;
@@ -46,6 +47,7 @@
     storageFile=$configPath/storage.conf
     mountsFile=$configPath/mounts.conf
 
+    # Check that config files are generated on both platforms
     assertFileExists $containersFile
     assertFileExists $policyFile
     assertFileExists $registriesFile
@@ -63,5 +65,16 @@
     assertFileContent $registriesFile ${./configuration-registries-expected.conf}
     assertFileContent $storageFile ${./configuration-storage-expected.conf}
     assertFileContent $mountsFile ${./configuration-mounts-expected.conf}
+
+    ${
+      if pkgs.stdenv.hostPlatform.isDarwin then
+        ''
+          # Darwin-specific: verify that config directory is automatically mounted into podman machines
+          assertFileExists activate
+          assertFileRegex activate '\$HOME/\.config/containers:/home/core/\.config/containers'
+        ''
+      else
+        ""
+    }
   '';
 }

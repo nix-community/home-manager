@@ -165,7 +165,7 @@ in
     let
       imageQuadlets = lib.mapAttrsToList toQuadletInternal cfg.images;
     in
-    lib.mkIf cfg.enable {
+    lib.mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
       services.podman.internal.quadletDefinitions = imageQuadlets;
       assertions = lib.flatten (map (image: image.assertions) imageQuadlets);
     };
