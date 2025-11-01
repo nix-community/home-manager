@@ -192,4 +192,9 @@ lib.foldl' (acc: tests: acc // tests) { } [
       mutableExtensionsDir = false;
     }
   )
+
+  # test: haskell support tests for vscode only with package.version = "1.73.0"
+  (buildTestSuiteFor "with-haskell-support" {
+    add-settings-and-extensions = import ./vscode-haskell.nix;
+  } { vscode = singleProfilePackages.vscode; } { })
 ]
