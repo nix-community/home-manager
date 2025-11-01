@@ -12,20 +12,18 @@ in
   meta.maintainers = [
     lib.hm.maintainers.bamhm182
     lib.maintainers.n-hass
+    lib.maintainers.delafthi
   ];
 
   imports = [
-    ./builds.nix
-    ./containers.nix
-    ./images.nix
-    ./install-quadlet.nix
-    ./networks.nix
-    ./services.nix
-    ./volumes.nix
+    ./linux/default.nix
+    ./darwin.nix
   ];
 
   options.services.podman = {
     enable = lib.mkEnableOption "Podman, a daemonless container engine";
+
+    package = lib.mkPackageOption pkgs "podman" { };
 
     settings = {
       containers = lib.mkOption {
@@ -94,28 +92,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [ (lib.hm.assertions.assertPlatform "podman" pkgs lib.platforms.linux) ];
-
     home.packages = [ cfg.package ];
-
-    services.podman.settings.storage = {
-      storage.driver = lib.mkDefault "overlay";
-    };
-
-    xdg.configFile = {
-      "containers/policy.json".source =
-        if cfg.settings.policy != { } then
-          pkgs.writeText "policy.json" (builtins.toJSON cfg.settings.policy)
-        else
-          "${pkgs.skopeo.policy}/default-policy.json";
-      "containers/registries.conf".source = toml.generate "registries.conf" {
-        registries = lib.mapAttrs (n: v: { registries = v; }) cfg.settings.registries;
-      };
-      "containers/storage.conf".source = toml.generate "storage.conf" cfg.settings.storage;
-      "containers/containers.conf".source = toml.generate "containers.conf" cfg.settings.containers;
-      "containers/mounts.conf" = lib.mkIf (cfg.settings.mounts != [ ]) {
-        text = builtins.concatStringsSep "\n" cfg.settings.mounts;
-      };
-    };
   };
 }

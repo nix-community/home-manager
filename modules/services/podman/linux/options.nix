@@ -56,8 +56,6 @@ in
       };
     };
 
-    package = lib.mkPackageOption pkgs "podman" { };
-
     enableTypeChecks = lib.mkEnableOption "type checks for podman quadlets";
   };
 }

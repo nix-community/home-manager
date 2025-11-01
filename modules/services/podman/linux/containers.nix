@@ -401,7 +401,7 @@ in
     let
       containerQuadlets = lib.mapAttrsToList toQuadletInternal cfg.containers;
     in
-    lib.mkIf cfg.enable {
+    lib.mkIf (cfg.enable && pkgs.stdenv.isLinux) {
       services.podman.internal.quadletDefinitions = containerQuadlets;
       assertions = lib.flatten (map (container: container.assertions) containerQuadlets);
 
