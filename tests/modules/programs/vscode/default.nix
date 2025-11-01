@@ -152,31 +152,42 @@ let
     update-checks-file-path = import ./profiles/update-checks-file-path.nix;
     update-checks-object = import ./profiles/update-checks-object.nix;
   };
-
-  extensionsTests = lib.filterAttrs (n: v: lib.hasPrefix "extensions" n) testModules;
 in
 lib.foldl' (acc: tests: acc // tests) { } [
+  # test: all tests with package.version = "1.73.0"
   (buildTestSuiteFor "single-profile-support-with-defaults" testModules singleProfilePackages { })
+
+  # test: all tests with package.version = "1.74.0"
   (buildTestSuiteFor "multi-profile-support-with-defaults" testModules multiProfilePackages { })
 
+  # test: all tests with package.version = "1.74.0"
   (buildTestSuiteFor "multi-profile-support-with-mutable-profiles" testModules multiProfilePackages {
     mutableProfile = true;
   })
 
+  # test: all tests with package.version = "1.74.0"
   (buildTestSuiteFor "multi-profile-support-with-immutable-profiles" testModules multiProfilePackages
     {
       mutableProfile = false;
     }
   )
 
-  (buildTestSuiteFor "single-profile-support-with-mutable-extensions-dir" extensionsTests
+  # test: extensions tests with package.version = "1.73.0"
+  (buildTestSuiteFor "single-profile-support-with-mutable-extensions-dir"
+    {
+      extensions = import ./profiles/extensions.nix;
+    }
     singleProfilePackages
     {
       mutableExtensionsDir = true;
     }
   )
 
-  (buildTestSuiteFor "single-profile-support-with-immutable-extensions-dir" extensionsTests
+  # test: extensions tests with package.version = "1.73.0"
+  (buildTestSuiteFor "single-profile-support-with-immutable-extensions-dir"
+    {
+      extensions = import ./profiles/extensions.nix;
+    }
     singleProfilePackages
     {
       mutableExtensionsDir = false;
@@ -186,7 +197,11 @@ lib.foldl' (acc: tests: acc // tests) { } [
   # mutableExtensionsDir defaults to `true` when a single profile is set,
   # then we set it to false to test multiple profiles
   #
-  (buildTestSuiteFor "multi-profile-support-with-default-profile-only" extensionsTests
+  # test: extensions tests with package.version = "1.74.0"
+  (buildTestSuiteFor "multi-profile-support-with-default-profile-only"
+    {
+      extensions = import ./profiles/extensions.nix;
+    }
     multiProfilePackages
     {
       mutableExtensionsDir = false;
