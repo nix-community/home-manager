@@ -37,15 +37,21 @@ let
     mkOptionType {
       name = "dagEntryOf";
       description = "DAG entry of ${elemType.description}";
-      # leave the checking to the submodule type
-      merge =
-        loc: defs:
-        submoduleType.merge loc (
-          map (def: {
-            inherit (def) file;
-            value = maybeConvert def;
-          }) defs
-        );
+      merge = {
+        __functor =
+          self: loc: defs:
+          (self.v2 { inherit loc defs; }).value;
+        v2 =
+          { loc, defs }:
+          # Delegate to submodule's v2 merge to propagate any errors
+          submoduleType.merge.v2 {
+            inherit loc;
+            defs = map (def: {
+              inherit (def) file;
+              value = maybeConvert def;
+            }) defs;
+          };
+      };
     };
 
 in
@@ -65,9 +71,24 @@ rec {
     mkOptionType rec {
       name = "dagOf";
       description = "DAG of ${elemType.description}";
-      inherit (attrEquivalent) check merge emptyValue;
+      check = {
+        __functor = _self: attrEquivalent.check;
+        isV2MergeCoherent = true;
+      };
+      merge = {
+        __functor =
+          self: loc: defs:
+          (self.v2 { inherit loc defs; }).value;
+        v2 =
+          { loc, defs }:
+          # Directly delegate to attrsOf's v2 merge
+          attrEquivalent.merge.v2 {
+            inherit loc defs;
+          };
+      };
+      inherit (attrEquivalent) emptyValue;
+      inherit (elemType) getSubModules;
       getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "<name>" ]);
-      getSubModules = elemType.getSubModules;
       substSubModules = m: dagOf (elemType.substSubModules m);
       functor = (defaultFunctor name) // {
         wrapped = elemType;
