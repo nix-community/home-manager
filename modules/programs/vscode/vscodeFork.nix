@@ -68,8 +68,18 @@ let
 in
 {
   imports =
+    # api.v2: migrate immutableExtensionsDir to mutableExtensionsDir
+    [
+      (lib.mkChangedOptionModule (modulePath ++ [ "immutableExtensionsDir" ]) (
+        modulePath
+        ++ [
+          "mutableExtensionsDir"
+        ]
+      ) (config: !config.${lib.concatStringsSep "." modulePath}.immutableExtensionsDir))
+    ]
+  ++
+    # api.v3: migrate top-level options to profiles.default
     map
-      # api.v2: migrate top-level options to profiles.default
       (
         v:
         lib.mkRenamedOptionModule (modulePath ++ [ v ]) (
@@ -151,7 +161,7 @@ in
     profiles = lib.mkOption {
       type = lib.types.attrsOf (
         lib.types.submodule {
-          # api.v3: migrate old profile options names to new names within profiles.default
+          # api.v4: migrate old profile options names to new names within profiles.default
           imports = [
             (lib.mkRenamedOptionModule [ "globalSnippets" ] [ "snippets" "global" ])
             (lib.mkRenamedOptionModule [ "languageSnippets" ] [ "snippets" "languages" ])
@@ -346,6 +356,7 @@ in
         message = "mutableExtensionsDir=true requires only a default profile; found additional profiles in ${lib.concatStringsSep ", " (builtins.attrNames profiles.otherProfiles)}";
       }
     ];
+
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.file = homeFiles;
