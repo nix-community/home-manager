@@ -67,6 +67,32 @@ let
   );
 in
 {
+  imports =
+    map
+      # api.v2: migrate top-level options to profiles.default
+      (
+        v:
+        lib.mkRenamedOptionModule (modulePath ++ [ v ]) (
+          modulePath
+          ++ [
+            "profiles"
+            "default"
+            v
+          ]
+        )
+      )
+      [
+        "enableUpdateCheck"
+        "enableExtensionUpdateCheck"
+        "userSettings"
+        "userTasks"
+        "userMcp"
+        "keybindings"
+        "extensions"
+        "languageSnippets"
+        "globalSnippets"
+      ];
+
   options = lib.setAttrByPath modulePath {
     enable = lib.mkEnableOption "VSCode Fork: ${moduleName})";
     package = lib.mkPackageOption pkgs packageName { nullable = true; };
