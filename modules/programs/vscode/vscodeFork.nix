@@ -151,6 +151,15 @@ in
     profiles = lib.mkOption {
       type = lib.types.attrsOf (
         lib.types.submodule {
+          # api.v3: migrate old profile options names to new names within profiles.default
+          imports = [
+            (lib.mkRenamedOptionModule [ "globalSnippets" ] [ "snippets" "global" ])
+            (lib.mkRenamedOptionModule [ "languageSnippets" ] [ "snippets" "languages" ])
+            (lib.mkRenamedOptionModule [ "userMcp" ] [ "mcp" ])
+            (lib.mkRenamedOptionModule [ "userSettings" ] [ "settings" ])
+            (lib.mkRenamedOptionModule [ "userTasks" ] [ "tasks" ])
+          ];
+
           options = {
             enableUpdateCheck = lib.mkOption {
               type = lib.types.nullOr lib.types.bool;
