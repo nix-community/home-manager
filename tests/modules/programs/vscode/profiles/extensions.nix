@@ -5,36 +5,25 @@
   ...
 }@inputs:
 let
-  inherit (import ../test-helpers.nix inputs) supportsMultiProfiles;
-
-  makeExt =
-    extName: extId: extraAttrs:
-    let
-      extensionName = "${forkInputs.package.pname}-${extName}-extension";
-      extensionDir = "$out/share/vscode/extensions/${extId}";
-    in
-    pkgs.runCommand extensionName ({ } // extraAttrs) ''
-      mkdir -p "${extensionDir}"
-      echo "${lib.escapeShellArg extName}-${extId}" > "${extensionDir}/.placeholder"
-    '';
+  inherit (import ../test-helpers.nix inputs) mkVSCodeExtension supportsMultiProfiles;
 
   extensionAId = "publisherA.extA";
   extensionBId = "publisherB.extB";
   extensionCId = "publisherC.extC";
 
-  extensionA = makeExt "extensionA" extensionAId {
+  extensionA = mkVSCodeExtension "extensionA" extensionAId {
     version = "0.0.1";
     vscodeExtUniqueId = extensionAId;
     vscodeExtPublisher = "publisherA";
   };
 
-  extensionB = makeExt "extensionB" extensionBId {
+  extensionB = mkVSCodeExtension "extensionB" extensionBId {
     version = "0.0.2";
     vscodeExtUniqueId = extensionBId;
     vscodeExtPublisher = "publisherB";
   };
 
-  extensionC = makeExt "extensionC" extensionCId {
+  extensionC = mkVSCodeExtension "extensionC" extensionCId {
     version = "0.0.3";
     vscodeExtUniqueId = extensionCId;
     vscodeExtPublisher = "publisherC";

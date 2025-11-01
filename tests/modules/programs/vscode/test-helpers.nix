@@ -6,8 +6,18 @@
 }:
 rec {
   # inherit (builtins) trace toJSON;
-
   # toPretty = lib.generators.toPretty { };
+
+  mkVSCodeExtension =
+    extName: extId: extraAttrs:
+    let
+      extensionName = "${forkInputs.package.pname}-${extName}-extension";
+      extensionDir = "$out/share/vscode/extensions/${extId}";
+    in
+    pkgs.runCommand extensionName ({ } // extraAttrs) ''
+      mkdir -p "${extensionDir}"
+      echo "${lib.escapeShellArg extName}-${extId}" > "${extensionDir}/.placeholder"
+    '';
 
   vscodePackageVersion =
     if forkInputs.package ? vscodeVersion then
