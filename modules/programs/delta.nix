@@ -135,14 +135,21 @@ in
       })
 
       (lib.mkIf (cfg.enable && cfg.enableJujutsuIntegration) {
+        assertions = [
+          {
+            assertion = config.programs.jujutsu.enable or false;
+            message = "programs.delta.enableJujutsuIntegration requires programs.jujutsu.enable to be true";
+          }
+        ];
+
         programs.jujutsu.settings = {
-          merge-tools.delta.diff-expected-exit-codes = [
+          merge-tools.delta.diff-expected-exit-codes = lib.mkDefault [
             0
             1
           ];
           ui = {
-            diff-formatter = ":git";
-            pager = "${lib.getExe cfg.package}";
+            diff-formatter = lib.mkDefault ":git";
+            pager = lib.mkDefault "${lib.getExe cfg.package}";
           };
         };
       })
