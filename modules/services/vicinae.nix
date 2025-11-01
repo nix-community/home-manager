@@ -6,12 +6,12 @@
 }:
 let
   cfg = config.services.vicinae;
-  
+
   jsonFormat = pkgs.formats.json { };
 in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
-  
+
   options.services.vicinae = {
     enable = lib.mkEnableOption "vicinae launcher daemon";
 
@@ -25,7 +25,7 @@ in
         default = true;
         description = "If the vicinae daemon should be started automatically";
       };
-      
+
       target = lib.mkOption {
         type = lib.types.str;
         default = "graphical-session.target";
@@ -47,7 +47,7 @@ in
       default = [ ];
       description = ''
         List of Vicinae extensions to install.
-        
+
         You can use the `config.lib.vicinae.mkExtension` function to create them, like:
         ```nix
           (config.lib.vicinae.mkExtension {
@@ -70,7 +70,7 @@ in
       default = { };
       description = ''
         Theme settings to add to the themes folder in `~/.config/vicinae/themes`.
-        
+
         The attribute name of the theme will be the name of theme json file,
         e.g. `base16-default-dark` will be `base16-default-dark.json`.
       '';
@@ -129,7 +129,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-      assertions = [
+    assertions = [
       {
         assertion = cfg.systemd.enable -> cfg.package != null;
         message = "{option}services.vicinae.systemd.enable requires non null {option}services.vicinae.package";
