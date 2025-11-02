@@ -5,22 +5,34 @@
   ...
 }:
 let
+  inherit (lib)
+    mkEnableOption
+    mkPackageOption
+    mkOption
+    mkIf
+    mkMerge
+    types
+    literalExpression
+    mapAttrs'
+    nameValuePair
+    ;
+
   cfg = config.programs.rio;
 
   settingsFormat = pkgs.formats.toml { };
 in
 {
   options.programs.rio = {
-    enable = lib.mkEnableOption null // {
+    enable = mkEnableOption null // {
       description = ''
         Enable Rio, a terminal built to run everywhere, as a native desktop applications by
         Rust/WebGPU or even in the browsers powered by WebAssembly/WebGPU.
       '';
     };
 
-    package = lib.mkPackageOption pkgs "rio" { nullable = true; };
+    package = mkPackageOption pkgs "rio" { nullable = true; };
 
-    settings = lib.mkOption {
+    settings = mkOption {
       type = settingsFormat.type;
       default = { };
       description = ''
@@ -29,15 +41,15 @@ in
       '';
     };
 
-    themes = lib.mkOption {
-      type = with lib.types; attrsOf (either settingsFormat.type path);
+    themes = mkOption {
+      type = with types; attrsOf (either settingsFormat.type path);
       default = { };
       description = ''
         Theme files written to {file}`$XDG_CONFIG_HOME/rio/themes/`. See
         <https://rioterm.com/docs/config#building-your-own-theme> for
         supported values.
       '';
-      example = lib.literalExpression ''
+      example = literalExpression ''
         {
           foobar.colors = {
             background = "#282a36";
@@ -50,27 +62,28 @@ in
   };
   meta.maintainers = [ lib.maintainers.otavio ];
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-      }
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.packages = mkIf (cfg.package != null) [ cfg.package ];
+    }
 
-      # Only manage configuration if not empty
-      (lib.mkIf (cfg.settings != { }) {
-        xdg.configFile."rio/config.toml".source =
-          if lib.isPath cfg.settings then cfg.settings else settingsFormat.generate "rio.toml" cfg.settings;
-      })
+    # Only manage configuration if not empty
+    (mkIf (cfg.settings != { }) {
+      xdg.configFile."rio/config.toml".source =
+        if builtins.isPath cfg.settings then
+          cfg.settings
+        else
+          settingsFormat.generate "rio.toml" cfg.settings;
+    })
 
-      (lib.mkIf (cfg.themes != { }) {
-        xdg.configFile = lib.mapAttrs' (
-          name: value:
-          lib.nameValuePair "rio/themes/${name}.toml" {
-            source =
-              if builtins.isPath value then value else settingsFormat.generate "rio-theme-${name}.toml" value;
-          }
-        ) cfg.themes;
-      })
-    ]
-  );
+    (mkIf (cfg.themes != { }) {
+      xdg.configFile = mapAttrs' (
+        name: value:
+        nameValuePair "rio/themes/${name}.toml" {
+          source =
+            if builtins.isPath value then value else settingsFormat.generate "rio-theme-${name}.toml" value;
+        }
+      ) cfg.themes;
+    })
+  ]);
 }
