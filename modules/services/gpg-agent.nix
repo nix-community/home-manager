@@ -19,9 +19,7 @@ let
 
   inherit (config.programs.gpg) homedir;
 
-  gpgSshSupportStr = ''
-    ${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye
-  '';
+  gpgSshSupportStr = "${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye";
 
   gpgBashInitStr = ''
     GPG_TTY="$(tty)"
