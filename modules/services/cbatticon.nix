@@ -42,7 +42,13 @@ in
     services.cbatticon = {
       enable = lib.mkEnableOption "cbatticon";
 
-      package = lib.mkPackageOption pkgs "cbatticon" { };
+      package = lib.mkPackageOption pkgs "cbatticon" {
+        example = "pkgs.batticonplus";
+        extraDescription = ''
+          Use {var}`pkgs.batticonplus`
+          for wayland support.
+        '';
+      };
 
       commandCriticalLevel = mkOption {
         type = types.nullOr types.lines;
