@@ -25,17 +25,23 @@ let
     GPG_TTY="$(tty)"
     export GPG_TTY
   ''
-  + optionalString cfg.enableSshSupport "${gpgSshSupportStr} > /dev/null";
+  + optionalString cfg.enableSshSupport ''
+    ${gpgSshSupportStr} > /dev/null
+  '';
 
   gpgZshInitStr = ''
     export GPG_TTY=$TTY
   ''
-  + optionalString cfg.enableSshSupport "${gpgSshSupportStr} > /dev/null";
+  + optionalString cfg.enableSshSupport ''
+    ${gpgSshSupportStr} > /dev/null
+  '';
 
   gpgFishInitStr = ''
     set -gx GPG_TTY (tty)
   ''
-  + optionalString cfg.enableSshSupport "${gpgSshSupportStr} > /dev/null";
+  + optionalString cfg.enableSshSupport ''
+    ${gpgSshSupportStr} > /dev/null
+  '';
 
   gpgNushellInitStr = ''
     $env.GPG_TTY = (tty)
