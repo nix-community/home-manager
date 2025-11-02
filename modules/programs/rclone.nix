@@ -112,13 +112,15 @@ in
                         enable = lib.mkEnableOption "this mount";
 
                         logLevel = lib.mkOption {
-                          type = lib.types.enum [
-                            "ERROR"
-                            "NOTICE"
-                            "INFO"
-                            "DEBUG"
-                          ];
-                          default = "NOTICE";
+                          type = lib.types.nullOr (
+                            lib.types.enum [
+                              "ERROR"
+                              "NOTICE"
+                              "INFO"
+                              "DEBUG"
+                            ]
+                          );
+                          default = null;
                           example = "INFO";
                           description = ''
                             Set the log-level.
@@ -363,8 +365,9 @@ in
                     Environment = [
                       # fusermount/fusermount3
                       "PATH=/run/wrappers/bin"
-                      "RCLONE_LOG_LEVEL=${mount.logLevel}"
-                    ];
+                    ]
+                    ++ lib.optional (mount.logLevel != null) "RCLONE_LOG_LEVEL=${mount.logLevel}";
+
                     ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mount.mountPoint}";
                     ExecStart = lib.concatStringsSep " " [
                       (lib.getExe cfg.package)
