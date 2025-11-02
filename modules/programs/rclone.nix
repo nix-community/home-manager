@@ -111,6 +111,21 @@ in
                       options = {
                         enable = lib.mkEnableOption "this mount";
 
+                        logLevel = lib.mkOption {
+                          type = lib.types.enum [
+                            "ERROR"
+                            "NOTICE"
+                            "INFO"
+                            "DEBUG"
+                          ];
+                          default = "NOTICE";
+                          example = "INFO";
+                          description = ''
+                            Set the log-level.
+                            See: https://rclone.org/docs/#logging
+                          '';
+                        };
+
                         mountPoint = lib.mkOption {
                           type = lib.types.str;
                           default = null;
@@ -348,12 +363,12 @@ in
                     Environment = [
                       # fusermount/fusermount3
                       "PATH=/run/wrappers/bin"
+                      "RCLONE_LOG_LEVEL=${mount.logLevel}"
                     ];
                     ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mount.mountPoint}";
                     ExecStart = lib.concatStringsSep " " [
                       (lib.getExe cfg.package)
                       "mount"
-                      "-vv"
                       (lib.cli.toGNUCommandLineShell { } mount.options)
                       "${remote-name}:${mount-path}"
                       "${mount.mountPoint}"
