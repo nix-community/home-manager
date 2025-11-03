@@ -2,7 +2,7 @@
 {
   programs.ghostty = {
     enable = true;
-    package = config.lib.test.mkStubPackage { };
+    package = config.lib.test.mkStubPackage { outPath = null; };
 
     settings = {
       theme = "catppuccin-mocha";
