@@ -1,6 +1,8 @@
+{ realPkgs, ... }:
 {
   programs.ghostty = {
     enable = true;
+    package = realPkgs.ghostty;
 
     themes = {
       catppuccin-mocha = {

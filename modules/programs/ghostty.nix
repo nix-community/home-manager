@@ -114,6 +114,24 @@ in
         defaultText = lib.literalMD "`true` if programs.ghostty.package is not null";
       };
 
+      systemd = lib.mkOption {
+        type = lib.types.submodule {
+          options = {
+            enable = lib.mkEnableOption "the Ghostty systemd user service" // {
+              default = pkgs.stdenv.hostPlatform.isLinux;
+            };
+          };
+        };
+        default = { };
+        defaultText = lib.literalMD "`true` on Linux, `false` otherwise";
+        description = ''
+          Configuration for Ghostty's systemd integration.
+          This enables additional speed and features.
+
+          See <https://ghostty.org/docs/linux/systemd> for more information.
+        '';
+      };
+
       enableBashIntegration = mkShellIntegrationOption (
         lib.hm.shell.mkBashIntegrationOption { inherit config; }
       );
@@ -193,6 +211,22 @@ in
           };
           config.map-syntax = [ "${config.xdg.configHome}/ghostty/config:Ghostty Config" ];
         };
+      })
+
+      (lib.mkIf (cfg.systemd.enable && pkgs.stdenv.hostPlatform.isLinux) {
+        assertions = [
+          {
+            assertion = cfg.systemd.enable -> cfg.package != null;
+            message = "programs.ghostty.systemd.enable cannot be true when programs.ghostty.package is null";
+          }
+          {
+            assertion = cfg.systemd.enable -> pkgs.stdenv.hostPlatform.isLinux;
+            message = "Ghostty systemd integration cannot be enabled for non-linux platforms";
+          }
+        ];
+        xdg.configFile."systemd/user/app-com.mitchellh.ghostty.service".source =
+          "${cfg.package}/share/systemd/user/app-com.mitchellh.ghostty.service";
+        dbus.packages = [ cfg.package ];
       })
 
       (lib.mkIf cfg.enableBashIntegration {

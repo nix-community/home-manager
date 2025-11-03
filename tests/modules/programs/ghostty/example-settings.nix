@@ -1,8 +1,8 @@
-{ config, ... }:
+{ realPkgs, ... }:
 {
   programs.ghostty = {
     enable = true;
-    package = config.lib.test.mkStubPackage { };
+    package = realPkgs.ghostty;
 
     settings = {
       theme = "catppuccin-mocha";
