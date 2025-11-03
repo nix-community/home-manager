@@ -261,6 +261,7 @@ let
         };
         erase = mkEnableOption "remove bind";
         silent = mkEnableOption "Operate silently";
+        repaint = mkEnableOption "redraw prompt after command";
         operate = mkOption {
           description = "Operate on preset bindings or user bindings";
           type =
@@ -324,6 +325,7 @@ let
         {
           silent,
           erase,
+          repaint,
           operate,
           mode,
           setsMode,
@@ -344,7 +346,11 @@ let
             ];
 
           cmdNormal = lib.concatStringsSep " " (
-            [ "bind" ] ++ opts ++ [ k ] ++ map lib.escapeShellArg (lib.flatten [ command ])
+            [ "bind" ]
+            ++ opts
+            ++ [ k ]
+            ++ map lib.escapeShellArg (lib.flatten [ command ])
+            ++ lib.optional repaint "repaint"
           );
 
           cmdErase = lib.concatStringsSep "  " (
