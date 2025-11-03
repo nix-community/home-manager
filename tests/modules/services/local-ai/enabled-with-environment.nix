@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.local-ai = {
     enable = true;

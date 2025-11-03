@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs "local-ai" { };
 
     environment = lib.mkOption {
-      type = types.attrsOf types.string;
+      type = types.attrsOf types.str;
       default = { };
       description = ''
         Additional environment passed to local-ai service. Used to configure local-ai
