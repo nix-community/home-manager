@@ -125,7 +125,7 @@ let
 
       function importTrust() {
         local keyIds trust
-        IFS='\n' read -ra keyIds <<< "$(gpgKeyId "$1")"
+        mapfile -t keyIds <<< "$(gpgKeyId "$1")"
         trust="$2"
         for id in "''${keyIds[@]}" ; do
           { echo trust; echo "$trust"; (( trust == 5 )) && echo y; echo quit; } \
