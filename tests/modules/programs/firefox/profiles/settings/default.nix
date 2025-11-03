@@ -39,7 +39,7 @@ in
       nmt.script =
         let
           binPath =
-            if pkgs.hostPlatform.isDarwin then
+            if pkgs.stdenv.hostPlatform.isDarwin then
               "Applications/${cfg.darwinAppName}.app/Contents/MacOS"
             else
               "bin";
