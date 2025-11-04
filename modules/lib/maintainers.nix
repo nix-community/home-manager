@@ -471,6 +471,12 @@
     github = "poseidon-rises";
     githubId = 179542264;
   };
+  prescientmoon = {
+    name = "prescientmoon";
+    email = "git@moonythm.dev";
+    github = "prescientmoon";
+    githubId = 39400800;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";
