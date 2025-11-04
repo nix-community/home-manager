@@ -1,13 +1,3 @@
-accordion-padding = 30
-after-startup-command = []
-default-root-container-layout = "tiles"
-default-root-container-orientation = "auto"
-enable-normalization-flatten-containers = true
-enable-normalization-opposite-orientation-for-nested-containers = true
-exec-on-workspace-change = []
-on-focus-changed = []
-on-focused-monitor-changed = ["move-mouse monitor-lazy-center"]
-
 [gaps.outer]
 bottom = 8
 left = 8
