@@ -36,7 +36,6 @@ let
     ./misc/news.nix
     ./misc/nix-remote-build.nix
     ./misc/nix.nix
-    ./misc/nixgl.nix
     ./misc/numlock.nix
     ./misc/pam.nix
     ./misc/qt.nix

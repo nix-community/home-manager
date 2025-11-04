@@ -24,6 +24,8 @@ in
         "data"
       ]
     )
+    (lib.mkRenamedOptionModule [ "nixGL" ] [ "targets" "genericLinux" "nixGL" ])
+    ./generic-linux/nixgl.nix
   ];
 
   options.targets.genericLinux = {
