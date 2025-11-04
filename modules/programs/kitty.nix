@@ -42,6 +42,10 @@ let
     mkKeyValue = key: command: "map ${key} ${command}";
   };
 
+  toKittyMouseBindings = lib.generators.toKeyValue {
+    mkKeyValue = key: command: "mouse_map ${key} ${command}";
+  };
+
   toKittyActionAliases = lib.generators.toKeyValue {
     mkKeyValue = alias_name: action: "action_alias ${alias_name} ${action}";
   };
@@ -199,6 +203,18 @@ in
       '';
     };
 
+    mouseBindings = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = "Mapping of mouse bindings to actions.";
+      example = literalExpression ''
+        {
+          "ctrl+left click" = "ungrabbed mouse_handle_click selection link prompt";
+          "left click" = "ungrabbed no-op";
+        };
+      '';
+    };
+
     environment = mkOption {
       type = types.attrsOf types.str;
       default = { };
@@ -316,7 +332,8 @@ in
       (mkOrder 540 (toKittyConfig cfg.settings))
       (mkOrder 550 (toKittyActionAliases cfg.actionAliases))
       (mkOrder 560 (toKittyKeybindings cfg.keybindings))
-      (mkOrder 570 (toKittyEnv cfg.environment))
+      (mkOrder 570 (toKittyMouseBindings cfg.mouseBindings))
+      (mkOrder 580 (toKittyEnv cfg.environment))
     ];
 
     xdg.configFile."kitty/kitty.conf" = {

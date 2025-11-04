@@ -9,8 +9,6 @@ let
 
   cfg = config.services.cbatticon;
 
-  package = pkgs.cbatticon;
-
   makeCommand =
     commandName: commandArg:
     optional (commandArg != null) (
@@ -21,7 +19,7 @@ let
     );
 
   commandLine = lib.concatStringsSep " " (
-    [ "${package}/bin/cbatticon" ]
+    [ (lib.getExe cfg.package) ]
     ++ makeCommand "command-critical-level" cfg.commandCriticalLevel
     ++ makeCommand "command-left-click" cfg.commandLeftClick
     ++ optional (cfg.iconType != null) "--icon-type ${cfg.iconType}"
@@ -43,6 +41,14 @@ in
   options = {
     services.cbatticon = {
       enable = lib.mkEnableOption "cbatticon";
+
+      package = lib.mkPackageOption pkgs "cbatticon" {
+        example = "pkgs.batticonplus";
+        extraDescription = ''
+          Use {var}`pkgs.batticonplus`
+          for wayland support.
+        '';
+      };
 
       commandCriticalLevel = mkOption {
         type = types.nullOr types.lines;
@@ -127,7 +133,7 @@ in
       (lib.hm.assertions.assertPlatform "services.cbatticon" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ package ];
+    home.packages = [ cfg.package ];
 
     systemd.user.services.cbatticon = {
       Unit = {

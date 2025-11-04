@@ -13,7 +13,7 @@ in
 {
   imports = [ firefoxMockOverlay ];
 
-  config = lib.mkIf (config.test.enableBig && !pkgs.hostPlatform.isDarwin) (
+  config = lib.mkIf (config.test.enableBig && !pkgs.stdenv.hostPlatform.isDarwin) (
     {
       home.stateVersion = "19.09";
     }

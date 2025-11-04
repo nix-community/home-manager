@@ -11,4 +11,6 @@
   opencode-mixed-content = ./mixed-content.nix;
   opencode-themes-inline = ./themes-inline.nix;
   opencode-themes-path = ./themes-path.nix;
+  opencode-mcp-integration = ./mcp-integration.nix;
+  opencode-mcp-integration-with-override = ./mcp-integration-with-override.nix;
 }

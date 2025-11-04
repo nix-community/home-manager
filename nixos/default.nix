@@ -12,7 +12,9 @@ let
 
   serviceEnvironment = lib.mkMerge [
     (mkIf cfg.verbose { VERBOSE = "1"; })
-
+    (mkIf (cfg.backupCommand != null) {
+      HOME_MANAGER_BACKUP_COMMAND = cfg.backupCommand;
+    })
     (mkIf (cfg.backupFileExtension != null) {
       HOME_MANAGER_BACKUP_EXT = cfg.backupFileExtension;
     })

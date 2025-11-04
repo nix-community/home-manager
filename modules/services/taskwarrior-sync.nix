@@ -19,7 +19,7 @@ in
   options.services.taskwarrior-sync = {
     enable = lib.mkEnableOption "Taskwarrior periodic sync";
 
-    package = lib.mkPackageOption pkgs "taskwarrior" { example = "pkgs.taskwarrior3"; };
+    package = lib.mkPackageOption pkgs "taskwarrior2" { example = "pkgs.taskwarrior3"; };
 
     frequency = lib.mkOption {
       type = lib.types.str;

@@ -114,6 +114,33 @@ let
 
   isPath = p: builtins.isPath p || lib.isStorePath p;
 
+  transformMcpServerForVscode =
+    name: server:
+    let
+      # Remove the disabled field from the server config
+      cleanServer = lib.filterAttrs (n: v: n != "disabled") server;
+    in
+    {
+      name = name;
+      value = {
+        enabled = !(server.disabled or false);
+      }
+      // (
+        if server ? url then
+          {
+            type = "http";
+          }
+          // cleanServer
+        else if server ? command then
+          {
+            type = "stdio";
+          }
+          // cleanServer
+        else
+          { }
+      );
+    };
+
   profileType = types.submodule {
     options = {
       userSettings = mkOption {
@@ -151,6 +178,20 @@ let
           Configuration written to Visual Studio Code's
           {file}`tasks.json`.
           This can be a JSON object or a path to a custom JSON file.
+        '';
+      };
+
+      enableMcpIntegration = mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to integrate the MCP servers config from
+          {option}`programs.mcp.servers` into
+          {option}`programs.vscode.profiles.<name>.userMcp`.
+
+          Note: Settings defined in {option}`programs.mcp.servers` are merged
+          with {option}`programs.vscode.profiles.<name>.userMcp`, with VSCode
+          settings taking precedence.
         '';
       };
 
@@ -459,10 +500,31 @@ in
             if isPath v.userTasks then v.userTasks else jsonFormat.generate "vscode-user-tasks" v.userTasks;
         })
 
-        (mkIf (v.userMcp != { }) {
-          "${mcpFilePath n}".source =
-            if isPath v.userMcp then v.userMcp else jsonFormat.generate "vscode-user-mcp" v.userMcp;
-        })
+        (mkIf
+          (
+            v.userMcp != { }
+            || (v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { })
+          )
+          {
+            "${mcpFilePath n}".source =
+              if isPath v.userMcp then
+                v.userMcp
+              else
+                let
+                  transformedMcpServers =
+                    if v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
+                      lib.listToAttrs (lib.mapAttrsToList transformMcpServerForVscode config.programs.mcp.servers)
+                    else
+                      { };
+                  # Merge MCP servers: transformed servers + user servers, with user servers taking precedence
+                  mergedServers = transformedMcpServers // ((v.userMcp.servers or { }));
+                  # Merge all MCP config
+                  mergedMcpConfig =
+                    v.userMcp // (lib.optionalAttrs (mergedServers != { }) { servers = mergedServers; });
+                in
+                jsonFormat.generate "vscode-user-mcp" mergedMcpConfig;
+          }
+        )
 
         (mkIf (v.keybindings != [ ]) {
           "${keybindingsFilePath n}".source =

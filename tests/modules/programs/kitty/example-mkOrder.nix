@@ -25,6 +25,11 @@
         "ctrl+f>2" = "set_font_size 20";
       };
 
+      mouseBindings = {
+        "ctrl+left click" = "ungrabbed mouse_handle_click selection link prompt";
+        "left click" = "ungrabbed no-op";
+      };
+
       actionAliases = {
         "launch_tab" = "launch --cwd=current --type=tab";
         "launch_window" = "launch --cwd=current --type=os-window";

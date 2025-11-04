@@ -107,6 +107,12 @@
       assert expected in actual, \
         f"expected generations to contain {expected}, but found {actual}"
 
+    with subtest("Home Manager option"):
+      actual = succeed_as_alice("home-manager option home.username")
+      expected = "alice"
+      assert expected in actual, \
+        f"expected generations to contain {expected}, but found {actual}"
+
     with subtest("Home Manager uninstallation"):
       succeed_as_alice("yes | home-manager uninstall -L")
 

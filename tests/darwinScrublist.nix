@@ -157,7 +157,7 @@ let
     "spotify-player"
     "starship"
     "superfile"
-    "taskwarrior"
+    "taskwarrior2"
     "tealdeer"
     "texlive"
     "thefuck"

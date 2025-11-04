@@ -16,6 +16,35 @@ let
   cfg = config.programs.opencode;
 
   jsonFormat = pkgs.formats.json { };
+
+  transformMcpServer = name: server: {
+    name = name;
+    value = {
+      enabled = !(server.disabled or false);
+    }
+    // (
+      if server ? url then
+        {
+          type = "remote";
+          url = server.url;
+        }
+        // (lib.optionalAttrs (server ? headers) { headers = server.headers; })
+      else if server ? command then
+        {
+          type = "local";
+          command = [ server.command ] ++ (server.args or [ ]);
+        }
+        // (lib.optionalAttrs (server ? env) { environment = server.env; })
+      else
+        { }
+    );
+  };
+
+  transformedMcpServers =
+    if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
+      lib.listToAttrs (lib.mapAttrsToList transformMcpServer config.programs.mcp.servers)
+    else
+      { };
 in
 {
   meta.maintainers = with lib.maintainers; [ delafthi ];
@@ -24,6 +53,20 @@ in
     enable = mkEnableOption "opencode";
 
     package = mkPackageOption pkgs "opencode" { nullable = true; };
+
+    enableMcpIntegration = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP servers config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.opencode.settings.mcp`.
+
+        Note: Settings defined in {option}`programs.mcp.servers` are merged
+        with {option}`programs.opencode.settings.mcp`, with OpenCode settings
+        taking precedence.
+      '';
+    };
 
     settings = mkOption {
       inherit (jsonFormat) type;
@@ -147,7 +190,7 @@ in
         Custom themes for opencode. The attribute name becomes the theme
         filename, and the value is either:
         - An attribute set, that is converted to a json
-        - A path to a file conaining the content
+        - A path to a file containing the content
         Themes are stored in {file}`$XDG_CONFIG_HOME/opencode/themes/` directory.
         Set `programs.opencode.settings.theme` to enable the custom theme.
         See <https://opencode.ai/docs/themes/> for the documentation.
@@ -159,13 +202,21 @@ in
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
-      "opencode/config.json" = mkIf (cfg.settings != { }) {
-        source = jsonFormat.generate "config.json" (
-          {
-            "$schema" = "https://opencode.ai/config.json";
-          }
-          // cfg.settings
-        );
+      "opencode/config.json" = mkIf (cfg.settings != { } || transformedMcpServers != { }) {
+        source =
+          let
+            # Merge MCP servers: transformed servers + user settings, with user settings taking precedence
+            mergedMcpServers = transformedMcpServers // (cfg.settings.mcp or { });
+            # Merge all settings
+            mergedSettings =
+              cfg.settings // (lib.optionalAttrs (mergedMcpServers != { }) { mcp = mergedMcpServers; });
+          in
+          jsonFormat.generate "config.json" (
+            {
+              "$schema" = "https://opencode.ai/config.json";
+            }
+            // mergedSettings
+          );
       };
 
       "opencode/AGENTS.md" = (
