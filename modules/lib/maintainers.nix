@@ -381,6 +381,18 @@
     github = "mipmip";
     githubId = 658612;
   };
+  mokrinsky = {
+    name = "mokrinsky";
+    email = "463907+mokrinsky@users.noreply.github.com";
+    github = "mokrinsky";
+    githubId = 463907;
+    keys = [
+      {
+        longkeyid = "rsa4096/0x73CC011921471A15";
+        fingerprint = "EA54 E892 D96C 779E 1FA6  4E0A 73CC 0119 2147 1A15";
+      }
+    ];
+  };
   msfjarvis = {
     email = "me@msfjarvis.dev";
     github = "msfjarvis";
