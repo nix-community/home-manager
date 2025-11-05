@@ -203,7 +203,6 @@ import nmtSrc {
           ./modules/misc/numlock
           ./modules/misc/pam
           ./modules/misc/qt
-          ./modules/misc/tmpfiles
           ./modules/misc/xdg/linux.nix
           ./modules/misc/xsession
           ./modules/systemd
