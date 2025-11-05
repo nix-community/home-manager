@@ -1,27 +1,34 @@
 {
-  pkgs,
   config,
   lib,
+  pkgs,
   ...
 }:
 let
-
   cfg = config.programs.vscode.haskell;
-
-  defaultHieNixExe = hie-nix.hies + "/bin/hie-wrapper";
-  defaultHieNixExeText = lib.literalExpression ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"'';
-
-  hie-nix =
-    pkgs.hie-nix or (abort ''
-      vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
-      ${exampleOverlay}
-    '');
 
   exampleOverlay = ''
     nixpkgs.overlays = [
       (self: super: { hie-nix = import ~/src/hie-nix {}; })
     ]
   '';
+
+  hie-nix = if pkgs ? hie-nix then pkgs.hie-nix else null;
+
+  defaultHieNixExe =
+    if hie-nix != null then
+      hie-nix.hies + "/bin/hie-wrapper"
+    else
+      abort ''
+        vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
+        ${exampleOverlay}
+      '';
+
+  defaultHieNixExeText =
+    if pkgs ? hie-nix then
+      lib.literalExpression ''"''${pkgs.hie-nix.hies}/bin/hie-wrapper"''
+    else
+      lib.literalExpression ''"<hie-nix-missing>"'';
 
 in
 {
@@ -55,14 +62,22 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.vscode.profiles.default.userSettings = lib.mkIf cfg.hie.enable {
-      "languageServerHaskell.enableHIE" = true;
-      "languageServerHaskell.hieExecutablePath" = cfg.hie.executablePath;
-    };
+    programs.vscode.profiles.default.userSettings = lib.mkIf cfg.hie.enable (
+      if hie-nix == null then
+        abort ''
+          vscode.haskell: pkgs.hie-nix missing. Please add an overlay such as:
+          ${exampleOverlay}
+        ''
+      else
+        {
+          "languageServerHaskell.enableHIE" = true;
+          "languageServerHaskell.hieExecutablePath" = cfg.hie.executablePath;
+        }
+    );
 
     programs.vscode.profiles.default.extensions = [
       pkgs.vscode-extensions.justusadam.language-haskell
     ]
-    ++ lib.optional cfg.hie.enable pkgs.vscode-extensions.alanz.vscode-hie-server;
+    ++ (lib.optional cfg.hie.enable pkgs.vscode-extensions.alanz.vscode-hie-server);
   };
 }
