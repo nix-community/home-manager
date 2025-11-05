@@ -103,13 +103,11 @@ in
         '';
 
         fishIntegration = ''
-          function ${cfg.shellWrapperName}
-            set -x LAZYGIT_NEW_DIR_FILE ${lazygitNewDirFilePath}
-            command lazygit $argv
-            if test -f $LAZYGIT_NEW_DIR_FILE
-              cd (cat $LAZYGIT_NEW_DIR_FILE)
-              rm -f $LAZYGIT_NEW_DIR_FILE
-            end
+          set -x LAZYGIT_NEW_DIR_FILE ${lazygitNewDirFilePath}
+          command lazygit $argv
+          if test -f $LAZYGIT_NEW_DIR_FILE
+            cd (cat $LAZYGIT_NEW_DIR_FILE)
+            rm -f $LAZYGIT_NEW_DIR_FILE
           end
         '';
 
