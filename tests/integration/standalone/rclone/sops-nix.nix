@@ -28,7 +28,7 @@ in
       uid = 1000;
     };
 
-    systemd.tmpfiles.settings.age.rules."/home/alice/age-key".f = {
+    systemd.tmpfiles.settings.age."/home/alice/age-key".f = {
       mode = "400";
       user = "alice";
       group = "users";
