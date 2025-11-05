@@ -167,7 +167,7 @@ let
         ]}
       '';
       onChange = ''
-        run ${pkgs.systemd}/bin/systemd-tmpfiles --user --remove --create ''${DRY_RUN:+--dry-run} '${config.xdg.configHome}/${mkFileName name}'
+        run ${pkgs.systemd}/bin/systemd-tmpfiles --user --remove --create ''${DRY_RUN:+--dry-run} '${mkFileName name}'
       '';
     };
 
