@@ -375,12 +375,15 @@ let
       passAsFile = [ "text" ];
     } "env HOME=$(mktemp -d) fish_indent < $textPath > $out";
 
-  translatedSessionVariables = pkgs.runCommandLocal "hm-session-vars.fish" { } ''
+  profileDir = "/etc/profile.d";
+  sessionVarsFile = "hm-session-vars.fish";
+  sessionVarsPkg = pkgs.runCommandLocal sessionVarsFile { } ''
+    mkdir -p $out/${profileDir}
     (echo "function setup_hm_session_vars;"
     ${pkgs.buildPackages.babelfish}/bin/babelfish \
-    <${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh
+      <${config.home.sessionVariablesPackage}/${profileDir}/hm-session-vars.sh
     echo "end"
-    echo "setup_hm_session_vars") > $out
+    echo "setup_hm_session_vars") > $out/${profileDir}/${sessionVarsFile}
   '';
 
 in
@@ -556,11 +559,25 @@ in
         <https://fishshell.com/docs/current/cmds/function.html>.
       '';
     };
+
+    programs.fish.sessionVariablesPackage = mkOption {
+      type = types.package;
+      internal = true;
+      description = ''
+        The package containing the translated {file}`hm-session-vars.fish` file.
+      '';
+    };
   };
 
   config = mkIf cfg.enable (
     lib.mkMerge [
-      { home.packages = [ cfg.package ]; }
+      {
+        home.packages = [
+          cfg.package
+          cfg.sessionVariablesPackage
+        ];
+        programs.fish.sessionVariablesPackage = sessionVarsPkg;
+      }
 
       (mkIf cfg.generateCompletions (
         let
@@ -592,7 +609,6 @@ in
                   fi
                 done
               '';
-
           allCompletions =
             let
               cmp = (a: b: (a.meta.priority or 0) > (b.meta.priority or 0));
@@ -673,7 +689,7 @@ in
           set -q __fish_home_manager_config_sourced; and exit
           set -g __fish_home_manager_config_sourced 1
 
-          source ${translatedSessionVariables}
+          source ${cfg.sessionVariablesPackage}/${profileDir}/${sessionVarsFile}
 
           ${cfg.shellInit}
 
