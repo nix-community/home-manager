@@ -224,7 +224,6 @@ in
         Documentation = [ "https://docs.vicinae.com" ];
         After = [ cfg.systemd.target ];
         PartOf = [ cfg.systemd.target ];
-        BindsTo = [ cfg.systemd.target ];
       };
       Service = {
         EnvironmentFile = pkgs.writeText "vicinae-env" ''
