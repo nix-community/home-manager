@@ -153,6 +153,17 @@ let
     };
   };
 
+  completionModule = types.submodule {
+    options = {
+      body = mkOption {
+        type = types.lines;
+        description = ''
+          The completion file's body.
+        '';
+      };
+    };
+  };
+
   abbrModule = types.submodule {
     options = {
       expansion = mkOption {
@@ -556,6 +567,28 @@ in
         <https://fishshell.com/docs/current/cmds/function.html>.
       '';
     };
+
+    programs.fish.completions = mkOption {
+      type = with types; attrsOf (either lines completionModule);
+      default = { };
+      example = literalExpression ''
+        {
+          my-prog = '''
+            complete -c myprog -s o -l output
+          ''';
+
+          my-app = {
+            body = '''
+              complete -c myapp -s -v
+            ''';
+          };
+        }
+      '';
+      description = ''
+        Custom fish completions. For more information see
+        <https://fishshell.com/docs/current/completions.html>.
+      '';
+    };
   };
 
   config = mkIf cfg.enable (
@@ -733,6 +766,20 @@ in
               '';
           };
         }) cfg.functions;
+      }
+      {
+        xdg.configFile = lib.mapAttrs' (name: def: {
+          name = "fish/completions/${name}.fish";
+          value = {
+            source =
+              let
+                body = if isAttrs def then def.body else def;
+              in
+              fishIndent "${name}.fish" ''
+                ${lib.strings.removeSuffix "\n" body}
+              '';
+          };
+        }) cfg.completions;
       }
 
       # Each plugin gets a corresponding conf.d/plugin-NAME.fish file to load
