@@ -89,6 +89,20 @@ in
       '';
     };
 
+    forceOverwriteSettings = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        When enabled, force overwriting of the Atuin configuration file
+        ({file}`$XDG_CONFIG_HOME/atuin/config.toml`).
+        Any existing Atuin configuration will be lost.
+
+        Enabling this is useful when adding settings for the first time
+        because Atuin writes its default config file after every single
+        shell command, which can make it difficult to manually remove.
+      '';
+    };
+
     themes = mkOption {
       type = types.attrsOf (
         types.oneOf [
@@ -152,11 +166,12 @@ in
 
           # If there are user-provided settings, generate the config file.
           xdg.configFile = lib.mkMerge [
-            {
+            (mkIf (cfg.settings != { }) {
               "atuin/config.toml" = {
                 source = tomlFormat.generate "atuin-config" cfg.settings;
+                force = cfg.forceOverwriteSettings;
               };
-            }
+            })
 
             (mkIf (cfg.themes != { }) (
               lib.mapAttrs' (
