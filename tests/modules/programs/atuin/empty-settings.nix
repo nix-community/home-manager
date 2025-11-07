@@ -1,7 +1,13 @@
 {
   programs.atuin.enable = true;
 
-  nmt.script = ''
-    assertPathNotExists home-files/.config/atuin/config.toml
-  '';
+  # Config file should exist and be empty
+  nmt.script =
+    let
+      configFile = "home-files/.config/atuin/config.toml";
+    in
+    ''
+      assertFileExists ${configFile}
+      assertFileNotRegex ${configFile} '.*'
+    '';
 }
