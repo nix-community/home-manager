@@ -1,0 +1,11 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@tomat@/bin/tomat daemon run
+Restart=always
+RestartSec=5
+
+[Unit]
+After=graphical.target
+Description=Tomat Pomodoro server
