@@ -152,11 +152,11 @@ in
 
           # If there are user-provided settings, generate the config file.
           xdg.configFile = lib.mkMerge [
-            (mkIf (cfg.settings != { }) {
+            {
               "atuin/config.toml" = {
                 source = tomlFormat.generate "atuin-config" cfg.settings;
               };
-            })
+            }
 
             (mkIf (cfg.themes != { }) (
               lib.mapAttrs' (
