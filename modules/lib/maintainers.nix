@@ -273,6 +273,12 @@
     githubId = 1553581;
     name = "Josh Robson Chase";
   };
+  jtrrll = {
+    email = "jacksonterrill3@gmail.com";
+    github = "jtrrll";
+    githubId = 77407057;
+    name = "Jackson Terrill";
+  };
   kaleo = {
     name = "Kaleo Cheng";
     email = "kaleocheng@gmail.com";
