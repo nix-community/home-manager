@@ -8,6 +8,7 @@ let
   cfg = config.programs.vicinae;
 
   jsonFormat = pkgs.formats.json { };
+  tomlFormat = pkgs.formats.toml { };
 in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
@@ -73,35 +74,46 @@ in
     };
 
     themes = lib.mkOption {
-      inherit (jsonFormat) type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
-        Theme settings to add to the themes folder in `~/.config/vicinae/themes`.
+        Theme settings to add to the themes folder in `~/.config/vicinae/themes`. See https://docs.vicinae.com/theming/getting-started for supported values.
 
-        The attribute name of the theme will be the name of theme json file,
-        e.g. `base16-default-dark` will be `base16-default-dark.json`.
+        The attribute name of the theme will be the name of theme toml file,
+        e.g. `base16-default-dark` will be `base16-default-dark.toml`.
       '';
       example =
         lib.literalExpression # nix
           ''
             {
-              base16-default-dark = {
-                version = "1.0.0";
-                appearance = "dark";
-                icon = /path/to/icon.png;
-                name = "base16 default dark";
-                description = "base16 default dark by Chris Kempson";
-                palette = {
-                  background = "#181818";
-                  foreground = "#d8d8d8";
-                  blue = "#7cafc2";
-                  green = "#a3be8c";
-                  magenta = "#ba8baf";
-                  orange = "#dc9656";
-                  purple = "#a16946";
-                  red = "#ab4642";
-                  yellow = "#f7ca88";
-                  cyan = "#86c1b9";
+              catppuccin-mocha = {
+                meta = {
+                  version = 1;
+                  name = "Catppuccin Mocha";
+                  description = "Cozy feeling with color-rich accents";
+                  variant = "dark";
+                  icon = "icons/catppuccin-mocha.png";
+                  inherits = "vicinae-dark";
+                };
+
+                colors = {
+                  core = {
+                    background = "#1E1E2E";
+                    foreground = "#CDD6F4";
+                    secondary_background = "#181825";
+                    border = "#313244";
+                    accent = "#89B4FA";
+                  };
+                  accents = {
+                    blue = "#89B4FA";
+                    green = "#A6E3A1";
+                    magenta = "#F5C2E7";
+                    orange = "#FAB387";
+                    purple = "#CBA6F7";
+                    red = "#F38BA8";
+                    yellow = "#F9E2AF";
+                    cyan = "#94E2D5";
+                  };
                 };
               };
             }
@@ -202,20 +214,21 @@ in
         "vicinae/vicinae.json" = lib.mkIf (cfg.settings != { }) {
           source = jsonFormat.generate "vicinae-settings" cfg.settings;
         };
-      }
-      // lib.mapAttrs' (
-        name: theme:
-        lib.nameValuePair "vicinae/themes/${name}.json" {
-          source = jsonFormat.generate "vicinae-${name}-theme" theme;
-        }
-      ) cfg.themes;
+      };
 
-      dataFile = builtins.listToAttrs (
-        builtins.map (item: {
-          name = "vicinae/extensions/${item.name}";
-          value.source = item;
-        }) cfg.extensions
-      );
+      dataFile =
+        builtins.listToAttrs (
+          builtins.map (item: {
+            name = "vicinae/extensions/${item.name}";
+            value.source = item;
+          }) cfg.extensions
+        )
+        // lib.mapAttrs' (
+          name: theme:
+          lib.nameValuePair "vicinae/themes/${name}.toml" {
+            source = tomlFormat.generate "vicinae-${name}-theme" theme;
+          }
+        ) cfg.themes;
     };
 
     systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
