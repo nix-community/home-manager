@@ -411,12 +411,68 @@ like</p><pre><code class="programlisting  nix">{
   # …
 }
 </code></pre><p>in your Home Manager configuration.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-usage-gpu-non-nixos" class="title" style="clear: both">GPU on non-NixOS systems   </h2>  </div> </div></div><p>To access the GPU, programs need access to OpenGL and Vulkan libraries. While
-this works transparently on NixOS, it does not on other Linux systems. A
-solution is provided by <a class="link" href="https://github.com/nix-community/nixGL"  target="_top">NixGL</a>, which
-can be integrated into Home Manager.</p><p>To enable the integration, import NixGL into your home configuration, either as
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-usage-gpu-non-nixos" class="title" style="clear: both">GPU on non-NixOS systems   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-usage-gpu-sudo">When sudo is available: fixing the host OS</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-gpu-nosudo">No root access: wrapping programs</a> </span></dt> </dl></div><p>To access the GPU, programs need access to OpenGL and Vulkan libraries. While
+this works transparently on NixOS, it does not on other Linux systems. There are
+two options:</p><div class="orderedlist"><ol class="orderedlist compact"  type="1"><li class="listitem"><p>Recommended: modify the host system slightly so that the graphics libraries
+can be found where programs from Nixpkgs can find them.</p></li><li class="listitem"><p>Wrap programs from Nixpkgs in an environment which tells them where to find
+graphics libraries.</p></li></ol></div><p>The first option is very clean because the needed modifications to the host OS
+are small. However, it does require root/sudo access to the system, which may
+not be available. The second approach avoids that. However, it injects libraries
+from Nixpkgs into the environment of wrapped programs, which can make it
+impossible to launch programs of the host OS from wrapped programs.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-usage-gpu-sudo" class="title" >When sudo is available: fixing the host OS   </h3>  </div> </div></div><p>The <code class="option">targets.genericLinux.gpu</code> module is automatically enabled whenever
+the option <code class="option">targets.genericLinux.enable</code> is set (unless
+<a class="link" href="index.xhtml#sec-usage-gpu-nosudo" title="No root access: wrapping programs" >NixGL</a> is used instead), which is recommended for
+non-NixOS Linux distributions in any case. The module can also be explicitly
+enabled by setting <code class="option">targets.genericLinux.gpu.enable</code>.</p><p>This module builds a directory containing GPU libraries. When activating the
+home configuration by <code class="literal">home-manager switch</code>, the host system is examined: for
+compatibility with NixOS, these libraries need to be placed in
+<code class="literal">/run/opengl-driver</code>. If this directory does not exist, or contains a different
+set of libraries, the activation script will print a warning such as</p><pre><code class="programlisting text">Activating checkExistingGpuDrivers
+GPU drivers require an update, run
+  sudo /nix/store/HASH-non-nixos-gpu/bin/non-nixos-gpu-setup
+</code></pre><p>Because the <code class="literal">/run</code> directory is volatile and disappears on reboot, libraries
+cannot be simply copied or linked there. The <code class="literal">non-nixos-gpu-setup</code> script
+installs a Systemd service which ensures that the drivers are linked to
+<code class="literal">/run/opengl-driver</code> on boot. Home Manager will always check and warn you when
+this setup needs to be refreshed.</p><p>If you ever wish to uninstall these drivers, all you need to do is</p><pre><code class="programlisting sh">sudo rm /run/opengl-driver
+sudo systemctl disable --now non-nixos-gpu.service
+sudo rm /etc/systemd/system/non-nixos-gpu.service
+</code></pre><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-usage-gpu-offloading" class="title" >GPU offloading   </h4>  </div> </div></div><p>You can use the <code class="option">targets.genericLinux.nixGL.prime.installScript</code> option.
+It installs the <code class="literal">prime-offload</code> script which is configured through options under
+<code class="option">targets.genericLinux.nixGL.prime</code>. This functionality is independent
+from the rest of NixGL and can be used when
+<code class="option">targets.genericLinux.nixGL.packages</code> is left <code class="literal">null</code>, which it should be
+when using drivers from <code class="literal">/run/opengl-driver</code>.</p>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-usage-gpu-nvidia" class="title" >Nvidia drivers   </h4>  </div> </div></div><p>If you need to include the proprietary Nvidia drivers, the process is a bit more
+involved. You need to:</p><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>Determine the exact version used by the host system. Example: <code class="literal">550.163.01</code></p></li><li class="listitem"><p>Fetch that version of the drivers from Nvidia and calculate their hash.
+Example:</p><pre><code class="programlisting sh">nix store prefetch-file \
+  https://download.nvidia.com/XFree86/Linux-x86_64/550.163.01/NVIDIA-Linux-x86_64-550.163.01.run
+</code></pre><p>Attention: the version and architecture are present twice. If you are on an
+ARM system, replace <code class="literal">x86_64</code> with <code class="literal">aarch64</code>.</p></li><li class="listitem"><p>Put this information into your home configuration. Example:</p><pre><code class="programlisting nix">targets.genericLinux.gpu.nvidia = {
+  enable = true;
+  version = &quot;550.163.01&quot;;
+  sha256 = &quot;sha256-74FJ9bNFlUYBRen7+C08ku5Gc1uFYGeqlIh7l1yrmi4=&quot;;
+};
+</code></pre></li></ol></div><div class="warning"><h3 class="title">Warning</h3><p>The Nvidia driver version <span class="strong"><strong>must</strong></span> match the host system. This means that you
+must pay attention when upgrading the system and update the home configuration
+as well.</p></div>
+</div>
+
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-usage-gpu-nosudo" class="title" >No root access: wrapping programs   </h3>  </div> </div></div><p>The wrapping approach is facilitated by
+<a class="link" href="https://github.com/nix-community/nixGL"  target="_top">NixGL</a>, which can be integrated into
+Home Manager.</p><div class="warning"><h3 class="title">Warning</h3><p>This approach can cause issues when a wrapped program from Nixpkgs executes a
+program from the host. For example, Firefox from Nixpkgs must be wrapped by
+NixGL in order for graphical acceleration to work. If you then download a PDF
+file and open it in a PDF viewer that is not installed from Nixpkgs but is
+provided by the host distribution, there may be issues. Because Firefox’s
+environment injects libraries from NixGL, they are inherited by the PDF viewer,
+and unless they are the same or compatible version as the libraries on the host,
+the viewer will not work. This problem manifests more often with Vulkan because
+it needs a larger set of injected libraries than OpenGL.</p><p>The problem typically manifests with errors similar to</p><pre><code class="programlisting text">/nix/store/HASH-gcc-12.3.0-lib/lib/libstdc++.so.6: version `GLIBCXX_3.4.31&#x27; not found
+</code></pre></div><p>To enable the integration, import NixGL into your home configuration, either as
 a channel, or as a flake input passed via <code class="literal">extraSpecialArgs</code>. Then, set the
-<code class="literal">nixGL.packages</code> option to the package set provided by NixGL.</p><p>Once integration is enabled, it can be used in two ways: as Nix functions for
+<code class="literal">targets.genericLinux.nixGL.packages</code> option to the package set provided by
+NixGL.</p><p>Once integration is enabled, it can be used in two ways: as Nix functions for
 wrapping programs installed via Home Manager, and as shell commands for running
 programs installed by other means (such as <code class="literal">nix shell</code>). In either case, there
 are several wrappers available. They can be broadly categorized</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>by vendor: as Mesa (for Free drivers of all vendors) and Nvidia (for
@@ -430,10 +486,11 @@ configured to use any of the wrappers. It is intended to provide a customization
 point when the same home configuration is used across several machines with
 different hardware. There is also the <code class="literal">config.lib.nixGL.wrapOffload</code> alias for
 two-GPU systems.</p><p>Another convenience is that all wrapper functions are always available. However,
-when <code class="literal">nixGL.packages</code> option is unset, they are no-ops. This allows them to be
-used even when the home configuration is used on NixOS machines. The exception
-is the <code class="literal">prime-offload</code> script which ignores <code class="literal">nixGL.packages</code> and is installed
-into the environment whenever <code class="literal">nixGL.prime.installScript</code> is set. This script,
+when <code class="literal">targets.genericLinux.nixGL.packages</code> option is unset, they are no-ops.
+This allows them to be used even when the home configuration is used on NixOS
+machines. The exception is the <code class="literal">prime-offload</code> script which ignores
+<code class="literal">targets.genericLinux.nixGL.packages</code> and is installed into the environment
+whenever <code class="literal">targets.genericLinux.nixGL.prime.installScript</code> is set. This script,
 which can be used to start a program on a secondary GPU, does not depend on
 NixGL and is useful on NixOS systems as well.</p><p>Below is an abbreviated example for an Optimus laptop that makes use of both
 Mesa and Nvidia wrappers, where the latter is used in dGPU offloading mode. It
@@ -442,10 +499,12 @@ to run on the Nvidia dGPU, and how to install the wrapper scripts. It also wraps
 Xonotic to run on the dGPU, but uses the wrapper function directly for
 demonstration purposes.</p><pre><code class="programlisting nix">{ config, lib, pkgs, nixgl, ... }:
 {
-  nixGL.packages = nixgl.packages;
-  nixGL.defaultWrapper = &quot;mesa&quot;;
-  nixGL.offloadWrapper = &quot;nvidiaPrime&quot;;
-  nixGL.installScripts = [ &quot;mesa&quot; &quot;nvidiaPrime&quot; ];
+  targets.genericLinux.nixGL = {
+    packages = nixgl.packages;
+    defaultWrapper = &quot;mesa&quot;;
+    offloadWrapper = &quot;nvidiaPrime&quot;;
+    installScripts = [ &quot;mesa&quot; &quot;nvidiaPrime&quot; ];
+  };
 
   programs.mpv = {
     enable = true;
@@ -460,10 +519,12 @@ demonstration purposes.</p><pre><code class="programlisting nix">{ config, lib, 
 </code></pre><p>The above example assumes a flake-based setup where <code class="literal">nixgl</code> was passed from the
 flake. When using channels, the example would instead begin with</p><pre><code class="programlisting nix">{ config, lib, pkgs, ... }:
 {
-  nixGL.packages = import &lt;nixgl&gt; { inherit pkgs; };
+  targets.genericLinux.nixGL.packages = import &lt;nixgl&gt; { inherit pkgs; };
   # The rest is the same as above
   ...
 </code></pre>
+</div>
+
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-updating" class="title" style="clear: both">Updating   </h2>  </div> </div></div><p>If you have installed Home Manager using the Nix channel method then
 updating Home Manager is done by first updating the channel. You can
 then switch to the updated Home Manager environment.</p><pre><code class="programlisting  shell">$ nix-channel --update
