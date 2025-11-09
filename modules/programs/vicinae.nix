@@ -85,7 +85,7 @@ in
     };
 
     themes = lib.mkOption {
-      inherit (themeFormat) type;
+      type = lib.types.nullOr tomlFormat.type;
       default = { };
       description = ''
         Theme settings to add to the themes folder in `~/.config/vicinae/themes`. See <https://docs.vicinae.com/theming/getting-started> for supported values.
