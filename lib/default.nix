@@ -9,6 +9,7 @@
       lib ? pkgs.lib,
       modules ? [ ],
       pkgs,
+      minimal ? false,
     }:
     import ../modules {
       inherit
@@ -16,6 +17,7 @@
         extraSpecialArgs
         lib
         pkgs
+        minimal
         ;
       configuration = {
         imports = modules ++ [
