@@ -12,14 +12,6 @@ let
 
   packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
   themeIsToml = lib.versionAtLeast packageVersion "0.15.0";
-  themeFormat = if themeIsToml then tomlFormat else jsonFormat;
-  themeExtension = if themeIsToml then "toml" else "json";
-  themeFiles = lib.mapAttrs' (
-    name: theme:
-    lib.nameValuePair "vicinae/themes/${name}.${themeExtension}" {
-      source = themeFormat.generate "vicinae-${name}-theme" theme;
-    }
-  ) cfg.themes;
 in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
@@ -85,7 +77,7 @@ in
     };
 
     themes = lib.mkOption {
-      type = lib.types.nullOr tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Theme settings to add to the themes folder in `~/.config/vicinae/themes`. See <https://docs.vicinae.com/theming/getting-started> for supported values.
@@ -221,23 +213,34 @@ in
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg = {
-      configFile = {
-        "vicinae/vicinae.json" = lib.mkIf (cfg.settings != { }) {
-          source = jsonFormat.generate "vicinae-settings" cfg.settings;
-        };
-      }
-      // lib.optionalAttrs (!themeIsToml) themeFiles;
+    xdg =
+      let
+        themeFormat = if themeIsToml then tomlFormat else jsonFormat;
+        themeExtension = if themeIsToml then "toml" else "json";
+        themeFiles = lib.mapAttrs' (
+          name: theme:
+          lib.nameValuePair "vicinae/themes/${name}.${themeExtension}" {
+            source = themeFormat.generate "vicinae-${name}-theme" theme;
+          }
+        ) cfg.themes;
+      in
+      {
+        configFile = {
+          "vicinae/vicinae.json" = lib.mkIf (cfg.settings != { }) {
+            source = jsonFormat.generate "vicinae-settings" cfg.settings;
+          };
+        }
+        // lib.optionalAttrs (!themeIsToml) themeFiles;
 
-      dataFile =
-        builtins.listToAttrs (
-          builtins.map (item: {
-            name = "vicinae/extensions/${item.name}";
-            value.source = item;
-          }) cfg.extensions
-        )
-        // lib.optionalAttrs themeIsToml themeFiles;
-    };
+        dataFile =
+          builtins.listToAttrs (
+            builtins.map (item: {
+              name = "vicinae/extensions/${item.name}";
+              value.source = item;
+            }) cfg.extensions
+          )
+          // lib.optionalAttrs themeIsToml themeFiles;
+      };
 
     systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
       Unit = {
