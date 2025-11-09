@@ -9,6 +9,17 @@ let
 
   jsonFormat = pkgs.formats.json { };
   tomlFormat = pkgs.formats.toml { };
+
+  packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
+  themeIsToml = lib.versionAtLeast packageVersion "0.15.0";
+  themeFormat = if themeIsToml then tomlFormat else jsonFormat;
+  themeExtension = if themeIsToml then "toml" else "json";
+  themeFiles = lib.mapAttrs' (
+    name: theme:
+    lib.nameValuePair "vicinae/themes/${name}.${themeExtension}" {
+      source = themeFormat.generate "vicinae-${name}-theme" theme;
+    }
+  ) cfg.themes;
 in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
@@ -74,17 +85,18 @@ in
     };
 
     themes = lib.mkOption {
-      inherit (tomlFormat) type;
+      inherit (themeFormat) type;
       default = { };
       description = ''
-        Theme settings to add to the themes folder in `~/.config/vicinae/themes`. See https://docs.vicinae.com/theming/getting-started for supported values.
+        Theme settings to add to the themes folder in `~/.config/vicinae/themes`. See <https://docs.vicinae.com/theming/getting-started> for supported values.
 
-        The attribute name of the theme will be the name of theme toml file,
-        e.g. `base16-default-dark` will be `base16-default-dark.toml`.
+        The attribute name of the theme will be the name of theme file,
+        e.g. `base16-default-dark` will be `base16-default-dark.toml` (or `.json` if vicinae version is < 0.15.0).
       '';
       example =
         lib.literalExpression # nix
           ''
+            # vicinae >= 0.15.0
             {
               catppuccin-mocha = {
                 meta = {
@@ -214,7 +226,8 @@ in
         "vicinae/vicinae.json" = lib.mkIf (cfg.settings != { }) {
           source = jsonFormat.generate "vicinae-settings" cfg.settings;
         };
-      };
+      }
+      // lib.optionalAttrs (!themeIsToml) themeFiles;
 
       dataFile =
         builtins.listToAttrs (
@@ -223,12 +236,7 @@ in
             value.source = item;
           }) cfg.extensions
         )
-        // lib.mapAttrs' (
-          name: theme:
-          lib.nameValuePair "vicinae/themes/${name}.toml" {
-            source = tomlFormat.generate "vicinae-${name}-theme" theme;
-          }
-        ) cfg.themes;
+        // lib.optionalAttrs themeIsToml themeFiles;
     };
 
     systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
