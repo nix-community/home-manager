@@ -121,15 +121,6 @@ in
     systemd.user.services.easyeffects = {
       Unit = {
         Description = "Easyeffects daemon";
-        Before = [
-          "pipewire.service"
-          "dbus.service"
-        ];
-        Wants = [
-          "pipewire.service"
-          "dbus.service"
-        ];
-        Requires = [ "dbus.service" ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
