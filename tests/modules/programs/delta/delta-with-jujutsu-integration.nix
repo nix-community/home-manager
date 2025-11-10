@@ -15,7 +15,7 @@
 
       [ui]
       diff-formatter = ":git"
-      pager = "${lib.getExe config.programs.delta.package}"
+      pager = "${lib.getExe config.programs.delta.finalPackage}"
     ''}
   '';
 }
