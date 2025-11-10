@@ -133,6 +133,7 @@ in
         KillMode = "mixed";
         Restart = "on-failure";
         RestartSec = 5;
+        TimeoutStopSec = 10;
       };
     };
   };
