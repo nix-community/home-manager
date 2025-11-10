@@ -142,7 +142,7 @@ in
           ];
           ui = {
             diff-formatter = ":git";
-            pager = "${lib.getExe cfg.package}";
+            pager = "${lib.getExe cfg.finalPackage}";
           };
         };
       })
