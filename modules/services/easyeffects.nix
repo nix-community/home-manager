@@ -121,12 +121,6 @@ in
     systemd.user.services.easyeffects = {
       Unit = {
         Description = "Easyeffects daemon";
-        Requires = [ "dbus.service" ];
-        After = [ "graphical-session.target" ];
-        PartOf = [
-          "graphical-session.target"
-          "pipewire.service"
-        ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
@@ -134,8 +128,12 @@ in
       Service = {
         ExecStart = "${cfg.package}/bin/easyeffects --gapplication-service ${presetOpts}";
         ExecStop = "${cfg.package}/bin/easyeffects --quit";
+        Type = "dbus";
+        BusName = "com.github.wwmm.easyeffects";
+        KillMode = "mixed";
         Restart = "on-failure";
         RestartSec = 5;
+        TimeoutStopSec = 10;
       };
     };
   };
