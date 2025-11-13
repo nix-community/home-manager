@@ -123,16 +123,23 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      file.".config/aerospace/aerospace.toml".source = tomlFormat.generate "aerospace" (
-        filterNulls (
-          cfg.settings
-          // lib.optionalAttrs cfg.launchd.enable {
-            # Override these to avoid launchd conflicts
-            start-at-login = false;
-            after-login-command = [ ];
-          }
-        )
-      );
+      file.".config/aerospace/aerospace.toml" = {
+        source = tomlFormat.generate "aerospace" (
+          filterNulls (
+            cfg.settings
+            // lib.optionalAttrs cfg.launchd.enable {
+              # Override these to avoid launchd conflicts
+              start-at-login = false;
+              after-login-command = [ ];
+            }
+          )
+        );
+
+        onChange = lib.mkIf cfg.launchd.enable ''
+          echo "AeroSpace config changed, reloading..."
+          ${lib.getExe cfg.package} reload-config
+        '';
+      };
     };
 
     launchd.agents.aerospace = {
