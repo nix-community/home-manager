@@ -28,11 +28,39 @@ in
         outer.right = 8;
       };
       mode.main.binding = {
+        alt-enter = ''
+          exec-and-forget osascript -e '
+                     tell application "Terminal"
+                         do script
+                         activate
+                     end tell'
+        '';
         alt-h = "focus left";
         alt-j = "focus down";
         alt-k = "focus up";
         alt-l = "focus right";
       };
+      on-window-detected = [
+        {
+          "if".app-id = "com.apple.finder";
+          run = "move-node-to-workspace 9";
+        }
+
+        {
+          "if" = {
+            app-id = "com.apple.systempreferences";
+            app-name-regex-substring = "settings";
+            window-title-regex-substring = "substring";
+            workspace = "workspace-name";
+            during-aerospace-startup = true;
+          };
+          check-further-callbacks = true;
+          run = [
+            "layout floating"
+            "move-node-to-workspace S"
+          ];
+        }
+      ];
     };
   };
 

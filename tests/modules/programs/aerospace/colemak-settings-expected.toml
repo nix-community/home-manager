@@ -1,3 +1,6 @@
+after-login-command = []
+start-at-login = false
+
 [gaps.outer]
 bottom = 8
 left = 8
