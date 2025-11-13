@@ -123,7 +123,7 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      file.".config/aerospace/aerospace.toml" = {
+      file.".config/aerospace/aerospace.toml" = lib.mkIf (cfg.settings != { }) {
         source = tomlFormat.generate "aerospace" (
           filterNulls (
             cfg.settings
