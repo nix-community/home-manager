@@ -118,6 +118,46 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.aerospace" pkgs lib.platforms.darwin)
+
+      # 1. Fail if user sets start-at-login = true BUT launchd is disabled.
+      {
+        assertion =
+          !((lib.hasAttr "start-at-login" cfg.settings) && (cfg.settings."start-at-login" == true))
+          || (cfg.launchd.enable == true);
+        message = ''
+          You have set `programs.aerospace.settings."start-at-login" = true;`
+          but `programs.aerospace.launchd.enable` is false.
+
+          This tells AeroSpace to manage its own startup, which can conflict
+          with Home Manager.
+
+          To manage startup with Home Manager, please set
+          `programs.aerospace.launchd.enable = true;`
+          (You can leave `start-at-login = true` in your settings, it will be
+          correctly overridden).
+        '';
+      }
+
+      # 2. Fail if user sets after-login-command (in any case).
+      {
+        assertion =
+          !(
+            (lib.hasAttr "after-login-command" cfg.settings)
+            && (lib.isList cfg.settings."after-login-command")
+            && (cfg.settings."after-login-command" != [ ])
+          );
+        message = ''
+          You have set `programs.aerospace.settings."after-login-command"`.
+
+          This setting is not supported when using this Home Manager module,
+          as it either conflicts with the launchd service (if enabled)
+          or bypasses it (if disabled).
+
+          The correct way to run commands after AeroSpace starts is to use:
+          1. `programs.aerospace.launchd.enable = true;`
+          2. `programs.aerospace.settings."after-startup-command" = [ ... ];`
+        '';
+      }
     ];
 
     home = {
@@ -138,6 +178,27 @@ in
         onChange = lib.mkIf cfg.launchd.enable ''
           echo "AeroSpace config changed, reloading..."
           ${lib.getExe cfg.package} reload-config
+        '';
+      };
+
+      activation = {
+        checkForAmbiguousAerospaceConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          MANAGED_CONFIG="$HOME/.config/aerospace/aerospace.toml"
+          OLD_CONFLICTING_CONFIG="$HOME/.aerospace.toml"
+
+          if [ -f "$MANAGED_CONFIG" ] && [ -f "$OLD_CONFLICTING_CONFIG" ]; then
+
+            echo "---------------------------------------------------------------" >&2
+            echo "❌ ERROR: Ambiguous AeroSpace Configuration" >&2
+            echo "Home Manager is managing: $MANAGED_CONFIG" >&2
+            echo "But found conflicting:    $OLD_CONFLICTING_CONFIG" >&2
+            echo "" >&2
+            echo "RECOMMENDATION: Remove the old file:" >&2
+            echo "  rm $OLD_CONFLICTING_CONFIG" >&2
+            echo "---------------------------------------------------------------" >&2
+
+            exit 1
+          fi
         '';
       };
     };
