@@ -127,7 +127,7 @@ in
         source = tomlFormat.generate "aerospace" (
           filterNulls (
             cfg.settings
-            // lib.optionalAttrs cfg.launchd.enable {
+            // {
               # Override these to avoid launchd conflicts
               start-at-login = false;
               after-login-command = [ ];
