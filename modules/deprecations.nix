@@ -1,6 +1,11 @@
 { lib, ... }:
 {
   imports = [
+    (lib.mkRemovedOptionModule [ "programs" "glab" "enable" ] ''
+      The glab module has been removed because changes are needed upstream to
+      support mixing declarative and stateful configurations. See #8066.
+    '')
+
     (lib.mkRemovedOptionModule [ "services" "password-store-sync" ] ''
       Use services.git-sync instead.
     '')
