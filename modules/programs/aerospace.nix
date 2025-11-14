@@ -88,23 +88,6 @@ in
       };
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = ''
-        Extra configuration to append to the aerospace.toml file.
-        This allows you to add raw TOML content, including multiline strings.
-      '';
-      example = lib.literalExpression ''
-        alt-enter = ''''exec-and-forget osascript -e '
-          tell application "Terminal"
-              do script
-              activate
-          end tell'
-        ''''
-      '';
-    };
-
     settings = mkOption {
       inherit (tomlFormat) type;
       default = {
