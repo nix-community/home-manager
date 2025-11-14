@@ -10,6 +10,12 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
+  configPath =
+    if config.xdg.enable then
+      "${lib.removePrefix config.home.homeDirectory config.xdg.configHome}/aerospace/aerospace.toml"
+    else
+      ".aerospace.toml";
+
   # filterAttrsRecursive supporting lists, as well.
   filterListAndAttrsRecursive =
     pred: set:
@@ -180,7 +186,7 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      file.".config/aerospace/aerospace.toml" = {
+      file.${configPath} = lib.mkIf (cfg.settings != { }) {
         source = tomlFormat.generate "aerospace" (
           filterNulls (
             cfg.settings
