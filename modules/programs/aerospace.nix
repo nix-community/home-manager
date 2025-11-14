@@ -50,6 +50,12 @@ in
       [ "programs" "aerospace" "userSettings" ]
       [ "programs" "aerospace" "settings" ]
     )
+
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "aerospace"
+      "extraConfig"
+    ] "This option has been removed. Please use 'programs.aerospace.settings' instead.")
   ];
 
   options.programs.aerospace = {
@@ -92,23 +98,6 @@ in
         default = true;
         description = "Whether the launchd service should be kept alive.";
       };
-    };
-
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = ''
-        Extra configuration to append to the aerospace.toml file.
-        This allows you to add raw TOML content, including multiline strings.
-      '';
-      example = lib.literalExpression ''
-        alt-enter = ''''exec-and-forget osascript -e '
-          tell application "Terminal"
-              do script
-              activate
-          end tell'
-        ''''
-      '';
     };
 
     settings = mkOption {
