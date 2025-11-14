@@ -39,6 +39,13 @@ in
 {
   meta.maintainers = with lib.maintainers; [ damidoug ];
 
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "programs" "aerospace" "userSettings" ]
+      [ "programs" "aerospace" "settings" ]
+    )
+  ];
+
   options.programs.aerospace = {
     enable = lib.mkEnableOption "AeroSpace window manager";
 
@@ -98,7 +105,7 @@ in
       '';
     };
 
-    userSettings = mkOption {
+    settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
@@ -137,7 +144,7 @@ in
         let
           generatedConfig = tomlFormat.generate "aerospace" (
             filterNulls (
-              cfg.userSettings
+              cfg.settings
               // lib.optionalAttrs cfg.launchd.enable {
                 # Override these to avoid launchd conflicts
                 start-at-login = false;
