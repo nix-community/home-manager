@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
 "PO-Revision-Date: 2025-11-14 16:51+0000\n"
-"Last-Translator: TANIGUCHI Kohei <a.d.xvii.kal.mai@gmail.com>\n"
+"Last-Translator: Mikenu Takeru <mikenu-jp@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
 "Language: ja\n"
@@ -201,7 +201,7 @@ msgstr "読み込み専用ディレクトリ内ではbuild（作成）できま�
 
 #: home-manager/home-manager:787
 msgid "The configuration did not contain the specialisation \"%s\""
-msgstr "\"%s\" という特殊化は設定にありません"
+msgstr "特殊化\"%s\"は設定にありません"
 
 #: home-manager/home-manager:841
 msgid "No generation with ID %s"
