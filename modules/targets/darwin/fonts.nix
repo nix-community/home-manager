@@ -10,7 +10,7 @@ let
   fontsEnv = pkgs.buildEnv {
     name = "home-manager-fonts";
     paths = config.home.packages;
-    pathsToLink = "/share/fonts";
+    pathsToLink = [ "/share/fonts" ];
   };
   fonts = "${fontsEnv}/share/fonts";
   installDir = "${homeDir}/Library/Fonts/HomeManager";
