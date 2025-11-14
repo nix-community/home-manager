@@ -180,27 +180,23 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      file.".config/aerospace/aerospace.toml".source =
-        let
-          generatedConfig = tomlFormat.generate "aerospace" (
-            filterNulls (
-              cfg.settings
-              // {
-                # Override these to avoid launchd conflicts
-                start-at-login = false;
-                after-login-command = [ ];
-              }
-            )
-          );
-          extraConfig = pkgs.writeText "aerospace-extra-config" cfg.extraConfig;
-        in
-        pkgs.runCommandLocal "aerospace.toml"
-          {
-            inherit generatedConfig extraConfig;
-          }
-          ''
-            cat "$generatedConfig" "$extraConfig" > "$out"
-          '';
+      file.".config/aerospace/aerospace.toml" = {
+        source = tomlFormat.generate "aerospace" (
+          filterNulls (
+            cfg.settings
+            // {
+              # Override these to avoid launchd conflicts
+              start-at-login = false;
+              after-login-command = [ ];
+            }
+          )
+        );
+
+        onChange = lib.mkIf cfg.launchd.enable ''
+          echo "AeroSpace config changed, reloading..."
+          ${lib.getExe cfg.package} reload-config
+        '';
+      };
     };
 
     launchd.agents.aerospace = {
