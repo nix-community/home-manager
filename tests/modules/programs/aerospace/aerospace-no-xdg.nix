@@ -14,7 +14,7 @@ let
   );
 in
 {
-  xdg.enable = true;
+  xdg.enable = false;
 
   programs.aerospace = {
     enable = true;
@@ -23,6 +23,6 @@ in
 
   nmt.script = ''
     # aerospace just create the config file if we open it by hand, otherwise he's use directly the default config
-    assertPathNotExists "home-files/.config/aerospace"
+    assertPathNotExists "home-files/.aerospace.toml"
   '';
 }
