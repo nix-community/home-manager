@@ -34,6 +34,11 @@
               host.address = "/run/user/1000/gnupg/S.gpg-agent";
             }
           ];
+          kexAlgorithms = [
+            "sntrup761x25519-sha512"
+            "sntrup761x25519-sha512@openssh.com"
+            "mlkem768x25519-sha256"
+          ];
           dynamicForwards = [ { port = 2839; } ];
           setEnv = {
             FOO = "foo12";
