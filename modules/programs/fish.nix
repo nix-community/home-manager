@@ -166,6 +166,14 @@ let
 
   abbrModule = types.submodule {
     options = {
+      name = mkOption {
+        type = with types; nullOr str;
+        default = null;
+        description = ''
+          The abbreviation name that is replaced by the expansion.
+        '';
+      };
+
       expansion = mkOption {
         type = with types; nullOr str;
         default = null;
@@ -289,8 +297,9 @@ let
 
   abbrsStr = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (
-      name: def:
+      attrName: def:
       let
+        name = if isAttrs def && def.name != null then def.name else attrName;
         mods =
           lib.cli.toGNUCommandLineShell
             {
