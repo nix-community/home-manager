@@ -9,7 +9,7 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [ lib.maintainers.awwpotato ];
+  meta.maintainers = [ lib.maintainers.da157 ];
 
   options.programs.mullvad-vpn = {
     enable = lib.mkEnableOption "Mullvad VPN";
