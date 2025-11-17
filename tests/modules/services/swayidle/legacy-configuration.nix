@@ -1,29 +1,27 @@
 { config, ... }:
-
 {
   services.swayidle = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@swayidle@"; };
-    timeouts = [
+    events = [
       {
-        timeout = 50;
-        command = ''notify-send -t 10000 -- "Screen lock in 10 seconds"'';
-      }
-      {
-        timeout = 60;
+        event = "lock";
         command = "swaylock -fF";
       }
       {
-        timeout = 300;
-        command = ''swaymsg "output * dpms off"'';
-        resumeCommand = ''swaymsg "output * dpms on"'';
+        event = "before-sleep";
+        command = "swaylock -fF";
       }
     ];
-    events = {
-      before-sleep = "swaylock -fF";
-      lock = "swaylock -fF";
-    };
   };
+
+  test.asserts.evalWarnings.expected = [
+    ''
+      The syntax of services.swayidle.events has changed. While it
+      previously accepted a list of events, it now accepts an attrset
+      keyed by the event name.
+    ''
+  ];
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/swayidle.service
@@ -38,7 +36,7 @@
 
       [Service]
       Environment=PATH=@bash-interactive@/bin
-      ExecStart=@swayidle@/bin/dummy -w timeout 50 'notify-send -t 10000 -- "Screen lock in 10 seconds"' timeout 60 'swaylock -fF' timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock -fF' lock 'swaylock -fF'
+      ExecStart=@swayidle@/bin/dummy -w before-sleep 'swaylock -fF' lock 'swaylock -fF'
       Restart=always
       Type=simple
 
