@@ -9,7 +9,7 @@ let
   cfg = config.programs.gurk-rs;
 in
 {
-  meta.maintainers = [ lib.maintainers.awwpotato ];
+  meta.maintainers = [ lib.maintainers.da157 ];
 
   options.programs.gurk-rs = {
     enable = lib.mkEnableOption "gurk-rs";

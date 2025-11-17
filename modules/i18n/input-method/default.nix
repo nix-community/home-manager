@@ -134,7 +134,7 @@ in
   };
 
   meta.maintainers = with lib.maintainers; [
-    awwpotato
+    da157
     kranzes
   ];
 }

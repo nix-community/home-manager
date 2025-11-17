@@ -629,12 +629,12 @@
     name = "Lorenzo Manacorda";
     source = "nixpkgs";
   };
-  awwpotato = {
-    email = "awwpotato@voidq.com";
-    github = "awwpotato";
-    githubId = 153149335;
+  da157 = {
+    email = "da157@voidq.com";
     matrix = "@awwpotato:envs.net";
-    name = "awwpotato";
+    github = "0xda157";
+    githubId = 153149335;
+    name = "0xda157";
     source = "nixpkgs";
   };
   b1kku = {

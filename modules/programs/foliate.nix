@@ -19,7 +19,7 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [ lib.maintainers.awwpotato ];
+  meta.maintainers = [ lib.maintainers.da157 ];
 
   options.programs.foliate = {
     enable = mkEnableOption "Foliate";
