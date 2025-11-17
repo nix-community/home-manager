@@ -1329,9 +1329,6 @@ case $COMMAND in
     remove-generations)
         doRmGenerations "${COMMAND_ARGS[@]}"
         ;;
-    rollback)
-        doRollback
-        ;;
     expire-generations)
         if [[ ${#COMMAND_ARGS[@]} != 1 ]]; then
             _i 'expire-generations expects one argument, got %d.' "${#COMMAND_ARGS[@]}" >&2
