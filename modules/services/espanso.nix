@@ -206,7 +206,7 @@ in
       enable = true;
       config = {
         ProgramArguments = [
-          "${cfg.package}/bin/espanso"
+          "${cfg.package}/Applications/Espanso.app/Contents/MacOS/espanso"
           "launcher"
         ];
         EnvironmentVariables.PATH = "${cfg.package}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
