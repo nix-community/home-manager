@@ -36,14 +36,6 @@ in
         Set a default value for the maximum lifetime in seconds of identities added to the agent.
       '';
     };
-
-    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
-
-    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
-
-    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
-
-    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable (
@@ -84,13 +76,13 @@ in
                 '';
           in
           {
-            bash.profileExtra = lib.mkIf cfg.enableBashIntegration bashIntegration;
+            bash.profileExtra = bashIntegration;
 
-            zsh.envExtra = lib.mkIf cfg.enableZshIntegration bashIntegration;
+            zsh.envExtra = bashIntegration;
 
-            fish.shellInit = lib.mkIf cfg.enableFishIntegration fishIntegration;
+            fish.shellInit = fishIntegration;
 
-            nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration nushellIntegration;
+            nushell.extraConfig = nushellIntegration;
           };
       }
 
