@@ -114,10 +114,6 @@ in
           # Append to history file rather than replacing it.
           "histappend"
 
-          # check the window size after each command and, if
-          # necessary, update the values of LINES and COLUMNS.
-          "checkwinsize"
-
           # Extended globbing.
           "extglob"
           "globstar"
