@@ -84,13 +84,13 @@ in
                 '';
           in
           {
-            bash.initExtra = lib.mkIf cfg.enableBashIntegration bashIntegration;
+            bash.profileExtra = lib.mkIf cfg.enableBashIntegration (lib.mkBefore bashIntegration);
 
-            zsh.initContent = lib.mkIf cfg.enableZshIntegration bashIntegration;
+            zsh.envExtra = lib.mkIf cfg.enableZshIntegration (lib.mkBefore bashIntegration);
 
-            fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration fishIntegration;
+            fish.shellInit = lib.mkIf cfg.enableFishIntegration (lib.mkBefore fishIntegration);
 
-            nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration nushellIntegration;
+            nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration (lib.mkBefore nushellIntegration);
           };
       }
 
