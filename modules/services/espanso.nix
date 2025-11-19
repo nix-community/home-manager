@@ -48,7 +48,6 @@ in
   meta.maintainers = with lib.maintainers; [
     bobvanderlinden
     liyangau
-    lucasew
     n8henrie
     phanirithvij
   ];
