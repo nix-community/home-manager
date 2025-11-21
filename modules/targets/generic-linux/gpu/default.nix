@@ -72,6 +72,18 @@
           `NIX_STATE_DIR` environment variable.
         '';
       };
+
+      setupPackage = mkOption {
+        type = types.package;
+        readOnly = true;
+        description = "Resulting setup package.";
+      };
+
+      drivers = mkOption {
+        type = types.package;
+        readOnly = true;
+        description = "Resulting drivers package.";
+      };
     };
 
   config =
@@ -101,7 +113,6 @@
         inherit (cfg) nixStateDirectory;
         nonNixosGpuEnv = drivers;
       };
-
     in
     lib.mkIf cfg.enable {
       assertions = lib.optionals cfg.nvidia.enable [
@@ -149,6 +160,10 @@
             warnEcho "  sudo ${setupPath}"
           fi
         '';
+
+      targets.genericLinux.gpu = {
+        inherit setupPackage drivers;
+      };
     };
 
   meta.maintainers = with lib.hm.maintainers; [ exzombie ];
