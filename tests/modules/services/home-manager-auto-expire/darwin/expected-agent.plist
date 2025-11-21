@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>org.nix-community.home.home-manager-auto-expire</string>
+	<key>ProcessType</key>
+	<string>Background</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/nix/store/00000000000000000000000000000000-home-manager-auto-expire</string>
+	</array>
+	<key>StandardErrorPath</key>
+	<string>/home/hm-user/Library/Logs/home-manager-auto-expire/launchd-stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/home/hm-user/Library/Logs/home-manager-auto-expire/launchd-stdout.log</string>
+	<key>StartCalendarInterval</key>
+	<array>
+		<dict>
+			<key>Hour</key>
+			<integer>0</integer>
+			<key>Minute</key>
+			<integer>0</integer>
+			<key>Weekday</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,1 @@
+{ topgrade-settings = ./settings.nix; }

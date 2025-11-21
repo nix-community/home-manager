@@ -1,0 +1,13 @@
+/**
+ * GTK 4 reads the theme configured by gtk-theme-name, but ignores it.
+ * It does however respect user CSS, so import the theme from here.
+**/
+@import url("file://@gnome-themes-extra@/share/themes/Adwaita-dark/gtk-4.0/gtk.css");
+/* Custom user CSS */
+window {
+  background-color: #2d2d2d;
+}
+
+button {
+  border-radius: 8px;
+}

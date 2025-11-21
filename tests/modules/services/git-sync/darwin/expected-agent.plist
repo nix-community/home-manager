@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>org.nix-community.home.git-sync-test</string>
+	<key>ProcessType</key>
+	<string>Background</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@git-sync@/bin/git-sync</string>
+	</array>
+	<key>StartInterval</key>
+	<integer>500</integer>
+	<key>WatchPaths</key>
+	<array>
+		<string>/a/path</string>
+	</array>
+	<key>WorkingDirectory</key>
+	<string>/a/path</string>
+</dict>
+</plist>

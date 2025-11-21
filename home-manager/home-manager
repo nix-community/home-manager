@@ -1,0 +1,1365 @@
+#!@bash@/bin/bash
+
+# Prepare to use tools from Nixpkgs.
+PATH=@DEP_PATH@${PATH:+:}$PATH
+
+set -euo pipefail
+
+export TEXTDOMAIN=home-manager
+export TEXTDOMAINDIR=@OUT@/share/locale
+
+# shellcheck disable=1091
+source @HOME_MANAGER_LIB@
+
+function errMissingOptArg() {
+    # translators: For example: "home-manager: missing argument for --cores"
+    _iError "%s: missing argument for %s" "$0" "$1" >&2
+    exit 1
+}
+
+function errTopLevelSubcommandOpt() {
+    # translators: For example: "home-manager: --rollback can only be used after switch"
+    _iError '%s: %s can only be used after %s' "$0" "$1" "$2" >&2
+    exit 1
+}
+
+function setNixProfileCommands() {
+    if  [[ -e $HOME/.nix-profile/manifest.json \
+        || -e ${XDG_STATE_HOME:-$HOME/.local/state}/nix/profile/manifest.json ]] ; then
+
+        LIST_OUTPATH_CMD="nix profile list"
+    else
+        LIST_OUTPATH_CMD="nix-env -q --out-path"
+    fi
+}
+
+function setVerboseArg() {
+    if [[ -v VERBOSE ]]; then
+        export VERBOSE_ARG="--verbose"
+    else
+        export VERBOSE_ARG=""
+    fi
+}
+
+function setWorkDir() {
+    if [[ ! -v WORK_DIR ]]; then
+        WORK_DIR="$(mktemp --tmpdir -d home-manager-build.XXXXXXXXXX)"
+        # shellcheck disable=2064
+        trap "rm -r '$WORK_DIR'" EXIT
+    fi
+}
+
+# Check to see if flakes are functionally available.
+function hasFlakeSupport() {
+    nix eval --expr 'builtins.getFlake' > /dev/null 2>&1
+}
+
+# Escape string for use in Nix files.
+function escapeForNix() {
+    printf %s "$1" | sed 's/["$\\]/\\\0/g'
+}
+
+# Attempts to set the HOME_MANAGER_CONFIG global variable.
+#
+# If no configuration file can be found then this function will print
+# an error message and exit with an error code.
+function setConfigFile() {
+    if [[ -v HOME_MANAGER_CONFIG ]] ; then
+        if [[ -e "$HOME_MANAGER_CONFIG" ]] ; then
+            HOME_MANAGER_CONFIG="$(realpath "$HOME_MANAGER_CONFIG")"
+        else
+            _i 'No configuration file found at %s' \
+               "$HOME_MANAGER_CONFIG" >&2
+            exit 1
+        fi
+    elif [[ ! -v HOME_MANAGER_CONFIG ]]; then
+        local configHome="${XDG_CONFIG_HOME:-$HOME/.config}"
+        local hmConfigHome="$configHome/home-manager"
+        local nixpkgsConfigHome="$configHome/nixpkgs"
+        local defaultConfFile="$hmConfigHome/home.nix"
+        local configFile
+
+        if [[ -e "$defaultConfFile" ]]; then
+            configFile="$defaultConfFile"
+        elif [[ -e "$nixpkgsConfigHome/home.nix" ]]; then
+            configFile="$nixpkgsConfigHome/home.nix"
+            # translators: The first '%s' specifier will be replaced by either
+            # 'home.nix' or 'flake.nix'.
+            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
+                   'home.nix' "$nixpkgsConfigHome" "$hmConfigHome" >&2
+        elif [[ -e "$HOME/.nixpkgs/home.nix" ]]; then
+            configFile="$HOME/.nixpkgs/home.nix"
+            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
+                   'home.nix' "$HOME/.nixpkgs" "$hmConfigHome" >&2
+        fi
+
+        if [[ -v configFile ]]; then
+            HOME_MANAGER_CONFIG="$(realpath "$configFile")"
+        else
+            _i 'No configuration file found. Please create one at %s' \
+               "$defaultConfFile" >&2
+            exit 1
+        fi
+    fi
+}
+
+function setHomeManagerNixPath() {
+    local path="@HOME_MANAGER_PATH@"
+
+    if [[ -n "$path" ]] ; then
+        if [[ -e "$path" || "$path" =~ ^https?:// ]] ; then
+            EXTRA_NIX_PATH+=("home-manager=$path")
+            return
+        else
+            _iWarn 'Home Manager not found at %s.' "$path"
+        fi
+    fi
+
+    for p in "${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home-manager" \
+             "$HOME/.nixpkgs/home-manager" ; do
+        if [[ -e "$p" ]] ; then
+            # translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+            _iWarn $'The fallback Home Manager path %s has been deprecated and a file/directory was found there.' \
+                   "$p"
+            # translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+            _i $'To remove this warning, do one of the following.
+
+1. Explicitly tell Home Manager to use the path, for example by adding
+
+     { programs.home-manager.path = "%s"; }
+
+   to your configuration.
+
+   If you import Home Manager directly, you can use the `path` parameter
+
+     pkgs.callPackage /path/to/home-manager-package { path = "%s"; }
+
+   when calling the Home Manager package.
+
+2. Remove the deprecated path.
+
+     $ rm -r "%s"' "$p" "$p" "$p"
+        fi
+    done
+}
+
+# Sets some useful Home Manager related paths as global read-only variables.
+function setHomeManagerPathVariables() {
+    # If called twice then just exit early.
+    if [[ -v HM_DATA_HOME ]]; then
+        return
+    fi
+
+    _iVerbose "Sanity checking Nix"
+    nix-build --quiet --expr '{}' --no-out-link > /dev/null 2>&1 || true
+    nix-env -q > /dev/null 2>&1 || true
+
+    declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
+    declare -r globalProfilesDir="$globalNixStateDir/profiles/per-user/$USER"
+    declare -r globalGcrootsDir="$globalNixStateDir/gcroots/per-user/$USER"
+
+    declare -r stateHome="${XDG_STATE_HOME:-$HOME/.local/state}"
+    declare -r userNixStateDir="$stateHome/nix"
+
+    declare -gr HM_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
+    declare -gr HM_STATE_DIR="$stateHome/home-manager"
+    declare -gr HM_GCROOT_LEGACY_PATH="$globalGcrootsDir/current-home"
+
+    if [[ -d $userNixStateDir/profiles ]]; then
+        declare -gr HM_PROFILE_DIR="$userNixStateDir/profiles"
+    elif [[ -d $globalProfilesDir ]]; then
+        declare -gr HM_PROFILE_DIR="$globalProfilesDir"
+    else
+        _iError 'Could not find suitable profile directory, tried %s and %s' \
+                "$userNixStateDir/profiles" "$globalProfilesDir" >&2
+        exit 1
+    fi
+}
+
+function setFlakeAttribute() {
+    if [[ -z $FLAKE_ARG && ! -v HOME_MANAGER_CONFIG ]]; then
+        local configHome="${XDG_CONFIG_HOME:-$HOME/.config}"
+        local hmConfigHome="$configHome/home-manager"
+        local nixpkgsConfigHome="$configHome/nixpkgs"
+
+        local configFlake
+
+        if [[ -e "$hmConfigHome/flake.nix" ]]; then
+            configFlake="$hmConfigHome/flake.nix"
+        elif [[ -e "$nixpkgsConfigHome/flake.nix" ]]; then
+            configFlake="$nixpkgsConfigHome/flake.nix"
+            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
+                   'flake.nix' "$nixpkgsConfigHome" "$hmConfigHome" >&2
+        fi
+
+        if [[ -v configFlake ]]; then
+            FLAKE_ARG="$(dirname "$(readlink -f "$configFlake")")"
+        fi
+    fi
+
+    if [[ -n "$FLAKE_ARG" ]]; then
+        local flake="${FLAKE_ARG%#*}"
+        case $FLAKE_ARG in
+            *#*)
+                local name="${FLAKE_ARG#*#}"
+                ;;
+            *)
+                local name="$USER"
+                # Check FQDN, long, and short hostnames; long first to preserve
+                # pre-existing behaviour in case both happen to be defined.
+                for n in "$USER@$(hostname -f)" "$USER@$(hostname)" "$USER@$(hostname -s)"; do
+                    if [[ "$(nix eval "$flake#homeConfigurations" --apply "x: x ? \"$(escapeForNix "$n")\"")" == "true" ]]; then
+                        name="$n"
+                        if [[ -v VERBOSE ]]; then
+                            echo "Using flake homeConfiguration for $name"
+                        fi
+                    fi
+                done
+                ;;
+        esac
+        export FLAKE_CONFIG_URI="$flake#homeConfigurations.\"$(printf %s "$name" | jq -sRr @uri)\""
+        export FLAKE_PATH="$flake"
+        export FLAKE_ATTR="homeConfigurations.\"$name\""
+    fi
+}
+
+function doInspectOption() {
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        # translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+        _iError "Can't inspect options of a flake configuration"
+        exit 1
+    fi
+    setConfigFile
+
+    local paths=()
+    local recursive=false
+
+    while (( $# > 0 )); do
+        local opt="$1"
+        shift
+
+        case $opt in
+            --recursive)
+                recursive=true;;
+            *)
+                # Remove trailing dot if exists, match the behavior of
+                # old nixos-option and make shell completions happy
+                paths+=("${opt%.}")
+                ;;
+        esac
+    done
+
+    if [[ ${#paths[@]} -eq 0 ]]; then
+        paths=("")
+    fi
+
+    local extraArgs=()
+
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs=("${extraArgs[@]}" "-I" "$p")
+    done
+
+    if [[ -v VERBOSE ]]; then
+        extraArgs=("${extraArgs[@]}" "--show-trace")
+    fi
+
+    local HOME_MANAGER_CONFIG_NIX HOME_MANAGER_CONFIG_ATTRIBUTE_NIX
+    HOME_MANAGER_CONFIG_NIX=${HOME_MANAGER_CONFIG//'\'/'\\'}
+    HOME_MANAGER_CONFIG_NIX=${HOME_MANAGER_CONFIG_NIX//'"'/'\"'}
+    HOME_MANAGER_CONFIG_NIX=${HOME_MANAGER_CONFIG_NIX//$'\n'/$'\\n'}
+    HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE//'\'/'\\'}
+    HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX//'"'/'\"'}
+    HOME_MANAGER_CONFIG_ATTRIBUTE_NIX=${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX//$'\n'/$'\\n'}
+    local modulesExpr
+    modulesExpr="let confPath = \"${HOME_MANAGER_CONFIG_NIX}\"; "
+    modulesExpr+="confAttr = \"${HOME_MANAGER_CONFIG_ATTRIBUTE_NIX}\"; in "
+    modulesExpr+="(import <home-manager/modules> {"
+    modulesExpr+=" configuration = if confAttr == \"\" then confPath else (import confPath).\${confAttr};"
+    modulesExpr+=" pkgs = import <nixpkgs> {}; check = true; })"
+
+    local NIXOS_OPTION_CMD NIXOS_OPTION_REAL NIXOS_OPTION_DIR NIXOS_OPTION_NIX
+    NIXOS_OPTION_CMD=$(command -v nixos-option)
+    NIXOS_OPTION_REAL=$(realpath "${NIXOS_OPTION_CMD}")
+    NIXOS_OPTION_NIX=$(nix-store -q --references "${NIXOS_OPTION_REAL}" | grep 'nixos-option\.nix$')
+
+    if [[ ! -f "$NIXOS_OPTION_NIX" ]]; then
+        _iError "nixos-option.nix not found."
+        exit 1
+    fi
+
+    for path in "${paths[@]}"; do
+        nix-instantiate --eval --json \
+            --arg nixos "$modulesExpr" \
+            --argstr path "$path" \
+            --arg recursive "$recursive" \
+            "$NIXOS_OPTION_NIX" \
+        | jq -r
+    done
+}
+
+function doInit() {
+    # The directory where we should place the initial configuration.
+    local confDir
+
+    # Whether we should immediate activate the configuration.
+    local switch
+
+    # Whether we should create a flake file.
+    local withFlake
+
+    if hasFlakeSupport; then
+        withFlake=1
+    fi
+
+    local homeManagerUrl="github:nix-community/home-manager"
+    local nixpkgsUrl="github:nixos/nixpkgs/nixos-unstable"
+
+    while (( $# > 0 )); do
+        local opt="$1"
+        shift
+
+        case $opt in
+            --no-flake)
+                unset withFlake
+                ;;
+            --switch)
+                switch=1
+                ;;
+            --home-manager-url)
+                [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+                homeManagerUrl="$1"
+                shift
+                ;;
+            --nixpkgs-url)
+                [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+                nixpkgsUrl="$1"
+                shift
+                ;;
+            -*)
+                _iError "%s: unknown option '%s'" "$0" "$opt" >&2
+                exit 1
+                ;;
+            *)
+                if [[ -v confDir ]]; then
+                    _i "Run '%s --help' for usage help" "$0" >&2
+                    exit 1
+                else
+                    confDir="$opt"
+                fi
+                ;;
+        esac
+    done
+
+    if [[ ! -v confDir ]]; then
+        confDir="${XDG_CONFIG_HOME:-$HOME/.config}/home-manager"
+    fi
+
+    if [[ ! -e $confDir ]]; then
+        mkdir -p "$confDir"
+    fi
+
+    if [[ ! -d $confDir ]]; then
+        _iError "%s: unknown option '%s'" "$0" "$opt" >&2
+        exit 1
+    fi
+
+    local confFile="$confDir/home.nix"
+    local flakeFile="$confDir/flake.nix"
+
+    if [[ -e $confFile ]]; then
+        _i 'The file %s already exists, leaving it unchanged...' "$confFile"
+    else
+        _i 'Creating %s...' "$confFile"
+        local nl=$'\n'
+        local xdgVars=""
+        if [[ -v XDG_CACHE_HOME && $XDG_CACHE_HOME != "$HOME/.cache" ]]; then
+            xdgVars="$xdgVars  xdg.cacheHome = \"$XDG_CACHE_HOME\";$nl"
+        fi
+        if [[ -v XDG_CONFIG_HOME && $XDG_CONFIG_HOME != "$HOME/.config" ]]; then
+            xdgVars="$xdgVars  xdg.configHome = \"$XDG_CONFIG_HOME\";$nl"
+        fi
+        if [[ -v XDG_DATA_HOME && $XDG_DATA_HOME != "$HOME/.local/share" ]]; then
+            xdgVars="$xdgVars  xdg.dataHome = \"$XDG_DATA_HOME\";$nl"
+        fi
+        if [[ -v XDG_STATE_HOME && $XDG_STATE_HOME != "$HOME/.local/state" ]]; then
+            xdgVars="$xdgVars  xdg.stateHome = \"$XDG_STATE_HOME\";$nl"
+        fi
+
+        mkdir -p "$confDir"
+        cat > "$confFile" <<EOF
+{ config, pkgs, ... }:
+
+{
+  # Home Manager needs a bit of information about you and the paths it should
+  # manage.
+  home.username = "$(escapeForNix "$USER")";
+  home.homeDirectory = "$(escapeForNix "$HOME")";
+$xdgVars
+  # This value determines the Home Manager release that your configuration is
+  # compatible with. This helps avoid breakage when a new Home Manager release
+  # introduces backwards incompatible changes.
+  #
+  # You should not change this value, even if you update Home Manager. If you do
+  # want to update the value, then make sure to first check the Home Manager
+  # release notes.
+  home.stateVersion = "25.05"; # Please read the comment before changing.
+
+  # The home.packages option allows you to install Nix packages into your
+  # environment.
+  home.packages = [
+    # # Adds the 'hello' command to your environment. It prints a friendly
+    # # "Hello, world!" when run.
+    # pkgs.hello
+
+    # # It is sometimes useful to fine-tune packages, for example, by applying
+    # # overrides. You can do that directly here, just don't forget the
+    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+    # # fonts?
+    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+
+    # # You can also create simple shell scripts directly inside your
+    # # configuration. For example, this adds a command 'my-hello' to your
+    # # environment:
+    # (pkgs.writeShellScriptBin "my-hello" ''
+    #   echo "Hello, \${config.home.username}!"
+    # '')
+  ];
+
+  # Home Manager is pretty good at managing dotfiles. The primary way to manage
+  # plain files is through 'home.file'.
+  home.file = {
+    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
+    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
+    # # symlink to the Nix store copy.
+    # ".screenrc".source = dotfiles/screenrc;
+
+    # # You can also set the file content immediately.
+    # ".gradle/gradle.properties".text = ''
+    #   org.gradle.console=verbose
+    #   org.gradle.daemon.idletimeout=3600000
+    # '';
+  };
+
+  # Home Manager can also manage your environment variables through
+  # 'home.sessionVariables'. These will be explicitly sourced when using a
+  # shell provided by Home Manager. If you don't want to manage your shell
+  # through Home Manager then you have to manually source 'hm-session-vars.sh'
+  # located at either
+  #
+  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+  #
+  # or
+  #
+  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
+  #
+  # or
+  #
+  #  /etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh
+  #
+  home.sessionVariables = {
+    # EDITOR = "emacs";
+  };
+
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+}
+EOF
+    fi
+
+    if [[ ! -v withFlake ]]; then
+        HOME_MANAGER_CONFIG="$confFile"
+    else
+        FLAKE_ARG="$confDir"
+
+        if [[ -e $flakeFile ]]; then
+            _i 'The file %s already exists, leaving it unchanged...' "$flakeFile"
+        else
+            _i 'Creating %s...' "$flakeFile"
+
+            local nixSystem
+            nixSystem=$(nix eval --expr builtins.currentSystem --raw --impure)
+
+            mkdir -p "$confDir"
+            cat > "$flakeFile" <<EOF
+{
+  description = "Home Manager configuration of $(escapeForNix "$USER")";
+
+  inputs = {
+    # Specify the source of Home Manager and Nixpkgs.
+    nixpkgs.url = "$nixpkgsUrl";
+    home-manager = {
+      url = "$homeManagerUrl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    { nixpkgs, home-manager, ... }:
+    let
+      system = "$nixSystem";
+      pkgs = nixpkgs.legacyPackages.\${system};
+    in
+    {
+      homeConfigurations."$(escapeForNix "$USER")" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+
+        # Specify your home configuration modules here, for example,
+        # the path to your home.nix.
+        modules = [ ./home.nix ];
+
+        # Optionally use extraSpecialArgs
+        # to pass through arguments to home.nix
+      };
+    };
+}
+EOF
+        fi
+    fi
+
+    if [[ -v switch ]]; then
+        echo
+        _i "Creating initial Home Manager generation..."
+        echo
+
+        if doSwitch --switch; then
+            # translators: The "%s" specifier will be replaced by a file path.
+            _i $'All done! The home-manager tool should now be installed and you can edit\n\n    %s\n\nto configure Home Manager. Run \'man home-configuration.nix\' to\nsee all available options.' \
+                "$confFile"
+            exit 0
+        else
+            # translators: The "%s" specifier will be replaced by a URL.
+            _i $'Uh oh, the installation failed! Please create an issue at\n\n    %s\n\nif the error seems to be the fault of Home Manager.' \
+                "https://github.com/nix-community/home-manager/issues"
+            exit 1
+        fi
+    fi
+}
+
+function doInstantiate() {
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        # translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+        _i "Can't instantiate a flake configuration" >&2
+        exit 1
+    fi
+    setConfigFile
+
+    local extraArgs=()
+
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs=("${extraArgs[@]}" "-I" "$p")
+    done
+
+    if [[ -v VERBOSE ]]; then
+        extraArgs=("${extraArgs[@]}" "--show-trace")
+    fi
+
+    nix-instantiate \
+        "<home-manager/home-manager/home-manager.nix>" \
+        "${extraArgs[@]}" \
+        "${PASSTHROUGH_OPTS[@]}" \
+        --argstr confPath "$HOME_MANAGER_CONFIG" \
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+}
+
+function doBuildAttr() {
+    setConfigFile
+
+    local extraArgs=("$@")
+
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs=("${extraArgs[@]}" "-I" "$p")
+    done
+
+    if [[ -v VERBOSE ]]; then
+        extraArgs=("${extraArgs[@]}" "--show-trace")
+    fi
+
+    nix-build \
+        "<home-manager/home-manager/home-manager.nix>" \
+        "${extraArgs[@]}" \
+        "${PASSTHROUGH_OPTS[@]}" \
+        --argstr confPath "$HOME_MANAGER_CONFIG" \
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+}
+
+function doBuildFlake() {
+    local extraArgs=("$@")
+
+    if [[ -v VERBOSE ]]; then
+        extraArgs=("${extraArgs[@]}" "--verbose")
+    fi
+
+    nix build \
+        "${extraArgs[@]}" \
+        "${PASSTHROUGH_OPTS[@]}"
+}
+
+# Presents news to the user as specified by the `news.display` option.
+function presentNews() {
+    local newsNixFile="$WORK_DIR/news.nix"
+    buildNews "$newsNixFile"
+
+    local newsDisplay
+    newsDisplay="$(nix-instantiate --eval --expr "(import ${newsNixFile}).meta.display" | xargs)"
+
+    local newsNumUnread
+    newsNumUnread="$(nix-instantiate --eval --expr "(import ${newsNixFile}).meta.numUnread" | xargs)"
+
+    # shellcheck disable=2154
+    if [[ $newsNumUnread -eq 0 ]]; then
+        return
+    elif [[ "$newsDisplay" == "silent" ]]; then
+        return
+    elif [[ "$newsDisplay" == "notify" ]]; then
+        local cmd msg
+        cmd="$(basename "$0")"
+        msg="$(_ip \
+                $'There is %d unread and relevant news item.\nRead it by running the command "%s news".' \
+                $'There are %d unread and relevant news items.\nRead them by running the command "%s news".' \
+                "$newsNumUnread" "$newsNumUnread" "$cmd")"
+
+        # Not actually an error but here stdout is reserved for
+        # nix-build output.
+        echo $'\n'"$msg"$'\n' >&2
+
+        if [[ -v DISPLAY ]] && type -P notify-send > /dev/null; then
+            notify-send "Home Manager" "$msg" > /dev/null 2>&1 || true
+        fi
+    elif [[ "$newsDisplay" == "show" ]]; then
+        doShowNews --unread
+    else
+        _i 'Unknown "news.display" setting "%s".' "$newsDisplay" >&2
+    fi
+}
+
+function doEdit() {
+    if [[ ! -v VISUAL || -z $VISUAL ]]; then
+        if [[ ! -v EDITOR || -z $EDITOR ]]; then
+            # shellcheck disable=2016
+            _i 'Please set the $EDITOR or $VISUAL environment variable' >&2
+            return 1
+        fi
+    else
+        EDITOR=$VISUAL
+    fi
+
+    setConfigFile
+
+    # Don't quote $EDITOR in order to support values including options, e.g.,
+    # "code --wait".
+    #
+    # shellcheck disable=2086
+    exec $EDITOR "$HOME_MANAGER_CONFIG"
+}
+
+function doBuild() {
+    if [[ ! -w . ]]; then
+        _i 'Cannot run build in read-only directory' >&2
+        return 1
+    fi
+
+    setWorkDir
+
+    setFlakeAttribute
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        doBuildFlake \
+            "$FLAKE_CONFIG_URI.activationPackage" \
+            ${DRY_RUN+--dry-run} \
+            ${NO_OUT_LINK+--no-link} \
+            ${PRINT_BUILD_LOGS+--print-build-logs} \
+            || return
+    else
+        doBuildAttr \
+            ${NO_OUT_LINK+--no-out-link} \
+            --attr activationPackage \
+        || return
+    fi
+
+    presentNews
+}
+
+function doRepl() {
+    setFlakeAttribute
+
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        printf -v bold '\033[1m'
+        printf -v blue '\033[34;1m'
+        printf -v reset '\033[0m'
+        exec nix repl --expr "
+            let
+                flake = builtins.getFlake ''$FLAKE_PATH'';
+                configuration = flake.$FLAKE_ATTR;
+                motd = ''
+
+
+                    Hello and welcome to the Home Manager configuration
+                        $FLAKE_ATTR
+                        in $FLAKE_PATH
+
+                    The following is loaded into nix repl's scope:
+
+                        - ${blue}config${reset}   All option values
+                        - ${blue}options${reset}  Option data and metadata
+                        - ${blue}pkgs${reset}     Nixpkgs package set
+                        - ${blue}lib${reset}      Nixpkgs library functions
+
+                        - ${blue}flake${reset}    Flake outputs, inputs and source info of $FLAKE_PATH
+
+                    Use tab completion to browse around ${blue}config${reset}.
+
+                    Use ${bold}:r${reset} to ${bold}reload${reset} everything after making a change in the flake.
+
+                    See ${bold}:?${reset} for more repl commands.
+                '';
+                scope =
+                    assert configuration.class or ''homeManager'' == ''homeManager'';
+                    {
+                        inherit (configuration) config options pkgs;
+                        inherit (configuration.pkgs) lib;
+                        inherit flake;
+                    };
+            in builtins.seq scope builtins.trace motd scope
+        " "${PASSTHROUGH_OPTS[@]}"
+    fi
+
+    setConfigFile
+
+    extraArgs=()
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs+=(-I "$p")
+    done
+
+    exec nix repl \
+        --file '<home-manager/home-manager/home-manager.nix>' \
+        "${extraArgs[@]}" \
+        "${PASSTHROUGH_OPTS[@]}" \
+        --argstr confPath "$HOME_MANAGER_CONFIG" \
+        --argstr confAttr "$HOME_MANAGER_CONFIG_ATTRIBUTE"
+}
+
+function doSwitch() {
+    setHomeManagerPathVariables
+    setVerboseArg
+    setWorkDir
+
+    local action
+    local specialisation
+
+    while (( $# > 0 )); do
+        local opt="$1"
+        shift
+
+        case $opt in
+            --switch)
+                action='switch'
+                ;;
+            --test)
+                action='test'
+                ;;
+            --rollback)
+                action='rollback'
+                ;;
+            --specialisation)
+                specialisation="$1"
+                shift
+                ;;
+            *)
+                _iError "%s: unknown option '%s'" "home-manager switch" "$opt" >&2
+                return 1
+                ;;
+        esac
+    done
+
+    if [[ ! -v action ]]; then
+        errorEcho "home-manager switch: missing required option" >&2
+        return 1
+    fi
+
+    local generation
+
+    case $action in
+        switch|test)
+            # Build the generation and run the activate script. Note, we
+            # specify an output link so that it is treated as a GC root. This
+            # prevents an unfortunately timed GC from removing the generation
+            # before activation completes.
+            generation="$WORK_DIR/generation"
+
+            setFlakeAttribute
+            if [[ -v FLAKE_CONFIG_URI ]]; then
+                doBuildFlake \
+                    "$FLAKE_CONFIG_URI.activationPackage" \
+                    --out-link "$generation" \
+                    ${PRINT_BUILD_LOGS+--print-build-logs}
+            else
+                doBuildAttr \
+                    --out-link "$generation" \
+                    --attr activationPackage
+            fi
+            ;;
+        rollback)
+            generation="$HM_PROFILE_DIR/home-manager"
+            ;;
+    esac
+
+    # If we are doing a switch but built a legacy configuration, where the
+    # activation script manages the profile, then we instead perform a test
+    # action.
+    #
+    # The migration away from legacy activation scripts happened when
+    # introducing the gen-version file, hence the existence check.
+    if [[ $action == 'switch' && ! -e "$generation/gen-version" ]]; then
+        action='test'
+    fi
+
+    # Choose the activate script to run.
+    local activateScript="$generation/activate"
+    if [[ -v specialisation ]]; then
+       activateScript="$generation/specialisation/$specialisation/activate"
+       if [[ ! -x $activateScript ]]; then
+         _iError 'The configuration did not contain the specialisation "%s"' "$specialisation"
+         exit 1
+       fi
+    fi
+
+    case $action in
+        switch)
+            run nix-env $VERBOSE_ARG --profile "$HM_PROFILE_DIR/home-manager" --set "$generation"
+            ;;
+        rollback)
+            run nix-env $VERBOSE_ARG --profile "$HM_PROFILE_DIR/home-manager" --rollback
+            ;;
+    esac
+
+    "$activateScript" --driver-version 1 || return
+
+    if [[ $action == 'switch' || $action == 'test' ]]; then
+        presentNews
+    fi
+}
+
+function doListGens() {
+    setHomeManagerPathVariables
+
+    # Whether to colorize the generations output.
+    local color="never"
+    if [[ ! -v NO_COLOR && -t 1 ]]; then
+        color="always"
+    fi
+
+    pushd "$HM_PROFILE_DIR" > /dev/null
+    local curProfile
+    curProfile=$(readlink home-manager)
+
+    # shellcheck disable=2012
+    ls --color=$color -gG --time-style=long-iso --sort time home-manager-*-link \
+        | cut -d' ' -f 4- \
+        | sed -E -e "/$curProfile/ { s/\$/ \(current\)/ }" \
+                 -e 's/home-manager-([[:digit:]]*)-link/: id \1/'
+    popd > /dev/null
+}
+
+# Removes linked generations. Takes as arguments identifiers of
+# generations to remove.
+function doRmGenerations() {
+    setHomeManagerPathVariables
+    setVerboseArg
+
+    pushd "$HM_PROFILE_DIR" > /dev/null
+
+    for generationId in "$@"; do
+        local linkName="home-manager-$generationId-link"
+
+        if [[ ! -e $linkName ]]; then
+            _i 'No generation with ID %s' "$generationId" >&2
+        elif [[ $linkName == $(readlink home-manager) ]]; then
+            _i 'Cannot remove the current generation %s' "$generationId" >&2
+        else
+            _i 'Removing generation %s' "$generationId"
+            run rm $VERBOSE_ARG $linkName
+        fi
+    done
+
+    popd > /dev/null
+}
+
+function doExpireGenerations() {
+    setHomeManagerPathVariables
+
+    local generations
+    generations="$( \
+        find "$HM_PROFILE_DIR" -name 'home-manager-*-link' -not -newermt "$1" \
+        | sed 's/^.*-\([0-9]*\)-link$/\1/' \
+    )"
+
+    if [[ -n $generations ]]; then
+        # shellcheck disable=2086
+        doRmGenerations $generations
+    elif [[ -v VERBOSE ]]; then
+        _i "No generations to expire"
+    fi
+}
+
+function doListPackages() {
+    setNixProfileCommands
+    local outPath
+    outPath="$($LIST_OUTPATH_CMD | grep -o '/.*home-manager-path$')"
+    if [[ -n "$outPath" ]] ; then
+        nix-store -q --references "$outPath" | sed 's/[^-]*-//' | sort --ignore-case
+    else
+        _i 'No home-manager packages seem to be installed.' >&2
+    fi
+}
+
+function newsReadIdsFile() {
+    local dataDir="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
+    local path="$dataDir/news-read-ids"
+
+    # If the path doesn't exist then we should create it, otherwise
+    # Nix will error out when we attempt to use builtins.readFile.
+    if [[ ! -f "$path" ]]; then
+        mkdir -p "$dataDir"
+        touch "$path"
+    fi
+
+    # Remove duplicate slashes in case $HOME or $XDG_DATA_HOME have a trailing
+    # slash. Double slashes causes Nix to error out with
+    #
+    #     error: syntax error, unexpected PATH_END, expecting DOLLAR_CURLY".
+    echo "$path" | tr -s /
+}
+
+# Builds the Home Manager news data file.
+#
+# Note, we suppress build output to remove unnecessary verbosity. We
+# put the output in the work directory to avoid the risk of an
+# unfortunately timed GC removing it.
+function buildNews() {
+    local newsNixFile="$1"
+    local newsJsonFile="$WORK_DIR/news.json"
+
+    if [[ -v FLAKE_CONFIG_URI ]]; then
+        # TODO: Use check=false to make it more likely that the build succeeds.
+        doBuildFlake \
+            "$FLAKE_CONFIG_URI.config.news.json.output" \
+            --quiet \
+            --out-link "$newsJsonFile" \
+            || return
+    else
+        doBuildAttr \
+            --out-link "$newsJsonFile" \
+            --arg check false \
+            --attr config.news.json.output \
+            > /dev/null \
+        || return
+    fi
+
+    local extraArgs=()
+
+    for p in "${EXTRA_NIX_PATH[@]}"; do
+        extraArgs=("${extraArgs[@]}" "-I" "$p")
+    done
+
+    local readIdsFile
+    readIdsFile="$(newsReadIdsFile)"
+
+    nix-instantiate \
+        --no-build-output --strict \
+        --eval '<home-manager/home-manager/build-news.nix>' \
+        --arg newsJsonFile "\"$(escapeForNix "$newsJsonFile")\"" \
+        --arg newsReadIdsFile "\"$(escapeForNix "$readIdsFile")\"" \
+        "${extraArgs[@]}" \
+        > "$newsNixFile"
+}
+
+function doShowNews() {
+    setWorkDir
+    setFlakeAttribute
+
+    local newsNixFile="$WORK_DIR/news.nix"
+    buildNews "$newsNixFile"
+
+    local readIdsFile
+    readIdsFile="$(newsReadIdsFile)"
+
+    local newsAttr
+
+    case $1 in
+        --all)
+            newsAttr="all"
+            ;;
+        --unread)
+            newsAttr="unread"
+            ;;
+        *)
+            _i 'Unknown argument %s' "$1"
+            return 1
+    esac
+
+    nix-instantiate --quiet --eval --json --expr "(import ${newsNixFile}).news.$newsAttr" \
+        | jq -r . \
+        | ${PAGER:-less}
+
+    local allIds
+    allIds="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).meta.ids")"
+    allIds="${allIds:1:-1}"    # Trim surrounding quotes.
+
+    local readIdsFileNew="$WORK_DIR/news-read-ids.new"
+    {
+      cat "$readIdsFile"
+      echo -e "$allIds"
+    } | sort | uniq > "$readIdsFileNew"
+
+    mv -f "$readIdsFileNew" "$readIdsFile"
+}
+
+function doUninstall() {
+    setHomeManagerPathVariables
+    setNixProfileCommands
+
+    _i 'This will remove Home Manager from your system.'
+
+    if [[ -v DRY_RUN ]]; then
+        _i 'This is a dry run, nothing will actually be uninstalled.'
+    fi
+
+    local confirmation
+    read -r -n 1 -p "$(_i 'Really uninstall Home Manager?') [y/n] " confirmation
+    echo
+
+    # shellcheck disable=2086
+    case $confirmation in
+        y|Y)
+            _i "Switching to empty Home Manager configuration..."
+            HOME_MANAGER_CONFIG="$(mktemp --tmpdir home-manager.XXXXXXXXXX)"
+            cat > "$HOME_MANAGER_CONFIG" <<EOF
+{
+  uninstall = true;
+  home.username = "$(escapeForNix "$USER")";
+  home.homeDirectory = "$(escapeForNix "$HOME")";
+  home.stateVersion = "25.05";
+}
+EOF
+            # shellcheck disable=2064
+            trap "rm '$HOME_MANAGER_CONFIG'" EXIT
+            doSwitch --switch
+            ;;
+        *)
+            _i "Yay!"
+            exit 0
+            ;;
+    esac
+
+    _i "Home Manager is uninstalled but your home.nix is left untouched."
+}
+
+function doHelp() {
+    echo "Usage: $0 [OPTION] COMMAND"
+    echo
+    echo "Options"
+    echo
+    echo "  -f FILE           The home configuration file."
+    echo "                    Default is '~/.config/nixpkgs/home.nix'."
+    echo "  -A ATTRIBUTE      Optional attribute that selects a configuration"
+    echo "                    expression in the configuration file."
+    echo "  -I PATH           Add a path to the Nix expression search path."
+    echo "  --flake flake-uri Use Home Manager configuration at flake-uri"
+    echo "                    Default is '~/.config/home-manager'."
+    echo "  -b EXT            Move existing files to new path rather than fail."
+    echo "  -v                Verbose output"
+    echo "  -n                Do a dry run, only prints what actions would be taken"
+    echo "  -h                Print this help"
+    echo "  --version         Print the Home Manager version"
+    echo
+    echo "Options passed on to nix-build(1)"
+    echo
+    echo "  --arg(str) NAME VALUE    Override inputs passed to home-manager.nix"
+    echo "  --cores NUM"
+    echo "  --debug"
+    echo "  --impure"
+    echo "  --keep-failed"
+    echo "  --keep-going"
+    echo "  -j, --max-jobs NUM"
+    echo "  --option NAME VALUE"
+    echo "  -L, --print-build-logs"
+    echo "  --log-format FORMAT"
+    echo "  --show-trace"
+    echo "  --(no-)substitute"
+    echo "  --no-out-link            Do not create a symlink to the output path"
+    echo "  --no-write-lock-file"
+    echo "  --builders VALUE"
+    echo "  --refresh                Consider all previously downloaded files out-of-date"
+    echo
+    echo "Commands"
+    echo
+    echo "  help         Print this help"
+    echo
+    echo "  edit         Open the home configuration in \$VISUAL or \$EDITOR"
+    echo
+    echo "  option [--recursive] OPTION.NAME"
+    echo "               Inspect configuration option named OPTION.NAME."
+    echo
+    echo "      --recursive   Print all the values at or below the option name recursively."
+    echo
+    echo "  build        Build configuration into result directory"
+    echo
+    echo "  init [--switch] [DIR]"
+    echo "      Initializes a configuration in the given directory. If the directory"
+    echo "      does not exist, then it will be created. The default directory is"
+    echo "      '~/.config/home-manager'."
+    echo
+    echo "      --switch      Immediately activate the generated configuration."
+    echo
+    echo "  instantiate  Instantiate the configuration and print the resulting derivation"
+    echo
+    echo "  switch [OPTION]"
+    echo "      Build and activate configuration"
+    echo
+    echo "      --rollback    Do not build a new configuration, instead roll back to"
+    echo "                    the configuration prior to the current configuration."
+    echo
+    echo "      -c, --specialisation NAME"
+    echo "                    Activates the named specialisation; when not specified,"
+    echo "                    switching will activate the unspecialised configuration."
+    echo
+    echo "  generations  List all home environment generations"
+    echo
+    echo "  remove-generations ID..."
+    echo "      Remove indicated generations. Use 'generations' command to"
+    echo "      find suitable generation numbers."
+    echo
+    echo "  repl"
+    echo "      Opens the configuration in \`nix repl\`"
+    echo
+    echo "  expire-generations TIMESTAMP"
+    echo "      Remove generations older than TIMESTAMP where TIMESTAMP is"
+    echo "      interpreted as in the -d argument of the date tool. For"
+    echo "      example \"-30 days\" or \"2018-01-01\"."
+    echo
+    echo "  packages     List all packages installed in home-manager-path"
+    echo
+    echo "  news         Show news entries in a pager"
+    echo
+    echo "  uninstall    Remove Home Manager"
+}
+
+EXTRA_NIX_PATH=()
+HOME_MANAGER_CONFIG_ATTRIBUTE=""
+PASSTHROUGH_OPTS=()
+COMMAND=""
+COMMAND_ARGS=()
+FLAKE_ARG=""
+
+while [[ $# -gt 0 ]]; do
+    opt="$1"
+    shift
+    case $opt in
+        build|init|instantiate|option|edit|expire-generations|generations|help|news|packages|remove-generations|repl|rollback|switch|test|uninstall)
+            COMMAND="$opt"
+            ;;
+        -A)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            HOME_MANAGER_CONFIG_ATTRIBUTE="$1"
+            shift
+            ;;
+        -I)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            EXTRA_NIX_PATH+=("$1")
+            shift
+            ;;
+        -B)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            export HOME_MANAGER_BACKUP_COMMAND="$1"
+            shift
+            ;;
+        -b)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            export HOME_MANAGER_BACKUP_EXT="$1"
+            shift
+            ;;
+        -f|--file)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            HOME_MANAGER_CONFIG="$1"
+            shift
+            ;;
+        --flake)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            FLAKE_ARG="$1"
+            shift
+            ;;
+        --recreate-lock-file|--no-update-lock-file|--no-write-lock-file|--no-registries|--commit-lock-file|--refresh)
+            PASSTHROUGH_OPTS+=("$opt")
+            ;;
+        --update-input)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
+        --override-input)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            [[ -v 2 && $2 != -* ]] || errMissingOptArg "$opt $1"
+            PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
+            shift 2
+            ;;
+        --experimental-features)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
+        --extra-experimental-features)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
+        --no-out-link)
+            NO_OUT_LINK=1
+            ;;
+        -L|--print-build-logs)
+            PRINT_BUILD_LOGS=1
+            ;;
+        -h|--help)
+            doHelp
+            exit 0
+            ;;
+        -n|--dry-run)
+            export DRY_RUN=1
+            ;;
+        --rollback)
+            case $COMMAND in
+                switch)
+                    COMMAND_ARGS+=("$opt")
+                    ;;
+                *)
+                    errTopLevelSubcommandOpt "--rollback" "switch"
+                    ;;
+            esac
+            ;;
+        -c|--specialisation)
+            case $COMMAND in
+                switch)
+                    [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+                    COMMAND_ARGS+=("--specialisation" "$1")
+                    shift
+                    ;;
+                *)
+                    errTopLevelSubcommandOpt "--specialisation" "switch"
+                    ;;
+            esac
+            ;;
+        --recursive)
+            case $COMMAND in
+                option)
+                    COMMAND_ARGS+=("$opt")
+                    ;;
+                *)
+                    errTopLevelSubcommandOpt "--recursive" "option"
+                    ;;
+            esac
+            ;;
+        --option|--arg|--argstr)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            [[ -v 2 ]] || errMissingOptArg "$opt $1"
+            PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
+            shift 2
+            ;;
+        -j|--max-jobs|--cores|--builders|--log-format)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
+        --debug|--keep-failed|--keep-going|--show-trace\
+            |--substitute|--no-substitute|--impure)
+            PASSTHROUGH_OPTS+=("$opt")
+            ;;
+        -v|--verbose)
+            export VERBOSE=1
+            ;;
+        --version)
+            echo 25.11-pre
+            exit 0
+            ;;
+        *)
+            case $COMMAND in
+                init|expire-generations|remove-generations|option)
+                    COMMAND_ARGS+=("$opt")
+                    ;;
+                *)
+                    _iError "%s: unknown option '%s'" "$0" "$opt" >&2
+                    _i "Run '%s --help' for usage help" "$0" >&2
+                    exit 1
+                    ;;
+            esac
+            ;;
+    esac
+done
+
+setHomeManagerNixPath
+
+if [[ -z $COMMAND ]]; then
+    doHelp >&2
+    exit 1
+fi
+
+case $COMMAND in
+    edit)
+        doEdit
+        ;;
+    build)
+        doBuild
+        ;;
+    init)
+        doInit "${COMMAND_ARGS[@]}"
+        ;;
+    instantiate)
+        doInstantiate
+        ;;
+    switch)
+        doSwitch --switch "${COMMAND_ARGS[@]}"
+        ;;
+    # TODO: The test functionality is not really sensible until we perform
+    # activation through some form of systemd unit.
+    # test)
+    #     doSwitch --test
+    #     ;;
+    generations)
+        doListGens
+        ;;
+    remove-generations)
+        doRmGenerations "${COMMAND_ARGS[@]}"
+        ;;
+    expire-generations)
+        if [[ ${#COMMAND_ARGS[@]} != 1 ]]; then
+            _i 'expire-generations expects one argument, got %d.' "${#COMMAND_ARGS[@]}" >&2
+            exit 1
+        else
+            doExpireGenerations "${COMMAND_ARGS[@]}"
+        fi
+        ;;
+    option)
+        doInspectOption "${COMMAND_ARGS[@]}"
+        ;;
+    packages)
+        doListPackages
+        ;;
+    repl)
+        doRepl
+        ;;
+    news)
+        doShowNews --all
+        ;;
+    uninstall)
+        doUninstall
+        ;;
+    help)
+        doHelp
+        ;;
+    *)
+        _iError 'Unknown command: %s' "$COMMAND" >&2
+        doHelp >&2
+        exit 1
+        ;;
+esac
+
+# vim: ft=bash

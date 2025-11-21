@@ -1,0 +1,71 @@
+# Configuration for probot-stale - https://github.com/probot/stale
+daysUntilStale: 90
+daysUntilClose: false
+staleLabel: "status: stale"
+issues:
+  markComment: |
+    <p>
+      Thank you for your contribution!
+      I marked this issue as stale due to inactivity.
+      Please be considerate of people watching this issue and receiving notifications before commenting 'I have this issue too'.
+      We welcome additional information that will help resolve this issue.
+      <b>Please read the relevant sections below before commenting.</b>
+    </p>
+
+    <details>
+    <summary><b>If you are the original author of the issue</b></summary>
+    <p>
+
+    * If this is resolved, please consider closing it so that the maintainers know not to focus on this.
+    * If this might still be an issue, but you are not interested in promoting its resolution, please consider closing it while encouraging others to take over and reopen an issue if they care enough.
+    * If you know how to solve the issue, please consider submitting a Pull Request that addresses this issue.
+
+    </p>
+    </details>
+
+    <details>
+    <summary><b>If you are <i>not</i> the original author of the issue</b></summary>
+    <p>
+
+    * If you are also experiencing this issue, please add details of your situation to help with the debugging process.
+    * If you know how to solve the issue, please consider submitting a Pull Request that addresses this issue.
+
+    </p>
+    </details>
+
+    <details>
+    <summary><b>Memorandum on closing issues</b></summary>
+    <p>
+      Don't be afraid to manually close an issue, even if it holds valuable information.
+      Closed issues stay in the system for people to search, read, cross-reference, or even reopen – nothing is lost!
+      Closing obsolete issues is an important way to help maintainers focus their time and effort.
+    </p>
+    </details>
+pulls:
+  markComment: |
+    <p>
+      Thank you for your contribution!
+      I marked this pull request as stale due to inactivity.
+      <b>Please read the relevant sections below before commenting.</b>
+    </p>
+
+    <details>
+    <summary><b>If you are the original author of the PR</b></summary>
+    <p>
+
+    * GitHub sometimes doesn't notify people who commented / reviewed a PR previously when you (force) push commits. *If you have addressed the reviews* you can [officially ask for a review](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/requesting-a-pull-request-review) from those who commented to you or anyone else.
+    * If it is unfinished but you plan to finish it, please mark it as a draft.
+    * If you don't expect to work on it any time soon, please consider closing it with a short comment encouraging someone else to pick up your work.
+    * To get things rolling again, rebase the PR against the target branch and address valid comments.
+
+    </p>
+    </details>
+
+    <details>
+    <summary><b>If you are <i>not</i> the original author of the PR</b></summary>
+    <p>
+
+    * If you want to pick up the work on this PR, please create a new PR and indicate that it supercedes and closes this PR.
+
+    </p>
+    </details>

@@ -1,0 +1,11 @@
+color_scheme=6
+cpu_count_from_one=0
+delay=15
+fields=0 48 17 18 38 39 40 2 46 47 49 1
+highlight_base_name=1
+highlight_megabytes=1
+highlight_threads=1
+left_meter_modes=1 1 1 2
+left_meters=AllCPUs2 Memory Swap Zram
+right_meter_modes=2 2 2 2
+right_meters=Tasks LoadAverage Uptime Systemd

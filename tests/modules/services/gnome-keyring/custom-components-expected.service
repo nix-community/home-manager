@@ -1,0 +1,10 @@
+[Install]
+WantedBy=graphical-session-pre.target
+
+[Service]
+ExecStart=@gnome-keyring@/bin/gnome-keyring-daemon --start --foreground --components=pkcs11,secrets,ssh
+Restart=on-abort
+
+[Unit]
+Description=GNOME Keyring
+PartOf=graphical-session-pre.target

@@ -1,0 +1,65 @@
+name: Update flake inputs
+on:
+  schedule:
+    # Update every Sunday and Wednesday
+    - cron: "51 3 * * 0,3"
+  workflow_dispatch:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
+    strategy:
+      matrix:
+        branch: [master, release-25.05]
+    steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v2
+        if: vars.CI_APP_ID
+        id: app-token
+        with:
+          app-id: ${{ vars.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+      - name: Get GitHub App user info
+        if: vars.CI_APP_ID
+        id: user-info
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token}}
+          slug: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          name="$slug[bot]"
+          id=$(gh api "/users/$name" --jq .id)
+          {
+            echo "id=$id"
+            echo "name=$name"
+            echo "email=$id+$name@users.noreply.github.com"
+          } >> "$GITHUB_OUTPUT"
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ matrix.branch }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v27
+        with:
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          git-committer-name: ${{ steps.user-info.outputs.name || 'github-actions[bot]' }}
+          git-committer-email: ${{ steps.user-info.outputs.email || '41898282+github-actions[bot]@users.noreply.github.com' }}
+          git-author-name: ${{ steps.user-info.outputs.name || 'github-actions[bot]' }}
+          git-author-email: ${{ steps.user-info.outputs.email || '41898282+github-actions[bot]@users.noreply.github.com' }}
+          pr-labels: dependencies
+          pr-title: "[${{ matrix.branch }}] flake.lock: Update"
+          pr-body: |
+            Automated update by the [update-flake-lock] GitHub Action.
+
+            ```
+            {{ env.GIT_COMMIT_MESSAGE }}
+            ```
+
+            This PR was most recently updated by workflow run [${{ github.run_id }}].
+
+            [update-flake-lock]: https://github.com/DeterminateSystems/update-flake-lock
+            [${{ github.run_id }}]: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          base: ${{ matrix.branch }}
+          branch: update/${{ matrix.branch }}

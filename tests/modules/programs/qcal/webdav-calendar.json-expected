@@ -1,0 +1,11 @@
+{
+  "Calendars": [
+    {
+      "PasswordCmd": "pass show calendar",
+      "Url": "https://cal.example.com/anton/work",
+      "Username": "anton"
+    }
+  ],
+  "DefaultNumDays": 23,
+  "Timezone": "Europe/Berlin"
+}

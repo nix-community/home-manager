@@ -1,0 +1,32 @@
+dvorak_keybindings = true
+seek_seconds = 10
+
+[keybindings]
+bottom = ["G", "<end>"]
+down = "j"
+left = "h"
+next_song = [">", "C-n"]
+previous_song = ["<", "C-p"]
+quit = ["<escape>", "q"]
+right = "l"
+seek = "<right>"
+seek_backwards = "<left>"
+toggle_playpause = ["p", "<space>"]
+top = ["g g", "<home>"]
+up = "k"
+
+[theme.album]
+fg = "#89b4fa"
+
+[theme.playing]
+fg = "#a6e3a1"
+
+[theme.status_album]
+fg = "#89b4fa"
+
+[theme.status_artist]
+fg = "#fab387"
+
+[theme.status_title]
+add_modifier = "BOLD"
+fg = "#cba6f7"

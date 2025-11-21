@@ -1,0 +1,1 @@
+{ specialisation = ./specialisation.nix; }

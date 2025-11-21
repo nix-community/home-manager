@@ -1,0 +1,13 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@runtimeShell@ -l -c "@emacs@/bin/emacs --fg-daemon -f exwm-enable"
+Restart=on-failure
+SuccessExitStatus=15
+Type=notify
+
+[Unit]
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+X-RestartIfChanged=false

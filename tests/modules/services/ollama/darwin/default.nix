@@ -1,0 +1,3 @@
+{
+  ollama-basic = ./basic.nix;
+}

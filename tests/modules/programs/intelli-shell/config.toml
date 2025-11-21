@@ -1,0 +1,18 @@
+check_updates = false
+data_dir = "/home/myuser/my/custom/datadir"
+
+[logs]
+enabled = false
+
+[theme]
+accent = "yellow"
+comment = "italic green"
+error = "dark red"
+highlight = "darkgrey"
+highlight_accent = "yellow"
+highlight_comment = "italic green"
+highlight_primary = "default"
+highlight_secondary = "default"
+highlight_symbol = "» "
+primary = "default"
+secondary = "dim"

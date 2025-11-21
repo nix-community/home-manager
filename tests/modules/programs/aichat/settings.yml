@@ -1,0 +1,8 @@
+clients:
+- api_base: http://localhost:11434/v1
+  models:
+  - name: llama3.2:latest
+    supports_function_calling: true
+  name: ollama
+  type: openai-compatible
+model: ollama:llama3.2:latest

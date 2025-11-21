@@ -1,0 +1,148 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager Modules package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager Modules\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2025-04-13 09:31+0000\n"
+"Last-Translator: max <weblate@p2502.net>\n"
+"Language-Team: Czech <https://hosted.weblate.org/projects/home-manager/"
+"modules/cs/>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+"X-Generator: Weblate 5.11-dev\n"
+
+#: modules/files.nix:206
+msgid "Creating home file links in %s"
+msgstr "Vytváření linků na domácí soubory v %s"
+
+#: modules/files.nix:219
+msgid "Cleaning up orphan links from %s"
+msgstr "Čištění osiřelých linků z %s"
+
+#: modules/home-environment.nix:647
+msgid "Creating new profile generation"
+msgstr "Vytváření nových generací profilu"
+
+#: modules/home-environment.nix:650
+msgid "No change so reusing latest profile generation"
+msgstr "Žádná změna, zachovává se poslední generace profilu"
+
+#: modules/home-environment.nix:699
+msgid ""
+"Oops, Nix failed to install your new Home Manager profile!\n"
+"\n"
+"Perhaps there is a conflict with a package that was installed using\n"
+"\"%s\"? Try running\n"
+"\n"
+"    %s\n"
+"\n"
+"and if there is a conflicting package you can remove it with\n"
+"\n"
+"    %s\n"
+"\n"
+"Then try activating your Home Manager configuration again."
+msgstr ""
+"Jejda, Nix se nepodařilo instalovat váš nový Home Manager profil!\n"
+"\n"
+"Možná je konflikt s balíčkem, který byl nainstalován pomocí\n"
+"\"%s\"? Zkuste spustit\n"
+"\n"
+"\t%s\n"
+"\n"
+"a jestli existuje konfliktní balíček, můžete ho odstranit pomocí\n"
+"\n"
+"\t%s\n"
+"\n"
+"Poté zkuste znova aktivovat vaši Home Manager konfiguraci."
+
+#: modules/home-environment.nix:735
+msgid "Activating %s"
+msgstr "Aktivuji %s"
+
+#: modules/home-environment.nix:807
+msgid "%s: unknown option '%s'"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:22
+msgid "Migrating profile from %s to %s"
+msgstr "Migruji profil z %s do %s"
+
+#: modules/lib-bash/activation-init.sh:54
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "Nebyl nalezen vhodný adresář profilu, byly zkoušeny %s a %s"
+
+#: modules/lib-bash/activation-init.sh:106
+msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+msgstr "Chyba: USER je nastaven na \"%s\", ale očekáváme \"%s\""
+
+#: modules/lib-bash/activation-init.sh:115
+msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+msgstr "Chyba: HOME je nastaven na \"%s\", ale očekáváme \"%s\""
+
+#: modules/lib-bash/activation-init.sh:132
+msgid "Starting Home Manager activation"
+msgstr "Zapínám aktivaci Home Manager"
+
+#: modules/lib-bash/activation-init.sh:136
+msgid "Sanity checking Nix"
+msgstr "Kontrola správnosti Nix"
+
+#: modules/lib-bash/activation-init.sh:149
+msgid "This is a dry run"
+msgstr "Toto je zkušební běh"
+
+#: modules/lib-bash/activation-init.sh:153
+msgid "This is a live run"
+msgstr "Toto je běh na ostro"
+
+#: modules/lib-bash/activation-init.sh:159
+msgid "Using Nix version: %s"
+msgstr "Používám Nix verze: %s"
+
+#: modules/lib-bash/activation-init.sh:162
+msgid "Activation variables:"
+msgstr "Aktivační proměnné:"
+
+#~ msgid "Creating profile generation %s"
+#~ msgstr "Vytvářím profil generace %s"
+
+#~ msgid "No change so reusing latest profile generation %s"
+#~ msgstr "Žádná změna, takže bude použita profil poslední generace %s"
+
+#~ msgid "Sanity checking oldGenNum and oldGenPath"
+#~ msgstr "Kontrola správnosti oldGenNum a oldGenPath"
+
+#~ msgid ""
+#~ "The previous generation number and path are in conflict! These\n"
+#~ "must be either both empty or both set but are now set to\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "If you don't mind losing previous profile generations then\n"
+#~ "the easiest solution is probably to run\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "and trying home-manager switch again. Good luck!"
+#~ msgstr ""
+#~ "Poslední číslo a cesta generace jsou konfliktní! Ty\n"
+#~ "musí být oboje buď prázdné, nebo nastaveny, ale nyní jsou nastaveny na\n"
+#~ "\n"
+#~ "\t'%s' a '%s'\n"
+#~ "\n"
+#~ "Jestli vám nevadí ztráta předchozích generací profilu, potom\n"
+#~ "to nejjednodušší řešení bude nejspíš spustit\n"
+#~ "\n"
+#~ "\trm %s/home-manager*\n"
+#~ "\trm %s/current-home\n"
+#~ "\n"
+#~ "a zkusit přepínač home‐manager znova. Hodně štěstí!"

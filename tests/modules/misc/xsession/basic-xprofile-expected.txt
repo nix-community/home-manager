@@ -1,0 +1,16 @@
+. "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"
+
+if [ -e "$HOME/.profile" ]; then
+  . "$HOME/.profile"
+fi
+
+# If there are any running services from a previous session.
+# Need to run this in xprofile because the NixOS xsession
+# script starts up graphical-session.target.
+systemctl --user stop graphical-session.target graphical-session-pre.target
+
+systemctl --user import-environment DBUS_SESSION_BUS_ADDRESS DISPLAY SSH_AUTH_SOCK XAUTHORITY XDG_DATA_DIRS XDG_RUNTIME_DIR XDG_SESSION_ID EXTRA_IMPORTED_VARIABLE
+
+profile extra commands
+
+export HM_XPROFILE_SOURCED=1

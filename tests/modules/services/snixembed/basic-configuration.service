@@ -1,0 +1,14 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@snixembed@/bin/snixembed
+Restart=on-failure
+RestartSec=3
+
+[Unit]
+Before=safeeyes.service
+Description=snixembed
+PartOf=graphical-session.target
+StartLimitBurst=10
+StartLimitIntervalSec=100

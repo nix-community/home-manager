@@ -1,0 +1,347 @@
+# This module is heavily inspired by the corresponding NixOS module. See
+#
+#   https://github.com/NixOS/nixpkgs/blob/23.11/nixos/modules/config/fonts/fontconfig.nix
+
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+let
+
+  cfg = config.fonts.fontconfig;
+
+  profileDirectory = config.home.profileDirectory;
+
+  fontConfigFileType = lib.types.submodule (
+    { name, ... }:
+    {
+      options = {
+        enable = lib.mkEnableOption "Whether this font config file should be generated.";
+        text = lib.mkOption {
+          type = lib.types.nullOr lib.types.lines;
+          default = null;
+          description = "Verbatim contents of the config file. If this option is null then the 'source' option must be set.";
+        };
+        source = lib.mkOption {
+          type = lib.types.nullOr lib.types.path;
+          default = null;
+          description = "Config file to source. Alternatively, use the 'text' option instead.";
+        };
+        label = lib.mkOption {
+          type = lib.types.str;
+          default = name;
+          defaultText = "<name>";
+          description = "Label to use for the name of the config file.";
+        };
+        priority = lib.mkOption {
+          type = lib.types.ints.between 0 99;
+          default = 90;
+          description = ''
+            Determines the order in which configs are loaded.
+            Must be a value within the range of 0-99, where priority 0 is the highest priority and 99 is the lowest.
+          '';
+        };
+      };
+    }
+  );
+
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    rycee
+  ];
+
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "fonts" "fontconfig" "enableProfileFonts" ]
+      [
+        "fonts"
+        "fontconfig"
+        "enable"
+      ]
+    )
+  ];
+
+  options = {
+    fonts.fontconfig = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to enable fontconfig configuration. This will, for
+          example, allow fontconfig to discover fonts and
+          configurations installed through
+          {var}`home.packages` and
+          {command}`nix-env`.
+        '';
+      };
+
+      defaultFonts = {
+        monospace = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+          description = ''
+            Per-user default monospace font(s). Multiple fonts may be listed in
+            case multiple languages must be supported.
+          '';
+        };
+
+        sansSerif = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+          description = ''
+            Per-user default sans serif font(s). Multiple fonts may be listed
+            in case multiple languages must be supported.
+          '';
+        };
+
+        serif = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+          description = ''
+            Per-user default serif font(s). Multiple fonts may be listed in
+            case multiple languages must be supported.
+          '';
+        };
+
+        emoji = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+          description = ''
+            Per-user default emoji font(s). Multiple fonts may be listed in
+            case a font does not support all emoji.
+
+            Note that fontconfig matches color emoji fonts preferentially,
+            so if you want to use a black and white font while having
+            a color font installed (eg. Noto Color Emoji installed alongside
+            Noto Emoji), fontconfig will still choose the color font even
+            when it is later in the list.
+          '';
+        };
+      };
+
+      antialiasing = lib.mkOption {
+        type = with lib.types; nullOr bool;
+        default = null;
+        description = "Whether to enable font antialiasing.";
+        example = true;
+      };
+      hinting = lib.mkOption {
+        type =
+          with lib.types;
+          nullOr (enum [
+            "none"
+            "slight"
+            "medium"
+            "full"
+          ]);
+        default = null;
+        description = "The font hinting mode.";
+        example = "slight";
+      };
+      subpixelRendering = lib.mkOption {
+        type =
+          with lib.types;
+          nullOr (enum [
+            "none"
+            "rgb"
+            "bgr"
+            "vertical-rgb"
+            "vertical-bgr"
+          ]);
+        default = null;
+        description = "The sub-pixel rendering mode.";
+        example = "rgb";
+      };
+
+      configFile = lib.mkOption {
+        type = lib.types.attrsOf fontConfigFileType;
+        default = { };
+        description = ''
+          Extra font config files that will be added to `~/.config/fontconfig/conf.d/`.
+          Files are named like `fontconfig/conf.d/{priority}-{label}.conf`.
+        '';
+        example = {
+          tamzen = {
+            enable = true;
+            label = "tamzen-disable-antialiasing";
+            text = ''
+              <?xml version="1.0"?>
+              <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+
+              <fontconfig>
+                <description>Disable anti-aliasing for Tamzen since it is a bitmap font</description>
+                <match target="pattern">
+                  <test name="family" compare="eq" qual="any">
+                    <string>Tamzen</string>
+                  </test>
+                  <edit name="antialias" mode="assign">
+                    <bool>false</bool>
+                  </edit>
+                </match>
+              </fontconfig>
+            '';
+            priority = 90;
+          }; # => conf.d/90-tamzen-disable-antialiasing.conf
+          commit-mono-options = {
+            enable = true;
+            source = "./resources/fontconfig/commit-mono.conf";
+            priority = 80;
+          }; # => conf.d/80-commit-mono-options.conf
+        };
+
+      };
+
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    home.packages = [
+      # Make sure that buildEnv creates a real directory path so that we avoid
+      # trying to write to a read-only location.
+      (pkgs.runCommandLocal "dummy-fc-dir1" { } "mkdir -p $out/lib/fontconfig")
+      (pkgs.runCommandLocal "dummy-fc-dir2" { } "mkdir -p $out/lib/fontconfig")
+    ];
+
+    home.extraProfileCommands = ''
+      if [[ -d $out/lib/X11/fonts || -d $out/share/fonts ]]; then
+        export FONTCONFIG_FILE="$(pwd)/fonts.conf"
+
+        cat > $FONTCONFIG_FILE << EOF
+      <?xml version='1.0'?>
+      <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+      <fontconfig>
+        <dir>$out/lib/X11/fonts</dir>
+        <dir>$out/share/fonts</dir>
+        <cachedir>$out/lib/fontconfig/cache</cachedir>
+      </fontconfig>
+      EOF
+
+        ${lib.getBin pkgs.fontconfig}/bin/fc-cache -f
+        rm -f $out/lib/fontconfig/cache/CACHEDIR.TAG
+        rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig/cache
+
+        rm "$FONTCONFIG_FILE"
+        unset FONTCONFIG_FILE
+      fi
+
+      # Remove the fontconfig directory if no files were available.
+      if [[ -d $out/lib/fontconfig ]] ; then
+        rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig
+      fi
+    '';
+
+    fonts.fontconfig.configFile =
+      let
+        mkFontconfigConf = conf: ''
+          <?xml version='1.0'?>
+
+          <!-- Generated by Home Manager. -->
+
+          <!DOCTYPE fontconfig SYSTEM 'urn:fontconfig:fonts.dtd'>
+          <fontconfig>
+          ${conf}
+          </fontconfig>
+        '';
+      in
+      {
+        fonts = {
+          enable = true;
+          priority = 10;
+          source = null; # Set the source as null explicitly so that it cannot be overwritten by mistake by a user
+          text = mkFontconfigConf ''
+            <description>Add fonts in the Nix user profile</description>
+
+            <include ignore_missing="yes">${config.home.path}/etc/fonts/conf.d</include>
+            <include ignore_missing="yes">${config.home.path}/etc/fonts/fonts.conf</include>
+
+            <dir>${config.home.path}/lib/X11/fonts</dir>
+            <dir>${config.home.path}/share/fonts</dir>
+            <dir>${profileDirectory}/lib/X11/fonts</dir>
+            <dir>${profileDirectory}/share/fonts</dir>
+
+            <cachedir>${config.home.path}/lib/fontconfig/cache</cachedir>
+          '';
+        };
+        rendering =
+          let
+            set =
+              name: value:
+              let
+                xmlValue =
+                  if builtins.isBool value then
+                    "<bool>${lib.boolToString value}</bool>"
+                  else if builtins.isString value then
+                    "<const>${value}</const>"
+                  else
+                    throw ("expected bool or string but got ${builtins.typeOf value}: ${toString value}");
+              in
+              ''
+                <match target="font">
+                  <edit mode="assign" name="${name}">
+                    ${xmlValue}
+                  </edit>
+                </match>
+              '';
+            content =
+              lib.optional (cfg.antialiasing != null) (set "antialias" cfg.antialiasing)
+              ++ lib.optionals (cfg.hinting != null) [
+                (set "hinting" true)
+                (set "hintstyle" ("hint" + cfg.hinting))
+              ]
+              ++ lib.optional (cfg.subpixelRendering != null) (
+                set "rgba" (builtins.replaceStrings [ "ertical-" ] [ "" ] cfg.subpixelRendering)
+              );
+          in
+          {
+            enable = builtins.length content > 0;
+            priority = 10;
+            source = null;
+            text = mkFontconfigConf (
+              lib.concatStrings ([ "<description>Set the rendering mode</description>\n" ] ++ content)
+            );
+          };
+        default-fonts =
+          let
+            genDefault =
+              fonts: name:
+              lib.optionalString (fonts != [ ]) ''
+                <alias binding="same">
+                  <family>${name}</family>
+                  <prefer>
+                  ${lib.concatStringsSep "" (
+                    map (font: ''
+                      <family>${font}</family>
+                    '') fonts
+                  )}
+                  </prefer>
+                </alias>
+              '';
+          in
+          {
+            enable = true;
+            priority = 52;
+            source = null;
+            text = mkFontconfigConf ''
+              <!-- Default fonts -->
+              ${genDefault cfg.defaultFonts.sansSerif "sans-serif"}
+              ${genDefault cfg.defaultFonts.serif "serif"}
+              ${genDefault cfg.defaultFonts.monospace "monospace"}
+              ${genDefault cfg.defaultFonts.emoji "emoji"}
+            '';
+          };
+      };
+
+    xdg.configFile = lib.mapAttrs' (
+      name: config:
+      lib.nameValuePair "fontconfig/conf.d/${builtins.toString config.priority}-hm-${config.label}.conf" {
+        inherit (config) enable text;
+        source = lib.mkIf (config.source != null) config.source;
+      }
+    ) cfg.configFile;
+  };
+}

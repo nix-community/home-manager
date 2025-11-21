@@ -1,0 +1,20 @@
+image: nixos/nix:latest
+
+variables:
+  NIX_PATH: "nixpkgs=channel:nixos-unstable"
+
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  script:
+    - nix-build -A docs.html
+    - mkdir public
+    - cp -r ./result/share/doc/home-manager/* public/
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: always

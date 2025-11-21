@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>HIP_VISIBLE_DEVICES</key>
+		<string>0,1</string>
+		<key>OLLAMA_HOST</key>
+		<string>localhost:11111</string>
+		<key>OLLAMA_LLM_LIBRARY</key>
+		<string>cpu</string>
+	</dict>
+	<key>KeepAlive</key>
+	<dict>
+		<key>Crashed</key>
+		<true/>
+		<key>SuccessfulExit</key>
+		<false/>
+	</dict>
+	<key>Label</key>
+	<string>org.nix-community.home.ollama</string>
+	<key>ProcessType</key>
+	<string>Background</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@ollama@/bin/ollama</string>
+		<string>serve</string>
+	</array>
+</dict>
+</plist>

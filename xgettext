@@ -1,0 +1,43 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/62b852f6c6742134ade1abdd2a21685fd617a291.tar.gz -i bash -p gettext
+
+set -euo pipefail
+shopt -s globstar
+
+function run() {
+  packageName="$1"
+  output="$2"
+  domain="$3"
+  shift 3
+
+  xgettext -v --package-name="$packageName" \
+           --copyright-holder='Home Manager contributors' \
+           --msgid-bugs-address=https://github.com/nix-community/home-manager/issues \
+           -L Shell -k \
+           -k_i:1 --flag=_i:1:c-format \
+           -k_iError:1 --flag=_i:1:c-format \
+           -k_iWarn:1 --flag=_i:1:c-format \
+           -k_iNote:1 --flag=_i:1:c-format \
+           -k_iVerbose:1 --flag=_i:1:c-format \
+           -k_ip:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -k_ipError:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -k_ipWarn:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -k_ipNote:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           -k_ipVerbose:1,2 --flag=_ip:1:c-format --flag=_ip:2:c-format \
+           --add-comments=translators: \
+           -o "$output" -d "$domain" "$@"
+}
+
+# Files that should be ignored due to various complications. They have been
+# verified not contain any translatable strings.
+GLOBIGNORE="modules/programs/thefuck.nix"
+
+run 'Home Manager' \
+    home-manager/po/home-manager.pot \
+    home-manager \
+    home-manager/home-manager home-manager/**/*.nix
+
+run 'Home Manager Modules' \
+    modules/po/hm-modules.pot \
+    hm-modules \
+    modules/**/*.{nix,sh}

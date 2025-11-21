@@ -1,0 +1,20 @@
+if [ -z "$HM_XPROFILE_SOURCED" ]; then
+  . "/home/hm-user/.xprofile"
+fi
+unset HM_XPROFILE_SOURCED
+
+systemctl --user start hm-graphical-session.target
+
+init extra commands
+
+window manager command
+
+systemctl --user stop graphical-session.target
+systemctl --user stop graphical-session-pre.target
+
+# Wait until the units actually stop.
+while [ -n "$(systemctl --user --no-legend --state=deactivating list-units)" ]; do
+  sleep 0.5
+done
+
+systemctl --user unset-environment DBUS_SESSION_BUS_ADDRESS DISPLAY SSH_AUTH_SOCK XAUTHORITY XDG_DATA_DIRS XDG_RUNTIME_DIR XDG_SESSION_ID EXTRA_IMPORTED_VARIABLE

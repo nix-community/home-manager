@@ -1,0 +1,279 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2025-08-06 21:01+0000\n"
+"Last-Translator: Максим Горпиніч <gorpinicmaksim5@gmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/home-manager/"
+"cli/uk/>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.13-dev\n"
+
+#. translators: For example: "home-manager: missing argument for --cores"
+#: home-manager/home-manager:16
+msgid "%s: missing argument for %s"
+msgstr "%s: відсутній аргумент для %s"
+
+#. translators: For example: "home-manager: --rollback can only be used after switch"
+#: home-manager/home-manager:22
+msgid "%s: %s can only be used after %s"
+msgstr "%s: %s можна використовувати лише після %s"
+
+#: home-manager/home-manager:71
+msgid "No configuration file found at %s"
+msgstr "Файл конфігурації не знайдено в %s"
+
+#. translators: The first '%s' specifier will be replaced by either
+#. 'home.nix' or 'flake.nix'.
+#: home-manager/home-manager:88 home-manager/home-manager:92
+#: home-manager/home-manager:191
+msgid ""
+"Keeping your Home Manager %s in %s is deprecated,\n"
+"please move it to %s"
+msgstr ""
+"Збереження вашого Home Manager %s у %s є застарілим,\n"
+"будь ласка, перемістіть його до %s"
+
+#: home-manager/home-manager:99
+msgid "No configuration file found. Please create one at %s"
+msgstr "Файл конфігурації не знайдено. Будь ласка, створіть його в %s"
+
+#: home-manager/home-manager:114
+msgid "Home Manager not found at %s."
+msgstr "Home Manager не знайдено на %s."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:122
+msgid ""
+"The fallback Home Manager path %s has been deprecated and a file/directory "
+"was found there."
+msgstr ""
+"Резервний шлях до Home Manager %s застарів, і там було знайдено файл/каталог."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:125
+msgid ""
+"To remove this warning, do one of the following.\n"
+"\n"
+"1. Explicitly tell Home Manager to use the path, for example by adding\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   to your configuration.\n"
+"\n"
+"   If you import Home Manager directly, you can use the `path` parameter\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   when calling the Home Manager package.\n"
+"\n"
+"2. Remove the deprecated path.\n"
+"\n"
+"     $ rm -r \"%s\""
+msgstr ""
+"Щоб видалити це попередження, виконайте одну з наведених нижче дій.\n"
+"\n"
+"1. Чітко скажіть Home Manager використовувати шлях, наприклад, додавши\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   до вашої конфігурації.\n"
+"\n"
+"   Якщо ви імпортуєте Home Manager безпосередньо, ви можете використовувати "
+"параметр `path`\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   при виклику пакету Home Manager.\n"
+"\n"
+"2. Видаліть застарілий шлях.\n"
+"\n"
+"     $ rm -r \"%s\""
+
+#: home-manager/home-manager:153
+msgid "Sanity checking Nix"
+msgstr "Перевірка адекватності Nix"
+
+#: home-manager/home-manager:173
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "Не вдалося знайти відповідний каталог профілю, спробував %s і %s"
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:230
+msgid "Can't inspect options of a flake configuration"
+msgstr "Неможливо перевірити параметри flake-конфігурації"
+
+#: home-manager/home-manager:305 home-manager/home-manager:328
+#: home-manager/home-manager:734 home-manager/home-manager:1237
+msgid "%s: unknown option '%s'"
+msgstr "%s: невідомий варіант '%s'"
+
+#: home-manager/home-manager:310 home-manager/home-manager:1238
+msgid "Run '%s --help' for usage help"
+msgstr "Запустіть '%s --help' для отримання довідки про використання"
+
+#: home-manager/home-manager:336 home-manager/home-manager:441
+msgid "The file %s already exists, leaving it unchanged..."
+msgstr "Файл %s вже існує, залишаючи його незмінним..."
+
+#: home-manager/home-manager:338 home-manager/home-manager:443
+msgid "Creating %s..."
+msgstr "Створення %s..."
+
+#: home-manager/home-manager:487
+msgid "Creating initial Home Manager generation..."
+msgstr "Створення початкової генерації Home Manager..."
+
+#. translators: The "%s" specifier will be replaced by a file path.
+#: home-manager/home-manager:492
+msgid ""
+"All done! The home-manager tool should now be installed and you can edit\n"
+"\n"
+"    %s\n"
+"\n"
+"to configure Home Manager. Run 'man home-configuration.nix' to\n"
+"see all available options."
+msgstr ""
+"Все готово! Інструмент Home-manager тепер повинен бути встановлений, і ви "
+"можете редагувати\n"
+"\n"
+"    %s,\n"
+"\n"
+"щоб налаштувати Home Manager. Запустіть 'man home-configuration.nix', щоб\n"
+"переглянути всі доступні варіанти."
+
+#. translators: The "%s" specifier will be replaced by a URL.
+#: home-manager/home-manager:497
+msgid ""
+"Uh oh, the installation failed! Please create an issue at\n"
+"\n"
+"    %s\n"
+"\n"
+"if the error seems to be the fault of Home Manager."
+msgstr ""
+"Ой, не вдалося встановити! Будь ласка, створіть проблему на\n"
+"\n"
+"    %s\n"
+"\n"
+"якщо здається, що помилка сталася через Home Manager."
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:508
+msgid "Can't instantiate a flake configuration"
+msgstr "Не вдається створити екземпляр flake-конфігурації"
+
+#: home-manager/home-manager:584
+msgid ""
+"There is %d unread and relevant news item.\n"
+"Read it by running the command \"%s news\"."
+msgid_plural ""
+"There are %d unread and relevant news items.\n"
+"Read them by running the command \"%s news\"."
+msgstr[0] ""
+"Є %d непрочитана і ревалентна новина.\n"
+"Прочитайте її, виконавши команду \"%s news\"."
+msgstr[1] ""
+"Є %d непрочитані і ревалентні новини.\n"
+"Прочитайте їх, виконавши команду \"%s news\"."
+msgstr[2] ""
+"Є %d непрочитаних і ревалентних новин.\n"
+"Прочитайте їх, виконавши команду \"%s news\"."
+
+#: home-manager/home-manager:598
+msgid "Unknown \"news.display\" setting \"%s\"."
+msgstr "Невідоме налаштування \"news.display\" \"%s\"."
+
+#: home-manager/home-manager:606
+#, sh-format
+msgid "Please set the $EDITOR or $VISUAL environment variable"
+msgstr "Будь ласка, встановіть змінну оточення $EDITOR або $VISUAL"
+
+#: home-manager/home-manager:624
+msgid "Cannot run build in read-only directory"
+msgstr "Неможливо запустити збірку в каталозі, доступному лише для читання"
+
+#: home-manager/home-manager:787
+msgid "The configuration did not contain the specialisation \"%s\""
+msgstr "Конфігурація не містила спеціалізації \"%s\""
+
+#: home-manager/home-manager:841
+msgid "No generation with ID %s"
+msgstr "Немає генерації з ID %s"
+
+#: home-manager/home-manager:843
+msgid "Cannot remove the current generation %s"
+msgstr "Не вдається видалити поточну генерацію %s"
+
+#: home-manager/home-manager:845
+msgid "Removing generation %s"
+msgstr "Видалення генерації %s"
+
+#: home-manager/home-manager:866
+msgid "No generations to expire"
+msgstr "Немає генерацій, термін дії яких закінчується"
+
+#: home-manager/home-manager:877
+msgid "No home-manager packages seem to be installed."
+msgstr "Здається, не встановлено жодних пакунків home-manager."
+
+#: home-manager/home-manager:962
+msgid "Unknown argument %s"
+msgstr "Невідомий аргумент %s"
+
+#: home-manager/home-manager:987
+msgid "This will remove Home Manager from your system."
+msgstr "Це призведе до видалення Home Manager з вашої системи."
+
+#: home-manager/home-manager:990
+msgid "This is a dry run, nothing will actually be uninstalled."
+msgstr "Це пробний запуск, насправді нічого не буде видалено."
+
+#: home-manager/home-manager:994
+msgid "Really uninstall Home Manager?"
+msgstr "Дійсно видаліть Home Manager?"
+
+#: home-manager/home-manager:1000
+msgid "Switching to empty Home Manager configuration..."
+msgstr "Перехід до порожньої конфігурації Home Manager..."
+
+#: home-manager/home-manager:1015
+msgid "Yay!"
+msgstr "Ура!"
+
+#: home-manager/home-manager:1020
+msgid "Home Manager is uninstalled but your home.nix is left untouched."
+msgstr "Home Manager буде видалено, але ваш home.nix залишиться недоторканим."
+
+#: home-manager/home-manager:1285
+msgid "expire-generations expects one argument, got %d."
+msgstr "expire-generation очікує один аргумент, отримав %d."
+
+#: home-manager/home-manager:1310
+msgid "Unknown command: %s"
+msgstr "Невідома команда: %s"
+
+#: home-manager/install.nix:21
+msgid "This derivation is not buildable, please run it using nix-shell."
+msgstr ""
+"Цю похідну не можна зібрати, будь ласка, запустіть її за допомогою nix-shell."
+
+#, sh-format
+#~ msgid "Please set the $EDITOR environment variable"
+#~ msgstr "Будь ласка, встановіть змінну середовища $EDITOR"
+
+#~ msgid "Sorry, this command is not yet supported in flake setup"
+#~ msgstr "На жаль, ця команда ще не підтримується в налаштуваннях flake"
+
+#~ msgid "Creating initial Home Manager configuration..."
+#~ msgstr "Створення початкової конфігурації Home Manager..."

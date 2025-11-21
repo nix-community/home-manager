@@ -1,0 +1,13 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+BusName=org.mpris.MediaPlayer2.mpd
+ExecStart=@mpDris2@/bin/mpDris2
+Restart=on-failure
+RestartSec=5s
+Type=simple
+
+[Unit]
+After=mpd.service
+Description=MPRIS 2 support for MPD

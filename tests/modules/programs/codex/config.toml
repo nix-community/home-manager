@@ -1,0 +1,7 @@
+model = "gemma3:latest"
+model_provider = "ollama"
+
+[model_providers.ollama]
+baseURL = "http://localhost:11434/v1"
+envKey = "OLLAMA_API_KEY"
+name = "Ollama"

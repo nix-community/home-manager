@@ -1,0 +1,12 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@picom@/bin/picom --config /nix/store/00000000000000000000000000000000-hm_picompicom.conf --legacy-backends
+Restart=always
+RestartSec=3
+
+[Unit]
+After=graphical-session.target
+Description=Picom X11 compositor
+PartOf=graphical-session.target

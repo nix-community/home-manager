@@ -1,0 +1,279 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2024-09-09 10:09+0000\n"
+"Last-Translator: Felix Puscasu <puscasu.felix1@gmail.com>\n"
+"Language-Team: Romanian <https://hosted.weblate.org/projects/home-manager/"
+"cli/ro/>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.8-dev\n"
+
+#. translators: For example: "home-manager: missing argument for --cores"
+#: home-manager/home-manager:16
+msgid "%s: missing argument for %s"
+msgstr "%s: Argument lipsă pentru %s"
+
+#. translators: For example: "home-manager: --rollback can only be used after switch"
+#: home-manager/home-manager:22
+msgid "%s: %s can only be used after %s"
+msgstr ""
+
+#: home-manager/home-manager:71
+msgid "No configuration file found at %s"
+msgstr "Nu s-a găsit niciun fișier de configurare la locația %s"
+
+#. translators: The first '%s' specifier will be replaced by either
+#. 'home.nix' or 'flake.nix'.
+#: home-manager/home-manager:88 home-manager/home-manager:92
+#: home-manager/home-manager:191
+msgid ""
+"Keeping your Home Manager %s in %s is deprecated,\n"
+"please move it to %s"
+msgstr ""
+"Păstrarea Home Managerului %s în $s e depreciat,\n"
+"vă rugăm să îl mutați în %s"
+
+#: home-manager/home-manager:99
+msgid "No configuration file found. Please create one at %s"
+msgstr ""
+"Nu s-a găsit niciun fișier de configurare. Vă rugăm să creați unul la %s"
+
+#: home-manager/home-manager:114
+msgid "Home Manager not found at %s."
+msgstr "Home Manager nu a putut fi găsit la locația %s."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:122
+msgid ""
+"The fallback Home Manager path %s has been deprecated and a file/directory "
+"was found there."
+msgstr ""
+"Locația de rezervă %s pentru Home Manager a fost depreciată și a fost găsit "
+"un fișier/director acolo."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:125
+msgid ""
+"To remove this warning, do one of the following.\n"
+"\n"
+"1. Explicitly tell Home Manager to use the path, for example by adding\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   to your configuration.\n"
+"\n"
+"   If you import Home Manager directly, you can use the `path` parameter\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   when calling the Home Manager package.\n"
+"\n"
+"2. Remove the deprecated path.\n"
+"\n"
+"     $ rm -r \"%s\""
+msgstr ""
+"Ca să înlăturați această avertizare, faceți una dintre următoarele\n"
+"\n"
+"1. Spuneți în mod explicit lui Home Manager să folosească locația,  ca "
+"exemplu prin adăugarea\n"
+"\n"
+"          { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"     în fila de configurare a dumneavoastră.\n"
+"\n"
+"     Dacă importați direct Home Manager, puteți folosi parametrul `path`\n"
+"\n"
+"          pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"      cănd rulați Home Manager.\n"
+"\n"
+"2. Ștergeți locația depreciata.\n"
+"\n"
+"           $ rm -r \"%s\""
+
+#: home-manager/home-manager:153
+msgid "Sanity checking Nix"
+msgstr "Se verifică corectitudinea Nix"
+
+#: home-manager/home-manager:173
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr ""
+"Nu s-a putut găsi un director cu un profil potrivit, s-a încercat %s și %s"
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:230
+msgid "Can't inspect options of a flake configuration"
+msgstr "Nu se pot inspecta opțiunile unei configurații flake"
+
+#: home-manager/home-manager:305 home-manager/home-manager:328
+#: home-manager/home-manager:734 home-manager/home-manager:1237
+msgid "%s: unknown option '%s'"
+msgstr "%s: opțiune necunoscută '%s'"
+
+#: home-manager/home-manager:310 home-manager/home-manager:1238
+msgid "Run '%s --help' for usage help"
+msgstr "Rulați '%s --help' pentru ajutor de utilizare"
+
+#: home-manager/home-manager:336 home-manager/home-manager:441
+msgid "The file %s already exists, leaving it unchanged..."
+msgstr "Fișierul %s există deja, îl lăsăm neschimbat..."
+
+#: home-manager/home-manager:338 home-manager/home-manager:443
+msgid "Creating %s..."
+msgstr "Creând %s..."
+
+#: home-manager/home-manager:487
+msgid "Creating initial Home Manager generation..."
+msgstr "Se creează generația Home Manager inițială..."
+
+#. translators: The "%s" specifier will be replaced by a file path.
+#: home-manager/home-manager:492
+msgid ""
+"All done! The home-manager tool should now be installed and you can edit\n"
+"\n"
+"    %s\n"
+"\n"
+"to configure Home Manager. Run 'man home-configuration.nix' to\n"
+"see all available options."
+msgstr ""
+"Totul este gata! Unealta home-manager ar trebui să fie instalata și acum "
+"puteți edita\n"
+"\n"
+"        %s\n"
+"\n"
+"ca să configurați Home Manager. Rulați 'man home-configuration.nix' pentru "
+"a\n"
+"putea vedea toate opțiunile."
+
+#. translators: The "%s" specifier will be replaced by a URL.
+#: home-manager/home-manager:497
+msgid ""
+"Uh oh, the installation failed! Please create an issue at\n"
+"\n"
+"    %s\n"
+"\n"
+"if the error seems to be the fault of Home Manager."
+msgstr ""
+"Uh oh, instalația a eșuat! Vă rugăm creați o problemă la\n"
+"\n"
+"        %s\n"
+"\n"
+"dacă eroarea pare să fie din vina Home manager."
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:508
+msgid "Can't instantiate a flake configuration"
+msgstr "Nu se poate instanția o configurare flake"
+
+#: home-manager/home-manager:584
+msgid ""
+"There is %d unread and relevant news item.\n"
+"Read it by running the command \"%s news\"."
+msgid_plural ""
+"There are %d unread and relevant news items.\n"
+"Read them by running the command \"%s news\"."
+msgstr[0] ""
+"Există %d știre necitită și relevantă.\n"
+"Citiți-o folosind comanda \"%s news\"."
+msgstr[1] ""
+"Există %d știri necitite și relevante.\n"
+"Citiți-le folosind comanda \"%s news\"."
+msgstr[2] ""
+"Există %d de știri necitite și relevante.\n"
+"Citiți-le folosind comanda \"%s news\"."
+
+#: home-manager/home-manager:598
+msgid "Unknown \"news.display\" setting \"%s\"."
+msgstr "Opțiunea \"news.display\" este necunoscută \"%s\"."
+
+#: home-manager/home-manager:606
+#, sh-format
+msgid "Please set the $EDITOR or $VISUAL environment variable"
+msgstr "Rugăm să setați variabila $EDITOR sau $VISUAL în variabilele de mediu"
+
+#: home-manager/home-manager:624
+msgid "Cannot run build in read-only directory"
+msgstr "Nu se poate rula construirea într-un director numai pentru citire"
+
+#: home-manager/home-manager:787
+msgid "The configuration did not contain the specialisation \"%s\""
+msgstr ""
+
+#: home-manager/home-manager:841
+msgid "No generation with ID %s"
+msgstr "Nicio generație cu ID-ul %s"
+
+#: home-manager/home-manager:843
+msgid "Cannot remove the current generation %s"
+msgstr "Nu se poate șterge generația curentă %s"
+
+#: home-manager/home-manager:845
+msgid "Removing generation %s"
+msgstr "Se șterge generația %s"
+
+#: home-manager/home-manager:866
+msgid "No generations to expire"
+msgstr "Nu există generații care să expire"
+
+#: home-manager/home-manager:877
+msgid "No home-manager packages seem to be installed."
+msgstr "Nu există instalat niciun pachet home-manager."
+
+#: home-manager/home-manager:962
+msgid "Unknown argument %s"
+msgstr "Argument necunoscut %s"
+
+#: home-manager/home-manager:987
+msgid "This will remove Home Manager from your system."
+msgstr "Aceasta v-a înlătura Home Manager din sistemul dumneavoastră."
+
+#: home-manager/home-manager:990
+msgid "This is a dry run, nothing will actually be uninstalled."
+msgstr "Aceasta este o rulare de test, nimic nu v-a fi dezinstalat."
+
+#: home-manager/home-manager:994
+msgid "Really uninstall Home Manager?"
+msgstr "Doriți cu adevărat să dezinstalați Home Manager?"
+
+#: home-manager/home-manager:1000
+msgid "Switching to empty Home Manager configuration..."
+msgstr "Se trece la o configurare Home Manager goală..."
+
+#: home-manager/home-manager:1015
+msgid "Yay!"
+msgstr "Ura!"
+
+#: home-manager/home-manager:1020
+msgid "Home Manager is uninstalled but your home.nix is left untouched."
+msgstr ""
+"Home Manager a fost dezinstalat, dar fișierul home.nix a rămas neatins."
+
+#: home-manager/home-manager:1285
+msgid "expire-generations expects one argument, got %d."
+msgstr "expire-generations se așteaptă la un argument, a primit %d."
+
+#: home-manager/home-manager:1310
+msgid "Unknown command: %s"
+msgstr "Comandă necunoscută: %s"
+
+#: home-manager/install.nix:21
+msgid "This derivation is not buildable, please run it using nix-shell."
+msgstr ""
+"Această derivație nu poate fi construită, vă rugăm să o rulați folosind nix-"
+"shell."
+
+#, sh-format
+#~ msgid "Please set the $EDITOR environment variable"
+#~ msgstr "Vă rugăm să setați variabila de mediu $EDITOR"

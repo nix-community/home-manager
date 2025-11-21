@@ -1,0 +1,8 @@
+[addressbooks]
+[[kebap-case-named-abook]]
+path = /home/user/who/likes/kebap-case/named-abook
+
+
+[general]
+default_action=list
+

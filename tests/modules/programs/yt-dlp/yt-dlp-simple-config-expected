@@ -1,0 +1,8 @@
+--downloader aria2c
+--downloader-args aria2c:'-c -x8 -s8 -k1M'
+--no-embed-subs
+--embed-thumbnail
+--sub-langs all
+--trim-filenames 30
+--config-locations /home/user/.yt-dlp.conf
+

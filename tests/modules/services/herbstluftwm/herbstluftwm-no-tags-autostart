@@ -1,0 +1,32 @@
+#!/nix/store/00000000000000000000000000000000-bash/bin/bash
+shopt -s expand_aliases
+
+# shellcheck disable=SC2142
+alias herbstclient='set -- "$@" ";"'
+set --
+
+herbstclient emit_hook reload
+
+# Reset everything.
+herbstclient attr theme.tiling.reset 1
+herbstclient attr theme.floating.reset 1
+herbstclient keyunbind --all
+herbstclient mouseunbind --all
+herbstclient unrule --all
+
+
+
+
+
+
+
+
+
+
+
+
+
+herbstclient unlock
+
+@herbstluftwm@/bin/herbstclient chain ";" "$@"
+

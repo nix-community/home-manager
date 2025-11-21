@@ -1,0 +1,13 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@mpd-mpris@/bin/mpd-mpris -no-instance
+Restart=on-failure
+RestartSec=5s
+Type=simple
+
+[Unit]
+After=mpd.service
+Description=mpd-mpris: An implementation of the MPRIS protocol for MPD
+Requires=mpd.service

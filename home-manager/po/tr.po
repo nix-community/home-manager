@@ -1,0 +1,284 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2025-07-29 05:02+0000\n"
+"Last-Translator: Silk <omerntuzun@gmail.com>\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/home-manager/cli/"
+"tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.13-dev\n"
+
+#. translators: For example: "home-manager: missing argument for --cores"
+#: home-manager/home-manager:16
+msgid "%s: missing argument for %s"
+msgstr "%s: %s için argüman eksik"
+
+#. translators: For example: "home-manager: --rollback can only be used after switch"
+#: home-manager/home-manager:22
+msgid "%s: %s can only be used after %s"
+msgstr "%s: %s kullanmak için ilk %s kullanın"
+
+#: home-manager/home-manager:71
+msgid "No configuration file found at %s"
+msgstr "%s'te yapılandırma dosyası bulunamadı"
+
+#. translators: The first '%s' specifier will be replaced by either
+#. 'home.nix' or 'flake.nix'.
+#: home-manager/home-manager:88 home-manager/home-manager:92
+#: home-manager/home-manager:191
+msgid ""
+"Keeping your Home Manager %s in %s is deprecated,\n"
+"please move it to %s"
+msgstr ""
+"Ana Dizin Yöneticisi'yi %s'de tutmak artık desteklenmemektedir,\n"
+"lütfen %s'e taşıyın"
+
+#: home-manager/home-manager:99
+msgid "No configuration file found. Please create one at %s"
+msgstr ""
+"Yapılandırma dosyası bulunamadı. Lütfen %s konumunda bir tane oluşturunuz"
+
+#: home-manager/home-manager:114
+msgid "Home Manager not found at %s."
+msgstr "%s konumunda Ana Dizin Yöneticisi bulunamadı."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:122
+msgid ""
+"The fallback Home Manager path %s has been deprecated and a file/directory "
+"was found there."
+msgstr ""
+"Yedek Ana Dizin Yöneticisi %s yolu kullanımdan kaldırıldı ve orada bir dosya/"
+"dizin bulundu."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:125
+msgid ""
+"To remove this warning, do one of the following.\n"
+"\n"
+"1. Explicitly tell Home Manager to use the path, for example by adding\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   to your configuration.\n"
+"\n"
+"   If you import Home Manager directly, you can use the `path` parameter\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   when calling the Home Manager package.\n"
+"\n"
+"2. Remove the deprecated path.\n"
+"\n"
+"     $ rm -r \"%s\""
+msgstr ""
+"Bu uyarıyı kaldırmak için aşağıdakilerden birini yapınız.\n"
+"\n"
+"1. Ana Dizin Yöneticisi'ye yolu kullanmasını açıkça söyleyiniz, örneğin\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   şeklinde yapılandırmanıza ekleyebilirsiniz.\n"
+"\n"
+"  Ana Dizin Yöneticisi'ye doğrudan içe aktarırsanız, Ana Dizin Yöneticisi "
+"paketini çağırırken\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   şeklinde `path` parametresini kullanabilirsiniz.\n"
+"\n"
+"2. Kullanımdan kaldırılan yolu kaldırın.\n"
+"\n"
+"     $ rm -r \"%s\""
+
+#: home-manager/home-manager:153
+msgid "Sanity checking Nix"
+msgstr "Nix denetleniyor"
+
+#: home-manager/home-manager:173
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "Kullanılabilir profil dizini bulunamadı, %s ve %s denendi"
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:230
+msgid "Can't inspect options of a flake configuration"
+msgstr "Flake yapılandırmasının ayarları incelenemiyor"
+
+#: home-manager/home-manager:305 home-manager/home-manager:328
+#: home-manager/home-manager:734 home-manager/home-manager:1237
+msgid "%s: unknown option '%s'"
+msgstr "%s: Bilinmeyen komut '%s'"
+
+#: home-manager/home-manager:310 home-manager/home-manager:1238
+msgid "Run '%s --help' for usage help"
+msgstr "Yardım için '%s --help'"
+
+#: home-manager/home-manager:336 home-manager/home-manager:441
+msgid "The file %s already exists, leaving it unchanged..."
+msgstr "%s dosyası zaten var, değişiklik yapılmıyor..."
+
+#: home-manager/home-manager:338 home-manager/home-manager:443
+msgid "Creating %s..."
+msgstr "%s oluşturuluyor ..."
+
+#: home-manager/home-manager:487
+msgid "Creating initial Home Manager generation..."
+msgstr "İlk Ana Dizin Yöneticisi inşası oluşturuluyor..."
+
+#. translators: The "%s" specifier will be replaced by a file path.
+#: home-manager/home-manager:492
+msgid ""
+"All done! The home-manager tool should now be installed and you can edit\n"
+"\n"
+"    %s\n"
+"\n"
+"to configure Home Manager. Run 'man home-configuration.nix' to\n"
+"see all available options."
+msgstr ""
+"Herşey tamam! Ana Dizin Yöneticisi'nin home-manager aracı kuruldu ve "
+"yapılandırmak için\n"
+"\n"
+"    %s\n"
+"\n"
+"dosyasını düzenleyiniz. Kullanılabilir seçenekleri görmek için:\n"
+"'man home-configuration.nix'."
+
+#. translators: The "%s" specifier will be replaced by a URL.
+#: home-manager/home-manager:497
+msgid ""
+"Uh oh, the installation failed! Please create an issue at\n"
+"\n"
+"    %s\n"
+"\n"
+"if the error seems to be the fault of Home Manager."
+msgstr ""
+"Eyvah, kurulum başarısız! Eğer hatanın Ana Dizin Yöneticisi'nden "
+"kaynaklandığını düşünüyorsanız\n"
+"\n"
+"    %s\n"
+"\n"
+"adresinden bildirin."
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:508
+msgid "Can't instantiate a flake configuration"
+msgstr "Flake yapılandırması örneklendirilemiyor"
+
+#: home-manager/home-manager:584
+msgid ""
+"There is %d unread and relevant news item.\n"
+"Read it by running the command \"%s news\"."
+msgid_plural ""
+"There are %d unread and relevant news items.\n"
+"Read them by running the command \"%s news\"."
+msgstr[0] ""
+"%d tane okunmamış ilgili haber bulunmaktadır.\n"
+"Okumak için \"%s news\" komutunu kullanın."
+msgstr[1] ""
+"%d tane okunmamış ilgili haberler bulunmaktadır.\n"
+"Okumak için \"%s news\" komutunu kullanın."
+
+#: home-manager/home-manager:598
+msgid "Unknown \"news.display\" setting \"%s\"."
+msgstr "Bilinmeyen \"news.display\" seçeneği \"%s\"."
+
+#: home-manager/home-manager:606
+#, sh-format
+msgid "Please set the $EDITOR or $VISUAL environment variable"
+msgstr "Lütfen $EDITOR veya $VISUAL ortam değişkenini ayarlayınız"
+
+#: home-manager/home-manager:624
+msgid "Cannot run build in read-only directory"
+msgstr "Sadece okuma izni olan bir dizinde inşa çalıştırılamaz"
+
+#: home-manager/home-manager:787
+msgid "The configuration did not contain the specialisation \"%s\""
+msgstr "Yapılandırmada \"%s\" özelleştirmesi yoktu"
+
+#: home-manager/home-manager:841
+msgid "No generation with ID %s"
+msgstr "%s ID'sine sahip nesil bulunamadı"
+
+#: home-manager/home-manager:843
+msgid "Cannot remove the current generation %s"
+msgstr "Kullanımda olan %s inşası silinemez"
+
+#: home-manager/home-manager:845
+msgid "Removing generation %s"
+msgstr "İnşa siliniyor %s"
+
+#: home-manager/home-manager:866
+msgid "No generations to expire"
+msgstr "Süresi dolacak inşa yok"
+
+#: home-manager/home-manager:877
+msgid "No home-manager packages seem to be installed."
+msgstr "Galiba home-manager paketi kurulu değil."
+
+#: home-manager/home-manager:962
+msgid "Unknown argument %s"
+msgstr "Bilinmeyen argüman %s"
+
+#: home-manager/home-manager:987
+msgid "This will remove Home Manager from your system."
+msgstr "Bu, sisteminizden Home Manager'ı kaldıracak."
+
+#: home-manager/home-manager:990
+msgid "This is a dry run, nothing will actually be uninstalled."
+msgstr "Bu sadece bir inşa denemesi, hiçbir şey silinmeyecek."
+
+#: home-manager/home-manager:994
+msgid "Really uninstall Home Manager?"
+msgstr "Home Manager'ı silmek istediğinize emin misiniz?"
+
+#: home-manager/home-manager:1000
+msgid "Switching to empty Home Manager configuration..."
+msgstr "Boş Home Manager yapılandırmasına geçiliyor..."
+
+#: home-manager/home-manager:1015
+msgid "Yay!"
+msgstr "Güzel!"
+
+#: home-manager/home-manager:1020
+msgid "Home Manager is uninstalled but your home.nix is left untouched."
+msgstr "Home Manager kaldırıldı ama home.nix dosyasına dokunulmadı."
+
+#: home-manager/home-manager:1285
+msgid "expire-generations expects one argument, got %d."
+msgstr "expire-generations bir argüman istiyor, %d tane girildi."
+
+#: home-manager/home-manager:1310
+msgid "Unknown command: %s"
+msgstr "Bilinmeyen komut: %s"
+
+#: home-manager/install.nix:21
+msgid "This derivation is not buildable, please run it using nix-shell."
+msgstr ""
+"Bu türetim inşa edilebilir değil, lütfen onu nix-shell kullanarak çalıştırın."
+
+#, sh-format
+#~ msgid "Please set the $EDITOR environment variable"
+#~ msgstr "Lütfen $EDITOR ortam değişkenini tanımlayın"
+
+#~ msgid "Creating initial Home Manager configuration..."
+#~ msgstr "İlk Home Manager yapılandırması oluşturuluyor..."
+
+#~ msgid "Remove all Home Manager generations?"
+#~ msgstr "Tüm Home Manager inşaları kaldırılsın mı?"
+
+#~ msgid "All generations are now eligible for garbage collection."
+#~ msgstr "Artık tüm inşalar çöp olarak toplanabilir."
+
+#~ msgid "Leaving generations but they may still be garbage collected."
+#~ msgstr "İnşalar yine de çöp olarak toplanabilir."

@@ -1,0 +1,1 @@
+--single-instance --directory=/tmp/my-dir --listen-on=unix:/tmp/my-socket

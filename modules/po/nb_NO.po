@@ -1,0 +1,175 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager Modules package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager Modules\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2024-04-02 21:38+0000\n"
+"Last-Translator: LilleAila <olai.solsvik@gmail.com>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/home-"
+"manager/modules/nb_NO/>\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.5-dev\n"
+
+#: modules/files.nix:206
+msgid "Creating home file links in %s"
+msgstr "Lager hjemmefillenker i %s"
+
+#: modules/files.nix:219
+msgid "Cleaning up orphan links from %s"
+msgstr "Fjerner frakoblede lenker fra %s"
+
+#: modules/home-environment.nix:647
+msgid "Creating new profile generation"
+msgstr ""
+
+#: modules/home-environment.nix:650
+msgid "No change so reusing latest profile generation"
+msgstr ""
+
+#: modules/home-environment.nix:699
+msgid ""
+"Oops, Nix failed to install your new Home Manager profile!\n"
+"\n"
+"Perhaps there is a conflict with a package that was installed using\n"
+"\"%s\"? Try running\n"
+"\n"
+"    %s\n"
+"\n"
+"and if there is a conflicting package you can remove it with\n"
+"\n"
+"    %s\n"
+"\n"
+"Then try activating your Home Manager configuration again."
+msgstr ""
+"Nix kunne ikke installere din nye Home Manager-profil!\n"
+"\n"
+"Kanskje det er en konflikt med en pakke som ble installert ved bruk av\n"
+"«%s«? Prøv å kjøre\n"
+"\n"
+"    %s\n"
+"\n"
+"og hvis det er en pakke i konflikt kan du fjerne den med\n"
+"\n"
+"    %s\n"
+"\n"
+"for så å aktivere ditt Home Manager-oppsett igjen."
+
+#: modules/home-environment.nix:735
+msgid "Activating %s"
+msgstr "Aktiverer %s"
+
+#: modules/home-environment.nix:807
+msgid "%s: unknown option '%s'"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:22
+msgid "Migrating profile from %s to %s"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:54
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "Kunne ikke finne en passende profilmappe, prøvde %s og %s"
+
+#: modules/lib-bash/activation-init.sh:106
+msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+msgstr "Feil: USER er satt til \"%s\", men vi forventet \"%s\""
+
+#: modules/lib-bash/activation-init.sh:115
+msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+msgstr "Feil: HOME er satt til \"%s\", men vi forventet \"%s\""
+
+#: modules/lib-bash/activation-init.sh:132
+msgid "Starting Home Manager activation"
+msgstr "Starter aktivering av Home Manager"
+
+#: modules/lib-bash/activation-init.sh:136
+msgid "Sanity checking Nix"
+msgstr "Kontrollerer at Nix fungerer"
+
+#: modules/lib-bash/activation-init.sh:149
+msgid "This is a dry run"
+msgstr "Dette er en simulert kjøring"
+
+#: modules/lib-bash/activation-init.sh:153
+msgid "This is a live run"
+msgstr "Dette er en virkelig kjøring"
+
+#: modules/lib-bash/activation-init.sh:159
+msgid "Using Nix version: %s"
+msgstr "Bruker Nix-versjon: %s"
+
+#: modules/lib-bash/activation-init.sh:162
+msgid "Activation variables:"
+msgstr "Aktiveringsvariabler:"
+
+#~ msgid "Creating profile generation %s"
+#~ msgstr "Oppretter profil for generering %s"
+
+#~ msgid "No change so reusing latest profile generation %s"
+#~ msgstr "Ingen endring, gjenbruker derfor siste profilgenerering %s"
+
+#~ msgid "Sanity checking oldGenNum and oldGenPath"
+#~ msgstr "Kontrollerer verdiene av oldGenNum og oldGenPath"
+
+#~ msgid ""
+#~ "The previous generation number and path are in conflict! These\n"
+#~ "must be either both empty or both set but are now set to\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "If you don't mind losing previous profile generations then\n"
+#~ "the easiest solution is probably to run\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "and trying home-manager switch again. Good luck!"
+#~ msgstr ""
+#~ "Det er en konflikt mellom forrige generasjonstall og stien. Begge\n"
+#~ "må enten være tomme eller satt, men er nå satt til\n"
+#~ "\n"
+#~ "    «%s« og «%s«\n"
+#~ "\n"
+#~ "Hvis du ikke bryr deg om å miste tidligere profilgenereringer\n"
+#~ "er den enkleste løsningen antageligvis å kjøre\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "for så å forsøke `home-manager switch` igjen. Lykke til!"
+
+#~ msgid ""
+#~ "Oops, nix-env failed to install your new Home Manager profile!\n"
+#~ "\n"
+#~ "Perhaps there is a conflict with a package that was installed using\n"
+#~ "\"nix-env -i\"? Try running\n"
+#~ "\n"
+#~ "    nix-env -q\n"
+#~ "\n"
+#~ "and if there is a conflicting package you can remove it with\n"
+#~ "\n"
+#~ "    nix-env -e {package name}\n"
+#~ "\n"
+#~ "Then try activating your Home Manager configuration again."
+#~ msgstr ""
+#~ "nix-env kunne ikke installere din nye Home Manager-profil!\n"
+#~ "\n"
+#~ "Kanskje det er en konflikt med en pakke som ble installert ved bruk av\n"
+#~ "«nix-env -i«? Prøv å kjøre\n"
+#~ "\n"
+#~ "    nix-env -q\n"
+#~ "\n"
+#~ "og hvis det er en pakke i konflikt kan du fjerne den med\n"
+#~ "\n"
+#~ "    nix-env -e {package name}\n"
+#~ "\n"
+#~ "for så å aktivere ditt Home Manager-oppsett igjen."

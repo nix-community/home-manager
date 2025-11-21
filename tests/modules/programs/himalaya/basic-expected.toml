@@ -1,0 +1,36 @@
+[accounts."hm@example.com"]
+default = true
+display-name = "H. M. Test"
+email = "hm@example.com"
+
+[accounts."hm@example.com".backend]
+host = "imap.example.com"
+login = "home.manager"
+port = 993
+type = "imap"
+
+[accounts."hm@example.com".backend.auth]
+cmd = "password-command"
+type = "password"
+
+[accounts."hm@example.com".backend.encryption]
+type = "tls"
+
+[accounts."hm@example.com".folder.aliases]
+drafts = "Drafts"
+inbox = "Inbox"
+sent = "Sent"
+trash = "Trash"
+
+[accounts."hm@example.com".message.send.backend]
+host = "smtp.example.com"
+login = "home.manager"
+port = 465
+type = "smtp"
+
+[accounts."hm@example.com".message.send.backend.auth]
+cmd = "password-command"
+type = "password"
+
+[accounts."hm@example.com".message.send.backend.encryption]
+type = "tls"

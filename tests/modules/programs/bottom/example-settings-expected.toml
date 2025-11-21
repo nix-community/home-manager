@@ -1,0 +1,6 @@
+[colors]
+low_battery_color = "red"
+
+[flags]
+avg_cpu = true
+temperature_type = "c"

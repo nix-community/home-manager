@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager Modules package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager Modules\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2025-09-17 16:02+0000\n"
+"Last-Translator: Kiril Pan <eccyboo@protonmail.com>\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/home-manager/"
+"modules/bg/>\n"
+"Language: bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14-dev\n"
+
+#: modules/files.nix:206
+msgid "Creating home file links in %s"
+msgstr "Създаване на връзки към файлове в %s"
+
+#: modules/files.nix:219
+msgid "Cleaning up orphan links from %s"
+msgstr "Изчистване на невалидни файлови връзки от %s"
+
+#: modules/home-environment.nix:647
+msgid "Creating new profile generation"
+msgstr "Създаване на нова генерация на профила"
+
+#: modules/home-environment.nix:650
+msgid "No change so reusing latest profile generation"
+msgstr "Няма промени и ще се използва последното поколение на профила"
+
+#: modules/home-environment.nix:699
+msgid ""
+"Oops, Nix failed to install your new Home Manager profile!\n"
+"\n"
+"Perhaps there is a conflict with a package that was installed using\n"
+"\"%s\"? Try running\n"
+"\n"
+"    %s\n"
+"\n"
+"and if there is a conflicting package you can remove it with\n"
+"\n"
+"    %s\n"
+"\n"
+"Then try activating your Home Manager configuration again."
+msgstr ""
+"Опа, Nix не успя да инсталира вашия нов Home Manager профил!\n"
+"\n"
+"Може би има конфликт с пакет инсталиран с\n"
+"\"%s\"? Може да изпробвате\n"
+"\n"
+"    %s\n"
+"\n"
+"и ако има клфликт с пакет, може да го премахнете с\n"
+"\n"
+"    %s\n"
+"\n"
+"след което да пробвате да активирате Home Manager конфигурацията отново."
+
+#: modules/home-environment.nix:735
+msgid "Activating %s"
+msgstr "Активиране на %s"
+
+#: modules/home-environment.nix:807
+msgid "%s: unknown option '%s'"
+msgstr "%s: непозната опция '%s'"
+
+#: modules/lib-bash/activation-init.sh:22
+msgid "Migrating profile from %s to %s"
+msgstr "Мигриране на профил от %s към %s"
+
+#: modules/lib-bash/activation-init.sh:54
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "Не беше намерена подходяща директория за профила, пробвано с %s и %s"
+
+#: modules/lib-bash/activation-init.sh:106
+msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+msgstr "Грешка: USER е със стойност \"%s\", но се очаква да е \"%s\""
+
+#: modules/lib-bash/activation-init.sh:115
+msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+msgstr "Грешка: HOME е със стойност \"%s\", но се очаква да е \"%s\""
+
+#: modules/lib-bash/activation-init.sh:132
+msgid "Starting Home Manager activation"
+msgstr "Започване на активацията на Home Manager"
+
+#: modules/lib-bash/activation-init.sh:136
+msgid "Sanity checking Nix"
+msgstr "Бърза проверка на Nix"
+
+#: modules/lib-bash/activation-init.sh:149
+msgid "This is a dry run"
+msgstr "Това е пробно изпълнение"
+
+#: modules/lib-bash/activation-init.sh:153
+msgid "This is a live run"
+msgstr "Това не е пробно изпълнение"
+
+#: modules/lib-bash/activation-init.sh:159
+msgid "Using Nix version: %s"
+msgstr "Използвана версия на Nix: %s"
+
+#: modules/lib-bash/activation-init.sh:162
+msgid "Activation variables:"
+msgstr "Активационни променливи:"

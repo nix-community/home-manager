@@ -1,0 +1,31 @@
+{
+  "bar": {
+    "battery": {
+      "label": true
+    },
+    "bluetooth": {
+      "label": false
+    },
+    "clock": {
+      "format": "%H:%M:%S"
+    },
+    "layouts": {
+      "*": {
+        "left": [
+          "dashboard",
+          "workspaces",
+          "media"
+        ],
+        "middle": [
+          "windowtitle"
+        ],
+        "right": [
+          "volume",
+          "network",
+          "bluetooth",
+          "notifications"
+        ]
+      }
+    }
+  }
+}

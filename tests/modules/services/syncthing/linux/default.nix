@@ -1,0 +1,3 @@
+{
+  syncthing-tray = ./tray.nix;
+}

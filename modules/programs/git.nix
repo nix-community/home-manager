@@ -1,0 +1,603 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib)
+    concatStringsSep
+    literalExpression
+    mkDefault
+    mkEnableOption
+    mkIf
+    mkOption
+    mkOptionDefault
+    types
+    ;
+
+  cfg = config.programs.git;
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    rycee
+  ];
+
+  options =
+    let
+      gitIniType =
+        with types;
+        let
+          primitiveType = either str (either bool int);
+          multipleType = either primitiveType (listOf primitiveType);
+          sectionType = attrsOf multipleType;
+          supersectionType = attrsOf (either multipleType sectionType);
+        in
+        attrsOf supersectionType;
+    in
+    {
+      programs.git = {
+        enable = mkEnableOption "Git";
+
+        package = lib.mkPackageOption pkgs "git" {
+          example = "pkgs.gitFull";
+          extraDescription = ''
+            Use {var}`pkgs.gitFull`
+            to gain access to {command}`git send-email` for instance.
+          '';
+        };
+
+        signing = {
+          key = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = ''
+              The default signing key fingerprint.
+
+              Set to `null` to let the signer decide what signing key
+              to use depending on commit’s author.
+            '';
+          };
+
+          format = mkOption {
+            type = types.nullOr (
+              types.enum [
+                "openpgp"
+                "ssh"
+                "x509"
+              ]
+            );
+            defaultText = literalExpression ''
+              "openpgp" for state version < 25.05,
+              undefined for state version ≥ 25.05
+            '';
+            description = ''
+              The signing method to use when signing commits and tags.
+              Valid values are `openpgp` (OpenPGP/GnuPG), `ssh` (SSH), and `x509` (X.509 certificates).
+            '';
+          };
+
+          signByDefault = mkOption {
+            type = types.nullOr types.bool;
+            default = null;
+            description = "Whether commits and tags should be signed by default.";
+          };
+
+          signer = mkOption {
+            type = types.nullOr types.str;
+            description = "Path to signer binary to use.";
+          };
+        };
+
+        settings = mkOption {
+          type = gitIniType;
+          default = { };
+          example = {
+            core = {
+              whitespace = "trailing-space,space-before-tab";
+            };
+            url."ssh://git@host".insteadOf = "otherhost";
+          };
+          description = ''
+            Configuration written to {file}`$XDG_CONFIG_HOME/git/config`.
+            See {manpage}`git-config(1)` for details.
+          '';
+        };
+
+        hooks = mkOption {
+          type = types.attrsOf types.path;
+          default = { };
+          example = literalExpression ''
+            {
+              pre-commit = ./pre-commit-script;
+            }
+          '';
+          description = ''
+            Configuration helper for Git hooks.
+            See <https://git-scm.com/docs/githooks>
+            for reference.
+          '';
+        };
+
+        iniContent = mkOption {
+          type = gitIniType;
+          internal = true;
+        };
+
+        ignores = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [
+            "*~"
+            "*.swp"
+          ];
+          description = "List of paths that should be globally ignored.";
+        };
+
+        attributes = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [ "*.pdf diff=pdf" ];
+          description = "List of defining attributes set globally.";
+        };
+
+        includes = mkOption {
+          type = types.listOf (
+            types.submodule (
+              { config, ... }:
+              {
+                options = {
+                  condition = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = ''
+                      Include this configuration only when {var}`condition`
+                      matches. Allowed conditions are described in
+                      {manpage}`git-config(1)`.
+                    '';
+                  };
+
+                  path = mkOption {
+                    type = with types; either str path;
+                    description = "Path of the configuration file to include.";
+                  };
+
+                  contents = mkOption {
+                    type = types.attrsOf types.anything;
+                    default = { };
+                    example = literalExpression ''
+                      {
+                        user = {
+                          email = "bob@work.example.com";
+                          name = "Bob Work";
+                          signingKey = "1A2B3C4D5E6F7G8H";
+                        };
+                        commit = {
+                          gpgSign = true;
+                        };
+                      };
+                    '';
+                    description = ''
+                      Configuration to include. If empty then a path must be given.
+
+                      This follows the configuration structure as described in
+                      {manpage}`git-config(1)`.
+                    '';
+                  };
+
+                  contentSuffix = mkOption {
+                    type = types.str;
+                    default = "gitconfig";
+                    description = ''
+                      Nix store name for the git configuration text file,
+                      when generating the configuration text from nix options.
+                    '';
+
+                  };
+                };
+                config.path = mkIf (config.contents != { }) (
+                  mkDefault (
+                    pkgs.writeText (lib.hm.strings.storeFileName config.contentSuffix) (
+                      lib.generators.toGitINI config.contents
+                    )
+                  )
+                );
+              }
+            )
+          );
+          default = [ ];
+          example = literalExpression ''
+            [
+              { path = "~/path/to/config.inc"; }
+              {
+                path = "~/path/to/conditional.inc";
+                condition = "gitdir:~/src/dir";
+              }
+            ]
+          '';
+          description = "List of configuration files to include.";
+        };
+
+        lfs = {
+          enable = mkEnableOption "Git Large File Storage";
+
+          package = lib.mkPackageOption pkgs "git-lfs" { nullable = true; };
+
+          skipSmudge = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Skip automatic downloading of objects on clone or pull.
+              This requires a manual {command}`git lfs pull`
+              every time a new commit is checked out on your repository.
+            '';
+          };
+        };
+
+        maintenance = {
+          enable = mkEnableOption "" // {
+            description = ''
+              Enable the automatic {command}`git maintenance`.
+
+              If you have SSH remotes, set {option}`programs.git.package` to a
+              git version with SSH support (eg: `pkgs.gitFull`).
+
+              See <https://git-scm.com/docs/git-maintenance>.
+            '';
+          };
+
+          repositories = mkOption {
+            type = with types; listOf str;
+            default = [ ];
+            description = ''
+              Repositories on which {command}`git maintenance` should run.
+
+              Should be a list of absolute paths.
+            '';
+          };
+
+          timers = mkOption {
+            type = types.attrsOf types.str;
+            default = {
+              hourly = "*-*-* 1..23:53:00";
+              daily = "Tue..Sun *-*-* 0:53:00";
+              weekly = "Mon 0:53:00";
+            };
+            description = ''
+              Systemd timers to create for scheduled {command}`git maintenance`.
+
+              Key is passed to `--schedule` argument in {command}`git maintenance run`
+              and value is passed to `Timer.OnCalendar` in `systemd.user.timers`.
+            '';
+          };
+        };
+      };
+    };
+
+  imports =
+    let
+      oldPrefix = [
+        "programs"
+        "git"
+      ];
+      newPrefix = [
+        "programs"
+        "git"
+        "settings"
+      ];
+    in
+    [
+      (lib.mkRenamedOptionModule
+        [ "programs" "git" "signing" "gpgPath" ]
+        [
+          "programs"
+          "git"
+          "signing"
+          "signer"
+        ]
+      )
+      (lib.mkRenamedOptionModule [ "programs" "git" "extraConfig" ] [ "programs" "git" "settings" ])
+    ]
+    ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix
+      {
+        transform = x: x;
+      }
+      [
+        {
+          old = [ "userName" ];
+          new = [
+            "user"
+            "name"
+          ];
+        }
+        {
+          old = [ "userEmail" ];
+          new = [
+            "user"
+            "email"
+          ];
+        }
+        {
+          old = [ "aliases" ];
+          new = [ "alias" ];
+        }
+      ]
+    );
+
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        home.packages = [ cfg.package ];
+
+        assertions = [
+          {
+            assertion =
+              let
+                enabled = [
+                  (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
+                  (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
+                  (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
+                  (config.programs.difftastic.enable && config.programs.difftastic.git.enable)
+                  (config.programs.patdiff.enable && config.programs.patdiff.enableGitIntegration)
+                  (config.programs.riff.enable && config.programs.riff.enableGitIntegration)
+                ];
+              in
+              lib.count lib.id enabled <= 1;
+            message = "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' or 'programs.git.patdiff' can be set to true at the same time.";
+          }
+        ];
+
+        xdg.configFile = {
+          "git/config".text = lib.generators.toGitINI cfg.iniContent;
+
+          "git/ignore" = mkIf (cfg.ignores != [ ]) {
+            text = concatStringsSep "\n" cfg.ignores + "\n";
+          };
+
+          "git/attributes" = mkIf (cfg.attributes != [ ]) {
+            text = concatStringsSep "\n" cfg.attributes + "\n";
+          };
+        };
+      }
+
+      {
+        programs.git.iniContent =
+          let
+            hasSmtp = _name: account: account.enable && account.smtp != null;
+
+            genIdentity =
+              name: account:
+              let
+                inherit (account)
+                  address
+                  realName
+                  smtp
+                  userName
+                  ;
+              in
+              lib.nameValuePair "sendemail.${name}" (
+                if account.msmtp.enable then
+                  {
+                    sendmailCmd = "${pkgs.msmtp}/bin/msmtp";
+                    envelopeSender = "auto";
+                    from = "${realName} <${address}>";
+                  }
+                else
+                  {
+                    smtpEncryption =
+                      if smtp.tls.enable then
+                        (if smtp.tls.useStartTls || lib.versionOlder config.home.stateVersion "20.09" then "tls" else "ssl")
+                      else
+                        "";
+                    smtpSslCertPath = mkIf smtp.tls.enable (toString smtp.tls.certificatesFile);
+                    smtpServer = smtp.host;
+                    smtpUser = userName;
+                    from = "${realName} <${address}>";
+                  }
+                  // lib.optionalAttrs (smtp.port != null) {
+                    smtpServerPort = smtp.port;
+                  }
+              );
+          in
+          lib.mapAttrs' genIdentity (lib.filterAttrs hasSmtp config.accounts.email.accounts);
+      }
+
+      (mkIf (cfg.signing != { }) {
+        programs.git = {
+          signing = {
+            format =
+              if (lib.versionOlder config.home.stateVersion "25.05") then
+                (mkOptionDefault "openpgp")
+              else
+                (mkOptionDefault null);
+            signer =
+              let
+                defaultSigners = {
+                  openpgp = lib.getExe config.programs.gpg.package;
+                  ssh = lib.getExe' pkgs.openssh "ssh-keygen";
+                  x509 = lib.getExe' config.programs.gpg.package "gpgsm";
+                };
+              in
+              mkIf (cfg.signing.format != null) (mkOptionDefault defaultSigners.${cfg.signing.format});
+          };
+
+          iniContent = lib.mkMerge [
+            (mkIf (cfg.signing.key != null) {
+              user.signingKey = mkDefault cfg.signing.key;
+            })
+            (mkIf (cfg.signing.signByDefault != null) {
+              commit.gpgSign = mkDefault cfg.signing.signByDefault;
+              tag.gpgSign = mkDefault cfg.signing.signByDefault;
+            })
+            (mkIf (cfg.signing.format != null) {
+              gpg = {
+                format = mkDefault cfg.signing.format;
+                ${cfg.signing.format}.program = mkDefault cfg.signing.signer;
+              };
+            })
+          ];
+        };
+      })
+
+      (mkIf (cfg.hooks != { }) {
+        programs.git.iniContent = {
+          core.hooksPath =
+            let
+              entries = lib.mapAttrsToList (name: path: { inherit name path; }) cfg.hooks;
+            in
+            toString (pkgs.linkFarm "git-hooks" entries);
+        };
+      })
+
+      (mkIf (cfg.settings != { }) {
+        programs.git.iniContent = cfg.settings;
+      })
+
+      (mkIf (cfg.includes != [ ]) {
+        xdg.configFile."git/config".text =
+          let
+            include =
+              i:
+              with i;
+              if condition != null then
+                {
+                  includeIf.${condition}.path = "${path}";
+                }
+              else
+                {
+                  include.path = "${path}";
+                };
+          in
+          lib.mkAfter (concatStringsSep "\n" (map lib.generators.toGitINI (map include cfg.includes)));
+      })
+
+      (mkIf cfg.lfs.enable {
+        home.packages = lib.mkIf (cfg.lfs.package != null) [ cfg.lfs.package ];
+
+        programs.git.iniContent.filter.lfs =
+          let
+            skipArg = lib.optional cfg.lfs.skipSmudge "--skip";
+          in
+          {
+            clean = "git-lfs clean -- %f";
+            process = concatStringsSep " " (
+              [
+                "git-lfs"
+                "filter-process"
+              ]
+              ++ skipArg
+            );
+            required = true;
+            smudge = concatStringsSep " " (
+              [
+                "git-lfs"
+                "smudge"
+              ]
+              ++ skipArg
+              ++ [
+                "--"
+                "%f"
+              ]
+            );
+          };
+      })
+
+      (mkIf cfg.maintenance.enable {
+        programs.git.iniContent.maintenance.repo = cfg.maintenance.repositories;
+
+        systemd.user.services."git-maintenance@" = {
+          Unit = {
+            Description = "Optimize Git repositories data";
+            Documentation = [ "man:git-maintenance(1)" ];
+          };
+
+          Service = {
+            Type = "oneshot";
+            ExecStart =
+              let
+                exe = lib.getExe cfg.package;
+              in
+              ''
+                "${exe}" for-each-repo --keep-going --config=maintenance.repo maintenance run --schedule=%i
+              '';
+            LockPersonality = "yes";
+            MemoryDenyWriteExecute = "yes";
+            NoNewPrivileges = "yes";
+            RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_VSOCK";
+            RestrictNamespaces = "yes";
+            RestrictRealtime = "yes";
+            RestrictSUIDSGID = "yes";
+            SystemCallArchitectures = "native";
+            SystemCallFilter = "@system-service";
+          };
+        };
+
+        systemd.user.timers =
+          let
+            toSystemdTimer =
+              name: time:
+              lib.attrsets.nameValuePair "git-maintenance@${name}" {
+                Unit.Description = "Optimize Git repositories data";
+
+                Timer = {
+                  OnCalendar = time;
+                  Persistent = true;
+                };
+
+                Install.WantedBy = [ "timers.target" ];
+              };
+          in
+          lib.attrsets.mapAttrs' toSystemdTimer cfg.maintenance.timers;
+
+        launchd.agents =
+          let
+            baseArguments = [
+              "${lib.getExe cfg.package}"
+              "for-each-repo"
+              "--keep-going"
+              "--config=maintenance.repo"
+              "maintenance"
+              "run"
+            ];
+          in
+          {
+            "git-maintenance-hourly" = {
+              enable = true;
+              config = {
+                ProgramArguments = baseArguments ++ [ "--schedule=hourly" ];
+                StartCalendarInterval = map (hour: {
+                  Hour = hour;
+                  Minute = 53;
+                }) (lib.range 1 23);
+              };
+            };
+            "git-maintenance-daily" = {
+              enable = true;
+              config = {
+                ProgramArguments = baseArguments ++ [ "--schedule=daily" ];
+                StartCalendarInterval = map (weekday: {
+                  Weekday = weekday;
+                  Hour = 0;
+                  Minute = 53;
+                }) (lib.range 1 6);
+              };
+            };
+            "git-maintenance-weekly" = {
+              enable = true;
+              config = {
+                ProgramArguments = baseArguments ++ [ "--schedule=weekly" ];
+                StartCalendarInterval = [
+                  {
+                    Weekday = 0;
+                    Hour = 0;
+                    Minute = 53;
+                  }
+                ];
+              };
+            };
+          };
+      })
+    ]
+  );
+}

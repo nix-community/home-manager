@@ -1,0 +1,5 @@
+mpd:
+  host: 10.0.0.42
+  port: 6601
+plugins:
+- mpdstats

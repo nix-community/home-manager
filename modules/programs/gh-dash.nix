@@ -1,0 +1,47 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+let
+
+  cfg = config.programs.gh-dash;
+
+  yamlFormat = pkgs.formats.yaml { };
+
+in
+{
+  meta.maintainers = [ lib.hm.maintainers.janik ];
+
+  options.programs.gh-dash = {
+    enable = lib.mkEnableOption "GitHub CLI dashboard plugin";
+
+    package = lib.mkPackageOption pkgs "gh-dash" { nullable = true; };
+
+    settings = lib.mkOption {
+      type = yamlFormat.type;
+      default = { };
+      example = lib.literalExpression ''
+        {
+          prSections = [{
+            title = "My Pull Requests";
+            filters = "is:open author:@me";
+          }];
+        }
+      '';
+      description = ''
+        Configuration written to {file}`$XDG_CONFIG_HOME/gh-dash/config.yml`.
+      '';
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+    programs.gh.extensions = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+    xdg.configFile."gh-dash/config.yml".source = yamlFormat.generate "gh-dash-config.yml" cfg.settings;
+  };
+}

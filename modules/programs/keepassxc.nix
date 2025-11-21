@@ -1,0 +1,113 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+let
+  cfg = config.programs.keepassxc;
+
+  iniFormat = pkgs.formats.ini { };
+in
+{
+  meta.maintainers = with lib.maintainers; [
+    bmrips
+    d-brasher
+  ];
+
+  options.programs.keepassxc = {
+    enable = lib.mkEnableOption "keepassxc" // {
+      description = ''
+        Whether to enable KeePassXC.
+
+        ::: {.note}
+        When this flag is set, KeePassXC' builtin native messaging manifest for
+        communication with its browser extension is automatically installed.
+        This conflicts with KeePassXC' builtin installation mechanism. To
+        prevent error messages, either set
+        {option}`programs.keepassxc.settings.Browser.UpdateBinaryPath` to
+        `false`, or untick the checkbox
+
+          Application Settings/
+            Browser Integration/
+              Advanced/
+                Update native messaging manifest files at startup
+
+        in the GUI.
+        :::
+      '';
+    };
+
+    package = lib.mkPackageOption pkgs "keepassxc" { nullable = true; };
+
+    settings = lib.mkOption {
+      type = iniFormat.type;
+      default = { };
+      example = lib.literalExpression ''
+        {
+          Browser.Enabled = true;
+
+          GUI = {
+            AdvancedSettings = true;
+            ApplicationTheme = "dark";
+            CompactMode = true;
+            HidePasswords = true;
+          };
+
+          SSHAgent.Enabled = true;
+        }
+      '';
+      description = ''
+        Configuration written to
+        {file}`$XDG_CONFIG_HOME/keepassxc/keepassxc.ini`.
+
+        See <https://github.com/keepassxreboot/keepassxc/blob/647272e9c5542297d3fcf6502e6173c96f12a9a0/src/core/Config.cpp#L49-L223>
+        for the full list of options.
+      '';
+    };
+
+    autostart = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to start KeePassXC automatically on login through the XDG autostart mechanism.
+      '';
+    };
+  };
+
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+
+      {
+        assertions = [
+          {
+            assertion = cfg.autostart -> config.xdg.autostart.enable;
+            message = ''
+              {option}`xdg.autostart.enable` has to be enabled in order for
+              {option}`programs.keepassxc.autostart` to be effective.
+            '';
+          }
+        ];
+
+        xdg.autostart.entries = lib.mkIf cfg.autostart [
+          "${cfg.package}/share/applications/org.keepassxc.KeePassXC.desktop"
+        ];
+        xdg.configFile."keepassxc/keepassxc.ini" = lib.mkIf (cfg.settings != { }) {
+          source = iniFormat.generate "keepassxc-settings" cfg.settings;
+        };
+      }
+
+      (lib.mkIf (cfg.package != null) {
+        home.packages = [ cfg.package ];
+        programs.brave.nativeMessagingHosts = [ cfg.package ];
+        programs.chromium.nativeMessagingHosts = [ cfg.package ];
+        programs.firefox.nativeMessagingHosts = [ cfg.package ];
+        programs.floorp.nativeMessagingHosts = [ cfg.package ];
+        programs.vivaldi.nativeMessagingHosts = [ cfg.package ];
+      })
+
+    ]
+  );
+}

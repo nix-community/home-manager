@@ -1,0 +1,11 @@
+{
+  "color_align": {
+    "custom_colors": [],
+    "fore_back": null,
+    "mode": "horizontal"
+  },
+  "light_dark": "dark",
+  "lightness": 0.5,
+  "mode": "rgb",
+  "preset": "rainbow"
+}

@@ -1,0 +1,12 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@setxkbmap@/bin/setxkbmap -option '' -option 'ctrl:nocaps' -option 'altwin:no_win'
+RemainAfterExit=true
+Type=oneshot
+
+[Unit]
+After=graphical-session-pre.target
+Description=Set up keyboard in X
+PartOf=graphical-session.target

@@ -1,0 +1,55 @@
+typeset -U path cdpath fpath manpath
+for profile in ${(z)NIX_PROFILES}; do
+  fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
+done
+
+HELPDIR="@zsh@/share/zsh/$ZSH_VERSION/help"
+
+autoload -U compinit && compinit
+# History options should be set in .zshrc and after oh-my-zsh sourcing.
+# See https://github.com/nix-community/home-manager/issues/177.
+HISTSIZE="10000"
+SAVEHIST="10000"
+
+HISTFILE="/home/hm-user/.zsh_history"
+mkdir -p "$(dirname "$HISTFILE")"
+
+setopt HIST_FCNTL_LOCK
+
+# Enabled history options
+enabled_opts=(
+  HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
+)
+for opt in "${enabled_opts[@]}"; do
+  setopt "$opt"
+done
+unset opt enabled_opts
+
+# Disabled history options
+disabled_opts=(
+  APPEND_HISTORY EXTENDED_HISTORY HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS
+  HIST_IGNORE_ALL_DUPS HIST_SAVE_NO_DUPS
+)
+for opt in "${disabled_opts[@]}"; do
+  unsetopt "$opt"
+done
+unset opt disabled_opts
+
+
+
+yt() {
+    if [ "$#" -eq 0 ] || [ "$#" -gt 2 ]; then
+        echo "Usage: yt [-t | --timestamps] youtube-link"
+        echo "Use the '-t' flag to get the transcript with timestamps."
+        return 1
+    fi
+
+    transcript_flag="--transcript"
+    if [ "$1" = "-t" ] || [ "$1" = "--timestamps" ]; then
+        transcript_flag="--transcript-with-timestamps"
+        shift
+    fi
+    local video_link="$1"
+    fabric -y "$video_link" $transcript_flag
+}
+

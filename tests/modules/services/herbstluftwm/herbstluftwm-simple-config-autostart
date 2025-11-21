@@ -1,0 +1,51 @@
+#!/nix/store/00000000000000000000000000000000-bash/bin/bash
+shopt -s expand_aliases
+
+# shellcheck disable=SC2142
+alias herbstclient='set -- "$@" ";"'
+set --
+
+herbstclient emit_hook reload
+
+# Reset everything.
+herbstclient attr theme.tiling.reset 1
+herbstclient attr theme.floating.reset 1
+herbstclient keyunbind --all
+herbstclient mouseunbind --all
+herbstclient unrule --all
+
+herbstclient set always_show_frame true
+herbstclient set default_frame_layout max
+herbstclient set frame_bg_active_color '#000000'
+herbstclient set frame_gap 12
+herbstclient set frame_padding -12
+
+for tag in 1 'with space' 'wə1rd#ch@rs'\'''; do
+  herbstclient add "$tag"
+done
+
+if @herbstluftwm@/bin/herbstclient object_tree tags.by-name.default &>/dev/null; then
+  herbstclient use 1
+  herbstclient merge_tag default 1
+fi
+
+
+herbstclient keybind Mod4-1 use 1
+herbstclient keybind Mod4-2 use 2
+herbstclient keybind Mod4-Alt-Tab cycle -1
+herbstclient keybind Mod4-Tab cycle 1
+
+herbstclient mousebind Mod4-B1 move
+herbstclient mousebind Mod4-B3 resize
+
+herbstclient rule focus=on
+herbstclient rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' focus=on pseudotile=on
+herbstclient rule class~'[Pp]inentry' instance=pinentry focus=on floating=on floatplacement=center keys_inactive='.*'
+
+herbstclient use 1
+
+
+herbstclient unlock
+
+@herbstluftwm@/bin/herbstclient chain ";" "$@"
+

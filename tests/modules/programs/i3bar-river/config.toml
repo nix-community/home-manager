@@ -1,0 +1,11 @@
+background = "#282828ff"
+color = "#ffffffff"
+font = "monospace 10"
+height = 24
+margin_bottom = 0
+margin_left = 0
+margin_top = 0
+separator = "#9a8a62ff"
+
+["wm.river"]
+max_tag = 0

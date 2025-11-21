@@ -1,0 +1,1 @@
+{ amber-settings = ./settings.nix; }

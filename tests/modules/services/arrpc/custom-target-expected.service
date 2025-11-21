@@ -1,0 +1,10 @@
+[Install]
+WantedBy=sway-session.target
+
+[Service]
+ExecStart=@arrpc@/bin/arrpc
+Restart=always
+
+[Unit]
+Description=Discord Rich Presence for browsers, and some custom clients
+PartOf=graphical-session.target

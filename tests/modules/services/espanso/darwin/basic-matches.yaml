@@ -1,0 +1,18 @@
+global_vars:
+- name: currentdate
+  params:
+    format: '%d/%m/%Y'
+  type: date
+- name: currenttime
+  params:
+    format: '%R'
+  type: date
+matches:
+- replace: It's {{currentdate}} {{currenttime}}
+  trigger: :now
+- replace: 'line1
+
+    line2'
+  trigger: :hello
+- regex: :hi(?P<person>.*)\.
+  replace: Hi {{person}}!

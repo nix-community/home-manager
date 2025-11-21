@@ -1,0 +1,1 @@
+{ himalaya-basic = ./basic.nix; }

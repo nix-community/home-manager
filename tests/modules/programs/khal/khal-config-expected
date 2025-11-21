@@ -1,0 +1,73 @@
+[calendars]
+[[test]]
+path = /home/hm-user/$XDG_CONFIG_HOME/cal/test/
+readonly = True
+color = '#ff0000'
+priority=10
+type=calendar
+
+
+
+[[testSinglefile]]
+path = $XDG_CONFIG_HOME/cal/timetable.ics
+readonly = True
+addresses= study@university.edu
+priority=10
+type=calendar
+
+
+
+[[testWithAddresss]]
+path = /home/hm-user/$XDG_CONFIG_HOME/cal/testWithAddresss/
+addresses= john.doe@email.com
+priority=10
+type=calendar
+
+
+
+[[testWithMultipleAddresss]]
+path = /home/hm-user/$XDG_CONFIG_HOME/cal/testWithMultipleAddresss/
+addresses= john.doe@email.com, another.brick@on.the.wall
+priority=10
+type=calendar
+
+
+
+[[testcontacts-automaticallyCollected]]
+path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontacts/automaticallyCollected
+priority=10
+type=birthdays
+
+
+
+[[testcontacts-default]]
+path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontacts/default
+priority=10
+type=birthdays
+
+
+
+[[testcontactsNoCollections]]
+path = /home/hm-user/$XDG_CONFIG_HOME/card/testcontactsNoCollections/
+priority=10
+type=birthdays
+
+
+
+[default]
+default_calendar=test
+highlight_event_days=true
+timedelta=5d
+
+[locale]
+dateformat=%x
+datetimeformat=%c
+firstweekday=0
+longdateformat=%x
+longdatetimeformat=%c
+timeformat=%X
+unicode_symbols=true
+weeknumbers=off
+
+[view]
+agenda_event_format={calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}

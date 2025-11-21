@@ -1,0 +1,14 @@
+blocks:
+- date
+- size
+- name
+color:
+  theme: custom
+date: relative
+ignore-globs:
+- .git
+- .hg
+- .bsp
+layout: oneline
+sorting:
+  dir-grouping: first

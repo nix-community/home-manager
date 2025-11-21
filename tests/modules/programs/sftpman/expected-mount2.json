@@ -1,0 +1,11 @@
+{
+  "authType": "password",
+  "beforeMount": "true",
+  "host": "host2.example.com",
+  "id": "mount2",
+  "mountOptions": [],
+  "mountPoint": "/another/path",
+  "port": 22,
+  "sshKey": null,
+  "user": "someuser"
+}

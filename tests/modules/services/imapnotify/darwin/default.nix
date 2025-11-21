@@ -1,0 +1,3 @@
+{
+  imapnotify-launchd = ./launchd.nix;
+}

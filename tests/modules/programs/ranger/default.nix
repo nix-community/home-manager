@@ -1,0 +1,1 @@
+{ ranger-configuration = ./configuration.nix; }

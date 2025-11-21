@@ -1,0 +1,1 @@
+{ lesspipe = ./lesspipe.nix; }

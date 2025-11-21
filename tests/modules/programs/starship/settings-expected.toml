@@ -1,0 +1,28 @@
+add_newline = false
+format = "$line_break$package$line_break$character"
+scan_timeout = 10
+
+[aws]
+disabled = true
+style = "bold blue"
+
+[battery]
+charging_symbol = "⚡️"
+
+[[battery.display]]
+style = "bold red"
+threshold = 10
+
+[[battery.display]]
+style = "bold yellow"
+threshold = 30
+
+[character]
+error_symbol = "➜"
+success_symbol = "➜"
+
+[memory_usage]
+threshold = -1
+
+[package]
+disabled = true

@@ -1,0 +1,26 @@
+{
+  "116": {
+    "name": "column select: page up",
+    "s1": []
+  },
+  "153": {
+    "name": "delete char right (delete)",
+    "s1": [
+      "End"
+    ]
+  },
+  "2823": {
+    "name": "code tree: clear filter",
+    "s1": [
+      "Home"
+    ]
+  },
+  "655464": {
+    "name": "caret to line begin",
+    "s1": []
+  },
+  "655465": {
+    "name": "caret to line end",
+    "s1": []
+  }
+}

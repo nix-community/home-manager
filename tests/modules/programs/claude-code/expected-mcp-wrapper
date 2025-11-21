@@ -1,0 +1,2 @@
+#! /nix/store/00000000000000000000000000000000-bash/bin/bash -e
+exec -a "$0" "/nix/store/00000000000000000000000000000000-claude-code/bin/.claude-wrapped"  --mcp-config /nix/store/00000000000000000000000000000000-claude-code-mcp-config.json "$@" 

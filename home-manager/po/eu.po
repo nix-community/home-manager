@@ -1,0 +1,269 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2025-09-20 10:01+0000\n"
+"Last-Translator: ShadowTiger Raptor <sh4dowtig3r@gmail.com>\n"
+"Language-Team: Basque <https://hosted.weblate.org/projects/home-manager/cli/"
+"eu/>\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14-dev\n"
+
+#. translators: For example: "home-manager: missing argument for --cores"
+#: home-manager/home-manager:16
+msgid "%s: missing argument for %s"
+msgstr "%s: %s -(e)k argumentua falta du"
+
+#. translators: For example: "home-manager: --rollback can only be used after switch"
+#: home-manager/home-manager:22
+msgid "%s: %s can only be used after %s"
+msgstr "%s: %s %s -(r)en ondoren bakarrik erabili daiteke"
+
+#: home-manager/home-manager:71
+msgid "No configuration file found at %s"
+msgstr "Ez da konfigurazio fitxategirik topatu %s -n"
+
+#. translators: The first '%s' specifier will be replaced by either
+#. 'home.nix' or 'flake.nix'.
+#: home-manager/home-manager:88 home-manager/home-manager:92
+#: home-manager/home-manager:191
+msgid ""
+"Keeping your Home Manager %s in %s is deprecated,\n"
+"please move it to %s"
+msgstr ""
+"Zure Home Manager-a %s %s -(r)en barruan izatea gaitzetsia dago,\n"
+"mesedez, mugizazu %s -ra"
+
+#: home-manager/home-manager:99
+msgid "No configuration file found. Please create one at %s"
+msgstr "Ez da konfigurazio fitxategirik aurkitu. Mesedez sortuzazu bat %s -n"
+
+#: home-manager/home-manager:114
+msgid "Home Manager not found at %s."
+msgstr "Ezin izan da Home Manager aurkitu %s -(r)(e)n barruan."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:122
+msgid ""
+"The fallback Home Manager path %s has been deprecated and a file/directory "
+"was found there."
+msgstr ""
+"Ordezko Home Manager bide-izena %s gaitzetsia dago eta fitxategi/karpeta bat "
+"aurkitu da han."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:125
+msgid ""
+"To remove this warning, do one of the following.\n"
+"\n"
+"1. Explicitly tell Home Manager to use the path, for example by adding\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   to your configuration.\n"
+"\n"
+"   If you import Home Manager directly, you can use the `path` parameter\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   when calling the Home Manager package.\n"
+"\n"
+"2. Remove the deprecated path.\n"
+"\n"
+"     $ rm -r \"%s\""
+msgstr ""
+"Abisu hau kentzeko, egin hauetako bat.\n"
+"\n"
+"1. Espresuki adierazi Home Manager-ari bide-izena erabiltzeko, adibidez "
+"honako hau gehitzen\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   zure konfigurazioari.\n"
+"\n"
+"   Home Manager-a zuzenean inportatuz gero `path` parametroa erabil "
+"dezakezu\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   Home Manager paketea deitzerakoan.\n"
+"\n"
+"2. Kendu bide-izen gaitzetsia.\n"
+"\n"
+"     $ rm -r \"%s\""
+
+#: home-manager/home-manager:153
+msgid "Sanity checking Nix"
+msgstr "Nix ikuskatzen"
+
+#: home-manager/home-manager:173
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "Ezin izan da profil karpeta egokirik aurkitu, %s eta %s saiatu dira"
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:230
+msgid "Can't inspect options of a flake configuration"
+msgstr "Ezin dira flake baten konfigurazio aukerak arakatu"
+
+#: home-manager/home-manager:305 home-manager/home-manager:328
+#: home-manager/home-manager:734 home-manager/home-manager:1237
+msgid "%s: unknown option '%s'"
+msgstr "%s: aukera ezezaguna '%s'"
+
+#: home-manager/home-manager:310 home-manager/home-manager:1238
+msgid "Run '%s --help' for usage help"
+msgstr "'%s --help' exekutatu erabilera laguntzarako"
+
+#: home-manager/home-manager:336 home-manager/home-manager:441
+msgid "The file %s already exists, leaving it unchanged..."
+msgstr "%s fitxategia jada existitzen da, aldaketarik gabe uzten..."
+
+#: home-manager/home-manager:338 home-manager/home-manager:443
+msgid "Creating %s..."
+msgstr "%s sortzen..."
+
+#: home-manager/home-manager:487
+msgid "Creating initial Home Manager generation..."
+msgstr "Home Manager-en hasierako generazioa sortzen..."
+
+#. translators: The "%s" specifier will be replaced by a file path.
+#: home-manager/home-manager:492
+msgid ""
+"All done! The home-manager tool should now be installed and you can edit\n"
+"\n"
+"    %s\n"
+"\n"
+"to configure Home Manager. Run 'man home-configuration.nix' to\n"
+"see all available options."
+msgstr ""
+"Kito! home-manager erraminta instalatuta egon behar luke eta orain\n"
+"\n"
+"    %s\n"
+"\n"
+"editatu zenezake Home Manager konfiguratzeko. 'man home-configuration.nix' "
+"exekutatu\n"
+"aukera guztiak ikusteko."
+
+#. translators: The "%s" specifier will be replaced by a URL.
+#: home-manager/home-manager:497
+msgid ""
+"Uh oh, the installation failed! Please create an issue at\n"
+"\n"
+"    %s\n"
+"\n"
+"if the error seems to be the fault of Home Manager."
+msgstr ""
+"Ai ene, instalazioak huts egin du! Mesedez jarkinarzi\n"
+"\n"
+"    %s\n"
+"\n"
+"webgunean arazoa Home Manager-ena badirudi."
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:508
+msgid "Can't instantiate a flake configuration"
+msgstr "Ezin izan da flake ezarpen bat sortu"
+
+#: home-manager/home-manager:584
+msgid ""
+"There is %d unread and relevant news item.\n"
+"Read it by running the command \"%s news\"."
+msgid_plural ""
+"There are %d unread and relevant news items.\n"
+"Read them by running the command \"%s news\"."
+msgstr[0] ""
+"Irakurri gabeko berri aipagarri %d dago .\n"
+"Irakurri ezazu \"%s news\" exekutatzen."
+msgstr[1] ""
+"Irakurri gabeko berri aipagarri %d daude .\n"
+"Irakurri itzazu \"%s news\" exekutatzen."
+
+#: home-manager/home-manager:598
+msgid "Unknown \"news.display\" setting \"%s\"."
+msgstr "\"news.display\" ezarpen ezezaguna \"%s\"."
+
+#: home-manager/home-manager:606
+#, sh-format
+msgid "Please set the $EDITOR or $VISUAL environment variable"
+msgstr "Mesedez, ezarri $EDITOR edo $VISUAL ingurumen aldagaia"
+
+#: home-manager/home-manager:624
+msgid "Cannot run build in read-only directory"
+msgstr "Ezin da konpilazioa exekutatu irakurtzeko soilik den direktorioan"
+
+#: home-manager/home-manager:787
+msgid "The configuration did not contain the specialisation \"%s\""
+msgstr "Konfigurazioak ez du \"%s\" espezializazioa izan"
+
+#: home-manager/home-manager:841
+msgid "No generation with ID %s"
+msgstr "Ez dago generaziorik %s ID-arekin"
+
+#: home-manager/home-manager:843
+msgid "Cannot remove the current generation %s"
+msgstr "Ezin da oraingo generazioa %s ezabatu"
+
+#: home-manager/home-manager:845
+msgid "Removing generation %s"
+msgstr "%s generazioa ezabatzen"
+
+#: home-manager/home-manager:866
+msgid "No generations to expire"
+msgstr "Ez dago generaziorik iraungitzeko"
+
+#: home-manager/home-manager:877
+msgid "No home-manager packages seem to be installed."
+msgstr "Ez dirudi home-manager paketerik instalatuta dagoenik."
+
+#: home-manager/home-manager:962
+msgid "Unknown argument %s"
+msgstr "Argumento ezezaguna: %s"
+
+#: home-manager/home-manager:987
+msgid "This will remove Home Manager from your system."
+msgstr "Honek Home Manager zure sistematik ezabatuko du."
+
+#: home-manager/home-manager:990
+msgid "This is a dry run, nothing will actually be uninstalled."
+msgstr "Hau itxurazko exekuzioa da, benetan ez da ezer desinstalatuko."
+
+#: home-manager/home-manager:994
+msgid "Really uninstall Home Manager?"
+msgstr "Ziur zaude Home Manager desinstalatu nahi duzula?"
+
+#: home-manager/home-manager:1000
+msgid "Switching to empty Home Manager configuration..."
+msgstr "Home Manager konfigurazio hutsera aldatzen..."
+
+#: home-manager/home-manager:1015
+msgid "Yay!"
+msgstr "Primeran!"
+
+#: home-manager/home-manager:1020
+msgid "Home Manager is uninstalled but your home.nix is left untouched."
+msgstr ""
+"Home Manager desinstalatua izan da baina zure home.nix fitxategia ez da "
+"ikutu."
+
+#: home-manager/home-manager:1285
+msgid "expire-generations expects one argument, got %d."
+msgstr ""
+"expire-generations argumentu bakarra espero izan du, baina %d jaso ditu."
+
+#: home-manager/home-manager:1310
+msgid "Unknown command: %s"
+msgstr "Komando ezezaguna: %s"
+
+#: home-manager/install.nix:21
+msgid "This derivation is not buildable, please run it using nix-shell."
+msgstr "Deribazioa ezin da konpilatu, mesedez exekutatu nix-shell erabiliz."

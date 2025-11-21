@@ -1,0 +1,11 @@
+modules:
+  center:
+  - Window Title
+  left:
+  - Workspaces
+  right:
+  - SystemInfo
+  - Clock
+workspaces:
+  showEmpty: true
+  visibilityMode: MonitorSpecific

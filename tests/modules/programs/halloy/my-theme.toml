@@ -1,0 +1,12 @@
+[general]
+background = "<string>"
+border = "<string>"
+horizontal_rule = "<string>"
+unread_indicator = "<string>"
+
+[text]
+error = "<string>"
+primary = "<string>"
+secondary = "<string>"
+success = "<string>"
+tertiary = "<string>"

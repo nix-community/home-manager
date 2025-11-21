@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>NOTMUCH_CONFIG</key>
+		<string>/home/hm-user/.config/notmuch/default/config</string>
+	</dict>
+	<key>ExitTimeOut</key>
+	<integer>0</integer>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>org.nix-community.home.imapnotify-hm-example.com</string>
+	<key>ProcessType</key>
+	<string>Background</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@goimapnotify@/bin/goimapnotify</string>
+		<string>-conf</string>
+		<string>/nix/store/00000000000000000000000000000000-imapnotify-hm-example.com-config.json</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>ThrottleInterval</key>
+	<integer>30</integer>
+</dict>
+</plist>

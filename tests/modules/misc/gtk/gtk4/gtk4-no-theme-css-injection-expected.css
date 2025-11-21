@@ -1,0 +1,8 @@
+/* Custom user CSS */
+window {
+  background-color: #2d2d2d;
+}
+
+button {
+  border-radius: 8px;
+}

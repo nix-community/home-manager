@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>org.nix-community.home.git-maintenance-weekly</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@git@/bin/git</string>
+		<string>for-each-repo</string>
+		<string>--keep-going</string>
+		<string>--config=maintenance.repo</string>
+		<string>maintenance</string>
+		<string>run</string>
+		<string>--schedule=weekly</string>
+	</array>
+	<key>StartCalendarInterval</key>
+	<array>
+		<dict>
+			<key>Hour</key>
+			<integer>0</integer>
+			<key>Minute</key>
+			<integer>53</integer>
+			<key>Weekday</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+</dict>
+</plist>

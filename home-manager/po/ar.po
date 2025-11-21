@@ -1,0 +1,275 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2025-08-25 05:01+0000\n"
+"Last-Translator: Omar Mohamed <mohamed.omar67492@gmail.com>\n"
+"Language-Team: Arabic <https://hosted.weblate.org/projects/home-manager/cli/"
+"ar/>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.13\n"
+
+#. translators: For example: "home-manager: missing argument for --cores"
+#: home-manager/home-manager:16
+msgid "%s: missing argument for %s"
+msgstr "%s: معطيات مفقوة ل %s"
+
+#. translators: For example: "home-manager: --rollback can only be used after switch"
+#: home-manager/home-manager:22
+msgid "%s: %s can only be used after %s"
+msgstr "%s: %s يمكن استخدامه فقط بعد %s"
+
+#: home-manager/home-manager:71
+msgid "No configuration file found at %s"
+msgstr "لم يتم العثور على ملف الإعدادات في %s"
+
+#. translators: The first '%s' specifier will be replaced by either
+#. 'home.nix' or 'flake.nix'.
+#: home-manager/home-manager:88 home-manager/home-manager:92
+#: home-manager/home-manager:191
+msgid ""
+"Keeping your Home Manager %s in %s is deprecated,\n"
+"please move it to %s"
+msgstr ""
+"وضع Home Manager %s فى %s لا ينصح به،\n"
+"الرجاء قم بنقله الى %s"
+
+#: home-manager/home-manager:99
+msgid "No configuration file found. Please create one at %s"
+msgstr "لم يتم العثور على ملف الاعدادات. يُرجى إنشاء واحد في %s"
+
+#: home-manager/home-manager:114
+msgid "Home Manager not found at %s."
+msgstr "لم يتم العثور على Home Manager في %s."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:122
+msgid ""
+"The fallback Home Manager path %s has been deprecated and a file/directory "
+"was found there."
+msgstr ""
+"مسار Home Manager البديل %s غير موصى باستخدامه وتم العثور على ملف/مجلد هناك."
+
+#. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
+#: home-manager/home-manager:125
+msgid ""
+"To remove this warning, do one of the following.\n"
+"\n"
+"1. Explicitly tell Home Manager to use the path, for example by adding\n"
+"\n"
+"     { programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   to your configuration.\n"
+"\n"
+"   If you import Home Manager directly, you can use the `path` parameter\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"   when calling the Home Manager package.\n"
+"\n"
+"2. Remove the deprecated path.\n"
+"\n"
+"     $ rm -r \"%s\""
+msgstr ""
+"لإزالة هذا التحذير، نفّذ أحد الإجراءات التالية.\n"
+"\n"
+"1. وجّه Home Manager صراحةً لاستخدام المسار، على سبيل المثال بإضافة\n"
+"\n"
+"     ­­{ programs.home-manager.path = \"%s\"; }\n"
+"\n"
+"   إلى إعداداتك.\n"
+"\n"
+"إذا استوردت Home Manager مباشرةً، يمكنك استخدام المتغير `path`\n"
+"\n"
+"     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
+"\n"
+"عند استدعاء حزمة Home Manager.\n"
+"\n"
+"2. أزل المسار المُهمل.\n"
+"\n"
+"     $ rm -r \"%s\""
+
+#: home-manager/home-manager:153
+msgid "Sanity checking Nix"
+msgstr "جارى فحص سلامة Nix"
+
+#: home-manager/home-manager:173
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "لم يتم العثور على مجلد الملف الشخصي المناسب، تم تجريب %s و%s"
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:230
+msgid "Can't inspect options of a flake configuration"
+msgstr "لا يمكن فحص خيارات اعداد flake"
+
+#: home-manager/home-manager:305 home-manager/home-manager:328
+#: home-manager/home-manager:734 home-manager/home-manager:1237
+msgid "%s: unknown option '%s'"
+msgstr "%s: خيار غير معروف '%s'"
+
+#: home-manager/home-manager:310 home-manager/home-manager:1238
+msgid "Run '%s --help' for usage help"
+msgstr "قم بتشغيل '%s --help' للحصول على مساعدة في الاستخدام"
+
+#: home-manager/home-manager:336 home-manager/home-manager:441
+msgid "The file %s already exists, leaving it unchanged..."
+msgstr "الملف %s موجود بالفعل، تم تركه دون تغيير..."
+
+#: home-manager/home-manager:338 home-manager/home-manager:443
+msgid "Creating %s..."
+msgstr "جارى إنشاء %s..."
+
+#: home-manager/home-manager:487
+msgid "Creating initial Home Manager generation..."
+msgstr "جارى إنشاء الجيل الأولى ل Home Manager..."
+
+#. translators: The "%s" specifier will be replaced by a file path.
+#: home-manager/home-manager:492
+msgid ""
+"All done! The home-manager tool should now be installed and you can edit\n"
+"\n"
+"    %s\n"
+"\n"
+"to configure Home Manager. Run 'man home-configuration.nix' to\n"
+"see all available options."
+msgstr ""
+"تم الانتهاء! سيتم الآن تثبيت أداة home-manager، ويمكنك تعديل\n"
+"\n"
+"    %s\n"
+"\n"
+"لتهيئة Home Manager. شغّل \"man home-configuration.nix\"\n"
+"للاطلاع على جميع الخيارات المتاحة."
+
+#. translators: The "%s" specifier will be replaced by a URL.
+#: home-manager/home-manager:497
+msgid ""
+"Uh oh, the installation failed! Please create an issue at\n"
+"\n"
+"    %s\n"
+"\n"
+"if the error seems to be the fault of Home Manager."
+msgstr ""
+"للأسف، فشل التثبيت! يُرجى إنشاء مشكلة في\n"
+"\n"
+"    %s\n"
+"\n"
+"إذا بدا أن الخطأ ناتج عن خطأ في Home Manager."
+
+#. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
+#: home-manager/home-manager:508
+msgid "Can't instantiate a flake configuration"
+msgstr "لا يمكن إنشاء مثيل لاعدادات رقاقة"
+
+#: home-manager/home-manager:584
+msgid ""
+"There is %d unread and relevant news item.\n"
+"Read it by running the command \"%s news\"."
+msgid_plural ""
+"There are %d unread and relevant news items.\n"
+"Read them by running the command \"%s news\"."
+msgstr[0] ""
+"هناك %d خبر غير مقروء.\n"
+"يمكنك قرآتها بتشغيل الأمر \"%s news\"."
+msgstr[1] ""
+"هناك %d خبر غير مقروء وذي صلة.\n"
+"اقرأه بتشغيل الأمر \"%s news\"."
+msgstr[2] ""
+"هناك خبران (%d) غير مقروءين وذى صلة.\n"
+"اقرأهما بتشغيل الأمر \"%s news\"."
+msgstr[3] ""
+"هناك %d أخبار غير مقروءه وذى صلة.\n"
+"اقرأها بتشغيل الأمر \"%s news\"."
+msgstr[4] ""
+"هناك %d خبر غير مقروء وذى صلة.\n"
+"اقرأهم بتشغيل الأمر \"%s news\"."
+msgstr[5] ""
+"هناك %d خبر غير مقروء وذى صلة.\n"
+"اقرأهم بتشغيل الأمر \"%s news\"."
+
+#: home-manager/home-manager:598
+msgid "Unknown \"news.display\" setting \"%s\"."
+msgstr "إعداد \"news.display\" غير معروف \"%s\"."
+
+#: home-manager/home-manager:606
+#, sh-format
+msgid "Please set the $EDITOR or $VISUAL environment variable"
+msgstr "يرجى تعيين متغير البيئة $EDITOR أو $VISUAL"
+
+#: home-manager/home-manager:624
+msgid "Cannot run build in read-only directory"
+msgstr "لا يمكن تشغيل البناء في مجلد قراءة فقط"
+
+#: home-manager/home-manager:787
+msgid "The configuration did not contain the specialisation \"%s\""
+msgstr "لم يتضمن ملف الاعدادات التخصص \"%s\""
+
+#: home-manager/home-manager:841
+msgid "No generation with ID %s"
+msgstr "لا يوجد جيل بمعرف %s"
+
+#: home-manager/home-manager:843
+msgid "Cannot remove the current generation %s"
+msgstr "لا يمكن إزالة الجيل الحالي %s"
+
+#: home-manager/home-manager:845
+msgid "Removing generation %s"
+msgstr "جارى إزالة الجيل %s"
+
+#: home-manager/home-manager:866
+msgid "No generations to expire"
+msgstr "لا يوجد أجيال لتنتهي"
+
+#: home-manager/home-manager:877
+msgid "No home-manager packages seem to be installed."
+msgstr "يبدو أنه لم يتم تثبيت أي حزم home-mnager."
+
+#: home-manager/home-manager:962
+msgid "Unknown argument %s"
+msgstr "معطى غير معروف %s"
+
+#: home-manager/home-manager:987
+msgid "This will remove Home Manager from your system."
+msgstr "سيؤدي هذا إلى إزالة Home Manager من نظامك."
+
+#: home-manager/home-manager:990
+msgid "This is a dry run, nothing will actually be uninstalled."
+msgstr "هذا تشغيل تجريبيى، ولن يتم إلغاء تثبيت أي شيء فعليًا."
+
+#: home-manager/home-manager:994
+msgid "Really uninstall Home Manager?"
+msgstr "هل تريد إلغاء تثبيت Home Manager حقًا؟"
+
+#: home-manager/home-manager:1000
+msgid "Switching to empty Home Manager configuration..."
+msgstr "جاري التبديل إلى اعدادات Home Manager فارغة..."
+
+#: home-manager/home-manager:1015
+msgid "Yay!"
+msgstr "مرحا!"
+
+#: home-manager/home-manager:1020
+msgid "Home Manager is uninstalled but your home.nix is left untouched."
+msgstr "تم إلغاء تثبيت Home Manager ولكن تم ترك ملف home.nix الخاص بك دون مساس."
+
+#: home-manager/home-manager:1285
+msgid "expire-generations expects one argument, got %d."
+msgstr "يتوقع expire-generations معطى واحد، وقد حصل على %d."
+
+#: home-manager/home-manager:1310
+msgid "Unknown command: %s"
+msgstr "أمر غير معروف: %s"
+
+#: home-manager/install.nix:21
+msgid "This derivation is not buildable, please run it using nix-shell."
+msgstr "لا يمكن بناء هذا الاشتقاق، يرجى تشغيله باستخدام nix-shell."

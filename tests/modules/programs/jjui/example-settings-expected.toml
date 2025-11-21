@@ -1,0 +1,3 @@
+[revisions]
+revset = "ancestors(@ | heads(remote_branches())) ~ empty()"
+template = "builtin_log_compact"

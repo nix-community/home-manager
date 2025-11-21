@@ -1,0 +1,8 @@
+k9s:
+  body:
+    bgColor: '#ffffff'
+    fgColor: orangered
+    logoColor: '#0000ff'
+  info:
+    fgColor: red
+    sectionColor: mediumvioletred

@@ -1,0 +1,6 @@
+{"action":"systemctl poweroff","keybind":"s","label":"shutdown","text":"Shutdown"}
+{"action":"systemctl hibernate","height":0.5,"keybind":"h","label":"hibernate","text":"Hibernate","width":0.5}
+{"action":"systemctl suspend","circular":true,"keybind":"u","label":"suspend","text":"Suspend"}
+{"action":"swaymsg exit","keybind":"e","label":"exit","text":"Exit"}
+{"action":"systemctl reboot","keybind":"r","label":"reboot","text":"Reboot"}
+{"action":"gtklock","keybind":"l","label":"lock","text":"Lock"}

@@ -1,0 +1,5 @@
+code_syntax_highlight = "catppuccin-latte"
+file_panel_border = "#101010"
+footer_border = "#101012"
+gradient_color = ["#101013", "#101014"]
+sidebar_border = "#101011"

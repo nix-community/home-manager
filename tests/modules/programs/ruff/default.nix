@@ -1,0 +1,1 @@
+{ ruff-program = ./ruff.nix; }

@@ -1,0 +1,8 @@
+{
+  "DuckDuckGo": {
+    "exec": "firefox https://duckduckgo.com/?q=%s",
+    "icon": "duckduckgo",
+    "keywords": "search web ddg",
+    "name": "DuckDuckGo"
+  }
+}

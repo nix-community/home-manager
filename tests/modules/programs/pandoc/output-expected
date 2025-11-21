@@ -1,0 +1,5 @@
+Pandoc
+  Meta
+    { unMeta = fromList [ ( "author" , MetaString "John Doe" ) ]
+    }
+  []

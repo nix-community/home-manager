@@ -1,0 +1,6 @@
+[Service]
+ExecStart=/nix/store/00000000000000000000000000000000-nix-gc
+Type=oneshot
+
+[Unit]
+Description=Nix Garbage Collector

@@ -1,0 +1,14 @@
+{
+  "bookmark@claude": {
+    "title": "Claude",
+    "url": "https://claude.ai"
+  },
+  "bookmark@github": {
+    "title": "GitHub",
+    "url": "https://github.com"
+  },
+  "bookmark@google": {
+    "title": "Google",
+    "url": "https://www.google.com"
+  }
+}

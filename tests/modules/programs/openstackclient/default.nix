@@ -1,0 +1,1 @@
+{ openstackclient = ./openstackclient.nix; }

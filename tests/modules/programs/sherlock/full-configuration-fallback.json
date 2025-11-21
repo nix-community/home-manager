@@ -1,0 +1,114 @@
+[
+  {
+    "args": {
+      "location": "Appleton",
+      "update_interval": 60
+    },
+    "async": true,
+    "home": "OnlyHome",
+    "name": "Weather",
+    "priority": 1,
+    "shortcut": false,
+    "spawn_focus": false,
+    "type": "weather"
+  },
+  {
+    "alias": "app",
+    "args": {},
+    "home": "Home",
+    "name": "App Launcher",
+    "priority": 2,
+    "type": "app_launcher"
+  },
+  {
+    "alias": "ddg",
+    "args": {
+      "icon": "duckduckgo",
+      "search_engine": "duckduckgo"
+    },
+    "display_name": "DuckDuckGo Search",
+    "name": "Web Search",
+    "priority": 100,
+    "tag_end": "{keyword}",
+    "tag_start": "{keyword}",
+    "type": "web_launcher"
+  },
+  {
+    "args": {
+      "capabilities": [
+        "calc.math",
+        "calc.units"
+      ]
+    },
+    "name": "Calculator",
+    "priority": 1,
+    "type": "calculation"
+  },
+  {
+    "args": {
+      "capabilities": [
+        "url",
+        "colors.all",
+        "calc.math",
+        "calc.units"
+      ]
+    },
+    "home": "Home",
+    "name": "Clipboard",
+    "priority": 1,
+    "type": "clipboard-execution"
+  },
+  {
+    "alias": "nix",
+    "args": {
+      "commands": {
+        "Nix Search TV": {
+          "exec": "kitty -e nix-search-tv",
+          "icon": "nix-snowflake",
+          "search_string": "interactive;search;tv"
+        },
+        "NixOS Wiki": {
+          "exec": "firefox https://wiki.nixos.org/w/index.php?search={keyword}",
+          "icon": "nix-snowflake",
+          "search_string": "wiki;docs;documentation",
+          "tag_end": "",
+          "tag_start": "wiki:"
+        },
+        "Search Options": {
+          "exec": "firefox https://search.nixos.org/options?query={keyword}",
+          "icon": "nix-snowflake",
+          "search_string": "options;config;nixos",
+          "tag_end": "",
+          "tag_start": "options:"
+        },
+        "Search Packages": {
+          "exec": "firefox https://search.nixos.org/packages?query={keyword}",
+          "icon": "nix-snowflake",
+          "search_string": "packages;search;nixpkgs",
+          "tag_end": "",
+          "tag_start": "search:"
+        }
+      }
+    },
+    "name": "Nix Commands",
+    "priority": 5,
+    "type": "command"
+  },
+  {
+    "args": {
+      "default_skin_tone": "Simpsons"
+    },
+    "home": "Search",
+    "name": "Emoji Picker",
+    "priority": 4,
+    "type": "emoji_picker"
+  },
+  {
+    "alias": "kill",
+    "args": {},
+    "home": "Search",
+    "name": "Kill Process",
+    "priority": 6,
+    "type": "process"
+  }
+]

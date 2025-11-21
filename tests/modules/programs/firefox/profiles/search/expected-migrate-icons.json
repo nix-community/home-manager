@@ -1,0 +1,54 @@
+{
+  "engines": [
+    {
+      "_definedAliases": [
+        "@np"
+      ],
+      "_iconMapObj": {
+        "16": "https://search.nixos.org/favicon.ico"
+      },
+      "_isAppProvided": false,
+      "_loadPath": "[home-manager]/programs.@name@.profiles.migrateIcons.search.engines.nix-packages",
+      "_metaData": {},
+      "_name": "Nix Packages",
+      "_urls": [
+        {
+          "params": [
+            {
+              "name": "type",
+              "value": "packages"
+            },
+            {
+              "name": "query",
+              "value": "{searchTerms}"
+            }
+          ],
+          "template": "https://search.nixos.org/packages"
+        }
+      ],
+      "id": "nix-packages"
+    },
+    {
+      "_definedAliases": [
+        "@nw"
+      ],
+      "_iconMapObj": {
+        "16": "https://wiki.nixos.org/favicon.ico"
+      },
+      "_isAppProvided": false,
+      "_loadPath": "[home-manager]/programs.@name@.profiles.migrateIcons.search.engines.nixos-wiki",
+      "_metaData": {},
+      "_name": "NixOS Wiki",
+      "_urls": [
+        {
+          "template": "https://wiki.nixos.org/w/index.php?search={searchTerms}"
+        }
+      ],
+      "id": "nixos-wiki"
+    }
+  ],
+  "metaData": {
+    "useSavedOrder": false
+  },
+  "version": 12
+}

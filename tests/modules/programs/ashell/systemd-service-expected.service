@@ -1,0 +1,11 @@
+[Install]
+WantedBy=hyprland-session.target
+
+[Service]
+ExecStart=@ashell-0.5.0@/bin/ashell
+Restart=on-failure
+
+[Unit]
+After=hyprland-session.target
+Description=ashell status bar
+Documentation=https://github.com/MalpenZibo/ashell/tree/0.4.1

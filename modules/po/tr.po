@@ -1,0 +1,150 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager Modules package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager Modules\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"PO-Revision-Date: 2025-07-29 05:02+0000\n"
+"Last-Translator: Silk <omerntuzun@gmail.com>\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/home-manager/"
+"modules/tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.13-dev\n"
+
+#: modules/files.nix:206
+msgid "Creating home file links in %s"
+msgstr "%s konumunda ev dosya bağlantıları oluşturuluyor"
+
+#: modules/files.nix:219
+msgid "Cleaning up orphan links from %s"
+msgstr "Geçersiz bağlantılar temizleniyor %s"
+
+#: modules/home-environment.nix:647
+msgid "Creating new profile generation"
+msgstr "Yeni profil nesli kuruluyor"
+
+#: modules/home-environment.nix:650
+msgid "No change so reusing latest profile generation"
+msgstr "Değişiklik yok; en son profil neslisi kullanılcak"
+
+#: modules/home-environment.nix:699
+msgid ""
+"Oops, Nix failed to install your new Home Manager profile!\n"
+"\n"
+"Perhaps there is a conflict with a package that was installed using\n"
+"\"%s\"? Try running\n"
+"\n"
+"    %s\n"
+"\n"
+"and if there is a conflicting package you can remove it with\n"
+"\n"
+"    %s\n"
+"\n"
+"Then try activating your Home Manager configuration again."
+msgstr ""
+"Eyvah, Nix yeni Home Manager profilinizi kuramadı!\n"
+"\n"
+"Belki de \"%s\" kullanan kurulan paketlerin biriyle bir çakışma vardır?\n"
+"\n"
+"    %s\n"
+"\n"
+"komutunu çalıştırın ve eğer çakışan bir paket varsa onu\n"
+"\n"
+"    %s\n"
+"\n"
+"ile kaldırabilirsiniz. Sonra Home Manager yapılandırmanızı yeniden\n"
+"etkinleştirmeyi deneyin."
+
+#: modules/home-environment.nix:735
+msgid "Activating %s"
+msgstr "%s etkinleştiriliyor"
+
+#: modules/home-environment.nix:807
+msgid "%s: unknown option '%s'"
+msgstr "%s: Bilinmeyen komut '%s'"
+
+#: modules/lib-bash/activation-init.sh:22
+msgid "Migrating profile from %s to %s"
+msgstr "Profil %s, %s e taşınıyor"
+
+#: modules/lib-bash/activation-init.sh:54
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "Kullanılabilir profil dizini bulunamadı, %s ve %s denendi"
+
+#: modules/lib-bash/activation-init.sh:106
+msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+msgstr "Hata: USER \"%s\" olarak ayarlandı ancak biz \"%s\" bekliyoruz"
+
+#: modules/lib-bash/activation-init.sh:115
+msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+msgstr "Hata: HOME \"%s\" olarak ayarlandı ancak biz \"%s\" bekliyoruz"
+
+#: modules/lib-bash/activation-init.sh:132
+msgid "Starting Home Manager activation"
+msgstr "Home Manager etkinleştirmesi başlatılıyor"
+
+#: modules/lib-bash/activation-init.sh:136
+msgid "Sanity checking Nix"
+msgstr "Nix denetleniyor"
+
+#: modules/lib-bash/activation-init.sh:149
+msgid "This is a dry run"
+msgstr "Bu bir deneme çalıştırmasıdır"
+
+#: modules/lib-bash/activation-init.sh:153
+msgid "This is a live run"
+msgstr "Bu bir gerçek çalıştırmadır"
+
+#: modules/lib-bash/activation-init.sh:159
+msgid "Using Nix version: %s"
+msgstr "Kullanılan Nix sürümü: %s"
+
+#: modules/lib-bash/activation-init.sh:162
+msgid "Activation variables:"
+msgstr "Etkinleştirme değişkenleri:"
+
+#~ msgid "Creating profile generation %s"
+#~ msgstr "%s profil inşası oluşturuluyor"
+
+#~ msgid "No change so reusing latest profile generation %s"
+#~ msgstr ""
+#~ "Değişiklik yok, bu nedenle en son profil inşası %s yeniden kullanılıyor"
+
+#~ msgid "Sanity checking oldGenNum and oldGenPath"
+#~ msgstr "oldGenNum ve oldGenPath denetleniyor"
+
+#~ msgid ""
+#~ "The previous generation number and path are in conflict! These\n"
+#~ "must be either both empty or both set but are now set to\n"
+#~ "\n"
+#~ "    '%s' and '%s'\n"
+#~ "\n"
+#~ "If you don't mind losing previous profile generations then\n"
+#~ "the easiest solution is probably to run\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "and trying home-manager switch again. Good luck!"
+#~ msgstr ""
+#~ "Önceki inşa numarası ve yolu çakışıyor! Bunların ikisi de boş olmalı\n"
+#~ "veya ayarlanmalı ama şu anda\n"
+#~ "\n"
+#~ "    '%s' ve '%s'\n"
+#~ "\n"
+#~ "olarak ayarlandı. Önceki profil inşalarını kaybetmeyi önemsemiyorsanız\n"
+#~ "en kolay çözüm muhtemelen\n"
+#~ "\n"
+#~ "   rm %s/home-manager*\n"
+#~ "   rm %s/current-home\n"
+#~ "\n"
+#~ "komutlarını çalıştırmak ve tekrar home-manager switch denemektir. İyi "
+#~ "şanslar!"

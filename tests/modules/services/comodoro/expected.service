@@ -1,0 +1,12 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecSearchPath=/bin
+ExecStart=@comodoro@/bin/comodoro server start preset tcp
+Restart=always
+RestartSec=10
+
+[Unit]
+After=network.target
+Description=Comodoro server

@@ -1,0 +1,10 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@espanso@/bin/espanso launcher
+Restart=on-failure
+RestartSec=3
+
+[Unit]
+Description=Espanso: cross platform text expander in Rust

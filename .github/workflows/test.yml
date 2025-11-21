@@ -1,0 +1,106 @@
+name: Test
+on:
+  pull_request:
+  schedule:
+    - cron: "30 2 * * *"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.run_id }}
+  cancel-in-progress: true
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docs: ${{ steps.changes.outputs.docs }}
+      format: ${{ steps.changes.outputs.format }}
+      hm: ${{ steps.changes.outputs.hm }}
+      tests: ${{ steps.changes.outputs.tests }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            tests:
+              - 'flake.lock'
+              - 'flake.nix'
+              - 'modules/**'
+              - 'nix-darwin/**'
+              - 'nixos/**'
+              - 'tests/**'
+            docs:
+              - '**.md'
+              - 'docs/**'
+              - 'flake.lock'
+              - 'flake.nix'
+              - 'modules/**'
+            format:
+              - '**/*.nix'
+            hm:
+              - 'flake.lock'
+              - 'flake.nix'
+              - 'home-manager/**'
+  tests:
+    needs: changes
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Get Nixpkgs revision from flake.lock
+        id: get-nixpkgs
+        run: |
+          echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
+      - uses: cachix/install-nix-action@v31
+        if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.hm == 'true' || needs.changes.outputs.format == 'true'
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
+      - name: Build docs
+        if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true'
+        run: nix build --show-trace .#docs-jsonModuleMaintainers
+      - name: Format Check
+        if: github.event_name == 'schedule' || needs.changes.outputs.format == 'true'
+        run: nix fmt -- --ci
+      - name: Test init --switch with locked inputs
+        if: github.event_name == 'schedule' || needs.changes.outputs.hm == 'true'
+        run: |
+          # Copy lock file to home directory for consistent testing
+          mkdir -p ~/.config/home-manager
+          cp flake.lock ~/.config/home-manager/
+          nix run .#home-manager -- init --switch --override-input home-manager .
+      - name: Uninstall
+        if: github.event_name == 'schedule' || needs.changes.outputs.hm == 'true'
+        run: yes | nix run . -- uninstall
+      - name: Generate Job Summary
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          echo "### Test Job Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "A summary of tasks triggered by file changes in this PR:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ needs.changes.outputs.docs }}" == "true" ]]; then
+            echo "- ✅ **Docs Build:** Triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ☑️ **Docs Build:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [[ "${{ needs.changes.outputs.format }}" == "true" ]]; then
+            echo "- ✅ **Format Check:** Triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ☑️ **Format Check:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [[ "${{ needs.changes.outputs.hm }}" == "true" ]]; then
+            echo "- ✅ **Home Manager Tests:** Triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ☑️ **Home Manager Tests:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [[ "${{ needs.changes.outputs.tests }}" == "true" ]]; then
+            echo "- ✅ **General Tests:** Triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ☑️ **General Tests:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -1,0 +1,23 @@
+[Service]
+ExecStart=@systemd@/bin/systemd-inhibit \
+  --who="borgmatic" \
+  --what="sleep:shutdown" \
+  --why="Prevent interrupting scheduled backup" \
+  @borgmatic@/bin/borgmatic \
+    --stats \
+    --verbosity -1 \
+    --list \
+    --syslog-verbosity 1
+
+ExecStartPre=/nix/store/00000000000000000000000000000000-coreutils/bin/sleep 3m
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+IOWeight=100
+LogRateLimitIntervalSec=0
+Nice=19
+Restart=no
+Type=oneshot
+
+[Unit]
+ConditionACPower=true
+Description=borgmatic backup

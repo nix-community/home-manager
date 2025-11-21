@@ -1,0 +1,1 @@
+{ autojump = ./default-settings.nix; }

@@ -1,0 +1,13 @@
+{
+  "authType": "publickey",
+  "beforeMount": "true",
+  "host": "host1.example.com",
+  "id": "mount1",
+  "mountOptions": [
+    "idmap=user"
+  ],
+  "mountPoint": "/path/to/somewhere",
+  "port": 22,
+  "sshKey": "/home/user/.ssh/id_ed25519",
+  "user": "root"
+}

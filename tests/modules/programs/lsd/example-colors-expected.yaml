@@ -1,0 +1,8 @@
+date:
+  day-old: green
+  older: dark_green
+size:
+  large: dark_yellow
+  medium: yellow
+  none: grey
+  small: grey

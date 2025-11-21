@@ -1,0 +1,27 @@
+actions=true
+anchor=top-right
+background-color=#000000
+border-color=#FFFFFF
+border-radius=0
+border-size=2
+default-timeout=5000
+font=monospace 10
+format=<b>%s</b>
+%b
+group-by=app-name
+height=100
+icon-path=/usr/share/icons/hicolor
+icons=true
+ignore-timeout=false
+layer=top
+margin=10
+markup=true
+max-history=5
+max-icon-size=32
+max-visible=3
+output=HDMI-A-1
+padding=5,10
+progress-color=#4C7899
+sort=-time
+text-color=#FFFFFF
+width=300

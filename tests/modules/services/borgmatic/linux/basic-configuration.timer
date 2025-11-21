@@ -1,0 +1,10 @@
+[Install]
+WantedBy=timers.target
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+RandomizedDelaySec=10m
+
+[Unit]
+Description=Run borgmatic backup

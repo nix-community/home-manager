@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ### This file was generated with Nix. Don't modify this file directly. -->
+<labwc_config>
+  <desktops number="10" />
+  <keyboard>
+    <default />
+    <keybind key="W-Return">
+      <action name="Execute" command="alacritty" />
+    </keybind>
+    <keybind key="W-Esc">
+      <action name="Execute" command="foot" />
+    </keybind>
+    <keybind key="W-1">
+      <action name="GoToDesktop" to="1" />
+    </keybind>
+  </keyboard>
+  <mouse>
+    <default />
+    <context name="Root">
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="some-custom-menu" />
+      </mousebind>
+    </context>
+  </mouse>
+  <theme>
+    <cornerRadius>8</cornerRadius>
+    <font place="" name="FiraCode" size="11" />
+    <name>nord</name>
+  </theme>
+  <!-- ExtraConfig -->
+  <tabletTool motion="absolute" relativeMotionSensitivity="1.0" />
+  <libinput>
+    <device category="default">
+      <naturalScroll></naturalScroll>
+      <leftHanded></leftHanded>
+      <pointerSpeed></pointerSpeed>
+      <accelProfile></accelProfile>
+    </device>
+  </libinput>
+
+</labwc_config>

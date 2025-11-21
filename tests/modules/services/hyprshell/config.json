@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "windows": {
+    "items_per_row": 5,
+    "overview": {
+      "key": "super_l",
+      "launcher": {
+        "default_terminal": "alacritty"
+      },
+      "modifier": "super"
+    },
+    "scale": 8.5,
+    "switch": {
+      "modifier": "alt"
+    }
+  }
+}
