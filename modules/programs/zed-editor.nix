@@ -219,6 +219,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.extraPackages != [ ] -> cfg.package != null;
+        message = "{option}programs.zed-editor.extraPackages requires non null {option}programs.zed-editor.package";
+      }
+    ];
+
     home.packages = mkIf (cfg.package != null) (
       if cfg.extraPackages != [ ] then
         [
@@ -306,13 +313,6 @@ in
       (mkIf (!cfg.mutableUserDebug && cfg.userDebug != [ ]) {
         "zed/debug.json".source = jsonFormat.generate "zed-user-debug" cfg.userDebug;
       })
-    ];
-
-    assertions = [
-      {
-        assertion = cfg.extraPackages != [ ] -> cfg.package != null;
-        message = "{option}programs.zed-editor.extraPackages requires non null {option}programs.zed-editor.package";
-      }
     ];
   };
 }
