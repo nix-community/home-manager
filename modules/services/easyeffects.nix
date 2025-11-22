@@ -31,7 +31,7 @@ let
     default = { };
     description = ''
       List of presets to import to easyeffects.
-      Presets are written to input and output folder in `$XDG_CONFIG_HOME/easyeffects`.
+      Presets are written to input and output folder in `$XDG_DATA_HOME/easyeffects`.
       Top level block (input/output) determines the folder the file is written to.
 
       See community presets at:
@@ -97,15 +97,9 @@ in
       (lib.hm.assertions.assertPlatform "services.easyeffects" pkgs lib.platforms.linux)
     ];
 
-    # Running easyeffects will just attach itself to `gapplication` service
-    # at-spi2-core is to minimize `journalctl` noise of:
-    # "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"
-    home.packages = with pkgs; [
-      cfg.package
-      at-spi2-core
-    ];
+    home.packages = [ cfg.package ];
 
-    xdg.configFile = lib.mkIf (cfg.extraPresets != { }) (
+    xdg.dataFile = lib.mkIf (cfg.extraPresets != { }) (
       lib.mapAttrs' (
         k: v:
         # Assuming only one of either input or output block is defined, having both in same file not seem to be supported by the application since it separates it by folder
@@ -121,6 +115,7 @@ in
     systemd.user.services.easyeffects = {
       Unit = {
         Description = "Easyeffects daemon";
+        Before = [ "pipewire.socket" ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
@@ -128,8 +123,6 @@ in
       Service = {
         ExecStart = "${cfg.package}/bin/easyeffects --gapplication-service ${presetOpts}";
         ExecStop = "${cfg.package}/bin/easyeffects --quit";
-        Type = "dbus";
-        BusName = "com.github.wwmm.easyeffects";
         KillMode = "mixed";
         Restart = "on-failure";
         RestartSec = 5;
