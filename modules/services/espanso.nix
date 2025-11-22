@@ -38,6 +38,13 @@ let
   yaml = pkgs.formats.yaml { };
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    bobvanderlinden
+    liyangau
+    n8henrie
+    phanirithvij
+  ];
+
   imports = [
     (mkRemovedOptionModule [
       "services"
@@ -45,12 +52,7 @@ in
       "settings"
     ] "Use services.espanso.configs and services.espanso.matches instead.")
   ];
-  meta.maintainers = with lib.maintainers; [
-    bobvanderlinden
-    liyangau
-    n8henrie
-    phanirithvij
-  ];
+
   options = {
     services.espanso = {
       enable = mkEnableOption "Espanso: cross platform text expander in Rust";

@@ -42,6 +42,8 @@ let
   };
 in
 {
+  meta.maintainers = [ lib.maintainers.mtoohey ];
+
   imports = [
     (lib.mkRemovedOptionModule [
       "programs"
@@ -49,9 +51,6 @@ in
       "config"
     ] "Pistol is now configured with programs.pistol.associations.")
   ];
-
-  meta.maintainers = [ lib.maintainers.mtoohey ];
-
   options.programs.pistol = {
     enable = lib.mkEnableOption "file previewer for terminal file managers";
 

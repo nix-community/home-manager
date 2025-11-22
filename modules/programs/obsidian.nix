@@ -48,6 +48,8 @@ let
   ];
 in
 {
+  meta.maintainers = [ lib.hm.maintainers.karaolidis ];
+
   options.programs.obsidian = {
     enable = mkEnableOption "obsidian";
     package = mkPackageOption pkgs "obsidian" { nullable = true; };
@@ -573,6 +575,4 @@ in
         }
       ];
     };
-
-  meta.maintainers = [ lib.hm.maintainers.karaolidis ];
 }

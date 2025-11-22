@@ -8,6 +8,8 @@ let
   cfg = config.xdg.terminal-exec;
 in
 {
+  meta.maintainers = with lib.maintainers; [ nukdokplex ];
+
   options = {
     xdg.terminal-exec = {
       enable = lib.mkEnableOption ''
@@ -50,6 +52,4 @@ in
       ) { text = lib.concatLines terminals; }
     ) cfg.settings;
   };
-
-  meta.maintainers = with lib.maintainers; [ nukdokplex ];
 }

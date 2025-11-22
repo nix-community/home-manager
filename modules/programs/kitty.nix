@@ -92,6 +92,8 @@ let
     };
 in
 {
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
+
   imports = [
     (lib.mkChangedOptionModule
       [ "programs" "kitty" "theme" ]
@@ -122,9 +124,6 @@ in
       )
     )
   ];
-
-  meta.maintainers = with lib.maintainers; [ khaneliman ];
-
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
 

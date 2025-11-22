@@ -26,14 +26,13 @@ let
   inherit (import ./lib.nix { inherit config lib; }) homeDir dotDirAbs dotDirRel;
 in
 {
+  meta.maintainers = [ lib.maintainers.khaneliman ];
+
   imports = [
     ./plugins
     ./deprecated.nix
     ./history.nix
   ];
-
-  meta.maintainers = [ lib.maintainers.khaneliman ];
-
   options =
     let
       syntaxHighlightingModule = types.submodule {

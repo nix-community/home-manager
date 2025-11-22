@@ -10,6 +10,8 @@ let
 in
 
 {
+  meta.maintainers = with lib.maintainers; [ andre4ik3 ];
+
   options.programs.desktoppr = {
     enable = lib.mkEnableOption "managing the desktop picture/wallpaper on macOS using desktoppr";
     package = lib.mkPackageOption pkgs "desktoppr" { };
@@ -100,6 +102,4 @@ in
       run "${lib.getExe cfg.package}" manage
     '';
   };
-
-  meta.maintainers = with lib.maintainers; [ andre4ik3 ];
 }

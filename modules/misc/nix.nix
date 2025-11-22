@@ -147,6 +147,8 @@ let
 
 in
 {
+  meta.maintainers = [ ];
+
   options.nix = {
     enable =
       mkEnableOption ''
@@ -363,6 +365,4 @@ in
       xdg.configFile."nix/nix.conf".source = nixConf;
     })
   ]);
-
-  meta.maintainers = [ ];
 }

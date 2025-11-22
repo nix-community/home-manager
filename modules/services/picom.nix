@@ -86,6 +86,8 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [ thiagokokada ];
+
   imports = [
     (mkRemovedOptionModule [
       "services"
@@ -431,6 +433,4 @@ in
       };
     };
   };
-
-  meta.maintainers = with lib.maintainers; [ thiagokokada ];
 }

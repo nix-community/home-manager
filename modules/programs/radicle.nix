@@ -50,6 +50,11 @@ let
   publicExplorerSuffix = "$rid$path";
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    lorenzleutgeb
+    matthiasbeyer
+  ];
+
   options = {
     programs.radicle = {
       enable = mkEnableOption "Radicle";
@@ -261,9 +266,4 @@ in
         );
     };
   };
-
-  meta.maintainers = with lib.maintainers; [
-    lorenzleutgeb
-    matthiasbeyer
-  ];
 }
