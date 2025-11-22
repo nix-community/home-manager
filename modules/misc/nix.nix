@@ -157,13 +157,9 @@ in
         visible = false;
       };
 
-    package = mkOption {
-      type = types.nullOr types.package;
+    package = lib.mkPackageOption pkgs "nix" {
       default = null;
-      example = literalExpression "pkgs.nix";
-      description = ''
-        The Nix package that the configuration should be generated for.
-      '';
+      nullable = true;
     };
 
     nixPath = mkOption {
