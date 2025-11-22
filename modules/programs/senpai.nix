@@ -10,6 +10,8 @@ let
   cfg = config.programs.senpai;
 in
 {
+  meta.maintainers = [ lib.maintainers.malte-v ];
+
   options.programs.senpai = {
     enable = lib.mkEnableOption "senpai";
     package = lib.mkPackageOption pkgs "senpai" { };
@@ -132,6 +134,4 @@ in
       in
       lib.hm.generators.toSCFG { } (attrsToDirectiveList cfg.config);
   };
-
-  meta.maintainers = [ lib.maintainers.malte-v ];
 }

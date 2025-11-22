@@ -30,6 +30,8 @@ let
   formatWineName = (package: toLower package.name);
 in
 {
+  meta.maintainers = [ lib.hm.maintainers.bikku ];
+
   options.programs.lutris = {
     enable = mkEnableOption "lutris.";
     package = lib.mkPackageOption pkgs "lutris" { };
@@ -150,7 +152,6 @@ in
       );
     };
   };
-  meta.maintainers = [ lib.hm.maintainers.bikku ];
   config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.lutris" pkgs lib.platforms.linux)

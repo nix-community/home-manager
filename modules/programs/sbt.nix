@@ -99,14 +99,13 @@ let
 
 in
 {
+  meta.maintainers = [ lib.maintainers.kubukoz ];
+
   imports = [
     (lib.mkRemovedOptionModule [ "programs" "sbt" "baseConfigPath" ]
       "Use programs.sbt.baseUserConfigPath instead, but note that the semantics are slightly different."
     )
   ];
-
-  meta.maintainers = [ lib.maintainers.kubukoz ];
-
   options.programs.sbt = {
     enable = lib.mkEnableOption "sbt";
 

@@ -8,6 +8,8 @@ let
   cfg = config.programs.xmobar;
 in
 {
+  meta.maintainers = [ lib.maintainers.t4ccer ];
+
   options.programs.xmobar = {
     enable = lib.mkEnableOption "Xmobar, a minimalistic status bar";
 
@@ -51,6 +53,4 @@ in
     home.packages = [ cfg.package ];
     xdg.configFile."xmobar/.xmobarrc".text = cfg.extraConfig;
   };
-
-  meta.maintainers = [ lib.maintainers.t4ccer ];
 }

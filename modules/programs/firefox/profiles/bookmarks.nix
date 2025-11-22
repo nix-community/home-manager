@@ -75,13 +75,13 @@ let
     '';
 in
 {
+  # We're currently looking for a maintainer who actively uses bookmarks!
+  meta.maintainers = with maintainers; [ kira-bruneau ];
+
   imports = [
     (pkgs.path + "/nixos/modules/misc/assertions.nix")
     (pkgs.path + "/nixos/modules/misc/meta.nix")
   ];
-
-  # We're currently looking for a maintainer who actively uses bookmarks!
-  meta.maintainers = with maintainers; [ kira-bruneau ];
 
   options = {
     enable = mkOption {
