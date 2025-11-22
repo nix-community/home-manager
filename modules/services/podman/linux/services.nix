@@ -27,7 +27,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
+  config = lib.mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isLinux) (
     lib.mkMerge [
       (lib.mkIf cfg.autoUpdate.enable {
         systemd.user.services."podman-auto-update" = {

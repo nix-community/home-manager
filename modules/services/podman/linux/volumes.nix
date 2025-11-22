@@ -192,7 +192,7 @@ in
     let
       volumeQuadlets = lib.mapAttrsToList toQuadletInternal cfg.volumes;
     in
-    lib.mkIf cfg.enable {
+    lib.mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
       services.podman.internal.quadletDefinitions = volumeQuadlets;
       assertions = lib.flatten (map (volume: volume.assertions) volumeQuadlets);
 

@@ -180,7 +180,7 @@ in
     let
       networkQuadlets = lib.mapAttrsToList toQuadletInternal cfg.networks;
     in
-    lib.mkIf cfg.enable {
+    lib.mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
       services.podman.internal.quadletDefinitions = networkQuadlets;
       assertions = lib.flatten (map (network: network.assertions) networkQuadlets);
 
