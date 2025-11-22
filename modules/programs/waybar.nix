@@ -171,14 +171,7 @@ in
   options.programs.waybar = with lib.types; {
     enable = mkEnableOption "Waybar";
 
-    package = mkOption {
-      type = package;
-      default = pkgs.waybar;
-      defaultText = literalExpression "pkgs.waybar";
-      description = ''
-        Waybar package to use. Set to `null` to use the default package.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "waybar" { };
 
     settings = mkOption {
       type = either (listOf waybarBarConfig) (attrsOf waybarBarConfig);
