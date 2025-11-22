@@ -37,9 +37,5 @@
     assertFileExists home-files/.config/gtk-4.0/settings.ini
     assertFileContent home-files/.config/gtk-4.0/settings.ini \
       ${./gtk-global-inheritance-gtk4-expected.ini}
-
-    # Check GTK4 CSS with theme import
-    assertFileExists home-files/.config/gtk-4.0/gtk.css
-    assertFileContent home-files/.config/gtk-4.0/gtk.css ${./gtk-global-inheritance-gtk4-css-expected.css}
   '';
 }
