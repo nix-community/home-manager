@@ -141,15 +141,12 @@ in
   options.services.activitywatch = {
     enable = lib.mkEnableOption "ActivityWatch, an automated time tracker";
 
-    package = mkOption {
-      description = ''
-        Package containing [the Rust implementation of ActivityWatch
-        server](https://github.com/ActivityWatch/aw-server-rust).
+    package = lib.mkPackageOption pkgs "activitywatch" {
+      example = "pkgs.aw-server-rust";
+      extraDescription = ''
+        Specifically, this should be a package containing [the Rust implementation
+        of ActivityWatch server](https://github.com/ActivityWatch/aw-server-rust).
       '';
-      type = lib.types.package;
-      default = pkgs.activitywatch;
-      defaultText = lib.literalExpression "pkgs.activitywatch";
-      example = lib.literalExpression "pkgs.aw-server-rust";
     };
 
     settings = mkOption {
