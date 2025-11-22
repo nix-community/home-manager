@@ -8,6 +8,7 @@ let
     "aerc"
     "aerospace"
     "aichat"
+    "aider-chat"
     "alacritty"
     "alot"
     "antidote"
