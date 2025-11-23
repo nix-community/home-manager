@@ -141,6 +141,36 @@ attribute set</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="nixos-opt-home-manager.minimal"></a><a class="term" href="nixos-options.xhtml#nixos-opt-home-manager.minimal"><code class="option">home-manager.minimal</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable only the necessary modules that allow home-manager to function.</p><p>This can be used to allow vendoring a minimal list of modules yourself, rather than
+importing every single module.</p><p>THIS IS FOR ADVANCED USERS, AND WILL DISABLE ALMOST EVERY MODULE.
+THIS SHOULD NOT BE ENABLED UNLESS YOU KNOW THE IMPLICATIONS.
+.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/nixos/common.nix" target="_top">
+&lt;home-manager/nixos/common.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="nixos-opt-home-manager.overwriteBackup"></a><a class="term" href="nixos-options.xhtml#nixos-opt-home-manager.overwriteBackup"><code class="option">home-manager.overwriteBackup</code>
   </a>
  </span>

@@ -51,7 +51,17 @@ previously created an unnecessary <code class="literal">home-manager</code> per-
 profile” for the user. This no longer happens. You can restore the
 old behavior by adding</p><pre><code class="programlisting  nix">home-manager.enableLegacyProfileManagement = true;
 </code></pre><p>to your configuration. This option is likely to be deprecated in the
-future.</p></li><li class="listitem"><p>The use of <code class="literal">services.syncthing.tray</code> as a Boolean option was removed
+future.</p></li><li class="listitem"><p>By default, Home Manager imports all modules, which leads to
+increased evaluation time. Some users may wish to only import the
+modules they actually use. To accomodate this, a new option
+<code class="literal">home-manager.minimal</code> has been added. When this option is enabled,
+Home Manager will only import the basic set of modules it requires
+to function. Other modules will have to be enabled manually, like
+this:</p><pre><code class="programlisting nix">  imports = [
+    &quot;${modulesPath}/programs/fzf.nix&quot;
+  ];
+</code></pre><p>This entrypoint is only recommended for advanced users, who are
+comfortable maintaining a personal list of modules to import.</p></li><li class="listitem"><p>The use of <code class="literal">services.syncthing.tray</code> as a Boolean option was removed
 after being deprecated in 2021. You are now expected to use
 <a class="xref" href="options.xhtml#opt-services.syncthing.tray.enable"  ><code class="option">services.syncthing.tray.enable</code></a> to enable the Syncthing tray
 service.</p></li></ul></div>
