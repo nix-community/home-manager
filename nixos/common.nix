@@ -117,7 +117,7 @@ in
     };
 
     minimal = mkEnableOption ''
-      Only the necessary modules that allow home-manager to function.
+      only the necessary modules that allow home-manager to function.
 
       This can be used to allow vendoring a minimal list of modules yourself, rather than
       importing every single module.
