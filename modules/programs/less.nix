@@ -37,11 +37,14 @@ in
       options = lib.mkOption {
         type =
           with lib.types;
-          attrsOf (oneOf [
-            bool
-            int
-            str
-          ]);
+          let
+            scalar = oneOf [
+              bool
+              int
+              str
+            ];
+          in
+          attrsOf (either scalar (listOf scalar));
         default = { };
         description = "GNU-style options to be set via {env}`$LESS`.";
         example = {
