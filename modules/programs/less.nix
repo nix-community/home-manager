@@ -62,9 +62,33 @@ in
     xdg.configFile."lesskey" = lib.mkIf (cfg.config != "") { text = cfg.config; };
 
     programs.less.config = lib.mkIf (cfg.options != { }) (
+      let
+        color = lib.intersectAttrs {
+          color = null;
+          D = null;
+        } cfg.options;
+        prompt = lib.intersectAttrs {
+          prompt = null;
+          P = null;
+        } cfg.options;
+        otherOptions = lib.removeAttrs cfg.options [
+          "color"
+          "D"
+          "P"
+          "prompt"
+        ];
+
+        toCommandLine = lib.cli.toGNUCommandLineShell { };
+
+        orderedOptions = lib.filter (x: x != { }) [
+          otherOptions
+          color # colors need to come after `--use-color`.
+          prompt # the prompt has to be the last option.
+        ];
+      in
       lib.mkBefore ''
         #env
-        LESS = ${lib.cli.toGNUCommandLineShell { } cfg.options}
+        LESS = ${lib.concatMapStringsSep " " toCommandLine orderedOptions}
       ''
     );
   };
