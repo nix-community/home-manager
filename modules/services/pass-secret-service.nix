@@ -28,11 +28,10 @@ in
       defaultText = "$HOME/.password-store";
       example = "/home/user/.local/share/password-store";
       description = ''
-        Absolute path to password store, default upstream value of which is
-        {file}`$HOME/.password-store`. If the
-        {option}`programs.password-store` module is enabled and
-        {option}`programs.password-store.settings.PASSWORD_STORE_DIR` is set,
-        it will inherit the value from the latter.
+        Absolute path to the password store. If the
+        {option}`programs.password-store` module is enabled, the
+        {option}`programs.password-store.settings.PASSWORD_STORE_DIR` option
+        will be checked, if found it will be inherited as the default.
       '';
     };
   };
@@ -56,7 +55,7 @@ in
       in
       {
         Unit = {
-          AssertFileIsExecutable = "${binPath}";
+          AssertFileIsExecutable = binPath;
           Description = "Pass libsecret service";
           Documentation = "https://github.com/mdellweg/pass_secret_service";
           PartOf = [ "default.target" ];
@@ -64,7 +63,7 @@ in
 
         Service = {
           Type = "dbus";
-          ExecStart = "${binPath} ${lib.optionalString (cfg.storePath != null) "--path ${cfg.storePath}"}";
+          ExecStart = binPath + lib.optionalString (cfg.storePath != null) " --path ${cfg.storePath}";
           BusName = busName;
           Environment = [ "GNUPGHOME=${config.programs.gpg.homedir}" ];
         };
