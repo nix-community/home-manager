@@ -15,6 +15,14 @@
     name = "0x5a4";
     source = "nixpkgs";
   };
+  "0xda157" = {
+    email = "da157@voidq.com";
+    github = "0xda157";
+    githubId = 153149335;
+    matrix = "@da157:catgirl.cloud";
+    name = "0xda157";
+    source = "nixpkgs";
+  };
   "3ulalia" = {
     email = "3ulalia@proton.me";
     github = "3ulalia";
@@ -627,14 +635,6 @@
     githubId = 101816;
     matrix = "@asymmetric:matrix.dapp.org.uk";
     name = "Lorenzo Manacorda";
-    source = "nixpkgs";
-  };
-  da157 = {
-    email = "da157@voidq.com";
-    matrix = "@awwpotato:envs.net";
-    github = "0xda157";
-    githubId = 153149335;
-    name = "0xda157";
     source = "nixpkgs";
   };
   b1kku = {
@@ -1316,7 +1316,7 @@
     source = "nixpkgs";
   };
   jolars = {
-    email = "jolars@posteo.com";
+    email = "johan@jolars.co";
     github = "jolars";
     githubId = 13087841;
     keys = [
@@ -1519,13 +1519,6 @@
     githubId = 15341887;
     name = "maya_t";
     source = "home-manager";
-  };
-  lucasew = {
-    email = "lucas59356@gmail.com";
-    github = "lucasew";
-    githubId = 15693688;
-    name = "Lucas Eduardo Wendt";
-    source = "nixpkgs";
   };
   lukasngl = {
     email = "69244516+lukasngl@users.noreply.github.com";
