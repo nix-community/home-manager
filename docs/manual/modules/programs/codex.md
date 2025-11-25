@@ -83,11 +83,16 @@ programs.codex = {
       set = { CI = "1"; };
       exclude = [ "AWS_*" "GCP_*" ];
     };
-    # Real, local MCP server example (requires ripgrep in PATH)
+    # Real MCP server example: filesystem server from the official MCP catalog.
+    # Provides read/write tools within the specified roots.
     mcp_servers = {
-      ripgrep-local = {
-        command = "${pkgs.ripgrep}/bin/rg";
-        args = [ "--json" ];
+      filesystem = {
+        command = "npx";
+        args = [
+          "-y"
+          "@modelcontextprotocol/server-filesystem"
+          "${config.home.homeDirectory}/projects"
+        ];
         enabled = true;
         tool_timeout_sec = 30;
       };
