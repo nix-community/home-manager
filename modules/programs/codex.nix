@@ -24,9 +24,10 @@ in
     settings = lib.mkOption {
       type = tomlFormat.type;
       description = ''
-        Configuration written to {file}`CODEX_HOME/config.toml`. Per default {env}`CODEX_HOME`
-        设为 ~/.codex；开启 {option}`home.preferXdgDirectories` 时写入 {file}`~/.config/codex/`。
-        详见 <https://github.com/openai/codex/blob/main/codex-rs/config.md>。
+        Configuration is written to {file}`CODEX_HOME/config.toml`. By default {env}`CODEX_HOME`
+        points to {file}`~/.codex`; when {option}`home.preferXdgDirectories` is enabled it
+        switches to {file}`~/.config/codex/`.
+        See <https://github.com/openai/codex/blob/main/codex-rs/config.md> for supported keys.
       '';
       default = { };
       defaultText = lib.literalExpression "{ }";
