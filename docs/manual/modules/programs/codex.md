@@ -76,14 +76,15 @@ programs.codex = {
       set = { CI = "1"; };
       exclude = [ "AWS_*" "GCP_*" ];
     };
+    # Replace with your actual MCP servers; below are illustrative only.
     mcp_servers = {
-      ripgrep = {
+      ripgrep-local = {
         command = "rg";
         args = [ "--json" ];
         enabled = true;
         tool_timeout_sec = 30;
       };
-      github = {
+      github-example = {
         url = "https://github-mcp.example.com/mcp";
         bearer_token_env_var = "GITHUB_TOKEN";
         enabled_tools = [ "issues" "pulls" ];
