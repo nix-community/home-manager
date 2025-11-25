@@ -49,6 +49,17 @@ in
       '';
     };
 
+    presets = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [ "nerd-font-symbols" ];
+      description = ''
+        Preset files to be merged with settings in order.
+
+        See <https://starship.rs/presets/> for the full list of available presets.
+      '';
+    };
+
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
@@ -99,9 +110,29 @@ in
 
       sessionVariables.STARSHIP_CONFIG = cfg.configPath;
 
-      file.${cfg.configPath} = mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "starship-config" cfg.settings;
-      };
+      file.${cfg.configPath} =
+        let
+          settingsFile = tomlFormat.generate "starship-config" cfg.settings;
+        in
+        if cfg.presets == [ ] then
+          { source = settingsFile; }
+        else
+          {
+            source =
+              pkgs.runCommand "starship.toml"
+                {
+                  nativeBuildInputs = [ pkgs.yq ];
+                }
+                ''
+                  tomlq -s -t 'reduce .[] as $item ({}; . * $item)' \
+                    ${
+                      lib.concatStringsSep " " (map (f: "${cfg.package}/share/starship/presets/${f}.toml") cfg.presets)
+                    } \
+                    ${settingsFile} \
+                    > $out
+                '';
+          };
+
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
