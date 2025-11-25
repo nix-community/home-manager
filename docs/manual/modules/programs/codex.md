@@ -56,6 +56,13 @@ programs.codex = {
   settings = {
     model = "gpt-5.1";
     model_provider = "openai";
+    model_providers = {
+      openai = {
+        name = "OpenAI";
+        baseURL = "https://api.openai.com/v1";
+        envKey = "OPENAI_API_KEY";
+      };
+    };
     model_reasoning_effort = "medium";
     model_reasoning_summary = "auto";
     approval_policy = "on-request";
@@ -76,18 +83,13 @@ programs.codex = {
       set = { CI = "1"; };
       exclude = [ "AWS_*" "GCP_*" ];
     };
-    # Replace with your actual MCP servers; below are illustrative only.
+    # Real, local MCP server example (requires ripgrep in PATH)
     mcp_servers = {
       ripgrep-local = {
-        command = "rg";
+        command = "${pkgs.ripgrep}/bin/rg";
         args = [ "--json" ];
         enabled = true;
         tool_timeout_sec = 30;
-      };
-      github-example = {
-        url = "https://github-mcp.example.com/mcp";
-        bearer_token_env_var = "GITHUB_TOKEN";
-        enabled_tools = [ "issues" "pulls" ];
       };
     };
     otel.exporter = "none";
