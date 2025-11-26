@@ -1,6 +1,6 @@
 # Home Manager Manual {#home-manager-manual}
 
-## Version 25.11
+## Version 26.05 (unstable)
 
 
 ```{=include=} preface
