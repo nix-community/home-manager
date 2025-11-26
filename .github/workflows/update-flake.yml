@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
     strategy:
+      fail-fast: false
       matrix:
         branch: [master, release-25.11]
     steps:
