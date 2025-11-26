@@ -67,7 +67,10 @@ after being deprecated in 2021. You are now expected to use
 service.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11-state-version-changes" class="title" style="clear: both">State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;25.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>No changes.</p></li></ul></div>
+&quot;25.11&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p>The <code class="literal">programs.password-store.settings</code> option does not set
+<code class="literal">{ PASSWORD_STORE_DIR = $XDG_DATA_HOME/password-store; }</code> anymore by its
+default value. This will revert to the default behaviour of the program,
+namely <code class="literal">$HOME/.password-store</code> to be used as the store path.</p></li></ul></div>
 </div>
 
 </div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.05" class="title" >Release 25.05   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-25.05-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-25.05-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 25.05 release branch became stable in May, 2025.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.05-highlights" class="title" style="clear: both">Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-systemd.user.startServices"  ><code class="option">systemd.user.startServices</code></a> option now defaults to
