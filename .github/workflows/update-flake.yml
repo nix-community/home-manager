@@ -10,7 +10,7 @@ jobs:
     if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
     strategy:
       matrix:
-        branch: [master, release-25.05]
+        branch: [master, release-25.11]
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
