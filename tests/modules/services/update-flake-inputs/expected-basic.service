@@ -1,0 +1,12 @@
+[Service]
+ExecStart=/nix/store/00000000000000000000000000000000-update-flake-inputs/bin/update-flake-inputs /some/path
+
+Type=oneshot
+
+[Unit]
+After=network-online.target
+Description=Update Nix flake inputs
+Documentation=man:nix3-flake(1)
+Wants=network-online.target
+X-RestartIfChanged=false
+X-StopOnRemoval=false
