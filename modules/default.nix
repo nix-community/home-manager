@@ -18,7 +18,7 @@ let
     let
       f = w: x: builtins.trace "[1;31mwarning: ${w}[0m" x;
     in
-    lib.fold f res res.config.warnings;
+    lib.foldr f res res.config.warnings;
 
   extendedLib = import ./lib/stdlib-extended.nix lib;
 
