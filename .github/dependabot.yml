@@ -7,11 +7,6 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "ci:"
-    ignore:
-      # Ignore v6 until update-flake-lock upgrades to create-pull-request@v7.0.9+
-      - dependency-name: "actions/checkout"
-        update-types: ["version-update:semver-major"]
-
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "release-25.11"
@@ -20,6 +15,3 @@ updates:
     commit-message:
       prefix: "ci:"
     ignore:
-      # Ignore v6 until update-flake-lock upgrades to create-pull-request@v7.0.9+
-      - dependency-name: "actions/checkout"
-        update-types: ["version-update:semver-major"]
