@@ -121,6 +121,22 @@ Reference commits:
    - Change `isReleaseBranch` from `false` to `true`
    - Do NOT change the `release` field (it's already correct from Step 1)
 
+2. **flake.nix**
+   - Update the nixpkgs input to track the corresponding stable branch
+   - Example: For `release-25.11`, change from:
+     ```nix
+     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+     ```
+     to:
+     ```nix
+     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+     ```
+   - Run `nix flake update` to update flake.lock to the stable branch
+   - Commit the flake.nix and flake.lock changes
+
+**Note**: The release branch should track the stable NixOS release channel
+(e.g., `nixos-25.11`), while master continues to track `nixos-unstable`.
+
 #### Step 3.5: On master - Update CI for the New Release Branch
 
 **When**: After marking the release branch as a release branch (Step 3)
