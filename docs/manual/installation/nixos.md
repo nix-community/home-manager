@@ -17,10 +17,10 @@ $ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/m
 $ sudo nix-channel --update
 ```
 
-and if you follow a Nixpkgs version 25.05 channel, you can run
+and if you follow a Nixpkgs version 25.11 channel, you can run
 
 ``` shell
-$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz home-manager
 $ sudo nix-channel --update
 ```
 
@@ -39,7 +39,7 @@ Alternatively, home-manager installation can be done declaratively through confi
 { config, pkgs, lib, ... }:
 
 let
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz;
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz;
 in
 {
   imports =
@@ -51,10 +51,10 @@ in
   home-manager.users.eve = { pkgs, ... }: {
     home.packages = [ pkgs.atool pkgs.httpie ];
     programs.bash.enable = true;
-  
+
     # The state version is required and should stay at the version you
     # originally installed.
-    home.stateVersion = "25.05";
+    home.stateVersion = "25.11";
   };
 }
 ```
@@ -67,14 +67,14 @@ home-manager.users.eve = { pkgs, ... }: {
   home.packages = [ pkgs.atool pkgs.httpie ];
   programs.bash.enable = true;
 
-  # This value determines the Home Manager release that your configuration is 
-  # compatible with. This helps avoid breakage when a new Home Manager release 
-  # introduces backwards incompatible changes. 
+  # This value determines the Home Manager release that your configuration is
+  # compatible with. This helps avoid breakage when a new Home Manager release
+  # introduces backwards incompatible changes.
   #
-  # You should not change this value, even if you update Home Manager. If you do 
-  # want to update the value, then make sure to first check the Home Manager 
-  # release notes. 
-  home.stateVersion = "24.05"; # Please read the comment before changing. 
+  # You should not change this value, even if you update Home Manager. If you do
+  # want to update the value, then make sure to first check the Home Manager
+  # release notes.
+  home.stateVersion = "25.11"; # Please read the comment before changing. 
 
 };
 ```
