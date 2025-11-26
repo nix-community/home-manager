@@ -35,7 +35,12 @@ jobs:
             echo "email=$id+$name@users.noreply.github.com"
           } >> "$GITHUB_OUTPUT"
       - name: Checkout repository
-        uses: actions/checkout@v6
+        # NOTE: v6 is incompatible with update-flake-lock@v27 due to credential
+        # storage changes. update-flake-lock uses peter-evans/create-pull-request@v6.0.5
+        # which doesn't work with v6's $RUNNER_TEMP credential storage.
+        # Can upgrade to v6 once update-flake-lock uses create-pull-request@v7.0.9+
+        # See: https://github.com/peter-evans/create-pull-request/issues/690
+        uses: actions/checkout@v5
         with:
           ref: ${{ matrix.branch }}
           token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
