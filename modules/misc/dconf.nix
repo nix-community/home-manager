@@ -17,15 +17,29 @@ let
   # The dconf keys managed by this configuration. We store this as part of the
   # generation state to be able to reset keys that become unmanaged during
   # switch.
-  stateDconfKeys = pkgs.writeText "dconf-keys.json" (
-    builtins.toJSON (
-      lib.concatLists (
-        lib.mapAttrsToList (
-          dir: entries: lib.mapAttrsToList (key: _: "/${dir}/${key}") entries
-        ) cfg.settings
+  mkStateDconfKeys =
+    nameSuffix: settings:
+    pkgs.writeText "dconf-keys${nameSuffix}.json" (
+      builtins.toJSON (
+        lib.concatLists (
+          lib.mapAttrsToList (dir: entries: lib.mapAttrsToList (key: _: "/${dir}/${key}") entries) settings
+        )
       )
-    )
-  );
+    );
+
+  databases =
+    lib.optional (cfg.settings != { }) {
+      dconfProfile = null;
+      stateDconfKeys = mkStateDconfKeys "" cfg.settings;
+      inherit (cfg) settings;
+    }
+    ++ lib.mapAttrsToList (name: value: {
+      dconfProfile = pkgs.writeText "dconf-profile-${name}" ''
+        user-db:${name}
+      '';
+      stateDconfKeys = mkStateDconfKeys "-${name}" value;
+      settings = value;
+    }) cfg.databases;
 
 in
 {
@@ -81,73 +95,87 @@ in
           to convert dconf database dumps into compatible Nix expression.
         '';
       };
+      databases = lib.mkOption {
+        type = with types; attrsOf (attrsOf (attrsOf lib.hm.types.gvariant));
+        default = { };
+        description = ''
+          Settings to write to specific dconf user databases.
+          See [](#opt-dconf.settings) for details.
+        '';
+      };
     };
   };
 
-  config = lib.mkIf (cfg.enable && cfg.settings != { }) {
+  config = lib.mkIf (cfg.enable && databases != [ ]) {
     # Make sure the dconf directory exists.
     xdg.configFile."dconf/.keep".source = builtins.toFile "keep" "";
 
     home.extraBuilderCommands = ''
       mkdir -p $out/state/
-      ln -s ${stateDconfKeys} $out/state/${stateDconfKeys.name}
-    '';
+    ''
+    + lib.concatMapStrings (db: ''
+      ln -s ${db.stateDconfKeys} $out/state/${db.stateDconfKeys.name}
+    '') databases;
 
     home.activation.dconfSettings = lib.hm.dag.entryAfter [ "installPackages" ] (
-      let
-        iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni cfg.settings);
+      lib.concatMapStrings (
+        db:
+        let
+          iniFile = pkgs.writeText "hm-dconf.ini" (toDconfIni db.settings);
 
-        statePath = "state/${stateDconfKeys.name}";
+          statePath = "state/${db.stateDconfKeys.name}";
 
-        cleanup = pkgs.writeShellScript "dconf-cleanup" ''
-          set -euo pipefail
+          cleanup = pkgs.writeShellScript "dconf-cleanup" ''
+            set -euo pipefail
 
-          ${config.lib.bash.initHomeManagerLib}
+            ${config.lib.bash.initHomeManagerLib}
 
-          PATH=${
-            lib.makeBinPath [
-              pkgs.dconf
-              pkgs.jq
-            ]
-          }''${PATH:+:}$PATH
+            PATH=${
+              lib.makeBinPath [
+                pkgs.dconf
+                pkgs.jq
+              ]
+            }''${PATH:+:}$PATH
 
-          oldState="$1"
-          newState="$2"
+            oldState="$1"
+            newState="$2"
 
-          # Can't do cleanup if we don't know the old state.
-          if [[ ! -f $oldState ]]; then
-            exit 0
+            # Can't do cleanup if we don't know the old state.
+            if [[ ! -f $oldState ]]; then
+              exit 0
+            fi
+
+            # Reset all keys that are present in the old generation but not the new
+            # one.
+            jq -r -n \
+                --slurpfile old "$oldState" \
+                --slurpfile new "$newState" \
+                '($old[] - $new[])[]' \
+              | while read -r key; do
+                  verboseEcho "Resetting dconf key \"$key\""
+                  run $DCONF_DBUS_RUN_SESSION dconf reset "$key"
+                done
+          '';
+          envCommand = lib.optionalString (db.dconfProfile != null) "env DCONF_PROFILE=${db.dconfProfile}";
+        in
+        ''
+          if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
+            export DCONF_DBUS_RUN_SESSION="${envCommand}"
+          else
+            export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon ${envCommand}"
           fi
 
-          # Reset all keys that are present in the old generation but not the new
-          # one.
-          jq -r -n \
-              --slurpfile old "$oldState" \
-              --slurpfile new "$newState" \
-              '($old[] - $new[])[]' \
-            | while read -r key; do
-                verboseEcho "Resetting dconf key \"$key\""
-                run $DCONF_DBUS_RUN_SESSION dconf reset "$key"
-              done
-        '';
-      in
-      ''
-        if [[ -v DBUS_SESSION_BUS_ADDRESS ]]; then
-          export DCONF_DBUS_RUN_SESSION=""
-        else
-          export DCONF_DBUS_RUN_SESSION="${pkgs.dbus}/bin/dbus-run-session --dbus-daemon=${pkgs.dbus}/bin/dbus-daemon"
-        fi
+          if [[ -v oldGenPath ]]; then
+            ${cleanup} \
+              "$oldGenPath/${statePath}" \
+              "$newGenPath/${statePath}"
+          fi
 
-        if [[ -v oldGenPath ]]; then
-          ${cleanup} \
-            "$oldGenPath/${statePath}" \
-            "$newGenPath/${statePath}"
-        fi
+          run $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
 
-        run $DCONF_DBUS_RUN_SESSION ${pkgs.dconf}/bin/dconf load / < ${iniFile}
-
-        unset DCONF_DBUS_RUN_SESSION
-      ''
+          unset DCONF_DBUS_RUN_SESSION
+        ''
+      ) databases
     );
   };
 }
