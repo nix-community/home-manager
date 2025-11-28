@@ -1,6 +1,13 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  cfg = config.services.podman;
+
   # Define the systemd service type
   quadletInternalType = lib.types.submodule {
     options = {
@@ -38,6 +45,15 @@ let
       };
     };
   };
+
+  # Check if any Linux-specific options are configured
+  hasLinuxConfig =
+    cfg.containers != { }
+    || cfg.builds != { }
+    || cfg.images != { }
+    || cfg.networks != { }
+    || cfg.volumes != { }
+    || cfg.enableTypeChecks;
 in
 {
   options.services.podman = {
@@ -56,8 +72,27 @@ in
       };
     };
 
-    package = lib.mkPackageOption pkgs "podman" { };
-
     enableTypeChecks = lib.mkEnableOption "type checks for podman quadlets";
+  };
+
+  config = lib.mkIf (cfg.enable && hasLinuxConfig) {
+    assertions = [
+      {
+        assertion = pkgs.stdenv.hostPlatform.isLinux;
+        message = ''
+          Podman Linux-specific options (quadlets) are configured, but you are not on a Linux system.
+          The following options are only available on Linux:
+          - services.podman.containers
+          - services.podman.builds
+          - services.podman.images
+          - services.podman.networks
+          - services.podman.volumes
+          - services.podman.enableTypeChecks
+          - services.podman.autoUpdate
+
+          Please remove these Linux-specific configurations from your home-manager configuration.
+        '';
+      }
+    ];
   };
 }
