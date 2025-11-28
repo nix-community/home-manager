@@ -1,4 +1,4 @@
-set -o errexit -o noclobber -o nounset -o pipefail
+set -o errexit -o noclobber -o nounset -o pipefail -x
 shopt -s failglob inherit_errexit
 
 cleanup() {
