@@ -128,9 +128,6 @@ let
             username = "hm-user";
             homeDirectory = "/home/hm-user";
             stateVersion = lib.mkDefault "18.09";
-            # TODO: Disable release check during version transitions when Home Manager
-            # and nixos-unstable are temporarily out of sync.
-            enableNixpkgsReleaseCheck = false;
           };
 
           # Avoid including documentation since this will cause
