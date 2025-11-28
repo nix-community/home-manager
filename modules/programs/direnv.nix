@@ -97,6 +97,14 @@ in
 
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
+    enableXonshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Xonsh integration.
+      '';
+    };
+
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     nix-direnv = {
@@ -185,6 +193,10 @@ in
               }
           )
         '');
+        xonsh = mkIf cfg.enableXonshIntegration {
+          xonshrc = "xontrib load direnv";
+          extraPackages = ps: [ ps.xonsh.xontribs.xonsh-direnv ];
+        };
       };
 
       xdg.configFile = {
