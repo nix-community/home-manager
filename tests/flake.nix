@@ -15,7 +15,7 @@
 {
   description = "Tests of Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
   outputs =
     { nixpkgs, ... }:
