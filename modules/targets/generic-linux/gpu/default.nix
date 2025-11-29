@@ -81,7 +81,7 @@
 
       drivers = mkOption {
         type = types.package;
-        readOnly = true;
+        internal = true;
         description = "Resulting drivers package.";
       };
     };
@@ -104,15 +104,9 @@
             kernel = null;
           };
 
-      drivers = cfg.packages.callPackage ./gpu-libs-env.nix {
-        inherit (pkgs.stdenv.hostPlatform) system;
-        addNvidia = cfg.nvidia.enable;
-        nvidia_x11 = nvidia; # Only used if addNvidia is enabled
-      };
-
       setupPackage = cfg.packages.callPackage ./setup {
         inherit (cfg) nixStateDirectory;
-        nonNixosGpuEnv = drivers;
+        nonNixosGpuEnv = cfg.drivers;
       };
     in
     lib.mkIf cfg.enable {
@@ -149,7 +143,7 @@
         in
         lib.hm.dag.entryAnywhere ''
           existing=$(readlink /run/opengl-driver || true)
-          new=${drivers}
+          new=${cfg.drivers}
           verboseEcho Existing drivers: ''${existing}
           verboseEcho New drivers: ''${new}
           if [[ -z "''${existing}" ]] ; then
@@ -163,7 +157,13 @@
         '';
 
       targets.genericLinux.gpu = {
-        inherit setupPackage drivers;
+        inherit setupPackage;
+        drivers = cfg.packages.callPackage ./gpu-libs-env.nix {
+          inherit (pkgs.stdenv.hostPlatform) system;
+          addNvidia = cfg.nvidia.enable;
+          nvidia_x11 = nvidia; # Only used if addNvidia is enabled
+        };
+
       };
     };
 
