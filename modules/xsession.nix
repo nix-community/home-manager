@@ -188,10 +188,13 @@ in
         hm-graphical-session = {
           Unit = {
             Description = "Home Manager X session";
-            Requires = [
-              "graphical-session-pre.target"
-              "xdg-desktop-autostart.target"
-            ];
+            Requires =
+              let
+                requires = lib.optional (config.xdg.autostart.enable) "xdg-desktop-autostart.target" ++ [
+                  "graphical-session-pre.target"
+                ];
+              in
+              requires;
             BindsTo = [
               "graphical-session.target"
               "tray.target"
