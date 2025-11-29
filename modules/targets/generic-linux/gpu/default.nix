@@ -105,6 +105,7 @@
           };
 
       drivers = cfg.packages.callPackage ./gpu-libs-env.nix {
+        inherit (pkgs.stdenv.hostPlatform) system;
         addNvidia = cfg.nvidia.enable;
         nvidia_x11 = nvidia; # Only used if addNvidia is enabled
       };
