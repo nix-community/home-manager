@@ -96,6 +96,7 @@ let
     "lf"
     "lieer"
     "lsd"
+    "ludusavi"
     "mbsync"
     "meli"
     "mergiraf"
