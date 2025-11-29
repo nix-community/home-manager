@@ -49,9 +49,17 @@ in
       default = {
         manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
         roots = [ ];
-        backup.path = "$XDG_STATE_HOME/backups/ludusavi";
-        restore.path = "$XDG_STATE_HOME/backups/ludusavi";
+        backup.path = "${config.xdg.stateHome}/backups/ludusavi";
+        restore.path = "${config.xdg.stateHome}/backups/ludusavi";
       };
+      defaultText = ''
+        {
+          manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
+          roots = [ ];
+          backup.path = "$XDG_STATE_HOME/backups/ludusavi";
+          restore.path = "$XDG_STATE_HOME/backups/ludusavi";
+        }
+      '';
       example = {
         language = "en-US";
         theme = "light";
