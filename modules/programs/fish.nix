@@ -628,30 +628,9 @@ in
                 mkdir -p $out
                 for src in $srcs; do
                   if [ -d $src/share/man ]; then
-                    while IFS= read -r manpage; do
-                      # Approximate the corresponding command for this manpage
-                      bin="$(basename "$manpage")"
-                      bin="''${bin%%.*}"
-                      bin="$src/bin/$bin"
-
-                      # Check for builtin completion
-                      if
-                        [ -e "$bin" ] &&
-                        fish \
-                          --no-config \
-                          --command 'complete --do-complete $argv[1]' \
-                          -- "$bin" \
-                          >/dev/null 2>&1
-                      then
-                        echo "Found builtin completion for $bin (skipping)"
-                        continue
-                      fi
-
-                      # Generate completion based on the manpage
-                      python ${cfg.package}/share/fish/tools/create_manpage_completions.py \
-                        --directory "$out" "$manpage" > /dev/null
-
-                    done < <(find -L "$src/share/man" -type f)
+                    find -L $src/share/man -type f \
+                      -exec python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out {} + \
+                      > /dev/null
                   fi
                 done
               '';
