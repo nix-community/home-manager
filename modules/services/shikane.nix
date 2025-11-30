@@ -67,6 +67,8 @@ in
       (lib.hm.assertions.assertPlatform "services.shikane" pkgs lib.platforms.linux)
     ];
 
+    home.packages = [ cfg.package ];
+
     xdg.configFile."shikane/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "shikane-config" cfg.settings;
     };
