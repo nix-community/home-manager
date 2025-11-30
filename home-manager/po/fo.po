@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-08-23 20:02+0000\n"
+"PO-Revision-Date: 2025-11-30 14:00+0000\n"
 "Last-Translator: Brian E <brianellingsgaard9@gmail.com>\n"
 "Language-Team: Faroese <https://hosted.weblate.org/projects/home-manager/cli/"
 "fo/>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "%s: manglar eitt ávirki fyri %s"
 
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
@@ -31,7 +31,7 @@ msgstr "%s: %s kann bert brúkast aftaná %s"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
-msgstr ""
+msgstr "Eingin samansetingsfíla funni hjá %s"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
