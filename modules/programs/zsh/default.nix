@@ -79,7 +79,11 @@ in
     in
     {
       programs.zsh = {
-        enable = mkEnableOption "Z shell (Zsh)";
+        enable = mkOption {
+          default = pkgs.stdenv.isDarwin;
+          description = "Enable zsh as a user shell.";
+          type = types.bool;
+        };
 
         package = lib.mkPackageOption pkgs "zsh" { };
 
