@@ -629,6 +629,13 @@
     name = "Arjan Schrijver";
     source = "nixpkgs";
   };
+  arunoruto = {
+    email = "mirza.arnaut45@gmail.com";
+    github = "arunoruto";
+    githubId = 21687187;
+    name = "Mirza Arnaut";
+    source = "nixpkgs";
+  };
   asymmetric = {
     email = "lorenzo@mailbox.org";
     github = "asymmetric";
