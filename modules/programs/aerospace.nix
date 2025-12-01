@@ -10,6 +10,12 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
+  configPath =
+    if config.xdg.enable then
+      "${lib.removePrefix config.home.homeDirectory config.xdg.configHome}/aerospace/aerospace.toml"
+    else
+      ".aerospace.toml";
+
   # filterAttrsRecursive supporting lists, as well.
   filterListAndAttrsRecursive =
     pred: set:
@@ -38,6 +44,19 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [ damidoug ];
+
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "programs" "aerospace" "userSettings" ]
+      [ "programs" "aerospace" "settings" ]
+    )
+
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "aerospace"
+      "extraConfig"
+    ] "This option has been removed. Please use 'programs.aerospace.settings' instead.")
+  ];
 
   options.programs.aerospace = {
     enable = lib.mkEnableOption "AeroSpace window manager";
@@ -81,24 +100,7 @@ in
       };
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = ''
-        Extra configuration to append to the aerospace.toml file.
-        This allows you to add raw TOML content, including multiline strings.
-      '';
-      example = lib.literalExpression ''
-        alt-enter = ''''exec-and-forget osascript -e '
-          tell application "Terminal"
-              do script
-              activate
-          end tell'
-        ''''
-      '';
-    };
-
-    userSettings = mkOption {
+    settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
@@ -115,6 +117,27 @@ in
             alt-k = "focus up";
             alt-l = "focus right";
           };
+          on-window-detected = [
+            {
+              "if".app-id = "com.apple.finder";
+              run = "move-node-to-workspace 9";
+            }
+
+            {
+              "if" = {
+                app-id = "com.apple.systempreferences";
+                app-name-regex-substring = "settings";
+                window-title-regex-substring = "substring";
+                workspace = "workspace-name";
+                during-aerospace-startup = true;
+              };
+              check-further-callbacks = true;
+              run = [
+                "layout floating"
+                "move-node-to-workspace S"
+              ];
+            }
+          ];
         }
       '';
       description = ''
@@ -128,32 +151,68 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.aerospace" pkgs lib.platforms.darwin)
+
+      # 1. Fail if user sets start-at-login = true BUT launchd is disabled.
+      {
+        assertion =
+          !((lib.hasAttr "start-at-login" cfg.settings) && (cfg.settings."start-at-login" == true))
+          || (cfg.launchd.enable == true);
+        message = ''
+          You have set `programs.aerospace.settings."start-at-login" = true;`
+          but `programs.aerospace.launchd.enable` is false.
+
+          This tells AeroSpace to manage its own startup, which can conflict
+          with Home Manager.
+
+          To manage startup with Home Manager, please set
+          `programs.aerospace.launchd.enable = true;`
+          (You can leave `start-at-login = true` in your settings, it will be
+          correctly overridden).
+        '';
+      }
+
+      # 2. Fail if user sets after-login-command (in any case).
+      {
+        assertion =
+          !(
+            (lib.hasAttr "after-login-command" cfg.settings)
+            && (lib.isList cfg.settings."after-login-command")
+            && (cfg.settings."after-login-command" != [ ])
+          );
+        message = ''
+          You have set `programs.aerospace.settings."after-login-command"`.
+
+          This setting is not supported when using this Home Manager module,
+          as it either conflicts with the launchd service (if enabled)
+          or bypasses it (if disabled).
+
+          The correct way to run commands after AeroSpace starts is to use:
+          1. `programs.aerospace.launchd.enable = true;`
+          2. `programs.aerospace.settings."after-startup-command" = [ ... ];`
+        '';
+      }
     ];
 
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      file.".config/aerospace/aerospace.toml".source =
-        let
-          generatedConfig = tomlFormat.generate "aerospace" (
-            filterNulls (
-              cfg.userSettings
-              // lib.optionalAttrs cfg.launchd.enable {
-                # Override these to avoid launchd conflicts
-                start-at-login = false;
-                after-login-command = [ ];
-              }
-            )
-          );
-          extraConfig = pkgs.writeText "aerospace-extra-config" cfg.extraConfig;
-        in
-        pkgs.runCommandLocal "aerospace.toml"
-          {
-            inherit generatedConfig extraConfig;
-          }
-          ''
-            cat "$generatedConfig" "$extraConfig" > "$out"
-          '';
+      file.${configPath} = lib.mkIf (cfg.settings != { }) {
+        source = tomlFormat.generate "aerospace" (
+          filterNulls (
+            cfg.settings
+            // {
+              # Override these to avoid launchd conflicts
+              start-at-login = false;
+              after-login-command = [ ];
+            }
+          )
+        );
+
+        onChange = lib.mkIf cfg.launchd.enable ''
+          echo "AeroSpace config changed, reloading..."
+          ${lib.getExe cfg.package} reload-config
+        '';
+      };
     };
 
     launchd.agents.aerospace = {

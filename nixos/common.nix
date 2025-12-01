@@ -42,6 +42,7 @@ let
             import ../modules/modules.nix {
               inherit pkgs;
               lib = extendedLib;
+              inherit (cfg) minimal;
               useNixpkgsModule = !cfg.useGlobalPkgs;
             }
             ++ cfg.sharedModules;
@@ -84,7 +85,7 @@ in
     backupCommand = mkOption {
       type = types.nullOr (types.either types.str types.path);
       default = null;
-      example = lib.literalExpression "''${pkgs.trash-cli}/bin/trash";
+      example = lib.literalExpression "\${pkgs.trash-cli}/bin/trash";
       description = ''
         On activation run this command on each existing file
         rather than exiting with an error.
@@ -114,6 +115,16 @@ in
         option can be used to pass additional arguments to all modules.
       '';
     };
+
+    minimal = mkEnableOption ''
+      only the necessary modules that allow home-manager to function.
+
+      This can be used to allow vendoring a minimal list of modules yourself, rather than
+      importing every single module.
+
+      THIS IS FOR ADVANCED USERS, AND WILL DISABLE ALMOST EVERY MODULE.
+      THIS SHOULD NOT BE ENABLED UNLESS YOU KNOW THE IMPLICATIONS.
+    '';
 
     sharedModules = mkOption {
       type = with types; listOf raw;

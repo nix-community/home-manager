@@ -59,7 +59,7 @@ in
     theme = mkOption {
       type = types.nullOr themeType;
       default = null;
-      description = "Default theme for all GTK versions.";
+      description = "Default theme for GTK 2/3.";
     };
 
     iconTheme = mkOption {

@@ -66,6 +66,11 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    thiagokokada
+    chuangzhu
+  ];
+
   options = {
     programs.mpv = {
       enable = lib.mkEnableOption "mpv";
@@ -250,9 +255,4 @@ in
       }
     ]
   );
-
-  meta.maintainers = with lib.maintainers; [
-    thiagokokada
-    chuangzhu
-  ];
 }

@@ -79,6 +79,8 @@ let
     };
 in
 {
+  meta.maintainers = [ lib.maintainers.jess ];
+
   options.services.restic = {
     enable = lib.mkEnableOption "restic";
 
@@ -606,6 +608,4 @@ in
       }
     ]
   );
-
-  meta.maintainers = [ lib.maintainers.jess ];
 }

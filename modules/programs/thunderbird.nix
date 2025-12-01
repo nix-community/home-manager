@@ -785,13 +785,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    warnings = lib.optionals (!cfg.darwinSetupWarning) [
-      ''
-        Using programs.thunderbird.darwinSetupWarning is deprecated and will be
-        removed in the future. Thunderbird is now supported on Darwin.
-      ''
-    ];
-
     assertions = [
       (
         let
@@ -882,6 +875,13 @@ in
             '';
         }
       )
+    ];
+
+    warnings = lib.optionals (!cfg.darwinSetupWarning) [
+      ''
+        Using programs.thunderbird.darwinSetupWarning is deprecated and will be
+        removed in the future. Thunderbird is now supported on Darwin.
+      ''
     ];
 
     home.packages = [

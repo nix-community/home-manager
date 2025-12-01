@@ -19,6 +19,8 @@ let
   };
 in
 {
+  meta.maintainers = [ lib.hm.maintainers.msyds ];
+
   options.services.mpdscribble = {
 
     enable = lib.mkEnableOption ''
@@ -225,6 +227,4 @@ in
         };
       };
   };
-
-  meta.maintainers = [ lib.hm.maintainers.msyds ];
 }

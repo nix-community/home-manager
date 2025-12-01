@@ -70,11 +70,7 @@ in
     programs.meli = {
       enable = mkEnableOption "meli email client";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.meli;
-        description = "meli package to use";
-      };
+      package = lib.mkPackageOption pkgs "meli" { };
 
       includes = mkOption {
         type = with types; listOf (str);

@@ -169,6 +169,12 @@
     github = "epixtm";
     githubId = 168025607;
   };
+  exzombie = {
+    name = "Jure Varlec";
+    email = "jure@varlec.si";
+    github = "exzombie";
+    githubId = 11456290;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
@@ -266,6 +272,12 @@
     github = "jrobsonchase";
     githubId = 1553581;
     name = "Josh Robson Chase";
+  };
+  jtrrll = {
+    email = "jacksonterrill3@gmail.com";
+    github = "jtrrll";
+    githubId = 77407057;
+    name = "Jackson Terrill";
   };
   kaleo = {
     name = "Kaleo Cheng";
@@ -464,6 +476,12 @@
     email = "softwaredevelopment.stingray177@passinbox.com";
     github = "poseidon-rises";
     githubId = 179542264;
+  };
+  prescientmoon = {
+    name = "prescientmoon";
+    email = "git@moonythm.dev";
+    github = "prescientmoon";
+    githubId = 39400800;
   };
   rasmus-kirk = {
     name = "Rasmus Kirk";

@@ -338,6 +338,8 @@ let
 
 in
 {
+  meta.maintainers = [ lib.maintainers.uvnikita ];
+
   options = {
     programs.autorandr = {
       enable = lib.mkEnableOption "Autorandr";
@@ -432,6 +434,4 @@ in
       (lib.mkMerge (mapAttrsToList profileToFiles cfg.profiles))
     ];
   };
-
-  meta.maintainers = [ lib.maintainers.uvnikita ];
 }

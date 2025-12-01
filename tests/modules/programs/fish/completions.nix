@@ -25,7 +25,7 @@ in
       };
     };
 
-    xdg.dataFile."fish/home-manager_generated_completions".source = lib.mkForce (
+    xdg.dataFile."fish/home-manager/generated_completions".source = lib.mkForce (
       builtins.toFile "empty" ""
     );
 

@@ -14,6 +14,8 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [ jess ];
+
   imports = [
     (lib.mkRemovedOptionModule [ "programs" "rclone" "writeAfter" ] ''
       The writeAfter option has been removed because rclone configuration is now handled by a
@@ -399,6 +401,4 @@ in
         mountServices
       ];
     };
-
-  meta.maintainers = with lib.maintainers; [ jess ];
 }

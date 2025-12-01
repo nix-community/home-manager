@@ -10,6 +10,8 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
+  meta.maintainers = [ ];
+
   imports =
     let
       msg = ''
@@ -21,9 +23,6 @@ in
         configuration.'';
     in
     [ (lib.mkRemovedOptionModule [ "programs" "lsd" "enableAliases" ] msg) ];
-
-  meta.maintainers = [ ];
-
   options.programs.lsd = {
     enable = lib.mkEnableOption "lsd";
 

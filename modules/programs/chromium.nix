@@ -38,6 +38,15 @@ let
         description = "The ${name} package to use.";
       };
 
+      finalPackage = mkOption {
+        inherit visible;
+        type = types.package;
+        readOnly = true;
+        description = ''
+          Resulting customized ${name} package
+        '';
+      };
+
       commandLineArgs = mkOption {
         inherit visible;
         type = types.listOf types.str;
@@ -212,15 +221,17 @@ let
 
     in
     lib.mkIf cfg.enable {
-      home.packages = lib.mkIf (cfg.package != null) [
-        (
-          if cfg.commandLineArgs != [ ] then
-            cfg.package.override {
-              commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
-            }
-          else
-            cfg.package
-        )
+      programs.${browser}.finalPackage = lib.mkIf (cfg.package != null) (
+        if cfg.commandLineArgs != [ ] then
+          cfg.package.override {
+            commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
+          }
+        else
+          cfg.package
+      );
+
+      home.packages = lib.mkIf (cfg.finalPackage != null) [
+        cfg.finalPackage
       ];
       home.file = lib.optionalAttrs (!isProprietaryChrome) (
         lib.listToAttrs ((map extensionJson cfg.extensions) ++ (map dictionary cfg.dictionaries))

@@ -484,6 +484,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
+        message = "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
+      }
+    ];
+
     home.packages = [ cfg.package ];
     home.file =
       let
@@ -540,13 +547,6 @@ in
           ]
         );
     };
-
-    assertions = [
-      {
-        assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
-        message = "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
-      }
-    ];
 
     warnings =
       let

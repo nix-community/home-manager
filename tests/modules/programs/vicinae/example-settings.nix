@@ -28,22 +28,34 @@
       };
     };
     themes = {
-      base16-default-dark = {
-        version = "1.0.0";
-        appearance = "dark";
-        name = "base16 default dark";
-        description = "base16 default dark by Chris Kempson";
-        palette = {
-          background = "#181818";
-          foreground = "#d8d8d8";
-          blue = "#7cafc2";
-          green = "#a3be8c";
-          magenta = "#ba8baf";
-          orange = "#dc9656";
-          purple = "#a16946";
-          red = "#ab4642";
-          yellow = "#f7ca88";
-          cyan = "#86c1b9";
+      catppuccin-mocha = {
+        meta = {
+          version = 1;
+          name = "Catppuccin Mocha";
+          description = "Cozy feeling with color-rich accents";
+          variant = "dark";
+          icon = "icons/catppuccin-mocha.png";
+          inherits = "vicinae-dark";
+        };
+
+        colors = {
+          core = {
+            background = "#1E1E2E";
+            foreground = "#CDD6F4";
+            secondary_background = "#181825";
+            border = "#313244";
+            accent = "#89B4FA";
+          };
+          accents = {
+            blue = "#89B4FA";
+            green = "#A6E3A1";
+            magenta = "#F5C2E7";
+            orange = "#FAB387";
+            purple = "#CBA6F7";
+            red = "#F38BA8";
+            yellow = "#F9E2AF";
+            cyan = "#94E2D5";
+          };
         };
       };
     };
@@ -71,6 +83,7 @@
   nmt.script = ''
     assertFileExists      "home-files/.config/vicinae/vicinae.json"
     assertFileExists      "home-files/.config/systemd/user/vicinae.service"
+    assertFileExists      "home-files/.local/share/vicinae/themes/catppuccin-mocha.toml"
     assertFileExists      "home-files/.local/share/vicinae/extensions/gif-search/package.json"
     assertFileExists      "home-files/.local/share/vicinae/extensions/test-extension/package.json"
   '';

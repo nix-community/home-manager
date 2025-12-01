@@ -16,6 +16,7 @@ let
       cfg.configFile;
 in
 {
+  meta.maintainers = [ lib.maintainers.PopeRigby ];
 
   options.services.ludusavi = {
     enable = lib.mkEnableOption "Ludusavi game backup tool";
@@ -109,6 +110,4 @@ in
 
     home.packages = [ cfg.package ];
   };
-
-  meta.maintainers = [ lib.maintainers.PopeRigby ];
 }

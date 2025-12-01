@@ -227,6 +227,53 @@ in
       example = lib.literalExpression "./hooks";
     };
 
+    skills = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Custom skills for Claude Code.
+        The attribute name becomes the skill filename or directory name, and the value is either:
+        - Inline content as a string (creates .claude/skills/<name>.md)
+        - A path to a file (creates .claude/skills/<name>.md)
+        - A path to a directory (creates .claude/skills/<name>/ with all files)
+      '';
+      example = lib.literalExpression ''
+        {
+          xlsx = ./skills/xlsx.md;
+          data-analysis = ./skills/data-analysis;
+          pdf-processing = '''
+            ---
+            name: pdf-processing
+            description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+            ---
+
+            # PDF Processing
+
+            ## Quick start
+
+            Use pdfplumber to extract text from PDFs:
+
+            ```python
+            import pdfplumber
+
+            with pdfplumber.open("document.pdf") as pdf:
+                text = pdf.pages[0].extract_text()
+            ```
+          ''';
+        }
+      '';
+    };
+
+    skillsDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing skill files for Claude Code.
+        Skill files from this directory will be symlinked to .claude/skills/.
+      '';
+      example = lib.literalExpression "./skills";
+    };
+
     mcpServers = lib.mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
@@ -290,6 +337,10 @@ in
         assertion = !(cfg.hooks != { } && cfg.hooksDir != null);
         message = "Cannot specify both `programs.claude-code.hooks` and `programs.claude-code.hooksDir`";
       }
+      {
+        assertion = !(cfg.skills != { } && cfg.skillsDir != null);
+        message = "Cannot specify both `programs.claude-code.skills` and `programs.claude-code.skillsDir`";
+      }
     ];
 
     programs.claude-code.finalPackage =
@@ -349,6 +400,11 @@ in
           source = cfg.hooksDir;
           recursive = true;
         };
+
+        ".claude/skills" = lib.mkIf (cfg.skillsDir != null) {
+          source = cfg.skillsDir;
+          recursive = true;
+        };
       }
       // lib.mapAttrs' (
         name: content:
@@ -367,7 +423,19 @@ in
         lib.nameValuePair ".claude/hooks/${name}" {
           text = content;
         }
-      ) cfg.hooks;
+      ) cfg.hooks
+      // lib.mapAttrs' (
+        name: content:
+        if lib.isPath content && lib.pathIsDirectory content then
+          lib.nameValuePair ".claude/skills/${name}" {
+            source = content;
+            recursive = true;
+          }
+        else
+          lib.nameValuePair ".claude/skills/${name}.md" (
+            if lib.isPath content then { source = content; } else { text = content; }
+          )
+      ) cfg.skills;
     };
   };
 }

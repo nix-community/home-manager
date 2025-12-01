@@ -96,6 +96,8 @@ let
       }"'';
 in
 {
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
+
   imports = [
     (mkRemovedOptionModule [
       "programs"
@@ -116,9 +118,6 @@ in
               configure.customRC -> programs.neovim.extraConfig
     '')
   ];
-
-  meta.maintainers = with lib.maintainers; [ khaneliman ];
-
   options = {
     programs.neovim = {
       enable = mkEnableOption "Neovim";

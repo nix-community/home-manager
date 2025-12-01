@@ -7,11 +7,11 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "ci:"
-
   - package-ecosystem: "github-actions"
     directory: "/"
-    target-branch: "release-25.05"
+    target-branch: "release-25.11"
     schedule:
       interval: "weekly"
     commit-message:
       prefix: "ci:"
+    ignore:

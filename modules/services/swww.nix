@@ -50,6 +50,9 @@ in
 
       Service = {
         ExecStart = "${lib.getExe' cfg.package "swww-daemon"} ${lib.escapeShellArgs cfg.extraArgs}";
+        Environment = [
+          "PATH=$PATH:${lib.makeBinPath [ cfg.package ]}"
+        ];
         Restart = "always";
         RestartSec = 10;
       };

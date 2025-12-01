@@ -46,7 +46,7 @@ let
         traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
       in
       traceXIfNot isConfig;
-    merge = args: lib.fold (def: mergeConfig def.value) { };
+    merge = args: lib.foldr (def: mergeConfig def.value) { };
   };
 
   # Copied from nixpkgs.nix.

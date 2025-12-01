@@ -38,6 +38,13 @@ let
   yaml = pkgs.formats.yaml { };
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    bobvanderlinden
+    liyangau
+    n8henrie
+    phanirithvij
+  ];
+
   imports = [
     (mkRemovedOptionModule [
       "services"
@@ -45,13 +52,7 @@ in
       "settings"
     ] "Use services.espanso.configs and services.espanso.matches instead.")
   ];
-  meta.maintainers = with lib.maintainers; [
-    bobvanderlinden
-    liyangau
-    lucasew
-    n8henrie
-    phanirithvij
-  ];
+
   options = {
     services.espanso = {
       enable = mkEnableOption "Espanso: cross platform text expander in Rust";
@@ -206,7 +207,7 @@ in
       enable = true;
       config = {
         ProgramArguments = [
-          "${cfg.package}/bin/espanso"
+          "${cfg.package}/Applications/Espanso.app/Contents/MacOS/espanso"
           "launcher"
         ];
         EnvironmentVariables.PATH = "${cfg.package}/bin:/usr/bin:/bin:/usr/sbin:/sbin";

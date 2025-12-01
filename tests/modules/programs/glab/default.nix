@@ -1,3 +1,0 @@
-{
-  glab-aliases = ./aliases.nix;
-}

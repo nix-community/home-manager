@@ -12,6 +12,8 @@ let
 
 in
 {
+  meta.maintainers = [ ];
+
   options = {
     programs.bottom = {
       enable = lib.mkEnableOption ''
@@ -53,6 +55,4 @@ in
       source = tomlFormat.generate "bottom.toml" cfg.settings;
     };
   };
-
-  meta.maintainers = [ ];
 }
