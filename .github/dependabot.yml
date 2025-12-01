@@ -14,4 +14,3 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "ci:"
-    ignore:
