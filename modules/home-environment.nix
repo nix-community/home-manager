@@ -570,14 +570,25 @@ in
     warnings =
       let
         hmRelease = config.home.version.release;
-        nixpkgsRelease = lib.trivial.release;
-        releaseMismatch = config.home.enableNixpkgsReleaseCheck && hmRelease != nixpkgsRelease;
+        libRelease = lib.trivial.release;
+        pkgsRelease = pkgs.lib.trivial.release;
+        releaseMismatch = hmRelease != libRelease || hmRelease != pkgsRelease;
+
+        versionsSummary =
+          if libRelease == pkgsRelease then
+            ''
+              Home Manager version ${hmRelease} and
+              Nixpkgs version ${libRelease}.''
+          else
+            ''
+              Home Manager version: ${hmRelease}
+              Nixpkgs version used to evaluate Home Manager: ${libRelease}
+              Nixpkgs version used for packages (`pkgs`): ${pkgsRelease}'';
       in
-      lib.optional releaseMismatch ''
+      lib.optional (config.home.enableNixpkgsReleaseCheck && releaseMismatch) ''
         You are using
 
-          Home Manager version ${hmRelease} and
-          Nixpkgs version ${nixpkgsRelease}.
+          ${lib.replaceString "\n" "\n  " versionsSummary}
 
         Using mismatched versions is likely to cause errors and unexpected
         behavior. It is therefore highly recommended to use a release of Home
