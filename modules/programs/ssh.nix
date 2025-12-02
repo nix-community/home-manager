@@ -404,6 +404,16 @@ let
         example = "10m";
         description = "Whether control socket should remain open in the background.";
       };
+
+      strictHostKeyChecking = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Whether to add hosts to the {file}`~/.ssh/known_hosts` file.
+
+          See {manpage}`ssh_config(5)` for more information.
+        '';
+      };
     };
 
     #    config.host = mkDefault dagName;
@@ -445,6 +455,7 @@ let
       ++ optional (cf.controlMaster != null) "  ControlMaster ${cf.controlMaster}"
       ++ optional (cf.controlPath != null) "  ControlPath ${cf.controlPath}"
       ++ optional (cf.controlPersist != null) "  ControlPersist ${cf.controlPersist}"
+      ++ optional (cf.strictHostKeyChecking != null) "  StrictHostKeyChecking ${cf.strictHostKeyChecking}"
       ++ map (file: "  IdentityFile ${file}") cf.identityFile
       ++ map (file: "  IdentityAgent ${file}") cf.identityAgent
       ++ map (file: "  CertificateFile ${file}") cf.certificateFile

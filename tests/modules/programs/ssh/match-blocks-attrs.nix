@@ -39,6 +39,7 @@
             FOO = "foo12";
             BAR = "_bar_ 42";
           };
+          strictHostKeyChecking = "accept-new";
         };
 
         "* !github.com" = {
