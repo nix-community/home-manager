@@ -31,31 +31,34 @@ let
     );
 
   mkAddressPortModule =
-    nullableAddress:
+    {
+      actionType,
+      nullableAddress ? actionType == "forward",
+    }:
     types.submodule {
       options = {
         address = mkOption {
           type = if nullableAddress then types.nullOr types.str else types.str;
           default = if nullableAddress then null else "localhost";
           example = "example.org";
-          description = "The address where to bind the port.";
+          description = "The address to ${actionType} to.";
         };
 
         port = mkOption {
           type = types.nullOr types.port;
           default = null;
           example = 8080;
-          description = "Specifies port number to bind on bind address.";
+          description = "Specifies port number to ${actionType} to.";
         };
       };
     };
 
-  dynamicForwardModule = mkAddressPortModule false;
+  dynamicForwardModule = mkAddressPortModule { actionType = "bind"; };
 
   forwardModule = types.submodule {
     options = {
-      bind = mkOption { type = mkAddressPortModule false; };
-      host = mkOption { type = mkAddressPortModule true; };
+      bind = mkOption { type = mkAddressPortModule { actionType = "bind"; }; };
+      host = mkOption { type = mkAddressPortModule { actionType = "forward"; }; };
     };
   };
 
