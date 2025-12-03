@@ -117,6 +117,17 @@ function checkHomeDirectory() {
   fi
 }
 
+function checkUid() {
+  local expectedUid="$1"
+  local actualUid
+  actualUid="$(id -u)"
+
+  if [[ "$actualUid" != "$expectedUid" ]]; then
+    _iError 'Error: UID is "%s" but we expect "%s"' "$actualUid" "$expectedUid"
+    exit 1
+  fi
+}
+
 # Note, the VERBOSE_ECHO variable is deprecated and should not be used inside
 # the Home Manager project. It is provided here for backwards compatibility.
 if [[ -v VERBOSE ]]; then
