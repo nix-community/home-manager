@@ -193,6 +193,13 @@ in
       description = "The user's username.";
     };
 
+    home.uid = mkOption {
+      type = types.nullOr types.ints.unsigned;
+      default = null;
+      example = 1000;
+      description = "The user's uid.";
+    };
+
     home.homeDirectory = mkOption {
       type = types.path;
       defaultText = literalExpression ''
@@ -842,6 +849,9 @@ in
           if [[ ! -v SKIP_SANITY_CHECKS ]]; then
             checkUsername ${lib.escapeShellArg config.home.username}
             checkHomeDirectory ${lib.escapeShellArg config.home.homeDirectory}
+            ${lib.optionalString (config.home.uid != null) ''
+              checkUid ${toString config.home.uid}
+            ''}
           fi
 
           ${lib.optionalString config.home.activationGenerateGcRoot ''
