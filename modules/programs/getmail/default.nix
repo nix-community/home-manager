@@ -16,6 +16,8 @@ let
       passCmd = lib.concatMapStringsSep ", " (x: "'${x}'") passwordCommand;
       renderedMailboxes = lib.concatMapStrings (x: "'${x}', ") getmail.mailboxes;
       retrieverType = if imap.tls.enable then "SimpleIMAPSSLRetriever" else "SimpleIMAPRetriever";
+      # Use IMAP-specific username if set, otherwise fall back to account username
+      imapUser = if imap.userName != null then imap.userName else account.userName;
       destination =
         if getmail.destinationCommand != null then
           {
@@ -35,7 +37,7 @@ let
       type = ${retrieverType}
       server = ${imap.host}
       ${lib.optionalString (imap.port != null) "port = ${toString imap.port}"}
-      username = ${account.userName}
+      username = ${imapUser}
       password_command = (${passCmd})
       mailboxes = ( ${renderedMailboxes} )
 

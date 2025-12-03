@@ -18,6 +18,10 @@ let
   accountStr =
     account:
     with account;
+    let
+      # Use SMTP-specific username if set, otherwise fall back to account username
+      smtpUser = if smtp.userName != null then smtp.userName else userName;
+    in
     lib.concatStringsSep "\n" (
       [ "account ${name}" ]
       ++ lib.mapAttrsToList (n: v: n + " " + v) (
@@ -25,7 +29,7 @@ let
           host = smtp.host;
           from = address;
           auth = "on";
-          user = userName;
+          user = smtpUser;
           tls = onOff smtp.tls.enable;
           tls_starttls = onOff smtp.tls.useStartTls;
         }

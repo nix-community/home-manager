@@ -157,6 +157,15 @@ let
         '';
       };
 
+      userName = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          The server username for IMAP. If `null`,
+          the account-level `userName` will be used.
+        '';
+      };
+
       authentication = authenticationOption;
 
       tls = mkOption {
@@ -216,6 +225,15 @@ let
         description = ''
           The port on which the SMTP server listens. If
           `null` then the default port is used.
+        '';
+      };
+
+      userName = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          The server username for SMTP. If `null`,
+          the account-level `userName` will be used.
         '';
       };
 

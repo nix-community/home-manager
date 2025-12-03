@@ -3,4 +3,5 @@
   aerc-settings = ./settings.nix;
   aerc-assertion = ./assertion.nix;
   aerc-oauth = ./oauth.nix;
+  aerc-protocol-usernames = ./protocol-usernames.nix;
 }
