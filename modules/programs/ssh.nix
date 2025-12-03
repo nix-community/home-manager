@@ -151,14 +151,7 @@ let
       identityFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
         default = [ ];
-        apply =
-          p:
-          if p == null then
-            [ ]
-          else if lib.isString p then
-            [ p ]
-          else
-            p;
+        apply = p: if p == null then [ ] else lib.toList p;
         description = ''
           Specifies files from which the user identity is read.
           Identities will be tried in the given order.
@@ -168,14 +161,7 @@ let
       identityAgent = mkOption {
         type = with types; either (listOf str) (nullOr str);
         default = [ ];
-        apply =
-          p:
-          if p == null then
-            [ ]
-          else if lib.isString p then
-            [ p ]
-          else
-            p;
+        apply = p: if p == null then [ ] else lib.toList p;
         description = ''
           Specifies the location of the ssh identity agent.
         '';
@@ -265,14 +251,7 @@ let
       certificateFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
         default = [ ];
-        apply =
-          p:
-          if p == null then
-            [ ]
-          else if lib.isString p then
-            [ p ]
-          else
-            p;
+        apply = p: if p == null then [ ] else lib.toList p;
         description = ''
           Specifies files from which the user certificate is read.
         '';
