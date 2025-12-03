@@ -8,6 +8,10 @@
 let
   cfg = config.qt;
 
+  qtctFormat = pkgs.formats.ini {
+    listToValue = values: lib.concatStringsSep ", " values;
+  };
+
   # Map platform names to their packages.
   platformPackages = with pkgs; {
     gnome = [
@@ -286,6 +290,29 @@ in
           '';
         };
       };
+      qtctSettings = lib.mkOption {
+        type = lib.types.nullOr qtctFormat.type;
+        default = null;
+        example = lib.literalExpression ''
+          {
+            Appearance = {
+              style = "kvantum";
+              icon_theme = "Papirus-Dark";
+              standar_dialogs = "xdgdesktopportal";
+            };
+            Fonts = {
+              fixed = \""DejaVuSansM Nerd Font Mono,12"\";
+              general = \""DejaVu Sans,12"\";
+            };
+          }
+        '';
+        description = ''
+          Qtct configuration. If specified, wrotes settings to
+          both `qt5ct/qt5ct.conf` and `qt6ct/qt6ct.conf` files.
+          Lists will be translated to comma-separated strings.
+          Fonts must be quoted (see example).
+        '';
+      };
     };
   };
 
@@ -397,5 +424,15 @@ in
       ]
       ++ lib.optionals (platformTheme.name != null) [ "QT_QPA_PLATFORMTHEME" ]
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
+
+      xdg.configFile = lib.mkIf (cfg.qtctSettings != null) (
+        let
+          conf = qtctFormat.generate "qtct-config" cfg.qtctSettings;
+        in
+        {
+          "qt5ct/qt5ct.conf".source = conf;
+          "qt6ct/qt6ct.conf".source = conf;
+        }
+      );
     };
 }
