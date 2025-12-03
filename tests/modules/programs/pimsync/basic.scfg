@@ -1,14 +1,18 @@
-storage caldav-local {
-	fileext .ics
-	path /home/hm-user/.local/state/calendar/caldav
-	type vdir/icalendar
-}
-storage http-local {
+storage calendar-http-local {
 	fileext .ics
 	path /home/hm-user/.local/state/calendar/http
 	type vdir/icalendar
 }
-storage caldav-remote {
+storage calendar-mine-local {
+	fileext .ics
+	path /home/hm-user/.local/state/calendar/mine
+	type vdir/icalendar
+}
+storage calendar-http-remote {
+	type webcal
+	url https://example.com/calendar
+}
+storage calendar-mine-remote {
 	type caldav
 	url https://caldav.example.com
 	username alice
@@ -16,24 +20,20 @@ storage caldav-remote {
 		cmd pass caldav
 	}
 }
-storage http-remote {
-	type webcal
-	url https://example.com/calendar
-}
-pair calendar-caldav {
-	storage_a caldav-local
-	storage_b caldav-remote
-}
 pair calendar-http {
-	storage_a http-local
-	storage_b http-remote
+	storage_a calendar-http-local
+	storage_b calendar-http-remote
 }
-storage carddav-local {
+pair calendar-mine {
+	storage_a calendar-mine-local
+	storage_b calendar-mine-remote
+}
+storage contacts-mine-local {
 	fileext .vcf
-	path /home/hm-user/.local/state/contact/carddav
+	path /home/hm-user/.local/state/contact/mine
 	type vdir/vcard
 }
-storage carddav-remote {
+storage contacts-mine-remote {
 	type carddav
 	url https://carddav.example.com
 	username bob
@@ -41,8 +41,8 @@ storage carddav-remote {
 		cmd pass carddav
 	}
 }
-pair contacts-carddav {
-	storage_a carddav-local
-	storage_b carddav-remote
+pair contacts-mine {
+	storage_a contacts-mine-local
+	storage_b contacts-mine-remote
 }
 status_path /test/dir
