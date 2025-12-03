@@ -1,0 +1,1 @@
+{ calibre-settings = ./settings.nix; }
