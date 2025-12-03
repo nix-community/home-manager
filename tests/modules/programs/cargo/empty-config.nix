@@ -1,5 +1,5 @@
 {
-  programs.docker-cli = {
+  programs.cargo = {
     settings = {
       net = {
         git-fetch-with-cli = true;
