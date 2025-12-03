@@ -290,30 +290,40 @@ in
           '';
         };
       };
-      qtctSettings = lib.mkOption {
-        type = lib.types.nullOr qtctFormat.type;
-        default = null;
-        example = lib.literalExpression ''
-          {
-            Appearance = {
-              style = "kvantum";
-              icon_theme = "Papirus-Dark";
-              standar_dialogs = "xdgdesktopportal";
-            };
-            Fonts = {
-              fixed = \""DejaVuSansM Nerd Font Mono,12"\";
-              general = \""DejaVu Sans,12"\";
-            };
-          }
-        '';
-        description = ''
-          Qtct configuration. If specified, wrotes settings to
-          both `qt5ct/qt5ct.conf` and `qt6ct/qt6ct.conf` files.
-          Lists will be translated to comma-separated strings.
-          Fonts must be quoted (see example).
-        '';
-      };
-    };
+    }
+    // (lib.pipe
+      [ "qt5ct" "qt6ct" ]
+      [
+        (map (
+          name:
+          lib.nameValuePair "${name}Settings" (
+            lib.mkOption {
+              type = lib.types.nullOr qtctFormat.type;
+              default = null;
+              example = lib.literalExpression ''
+                {
+                  Appearance = {
+                    style = "kvantum";
+                    icon_theme = "Papirus-Dark";
+                    standar_dialogs = "xdgdesktopportal";
+                  };
+                  Fonts = {
+                    fixed = \""DejaVuSansM Nerd Font Mono,12"\";
+                    general = \""DejaVu Sans,12"\";
+                  };
+                }
+              '';
+              description = ''
+                Qtct configuration. Wrotes settings to `${name}/${name}.conf`
+                file. Lists will be translated to comma-separated strings.
+                Fonts must be quoted (see example).
+              '';
+            }
+          )
+        ))
+        lib.listToAttrs
+      ]
+    );
   };
 
   config =
@@ -425,14 +435,21 @@ in
       ++ lib.optionals (platformTheme.name != null) [ "QT_QPA_PLATFORMTHEME" ]
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
 
-      xdg.configFile = lib.mkIf (cfg.qtctSettings != null) (
-        let
-          conf = qtctFormat.generate "qtct-config" cfg.qtctSettings;
-        in
-        {
-          "qt5ct/qt5ct.conf".source = conf;
-          "qt6ct/qt6ct.conf".source = conf;
-        }
-      );
+      xdg.configFile =
+        lib.foldl
+          (
+            acc: elem:
+            acc
+            // {
+              "${elem}/${elem}.conf".source = lib.mkIf (cfg."${elem}Settings" != null) (
+                qtctFormat.generate "${elem}-config" cfg."${elem}Settings"
+              );
+            }
+          )
+          { }
+          [
+            "qt5ct"
+            "qt6ct"
+          ];
     };
 }
