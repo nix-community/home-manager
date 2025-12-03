@@ -22,6 +22,22 @@
     basePath = ".local/state/calendar";
   };
 
+  accounts.contact = {
+    accounts.carddav = {
+      pimsync.enable = true;
+      remote = {
+        passwordCommand = [
+          "pass"
+          "carddav"
+        ];
+        type = "carddav";
+        url = "https://carddav.example.com";
+        userName = "bob";
+      };
+    };
+    basePath = ".local/state/contact";
+  };
+
   programs.pimsync = {
     enable = true;
     settings = [

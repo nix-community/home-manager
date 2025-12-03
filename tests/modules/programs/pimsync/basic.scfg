@@ -28,4 +28,21 @@ pair calendar-http {
 	storage_a http-local
 	storage_b http-remote
 }
+storage carddav-local {
+	fileext .vcf
+	path /home/hm-user/.local/state/contact/carddav
+	type vdir/vcard
+}
+storage carddav-remote {
+	type carddav
+	url https://carddav.example.com
+	username bob
+	password {
+		cmd pass carddav
+	}
+}
+pair contacts-carddav {
+	storage_a carddav-local
+	storage_b carddav-remote
+}
 status_path /test/dir
