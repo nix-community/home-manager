@@ -70,11 +70,11 @@ let
     };
   };
 
-  matchBlockModule = types.submodule {
+  matchBlockModule = types.submodule ({ dagName, ... }: {
     options = {
       host = mkOption {
         type = types.nullOr types.str;
-        default = null;
+        default = dagName;
         example = "*.example.org";
         description = ''
           `Host` pattern used by this conditional block.
@@ -384,16 +384,13 @@ let
         description = "Whether control socket should remain open in the background.";
       };
     };
-
-    #    config.host = mkDefault dagName;
-  };
+  });
 
   matchBlockStr =
     key: cf:
     concatStringsSep "\n" (
       let
-        hostOrDagName = if cf.host != null then cf.host else key;
-        matchHead = if cf.match != null then "Match ${cf.match}" else "Host ${hostOrDagName}";
+        matchHead = if cf.match != null then "Match ${cf.match}" else "Host ${cf.host}";
       in
       [ "${matchHead}" ]
       ++ optional (cf.port != null) "  Port ${toString cf.port}"
@@ -622,13 +619,6 @@ in
             ${if (defaultHostBlock != null) then (matchBlockStr "*" defaultHostBlock.data) else ""}
               ${lib.replaceStrings [ "\n" ] [ "\n  " ] cfg.extraConfig}
           '';
-
-        warnings =
-          mapAttrsToList
-            (n: v: ''
-              The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
-              The match option takes precedence.'')
-            (lib.filterAttrs (n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
       }
       (lib.mkIf cfg.enableDefaultConfig {
         warnings = [
