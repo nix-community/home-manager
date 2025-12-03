@@ -451,7 +451,13 @@ let
       ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.localForwards
       ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.remoteForwards
       ++ map (f: "  DynamicForward" + addressPort f) cf.dynamicForwards
-      ++ mapAttrsToList (n: v: "  ${n} ${v}") cf.extraOptions
+      ++ [
+        (lib.generators.toKeyValue {
+          mkKeyValue = lib.generators.mkKeyValueDefault { } " ";
+          listsAsDuplicateKeys = true;
+          indent = "  ";
+        } cf.extraOptions)
+      ]
     );
 
 in
