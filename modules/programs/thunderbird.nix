@@ -9,6 +9,7 @@ let
     attrValues
     concatStringsSep
     filter
+    flatten
     length
     literalExpression
     mapAttrsToList
@@ -918,7 +919,14 @@ in
               calendarAccounts = getAccountsForProfile name enabledCalendarAccountsWithId;
               contactAccounts = getAccountsForProfile name enabledContactAccountsWithId;
 
-              smtp = filter (a: a.smtp != null) emailAccounts;
+              accountsSmtp = filter (a: a.smtp != null) emailAccounts;
+              aliasesSmtp =
+                let
+                  getAliasesWithSmtp = a: filter (al: builtins.isAttrs al && al.smtp != null) a.aliases;
+                  getAliasesWithId = a: map (al: al // { id = getId a al; }) (getAliasesWithSmtp a);
+                in
+                flatten (map getAliasesWithId emailAccounts);
+              smtp = accountsSmtp ++ aliasesSmtp;
 
               feedAccounts = addId (attrValues profile.feedAccounts);
 
