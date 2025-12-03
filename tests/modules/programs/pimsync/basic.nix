@@ -1,6 +1,6 @@
 {
   accounts.calendar = {
-    accounts.caldav = {
+    accounts.mine = {
       pimsync.enable = true;
       remote = {
         passwordCommand = [
@@ -23,7 +23,7 @@
   };
 
   accounts.contact = {
-    accounts.carddav = {
+    accounts.mine = {
       pimsync.enable = true;
       remote = {
         passwordCommand = [

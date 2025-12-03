@@ -51,7 +51,7 @@
 
       localStorage = calendar: name: acc: {
         name = "storage";
-        params = [ "${name}-local" ];
+        params = [ "${if calendar then "calendar" else "contacts"}-${name}-local" ];
         children =
           (attrsToDirectives {
             inherit (acc.local) path;
@@ -63,7 +63,7 @@
 
       remoteStorage = calendar: name: acc: {
         name = "storage";
-        params = [ "${name}-remote" ];
+        params = [ "${if calendar then "calendar" else "contacts"}-${name}-remote" ];
         children =
           (attrsToDirectives {
             inherit (acc.remote) url;
@@ -91,8 +91,8 @@
         params = lib.singleton "${if calendar then "calendar" else "contacts"}-${name}";
         children =
           (attrsToDirectives {
-            storage_a = "${name}-local";
-            storage_b = "${name}-remote";
+            storage_a = "${if calendar then "calendar" else "contacts"}-${name}-local";
+            storage_b = "${if calendar then "calendar" else "contacts"}-${name}-remote";
           })
           ++ acc.pimsync.extraPairDirectives;
       };
