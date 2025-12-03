@@ -30,43 +30,32 @@ let
       mapAttrsToList (name: value: ''${name}="${lib.escape [ ''"'' "\\" ] (toString value)}"'') envStr
     );
 
-  bindOptions = {
-    address = mkOption {
-      type = types.str;
-      default = "localhost";
-      example = "example.org";
-      description = "The address where to bind the port.";
-    };
-
-    port = mkOption {
-      type = types.nullOr types.port;
-      default = null;
-      example = 8080;
-      description = "Specifies port number to bind on bind address.";
-    };
-  };
-
-  dynamicForwardModule = types.submodule { options = bindOptions; };
-
-  forwardModule = types.submodule {
-    options = {
-      bind = bindOptions;
-
-      host = {
+  mkAddressPortModule =
+    nullableAddress:
+    types.submodule {
+      options = {
         address = mkOption {
-          type = types.nullOr types.str;
-          default = null;
+          type = if nullableAddress then types.nullOr types.str else types.str;
+          default = if nullableAddress then null else "localhost";
           example = "example.org";
-          description = "The address where to forward the traffic to.";
+          description = "The address where to bind the port.";
         };
 
         port = mkOption {
           type = types.nullOr types.port;
           default = null;
-          example = 80;
-          description = "Specifies port number to forward the traffic to.";
+          example = 8080;
+          description = "Specifies port number to bind on bind address.";
         };
       };
+    };
+
+  dynamicForwardModule = mkAddressPortModule false;
+
+  forwardModule = types.submodule {
+    options = {
+      bind = mkOption { type = mkAddressPortModule false; };
+      host = mkOption { type = mkAddressPortModule true; };
     };
   };
 
