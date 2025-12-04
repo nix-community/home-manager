@@ -14,7 +14,24 @@ in
   imports = [ ../nixos/common.nix ];
 
   config = lib.mkMerge [
-    { home-manager.extraSpecialArgs.darwinConfig = config; }
+    {
+      home-manager = {
+        extraSpecialArgs.darwinConfig = config;
+
+        sharedModules = [
+          (
+            { name, ... }:
+            {
+              key = "home-manager#darwin-shared-module";
+
+              config = {
+                home.uid = lib.mkIf (config.users.users.${name} ? uid) config.users.users.${name}.uid;
+              };
+            }
+          )
+        ];
+      };
+    }
     (lib.mkIf (cfg.users != { }) {
       system.activationScripts.postActivation.text = lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
