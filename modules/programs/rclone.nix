@@ -153,7 +153,7 @@ in
                           default = { };
                           apply = lib.mergeAttrs {
                             vfs-cache-mode = "full";
-                            cache-dir = "%C";
+                            cache-dir = "%C/rclone";
                           };
                           description = ''
                             An attribute set of option values passed to `rclone mount`. To set
