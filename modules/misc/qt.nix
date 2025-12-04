@@ -308,13 +308,13 @@ in
                     standar_dialogs = "xdgdesktopportal";
                   };
                   Fonts = {
-                    fixed = \""DejaVuSansM Nerd Font Mono,12"\";
-                    general = \""DejaVu Sans,12"\";
+                    fixed = "\"DejaVuSansM Nerd Font Mono,12\"";
+                    general = "\"DejaVu Sans,12\"";
                   };
                 }
               '';
               description = ''
-                Qtct configuration. Wrotes settings to `${name}/${name}.conf`
+                Qtct configuration. Writes settings to `${name}/${name}.conf`
                 file. Lists will be translated to comma-separated strings.
                 Fonts must be quoted (see example).
               '';
