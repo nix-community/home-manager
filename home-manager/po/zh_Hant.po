@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-12-04 04:17+0000\n"
+"PO-Revision-Date: 2025-12-04 09:16+0000\n"
 "Last-Translator: \"Urocissa Caerulea.Tw\" <urocissa.tw@proton.me>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/home-manager/cli/zh_Hant/>\n"
@@ -215,7 +215,7 @@ msgstr "沒有即將過期的世代"
 
 #: home-manager/home-manager:877
 msgid "No home-manager packages seem to be installed."
-msgstr "似乎沒有安裝 home-manager 軟體包。"
+msgstr "似乎沒有安裝 home-manager 套件。"
 
 #: home-manager/home-manager:962
 msgid "Unknown argument %s"
@@ -223,11 +223,11 @@ msgstr "未知引數 %s"
 
 #: home-manager/home-manager:987
 msgid "This will remove Home Manager from your system."
-msgstr "這將會從系統中移除 Home Manager。"
+msgstr "這將會從您的系統中移除 Home Manager。"
 
 #: home-manager/home-manager:990
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr "這是試執行結果，沒有實際解除安裝任何軟體包。"
+msgstr "這是模擬執行，實際上並不會解除安裝任何內容。"
 
 #: home-manager/home-manager:994
 msgid "Really uninstall Home Manager?"
@@ -235,27 +235,27 @@ msgstr "確定要解除安裝 Home Manager 嗎？"
 
 #: home-manager/home-manager:1000
 msgid "Switching to empty Home Manager configuration..."
-msgstr "正在切換至空的 Home Manager 配置 ..."
+msgstr "正在切換至空的 Home Manager 設定..."
 
 #: home-manager/home-manager:1015
 msgid "Yay!"
-msgstr "好耶！"
+msgstr "太好了！"
 
 #: home-manager/home-manager:1020
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr "Home Manager 已解除安裝，但未改動您的 home.nix 配置檔案。"
+msgstr "Home Manager 已解除安裝，但您的 home.nix 保持不變。"
 
 #: home-manager/home-manager:1285
 msgid "expire-generations expects one argument, got %d."
-msgstr "expire-generations 須要一個引數，但獲取到了 %d 個。"
+msgstr "expire-generations 預期一個引數，但得到了 %d 個。"
 
 #: home-manager/home-manager:1310
 msgid "Unknown command: %s"
-msgstr "未知命令：%s"
+msgstr "未知指令：%s"
 
 #: home-manager/install.nix:21
 msgid "This derivation is not buildable, please run it using nix-shell."
-msgstr "此配置檔案/變體不可構建，請在 nix-shell 中執行它。"
+msgstr "此 derivation 無法建置，請使用 nix-shell 執行。"
 
 #, sh-format
 #~ msgid "Please set the $EDITOR environment variable"
