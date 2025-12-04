@@ -429,13 +429,20 @@ in
       ++ lib.optionals (platformTheme.name != null) [ "QT_QPA_PLATFORMTHEME" ]
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
 
-      xdg.configFile = lib.genAttrs' [ "qt5ct" "qt6ct" ] (
-        qtct:
-        lib.nameValuePair "${qtct}/${qtct}.conf" {
-          source = lib.mkIf (cfg."${qtct}Settings" != null) (
-            qtctFormat.generate "${qtct}-config" cfg."${qtct}Settings"
-          );
-        }
-      );
+      xdg.configFile =
+        lib.pipe
+          [ "qt5ct" "qt6ct" ]
+          [
+            (lib.filter (qtct: cfg."${qtct}Settings" != null))
+            (
+              qtcts:
+              lib.genAttrs' qtcts (
+                qtct:
+                lib.nameValuePair "${qtct}/${qtct}.conf" {
+                  source = qtctFormat.generate "${qtct}-config" cfg."${qtct}Settings";
+                }
+              )
+            )
+          ];
     };
 }
