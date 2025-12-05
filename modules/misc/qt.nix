@@ -434,15 +434,12 @@ in
           [ "qt5ct" "qt6ct" ]
           [
             (lib.filter (qtct: cfg."${qtct}Settings" != null))
-            (
-              qtcts:
-              lib.genAttrs' qtcts (
-                qtct:
-                lib.nameValuePair "${qtct}/${qtct}.conf" {
-                  source = qtctFormat.generate "${qtct}-config" cfg."${qtct}Settings";
-                }
-              )
-            )
+            (lib.flip lib.genAttrs' (
+              qtct:
+              lib.nameValuePair "${qtct}/${qtct}.conf" {
+                source = qtctFormat.generate "${qtct}-config" cfg."${qtct}Settings";
+              }
+            ))
           ];
     };
 }
