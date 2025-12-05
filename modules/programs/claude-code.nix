@@ -345,23 +345,24 @@ in
 
     programs.claude-code.finalPackage =
       let
-        mcpConfigFile = jsonFormat.generate "claude-code-mcp-config.json" {
-          inherit (cfg) mcpServers;
-        };
+        makeWrapperArgs = lib.flatten (
+          lib.filter (x: x != [ ]) [
+            (lib.optional (cfg.mcpServers != { }) [
+              "--append-flags"
+              "--mcp-config ${jsonFormat.generate "claude-code-mcp-config.json" { inherit (cfg) mcpServers; }}"
+            ])
+          ]
+        );
 
-        needsWrapper = cfg.mcpServers != { };
-
-        wrapperScript = pkgs.writeShellScriptBin "claude" ''
-          exec "${lib.getExe cfg.package}" "$@" --mcp-config "${mcpConfigFile}"
-        '';
+        hasWrapperArgs = makeWrapperArgs != [ ];
       in
-      if needsWrapper then
+      if hasWrapperArgs then
         pkgs.symlinkJoin {
           name = "claude-code";
           paths = [ cfg.package ];
+          nativeBuildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
-            rm $out/bin/claude
-            ln -s ${wrapperScript}/bin/claude $out/bin/claude
+            wrapProgram $out/bin/claude ${lib.escapeShellArgs makeWrapperArgs}
           '';
           inherit (cfg.package) meta;
         }
