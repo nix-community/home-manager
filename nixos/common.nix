@@ -36,7 +36,7 @@ let
 
     modules = [
       (
-        { name, ... }:
+        { name, options, ... }:
         {
           imports =
             import ../modules/modules.nix {
@@ -53,7 +53,7 @@ let
 
             home.username = config.users.users.${name}.name;
             home.homeDirectory = config.users.users.${name}.home;
-            home.uid = mkIf (config.users.users.${name}.uid != null) config.users.users.${name}.uid;
+            home.uid = mkIf (options.users.users.${name}.uid.isDefined or false) config.users.users.${name}.uid;
 
             # Forward `nix.enable` from the OS configuration. The
             # conditional is to check whether nix-darwin is new enough
