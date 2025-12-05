@@ -2,7 +2,6 @@
 # For OS-specific configuration, please edit nixos/default.nix or nix-darwin/default.nix instead.
 
 {
-  options,
   config,
   lib,
   pkgs,
@@ -48,23 +47,29 @@ let
             ++ cfg.sharedModules;
 
           config = {
-            submoduleSupport.enable = true;
-            submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+            submoduleSupport = {
+              enable = true;
+              externalPackageInstall = cfg.useUserPackages;
+            };
 
-            home.username = config.users.users.${name}.name;
-            home.homeDirectory = config.users.users.${name}.home;
-            home.uid = mkIf (options.users.users.${name}.uid.isDefined or false) config.users.users.${name}.uid;
+            home = {
+              username = config.users.users.${name}.name;
+              homeDirectory = config.users.users.${name}.home;
+              uid = mkIf (options.users.users.${name}.uid.isDefined or false) config.users.users.${name}.uid;
+            };
 
-            # Forward `nix.enable` from the OS configuration. The
-            # conditional is to check whether nix-darwin is new enough
-            # to have the `nix.enable` option; it was previously a
-            # `mkRemovedOptionModule` error, which we can crudely detect
-            # by `visible` being set to `false`.
-            nix.enable = mkIf (options.nix.enable.visible or true) config.nix.enable;
+            nix = {
+              # Forward `nix.enable` from the OS configuration. The
+              # conditional is to check whether nix-darwin is new enough
+              # to have the `nix.enable` option; it was previously a
+              # `mkRemovedOptionModule` error, which we can crudely detect
+              # by `visible` being set to `false`.
+              enable = mkIf (options.nix.enable.visible or true) config.nix.enable;
 
-            # Make activation script use same version of Nix as system as a whole.
-            # This avoids problems with Nix not being in PATH.
-            nix.package = config.nix.package;
+              # Make activation script use same version of Nix as system as a whole.
+              # This avoids problems with Nix not being in PATH.
+              inherit (config.nix) package;
+            };
           };
         }
       )
@@ -161,30 +166,28 @@ in
     };
   };
 
-  config = (
-    lib.mkMerge [
-      # Fix potential recursion when configuring home-manager users based on values in users.users #594
-      (mkIf (cfg.useUserPackages && cfg.users != { }) {
-        users.users = (lib.mapAttrs (_username: usercfg: { packages = [ usercfg.home.path ]; }) cfg.users);
-        environment.pathsToLink = [ "/etc/profile.d" ];
-      })
-      (mkIf (cfg.users != { }) {
-        warnings = lib.flatten (
-          flip lib.mapAttrsToList cfg.users (
-            user: config: flip map config.warnings (warning: "${user} profile: ${warning}")
-          )
-        );
+  config = lib.mkMerge [
+    # Fix potential recursion when configuring home-manager users based on values in users.users #594
+    (mkIf (cfg.useUserPackages && cfg.users != { }) {
+      users.users = lib.mapAttrs (_username: usercfg: { packages = [ usercfg.home.path ]; }) cfg.users;
+      environment.pathsToLink = [ "/etc/profile.d" ];
+    })
+    (mkIf (cfg.users != { }) {
+      warnings = lib.flatten (
+        flip lib.mapAttrsToList cfg.users (
+          user: config: flip map config.warnings (warning: "${user} profile: ${warning}")
+        )
+      );
 
-        assertions = lib.flatten (
-          flip lib.mapAttrsToList cfg.users (
-            user: config:
-            flip map config.assertions (assertion: {
-              inherit (assertion) assertion;
-              message = "${user} profile: ${assertion.message}";
-            })
-          )
-        );
-      })
-    ]
-  );
+      assertions = lib.flatten (
+        flip lib.mapAttrsToList cfg.users (
+          user: config:
+          flip map config.assertions (assertion: {
+            inherit (assertion) assertion;
+            message = "${user} profile: ${assertion.message}";
+          })
+        )
+      );
+    })
+  ];
 }
