@@ -1,0 +1,5 @@
+[gotify]
+url = "wss://foo.bar"
+
+[gotify.token]
+command = "secret-token-command"

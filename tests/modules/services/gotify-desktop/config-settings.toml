@@ -1,0 +1,6 @@
+[foo]
+bar = "extra"
+
+[gotify]
+token = "secret-token"
+url = "wss://foo.bar"
