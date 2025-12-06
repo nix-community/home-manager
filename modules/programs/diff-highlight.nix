@@ -68,8 +68,15 @@ in
     in
     lib.mkMerge [
       (mkIf cfg.enable {
-        # Auto-enable git integration if programs.git.diff-highlight.enable was set to true
-        programs.diff-highlight.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
+        assertions = [
+          {
+            assertion = !cfg.enableGitIntegration || config.programs.git.package != null;
+            message = ''
+              programs.diff-highlight.enableGitIntegration requires programs.git.package to be set.
+              Please set programs.git.package to a valid git package.
+            '';
+          }
+        ];
 
         warnings =
           lib.optional
@@ -77,9 +84,12 @@ in
               cfg.enableGitIntegration && options.programs.diff-highlight.enableGitIntegration.highestPrio == 1490
             )
             "`programs.diff-highlight.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.diff-highlight.enableGitIntegration = true`.";
+
+        # Auto-enable git integration if programs.git.diff-highlight.enable was set to true
+        programs.diff-highlight.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
       })
 
-      (mkIf (cfg.enable && cfg.enableGitIntegration) {
+      (mkIf (cfg.enable && cfg.enableGitIntegration && config.programs.git.package != null) {
         programs.git = {
           enable = lib.mkDefault true;
           iniContent =
