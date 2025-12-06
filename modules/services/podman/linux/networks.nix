@@ -5,7 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkMerge
+    types
+    ;
+  assertions = import ../assertions.nix { inherit lib; };
 
   cfg = config.services.podman;
 
@@ -180,10 +186,17 @@ in
     let
       networkQuadlets = lib.mapAttrsToList toQuadletInternal cfg.networks;
     in
-    lib.mkIf cfg.enable {
-      services.podman.internal.quadletDefinitions = networkQuadlets;
-      assertions = lib.flatten (map (network: network.assertions) networkQuadlets);
+    mkIf cfg.enable (mkMerge [
+      {
+        assertions = [
+          (assertions.assertPlatform "services.podman.networks" config pkgs lib.platforms.linux)
+        ];
+      }
+      (mkIf pkgs.stdenv.hostPlatform.isLinux {
+        services.podman.internal.quadletDefinitions = networkQuadlets;
+        assertions = lib.flatten (map (network: network.assertions) networkQuadlets);
 
-      xdg.configFile."podman/networks.manifest".text = podman-lib.generateManifestText networkQuadlets;
-    };
+        xdg.configFile."podman/networks.manifest".text = podman-lib.generateManifestText networkQuadlets;
+      })
+    ]);
 }

@@ -1,7 +1,4 @@
-{ lib, pkgs, ... }:
-
-lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-  podman-configuration = ./configuration.nix;
+{
   podman-container = ./container.nix;
   podman-build = ./build.nix;
   podman-image = ./image.nix;
