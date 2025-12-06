@@ -57,7 +57,11 @@ let
       # We need to set default-shell before calling new-session
       set  -g default-shell "${cfg.shell}"
     ''}
-    ${optionalString cfg.newSession "new-session"}
+    ${optionalString cfg.newSession ''
+      # Use -A to make new-session idempotent: attach if session "0" exists,
+      # otherwise create it. This prevents duplicate sessions when multiple
+      # configs (e.g., system and user) both enable newSession.
+      new-session -A -s 0''}
 
     ${optionalString cfg.reverseSplit ''
       bind -N "Split the pane into two, left and right" v split-window -h
