@@ -98,5 +98,6 @@ rec {
   mkFishIntegrationOption = mkShellIntegrationOption "Fish";
   mkIonIntegrationOption = mkShellIntegrationOption "Ion";
   mkNushellIntegrationOption = mkShellIntegrationOption "Nushell";
+  mkXonshIntegrationOption = mkShellIntegrationOption "Xonsh";
   mkZshIntegrationOption = mkShellIntegrationOption "Zsh";
 }
