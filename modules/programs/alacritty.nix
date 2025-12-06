@@ -92,10 +92,12 @@ in
 
         theme = "${alacrittyTheme}/share/alacritty-theme/${cfg.theme}.toml";
       in
-      lib.mkIf (cfg.theme != null) {
-        general.import = lib.mkIf (lib.versionAtLeast cfg.package.version "0.14") [ theme ];
-        import = lib.mkIf (lib.versionOlder cfg.package.version "0.14") [ theme ];
-      };
+      lib.mkIf (cfg.theme != null) (
+        if lib.versionOlder cfg.package.version "0.14" then
+          { general.import = [ theme ]; }
+        else
+          { import = [ theme ]; }
+      );
 
     xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {
       source = (tomlFormat.generate "alacritty.toml" cfg.settings).overrideAttrs (
