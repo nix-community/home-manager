@@ -68,7 +68,9 @@ let
 
               # Make activation script use same version of Nix as system as a whole.
               # This avoids problems with Nix not being in PATH.
-              inherit (config.nix) package;
+              # Only set package when nix is enabled to avoid errors when
+              # nix-darwin has nix.enable = false (e.g., Determinate Nix users).
+              package = mkIf config.nix.enable config.nix.package;
             };
           };
         }

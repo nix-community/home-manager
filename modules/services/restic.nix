@@ -475,7 +475,7 @@ in
               CacheDirectoryMode = "0700";
               PrivateTmp = true;
 
-              Environment = mkEnvironment backup ++ [ "RESTIC_CACHE_DIR=%C" ];
+              Environment = mkEnvironment backup ++ [ "RESTIC_CACHE_DIR=%C/${serviceName}" ];
 
               ExecStart =
                 lib.optional doBackup backupCmd
@@ -591,7 +591,7 @@ in
                 lib.concatLines
               ]}
 
-              RESTIC_CACHE_DIR=$HOME/.cache/${serviceName}
+              RESTIC_CACHE_DIR=${config.xdg.cacheHome}/${serviceName}
 
               PATH=${
                 lib.pipe environment [
