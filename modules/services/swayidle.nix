@@ -108,7 +108,7 @@ in
                 )
               )
           ) (submodule eventsModule);
-        default = [ ];
+        default = { };
         example = literalExpression ''
           {
             "before-sleep" = "''${pkgs.swaylock}/bin/swaylock -fF";
