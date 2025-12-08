@@ -2311,6 +2311,13 @@
     name = "Florian Peter";
     source = "nixpkgs";
   };
+  xavwe = {
+    email = "git@xavwe.dev";
+    github = "xavwe";
+    githubId = 125409009;
+    name = "Xaver Wenhart";
+    source = "nixpkgs";
+  };
   xlambein = {
     email = "xlambein@gmail.com";
     github = "xlambein";
