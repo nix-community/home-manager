@@ -705,7 +705,8 @@ in
         default = false;
         description = ''
           Whether to configure {command}`kak` as the default
-          editor using the {env}`EDITOR` environment variable.
+          editor using the {env}`EDITOR` and {env}`VISUAL`
+          environment variables.
         '';
       };
 
@@ -755,7 +756,10 @@ in
     programs.kakoune.finalPackage = lib.mkIf (cfg.package != null) kakouneWithPlugins;
 
     home.packages = lib.mkIf (cfg.finalPackage != null) [ cfg.finalPackage ];
-    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "kak"; };
+    home.sessionVariables = mkIf cfg.defaultEditor {
+      EDITOR = "kak";
+      VISUAL = "kak";
+    };
     xdg.configFile = lib.mkMerge [
       { "kak/kakrc".source = configFile; }
       (mkIf (cfg.colorSchemePackage != null) {
