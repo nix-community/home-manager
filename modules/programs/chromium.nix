@@ -40,7 +40,7 @@ let
 
       finalPackage = mkOption {
         inherit visible;
-        type = types.package;
+        type = types.nullOr types.package;
         readOnly = true;
         description = ''
           Resulting customized ${name} package
@@ -220,15 +220,22 @@ let
       };
 
     in
+
     lib.mkIf cfg.enable {
-      programs.${browser}.finalPackage = lib.mkIf (cfg.package != null) (
+      assertions = [
+        {
+          assertion = !(cfg.package == null && cfg.commandLineArgs != [ ]);
+          message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
+        }
+      ];
+
+      programs.${browser}.finalPackage =
         if cfg.commandLineArgs != [ ] then
           cfg.package.override {
             commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
           }
         else
-          cfg.package
-      );
+          cfg.package;
 
       home.packages = lib.mkIf (cfg.finalPackage != null) [
         cfg.finalPackage
