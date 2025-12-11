@@ -49,7 +49,8 @@ in
       default = false;
       description = ''
         Whether to configure {command}`hx` as the default
-        editor using the {env}`EDITOR` environment variable.
+        editor using the {env}`EDITOR` and {env}`VISUAL`
+        environment variables.
       '';
     };
 
@@ -225,7 +226,10 @@ in
       else
         [ cfg.package ];
 
-    home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "hx"; };
+    home.sessionVariables = mkIf cfg.defaultEditor {
+      EDITOR = "hx";
+      VISUAL = "hx";
+    };
 
     xdg.configFile =
       let
