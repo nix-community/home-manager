@@ -9,7 +9,7 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [ lib.maintainers.perchun ];
+  meta.maintainers = [ lib.maintainers.PerchunPak ];
 
   imports = [
     (lib.mkRemovedOptionModule [ "programs" "hyprpanel" "dontAssertNotificationDaemons " ] ''
