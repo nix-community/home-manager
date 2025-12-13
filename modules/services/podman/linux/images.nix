@@ -5,7 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkMerge
+    types
+    ;
+  assertions = import ../assertions.nix { inherit lib; };
 
   cfg = config.services.podman;
 
@@ -165,8 +171,15 @@ in
     let
       imageQuadlets = lib.mapAttrsToList toQuadletInternal cfg.images;
     in
-    lib.mkIf cfg.enable {
-      services.podman.internal.quadletDefinitions = imageQuadlets;
-      assertions = lib.flatten (map (image: image.assertions) imageQuadlets);
-    };
+    mkIf cfg.enable (mkMerge [
+      {
+        assertions = [
+          (assertions.assertPlatform "services.podman.images" config pkgs lib.platforms.linux)
+        ];
+      }
+      (mkIf pkgs.stdenv.hostPlatform.isLinux {
+        services.podman.internal.quadletDefinitions = imageQuadlets;
+        assertions = lib.flatten (map (image: image.assertions) imageQuadlets);
+      })
+    ]);
 }

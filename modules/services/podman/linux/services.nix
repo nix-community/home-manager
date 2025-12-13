@@ -5,20 +5,23 @@
   ...
 }:
 let
+  inherit (lib) mkIf mkOption mkMerge;
+  assertions = import ../assertions.nix { inherit lib; };
+
   cfg = config.services.podman;
 in
 {
   options.services.podman = {
     autoUpdate = {
-      enable = lib.mkOption {
+      enable = mkOption {
         type = lib.types.bool;
-        default = false;
+        default = pkgs.stdenv.hostPlatform.isLinux;
         description = "Automatically update the podman images.";
       };
 
-      onCalendar = lib.mkOption {
+      onCalendar = mkOption {
         type = lib.types.str;
-        default = "Sun *-*-* 00:00";
+        default = lib.optionalString pkgs.stdenv.hostPlatform.isLinux "Sun *-*-* 00:00";
         description = ''
           The systemd `OnCalendar` expression for the update. See
           {manpage}`systemd.time(7)` for a description of the format.
@@ -27,9 +30,14 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      (lib.mkIf cfg.autoUpdate.enable {
+  config = mkIf cfg.enable (mkMerge [
+    {
+      assertions = [
+        (assertions.assertPlatform "services.podman.networks" config pkgs lib.platforms.linux)
+      ];
+    }
+    (mkIf pkgs.stdenv.hostPlatform.isLinux (mkMerge [
+      (mkIf cfg.autoUpdate.enable {
         systemd.user.services."podman-auto-update" = {
           Unit = {
             Description = "Podman auto-update service";
@@ -86,6 +94,6 @@ in
             }:/bin
           '';
       }
-    ]
-  );
+    ]))
+  ]);
 }
