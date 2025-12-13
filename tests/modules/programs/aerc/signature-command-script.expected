@@ -1,0 +1,4 @@
+#!/nix/store/00000000000000000000000000000000-bash/bin/bash
+echo "some signature"
+echo "goes here"
+
