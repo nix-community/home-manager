@@ -8,7 +8,7 @@
 let
 
   cfg = config.programs.rclone;
-  iniFormat = pkgs.formats.ini { };
+  # iniFormat removed; rclone CLI handles parsing now
   replaceSlashes = builtins.replaceStrings [ "/" ] [ "." ];
   isUsingSecretProvisioner = name: config ? "${name}" && config."${name}".secrets != { };
 
@@ -87,7 +87,12 @@ in
               };
 
               secrets = lib.mkOption {
-                type = with lib.types; attrsOf str;
+                type =
+                  with lib.types;
+                  attrsOf (oneOf [
+                    str
+                    path
+                  ]);
                 default = { };
                 description = ''
                   Sensitive configuration values such as passwords, API keys, and tokens. These
@@ -261,32 +266,50 @@ in
 
   config =
     let
+      rcloneConfigPath = "${config.xdg.configHome}/rclone/rclone.conf";
+
       rcloneConfigService =
         let
-          safeConfig = lib.pipe cfg.remotes [
-            (lib.mapAttrs (_: v: v.config))
-            (iniFormat.generate "rclone.conf@pre-secrets")
-          ];
+          # Helper to convert nix bools to strings expected by rclone CLI
+          toRcloneVal = v: if builtins.isBool v then (if v then "true" else "false") else toString v;
 
-          injectSecret =
-            remote:
-            lib.mapAttrsToList (secret: secretFile: ''
-              if [[ ! -r "${secretFile}" ]]; then
-                echo "Secret \"${secretFile}\" not found"
-                cleanup
-              fi
+          # Generate a script that runs 'rclone config update' for each remote
+          rcloneConfigScript = lib.concatStringsSep "\n" (
+            lib.mapAttrsToList (
+              remoteName: remoteData:
+              let
+                staticArgs = lib.concatLists (
+                  lib.mapAttrsToList (k: v: [
+                    k
+                    (lib.escapeShellArg (toRcloneVal v))
+                  ]) remoteData.config
+                );
 
-              if ! ${lib.getExe cfg.package} config update \
-                     ${remote.name} config_refresh_token=false \
-                     ${secret}="$(cat "${secretFile}")" \
-                     --non-interactive; then
-                echo "Failed to inject secret \"${secretFile}\""
-                cleanup
-              fi
-            '') remote.value.secrets or { };
+                secretArgs = lib.concatLists (
+                  lib.mapAttrsToList (k: v: [
+                    k
+                    "\"$(cat ${lib.escapeShellArg v})\""
+                  ]) (remoteData.secrets or { })
+                );
 
-          injectAllSecrets = lib.concatMap injectSecret (lib.mapAttrsToList lib.nameValuePair cfg.remotes);
-          rcloneConfigPath = "${config.xdg.configHome}/rclone/rclone.conf";
+                allArgs = staticArgs ++ secretArgs;
+              in
+              ''
+                echo "Updating remote: ${remoteName}"
+                # Ensure all secret files exist before running the command
+                ${lib.concatMapStrings (path: ''
+                  if [ ! -r ${lib.escapeShellArg path} ]; then
+                    echo "Error: Secret file not found: ${path}"
+                    exit 1
+                  fi
+                '') (lib.attrValues (remoteData.secrets or { }))}
+
+                ${lib.getExe cfg.package} config update "${remoteName}" \
+                  ${lib.concatStringsSep " " allArgs} \
+                  --non-interactive
+              ''
+            ) cfg.remotes
+          );
         in
         lib.mkIf (cfg.remotes != { }) {
           rclone-config = {
@@ -313,25 +336,16 @@ in
 
                   text = ''
                     configPath="${rcloneConfigPath}"
-                    configName="$(basename $configPath)"
-                    savedConfigPath="$(dirname $configPath)"/."$configName".orig
+                    mkdir -p "$(dirname "$configPath")"
 
-                    cleanup() {
-                      echo "Failed to render config."
-                      if [ -f "$savedConfigPath" ]; then
-                        cp -v "$savedConfigPath" "${rcloneConfigPath}"
-                      fi
-                      exit 1
-                    }
-
-                    trap cleanup SIGINT
-
-                    if [ -f "${rcloneConfigPath}" ]; then
-                      cp -v "${rcloneConfigPath}" "$savedConfigPath"
+                    # Ensure the file exists so rclone can update it.
+                    # 'config update' creates it if missing, but we ensure permissions here.
+                    if [ ! -f "$configPath" ]; then
+                      touch "$configPath"
+                      chmod 600 "$configPath"
                     fi
 
-                    install -v -D -m600 "${safeConfig}" "${rcloneConfigPath}"
-                    ${lib.concatLines injectAllSecrets}
+                    ${rcloneConfigScript}
                   '';
                 }
               );
