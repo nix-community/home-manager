@@ -197,7 +197,13 @@ in
       type = types.nullOr types.ints.unsigned;
       default = null;
       example = 1000;
-      description = "The user's uid.";
+      description = ''
+        The user's UID. Required for state version 26.05 and later.
+
+        When using Home Manager as a NixOS or nix-darwin module, this value
+        is automatically set from {option}`users.users.<name>.uid` when that
+        option is defined.
+      '';
     };
 
     home.homeDirectory = mkOption {
@@ -571,6 +577,16 @@ in
       {
         assertion = config.home.homeDirectory != "";
         message = "Home directory could not be determined";
+      }
+      {
+        assertion = lib.versionOlder config.home.stateVersion "26.05" || config.home.uid != null;
+        message = ''
+          User ID (UID) could not be determined. Please set 'home.uid' to your
+          user's UID. You can find your UID by running 'id -u' in your terminal.
+
+          If you are using Home Manager as a NixOS or nix-darwin module, you can
+          alternatively set 'users.users.<name>.uid' in your system configuration.
+        '';
       }
     ];
 
