@@ -1,6 +1,8 @@
 {
+  lib,
   pkgs,
   config,
+  options,
   ...
 }:
 
@@ -79,6 +81,28 @@
       })
     ];
   };
+
+  test.asserts.warnings.expected =
+    let
+      pathToString = lib.foldl (acc: next: "${acc}.${next}");
+    in
+    lib.map
+      (
+        path:
+        "The option `${pathToString "programs.vicinae" path}' defined in ${
+          lib.showFiles (lib.attrByPath (path ++ [ "files" ]) "" options.programs.vicinae)
+        } has been renamed to `${pathToString "services.vicinae" path}'."
+      )
+      [
+        [ "settings" ]
+        [ "themes" ]
+        [ "extensions" ]
+        [
+          "systemd"
+          "enable"
+        ]
+        [ "enable" ]
+      ];
 
   nmt.script = ''
     assertFileExists      "home-files/.config/vicinae/vicinae.json"
