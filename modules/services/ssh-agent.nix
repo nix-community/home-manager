@@ -84,13 +84,11 @@ in
                 '';
           in
           {
-            bash.initExtra = lib.mkIf cfg.enableBashIntegration bashIntegration;
-
-            zsh.initContent = lib.mkIf cfg.enableZshIntegration bashIntegration;
-
-            fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration fishIntegration;
-
-            nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration nushellIntegration;
+            # $SSH_AUTH_SOCK has to be set early since other tools rely on it
+            bash.profileExtra = lib.mkIf cfg.enableBashIntegration (lib.mkOrder 900 bashIntegration);
+            fish.shellInit = lib.mkIf cfg.enableFishIntegration (lib.mkOrder 900 fishIntegration);
+            nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration (lib.mkOrder 900 nushellIntegration);
+            zsh.envExtra = lib.mkIf cfg.enableZshIntegration (lib.mkOrder 900 bashIntegration);
           };
       }
 
