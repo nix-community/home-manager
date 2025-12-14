@@ -234,6 +234,14 @@ in
         this should be a wrapped ${appName} package. For earlier state
         versions it should be an unwrapped ${appName} package.
         Set to `null` to disable installing ${appName}.
+
+        Note that by default ${appName} will attempt to update the `profiles.ini`
+        configuration file on startup which will fail if Home Manager is managing
+        it. If you wish to use an unwrapped ${appName} (e.g. from outside Nix),
+        consider setting the environment variable `MOZ_LEGACY_PROFILES=1` to
+        disable attempts to write to the file. For macOS specifically, this
+        should be done via `/bin/launchctl setenv MOZ_LEGACY_PROFILES 1` to
+        ensure it is set when ${appName} is launched through the Finder or Dock.
       '';
     };
 
