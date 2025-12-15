@@ -84,7 +84,7 @@ in
           The interval at which the Home Manager auto upgrade is run.
           This value is passed to the systemd timer configuration
           as the `OnCalendar` option.
-          The format is described in systemd.time(7).
+          The format is described in {manpage}`systemd.time(7)`.
         '';
       };
 
