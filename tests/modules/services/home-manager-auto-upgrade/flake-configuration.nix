@@ -4,6 +4,7 @@
     frequency = "daily";
     useFlake = true;
     flakeDir = "/tmp/my-flake";
+    preSwitchCommands = [ "nix flake update" ];
   };
 
   nmt.script = ''
