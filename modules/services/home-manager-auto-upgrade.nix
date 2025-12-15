@@ -11,12 +11,24 @@ let
   homeManagerPackage = config.programs.home-manager.package;
 
   hmExtraArgs = lib.escapeShellArgs cfg.extraArgs;
+  legacyPreSwitchCommands = lib.warn ''
+    services.home-manager.autoUpgrade:
+    Implicit `nix flake update` before `home-manager switch` is deprecated.
+    Please set `services.home-manager.autoUpgrade.preSwitchCommands`
+    explicitly.
+  '' [ "nix flake update" ];
+
+  effectivePreSwitchCommands =
+    if cfg.useFlake && cfg.preSwitchCommands == [ ] then
+      legacyPreSwitchCommands
+    else
+      cfg.preSwitchCommands;
 
   preSwitchScript = lib.concatStringsSep "\n" (
     map (cmd: ''
       echo "+ ${cmd}"
       ${cmd}
-    '') cfg.preSwitchCommands
+    '') effectivePreSwitchCommands
   );
 
   autoUpgradeApp = pkgs.writeShellApplication {
