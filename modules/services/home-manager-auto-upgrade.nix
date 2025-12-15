@@ -6,39 +6,65 @@
 }:
 
 let
-
   cfg = config.services.home-manager.autoUpgrade;
 
   homeManagerPackage = config.programs.home-manager.package;
 
+  hmExtraArgs = lib.escapeShellArgs cfg.extraArgs;
+
+  preSwitchScript = lib.concatStringsSep "\n" (
+    map (cmd: ''
+      echo "+ ${cmd}"
+      ${cmd}
+    '') cfg.preSwitchCommands
+  );
+
   autoUpgradeApp = pkgs.writeShellApplication {
     name = "home-manager-auto-upgrade";
-    text =
-      if cfg.useFlake then
-        ''
-          set -e
-          if [[ ! -f "$FLAKE_DIR/flake.nix" ]]; then
-              echo "No flake.nix found in $FLAKE_DIR." >&2
-              exit 1
-          fi
-          echo "Changing to flake directory $FLAKE_DIR"
-          cd "$FLAKE_DIR"
-          echo "Update flake inputs"
-          nix flake update
-          echo "Upgrade Home Manager"
-          home-manager switch --flake .
-        ''
-      else
-        ''
-          echo "Update Nix's channels"
-          nix-channel --update
-          echo "Upgrade Home Manager"
-          home-manager switch
-        '';
+
     runtimeInputs = with pkgs; [
       homeManagerPackage
       nix
+      git
     ];
+
+    text =
+      if cfg.useFlake then
+        ''
+          set -euo pipefail
+
+          if [[ -z "''${FLAKE_DIR:-}" ]]; then
+            echo "FLAKE_DIR is not set" >&2
+            exit 1
+          fi
+
+          if [[ ! -f "$FLAKE_DIR/flake.nix" ]]; then
+            echo "No flake.nix found in $FLAKE_DIR." >&2
+            exit 1
+          fi
+
+          echo "Changing to flake directory $FLAKE_DIR"
+          cd "$FLAKE_DIR"
+
+          echo "Running pre-switch commands"
+          ${preSwitchScript}
+
+          echo "Upgrade Home Manager"
+          home-manager switch --flake . ${hmExtraArgs}
+        ''
+      else
+        ''
+          set -euo pipefail
+
+          echo "Update Nix channels"
+          nix-channel --update
+
+          echo "Running pre-switch commands"
+          ${preSwitchScript}
+
+          echo "Upgrade Home Manager"
+          home-manager switch ${hmExtraArgs}
+        '';
   };
 in
 {
@@ -48,7 +74,8 @@ in
     services.home-manager.autoUpgrade = {
       enable = lib.mkEnableOption ''
         the Home Manager upgrade service that periodically updates your Nix
-        channels before running `home-manager switch`'';
+        configuration before running `home-manager switch`
+      '';
 
       frequency = lib.mkOption {
         type = lib.types.str;
@@ -57,15 +84,16 @@ in
           The interval at which the Home Manager auto upgrade is run.
           This value is passed to the systemd timer configuration
           as the `OnCalendar` option.
-          The format is described in
-          {manpage}`systemd.time(7)`.
+          The format is described in systemd.time(7).
         '';
       };
 
       useFlake = lib.mkOption {
         type = lib.types.bool;
         default = false;
-        description = "Whether to use 'nix flake update' instead of 'nix-channel --update'.";
+        description = ''
+          Whether to use flake-based Home Manager configuration.
+        '';
       };
 
       flakeDir = lib.mkOption {
@@ -73,7 +101,34 @@ in
         default = "${config.xdg.configHome}/home-manager";
         defaultText = lib.literalExpression ''"''${config.xdg.configHome}/home-manager"'';
         example = "/home/user/dotfiles";
-        description = "The directory of the flake to update.";
+        description = ''
+          Directory containing flake.nix.
+        '';
+      };
+
+      extraArgs = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        example = [
+          "--impure"
+          "-b"
+          "hmbak"
+        ];
+        description = ''
+          Extra arguments passed to `home-manager switch`.
+        '';
+      };
+
+      preSwitchCommands = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        example = [
+          "nix flake update"
+        ];
+        description = ''
+          Shell commands executed before `home-manager switch`.
+          Each entry is executed as a separate command.
+        '';
       };
     };
   };
@@ -97,10 +152,17 @@ in
       };
 
       services.home-manager-auto-upgrade = {
-        Unit.Description = "Home Manager upgrade";
+        Unit = {
+          Description = "Home Manager upgrade";
+          X-SwitchMethod = "keep-old";
+        };
+
         Service = {
           ExecStart = "${autoUpgradeApp}/bin/home-manager-auto-upgrade";
-          Environment = lib.mkIf cfg.useFlake [ "FLAKE_DIR=${cfg.flakeDir}" ];
+
+          Environment = lib.mkIf cfg.useFlake [
+            "FLAKE_DIR=${cfg.flakeDir}"
+          ];
         };
       };
     };
