@@ -11,6 +11,7 @@ let
   homeManagerPackage = config.programs.home-manager.package;
 
   hmExtraArgs = lib.escapeShellArgs cfg.flags;
+
   legacyPreSwitchCommands = lib.warn ''
     services.home-manager.autoUpgrade:
     Implicit `nix flake update` before `home-manager switch` is deprecated.
@@ -18,17 +19,26 @@ let
     explicitly.
   '' [ "nix flake update" ];
 
+  # null = legacy behavior
+  # []   = run nothing
   effectivePreSwitchCommands =
-    if cfg.useFlake && cfg.preSwitchCommands == [ ] then
+    if cfg.useFlake && cfg.preSwitchCommands == null then
       legacyPreSwitchCommands
     else
       cfg.preSwitchCommands;
 
-  preSwitchScript = lib.concatStringsSep "\n" (
-    map (cmd: ''
-      echo "+ ${cmd}"
-      ${cmd}
-    '') effectivePreSwitchCommands
+  hasPreSwitchCommands = effectivePreSwitchCommands != [ ];
+
+  preSwitchScript = lib.optionalString hasPreSwitchCommands (
+    lib.concatStringsSep "\n" (
+      [
+        ''echo "Running pre-switch commands"''
+      ]
+      ++ map (cmd: ''
+        echo "+ ${cmd}"
+        ${cmd}
+      '') effectivePreSwitchCommands
+    )
   );
 
   autoUpgradeApp = pkgs.writeShellApplication {
@@ -57,7 +67,6 @@ let
           echo "Changing to flake directory $FLAKE_DIR"
           cd "$FLAKE_DIR"
 
-          echo "Running pre-switch commands"
           ${preSwitchScript}
 
           echo "Upgrade Home Manager"
@@ -70,7 +79,6 @@ let
           echo "Update Nix channels"
           nix-channel --update
 
-          echo "Running pre-switch commands"
           ${preSwitchScript}
 
           echo "Upgrade Home Manager"
@@ -131,8 +139,8 @@ in
       };
 
       preSwitchCommands = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        default = [ ];
+        type = lib.types.nullOr (lib.types.listOf lib.types.str);
+        default = null;
         example = lib.literalExpression ''
           [
             "nix flake update"
@@ -141,7 +149,9 @@ in
         '';
         description = ''
           Shell commands executed before `home-manager switch`.
-          Each entry is executed as a separate command.
+
+          - null: use legacy behavior (deprecated)
+          - []: run no pre-switch commands
         '';
       };
     };
