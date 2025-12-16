@@ -37,7 +37,6 @@ let
     runtimeInputs = with pkgs; [
       homeManagerPackage
       nix
-      git
     ];
 
     text =
