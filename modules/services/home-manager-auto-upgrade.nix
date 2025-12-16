@@ -133,9 +133,12 @@ in
       preSwitchCommands = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
-        example = [
-          "nix flake update"
-        ];
+        example = lib.literalExpression ''
+          [
+            "nix flake update"
+            "''${pkgs.git}/bin/git pull"
+          ]
+        '';
         description = ''
           Shell commands executed before `home-manager switch`.
           Each entry is executed as a separate command.
