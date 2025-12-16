@@ -10,7 +10,7 @@ let
 
   homeManagerPackage = config.programs.home-manager.package;
 
-  hmExtraArgs = lib.escapeShellArgs cfg.extraArgs;
+  hmExtraArgs = lib.escapeShellArgs cfg.flags;
   legacyPreSwitchCommands = lib.warn ''
     services.home-manager.autoUpgrade:
     Implicit `nix flake update` before `home-manager switch` is deprecated.
@@ -118,7 +118,7 @@ in
         '';
       };
 
-      extraArgs = lib.mkOption {
+      flags = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
         example = [
