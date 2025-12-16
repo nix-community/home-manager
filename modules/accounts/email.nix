@@ -442,7 +442,8 @@ let
           default = null;
           description = ''
             The server username of this account. This will be used as
-            the SMTP, IMAP, and JMAP user name.
+            the default SMTP, IMAP, and JMAP user name, but can be
+            overridden by setting the corresponding username option.
           '';
         };
 
