@@ -52,7 +52,7 @@ in
       eval "$(sheldon source)"
     '';
 
-    programs.zsh.initExtra = mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       eval "$(sheldon source)"
     '';
 

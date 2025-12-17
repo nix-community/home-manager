@@ -756,12 +756,9 @@ in
           description = "Syncthing tray command to use.";
         };
 
-        package = mkOption {
-          type = types.package;
-          default = pkgs.syncthingtray-minimal;
-          defaultText = literalExpression "pkgs.syncthingtray-minimal";
-          example = literalExpression "pkgs.qsyncthingtray";
-          description = "Syncthing tray package to use.";
+        package = lib.mkPackageOption pkgs "syncthingtray" {
+          default = "syncthingtray-minimal";
+          example = "qsyncthingtray";
         };
       };
     };

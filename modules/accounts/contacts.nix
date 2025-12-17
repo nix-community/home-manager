@@ -102,8 +102,8 @@ let
         };
 
         local = mkOption {
-          type = types.nullOr (localModule name);
-          default = null;
+          type = localModule name;
+          default = { };
           description = ''
             Local configuration for the contacts.
           '';

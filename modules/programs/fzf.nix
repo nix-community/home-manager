@@ -62,6 +62,8 @@ let
       '';
 in
 {
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
+
   imports = [
     (lib.mkRemovedOptionModule [
       "programs"
@@ -69,9 +71,6 @@ in
       "historyWidgetCommand"
     ] "This option is no longer supported by fzf.")
   ];
-
-  meta.maintainers = with lib.maintainers; [ khaneliman ];
-
   options.programs.fzf = {
     enable = lib.mkEnableOption "fzf - a command-line fuzzy finder";
 

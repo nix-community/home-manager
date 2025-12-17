@@ -41,6 +41,7 @@ in
         enable = mkEnableOption "Git";
 
         package = lib.mkPackageOption pkgs "git" {
+          nullable = true;
           example = "pkgs.gitFull";
           extraDescription = ''
             Use {var}`pkgs.gitFull`
@@ -328,7 +329,7 @@ in
   config = mkIf cfg.enable (
     lib.mkMerge [
       {
-        home.packages = [ cfg.package ];
+        home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
         assertions = [
           {
@@ -516,7 +517,7 @@ in
             Type = "oneshot";
             ExecStart =
               let
-                exe = lib.getExe cfg.package;
+                exe = if cfg.package != null then lib.getExe cfg.package else "git";
               in
               ''
                 "${exe}" for-each-repo --keep-going --config=maintenance.repo maintenance run --schedule=%i
@@ -553,7 +554,7 @@ in
         launchd.agents =
           let
             baseArguments = [
-              "${lib.getExe cfg.package}"
+              "${if cfg.package != null then lib.getExe cfg.package else "git"}"
               "for-each-repo"
               "--keep-going"
               "--config=maintenance.repo"

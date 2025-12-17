@@ -15,6 +15,8 @@ let
   };
 in
 {
+  meta.maintainers = [ lib.maintainers.arjan-s ];
+
   imports =
     let
       msg = ''
@@ -26,9 +28,6 @@ in
         configuration.'';
     in
     [ (lib.mkRemovedOptionModule [ "programs" "pls" "enableAliases" ] msg) ];
-
-  meta.maintainers = [ lib.maintainers.arjan-s ];
-
   options.programs.pls = {
     enable = lib.mkEnableOption "pls, a modern replacement for {command}`ls`";
 

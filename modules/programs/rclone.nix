@@ -14,6 +14,8 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [ jess ];
+
   imports = [
     (lib.mkRemovedOptionModule [ "programs" "rclone" "writeAfter" ] ''
       The writeAfter option has been removed because rclone configuration is now handled by a
@@ -151,7 +153,7 @@ in
                           default = { };
                           apply = lib.mergeAttrs {
                             vfs-cache-mode = "full";
-                            cache-dir = "%C";
+                            cache-dir = "%C/rclone";
                           };
                           description = ''
                             An attribute set of option values passed to `rclone mount`. To set
@@ -399,6 +401,4 @@ in
         mountServices
       ];
     };
-
-  meta.maintainers = with lib.maintainers; [ jess ];
 }

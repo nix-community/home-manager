@@ -9,7 +9,7 @@ let
   cfg = config.programs.nix-init;
 in
 {
-  meta.maintainers = [ lib.maintainers.awwpotato ];
+  meta.maintainers = [ lib.maintainers.da157 ];
 
   options.programs.nix-init = {
     enable = lib.mkEnableOption "nix-init";

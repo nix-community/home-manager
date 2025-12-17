@@ -113,7 +113,8 @@ in
       example = !default;
       description = ''
         Whether to configure {command}`emacsclient` as the default
-        editor using the {env}`EDITOR` environment variable.
+        editor using the {env}`EDITOR` and {env}`VISUAL`
+        environment variables.
       '';
     };
   };
@@ -121,11 +122,16 @@ in
   config = mkIf cfg.enable (
     lib.mkMerge [
       {
-        home.sessionVariables = mkIf cfg.defaultEditor {
-          EDITOR = lib.getBin (
-            pkgs.writeShellScript "editor" ''exec ${lib.getBin cfg.package}/bin/emacsclient "''${@:---create-frame}"''
-          );
-        };
+        home.sessionVariables =
+          let
+            editorBin = lib.getBin (
+              pkgs.writeShellScript "editor" ''exec ${lib.getBin cfg.package}/bin/emacsclient "''${@:---create-frame}"''
+            );
+          in
+          mkIf cfg.defaultEditor {
+            EDITOR = editorBin;
+            VISUAL = editorBin;
+          };
       }
 
       (mkIf pkgs.stdenv.isLinux {

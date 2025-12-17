@@ -11,7 +11,7 @@ let
   cfg = config.programs.ptyxis;
 in
 {
-  meta.maintainers = [ lib.maintainers.awwpotato ];
+  meta.maintainers = [ lib.maintainers.da157 ];
 
   options.programs.ptyxis = {
     enable = lib.mkEnableOption "ptyxis";

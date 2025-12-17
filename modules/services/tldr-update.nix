@@ -8,7 +8,7 @@ let
   cfg = config.services.tldr-update;
 in
 {
-  meta.maintainers = [ lib.maintainers.perchun ];
+  meta.maintainers = [ lib.maintainers.PerchunPak ];
 
   options.services.tldr-update = {
     enable = lib.mkEnableOption ''

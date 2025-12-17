@@ -19,16 +19,10 @@
         resumeCommand = ''swaymsg "output * dpms on"'';
       }
     ];
-    events = [
-      {
-        event = "before-sleep";
-        command = "swaylock -fF";
-      }
-      {
-        event = "lock";
-        command = "swaylock -fF";
-      }
-    ];
+    events = {
+      before-sleep = "swaylock -fF";
+      lock = "swaylock -fF";
+    };
   };
 
   nmt.script = ''

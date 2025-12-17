@@ -47,7 +47,7 @@ in
     };
 
     # Needed to avoid error with dummy fish package.
-    xdg.dataFile."fish/home-manager_generated_completions".source = lib.mkForce (
+    xdg.dataFile."fish/home-manager/generated_completions".source = lib.mkForce (
       builtins.toFile "empty" ""
     );
 

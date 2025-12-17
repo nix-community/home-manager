@@ -147,6 +147,8 @@ let
 
 in
 {
+  meta.maintainers = [ ];
+
   options.nix = {
     enable =
       mkEnableOption ''
@@ -157,13 +159,9 @@ in
         visible = false;
       };
 
-    package = mkOption {
-      type = types.nullOr types.package;
+    package = lib.mkPackageOption pkgs "nix" {
       default = null;
-      example = literalExpression "pkgs.nix";
-      description = ''
-        The Nix package that the configuration should be generated for.
-      '';
+      nullable = true;
     };
 
     nixPath = mkOption {
@@ -363,6 +361,4 @@ in
       xdg.configFile."nix/nix.conf".source = nixConf;
     })
   ]);
-
-  meta.maintainers = [ ];
 }

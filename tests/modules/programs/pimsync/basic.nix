@@ -1,6 +1,6 @@
 {
   accounts.calendar = {
-    accounts.caldav = {
+    accounts.mine = {
       pimsync.enable = true;
       remote = {
         passwordCommand = [
@@ -20,6 +20,22 @@
       };
     };
     basePath = ".local/state/calendar";
+  };
+
+  accounts.contact = {
+    accounts.mine = {
+      pimsync.enable = true;
+      remote = {
+        passwordCommand = [
+          "pass"
+          "carddav"
+        ];
+        type = "carddav";
+        url = "https://carddav.example.com";
+        userName = "bob";
+      };
+    };
+    basePath = ".local/state/contact";
   };
 
   programs.pimsync = {

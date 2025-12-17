@@ -11,7 +11,7 @@ let
     types
     ;
 
-  mergeSets = sets: lib.lists.fold lib.attrsets.recursiveUpdate { } sets;
+  mergeSets = sets: lib.lists.foldr lib.attrsets.recursiveUpdate { } sets;
 
   yaml = pkgs.formats.yaml { };
 

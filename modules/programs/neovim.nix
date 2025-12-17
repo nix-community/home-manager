@@ -96,6 +96,8 @@ let
       }"'';
 in
 {
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
+
   imports = [
     (mkRemovedOptionModule [
       "programs"
@@ -116,9 +118,6 @@ in
               configure.customRC -> programs.neovim.extraConfig
     '')
   ];
-
-  meta.maintainers = with lib.maintainers; [ khaneliman ];
-
   options = {
     programs.neovim = {
       enable = mkEnableOption "Neovim";
@@ -290,7 +289,8 @@ in
         default = false;
         description = ''
           Whether to configure {command}`nvim` as the default
-          editor using the {env}`EDITOR` environment variable.
+          editor using the {env}`EDITOR` and {env}`VISUAL`
+          environment variables.
         '';
       };
 
@@ -454,7 +454,10 @@ in
 
       home.packages = [ cfg.finalPackage ];
 
-      home.sessionVariables = mkIf cfg.defaultEditor { EDITOR = "nvim"; };
+      home.sessionVariables = mkIf cfg.defaultEditor {
+        EDITOR = "nvim";
+        VISUAL = "nvim";
+      };
 
       home.shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
 

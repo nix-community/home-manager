@@ -11,9 +11,10 @@ in
   programs.bash.enable = true;
   programs.fish.enable = true;
   programs.zsh.enable = true;
+  programs.nushell.enable = true;
 
   # Needed to avoid error with dummy fish package.
-  xdg.dataFile."fish/home-manager_generated_completions".source = lib.mkForce (
+  xdg.dataFile."fish/home-manager/generated_completions".source = lib.mkForce (
     builtins.toFile "empty" ""
   );
 
@@ -36,5 +37,11 @@ in
     assertFileExists home-files/.config/fish/config.fish
     assertFileRegex \
       home-files/.config/fish/config.fish '${fishRegex}'
+
+    # Nushell integration
+    assertFileExists home-files/.config/nushell/config.nu
+    assertFileContains \
+      home-files/.config/nushell/config.nu \
+      '$env.config.hooks.command_not_found = (source @nix-index@/etc/profile.d/command-not-found.nu)'
   '';
 }

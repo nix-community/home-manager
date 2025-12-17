@@ -9,7 +9,7 @@ let
   cfg = config.services.rescrobbled;
 in
 {
-  meta.maintainers = [ lib.maintainers.awwpotato ];
+  meta.maintainers = [ lib.maintainers.da157 ];
 
   options.services.rescrobbled = {
     enable = lib.mkEnableOption "rescrobbled, a MPRIS music scrobbler daemon";

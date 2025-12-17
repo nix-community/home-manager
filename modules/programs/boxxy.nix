@@ -91,6 +91,8 @@ let
   };
 in
 {
+  meta.maintainers = with lib.hm.maintainers; [ nikp123 ];
+
   options.programs.boxxy = {
     enable = lib.mkEnableOption "boxxy: Boxes in badly behaving applications";
 
@@ -114,6 +116,4 @@ in
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
   };
-
-  meta.maintainers = with lib.hm.maintainers; [ nikp123 ];
 }

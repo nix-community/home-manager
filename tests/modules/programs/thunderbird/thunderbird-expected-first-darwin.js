@@ -120,7 +120,7 @@ user_pref("mail.smtpserver.smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfa
 user_pref("mail.smtpserver.smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.port", 456);
 user_pref("mail.smtpserver.smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.try_ssl", 3);
 user_pref("mail.smtpserver.smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.username", "home.manager");
-user_pref("mail.smtpservers", "smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc,smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f");
+user_pref("mail.smtpservers", "smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc,smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f,smtp_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b");
 user_pref("privacy.donottrackheader.enabled", true);
 
 user_pref("mail.html_compose", false);

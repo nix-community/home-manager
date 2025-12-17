@@ -23,6 +23,12 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    rycee
+    shikanime
+  ];
+
   imports = [
     (mkRenamedOptionModule
       [
@@ -38,12 +44,6 @@ in
       "nix-direnv"
       "enableFlakes"
     ] "Flake support is now always enabled.")
-  ];
-
-  meta.maintainers = with lib.maintainers; [
-    khaneliman
-    rycee
-    shikanime
   ];
 
   options.programs.direnv = {

@@ -22,6 +22,8 @@ let
   settingsFormat = pkgs.formats.toml { };
 in
 {
+  meta.maintainers = [ lib.maintainers.otavio ];
+
   options.programs.rio = {
     enable = mkEnableOption null // {
       description = ''
@@ -60,8 +62,6 @@ in
       '';
     };
   };
-  meta.maintainers = [ lib.maintainers.otavio ];
-
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = mkIf (cfg.package != null) [ cfg.package ];

@@ -38,6 +38,11 @@ let
   env = attrs: (mapAttrsToList (generators.mkKeyValueDefault { } "=") attrs) ++ gitPath;
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    lorenzleutgeb
+    matthiasbeyer
+  ];
+
   options = {
     services.radicle = {
       node = {
@@ -237,9 +242,4 @@ in
       RAD_SOCKET = "\${XDG_RUNTIME_DIR:-/run/user/$UID}/radicle-node/control.sock";
     };
   };
-
-  meta.maintainers = with lib.maintainers; [
-    lorenzleutgeb
-    matthiasbeyer
-  ];
 }

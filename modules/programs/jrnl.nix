@@ -9,15 +9,16 @@ let
   cfg = config.programs.jrnl;
   yamlFormat = pkgs.formats.yaml { };
 in
-with lib;
 {
+  meta.maintainers = [ lib.maintainers.matthiasbeyer ];
+
   options.programs.jrnl = {
-    enable = mkEnableOption "jrnl";
+    enable = lib.mkEnableOption "jrnl";
 
     package = lib.mkPackageOption pkgs "jrnl" { nullable = true; };
 
-    settings = mkOption {
-      type = yamlFormat.type;
+    settings = lib.mkOption {
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Configuration for the jrnl binary.
@@ -27,10 +28,11 @@ with lib;
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = mkIf (cfg.package != null) [ cfg.package ];
-    xdg.configFile."jrnl/jrnl.yaml".source = yamlFormat.generate "jrnl.yaml" cfg.settings;
-  };
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-  meta.maintainers = [ lib.maintainers.matthiasbeyer ];
+    xdg.configFile."jrnl/jrnl.yaml" = lib.mkIf (cfg.settings != { }) {
+      source = yamlFormat.generate "jrnl.yaml" cfg.settings;
+    };
+  };
 }

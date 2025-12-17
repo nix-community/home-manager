@@ -162,7 +162,8 @@ in
         default = false;
         description = ''
           Whether to configure {command}`vim` as the default
-          editor using the {env}`EDITOR` environment variable.
+          editor using the {env}`EDITOR` and {env}`VISUAL`
+          environment variables.
         '';
       };
     };
@@ -213,7 +214,10 @@ in
 
       home.packages = [ cfg.package ];
 
-      home.sessionVariables = lib.mkIf cfg.defaultEditor { EDITOR = "vim"; };
+      home.sessionVariables = lib.mkIf cfg.defaultEditor {
+        EDITOR = "vim";
+        VISUAL = "vim";
+      };
 
       programs.vim = {
         package = vim;

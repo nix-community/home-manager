@@ -10,6 +10,8 @@ let
   cfg = config.programs.ranger;
 in
 {
+  meta.maintainers = [ lib.hm.maintainers.fpob ];
+
   options.programs.ranger = {
     enable = lib.mkEnableOption "ranger file manager";
 
@@ -204,6 +206,4 @@ in
       })
     ]
   );
-
-  meta.maintainers = [ lib.hm.maintainers.fpob ];
 }
