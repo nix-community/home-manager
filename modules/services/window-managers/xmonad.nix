@@ -9,6 +9,7 @@ let
 
   cfg = config.xsession.windowManager.xmonad;
 
+
   xmonad = pkgs.xmonad-with-packages.override {
     ghcWithPackages = cfg.haskellPackages.ghcWithPackages;
     packages =
@@ -19,6 +20,11 @@ let
         self.xmonad-extras
       ];
   };
+  ghc-builder = cfg.haskellPackages.ghcWithPackages
+    (self: [ self.xmonad ]
+        ++ (cfg.extraPackages self)
+        ++ lib.optionals cfg.enableContribAndExtras
+              [self.xmonad-contrib self.xmonad-extras]);
 
 in
 {
@@ -104,6 +110,20 @@ in
           contents of the files.
         '';
       };
+      buildScript = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        description = ''
+          Build script for your xmonad configuration.
+        '';
+      };
+      buildScriptPackages = mkOption {
+        type = types.listOf types.package;
+        default = [];
+        description = ''
+          Extra packages needed to run the build script.
+        '';
+      };
     };
   };
 
@@ -119,7 +139,9 @@ in
       xmonadBin = "${
         pkgs.runCommandLocal "xmonad-compile"
           {
-            nativeBuildInputs = [ xmonad ];
+            nativeBuildInputs = [ xmonad
+                                  ghc-builder
+                                ] ++ cfg.buildScriptPackages;
           }
           ''
             mkdir -p $out/bin
@@ -131,7 +153,9 @@ in
             mkdir -p "$XMONAD_CONFIG_DIR/lib" "$XMONAD_CACHE_DIR" "$XMONAD_DATA_DIR"
 
             cp ${cfg.config} xmonad-config/xmonad.hs
-
+            ${lib.optionalString (cfg.buildScript != null) ''
+              cp ${cfg.buildScript} xmonad-config/build && chmod +x xmonad-config/build
+            ''}
             declare -A libFiles
             libFiles=(${
               lib.concatStringsSep " " (lib.mapAttrsToList (name: value: "['${name}']='${value}'") cfg.libFiles)
