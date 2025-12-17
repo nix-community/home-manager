@@ -18,7 +18,13 @@ in
   options.services.lorri = {
     enable = lib.mkEnableOption "lorri build daemon";
 
-    enableNotifications = lib.mkEnableOption "lorri build notifications";
+    enableNotifications = lib.mkOption {
+      default = false;
+      example = true;
+      description = "Whether to enable lorri build notifications.";
+      type = lib.types.bool;
+      readOnly = pkgs.stdenv.isDarwin;
+    };
 
     package = lib.mkPackageOption pkgs "lorri" { };
 
@@ -47,13 +53,6 @@ in
         home.packages = [ cfg.package ];
       }
       (lib.mkIf pkgs.stdenv.isDarwin {
-        warnings =
-          if cfg.enableNotifications then
-            [
-              "services.lorri.enableNotifications is not currently supported for Darwin."
-            ]
-          else
-            [ ];
         launchd.agents.lorri = {
           enable = true;
           config = {
