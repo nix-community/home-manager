@@ -19,19 +19,17 @@ let
     explicitly.
   '' [ "nix flake update" ];
 
-  /*
-    Normalize to a list:
-    - useFlake && null -> legacy (warn + nix flake update)
-    - null             -> []
-    - [] / [ ... ]     -> as-is
-  */
-  resolvedPreSwitchCommands =
+  # null = legacy behavior
+  # []   = run nothing
+  preSwitchCommands =
     if cfg.useFlake && cfg.preSwitchCommands == null then
       legacyPreSwitchCommands
+    else if cfg.preSwitchCommands == null then
+      [ ]
     else
-      cfg.preSwitchCommands or [ ];
+      cfg.preSwitchCommands;
 
-  hasPreSwitchCommands = resolvedPreSwitchCommands != [ ];
+  hasPreSwitchCommands = preSwitchCommands != [ ];
 
   preSwitchScript = lib.optionalString hasPreSwitchCommands (
     lib.concatStringsSep "\n" (
@@ -41,7 +39,7 @@ let
       ++ map (cmd: ''
         echo "+ ${cmd}"
         ${cmd}
-      '') resolvedPreSwitchCommands
+      '') preSwitchCommands
     )
   );
 
@@ -154,7 +152,7 @@ in
         description = ''
           Shell commands executed before `home-manager switch`.
 
-          - null: legacy behavior (deprecated, flake only)
+          - null: use legacy behavior (deprecated)
           - []: run no pre-switch commands
         '';
       };
