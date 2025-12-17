@@ -112,6 +112,12 @@
       ];
 
       accountSettings = calendarConfig ++ contactConfig;
+
+      localStorageDir = name: acc: lib.attrsets.getAttrFromPath [ "local" "path" ] acc;
+
+      calendarLocalStorageDirs = lib.mapAttrsToList localStorageDir calendarAccounts;
+      contactLocalStorageDirs = lib.mapAttrsToList localStorageDir contactAccounts;
+      localStorageDirs = calendarLocalStorageDirs ++ contactLocalStorageDirs;
     in
     lib.mkIf cfg.enable {
       meta.maintainers = [ lib.maintainers.antonmosich ];
@@ -146,6 +152,16 @@
 
       xdg.configFile."pimsync/pimsync.conf".text = lib.hm.generators.toSCFG { } (
         accountSettings ++ cfg.settings
+      );
+
+      home.activation.createDavDirectories = (
+        let
+          directoriesList = localStorageDirs;
+          mkdir = (dir: ''[[ -L "${dir}" ]] || run mkdir -p $VERBOSE_ARG "${dir}"'');
+        in
+        lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          lib.strings.concatMapStringsSep "\n" mkdir directoriesList
+        )
       );
     };
 }
