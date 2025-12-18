@@ -9,7 +9,6 @@ let
 
   cfg = config.xsession.windowManager.xmonad;
 
-
   xmonad = pkgs.xmonad-with-packages.override {
     ghcWithPackages = cfg.haskellPackages.ghcWithPackages;
     packages =
@@ -20,11 +19,15 @@ let
         self.xmonad-extras
       ];
   };
-  ghc-builder = cfg.haskellPackages.ghcWithPackages
-    (self: [ self.xmonad ]
-        ++ (cfg.extraPackages self)
-        ++ lib.optionals cfg.enableContribAndExtras
-              [self.xmonad-contrib self.xmonad-extras]);
+  ghc-builder = cfg.haskellPackages.ghcWithPackages (
+    self:
+    [ self.xmonad ]
+    ++ (cfg.extraPackages self)
+    ++ lib.optionals cfg.enableContribAndExtras [
+      self.xmonad-contrib
+      self.xmonad-extras
+    ]
+  );
 
 in
 {
@@ -119,7 +122,7 @@ in
       };
       buildScriptPackages = mkOption {
         type = types.listOf types.package;
-        default = [];
+        default = [ ];
         description = ''
           Extra packages needed to run the build script.
         '';
@@ -139,9 +142,11 @@ in
       xmonadBin = "${
         pkgs.runCommandLocal "xmonad-compile"
           {
-            nativeBuildInputs = [ xmonad
-                                  ghc-builder
-                                ] ++ cfg.buildScriptPackages;
+            nativeBuildInputs = [
+              xmonad
+              ghc-builder
+            ]
+            ++ cfg.buildScriptPackages;
           }
           ''
             mkdir -p $out/bin
