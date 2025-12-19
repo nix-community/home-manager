@@ -81,12 +81,12 @@ in
       };
 
     defaultModel = lib.mkOption {
-      type = lib.types.str;
-      default = "gemini-2.5-pro";
+      type = lib.types.nullOr lib.types.str;
+      default = null;
       example = "gemini-2.5-flash";
       description = ''
         The default model to use for the CLI.
-        Will be set as $GEMINI_MODEL.
+        Will be set as $GEMINI_MODEL when configured.
       '';
     };
 
@@ -138,7 +138,9 @@ in
           file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
           };
-          sessionVariables.GEMINI_MODEL = cfg.defaultModel;
+          sessionVariables = lib.mkIf (cfg.defaultModel != null) {
+            GEMINI_MODEL = cfg.defaultModel;
+          };
         };
       }
       {
