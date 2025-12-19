@@ -197,6 +197,47 @@ in
       };
     };
 
+    rules = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Modular rule files for Claude Code.
+        The attribute name becomes the rule filename, and the value is either:
+        - Inline content as a string
+        - A path to a file containing the rule content
+        Rules are stored in .claude/rules/ directory.
+        All markdown files in .claude/rules/ are automatically loaded as project memory.
+      '';
+      example = lib.literalExpression ''
+        {
+          code-style = '''
+            # Code Style Guidelines
+
+            - Use consistent formatting
+            - Follow language conventions
+          ''';
+          testing = '''
+            # Testing Conventions
+
+            - Write tests for all new features
+            - Maintain test coverage above 80%
+          ''';
+          security = ./rules/security.md;
+        }
+      '';
+    };
+
+    rulesDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing rule files for Claude Code.
+        Rule files from this directory will be symlinked to .claude/rules/.
+        All markdown files in this directory are automatically loaded as project memory.
+      '';
+      example = lib.literalExpression "./rules";
+    };
+
     agentsDir = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;
@@ -326,6 +367,10 @@ in
         message = "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`";
       }
       {
+        assertion = !(cfg.rules != { } && cfg.rulesDir != null);
+        message = "Cannot specify both `programs.claude-code.rules` and `programs.claude-code.rulesDir`";
+      }
+      {
         assertion = !(cfg.agents != { } && cfg.agentsDir != null);
         message = "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`";
       }
@@ -386,6 +431,11 @@ in
           if cfg.memory.text != null then { text = cfg.memory.text; } else { source = cfg.memory.source; }
         );
 
+        ".claude/rules" = lib.mkIf (cfg.rulesDir != null) {
+          source = cfg.rulesDir;
+          recursive = true;
+        };
+
         ".claude/agents" = lib.mkIf (cfg.agentsDir != null) {
           source = cfg.agentsDir;
           recursive = true;
@@ -406,6 +456,12 @@ in
           recursive = true;
         };
       }
+      // lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair ".claude/rules/${name}.md" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
+      ) cfg.rules
       // lib.mapAttrs' (
         name: content:
         lib.nameValuePair ".claude/agents/${name}.md" (
