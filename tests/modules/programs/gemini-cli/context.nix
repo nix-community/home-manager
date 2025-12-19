@@ -41,5 +41,9 @@
     assertFileExists home-files/.gemini/CONTEXT.md
     assertFileContent home-files/.gemini/CONTEXT.md \
       ${./context-additional.md}
+
+    assertFileExists home-path/etc/profile.d/hm-session-vars.sh
+    assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh \
+      "GEMINI_MODEL"
   '';
 }
