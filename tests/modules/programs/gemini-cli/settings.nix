@@ -21,9 +21,10 @@
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.gemini/settings.json
-    assertFileContent home-files/.gemini/settings.json \
-      ${./settings.json}
+    assertPathNotExists home-files/.gemini/settings.json
+    assertFileExists home-files/.gemini/system-settings.json
+    assertFileContent home-files/.gemini/system-settings.json \
+      ${./system-settings.json}
     assertFileContent home-files/.gemini/commands/changelog.toml \
       ${./changelog.toml}
     assertFileContent home-files/.gemini/commands/git/fix.toml \

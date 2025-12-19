@@ -135,10 +135,15 @@ in
       {
         home = {
           packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-          file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
+          file.".gemini/system-settings.json" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
           };
-          sessionVariables.GEMINI_MODEL = cfg.defaultModel;
+          sessionVariables = {
+            GEMINI_MODEL = cfg.defaultModel;
+          }
+          // lib.optionalAttrs (cfg.settings != { }) {
+            GEMINI_CLI_SYSTEM_SETTINGS_PATH = "${config.home.homeDirectory}/.gemini/system-settings.json";
+          };
         };
       }
       {
