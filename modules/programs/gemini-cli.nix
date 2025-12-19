@@ -21,14 +21,19 @@ in
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          "theme": "Default",
-          "vimMode": true,
-          "preferredEditor": "nvim",
-          "autoAccept": true
-        }
-      '';
+      example = {
+        ui.theme = "Default";
+        general = {
+          vimMode = true;
+          preferredEditor = "nvim";
+          previewFeatures = true;
+        };
+        ide.enabled = true;
+        privacy.usageStatisticsEnabled = false;
+        tools.autoAccept = false;
+        context.loadMemoryFromIncludeDirectories = true;
+        security.auth.selectedType = "oauth-personal";
+      };
       description = "JSON config for gemini-cli";
     };
 
