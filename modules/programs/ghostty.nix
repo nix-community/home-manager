@@ -143,6 +143,10 @@ in
       enableZshIntegration = mkShellIntegrationOption (
         lib.hm.shell.mkZshIntegrationOption { inherit config; }
       );
+
+      enableNushellIntegration = mkShellIntegrationOption (
+        lib.hm.shell.mkNushellIntegrationOption { inherit config; }
+      );
     };
 
   config = lib.mkIf cfg.enable (
@@ -252,6 +256,14 @@ in
           if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
             source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
           fi
+        '';
+      })
+
+      (lib.mkIf cfg.enableNushellIntegration {
+        programs.nushell.extraConfig = ''
+          if ($env | get -i GHOSTTY_RESOURCES_DIR | is-not-empty) {
+            source $"($env.GHOSTTY_RESOURCES_DIR)/shell-integration/nu/init.nu"
+          }
         '';
       })
     ]
