@@ -13,7 +13,6 @@ let
     mkIf
     mkOption
     mkPackageOption
-    mkRemovedOptionModule
     optionals
     types
     ;
@@ -34,27 +33,6 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
-
-  imports = [
-    (mkRemovedOptionModule [
-      "programs"
-      "neovim"
-      "withPython"
-    ] "Python2 support has been removed from neovim.")
-    (mkRemovedOptionModule [
-      "programs"
-      "neovim"
-      "extraPythonPackages"
-    ] "Python2 support has been removed from neovim.")
-    (mkRemovedOptionModule [ "programs" "neovim" "configure" ] ''
-      programs.neovim.configure is deprecated.
-            Other programs.neovim options can override its settings or ignore them.
-            Please use the other options at your disposal:
-              configure.packages.*.opt  -> programs.neovim.plugins = [ { plugin = ...; optional = true; }]
-              configure.packages.*.start  -> programs.neovim.plugins = [ { plugin = ...; }]
-              configure.customRC -> programs.neovim.extraConfig
-    '')
-  ];
 
   options = {
     programs.neovim = {
