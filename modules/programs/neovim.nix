@@ -118,20 +118,7 @@ in
       };
 
       extraPython3Packages = mkOption {
-        # In case we get a plain list, we need to turn it into a function,
-        # as expected by the function in nixpkgs.
-        # The only way to do so is to call `const`, which will ignore its input.
-        type =
-          let
-            fromType = types.listOf types.package;
-          in
-          types.coercedTo fromType (lib.flip lib.warn lib.const ''
-            Assigning a plain list to extraPython3Packages is deprecated.
-                   Please assign a function taking a package set as argument, so
-                     extraPython3Packages = [ pkgs.python3Packages.xxx ];
-                   should become
-                     extraPython3Packages = ps: [ ps.xxx ];
-          '') (types.functionTo fromType);
+        type = types.functionTo (types.listOf types.package);
         default = _: [ ];
         defaultText = literalExpression "ps: [ ]";
         example = literalExpression "pyPkgs: with pyPkgs; [ python-language-server ]";
@@ -144,20 +131,7 @@ in
       };
 
       extraLuaPackages = mkOption {
-        # We get the Lua package from the final package and use its
-        # Lua packageset to evaluate the function that this option was set to.
-        # This ensures that we always use the same Lua version as the Neovim package.
-        type =
-          let
-            fromType = types.listOf types.package;
-          in
-          types.coercedTo fromType (lib.flip lib.warn lib.const ''
-            Assigning a plain list to extraLuaPackages is deprecated.
-                   Please assign a function taking a package set as argument, so
-                     extraLuaPackages = [ pkgs.lua51Packages.xxx ];
-                   should become
-                     extraLuaPackages = ps: [ ps.xxx ];
-          '') (types.functionTo fromType);
+        type = types.functionTo (types.listOf types.package);
         default = _: [ ];
         defaultText = literalExpression "ps: [ ]";
         example = literalExpression "luaPkgs: with luaPkgs; [ luautf8 ]";
