@@ -155,6 +155,15 @@ in
         '';
       };
 
+      withPerl = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Enable perl provider. Set to `true` to
+          use Perl plugins.
+        '';
+      };
+
       withRuby = mkOption {
         type = types.nullOr types.bool;
         default = true;
@@ -221,6 +230,31 @@ in
           This option accepts a function that takes a Lua package set as an argument,
           and selects the required Lua packages from this package set.
           See the example for more info.
+        '';
+      };
+
+      extraName = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          Extra name appended to the wrapper package name.
+        '';
+      };
+
+      autowrapRuntimeDeps = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to automatically wrap the binary with the runtime dependencies of the plugins.
+        '';
+      };
+
+      waylandSupport = mkOption {
+        type = types.bool;
+        default = pkgs.stdenv.isLinux;
+        defaultText = literalExpression "pkgs.stdenv.isLinux";
+        description = ''
+          Whether to enable Wayland clipboard support.
         '';
       };
 
@@ -418,6 +452,7 @@ in
           extraPython3Packages
           withPython3
           withRuby
+          withPerl
           viAlias
           vimAlias
           ;
@@ -429,6 +464,11 @@ in
       wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package (
         neovimConfig
         // {
+          inherit (cfg)
+            extraName
+            autowrapRuntimeDeps
+            waylandSupport
+            ;
           wrapperArgs =
             (lib.escapeShellArgs (neovimConfig.wrapperArgs ++ cfg.extraWrapperArgs))
             + " "
