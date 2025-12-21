@@ -118,6 +118,9 @@
       calendarLocalStorageDirs = lib.mapAttrsToList localStorageDir calendarAccounts;
       contactLocalStorageDirs = lib.mapAttrsToList localStorageDir contactAccounts;
       localStorageDirs = calendarLocalStorageDirs ++ contactLocalStorageDirs;
+
+      mkTmpFileRule = (dir: ''d ${dir} 0755 ${config.home.username} ${config.home.username} - -'');
+      tmpFileRules = map mkTmpFileRule localStorageDirs;
     in
     lib.mkIf cfg.enable {
       meta.maintainers = [ lib.maintainers.antonmosich ];
@@ -150,18 +153,10 @@
 
       home.packages = [ cfg.package ];
 
+      systemd.user.tmpfiles.rules = tmpFileRules;
+
       xdg.configFile."pimsync/pimsync.conf".text = lib.hm.generators.toSCFG { } (
         accountSettings ++ cfg.settings
-      );
-
-      home.activation.createDavDirectories = (
-        let
-          directoriesList = localStorageDirs;
-          mkdir = (dir: ''[[ -L "${dir}" ]] || run mkdir -p $VERBOSE_ARG "${dir}"'');
-        in
-        lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          lib.strings.concatMapStringsSep "\n" mkdir directoriesList
-        )
       );
     };
 }
