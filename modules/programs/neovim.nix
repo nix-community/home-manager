@@ -465,10 +465,10 @@ in
 
         generatedConfigs =
           let
-            grouped = lib.lists.groupBy (x: x.type) pluginsNormalized;
+            grouped = builtins.groupBy (x: x.type) pluginsNormalized;
             configsOnly = lib.foldl (acc: p: if p.config != null then acc ++ [ p.config ] else acc) [ ];
           in
-          lib.mapAttrs (name: vals: concatMapStringsSep "\n" (configsOnly vals)) grouped;
+          lib.mapAttrs (_name: vals: lib.concatStringsSep "\n" (configsOnly vals)) grouped;
 
         finalPackage = wrappedNeovim';
       };
