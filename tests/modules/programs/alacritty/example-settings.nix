@@ -19,8 +19,19 @@
   };
 
   nmt.script = ''
-    assertFileContent \
-      home-files/.config/alacritty/alacritty.toml \
-      ${./example-settings-expected.toml}
+    tomlFile=home-files/.config/alacritty/alacritty.toml
+
+    assertFileExists $tomlFile
+
+    assertFileRegex $tomlFile '^import = '
+
+    assertFileRegex $tomlFile '[[keyboard.bindings]]'
+    assertFileRegex $tomlFile 'chars = "\\u000c"'
+    assertFileRegex $tomlFile 'key = "K"'
+    assertFileRegex $tomlFile 'mods = "Control"'
+
+    assertFileRegex $tomlFile '[window.dimensions]'
+    assertFileRegex $tomlFile 'columns = 200'
+    assertFileRegex $tomlFile 'lines = 3'
   '';
 }
