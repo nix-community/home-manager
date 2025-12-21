@@ -1,6 +1,7 @@
 {
   programs.alacritty = {
     enable = true;
+    theme = "catppuccin_mocha";
     settings = {
       window.dimensions = {
         lines = 3;
