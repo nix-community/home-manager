@@ -445,12 +445,6 @@ let
         '';
       };
 
-      extraOptions = mkOption {
-        type = types.attrsOf types.str;
-        default = { };
-        description = "Extra configuration options for the host.";
-      };
-
       AddKeysToAgent = mkOption {
         type = types.nullOr types.str;
         default = null;
@@ -521,6 +515,16 @@ let
           Specifies the available KEX (Key Exchange) algorithms.
         '';
       };
+
+      # mkRemovedOptionModule does not work in submodules, so instead hide the
+      # option and add a top-level assert
+      # https://github.com/NixOS/nixpkgs/issues/96006
+      extraOptions = mkOption {
+        type = types.nullOr (types.attrsOf types.str);
+        default = null;
+        visible = false;
+        internal = true;
+      };
     };
 
     #    config.host = mkDefault dagName;
@@ -571,7 +575,6 @@ let
       ++ optional (
         cf.KexAlgorithms != null
       ) "  KexAlgorithms ${builtins.concatStringsSep "," cf.KexAlgorithms}"
-      ++ [ (mkSshOptions { indent = "  "; } cf.extraOptions) ]
     );
 
 in
@@ -729,7 +732,16 @@ in
             assertion = (cfg.extraConfig != "") -> (cfg.matchBlocks ? "*");
             message = ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.matchBlocks."*"` (default host config) is not declared.'';
           }
-        ];
+        ]
+        ++ (lib.flip mapAttrsToList cfg.matchBlocks (
+          n: v: {
+            assertion = v.data.extraOptions == null;
+            message = ''
+              `programs.ssh.matchBlocks.${n}` sets `extraOptions`, which has
+              been removed.
+            '';
+          }
+        ));
 
         home.packages = optional (cfg.package != null) cfg.package;
 

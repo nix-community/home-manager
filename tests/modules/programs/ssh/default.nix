@@ -7,6 +7,7 @@
   ssh-includes = ./includes.nix;
   ssh-match-blocks = ./match-blocks-attrs.nix;
   ssh-match-blocks-match-and-hosts = ./match-blocks-match-and-hosts.nix;
+  ssh-match-blocks-extra-option-assertion = ./match-blocks-extra-option-assertion.nix;
   ssh-forwards-dynamic-valid-bind-no-asserts = ./forwards-dynamic-valid-bind-no-asserts.nix;
   ssh-forwards-dynamic-bind-path-with-port-asserts = ./forwards-dynamic-bind-path-with-port-asserts.nix;
   ssh-forwards-local-bind-path-with-port-asserts = ./forwards-local-bind-path-with-port-asserts.nix;
