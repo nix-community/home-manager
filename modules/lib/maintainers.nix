@@ -209,6 +209,11 @@
     github = "genericnerdyusername";
     githubId = 111183546;
   };
+  gs-101 = {
+    email = "gabrielsantosdesouza@disroot.org";
+    github = "gs-101";
+    githubId = 172639817;
+  };
   henrisota = {
     email = "henrisota@users.noreply.github.com";
     github = "henrisota";
