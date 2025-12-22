@@ -43,6 +43,7 @@
           setEnv = {
             FOO = "foo12";
             BAR = "_bar_ 42";
+            BAZ = ''with " some \ very \" fun \\ escapes'';
           };
         };
 
