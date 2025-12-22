@@ -3,6 +3,13 @@
   zsh-aliases = ./aliases.nix;
   zsh-dotdir-absolute = import ./dotdir.nix "absolute";
   zsh-dotdir-default = import ./dotdir.nix "default";
+  zsh-dotdir-path-normalization-abs-no-slash = import ./dotdir.nix "abs-no-slash";
+  zsh-dotdir-path-normalization-abs-slash = import ./dotdir.nix "abs-slash";
+  zsh-dotdir-path-normalization-rel-no-slash = import ./dotdir.nix "rel-no-slash";
+  zsh-dotdir-path-normalization-rel-slash = import ./dotdir.nix "rel-slash";
+  zsh-dotdir-path-normalization-root-no-slash = import ./dotdir.nix "root-no-slash";
+  zsh-dotdir-path-normalization-root-slash = import ./dotdir.nix "root-slash";
+  zsh-dotdir-path-normalization-abs-space = import ./dotdir.nix "abs-space";
   zsh-dotdir-relative = import ./dotdir.nix "relative";
   zsh-dotdir-shell-variable = import ./dotdir.nix "shell-variable";
   zsh-history-ignore-pattern = ./history-ignore-pattern.nix;
