@@ -153,7 +153,7 @@
 
       home.packages = [ cfg.package ];
 
-      systemd.user.tmpfiles.rules = tmpFileRules;
+      systemd.user.tmpfiles.rules = lib.optionals (pkgs.stdenv.hostPlatform.system == lib.platforms.linux) tmpFileRules;
 
       xdg.configFile."pimsync/pimsync.conf".text = lib.hm.generators.toSCFG { } (
         accountSettings ++ cfg.settings
