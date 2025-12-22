@@ -3,7 +3,7 @@
     enable = true;
     enableDefaultConfig = false;
     extraOptionOverrides = {
-      ForwardAgent = "no";
+      ForwardAgent = false;
     };
   };
 
