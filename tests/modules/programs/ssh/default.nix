@@ -2,6 +2,7 @@
   ssh-old-defaults = ./old-defaults.nix;
   ssh-old-defaults-extra-config = ./old-defaults-extra-config.nix;
   ssh-extra-config-no-default-host = ./extra-config-no-default-host.nix;
+  ssh-extra-option-overrides = ./extra-option-overrides.nix;
   ssh-renamed-options = ./renamed-options.nix;
   ssh-includes = ./includes.nix;
   ssh-match-blocks = ./match-blocks-attrs.nix;
