@@ -26,5 +26,6 @@ stdenv.mkDerivation {
     mkdir -p $out/{bin,resources}
     cp non-nixos-gpu-setup $out/bin
     cp non-nixos-gpu.service $out/resources
+    cp non-nixos-gpu.scm $out/resources
   '';
 }
