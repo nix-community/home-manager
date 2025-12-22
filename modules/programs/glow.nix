@@ -13,7 +13,7 @@ let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 in
 {
-  meta.maintainers = [ maintainers.m-vz ];
+  meta.maintainers = [ hm.maintainers.m-vz ];
 
   options.programs.glow = {
     enable = mkEnableOption "Glow, a terminal based markdown reader";
