@@ -109,6 +109,22 @@ let
     in
     types.attrsOf atom;
 
+  mkMatchBlock =
+    key: cf:
+    let
+      hostOrDagName = if cf.Host != null then cf.Host else key;
+      matchHead = if cf.Match != null then "Match ${cf.Match}" else "Host ${hostOrDagName}";
+      cf' = lib.removeAttrs cf [
+        "Host"
+        "Match"
+      ];
+    in
+    concatStringsSep "\n" (
+      [ "${matchHead}" ]
+      # \
+      ++ [ (mkSshOptions { indent = "  "; } cf') ]
+    );
+
   isPath = x: builtins.substring 0 1 (toString x) == "/";
 
   addressPort =
@@ -162,6 +178,8 @@ let
   };
 
   matchBlockModule = types.submodule {
+    freeformType = lib.types.attrsOf sshConfigType;
+
     # Rename options
     imports = lib.mapAttrsToList (prev: new: (lib.mkRenamedOptionModule [ prev ] [ new ])) {
       addKeysToAgent = "AddKeysToAgent";
@@ -529,54 +547,6 @@ let
 
     #    config.host = mkDefault dagName;
   };
-
-  matchBlockStr =
-    key: cf:
-    concatStringsSep "\n" (
-      let
-        hostOrDagName = if cf.Host != null then cf.Host else key;
-        matchHead = if cf.Match != null then "Match ${cf.Match}" else "Host ${hostOrDagName}";
-      in
-      [ "${matchHead}" ]
-      ++ optional (cf.Port != null) "  Port ${toString cf.Port}"
-      ++ optional (cf.ForwardAgent != null) "  ForwardAgent ${lib.hm.booleans.yesNo cf.ForwardAgent}"
-      ++ optional cf.ForwardX11 "  ForwardX11 yes"
-      ++ optional cf.ForwardX11Trusted "  ForwardX11Trusted yes"
-      ++ optional cf.IdentitiesOnly "  IdentitiesOnly yes"
-      ++ optional (cf.User != null) "  User ${cf.User}"
-      ++ optional (cf.Hostname != null) "  Hostname ${cf.Hostname}"
-      ++ optional (cf.AddressFamily != null) "  AddressFamily ${cf.AddressFamily}"
-      ++ optional (cf.SendEnv != [ ]) "  SendEnv ${unwords cf.SendEnv}"
-      ++ optional (cf.SetEnv != { }) "  SetEnv ${mkSetEnvStr cf.SetEnv}"
-      ++ optional (
-        cf.ServerAliveInterval != null
-      ) "  ServerAliveInterval ${toString cf.ServerAliveInterval}"
-      ++ optional (
-        cf.ServerAliveCountMax != null
-      ) "  ServerAliveCountMax ${toString cf.ServerAliveCountMax}"
-      ++ optional (cf.Compression != null) "  Compression ${lib.hm.booleans.yesNo cf.Compression}"
-      ++ optional (!cf.CheckHostIP) "  CheckHostIP no"
-      ++ optional (cf.ProxyCommand != null) "  ProxyCommand ${cf.ProxyCommand}"
-      ++ optional (cf.ProxyJump != null) "  ProxyJump ${cf.ProxyJump}"
-      ++ optional (cf.AddKeysToAgent != null) "  AddKeysToAgent ${cf.AddKeysToAgent}"
-      ++ optional (
-        cf.HashKnownHosts != null
-      ) "  HashKnownHosts ${lib.hm.booleans.yesNo cf.HashKnownHosts}"
-      ++ optional (cf.UserKnownHostsFile != null) "  UserKnownHostsFile ${cf.UserKnownHostsFile}"
-      ++ optional (cf.ControlMaster != null) "  ControlMaster ${cf.ControlMaster}"
-      ++ optional (cf.ControlPath != null) "  ControlPath ${cf.ControlPath}"
-      ++ optional (cf.ControlPersist != null) "  ControlPersist ${cf.ControlPersist}"
-      ++ map (file: "  IdentityFile ${file}") cf.IdentityFile
-      ++ map (file: "  IdentityAgent ${file}") cf.IdentityAgent
-      ++ map (file: "  CertificateFile ${file}") cf.CertificateFile
-      ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.LocalForward
-      ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.RemoteForward
-      ++ map (f: "  DynamicForward" + addressPort f) cf.DynamicForward
-      ++ optional (
-        cf.KexAlgorithms != null
-      ) "  KexAlgorithms ${builtins.concatStringsSep "," cf.KexAlgorithms}"
-    );
-
 in
 {
   meta.maintainers = [ lib.maintainers.rycee ];
@@ -739,6 +709,8 @@ in
             message = ''
               `programs.ssh.matchBlocks.${n}` sets `extraOptions`, which has
               been removed.
+
+              You can now use the freeform module with arbitrary options.
             '';
           }
         ));
@@ -763,10 +735,10 @@ in
               ++ (optional (cfg.includes != [ ]) ''
                 Include ${concatStringsSep " " cfg.includes}
               '')
-              ++ (map (block: matchBlockStr block.name block.data) matchBlocks)
+              ++ (map (block: mkMatchBlock block.name block.data) matchBlocks)
             )}
 
-            ${if (defaultHostBlock != null) then (matchBlockStr "*" defaultHostBlock.data) else ""}
+            ${if (defaultHostBlock != null) then (mkMatchBlock "*" defaultHostBlock.data) else ""}
               ${lib.replaceStrings [ "\n" ] [ "\n  " ] cfg.extraConfig}
           '';
 
