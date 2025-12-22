@@ -444,12 +444,6 @@ let
         '';
       };
 
-      extraOptions = mkOption {
-        type = types.attrsOf types.str;
-        default = { };
-        description = "Extra configuration options for the host.";
-      };
-
       AddKeysToAgent = mkOption {
         type = types.nullOr types.str;
         default = null;
@@ -508,6 +502,16 @@ let
         example = "10m";
         description = "Whether control socket should remain open in the background.";
       };
+
+      # mkRemovedOptionModule does not work in submodules, so instead hide the
+      # option and add a top-level assert
+      # https://github.com/NixOS/nixpkgs/issues/96006
+      extraOptions = mkOption {
+        type = types.nullOr (types.attrsOf types.str);
+        default = null;
+        visible = false;
+        internal = true;
+      };
     };
 
     #    config.host = mkDefault dagName;
@@ -555,7 +559,6 @@ let
       ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.LocalForward
       ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.RemoteForward
       ++ map (f: "  DynamicForward" + addressPort f) cf.DynamicForward
-      ++ [ (mkSshOptions { indent = "  "; } cf.extraOptions) ]
     );
 
 in
@@ -713,7 +716,16 @@ in
             assertion = (cfg.extraConfig != "") -> (cfg.matchBlocks ? "*");
             message = ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.matchBlocks."*"` (default host config) is not declared.'';
           }
-        ];
+        ]
+        ++ (lib.flip mapAttrsToList cfg.matchBlocks (
+          n: v: {
+            assertion = v.data.extraOptions == null;
+            message = ''
+              `programs.ssh.matchBlocks.${n}` sets `extraOptions`, which has
+              been removed.
+            '';
+          }
+        ));
 
         home.packages = optional (cfg.package != null) cfg.package;
 
