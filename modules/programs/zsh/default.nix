@@ -412,7 +412,7 @@ in
 
         (mkIf (dotDirAbs != homeDir) {
           home.file."${dotDirRel}/.zshenv".text = ''
-            export ZDOTDIR=${dotDirAbs}
+            ${config.lib.zsh.export "ZDOTDIR" dotDirAbs}
           '';
 
           # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
@@ -420,7 +420,7 @@ in
           # already set correctly (by e.g. spawning a zsh inside a zsh), all env
           # vars still get exported
           home.file.".zshenv".text = ''
-            source ${dotDirAbs}/.zshenv
+            source "${dotDirAbs}/.zshenv"
           '';
         })
 
