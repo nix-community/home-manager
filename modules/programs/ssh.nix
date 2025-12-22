@@ -76,7 +76,7 @@ let
         v:
         if lib.isInt v then
           toString v
-        else if lib.isString v then
+        else if lib.isStringLike v then
           v
         else if lib.isBool v then
           lib.hm.booleans.yesNo v
@@ -129,13 +129,11 @@ let
 
   addressPort =
     entry:
-    if isPath entry.address then " ${entry.address}" else " [${entry.address}]:${toString entry.port}";
-
-  unwords = builtins.concatStringsSep " ";
+    if isPath entry.address then "${entry.address}" else "[${entry.address}]:${toString entry.port}";
 
   mkSetEnvStr =
     envStr:
-    unwords (
+    builtins.concatStringsSep " " (
       mapAttrsToList (name: value: ''${name}="${lib.escape [ ''"'' "\\" ] (toString value)}"'') envStr
     );
 
@@ -146,6 +144,14 @@ let
     }:
     types.submodule {
       options = {
+        # Define `__toString` so that the configuration serialization uses it
+        __toString = mkOption {
+          default = addressPort;
+          visible = false;
+          internal = true;
+          readOnly = true;
+        };
+
         address = mkOption {
           type = if nullableAddress then types.nullOr types.str else types.str;
           default = if nullableAddress then null else "localhost";
@@ -166,6 +172,14 @@ let
 
   forwardModule = types.submodule {
     options = {
+      # Define `__toString` so that the configuration serialization uses it
+      __toString = mkOption {
+        default = f: "${toString f.bind} ${toString f.host}";
+        visible = false;
+        internal = true;
+        readOnly = true;
+      };
+
       bind = mkOption {
         type = mkAddressPortModule { actionType = "bind"; };
         description = "Local port binding options";
@@ -178,7 +192,7 @@ let
   };
 
   matchBlockModule = types.submodule {
-    freeformType = lib.types.attrsOf sshConfigType;
+    freeformType = sshConfigType;
 
     # Rename options
     imports = lib.mapAttrsToList (prev: new: (lib.mkRenamedOptionModule [ prev ] [ new ])) {
@@ -294,8 +308,8 @@ let
 
       IdentityFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
-        default = [ ];
-        apply = p: if p == null then [ ] else lib.toList p;
+        default = null;
+        apply = p: if p == null then null else lib.toList p;
         description = ''
           Specifies files from which the user identity is read.
           Identities will be tried in the given order.
@@ -304,8 +318,8 @@ let
 
       IdentityAgent = mkOption {
         type = with types; either (listOf str) (nullOr str);
-        default = [ ];
-        apply = p: if p == null then [ ] else lib.toList p;
+        default = null;
+        apply = p: if p == null then null else lib.toList p;
         description = ''
           Specifies the location of the ssh identity agent.
         '';
@@ -357,6 +371,7 @@ let
             float
           ]);
         default = { };
+        apply = mkSetEnvStr;
         description = ''
           Environment variables and their value to send to the server.
         '';
@@ -394,8 +409,8 @@ let
 
       CertificateFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
-        default = [ ];
-        apply = p: if p == null then [ ] else lib.toList p;
+        default = null;
+        apply = p: if p == null then null else lib.toList p;
         description = ''
           Specifies files from which the user certificate is read.
         '';
