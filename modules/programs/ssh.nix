@@ -16,6 +16,99 @@ let
 
   cfg = config.programs.ssh;
 
+  mkSshOptions =
+    {
+      indent ? "",
+    }:
+    let
+      # OpenSSH is very inconsistent with options that can take multiple values.
+      # For some of them, they can simply appear multiple times and are appended, for others the
+      # values must be separated by whitespace or even commas.
+      # Consult either ssh_config(5) or, as last resort, the OpehSSH source for parsing
+      # the options at ssh.c:process_config_files() to determine the right "mode"
+      # for each. But fortunately this fact is documented for most of them in the manpage.
+      fixListValues =
+        let
+          commaSeparated = [
+            "Ciphers"
+            "HostbasedAcceptedAlgorithms"
+            "MACs"
+            "PubkeyAcceptedAlgorithms"
+            # FIXME: Match?
+          ];
+          spaceSeparated = [
+            "ChannelTimeout"
+            "GlobalKnownHostsFile"
+            "IPQoS"
+            "PermitRemoteOpen"
+            "UserKnownHostsFile"
+            # FIXME: Host?
+          ];
+          multiLine = [
+            "CertificateFile"
+            "DynamicForward"
+            "IdentityAgent"
+            "IdentityFile"
+            "LocalForward"
+            "RemoteForward"
+            "SendEnv" # NOTE: could be spaceSeparated instead
+          ];
+          transformList =
+            key: val:
+            if lib.isList val then
+              if lib.elem key commaSeparated then
+                lib.concatStringsSep "," val
+              else if lib.elem key spaceSeparated then
+                lib.concatStringsSep " " val
+              else if lib.elem key multiLine then
+                val
+              else
+                throw "list value for unknown key ${key}: ${(lib.generators.toPretty { }) val}"
+            else
+              val;
+        in
+        lib.mapAttrs transformList;
+
+      removeNulls = lib.filterAttrs (_: v: v != null);
+
+      # reports boolean as yes / no
+      mkValueString =
+        v:
+        if lib.isInt v then
+          toString v
+        else if lib.isString v then
+          v
+        else if lib.isBool v then
+          lib.hm.booleans.yesNo v
+        else
+          throw "unsupported type ${builtins.typeOf v}: ${(lib.generators.toPretty { }) v}";
+
+      keyValue = lib.generators.toKeyValue {
+        mkKeyValue = lib.generators.mkKeyValueDefault { inherit mkValueString; } " ";
+        listsAsDuplicateKeys = true;
+        inherit indent;
+      };
+    in
+    conf: keyValue (fixListValues (removeNulls conf));
+
+  sshConfigType =
+    let
+      singleAtom =
+        with types;
+        nullOr (oneOf [
+          bool
+          int
+          str
+        ]);
+      atom =
+        with types;
+        (either singleAtom (listOf singleAtom))
+        // {
+          description = "SSH configuration atom (bool, int, string, or list there-of).";
+        };
+    in
+    types.attrsOf atom;
+
   isPath = x: builtins.substring 0 1 (toString x) == "/";
 
   addressPort =
@@ -443,13 +536,7 @@ let
       ++ optional (
         cf.kexAlgorithms != null
       ) "  KexAlgorithms ${builtins.concatStringsSep "," cf.kexAlgorithms}"
-      ++ [
-        (lib.generators.toKeyValue {
-          mkKeyValue = lib.generators.mkKeyValueDefault { } " ";
-          listsAsDuplicateKeys = true;
-          indent = "  ";
-        } cf.extraOptions)
-      ]
+      ++ [ (mkSshOptions { indent = "  "; } cf.extraOptions) ]
     );
 
 in
@@ -503,7 +590,7 @@ in
     };
 
     extraOptionOverrides = mkOption {
-      type = types.attrsOf types.str;
+      type = sshConfigType;
       default = { };
       description = ''
         Extra SSH configuration options that take precedence over any
@@ -625,7 +712,7 @@ in
           in
           ''
             ${concatStringsSep "\n" (
-              (mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
+              [ (mkSshOptions { } cfg.extraOptionOverrides) ]
               ++ (optional (cfg.includes != [ ]) ''
                 Include ${concatStringsSep " " cfg.includes}
               '')
