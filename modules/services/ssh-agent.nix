@@ -44,6 +44,16 @@ in
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+
+    forceOverride = lib.mkOption {
+      type = lib.types.bool;
+      default = pkgs.stdenv.isDarwin;
+      description = ''
+        Whether to override the {env}`SSH_AUTH_SOCK` environment variable even
+        if it is already set. This is useful on macOS where the system's
+        ssh-agent sets this variable by default.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -57,20 +67,41 @@ in
               else
                 "$XDG_RUNTIME_DIR/${cfg.socket}";
 
-            bashIntegration = ''
-              if [ -z "$SSH_AUTH_SOCK" ]; then
-                export SSH_AUTH_SOCK=${socketPath}
-              fi
-            '';
+            bashIntegration =
+              if cfg.forceOverride then
+                ''
+                  export SSH_AUTH_SOCK=${socketPath}
+                ''
+              else
+                ''
+                  if [ -z "$SSH_AUTH_SOCK" ]; then
+                    export SSH_AUTH_SOCK=${socketPath}
+                  fi
+                '';
 
-            fishIntegration = ''
-              if test -z "$SSH_AUTH_SOCK"
-                set -x SSH_AUTH_SOCK ${socketPath}
-              end
-            '';
+            fishIntegration =
+              if cfg.forceOverride then
+                ''
+                  set -gx SSH_AUTH_SOCK ${socketPath}
+                ''
+              else
+                ''
+                  if test -z "$SSH_AUTH_SOCK"
+                    set -x SSH_AUTH_SOCK ${socketPath}
+                  end
+                '';
 
             nushellIntegration =
-              if pkgs.stdenv.isDarwin then
+              if cfg.forceOverride then
+                if pkgs.stdenv.isDarwin then
+                  ''
+                    $env.SSH_AUTH_SOCK = $"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"
+                  ''
+                else
+                  ''
+                    $env.SSH_AUTH_SOCK = $"($env.XDG_RUNTIME_DIR)/${cfg.socket}"
+                  ''
+              else if pkgs.stdenv.isDarwin then
                 ''
                   if "SSH_AUTH_SOCK" not-in $env {
                     $env.SSH_AUTH_SOCK = $"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"
