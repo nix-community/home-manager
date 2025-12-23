@@ -304,9 +304,12 @@ in
                   fi
                 '') (lib.attrValues (remoteData.secrets or { }))}
 
-                ${lib.getExe cfg.package} config update "${remoteName}" \
+                if ! ${lib.getExe cfg.package} config update "${remoteName}" \
                   ${lib.concatStringsSep " " allArgs} \
-                  --non-interactive
+                  --non-interactive; then
+                  echo "Failed to update remote: ${remoteName}"
+                  exit 1
+                fi
               ''
             ) cfg.remotes
           );
@@ -336,7 +339,26 @@ in
 
                   text = ''
                     configPath="${rcloneConfigPath}"
+                    configName="$(basename "$configPath")"
+                    savedConfigPath="$(dirname "$configPath")/.$configName.orig"
+
+                    cleanup() {
+                      echo "Failed to render config."
+                      if [ -f "$savedConfigPath" ]; then
+                        echo "Restoring original config from backup"
+                        cp -v "$savedConfigPath" "$configPath"
+                      fi
+                      exit 1
+                    }
+
+                    trap cleanup SIGINT SIGTERM ERR
+
                     mkdir -p "$(dirname "$configPath")"
+
+                    # Create backup of existing config if it exists
+                    if [ -f "$configPath" ]; then
+                      cp -v "$configPath" "$savedConfigPath"
+                    fi
 
                     # Ensure the file exists so rclone can update it.
                     # 'config update' creates it if missing, but we ensure permissions here.
@@ -346,6 +368,11 @@ in
                     fi
 
                     ${rcloneConfigScript}
+
+                    # Clean up backup on success
+                    if [ -f "$savedConfigPath" ]; then
+                      rm -f "$savedConfigPath"
+                    fi
                   '';
                 }
               );
