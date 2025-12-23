@@ -89,7 +89,7 @@ let
         inherit indent;
       };
     in
-    conf: keyValue (fixListValues (removeNulls conf));
+    conf: keyValue (lib.traceVal (fixListValues (removeNulls  conf)));
 
   sshConfigType =
     let
@@ -226,7 +226,10 @@ let
       setEnv = "SetEnv";
       user = "User";
       userKnownHostsFile = "UserKnownHostsFile";
-    };
+    }
+    ++ [
+      (lib.mkRemovedOptionModule [ "extraOptions" ] "")
+    ];
 
     options = {
       Host = mkOption {
@@ -276,8 +279,8 @@ let
       };
 
       ForwardX11 = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Specifies whether X11 connections will be automatically redirected
           over the secure channel and {env}`DISPLAY` set.
@@ -285,8 +288,8 @@ let
       };
 
       ForwardX11Trusted = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Specifies whether remote X11 clients will have full access to the
           original X11 display.
@@ -294,8 +297,8 @@ let
       };
 
       IdentitiesOnly = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Specifies that ssh should only use the authentication
           identity explicitly configured in the
@@ -352,8 +355,9 @@ let
       };
 
       SendEnv = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
+        type = with types; either (listOf str) (nullOr str);
+        default = null;
+        apply = p: if p == null then null else lib.toList p;
         description = ''
           Environment variables to send from the local host to the
           server.
@@ -386,8 +390,8 @@ let
       };
 
       CheckHostIP = mkOption {
-        type = types.bool;
-        default = true;
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Check the host IP address in the
           {file}`known_hosts` file.
@@ -430,8 +434,9 @@ let
       };
 
       LocalForward = mkOption {
-        type = types.listOf forwardModule;
-        default = [ ];
+        type = types.nullOr (types.listOf forwardModule);
+        apply = p: if p == null then null else lib.toList p;
+        default = null;
         example = literalExpression ''
           [
             {
@@ -448,8 +453,9 @@ let
       };
 
       RemoteForward = mkOption {
-        type = types.listOf forwardModule;
-        default = [ ];
+        type = types.nullOr (types.listOf forwardModule);
+        apply = p: if p == null then null else lib.toList p;
+        default = null;
         example = literalExpression ''
           [
             {
@@ -466,8 +472,9 @@ let
       };
 
       DynamicForward = mkOption {
-        type = types.listOf dynamicForwardModule;
-        default = [ ];
+        type = types.nullOr (types.listOf dynamicForwardModule);
+        apply = p: if p == null then null else lib.toList p;
+        default = null;
         example = literalExpression ''
           [ { port = 8080; } ];
         '';
@@ -536,12 +543,17 @@ let
         description = "Whether control socket should remain open in the background.";
       };
 
-      # mkRemovedOptionModule does not work in submodules, so instead hide the
-      # option and add a top-level assert
-      # https://github.com/NixOS/nixpkgs/issues/96006
-      extraOptions = mkOption {
-        type = types.nullOr (types.attrsOf types.str);
-        default = null;
+      # mkRemovedOptionModule does not work in submodules, this is a work-around
+      # for https://github.com/NixOS/nixpkgs/issues/96006
+      assertions = mkOption {
+        type = types.listOf types.unspecified;
+        default = [ ];
+        visible = false;
+        internal = true;
+      };
+      warnings = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
         visible = false;
         internal = true;
       };
@@ -705,17 +717,8 @@ in
             message = ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.matchBlocks."*"` (default host config) is not declared.'';
           }
         ]
-        ++ (lib.flip mapAttrsToList cfg.matchBlocks (
-          n: v: {
-            assertion = v.data.extraOptions == null;
-            message = ''
-              `programs.ssh.matchBlocks.${n}` sets `extraOptions`, which has
-              been removed.
-
-              You can now use the freeform module with arbitrary options.
-            '';
-          }
-        ));
+        # ++ lib.flatten (lib.mapAttrsToList (_: v: v.data.assertions) cfg.matchBlocks);
+        ;
 
         home.packages = optional (cfg.package != null) cfg.package;
 
@@ -749,7 +752,9 @@ in
             (n: v: ''
               The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
               The match option takes precedence.'')
-            (lib.filterAttrs (n: v: v.data.Host != null && v.data.Match != null) cfg.matchBlocks);
+            (lib.filterAttrs (n: v: v.data.Host != null && v.data.Match != null) cfg.matchBlocks)
+          # ++ lib.flatten (lib.mapAttrsToList (_: v: v.data.warnings) cfg.matchBlocks);
+          ;
       }
       (lib.mkIf cfg.enableDefaultConfig {
         warnings = [
