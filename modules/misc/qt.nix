@@ -291,7 +291,7 @@ in
         };
       };
     }
-    // (lib.genAttrs' [ "qt5ct" "qt6ct" ] (
+    // (lib.genAttrs [ "qt5ct" "qt6ct" ] (
       name:
       lib.nameValuePair "${name}Settings" (
         lib.mkOption {
