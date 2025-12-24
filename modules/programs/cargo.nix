@@ -9,6 +9,8 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
+  defaultCargoHome = ".cargo";
+
   cfg = config.programs.cargo;
 in
 {
@@ -18,6 +20,17 @@ in
     programs = {
       cargo = {
         enable = mkEnableOption "management of cargo config";
+
+        cargoHome = lib.mkOption {
+          type = lib.types.nullOr lib.types.str;
+          default = null;
+          example = ".cargo";
+          description = ''
+            The location of the cargo home directory, from `~`, which caches downloads and holds the Cargo configuration file.
+            If not null, sets the `CARGO_HOME` environment variable. and places the config file in `$CARGO_HOME/config.toml`.
+            See: https://doc.rust-lang.org/cargo/guide/cargo-home.html
+          '';
+        };
 
         settings = lib.mkOption {
           inherit (tomlFormat) type;
@@ -37,6 +50,9 @@ in
         ".cargo/config.toml" = {
           source = tomlFormat.generate "config.toml" cfg.settings;
         };
+      };
+      sessionVariables = lib.mkIf (cfg.cargoHome != null) {
+        CARGO_HOME = "${config.home.homeDirectory}/${cfg.cargoHome}";
       };
     };
   };
