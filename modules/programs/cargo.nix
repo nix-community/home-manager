@@ -36,7 +36,7 @@ in
           inherit (tomlFormat) type;
           default = { };
           description = ''
-            Available configuration options for the .cargo/config see:
+            Available configuration options for the cargo configuration file, see:
             https://doc.rust-lang.org/cargo/reference/config.html
           '';
         };
@@ -48,11 +48,15 @@ in
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      file = {
-        ".cargo/config.toml" = {
-          source = tomlFormat.generate "config.toml" cfg.settings;
+      file =
+        let
+          cargoHomePath = if cfg.cargoHome != null then cfg.cargoHome else defaultCargoHome;
+        in
+        {
+          "${cargoHomePath}/config.toml" = {
+            source = tomlFormat.generate "config.toml" cfg.settings;
+          };
         };
-      };
       sessionVariables = lib.mkIf (cfg.cargoHome != null) {
         CARGO_HOME = "${config.home.homeDirectory}/${cfg.cargoHome}";
       };
