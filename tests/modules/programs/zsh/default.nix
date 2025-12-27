@@ -19,12 +19,15 @@
   zsh-history-path-xdg-variable = import ./history-path.nix "xdg-variable";
   zsh-history-path-zdotdir-variable = import ./history-path.nix "zdotdir-variable";
   zsh-history-substring-search = ./history-substring-search.nix;
+  zsh-legacy-warning = ./legacy-warning.nix;
   zsh-siteFunctions-mkcd = ./siteFunctions-mkcd.nix;
   zsh-plugins = ./plugins.nix;
   zsh-prezto = ./prezto.nix;
   zsh-session-variables = ./session-variables.nix;
   zsh-smart-formatting = ./smart-formatting.nix;
   zsh-syntax-highlighting = ./syntax-highlighting.nix;
+  zsh-xdg-default = ./xdg-default.nix;
+  zsh-xdg-disabled = ./xdg-disabled.nix;
   zsh-zprof = ./zprof.nix;
   zshrc-contents-priorities = ./zshrc-content-priorities.nix;
 }
