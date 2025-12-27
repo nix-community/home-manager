@@ -24,12 +24,11 @@ in
         cargoHome = lib.mkOption {
           type = lib.types.nullOr lib.types.str;
           default = null;
-          defaultText = defaultCargoHome;
-          example = ".config/cargo";
+          example = ".cargo";
           description = ''
             The location of the cargo home directory, from `~`, which caches downloads and holds the Cargo configuration file.
-            Sets the `CARGO_HOME` environment variable. and places the config file in `$CARGO_HOME/config.toml`. See:
-            https://doc.rust-lang.org/cargo/guide/cargo-home.html
+            If not null, sets the `CARGO_HOME` environment variable. and places the config file in `$CARGO_HOME/config.toml`.
+            See: https://doc.rust-lang.org/cargo/guide/cargo-home.html
           '';
         };
 
