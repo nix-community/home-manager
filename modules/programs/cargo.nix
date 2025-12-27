@@ -33,15 +33,6 @@ in
           '';
         };
 
-        enableSccache = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description = ''
-            Sets up the use of sccache with cargo on local, in order to cache build artifacts and speed up subsequent builds. See:
-            https://github.com/mozilla/sccache
-          '';
-        };
-
         settings = lib.mkOption {
           inherit (tomlFormat) type;
           default = { };
@@ -68,9 +59,6 @@ in
       sessionVariables = lib.mkIf (cfg.cargoHome != null) {
         CARGO_HOME = "${config.home.homeDirectory}/${cfg.cargoHome}";
       };
-    };
-    programs.cargo.settings = lib.mkIf cfg.enableSccache {
-      build.rustc_wrapper = "${pkgs.sccache}/bin/sccache";
     };
   };
 }

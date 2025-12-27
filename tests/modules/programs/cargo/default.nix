@@ -2,5 +2,4 @@
   cargo = ./example-config.nix;
   cargo-empty-config = ./empty-config.nix;
   cargo-alt-cargohome = ./alt-cargohome.nix;
-  cargo-sccache-config = ./sccache-config.nix;
 }
