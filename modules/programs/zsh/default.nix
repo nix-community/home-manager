@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  options,
   ...
 }:
 let
@@ -100,8 +101,17 @@ in
         };
 
         dotDir = mkOption {
-          default = homeDir;
-          defaultText = "`config.home.homeDirectory`";
+          default =
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "${config.xdg.configHome}/zsh"
+            else
+              homeDir;
+          defaultText = lib.literalExpression ''
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "''${config.xdg.configHome}/zsh"
+            else
+              config.home.homeDirectory
+          '';
           example = "`\${config.xdg.configHome}/zsh`";
           description = ''
             Directory where the zsh configuration and more should be located,
@@ -391,7 +401,24 @@ in
                   - config.xdg.dataHome (XDG data directory)
                   - config.xdg.cacheHome (XDG cache directory)
                 ''
-              ];
+              ]
+            ++
+              lib.optionals
+                (
+                  config.xdg.enable
+                  && !lib.versionAtLeast config.home.stateVersion "26.05"
+                  && options.programs.zsh.dotDir.highestPrio >= 1500
+                )
+                [
+                  ''
+                    The default value of `programs.zsh.dotDir` will change in future versions.
+                    You are currently using the legacy default (home directory) because `home.stateVersion` is less than "26.05".
+                    To silence this warning and lock in the current behavior, set:
+                      programs.zsh.dotDir = config.home.homeDirectory;
+                    To adopt the new behavior (XDG config directory), update `home.stateVersion` to "26.05" or set:
+                      programs.zsh.dotDir = "''${config.xdg.configHome}/zsh";
+                  ''
+                ];
         }
 
         (mkIf (cfg.envExtra != "") {
@@ -420,7 +447,7 @@ in
           # already set correctly (by e.g. spawning a zsh inside a zsh), all env
           # vars still get exported
           home.file.".zshenv".text = ''
-            source "${dotDirAbs}/.zshenv"
+            source ${lib.escapeShellArg "${dotDirAbs}/.zshenv"}
           '';
         })
 
