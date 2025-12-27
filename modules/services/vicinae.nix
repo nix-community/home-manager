@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.programs.vicinae;
+  cfg = config.services.vicinae;
 
   jsonFormat = pkgs.formats.json { };
   tomlFormat = pkgs.formats.toml { };
@@ -16,7 +16,48 @@ in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
 
-  options.programs.vicinae = {
+  imports =
+    map
+      (
+        path:
+        lib.mkRenamedOptionModule
+          (
+            [
+              "programs"
+              "vicinae"
+            ]
+            ++ path
+          )
+          (
+            [
+              "services"
+              "vicinae"
+            ]
+            ++ path
+          )
+      )
+      [
+        [ "enable" ]
+        [ "package" ]
+        [
+          "systemd"
+          "enable"
+        ]
+        [
+          "systemd"
+          "autoStart"
+        ]
+        [
+          "systemd"
+          "target"
+        ]
+        [ "useLayerShell" ]
+        [ "extensions" ]
+        [ "themes" ]
+        [ "settings" ]
+      ];
+
+  options.services.vicinae = {
     enable = lib.mkEnableOption "vicinae launcher daemon";
 
     package = lib.mkPackageOption pkgs "vicinae" { nullable = true; };
@@ -153,10 +194,10 @@ in
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.vicinae" pkgs lib.platforms.linux)
       {
         assertion = cfg.systemd.enable -> cfg.package != null;
-        message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
+        message = "{option}services.vicinae.systemd.enable requires non null {option}services.vicinae.package";
       }
     ];
     lib.vicinae.mkExtension = (
