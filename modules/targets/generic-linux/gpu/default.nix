@@ -24,6 +24,16 @@
         description = "Whether to enable GPU driver integration for non-NixOS systems.";
       };
 
+      initSystem = mkOption {
+        type = types.enum [
+          "systemd"
+          "shepherd"
+        ];
+        default = "systemd";
+        example = "shepherd";
+        description = "The init system used to install the GPU service.";
+      };
+
       packages = mkOption {
         type = types.attrs;
         default = pkgs;
