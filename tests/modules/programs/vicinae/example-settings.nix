@@ -8,7 +8,7 @@
   programs.vicinae = {
     enable = true;
     systemd.enable = true;
-
+    useLayerShell = false;
     settings = {
       faviconService = "twenty";
       font = {
@@ -79,6 +79,10 @@
       })
     ];
   };
+
+  test.asserts.assertions.expected = [
+    ''After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.''
+  ];
 
   nmt.script = ''
     assertFileExists      "home-files/.config/vicinae/settings.json"
