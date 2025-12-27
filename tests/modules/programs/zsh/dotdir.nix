@@ -99,7 +99,7 @@ in
           "assertFileExists 'home-files/${if relDotDir == "" then "" else "${relDotDir}/"}.zshenv'"
 
           # for non-default dotDir only:
-          (lib.optionalString (case != "default" && case != "root-slash" && case != "root-no-slash") ''
+          (lib.optionalString (absDotDir != home) ''
             # check .zshenv in homeDirectory sources .zshenv in dotDir
             assertFileRegex home-files/.zshenv "source ${lib.escapeShellArg "${absDotDir}/.zshenv"}"
 

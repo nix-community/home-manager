@@ -130,6 +130,13 @@ let
             stateVersion = lib.mkDefault "18.09";
           };
 
+          # NOTE: Added 2025-12-27
+          # Avoid option change deprecation warning
+          # Remove after deprecation period
+          programs.zsh.dotDir = lib.mkIf (config.home.stateVersion == "18.09") (
+            lib.mkDefault "/home/hm-user"
+          );
+
           # Avoid including documentation since this will cause
           # unnecessary rebuilds of the tests.
           manual.manpages.enable = lib.mkDefault false;
