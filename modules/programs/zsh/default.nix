@@ -100,8 +100,17 @@ in
         };
 
         dotDir = mkOption {
-          default = homeDir;
-          defaultText = "`config.home.homeDirectory`";
+          default =
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "${config.xdg.configHome}/zsh"
+            else
+              homeDir;
+          defaultText = lib.literalExpression ''
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "''${config.xdg.configHome}/zsh"
+            else
+              config.home.homeDirectory
+          '';
           example = "`\${config.xdg.configHome}/zsh`";
           description = ''
             Directory where the zsh configuration and more should be located,
