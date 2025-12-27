@@ -1,9 +1,12 @@
 { config, lib, ... }:
 let
   cfg = config.programs.zsh;
+
+  stripSlash = lib.removeSuffix "/";
 in
 rec {
-  homeDir = config.home.homeDirectory;
+  # Raw home directory, no trailing slash.
+  homeDir = stripSlash config.home.homeDirectory;
 
   /*
     Escape a path string for shell usage and remove trailing slashes.
@@ -18,10 +21,11 @@ rec {
       cleanPathStr "/path/to/dir/" => "'/path/to/dir'"
       cleanPathStr "path with spaces" => "'path with spaces'"
   */
-  cleanPathStr = pathStr: lib.escapeShellArg (lib.removeSuffix "/" pathStr);
+  cleanPathStr = pathStr: lib.escapeShellArg (stripSlash pathStr);
 
   /*
     Convert an absolute path to a relative path by stripping the home directory prefix.
+    Returns the raw path (unescaped) for use in home.file keys.
 
     This function converts absolute paths within the home directory to relative paths
     by removing the home directory prefix. Paths already relative are returned as-is.
@@ -30,19 +34,22 @@ rec {
     Type: String -> String
 
     Example:
-      mkRelPathStr "/home/user/config" => "'config'"
-      mkRelPathStr "config" => "'config'"
+      mkRelPathStr "/home/user/config" => "config"
+      mkRelPathStr "config" => "config"
+      mkRelPathStr "/home/user" => "."
       mkRelPathStr "/etc/config" => <error>
   */
   mkRelPathStr =
     pathStr:
-    # is already a relative path
-    if (!lib.hasPrefix "/" pathStr) then
-      cleanPathStr pathStr
-    # is an absolute path within home dir
-    else if (lib.hasPrefix homeDir pathStr) then
-      cleanPathStr (lib.removePrefix "${homeDir}/" pathStr)
-    # is an absolute path not in home dir
+    let
+      normPath = stripSlash pathStr;
+    in
+    if (!lib.hasPrefix "/" normPath) then
+      normPath
+    else if normPath == homeDir then
+      "."
+    else if (lib.hasPrefix "${homeDir}/" normPath) then
+      lib.removePrefix "${homeDir}/" normPath
     else
       throw ''
         Attempted to convert an absolute path not within home directory to a
@@ -54,47 +61,47 @@ rec {
       '';
 
   /*
-    Convert a relative path to an absolute path by prepending the home directory.
+    Convert a relative path to an absolute path.
+    Returns RAW path (unescaped).
 
     This function ensures paths are absolute by prepending the home directory
     to relative paths. Already absolute paths are returned unchanged (after cleaning).
-    This function does NOT support shell variables.
 
     Type: String -> String
 
     Example:
-      mkAbsPathStr "config" => "'/home/user/config'"
-      mkAbsPathStr "/absolute/path" => "'/absolute/path'"
+      mkAbsPathStr "config" => "/home/user/config"
+      mkAbsPathStr "/absolute/path" => "/absolute/path"
   */
   mkAbsPathStr =
-    pathStr: cleanPathStr ((lib.optionalString (!lib.hasPrefix "/" pathStr) "${homeDir}/") + pathStr);
+    pathStr:
+    let
+      normPath = stripSlash pathStr;
+    in
+    if lib.hasPrefix "/" normPath then normPath else "${homeDir}/${normPath}";
 
   /*
-    Convert a path to absolute form while preserving shell variables for runtime expansion.
+    Convert a path to absolute form while preserving shell variables.
+    Returns RAW path (unescaped) unless vars are present (then preserves vars).
 
     This function handles both literal paths and shell variable expressions.
     Shell variables (containing '$') are preserved unescaped to allow runtime expansion.
-    Literal paths are made absolute and properly escaped for shell usage.
+    Literal paths are made absolute.
 
     Type: String -> String
 
     Example:
-      mkShellVarPathStr "config" => "'/home/user/config'"
+      mkShellVarPathStr "config" => "/home/user/config"
       mkShellVarPathStr "$HOME/config" => "$HOME/config"
       mkShellVarPathStr "\${XDG_CONFIG_HOME:-$HOME/.config}/app" => "\${XDG_CONFIG_HOME:-$HOME/.config}/app"
   */
   mkShellVarPathStr =
     pathStr:
     let
-      cleanPath = lib.removeSuffix "/" pathStr;
-      hasShellVars = lib.hasInfix "$" cleanPath;
+      normPath = stripSlash pathStr;
+      hasShellVars = lib.hasInfix "$" normPath;
     in
-    if hasShellVars then
-      # Does not escape shell variables, allowing them to be expanded at runtime
-      cleanPath
-    else
-      # For literal paths, make them absolute if needed and escape them
-      cleanPathStr ((lib.optionalString (!lib.hasPrefix "/" cleanPath) "${homeDir}/") + cleanPath);
+    if hasShellVars then normPath else mkAbsPathStr normPath;
 
   dotDirAbs = mkAbsPathStr cfg.dotDir;
   dotDirRel = mkRelPathStr cfg.dotDir;
@@ -107,5 +114,5 @@ rec {
 
     Type: String
   */
-  pluginsDir = dotDirAbs + (lib.optionalString (homeDir == dotDirAbs) "/.zsh") + "/plugins";
+  pluginsDir = dotDirAbs + (lib.optionalString (mkRelPathStr cfg.dotDir == ".") "/.zsh") + "/plugins";
 }

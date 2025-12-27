@@ -100,8 +100,17 @@ in
         };
 
         dotDir = mkOption {
-          default = homeDir;
-          defaultText = "`config.home.homeDirectory`";
+          default =
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "${config.xdg.configHome}/zsh"
+            else
+              homeDir;
+          defaultText = lib.literalExpression ''
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "''${config.xdg.configHome}/zsh"
+            else
+              config.home.homeDirectory
+          '';
           example = "`\${config.xdg.configHome}/zsh`";
           description = ''
             Directory where the zsh configuration and more should be located,
@@ -412,7 +421,7 @@ in
 
         (mkIf (dotDirAbs != homeDir) {
           home.file."${dotDirRel}/.zshenv".text = ''
-            export ZDOTDIR=${dotDirAbs}
+            export ZDOTDIR=${lib.escapeShellArg dotDirAbs}
           '';
 
           # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
@@ -420,7 +429,7 @@ in
           # already set correctly (by e.g. spawning a zsh inside a zsh), all env
           # vars still get exported
           home.file.".zshenv".text = ''
-            source ${dotDirAbs}/.zshenv
+            source ${lib.escapeShellArg dotDirAbs}/.zshenv
           '';
         })
 
