@@ -291,33 +291,30 @@ in
         };
       };
     }
-    // (lib.genAttrs' [ "qt5ct" "qt6ct" ] (
-      name:
-      lib.nameValuePair "${name}Settings" (
-        lib.mkOption {
-          type = lib.types.nullOr qtctFormat.type;
-          default = null;
-          example = lib.literalExpression ''
-            {
-              Appearance = {
-                style = "kvantum";
-                icon_theme = "Papirus-Dark";
-                standar_dialogs = "xdgdesktopportal";
-              };
-              Fonts = {
-                fixed = "\"DejaVuSansM Nerd Font Mono,12\"";
-                general = "\"DejaVu Sans,12\"";
-              };
-            }
-          '';
-          description = ''
-            Qtct configuration. Writes settings to `${name}/${name}.conf`
-            file. Lists will be translated to comma-separated strings.
-            Fonts must be quoted (see example).
-          '';
-        }
-      )
-    ));
+   // (lib.listToAttrs (map (name: lib.nameValuePair "${name}Settings" (
+      lib.mkOption {
+        type = lib.types.nullOr qtctFormat.type;
+        default = null;
+        example = lib.literalExpression ''
+          {
+            Appearance = {
+              style = "kvantum";
+              icon_theme = "Papirus-Dark";
+              standar_dialogs = "xdgdesktopportal";
+            };
+            Fonts = {
+              fixed = "\"DejaVuSansM Nerd Font Mono,12\"";
+              general = "\"DejaVu Sans,12\"";
+            };
+          }
+        '';
+        description = ''
+          Qtct configuration. Writes settings to `${name}/${name}.conf`
+          file. Lists will be translated to comma-separated strings.
+          Fonts must be quoted (see example).
+        '';
+      }
+    )) [ "qt5ct" "qt6ct" ]));
   };
 
   config =
