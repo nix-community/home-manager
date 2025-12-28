@@ -213,11 +213,17 @@ in
       extraLuaConfig = mkOption {
         type = types.lines;
         default = "";
-        example = ''
-          vim.opt.nobackup = true
+        example = lib.literalExpression ''
+          let
+                nvimEarlyInit = lib.mkOrder 500 "set rtp+=vim.opt.rtp:prepend('/home/user/myplugin')";
+                nvimLateInit = lib.mkAfter 1000 "vim.opt.signcolumn = 'auto:1-3'";
+            in
+                lib.mkMerge [ nvimEarlyInit nvimLateInit ];
         '';
         description = ''
-          Custom lua lines.
+          Content to be added to {file}`init.lua`.
+
+          To specify the order, use `lib.mkOrder`, `lib.mkBefore`, `lib.mkAfter`.
         '';
       };
 
@@ -472,29 +478,28 @@ in
         shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
       };
 
-      xdg.configFile =
-        let
-          hasLuaConfig = lib.hasAttr "lua" config.programs.neovim.generatedConfigs;
-          luaRcContent =
-            lib.optionalString (
-              wrappedNeovim'.initRc != ""
-            ) "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]\n"
-            + config.programs.neovim.extraLuaConfig
-            + lib.optionalString hasLuaConfig config.programs.neovim.generatedConfigs.lua;
-        in
-        lib.mkMerge (
-          # writes runtime
-          (map (x: x.runtime) pluginsNormalized)
-          ++ [
-            {
-              "nvim/init.lua" = mkIf (luaRcContent != "") { text = luaRcContent; };
+      programs.neovim.extraLuaConfig = lib.mkMerge [
+        (lib.mkIf (wrappedNeovim'.initRc != "") (
+          lib.mkBefore "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
+        ))
+        (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs) (lib.mkAfter cfg.generatedConfigs.lua))
+      ];
 
-              "nvim/coc-settings.json" = mkIf cfg.coc.enable {
-                source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
-              };
-            }
-          ]
-        );
+      xdg.configFile = lib.mkMerge (
+        # writes runtime
+        (map (x: x.runtime) pluginsNormalized)
+        ++ [
+          {
+            "nvim/init.lua" = mkIf (cfg.extraLuaConfig != "") {
+              text = cfg.extraLuaConfig;
+            };
+
+            "nvim/coc-settings.json" = mkIf cfg.coc.enable {
+              source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
+            };
+          }
+        ]
+      );
     }
   );
 }
