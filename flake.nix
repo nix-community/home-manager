@@ -57,6 +57,7 @@
               nixfmt
               deadnix
               keep-sorted
+              nixf-diagnose
             ];
             settings = pkgs.lib.importTOML ./treefmt.toml;
           }
