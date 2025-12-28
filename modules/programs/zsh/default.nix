@@ -415,7 +415,7 @@ in
                     You are currently using the legacy default (home directory) because `home.stateVersion` is less than "26.05".
                     To silence this warning and lock in the current behavior, set:
                       programs.zsh.dotDir = config.home.homeDirectory;
-                    To adopt the new behavior (XDG config directory), update `home.stateVersion` to "26.05" or set:
+                    To adopt the new behavior (XDG config directory), set:
                       programs.zsh.dotDir = "''${config.xdg.configHome}/zsh";
                   ''
                 ];
