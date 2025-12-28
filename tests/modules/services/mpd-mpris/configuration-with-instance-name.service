@@ -2,12 +2,11 @@
 WantedBy=default.target
 
 [Service]
-ExecStart=@mpd-mpris@/bin/mpd-mpris -no-instance
+BusName=org.mpris.MediaPlayer2.mpd.test-instance
+ExecStart=@mpd-mpris@/bin/mpd-mpris -host example.com -instance-name test-instance -port 1234
 Restart=on-failure
 RestartSec=5s
-Type=simple
+Type=dbus
 
 [Unit]
-After=mpd.service
 Description=mpd-mpris: An implementation of the MPRIS protocol for MPD
-Requires=mpd.service
