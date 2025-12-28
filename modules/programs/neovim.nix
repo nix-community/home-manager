@@ -426,7 +426,10 @@ in
         (concatMapStringsSep ";" luaPackages.getLuaPath resolvedExtraLuaPackages)
       ];
 
-      neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
+      wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package {
+        withNodeJs = cfg.withNodeJs || cfg.coc.enable;
+        plugins = map suppressNotVimlConfig pluginsNormalized;
+
         inherit (cfg)
           extraPython3Packages
           withPython3
@@ -434,34 +437,19 @@ in
           withPerl
           viAlias
           vimAlias
+          extraName
+          autowrapRuntimeDeps
+          waylandSupport
           ;
-        withNodeJs = cfg.withNodeJs || cfg.coc.enable;
-        plugins = map suppressNotVimlConfig pluginsNormalized;
-        customRC = cfg.extraConfig;
+        neovimRcContent = cfg.extraConfig;
+        wrapperArgs =
+          cfg.extraWrapperArgs ++ extraMakeWrapperArgs ++ extraMakeWrapperLuaCArgs ++ extraMakeWrapperLuaArgs;
+        wrapRc = false;
       };
-
-      wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package (
-        neovimConfig
-        // {
-          inherit (cfg)
-            extraName
-            autowrapRuntimeDeps
-            waylandSupport
-            withNodeJs
-            ;
-          wrapperArgs =
-            neovimConfig.wrapperArgs
-            ++ cfg.extraWrapperArgs
-            ++ extraMakeWrapperArgs
-            ++ extraMakeWrapperLuaCArgs
-            ++ extraMakeWrapperLuaArgs;
-          wrapRc = false;
-        }
-      );
     in
     {
       programs.neovim = {
-        generatedConfigViml = neovimConfig.neovimRcContent;
+        generatedConfigViml = cfg.extraConfig;
 
         generatedConfigs =
           let
