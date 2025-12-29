@@ -152,6 +152,15 @@ in
         '';
       };
 
+      autoconfigure = mkOption {
+        type = types.bool;
+        default = true;
+        visible = false;
+        description = ''
+          Whether to automatically add the recommended lua configuration specified in nixpkgs for
+          some plugins in their passthru.initLua.
+        '';
+      };
       autowrapRuntimeDeps = mkOption {
         type = types.bool;
         default = true;
@@ -437,6 +446,7 @@ in
         plugins = map suppressNotVimlConfig pluginsNormalized;
 
         inherit (cfg)
+          autoconfigure
           extraPython3Packages
           withPython3
           withRuby

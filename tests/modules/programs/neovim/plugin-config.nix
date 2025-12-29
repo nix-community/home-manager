@@ -20,6 +20,7 @@ lib.mkIf config.test.enableBig {
           let g:hmPlugins='HM_PLUGINS_CONFIG'
         '';
       }
+      unicode-vim
       {
         plugin = vim-nix;
         type = "lua";
