@@ -138,11 +138,12 @@ in
           PartOf = [ "graphical-session.target" ];
         };
         Service = {
-          ExecStart =
-            lib.getExe cfg.package
-            + (lib.optionalString (cfg.assetsPath != null) " --assets-dir ${cfg.assetsPath} ")
-            + (lib.optionalString (cfg.clamping != null) "--clamping ${cfg.clamping} ")
-            + (lib.strings.concatStringsSep " " args);
+          ExecStart = lib.concatStringsSep " " (
+            [ (lib.getExe cfg.package) ]
+            ++ lib.optional (cfg.assetsPath != null) "--assets-dir ${cfg.assetsPath}"
+            ++ lib.optional (cfg.clamping != null) "--clamping ${cfg.clamping}"
+            ++ args
+          );
           Restart = "on-failure";
         };
         Install = {
