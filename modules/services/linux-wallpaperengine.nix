@@ -8,7 +8,6 @@ let
   inherit (lib) mkOption types;
 
   cfg = config.services.linux-wallpaperengine;
-
 in
 {
   meta.maintainers = [ lib.hm.maintainers.ckgxrg ];
@@ -105,10 +104,10 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.linux-wallpaperengine" pkgs lib.platforms.linux)
-      ({
+      {
         assertion = cfg.wallpapers != null;
         message = "linux-wallpaperengine: You must set at least one wallpaper";
-      })
+      }
     ];
 
     home.packages = [ cfg.package ];
@@ -121,7 +120,7 @@ in
             lib.cli.toGNUCommandLine { } {
               screen-root = each.monitor;
               inherit (each) scaling fps;
-              silent = each.audio.silent;
+              inherit (each.audio) silent;
               noautomute = !each.audio.automute;
               no-audio-processing = !each.audio.processing;
             }
