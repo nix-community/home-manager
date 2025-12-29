@@ -215,10 +215,10 @@ in
         default = "";
         example = lib.literalExpression ''
           let
-                nvimEarlyInit = lib.mkOrder 500 "set rtp+=vim.opt.rtp:prepend('/home/user/myplugin')";
-                nvimLateInit = lib.mkAfter 1000 "vim.opt.signcolumn = 'auto:1-3'";
-            in
-                lib.mkMerge [ nvimEarlyInit nvimLateInit ];
+              nvimEarlyInit = lib.mkOrder 500 "set rtp+=vim.opt.rtp:prepend('/home/user/myplugin')";
+              nvimLateInit = lib.mkAfter "vim.opt.signcolumn = 'auto:1-3'";
+          in
+              lib.mkMerge [ nvimEarlyInit nvimLateInit ];
         '';
         description = ''
           Content to be added to {file}`init.lua`.
