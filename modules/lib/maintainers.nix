@@ -525,6 +525,12 @@
     github = "silmarp";
     githubId = 67292496;
   };
+  strangeoceans = {
+    name = "strangeoceans";
+    email = "nix@strangeoceans.com";
+    github = "strangeoceans";
+    githubId = 223593185;
+  };
   vortriz = {
     name = "Rishi Vora";
     email = "vorarishi22+nix@gmail.com";
