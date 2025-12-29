@@ -53,6 +53,26 @@
           ];
           port = 516;
         };
+
+        "pubkey-yes" = {
+          hostname = "pubkey-yes.example.com";
+          pubkeyAuthentication = "yes";
+        };
+
+        "pubkey-no" = {
+          hostname = "pubkey-no.example.com";
+          pubkeyAuthentication = "no";
+        };
+
+        "pubkey-unbound" = {
+          hostname = "pubkey-unbound.example.com";
+          pubkeyAuthentication = "unbound";
+        };
+
+        "pubkey-host-bound" = {
+          hostname = "pubkey-host-bound.example.com";
+          pubkeyAuthentication = "host-bound";
+        };
       };
     };
 

@@ -146,6 +146,27 @@ let
         '';
       };
 
+      pubkeyAuthentication = mkOption {
+        type = types.nullOr (
+          types.enum [
+            "yes"
+            "no"
+            "unbound"
+            "host-bound"
+          ]
+        );
+        default = null;
+        description = ''
+          Specifies whether to try public key authentication.
+          The argument must be yes (the default), no, unbound, or host-bound.
+          The final two options enable public key authentication while
+          respectively disabling or enabling the OpenSSH host-bound
+          authentication protocol extension required for restricted
+          {command}`ssh-agent(1)` forwarding.
+          Omitted from the host block when `null`.
+        '';
+      };
+
       identityFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
         default = [ ];
@@ -411,6 +432,7 @@ let
       ++ optional cf.forwardX11 "  ForwardX11 yes"
       ++ optional cf.forwardX11Trusted "  ForwardX11Trusted yes"
       ++ optional cf.identitiesOnly "  IdentitiesOnly yes"
+      ++ optional (cf.pubkeyAuthentication != null) "  PubkeyAuthentication ${cf.pubkeyAuthentication}"
       ++ optional (cf.user != null) "  User ${cf.user}"
       ++ optional (cf.hostname != null) "  HostName ${cf.hostname}"
       ++ optional (cf.addressFamily != null) "  AddressFamily ${cf.addressFamily}"
