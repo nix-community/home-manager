@@ -280,6 +280,43 @@ in
       '';
     };
 
+    animations = lib.mkOption {
+      type = with lib.types; attrsOf str;
+      default = { };
+      description = ''
+        Hyprland animations configuration. This option is an alternative to
+        {option}`programs.hyprland.settings.animation` which can help avoiding
+        repetition of animations, in case you want to pass an animation to
+        a bind to hyprctl for example.
+
+        ::: {.note}
+        This option has an `apply` function which prepends the attribute
+        values with their corresponding names. This is so that to write
+        a call to `hyprctl animation`, you only have to write
+        ```nix
+        "hyprctl animation ''${config.programs.hyprland.animations.''${animName}}"
+        ```
+        instead of having to repeat the animation name (which would look like this:)
+        ```nix
+        "hyprctl animation ''${animName}, ''${config.programs.hyprland.animations.''${animName}}"
+        ```
+        :::
+      '';
+      example = lib.literalExpression ''
+        {
+          ## This produces the example from the Hyprland documentation example:
+          # animation = workspaces, 1, 8, default
+          # animation = windows, 1, 10, myepiccurve, slide
+          # animation = fade, 0
+
+          workspaces = "1, 8, default";
+          windows = "1, 10, myepiccurve, slide";
+          fade = "0";
+        }
+      '';
+      apply = builtins.mapAttrs (n: v: "${n}, ${v}");
+    };
+
     extraConfig = lib.mkOption {
       type = lib.types.lines;
       default = "";
@@ -404,6 +441,7 @@ in
             }
           )
           + lib.optionalString (cfg.submaps != { }) (submapsToHyprConf cfg.submaps)
+          + lib.concatMapAttrsStringSep "" (n: v: "animation=${v}\n") cfg.animations
           + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
         onChange = lib.mkIf (cfg.package != null) ''
