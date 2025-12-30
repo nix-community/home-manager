@@ -29,6 +29,7 @@ let
     fileType
     ;
 
+  inherit (pkgs) neovimUtils;
   jsonFormat = pkgs.formats.json { };
 in
 {
@@ -222,6 +223,8 @@ in
         '';
         description = ''
           Content to be added to {file}`init.lua`.
+
+          Automatically contains the [advised plugin config](https://nixos.org/manual/nixpkgs/stable/#neovim-custom-configuration)
 
           To specify the order, use `lib.mkOrder`, `lib.mkBefore`, `lib.mkAfter`.
         '';
@@ -432,12 +435,23 @@ in
         (concatMapStringsSep ";" luaPackages.getLuaPath resolvedExtraLuaPackages)
       ];
 
+      vimPackageInfo = neovimUtils.makeVimPackageInfo (map suppressNotVimlConfig pluginsNormalized);
+
+      packpathDirs.hm = vimPackageInfo.vimPackage;
+      finalPackdir = neovimUtils.packDir packpathDirs;
+
+      packpathWrapperArgs = lib.optionals (packpathDirs.hm.start != [ ] || packpathDirs.hm.opt != [ ]) [
+        "--add-flags"
+        ''--cmd "set packpath^=${finalPackdir}"''
+        "--add-flags"
+        ''--cmd "set rtp^=${finalPackdir}"''
+      ];
+
       wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package {
         withNodeJs = cfg.withNodeJs || cfg.coc.enable;
-        plugins = map suppressNotVimlConfig pluginsNormalized;
+        plugins = [ ];
 
         inherit (cfg)
-          extraPython3Packages
           withPython3
           withRuby
           withPerl
@@ -447,9 +461,16 @@ in
           autowrapRuntimeDeps
           waylandSupport
           ;
+
+        extraPython3Packages =
+          ps: (cfg.extraPython3Packages ps) ++ (lib.concatMap (f: f ps) vimPackageInfo.pluginPython3Packages);
         neovimRcContent = cfg.extraConfig;
         wrapperArgs =
-          cfg.extraWrapperArgs ++ extraMakeWrapperArgs ++ extraMakeWrapperLuaCArgs ++ extraMakeWrapperLuaArgs;
+          cfg.extraWrapperArgs
+          ++ extraMakeWrapperArgs
+          ++ extraMakeWrapperLuaCArgs
+          ++ extraMakeWrapperLuaArgs
+          ++ packpathWrapperArgs;
         wrapRc = false;
       };
     in
@@ -478,12 +499,37 @@ in
         shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
       };
 
-      programs.neovim.extraLuaConfig = lib.mkMerge [
-        (lib.mkIf (wrappedNeovim'.initRc != "") (
-          lib.mkBefore "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
-        ))
-        (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs) (lib.mkAfter cfg.generatedConfigs.lua))
-      ];
+      programs.neovim.extraConfig = lib.concatStringsSep "\n" vimPackageInfo.userPluginViml;
+      programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
+
+      programs.neovim.extraLuaConfig =
+        let
+          # using default 'foldmarker', to be used with foldmethod=marker
+          foldedLuaBlock =
+            title: content:
+            if (content != "") then
+              ''
+                -- ${title} {{{
+                ${content}
+                -- }}}
+              ''
+            else
+              null;
+
+          advisedLua = foldedLuaBlock "home-manager generated: plugin config advised in nixpkgs" (
+            lib.concatStringsSep "\n" vimPackageInfo.pluginAdvisedLua
+          );
+        in
+
+        lib.mkMerge [
+          (lib.mkIf (advisedLua != null) (lib.mkOrder 510 advisedLua))
+          (lib.mkIf (wrappedNeovim'.initRc != "") (
+            lib.mkBefore "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
+          ))
+          (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs) (
+            lib.mkAfter (foldedLuaBlock "user-associated plugin config" cfg.generatedConfigs.lua)
+          ))
+        ];
 
       xdg.configFile = lib.mkMerge (
         # writes runtime
