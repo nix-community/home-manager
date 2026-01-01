@@ -840,6 +840,8 @@ in
               SuccessfulExit = false;
             };
             ProcessType = "Background";
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/Syncthing/syncthing-stdout.log";
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/Syncthing/syncthing-stderr.log";
           };
         };
 
@@ -849,6 +851,8 @@ in
             ProgramArguments = [ "${updateConfig}" ];
             ProcessType = "Background";
             RunAtLoad = true;
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/Syncthing/syncthing-init-stdout.log";
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/Syncthing/syncthing-init-stderr.log";
           };
         };
       };
