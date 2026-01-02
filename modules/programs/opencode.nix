@@ -133,7 +133,7 @@ in
         The attribute name becomes the command filename, and the value is either:
         - Inline content as a string
         - A path to a file containing the command content
-        Commands are stored in {file}`$XDG_CONFIG_HOME/.config/opencode/command/` directory.
+        Commands are stored in {file}`$XDG_CONFIG_HOME/opencode/command/` directory.
       '';
       example = lib.literalExpression ''
         {
@@ -162,7 +162,7 @@ in
         The attribute name becomes the agent filename, and the value is either:
         - Inline content as a string
         - A path to a file containing the agent content
-        Agents are stored in {file}`$XDG_CONFIG_HOME/.config/opencode/agent/` directory.
+        Agents are stored in {file}`$XDG_CONFIG_HOME/opencode/agent/` directory.
       '';
       example = lib.literalExpression ''
         {
