@@ -2,7 +2,6 @@
 
 let
   inherit (lib)
-    defaultFunctor
     hm
     mkIf
     mkOrder
@@ -11,6 +10,17 @@ let
     types
     ;
 
+  # Modified from nixpkgs/lib/types.nix https://github.com/NixOS/nixpkgs/blob/821647d8479ce41cafa8294de5abc081e87151e2/lib/types.nix#L84
+  # defers type merging to the elemType
+  elemTypeFunctor = type: name: payload: {
+    inherit payload type name;
+    binOp =
+      a: b:
+      let
+        merged = a.elemType.typeMerge b.elemType.functor;
+      in
+      if merged == null then null else { elemType = merged; };
+  };
   dagEntryOf =
     elemType:
     let
@@ -64,13 +74,17 @@ rec {
     in
     mkOptionType rec {
       name = "dagOf";
-      description = "DAG of ${elemType.description}";
+      description = "DAG of ${
+        types.optionDescriptionPhrase (class: class == "noun" || class == "composite") elemType
+      }";
+      descriptionClass = "composite";
       inherit (attrEquivalent) check merge emptyValue;
       getSubOptions = prefix: elemType.getSubOptions (prefix ++ [ "<name>" ]);
       getSubModules = elemType.getSubModules;
       substSubModules = m: dagOf (elemType.substSubModules m);
-      functor = (defaultFunctor name) // {
-        wrapped = elemType;
+      # Allow type merging for elemType
+      functor = (elemTypeFunctor dagOf name { inherit elemType; }) // {
+        type = payload: dagOf payload.elemType;
       };
       nestedTypes.elemType = elemType;
     };
