@@ -20,6 +20,6 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/yt-dlp/config
-    assertFileContent home-files/.config/yt-dlp/config ${./yt-dlp-simple-config-expected}
+    assertFileContent home-files/.config/yt-dlp/config ${./yt-dlp-config-expected}
   '';
 }
