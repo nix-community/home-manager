@@ -50,10 +50,7 @@ let
   );
   enabledContactAccountsWithId = addId enabledContactAccounts;
 
-  thunderbirdConfigPath = if isDarwin then "Library/Thunderbird" else ".thunderbird";
-
-  thunderbirdProfilesPath =
-    if isDarwin then "${thunderbirdConfigPath}/Profiles" else thunderbirdConfigPath;
+  thunderbirdProfilesPath = if isDarwin then "${cfg.configPath}/Profiles" else cfg.configPath;
 
   profilesWithId = lib.imap0 (i: v: v // { id = toString i; }) (attrValues cfg.profiles);
 
@@ -323,6 +320,17 @@ in
         type = types.nullOr types.ints.unsigned;
         default = if isDarwin then null else 2;
         description = "profile version, set null for nix-darwin";
+      };
+
+      configPath = mkOption {
+        type = types.str;
+        default = if isDarwin then "Library/Thunderbird" else ".thunderbird";
+        description = ''
+          The path to the Thunderbird config directory. This option does not
+          change where Thunderbird looks for config files, only where generated
+          files are placed. Only change if you have a nonstandard installation,
+          such as when overriding $HOME in a wrapped package.
+        '';
       };
 
       nativeMessagingHosts = mkOption {
@@ -898,7 +906,7 @@ in
     home.file = lib.mkMerge (
       [
         {
-          "${thunderbirdConfigPath}/profiles.ini" = mkIf (cfg.profiles != { }) {
+          "${cfg.configPath}/profiles.ini" = mkIf (cfg.profiles != { }) {
             text = lib.generators.toINI { } profilesIni;
           };
         }
