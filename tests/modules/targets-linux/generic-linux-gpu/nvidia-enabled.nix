@@ -39,11 +39,12 @@ in
     setupScript="$TESTED/home-path/bin/non-nixos-gpu-setup"
     assertFileExists "$setupScript"
 
-    # Find the resources directory
-    resourcesPath=$(grep -oP '/nix/store/[^/]+-non-nixos-gpu/resources' "$setupScript" | head -1)
+    # Find the service file
+    storePath="$(dirname "$(readlink "''${setupScript}")")"/../
+    servicePath="$storePath/lib/systemd/system/non-nixos-gpu.service"
 
     # Extract the GPU environment path
-    envPath=$(grep -oP '/nix/store/[^/]+-non-nixos-gpu' "$resourcesPath/non-nixos-gpu.service" | head -1)
+    envPath=$(grep -oP '/nix/store/[^/]+-non-nixos-gpu' "$servicePath" | head -1)
 
     if [[ -z "$envPath" ]]; then
       fail "Could not find GPU environment path in service file"
