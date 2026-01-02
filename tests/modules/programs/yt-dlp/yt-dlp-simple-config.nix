@@ -8,6 +8,10 @@
       downloader = "aria2c";
       downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
       trim-filenames = 30;
+      color = [
+        "stdout:no_color"
+        "stderr:always"
+      ];
     };
     extraConfig = ''
       --config-locations /home/user/.yt-dlp.conf
