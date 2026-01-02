@@ -11,19 +11,22 @@
     assertFileExists "$setupScript"
     assertFileIsExecutable "$setupScript"
 
-    # Find and check the resources directory
-    resourcesPath=$(grep -oP '/nix/store/[^/]+-non-nixos-gpu/resources' "$setupScript" | head -1)
-    assertDirectoryExists "$resourcesPath"
-
     # Check that gcroots dir was set
     cat "$setupScript"
     assertFileRegex "$setupScript" ' "/custom/state/directory"/gcroots'
 
-    serviceFile="$resourcesPath/non-nixos-gpu.service"
-    assertFileExists "$serviceFile"
-
     # Check that no placeholders remain
-    assertFileNotRegex "$serviceFile" '@@[^@]\+@@'
     assertFileNotRegex "$setupScript" '@@[^@]\+@@'
+
+    # Check that expected files are present and free of placeholders
+    storePath="$(dirname "$(readlink "''${setupScript}")")"/../
+    expectedFiles=(
+      lib/systemd/system/non-nixos-gpu.service
+    )
+
+    for f in "''${expectedFiles[@]}"; do
+      assertFileExists "$storePath/$f"
+      assertFileNotRegex "$storePath/$f" '@@[^@]\+@@'
+    done
   '';
 }
