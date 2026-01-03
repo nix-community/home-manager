@@ -16,7 +16,12 @@
   };
   accounts.email.accounts = {
     "hm@example.com" = {
-      meli.enable = true;
+      meli = {
+        enable = true;
+        settings = {
+          listing.index_style = "compact";
+        };
+      };
       smtp.port = 1848;
     };
   };

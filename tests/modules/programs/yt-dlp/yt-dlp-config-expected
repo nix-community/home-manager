@@ -1,3 +1,5 @@
+--color stdout:no_color
+--color stderr:always
 --downloader aria2c
 --downloader-args aria2c:'-c -x8 -s8 -k1M'
 --no-embed-subs

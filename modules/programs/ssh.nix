@@ -30,42 +30,40 @@ let
       mapAttrsToList (name: value: ''${name}="${lib.escape [ ''"'' "\\" ] (toString value)}"'') envStr
     );
 
-  bindOptions = {
-    address = mkOption {
-      type = types.str;
-      default = "localhost";
-      example = "example.org";
-      description = "The address where to bind the port.";
-    };
-
-    port = mkOption {
-      type = types.nullOr types.port;
-      default = null;
-      example = 8080;
-      description = "Specifies port number to bind on bind address.";
-    };
-  };
-
-  dynamicForwardModule = types.submodule { options = bindOptions; };
-
-  forwardModule = types.submodule {
-    options = {
-      bind = bindOptions;
-
-      host = {
+  mkAddressPortModule =
+    {
+      actionType,
+      nullableAddress ? actionType == "forward",
+    }:
+    types.submodule {
+      options = {
         address = mkOption {
-          type = types.nullOr types.str;
-          default = null;
+          type = if nullableAddress then types.nullOr types.str else types.str;
+          default = if nullableAddress then null else "localhost";
           example = "example.org";
-          description = "The address where to forward the traffic to.";
+          description = "The address to ${actionType} to.";
         };
 
         port = mkOption {
           type = types.nullOr types.port;
           default = null;
-          example = 80;
-          description = "Specifies port number to forward the traffic to.";
+          example = 8080;
+          description = "Specifies port number to ${actionType} to.";
         };
+      };
+    };
+
+  dynamicForwardModule = mkAddressPortModule { actionType = "bind"; };
+
+  forwardModule = types.submodule {
+    options = {
+      bind = mkOption {
+        type = mkAddressPortModule { actionType = "bind"; };
+        description = "Local port binding options";
+      };
+      host = mkOption {
+        type = mkAddressPortModule { actionType = "forward"; };
+        description = "Host port binding options";
       };
     };
   };
@@ -383,6 +381,18 @@ let
         example = "10m";
         description = "Whether control socket should remain open in the background.";
       };
+
+      kexAlgorithms = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        example = [
+          "curve25519-sha256@libssh.org"
+          "diffie-hellman-group-exchange-sha256"
+        ];
+        description = ''
+          Specifies the available KEX (Key Exchange) algorithms.
+        '';
+      };
     };
 
     #    config.host = mkDefault dagName;
@@ -430,6 +440,9 @@ let
       ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.localForwards
       ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.remoteForwards
       ++ map (f: "  DynamicForward" + addressPort f) cf.dynamicForwards
+      ++ optional (
+        cf.kexAlgorithms != null
+      ) "  KexAlgorithms ${builtins.concatStringsSep "," cf.kexAlgorithms}"
       ++ [
         (lib.generators.toKeyValue {
           mkKeyValue = lib.generators.mkKeyValueDefault { } " ";

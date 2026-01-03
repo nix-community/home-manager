@@ -107,10 +107,10 @@ in
       '';
     };
 
-    defaultEditor = mkOption rec {
+    defaultEditor = mkOption {
       type = types.bool;
       default = false;
-      example = !default;
+      example = true;
       description = ''
         Whether to configure {command}`emacsclient` as the default
         editor using the {env}`EDITOR` and {env}`VISUAL`

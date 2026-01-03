@@ -82,7 +82,7 @@ in
     };
 
     uiScale = lib.mkOption {
-      type = with lib.types; nullOr (numbers.between 0.0 1.0);
+      type = with lib.types; nullOr (numbers.between 1.0 2.0);
       default = null;
       example = 1.0;
       description = "User interface scale.";

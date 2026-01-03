@@ -68,7 +68,7 @@ in
       else if case == "zdotdir-variable" then
         ''
           assertFileContains home-files/.config/zsh/.zshrc 'HISTFILE="$ZDOTDIR/.zsh_history"'
-          assertFileContains home-files/.config/zsh/.zshenv "export ZDOTDIR=${homeDir}/.config/zsh"
+          assertFileContains home-files/.config/zsh/.zshenv "export ZDOTDIR=\"${homeDir}/.config/zsh\""
         ''
       else
         ''

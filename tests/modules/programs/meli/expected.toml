@@ -5,6 +5,9 @@ identity = "hm@example.com"
 root_mailbox = "/home/hm-user/Mail/hm@example.com"
 subscribed_mailboxes = ["Inbox", "Sent", "Trash", "Drafts"]
 
+[accounts."hm@example.com".listing]
+index_style = "compact"
+
 [accounts."hm@example.com".mailboxes]
 
 [accounts."hm@example.com".send_mail]

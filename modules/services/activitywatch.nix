@@ -136,7 +136,7 @@ let
     );
 in
 {
-  meta.maintainers = with lib.maintainers; [ foo-dogsquared ];
+  meta.maintainers = [ ];
 
   options.services.activitywatch = {
     enable = lib.mkEnableOption "ActivityWatch, an automated time tracker";

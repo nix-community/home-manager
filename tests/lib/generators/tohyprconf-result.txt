@@ -1,0 +1,93 @@
+$important=123
+attrs-section {
+  bool=true
+  float=0.800000
+  int=5
+  null=null
+  string=abc
+}
+
+combined-attrs-nested-section {
+  a {
+    a=123
+  }
+
+  a {
+    b=123
+  }
+
+  a {
+    c=123
+  }
+
+  b {
+    a=123
+  }
+
+  b {
+    b=123
+  }
+
+  b {
+    c=123
+  }
+}
+
+combined-list-nested-section {
+  b {
+    c {
+      abc=123
+    }
+  }
+}
+
+combined-list-nested-section {
+  bar {
+    baz {
+      aaa=111
+    }
+  }
+}
+
+list-section=foo
+list-section=bar
+list-section=baz
+
+list-with-strings-and-attrs=abc
+list-with-strings-and-attrs {
+  a=123
+}
+list-with-strings-and-attrs=foo
+list-with-strings-and-attrs {
+  b=321
+}
+
+nested-attrs-section {
+  a {
+    b {
+      c {
+        abc=123
+      }
+    }
+  }
+
+  foo {
+    bar {
+      baz {
+        aaa=111
+      }
+    }
+  }
+}
+
+nested-list-section {
+  a=123
+}
+
+nested-list-section {
+  b=123
+}
+
+nested-list-section {
+  c=123
+}

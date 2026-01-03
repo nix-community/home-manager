@@ -106,13 +106,13 @@ in
     ];
 
     programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
-      eval "$(${lib.getExe cfg.package} init bash)"
+      source ${cfg.package}/share/television/completion.bash
     '';
     programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
-      eval "$(${lib.getExe cfg.package} init zsh)"
+      source ${cfg.package}/share/television/completion.zsh
     '';
     programs.fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
-      ${lib.getExe cfg.package} init fish | source
+      source ${cfg.package}/share/television/completion.fish
     '';
   };
 }
