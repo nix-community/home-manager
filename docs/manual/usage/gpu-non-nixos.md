@@ -51,6 +51,61 @@ sudo rm /etc/systemd/system/non-nixos-gpu.service
 ```
 
 
+### GNU Shepherd support
+
+If you use the [GNU Shepherd](https://shepherding.services/) init system on
+[GNU Guix](https://guix.gnu.org/), besides running the `non-nixos-gpu-setup`
+script, you have to load the service at startup. You can either use a
+predefined `non-nixos-gpu-service-type` from the
+[selected-guix-works](https://github.com/gs-101/selected-guix-works) channel,
+or define it yourself:
+
+```scheme
+(define (non-nixos-gpu-shepherd-service _)
+  (let ((herd (file-append shepherd "/bin/herd"))
+        (path "/etc/shepherd/non-nixos-gpu.scm"))
+    (list (shepherd-service
+            (provision '(non-nixos-gpu))
+            (documentation "Load the home-manager non-nixos-gpu
+service at startup.")
+            ;; The entries here deviate from the standard make-forkexec and
+            ;; kill-destructor because the service errors out at startup
+            ;; (it can't be killed due to not being a continuous process).
+            (start #~(lambda _ (invoke #$herd "load" "root" #$path)))
+            (stop #~(const #f))
+            (one-shot? #t)
+            (respawn? #f)))))
+
+(define non-nixos-gpu-service-type
+  (service-type
+    (name 'non-nixos-gpu)
+    (extensions
+     (list (service-extension shepherd-root-service-type
+                              non-nixos-gpu-shepherd-service)))
+    (default-value #f)
+    (description
+     "Load the home-manager non-nixos-gpu
+service at startup.")))
+```
+
+It requires the following modules:
+
+- `(gnu packages admin)`
+- `(gnu services)`
+- `(gnu services shepherd)`
+- `(guix gexp)`
+
+To uninstall, remove the `non-nixos-gpu-service-type` from your system
+definition and then:
+
+```
+sudo rm /run/opengl-driver
+sudo guix system reconfigure path/to/your/system/definition
+sudo rm /etc/shepherd/non-nixos-gpu.scm
+# Or sudo rm -rf /etc/shepherd if you don't use that directory.
+```
+
+
 ### GPU offloading {#sec-usage-gpu-offloading}
 
 You can use the {option}`targets.genericLinux.nixGL.prime.installScript` option.
