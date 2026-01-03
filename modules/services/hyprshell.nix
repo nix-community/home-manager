@@ -29,7 +29,7 @@ in
       default = { };
       description = ''
         Configuration settings for hyprshell. All the avaiblable
-        options can be found here: <https://github.com/H3rmt/hyprshell/blob/hyprshell-release/CONFIGURE.md#config-options>
+        options can be found here: <https://github.com/H3rmt/hyprshell/blob/hyprshell-release/docs/CONFIGURE.md#config-options>
       '';
     };
 
@@ -38,7 +38,7 @@ in
       default = "";
       description = ''
         CSS file for customizing hyprshell. All the available
-        options can be found here: <https://github.com/H3rmt/hyprshell/blob/hyprshell-release/CONFIGURE.md#css>
+        options can be found here: <https://github.com/H3rmt/hyprshell/blob/hyprshell-release/docs/CONFIGURE.md#css>
       '';
     };
 
