@@ -92,7 +92,7 @@ in
             if pkgs.stdenv.hostPlatform.isDarwin then
               "${cfg.finalPackage}/${darwinPath}"
             else
-              "${cfg.finalPackage}/lib/${cfg.wrappedPackageName}";
+              "${cfg.finalPackage}/lib/${cfg.finalPackage.unwrapped.libName or cfg.wrappedPackageName}";
           config_file = "${libDir}/distribution/policies.json";
         in
         ''
