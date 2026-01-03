@@ -430,10 +430,7 @@ in
   # Do not install any user services if username is root.
   config = mkIf (cfg.enable && config.home.username != "root") {
     assertions = [
-      {
-        assertion = pkgs.stdenv.isLinux;
-        message = "This module is only available on Linux.";
-      }
+      (lib.hm.assertions.assertPlatform "systemd" pkgs lib.platforms.linux)
     ];
 
     xdg.configFile = mkMerge [
