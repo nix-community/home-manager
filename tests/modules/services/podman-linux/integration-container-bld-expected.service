@@ -15,24 +15,24 @@ WantedBy=default.target
 WantedBy=multi-user.target
 
 [Service]
-Environment=PATH=/run/wrappers/bin:/run/current-system/sw/bin:/home/hm-user/.nix-profile/bin:@systemd@/bin
+Environment=PATH=/run/wrappers/bin:/run/current-system/sw/bin:@nftables@/bin:/home/hm-user/.nix-profile/bin:@systemd@/bin
 Restart=always
 TimeoutStopSec=30
 Environment=PODMAN_SYSTEMD_UNIT=%n
 KillMode=mixed
-ExecStop=/nix/store/00000000000000000000000000000000-podman/bin/podman rm -v -f -i --cidfile=%t/%N.cid
-ExecStopPost=-/nix/store/00000000000000000000000000000000-podman/bin/podman rm -v -f -i --cidfile=%t/%N.cid
+ExecStop=/nix/store/00000000000000000000000000000000-podman/bin/podman rm -v -f -i my-container-bld
+ExecStopPost=-/nix/store/00000000000000000000000000000000-podman/bin/podman rm -v -f -i my-container-bld
 Delegate=yes
 Type=notify
 NotifyAccess=all
 SyslogIdentifier=%N
-ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container-bld --cidfile=%t/%N.cid --replace --rm --cgroups=split --sdnotify=conmon -d --label nix.home-manager.managed=true homemanager/my-bld
+ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container-bld --replace --rm --cgroups=split --sdnotify=conmon -d --label nix.home-manager.managed=true homemanager/my-bld
 
 [Unit]
 Wants=podman-user-wait-network-online.service
 After=podman-user-wait-network-online.service
 Description=Service for container my-container-bld
 SourcePath=/nix/store/00000000000000000000000000000000-home-container-podman-my-container-bld/quadlets/podman-my-container-bld.container
+RequiresMountsFor=%t/containers
 Requires=podman-my-bld-build.service
 After=podman-my-bld-build.service
-RequiresMountsFor=%t/containers
