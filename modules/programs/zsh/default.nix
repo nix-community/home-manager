@@ -112,7 +112,7 @@ in
             else
               config.home.homeDirectory
           '';
-          example = "`\${config.xdg.configHome}/zsh`";
+          example = literalExpression ''"''${config.xdg.configHome}/zsh"'';
           description = ''
             Directory where the zsh configuration and more should be located,
             relative to the users home directory. The default is the home
