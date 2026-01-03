@@ -70,18 +70,19 @@ in
             '';
 
             nushellIntegration =
-              if pkgs.stdenv.isDarwin then
-                ''
-                  if "SSH_AUTH_SOCK" not-in $env {
-                    $env.SSH_AUTH_SOCK = $"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"
-                  }
-                ''
-              else
-                ''
-                  if "SSH_AUTH_SOCK" not-in $env {
-                    $env.SSH_AUTH_SOCK = $"($env.XDG_RUNTIME_DIR)/${cfg.socket}"
-                  }
-                '';
+              let
+                unsetOrEmpty = var: ''("${var}" not-in $env) or ($env.${var} | is-empty)'';
+                socketPath =
+                  if pkgs.stdenv.isDarwin then
+                    ''$"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"''
+                  else
+                    ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"'';
+              in
+              ''
+                if ${unsetOrEmpty "SSH_AUTH_SOCK"} {
+                  $env.SSH_AUTH_SOCK = ${socketPath}
+                }
+              '';
           in
           {
             # $SSH_AUTH_SOCK has to be set early since other tools rely on it
