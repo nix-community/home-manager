@@ -64,8 +64,7 @@ class TestRunner:
         )
 
         cmd = [
-            "nix", "eval", "--raw", "--reference-lock-file", "flake.lock",
-            f"./tests#packages.{system}", "--apply", nix_apply_expr
+            "nix", "eval", "--raw", f".#legacyPackages.{system}", "--apply", nix_apply_expr
         ]
 
         result = _run_command(cmd, cwd=self.repo_root)
