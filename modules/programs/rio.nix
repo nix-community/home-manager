@@ -61,6 +61,12 @@ in
         }
       '';
     };
+
+    defaultTerminal = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to set {command}`rio` as the default terminal.";
+    };
   };
   config = mkIf cfg.enable (mkMerge [
     {
@@ -84,6 +90,13 @@ in
             if builtins.isPath value then value else settingsFormat.generate "rio-theme-${name}.toml" value;
         }
       ) cfg.themes;
+    })
+
+    (mkIf (cfg.defaultTerminal) {
+      home.sessionVariables.TERMINAL = lib.getExe cfg.package;
+      systemd.user.sessionVariables = mkIf pkgs.stdenv.isLinux {
+        TERMINAL = lib.getExe cfg.package;
+      };
     })
   ]);
 }
