@@ -66,10 +66,7 @@ in
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      {
-        assertion = pkgs.stdenv.hostPlatform.isLinux;
-        message = "niriswitcher is only available on Linux.";
-      }
+      (lib.hm.assertions.assertPlatform "programs.niriswitcher" pkgs lib.platforms.linux)
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
