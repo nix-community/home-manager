@@ -25,6 +25,7 @@ in
           binaryName = cfg.wrappedPackageName;
           gtk3 = null;
           meta.description = "I pretend to be ${cfg.name}";
+          meta.mainProgram = lib.toLower cfg.name;
         };
         outPath = null;
         buildScript =
