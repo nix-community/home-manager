@@ -18,27 +18,27 @@ WantedBy=default.target
 WantedBy=multi-user.target
 
 [Service]
-Environment=PATH=/run/wrappers/bin:/run/current-system/sw/bin:/home/hm-user/.nix-profile/bin:@systemd@/bin
+Environment=PATH=/run/wrappers/bin:/run/current-system/sw/bin:@nftables@/bin:/home/hm-user/.nix-profile/bin:@systemd@/bin
 Restart=always
 TimeoutStopSec=30
 Environment=PODMAN_SYSTEMD_UNIT=%n
 KillMode=mixed
-ExecStop=/nix/store/00000000000000000000000000000000-podman/bin/podman rm -v -f -i --cidfile=%t/%N.cid
-ExecStopPost=-/nix/store/00000000000000000000000000000000-podman/bin/podman rm -v -f -i --cidfile=%t/%N.cid
+ExecStop=/nix/store/00000000000000000000000000000000-podman/bin/podman rm -v -f -i my-container
+ExecStopPost=-/nix/store/00000000000000000000000000000000-podman/bin/podman rm -v -f -i my-container
 Delegate=yes
 Type=notify
 NotifyAccess=all
 SyslogIdentifier=%N
-ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container --cidfile=%t/%N.cid --replace --rm --cgroups=split --network my-app --network externalnet --sdnotify=conmon -d -v my-app:/data --label nix.home-manager.managed=true docker.io/alpine:latest
+ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container --replace --rm --cgroups=split --network my-app --network externalnet --sdnotify=conmon -d -v my-app:/data --label nix.home-manager.managed=true docker.io/alpine:latest
 
 [Unit]
 Wants=podman-user-wait-network-online.service
 After=podman-user-wait-network-online.service
 Description=Service for container my-container
 SourcePath=/nix/store/00000000000000000000000000000000-home-container-podman-my-container/quadlets/podman-my-container.container
+RequiresMountsFor=%t/containers
 Requires=podman-my-img-image.service
 After=podman-my-img-image.service
-RequiresMountsFor=%t/containers
 Requires=podman-my-app-network.service
 After=podman-my-app-network.service
 Requires=podman-my-app-volume.service
