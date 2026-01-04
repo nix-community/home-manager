@@ -264,6 +264,49 @@ in
         See <https://opencode.ai/docs/themes/> for the documentation.
       '';
     };
+
+    tools = lib.mkOption {
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
+      default = { };
+      description = ''
+        Custom tools for opencode.
+
+        This option can either be:
+        - An attribute set defining tools
+        - A path to a directory containing multiple tool files
+
+        If an attribute set is used, the attribute name becomes the tool filename,
+        and the value is either:
+        - Inline content as a string (creates `opencode/tool/<name>.ts`)
+        - A path to a file (creates `opencode/tool/<name>.ts` or `opencode/tool/<name>.js`)
+
+        If a path is used, it is expected to contain tool files.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/tool/`.
+
+        See <https://opencode.ai/docs/tools/> for the documentation.
+      '';
+      example = lib.literalExpression ''
+        {
+          database-query = '''
+            import { tool } from "@opencode-ai/plugin"
+
+            export default tool({
+              description: "Query the project database",
+              args: {
+                query: tool.schema.string().describe("SQL query to execute"),
+              },
+              async execute(args) {
+                // Your database logic here
+                return `Executed query: ''${args.query}`
+              },
+            })
+          ''';
+
+          # Or reference an existing file
+          api-client = ./tools/api-client.ts;
+        }
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -275,6 +318,10 @@ in
       {
         assertion = !lib.isPath cfg.agents || lib.pathIsDirectory cfg.agents;
         message = "`programs.opencode.agents` must be a directory when set to a path";
+      }
+      {
+        assertion = !lib.isPath cfg.tools || lib.pathIsDirectory cfg.tools;
+        message = "`programs.opencode.tools` must be a directory when set to a path";
       }
       {
         assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
@@ -325,6 +372,11 @@ in
         recursive = true;
       };
 
+      "opencode/tool" = mkIf (lib.isPath cfg.tools) {
+        source = cfg.tools;
+        recursive = true;
+      };
+
       "opencode/skill" = mkIf (lib.isPath cfg.skills) {
         source = cfg.skills;
         recursive = true;
@@ -350,6 +402,14 @@ in
           if lib.isPath content then { source = content; } else { text = content; }
         )
       ) cfg.agents
+    )
+    // lib.optionalAttrs (builtins.isAttrs cfg.tools) (
+      lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair "opencode/tool/${name}.ts" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
+      ) cfg.tools
     )
     // lib.mapAttrs' (
       name: content:

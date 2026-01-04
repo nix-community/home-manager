@@ -15,6 +15,22 @@
       '';
       path-agent = ./test-agent.md;
     };
+    tools = {
+      inline-tool = ''
+        import { tool } from "@opencode-ai/plugin"
+
+        export default tool({
+          description: "Inline tool definition",
+          args: {
+            input: tool.schema.string().describe("Test input"),
+          },
+          async execute(args) {
+            return `Processed: ''${args.input}`
+          },
+        })
+      '';
+      path-tool = ./test-tool.ts;
+    };
     skills = {
       inline-skill = ''
         ---
@@ -53,6 +69,13 @@
 
     assertFileContent home-files/.config/opencode/agent/path-agent.md \
       ${./test-agent.md}
+
+    # Tools
+    assertFileExists home-files/.config/opencode/tool/inline-tool.ts
+    assertFileExists home-files/.config/opencode/tool/path-tool.ts
+
+    assertFileContent home-files/.config/opencode/tool/path-tool.ts \
+      ${./test-tool.ts}
 
     # Skills
     assertFileExists home-files/.config/opencode/skill/inline-skill/SKILL.md
