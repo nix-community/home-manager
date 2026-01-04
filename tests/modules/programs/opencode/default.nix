@@ -10,6 +10,9 @@
   opencode-commands-path = ./commands-path.nix;
   opencode-agents-bulk-directory = ./agents-bulk-directory.nix;
   opencode-commands-bulk-directory = ./commands-bulk-directory.nix;
+  opencode-tools-inline = ./tools-inline.nix;
+  opencode-tools-path = ./tools-path.nix;
+  opencode-tools-bulk-directory = ./tools-bulk-directory.nix;
   opencode-mixed-content = ./mixed-content.nix;
   opencode-skills-inline = ./skills-inline.nix;
   opencode-skills-path = ./skills-path.nix;
