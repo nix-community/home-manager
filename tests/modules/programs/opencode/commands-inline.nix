@@ -6,12 +6,14 @@
         # Update Changelog Command
 
         Update CHANGELOG.md with a new entry for the specified version.
-        Usage: /changelog [version] [change-type] [message]'';
+        Usage: /changelog [version] [change-type] [message]
+      '';
       commit = ''
         # Commit Command
 
         Create a git commit with proper message formatting.
-        Usage: /commit [message]'';
+        Usage: /commit [message]
+      '';
     };
   };
   nmt.script = ''
