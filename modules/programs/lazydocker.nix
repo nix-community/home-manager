@@ -11,7 +11,11 @@ let
 
   yamlFormat = pkgs.formats.yaml { };
 
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
+      "Library/Application Support/jesseduffield"
+    else
+      config.xdg.configHome;
 
 in
 {
@@ -51,16 +55,8 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."Library/Application Support/jesseduffield/lazydocker/config.yml" =
-      lib.mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable))
-        {
-          source = yamlFormat.generate "lazydocker-config" cfg.settings;
-        };
-
-    xdg.configFile."lazydocker/config.yml" =
-      lib.mkIf (cfg.settings != { } && !(isDarwin && !config.xdg.enable))
-        {
-          source = yamlFormat.generate "lazydocker-config" cfg.settings;
-        };
+    home.file."${configDir}/lazydocker/config.yml" = lib.mkIf (cfg.settings != { }) {
+      source = yamlFormat.generate "lazydocker-config" cfg.settings;
+    };
   };
 }
