@@ -35,51 +35,49 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-      }
-      (lib.mkIf pkgs.stdenv.isLinux {
-        xdg.configFile."pueue/pueue.yml".source = configFile;
-        systemd.user = lib.mkIf (cfg.package != null) {
-          services.pueued = {
-            Unit = {
-              Description = "Pueue Daemon - CLI process scheduler and manager";
-            };
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-            Service = {
-              Restart = "on-failure";
-              ExecStart = "${pueuedBin} -v -c ${configFile}";
-            };
+    xdg.configFile."pueue/pueue.yml" = lib.mkIf pkgs.stdenv.isLinux { source = configFile; };
 
-            Install.WantedBy = [ "default.target" ];
-          };
+    systemd.user = lib.mkIf (cfg.package != null) {
+      services.pueued = {
+        Unit = {
+          Description = "Pueue Daemon - CLI process scheduler and manager";
         };
-      })
-      (lib.mkIf pkgs.stdenv.isDarwin {
-        # This is the default configuration file location for pueue on
-        # darwin (https://github.com/Nukesor/pueue/wiki/Configuration)
-        home.file."Library/Application Support/pueue/pueue.yml".source = configFile;
-        launchd.agents.pueued = lib.mkIf (cfg.package != null) {
-          enable = true;
 
-          config = {
-            ProgramArguments = [
-              pueuedBin
-              "-v"
-              "-c"
-              "${configFile}"
-            ];
-            KeepAlive = {
-              Crashed = true;
-              SuccessfulExit = false;
-            };
-            ProcessType = "Background";
-            RunAtLoad = true;
-          };
+        Service = {
+          Restart = "on-failure";
+          ExecStart = "${pueuedBin} -v -c ${configFile}";
         };
-      })
-    ]
-  );
+
+        Install.WantedBy = [ "default.target" ];
+      };
+    };
+
+    # This is the default configuration file location for pueue on
+    # darwin (https://github.com/Nukesor/pueue/wiki/Configuration)
+    home.file."Library/Application Support/pueue/pueue.yml" = lib.mkIf pkgs.stdenv.isDarwin {
+      source = configFile;
+    };
+
+    launchd.agents.pueued = lib.mkIf (cfg.package != null) {
+      enable = true;
+
+      config = {
+        ProgramArguments = [
+          pueuedBin
+          "-v"
+          "-c"
+          "${configFile}"
+        ];
+        KeepAlive = {
+          Crashed = true;
+          SuccessfulExit = false;
+        };
+        ProcessType = "Background";
+        RunAtLoad = true;
+      };
+    };
+  };
 }
