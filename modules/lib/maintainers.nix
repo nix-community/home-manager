@@ -175,6 +175,12 @@
     github = "exzombie";
     githubId = 11456290;
   };
+  farberbrodsky = {
+    name = "Michael Farber Brodsky";
+    email = "misha@farberbrodsky.com";
+    github = "farberbrodsky";
+    githubId = 36243759;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
