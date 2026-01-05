@@ -459,7 +459,7 @@ in
 
         generatedConfigs =
           let
-            grouped = builtins.groupBy (x: x.type) pluginsNormalized;
+            grouped = lib.groupBy (x: x.type) pluginsNormalized;
             configsOnly = lib.foldl (acc: p: if p.config != null then acc ++ [ p.config ] else acc) [ ];
           in
           lib.mapAttrs (_name: vals: lib.concatStringsSep "\n" (configsOnly vals)) grouped;
