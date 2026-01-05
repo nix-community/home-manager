@@ -11,8 +11,11 @@ let
 
   yamlFormat = pkgs.formats.yaml { };
 
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
-
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 in
 {
   meta.maintainers = [
@@ -71,17 +74,10 @@ in
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."Library/Application Support/lazygit/config.yml" =
-      mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable))
-        {
-          source = yamlFormat.generate "lazygit-config" cfg.settings;
-        };
-
-    xdg.configFile."lazygit/config.yml" =
-      mkIf (cfg.settings != { } && !(isDarwin && !config.xdg.enable))
-        {
-          source = yamlFormat.generate "lazygit-config" cfg.settings;
-        };
+    home.file."${configDir}/lazygit/config.yml" = {
+      enable = cfg.settings != { };
+      source = yamlFormat.generate "lazygit-config" cfg.settings;
+    };
 
     programs =
       let
