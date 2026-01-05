@@ -5,6 +5,6 @@
   };
 
   test.asserts.assertions.expected = [
-    "On Darwin services.borgmatic.frequency must be one of: hourly, daily, weekly, monthly, semiannually, annually."
+    "On Darwin, services.borgmatic.frequency must be one of: hourly, daily, weekly, monthly, semiannually, annually."
   ];
 }
