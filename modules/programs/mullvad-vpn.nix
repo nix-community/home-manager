@@ -7,6 +7,8 @@
 let
   cfg = config.programs.mullvad-vpn;
   jsonFormat = pkgs.formats.json { };
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 in
 {
   meta.maintainers = [ lib.maintainers.da157 ];
@@ -42,11 +44,8 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."${
-      if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome
-    }/Mullvad VPN/gui_settings.json" =
-      lib.mkIf (cfg.settings != { }) {
-        source = jsonFormat.generate "mullvad-gui-settings" cfg.settings;
-      };
+    home.file."${configDir}/Mullvad VPN/gui_settings.json" = lib.mkIf (cfg.settings != { }) {
+      source = jsonFormat.generate "mullvad-gui-settings" cfg.settings;
+    };
   };
 }
