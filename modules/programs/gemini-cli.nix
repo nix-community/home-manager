@@ -21,14 +21,19 @@ in
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          "theme": "Default",
-          "vimMode": true,
-          "preferredEditor": "nvim",
-          "autoAccept": true
-        }
-      '';
+      example = {
+        ui.theme = "Default";
+        general = {
+          vimMode = true;
+          preferredEditor = "nvim";
+          previewFeatures = true;
+        };
+        ide.enabled = true;
+        privacy.usageStatisticsEnabled = false;
+        tools.autoAccept = false;
+        context.loadMemoryFromIncludeDirectories = true;
+        security.auth.selectedType = "oauth-personal";
+      };
       description = "JSON config for gemini-cli";
     };
 
@@ -81,12 +86,12 @@ in
       };
 
     defaultModel = lib.mkOption {
-      type = lib.types.str;
-      default = "gemini-2.5-pro";
+      type = lib.types.nullOr lib.types.str;
+      default = null;
       example = "gemini-2.5-flash";
       description = ''
         The default model to use for the CLI.
-        Will be set as $GEMINI_MODEL.
+        Will be set as $GEMINI_MODEL when configured.
       '';
     };
 
@@ -138,7 +143,9 @@ in
           file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
           };
-          sessionVariables.GEMINI_MODEL = cfg.defaultModel;
+          sessionVariables = lib.mkIf (cfg.defaultModel != null) {
+            GEMINI_MODEL = cfg.defaultModel;
+          };
         };
       }
       {

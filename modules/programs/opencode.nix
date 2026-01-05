@@ -133,7 +133,7 @@ in
         The attribute name becomes the command filename, and the value is either:
         - Inline content as a string
         - A path to a file containing the command content
-        Commands are stored in {file}`$XDG_CONFIG_HOME/.config/opencode/command/` directory.
+        Commands are stored in {file}`$XDG_CONFIG_HOME/opencode/command/` directory.
       '';
       example = lib.literalExpression ''
         {
@@ -162,7 +162,7 @@ in
         The attribute name becomes the agent filename, and the value is either:
         - Inline content as a string
         - A path to a file containing the agent content
-        Agents are stored in {file}`$XDG_CONFIG_HOME/.config/opencode/agent/` directory.
+        Agents are stored in {file}`$XDG_CONFIG_HOME/opencode/agent/` directory.
       '';
       example = lib.literalExpression ''
         {
@@ -183,6 +183,49 @@ in
       '';
     };
 
+    skills = lib.mkOption {
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
+      default = { };
+      description = ''
+        Custom agent skills for opencode.
+
+        This option can either be:
+        - An attribute set defining skills
+        - A path to a directory containing multiple skill folders
+
+        If an attribute set is used, the attribute name becomes the skill directory name,
+        and the value is either:
+        - Inline content as a string (creates `opencode/skill/<name>/SKILL.md`)
+        - A path to a file (creates `opencode/skill/<name>/SKILL.md`)
+        - A path to a directory (creates `opencode/skill/<name>/` with all files)
+
+        If a path is used, it is expected to contain one folder per skill name, each
+        containing a {file}`SKILL.md`. The directory is symlinked to
+        {file}`$XDG_CONFIG_HOME/opencode/skill/`.
+
+        See <https://opencode.ai/docs/skills/> for the documentation.
+      '';
+      example = lib.literalExpression ''
+        {
+          git-release = '''
+            ---
+            name: git-release
+            description: Create consistent releases and changelogs
+            ---
+
+            ## What I do
+
+            - Draft release notes from merged PRs
+            - Propose a version bump
+            - Provide a copy-pasteable `gh release create` command
+          ''';
+
+          # A skill can also be a directory containing SKILL.md and other files.
+          data-analysis = ./skills/data-analysis;
+        }
+      '';
+    };
+
     themes = mkOption {
       type = lib.types.attrsOf (lib.types.either jsonFormat.type lib.types.path);
       default = { };
@@ -199,6 +242,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
+        message = "`programs.opencode.skills` must be a directory when set to a path";
+      }
+    ];
+
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
@@ -227,6 +277,11 @@ in
             text = cfg.rules;
           })
       );
+
+      "opencode/skill" = mkIf (lib.isPath cfg.skills) {
+        source = cfg.skills;
+        recursive = true;
+      };
     }
     // lib.mapAttrs' (
       name: content:
@@ -240,6 +295,18 @@ in
         if lib.isPath content then { source = content; } else { text = content; }
       )
     ) cfg.agents
+    // lib.mapAttrs' (
+      name: content:
+      if lib.isPath content && lib.pathIsDirectory content then
+        lib.nameValuePair "opencode/skill/${name}" {
+          source = content;
+          recursive = true;
+        }
+      else
+        lib.nameValuePair "opencode/skill/${name}/SKILL.md" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
+    ) (if builtins.isAttrs cfg.skills then cfg.skills else { })
     // lib.mapAttrs' (
       name: content:
       lib.nameValuePair "opencode/themes/${name}.json" (

@@ -270,9 +270,7 @@ in
             setupLaunchAgents
 
             # Restore errexit
-            if [[ -o errexit ]]; then
-              set -e
-            fi
+            set -e
           '';
     })
   ];

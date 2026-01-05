@@ -1,6 +1,7 @@
 {
   programs.gemini-cli = {
     enable = true;
+    defaultModel = "gemini-2.5-flash";
     settings = {
       theme = "Default";
       vimMode = true;
@@ -28,5 +29,9 @@
       ${./changelog.toml}
     assertFileContent home-files/.gemini/commands/git/fix.toml \
       ${./fix.toml}
+
+    assertFileExists home-path/etc/profile.d/hm-session-vars.sh
+    assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
+      'export GEMINI_MODEL="gemini-2.5-flash"'
   '';
 }

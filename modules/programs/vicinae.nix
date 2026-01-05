@@ -12,6 +12,7 @@ let
 
   packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
   themeIsToml = lib.versionAtLeast packageVersion "0.15.0";
+  versionPost0_17 = lib.versionAtLeast packageVersion "0.17.0";
 in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
@@ -43,7 +44,12 @@ in
     useLayerShell = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "If vicinae should use the layer shell";
+      description = ''
+        Whether vicinae should use the layer shell.
+        If you are using version 0.17 or newer, you should use
+        {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false
+        instead.
+      '';
     };
 
     extensions = lib.mkOption {
@@ -127,26 +133,21 @@ in
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      description = "Settings written as JSON to `~/.config/vicinae/vicinae.json.";
       example = lib.literalExpression ''
         {
-          faviconService = "twenty";
-          font = {
-            size = 10;
-          };
-          popToRootOnClose = false;
-          rootSearch = {
-            searchFiles = false;
-          };
+          favicon_service = "twenty";
+          font.normal.size = 10;
+          pop_to_root_on_close=false;
+          search_files_in_root= false;
           theme = {
-            name = "vicinae-dark";
-          };
-          window = {
-           csd = true;
-           opacity = 0.95;
-           rounding = 10;
+            dark.name = "vicinae-dark";
+            light.name = "vicinae-light";
           };
         }
+      '';
+      description = ''
+        Settings written as JSON to {file}`~/.config/vicinae/settings.json`.
+        See {command}`vicinae config default`.
       '';
     };
   };
@@ -157,6 +158,10 @@ in
       {
         assertion = cfg.systemd.enable -> cfg.package != null;
         message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
+      }
+      {
+        assertion = !cfg.useLayerShell -> !versionPost0_17;
+        message = ''After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.'';
       }
     ];
     lib.vicinae.mkExtension = (
@@ -223,10 +228,11 @@ in
             source = themeFormat.generate "vicinae-${name}-theme" theme;
           }
         ) cfg.themes;
+        settingsPath = if versionPost0_17 then "vicinae/settings.json" else "vicinae/vicinae.json";
       in
       {
         configFile = {
-          "vicinae/vicinae.json" = lib.mkIf (cfg.settings != { }) {
+          "${settingsPath}" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "vicinae-settings" cfg.settings;
           };
         }
@@ -250,14 +256,16 @@ in
         PartOf = [ cfg.systemd.target ];
       };
       Service = {
-        EnvironmentFile = pkgs.writeText "vicinae-env" ''
-          USE_LAYER_SHELL=${if cfg.useLayerShell then builtins.toString 1 else builtins.toString 0}
-        '';
         Type = "simple";
         ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
         Restart = "always";
         RestartSec = 5;
         KillMode = "process";
+        EnvironmentFile = lib.mkIf (!versionPost0_17) (
+          pkgs.writeText "vicinae-env" ''
+            USE_LAYER_SHELL=${if cfg.useLayerShell then builtins.toString 1 else builtins.toString 0}
+          ''
+        );
       };
       Install = lib.mkIf cfg.systemd.autoStart {
         WantedBy = [ cfg.systemd.target ];
