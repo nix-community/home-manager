@@ -1,0 +1,11 @@
+[Install]
+WantedBy=sway-session.target
+
+[Service]
+ExecStart=@workstyle@/bin/workstyle
+Restart=always
+RestartSec=3
+
+[Unit]
+BindsTo=sway-session.target
+Description=workstyle autostart

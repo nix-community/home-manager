@@ -1,0 +1,12 @@
+[Install]
+WantedBy=a.target
+
+[Service]
+Environment=RUST_LOG=debug
+ExecStart=@workstyle@/bin/workstyle
+Restart=always
+RestartSec=3
+
+[Unit]
+BindsTo=a.target
+Description=workstyle autostart
