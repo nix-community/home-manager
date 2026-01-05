@@ -10,7 +10,6 @@ let
   jsonFormat = pkgs.formats.json { };
 
   inherit (lib) mkOption types;
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   settingsModule = types.submodule {
     freeformType = jsonFormat.type;
@@ -62,6 +61,9 @@ let
       };
     };
   };
+
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 in
 {
   meta.maintainers = with lib.maintainers; [ ambroisie ];
@@ -93,21 +95,11 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        home.packages = [ cfg.package ];
-      }
+  config = lib.mkIf cfg.enable {
+    home.packages = [ cfg.package ];
 
-      # Only manage configuration if not empty
-      (lib.mkIf (cfg.settings != null && !isDarwin) {
-        xdg.configFile."rbw/config.json".source = jsonFormat.generate "rbw-config.json" cfg.settings;
-      })
-
-      (lib.mkIf (cfg.settings != null && isDarwin) {
-        home.file."Library/Application Support/rbw/config.json".source =
-          jsonFormat.generate "rbw-config.json" cfg.settings;
-      })
-    ]
-  );
+    home.file."${configDir}/rbw/config.json" = lib.mkIf (cfg.settings != null) {
+      source = jsonFormat.generate "rbw-config.json" cfg.settings;
+    };
+  };
 }
