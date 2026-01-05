@@ -9,7 +9,6 @@ let
 
   cfg = config.programs.kubecolor;
   yamlFormat = pkgs.formats.yaml { };
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
 in
 {
@@ -50,18 +49,20 @@ in
 
   config =
     let
-      preferXdgDirectories = config.home.preferXdgDirectories && (!isDarwin || config.xdg.enable);
+      preferXdgDirectories =
+        config.home.preferXdgDirectories && (!pkgs.stdenv.hostPlatform.isDarwin || config.xdg.enable);
+      configDir =
+        if preferXdgDirectories then
+          "${config.xdg.configHome}/kube"
+        else if pkgs.stdenv.hostPlatform.isDarwin then
+          "Library/Application Support/kube"
+        else
+          ".kube";
 
       # https://github.com/kubecolor/kubecolor/pull/145
-      configPathSuffix =
-        if
-          cfg.package.pname == "kubecolor"
-          && lib.strings.toInt (lib.versions.major cfg.package.version) == 0
-          && lib.strings.toInt (lib.versions.minor cfg.package.version) < 4
-        then
-          "kube/"
-        else
-          "kube/color.yaml";
+      configPathSuffix = lib.optionalString (
+        cfg.package.pname == "kubecolor" && lib.versionOlder (lib.getVersion cfg.package) "0.4"
+      ) "color.yaml";
 
     in
     mkIf cfg.enable {
@@ -73,31 +74,10 @@ in
 
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      home.sessionVariables =
-        if preferXdgDirectories then
-          {
-            KUBECOLOR_CONFIG = "${config.xdg.configHome}/${configPathSuffix}";
-          }
-        else if isDarwin then
-          {
-            KUBECOLOR_CONFIG = "${config.home.homeDirectory}/Library/Application Support/${configPathSuffix}";
-          }
-        else
-          { };
+      home.sessionVariables.KUBECOLOR_CONFIG = "${configDir}/${configPathSuffix}";
 
-      xdg.configFile = mkIf preferXdgDirectories {
-        "kube/color.yaml" = mkIf (cfg.settings != { }) {
-          source = yamlFormat.generate "kubecolor-settings" cfg.settings;
-        };
-      };
-
-      home.file = mkIf (!preferXdgDirectories) {
-        "Library/Application Support/kube/color.yaml" = mkIf (isDarwin && cfg.settings != { }) {
-          source = yamlFormat.generate "kubecolor-settings" cfg.settings;
-        };
-        ".kube/color.yaml" = mkIf (!isDarwin && cfg.settings != { }) {
-          source = yamlFormat.generate "kubecolor-settings" cfg.settings;
-        };
+      home.file."${configDir}/color.yaml" = mkIf (cfg.settings != { }) {
+        source = yamlFormat.generate "kubecolor-settings" cfg.settings;
       };
 
       home.shellAliases = lib.mkIf (cfg.enableAlias && (cfg.package != null)) {
