@@ -9,6 +9,11 @@ let
 
   cfg = config.programs.streamlink;
 
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
+  dataDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.dataHome;
+
   renderSettings =
     settings:
     lib.concatLines (
@@ -130,72 +135,36 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      { home.packages = lib.mkIf (cfg.package != null) [ cfg.package ]; }
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-        xdg.configFile = {
-          "streamlink/config" = lib.mkIf (cfg.settings != { }) {
-            text = renderSettings cfg.settings;
-          };
+    home.file = {
+      "${configDir}/streamlink/config" = lib.mkIf (cfg.settings != { }) {
+        text = renderSettings cfg.settings;
+      };
+    }
+    // (lib.mapAttrs' (
+      name: value:
+      lib.nameValuePair "${configDir}/streamlink/config.${name}" (
+        lib.mkIf (value.settings != { }) {
+          text = renderSettings value.settings;
         }
-        // (lib.mapAttrs' (
-          name: value:
-          lib.nameValuePair "streamlink/config.${name}" (
-            lib.mkIf (value.settings != { }) {
-              text = renderSettings value.settings;
+      )
+    ) cfg.plugins)
+    // (lib.mapAttrs' (
+      name: value:
+      lib.nameValuePair "${dataDir}/streamlink/plugins/${name}.py" (
+        lib.mkIf (value.src != null) (
+          if (builtins.isPath value.src) then
+            {
+              source = value.src;
             }
-          )
-        ) cfg.plugins);
-
-        xdg.dataFile = lib.mapAttrs' (
-          name: value:
-          lib.nameValuePair "streamlink/plugins/${name}.py" (
-            lib.mkIf (value.src != null) (
-              if (builtins.isPath value.src) then
-                {
-                  source = value.src;
-                }
-              else
-                {
-                  text = value.src;
-                }
-            )
-          )
-        ) cfg.plugins;
-      })
-
-      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-        home.file = {
-          "Library/Application Support/streamlink/config" = lib.mkIf (cfg.settings != { }) {
-            text = renderSettings cfg.settings;
-          };
-        }
-        // (lib.mapAttrs' (
-          name: value:
-          lib.nameValuePair "Library/Application Support/streamlink/config.${name}" (
-            lib.mkIf (value.settings != { }) {
-              text = renderSettings value.settings;
+          else
+            {
+              text = value.src;
             }
-          )
-        ) cfg.plugins)
-        // (lib.mapAttrs' (
-          name: value:
-          lib.nameValuePair "Library/Application Support/streamlink/plugins/${name}.py" (
-            lib.mkIf (value.src != null) (
-              if (builtins.isPath value.src) then
-                {
-                  source = value.src;
-                }
-              else
-                {
-                  text = value.src;
-                }
-            )
-          )
-        ) cfg.plugins);
-      })
-    ]
-  );
+        )
+      )
+    ) cfg.plugins);
+  };
 }
