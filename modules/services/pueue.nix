@@ -7,6 +7,8 @@
 let
   cfg = config.services.pueue;
   yamlFormat = pkgs.formats.yaml { };
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
   configFile = yamlFormat.generate "pueue.yaml" ({ shared = { }; } // cfg.settings);
   pueuedBin = "${cfg.package}/bin/pueued";
 in
@@ -38,7 +40,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."pueue/pueue.yml" = lib.mkIf pkgs.stdenv.isLinux { source = configFile; };
+    home.file."${configDir}/pueue/pueue.yml".source = configFile;
 
     systemd.user = lib.mkIf (cfg.package != null) {
       services.pueued = {
@@ -53,12 +55,6 @@ in
 
         Install.WantedBy = [ "default.target" ];
       };
-    };
-
-    # This is the default configuration file location for pueue on
-    # darwin (https://github.com/Nukesor/pueue/wiki/Configuration)
-    home.file."Library/Application Support/pueue/pueue.yml" = lib.mkIf pkgs.stdenv.isDarwin {
-      source = configFile;
     };
 
     launchd.agents.pueued = lib.mkIf (cfg.package != null) {
