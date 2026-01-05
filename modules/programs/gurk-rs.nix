@@ -7,6 +7,8 @@
 let
   tomlFormat = pkgs.formats.toml { };
   cfg = config.programs.gurk-rs;
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 in
 {
   meta.maintainers = [ lib.maintainers.da157 ];
@@ -46,9 +48,8 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."${
-      if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome
-    }/gurk/gurk.toml".source =
-      lib.mkIf (cfg.settings != { }) (tomlFormat.generate "gurk-config" cfg.settings);
+    home.file."${configDir}/gurk/gurk.toml" = lib.mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "gurk-config" cfg.settings;
+    };
   };
 }
