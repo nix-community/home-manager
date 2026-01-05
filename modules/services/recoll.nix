@@ -103,7 +103,7 @@ let
   settingsFormat = recollConfFormat { };
 in
 {
-  meta.maintainers = [ lib.maintainers.foo-dogsquared ];
+  meta.maintainers = [ ];
 
   options.services.recoll = {
     enable = lib.mkEnableOption "Recoll file index service";

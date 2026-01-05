@@ -117,6 +117,8 @@ in
     systemd.user.services.easyeffects = {
       Unit = {
         Description = "Easyeffects daemon";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];

@@ -5,6 +5,7 @@ shopt -s expand_aliases
 alias herbstclient='set -- "$@" ";"'
 set --
 
+
 herbstclient emit_hook reload
 
 # Reset everything.
@@ -29,4 +30,5 @@ herbstclient unrule --all
 herbstclient unlock
 
 @herbstluftwm@/bin/herbstclient chain ";" "$@"
+
 

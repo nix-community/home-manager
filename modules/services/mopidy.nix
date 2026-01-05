@@ -75,7 +75,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.foo-dogsquared ];
+  meta.maintainers = [ ];
 
   options.services.mopidy = {
     enable = lib.mkEnableOption "Mopidy music player daemon";

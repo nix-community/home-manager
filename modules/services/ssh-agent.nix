@@ -57,40 +57,40 @@ in
               else
                 "$XDG_RUNTIME_DIR/${cfg.socket}";
 
+            # Preserve $SSH_AUTH_SOCK only if it stems from a forwarded agent,
+            # which is the case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are
+            # set.
             bashIntegration = ''
-              if [ -z "$SSH_AUTH_SOCK" ]; then
+              if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
                 export SSH_AUTH_SOCK=${socketPath}
               fi
             '';
-
             fishIntegration = ''
-              if test -z "$SSH_AUTH_SOCK"
+              if test -z "$SSH_AUTH_SOCK"; or test -z "$SSH_CONNECTION"
                 set -x SSH_AUTH_SOCK ${socketPath}
               end
             '';
-
             nushellIntegration =
-              if pkgs.stdenv.isDarwin then
-                ''
-                  if "SSH_AUTH_SOCK" not-in $env {
-                    $env.SSH_AUTH_SOCK = $"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"
-                  }
-                ''
-              else
-                ''
-                  if "SSH_AUTH_SOCK" not-in $env {
-                    $env.SSH_AUTH_SOCK = $"($env.XDG_RUNTIME_DIR)/${cfg.socket}"
-                  }
-                '';
+              let
+                unsetOrEmpty = var: ''("${var}" not-in $env) or ($env.${var} | is-empty)'';
+                socketPath =
+                  if pkgs.stdenv.isDarwin then
+                    ''$"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"''
+                  else
+                    ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"'';
+              in
+              ''
+                if ${unsetOrEmpty "SSH_AUTH_SOCK"} or ${unsetOrEmpty "SSH_CONNECTION"} {
+                  $env.SSH_AUTH_SOCK = ${socketPath}
+                }
+              '';
           in
           {
-            bash.initExtra = lib.mkIf cfg.enableBashIntegration bashIntegration;
-
-            zsh.initContent = lib.mkIf cfg.enableZshIntegration bashIntegration;
-
-            fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration fishIntegration;
-
-            nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration nushellIntegration;
+            # $SSH_AUTH_SOCK has to be set early since other tools rely on it
+            bash.profileExtra = lib.mkIf cfg.enableBashIntegration (lib.mkOrder 900 bashIntegration);
+            fish.shellInit = lib.mkIf cfg.enableFishIntegration (lib.mkOrder 900 fishIntegration);
+            nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration (lib.mkOrder 900 nushellIntegration);
+            zsh.envExtra = lib.mkIf cfg.enableZshIntegration (lib.mkOrder 900 bashIntegration);
           };
       }
 

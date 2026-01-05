@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-03-07 18:58+0000\n"
-"Last-Translator: 807 <s10855168@gmail.com>\n"
+"PO-Revision-Date: 2025-12-04 04:17+0000\n"
+"Last-Translator: \"Urocissa Caerulea.Tw\" <urocissa.tw@proton.me>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/home-manager/cli/zh_Hant/>\n"
 "Language: zh_Hant\n"
@@ -17,21 +17,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.10.3-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr "%s: 缺少參數 %s"
+msgstr "%s：缺少 %s 的引數"
 
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s：%s 只能在 %s 之後使用"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
-msgstr "未在 %s 處找到配置檔案"
+msgstr "在 %s 找不到設定檔"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
@@ -41,12 +41,12 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
-"保持你的 Home Manager 在 %s 中，%s 已被拋棄，\n"
-"請將它移動到 %s"
+"將 Home Manager 的 %s 放在 %s 中， 已經被棄用，\n"
+"請改放到 %s"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
-msgstr "未找到配置檔案。請在 %s 處建立一份"
+msgstr "找不到設定檔。請在 %s 建立新的設定檔"
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
@@ -57,7 +57,7 @@ msgstr "在 %s 中找不到 Home Manager。"
 msgid ""
 "The fallback Home Manager path %s has been deprecated and a file/directory "
 "was found there."
-msgstr "備用的 Home Manager 路徑 %s 已被拋棄，但一個檔案/資料夾在這被找到。"
+msgstr "備用的 Home Manager 路徑 %s 已被棄用，且在該處找到了檔案/目錄。"
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:125
@@ -80,21 +80,21 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
-"要消除這個警告，請做以下其中一步。\n"
+"若要移除此警告，請執行下列其中一項。\n"
 "\n"
-"1. 告訴Home Manager去使用路徑，例如加入\n"
+"1. 明確告知 Home Manager 使用該路徑，例如在\n"
 "\n"
 "     { programs.home-manager.path = \"%s\"; }\n"
 "\n"
-"   到你的配置中。\n"
+"   中，加入您的設定。\n"
 "\n"
-"   如果你想要直接引入Home Manager， 請你使用 `path` 參數r\n"
+"   如果想直接匯入 Home Manager，可以在呼叫時使用 `path` 參數來指定路徑：\n"
 "\n"
 "     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
 "\n"
-"   當呼叫 Home Manager 模組。\n"
+"   這樣就能正確傳遞 Home Manager 的路徑。\n"
 "\n"
-"2. 刪除無效的路徑\n"
+"2. 移除已棄用的路徑。\n"
 "\n"
 "     $ rm -r \"%s\""
 
@@ -104,33 +104,33 @@ msgstr "正在進行 Nix 完整性檢查"
 
 #: home-manager/home-manager:173
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr "找不到合適的 profile 目錄，已經嘗試 %s 和 %s"
+msgstr "找不到合適的設定檔目錄，已嘗試 %s 和 %s"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:230
 msgid "Can't inspect options of a flake configuration"
-msgstr "無法檢查 flake 配置中的選項"
+msgstr "無法檢查 flake 設定的選項"
 
 #: home-manager/home-manager:305 home-manager/home-manager:328
 #: home-manager/home-manager:734 home-manager/home-manager:1237
 msgid "%s: unknown option '%s'"
-msgstr "%s：未知選項 ‘%s’"
+msgstr "%s：未知選項 '%s'"
 
 #: home-manager/home-manager:310 home-manager/home-manager:1238
 msgid "Run '%s --help' for usage help"
-msgstr "執行 ‘%s --help’ 獲取用法幫助"
+msgstr "執行 '%s --help' 以取得使用說明"
 
 #: home-manager/home-manager:336 home-manager/home-manager:441
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr "檔案 %s 已經存在，不更改它..."
+msgstr "檔案 %s 已存在，保持不變..."
 
 #: home-manager/home-manager:338 home-manager/home-manager:443
 msgid "Creating %s..."
-msgstr "創建 %s 中..."
+msgstr "正在建立 %s..."
 
 #: home-manager/home-manager:487
 msgid "Creating initial Home Manager generation..."
-msgstr "正在建立初始 Home Manager 世代 ..."
+msgstr "正在建立初始 Home Manager 世代..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:492
@@ -142,12 +142,12 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
-"全部工作完成了！home-manager 工具現應已安裝，您可以編輯\n"
+"全部完成！home-manager 工具現在應該已被安裝，您可以編輯\n"
 "\n"
 "    %s\n"
 "\n"
-"來配置 Home Manager。執行 ‘man home-configuration.nix’\n"
-"來檢視所有可用選項。"
+"來設定 Home Manager。執行 'man home-configuration.nix' 時\n"
+"可查看所有可用選項。"
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:497
@@ -158,16 +158,16 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
-"啊哦，安裝失敗了！如果感覺是 Home Manager 造成的錯誤，請在下方\n"
+"糟糕，安裝失敗了！如果感覺是 Home Manager 所造成的錯誤，請在此連結\n"
 "\n"
 "    %s\n"
 "\n"
-"處建立 Issue 告知我們。"
+"中，建立 Issue 告知我們。"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:508
 msgid "Can't instantiate a flake configuration"
-msgstr "無法建立 flake 配置例項"
+msgstr "無法實例化 flake 設定"
 
 #: home-manager/home-manager:584
 msgid ""
@@ -177,12 +177,12 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
-"有 %d 條未讀的相關新聞或訊息。\n"
-"可執行 “%s news” 命令進行閱讀。"
+"有 %d 則未讀且相關的消息項目。\n"
+"執行指令 \"%s news\" 來進行確認。"
 
 #: home-manager/home-manager:598
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr "未知的 “news.display” 設定項 “%s”。"
+msgstr "未知的 \"news.display\" 設定值 \"%s\"。"
 
 #: home-manager/home-manager:606
 #, sh-format
@@ -191,11 +191,11 @@ msgstr "請設定 $EDITOR 或 $VISUAL 環境變數"
 
 #: home-manager/home-manager:624
 msgid "Cannot run build in read-only directory"
-msgstr "無法在唯讀目錄中執行構建"
+msgstr "無法在唯讀目錄中執行建置"
 
 #: home-manager/home-manager:787
 msgid "The configuration did not contain the specialisation \"%s\""
-msgstr ""
+msgstr "設定中不包含特化設定 \"%s\""
 
 #: home-manager/home-manager:841
 msgid "No generation with ID %s"
@@ -203,7 +203,7 @@ msgstr "沒有 ID 為 %s 的世代"
 
 #: home-manager/home-manager:843
 msgid "Cannot remove the current generation %s"
-msgstr "無法移除當前世代 %s"
+msgstr "無法移除目前的世代 %s"
 
 #: home-manager/home-manager:845
 msgid "Removing generation %s"

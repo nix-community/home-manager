@@ -361,6 +361,11 @@
     email = "nixpkgs@perchun.it";
     github = "PerchunPak";
     githubId = 68118654;
+    keys = [
+      {
+        fingerprint = "BBB5 1142 959D 8549 A3D2  F6C5 313F 67D1 EAB7 70F9";
+      }
+    ];
     name = "Perchun Pak";
     source = "nixpkgs";
   };
@@ -1091,19 +1096,6 @@
     githubId = 67634026;
     name = "Hoang Nguyen";
     source = "home-manager";
-  };
-  foo-dogsquared = {
-    email = "foodogsquared@foodogsquared.one";
-    github = "foo-dogsquared";
-    githubId = 34962634;
-    keys = [
-      {
-        fingerprint = "DDD7 D0BD 602E 564B AA04  FC35 1431 0D91 4115 2B92";
-      }
-    ];
-    matrix = "@foodogsquared:matrix.org";
-    name = "Gabriel Arazas";
-    source = "nixpkgs";
   };
   fpob = {
     email = "fpob@proton.me";
@@ -2073,7 +2065,7 @@
     source = "nixpkgs";
   };
   shikanime = {
-    email = "deva.shikanime@protonmail.com";
+    email = "william.phetsinorath@shikanime.studio";
     github = "shikanime";
     githubId = 22115108;
     name = "William Phetsinorath";
@@ -2309,6 +2301,13 @@
       }
     ];
     name = "Florian Peter";
+    source = "nixpkgs";
+  };
+  xavwe = {
+    email = "git@xavwe.dev";
+    github = "xavwe";
+    githubId = 125409009;
+    name = "Xaver Wenhart";
     source = "nixpkgs";
   };
   xlambein = {

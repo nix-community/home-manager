@@ -27,6 +27,7 @@ let
     "broot"
     "browserpass"
     "btop"
+    "calibre"
     "carapace"
     "cava"
     "claude-code"

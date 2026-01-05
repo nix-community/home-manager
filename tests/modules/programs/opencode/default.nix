@@ -9,6 +9,10 @@
   opencode-agents-path = ./agents-path.nix;
   opencode-commands-path = ./commands-path.nix;
   opencode-mixed-content = ./mixed-content.nix;
+  opencode-skills-inline = ./skills-inline.nix;
+  opencode-skills-path = ./skills-path.nix;
+  opencode-skills-directory = ./skills-directory.nix;
+  opencode-skills-bulk-directory = ./skills-bulk-directory.nix;
   opencode-themes-inline = ./themes-inline.nix;
   opencode-themes-path = ./themes-path.nix;
   opencode-mcp-integration = ./mcp-integration.nix;

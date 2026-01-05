@@ -22,6 +22,15 @@ in
 
       package = lib.mkPackageOption pkgs "mpd" { };
 
+      enableSessionVariables = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to set {env}`MPD_HOST` {env}`MPD_PORT` environment variables
+          according to {option}`services.mpd.network`.
+        '';
+      };
+
       musicDirectory = mkOption {
         type = with types; either path str;
         defaultText = lib.literalExpression ''
@@ -155,7 +164,13 @@ in
       );
     in
     mkIf cfg.enable {
-      home.packages = [ cfg.package ];
+      home = {
+        packages = [ cfg.package ];
+        sessionVariables = mkIf cfg.enableSessionVariables {
+          MPD_HOST = mkIf (cfg.network.listenAddress != "any") cfg.network.listenAddress;
+          MPD_PORT = builtins.toString cfg.network.port;
+        };
+      };
 
       services.mpd = lib.mkMerge [
         (mkIf (lib.versionAtLeast config.home.stateVersion "22.11" && config.xdg.userDirs.enable) {

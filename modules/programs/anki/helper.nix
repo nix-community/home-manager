@@ -112,7 +112,7 @@ let
 
     answer_keys: tuple[tuple[int, str], ...] = (${
       lib.strings.concatMapStringsSep ", " (val: "(${toString val.ease}, '${val.key}')") cfg.answerKeys
-    })
+    }${if cfg.answerKeys != [ ] then "," else ""})
     for ease, key in answer_keys:
       profile_manager.set_answer_key(ease, key)
 

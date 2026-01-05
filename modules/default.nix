@@ -57,9 +57,8 @@ let
     let
       module = moduleChecks rawModule;
     in
-    {
-      inherit (module) options config;
-
+    module
+    // {
       activationPackage = module.config.home.activationPackage;
 
       # For backwards compatibility. Please use activationPackage instead.

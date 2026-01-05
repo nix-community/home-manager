@@ -9,12 +9,27 @@ let
 
   cfg = config.programs.yt-dlp;
 
-  renderSettings = lib.mapAttrsToList (
+  configAtom =
+    with types;
+    oneOf [
+      bool
+      int
+      str
+    ];
+
+  renderSingleOption =
     name: value:
     if lib.isBool value then
       if value then "--${name}" else "--no-${name}"
     else
-      "--${name} ${toString value}"
+      "--${name} ${toString value}";
+
+  renderSettings = lib.mapAttrsToList (
+    name: value:
+    if lib.isList value then
+      lib.concatStringsSep "\n" (map (renderSingleOption name) value)
+    else
+      renderSingleOption name value
   );
 
 in
@@ -27,13 +42,7 @@ in
     package = lib.mkPackageOption pkgs "yt-dlp" { };
 
     settings = mkOption {
-      type =
-        with types;
-        attrsOf (oneOf [
-          bool
-          int
-          str
-        ]);
+      type = with types; attrsOf (either configAtom (listOf configAtom));
       default = { };
       example = lib.literalExpression ''
         {
@@ -42,6 +51,10 @@ in
           sub-langs = "all";
           downloader = "aria2c";
           downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
+          color = [
+            "stdout:no_color"
+            "stderr:always"
+          ];
         }
       '';
       description = ''

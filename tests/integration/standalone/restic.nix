@@ -216,7 +216,7 @@ in
 
       def make_backup(time):
         global snapshot_count
-        machine.succeed(f"timedatectl set-time '{time}'")
+        machine.succeed(f"date --set='{time}'")
         systemctl_succeed_as_alice("start restic-backups-prune-me.service")
         snapshot_count += 1
         actual = \
