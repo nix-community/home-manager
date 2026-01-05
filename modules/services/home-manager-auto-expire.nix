@@ -81,46 +81,38 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      (lib.mkIf pkgs.stdenv.isLinux {
-        systemd.user = {
-          timers.home-manager-auto-expire = {
-            Unit.Description = "Home Manager expire generations timer";
+  config = lib.mkIf cfg.enable {
 
-            Install.WantedBy = [ "timers.target" ];
-
-            Timer = {
-              OnCalendar = cfg.frequency;
-              Unit = "home-manager-auto-expire.service";
-              Persistent = true;
-            };
-          };
-
-          services.home-manager-auto-expire = {
-            Unit.Description = "Home Manager expire generations";
-
-            Service.ExecStart = toString script;
-          };
+    systemd.user = {
+      timers.home-manager-auto-expire = {
+        Unit.Description = "Home Manager expire generations timer";
+        Install.WantedBy = [ "timers.target" ];
+        Timer = {
+          OnCalendar = cfg.frequency;
+          Unit = "home-manager-auto-expire.service";
+          Persistent = true;
         };
-      })
+      };
+      services.home-manager-auto-expire = {
+        Unit.Description = "Home Manager expire generations";
+        Service.ExecStart = toString script;
+      };
+    };
 
-      (lib.mkIf pkgs.stdenv.isDarwin {
-        assertions = [
-          (lib.hm.darwin.assertInterval "services.home-manager.autoExpire.frequency" cfg.frequency pkgs)
-        ];
+    assertions = [
+      (lib.hm.darwin.assertInterval "services.home-manager.autoExpire.frequency" cfg.frequency pkgs)
+    ];
 
-        launchd.agents.home-manager-auto-expire = {
-          enable = true;
-          config = {
-            ProgramArguments = [ (toString script) ];
-            ProcessType = "Background";
-            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
-            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/home-manager-auto-expire/launchd-stdout.log";
-            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/home-manager-auto-expire/launchd-stderr.log";
-          };
-        };
-      })
-    ]
-  );
+    launchd.agents.home-manager-auto-expire = {
+      enable = true;
+      config = {
+        ProgramArguments = [ (toString script) ];
+        ProcessType = "Background";
+        StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
+        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/home-manager-auto-expire/launchd-stdout.log";
+        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/home-manager-auto-expire/launchd-stderr.log";
+      };
+    };
+
+  };
 }
