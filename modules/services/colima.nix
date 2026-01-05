@@ -163,7 +163,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable ({
+  config = lib.mkIf cfg.enable {
     assertions = [
       {
         assertion = (lib.count (p: p.isActive) (lib.attrValues cfg.profiles)) <= 1;
@@ -189,78 +189,74 @@ in
         if activeProfile.name != "default" then "colima-${activeProfile.name}" else "colima"
       );
 
-    launchd.agents = lib.mkIf pkgs.stdenv.isDarwin (
-      lib.mapAttrs' (
-        name: profile:
-        lib.nameValuePair "colima-${name}" {
-          enable = true;
-          config = {
-            ProgramArguments = [
-              "${lib.getExe cfg.package}"
-              "start"
-              name
-              "-f"
-              "--activate=${if profile.isActive then "true" else "false"}"
-              "--save-config=false"
-            ];
-            KeepAlive = true;
-            RunAtLoad = true;
-            EnvironmentVariables.PATH = lib.makeBinPath [
-              cfg.package
-              cfg.perlPackage
-              cfg.dockerPackage
-              cfg.sshPackage
-              cfg.coreutilsPackage
-              cfg.curlPackage
-              cfg.bashPackage
-              pkgs.darwin.DarwinTools
-            ];
-            StandardOutPath = profile.logFile;
-            StandardErrorPath = profile.logFile;
-          };
-        }
-      ) (lib.filterAttrs (_: p: p.isService) cfg.profiles)
-    );
+    launchd.agents = lib.mapAttrs' (
+      name: profile:
+      lib.nameValuePair "colima-${name}" {
+        enable = true;
+        config = {
+          ProgramArguments = [
+            "${lib.getExe cfg.package}"
+            "start"
+            name
+            "-f"
+            "--activate=${if profile.isActive then "true" else "false"}"
+            "--save-config=false"
+          ];
+          KeepAlive = true;
+          RunAtLoad = true;
+          EnvironmentVariables.PATH = lib.makeBinPath [
+            cfg.package
+            cfg.perlPackage
+            cfg.dockerPackage
+            cfg.sshPackage
+            cfg.coreutilsPackage
+            cfg.curlPackage
+            cfg.bashPackage
+            pkgs.darwin.DarwinTools
+          ];
+          StandardOutPath = profile.logFile;
+          StandardErrorPath = profile.logFile;
+        };
+      }
+    ) (lib.filterAttrs (_: p: p.isService) cfg.profiles);
 
-    systemd.user.services = lib.mkIf pkgs.stdenv.isLinux (
-      lib.mapAttrs' (
-        name: profile:
-        lib.nameValuePair "colima-${name}" {
-          Unit = {
-            Description = "Colima container runtime (${name} profile)";
-            After = [ "network-online.target" ];
-            Wants = [ "network-online.target" ];
-          };
-          Service = {
-            ExecStart = ''
-              ${lib.getExe cfg.package} start ${name} \
-                -f \
-                --activate=${if profile.isActive then "true" else "false"} \
-                --save-config=false
-            '';
-            Restart = "always";
-            RestartSec = 2;
-            Environment = [
-              "PATH=${
-                lib.makeBinPath [
-                  cfg.package
-                  cfg.perlPackage
-                  cfg.dockerPackage
-                  cfg.sshPackage
-                  cfg.coreutilsPackage
-                  cfg.curlPackage
-                  cfg.bashPackage
-                ]
-              }"
-            ];
-            StandardOutput = "append:${profile.logFile}";
-            StandardError = "append:${profile.logFile}";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-        }
-      ) (lib.filterAttrs (_: p: p.isService) cfg.profiles)
-    );
-  });
+    systemd.user.services = lib.mapAttrs' (
+      name: profile:
+      lib.nameValuePair "colima-${name}" {
+        Unit = {
+          Description = "Colima container runtime (${name} profile)";
+          After = [ "network-online.target" ];
+          Wants = [ "network-online.target" ];
+        };
+        Service = {
+          ExecStart = ''
+            ${lib.getExe cfg.package} start ${name} \
+              -f \
+              --activate=${if profile.isActive then "true" else "false"} \
+              --save-config=false
+          '';
+          Restart = "always";
+          RestartSec = 2;
+          Environment = [
+            "PATH=${
+              lib.makeBinPath [
+                cfg.package
+                cfg.perlPackage
+                cfg.dockerPackage
+                cfg.sshPackage
+                cfg.coreutilsPackage
+                cfg.curlPackage
+                cfg.bashPackage
+              ]
+            }"
+          ];
+          StandardOutput = "append:${profile.logFile}";
+          StandardError = "append:${profile.logFile}";
+        };
+        Install = {
+          WantedBy = [ "default.target" ];
+        };
+      }
+    ) (lib.filterAttrs (_: p: p.isService) cfg.profiles);
+  };
 }
