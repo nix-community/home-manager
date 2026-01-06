@@ -224,8 +224,15 @@ in
             message = "Ghostty systemd integration cannot be enabled for non-linux platforms";
           }
         ];
+
         xdg.configFile."systemd/user/app-com.mitchellh.ghostty.service".source =
           "${cfg.package}/share/systemd/user/app-com.mitchellh.ghostty.service";
+
+        xdg.configFile."systemd/user/app-com.mitchellh.ghostty.service.d/overrides.conf".text = ''
+          [Unit]
+          X-SwitchMethod=keep-old
+        '';
+
         dbus.packages = [ cfg.package ];
       })
 
