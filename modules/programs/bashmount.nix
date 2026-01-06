@@ -8,7 +8,7 @@ let
   cfg = config.programs.bashmount;
 in
 {
-  meta.maintainers = [ lib.maintainers.AndersonTorres ];
+  meta.maintainers = [ ];
 
   options.programs.bashmount = {
     enable = lib.mkEnableOption "bashmount";
