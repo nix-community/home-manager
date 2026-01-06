@@ -9,7 +9,7 @@ let
   iniFormat = pkgs.formats.ini { };
 in
 {
-  meta.maintainers = with lib.maintainers; [ AndersonTorres ];
+  meta.maintainers = with lib.maintainers; [ ];
 
   options.programs.havoc = {
     enable = lib.mkEnableOption "Havoc terminal";
