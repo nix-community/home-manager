@@ -156,7 +156,7 @@ in
 
     xdg.configFile."clipse/custom_theme.json".source = jsonFormat.generate "theme" cfg.theme;
 
-    systemd.user.services.clipse = lib.mkIf (pkgs.stdenv.isLinux && (cfg.package != null)) {
+    systemd.user.services.clipse = lib.mkIf (cfg.package != null) {
       Unit = {
         Description = "Clipse listener";
         PartOf = [ "graphical-session.target" ];

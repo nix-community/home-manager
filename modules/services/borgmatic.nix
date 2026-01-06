@@ -32,78 +32,72 @@ in
     };
   };
 
-  config = lib.mkIf serviceConfig.enable (
-    lib.mkMerge [
-      (lib.mkIf pkgs.stdenv.isLinux {
-        systemd.user = {
-          services.borgmatic = {
-            Unit = {
-              Description = "borgmatic backup";
-              # Prevent borgmatic from running unless the machine is
-              # plugged into power:
-              ConditionACPower = true;
-            };
-            Service = {
-              Type = "oneshot";
-
-              # Lower CPU and I/O priority:
-              Nice = 19;
-              IOSchedulingClass = "best-effort";
-              IOSchedulingPriority = 7;
-              IOWeight = 100;
-
-              Restart = "no";
-              LogRateLimitIntervalSec = 0;
-
-              # Delay start to prevent backups running during boot:
-              ExecStartPre = "${pkgs.coreutils}/bin/sleep 3m";
-
-              ExecStart = ''
-                ${pkgs.systemd}/bin/systemd-inhibit \
-                  --who="borgmatic" \
-                  --what="sleep:shutdown" \
-                  --why="Prevent interrupting scheduled backup" \
-                  ${programConfig.package}/bin/borgmatic \
-                    --stats \
-                    --verbosity -1 \
-                    --list \
-                    --syslog-verbosity 1
-              '';
-            };
-          };
-
-          timers.borgmatic = {
-            Unit.Description = "Run borgmatic backup";
-            Timer = {
-              OnCalendar = serviceConfig.frequency;
-              Persistent = true;
-              RandomizedDelaySec = "10m";
-            };
-            Install.WantedBy = [ "timers.target" ];
-          };
+  config = lib.mkIf serviceConfig.enable {
+    systemd.user = {
+      services.borgmatic = {
+        Unit = {
+          Description = "borgmatic backup";
+          # Prevent borgmatic from running unless the machine is
+          # plugged into power:
+          ConditionACPower = true;
         };
-      })
+        Service = {
+          Type = "oneshot";
 
-      (lib.mkIf pkgs.stdenv.isDarwin {
-        assertions = [
-          (lib.hm.darwin.assertInterval "services.borgmatic.frequency" serviceConfig.frequency pkgs)
+          # Lower CPU and I/O priority:
+          Nice = 19;
+          IOSchedulingClass = "best-effort";
+          IOSchedulingPriority = 7;
+          IOWeight = 100;
+
+          Restart = "no";
+          LogRateLimitIntervalSec = 0;
+
+          # Delay start to prevent backups running during boot:
+          ExecStartPre = "${pkgs.coreutils}/bin/sleep 3m";
+
+          ExecStart = ''
+            ${pkgs.systemd}/bin/systemd-inhibit \
+              --who="borgmatic" \
+              --what="sleep:shutdown" \
+              --why="Prevent interrupting scheduled backup" \
+              ${programConfig.package}/bin/borgmatic \
+                --stats \
+                --verbosity -1 \
+                --list \
+                --syslog-verbosity 1
+          '';
+        };
+      };
+
+      timers.borgmatic = {
+        Unit.Description = "Run borgmatic backup";
+        Timer = {
+          OnCalendar = serviceConfig.frequency;
+          Persistent = true;
+          RandomizedDelaySec = "10m";
+        };
+        Install.WantedBy = [ "timers.target" ];
+      };
+    };
+
+    assertions = [
+      (lib.hm.darwin.assertInterval "services.borgmatic.frequency" serviceConfig.frequency pkgs)
+    ];
+
+    launchd.agents.borgmatic = {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          (lib.getExe programConfig.package)
+          "--stats"
+          "--list"
         ];
-
-        launchd.agents.borgmatic = {
-          enable = true;
-          config = {
-            ProgramArguments = [
-              (lib.getExe programConfig.package)
-              "--stats"
-              "--list"
-            ];
-            ProcessType = "Background";
-            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval serviceConfig.frequency;
-            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/borgmatic/launchd-stdout.log";
-            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/borgmatic/launchd-stderr.log";
-          };
-        };
-      })
-    ]
-  );
+        ProcessType = "Background";
+        StartCalendarInterval = lib.hm.darwin.mkCalendarInterval serviceConfig.frequency;
+        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/borgmatic/launchd-stdout.log";
+        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/borgmatic/launchd-stderr.log";
+      };
+    };
+  };
 }

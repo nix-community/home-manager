@@ -182,7 +182,7 @@ in
         })
       ];
 
-      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      systemd.user = {
         services.mpd = {
           Unit = lib.mkMerge [
             {
@@ -236,7 +236,7 @@ in
         };
       };
 
-      launchd.agents.mpd = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      launchd.agents.mpd = {
         enable = true;
         config = {
           ProgramArguments = [

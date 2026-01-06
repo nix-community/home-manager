@@ -87,7 +87,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.user.services.ollama = mkIf pkgs.stdenv.isLinux {
+    systemd.user.services.ollama = {
       Unit = {
         Description = "Server for local large language models";
         After = [ "network.target" ];
@@ -105,7 +105,7 @@ in
       };
     };
 
-    launchd.agents.ollama = mkIf pkgs.stdenv.isDarwin {
+    launchd.agents.ollama = {
       enable = true;
       config = {
         ProgramArguments = [

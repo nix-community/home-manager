@@ -119,127 +119,117 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        home.sessionVariables =
-          let
-            editorBin = lib.getBin (
-              pkgs.writeShellScript "editor" ''exec ${lib.getBin cfg.package}/bin/emacsclient "''${@:---create-frame}"''
-            );
-          in
-          mkIf cfg.defaultEditor {
-            EDITOR = editorBin;
-            VISUAL = editorBin;
-          };
+  config = mkIf cfg.enable {
+    home.sessionVariables =
+      let
+        editorBin = lib.getBin (
+          pkgs.writeShellScript "editor" ''exec ${lib.getBin cfg.package}/bin/emacsclient "''${@:---create-frame}"''
+        );
+      in
+      mkIf cfg.defaultEditor {
+        EDITOR = editorBin;
+        VISUAL = editorBin;
+      };
+
+    home.packages = optional (cfg.client.enable && pkgs.stdenv.isLinux) (lib.hiPrio clientDesktopItem);
+
+    systemd.user.services.emacs = {
+      Unit = {
+        Description = "Emacs text editor";
+        Documentation = "info:emacs man:emacs(1) https://gnu.org/software/emacs/";
+
+        After = optional (cfg.startWithUserSession == "graphical") "graphical-session.target";
+        PartOf = optional (cfg.startWithUserSession == "graphical") "graphical-session.target";
+
+        # Avoid killing the Emacs session, which may be full of
+        # unsaved buffers.
+        X-RestartIfChanged = false;
       }
+      // optionalAttrs needsSocketWorkaround {
+        # Emacs deletes its socket when shutting down, which systemd doesn't
+        # handle, resulting in a server without a socket.
+        # See https://github.com/nix-community/home-manager/issues/2018
+        RefuseManualStart = true;
+      };
 
-      (mkIf pkgs.stdenv.isLinux {
-        systemd.user.services.emacs = {
-          Unit = {
-            Description = "Emacs text editor";
-            Documentation = "info:emacs man:emacs(1) https://gnu.org/software/emacs/";
+      Service = {
+        Type = "notify";
 
-            After = optional (cfg.startWithUserSession == "graphical") "graphical-session.target";
-            PartOf = optional (cfg.startWithUserSession == "graphical") "graphical-session.target";
+        # We wrap ExecStart in a login shell so Emacs starts with the user's
+        # environment, most importantly $PATH and $NIX_PROFILES. It may be
+        # worth investigating a more targeted approach for user services to
+        # import the user environment.
+        ExecStart = ''${pkgs.runtimeShell} -l -c "${emacsBinPath}/emacs --fg-daemon${
+          # In case the user sets 'server-directory' or 'server-name' in
+          # their Emacs config, we want to specify the socket path explicitly
+          # so launching 'emacs.service' manually doesn't break emacsclient
+          # when using socket activation.
+          lib.optionalString cfg.socketActivation.enable "=${lib.escapeShellArg socketPath}"
+        } ${lib.escapeShellArgs cfg.extraOptions}"'';
 
-            # Avoid killing the Emacs session, which may be full of
-            # unsaved buffers.
-            X-RestartIfChanged = false;
-          }
-          // optionalAttrs needsSocketWorkaround {
-            # Emacs deletes its socket when shutting down, which systemd doesn't
-            # handle, resulting in a server without a socket.
-            # See https://github.com/nix-community/home-manager/issues/2018
-            RefuseManualStart = true;
-          };
+        # Emacs will exit with status 15 after having received SIGTERM, which
+        # is the default "KillSignal" value systemd uses to stop services.
+        SuccessExitStatus = 15;
 
-          Service = {
-            Type = "notify";
+        Restart = "on-failure";
+      }
+      // optionalAttrs needsSocketWorkaround {
+        # Use read-only directory permissions to prevent emacs from
+        # deleting systemd's socket file before exiting.
+        ExecStartPost = "${pkgs.coreutils}/bin/chmod --changes -w ${socketDir}";
+        ExecStopPost = "${pkgs.coreutils}/bin/chmod --changes +w ${socketDir}";
+      };
+    }
+    // optionalAttrs (cfg.startWithUserSession != false) {
+      Install = {
+        WantedBy = [
+          (if cfg.startWithUserSession == true then "default.target" else "graphical-session.target")
+        ];
+      };
+    };
 
-            # We wrap ExecStart in a login shell so Emacs starts with the user's
-            # environment, most importantly $PATH and $NIX_PROFILES. It may be
-            # worth investigating a more targeted approach for user services to
-            # import the user environment.
-            ExecStart = ''${pkgs.runtimeShell} -l -c "${emacsBinPath}/emacs --fg-daemon${
-              # In case the user sets 'server-directory' or 'server-name' in
-              # their Emacs config, we want to specify the socket path explicitly
-              # so launching 'emacs.service' manually doesn't break emacsclient
-              # when using socket activation.
-              lib.optionalString cfg.socketActivation.enable "=${lib.escapeShellArg socketPath}"
-            } ${lib.escapeShellArgs cfg.extraOptions}"'';
+    systemd.user.sockets.emacs = mkIf cfg.socketActivation.enable {
+      Unit = {
+        Description = "Emacs text editor";
+        Documentation = "info:emacs man:emacs(1) https://gnu.org/software/emacs/";
+      };
 
-            # Emacs will exit with status 15 after having received SIGTERM, which
-            # is the default "KillSignal" value systemd uses to stop services.
-            SuccessExitStatus = 15;
+      Socket = {
+        ListenStream = socketPath;
+        FileDescriptorName = "server";
+        SocketMode = "0600";
+        DirectoryMode = "0700";
+        # This prevents the service from immediately starting again
+        # after being stopped, due to the function
+        # `server-force-stop' present in `kill-emacs-hook', which
+        # calls `server-running-p', which opens the socket file.
+        FlushPending = true;
+      };
 
-            Restart = "on-failure";
-          }
-          // optionalAttrs needsSocketWorkaround {
-            # Use read-only directory permissions to prevent emacs from
-            # deleting systemd's socket file before exiting.
-            ExecStartPost = "${pkgs.coreutils}/bin/chmod --changes -w ${socketDir}";
-            ExecStopPost = "${pkgs.coreutils}/bin/chmod --changes +w ${socketDir}";
-          };
-        }
-        // optionalAttrs (cfg.startWithUserSession != false) {
-          Install = {
-            WantedBy = [
-              (if cfg.startWithUserSession == true then "default.target" else "graphical-session.target")
-            ];
-          };
+      Install = {
+        WantedBy = [ "sockets.target" ];
+        # Adding this Requires= dependency ensures that systemd
+        # manages the socket file, in the case where the service is
+        # started when the socket is stopped.
+        # The socket unit is implicitly ordered before the service.
+        RequiredBy = [ "emacs.service" ];
+      };
+    };
+
+    launchd.agents.emacs = {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          "${cfg.package}/bin/emacs"
+          "--fg-daemon"
+        ]
+        ++ cfg.extraOptions;
+        RunAtLoad = true;
+        KeepAlive = {
+          Crashed = true;
+          SuccessfulExit = false;
         };
-
-        home.packages = optional cfg.client.enable (lib.hiPrio clientDesktopItem);
-      })
-
-      (mkIf (cfg.socketActivation.enable && pkgs.stdenv.isLinux) {
-        systemd.user.sockets.emacs = {
-          Unit = {
-            Description = "Emacs text editor";
-            Documentation = "info:emacs man:emacs(1) https://gnu.org/software/emacs/";
-          };
-
-          Socket = {
-            ListenStream = socketPath;
-            FileDescriptorName = "server";
-            SocketMode = "0600";
-            DirectoryMode = "0700";
-            # This prevents the service from immediately starting again
-            # after being stopped, due to the function
-            # `server-force-stop' present in `kill-emacs-hook', which
-            # calls `server-running-p', which opens the socket file.
-            FlushPending = true;
-          };
-
-          Install = {
-            WantedBy = [ "sockets.target" ];
-            # Adding this Requires= dependency ensures that systemd
-            # manages the socket file, in the case where the service is
-            # started when the socket is stopped.
-            # The socket unit is implicitly ordered before the service.
-            RequiredBy = [ "emacs.service" ];
-          };
-        };
-      })
-
-      (mkIf pkgs.stdenv.isDarwin {
-        launchd.agents.emacs = {
-          enable = true;
-          config = {
-            ProgramArguments = [
-              "${cfg.package}/bin/emacs"
-              "--fg-daemon"
-            ]
-            ++ cfg.extraOptions;
-            RunAtLoad = true;
-            KeepAlive = {
-              Crashed = true;
-              SuccessfulExit = false;
-            };
-          };
-        };
-      })
-    ]
-  );
+      };
+    };
+  };
 }

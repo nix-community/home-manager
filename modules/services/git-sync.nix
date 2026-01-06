@@ -15,49 +15,12 @@ let
 
   cfg = config.services.git-sync;
 
-  mkUnit = name: repo: {
-    Unit.Description = "Git Sync ${name}";
-
-    Install.WantedBy = [ "default.target" ];
-
-    Service = {
-      Environment = [
-        "PATH=${
-          lib.makeBinPath (
-            with pkgs;
-            [
-              openssh
-              git
-            ]
-            ++ repo.extraPackages
-          )
-        }"
-        "GIT_SYNC_DIRECTORY=${lib.strings.escapeShellArg repo.path}"
-        "GIT_SYNC_COMMAND=${cfg.package}/bin/git-sync"
-        "GIT_SYNC_REPOSITORY=${lib.strings.escapeShellArg repo.uri}"
-        "GIT_SYNC_INTERVAL=${toString repo.interval}"
-      ];
-      ExecStart = "${cfg.package}/bin/git-sync-on-inotify";
-      Restart = "on-abort";
-    };
-  };
-
-  mkAgent = name: repo: {
-    enable = true;
-    config = {
-      StartInterval = repo.interval;
-      ProcessType = "Background";
-      WorkingDirectory = "${repo.path}";
-      WatchPaths = [ "${repo.path}" ];
-      ProgramArguments = [ "${cfg.package}/bin/git-sync" ];
-    };
-  };
-
-  mkService = if pkgs.stdenv.isLinux then mkUnit else mkAgent;
-  services = lib.mapAttrs' (name: repo: {
-    name = "git-sync-${name}";
-    value = mkService name repo;
-  }) cfg.repositories;
+  services =
+    mkService:
+    lib.mapAttrs' (name: repo: {
+      name = "git-sync-${name}";
+      value = mkService name repo;
+    }) cfg.repositories;
 
   repositoryType = types.submodule (
     { name, ... }:
@@ -141,11 +104,48 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    lib.mkMerge [
-      (mkIf pkgs.stdenv.isLinux { systemd.user.services = services; })
-      (mkIf pkgs.stdenv.isDarwin { launchd.agents = services; })
-    ]
-  );
+  config = mkIf cfg.enable {
+    launchd.agents = services (
+      name: repo: {
+        enable = true;
+        config = {
+          StartInterval = repo.interval;
+          ProcessType = "Background";
+          WorkingDirectory = "${repo.path}";
+          WatchPaths = [ "${repo.path}" ];
+          ProgramArguments = [ "${cfg.package}/bin/git-sync" ];
+        };
+      }
+    );
+
+    systemd.user.services = services (
+      name: repo: {
+        Unit.Description = "Git Sync ${name}";
+
+        Install.WantedBy = [ "default.target" ];
+
+        Service = {
+          Environment = [
+            "PATH=${
+              lib.makeBinPath (
+                with pkgs;
+                [
+                  openssh
+                  git
+                ]
+                ++ repo.extraPackages
+              )
+            }"
+            "GIT_SYNC_DIRECTORY=${lib.strings.escapeShellArg repo.path}"
+            "GIT_SYNC_COMMAND=${cfg.package}/bin/git-sync"
+            "GIT_SYNC_REPOSITORY=${lib.strings.escapeShellArg repo.uri}"
+            "GIT_SYNC_INTERVAL=${toString repo.interval}"
+          ];
+          ExecStart = "${cfg.package}/bin/git-sync-on-inotify";
+          Restart = "on-abort";
+        };
+      }
+    );
+  };
 
 }
