@@ -11,7 +11,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.AndersonTorres ];
+  meta.maintainers = [ ];
 
   options = {
     xsession.windowManager.fluxbox = {

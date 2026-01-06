@@ -11,7 +11,7 @@ let
   pueuedBin = "${cfg.package}/bin/pueued";
 in
 {
-  meta.maintainers = [ lib.maintainers.AndersonTorres ];
+  meta.maintainers = [ ];
 
   options.services.pueue = {
     enable = lib.mkEnableOption "Pueue, CLI process scheduler and manager";
