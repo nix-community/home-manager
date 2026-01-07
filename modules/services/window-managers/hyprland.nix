@@ -48,11 +48,6 @@ in
       [ "wayland" "windowManager" "hyprland" "systemdIntegration" ] # \
       [ "wayland" "windowManager" "hyprland" "systemd" "enable" ]
     )
-
-    (lib.mkRenamedOptionModule # \
-      [ "wayland" "windowManager" "hyprland" "xwayland" "enable" ] # \
-      [ "wayland" "windowManager" "hyprland" "settings" "xwayland" "enable" ]
-    )
   ];
 
   options.wayland.windowManager.hyprland = {
@@ -84,7 +79,11 @@ in
     finalPackage = lib.mkOption {
       type = with lib.types; nullOr package;
       readOnly = true;
-      default = if cfg.package != null then cfg.package else null;
+      default =
+        if cfg.package != null then
+          cfg.package.override { enableXWayland = cfg.xwayland.enable; }
+        else
+          null;
       defaultText = lib.literalMD "`wayland.windowManager.hyprland.package` with applied configuration";
       description = ''
         The Hyprland package after applying configuration.
@@ -161,6 +160,10 @@ in
       enableXdgAutostart = lib.mkEnableOption ''
         autostart of applications using
         {manpage}`systemd-xdg-autostart-generator(8)`'';
+    };
+
+    xwayland.enable = lib.mkEnableOption "XWayland" // {
+      default = true;
     };
 
     settings = lib.mkOption {
@@ -354,10 +357,7 @@ in
       submapWarnings ++ lib.optional inconsistent warning;
 
     home.packages = lib.mkIf (cfg.package != null) (
-      [ cfg.finalPackage ]
-      ++ lib.optional (
-        (lib.hasAttrByPath [ "settings" "xwayland" "enable" ] cfg) && cfg.settings.xwayland.enable
-      ) pkgs.xwayland
+      [ cfg.finalPackage ] ++ lib.optional cfg.xwayland.enable pkgs.xwayland
     );
 
     xdg.configFile."hypr/hyprland.conf" =
