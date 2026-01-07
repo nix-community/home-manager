@@ -1,7 +1,7 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:notalltim/nixpkgs/hm-pin-default-type-merge-fix";
 
   outputs =
     {
