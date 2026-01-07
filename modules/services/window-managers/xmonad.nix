@@ -119,12 +119,13 @@ in
         description = ''
           Build script for your xmonad configuration.
         '';
-      };
-      buildScriptPackages = mkOption {
-        type = types.listOf types.package;
-        default = [ ];
-        description = ''
-          Extra packages needed to run the build script.
+        example = literalExpression ''
+          pkgs.writeText "build" '''
+            #!/bin/sh
+
+            # Enable -threaded
+            ghc --make xmonad.hs -threaded -i -ilib -fforce-recomp -main-is main -v0 -O2 -o "$1"
+          '''
         '';
       };
     };
@@ -144,9 +145,10 @@ in
           {
             nativeBuildInputs = [
               xmonad
-              ghc-builder
             ]
-            ++ cfg.buildScriptPackages;
+            ++ lib.optional (cfg.buildScript != null) [
+              ghc-builder
+            ];
           }
           ''
             mkdir -p $out/bin
@@ -159,7 +161,7 @@ in
 
             cp ${cfg.config} xmonad-config/xmonad.hs
             ${lib.optionalString (cfg.buildScript != null) ''
-              cp ${cfg.buildScript} xmonad-config/build && chmod +x xmonad-config/build
+              install -m 555 ${cfg.buildScript} xmonad-config/build
             ''}
             declare -A libFiles
             libFiles=(${
