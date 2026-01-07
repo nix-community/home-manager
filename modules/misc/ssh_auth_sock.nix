@@ -67,11 +67,36 @@ in
     type = with lib.types; nullOr (submodule initSubmodule);
   };
 
-  config = lib.mkIf (cfg.initialization != null) {
-    # $SSH_AUTH_SOCK has to be set early since other tools rely on it
-    programs.bash.profileExtra = lib.mkOrder 900 bashIntegration;
-    programs.fish.shellInit = lib.mkOrder 900 fishIntegration;
-    programs.nushell.extraConfig = lib.mkOrder 900 nushellIntegration;
-    programs.zsh.envExtra = lib.mkOrder 900 bashIntegration;
-  };
+  config = lib.mkMerge [
+    {
+      assertions = [
+        {
+          assertion =
+            lib.count (x: x) [
+              (config.services.ssh-agent.enable || config.services.ssh-tpm-agent.enable)
+              (config.services.gpg-agent.enable && config.services.gpg-agent.enableSshSupport)
+              config.services.yubikey-agent.enable
+            ] <= 1;
+          message = ''
+            Out of the SSH agents
+
+            - ssh-agent or ssh-tpm-agent (these two can coexist),
+            - gpg-agent with SSH support enabled, and
+            - yubikey-agent,
+
+            at most one of them may be enabled (with the exception of ssh-agent and
+            ssh-tpm-agent).
+          '';
+        }
+      ];
+    }
+
+    (lib.mkIf (cfg.initialization != null) {
+      # $SSH_AUTH_SOCK has to be set early since other tools rely on it
+      programs.bash.profileExtra = lib.mkOrder 900 bashIntegration;
+      programs.fish.shellInit = lib.mkOrder 900 fishIntegration;
+      programs.nushell.extraConfig = lib.mkOrder 900 nushellIntegration;
+      programs.zsh.envExtra = lib.mkOrder 900 bashIntegration;
+    })
+  ];
 }
