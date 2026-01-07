@@ -64,7 +64,10 @@ in
 
     importantPrefixes = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [ "$" ];
+      default = [
+        "$"
+        "monitor"
+      ];
       example = [ "$" ];
       description = ''
         List of prefix of attributes to source at the top of the config.
