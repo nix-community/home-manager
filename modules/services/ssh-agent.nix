@@ -37,6 +37,17 @@ in
       '';
     };
 
+    pkcs11Whitelist = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = lib.literalExpression ''[ "''${pkgs.tpm2-pkcs11}/lib/*" ]'';
+      description = ''
+        Specify a list of approved path patterns for PKCS#11 and FIDO authenticator middleware libraries. When using the -s or -S options with {manpage}`ssh-add(1)`, only libraries matching these patterns will be accepted.
+
+        See {manpage}`ssh-agent(1)`.
+      '';
+    };
+
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
@@ -101,6 +112,10 @@ in
         lib.optionalString (
           cfg.defaultMaximumIdentityLifetime != null
         ) " -t ${toString cfg.defaultMaximumIdentityLifetime}"
+      }${
+        lib.optionalString (
+          cfg.pkcs11Whitelist != [ ]
+        ) " -P '${lib.concatStringsSep "," cfg.pkcs11Whitelist}'"
       }";
     };
 
@@ -114,6 +129,10 @@ in
             lib.optionalString (
               cfg.defaultMaximumIdentityLifetime != null
             ) " -t ${toString cfg.defaultMaximumIdentityLifetime}"
+          }${
+            lib.optionalString (
+              cfg.pkcs11Whitelist != [ ]
+            ) " -P '${lib.concatStringsSep "," cfg.pkcs11Whitelist}'"
           }''
         ];
         KeepAlive = {
@@ -124,7 +143,5 @@ in
         RunAtLoad = true;
       };
     };
-
   };
-
 }

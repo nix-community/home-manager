@@ -1,0 +1,9 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@openssh@/bin/ssh-agent -D -a %t/ssh-agent -P '/nix/store/*/lib,/usr/lib/libpkcs11.so,/usr/lib/other.so'
+
+[Unit]
+Description=SSH authentication agent
+Documentation=man:ssh-agent(1)
