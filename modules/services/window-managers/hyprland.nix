@@ -164,6 +164,14 @@ in
 
     xwayland.enable = lib.mkEnableOption "XWayland" // {
       default = true;
+      description = ''
+        Whether or not to enable XWayland.
+
+        Overrides the `enableXWayland` option of the Hyprland package.
+
+        In newer versions of Hyprland, you can use the {option}`wayland.windowManager.hyprland.settings.xwayland`
+        option to avoid recompiling Hyprland.
+      '';
     };
 
     settings = lib.mkOption {
