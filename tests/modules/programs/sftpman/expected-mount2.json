@@ -3,6 +3,7 @@
   "beforeMount": "true",
   "host": "host2.example.com",
   "id": "mount2",
+  "mountDestPath": null,
   "mountOptions": [],
   "mountPoint": "/another/path",
   "port": 22,
