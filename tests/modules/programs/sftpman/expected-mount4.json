@@ -1,0 +1,12 @@
+{
+  "authType": "authentication-agent",
+  "beforeMount": "true",
+  "host": "host4.example.com",
+  "id": "mount4",
+  "mountDestPath": "/mnt/host4",
+  "mountOptions": [],
+  "mountPoint": "/another/path/somewhere/else",
+  "port": 22,
+  "sshKey": "/home/user/.ssh/id_ed25519",
+  "user": "user"
+}
