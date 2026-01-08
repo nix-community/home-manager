@@ -4,6 +4,7 @@ on:
     paths:
       - "modules/lib/maintainers.nix"
       - "flake.lock"
+      - "all-maintainers.nix"
   workflow_dispatch:
     inputs:
       run_tests:
