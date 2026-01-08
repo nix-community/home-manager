@@ -2,12 +2,25 @@
 
 set -e
 
-# Install the systemd service file and ensure that the store path won't be
-# garbage-collected as long as it's installed.
-unit_path=/etc/systemd/system/non-nixos-gpu.service
-ln -sf @@resources@@/non-nixos-gpu.service "$unit_path"
-ln -sf "$unit_path" "@@statedir@@"/gcroots/non-nixos-gpu.service
+if command -v systemctl &>/dev/null; then
+  # Install the systemd service file and ensure that the store path won't be
+  # garbage-collected as long as it's installed.
+  unit_path=/etc/systemd/system/non-nixos-gpu.service
+  ln -sf @@resources@@/non-nixos-gpu.service "$unit_path"
+  ln -sf "$unit_path" "@@statedir@@"/gcroots/non-nixos-gpu.service
 
-systemctl daemon-reload
-systemctl enable non-nixos-gpu.service
-systemctl restart non-nixos-gpu.service
+  systemctl daemon-reload
+  systemctl enable non-nixos-gpu.service
+  systemctl restart non-nixos-gpu.service
+elif command -v shepherd &>/dev/null; then
+  # Same for the Shepherd service file.
+  mkdir -p /etc/shepherd
+  unit_path=/etc/shepherd/non-nixos-gpu.scm
+  ln -sf @@resources@@/non-nixos-gpu.scm "$unit_path"
+  ln -sf "$unit_path" "@@statedir@@"/gcroots/non-nixos-gpu.scm
+
+  herd load root /etc/shepherd/non-nixos-gpu.scm
+else
+  echo "non-nixos-gpu-setup: Unsupport init system" >&2
+  exit 1
+fi
