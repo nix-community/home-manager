@@ -158,7 +158,7 @@ in
                           description = ''
                             An attribute set of option values passed to `rclone mount`. To set
                             a boolean option, assign it `true` or `false`. See
-                            <https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toGNUCommandLineShell>
+                            <https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toCommandLineShellGNU>
                             for more details on the format.
 
                             Some caching options are set by default, namely `vfs-cache-mode = "full"`
@@ -374,7 +374,7 @@ in
                     ExecStart = lib.concatStringsSep " " [
                       (lib.getExe cfg.package)
                       "mount"
-                      (lib.cli.toGNUCommandLineShell { } mount.options)
+                      (lib.cli.toCommandLineShellGNU { } mount.options)
                       "${remote-name}:${mount-path}"
                       "${mount.mountPoint}"
                     ];
