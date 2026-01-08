@@ -117,13 +117,19 @@ in
         args = lib.lists.forEach cfg.wallpapers (
           each:
           lib.concatStringsSep " " (
-            lib.cli.toGNUCommandLine { } {
-              screen-root = each.monitor;
-              inherit (each) scaling fps;
-              inherit (each.audio) silent;
-              noautomute = !each.audio.automute;
-              no-audio-processing = !each.audio.processing;
-            }
+            lib.cli.toCommandLine
+              (optionName: {
+                option = if builtins.stringLength optionName > 1 then "--${optionName}" else "-${optionName}";
+                sep = null;
+                explicitBool = false;
+              })
+              {
+                screen-root = each.monitor;
+                inherit (each) scaling fps;
+                inherit (each.audio) silent;
+                noautomute = !each.audio.automute;
+                no-audio-processing = !each.audio.processing;
+              }
             ++ each.extraOptions
           )
           # This has to be the last argument in each group
