@@ -45,7 +45,7 @@ in
             ];
             attrs = attrsOf (either scalar (listOf scalar));
           in
-          coercedTo attrs (lib.cli.toGNUCommandLine { }) (listOf str);
+          coercedTo attrs (lib.cli.toCommandLineGNU { }) (listOf str);
         default = [ ];
         description = "Options to be set via {env}`$LESS`.";
         example = {
