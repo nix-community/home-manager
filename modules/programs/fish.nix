@@ -301,7 +301,7 @@ let
       let
         name = if isAttrs def && def.name != null then def.name else attrName;
         mods =
-          lib.cli.toGNUCommandLineShell
+          lib.cli.toCommandLineShellGNU
             {
               mkOption =
                 k: v:

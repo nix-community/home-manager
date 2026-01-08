@@ -117,7 +117,7 @@ in
         args = lib.lists.forEach cfg.wallpapers (
           each:
           lib.concatStringsSep " " (
-            lib.cli.toGNUCommandLine { } {
+            lib.cli.toCommandLineGNU { } {
               screen-root = each.monitor;
               inherit (each) scaling fps;
               inherit (each.audio) silent;
