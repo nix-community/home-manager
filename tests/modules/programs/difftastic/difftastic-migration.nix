@@ -26,6 +26,6 @@
     # Git config should contain difftastic configuration (backward compatibility)
     assertFileExists home-files/.config/git/config
     assertFileContains home-files/.config/git/config '[diff]'
-    assertFileRegex home-files/.config/git/config 'external = .*/difft.*--color.*--display'
+    assertFileContains home-files/.config/git/config "external = \"@difftastic@/bin/difft '--color=always' '--display=side-by-side'\""
   '';
 }
