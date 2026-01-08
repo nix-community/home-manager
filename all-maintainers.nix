@@ -19,6 +19,11 @@
     email = "da157@voidq.com";
     github = "0xda157";
     githubId = 153149335;
+    keys = [
+      {
+        fingerprint = "5A66 FF95 36DE B501 DDD2  1647 B7AC 1B10 365D 45FF";
+      }
+    ];
     matrix = "@da157:catgirl.cloud";
     name = "0xda157";
     source = "nixpkgs";
@@ -64,14 +69,6 @@
     githubId = 1622250;
     name = "Alex";
     source = "home-manager";
-  };
-  AndersonTorres = {
-    email = "torres.anderson.85@protonmail.com";
-    github = "AndersonTorres";
-    githubId = 5954806;
-    matrix = "@anderson_torres:matrix.org";
-    name = "Anderson Torres";
-    source = "nixpkgs";
   };
   AndreasMager = {
     email = "andreas@mager.eu";
@@ -1760,7 +1757,7 @@
     github = "nickthegroot";
     githubId = 1966472;
     name = "Nick DeGroot";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   nikp123 = {
     email = "nikp123@users.noreply.github.com";
@@ -2012,7 +2009,7 @@
     github = "rrvsh";
     githubId = 20300874;
     name = "Mohammad Rafiq";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   rszamszur = {
     email = "radoslawszamszur@gmail.com";
