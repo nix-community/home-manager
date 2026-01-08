@@ -134,7 +134,7 @@ in
       Service = {
         ExecStart =
           let
-            args = lib.cli.toGNUCommandLineShell { } {
+            args = lib.cli.toCommandLineShellGNU { } {
               t = cfg.temperature.night;
               T = cfg.temperature.day;
               g = cfg.gamma;

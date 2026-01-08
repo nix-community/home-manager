@@ -54,7 +54,7 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.sessionVariables = lib.mkIf (cfg.settings != { }) {
-      BEMENU_OPTS = lib.cli.toGNUCommandLineShell { } cfg.settings;
+      BEMENU_OPTS = lib.cli.toCommandLineShellGNU { } cfg.settings;
     };
   };
 }
