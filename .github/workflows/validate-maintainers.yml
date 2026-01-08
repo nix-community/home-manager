@@ -1,7 +1,9 @@
 name: Validate maintainers.nix
 on:
   pull_request:
-    paths: ["modules/lib/maintainers.nix"]
+    paths:
+      - "modules/lib/maintainers.nix"
+      - "flake.lock"
   workflow_dispatch:
     inputs:
       run_tests:
