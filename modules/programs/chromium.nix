@@ -281,7 +281,7 @@ in
   ) supportedBrowsers;
 
   config = lib.mkMerge (
-    builtins.map (browser: browserConfig browser config.programs.${browser}) (
+    map (browser: browserConfig browser config.programs.${browser}) (
       builtins.attrNames supportedBrowsers
     )
   );

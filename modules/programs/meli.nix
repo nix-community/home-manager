@@ -82,7 +82,7 @@ in
       package = lib.mkPackageOption pkgs "meli" { };
 
       includes = mkOption {
-        type = with types; listOf (str);
+        type = with types; listOf str;
         description = "Paths of the various meli configuration files to include.";
         default = [ ];
       };

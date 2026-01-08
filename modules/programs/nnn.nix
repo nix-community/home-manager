@@ -13,7 +13,7 @@ let
 
   renderSettings = settings: lib.concatStringsSep ";" (lib.mapAttrsToList renderSetting settings);
 
-  pluginModule = types.submodule ({
+  pluginModule = types.submodule {
     options = {
       src = mkOption {
         type = with types; nullOr path;
@@ -46,7 +46,7 @@ let
         '';
       };
     };
-  });
+  };
 in
 {
   meta.maintainers = with lib.maintainers; [ thiagokokada ];

@@ -85,8 +85,7 @@ in
           if v == false then
             ""
           else
-            (if v == true then n else n + "=" + (if builtins.isPath v then "${v}" else builtins.toString v))
-            + "\n"
+            (if v == true then n else n + "=" + (if builtins.isPath v then "${v}" else toString v)) + "\n"
         ) cfg.settings
       );
     };

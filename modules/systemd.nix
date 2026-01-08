@@ -75,7 +75,7 @@ let
   buildServices =
     style: serviceCfgs: lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
 
-  servicesStartTimeoutMs = builtins.toString cfg.servicesStartTimeoutMs;
+  servicesStartTimeoutMs = toString cfg.servicesStartTimeoutMs;
 
   unitBaseType =
     unitKind: mod:

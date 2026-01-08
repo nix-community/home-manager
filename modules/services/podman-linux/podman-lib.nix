@@ -23,9 +23,9 @@ let
 
             ${k}='' (mapAttrsToList normalizeKeyValue v))
         else
-          builtins.toString v;
+          toString v;
     in
-    if builtins.isNull v then "" else "${k}=${v'}";
+    if isNull v then "" else "${k}=${v'}";
 
   primitiveAttrs = with types; attrsOf (either primitive (listOf primitive));
   primitiveList = with types; listOf primitive;

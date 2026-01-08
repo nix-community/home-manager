@@ -31,7 +31,7 @@ let
     modules = [ configuration ] ++ hmModules;
     class = "homeManager";
     specialArgs = {
-      modulesPath = builtins.toString ./.;
+      modulesPath = toString ./.;
     }
     // extraSpecialArgs;
   };

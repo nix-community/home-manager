@@ -35,7 +35,7 @@ let
         '';
       }
     else
-      builtins.dirOf value;
+      dirOf value;
 
   makePluginSearchPath = p: "${p}/?/init.lua;${p}/?.lua";
 
@@ -46,9 +46,9 @@ let
         searchPaths = map makePluginSearchPath wrappedPlugins;
         pluginSearchPath = lib.concatStringsSep ";" searchPaths;
       in
-      (''
+      ''
         package.path = "${pluginSearchPath};" .. package.path
-      '')
+      ''
     else
       "\n";
 

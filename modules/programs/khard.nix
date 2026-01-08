@@ -14,7 +14,7 @@ let
   renderSettings =
     with lib.generators;
     toINI {
-      mkKeyValue = mkKeyValueDefault rec {
+      mkKeyValue = mkKeyValueDefault {
         mkValueString =
           v:
           if lib.isList v then
@@ -139,7 +139,7 @@ in
       let
         makePath =
           baseDir: subDir:
-          builtins.toString (
+          toString (
             /.
             + lib.concatStringsSep "/" [
               baseDir

@@ -16,8 +16,7 @@ let
 
   generateConfig = lib.generators.toKeyValue {
     mkKeyValue =
-      name: value:
-      if lib.isString value then ''${name}="${value}"'' else "${name}=${builtins.toString value}";
+      name: value: if lib.isString value then ''${name}="${value}"'' else "${name}=${toString value}";
   };
 
   iniFormat = pkgs.formats.ini { listsAsDuplicateKeys = true; };

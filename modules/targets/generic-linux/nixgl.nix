@@ -211,7 +211,7 @@ in
 
       makePackageWrapper =
         vendor: environment: pkg:
-        if builtins.isNull cfg.packages then
+        if isNull cfg.packages then
           pkg
         else
           # Wrap the package's binaries with nixGL, while preserving the rest of

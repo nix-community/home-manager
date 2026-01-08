@@ -168,7 +168,7 @@ in
         packages = [ cfg.package ];
         sessionVariables = mkIf cfg.enableSessionVariables (
           {
-            MPD_PORT = builtins.toString cfg.network.port;
+            MPD_PORT = toString cfg.network.port;
           }
           // lib.optionalAttrs (cfg.network.listenAddress != "any") {
             MPD_HOST = cfg.network.listenAddress;

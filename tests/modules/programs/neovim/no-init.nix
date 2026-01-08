@@ -20,7 +20,7 @@
     # plugins without associated config should not trigger the creation of init.vim
     plugins = with pkgs.vimPlugins; [
       vim-fugitive
-      ({ plugin = vim-sensible; })
+      { plugin = vim-sensible; }
     ];
   };
   nmt.script = ''

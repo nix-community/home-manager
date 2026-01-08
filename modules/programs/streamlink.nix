@@ -23,9 +23,9 @@ let
           if (builtins.isBool value) then
             if value then name else ""
           else if (builtins.isList value) then
-            lib.concatStringsSep "\n" (builtins.map (item: "${name}=${builtins.toString item}") value)
+            lib.concatStringsSep "\n" (map (item: "${name}=${toString item}") value)
           else
-            "${name}=${builtins.toString value}"
+            "${name}=${toString value}"
         ) settings
       )
     );
