@@ -301,20 +301,13 @@ let
       let
         name = if isAttrs def && def.name != null then def.name else attrName;
         mods =
-          lib.cli.toGNUCommandLineShell
-            {
-              mkOption =
-                k: v:
-                if v == null then
-                  [ ]
-                else if k == "set-cursor" then
-                  [ "--${k}=${lib.generators.mkValueStringDefault { } v}" ]
-                else
-                  [
-                    "--${k}"
-                    (lib.generators.mkValueStringDefault { } v)
-                  ];
-            }
+          lib.cli.toCommandLineShell
+            (optionName: {
+              option = "--${optionName}";
+              sep = if optionName == "set-cursor" then "=" else null;
+              explicitBool = false;
+              formatArg = lib.generators.mkValueStringDefault { };
+            })
             {
               inherit (def)
                 position
