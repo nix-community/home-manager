@@ -40,6 +40,12 @@ let
         description = "The remote path to mount.";
       };
 
+      mountDestPath = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The path on the current machine where the remote path would be mounted.";
+      };
+
       authType = mkOption {
         type = types.enum [
           "password"
@@ -47,6 +53,7 @@ let
           "hostbased"
           "keyboard-interactive"
           "gssapi-with-mic"
+          "authentication-agent"
         ];
         default = "publickey";
         description = "The authentication method to use.";

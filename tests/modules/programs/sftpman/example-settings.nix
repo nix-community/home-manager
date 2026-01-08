@@ -23,6 +23,13 @@
         user = "user";
         sshKey = "/home/user/.ssh/id_rsa";
       };
+      mount4 = {
+        host = "host4.example.com";
+        mountPoint = "/another/path/somewhere/else";
+        user = "user";
+        authType = "authentication-agent";
+        mountDestPath = "/mnt/host4";
+      };
     };
   };
 
@@ -36,5 +43,8 @@
     assertFileContent \
       home-files/.config/sftpman/mounts/mount3.json \
       ${./expected-mount3.json}
+    assertFileContent \
+      home-files/.config/sftpman/mounts/mount4.json \
+      ${./expected-mount4.json}
   '';
 }
