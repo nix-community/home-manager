@@ -239,7 +239,7 @@ in
             configFullPath = config.xdg.configHome + "/${xdgConfigFilePath}";
           in
           "${cfg.package}/bin/${command} "
-          + lib.cli.toGNUCommandLineShell { } {
+          + lib.cli.toCommandLineShellGNU { } {
             v = cfg.enableVerboseLogging;
             c = configFullPath;
           };
