@@ -110,8 +110,7 @@ let
     in
     pkgs.buildPackages.nixosOptionsDoc (
       {
-        options =
-          if includeModuleSystemOptions then options else builtins.removeAttrs options [ "_module" ];
+        options = if includeModuleSystemOptions then options else removeAttrs options [ "_module" ];
         transformOptions =
           opt:
           opt
@@ -133,7 +132,7 @@ let
             ) opt.declarations;
           };
       }
-      // builtins.removeAttrs args [
+      // removeAttrs args [
         "modules"
         "includeModuleSystemOptions"
       ]

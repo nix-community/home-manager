@@ -517,7 +517,7 @@ in
                     else
                       { };
                   # Merge MCP servers: transformed servers + user servers, with user servers taking precedence
-                  mergedServers = transformedMcpServers // ((v.userMcp.servers or { }));
+                  mergedServers = transformedMcpServers // (v.userMcp.servers or { });
                   # Merge all MCP config
                   mergedMcpConfig =
                     v.userMcp // (lib.optionalAttrs (mergedServers != { }) { servers = mergedServers; });

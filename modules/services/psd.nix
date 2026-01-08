@@ -15,7 +15,7 @@ let
     ''}
 
     USE_BACKUP="${if cfg.useBackup then "yes" else "no"}"
-    BACKUP_LIMIT=${builtins.toString cfg.backupLimit}
+    BACKUP_LIMIT=${toString cfg.backupLimit}
   '';
 in
 {

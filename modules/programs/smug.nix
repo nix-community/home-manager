@@ -158,7 +158,7 @@ in
               prjConf =
                 lib.attrsets.mapAttrs' (
                   name: value:
-                  (lib.attrsets.nameValuePair (if name == "beforeStart" then "before_start" else name) (value))
+                  (lib.attrsets.nameValuePair (if name == "beforeStart" then "before_start" else name) value)
                 ) v
                 // {
                   session = k;
