@@ -13,12 +13,9 @@ let
     mergeDefinitions
     ;
   inherit (builtins)
-    map
     filter
     length
     deepSeq
-    throw
-    toString
     concatLists
     ;
   inherit (lib.options) showDefs;

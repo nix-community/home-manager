@@ -183,14 +183,12 @@ let
           3;
       "mail.smtpserver.smtp_${id}.username" = account.userName;
     }
-    // builtins.foldl' (a: b: a // b) { } (
-      builtins.map (address: toThunderbirdSMTP account address) addresses
-    )
+    // builtins.foldl' (a: b: a // b) { } (map (address: toThunderbirdSMTP account address) addresses)
     // optionalAttrs (account.smtp != null && account.primary) {
       "mail.smtp.defaultserver" = "smtp_${id}";
     }
     // builtins.foldl' (a: b: a // b) { } (
-      builtins.map (address: toThunderbirdIdentity account address) addresses
+      map (address: toThunderbirdIdentity account address) addresses
     )
     // account.thunderbird.settings id;
 

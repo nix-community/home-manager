@@ -6,9 +6,7 @@
 }:
 let
   inherit (builtins)
-    map
     toJSON
-    toString
     substring
     stringLength
     ;

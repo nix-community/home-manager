@@ -103,7 +103,7 @@ in
               StopWhenUnneeded = cfg.node.lazy.enable;
               ConditionPathExists = radicleKeyPair;
             };
-            Service = mkMerge ([
+            Service = mkMerge [
               {
                 Slice = "session.slice";
                 ExecStart = "${getExe' cfg.node.package "radicle-node"} ${cfg.node.args}";
@@ -182,7 +182,7 @@ in
                   "~@setuid"
                 ];
               }
-            ]);
+            ];
           };
         "radicle-node-proxy" = mkIf cfg.node.lazy.enable {
           Unit = {

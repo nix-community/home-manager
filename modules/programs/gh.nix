@@ -204,7 +204,7 @@ in
 
     xdg.dataFile."gh/extensions" = mkIf (cfg.extensions != [ ]) {
       source = pkgs.linkFarm "gh-extensions" (
-        builtins.map (p: {
+        map (p: {
           name = p.pname;
           path = "${p}/bin";
         }) cfg.extensions

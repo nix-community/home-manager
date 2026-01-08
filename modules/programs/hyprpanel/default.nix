@@ -70,7 +70,7 @@ in
           "mako"
         ];
       in
-      builtins.map (name: {
+      map (name: {
         assertion = !config.services.${name}.enable;
         message = ''
           Only one notification daemon can be enabled at once. You have enabled

@@ -27,7 +27,7 @@ let
     else if builtins.isList v then
       "[${concatStringsSep ", " (map pythonize v)}]"
     else
-      builtins.toString v;
+      toString v;
 
   formatDictLine =
     o: n: v:

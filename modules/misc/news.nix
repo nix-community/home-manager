@@ -72,7 +72,7 @@ let
     fileList ++ subdirFiles;
 
   newsFiles = collectNixFiles ./news;
-  newsEntries = builtins.map (
+  newsEntries = map (
     newsFile:
     let
       imported = import newsFile;

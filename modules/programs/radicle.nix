@@ -168,7 +168,7 @@ in
       }
       {
         assertion = cfg.uri.web-rad.enable -> cfg.uri.web-rad.browser != null;
-        message = "Could not detect preferred browser. Please set `${builtins.toString opt.uri.web-rad.browser}`.";
+        message = "Could not detect preferred browser. Please set `${toString opt.uri.web-rad.browser}`.";
       }
       {
         assertion =

@@ -359,7 +359,7 @@ in
         ) cfg.submaps;
 
         submapWarnings = lib.mapAttrsToList (submapName: nonBinds: ''
-          wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${builtins.toString nonBinds}], which will have no effect in a submap
+          wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${toString nonBinds}], which will have no effect in a submap
         '') (lib.filterAttrs (n: v: v != [ ]) submapWarningsAttrset);
       in
       submapWarnings ++ lib.optional inconsistent warning;

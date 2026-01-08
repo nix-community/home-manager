@@ -103,7 +103,7 @@ in
         {
           name = path;
           value = {
-            source = jsonFormat.generate "config.json" (ctx);
+            source = jsonFormat.generate "config.json" ctx;
           };
         }
       ) cfg.contexts;

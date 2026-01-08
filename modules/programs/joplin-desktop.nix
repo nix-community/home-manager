@@ -139,7 +139,7 @@ in
         in
         lib.hm.dag.entryAfter [ "linkGeneration" ] ''
           # Ensure that settings.json exists.
-          mkdir -p ${builtins.dirOf configPath}
+          mkdir -p ${dirOf configPath}
           touch ${configPath}
           # Config has to be written to temporary variable because jq cannot edit files in place.
           config="$(jq -s '.[0] + .[1]' ${configPath} ${newConfig})"
