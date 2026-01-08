@@ -1282,7 +1282,10 @@ way. In Bash and Z shell this can be done by adding</p><pre><code class="program
 </code></pre><p>to your <code class="literal">.profile</code> and <code class="literal">.zshrc</code> files, respectively. The
 <code class="literal">hm-session-vars.sh</code> file should work in most Bourne-like shells. For
 fish shell, it is possible to source it using <a class="link" href="https://github.com/oh-my-fish/plugin-foreign-env"  target="_top">the foreign-env
-plugin</a></p><pre><code class="programlisting  bash">fenv source &quot;$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh&quot; &gt; /dev/null
+plugin</a> or using the builtin
+<a class="link" href="https://github.com/bouk/babelfish"  target="_top">babelfish</a>-translated variables:</p><pre><code class="programlisting  bash">fenv source &quot;$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh&quot; &gt; /dev/null
+# or
+source &quot;$HOME/.nix-profile/etc/profile.d/hm-session-vars.fish&quot;
 </code></pre>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="_how_to_set_up_a_configuration_for_multiple_users_machines" class="title" style="clear: both">How to set up a configuration for multiple users/machines?   </h2>  </div> </div></div><p>A typical way to prepare a repository of configurations for multiple
 logins and machines is to prepare one &quot;top-level&quot; file for each unique
