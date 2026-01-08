@@ -423,12 +423,6 @@
     github = "natecox";
     githubId = 2782695;
   };
-  nickthegroot = {
-    name = "Nick DeGroot";
-    email = "nick@nickthegroot.com";
-    github = "nickthegroot";
-    githubId = 1966472;
-  };
   nikp123 = {
     name = "nikp123";
     email = "nikp123@users.noreply.github.com";
