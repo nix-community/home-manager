@@ -129,7 +129,7 @@ in
           enable = lib.mkDefault true;
           iniContent =
             let
-              difftCommand = "${lib.getExe cfg.package} ${lib.cli.toGNUCommandLineShell { } cfg.options}";
+              difftCommand = "${lib.getExe cfg.package} ${lib.cli.toCommandLineShellGNU { } cfg.options}";
             in
             mkMerge [
               {
