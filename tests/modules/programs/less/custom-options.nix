@@ -15,7 +15,7 @@
     assertFileExists home-files/.config/lesskey
     assertFileContent home-files/.config/lesskey ${builtins.toFile "lesskey.expected" ''
       #env
-      LESS = --RAW-CONTROL-CHARS --quiet --wheel-lines 3 --wheel-lines 1
+      LESS = --RAW-CONTROL-CHARS --quiet --wheel-lines=3 --wheel-lines=1
     ''}
   '';
 }
