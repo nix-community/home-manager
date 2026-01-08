@@ -117,7 +117,7 @@ in
         args = lib.lists.forEach cfg.wallpapers (
           each:
           lib.concatStringsSep " " (
-            lib.cli.toGNUCommandLine { } {
+            lib.cli.toCommandLineGNU { } {
               screen-root = each.monitor;
               inherit (each) scaling fps;
               inherit (each.audio) silent;
@@ -125,9 +125,11 @@ in
               no-audio-processing = !each.audio.processing;
             }
             ++ each.extraOptions
+            ++ [
+              "--bg"
+              each.wallpaperId
+            ]
           )
-          # This has to be the last argument in each group
-          + " --bg ${each.wallpaperId}"
         );
       in
       {
