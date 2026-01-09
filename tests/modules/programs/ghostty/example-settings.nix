@@ -11,6 +11,9 @@
   };
 
   nmt.script = ''
+    servicePath=home-files/.config/systemd/user/app-com.mitchellh.ghostty.service
+    assertPathNotExists $servicePath
+
     assertFileContent \
       home-files/.config/ghostty/config \
       ${./example-config-expected}

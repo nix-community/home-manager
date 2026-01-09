@@ -24,7 +24,7 @@
     assertFileExists home-files/.config/lesskey
     assertFileContent home-files/.config/lesskey ${builtins.toFile "lesskey.expected" ''
       #env
-      LESS = --quiet --use-color --color HkK --color Mkb --prompt s%f
+      LESS = --quiet --use-color --color=HkK --color=Mkb --prompt=s%f
     ''}
   '';
 }

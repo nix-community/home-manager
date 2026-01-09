@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2025-11-30 14:00+0000\n"
+"PO-Revision-Date: 2026-01-07 17:01+0000\n"
 "Last-Translator: Brian E <brianellingsgaard9@gmail.com>\n"
 "Language-Team: Faroese <https://hosted.weblate.org/projects/home-manager/cli/"
 "fo/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -41,10 +41,12 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"At hava Heimvørðurin %s í %s er fyrnast,\n"
+"vinarliga flyt hann til %s"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
-msgstr ""
+msgstr "Eingin samansetingsfíla funni. Vinarliga stovna ein hjá %s"
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."

@@ -126,14 +126,22 @@ in
     };
 
     commands = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
       default = { };
       description = ''
         Custom commands for opencode.
-        The attribute name becomes the command filename, and the value is either:
-        - Inline content as a string
-        - A path to a file containing the command content
-        Commands are stored in {file}`$XDG_CONFIG_HOME/opencode/command/` directory.
+
+        This option can either be:
+        - An attribute set defining commands
+        - A path to a directory containing multiple command files
+
+        If an attribute set is used, the attribute name becomes the command filename,
+        and the value is either:
+        - Inline content as a string (creates `opencode/command/<name>.md`)
+        - A path to a file (creates `opencode/command/<name>.md`)
+
+        If a path is used, it is expected to contain command files.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/command/`.
       '';
       example = lib.literalExpression ''
         {
@@ -155,14 +163,22 @@ in
     };
 
     agents = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
       default = { };
       description = ''
         Custom agents for opencode.
-        The attribute name becomes the agent filename, and the value is either:
-        - Inline content as a string
-        - A path to a file containing the agent content
-        Agents are stored in {file}`$XDG_CONFIG_HOME/opencode/agent/` directory.
+
+        This option can either be:
+        - An attribute set defining agents
+        - A path to a directory containing multiple agent files
+
+        If an attribute set is used, the attribute name becomes the agent filename,
+        and the value is either:
+        - Inline content as a string (creates `opencode/agent/<name>.md`)
+        - A path to a file (creates `opencode/agent/<name>.md`)
+
+        If a path is used, it is expected to contain agent files.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/agent/`.
       '';
       example = lib.literalExpression ''
         {
@@ -227,16 +243,68 @@ in
     };
 
     themes = mkOption {
-      type = lib.types.attrsOf (lib.types.either jsonFormat.type lib.types.path);
+      type = lib.types.either (lib.types.attrsOf (lib.types.either jsonFormat.type lib.types.path)) lib.types.path;
       default = { };
       description = ''
-        Custom themes for opencode. The attribute name becomes the theme
-        filename, and the value is either:
-        - An attribute set, that is converted to a json
-        - A path to a file containing the content
-        Themes are stored in {file}`$XDG_CONFIG_HOME/opencode/themes/` directory.
+        Custom themes for opencode.
+
+        This option can either be:
+        - An attribute set defining themes
+        - A path to a directory containing multiple theme files
+
+        If an attribute set is used, the attribute name becomes the theme filename,
+        and the value is either:
+        - An attribute set that is converted to a JSON file (creates `opencode/themes/<name>.json`)
+        - A path to a file (creates `opencode/themes/<name>.json`)
+
+        If a path is used, it is expected to contain theme files.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/themes/`.
+
         Set `programs.opencode.settings.theme` to enable the custom theme.
         See <https://opencode.ai/docs/themes/> for the documentation.
+      '';
+    };
+
+    tools = lib.mkOption {
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
+      default = { };
+      description = ''
+        Custom tools for opencode.
+
+        This option can either be:
+        - An attribute set defining tools
+        - A path to a directory containing multiple tool files
+
+        If an attribute set is used, the attribute name becomes the tool filename,
+        and the value is either:
+        - Inline content as a string (creates `opencode/tool/<name>.ts`)
+        - A path to a file (creates `opencode/tool/<name>.ts` or `opencode/tool/<name>.js`)
+
+        If a path is used, it is expected to contain tool files.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/tool/`.
+
+        See <https://opencode.ai/docs/tools/> for the documentation.
+      '';
+      example = lib.literalExpression ''
+        {
+          database-query = '''
+            import { tool } from "@opencode-ai/plugin"
+
+            export default tool({
+              description: "Query the project database",
+              args: {
+                query: tool.schema.string().describe("SQL query to execute"),
+              },
+              async execute(args) {
+                // Your database logic here
+                return `Executed query: ''${args.query}`
+              },
+            })
+          ''';
+
+          # Or reference an existing file
+          api-client = ./tools/api-client.ts;
+        }
       '';
     };
   };
@@ -244,8 +312,24 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
+        assertion = !lib.isPath cfg.commands || lib.pathIsDirectory cfg.commands;
+        message = "`programs.opencode.commands` must be a directory when set to a path";
+      }
+      {
+        assertion = !lib.isPath cfg.agents || lib.pathIsDirectory cfg.agents;
+        message = "`programs.opencode.agents` must be a directory when set to a path";
+      }
+      {
+        assertion = !lib.isPath cfg.tools || lib.pathIsDirectory cfg.tools;
+        message = "`programs.opencode.tools` must be a directory when set to a path";
+      }
+      {
         assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
         message = "`programs.opencode.skills` must be a directory when set to a path";
+      }
+      {
+        assertion = !lib.isPath cfg.themes || lib.pathIsDirectory cfg.themes;
+        message = "`programs.opencode.themes` must be a directory when set to a path";
       }
     ];
 
@@ -278,23 +362,55 @@ in
           })
       );
 
+      "opencode/command" = mkIf (lib.isPath cfg.commands) {
+        source = cfg.commands;
+        recursive = true;
+      };
+
+      "opencode/agent" = mkIf (lib.isPath cfg.agents) {
+        source = cfg.agents;
+        recursive = true;
+      };
+
+      "opencode/tool" = mkIf (lib.isPath cfg.tools) {
+        source = cfg.tools;
+        recursive = true;
+      };
+
       "opencode/skill" = mkIf (lib.isPath cfg.skills) {
         source = cfg.skills;
         recursive = true;
       };
+
+      "opencode/themes" = mkIf (lib.isPath cfg.themes) {
+        source = cfg.themes;
+        recursive = true;
+      };
     }
-    // lib.mapAttrs' (
-      name: content:
-      lib.nameValuePair "opencode/command/${name}.md" (
-        if lib.isPath content then { source = content; } else { text = content; }
-      )
-    ) cfg.commands
-    // lib.mapAttrs' (
-      name: content:
-      lib.nameValuePair "opencode/agent/${name}.md" (
-        if lib.isPath content then { source = content; } else { text = content; }
-      )
-    ) cfg.agents
+    // lib.optionalAttrs (builtins.isAttrs cfg.commands) (
+      lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair "opencode/command/${name}.md" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
+      ) cfg.commands
+    )
+    // lib.optionalAttrs (builtins.isAttrs cfg.agents) (
+      lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair "opencode/agent/${name}.md" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
+      ) cfg.agents
+    )
+    // lib.optionalAttrs (builtins.isAttrs cfg.tools) (
+      lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair "opencode/tool/${name}.ts" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
+      ) cfg.tools
+    )
     // lib.mapAttrs' (
       name: content:
       if lib.isPath content && lib.pathIsDirectory content then
@@ -307,23 +423,25 @@ in
           if lib.isPath content then { source = content; } else { text = content; }
         )
     ) (if builtins.isAttrs cfg.skills then cfg.skills else { })
-    // lib.mapAttrs' (
-      name: content:
-      lib.nameValuePair "opencode/themes/${name}.json" (
-        if lib.isPath content then
-          {
-            source = content;
-          }
-        else
-          {
-            source = jsonFormat.generate "opencode-${name}.json" (
-              {
-                "$schema" = "https://opencode.ai/theme.json";
-              }
-              // content
-            );
-          }
-      )
-    ) cfg.themes;
+    // lib.optionalAttrs (builtins.isAttrs cfg.themes) (
+      lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair "opencode/themes/${name}.json" (
+          if lib.isPath content then
+            {
+              source = content;
+            }
+          else
+            {
+              source = jsonFormat.generate "opencode-${name}.json" (
+                {
+                  "$schema" = "https://opencode.ai/theme.json";
+                }
+                // content
+              );
+            }
+        )
+      ) cfg.themes
+    );
   };
 }

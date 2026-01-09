@@ -166,10 +166,14 @@ in
     mkIf cfg.enable {
       home = {
         packages = [ cfg.package ];
-        sessionVariables = mkIf cfg.enableSessionVariables {
-          MPD_HOST = mkIf (cfg.network.listenAddress != "any") cfg.network.listenAddress;
-          MPD_PORT = builtins.toString cfg.network.port;
-        };
+        sessionVariables = mkIf cfg.enableSessionVariables (
+          {
+            MPD_PORT = toString cfg.network.port;
+          }
+          // lib.optionalAttrs (cfg.network.listenAddress != "any") {
+            MPD_HOST = cfg.network.listenAddress;
+          }
+        );
       };
 
       services.mpd = lib.mkMerge [
@@ -182,7 +186,7 @@ in
         })
       ];
 
-      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      systemd.user = {
         services.mpd = {
           Unit = lib.mkMerge [
             {
@@ -236,7 +240,7 @@ in
         };
       };
 
-      launchd.agents.mpd = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      launchd.agents.mpd = {
         enable = true;
         config = {
           ProgramArguments = [

@@ -135,7 +135,7 @@ let
   modes = map (mode: if isString mode then mode else "${mode.name}:${mode.path}") cfg.modes;
 in
 {
-  meta.maintainers = with lib.maintainers; [ ];
+  meta.maintainers = [ ];
 
   options.programs.rofi = {
     enable = lib.mkEnableOption "Rofi: A window switcher, application launcher and dmenu replacement";

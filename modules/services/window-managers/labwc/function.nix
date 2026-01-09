@@ -98,7 +98,7 @@ let
               attrName = builtins.substring 1 999 k; # Remove "@" prefix
               attrValue = value.${k};
             in
-            " ${attrName}=\"${escape (builtins.toString attrValue)}\""
+            " ${attrName}=\"${escape (toString attrValue)}\""
           ) attrKeys
         );
 
@@ -125,7 +125,7 @@ let
 
     # All other primitive values: wrap in start/end tag
     else
-      "<${name}>${escape (builtins.toString value)}</${name}>";
+      "<${name}>${escape (toString value)}</${name}>";
 
   generateXML = name: config: extraConfig: ''
     <?xml version="1.0" encoding="UTF-8"?>
@@ -139,7 +139,7 @@ let
           else if name == "labwc_config" then
             lib.mapAttrsToList generateRc
           else
-            builtins.throw "error ${name} is neither openbox_menu nor labwc_config"
+            throw "error ${name} is neither openbox_menu nor labwc_config"
         )
           config
       )

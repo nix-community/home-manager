@@ -83,56 +83,51 @@ in
     };
   };
 
-  config = lib.mkIf cfg.automatic (
-    lib.mkMerge [
-      (lib.mkIf pkgs.stdenv.isLinux {
-        systemd.user.services.nix-gc = {
-          Unit = {
-            Description = "Nix Garbage Collector";
-          };
-          Service = {
-            Type = "oneshot";
-            ExecStart = pkgs.writeShellScript "nix-gc" "exec ${nixPackage}/bin/nix-collect-garbage ${
-              lib.optionalString (cfg.options != null) cfg.options
-            }";
-          };
-        };
-        systemd.user.timers.nix-gc = {
-          Unit = {
-            Description = "Nix Garbage Collector";
-          };
-          Timer = {
-            OnCalendar = cfg.dates;
-            RandomizedDelaySec = cfg.randomizedDelaySec;
-            Persistent = cfg.persistent;
-            Unit = "nix-gc.service";
-          };
-          Install = {
-            WantedBy = [ "timers.target" ];
-          };
-        };
-      })
+  config = lib.mkIf cfg.automatic {
+    systemd.user.services.nix-gc = {
+      Unit = {
+        Description = "Nix Garbage Collector";
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "nix-gc" "exec ${nixPackage}/bin/nix-collect-garbage ${
+          lib.optionalString (cfg.options != null) cfg.options
+        }";
+      };
+    };
 
-      (lib.mkIf pkgs.stdenv.isDarwin {
-        assertions = [
-          {
-            assertion = (lib.length cfg.dates) == 1;
-            message = "On Darwin, `nix.gc.dates` must contain a single element.";
-          }
-          (lib.hm.darwin.assertInterval "nix.gc.dates.*" (lib.elemAt cfg.dates 0) pkgs)
-        ];
+    systemd.user.timers.nix-gc = {
+      Unit = {
+        Description = "Nix Garbage Collector";
+      };
+      Timer = {
+        OnCalendar = cfg.dates;
+        RandomizedDelaySec = cfg.randomizedDelaySec;
+        Persistent = cfg.persistent;
+        Unit = "nix-gc.service";
+      };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
+    };
 
-        launchd.agents.nix-gc = {
-          enable = true;
-          config = {
-            ProgramArguments = [
-              "${nixPackage}/bin/nix-collect-garbage"
-            ]
-            ++ lib.optional (cfg.options != null) cfg.options;
-            StartCalendarInterval = lib.hm.darwin.mkCalendarInterval (lib.elemAt cfg.dates 0);
-          };
-        };
-      })
-    ]
-  );
+    assertions = [
+      {
+        assertion = pkgs.stdenv.isDarwin -> (lib.length cfg.dates == 1);
+        message = "On Darwin, `nix.gc.dates` must contain a single element.";
+      }
+      (lib.hm.darwin.assertInterval "nix.gc.dates.*" (lib.elemAt cfg.dates 0) pkgs)
+    ];
+
+    launchd.agents.nix-gc = {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          "${nixPackage}/bin/nix-collect-garbage"
+        ]
+        ++ lib.optional (cfg.options != null) cfg.options;
+        StartCalendarInterval = lib.hm.darwin.mkCalendarInterval (lib.elemAt cfg.dates 0);
+      };
+    };
+  };
 }

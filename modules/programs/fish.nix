@@ -301,20 +301,13 @@ let
       let
         name = if isAttrs def && def.name != null then def.name else attrName;
         mods =
-          lib.cli.toGNUCommandLineShell
-            {
-              mkOption =
-                k: v:
-                if v == null then
-                  [ ]
-                else if k == "set-cursor" then
-                  [ "--${k}=${lib.generators.mkValueStringDefault { } v}" ]
-                else
-                  [
-                    "--${k}"
-                    (lib.generators.mkValueStringDefault { } v)
-                  ];
-            }
+          lib.cli.toCommandLineShell
+            (optionName: {
+              option = "--${optionName}";
+              sep = if optionName == "set-cursor" then "=" else null;
+              explicitBool = false;
+              formatArg = lib.generators.mkValueStringDefault { };
+            })
             {
               inherit (def)
                 position
@@ -395,12 +388,14 @@ let
       passAsFile = [ "text" ];
     } "env HOME=$(mktemp -d) fish_indent < $textPath > $out";
 
-  translatedSessionVariables = pkgs.runCommandLocal "hm-session-vars.fish" { } ''
+  sessionVarsFile = "etc/profile.d/hm-session-vars.fish";
+  sessionVarsPkg = pkgs.runCommandLocal "hm-session-vars.fish" { } ''
+    mkdir -p "$(dirname $out/${sessionVarsFile})"
     (echo "function setup_hm_session_vars;"
     ${pkgs.buildPackages.babelfish}/bin/babelfish \
-    <${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh
+      <${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh
     echo "end"
-    echo "setup_hm_session_vars") > $out
+    echo "setup_hm_session_vars") > $out/${sessionVarsFile}
   '';
 
 in
@@ -598,11 +593,25 @@ in
         <https://fishshell.com/docs/current/completions.html>.
       '';
     };
+
+    programs.fish.sessionVariablesPackage = mkOption {
+      type = types.package;
+      internal = true;
+      description = ''
+        The package containing the translated {file}`hm-session-vars.fish` file.
+      '';
+    };
   };
 
   config = mkIf cfg.enable (
     lib.mkMerge [
-      { home.packages = [ cfg.package ]; }
+      {
+        home.packages = [
+          cfg.package
+          cfg.sessionVariablesPackage
+        ];
+        programs.fish.sessionVariablesPackage = sessionVarsPkg;
+      }
 
       (mkIf cfg.generateCompletions (
         let
@@ -618,7 +627,7 @@ in
                   package
                 ]
                 ++ lib.filter (p: p != null) (
-                  builtins.map (outName: package.${outName} or null) config.home.extraOutputsToInstall
+                  map (outName: package.${outName} or null) config.home.extraOutputsToInstall
                 );
                 nativeBuildInputs = [ pkgs.python3 ];
                 buildInputs = [ cfg.package ];
@@ -715,7 +724,7 @@ in
           set -q __fish_home_manager_config_sourced; and exit
           set -g __fish_home_manager_config_sourced 1
 
-          source ${translatedSessionVariables}
+          source ${cfg.sessionVariablesPackage}/${sessionVarsFile}
 
           ${cfg.shellInit}
 

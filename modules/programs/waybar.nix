@@ -301,7 +301,7 @@ in
       {
         assertions = [
           (lib.hm.assertions.assertPlatform "programs.waybar" pkgs lib.platforms.linux)
-          ({
+          {
             assertion =
               if lib.versionAtLeast config.home.stateVersion "22.05" then
                 all (x: !hasAttr "modules" x || x.modules == null) settings
@@ -311,7 +311,7 @@ in
               The `programs.waybar.settings.[].modules` option has been removed.
               It is now possible to declare modules in the configuration without nesting them under the `modules` option.
             '';
-          })
+          }
         ];
 
         home.packages = [ cfg.package ];

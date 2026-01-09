@@ -341,16 +341,13 @@ in
         # See https://sw.kovidgoyal.net/kitty/conf.html
         ${cfg.extraConfig}
       '';
-    }
-    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-      onChange = ''
-        ${pkgs.procps}/bin/pkill -USR1 -u $USER kitty || true
-      '';
-    }
-    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-      onChange = ''
-        /usr/bin/pkill -USR1 -u $USER kitty || true
-      '';
+      onChange =
+        let
+          prefix = if pkgs.stdenv.hostPlatform.isDarwin then "/usr" else pkgs.procps;
+        in
+        ''
+          ${prefix}/bin/pkill -USR1 -u $USER kitty || true
+        '';
     };
 
     xdg.configFile."kitty/quick-access-terminal.conf" = mkIf (cfg.quickAccessTerminalConfig != { }) {

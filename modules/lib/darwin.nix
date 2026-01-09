@@ -63,12 +63,12 @@ let
   intervalsString = lib.concatStringsSep ", " intervals;
 
   assertInterval = option: interval: pkgs: {
-    assertion = (!pkgs.stdenv.isDarwin) || (lib.elem interval intervals);
-    message = "On Darwin ${option} must be one of: ${intervalsString}.";
+    assertion = pkgs.stdenv.isDarwin -> lib.elem interval intervals;
+    message = "On Darwin, ${option} must be one of: ${intervalsString}.";
   };
 
   intervalDocumentation = ''
-    On Darwin it must be one of: ${intervalsString}, which are implemented as defined in {manpage}`systemd.time(7)`.
+    On Darwin, it must be one of: ${intervalsString}, which are implemented as defined in {manpage}`systemd.time(7)`.
   '';
 in
 {

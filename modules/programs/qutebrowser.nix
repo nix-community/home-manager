@@ -27,7 +27,7 @@ let
     else if builtins.isList v then
       "[${concatStringsSep ", " (map pythonize v)}]"
     else
-      builtins.toString v;
+      toString v;
 
   formatDictLine =
     o: n: v:
@@ -336,22 +336,20 @@ in
       greasemonkeyDir = lib.optionals (
         cfg.greasemonkey != [ ]
       ) pkgs.linkFarmFromDrvs "greasemonkey-userscripts" cfg.greasemonkey;
+
+      configDir =
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          ".qutebrowser"
+        else
+          "${config.xdg.configHome}/qutebrowser";
     in
     mkIf cfg.enable {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      home.file.".qutebrowser/config.py" = mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      home.file."${configDir}/config.py" = {
         text = qutebrowserConfig;
-      };
-
-      home.file.".qutebrowser/quickmarks" =
-        mkIf (cfg.quickmarks != { } && pkgs.stdenv.hostPlatform.isDarwin)
-          {
-            text = quickmarksFile;
-          };
-
-      xdg.configFile."qutebrowser/config.py" = mkIf pkgs.stdenv.hostPlatform.isLinux {
-        text = qutebrowserConfig;
+      }
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
         onChange = ''
           hash="$(echo -n "$USER" | md5sum | cut -d' ' -f1)"
           socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/qutebrowser/ipc-$hash"
@@ -371,22 +369,12 @@ in
         '';
       };
 
-      xdg.configFile."qutebrowser/quickmarks" =
-        mkIf (cfg.quickmarks != { } && pkgs.stdenv.hostPlatform.isLinux)
-          {
-            text = quickmarksFile;
-          };
+      home.file."${configDir}/quickmarks" = mkIf (cfg.quickmarks != { }) {
+        text = quickmarksFile;
+      };
 
-      home.file.".qutebrowser/greasemonkey" =
-        mkIf (cfg.greasemonkey != [ ] && pkgs.stdenv.hostPlatform.isDarwin)
-          {
-            source = greasemonkeyDir;
-          };
-
-      xdg.configFile."qutebrowser/greasemonkey" =
-        mkIf (cfg.greasemonkey != [ ] && pkgs.stdenv.hostPlatform.isLinux)
-          {
-            source = greasemonkeyDir;
-          };
+      home.file."${configDir}/greasemonkey" = mkIf (cfg.greasemonkey != [ ]) {
+        source = greasemonkeyDir;
+      };
     };
 }

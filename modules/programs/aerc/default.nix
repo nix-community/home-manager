@@ -104,7 +104,7 @@ in
     };
 
     stylesets = mkOption {
-      type = with types; attrsOf (sectionsOrLines);
+      type = with types; attrsOf sectionsOrLines;
       default = { };
       example = literalExpression ''
         { default = { ui = { "tab.selected.reverse" = "toggle"; }; }; };

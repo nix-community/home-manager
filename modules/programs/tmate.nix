@@ -69,7 +69,7 @@ in
       let
         conf =
           optional (cfg.host != null) ''set -g tmate-server-host "${cfg.host}"''
-          ++ optional (cfg.port != null) "set -g tmate-server-port ${builtins.toString cfg.port}"
+          ++ optional (cfg.port != null) "set -g tmate-server-port ${toString cfg.port}"
           ++ optional (
             cfg.dsaFingerprint != null
           ) ''set -g tmate-server-ed25519-fingerprint "${cfg.dsaFingerprint}"''

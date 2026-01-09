@@ -278,7 +278,7 @@ in
                   else if builtins.isString value then
                     "<const>${value}</const>"
                   else
-                    throw ("expected bool or string but got ${builtins.typeOf value}: ${toString value}");
+                    throw "expected bool or string but got ${builtins.typeOf value}: ${toString value}";
               in
               ''
                 <match target="font">
@@ -338,7 +338,7 @@ in
 
     xdg.configFile = lib.mapAttrs' (
       name: config:
-      lib.nameValuePair "fontconfig/conf.d/${builtins.toString config.priority}-hm-${config.label}.conf" {
+      lib.nameValuePair "fontconfig/conf.d/${toString config.priority}-hm-${config.label}.conf" {
         inherit (config) enable text;
         source = lib.mkIf (config.source != null) config.source;
       }

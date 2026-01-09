@@ -471,7 +471,7 @@ in
 
     order = mkOption {
       type = with types; uniq (listOf str);
-      apply = builtins.map migrateEngineNameToIdV7;
+      apply = map migrateEngineNameToIdV7;
       default = [ ];
       example = [
         "ddg"

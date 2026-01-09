@@ -19,11 +19,11 @@ let
   valueToString =
     value:
     if builtins.isList value then
-      builtins.concatStringsSep "," (builtins.map valueToString value)
+      builtins.concatStringsSep "," (map valueToString value)
     else if builtins.isAttrs value then
       valueToString (lib.mapAttrsToList (key: val: "${valueToString key}=${valueToString val}") value)
     else
-      builtins.toString value;
+      toString value;
 
   modulesArgument = optionalString (cfg.modules != null) " -modules ${valueToString cfg.modules}";
 

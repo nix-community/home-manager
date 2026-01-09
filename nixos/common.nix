@@ -29,7 +29,7 @@ let
       lib = extendedLib;
       osConfig = config;
       osClass = _class;
-      modulesPath = builtins.toString ../modules;
+      modulesPath = toString ../modules;
     }
     // cfg.extraSpecialArgs;
 

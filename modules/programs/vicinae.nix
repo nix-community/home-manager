@@ -240,7 +240,7 @@ in
 
         dataFile =
           builtins.listToAttrs (
-            builtins.map (item: {
+            map (item: {
               name = "vicinae/extensions/${item.name}";
               value.source = item;
             }) cfg.extensions
@@ -263,7 +263,7 @@ in
         KillMode = "process";
         EnvironmentFile = lib.mkIf (!versionPost0_17) (
           pkgs.writeText "vicinae-env" ''
-            USE_LAYER_SHELL=${if cfg.useLayerShell then builtins.toString 1 else builtins.toString 0}
+            USE_LAYER_SHELL=${if cfg.useLayerShell then toString 1 else toString 0}
           ''
         );
       };

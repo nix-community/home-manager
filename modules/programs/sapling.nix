@@ -11,6 +11,9 @@ let
 
   iniFormat = pkgs.formats.ini { };
 
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Preferences" else config.xdg.configHome;
+
 in
 {
   meta.maintainers = [ lib.maintainers.pbar ];
@@ -55,32 +58,22 @@ in
       {
         home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-        programs.sapling.iniContent.ui = {
-          username = cfg.userName + " <" + cfg.userEmail + ">";
+        programs.sapling.iniContent = {
+          alias = mkIf (cfg.aliases != { }) cfg.aliases;
+          ui.username = cfg.userName + " <" + cfg.userEmail + ">";
+        };
+
+        home.file."${configDir}/sapling/sapling.conf" = mkIf (cfg.iniContent != { }) {
+          source = iniFormat.generate "sapling.conf" cfg.iniContent;
         };
       }
-
-      (mkIf (!pkgs.stdenv.isDarwin) {
-        xdg.configFile."sapling/sapling.conf".source = iniFormat.generate "sapling.conf" cfg.iniContent;
-      })
-      (mkIf (pkgs.stdenv.isDarwin) {
-        home.file."Library/Preferences/sapling/sapling.conf".source =
-          iniFormat.generate "sapling.conf" cfg.iniContent;
-      })
-
-      (mkIf (cfg.aliases != { }) {
-        programs.sapling.iniContent.alias = cfg.aliases;
-      })
 
       (mkIf (lib.isAttrs cfg.extraConfig) {
         programs.sapling.iniContent = cfg.extraConfig;
       })
 
-      (mkIf (lib.isString cfg.extraConfig && !pkgs.stdenv.isDarwin) {
-        xdg.configFile."sapling/sapling.conf".text = cfg.extraConfig;
-      })
-      (mkIf (lib.isString cfg.extraConfig && pkgs.stdenv.isDarwin) {
-        home.file."Library/Preferences/sapling/sapling.conf".text = cfg.extraConfig;
+      (mkIf (lib.isString cfg.extraConfig) {
+        home.file."${configDir}/sapling/sapling.conf".text = cfg.extraConfig;
       })
     ]
   );

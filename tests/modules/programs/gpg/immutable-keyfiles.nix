@@ -12,7 +12,7 @@
       {
         source = realPkgs.fetchurl {
           url = "https://keys.openpgp.org/pks/lookup?op=get&options=mr&search=0x44CF42371ADF842E12F116EAA9D3F98FCCF5460B";
-          hash = "sha256-bSluCZh6ijwppigk8iF2BwWKZgq1WDbIjyYQRK772dM=";
+          hash = "sha256-csrFDI6QSPfNN+adOPEAupAtspYNBCybFZExvVS+vRY=";
         };
         trust = 1; # "unknown"
       }

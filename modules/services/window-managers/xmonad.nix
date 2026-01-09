@@ -19,6 +19,15 @@ let
         self.xmonad-extras
       ];
   };
+  ghc-builder = cfg.haskellPackages.ghcWithPackages (
+    self:
+    [ self.xmonad ]
+    ++ (cfg.extraPackages self)
+    ++ lib.optionals cfg.enableContribAndExtras [
+      self.xmonad-contrib
+      self.xmonad-extras
+    ]
+  );
 
 in
 {
@@ -104,6 +113,21 @@ in
           contents of the files.
         '';
       };
+      buildScript = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        description = ''
+          Build script for your xmonad configuration.
+        '';
+        example = literalExpression ''
+          pkgs.writeText "build" '''
+            #!/bin/sh
+
+            # Enable -threaded
+            ghc --make xmonad.hs -threaded -i -ilib -fforce-recomp -main-is main -v0 -O2 -o "$1"
+          '''
+        '';
+      };
     };
   };
 
@@ -119,7 +143,12 @@ in
       xmonadBin = "${
         pkgs.runCommandLocal "xmonad-compile"
           {
-            nativeBuildInputs = [ xmonad ];
+            nativeBuildInputs = [
+              xmonad
+            ]
+            ++ lib.optional (cfg.buildScript != null) [
+              ghc-builder
+            ];
           }
           ''
             mkdir -p $out/bin
@@ -131,7 +160,9 @@ in
             mkdir -p "$XMONAD_CONFIG_DIR/lib" "$XMONAD_CACHE_DIR" "$XMONAD_DATA_DIR"
 
             cp ${cfg.config} xmonad-config/xmonad.hs
-
+            ${lib.optionalString (cfg.buildScript != null) ''
+              install -m 555 ${cfg.buildScript} xmonad-config/build
+            ''}
             declare -A libFiles
             libFiles=(${
               lib.concatStringsSep " " (lib.mapAttrsToList (name: value: "['${name}']='${value}'") cfg.libFiles)
