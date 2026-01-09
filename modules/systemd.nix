@@ -12,12 +12,14 @@ let
   inherit (lib)
     any
     attrValues
+    filterAttrs
     hm
     isBool
     literalExpression
+    mapAttrs
+    mkEnableOption
     mkIf
     mkMerge
-    mkEnableOption
     mkOption
     types
     ;
@@ -28,7 +30,7 @@ let
   mkPathSafeName = lib.replaceStrings [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
 
   removeIfEmpty =
-    attrs: names: lib.filterAttrs (name: value: !(builtins.elem name names) || value != "") attrs;
+    attrs: names: filterAttrs (name: value: !(builtins.elem name names) || value != "") attrs;
 
   toSystemdIni = lib.generators.toINI {
     listsAsDuplicateKeys = true;
@@ -46,29 +48,63 @@ let
       filename = "${name}.${style}";
       pathSafeName = mkPathSafeName filename;
 
+      # The actual unit content (or unit override content if a base is
+      # specified).
+      finalConfig =
+        let
+          # Filters out fields that are set to `null` or empty list. Also
+          # make sure the `Unit.X-Base` field is skipped.
+          shouldKeepField =
+            section: key: value:
+            value != null && value != [ ] && !(section == "Unit" && key == "X-Base");
+
+          # Filters out empty sections.
+          shouldKeepSection = _: value: value != { };
+
+          filteredFields = mapAttrs (section: filterAttrs (shouldKeepField section)) serviceCfg;
+          filteredSections = filterAttrs shouldKeepSection filteredFields;
+        in
+        filteredSections;
+
+      finalConfigIni = toSystemdIni finalConfig;
+
       # Needed because systemd derives unit names from the ultimate
       # link target.
-      source =
+      generatedSource =
         pkgs.writeTextFile {
           name = pathSafeName;
-          text = toSystemdIni (
-            lib.filterAttrs (_: v: v != { }) (
-              lib.mapAttrs (_: lib.filterAttrs (_: v: v != null && v != [ ])) serviceCfg
-            )
-          );
+          text = finalConfigIni;
           destination = "/${filename}";
         }
         + "/${filename}";
+
+      hasBaseSource = serviceCfg.Unit.X-Base != null;
+
+      source = if hasBaseSource then serviceCfg.Unit.X-Base else generatedSource;
 
       install = variant: target: {
         name = "systemd/user/${target}.${variant}/${filename}";
         value = { inherit source; };
       };
     in
-    lib.singleton {
-      name = "systemd/user/${filename}";
-      value = { inherit source; };
-    }
+    [
+      {
+        name = "systemd/user/${filename}";
+        value = { inherit source; };
+      }
+      # Produce the overrides file if the main unit file is produced by X-Base.
+      # Note, we always create an overrides file even if no overrides are
+      # present. This simplifies the implementation somewhat as we don't have to
+      # check whether the unit settings attribute set is empty. The check would
+      # force the attribute set which may cause infinite recursion if it
+      # contains references to `config`.
+      {
+        name = "systemd/user/${filename}.d/overrides.conf";
+        value = lib.mkIf hasBaseSource {
+          source = generatedSource;
+        };
+      }
+    ]
     ++ map (install "wants") (serviceCfg.Install.WantedBy or [ ])
     ++ map (install "requires") (serviceCfg.Install.RequiredBy or [ ]);
 
@@ -98,6 +134,53 @@ let
       imports = [
         {
           options.Unit = {
+            X-Base = mkOption {
+              type = types.nullOr types.path;
+              default = null;
+              example = literalExpression "\${pkgs.example}/share/systemd/user/example.service";
+              description = ''
+                ::: {.warning}
+                This is an experimental option, it may be removed or its
+                behavior changed at any time!
+                :::
+
+                Path to unit file that should be used as a base definition. This
+                unit file will be copied to the Nix store (if not already there)
+                and linked into the user's environment. Any other fields
+                specified for this unit will be placed in an overrides file.
+
+                The `Unit.X-Base` field is filtered out from when the output
+                files are generated.
+
+                The filename of the base unit file _must_ be the same as the
+                unit name. That is, if you specify a base file for
+                `systemd.user.services."foo"`, then the base file must be
+                `foo.service`.
+
+                As a specific example, consider the following configuration:
+
+                ``` nix
+                systemd.user.services.example = {
+                  Unit.X-Base = "''${pkgs.example}/share/systemd/user/example.service";
+                  Service.ExecStartPre = "''${pkgs.coreutils}/bin/sleep 1m"
+                };
+                ```
+
+                After activation the user will have two new managed files in
+                their home directory:
+
+                `.config/systemd/user/example.service`
+                :   This will point to the `X-Base` file.
+
+                `.config/systemd/user/example.service.d/overrides.conf`
+                :   This will contain the specified overrides, in this case
+                    ``` ini
+                    [Service]
+                    ExecStartPre=/nix/store/...-coreutils/bin/sleep 1m
+                    ```
+              '';
+            };
+
             Description = mkOption {
               type = types.nullOr types.str;
               default = null;
