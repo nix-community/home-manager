@@ -91,8 +91,17 @@ in
 
     configLocation = mkOption {
       type = types.path;
-      default = "${config.home.homeDirectory}/.gtkrc-2.0";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/.gtkrc-2.0"'';
+      default =
+        if config.home.preferXdgDirectories then
+          "${config.xdg.configHome}/gtk-2.0/gtkrc"
+        else
+          "${config.home.homeDirectory}/.gtkrc-2.0";
+      defaultText = literalExpression ''
+        if config.home.preferXdgDirectories then
+          "''${config.xdg.configHome}/gtk-2.0/gtkrc"
+        else
+          "''${config.home.homeDirectory}/.gtkrc-2.0";
+      '';
       example = literalExpression ''"''${config.xdg.configHome}/gtk-2.0/gtkrc"'';
       description = "The location of the GTK 2 configuration file.";
     };
