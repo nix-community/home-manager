@@ -22,7 +22,7 @@ Also make sure to read the guidelines found at
 - [ ] Change is backwards compatible.
 
 - [ ] Code formatted with `nix fmt` or
-      `nix-shell -p treefmt nixfmt deadnix keep-sorted --run treefmt`.
+      `nix-shell -p treefmt nixfmt deadnix keep-sorted nixf-diagnose --run treefmt`.
 
 - [ ] Code tested through `nix run .#tests -- test-all` or
       `nix-shell --pure tests -A run.all`.
