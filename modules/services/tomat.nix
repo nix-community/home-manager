@@ -57,17 +57,19 @@ in
     systemd.user.services.tomat = {
       Unit = {
         Description = "Tomat Pomodoro server";
-        After = [ "graphical.target" ];
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
       };
 
       Service = {
         ExecStart = "${lib.getExe cfg.package} daemon run";
         Restart = "always";
         RestartSec = 5;
+        Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = [ "graphical-session.target" ];
       };
     };
   };

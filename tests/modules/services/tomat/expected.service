@@ -1,11 +1,13 @@
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target
 
 [Service]
+Environment=PATH=/home/hm-user/.nix-profile/bin
 ExecStart=@tomat@/bin/tomat daemon run
 Restart=always
 RestartSec=5
 
 [Unit]
-After=graphical.target
+After=graphical-session.target
 Description=Tomat Pomodoro server
+PartOf=graphical-session.target
