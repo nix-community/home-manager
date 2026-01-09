@@ -192,25 +192,12 @@ in
       '';
     };
 
-    useXdgConfig = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to place the configuration file in the XDG config directory
-        ({file}`$XDG_CONFIG_HOME/tig/config`) instead of the home directory
-        ({file}`~/.tigrc`).
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile."tig/config" = lib.mkIf (cfg.useXdgConfig && generatedConfig != "") {
-      text = generatedConfig;
-    };
-
-    home.file.".tigrc" = lib.mkIf (!cfg.useXdgConfig && generatedConfig != "") {
+    xdg.configFile."tig/config" = lib.mkIf (generatedConfig != "") {
       text = generatedConfig;
     };
   };
