@@ -203,7 +203,15 @@
         else if vType == "set" then
           convertAttrsToKDL name value
         else if vType == "list" then
-          convertListToKDL name value
+          if name == "_children" then
+            concatStringsSep "\n" (
+              map (lib.flip lib.pipe [
+                (mapAttrsToList convertAttributeToKDL)
+                (concatStringsSep "\n")
+              ]) value
+            )
+          else
+            convertListToKDL name value
         else
           throw ''
             Cannot convert type `(${typeOf value})` to KDL:
