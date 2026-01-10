@@ -16,21 +16,6 @@ in
 {
   meta.maintainers = with lib.maintainers; [ matthiasbeyer ];
 
-  imports = [
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diffnav" "enable" ]
-      [ "programs" "diffnav" "enable" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diffnav" "package" ]
-      [ "programs" "diffnav" "package" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diffnav" "options" ]
-      [ "programs" "diffnav" "options" ]
-    )
-  ];
-
   options.programs.diffnav = {
     enable = lib.mkEnableOption "diffnav, a git diff pager based on delta but with a file tree, à la GitHub";
 
