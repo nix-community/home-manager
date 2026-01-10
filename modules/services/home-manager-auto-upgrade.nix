@@ -56,11 +56,6 @@ let
         ''
           set -euo pipefail
 
-          if [[ -z "''${FLAKE_DIR:-}" ]]; then
-            echo "FLAKE_DIR is not set" >&2
-            exit 1
-          fi
-
           if [[ ! -f "$FLAKE_DIR/flake.nix" ]]; then
             echo "No flake.nix found in $FLAKE_DIR." >&2
             exit 1
