@@ -140,6 +140,7 @@ let
     "pls"
     "poetry"
     "powerline-go"
+    "proton-pass-cli"
     "pubs"
     "pyenv"
     "qcal"
