@@ -1,0 +1,12 @@
+[Install]
+WantedBy=timers.target
+
+[Timer]
+FixedRandomDelay=true
+OnCalendar=04:00
+Persistent=false
+RandomizedDelaySec=45 minutes
+Unit=update-flake-inputs.service
+
+[Unit]
+Description=Update Nix flake inputs
