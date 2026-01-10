@@ -19,7 +19,7 @@ let
       substitutions = [
         "--replace"
         "@name@"
-        cfg.wrappedPackageName
+        cfg.package.meta.mainProgram
       ];
     };
 

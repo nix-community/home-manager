@@ -21,7 +21,7 @@ in
     // {
       nmt.script = ''
         assertFileRegex \
-          home-path/bin/${cfg.wrappedPackageName} \
+          home-path/bin/${cfg.finalPackage.meta.mainProgram} \
           MOZ_APP_LAUNCHER
       '';
     }
