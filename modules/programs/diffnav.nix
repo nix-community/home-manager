@@ -21,18 +21,8 @@ in
 
     package = lib.mkPackageOption pkgs "diffnav" { };
 
-    options = mkOption {
-      type =
-        with types;
-        let
-          primitiveType = oneOf [
-            str
-            bool
-            int
-          ];
-          sectionType = attrsOf primitiveType;
-        in
-        attrsOf (either primitiveType sectionType);
+    settings = mkOption {
+      type = pkgs.formats.yaml;
 
       default = { };
 
@@ -45,6 +35,7 @@ in
           searchTreeWidth = 60;
         };
       };
+
       description = ''
         Options to configure diffnav.
       '';
