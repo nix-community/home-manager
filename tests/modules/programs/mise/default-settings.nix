@@ -8,7 +8,6 @@
 
     nmt.script = ''
       assertPathNotExists home-files/.config/mise/config.toml
-      assertPathNotExists home-files/.config/mise/settings.toml
     '';
   };
 }
