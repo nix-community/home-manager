@@ -50,33 +50,6 @@ in
         When enabled, diffnav will be configured as git's diff filter.
       '';
     };
-
-    finalPackage = mkOption {
-      type = types.package;
-      readOnly = true;
-      visible = false;
-      default =
-        let
-          configFile = pkgs.writeText "diffnav-config" (lib.generators.toYAML { diffnav = cfg.options; });
-          wrappedDiffnav = pkgs.symlinkJoin {
-            name = "diffnav-wrapped";
-            paths = [ cfg.package ];
-            nativeBuildInputs = [ pkgs.makeWrapper ];
-            postBuild = ''
-              wrapProgram $out/bin/diffnav \
-                --set "DIFFNAV_CONFIG_DIR" "$(pathname "${configFile}")"
-            '';
-            inherit (cfg.package) meta;
-          };
-        in
-        if cfg.options != { } then wrappedDiffnav else cfg.package;
-      description = ''
-        The diffnav package with configuration wrapper applied.
-
-        When options are configured, this is a wrapped version that passes the
-        configuration to diffnav. Otherwise, it's the unwrapped package.
-      '';
-    };
   };
 
   config =
@@ -87,7 +60,7 @@ in
     in
     lib.mkMerge [
       (lib.mkIf cfg.enable {
-        home.packages = [ cfg.finalPackage ];
+        home.packages = [ cfg.package ];
 
         programs.diffnav.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
       })
