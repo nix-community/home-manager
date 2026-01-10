@@ -62,7 +62,9 @@ in
       (lib.mkIf cfg.enable {
         home.packages = [ cfg.package ];
 
-        programs.diffnav.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
+        xdg.configFile."diffnav/config.yml".text = pkgs.writeText "diffnav-config" (
+          lib.generators.toYAML { diffnav = cfg.options; }
+        );
       })
 
       (lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
