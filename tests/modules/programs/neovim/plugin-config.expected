@@ -1,3 +1,6 @@
 vim.cmd [[source /nix/store/00000000000000000000000000000000-nvim-init-home-manager.vim]]
+-- user-associated plugin config {{{
 function HM_PLUGIN_LUA_CONFIG ()
 end
+
+-- }}}
