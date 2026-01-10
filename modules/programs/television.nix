@@ -86,6 +86,7 @@ in
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
@@ -113,6 +114,10 @@ in
     '';
     programs.fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
       source ${cfg.package}/share/television/completion.fish
+    '';
+    programs.nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration ''
+      mkdir ($nu.data-dir | path join "vendor/autoload")
+      ${lib.getExe cfg.package} init nu | save -f ($nu.data-dir | path join "vendor/autoload/tv.nu")
     '';
   };
 }
