@@ -48,6 +48,8 @@
     ];
   };
 
+  test.stubs.systemd.outPath = null;
+
   nmt.script = ''
     assertFileExists home-files/.config/pimsync/pimsync.conf
     assertFileContent home-files/.config/pimsync/pimsync.conf ${./basic.scfg}
