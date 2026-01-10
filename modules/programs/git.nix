@@ -345,7 +345,7 @@ in
                 ];
               in
               lib.count lib.id enabled <= 1;
-            message = "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' or 'programs.git.patdiff' can be set to true at the same time.";
+            message = "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' or 'programs.git.patdiff.enable' can be set to true at the same time.";
           }
         ];
 
