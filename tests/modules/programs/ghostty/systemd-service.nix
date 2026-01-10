@@ -45,8 +45,9 @@
     assertFileContent $(normalizeStorePaths $serviceOverridesPath) \
       ${builtins.toFile "ghostty-service-overrides" ''
         [Unit]
+        X-Reload-Triggers=/nix/store/00000000000000000000000000000000-ghostty-config
+        X-Reload-Triggers=/nix/store/00000000000000000000000000000000-ghostty-catppuccin-mocha-theme
         X-SwitchMethod=keep-old
-        X-Reload-Triggers=/nix/store/00000000000000000000000000000000-ghostty-config /nix/store/00000000000000000000000000000000-ghostty-catppuccin-mocha-theme
       ''}
 
     assertFileContent \
