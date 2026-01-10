@@ -295,7 +295,7 @@ in
 {
   meta.maintainers = [
     lib.maintainers.rycee
-    lib.hm.maintainers.aionescu
+    lib.maintainers.aionescu
   ];
 
   options = {
