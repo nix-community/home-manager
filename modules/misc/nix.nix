@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
   ...
 }:
@@ -21,6 +22,7 @@ let
     isList
     isString
     literalExpression
+    literalMD
     mapAttrsToList
     mkDefault
     mkEnableOption
@@ -41,7 +43,7 @@ let
 
   nixPath = concatStringsSep ":" cfg.nixPath;
 
-  useXdg = config.nix.enable && (config.nix.settings.use-xdg-base-directories or false);
+  inherit (config.nix) useXdg;
   defexprDir =
     if useXdg then
       "${config.xdg.stateHome}/nix/defexpr"
@@ -296,6 +298,30 @@ in
       '';
     };
 
+    assumeXdg = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether Home Manager should assume that Nix is configured to use XDG
+        base directories. Note that this doesn't change the behavior of Nix. To
+        do that, set nix.settings.use-xdg-base-directories instead. This option
+        is intended for settings in which use-xdg-base-directories is set
+        globally or nix.conf is unmanaged by Home Manager.
+      '';
+    };
+
+    useXdg = mkOption {
+      type = types.bool;
+      visible = false;
+      readOnly = true;
+      defaultText = literalMD ''
+        In descending priority:
+        * `true` if `nix.assumeXdg` is `true`
+        * `nix.settings.use-xdg-base-directories` if it is set and `nix.enable` is `true`
+        * `osConfig.nix.settings.use-xdg-base-directories` if it is set and `osConfig.nix.enable` is `true`
+      '';
+    };
+
     extraOptions = mkOption {
       type = types.lines;
       default = "";
@@ -326,39 +352,61 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    (mkIf (cfg.nixPath != [ ] && !cfg.keepOldNixPath) {
-      home.sessionVariables.NIX_PATH = "${nixPath}";
-    })
+  config = mkMerge [
+    {
+      nix.useXdg =
+        cfg.assumeXdg
+        ||
+          lib.foldr (cfg: next: if cfg.enable then cfg.settings.use-xdg-base-directories or next else next)
+            false
+            [
+              cfg
+              osConfig.nix or { enable = false; }
+            ];
 
-    (mkIf (cfg.nixPath != [ ] && cfg.keepOldNixPath) {
-      home.sessionVariables.NIX_PATH = "${nixPath}\${NIX_PATH:+:$NIX_PATH}";
-    })
-
-    (lib.mkIf (cfg.channels != { }) {
-      nix.nixPath = [ channelPath ];
-      home.file."${channelPath}".source = channelsDrv;
-    })
-
-    (mkIf (cfg.registry != { }) {
-      xdg.configFile."nix/registry.json".source = jsonFormat.generate "registry.json" {
-        version = cfg.registryVersion;
-        flakes = mapAttrsToList (n: v: { inherit (v) from to exact; }) cfg.registry;
-      };
-    })
-
-    (mkIf (cfg.settings != { } || cfg.extraOptions != "") {
       assertions = [
         {
-          assertion = cfg.package != null;
+          assertion = !(cfg.assumeXdg && cfg.enable && cfg.settings ? use-xdg-base-directories);
           message = ''
-            A corresponding Nix package must be specified via `nix.package` for generating
-            nix.conf.
+            `nix.assumeXdg` should not be set if `nix.settings.use-xdg-base-directories` is.
           '';
         }
       ];
+    }
+    (mkIf cfg.enable (mkMerge [
+      (mkIf (cfg.nixPath != [ ] && !cfg.keepOldNixPath) {
+        home.sessionVariables.NIX_PATH = "${nixPath}";
+      })
 
-      xdg.configFile."nix/nix.conf".source = nixConf;
-    })
-  ]);
+      (mkIf (cfg.nixPath != [ ] && cfg.keepOldNixPath) {
+        home.sessionVariables.NIX_PATH = "${nixPath}\${NIX_PATH:+:$NIX_PATH}";
+      })
+
+      (lib.mkIf (cfg.channels != { }) {
+        nix.nixPath = [ channelPath ];
+        home.file."${channelPath}".source = channelsDrv;
+      })
+
+      (mkIf (cfg.registry != { }) {
+        xdg.configFile."nix/registry.json".source = jsonFormat.generate "registry.json" {
+          version = cfg.registryVersion;
+          flakes = mapAttrsToList (n: v: { inherit (v) from to exact; }) cfg.registry;
+        };
+      })
+
+      (mkIf (cfg.settings != { } || cfg.extraOptions != "") {
+        assertions = [
+          {
+            assertion = cfg.package != null;
+            message = ''
+              A corresponding Nix package must be specified via `nix.package` for generating
+              nix.conf.
+            '';
+          }
+        ];
+
+        xdg.configFile."nix/nix.conf".source = nixConf;
+      })
+    ]))
+  ];
 }
