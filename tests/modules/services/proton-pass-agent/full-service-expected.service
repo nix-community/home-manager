@@ -1,0 +1,10 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@proton-pass-cli@/bin/pass-cli ssh-agent start --socket-path %t/proton-pass-agent/socket --share-id 123456789 --vault-name MySshKeyVault --refresh-interval 7200 --create-new-identities MySshKeyVault
+KeyringMode=shared
+
+[Unit]
+Description=Proton Pass SSH agent
+Documentation=https://protonpass.github.io/pass-cli/commands/ssh-agent/#ssh-agent-integration

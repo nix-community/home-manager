@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KeepAlive</key>
+	<dict>
+		<key>Crashed</key>
+		<true/>
+		<key>SuccessfulExit</key>
+		<false/>
+	</dict>
+	<key>Label</key>
+	<string>org.nix-community.home.proton-pass-agent</string>
+	<key>ProcessType</key>
+	<string>Background</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@bash-interactive@/bin/bash</string>
+		<string>-c</string>
+		<string>@proton-pass-cli@/bin/pass-cli ssh-agent start --socket-path $(@getconf-system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/proton-pass-agent/socket --share-id 123456789 --vault-name MySshKeyVault --refresh-interval 7200 --create-new-identities MySshKeyVault</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/home/hm-user/Library/Logs/Proton Pass CLI/ssh-agent-stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/home/hm-user/Library/Logs/Proton Pass CLI/ssh-agent-stdout.log</string>
+</dict>
+</plist>
