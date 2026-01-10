@@ -22,10 +22,10 @@ in
         '');
     in
     [
-      (lib.mkRemovedOptionModule [ "programs" "mise" "settings" ] ''
-        mise no longer supports the separate `settings.toml` file for settings.
-        Please define your settings with `programs.mise.globalConfig.settings`.
-      '')
+      (lib.mkRenamedOptionModule
+        [ "programs" "mise" "settings" ]
+        [ "programs" "mise" "globalConfig" "settings" ]
+      )
     ]
     ++ map mkRtxRemovedWarning [
       "enable"
