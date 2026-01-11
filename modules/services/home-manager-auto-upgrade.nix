@@ -138,8 +138,8 @@ in
         default = null;
         example = lib.literalExpression ''
           [
+            "''${pkgs.gitMinimal}/bin/git pull"
             "nix flake update"
-            "''${pkgs.git}/bin/git pull"
           ]
         '';
         description = ''
