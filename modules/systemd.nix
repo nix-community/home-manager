@@ -249,6 +249,20 @@ in
         '';
       };
 
+      packages = mkOption {
+        type = with types; listOf package;
+        default = [ ];
+        description = ''
+          Packages providing systemd user units.
+
+          This is the Home Manager equivalent of NixOS’s `systemd.packages`
+          option.
+
+          Files in {file}`«pkg»/share/systemd/user` will be included in the
+          user’s {file}`$XDG_DATA_HOME/systemd/user` directory.
+        '';
+      };
+
       services = mkOption {
         default = { };
         type = serviceType;
@@ -449,6 +463,15 @@ in
 
       settings
     ];
+
+    xdg.dataFile."systemd/user" = {
+      recursive = true;
+      source = pkgs.symlinkJoin {
+        name = "user-systemd-units";
+        paths = cfg.packages;
+        stripPrefix = "/share/systemd/user";
+      };
+    };
 
     # Run systemd service reload if user is logged in. If we're
     # running this from the NixOS module then XDG_RUNTIME_DIR is not
