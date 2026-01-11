@@ -1,3 +1,5 @@
+rootLevelChild 2
+rootLevelChild 1
 a 1
 argsAndProps 1 2 a=3
 b "string"
