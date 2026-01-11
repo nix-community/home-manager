@@ -35,11 +35,9 @@ let
     lib.concatStringsSep "\n" (
       [
         ''echo "Running pre-switch commands"''
+        "set -o xtrace"
       ]
-      ++ map (cmd: ''
-        echo "+ ${cmd}"
-        ${cmd}
-      '') preSwitchCommands
+      ++ preSwitchCommands
     )
   );
 
