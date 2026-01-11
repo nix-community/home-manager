@@ -42,6 +42,10 @@
       { child = [ 2 ]; }
       { child = [ 1 ]; }
     ];
+    _children = [
+      { rootLevelChild = [ 2 ]; }
+      { rootLevelChild = [ 1 ]; }
+    ];
     extraAttrs = {
       _args = [
         2
