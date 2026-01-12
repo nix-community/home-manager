@@ -61,7 +61,7 @@ in
 
       # https://github.com/kubecolor/kubecolor/pull/145
       configPathSuffix = lib.optionalString (
-        cfg.package.pname == "kubecolor" && lib.versionOlder (lib.getVersion cfg.package) "0.4"
+        cfg.package.pname == "kubecolor" && lib.versionAtLeast (lib.getVersion cfg.package) "0.4"
       ) "color.yaml";
 
     in
