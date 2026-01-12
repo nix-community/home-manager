@@ -24,12 +24,14 @@ in
   };
 
   config = {
-    xdg.dataFile."dbus-1/services" = {
-      recursive = true;
-      source = pkgs.symlinkJoin {
-        name = "user-dbus-services";
-        paths = cfg.packages;
-        stripPrefix = "/share/dbus-1/services";
+    xdg.dataFile = lib.mkIf (cfg.packages != [ ]) {
+      "dbus-1/services" = {
+        recursive = true;
+        source = pkgs.symlinkJoin {
+          name = "user-dbus-services";
+          paths = cfg.packages;
+          stripPrefix = "/share/dbus-1/services";
+        };
       };
     };
   };
