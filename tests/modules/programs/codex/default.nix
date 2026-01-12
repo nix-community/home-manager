@@ -6,4 +6,7 @@
   codex-custom-instructions = ./custom-instructions.nix;
   codex-custom-instructions-prefer-xdg-directories = ./custom-instructions-prefer-xdg-directories.nix;
   codex-empty-custom-instructions = ./empty-custom-instructions.nix;
+  codex-skills-inline = ./skills-inline.nix;
+  codex-skills-dir = ./skills-dir.nix;
+  codex-skills-conflict = ./skills-conflict.nix;
 }
