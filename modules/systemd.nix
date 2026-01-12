@@ -464,12 +464,14 @@ in
       settings
     ];
 
-    xdg.dataFile."systemd/user" = {
-      recursive = true;
-      source = pkgs.symlinkJoin {
-        name = "user-systemd-units";
-        paths = cfg.packages;
-        stripPrefix = "/share/systemd/user";
+    xdg.dataFile = lib.mkIf (cfg.packages != [ ]) {
+      "systemd/user" = {
+        recursive = true;
+        source = pkgs.symlinkJoin {
+          name = "user-systemd-units";
+          paths = cfg.packages;
+          stripPrefix = "/share/systemd/user";
+        };
       };
     };
 
