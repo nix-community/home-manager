@@ -1,8 +1,5 @@
-{ pkgs, config, ... }:
+{ config, ... }:
 
-let
-  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else ".config";
-in
 {
   programs.kubecolor = {
     enable = true;
@@ -13,6 +10,7 @@ in
   };
 
   nmt.script = ''
-    assertPathNotExists 'home-files/${configDir}/kube/color.yaml'
+    assertPathNotExists 'home-files/.kube/color.yaml'
+    assertPathNotExists 'home-files/.config/kubecolor.yaml'
   '';
 }
