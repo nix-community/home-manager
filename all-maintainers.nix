@@ -560,7 +560,7 @@
     github = "aionescu";
     githubId = 48064242;
     name = "Alex Ionescu";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   ajgon = {
     email = "igor@rzegocki.pl";
@@ -1079,6 +1079,13 @@
     matrix = "@eyjhb:eyjhb.dk";
     name = "eyJhb";
     source = "nixpkgs";
+  };
+  farberbrodsky = {
+    email = "misha@farberbrodsky.com";
+    github = "farberbrodsky";
+    githubId = 36243759;
+    name = "Michael Farber Brodsky";
+    source = "home-manager";
   };
   florpe = {
     email = "jens.krewald@gmail.com";
