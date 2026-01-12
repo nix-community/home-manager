@@ -62,6 +62,52 @@ in
         '''
       '';
     };
+
+    skills = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Custom skills for Codex.
+        The attribute name becomes the skill directory name, and the value is either:
+        - Inline content as a string (creates {file}`skills/<name>/SKILL.md`)
+        - A path to a file (creates {file}`skills/<name>/SKILL.md`)
+        - A path to a directory (creates {file}`skills/<name>/` with all files)
+      '';
+      example = lib.literalExpression ''
+        {
+          pdf-processing = '''
+            ---
+            name: pdf-processing
+            description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+            ---
+
+            # PDF Processing
+
+            ## Quick start
+
+            Use pdfplumber to extract text from PDFs:
+
+            ```python
+            import pdfplumber
+
+            with pdfplumber.open("document.pdf") as pdf:
+                text = pdf.pages[0].extract_text()
+            ```
+          ''';
+          data-analysis = ./skills/data-analysis;
+        }
+      '';
+    };
+
+    skillsDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing skill folders for Codex.
+        Skill folders from this directory will be symlinked to {file}`skills/`.
+      '';
+      example = lib.literalExpression "./skills";
+    };
   };
 
   config =
@@ -72,6 +118,13 @@ in
       configFileName = if isTomlConfig then "config.toml" else "config.yaml";
     in
     mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = !(cfg.skills != { } && cfg.skillsDir != null);
+          message = "Cannot specify both `programs.codex.skills` and `programs.codex.skillsDir`";
+        }
+      ];
+
       home = {
         packages = mkIf (cfg.package != null) [ cfg.package ];
         file = {
@@ -81,7 +134,23 @@ in
           "${configDir}/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
             text = cfg.custom-instructions;
           };
-        };
+          "${configDir}/skills" = lib.mkIf (cfg.skillsDir != null) {
+            source = cfg.skillsDir;
+            recursive = true;
+          };
+        }
+        // (lib.mapAttrs' (
+          name: content:
+          if lib.isPath content && lib.pathIsDirectory content then
+            lib.nameValuePair "${configDir}/skills/${name}" {
+              source = content;
+              recursive = true;
+            }
+          else
+            lib.nameValuePair "${configDir}/skills/${name}/SKILL.md" (
+              if lib.isPath content then { source = content; } else { text = content; }
+            )
+        ) cfg.skills);
         sessionVariables = mkIf useXdgDirectories {
           CODEX_HOME = "${config.xdg.configHome}/codex";
         };
