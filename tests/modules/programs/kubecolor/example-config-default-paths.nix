@@ -1,8 +1,5 @@
-{ pkgs, config, ... }:
+{ config, ... }:
 
-let
-  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support/kube" else ".kube";
-in
 {
   programs.kubecolor = {
     enable = true;
@@ -20,8 +17,8 @@ in
   };
 
   nmt.script = ''
-    assertFileExists 'home-files/${configDir}/color.yaml'
-    assertFileContent 'home-files/${configDir}/color.yaml' \
+    assertFileExists 'home-files/.kube/color.yaml'
+    assertFileContent 'home-files/.kube/color.yaml' \
       ${builtins.toFile "expected.yaml" ''
         kubectl: kubectl
         objFreshThreshold: 0
