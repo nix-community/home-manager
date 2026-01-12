@@ -49,20 +49,9 @@ in
 
   config =
     let
-      preferXdgDirectories =
-        config.home.preferXdgDirectories && (!pkgs.stdenv.hostPlatform.isDarwin || config.xdg.enable);
-      configDir =
-        if preferXdgDirectories then
-          "${config.xdg.configHome}/kube"
-        else if pkgs.stdenv.hostPlatform.isDarwin then
-          "Library/Application Support/kube"
-        else
-          ".kube";
-
-      # https://github.com/kubecolor/kubecolor/pull/145
-      configPathSuffix = lib.optionalString (
-        cfg.package.pname == "kubecolor" && lib.versionOlder (lib.getVersion cfg.package) "0.4"
-      ) "color.yaml";
+      preferXdgDirectories = config.home.preferXdgDirectories && config.xdg.enable;
+      configFile =
+        if preferXdgDirectories then "${config.xdg.configHome}/kubecolor.yaml" else ".kube/color.yaml";
 
     in
     mkIf cfg.enable {
@@ -74,9 +63,11 @@ in
 
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      home.sessionVariables.KUBECOLOR_CONFIG = "${configDir}/${configPathSuffix}";
+      home.sessionVariables = lib.mkIf preferXdgDirectories {
+        KUBECOLOR_CONFIG = configFile;
+      };
 
-      home.file."${configDir}/color.yaml" = mkIf (cfg.settings != { }) {
+      home.file.${configFile} = mkIf (cfg.settings != { }) {
         source = yamlFormat.generate "kubecolor-settings" cfg.settings;
       };
 
