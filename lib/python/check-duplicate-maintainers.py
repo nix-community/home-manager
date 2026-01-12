@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#! /usr/bin/env nix-shell
+#! nix-shell -i python3 -p python3
 """
 Check for duplicate maintainers between home-manager and nixpkgs
 
@@ -9,6 +10,7 @@ to identify duplicates that should be removed from home-manager.
 import json
 import subprocess
 import sys
+from pathlib import Path
 
 
 def main():
@@ -23,9 +25,19 @@ def main():
         if 'github' in data:
             hm_github_users.add(data['github'])
 
-    # Get nixpkgs maintainers
-    nixpkgs_result = subprocess.run(['nix', 'eval', 'nixpkgs#lib.maintainers', '--json'],
-                                   capture_output=True, text=True, check=True)
+    # Read nixpkgs revision from flake.lock to ensure consistency between local and CI
+    flake_lock_path = Path('flake.lock')
+    with open(flake_lock_path, 'r') as f:
+        flake_lock = json.load(f)
+        nixpkgs_rev = flake_lock['nodes']['nixpkgs']['locked']['rev']
+
+    print(f"📌 Using nixpkgs from flake.lock: {nixpkgs_rev[:7]}")
+
+    # Get nixpkgs maintainers from the locked revision
+    nixpkgs_result = subprocess.run(
+        ['nix', 'eval', f'github:NixOS/nixpkgs/{nixpkgs_rev}#lib.maintainers', '--json'],
+        capture_output=True, text=True, check=True
+    )
     nixpkgs_maintainers = json.loads(nixpkgs_result.stdout)
     nixpkgs_github_users = set()
     for name, data in nixpkgs_maintainers.items():
