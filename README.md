@@ -45,7 +45,7 @@ and gradually make it more elaborate as you learn.
 
 In some cases Home Manager cannot detect whether it will overwrite a previous
 manual configuration. For example, the Gnome Terminal module will write to your
-dconf store and cannot tell whether a configuration that it is about to be
+dconf store and cannot tell whether a configuration that is about to be
 overwritten was from a previous Home Manager generation or from manual
 configuration.
 
