@@ -537,7 +537,7 @@ in
           let
             template = (pkgs.formats.json { }).generate "obsidian.json" {
               vaults = builtins.listToAttrs (
-                builtins.map (vault: {
+                map (vault: {
                   name = builtins.substring 0 16 (builtins.hashString "md5" vault.target);
                   value = {
                     path = "${config.home.homeDirectory}/${vault.target}";
