@@ -88,7 +88,7 @@ in
     services.home-manager.autoUpgrade = {
       enable = lib.mkEnableOption ''
         the Home Manager upgrade service that periodically updates your Nix
-        configuration before running `home-manager switch`
+        configuration by running `home-manager switch`
       '';
 
       frequency = lib.mkOption {
