@@ -64,14 +64,23 @@ in
     };
 
     skills = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
       default = { };
       description = ''
         Custom skills for Codex.
-        The attribute name becomes the skill directory name, and the value is either:
+
+        This option can either be:
+        - An attribute set defining skills
+        - A path to a directory containing multiple skill folders
+
+        If an attribute set is used, the attribute name becomes the skill directory name,
+        and the value is either:
         - Inline content as a string (creates {file}`skills/<name>/SKILL.md`)
         - A path to a file (creates {file}`skills/<name>/SKILL.md`)
         - A path to a directory (creates {file}`skills/<name>/` with all files)
+
+        If a path is used, it is expected to contain one folder per skill name, each
+        containing a {file}`SKILL.md`. The directory is symlinked to {file}`skills/`.
       '';
       example = lib.literalExpression ''
         {
@@ -98,16 +107,6 @@ in
         }
       '';
     };
-
-    skillsDir = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = ''
-        Path to a directory containing skill folders for Codex.
-        Skill folders from this directory will be symlinked to {file}`skills/`.
-      '';
-      example = lib.literalExpression "./skills";
-    };
   };
 
   config =
@@ -120,8 +119,8 @@ in
     mkIf cfg.enable {
       assertions = [
         {
-          assertion = !(cfg.skills != { } && cfg.skillsDir != null);
-          message = "Cannot specify both `programs.codex.skills` and `programs.codex.skillsDir`";
+          assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
+          message = "`programs.codex.skills` must be a directory when set to a path";
         }
       ];
 
@@ -134,8 +133,8 @@ in
           "${configDir}/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
             text = cfg.custom-instructions;
           };
-          "${configDir}/skills" = lib.mkIf (cfg.skillsDir != null) {
-            source = cfg.skillsDir;
+          "${configDir}/skills" = lib.mkIf (lib.isPath cfg.skills) {
+            source = cfg.skills;
             recursive = true;
           };
         }
@@ -150,7 +149,7 @@ in
             lib.nameValuePair "${configDir}/skills/${name}/SKILL.md" (
               if lib.isPath content then { source = content; } else { text = content; }
             )
-        ) cfg.skills);
+        ) (if builtins.isAttrs cfg.skills then cfg.skills else { }));
         sessionVariables = mkIf useXdgDirectories {
           CODEX_HOME = "${config.xdg.configHome}/codex";
         };

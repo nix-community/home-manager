@@ -1,11 +1,12 @@
 {
   programs.codex = {
     enable = true;
-    skillsDir = ./skills-dir;
+    skills = ./skills-dir;
   };
 
   nmt.script = ''
     assertFileExists home-files/.codex/skills/skill-one/SKILL.md
-    assertFileRegex home-files/.codex/skills/skill-one/SKILL.md "Skill One"
+    assertFileContent home-files/.codex/skills/skill-one/SKILL.md \
+      ${./skills-dir/skill-one/SKILL.md}
   '';
 }
