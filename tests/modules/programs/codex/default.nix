@@ -8,5 +8,5 @@
   codex-empty-custom-instructions = ./empty-custom-instructions.nix;
   codex-skills-inline = ./skills-inline.nix;
   codex-skills-dir = ./skills-dir.nix;
-  codex-skills-conflict = ./skills-conflict.nix;
+  codex-skills-path-not-directory = ./skills-path-not-directory.nix;
 }
