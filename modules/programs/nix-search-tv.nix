@@ -55,6 +55,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.package != null || cfg.enableTelevisionIntegration;
+        message = "Cannot enable television integration when config.programs.nix-search-tv.package is null.";
+      }
+    ];
+
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."nix-search-tv/config.json" = lib.mkIf (cfg.settings != { }) {
@@ -75,12 +82,5 @@ in
         preview.command = ''${path} preview "{}"'';
       }
     );
-
-    assertions = [
-      {
-        assertion = cfg.package != null || cfg.enableTelevisionIntegration;
-        message = "Cannot enable television integration when config.programs.nix-search-tv.package is null.";
-      }
-    ];
   };
 }

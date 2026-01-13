@@ -114,10 +114,6 @@ in
           # Append to history file rather than replacing it.
           "histappend"
 
-          # check the window size after each command and, if
-          # necessary, update the values of LINES and COLUMNS.
-          "checkwinsize"
-
           # Extended globbing.
           "extglob"
           "globstar"
@@ -265,7 +261,7 @@ in
       );
 
       home.file.".profile".source = writeBashScript "profile" ''
-        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
 
         ${sessionVarsStr}
 

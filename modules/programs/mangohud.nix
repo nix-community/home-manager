@@ -41,6 +41,8 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [ zeratax ];
+
   options = {
     programs.mangohud = {
       enable = lib.mkEnableOption "Mangohud";
@@ -113,6 +115,4 @@ in
       n: v: lib.nameValuePair "MangoHud/${n}.conf" { text = renderSettings v; }
     ) cfg.settingsPerApplication;
   };
-
-  meta.maintainers = with lib.maintainers; [ zeratax ];
 }

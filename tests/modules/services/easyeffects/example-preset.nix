@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   services.easyeffects = {
     enable = true;
@@ -29,6 +27,6 @@
 
   nmt.script = ''
     assertFileContent \
-      home-files/.config/easyeffects/input/example-preset.json "${./example-preset.json}"
+      home-files/.local/share/easyeffects/input/example-preset.json "${./example-preset.json}"
   '';
 }

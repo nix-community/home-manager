@@ -1,11 +1,13 @@
 { pkgs, ... }:
 {
+  home.stateVersion = "26.05";
+
   gtk = {
     enable = true;
     font = {
       name = "Ubuntu";
       size = 12;
-      package = pkgs.ubuntu_font_family;
+      package = pkgs.ubuntu-classic;
     };
     theme = {
       name = "Adwaita-dark";
@@ -19,6 +21,7 @@
       name = "Adwaita";
       size = 24;
     };
+    colorScheme = "dark";
   };
 
   nmt.script = ''
@@ -36,9 +39,5 @@
     assertFileExists home-files/.config/gtk-4.0/settings.ini
     assertFileContent home-files/.config/gtk-4.0/settings.ini \
       ${./gtk-global-inheritance-gtk4-expected.ini}
-
-    # Check GTK4 CSS with theme import
-    assertFileExists home-files/.config/gtk-4.0/gtk.css
-    assertFileContent home-files/.config/gtk-4.0/gtk.css ${./gtk-global-inheritance-gtk4-css-expected.css}
   '';
 }

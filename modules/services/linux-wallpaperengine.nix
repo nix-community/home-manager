@@ -8,7 +8,6 @@ let
   inherit (lib) mkOption types;
 
   cfg = config.services.linux-wallpaperengine;
-
 in
 {
   meta.maintainers = [ lib.hm.maintainers.ckgxrg ];
@@ -105,10 +104,10 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.linux-wallpaperengine" pkgs lib.platforms.linux)
-      ({
+      {
         assertion = cfg.wallpapers != null;
         message = "linux-wallpaperengine: You must set at least one wallpaper";
-      })
+      }
     ];
 
     home.packages = [ cfg.package ];
@@ -118,17 +117,19 @@ in
         args = lib.lists.forEach cfg.wallpapers (
           each:
           lib.concatStringsSep " " (
-            lib.cli.toGNUCommandLine { } {
+            lib.cli.toCommandLineGNU { } {
               screen-root = each.monitor;
               inherit (each) scaling fps;
-              silent = each.audio.silent;
+              inherit (each.audio) silent;
               noautomute = !each.audio.automute;
               no-audio-processing = !each.audio.processing;
             }
             ++ each.extraOptions
+            ++ [
+              "--bg"
+              each.wallpaperId
+            ]
           )
-          # This has to be the last argument in each group
-          + " --bg ${each.wallpaperId}"
         );
       in
       {
@@ -138,11 +139,12 @@ in
           PartOf = [ "graphical-session.target" ];
         };
         Service = {
-          ExecStart =
-            lib.getExe cfg.package
-            + (lib.optionalString (cfg.assetsPath != null) " --assets-dir ${cfg.assetsPath} ")
-            + (lib.optionalString (cfg.clamping != null) "--clamping ${cfg.clamping} ")
-            + (lib.strings.concatStringsSep " " args);
+          ExecStart = lib.concatStringsSep " " (
+            [ (lib.getExe cfg.package) ]
+            ++ lib.optional (cfg.assetsPath != null) "--assets-dir ${cfg.assetsPath}"
+            ++ lib.optional (cfg.clamping != null) "--clamping ${cfg.clamping}"
+            ++ args
+          );
           Restart = "on-failure";
         };
         Install = {

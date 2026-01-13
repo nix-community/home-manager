@@ -38,6 +38,15 @@ let
         description = "The ${name} package to use.";
       };
 
+      finalPackage = mkOption {
+        inherit visible;
+        type = types.nullOr types.package;
+        readOnly = true;
+        description = ''
+          Resulting customized ${name} package
+        '';
+      };
+
       commandLineArgs = mkOption {
         inherit visible;
         type = types.listOf types.str;
@@ -211,16 +220,25 @@ let
       };
 
     in
+
     lib.mkIf cfg.enable {
-      home.packages = lib.mkIf (cfg.package != null) [
-        (
-          if cfg.commandLineArgs != [ ] then
-            cfg.package.override {
-              commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
-            }
-          else
-            cfg.package
-        )
+      assertions = [
+        {
+          assertion = !(cfg.package == null && cfg.commandLineArgs != [ ]);
+          message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
+        }
+      ];
+
+      programs.${browser}.finalPackage =
+        if cfg.commandLineArgs != [ ] then
+          cfg.package.override {
+            commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
+          }
+        else
+          cfg.package;
+
+      home.packages = lib.mkIf (cfg.finalPackage != null) [
+        cfg.finalPackage
       ];
       home.file = lib.optionalAttrs (!isProprietaryChrome) (
         lib.listToAttrs ((map extensionJson cfg.extensions) ++ (map dictionary cfg.dictionaries))
@@ -263,7 +281,7 @@ in
   ) supportedBrowsers;
 
   config = lib.mkMerge (
-    builtins.map (browser: browserConfig browser config.programs.${browser}) (
+    map (browser: browserConfig browser config.programs.${browser}) (
       builtins.attrNames supportedBrowsers
     )
   );

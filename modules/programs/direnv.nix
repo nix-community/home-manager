@@ -23,6 +23,12 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    rycee
+    shikanime
+  ];
+
   imports = [
     (mkRenamedOptionModule
       [
@@ -38,12 +44,6 @@ in
       "nix-direnv"
       "enableFlakes"
     ] "Flake support is now always enabled.")
-  ];
-
-  meta.maintainers = with lib.maintainers; [
-    khaneliman
-    rycee
-    shikanime
   ];
 
   options.programs.direnv = {
@@ -75,25 +75,7 @@ in
 
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
-    enableFishIntegration =
-      lib.hm.shell.mkFishIntegrationOption {
-        inherit config;
-        extraDescription = ''
-          Note, enabling the direnv module will always activate its functionality
-          for Fish since the direnv package automatically gets loaded in Fish.
-          If this is not the case try adding
-
-          ```nix
-          environment.pathsToLink = [ "/share/fish" ];
-          ```
-
-          to the system configuration.
-        '';
-      }
-      // {
-        default = true;
-        readOnly = true;
-      };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 

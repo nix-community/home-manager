@@ -9,7 +9,14 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [ lib.maintainers.perchun ];
+  meta.maintainers = [ lib.maintainers.PerchunPak ];
+
+  imports = [
+    (lib.mkRemovedOptionModule [ "programs" "hyprpanel" "dontAssertNotificationDaemons " ] ''
+      The hyprpanel never supported using it alongside other notification
+      daemons, so this option never truly worked.
+    '')
+  ];
 
   options.programs.hyprpanel = {
     enable = lib.mkEnableOption "HyprPanel";
@@ -52,33 +59,24 @@ in
     systemd.enable = lib.mkEnableOption "HyprPanel systemd integration" // {
       default = true;
     };
-
-    dontAssertNotificationDaemons = lib.mkOption {
-      default = true;
-      example = false;
-      description = ''
-        Whether to check for other notification daemons.
-
-        You might want to set this to false, because hyprpanel's notification
-        daemon is buggy and you may prefer something else.
-      '';
-      type = lib.types.bool;
-    };
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = cfg.dontAssertNotificationDaemons && !config.services.swaync.enable;
+    assertions =
+      let
+        notificationDaemons = [
+          "swaync"
+          "dunst"
+          "mako"
+        ];
+      in
+      map (name: {
+        assertion = !config.services.${name}.enable;
         message = ''
           Only one notification daemon can be enabled at once. You have enabled
-          swaync and hyprpanel at once.
-
-          If you dont want to use hyprpanel's notification daemon, set
-          `programs.hyprpanel.dontAssertNotificationDaemons` to true.
+          ${name} and hyprpanel.
         '';
-      }
-    ];
+      }) notificationDaemons;
 
     home.packages = [ cfg.package ];
 

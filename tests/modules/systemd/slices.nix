@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   systemd.user.slices.app-test = {
     Unit = {

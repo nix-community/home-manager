@@ -5,14 +5,17 @@
   ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf types;
 
   cfg = config.programs.lazygit;
 
   yamlFormat = pkgs.formats.yaml { };
 
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
-
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 in
 {
   meta.maintainers = [
@@ -49,21 +52,80 @@ in
         for supported values.
       '';
     };
+
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    shellWrapperName = lib.mkOption {
+      type = types.str;
+      default = "lg";
+      example = "lg";
+      description = ''
+        Name of the shell wrapper to be called.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."Library/Application Support/lazygit/config.yml" =
-      mkIf (cfg.settings != { } && (isDarwin && !config.xdg.enable))
-        {
-          source = yamlFormat.generate "lazygit-config" cfg.settings;
-        };
+    home.file."${configDir}/lazygit/config.yml" = {
+      enable = cfg.settings != { };
+      source = yamlFormat.generate "lazygit-config" cfg.settings;
+    };
 
-    xdg.configFile."lazygit/config.yml" =
-      mkIf (cfg.settings != { } && !(isDarwin && !config.xdg.enable))
-        {
-          source = yamlFormat.generate "lazygit-config" cfg.settings;
-        };
+    programs =
+      let
+        lazygitNewDirFilePath =
+          if config.home.preferXdgDirectories then
+            "${config.xdg.cacheHome}/lazygit/newdir"
+          else
+            "~/.lazygit/newdir";
+
+        bashIntegration = ''
+          ${cfg.shellWrapperName}() {
+              export LAZYGIT_NEW_DIR_FILE=${lazygitNewDirFilePath}
+              command lazygit "$@"
+              if [ -f $LAZYGIT_NEW_DIR_FILE ]; then
+                cd "$(cat $LAZYGIT_NEW_DIR_FILE)"
+                rm -f $LAZYGIT_NEW_DIR_FILE > /dev/null
+              fi
+          }
+        '';
+
+        fishIntegration = ''
+          set -x LAZYGIT_NEW_DIR_FILE ${lazygitNewDirFilePath}
+          command lazygit $argv
+          if test -f $LAZYGIT_NEW_DIR_FILE
+            cd (cat $LAZYGIT_NEW_DIR_FILE)
+            rm -f $LAZYGIT_NEW_DIR_FILE
+          end
+        '';
+
+        nushellIntegration = ''
+          def --env ${cfg.shellWrapperName} [...args] {
+            $env.LAZYGIT_NEW_DIR_FILE = "${lazygitNewDirFilePath}" | path expand
+            lazygit ...$args
+            if ($env.LAZYGIT_NEW_DIR_FILE | path exists) {
+              cd (open $env.LAZYGIT_NEW_DIR_FILE)
+              rm -f $env.LAZYGIT_NEW_DIR_FILE
+            }
+          }
+        '';
+      in
+      {
+        bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
+
+        zsh.initContent = mkIf cfg.enableZshIntegration bashIntegration;
+
+        fish.functions.${cfg.shellWrapperName} = mkIf cfg.enableFishIntegration fishIntegration;
+
+        nushell.extraConfig = mkIf cfg.enableNushellIntegration nushellIntegration;
+      };
   };
 }

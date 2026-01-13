@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  options,
   ...
 }:
 let
@@ -17,7 +18,6 @@ let
     ;
 
   cfg = config.programs.zsh;
-
   bindkeyCommands = {
     emacs = "bindkey -e";
     viins = "bindkey -v";
@@ -27,14 +27,13 @@ let
   inherit (import ./lib.nix { inherit config lib; }) homeDir dotDirAbs dotDirRel;
 in
 {
+  meta.maintainers = [ lib.maintainers.khaneliman ];
+
   imports = [
     ./plugins
     ./deprecated.nix
     ./history.nix
   ];
-
-  meta.maintainers = [ lib.maintainers.khaneliman ];
-
   options =
     let
       syntaxHighlightingModule = types.submodule {
@@ -102,9 +101,18 @@ in
         };
 
         dotDir = mkOption {
-          default = homeDir;
-          defaultText = "`config.home.homeDirectory`";
-          example = "`\${config.xdg.configHome}/zsh`";
+          default =
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "${config.xdg.configHome}/zsh"
+            else
+              homeDir;
+          defaultText = lib.literalExpression ''
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "''${config.xdg.configHome}/zsh"
+            else
+              config.home.homeDirectory
+          '';
+          example = literalExpression ''"''${config.xdg.configHome}/zsh"'';
           description = ''
             Directory where the zsh configuration and more should be located,
             relative to the users home directory. The default is the home
@@ -347,7 +355,7 @@ in
 
   config =
     let
-      envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
+      envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables { indent = "  "; };
       localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
 
       aliasesStr = concatStringsSep "\n" (
@@ -393,7 +401,24 @@ in
                   - config.xdg.dataHome (XDG data directory)
                   - config.xdg.cacheHome (XDG cache directory)
                 ''
-              ];
+              ]
+            ++
+              lib.optionals
+                (
+                  config.xdg.enable
+                  && !lib.versionAtLeast config.home.stateVersion "26.05"
+                  && options.programs.zsh.dotDir.highestPrio >= 1500
+                )
+                [
+                  ''
+                    The default value of `programs.zsh.dotDir` will change in future versions.
+                    You are currently using the legacy default (home directory) because `home.stateVersion` is less than "26.05".
+                    To silence this warning and lock in the current behavior, set:
+                      programs.zsh.dotDir = config.home.homeDirectory;
+                    To adopt the new behavior (XDG config directory), set:
+                      programs.zsh.dotDir = "''${config.xdg.configHome}/zsh";
+                  ''
+                ];
         }
 
         (mkIf (cfg.envExtra != "") {
@@ -414,7 +439,7 @@ in
 
         (mkIf (dotDirAbs != homeDir) {
           home.file."${dotDirRel}/.zshenv".text = ''
-            export ZDOTDIR=${dotDirAbs}
+            ${config.lib.zsh.export "ZDOTDIR" dotDirAbs}
           '';
 
           # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
@@ -422,7 +447,7 @@ in
           # already set correctly (by e.g. spawning a zsh inside a zsh), all env
           # vars still get exported
           home.file.".zshenv".text = ''
-            source ${dotDirAbs}/.zshenv
+            source ${lib.escapeShellArg "${dotDirAbs}/.zshenv"}
           '';
         })
 
@@ -438,7 +463,7 @@ in
         {
           home.file."${dotDirRel}/.zshenv".text = ''
             # Environment variables
-            . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+            . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
 
             # Only source this once
             if [[ -z "$__HM_ZSH_SESS_VARS_SOURCED" ]]; then
@@ -501,7 +526,12 @@ in
 
             (lib.mkIf (cfg.setOptions != [ ]) (
               mkOrder 950 ''
-                ${concatStringsSep "\n" (map (option: "setopt ${option}") cfg.setOptions)}
+                # Set shell options
+                ${lib.hm.zsh.define "set_opts" cfg.setOptions}
+                for opt in "''${set_opts[@]}"; do
+                  setopt "$opt"
+                done
+                unset opt set_opts
               ''
             ))
 

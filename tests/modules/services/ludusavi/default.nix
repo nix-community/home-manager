@@ -1,0 +1,1 @@
+{ ludusavi-settings = ./settings.nix; }

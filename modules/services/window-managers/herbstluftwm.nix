@@ -119,6 +119,24 @@ in
         {file}`$XDG_CONFIG_HOME/herbstluftwm/autostart`.
       '';
     };
+
+    enableAlias = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Set an alias for the {command}`herbstclient` command in the
+        {file}`autostart` script that only stores its arguments and executes
+        them all at once at the end of the {file}`autostart` script.
+
+        This reduces the amount of flickering you get while all options are
+        being applied and improves the performance.
+
+        On the other hand, this makes it more difficult to write bash functions
+        that call {command}`herbstclient`. You can work around this by calling
+        {command}`command herbstclient` in your functions to still get some of
+        the benefits of enabling this alias.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -131,11 +149,13 @@ in
     xsession.windowManager.command = "${cfg.package}/bin/herbstluftwm --locked";
 
     xdg.configFile."herbstluftwm/autostart".source = pkgs.writeShellScript "herbstluftwm-autostart" ''
-      shopt -s expand_aliases
+      ${lib.optionalString cfg.enableAlias ''
+        shopt -s expand_aliases
 
-      # shellcheck disable=SC2142
-      alias herbstclient='set -- "$@" ";"'
-      set --
+        # shellcheck disable=SC2142
+        alias herbstclient='set -- "$@" ";"'
+        set --
+      ''}
 
       herbstclient emit_hook reload
 
@@ -169,7 +189,9 @@ in
 
       herbstclient unlock
 
-      ${cfg.package}/bin/herbstclient chain ";" "$@"
+      ${lib.optionalString cfg.enableAlias ''
+        ${cfg.package}/bin/herbstclient chain ";" "$@"
+      ''}
     '';
   };
 }

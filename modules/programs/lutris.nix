@@ -12,19 +12,26 @@ let
     types
     optional
     optionalAttrs
+    optionalString
     nameValuePair
     mapAttrs'
+    filter
     filterAttrs
+    filterAttrsRecursive
     attrNames
     concatStringsSep
     toLower
+    recursiveUpdate
     listToAttrs
     getExe
     ;
   cfg = config.programs.lutris;
   settingsFormat = pkgs.formats.yaml { };
+  formatWineName = (package: toLower package.name);
 in
 {
+  meta.maintainers = [ lib.hm.maintainers.bikku ];
+
   options.programs.lutris = {
     enable = mkEnableOption "lutris.";
     package = lib.mkPackageOption pkgs "lutris" { };
@@ -46,6 +53,16 @@ in
       '';
       type = types.listOf types.package;
     };
+    defaultWinePackage = mkOption {
+      default = null;
+      example = "pkgs.proton-ge-bin";
+      description = ''
+        The wine/proton package to set as the default for lutris.
+        It must still be set under proton/winePackages.
+      '';
+      type = types.nullOr types.package;
+    };
+
     protonPackages = mkOption {
       default = [ ];
       example = "[ pkgs.proton-ge-bin ]";
@@ -87,6 +104,7 @@ in
               description = ''
                 The package to use for this runner, nix will try to find the executable for this package.
                 A more specific path can be set by using settings.runner.runner_executable instead.
+                Uncompatible with certain runners, such as wine.
               '';
               type = types.nullOr types.package;
             };
@@ -111,6 +129,7 @@ in
                           default = "";
                           description = ''
                             Specific option to point to a runner executable directly, don't set runner.package if you set this.
+                            Uncompatible with certain runners such as wine.
                           '';
                         };
                       };
@@ -133,7 +152,6 @@ in
       );
     };
   };
-  meta.maintainers = [ lib.hm.maintainers.bikku ];
   config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.lutris" pkgs lib.platforms.linux)
@@ -148,13 +166,23 @@ in
           ) cfg.runners
         );
       in
-      mkIf (redundantRunners != [ ]) [
-        ''
+      filter (e: e != "") [
+        (optionalString (redundantRunners != [ ]) ''
           Under programs.lutris.runners, the following lutris runners had both a
           <runner>.package and <runner>.settings.runner.runner_executable options set:
             - ${concatStringsSep ", " redundantRunners}
           Note that runner_executable overrides package, setting both is pointless.
-        ''
+        '')
+        (optionalString ((cfg.runners.wine.package or null) != null) ''
+          Setting programs.lutris.runners.wine.package does nothing.
+          Use the respective options, proton/winePackages and defaultWinePackage.
+        '')
+        (optionalString ((cfg ? runners.wine.settings.runner.version) && (cfg.defaultWinePackage != null))
+          ''
+            Found conflicting options under programs.lutris, both runners.wine.settings.version and defaultWinePackage
+            were set.
+          ''
+        )
       ];
     home.packages =
       let
@@ -170,27 +198,34 @@ in
       let
         buildRunnerConfig = (
           runner_name: runner_config:
-          {
+          # Remove the unset values so they don't end up on the final config.
+          filterAttrsRecursive (name: value: value != { } && value != null && value != "") {
             "${runner_name}" =
-              (optionalAttrs (runner_config.settings.runner != { }) runner_config.settings.runner)
-              // (optionalAttrs
-                (runner_config.package != null && runner_config.settings.runner.runner_executable == "")
-                {
-                  runner_executable = getExe runner_config.package;
-                }
-              );
-          }
-          // optionalAttrs (runner_config.settings.system != { }) {
-            system = runner_config.settings.system;
+              runner_config.settings.runner
+              # If set translate .package to runner_executable
+              // (optionalAttrs (runner_config.package != null) {
+                runner_executable = getExe runner_config.package;
+              });
+            inherit (runner_config.settings) system;
           }
         );
+        # Extra default config for wine if defaultWinePackage was set
+        wine_extra = optionalAttrs (cfg.defaultWinePackage != null) {
+          wine = {
+            package = null;
+            settings = {
+              runner.version = formatWineName cfg.defaultWinePackage;
+              system = { };
+            };
+          };
+        };
       in
       mapAttrs' (
         runner_name: runner_config:
         nameValuePair "lutris/runners/${runner_name}.yml" {
           source = settingsFormat.generate "${runner_name}.yml" (buildRunnerConfig runner_name runner_config);
         }
-      ) cfg.runners;
+      ) (recursiveUpdate wine_extra cfg.runners);
 
     xdg.dataFile =
       let
@@ -199,7 +234,7 @@ in
           map (
             # lutris seems to not detect wine/proton if the name has some caps
             package:
-            (nameValuePair "lutris/runners/${type}/${toLower package.name}" {
+            (nameValuePair "lutris/runners/${type}/${formatWineName package}" {
               source = package;
             })
           ) packages;

@@ -7,6 +7,7 @@
 
 let
   cfg = config.services.snixembed;
+  waybarCfg = config.programs.waybar;
 in
 {
   meta.maintainers = [ lib.maintainers.DamienCassou ];
@@ -32,6 +33,10 @@ in
     assertions = [
       (lib.hm.assertions.assertPlatform "services.snixembed" pkgs lib.platforms.linux)
     ];
+    warnings = lib.optional waybarCfg.enable ''
+      snixembed and waybar should not be enabled at the same time.
+      You may experience inconsistent tray behavior as a result.
+    '';
 
     systemd.user.services.snixembed = {
       Install.WantedBy = [ "graphical-session.target" ];

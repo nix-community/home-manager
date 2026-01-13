@@ -1,7 +1,7 @@
 { pkgs, ... }:
 let
   # This would normally not be a file in the store for security reasons.
-  testPasswordFile = pkgs.writeText "test-password-file" "password";
+  testKeyFile = pkgs.writeText "test-key-file" "a-sync-key";
 in
 {
   programs.anki = {
@@ -37,7 +37,7 @@ in
       networkTimeout = 60;
       url = "http://example.com/anki-sync/";
       username = "lovelearning@email.com";
-      passwordFile = testPasswordFile;
+      keyFile = testKeyFile;
     };
   };
 

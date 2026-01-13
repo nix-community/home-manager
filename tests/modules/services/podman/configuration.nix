@@ -1,0 +1,80 @@
+{ pkgs, ... }:
+{
+  services.podman = {
+    enable = true;
+    settings = {
+      containers = {
+        network = {
+          default_subnet = "172.16.10.0/24";
+          default_subnet_pools = [
+            {
+              base = "172.16.11.0/24";
+              size = 24;
+            }
+            {
+              base = "172.16.12.0/24";
+              size = 24;
+            }
+          ];
+        };
+      };
+      storage = {
+        storage = {
+          runroot = "$HOME/.containers/runroot";
+          graphroot = "$HOME/.containers/graphroot";
+        };
+      };
+      registries = {
+        block = [
+          "ghcr.io"
+          "gallery.ecr.aws"
+        ];
+        insecure = [ "quay.io" ];
+        search = [ "docker.io" ];
+      };
+      policy = {
+        default = [ { type = "insecureAcceptAnything"; } ];
+      };
+      mounts = [ "/usr/share/secrets:/run/secrets" ];
+    };
+  };
+
+  nmt.script = ''
+    configPath=home-files/.config/containers
+    containersFile=$configPath/containers.conf
+    policyFile=$configPath/policy.json
+    registriesFile=$configPath/registries.conf
+    storageFile=$configPath/storage.conf
+    mountsFile=$configPath/mounts.conf
+
+    # Check that config files are generated on both platforms
+    assertFileExists $containersFile
+    assertFileExists $policyFile
+    assertFileExists $registriesFile
+    assertFileExists $storageFile
+    assertFileExists $mountsFile
+
+    containersFile=$(normalizeStorePaths $containersFile)
+    policyFile=$(normalizeStorePaths $policyFile)
+    registriesFile=$(normalizeStorePaths $registriesFile)
+    storageFile=$(normalizeStorePaths $storageFile)
+    mountsFile=$(normalizeStorePaths $mountsFile)
+
+    assertFileContent $containersFile ${./configuration-containers-expected.conf}
+    assertFileContent $policyFile ${./configuration-policy-expected.json}
+    assertFileContent $registriesFile ${./configuration-registries-expected.conf}
+    assertFileContent $storageFile ${./configuration-storage-expected.conf}
+    assertFileContent $mountsFile ${./configuration-mounts-expected.conf}
+
+    ${
+      if pkgs.stdenv.hostPlatform.isDarwin then
+        ''
+          # Darwin-specific: verify that config directory is automatically mounted into podman machines
+          assertFileExists activate
+          assertFileRegex activate '\$HOME/\.config/containers:/home/core/\.config/containers'
+        ''
+      else
+        ""
+    }
+  '';
+}

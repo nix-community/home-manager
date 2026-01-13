@@ -57,6 +57,7 @@
               nixfmt
               deadnix
               keep-sorted
+              nixf-diagnose
             ];
             settings = pkgs.lib.importTOML ./treefmt.toml;
           }
@@ -80,9 +81,7 @@
               ./modules/misc/news/create-news-entry.sh
             '';
 
-            tests = pkgs.writeShellScriptBin "tests" ''
-              exec ${pkgs.python3}/bin/python3 ${self}/tests/tests.py "$@"
-            '';
+            tests = pkgs.callPackage ./tests/package.nix { flake = self; };
 
             docs-html = docs.manual.html;
             docs-htmlOpenTool = docs.manual.htmlOpenTool;

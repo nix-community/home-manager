@@ -59,7 +59,7 @@ in
     theme = mkOption {
       type = types.nullOr themeType;
       default = null;
-      description = "Default theme for all GTK versions.";
+      description = "Default theme for GTK 2/3.";
     };
 
     iconTheme = mkOption {
@@ -72,6 +72,17 @@ in
       type = types.nullOr cursorThemeType;
       default = null;
       description = "Default cursor theme for all GTK versions.";
+    };
+
+    colorScheme = mkOption {
+      type = types.nullOr (
+        types.enum [
+          "dark"
+          "light"
+        ]
+      );
+      default = null;
+      description = "Default color scheme for all GTK versions";
     };
   };
 

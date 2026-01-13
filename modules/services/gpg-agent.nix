@@ -17,34 +17,37 @@ let
   cfg = config.services.gpg-agent;
   gpgPkg = config.programs.gpg.package;
 
-  homedir = config.programs.gpg.homedir;
+  inherit (config.programs.gpg) homedir;
 
-  gpgSshSupportStr = ''
-    ${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye > /dev/null
-  '';
+  gpgSshSupportStr = "${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye";
 
-  gpgInitStr = ''
+  gpgBashInitStr = ''
     GPG_TTY="$(tty)"
     export GPG_TTY
   ''
-  + optionalString cfg.enableSshSupport gpgSshSupportStr;
+  + optionalString cfg.enableSshSupport ''
+    ${gpgSshSupportStr} > /dev/null
+  '';
 
   gpgZshInitStr = ''
     export GPG_TTY=$TTY
   ''
-  + optionalString cfg.enableSshSupport gpgSshSupportStr;
+  + optionalString cfg.enableSshSupport ''
+    ${gpgSshSupportStr} > /dev/null
+  '';
 
   gpgFishInitStr = ''
     set -gx GPG_TTY (tty)
   ''
-  + optionalString cfg.enableSshSupport gpgSshSupportStr;
+  + optionalString cfg.enableSshSupport ''
+    ${gpgSshSupportStr} > /dev/null
+  '';
 
   gpgNushellInitStr = ''
     $env.GPG_TTY = (tty)
   ''
   + optionalString cfg.enableSshSupport ''
-    ${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye | ignore
-
+    ${gpgSshSupportStr} | ignore
     $env.SSH_AUTH_SOCK = ($env.SSH_AUTH_SOCK? | default (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket))
   '';
 
@@ -113,7 +116,7 @@ let
           }
         else
           {
-            ret = ret;
+            inherit ret;
             buf = buf';
             bufBits = bufBits';
           };
@@ -341,120 +344,115 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        # Grab the default binary name and fallback to expected value if `meta.mainProgram` not set
-        services.gpg-agent.pinentry.program = lib.mkOptionDefault (
-          cfg.pinentry.package.meta.mainProgram or "pinentry"
-        );
+  config = mkIf cfg.enable {
+    # Grab the default binary name and fallback to expected value if `meta.mainProgram` not set
+    services.gpg-agent.pinentry.program = lib.mkOptionDefault (
+      cfg.pinentry.package.meta.mainProgram or "pinentry"
+    );
 
-        home.file."${homedir}/gpg-agent.conf".text = lib.concatStringsSep "\n" (
-          optional (cfg.enableSshSupport) "enable-ssh-support"
-          ++ optional cfg.grabKeyboardAndMouse "grab"
-          ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
-          ++ optional (cfg.noAllowExternalCache) "no-allow-external-cache"
-          ++ optional (cfg.defaultCacheTtl != null) "default-cache-ttl ${toString cfg.defaultCacheTtl}"
-          ++ optional (
-            cfg.defaultCacheTtlSsh != null
-          ) "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
-          ++ optional (cfg.maxCacheTtl != null) "max-cache-ttl ${toString cfg.maxCacheTtl}"
-          ++ optional (cfg.maxCacheTtlSsh != null) "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
-          ++ optional (
-            cfg.pinentry.package != null
-          ) "pinentry-program ${lib.getExe' cfg.pinentry.package cfg.pinentry.program}"
-          ++ [ cfg.extraConfig ]
-        );
+    home.file."${homedir}/gpg-agent.conf".text = lib.concatStringsSep "\n" (
+      optional cfg.enableSshSupport "enable-ssh-support"
+      ++ optional cfg.grabKeyboardAndMouse "grab"
+      ++ optional (!cfg.enableScDaemon) "disable-scdaemon"
+      ++ optional cfg.noAllowExternalCache "no-allow-external-cache"
+      ++ optional (cfg.defaultCacheTtl != null) "default-cache-ttl ${toString cfg.defaultCacheTtl}"
+      ++ optional (
+        cfg.defaultCacheTtlSsh != null
+      ) "default-cache-ttl-ssh ${toString cfg.defaultCacheTtlSsh}"
+      ++ optional (cfg.maxCacheTtl != null) "max-cache-ttl ${toString cfg.maxCacheTtl}"
+      ++ optional (cfg.maxCacheTtlSsh != null) "max-cache-ttl-ssh ${toString cfg.maxCacheTtlSsh}"
+      ++ optional (
+        cfg.pinentry.package != null
+      ) "pinentry-program ${lib.getExe' cfg.pinentry.package cfg.pinentry.program}"
+      ++ [ cfg.extraConfig ]
+    );
 
-        home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
-          unset SSH_AGENT_PID
-          if [ -z "$SSH_CONNECTION" -o -z "$SSH_AUTH_SOCK" ] && [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-            export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
-          fi
-        '';
+    home.sessionVariablesExtra = optionalString cfg.enableSshSupport ''
+      unset SSH_AGENT_PID
+      if [ -z "$SSH_CONNECTION" -o -z "$SSH_AUTH_SOCK" ] && [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+        export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
+      fi
+    '';
 
-        programs.bash.initExtra = mkIf cfg.enableBashIntegration gpgInitStr;
-        programs.zsh.initContent = mkIf cfg.enableZshIntegration gpgZshInitStr;
-        programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration gpgFishInitStr;
+    programs = {
+      bash.initExtra = mkIf cfg.enableBashIntegration gpgBashInitStr;
+      zsh.initContent = mkIf cfg.enableZshIntegration gpgZshInitStr;
+      fish.interactiveShellInit = mkIf cfg.enableFishIntegration gpgFishInitStr;
+      nushell.extraConfig = mkIf cfg.enableNushellIntegration gpgNushellInitStr;
+    };
 
-        programs.nushell.extraEnv = mkIf cfg.enableNushellIntegration gpgNushellInitStr;
-      }
+    # Trailing newlines are important
+    home.file."${homedir}/sshcontrol" = mkIf (cfg.sshKeys != null) {
+      text = lib.concatMapStrings (s: ''
+        ${s}
+      '') cfg.sshKeys;
+    };
 
-      (mkIf (cfg.sshKeys != null) {
-        # Trailing newlines are important
-        home.file."${homedir}/sshcontrol".text = lib.concatMapStrings (s: ''
-          ${s}
-        '') cfg.sshKeys;
-      })
+    systemd.user = {
+      services.gpg-agent = {
+        Unit = {
+          Description = "GnuPG cryptographic agent and passphrase cache";
+          Documentation = "man:gpg-agent(1)";
+          Requires = "gpg-agent.socket";
+          After = "gpg-agent.socket";
+          # This is a socket-activated service:
+          RefuseManualStart = true;
+        };
 
-      (lib.mkMerge [
-        (mkIf pkgs.stdenv.isLinux {
-          systemd.user.services.gpg-agent = {
-            Unit = {
-              Description = "GnuPG cryptographic agent and passphrase cache";
-              Documentation = "man:gpg-agent(1)";
-              Requires = "gpg-agent.socket";
-              After = "gpg-agent.socket";
-              # This is a socket-activated service:
-              RefuseManualStart = true;
-            };
+        Service = {
+          ExecStart = "${gpgPkg}/bin/gpg-agent --supervised" + optionalString cfg.verbose " --verbose";
+          ExecReload = "${gpgPkg}/bin/gpgconf --reload gpg-agent";
+          Environment = [ "GNUPGHOME=${homedir}" ];
+        };
+      };
 
-            Service = {
-              ExecStart = "${gpgPkg}/bin/gpg-agent --supervised" + optionalString cfg.verbose " --verbose";
-              ExecReload = "${gpgPkg}/bin/gpgconf --reload gpg-agent";
-              Environment = [ "GNUPGHOME=${homedir}" ];
-            };
-          };
+      sockets = {
+        gpg-agent = mkSocket {
+          desc = "GnuPG cryptographic agent and passphrase cache";
+          docs = "man:gpg-agent(1)";
+          stream = "S.gpg-agent";
+          fdName = "std";
+        };
 
-          systemd.user.sockets.gpg-agent = mkSocket {
-            desc = "GnuPG cryptographic agent and passphrase cache";
-            docs = "man:gpg-agent(1)";
-            stream = "S.gpg-agent";
-            fdName = "std";
-          };
+        gpg-agent-ssh = mkIf cfg.enableSshSupport (mkSocket {
+          desc = "GnuPG cryptographic agent (ssh-agent emulation)";
+          docs = "man:gpg-agent(1) man:ssh-add(1) man:ssh-agent(1) man:ssh(1)";
+          stream = "S.gpg-agent.ssh";
+          fdName = "ssh";
+        });
 
-          systemd.user.sockets.gpg-agent-ssh = mkIf cfg.enableSshSupport (mkSocket {
-            desc = "GnuPG cryptographic agent (ssh-agent emulation)";
-            docs = "man:gpg-agent(1) man:ssh-add(1) man:ssh-agent(1) man:ssh(1)";
-            stream = "S.gpg-agent.ssh";
-            fdName = "ssh";
-          });
+        gpg-agent-extra = mkIf cfg.enableExtraSocket (mkSocket {
+          desc = "GnuPG cryptographic agent and passphrase cache (restricted)";
+          docs = "man:gpg-agent(1) man:ssh(1)";
+          stream = "S.gpg-agent.extra";
+          fdName = "extra";
+        });
+      };
+    };
 
-          systemd.user.sockets.gpg-agent-extra = mkIf cfg.enableExtraSocket (mkSocket {
-            desc = "GnuPG cryptographic agent and passphrase cache (restricted)";
-            docs = "man:gpg-agent(1) man:ssh(1)";
-            stream = "S.gpg-agent.extra";
-            fdName = "extra";
-          });
-        })
-
-        (mkIf pkgs.stdenv.isDarwin {
-          launchd.agents.gpg-agent = {
-            enable = true;
-            config = {
-              ProgramArguments = [
-                "${gpgPkg}/bin/gpg-agent"
-                "--supervised"
-              ]
-              ++ optional cfg.verbose "--verbose";
-              EnvironmentVariables = {
-                GNUPGHOME = homedir;
-              };
-              KeepAlive = {
-                Crashed = true;
-                SuccessfulExit = false;
-              };
-              ProcessType = "Background";
-              RunAtLoad = cfg.enableSshSupport;
-              Sockets = {
-                Agent = mkAgentSock "S.gpg-agent";
-                Ssh = mkIf cfg.enableSshSupport (mkAgentSock "S.gpg-agent.ssh");
-                Extra = mkIf cfg.enableExtraSocket (mkAgentSock "S.gpg-agent.extra");
-              };
-            };
-          };
-        })
-      ])
-    ]
-  );
+    launchd.agents.gpg-agent = {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          "${gpgPkg}/bin/gpg-agent"
+          "--supervised"
+        ]
+        ++ optional cfg.verbose "--verbose";
+        EnvironmentVariables = {
+          GNUPGHOME = homedir;
+        };
+        KeepAlive = {
+          Crashed = true;
+          SuccessfulExit = false;
+        };
+        ProcessType = "Background";
+        RunAtLoad = cfg.enableSshSupport;
+        Sockets = {
+          Agent = mkAgentSock "S.gpg-agent";
+          Ssh = mkIf cfg.enableSshSupport (mkAgentSock "S.gpg-agent.ssh");
+          Extra = mkIf cfg.enableExtraSocket (mkAgentSock "S.gpg-agent.extra");
+        };
+      };
+    };
+  };
 }

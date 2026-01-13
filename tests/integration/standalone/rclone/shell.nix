@@ -24,7 +24,7 @@ let
 
   '';
 
-  xdgRuntimeDir = "/run/user/${builtins.toString config.nodes.machine.users.users.alice.uid}";
+  xdgRuntimeDir = "/run/user/${toString config.nodes.machine.users.users.alice.uid}";
   httpHeadersSecret = pkgs.writeText "http-headers" "Cookie,secret_password=aliceiscool";
 
   shellVar = mkHttpModule "\\\${XDG_RUNTIME_DIR}/http-headers";

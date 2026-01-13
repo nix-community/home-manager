@@ -9,6 +9,9 @@ let
 
   cfg = config.programs.pistol;
 
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Preferences" else config.xdg.configHome;
+
   configFile = lib.concatStringsSep "\n" (
     map (
       {
@@ -42,6 +45,8 @@ let
   };
 in
 {
+  meta.maintainers = [ lib.maintainers.mtoohey ];
+
   imports = [
     (lib.mkRemovedOptionModule [
       "programs"
@@ -49,9 +54,6 @@ in
       "config"
     ] "Pistol is now configured with programs.pistol.associations.")
   ];
-
-  meta.maintainers = [ lib.maintainers.mtoohey ];
-
   options.programs.pistol = {
     enable = lib.mkEnableOption "file previewer for terminal file managers";
 
@@ -75,31 +77,23 @@ in
 
   };
 
-  config = mkIf cfg.enable (
-    lib.mkMerge [
+  config = mkIf cfg.enable {
+    assertions = [
       {
-        assertions = [
-          {
-            assertion = lib.all (
-              { fpath, mime, ... }: (fpath != "" && mime == "") || (fpath == "" && mime != "")
-            ) cfg.associations;
-            message = ''
-              Each entry in programs.pistol.associations must contain exactly one
-              of fpath or mime.
-            '';
-          }
-        ];
-
-        home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+        assertion = lib.all (
+          { fpath, mime, ... }: (fpath != "" && mime == "") || (fpath == "" && mime != "")
+        ) cfg.associations;
+        message = ''
+          Each entry in programs.pistol.associations must contain exactly one
+          of fpath or mime.
+        '';
       }
+    ];
 
-      (mkIf (cfg.associations != [ ] && pkgs.stdenv.hostPlatform.isDarwin) {
-        home.file."Library/Application Support/pistol/pistol.conf".text = configFile;
-      })
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      (mkIf (cfg.associations != [ ] && !pkgs.stdenv.hostPlatform.isDarwin) {
-        xdg.configFile."pistol/pistol.conf".text = configFile;
-      })
-    ]
-  );
+    home.file."${configDir}/pistol/pistol.conf" = mkIf (cfg.associations != [ ]) {
+      text = configFile;
+    };
+  };
 }

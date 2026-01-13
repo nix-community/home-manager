@@ -77,12 +77,17 @@ let
         ${v}
       '';
 
-  toConf = attrs: concatStringsSep "\n" (mkAttrsString true cfg.settings);
+  toConf = attrs: concatStringsSep "\n" (mkAttrsString true attrs);
 
-  configFile = toConf cfg.settings;
+  configFile = concatStringsSep "\n" [
+    (toConf cfg.settings)
+    cfg.extraConfig
+  ];
 
 in
 {
+  meta.maintainers = with lib.maintainers; [ thiagokokada ];
+
   imports = [
     (mkRemovedOptionModule [
       "services"
@@ -347,6 +352,24 @@ in
           CONFIGURATION FILES section at `picom(1)`.
         '';
       };
+
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      example = ''
+        animations = (
+          {
+          	triggers = [ "open", "show" ];
+          	preset = "slide-in";
+          	direction = "up";
+            duration = 0.2;
+          }
+        )
+      '';
+      description = ''
+        Extra configuration lines to append to the picom configuration file.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -410,6 +433,4 @@ in
       };
     };
   };
-
-  meta.maintainers = with lib.maintainers; [ thiagokokada ];
 }

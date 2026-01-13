@@ -108,8 +108,7 @@ in
     lib.test.mkStubPackage = mkStubPackage;
 
     test.stubOverlays =
-      [ ]
-      ++ lib.optional (config.test.stubs != { }) (
+      lib.optional (config.test.stubs != { }) (
         self: super:
         lib.mapAttrs (
           n: v:

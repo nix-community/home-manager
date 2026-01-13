@@ -1,14 +1,4 @@
-accordion-padding = 30
 after-login-command = []
-after-startup-command = []
-default-root-container-layout = "tiles"
-default-root-container-orientation = "auto"
-enable-normalization-flatten-containers = true
-enable-normalization-opposite-orientation-for-nested-containers = true
-exec-on-workspace-change = []
-on-focus-changed = []
-on-focused-monitor-changed = ["move-mouse monitor-lazy-center"]
-on-window-detected = []
 start-at-login = false
 
 [gaps.outer]
@@ -17,11 +7,26 @@ left = 8
 right = 8
 top = 8
 
-[key-mapping]
-preset = "qwerty"
-
 [mode.main.binding]
+alt-enter = "exec-and-forget osascript -e '\n           tell application \"Terminal\"\n               do script\n               activate\n           end tell'\n"
 alt-h = "focus left"
 alt-j = "focus down"
 alt-k = "focus up"
 alt-l = "focus right"
+
+[[on-window-detected]]
+run = "move-node-to-workspace 9"
+
+[on-window-detected.if]
+app-id = "com.apple.finder"
+
+[[on-window-detected]]
+check-further-callbacks = true
+run = ["layout floating", "move-node-to-workspace S"]
+
+[on-window-detected.if]
+app-id = "com.apple.systempreferences"
+app-name-regex-substring = "settings"
+during-aerospace-startup = true
+window-title-regex-substring = "substring"
+workspace = "workspace-name"

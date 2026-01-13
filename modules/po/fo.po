@@ -8,30 +8,32 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-01-07 17:01+0000\n"
+"Last-Translator: Brian E <brianellingsgaard9@gmail.com>\n"
+"Language-Team: Faroese <https://hosted.weblate.org/projects/home-manager/"
+"modules/fo/>\n"
 "Language: fo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: modules/files.nix:206
 msgid "Creating home file links in %s"
-msgstr ""
+msgstr "Stávni heimafílaleinkir innaní %s"
 
 #: modules/files.nix:219
 msgid "Cleaning up orphan links from %s"
-msgstr ""
+msgstr "Ruddi foreldraleys leinkir frá %s"
 
 #: modules/home-environment.nix:647
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "Stovni nýggjan profil ættarlið"
 
 #: modules/home-environment.nix:650
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Eingin broyting. Seinastið umhvarv ættarlið er enn í brúk"
 
 #: modules/home-environment.nix:699
 msgid ""

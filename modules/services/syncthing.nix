@@ -51,11 +51,11 @@ let
       devices = map (
         device:
         if builtins.isString device then
-          {
-            deviceId = cfg.settings.devices.${device}.id;
-          }
+          { deviceId = cfg.settings.devices.${device}.id; }
+        else if builtins.isAttrs device then
+          { deviceId = cfg.settings.devices.${device.name}.id; } // device
         else
-          device
+          throw "Invalid type for devices in folder '${folder.label}'; expected list or attrset."
       ) folder.devices;
     }
   ) (lib.filterAttrs (_: folder: folder.enable) cfg.settings.folders);
@@ -152,9 +152,79 @@ let
               # don't exist in the array given. That's why we use here `POST`, and
               # only if s.override == true then we DELETE the relevant folders
               # afterwards.
-              (map (new_cfg: ''
-                curl -d ${lib.escapeShellArg (builtins.toJSON new_cfg)} -X POST ${s.baseAddress}
-              ''))
+              (map (
+                new_cfg:
+                let
+                  jsonPreSecretsFile = pkgs.writeTextFile {
+                    name = "${conf_type}-${new_cfg.id}-conf-pre-secrets.json";
+                    text = builtins.toJSON new_cfg;
+                  };
+                  injectSecretsJqCmd =
+                    {
+                      # There are no secrets in `devs`, so no massaging needed.
+                      "devs" = "${jq} .";
+                      "dirs" =
+                        let
+                          folder = new_cfg;
+                          devicesWithSecrets = lib.pipe folder.devices [
+                            (lib.filter (device: (builtins.isAttrs device) && device ? encryptionPasswordFile))
+                            (map (device: {
+                              deviceId = device.deviceId;
+                              variableName = "secret_${builtins.hashString "sha256" device.encryptionPasswordFile}";
+                              secretPath = device.encryptionPasswordFile;
+                            }))
+                          ];
+                          # At this point, `jsonPreSecretsFile` looks something like this:
+                          #
+                          #   {
+                          #     ...,
+                          #     "devices": [
+                          #       {
+                          #         "deviceId": "id1",
+                          #         "encryptionPasswordFile": "/etc/bar-encryption-password",
+                          #         "name": "..."
+                          #       }
+                          #     ],
+                          #   }
+                          #
+                          # We now generate a `jq` command that can replace those
+                          # `encryptionPasswordFile`s with `encryptionPassword`.
+                          # The `jq` command ends up looking like this:
+                          #
+                          #   jq --rawfile secret_DEADBEEF /etc/bar-encryption-password '
+                          #     .devices[] |= (
+                          #       if .deviceId == "id1" then
+                          #         del(.encryptionPasswordFile) |
+                          #         .encryptionPassword = $secret_DEADBEEF
+                          #       else
+                          #         .
+                          #       end
+                          #     )
+                          #   '
+                          jqUpdates = map (device: ''
+                            .devices[] |= (
+                              if .deviceId == "${device.deviceId}" then
+                                del(.encryptionPasswordFile) |
+                                .encryptionPassword = ''$${device.variableName}
+                              else
+                                .
+                              end
+                            )
+                          '') devicesWithSecrets;
+                          jqRawFiles = map (
+                            device: "--rawfile ${device.variableName} ${lib.escapeShellArg device.secretPath}"
+                          ) devicesWithSecrets;
+                        in
+                        "${jq} ${lib.concatStringsSep " " jqRawFiles} ${
+                          lib.escapeShellArg (lib.concatStringsSep "|" ([ "." ] ++ jqUpdates))
+                        }";
+                    }
+                    .${conf_type};
+                in
+                ''
+                  ${injectSecretsJqCmd} ${jsonPreSecretsFile} | curl --json @- -X POST ${s.baseAddress}
+                ''
+              ))
               (lib.concatStringsSep "\n")
             ]
             /*
@@ -213,17 +283,20 @@ let
 
   defaultSyncthingArgs = [
     "${syncthing}"
-    "-no-browser"
-    "-no-restart"
-    "-no-upgrade"
-    "-gui-address=${if isUnixGui then "unix://" else ""}${cfg.guiAddress}"
-    "-logflags=0"
+    "serve"
+    "--no-browser"
+    "--no-restart"
+    "--no-upgrade"
+    "--gui-address=${if isUnixGui then "unix://" else ""}${cfg.guiAddress}"
   ];
 
   syncthingArgs = defaultSyncthingArgs ++ cfg.extraOptions;
 in
 {
-  meta.maintainers = [ lib.maintainers.rycee ];
+  meta.maintainers = [
+    lib.maintainers.rycee
+    lib.maintainers.aionescu
+  ];
 
   options = {
     services.syncthing = {
@@ -478,11 +551,45 @@ in
                       };
 
                       devices = mkOption {
-                        type = with types; listOf str;
+                        type = types.listOf (
+                          types.oneOf [
+                            types.str
+                            (types.submodule {
+                              freeformType = settingsFormat.type;
+                              options = {
+                                name = mkOption {
+                                  type = types.str;
+                                  default = null;
+                                  description = ''
+                                    The name of a device defined in the
+                                    [devices](#opt-services.syncthing.settings.devices)
+                                    option.
+                                  '';
+                                };
+                                encryptionPasswordFile = mkOption {
+                                  type = types.nullOr (
+                                    types.pathWith {
+                                      inStore = false;
+                                      absolute = true;
+                                    }
+                                  );
+                                  default = null;
+                                  description = ''
+                                    Path to encryption password. If set, the file will be read during
+                                    service activation, without being embedded in derivation.
+                                  '';
+                                };
+                              };
+                            })
+                          ]
+                        );
                         default = [ ];
                         description = ''
                           The devices this folder should be shared with. Each device must
                           be defined in the [devices](#opt-services.syncthing.settings.devices) option.
+
+                          A list of either strings or attribute sets, where values
+                          are device names or device configurations.
                         '';
                       };
 
@@ -634,38 +741,25 @@ in
 
       package = lib.mkPackageOption pkgs "syncthing" { };
 
-      tray = mkOption {
-        type =
-          with types;
-          either bool (submodule {
-            options = {
-              enable = mkOption {
-                type = bool;
-                default = false;
-                description = "Whether to enable a syncthing tray service.";
-              };
-
-              command = mkOption {
-                type = str;
-                default = "syncthingtray --wait";
-                defaultText = literalExpression "syncthingtray --wait";
-                example = literalExpression "qsyncthingtray";
-                description = "Syncthing tray command to use.";
-              };
-
-              package = mkOption {
-                type = package;
-                default = pkgs.syncthingtray-minimal;
-                defaultText = literalExpression "pkgs.syncthingtray-minimal";
-                example = literalExpression "pkgs.qsyncthingtray";
-                description = "Syncthing tray package to use.";
-              };
-            };
-          });
-        default = {
-          enable = false;
+      tray = {
+        enable = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Whether to enable a syncthing tray service.";
         };
-        description = "Syncthing tray service configuration.";
+
+        command = mkOption {
+          type = types.str;
+          default = "syncthingtray --wait";
+          defaultText = literalExpression "syncthingtray --wait";
+          example = literalExpression "qsyncthingtray";
+          description = "Syncthing tray command to use.";
+        };
+
+        package = lib.mkPackageOption pkgs "syncthingtray" {
+          default = "syncthingtray-minimal";
+          example = "qsyncthingtray";
+        };
       };
     };
   };
@@ -767,10 +861,12 @@ in
         };
     })
 
-    (lib.mkIf (lib.isAttrs cfg.tray && cfg.tray.enable) {
+    (lib.mkIf cfg.tray.enable {
       assertions = [
         (lib.hm.assertions.assertPlatform "services.syncthing.tray" pkgs lib.platforms.linux)
       ];
+
+      home.packages = [ cfg.tray.package ];
 
       systemd.user.services = {
         ${cfg.tray.package.pname} = {
@@ -793,38 +889,6 @@ in
           };
         };
       };
-    })
-
-    # deprecated
-    (lib.mkIf (lib.isBool cfg.tray && cfg.tray) {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "services.syncthing.tray" pkgs lib.platforms.linux)
-      ];
-
-      systemd.user.services = {
-        "syncthingtray" = {
-          Unit = {
-            Description = "syncthingtray";
-            Requires = [ "tray.target" ];
-            After = [
-              "graphical-session.target"
-              "tray.target"
-            ];
-            PartOf = [ "graphical-session.target" ];
-          };
-
-          Service = {
-            ExecStart = "${pkgs.syncthingtray-minimal}/bin/syncthingtray --wait";
-          };
-
-          Install = {
-            WantedBy = [ "graphical-session.target" ];
-          };
-        };
-      };
-      warnings = [
-        "Specifying 'services.syncthing.tray' as a boolean is deprecated, set 'services.syncthing.tray.enable' instead. See https://github.com/nix-community/home-manager/pull/1257."
-      ];
     })
   ];
 }

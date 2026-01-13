@@ -201,7 +201,7 @@ let
     plugins:
     pkgs.linkFarm "lapce-plugins" (
       builtins.listToAttrs (
-        builtins.map (
+        map (
           {
             author,
             name,

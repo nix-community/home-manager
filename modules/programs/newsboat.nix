@@ -142,6 +142,36 @@ in
           Extra configuration values that will be appended to the end.
         '';
       };
+
+      autoFetchArticles = {
+        enable = lib.mkEnableOption "automatic article fetcher timer";
+
+        onCalendar = lib.mkOption {
+          type = lib.types.str;
+          default = "daily";
+          example = "weekly";
+          description = ''
+            How often to fetch new articles.
+
+            See {manpage}`systemd.time(7)` for more information about the format.
+          '';
+        };
+      };
+
+      autoVacuum = {
+        enable = lib.mkEnableOption "automatic cleaning of the newsboat cache";
+
+        onCalendar = lib.mkOption {
+          type = lib.types.str;
+          default = "weekly";
+          example = "monthly";
+          description = ''
+            How often to run the cleaning command.
+
+            See {manpage}`systemd.time(7)` for more information about the format.
+          '';
+        };
+      };
     };
   };
 
@@ -152,6 +182,18 @@ in
         message = ''
           Cannot specify queries if urls is empty. Unset queries if you
           want to manage urls imperatively.
+        '';
+      }
+      {
+        assertion = cfg.autoFetchArticles.enable -> cfg.package != null;
+        message = ''
+          Cannot fetch articles if package is unset.
+        '';
+      }
+      {
+        assertion = cfg.autoVacuum.enable -> cfg.package != null;
+        message = ''
+          Cannot clean newsboat cache if package is unset.
         '';
       }
     ];
@@ -167,6 +209,73 @@ in
     xdg.configFile = mkIf (lib.versionAtLeast config.home.stateVersion "21.05") {
       "newsboat/urls" = mkIf (cfg.urls != [ ]) { text = urlsFileContents; };
       "newsboat/config".text = configFileContents;
+    };
+
+    systemd.user.services.newsboat-fetch-articles = lib.mkIf cfg.autoFetchArticles.enable {
+      Unit = {
+        Description = "Automatic Newsboat Article Fetcher";
+        Documentation = [ "man:newsboat(1)" ];
+      };
+
+      Service = {
+        Type = "oneshot";
+        Slice = "background.slice";
+        CPUSchedulingPolicy = "idle";
+        IOSchedulingClass = "idle";
+        RuntimeDirectory = "newsboat";
+        ExecStart = "${lib.getExe pkgs.flock} %t/newsboat.lock ${lib.getExe cfg.package} --execute=reload";
+      };
+    };
+
+    systemd.user.timers.newsboat-fetch-articles = lib.mkIf cfg.autoFetchArticles.enable {
+      Unit = {
+        Description = "Automatic Newsboat Article Fetcher";
+        Documentation = [ "man:newsboat(1)" ];
+        After = [ "network.target" ];
+      };
+
+      Timer = {
+        Unit = "newsboat-fetch-articles.service";
+        OnCalendar = cfg.autoFetchArticles.onCalendar;
+        Persistent = true;
+      };
+
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
+    };
+
+    systemd.user.services.newsboat-vacuum = lib.mkIf cfg.autoVacuum.enable {
+      Unit = {
+        Description = "Automatic Newsboat Cache Cleaner";
+        Documentation = [ "man:newsboat(1)" ];
+      };
+
+      Service = {
+        Type = "oneshot";
+        Slice = "background.slice";
+        CPUSchedulingPolicy = "idle";
+        IOSchedulingClass = "idle";
+        RuntimeDirectory = "newsboat";
+        ExecStart = "${lib.getExe pkgs.flock} %t/newsboat.lock ${lib.getExe cfg.package} --vacuum";
+      };
+    };
+
+    systemd.user.timers.newsboat-vacuum = lib.mkIf cfg.autoVacuum.enable {
+      Unit = {
+        Description = "Automatic Newsboat Cache Cleaner";
+        Documentation = [ "man:newsboat(1)" ];
+      };
+
+      Timer = {
+        Unit = "newsboat-vacuum.service";
+        OnCalendar = cfg.autoVacuum.onCalendar;
+        Persistent = true;
+      };
+
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
     };
   };
 }

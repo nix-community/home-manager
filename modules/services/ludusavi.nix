@@ -16,6 +16,7 @@ let
       cfg.configFile;
 in
 {
+  meta.maintainers = [ lib.maintainers.PopeRigby ];
 
   options.services.ludusavi = {
     enable = lib.mkEnableOption "Ludusavi game backup tool";
@@ -48,9 +49,17 @@ in
       default = {
         manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
         roots = [ ];
-        backup.path = "$XDG_STATE_HOME/backups/ludusavi";
-        restore.path = "$XDG_STATE_HOME/backups/ludusavi";
+        backup.path = "${config.xdg.stateHome}/backups/ludusavi";
+        restore.path = "${config.xdg.stateHome}/backups/ludusavi";
       };
+      defaultText = ''
+        {
+          manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
+          roots = [ ];
+          backup.path = "$XDG_STATE_HOME/backups/ludusavi";
+          restore.path = "$XDG_STATE_HOME/backups/ludusavi";
+        }
+      '';
       example = {
         language = "en-US";
         theme = "light";
@@ -93,6 +102,24 @@ in
         Service = {
           Type = "oneshot";
           ExecStart = "${lib.getExe cfg.package} backup --force";
+          ExecStartPre = "${pkgs.writeShellScript "ludusavi-migrate-backup" ''
+            old_base_dir="${config.home.homeDirectory}/\$XDG_STATE_HOME"
+            old_dir="$old_base_dir/backups/ludusavi"
+            new_base_dir="${config.xdg.stateHome}/backups"
+            new_dir="$new_base_dir/ludusavi"
+
+            if [[ -d "$old_base_dir" ]]; then
+              echo "Migrating old Ludusavi's backup... (See home-manager/#8234)"
+              if [[ ! -d "$new_base_dir" ]]; then
+                mkdir -p "$new_base_dir"
+              fi
+
+              mv "$old_dir" "$new_dir"
+              rmdir "$old_base_dir/backups"
+              rmdir "$old_base_dir"
+              echo "Migration completed successfully."
+            fi
+          ''}";
         }
         // lib.optionalAttrs cfg.backupNotification {
           ExecStartPost = "${lib.getExe pkgs.libnotify} 'Ludusavi' 'Backup completed' -i com.mtkennerly.ludusavi -a 'Ludusavi'";
@@ -109,6 +136,4 @@ in
 
     home.packages = [ cfg.package ];
   };
-
-  meta.maintainers = [ lib.maintainers.PopeRigby ];
 }

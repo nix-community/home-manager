@@ -1,0 +1,8 @@
+[__config__]
+keyfile = "keyfile.toml"
+newver = "new_ver.json"
+oldver = "old_ver.json"
+
+[nvchecker]
+github = "lilydjwg/nvchecker"
+source = "github"

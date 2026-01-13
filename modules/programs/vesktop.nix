@@ -92,9 +92,12 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
+  config =
     let
-      config =
+      configDir =
+        if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
+
+      configFiles =
         lib.attrsets.unionOfDisjoint
           {
             "vesktop/settings.json" = lib.mkIf (cfg.settings != { }) {
@@ -117,16 +120,11 @@ in
             ) cfg.vencord.themes
           );
     in
-    lib.mkMerge [
-      {
-        home.packages = [
-          (cfg.package.override { withSystemVencord = cfg.vencord.useSystem; })
-        ];
-      }
-      (lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) { xdg.configFile = config; })
-      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-        home.file = lib.mapAttrs' (n: v: lib.nameValuePair "Library/Application Support/${n}" v) config;
-      })
-    ]
-  );
+    lib.mkIf cfg.enable {
+      home.packages = [
+        (cfg.package.override { withSystemVencord = cfg.vencord.useSystem; })
+      ];
+
+      home.file = lib.mapAttrs' (n: lib.nameValuePair "${configDir}/${n}") configFiles;
+    };
 }

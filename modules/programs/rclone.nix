@@ -14,6 +14,8 @@ let
 
 in
 {
+  meta.maintainers = with lib.maintainers; [ jess ];
+
   imports = [
     (lib.mkRemovedOptionModule [ "programs" "rclone" "writeAfter" ] ''
       The writeAfter option has been removed because rclone configuration is now handled by a
@@ -111,6 +113,23 @@ in
                       options = {
                         enable = lib.mkEnableOption "this mount";
 
+                        logLevel = lib.mkOption {
+                          type = lib.types.nullOr (
+                            lib.types.enum [
+                              "ERROR"
+                              "NOTICE"
+                              "INFO"
+                              "DEBUG"
+                            ]
+                          );
+                          default = null;
+                          example = "INFO";
+                          description = ''
+                            Set the log-level.
+                            See: https://rclone.org/docs/#logging
+                          '';
+                        };
+
                         mountPoint = lib.mkOption {
                           type = lib.types.str;
                           default = null;
@@ -134,12 +153,12 @@ in
                           default = { };
                           apply = lib.mergeAttrs {
                             vfs-cache-mode = "full";
-                            cache-dir = "%C";
+                            cache-dir = "%C/rclone";
                           };
                           description = ''
                             An attribute set of option values passed to `rclone mount`. To set
                             a boolean option, assign it `true` or `false`. See
-                            <https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toGNUCommandLineShell>
+                            <https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toCommandLineShellGNU>
                             for more details on the format.
 
                             Some caching options are set by default, namely `vfs-cache-mode = "full"`
@@ -252,7 +271,7 @@ in
           injectSecret =
             remote:
             lib.mapAttrsToList (secret: secretFile: ''
-              if ! cat "${secretFile}"; then
+              if [[ ! -r "${secretFile}" ]]; then
                 echo "Secret \"${secretFile}\" not found"
                 cleanup
               fi
@@ -348,13 +367,14 @@ in
                     Environment = [
                       # fusermount/fusermount3
                       "PATH=/run/wrappers/bin"
-                    ];
+                    ]
+                    ++ lib.optional (mount.logLevel != null) "RCLONE_LOG_LEVEL=${mount.logLevel}";
+
                     ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mount.mountPoint}";
                     ExecStart = lib.concatStringsSep " " [
                       (lib.getExe cfg.package)
                       "mount"
-                      "-vv"
-                      (lib.cli.toGNUCommandLineShell { } mount.options)
+                      (lib.cli.toCommandLineShellGNU { } mount.options)
                       "${remote-name}:${mount-path}"
                       "${mount.mountPoint}"
                     ];
@@ -381,6 +401,4 @@ in
         mountServices
       ];
     };
-
-  meta.maintainers = with lib.maintainers; [ jess ];
 }

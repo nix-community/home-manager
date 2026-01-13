@@ -14,7 +14,7 @@ let
   renderSettings =
     with lib.generators;
     toINI {
-      mkKeyValue = mkKeyValueDefault rec {
+      mkKeyValue = mkKeyValueDefault {
         mkValueString =
           v:
           if lib.isList v then
@@ -107,6 +107,26 @@ in
               default value will set the aforementioned path as a single vdir.
             '';
           };
+          options.khard.type = lib.mkOption {
+            type = types.enum [
+              "vdir"
+              "discover"
+            ];
+            default = "vdir";
+            description = ''
+              Either a single vdir located in [](#opt-accounts.contact.accounts._name_.local.path)
+              or multiple automatically discovered vdirs in
+              [](#opt-accounts.contact.accounts._name_.local.path)/[](#opt-accounts.contact.accounts._name_.khard.glob).
+            '';
+          };
+          options.khard.glob = lib.mkOption {
+            type = lib.types.str;
+            default = "*";
+            description = ''
+              The glob expansion to be searched for contacts when
+              type is set to discover.
+            '';
+          };
         }
       );
     };
@@ -119,7 +139,7 @@ in
       let
         makePath =
           baseDir: subDir:
-          builtins.toString (
+          toString (
             /.
             + lib.concatStringsSep "/" [
               baseDir
@@ -131,11 +151,20 @@ in
           [[${makeName anAccount.name anAbook}]]
           path = ${makePath anAccount.local.path anAbook}
         '';
+        makeDiscoverEntry = anAccount: ''
+          [[${makeName anAccount.name ""}]]
+          path = ${anAccount.local.path}/${anAccount.khard.glob}
+          type = discover
+        '';
       in
       ''
         [addressbooks]
         ${lib.concatMapStringsSep "\n" (
-          acc: lib.concatMapStringsSep "\n" (makeEntry acc) acc.khard.addressbooks
+          acc:
+          if acc.khard.type == "discover" then
+            makeDiscoverEntry acc
+          else
+            lib.concatMapStringsSep "\n" (makeEntry acc) acc.khard.addressbooks
         ) (lib.attrValues accounts)}
 
         ${renderSettings cfg.settings}

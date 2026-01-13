@@ -22,27 +22,58 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  configDir =
-    {
-      "vscode" = "Code";
-      "vscode-insiders" = "Code - Insiders";
-      "vscodium" = "VSCodium";
-      "openvscode-server" = "OpenVSCode Server";
-      "windsurf" = "Windsurf";
-      "cursor" = "Cursor";
-    }
-    .${vscodePname};
+  productInfoPath =
+    if
+      lib.pathExists "${cfg.package}/Applications/${
+        cfg.package.passthru.longName or "Code"
+      }.app/Contents/Resources/app/product.json"
+    then
+      "${cfg.package}/Applications/${
+        cfg.package.passthru.longName or "Code"
+      }.app/Contents/Resources/app/product.json"
+    else if lib.pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
+      # Visual Studio Code, VSCodium, Windsurf, Cursor
+      "${cfg.package}/lib/vscode/resources/app/product.json"
+    else
+      # OpenVSCode Server
+      "${cfg.package}/product.json";
 
-  extensionDir =
-    {
-      "vscode" = "vscode";
-      "vscode-insiders" = "vscode-insiders";
-      "vscodium" = "vscode-oss";
-      "openvscode-server" = "openvscode-server";
-      "windsurf" = "windsurf";
-      "cursor" = "cursor";
-    }
-    .${vscodePname};
+  productInfo = lib.importJSON productInfoPath;
+
+  # Use preset names for known products to avoid IFD loading it from product.json
+  knownProducts = {
+    cursor = {
+      dataFolderName = ".cursor";
+      nameShort = "Cursor";
+    };
+    kiro = {
+      dataFolderName = ".kiro";
+      nameShort = "Kiro";
+    };
+    openvscode-server = {
+      dataFolderName = ".openvscode-server";
+      nameShort = "OpenVSCode Server";
+    };
+    vscode = {
+      dataFolderName = ".vscode";
+      nameShort = "Code";
+    };
+    vscode-insiders = {
+      dataFolderName = ".vscode-insiders";
+      nameShort = "Code - Insiders";
+    };
+    vscodium = {
+      dataFolderName = ".vscode-oss";
+      nameShort = "VSCodium";
+    };
+    windsurf = {
+      dataFolderName = ".windsurf";
+      nameShort = "Windsurf";
+    };
+  };
+
+  configDir = cfg.nameShort;
+  extensionDir = cfg.dataFolderName;
 
   userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -60,8 +91,7 @@ let
 
   snippetDir = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}snippets";
 
-  # TODO: On Darwin where are the extensions?
-  extensionPath = ".${extensionDir}/extensions";
+  extensionPath = "${extensionDir}/extensions";
 
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
@@ -83,6 +113,33 @@ let
     };
 
   isPath = p: builtins.isPath p || lib.isStorePath p;
+
+  transformMcpServerForVscode =
+    name: server:
+    let
+      # Remove the disabled field from the server config
+      cleanServer = lib.filterAttrs (n: v: n != "disabled") server;
+    in
+    {
+      name = name;
+      value = {
+        enabled = !(server.disabled or false);
+      }
+      // (
+        if server ? url then
+          {
+            type = "http";
+          }
+          // cleanServer
+        else if server ? command then
+          {
+            type = "stdio";
+          }
+          // cleanServer
+        else
+          { }
+      );
+    };
 
   profileType = types.submodule {
     options = {
@@ -121,6 +178,20 @@ let
           Configuration written to Visual Studio Code's
           {file}`tasks.json`.
           This can be a JSON object or a path to a custom JSON file.
+        '';
+      };
+
+      enableMcpIntegration = mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to integrate the MCP servers config from
+          {option}`programs.mcp.servers` into
+          {option}`programs.vscode.profiles.<name>.userMcp`.
+
+          Note: Settings defined in {option}`programs.mcp.servers` are merged
+          with {option}`programs.vscode.profiles.<name>.userMcp`, with VSCode
+          settings taking precedence.
         '';
       };
 
@@ -317,6 +388,30 @@ in
       '';
     };
 
+    nameShort = mkOption {
+      type = types.str;
+      default = knownProducts.${vscodePname}.nameShort or productInfo.nameShort;
+      defaultText = "(derived from product.json)";
+      example = "MyCoolVSCodeFork";
+      description = ''
+        Override for package "short name", used for generating configuration.
+
+        This should match the `shortName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
+      '';
+    };
+
+    dataFolderName = mkOption {
+      type = types.str;
+      default = knownProducts.${vscodePname}.dataFolderName or productInfo.dataFolderName;
+      defaultText = "(derived from product.json)";
+      example = ".cool-vscode";
+      description = ''
+        Override for extensions directory.
+
+        This should match the `dataFolderName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
+      '';
+    };
+
     profiles = mkOption {
       type = types.attrsOf profileType;
       default = { };
@@ -364,7 +459,7 @@ in
             existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
 
             for profile in "''${profiles[@]}"; do
-              if [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile $profile '.[$profile]')" != "\"$profile\"" ]]; then
+              if [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile "$profile" '.[$profile]')" != "\"$profile\"" ]]; then
                 file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
               fi
             done
@@ -405,10 +500,31 @@ in
             if isPath v.userTasks then v.userTasks else jsonFormat.generate "vscode-user-tasks" v.userTasks;
         })
 
-        (mkIf (v.userMcp != { }) {
-          "${mcpFilePath n}".source =
-            if isPath v.userMcp then v.userMcp else jsonFormat.generate "vscode-user-mcp" v.userMcp;
-        })
+        (mkIf
+          (
+            v.userMcp != { }
+            || (v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { })
+          )
+          {
+            "${mcpFilePath n}".source =
+              if isPath v.userMcp then
+                v.userMcp
+              else
+                let
+                  transformedMcpServers =
+                    if v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
+                      lib.listToAttrs (lib.mapAttrsToList transformMcpServerForVscode config.programs.mcp.servers)
+                    else
+                      { };
+                  # Merge MCP servers: transformed servers + user servers, with user servers taking precedence
+                  mergedServers = transformedMcpServers // (v.userMcp.servers or { });
+                  # Merge all MCP config
+                  mergedMcpConfig =
+                    v.userMcp // (lib.optionalAttrs (mergedServers != { }) { servers = mergedServers; });
+                in
+                jsonFormat.generate "vscode-user-mcp" mergedMcpConfig;
+          }
+        )
 
         (mkIf (v.keybindings != [ ]) {
           "${keybindingsFilePath n}".source =

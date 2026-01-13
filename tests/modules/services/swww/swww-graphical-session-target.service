@@ -2,6 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
+Environment=PATH=$PATH:@swww@/bin
 ExecStart=@swww@/bin/swww-daemon --no-cache --layer bottom
 Restart=always
 RestartSec=10

@@ -7,11 +7,13 @@
 let
   cfg = config.services.pueue;
   yamlFormat = pkgs.formats.yaml { };
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
   configFile = yamlFormat.generate "pueue.yaml" ({ shared = { }; } // cfg.settings);
   pueuedBin = "${cfg.package}/bin/pueued";
 in
 {
-  meta.maintainers = [ lib.maintainers.AndersonTorres ];
+  meta.maintainers = [ ];
 
   options.services.pueue = {
     enable = lib.mkEnableOption "Pueue, CLI process scheduler and manager";
@@ -35,51 +37,43 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-      }
-      (lib.mkIf pkgs.stdenv.isLinux {
-        xdg.configFile."pueue/pueue.yml".source = configFile;
-        systemd.user = lib.mkIf (cfg.package != null) {
-          services.pueued = {
-            Unit = {
-              Description = "Pueue Daemon - CLI process scheduler and manager";
-            };
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-            Service = {
-              Restart = "on-failure";
-              ExecStart = "${pueuedBin} -v -c ${configFile}";
-            };
+    home.file."${configDir}/pueue/pueue.yml".source = configFile;
 
-            Install.WantedBy = [ "default.target" ];
-          };
+    systemd.user = lib.mkIf (cfg.package != null) {
+      services.pueued = {
+        Unit = {
+          Description = "Pueue Daemon - CLI process scheduler and manager";
         };
-      })
-      (lib.mkIf pkgs.stdenv.isDarwin {
-        # This is the default configuration file location for pueue on
-        # darwin (https://github.com/Nukesor/pueue/wiki/Configuration)
-        home.file."Library/Application Support/pueue/pueue.yml".source = configFile;
-        launchd.agents.pueued = lib.mkIf (cfg.package != null) {
-          enable = true;
 
-          config = {
-            ProgramArguments = [
-              pueuedBin
-              "-v"
-              "-c"
-              "${configFile}"
-            ];
-            KeepAlive = {
-              Crashed = true;
-              SuccessfulExit = false;
-            };
-            ProcessType = "Background";
-            RunAtLoad = true;
-          };
+        Service = {
+          Restart = "on-failure";
+          ExecStart = "${pueuedBin} -v -c ${configFile}";
         };
-      })
-    ]
-  );
+
+        Install.WantedBy = [ "default.target" ];
+      };
+    };
+
+    launchd.agents.pueued = lib.mkIf (cfg.package != null) {
+      enable = true;
+
+      config = {
+        ProgramArguments = [
+          pueuedBin
+          "-v"
+          "-c"
+          "${configFile}"
+        ];
+        KeepAlive = {
+          Crashed = true;
+          SuccessfulExit = false;
+        };
+        ProcessType = "Background";
+        RunAtLoad = true;
+      };
+    };
+  };
 }

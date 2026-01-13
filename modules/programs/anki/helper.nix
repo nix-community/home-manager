@@ -6,6 +6,16 @@
 }:
 let
   cfg = config.programs.anki;
+
+  # Convert Nix `nullOr bool` to Python types.
+  pyOptionalBool =
+    val:
+    if val == null then
+      "None"
+    else if val then
+      "True"
+    else
+      "False";
   # This script generates the Anki SQLite settings DB using the Anki Python API.
   # The configuration options in the SQLite database take the form of Python
   # Pickle data.
@@ -60,9 +70,9 @@ let
     if ui_scale_str:
       profile_manager.setUiScale(float(ui_scale_str))
 
-    hide_top_bar_str: str = "${toString cfg.hideTopBar}"
-    if hide_top_bar_str:
-      profile_manager.set_hide_top_bar(bool(hide_top_bar_str))
+    hide_top_bar: bool | None = ${pyOptionalBool cfg.hideTopBar}
+    if hide_top_bar is not None:
+      profile_manager.set_hide_top_bar(hide_top_bar)
 
     hide_top_bar_mode_str: str = "${toString cfg.hideTopBarMode}"
     if hide_top_bar_mode_str:
@@ -72,9 +82,9 @@ let
       }[hide_top_bar_mode_str]
       profile_manager.set_top_bar_hide_mode(hide_mode)
 
-    hide_bottom_bar_str: str = "${toString cfg.hideBottomBar}"
-    if hide_bottom_bar_str:
-      profile_manager.set_hide_bottom_bar(bool(hide_bottom_bar_str))
+    hide_bottom_bar: bool | None = ${pyOptionalBool cfg.hideBottomBar}
+    if hide_bottom_bar is not None:
+      profile_manager.set_hide_bottom_bar(hide_bottom_bar)
 
     hide_bottom_bar_mode_str: str = "${toString cfg.hideBottomBarMode}"
     if hide_bottom_bar_mode_str:
@@ -84,25 +94,25 @@ let
       }[hide_bottom_bar_mode_str]
       profile_manager.set_bottom_bar_hide_mode(hide_mode)
 
-    reduce_motion_str: str = "${toString cfg.reduceMotion}"
-    if reduce_motion_str:
-      profile_manager.set_reduce_motion(bool(reduce_motion_str))
+    reduce_motion: bool | None = ${pyOptionalBool cfg.reduceMotion}
+    if reduce_motion is not None:
+      profile_manager.set_reduce_motion(reduce_motion)
 
-    minimalist_mode_str: str = "${toString cfg.minimalistMode}"
-    if minimalist_mode_str:
-      profile_manager.set_minimalist_mode(bool(minimalist_mode_str))
+    minimalist_mode: bool | None = ${pyOptionalBool cfg.minimalistMode}
+    if minimalist_mode is not None:
+      profile_manager.set_minimalist_mode(minimalist_mode)
 
-    spacebar_rates_card_str: str = "${toString cfg.spacebarRatesCard}"
-    if spacebar_rates_card_str:
-      profile_manager.set_spacebar_rates_card(bool(spacebar_rates_card_str))
+    spacebar_rates_card: bool | None = ${pyOptionalBool cfg.spacebarRatesCard}
+    if spacebar_rates_card is not None:
+      profile_manager.set_spacebar_rates_card(spacebar_rates_card)
 
-    legacy_import_export_str: str = "${toString cfg.legacyImportExport}"
-    if legacy_import_export_str:
-      profile_manager.set_legacy_import_export(bool(legacy_import_export_str))
+    legacy_import_export: bool | None = ${pyOptionalBool cfg.legacyImportExport}
+    if legacy_import_export is not None:
+      profile_manager.set_legacy_import_export(legacy_import_export)
 
     answer_keys: tuple[tuple[int, str], ...] = (${
       lib.strings.concatMapStringsSep ", " (val: "(${toString val.ease}, '${val.key}')") cfg.answerKeys
-    })
+    }${if cfg.answerKeys != [ ] then "," else ""})
     for ease, key in answer_keys:
       profile_manager.set_answer_key(ease, key)
 
@@ -114,13 +124,13 @@ let
     # Without this, the collection DB won't get automatically optimized.
     profile_manager.profile["lastOptimize"] = None
 
-    auto_sync_str: str = "${toString cfg.sync.autoSync}"
-    if auto_sync_str:
-      profile_manager.profile["autoSync"] = bool(auto_sync_str)
+    auto_sync: bool | None = ${pyOptionalBool cfg.sync.autoSync}
+    if auto_sync is not None:
+      profile_manager.profile["autoSync"] = auto_sync
 
-    sync_media_str: str = "${toString cfg.sync.syncMedia}"
-    if sync_media_str:
-      profile_manager.profile["syncMedia"] = bool(sync_media_str)
+    sync_media: bool | None = ${pyOptionalBool cfg.sync.syncMedia}
+    if sync_media is not None:
+      profile_manager.profile["syncMedia"] = sync_media
 
     media_sync_minutes_str: str = "${toString cfg.sync.autoSyncMediaMinutes}"
     if media_sync_minutes_str:
@@ -164,7 +174,7 @@ in
         if cfg.sync.usernameFile == null then "None" else "Path('${cfg.sync.usernameFile}')"
       }
       key_file: Path | None = ${
-        if cfg.sync.passwordFile == null then "None" else "Path('${cfg.sync.passwordFile}')"
+        if cfg.sync.keyFile == null then "None" else "Path('${cfg.sync.keyFile}')"
       }
       custom_sync_url: str | None = ${if cfg.sync.url == null then "None" else "'${cfg.sync.url}'"}
 
@@ -174,9 +184,9 @@ in
           if username:
             aqt.mw.pm.set_sync_username(username)
           elif username_file and username_file.exists():
-              aqt.mw.pm.set_sync_username(username_file.read_text())
+              aqt.mw.pm.set_sync_username(username_file.read_text().strip())
           if key_file and key_file.exists():
-              aqt.mw.pm.set_sync_key(key_file.read_text())
+              aqt.mw.pm.set_sync_key(key_file.read_text().strip())
 
       aqt.gui_hooks.profile_did_open.append(set_server)
     '';

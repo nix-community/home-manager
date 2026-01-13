@@ -14,15 +14,20 @@ in
 
   imports =
     let
-      mkRemovedWarning =
+      mkRtxRemovedWarning =
         opt:
         (lib.mkRemovedOptionModule [ "programs" "rtx" opt ] ''
           The `rtx` package has been replaced by `mise`, please switch over to
           using the options under `programs.mise.*` instead.
         '');
-
     in
-    map mkRemovedWarning [
+    [
+      (lib.mkRenamedOptionModule
+        [ "programs" "mise" "settings" ]
+        [ "programs" "mise" "globalConfig" "settings" ]
+      )
+    ]
+    ++ map mkRtxRemovedWarning [
       "enable"
       "package"
       "enableBashIntegration"
@@ -47,38 +52,32 @@ in
       enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
       globalConfig = mkOption {
-        type = tomlFormat.type;
+        inherit (tomlFormat) type;
+
         default = { };
         example = lib.literalExpression ''
+          settings = {
+            disable_tools = [ "node" ];
+            experimental = true;
+            verbose = false;
+          };
+
+          tool_alias = {
+            node.versions = {
+              my_custom_node = "20";
+            };
+          };
+
           tools = {
             node = "lts";
             python = ["3.10" "3.11"];
-          };
-
-          aliases = {
-            my_custom_node = "20";
           };
         '';
         description = ''
           Config written to {file}`$XDG_CONFIG_HOME/mise/config.toml`.
 
-          See <https://mise.jdx.dev/configuration.html#global-config-config-mise-config-toml>
-          for details on supported values.
-        '';
-      };
-
-      settings = mkOption {
-        type = tomlFormat.type;
-        default = { };
-        example = lib.literalExpression ''
-          verbose = false;
-          experimental = false;
-          disable_tools = ["node"];
-        '';
-        description = ''
-          Settings written to {file}`$XDG_CONFIG_HOME/mise/settings.toml`.
-
-          See <https://mise.jdx.dev/configuration.html#settings-file-config-mise-settings-toml>
+          See <https://mise.jdx.dev/configuration.html> and
+          <https://mise.jdx.dev/configuration/settings.html>
           for details on supported values.
         '';
       };
@@ -109,32 +108,28 @@ in
       "mise/config.toml" = mkIf (cfg.globalConfig != { }) {
         source = tomlFormat.generate "mise-config" cfg.globalConfig;
       };
-
-      "mise/settings.toml" = mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "mise-settings" cfg.settings;
-      };
     };
 
     programs = {
-      bash.initExtra = mkIf cfg.enableBashIntegration ''
+      bash.initExtra = mkIf (cfg.enableBashIntegration && cfg.package != null) ''
         eval "$(${getExe cfg.package} activate bash)"
       '';
 
-      zsh.initContent = mkIf cfg.enableZshIntegration ''
+      zsh.initContent = mkIf (cfg.enableZshIntegration && cfg.package != null) ''
         eval "$(${getExe cfg.package} activate zsh)"
       '';
 
-      fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      fish.interactiveShellInit = mkIf (cfg.enableFishIntegration && cfg.package != null) ''
         ${getExe cfg.package} activate fish | source
       '';
 
-      nushell = mkIf cfg.enableNushellIntegration {
-        extraEnv = ''
-          let mise_path = $nu.default-config-dir | path join mise.nu
-          ^mise activate nu | save $mise_path --force
-        '';
+      nushell = mkIf (cfg.enableNushellIntegration && cfg.package != null) {
         extraConfig = ''
-          use ($nu.default-config-dir | path join mise.nu)
+          use ${
+            pkgs.runCommand "mise-nushell-config.nu" { } ''
+              ${lib.getExe cfg.package} activate nu > $out
+            ''
+          }
         '';
       };
     };

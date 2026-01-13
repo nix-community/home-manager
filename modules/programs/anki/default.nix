@@ -17,6 +17,13 @@ in
 {
   meta.maintainers = [ lib.maintainers.junestepp ];
 
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "programs" "anki" "sync" "passwordFile" ]
+      [ "programs" "anki" "sync" "keyFile" ]
+    )
+  ];
+
   options.programs.anki = {
     enable = lib.mkEnableOption "Anki";
 
@@ -75,7 +82,7 @@ in
     };
 
     uiScale = lib.mkOption {
-      type = with lib.types; nullOr (numbers.between 0.0 1.0);
+      type = with lib.types; nullOr (numbers.between 1.0 2.0);
       default = null;
       example = 1.0;
       description = "User interface scale.";
@@ -208,10 +215,23 @@ in
         description = "Path to a file containing the sync account username.";
       };
 
-      passwordFile = lib.mkOption {
+      keyFile = lib.mkOption {
         type = with lib.types; nullOr path;
         default = null;
-        description = "Path to a file containing the sync account password.";
+        description = ''
+          Path to a file containing the sync account sync key. This is different from
+          the account password.
+
+          To get the sync key, follow these steps:
+
+          - Enable this Home Manager module: `programs.anki.enable = true`
+          - Open Anki.
+          - Navigate to the sync settings page. (Tools > Preferences > Syncing)
+          - Log in to your AnkiWeb account.
+          - Select "Yes" to the prompt about saving preferences and syncing.
+          - A Home Manager warning prompt will show. Select "Show details...".
+          - Get your sync key from the message: "syncKey changed from \`None\` to \`<YOUR SYNC KEY WILL BE HERE>\`"
+        '';
       };
 
       url = lib.mkOption {
@@ -282,6 +302,7 @@ in
             config = {
               again_button_name = "not quite";
               good_button_name = "excellent";
+              toggle_names_textcolors = 1;
             };
             user_files = ./dir-to-be-merged-into-addon-user-files-dir;
           };

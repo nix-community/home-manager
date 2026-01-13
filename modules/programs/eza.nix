@@ -9,6 +9,8 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
+  meta.maintainers = [ lib.maintainers.cafkafk ];
+
   imports =
     let
       msg = ''
@@ -35,9 +37,6 @@ in
       "git"
     ])
     ++ [ (lib.mkRemovedOptionModule [ "programs" "eza" "enableAliases" ] msg) ];
-
-  meta.maintainers = [ lib.maintainers.cafkafk ];
-
   options.programs.eza = {
     enable = lib.mkEnableOption "eza, a modern replacement for {command}`ls`";
 

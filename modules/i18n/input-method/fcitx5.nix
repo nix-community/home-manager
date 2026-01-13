@@ -192,7 +192,7 @@ in
         ++ lib.optionals (cfg.quickPhraseFiles != { }) [
           (pkgs.linkFarm "quickPhraseFiles" (
             lib.mapAttrs' (
-              name: value: lib.nameValuePair ("share/fcitx5/data/quickphrase.d/${name}.mb") value
+              name: value: lib.nameValuePair "share/fcitx5/data/quickphrase.d/${name}.mb" value
             ) cfg.quickPhraseFiles
           ))
         ];
@@ -213,6 +213,14 @@ in
       };
 
       sessionSearchVariables.QT_PLUGIN_PATH = [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
+    };
+
+    # Make sure X11 GTK apps still use IM module.
+    # https://wiki.archlinux.org/title/Fcitx5#IM_modules
+    gtk = lib.optionalAttrs cfg.waylandFrontend {
+      gtk2.extraConfig = ''gtk-im-module="fcitx"'';
+      gtk3.extraConfig.gtk-im-module = "fcitx";
+      gtk4.extraConfig.gtk-im-module = "fcitx";
     };
 
     xdg = {

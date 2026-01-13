@@ -130,6 +130,7 @@ in
           - `HYPRLAND_INSTANCE_SIGNATURE`
           - `WAYLAND_DISPLAY`
           - `XDG_CURRENT_DESKTOP`
+          - `XDG_SESSION_TYPE`
         '';
       };
 
@@ -140,6 +141,7 @@ in
           "HYPRLAND_INSTANCE_SIGNATURE"
           "WAYLAND_DISPLAY"
           "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_TYPE"
         ];
         example = [ "--all" ];
         description = ''
@@ -164,6 +166,14 @@ in
 
     xwayland.enable = lib.mkEnableOption "XWayland" // {
       default = true;
+      description = ''
+        Whether or not to enable XWayland.
+
+        Overrides the `enableXWayland` option of the Hyprland package.
+
+        In newer versions of Hyprland, you can use the {option}`wayland.windowManager.hyprland.settings.xwayland`
+        option to avoid recompiling Hyprland.
+      '';
     };
 
     settings = lib.mkOption {
@@ -351,7 +361,7 @@ in
         ) cfg.submaps;
 
         submapWarnings = lib.mapAttrsToList (submapName: nonBinds: ''
-          wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${builtins.toString nonBinds}], which will have no effect in a submap
+          wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${toString nonBinds}], which will have no effect in a submap
         '') (lib.filterAttrs (n: v: v != [ ]) submapWarningsAttrset);
       in
       submapWarnings ++ lib.optional inconsistent warning;

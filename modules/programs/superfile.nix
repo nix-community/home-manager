@@ -7,7 +7,10 @@
 
 let
   cfg = config.programs.superfile;
+
   tomlFormat = pkgs.formats.toml { };
+  jsonFormat = pkgs.formats.json { };
+
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
   inherit (lib)
     literalExpression
@@ -23,6 +26,29 @@ let
     types
     hm
     ;
+
+  pinnedFolderModule = types.submodule {
+    freeformType = jsonFormat.type;
+
+    options = {
+      name = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "Nix Store";
+        description = ''
+          Name that will be shown.
+        '';
+      };
+
+      location = mkOption {
+        type = types.path;
+        example = "/nix/store";
+        description = ''
+          Location of the pinned entry.
+        '';
+      };
+    };
+  };
 in
 {
   meta.maintainers = [ hm.maintainers.LucasWagler ];
@@ -33,6 +59,7 @@ in
     package = mkPackageOption pkgs "superfile" { nullable = true; };
 
     metadataPackage = mkPackageOption pkgs "exiftool" { nullable = true; };
+    zoxidePackage = mkPackageOption pkgs "zoxide" { nullable = true; };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -105,11 +132,38 @@ in
         };
       '';
     };
+
+    firstUseCheck = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Enables the first time use popup.
+      '';
+    };
+
+    pinnedFolders = mkOption {
+      type = types.listOf pinnedFolderModule;
+      default = [ ];
+      example = literalExpression ''
+        [
+          {
+            name = "Nix Store";
+            location = "/nix/store";
+          }
+        ];
+      '';
+      description = ''
+        Entries that get added to the pinned panel.
+      '';
+    };
   };
 
   config =
     let
       enableXdgConfig = !isDarwin || config.xdg.enable;
+      baseConfigPath = if enableXdgConfig then "superfile" else "Library/Application Support/superfile";
+      baseDataPath = if enableXdgConfig then "superfile" else "Library/Application Support/superfile";
+
       themeSetting =
         if (!(cfg.settings ? theme) && cfg.themes != { }) then
           {
@@ -117,7 +171,6 @@ in
           }
         else
           { };
-      baseConfigPath = if enableXdgConfig then "superfile" else "Library/Application Support/superfile";
       configFile = mkIf (cfg.settings != { }) {
         "${baseConfigPath}/config.toml".source = tomlFormat.generate "superfile-config.toml" (
           recursiveUpdate themeSetting cfg.settings
@@ -138,21 +191,48 @@ in
               (tomlFormat.generate "superfile-theme-${name}.toml" value);
         }
       ) cfg.themes;
+
+      firstUseCheckFile = mkIf (!cfg.firstUseCheck) { "${baseDataPath}/firstUseCheck".text = ""; };
+      pinnedFile = mkIf (cfg.pinnedFolders != [ ]) {
+        "${baseDataPath}/pinned.json".source = jsonFormat.generate "pinned.json" cfg.pinnedFolders;
+      };
+
+      files = mkMerge [
+        configFile
+        hotkeysFile
+        themeFiles
+
+        firstUseCheckFile
+        pinnedFile
+      ];
       configFiles = mkMerge [
         configFile
         hotkeysFile
         themeFiles
       ];
+      dataFiles = mkMerge [
+        firstUseCheckFile
+        pinnedFile
+      ];
     in
     mkIf cfg.enable {
-      home.packages = mkIf (cfg.package != null) (
-        [ cfg.package ]
-        ++ optional (
-          cfg.metadataPackage != null && cfg.settings ? metadata && cfg.settings.metadata
-        ) cfg.metadataPackage
-      );
+      home = {
+        packages = mkIf (cfg.package != null) (
+          [ cfg.package ]
+          ++ optional (
+            cfg.metadataPackage != null && cfg.settings ? metadata && cfg.settings.metadata
+          ) cfg.metadataPackage
+          ++ optional (
+            cfg.zoxidePackage != null && cfg.settings ? zoxide_support && cfg.settings.zoxide_support
+          ) cfg.zoxidePackage
+        );
 
-      xdg.configFile = mkIf enableXdgConfig configFiles;
-      home.file = mkIf (!enableXdgConfig) configFiles;
+        file = mkIf (!enableXdgConfig) files;
+      };
+
+      xdg = {
+        configFile = mkIf enableXdgConfig configFiles;
+        dataFile = mkIf enableXdgConfig dataFiles;
+      };
     };
 }

@@ -13,43 +13,40 @@ let
 
   renderSettings = settings: lib.concatStringsSep ";" (lib.mapAttrsToList renderSetting settings);
 
-  pluginModule = types.submodule (
-    { ... }:
-    {
-      options = {
-        src = mkOption {
-          type = with types; nullOr path;
-          example = literalExpression ''
-            (pkgs.fetchFromGitHub {
-              owner = "jarun";
-              repo = "nnn";
-              rev = "v4.0";
-              sha256 = "sha256-Hpc8YaJeAzJoEi7aJ6DntH2VLkoR6ToP6tPYn3llR7k=";
-            }) + "/plugins";
-          '';
-          default = null;
-          description = ''
-            Path to the plugin folder.
-          '';
-        };
-
-        mappings = mkOption {
-          type = with types; attrsOf str;
-          description = ''
-            Key mappings to the plugins.
-          '';
-          default = { };
-          example = literalExpression ''
-            {
-              c = "fzcd";
-              f = "finder";
-              v = "imgview";
-            };
-          '';
-        };
+  pluginModule = types.submodule {
+    options = {
+      src = mkOption {
+        type = with types; nullOr path;
+        example = literalExpression ''
+          (pkgs.fetchFromGitHub {
+            owner = "jarun";
+            repo = "nnn";
+            rev = "v4.0";
+            sha256 = "sha256-Hpc8YaJeAzJoEi7aJ6DntH2VLkoR6ToP6tPYn3llR7k=";
+          }) + "/plugins";
+        '';
+        default = null;
+        description = ''
+          Path to the plugin folder.
+        '';
       };
-    }
-  );
+
+      mappings = mkOption {
+        type = with types; attrsOf str;
+        description = ''
+          Key mappings to the plugins.
+        '';
+        default = { };
+        example = literalExpression ''
+          {
+            c = "fzcd";
+            f = "finder";
+            v = "imgview";
+          };
+        '';
+      };
+    };
+  };
 in
 {
   meta.maintainers = with lib.maintainers; [ thiagokokada ];

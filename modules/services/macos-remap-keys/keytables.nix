@@ -45,6 +45,12 @@ let
     Dot = "0x37";
     Slash = "0x38";
     Capslock = "0x39";
+    # Section ('§') -- key below Escape on the non-US keyboards
+    NonUSBackslash = "0x64";
+    # Kana ('かな') -- key right of the space on Japanese keyboards
+    Kana = "0x90";
+    # Eisuu ('英数') -- key left of the space on Japanese keyboards
+    Eisuu = "0x91";
   };
 
   fKeys1To12 = {
@@ -141,7 +147,9 @@ let
   page7Keys = mapToInt (lib.fromHexString "700000000") (
     letters // numbers // specialKeys // fKeys1To12 // fKeys13To24 // navigationKeys // modifierKeys
   );
-  pageFFKeys = mapToInt (lib.fromHexString "FF00000000") { Fn = "0x3"; };
+  pageFFKeys = mapToInt (lib.fromHexString "FF00000000") {
+    Fn = "0x3";
+  };
 in
 {
   keyboard = page7Keys // pageFFKeys;

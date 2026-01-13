@@ -7,6 +7,8 @@
 let
   inherit (lib)
     concatStringsSep
+    filterAttrs
+    hasPrefix
     mapAttrsToList
     mkIf
     mkOption
@@ -427,7 +429,12 @@ let
     checkPhase = lib.optionalString cfg.checkConfig ''
       export DBUS_SESSION_BUS_ADDRESS=/dev/null
       export XDG_RUNTIME_DIR=$(mktemp -d)
-      ${pkgs.xvfb-run}/bin/xvfb-run ${cfg.package}/bin/sway --config "$target" --validate --unsupported-gpu
+      ${pkgs.xvfb-run}/bin/xvfb-run ${cfg.package}/bin/sway --config "$target" --validate --unsupported-gpu || {
+        echo "Checking the sway config file failed. Normally, this happens because there are errors in the config file."
+        echo "But the check can also fail if the sway config file has dependencies on configuration that is not available in the Nix build sandbox (e.g. custom keyboard layouts defined in the NixOS configuration; background images in the user's home directory)."
+        echo "In that case, it may be necessary to set 'wayland.windowManager.sway.checkConfig = false;'."
+        exit 1
+      }
     '';
 
     text = concatStringsSep "\n" (
@@ -471,7 +478,9 @@ let
               (keycodebindingsStr keycodebindings)
             ]
             ++ optional (builtins.attrNames bindswitches != [ ]) (bindswitchesStr bindswitches)
-            ++ mapAttrsToList inputStr input
+            ++ mapAttrsToList inputStr (filterAttrs (n: v: n == "*") input)
+            ++ mapAttrsToList inputStr (filterAttrs (n: v: hasPrefix "type:" n) input)
+            ++ mapAttrsToList inputStr (filterAttrs (n: v: n != "*" && !(hasPrefix "type:" n)) input)
             ++ mapAttrsToList outputStr output # outputs
             ++ mapAttrsToList seatStr seat # seats
             ++ mapAttrsToList (modeStr cfg.config.bindkeysToCode) modes # modes
@@ -497,7 +506,6 @@ in
     Scrumplex
     alexarice
     sumnerevans
-    oxalica
   ];
 
   imports =
@@ -696,20 +704,6 @@ in
 
   config = mkIf cfg.enable (
     lib.mkMerge [
-      (mkIf (cfg.config != null) {
-        warnings =
-          (optional (lib.isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
-          ++ lib.flatten (
-            map (
-              b:
-              optional (lib.isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
-            ) cfg.config.bars
-          )
-          ++ [
-            (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
-          ];
-      })
-
       {
         assertions = [
           (lib.hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs lib.platforms.linux)
@@ -745,6 +739,20 @@ in
           };
         };
       }
+
+      (mkIf (cfg.config != null) {
+        warnings =
+          (optional (lib.isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
+          ++ lib.flatten (
+            map (
+              b:
+              optional (lib.isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
+            ) cfg.config.bars
+          )
+          ++ [
+            (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+          ];
+      })
     ]
   );
 }

@@ -1,0 +1,120 @@
+colors:
+  # Based on original "ayu" theme:
+  # https://github.com/ayu-theme/ayu-colors
+  background_color: 'fafafa'
+  black: '000'
+  apricot: 'ed9366'
+  green: '318866'
+  sienna: 'ed666a'
+  blue: '1b7dc4'
+  pink: 'f07171'
+  lime: '86b300'
+
+  light_green: '9ae845'
+
+  gray: '666666'
+  lightgray: 'aaa'
+
+core:
+  normal_text: {}
+  regular_file: {}
+  reset_to_normal: {}
+
+  directory:
+    foreground: blue
+
+  symlink:
+    foreground: pink
+
+  multi_hard_link: {}
+
+  fifo:
+    foreground: black
+    background: blue
+
+  socket:
+    foreground: black
+    background: pink
+
+  door:
+    foreground: black
+    background: pink
+
+  block_device:
+    foreground: black
+    background: sienna
+
+  character_device:
+    foreground: black
+    background: lime
+
+  broken_symlink:
+    foreground: black
+    background: sienna
+
+  missing_symlink_target:
+    foreground: black
+    background: sienna
+
+  setuid: {}
+
+  setgid: {}
+
+  file_with_capability: {}
+
+  sticky_other_writable: {}
+
+  other_writable: {}
+
+  sticky: {}
+
+  executable_file:
+    foreground: sienna
+    font-style: bold
+
+text:
+  special:
+    foreground: black
+    background: apricot
+
+  todo:
+    font-style: bold
+
+  licenses:
+    foreground: gray
+
+  configuration:
+    foreground: apricot
+
+  other:
+    foreground: apricot
+
+markup:
+  foreground: apricot
+
+programming:
+  source:
+    foreground: green
+
+  tooling:
+    foreground: light_green
+
+    continuous-integration:
+      foreground: green
+
+media:
+  foreground: pink
+
+office:
+  foreground: sienna
+
+archives:
+  foreground: lime
+  font-style: underline
+
+executable:
+  foreground: sienna
+  font-style: bold
+
+unimportant:
+  foreground: lightgray

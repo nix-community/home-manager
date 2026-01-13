@@ -24,7 +24,8 @@ let
   meliAccounts = (lib.attrsets.mapAttrs (name: value: (mkMeliAccounts name value)) enabledAccounts);
 
   mkMeliAccounts = (
-    name: account: {
+    name: account:
+    {
       root_mailbox = "${config.accounts.email.maildirBasePath}/${account.maildir.path}";
       format = "Maildir";
       identity = account.address;
@@ -33,6 +34,14 @@ let
       send_mail = mkSmtp account;
       mailboxes = account.meli.mailboxAliases;
     }
+    // lib.optionalAttrs (account.flavor == "fastmail.com") {
+      server_username = account.userName;
+      server_password_command = lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
+      format = "jmap";
+      server_url = "https://api.fastmail.com/jmap/session";
+      use_token = true;
+    }
+    // account.meli.settings
   );
 
   mkSmtp = account: {
@@ -70,14 +79,10 @@ in
     programs.meli = {
       enable = mkEnableOption "meli email client";
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.meli;
-        description = "meli package to use";
-      };
+      package = lib.mkPackageOption pkgs "meli" { };
 
       includes = mkOption {
-        type = with types; listOf (str);
+        type = with types; listOf str;
         description = "Paths of the various meli configuration files to include.";
         default = [ ];
       };
@@ -157,6 +162,14 @@ in
                 };
                 description = "Folder display name";
               };
+
+              settings = mkOption {
+                type = types.submodule {
+                  freeformType = tomlFormat.type;
+                };
+                default = { };
+                description = "Account specific meli configuration";
+              };
             };
           }
         )
@@ -164,6 +177,15 @@ in
     };
   };
   config = mkIf config.programs.meli.enable {
+    assertions = [
+      {
+        assertion = cfg.settings ? accounts == false;
+        message = ''
+          programs.meli.settings.accounts override the accounts.email values.
+                      Use per-email accounts.email.<ACCOUNT>.meli.settings instead'';
+      }
+    ];
+
     home.packages = [ config.programs.meli.package ];
 
     # Generate meli configuration from email accounts

@@ -10,6 +10,8 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
+  meta.maintainers = [ ];
+
   imports =
     let
       msg = ''
@@ -21,9 +23,6 @@ in
         configuration.'';
     in
     [ (lib.mkRemovedOptionModule [ "programs" "lsd" "enableAliases" ] msg) ];
-
-  meta.maintainers = [ ];
-
   options.programs.lsd = {
     enable = lib.mkEnableOption "lsd";
 
@@ -54,7 +53,7 @@ in
     };
 
     colors = lib.mkOption {
-      type = yamlFormat.type;
+      type = lib.types.either yamlFormat.type lib.types.path;
       default = { };
       example = {
         size = {
@@ -74,7 +73,7 @@ in
     };
 
     icons = lib.mkOption {
-      type = yamlFormat.type;
+      type = lib.types.either yamlFormat.type lib.types.path;
       default = { };
       example = {
         name = {
@@ -132,7 +131,8 @@ in
 
     xdg.configFile = {
       "lsd/colors.yaml" = lib.mkIf (cfg.colors != { }) {
-        source = yamlFormat.generate "lsd-colors" cfg.colors;
+        source =
+          if lib.types.path.check cfg.colors then cfg.colors else yamlFormat.generate "lsd-colors" cfg.colors;
       };
 
       "lsd/config.yaml" = lib.mkIf (cfg.settings != { }) {
@@ -140,7 +140,8 @@ in
       };
 
       "lsd/icons.yaml" = lib.mkIf (cfg.icons != { }) {
-        source = yamlFormat.generate "lsd-icons" cfg.icons;
+        source =
+          if lib.types.path.check cfg.icons then cfg.icons else yamlFormat.generate "lsd-icons" cfg.icons;
       };
     };
   };

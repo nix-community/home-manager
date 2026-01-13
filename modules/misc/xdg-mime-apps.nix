@@ -75,6 +75,24 @@ in
         the list is attempted, and so on.
       '';
     };
+
+    defaultApplicationPackages = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = [
+        pkgs.eog
+        pkgs.evince
+      ];
+      description = ''
+        Packages whose `.desktop` files will be used to establish default
+        mimetype associations.
+
+        These associations are appended to the associations in
+        [](#opt-xdg.mimeApps.defaultApplications). If multiple packages
+        associate with the same mime type, then the priority among them is
+        determined by their order in the list.
+      '';
+    };
   };
 
   config = lib.mkMerge [
@@ -106,8 +124,12 @@ in
                 done
               done > "$out"
             '';
+
+          processAll = p: processLines (builtins.readFile (associations p));
+
+          warning = "The Home Manager `lib.xdg.mimeAssociations` function is deprecated, you can now instead use the option `xdg.mimeApps.defaultApplicationPackages` to achieve the same without import from derivation";
         in
-        p: processLines (builtins.readFile (associations p));
+        lib.warn warning processAll;
     }
 
     (lib.mkIf cfg.enable {
@@ -118,15 +140,44 @@ in
       # Deprecated but still used by some applications.
       xdg.dataFile."applications/mimeapps.list".source = config.xdg.configFile."mimeapps.list".source;
 
-      xdg.configFile."mimeapps.list".text =
+      xdg.configFile."mimeapps.list".source =
         let
           joinValues = lib.mapAttrs (n: lib.concatStringsSep ";");
+
+          baseFile = (pkgs.formats.ini { }).generate "mimeapps.list" {
+            "Added Associations" = joinValues cfg.associations.added;
+            "Removed Associations" = joinValues cfg.associations.removed;
+            "Default Applications" = joinValues cfg.defaultApplications;
+          };
+
+          # With default application packages merged into the generated base file.
+          mergedFile = pkgs.runCommand "mimeapps.list" { ps = cfg.defaultApplicationPackages; } ''
+            export PATH=$PATH:${pkgs.crudini}/bin
+
+            function mergeEntry() {
+              local mime="$1"
+              local name="$2"
+              local existing
+
+              existing="$(crudini --get $out 'Default Applications' "$mime" 2>/dev/null || true)"
+              local value="$existing''${existing:+;}''$name"
+              crudini --ini-options=nospace --inplace --set $out 'Default Applications' "$mime" "$value"
+            }
+
+            install -m644 ${baseFile} $out
+
+            for p in $ps ; do
+              for path in "$p"/share/applications/*.desktop ; do
+                name="''${path##*/}"
+                mimes=$(crudini --get "$path" 'Desktop Entry' MimeType 2>/dev/null || true)
+                for mime in ''${mimes//;/ }; do
+                  mergeEntry "$mime" "$name"
+                done
+              done
+            done
+          '';
         in
-        lib.generators.toINI { } {
-          "Added Associations" = joinValues cfg.associations.added;
-          "Removed Associations" = joinValues cfg.associations.removed;
-          "Default Applications" = joinValues cfg.defaultApplications;
-        };
+        if cfg.defaultApplicationPackages == [ ] then baseFile else mergedFile;
     })
   ];
 }

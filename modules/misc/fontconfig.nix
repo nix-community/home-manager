@@ -15,6 +15,39 @@ let
 
   profileDirectory = config.home.profileDirectory;
 
+  fontConfigFileType = lib.types.submodule (
+    { name, ... }:
+    {
+      options = {
+        enable = lib.mkEnableOption "Whether this font config file should be generated.";
+        text = lib.mkOption {
+          type = lib.types.nullOr lib.types.lines;
+          default = null;
+          description = "Verbatim contents of the config file. If this option is null then the 'source' option must be set.";
+        };
+        source = lib.mkOption {
+          type = lib.types.nullOr lib.types.path;
+          default = null;
+          description = "Config file to source. Alternatively, use the 'text' option instead.";
+        };
+        label = lib.mkOption {
+          type = lib.types.str;
+          default = name;
+          defaultText = "<name>";
+          description = "Label to use for the name of the config file.";
+        };
+        priority = lib.mkOption {
+          type = lib.types.ints.between 0 99;
+          default = 90;
+          description = ''
+            Determines the order in which configs are loaded.
+            Must be a value within the range of 0-99, where priority 0 is the highest priority and 99 is the lowest.
+          '';
+        };
+      };
+    }
+  );
+
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -125,6 +158,44 @@ in
         example = "rgb";
       };
 
+      configFile = lib.mkOption {
+        type = lib.types.attrsOf fontConfigFileType;
+        default = { };
+        description = ''
+          Extra font config files that will be added to `~/.config/fontconfig/conf.d/`.
+          Files are named like `fontconfig/conf.d/{priority}-{label}.conf`.
+        '';
+        example = {
+          tamzen = {
+            enable = true;
+            label = "tamzen-disable-antialiasing";
+            text = ''
+              <?xml version="1.0"?>
+              <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+
+              <fontconfig>
+                <description>Disable anti-aliasing for Tamzen since it is a bitmap font</description>
+                <match target="pattern">
+                  <test name="family" compare="eq" qual="any">
+                    <string>Tamzen</string>
+                  </test>
+                  <edit name="antialias" mode="assign">
+                    <bool>false</bool>
+                  </edit>
+                </match>
+              </fontconfig>
+            '';
+            priority = 90;
+          }; # => conf.d/90-tamzen-disable-antialiasing.conf
+          commit-mono-options = {
+            enable = true;
+            source = "./resources/fontconfig/commit-mono.conf";
+            priority = 80;
+          }; # => conf.d/80-commit-mono-options.conf
+        };
+
+      };
+
     };
   };
 
@@ -164,7 +235,7 @@ in
       fi
     '';
 
-    xdg.configFile =
+    fonts.fontconfig.configFile =
       let
         mkFontconfigConf = conf: ''
           <?xml version='1.0'?>
@@ -178,21 +249,25 @@ in
         '';
       in
       {
-        "fontconfig/conf.d/10-hm-fonts.conf".text = mkFontconfigConf ''
-          <description>Add fonts in the Nix user profile</description>
+        fonts = {
+          enable = true;
+          priority = 10;
+          source = null; # Set the source as null explicitly so that it cannot be overwritten by mistake by a user
+          text = mkFontconfigConf ''
+            <description>Add fonts in the Nix user profile</description>
 
-          <include ignore_missing="yes">${config.home.path}/etc/fonts/conf.d</include>
-          <include ignore_missing="yes">${config.home.path}/etc/fonts/fonts.conf</include>
+            <include ignore_missing="yes">${config.home.path}/etc/fonts/conf.d</include>
+            <include ignore_missing="yes">${config.home.path}/etc/fonts/fonts.conf</include>
 
-          <dir>${config.home.path}/lib/X11/fonts</dir>
-          <dir>${config.home.path}/share/fonts</dir>
-          <dir>${profileDirectory}/lib/X11/fonts</dir>
-          <dir>${profileDirectory}/share/fonts</dir>
+            <dir>${config.home.path}/lib/X11/fonts</dir>
+            <dir>${config.home.path}/share/fonts</dir>
+            <dir>${profileDirectory}/lib/X11/fonts</dir>
+            <dir>${profileDirectory}/share/fonts</dir>
 
-          <cachedir>${config.home.path}/lib/fontconfig/cache</cachedir>
-        '';
-
-        "fontconfig/conf.d/10-hm-rendering.conf" =
+            <cachedir>${config.home.path}/lib/fontconfig/cache</cachedir>
+          '';
+        };
+        rendering =
           let
             set =
               name: value:
@@ -203,7 +278,7 @@ in
                   else if builtins.isString value then
                     "<const>${value}</const>"
                   else
-                    throw ("expected bool or string but got ${builtins.typeOf value}: ${toString value}");
+                    throw "expected bool or string but got ${builtins.typeOf value}: ${toString value}";
               in
               ''
                 <match target="font">
@@ -222,13 +297,15 @@ in
                 set "rgba" (builtins.replaceStrings [ "ertical-" ] [ "" ] cfg.subpixelRendering)
               );
           in
-          lib.mkIf (builtins.length content > 0) {
+          {
+            enable = builtins.length content > 0;
+            priority = 10;
+            source = null;
             text = mkFontconfigConf (
               lib.concatStrings ([ "<description>Set the rendering mode</description>\n" ] ++ content)
             );
           };
-
-        "fontconfig/conf.d/52-hm-default-fonts.conf".text =
+        default-fonts =
           let
             genDefault =
               fonts: name:
@@ -245,13 +322,26 @@ in
                 </alias>
               '';
           in
-          mkFontconfigConf ''
-            <!-- Default fonts -->
-            ${genDefault cfg.defaultFonts.sansSerif "sans-serif"}
-            ${genDefault cfg.defaultFonts.serif "serif"}
-            ${genDefault cfg.defaultFonts.monospace "monospace"}
-            ${genDefault cfg.defaultFonts.emoji "emoji"}
-          '';
+          {
+            enable = true;
+            priority = 52;
+            source = null;
+            text = mkFontconfigConf ''
+              <!-- Default fonts -->
+              ${genDefault cfg.defaultFonts.sansSerif "sans-serif"}
+              ${genDefault cfg.defaultFonts.serif "serif"}
+              ${genDefault cfg.defaultFonts.monospace "monospace"}
+              ${genDefault cfg.defaultFonts.emoji "emoji"}
+            '';
+          };
       };
+
+    xdg.configFile = lib.mapAttrs' (
+      name: config:
+      lib.nameValuePair "fontconfig/conf.d/${toString config.priority}-hm-${config.label}.conf" {
+        inherit (config) enable text;
+        source = lib.mkIf (config.source != null) config.source;
+      }
+    ) cfg.configFile;
   };
 }

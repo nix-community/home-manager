@@ -18,7 +18,7 @@
 	<string>org.nix-community.home.espanso</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@espanso@/bin/espanso</string>
+		<string>@espanso@/Applications/Espanso.app/Contents/MacOS/espanso</string>
 		<string>launcher</string>
 	</array>
 	<key>RunAtLoad</key>

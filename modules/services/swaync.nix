@@ -111,8 +111,8 @@ in
         After = [ config.wayland.systemd.target ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
         X-Restart-Triggers = lib.mkMerge [
-          [ config.xdg.configFile."swaync/config.json".source ]
-          (lib.mkIf (cfg.style != null) [ config.xdg.configFile."swaync/style.css".source ])
+          [ "${config.xdg.configFile."swaync/config.json".source}" ]
+          (lib.mkIf (cfg.style != null) [ "${config.xdg.configFile."swaync/style.css".source}" ])
         ];
       };
 

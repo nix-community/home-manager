@@ -100,7 +100,7 @@ in
       lib.optional (cfg.clean.enable && config.nix.gc.automatic)
         "programs.nh.clean.enable and nix.gc.automatic (Home-Manager) are both enabled. Please use one or the other to avoid conflict.";
 
-    assertions = lib.optionals pkgs.stdenv.isDarwin [
+    assertions = [
       (lib.hm.darwin.assertInterval "programs.nh.clean.dates" cfg.clean.dates pkgs)
     ];
 
@@ -131,30 +131,25 @@ in
       ];
     };
 
-    systemd.user = lib.mkIf (cfg.clean.enable && pkgs.stdenv.isLinux) {
+    systemd.user = lib.mkIf cfg.clean.enable {
       services.nh-clean = {
         Unit.Description = "Nh clean (user)";
-
         Service = {
           Type = "oneshot";
           ExecStart = "${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
         };
       };
-
       timers.nh-clean = {
         Unit.Description = "Run nh clean";
-
         Timer = {
           OnCalendar = cfg.clean.dates;
           Persistent = true;
         };
-
         Install.WantedBy = [ "timers.target" ];
       };
-
     };
 
-    launchd.agents.nh-clean = lib.mkIf (cfg.clean.enable && pkgs.stdenv.isDarwin) {
+    launchd.agents.nh-clean = lib.mkIf cfg.clean.enable {
       enable = true;
       config = {
         ProgramArguments = [
@@ -163,9 +158,7 @@ in
           "user"
         ]
         ++ lib.optional (cfg.clean.extraArgs != "") cfg.clean.extraArgs;
-
         StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.clean.dates;
-
       };
     };
   };

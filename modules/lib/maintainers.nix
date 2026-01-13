@@ -2,9 +2,9 @@
 #
 # This attribute set contains Home Manager module maintainers that do
 # not have an entry in the Nixpkgs maintainer list [1]. Entries here
-# are expected to be follow the same format as described in [1].
+# are expected to follow the same format as described in [1].
 #
-# [1] https://github.com/NixOS/nixpkgs/blob/fca0d6e093c82b31103dc0dacc48da2a9b06e24b/maintainers/maintainer-list.nix#LC1
+# [1] https://github.com/NixOS/nixpkgs/blob/737449404589e4a80b3fa99ecbc6d4d803c1f6dc/maintainers/maintainer-list.nix#LC1
 {
   # keep-sorted start case=no numeric=no block=yes
   "3ulalia" = {
@@ -24,6 +24,12 @@
     email = "vcs@ersei.net";
     github = "9p4";
     githubId = 17993169;
+  };
+  "will-lol" = {
+    name = "William Bradshaw";
+    email = "will.bradshaw50@gmail.com";
+    github = "will-lol";
+    githubId = 65345408;
   };
   aabccd021 = {
     name = "Muhamad Abdurahman";
@@ -157,6 +163,18 @@
     github = "epixtm";
     githubId = 168025607;
   };
+  exzombie = {
+    name = "Jure Varlec";
+    email = "jure@varlec.si";
+    github = "exzombie";
+    githubId = 11456290;
+  };
+  farberbrodsky = {
+    name = "Michael Farber Brodsky";
+    email = "misha@farberbrodsky.com";
+    github = "farberbrodsky";
+    githubId = 36243759;
+  };
   fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
@@ -217,12 +235,6 @@
       }
     ];
   };
-  ipsavitsky = {
-    name = "Ilya Savitsky";
-    email = "ipsavitsky234@gmail.com";
-    github = "ipsavitsky";
-    githubId = 33558632;
-  };
   jack5079 = {
     name = "Jack W.";
     email = "nix@jack.cab";
@@ -260,6 +272,12 @@
     github = "jrobsonchase";
     githubId = 1553581;
     name = "Josh Robson Chase";
+  };
+  jtrrll = {
+    email = "jacksonterrill3@gmail.com";
+    github = "jtrrll";
+    githubId = 77407057;
+    name = "Jackson Terrill";
   };
   kaleo = {
     name = "Kaleo Cheng";
@@ -405,12 +423,6 @@
     github = "natecox";
     githubId = 2782695;
   };
-  nickthegroot = {
-    name = "Nick DeGroot";
-    email = "nick@nickthegroot.com";
-    github = "nickthegroot";
-    githubId = 1966472;
-  };
   nikp123 = {
     name = "nikp123";
     email = "nikp123@users.noreply.github.com";
@@ -459,6 +471,12 @@
     github = "poseidon-rises";
     githubId = 179542264;
   };
+  prescientmoon = {
+    name = "prescientmoon";
+    email = "git@moonythm.dev";
+    github = "prescientmoon";
+    githubId = 39400800;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";
@@ -483,12 +501,6 @@
     github = "Rosuavio";
     githubId = 7164552;
   };
-  rrvsh = {
-    name = "Mohammad Rafiq";
-    email = "rafiq@rrv.sh";
-    github = "rrvsh";
-    githubId = 20300874;
-  };
   rszamszur = {
     name = "Radosław Szamszur";
     email = "radoslawszamszur@gmail.com";
@@ -500,18 +512,6 @@
     email = "silmarjr2@gmail.com";
     github = "silmarp";
     githubId = 67292496;
-  };
-  swarsel = {
-    name = "Leon Schwarzäugl";
-    email = "leon@swarsel.win";
-    github = "Swarsel";
-    githubId = 32304731;
-    keys = [
-      {
-        longkeyid = "rsa4096/0x76FD3810215AE097";
-        fingerprint = "4BE7 9252 6228 9B47 6DBB  C17B 76FD 3810 215A E097";
-      }
-    ];
   };
   vortriz = {
     name = "Rishi Vora";

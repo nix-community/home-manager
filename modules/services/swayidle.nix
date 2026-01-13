@@ -21,49 +21,54 @@ in
   options.services.swayidle =
     let
 
-      timeoutModule =
-        { ... }:
-        {
-          options = {
-            timeout = mkOption {
-              type = types.ints.positive;
-              example = 60;
-              description = "Timeout in seconds.";
-            };
+      timeoutModule = {
+        options = {
+          timeout = mkOption {
+            type = types.ints.positive;
+            example = 60;
+            description = "Timeout in seconds.";
+          };
 
-            command = mkOption {
-              type = types.str;
-              description = "Command to run after timeout seconds of inactivity.";
-            };
+          command = mkOption {
+            type = types.str;
+            description = "Command to run after timeout seconds of inactivity.";
+          };
 
-            resumeCommand = mkOption {
-              type = with types; nullOr str;
-              default = null;
-              description = "Command to run when there is activity again.";
-            };
+          resumeCommand = mkOption {
+            type = with types; nullOr str;
+            default = null;
+            description = "Command to run when there is activity again.";
           };
         };
+      };
 
-      eventModule =
-        { ... }:
-        {
-          options = {
-            event = mkOption {
-              type = types.enum [
-                "before-sleep"
-                "after-resume"
-                "lock"
-                "unlock"
-              ];
-              description = "Event name.";
-            };
+      eventsModule = {
+        options = {
+          before-sleep = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Command to run before suspending.";
+          };
 
-            command = mkOption {
-              type = types.str;
-              description = "Command to run when event occurs.";
-            };
+          after-resume = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Command to run after resuming.";
+          };
+
+          lock = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Command to run when the logind session is locked.";
+          };
+
+          unlock = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Command to run when the logind session is unlocked.";
           };
         };
+      };
 
     in
     {
@@ -84,13 +89,31 @@ in
       };
 
       events = mkOption {
-        type = with types; listOf (submodule eventModule);
-        default = [ ];
+        type =
+          with types;
+          (coercedTo (listOf attrs)) (
+            events:
+            lib.warn
+              ''
+                The syntax of services.swayidle.events has changed. While it
+                previously accepted a list of events, it now accepts an attrset
+                keyed by the event name.
+              ''
+              (
+                lib.listToAttrs (
+                  map (e: {
+                    name = e.event;
+                    value = e.command;
+                  }) events
+                )
+              )
+          ) (submodule eventsModule);
+        default = { };
         example = literalExpression ''
-          [
-            { event = "before-sleep"; command = "''${pkgs.swaylock}/bin/swaylock -fF"; }
-            { event = "lock"; command = "lock"; }
-          ]
+          {
+            "before-sleep" = "''${pkgs.swaylock}/bin/swaylock -fF";
+            "lock" = "lock";
+          }
         '';
         description = "Run command on occurrence of a event.";
       };
@@ -117,6 +140,8 @@ in
     assertions = [
       (lib.hm.assertions.assertPlatform "services.swayidle" pkgs lib.platforms.linux)
     ];
+
+    home.packages = [ cfg.package ];
 
     systemd.user.services.swayidle = {
       Unit = {
@@ -146,13 +171,17 @@ in
                 t.resumeCommand
               ];
 
-            mkEvent = e: [
-              e.event
-              e.command
+            mkEvent = event: command: [
+              event
+              command
             ];
 
+            nonemptyEvents = lib.filterAttrs (event: command: command != null) cfg.events;
+
             args =
-              cfg.extraArgs ++ (lib.concatMap mkTimeout cfg.timeouts) ++ (lib.concatMap mkEvent cfg.events);
+              cfg.extraArgs
+              ++ (lib.concatMap mkTimeout cfg.timeouts)
+              ++ (lib.flatten (lib.mapAttrsToList mkEvent nonemptyEvents));
           in
           "${lib.getExe cfg.package} ${lib.escapeShellArgs args}";
       };

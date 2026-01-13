@@ -9,8 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
     strategy:
+      fail-fast: false
       matrix:
-        branch: [master, release-25.05]
+        branch: [master, release-25.11]
     steps:
       - name: Create GitHub App token
         uses: actions/create-github-app-token@v2
@@ -34,14 +35,14 @@ jobs:
             echo "email=$id+$name@users.noreply.github.com"
           } >> "$GITHUB_OUTPUT"
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ matrix.branch }}
           token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
       - name: Install Nix
         uses: cachix/install-nix-action@v31
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v27
+        uses: DeterminateSystems/update-flake-lock@v28
         with:
           token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           git-committer-name: ${{ steps.user-info.outputs.name || 'github-actions[bot]' }}

@@ -422,10 +422,9 @@ let
     // lib.optionalAttrs (iconMapObj != { }) { inherit iconMapObj; };
 in
 {
-  imports = [ (pkgs.path + "/nixos/modules/misc/meta.nix") ];
-
   meta.maintainers = with lib.maintainers; [ kira-bruneau ];
 
+  imports = [ (pkgs.path + "/nixos/modules/misc/meta.nix") ];
   options = {
     enable = mkOption {
       type = with types; bool;
@@ -472,7 +471,7 @@ in
 
     order = mkOption {
       type = with types; uniq (listOf str);
-      apply = builtins.map migrateEngineNameToIdV7;
+      apply = map migrateEngineNameToIdV7;
       default = [ ];
       example = [
         "ddg"

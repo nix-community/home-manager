@@ -4,18 +4,16 @@
   name = "standalone-standard-basics";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine =
-    { ... }:
-    {
-      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-      virtualisation.memorySize = 2048;
-      users.users.alice = {
-        isNormalUser = true;
-        description = "Alice Foobar";
-        password = "foobar";
-        uid = 1000;
-      };
+  nodes.machine = {
+    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+    virtualisation.memorySize = 2048;
+    users.users.alice = {
+      isNormalUser = true;
+      description = "Alice Foobar";
+      password = "foobar";
+      uid = 1000;
     };
+  };
 
   testScript = ''
     start_all()
@@ -106,6 +104,12 @@
     with subtest("Home Manager generations"):
       actual = succeed_as_alice("home-manager generations")
       expected = ": id 1 ->"
+      assert expected in actual, \
+        f"expected generations to contain {expected}, but found {actual}"
+
+    with subtest("Home Manager option"):
+      actual = succeed_as_alice("home-manager option home.username")
+      expected = "alice"
       assert expected in actual, \
         f"expected generations to contain {expected}, but found {actual}"
 

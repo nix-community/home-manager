@@ -188,7 +188,7 @@ in
         fi
       '';
 
-    programs.git.extraConfig.credential = mkIf cfg.gitCredentialHelper.enable (
+    programs.git.settings.credential = mkIf cfg.gitCredentialHelper.enable (
       builtins.listToAttrs (
         map (
           host:
@@ -204,7 +204,7 @@ in
 
     xdg.dataFile."gh/extensions" = mkIf (cfg.extensions != [ ]) {
       source = pkgs.linkFarm "gh-extensions" (
-        builtins.map (p: {
+        map (p: {
           name = p.pname;
           path = "${p}/bin";
         }) cfg.extensions

@@ -92,6 +92,23 @@ class TestRunner:
             # Can happen if fzf is not found or the user cancels (non-zero exit)
             return []
 
+    def _get_store_path(self, test: str, nix_args: list[str]) -> str | None:
+        """Retrieve the store path of a test."""
+        try:
+            store_cmd = [
+                "nix", "build", "--no-link", "--json", "--reference-lock-file", "flake.lock",
+                f"./tests#{test}", *nix_args
+            ]
+            result = _run_command(store_cmd, cwd=self.repo_root, check=False)
+            if result.returncode == 0:
+                import json
+                build_info = json.loads(result.stdout)
+                if build_info:
+                    return build_info[0]["outputs"]["out"]
+        except Exception:
+            pass
+        return None
+
     def run_tests(self, tests_to_run: list[str], nix_args: list[str]) -> bool:
         """Run the selected tests and report the outcome."""
         if not tests_to_run:
@@ -105,16 +122,47 @@ class TestRunner:
         for i, test in enumerate(tests_to_run, 1):
             print(f"\n--- Running test {i}/{count}: {test} ---")
             cmd = [
-                "nix", "build", "-L", "--reference-lock-file", "flake.lock",
+                "nix", "build", "-L", "--keep-failed", "--reference-lock-file", "flake.lock",
                 f"./tests#{test}", *nix_args
             ]
             try:
                 # For this command, we want output to go directly to the terminal
-                subprocess.run(cmd, check=True, cwd=self.repo_root)
+                result = subprocess.run(cmd, check=True, cwd=self.repo_root, capture_output=True, text=True)
                 print(f"{SUCCESS_EMOJI} Test passed: {test}")
-            except subprocess.CalledProcessError:
+
+                store_path = self._get_store_path(test, nix_args)
+                if store_path:
+                    print(f"{INFO_EMOJI} Test directory available at: {store_path}/tested/", file=sys.stderr)
+
+            except subprocess.CalledProcessError as e:
                 failed_tests.append(test)
                 print(f"{FAILURE_EMOJI} Test failed: {test}", file=sys.stderr)
+
+                if e.stderr:
+                    print(e.stderr, file=sys.stderr)
+
+                import re
+                if e.stderr:
+                    build_dir_match = re.search(r"keeping build directory '([^']+)'", e.stderr)
+                    if build_dir_match:
+                        build_dir = build_dir_match.group(1)
+                        try:
+                            import glob
+                            attr_files = glob.glob(f"{build_dir}/.attr-*")
+                            for attr_file in attr_files:
+                                with open(attr_file, 'r') as f:
+                                    content = f.read()
+                                    tested_match = re.search(r'TESTED="([^"]+)"', content)
+                                    if tested_match:
+                                        tested_path = tested_match.group(1)
+                                        print(f"{INFO_EMOJI} Generated test directory at: {tested_path}/", file=sys.stderr)
+                                        break
+                        except Exception:
+                            print(f"{INFO_EMOJI} Build directory available at: {build_dir}", file=sys.stderr)
+
+                store_path = self._get_store_path(test, nix_args)
+                if store_path:
+                    print(f"{INFO_EMOJI} Test directory available at: {store_path}/tested/", file=sys.stderr)
 
         print("\n--- Summary ---")
         if not failed_tests:

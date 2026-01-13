@@ -45,16 +45,18 @@ in
       '';
       example = lib.literalExpression ''
         {
-          ipc = "on";
           splash = false;
-          splash_offset = 2.0;
-
-          preload =
-            [ "/share/wallpapers/buttons.png" "/share/wallpapers/cat_pacman.png" ];
 
           wallpaper = [
-            "DP-3,/share/wallpapers/buttons.png"
-            "DP-1,/share/wallpapers/cat_pacman.png"
+            {
+              monitor = "DP-3";
+              path = "/share/wallpapers/buttons.png";
+              fit_mode = "tile";
+            }
+            {
+              monitor = "DP-1";
+              path = "/share/wallpapers/cat_pacman.png";
+            }
           ];
         }
       '';
@@ -62,7 +64,10 @@ in
 
     importantPrefixes = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [ "$" ];
+      default = [
+        "$"
+        "monitor"
+      ];
       example = [ "$" ];
       description = ''
         List of prefix of attributes to source at the top of the config.

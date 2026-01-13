@@ -45,9 +45,17 @@ in
           packageExample = "pkgs.gnome.gnome-themes-extra";
         }
       );
-      default = cfg.theme;
-      defaultText = literalExpression "config.gtk.theme";
-      description = "Theme for GTK 4 applications.";
+      default = if lib.versionOlder config.home.stateVersion "26.05" then cfg.theme else null;
+      defaultText = literalExpression ''if lib.versionOlder config.home.stateVersion "26.05" then cfg.theme else null'';
+      description = ''
+        Theme for GTK 4 applications.
+
+        Warning: This is not officially supported and applied using a workaround.
+        It may cause issues with some apps.
+
+        For context, see [Please don’t theme our apps](https://stopthemingmy.app/)
+        and [Restyling apps at scale](https://blogs.gnome.org/tbernard/2018/10/15/restyling-apps-at-scale/).
+      '';
     };
 
     iconTheme = mkOption {
@@ -74,6 +82,18 @@ in
       default = cfg.cursorTheme;
       defaultText = literalExpression "config.gtk.cursorTheme";
       description = "Cursor theme for GTK 4 applications.";
+    };
+
+    colorScheme = mkOption {
+      type = types.nullOr (
+        types.enum [
+          "dark"
+          "light"
+        ]
+      );
+      default = cfg.colorScheme;
+      defaultText = literalExpression "config.gtk.colorScheme";
+      description = "Color scheme for GTK 4 applications.";
     };
 
     extraConfig = mkOption {
@@ -105,11 +125,13 @@ in
         text = toIni {
           Settings =
             gtkLib.mkGtkSettings {
+              gtkVersion = 4;
               inherit (cfg4)
                 font
                 theme
                 iconTheme
                 cursorTheme
+                colorScheme
                 ;
             }
             // cfg4.extraConfig;

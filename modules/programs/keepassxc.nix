@@ -62,8 +62,15 @@ in
         Configuration written to
         {file}`$XDG_CONFIG_HOME/keepassxc/keepassxc.ini`.
 
-        See <https://github.com/keepassxreboot/keepassxc/blob/647272e9c5542297d3fcf6502e6173c96f12a9a0/src/core/Config.cpp#L49-L223>
+        See <https://github.com/keepassxreboot/keepassxc/blob/develop/src/core/Config.cpp>
         for the full list of options.
+
+        ::: {.note}
+        When the settings are non-empty, the configuration file will be linked
+        into the Nix store and KeePassXC will report an access error for its
+        configuration file. This is expected and can not be fixed in a way that
+        aligns with Home Manager's principles. See [#8257](https://github.com/nix-community/home-manager/issues/8257) for more details.
+        :::
       '';
     };
 

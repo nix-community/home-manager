@@ -9,6 +9,7 @@ let
     attrValues
     concatStringsSep
     filter
+    flatten
     length
     literalExpression
     mapAttrsToList
@@ -182,14 +183,12 @@ let
           3;
       "mail.smtpserver.smtp_${id}.username" = account.userName;
     }
-    // builtins.foldl' (a: b: a // b) { } (
-      builtins.map (address: toThunderbirdSMTP account address) addresses
-    )
+    // builtins.foldl' (a: b: a // b) { } (map (address: toThunderbirdSMTP account address) addresses)
     // optionalAttrs (account.smtp != null && account.primary) {
       "mail.smtp.defaultserver" = "smtp_${id}";
     }
     // builtins.foldl' (a: b: a // b) { } (
-      builtins.map (address: toThunderbirdIdentity account address) addresses
+      map (address: toThunderbirdIdentity account address) addresses
     )
     // account.thunderbird.settings id;
 
@@ -785,13 +784,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    warnings = lib.optionals (!cfg.darwinSetupWarning) [
-      ''
-        Using programs.thunderbird.darwinSetupWarning is deprecated and will be
-        removed in the future. Thunderbird is now supported on Darwin.
-      ''
-    ];
-
     assertions = [
       (
         let
@@ -884,6 +876,13 @@ in
       )
     ];
 
+    warnings = lib.optionals (!cfg.darwinSetupWarning) [
+      ''
+        Using programs.thunderbird.darwinSetupWarning is deprecated and will be
+        removed in the future. Thunderbird is now supported on Darwin.
+      ''
+    ];
+
     home.packages = [
       cfg.package
     ]
@@ -918,7 +917,14 @@ in
               calendarAccounts = getAccountsForProfile name enabledCalendarAccountsWithId;
               contactAccounts = getAccountsForProfile name enabledContactAccountsWithId;
 
-              smtp = filter (a: a.smtp != null) emailAccounts;
+              accountsSmtp = filter (a: a.smtp != null) emailAccounts;
+              aliasesSmtp =
+                let
+                  getAliasesWithSmtp = a: filter (al: builtins.isAttrs al && al.smtp != null) a.aliases;
+                  getAliasesWithId = a: map (al: al // { id = getId a al; }) (getAliasesWithSmtp a);
+                in
+                flatten (map getAliasesWithId emailAccounts);
+              smtp = accountsSmtp ++ aliasesSmtp;
 
               feedAccounts = addId (attrValues profile.feedAccounts);
 

@@ -1,0 +1,5 @@
+agent_prelude: default
+model: openai:gpt-4o
+temperature: 0.5
+top_p: 0.7
+use_tools: fs,web_search

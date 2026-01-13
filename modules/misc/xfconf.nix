@@ -135,7 +135,7 @@ in
     home.activation.xfconfSettings = lib.hm.dag.entryAfter [ "installPackages" ] (
       let
         mkCommand = channel: property: value: ''
-          run ${pkgs.xfce.xfconf}/bin/xfconf-query \
+          run ${pkgs.xfconf}/bin/xfconf-query \
             ${lib.escapeShellArgs (
               [
                 "-c"
