@@ -112,7 +112,7 @@ in
       in
       {
         NIX_PATH =
-          if config.nix.enable && (config.nix.settings.use-xdg-base-directories or false) then
+          if config.nix.useXdg then
             "${config.xdg.stateHome}/nix/defexpr/channels\${NIX_PATH:+:}$NIX_PATH"
           else
             "$HOME/.nix-defexpr/channels\${NIX_PATH:+:}$NIX_PATH";
