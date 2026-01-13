@@ -107,6 +107,7 @@ in
         default = false;
         description = ''
           Whether to use flake-based Home Manager configuration.
+          Also check `services.home-manager.autoUpgrade.flakeDir` option.
         '';
       };
 
@@ -117,6 +118,7 @@ in
         example = "/home/user/dotfiles";
         description = ''
           Directory containing flake.nix.
+          Also check `services.home-manager.autoUpgrade.useFlake` option.
         '';
       };
 
