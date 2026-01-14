@@ -226,6 +226,39 @@ list of raw value</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="nixos-opt-home-manager.startAsUserService"></a><a class="term" href="nixos-options.xhtml#nixos-opt-home-manager.startAsUserService"><code class="option">home-manager.startAsUserService</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to activate each user’s environment on demand, when
+they log in, using a systemd user service.  If this option is
+off, all configured users’ environments are instead activated
+during boot-up.</p><p>This option needs to be turned on in any situation where users’
+home directories are not available until they log in; for
+example, when using pam_mount.</p><p>Other usage scenarios are still experimental.  It may speed up
+boot when there are many users; this has not yet been confirmed.
+It could break configurations where the configured users do not
+(or do not always) run their processes within a complete
+systemd-managed user context.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/nixos" target="_top">
+&lt;home-manager/nixos&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="nixos-opt-home-manager.useGlobalPkgs"></a><a class="term" href="nixos-options.xhtml#nixos-opt-home-manager.useGlobalPkgs"><code class="option">home-manager.useGlobalPkgs</code>
   </a>
  </span>
