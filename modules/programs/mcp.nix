@@ -44,7 +44,7 @@ in
       '';
       description = ''
         MCP server configurations written to
-        {file}`XDG_CONFIG_HOME/.config/mcp/mcp.json`
+        {file}`XDG_CONFIG_HOME/mcp/mcp.json`
       '';
     };
   };
