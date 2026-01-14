@@ -19,6 +19,7 @@ let
   corePlugins = [
     "audio-recorder"
     "backlink"
+    "bases"
     "bookmarks"
     "canvas"
     "command-palette"
@@ -84,6 +85,7 @@ in
         type = types.raw;
         default = [
           "backlink"
+          "bases"
           "bookmarks"
           "canvas"
           "command-palette"
@@ -438,12 +440,6 @@ in
                 {
                   name = "${vault.target}/.obsidian/core-plugins.json";
                   value.source = (pkgs.formats.json { }).generate "core-plugins.json" (
-                    map (plugin: plugin.name) vault.settings.corePlugins
-                  );
-                }
-                {
-                  name = "${vault.target}/.obsidian/core-plugins-migration.json";
-                  value.source = (pkgs.formats.json { }).generate "core-plugins-migration.json" (
                     builtins.listToAttrs (
                       map (name: {
                         inherit name;
@@ -536,21 +532,32 @@ in
               ]) vaults
             )
           );
-      };
 
-      xdg.configFile."obsidian/obsidian.json".source = (pkgs.formats.json { }).generate "obsidian.json" {
-        vaults = builtins.listToAttrs (
-          map (vault: {
-            name = builtins.hashString "md5" vault.target;
-            value = {
-              path = "${config.home.homeDirectory}/${vault.target}";
-            }
-            // (lib.attrsets.optionalAttrs ((builtins.length vaults) == 1) {
-              open = true;
-            });
-          }) vaults
-        );
-        updateDisabled = true;
+        activation.obsidian =
+          let
+            template = (pkgs.formats.json { }).generate "obsidian.json" {
+              vaults = builtins.listToAttrs (
+                map (vault: {
+                  name = builtins.substring 0 16 (builtins.hashString "md5" vault.target);
+                  value = {
+                    path = "${config.home.homeDirectory}/${vault.target}";
+                  };
+                }) vaults
+              );
+              updateDisabled = true;
+            };
+          in
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            OBSIDIAN_CONFIG="$HOME/.config/obsidian/obsidian.json"
+            if [ -f "$OBSIDIAN_CONFIG" ]; then
+              tmp=$(mktemp)
+              ${lib.getExe pkgs.jq} -s '.[0] * .[1]' "$OBSIDIAN_CONFIG" "${template}" > "$tmp"
+              install -m644 "$tmp" "$OBSIDIAN_CONFIG"
+              rm -f "$tmp"
+            else
+              install -m644 ${template} "$OBSIDIAN_CONFIG"
+            fi
+          '';
       };
 
       assertions = [
