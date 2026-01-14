@@ -113,7 +113,7 @@ in
           eval "$(SHELL=zsh ${shellCommand})"
         '';
         programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration ''
-          let keychain_shell_command = (SHELL=bash ${shellCommand}| parse -r '(\w+)=(.*); export \1' | transpose -ird)
+          let keychain_shell_command = (SHELL=bash ${shellCommand}| parse -r '(\w+)="?(.*?)"?; export \1' | transpose -ird)
           if not ($keychain_shell_command|is-empty) {
             $keychain_shell_command | load-env
           }
