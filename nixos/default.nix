@@ -89,7 +89,7 @@ in
       };
     }
 
-    (mkIf (cfg.users != { } && !cfg.startAsUserService) {
+    (mkIf (!cfg.startAsUserService && cfg.users != { }) {
       systemd.services = lib.mapAttrs' (
         _: usercfg:
         let
@@ -140,7 +140,7 @@ in
       ) cfg.users;
     })
 
-    (mkIf (cfg.users != { } && cfg.startAsUserService) {
+    (mkIf (cfg.startAsUserService && cfg.users != { }) {
       systemd.user.services.home-manager = baseUnit "%u" // {
         # this _should_ depend on nix-daemon.socket, as the system-service
         # version of this unit does, but systemd doesn't allow user units
