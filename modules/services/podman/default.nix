@@ -96,7 +96,7 @@ in
 
     services.podman.settings.storage.storage.driver = lib.mkDefault "overlay";
 
-    # Configuration files are written to `$XDG_CONFIG_HOME/.config/containers`
+    # Configuration files are written to `$XDG_CONFIG_HOME/containers`
     # On Linux: podman reads them directly from this location
     # On Darwin: these files are automatically mounted into the podman machine VM
     #            (see darwin.nix for the volume mount configuration)
