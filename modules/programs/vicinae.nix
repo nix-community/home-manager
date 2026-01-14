@@ -161,7 +161,7 @@ in
       }
       {
         assertion = !cfg.useLayerShell -> !versionPost0_17;
-        message = ''After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.'';
+        message = "After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.";
       }
     ];
     lib.vicinae.mkExtension = (

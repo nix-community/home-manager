@@ -87,7 +87,7 @@ in
         pathStr = toString path;
         name = lib.hm.strings.storeFileName (baseNameOf pathStr);
       in
-      pkgs.runCommandLocal name { } ''ln -s ${lib.escapeShellArg pathStr} $out'';
+      pkgs.runCommandLocal name { } "ln -s ${lib.escapeShellArg pathStr} $out";
 
     # This verifies that the links we are about to create will not
     # overwrite an existing file.

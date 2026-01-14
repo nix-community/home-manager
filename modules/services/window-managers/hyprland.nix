@@ -352,8 +352,7 @@ in
         warning = "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake.";
 
         filterNonBinds =
-          attrs:
-          builtins.filter (n: builtins.match ''bind[[:lower:]]*'' n == null) (builtins.attrNames attrs);
+          attrs: builtins.filter (n: builtins.match "bind[[:lower:]]*" n == null) (builtins.attrNames attrs);
 
         # attrset of { <submap name> = <list of non bind* keys>; } for all submaps
         submapWarningsAttrset = builtins.mapAttrs (
