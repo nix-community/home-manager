@@ -1214,7 +1214,7 @@
     ];
     matrix = "@hey2022:matrix.org";
     name = "Yiheng He";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   hitsmaxft = {
     email = "mfthits@gmail.com";
