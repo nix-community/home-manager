@@ -339,9 +339,118 @@ let
     modKey = mkNullOption (types.strMatching "Super|Alt|Mod3|Mod5|Ctrl|Shift") "Customize the 'Mod' key for key bindings. Only valid modifiers are allowed, e.g. Super, Alt, Mod3, Mod5, Ctrl, Shift.";
     modKeyNested = mkNullOption (types.strMatching "Super|Alt|Mod3|Mod5|Ctrl|Shift") "Same as modKey but for nested sessions.";
   };
+
+  # layout options
+  layoutOptions =
+    let
+      # per-output layer options can disable options by setting them to false
+      mkLayoutBoolOption =
+        description:
+        (mkBoolOption description)
+        // {
+          apply = bindNull (v: if v then { } else false);
+        };
+
+      # helper type for distances
+      mkDistanceOptions =
+        description:
+        (mkNullOption (types.listOf (
+          types.attrTag {
+            none = mkOption { type = types.submodule { }; };
+            proportion = mkOption {
+              type = types.numbers.nonnegative;
+            };
+            fixed = mkOption {
+              type = types.ints.unsigned;
+            };
+          }
+        )) description)
+        // {
+          apply = bindNull (v: {
+            _children = v;
+          });
+        };
+
+    in
+    {
+      gaps = mkNullOption types.numbers.nonnegative "Gaps around (inside and outside) windows in logical pixels.";
+      centerFocusedColumn = mkNullOption (types.strMatching "never|always|on-overflow") "When to center a column when changing focus.";
+      alwaysCenterSingleColumn = mkLayoutBoolOption "Always center a single column on a workspace, regardless of the `center-focused-column` option.";
+      emptyWorkspaceAboveFirst = mkLayoutBoolOption "Always add an empty workspace at the very start, in addition to the empty workspace at the very end.";
+      defaultColumnDisplay = mkNullOption (types.strMatching "normal|tabbed") "Default display mode for new columns.";
+      presetColumnWidths = mkDistanceOptions "Set the widths that the `switch-preset-column-width` action toggles between.";
+      defaultColumnWidth = mkDistanceOptions "Default width of new windows.";
+      presetWindowHeights = mkDistanceOptions "Set the heights that the `switch-preset-window-height` action toggles between.";
+      focusRing = mkBorderOptions "Options for focus rings. A focus ring is drawn only around the active window.";
+      border = mkBorderOptions "Options for borders. Borders are drawn around all windows.";
+      shadow = mkShadowOption false "Shadow rendered behind a window.";
+      tabIndicator = mkTabIndicatorOptions "Appearance of the tab indicator.";
+      insertHint = mkSubOptions {
+        color = mkNullOption types.str "Color options for insert hint.";
+        gradient = mkGradientOption "Gradient options for insert hint.";
+      } "Settings for the window insert position hint during an interactive window move.";
+      struts =
+        mkSubOptions
+          {
+            left = mkNullOption types.number "Left strut rounded to physical pixels according to scale.";
+            right = mkNullOption types.number "Right strut rounded to physical pixels according to scale.";
+            top = mkNullOption types.number "Top strut rounded to physical pixels according to scale.";
+            bottom = mkNullOption types.number "Bottom strut rounded to physical pixels according to scale.";
+          }
+          "Shrink the area occupied by windows, similarly to layer-shell panels. You can think of them as a kind of outer gaps. They are set in logical pixels.";
+      backgroundColor = mkNullOption types.str "Default background color that niri draws for workspaces.";
+    };
+
+  # per-output options
+  perOutputOptions = {
+    off = mkFlagOption "Turn off that output entirely.";
+    mode = mkNullOption (types.strMatching "^[0-9]+x[0-9]+(@[0-9]+(\\.[0-9]*)?)?$") null // {
+      description = "Set the monitor resolution and refresh rate.";
+      example = "1920x1080@120.030";
+    };
+    scale = mkNullOption (types.float) "Set the scale of the monitor.";
+    transform = mkNullOption (types.strMatching "normal|90|180|270|flipped|flipped-90|flipped-180|flipped-270") "Rotate the output counter-clockwise.";
+    position =
+      mkSubOptions {
+        x = mkNullOption (types.ints.unsigned) "X position.";
+        y = mkNullOption (types.ints.unsigned) "Y position.";
+      } "Set the position of the output in the global coordinate space."
+      // {
+        apply = bindNull (t: {
+          _props = {
+            inherit (t) x y;
+          };
+        });
+      };
+    variableRefreshRate = mkFlagOption "Enable variable refresh rate.";
+    focusAtStartup = mkFlagOption "Focus this output by default when niri starts.";
+    backgroundColor = mkNullOption types.str "Set the background color that niri draws for workspaces on this output.";
+    backdropColor = mkNullOption types.str "Set the backdrop color that niri draws for this output.";
+    hotCorners = mkSubOptions {
+      off = mkFlagOption "Turn off hot corners.";
+      topLeft = mkFlagOption "";
+      topRight = mkFlagOption "";
+      bottomLeft = mkFlagOption "";
+      bottomRight = mkFlagOption "";
+    } "Customize the hot corners for this output.";
+    layout = mkSubOptions layoutOptions "Customize layout settings for an output.";
+  };
 in
 {
   options = {
     input = mkSubOptions inputOptions "Input options.";
+    layout = mkSubOptions layoutOptions "Layout options.";
+    outputs = mkNullOption (types.attrsOf (types.submodule { options = perOutputOptions; })) null // {
+      description = "Output options.";
+      apply = bindNull (
+        mapAttrsToList (
+          name: value: {
+            output = value // {
+              _args = [ name ];
+            };
+          }
+        )
+      );
+    };
   };
 }

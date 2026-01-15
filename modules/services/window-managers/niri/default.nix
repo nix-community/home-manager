@@ -33,7 +33,6 @@ in
       package = mkPackageOption pkgs "xwayland-satellite" { nullable = true; };
     };
 
-
     systemd = {
       enable = mkEnableOption null // {
         default = true;
