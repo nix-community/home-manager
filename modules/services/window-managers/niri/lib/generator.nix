@@ -9,6 +9,8 @@ let
     flip
     pipe
     mapAttrsToList
+    concatMap
+    nameValuePair
     ;
 
   inherit (lib.generators) toKDL;
@@ -23,20 +25,36 @@ let
     in
     concatMapStringsSep "-" toLower parts;
 
-  # filters out values of null, also traversing '_children' list attributes
+  # filters out values of null, also traversing '_children' list attributes.
+  # to preserve null values, an attribute named '_preserve_null' can be placed inside an attrset.
+  # 'a = { b = null; _preserve_null = {}; };' will preserve 'a.b = null;'.
   filterStep =
-    cfg:
-    let
-      attrFilterPass = lib.attrsets.filterAttrsRecursive (_: v: v != null) cfg;
-      listFilterPass = lib.attrsets.mapAttrsRecursive (
-        path: value: if (lib.last path) == "_children" then map filterStep value else value
-      ) attrFilterPass;
-    in
-    listFilterPass;
+    set:
+    flip pipe [
+      builtins.attrNames
+      (concatMap (
+        name:
+        let
+          v = set.${name};
+        in
+        if (v != null || builtins.hasAttr "_preserve_null" set) && name != "_preserve_null" then
+          [
+            (nameValuePair name (
+              if builtins.isAttrs v then
+                filterStep v
+              else
+                (if builtins.isList v && name == "_children" then map filterStep v else v)
+            ))
+          ]
+        else
+          [ ]
+      ))
+      builtins.listToAttrs
+    ];
 
   # rename everything to kebab case
   renameStep =
-    cfg:
+    set:
     let
       recurse = flip pipe [
         (mapAttrsToList (
@@ -57,7 +75,7 @@ let
         builtins.listToAttrs
       ];
     in
-    recurse cfg;
+    recurse set;
 in
 pipe cfg [
   filterStep
