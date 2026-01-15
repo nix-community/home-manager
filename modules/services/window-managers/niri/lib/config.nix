@@ -8,6 +8,8 @@ let
     pipe
     filter
     mapAttrsToList
+    singleton
+    filterAttrs
     ;
 
   # --- Utilities ---
@@ -435,6 +437,243 @@ let
     } "Customize the hot corners for this output.";
     layout = mkSubOptions layoutOptions "Customize layout settings for an output.";
   };
+
+  # bind options
+  bindOptions = {
+    repeat = mkBoolOption "Enable or disable repeat.";
+    cooldownMs = mkNullOption types.ints.unsigned "Cooldown for repeat.";
+    hotkeyOverlayTitle = mkNullOption types.str "Add a bind to the hotkey overlay. Set to `null` to remove a hardcoded binding.";
+    allowInhibiting = mkBoolOption "Set to `false` to disallow inhibiting.";
+    allowWhenLocked = mkBoolOption "Allow using a spawn binding even when locked.";
+    action =
+      let
+        mkPlainActionOption = mkNullOption (types.submodule { });
+        mkArgActionOption =
+          options: argName: description:
+          mkSubOptions options description
+          // {
+            apply = bindNull (v: {
+              _props = builtins.removeAttrs v [ argName ];
+              _args = bindNull singleton v.${argName};
+            });
+          };
+        mkWorkspaceOption = mkNullOption (types.either types.ints.unsigned types.str);
+      in
+      mkOption {
+        type = types.attrTag {
+          quit = mkPropOptions {
+            skipConfirmation = mkBoolOption "Don't show confirmation dialog.";
+          } "Exit niri";
+          suspend = mkPlainActionOption "Suspend the session.";
+          powerOffMonitors = mkPlainActionOption "Power off all monitors via DPMS.";
+          powerOnMonitors = mkPlainActionOption "Power on all monitors via DPMS.";
+          spawn =
+            mkSubOptions {
+              command = mkNullOption (types.listOf types.str) "The command and its arguments.";
+            } "Spawn a command."
+            // {
+              apply = bindNull (v: {
+                _args = v.command;
+              });
+            };
+          spawnSh = mkArgActionOption {
+            command = mkNullOption types.str "The command string, passed to `sh -c`.";
+          } "command" "Spawn a command through the shell";
+          doScreenTransition = mkPropOptions {
+            delayMs = mkNullOption types.ints.unsigned "Delay in ms.";
+          } "Do a screen transition";
+          screenshot = mkPropOptions {
+            writeToDisk = mkBoolOption "Save the screenshot in the screenshot directory.";
+            showPointer = mkBoolOption "Show the pointer as part of the screenshot.";
+          } "Open the screenshot UI.";
+          screenshotScreen = mkPropOptions {
+            writeToDisk = mkBoolOption "Save the screenshot in the screenshot directory.";
+            showPointer = mkBoolOption "Show the pointer as part of the screenshot.";
+          } "Screenshot the focused screen.";
+          screenshotWindow = mkPropOptions {
+            writeToDisk = mkBoolOption "Save the screenshot in the screenshot directory.";
+            showPointer = mkBoolOption "Show the pointer as part of the screenshot.";
+          } "Screenshot the focused window.";
+          toggleKeyboardShortcutsInhibit = mkPlainActionOption "Toggle the keyboard shortcuts inhibitor (if any) for the focused surface.";
+          closeWindow = mkPlainActionOption "Close the focused window.";
+          fullscreenWindow = mkPlainActionOption "Toggle fullscreen on the focused window.";
+          toggleWindowedFullscreen = mkPlainActionOption "Toggle windowed (fake) fullscreen on the focused window.";
+          focusWindowInColumn = mkArgActionOption {
+            index = mkNullOption types.ints.unsigned "Index in column.";
+          } "index" "Focus a window in the focused column by index.";
+          focusWindowPrevious = mkPlainActionOption "Focus the previously focused window.";
+          focusColumnLeft = mkPlainActionOption "Focus the column to the left.";
+          focusColumnRight = mkPlainActionOption "Focus the column to the right.";
+          focusColumnFirst = mkPlainActionOption "Focus the first column.";
+          focusColumnLast = mkPlainActionOption "Focus the last column.";
+          focusColumnRightOrFirst = mkPlainActionOption "Focus the next column to the right, looping if at end.";
+          focusColumnLeftOrLast = mkPlainActionOption "Focus the next column to the left, looping if at start.";
+          focusColumn = mkArgActionOption {
+            index = mkNullOption types.ints.unsigned "Index of column.";
+          } "index" "Focus a column by index.";
+          focusWindowOrMonitorUp = mkPlainActionOption "Focus the window or the monitor above.";
+          focusWindowOrMonitorDown = mkPlainActionOption "Focus the window or the monitor below.";
+          focusColumnOrMonitorLeft = mkPlainActionOption "Focus the column or the monitor to the left.";
+          focusColumnOrMonitorRight = mkPlainActionOption "Focus the column or the monitor to the right.";
+          focusWindowDown = mkPlainActionOption "Focus the window below.";
+          focusWindowUp = mkPlainActionOption "Focus the window above.";
+          focusWindowDownOrColumnLeft = mkPlainActionOption "Focus the window below or the column to the left.";
+          focusWindowDownOrColumnRight = mkPlainActionOption "Focus the window below or the column to the right.";
+          focusWindowUpOrColumnLeft = mkPlainActionOption "Focus the window above or the column to the left.";
+          focusWindowUpOrColumnRight = mkPlainActionOption "Focus the window above or the column to the right.";
+          focusWindowOrWorkspaceDown = mkPlainActionOption "Focus the window or the workspace below.";
+          focusWindowOrWorkspaceUp = mkPlainActionOption "Focus the window or the workspace above.";
+          focusWindowTop = mkPlainActionOption "Focus the topmost window.";
+          focusWindowBottom = mkPlainActionOption "Focus the bottommost window.";
+          focusWindowDownOrTop = mkPlainActionOption "Focus the window below or the topmost window.";
+          focusWindowUpOrBottom = mkPlainActionOption "Focus the window above or the bottommost window.";
+          moveColumnLeft = mkPlainActionOption "Move the focused column to the left.";
+          moveColumnRight = mkPlainActionOption "Move the focused column to the right.";
+          moveColumnToFirst = mkPlainActionOption "Move the focused column to the start of the workspace.";
+          moveColumnToLast = mkPlainActionOption "Move the focused column to the end of the workspace.";
+          moveColumnLeftOrToMonitorLeft = mkPlainActionOption "Move the focused column to the left or to the monitor to the left.";
+          moveColumnRightOrToMonitorRight = mkPlainActionOption "Move the focused column to the right or to the monitor to the right.";
+          moveColumnToIndex = mkArgActionOption {
+            index = mkNullOption types.ints.unsigned "Index to move to.";
+          } "index" "Move the focused column to a specific index on its workspace.";
+          moveWindowDown = mkPlainActionOption "Move the focused window down in a column.";
+          moveWindowUp = mkPlainActionOption "Move the focused window up in a column.";
+          moveWindowDownOrToWorkspaceDown = mkPlainActionOption "Move the focused window down in a column or to the workspace below.";
+          moveWindowUpOrToWorkspaceUp = mkPlainActionOption "Move the focused window up in a column or to the workspace above.";
+          consumeOrExpelWindowLeft = mkPlainActionOption "Consume or expel the focused window left.";
+          consumeOrExpelWindowRight = mkPlainActionOption "Consume or expel the focused window right.";
+          consumeWindowIntoColumn = mkPlainActionOption "Consume the window to the right into the focused column.";
+          expelWindowFromColumn = mkPlainActionOption "Expel the focused window from the column.";
+          swapWindowRight = mkPlainActionOption "Swap focused window with one to the right.";
+          swapWindowLeft = mkPlainActionOption "Swap focused window with one to the left.";
+          toggleColumnTabbedDisplay = mkPlainActionOption "Toggle the focused column between normal and tabbed display.";
+          setColumnDisplay = mkArgActionOption {
+            columnDisplay = mkNullOption (types.strMatching "normal|tabbed") "";
+          } "columnDisplay" "Set the display mode of the focused column.";
+          centerColumn = mkPlainActionOption "Center the focused column on the screen.";
+          centerWindow = mkPlainActionOption "Center the focused window on the screen.";
+          centerVisibleColumns = mkPlainActionOption "Center all fully visible columns on the screen.";
+          focusWorkspaceDown = mkPlainActionOption "Focus the workspace below.";
+          focusWorkspaceUp = mkPlainActionOption "Focus the workspace above.";
+          focusWorkspace = mkArgActionOption {
+            workspace = mkWorkspaceOption "Workspace to focus.";
+          } "workspace" "Focus a workspace by reference (index or name).";
+          focusWorkspacePrevious = mkPlainActionOption "Focus the previous workspace.";
+          moveWindowToWorkspaceDown = mkPropOptions {
+            focus = mkBoolOption "Follow the window.";
+          } "Move the focused window down in a column.";
+          moveWindowToWorkspaceUp = mkPropOptions {
+            focus = mkBoolOption "Follow the window.";
+          } "Move the focused window up in a column.";
+          moveWindowToWorkspace = mkArgActionOption {
+            workspace = mkWorkspaceOption "Workspace to move to.";
+            focus = mkBoolOption "Follow the window.";
+          } "workspace" "Move the focused window down in a column or to the workspace below.";
+          moveColumnToWorkspaceDown = mkPropOptions {
+            focus = mkBoolOption "";
+          } "";
+          moveColumnToWorkspaceUp = mkPropOptions {
+            focus = mkBoolOption "";
+          } "";
+          moveColumnToWorkspace = mkArgActionOption {
+            workspace = mkWorkspaceOption "";
+            focus = mkBoolOption "";
+          } "workspace" "";
+          moveWorkspaceDown = mkPlainActionOption "";
+          moveWorkspaceUp = mkPlainActionOption "";
+          moveWorkspaceToIndex = mkArgActionOption {
+            index = mkNullOption types.ints.unsigned "";
+          } "index" "";
+          setWorkspaceName = mkArgActionOption {
+            name = mkNullOption types.str "";
+          } "name" "";
+          unsetWorkspaceName = mkPlainActionOption "";
+          focusMonitorLeft = mkPlainActionOption "";
+          focusMonitorRight = mkPlainActionOption "";
+          focusMonitorDown = mkPlainActionOption "";
+          focusMonitorUp = mkPlainActionOption "";
+          focusMonitorPrevious = mkPlainActionOption "";
+          focusMonitorNext = mkPlainActionOption "";
+          focusMonitor = mkArgActionOption {
+            monitor = mkNullOption types.str "";
+          } "monitor" "";
+          moveWindowToMonitorLeft = mkPlainActionOption "";
+          moveWindowToMonitorRight = mkPlainActionOption "";
+          moveWindowToMonitorDown = mkPlainActionOption "";
+          moveWindowToMonitorUp = mkPlainActionOption "";
+          moveWindowToMonitorPrevious = mkPlainActionOption "";
+          moveWindowToMonitorNext = mkPlainActionOption "";
+          moveWindowToMonitor = mkArgActionOption {
+            monitor = mkNullOption types.str "";
+          } "monitor" "";
+          moveColumnToMonitorLeft = mkPlainActionOption "";
+          moveColumnToMonitorRight = mkPlainActionOption "";
+          moveColumnToMonitorDown = mkPlainActionOption "";
+          moveColumnToMonitorUp = mkPlainActionOption "";
+          moveColumnToMonitorPrevious = mkPlainActionOption "";
+          moveColumnToMonitorNext = mkPlainActionOption "";
+          moveColumnToMonitor = mkArgActionOption {
+            monitor = mkNullOption types.str "";
+          } "monitor" "";
+          setWindowWidth = mkArgActionOption {
+            width = mkNullOption types.str "";
+          } "width" "";
+          setWindowHeight = mkArgActionOption {
+            height = mkNullOption types.str "";
+          } "height" "";
+          resetWindowHeight = mkPlainActionOption "";
+          switchPresetColumnWidth = mkPlainActionOption "";
+          switchPresetColumnWidthBack = mkPlainActionOption "";
+          switchPresetWindowWidth = mkPlainActionOption "";
+          switchPresetWindowWidthBack = mkPlainActionOption "";
+          switchPresetWindowHeight = mkPlainActionOption "";
+          switchPresetWindowHeightBack = mkPlainActionOption "";
+          maximizeColumn = mkPlainActionOption "";
+          maximizeWindowToEdges = mkPlainActionOption "";
+          setColumnWidth = mkArgActionOption {
+            width = mkNullOption types.str "";
+          } "width" "";
+          expandColumnToAvailableWidth = mkPlainActionOption "";
+          switchLayout = mkArgActionOption {
+            layout = mkNullOption (types.either types.ints.unsigned (types.strMatching "next|prev")) "" // {
+              apply = bindNull builtins.toString;
+            };
+          } "layout" "";
+          showHotkeyOverlay = mkPlainActionOption "";
+          moveWorkspaceToMonitorLeft = mkPlainActionOption "";
+          moveWorkspaceToMonitorRight = mkPlainActionOption "";
+          moveWorkspaceToMonitorDown = mkPlainActionOption "";
+          moveWorkspaceToMonitorUp = mkPlainActionOption "";
+          moveWorkspaceToMonitorPrevious = mkPlainActionOption "";
+          moveWorkspaceToMonitorNext = mkPlainActionOption "";
+          moveWorkspaceToMonitor = mkArgActionOption {
+            monitor = mkNullOption types.str "";
+          } "monitor" "";
+          toggleDebugTint = mkPlainActionOption "";
+          debugToggleOpaqueRegions = mkPlainActionOption "";
+          debugToggleDamage = mkPlainActionOption "";
+          toggleWindowFloating = mkPlainActionOption "";
+          moveWindowToFloating = mkPlainActionOption "";
+          moveWindowToTiling = mkPlainActionOption "";
+          focusFloating = mkPlainActionOption "";
+          focusTiling = mkPlainActionOption "";
+          switchFocusBetweenFloatingAndTiling = mkPlainActionOption "";
+          moveFloatingWindow = mkPropOptions {
+            x = mkNullOption types.int "";
+            y = mkNullOption types.int "";
+          } "";
+          toggleWindowRuleOpacity = mkPlainActionOption "";
+          setDynamicCastWindow = mkPlainActionOption "";
+          setDynamicCastMonitor = mkArgActionOption {
+            monitor = mkNullOption types.str "";
+          } "monitor" "";
+          clearDynamicCastTarget = mkPlainActionOption "";
+          toggleOverview = mkPlainActionOption "";
+          openOverview = mkPlainActionOption "";
+          closeOverview = mkPlainActionOption "";
+        };
+      };
+  };
 in
 {
   options = {
@@ -448,6 +687,24 @@ in
             output = value // {
               _args = [ name ];
             };
+          }
+        )
+      );
+    };
+    binds = mkNullOption (types.attrsOf (types.submodule { options = bindOptions; })) null // {
+      description = "Bind options.";
+      apply = bindNull (
+        builtins.mapAttrs (
+          n: v: {
+            # don't rename bind keys
+            _preserve_name = { };
+
+            # preserve null for hotkeyOverlayTitle and remove action
+            _props = (filterAttrs (n: v: n != "action" && (n == "hotkeyOverlayTitle" || v != null)) v) // {
+              _preserve_null = { };
+            };
+
+            _children = [ v.action ];
           }
         )
       );
