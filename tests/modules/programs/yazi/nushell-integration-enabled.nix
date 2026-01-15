@@ -4,7 +4,7 @@ let
   shellIntegration = ''
     def --env yy [...args] {
       let tmp = (mktemp -t "yazi-cwd.XXXXX")
-      yazi ...$args --cwd-file $tmp
+      ^yazi ...$args --cwd-file $tmp
       let cwd = (open $tmp)
       if $cwd != "" and $cwd != $env.PWD {
         cd $cwd

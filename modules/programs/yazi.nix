@@ -220,7 +220,7 @@ in
         bashIntegration = ''
           function ${cfg.shellWrapperName}() {
             local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-            yazi "$@" --cwd-file="$tmp"
+            command yazi "$@" --cwd-file="$tmp"
             if cwd="$(<"$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
               builtin cd -- "$cwd"
             fi
@@ -240,7 +240,7 @@ in
         nushellIntegration = ''
           def --env ${cfg.shellWrapperName} [...args] {
             let tmp = (mktemp -t "yazi-cwd.XXXXX")
-            yazi ...$args --cwd-file $tmp
+            ^yazi ...$args --cwd-file $tmp
             let cwd = (open $tmp)
             if $cwd != "" and $cwd != $env.PWD {
               cd $cwd
