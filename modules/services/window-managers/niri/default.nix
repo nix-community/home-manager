@@ -33,6 +33,51 @@ in
       package = mkPackageOption pkgs "xwayland-satellite" { nullable = true; };
     };
 
+
+    systemd = {
+      enable = mkEnableOption null // {
+        default = true;
+        description = ''
+          Whether to enable {file}`niri-session.target` on
+          niri startup. This links to {file}`graphical-session.target`}.
+          Some important environment variables will be imported to systemd
+          and D-Bus user environment before reaching the target, including
+          - `DISPLAY`
+          - `WAYLAND_DISPLAY`
+          - `XDG_CURRENT_DESKTOP`
+          - `NIXOS_OZONE_WL`
+          - `XCURSOR_THEME`
+          - `XCURSOR_SIZE`
+        '';
+      };
+
+      variables = lib.mkOption {
+        type = types.listOf types.str;
+        default = [
+          "DISPLAY"
+          "WAYLAND_DISPLAY"
+          "XDG_CURRENT_DESKTOP"
+          "NIXOS_OZONE_WL"
+          "XCURSOR_THEME"
+          "XCURSOR_SIZE"
+        ];
+        example = [ "-all" ];
+        description = ''
+          Environment variables to be imported in the systemd & D-Bus user
+          environment.
+        '';
+      };
+
+      extraCommands = lib.mkOption {
+        type = types.listOf types.str;
+        default = [
+          "systemctl --user stop niri-session.target"
+          "systemctl --user start niri-session.target"
+        ];
+        description = "Extra commands to be run after D-Bus activation.";
+      };
+    };
+
     config = mkOption {
       type = types.submodule configOptions;
       default = { };
