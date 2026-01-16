@@ -437,16 +437,6 @@ in
 
       vimPackageInfo = neovimUtils.makeVimPackageInfo (map suppressNotVimlConfig pluginsNormalized);
 
-      packpathDirs.hm = vimPackageInfo.vimPackage;
-      finalPackdir = neovimUtils.packDir packpathDirs;
-
-      packpathWrapperArgs = lib.optionals (packpathDirs.hm.start != [ ] || packpathDirs.hm.opt != [ ]) [
-        "--add-flags"
-        ''--cmd "set packpath^=${finalPackdir}"''
-        "--add-flags"
-        ''--cmd "set rtp^=${finalPackdir}"''
-      ];
-
       wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package {
         withNodeJs = cfg.withNodeJs || cfg.coc.enable;
         plugins = [ ];
@@ -466,11 +456,7 @@ in
           ps: (cfg.extraPython3Packages ps) ++ (lib.concatMap (f: f ps) vimPackageInfo.pluginPython3Packages);
         neovimRcContent = cfg.extraConfig;
         wrapperArgs =
-          cfg.extraWrapperArgs
-          ++ extraMakeWrapperArgs
-          ++ extraMakeWrapperLuaCArgs
-          ++ extraMakeWrapperLuaArgs
-          ++ packpathWrapperArgs;
+          cfg.extraWrapperArgs ++ extraMakeWrapperArgs ++ extraMakeWrapperLuaCArgs ++ extraMakeWrapperLuaArgs;
         wrapRc = false;
       };
     in
@@ -530,6 +516,17 @@ in
             lib.mkAfter (foldedLuaBlock "user-associated plugin config" cfg.generatedConfigs.lua)
           ))
         ];
+
+      # link the packpath in expected folder so that even unwrapped neovim can pick
+      # home-manager's plugins
+      xdg.dataFile."nvim/site/pack/hm" =
+        let
+          packpathDirs.hm = vimPackageInfo.vimPackage;
+        in
+        {
+          enable = allPlugins != [ ];
+          source = "${pkgs.neovimUtils.packDir packpathDirs}/pack/hm";
+        };
 
       xdg.configFile = lib.mkMerge (
         # writes runtime
