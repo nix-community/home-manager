@@ -555,6 +555,7 @@ in
               install -m644 "$tmp" "$OBSIDIAN_CONFIG"
               rm -f "$tmp"
             else
+              mkdir -p "$(dirname "$OBSIDIAN_CONFIG")"
               install -m644 ${template} "$OBSIDIAN_CONFIG"
             fi
           '';
