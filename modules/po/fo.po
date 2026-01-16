@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2026-01-07 17:01+0000\n"
+"PO-Revision-Date: 2026-01-16 09:01+0000\n"
 "Last-Translator: Brian E <brianellingsgaard9@gmail.com>\n"
 "Language-Team: Faroese <https://hosted.weblate.org/projects/home-manager/"
 "modules/fo/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: modules/files.nix:206
 msgid "Creating home file links in %s"
@@ -29,11 +29,11 @@ msgstr "Ruddi foreldraleys leinkir frá %s"
 
 #: modules/home-environment.nix:647
 msgid "Creating new profile generation"
-msgstr "Stovni nýggjan profil ættarlið"
+msgstr "Stovni nýtt vangaættarlið"
 
 #: modules/home-environment.nix:650
 msgid "No change so reusing latest profile generation"
-msgstr "Eingin broyting. Seinastið umhvarv ættarlið er enn í brúk"
+msgstr "Eingin broyting. Seinast vangaættarlið er enn í brúk"
 
 #: modules/home-environment.nix:699
 msgid ""
@@ -53,15 +53,15 @@ msgstr ""
 
 #: modules/home-environment.nix:735
 msgid "Activating %s"
-msgstr ""
+msgstr "Seti %s í gongd"
 
 #: modules/home-environment.nix:807
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: ókendur kostur '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "Flyting av vanga %s til %s"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
