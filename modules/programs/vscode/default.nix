@@ -81,6 +81,7 @@ let
     else
       "${config.xdg.configHome}/${configDir}/User";
 
+  argvPath = "${configDir}/argv.json";
   configFilePath =
     name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}settings.json";
   tasksFilePath =
@@ -412,6 +413,21 @@ in
       '';
     };
 
+    argvSettings = mkOption {
+      type = types.either types.path jsonFormat.type;
+      default = { };
+      example = literalExpression ''
+        {
+          enable-crash-reporter = false;
+        }
+      '';
+      description = ''
+        Configuration written to Visual Studio Code's
+        {file}`argv.json`.
+        This can be a JSON object or a path to a custom JSON file.
+      '';
+    };
+
     profiles = mkOption {
       type = types.attrsOf profileType;
       default = { };
@@ -482,6 +498,14 @@ in
     );
 
     home.file = lib.mkMerge (flatten [
+      (mkIf (cfg.argvSettings != { }) {
+        "${argvPath}".source =
+          if isPath cfg.argvSettings then
+            cfg.argvSettings
+          else
+            jsonFormat.generate "vscode-argv" cfg.argvSettings;
+      })
+
       (mapAttrsToList (n: v: [
         (mkIf ((mergedUserSettings v.userSettings v.enableUpdateCheck v.enableExtensionUpdateCheck) != { })
           {
