@@ -21,6 +21,7 @@ let
   };
 
   tests = {
+    argv = import ./argv.nix;
     keybindings = import ./keybindings.nix;
     tasks = import ./tasks.nix;
     mcp = import ./mcp.nix;
