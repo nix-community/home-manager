@@ -124,6 +124,8 @@ in
       }
     ];
 
+    home.packages = [ cfg.package ];
+
     systemd.user.services.wlsunset = {
       Unit = {
         Description = "Day/night gamma adjustments for Wayland compositors.";
