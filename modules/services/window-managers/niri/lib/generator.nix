@@ -13,7 +13,7 @@ let
     nameValuePair
     ;
 
-  inherit (lib.generators) toKDL;
+  inherit (lib.hm.generators) toKDL;
 
   # converts camelCase to kebab-case
   toKebabCase =
@@ -30,7 +30,7 @@ let
   # 'a = { b = null; _preserve_null = {}; };' will preserve 'a.b = null;'.
   filterStep =
     set:
-    flip pipe [
+    pipe set [
       builtins.attrNames
       (concatMap (
         name:
