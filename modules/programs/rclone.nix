@@ -356,8 +356,8 @@ in
                 mount-path = name;
                 mount = value;
               in
-              [
-                (lib.nameValuePair "rclone-mount:${replaceSlashes mount-path}@${remote-name}" {
+              lib.optional mount.enable (
+                lib.nameValuePair "rclone-mount:${replaceSlashes mount-path}@${remote-name}" {
                   Unit = {
                     Description = "Rclone FUSE daemon for ${remote-name}:${mount-path}";
                   };
@@ -382,8 +382,8 @@ in
                   };
 
                   Install.WantedBy = [ "default.target" ];
-                })
-              ]
+                }
+              )
             ) (lib.attrsToList remote.mounts)
           )
           (
