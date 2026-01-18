@@ -1,6 +1,15 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
+    "atlassian": {
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer token"
+      },
+      "timeout": 8000,
+      "type": "remote",
+      "url": "https://api-private.atlassian.com/mcp"
+    },
     "context7": {
       "enabled": true,
       "headers": {
@@ -9,12 +18,12 @@
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
     },
-    "disabled-server": {
+    "disabled": {
       "command": [
-        "echo",
-        "test"
+        "echo"
       ],
       "enabled": false,
+      "environment": {},
       "type": "local"
     },
     "everything": {
@@ -24,6 +33,7 @@
         "@modelcontextprotocol/server-everything"
       ],
       "enabled": true,
+      "environment": {},
       "type": "local"
     }
   }

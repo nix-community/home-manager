@@ -115,32 +115,27 @@ let
 
   isPath = p: builtins.isPath p || lib.isStorePath p;
 
-  transformMcpServerForVscode =
-    name: server:
-    let
-      # Remove the disabled field from the server config
-      cleanServer = lib.filterAttrs (n: v: n != "disabled") server;
-    in
-    {
-      name = name;
-      value = {
-        enabled = !(server.disabled or false);
-      }
-      // (
-        if server ? url then
-          {
-            type = "http";
-          }
-          // cleanServer
-        else if server ? command then
-          {
-            type = "stdio";
-          }
-          // cleanServer
-        else
-          { }
-      );
-    };
+  transformMcpServerForVscode = name: server: {
+    inherit name;
+    value =
+      if server.type == "sse" then
+        {
+          type = "sse";
+          inherit (server) url headers;
+        }
+      else if server.type == "http" then
+        {
+          type = "http";
+          inherit (server) url headers;
+        }
+      else if server.type == "stdio" then
+        {
+          type = "stdio";
+          inherit (server) command args env;
+        }
+      else
+        throw "Unexpected MCP server type: ${server.type}";
+  };
 
   profileType = types.submodule {
     options = {
@@ -537,7 +532,11 @@ in
                 let
                   transformedMcpServers =
                     if v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
-                      lib.listToAttrs (lib.mapAttrsToList transformMcpServerForVscode config.programs.mcp.servers)
+                      lib.listToAttrs (
+                        lib.mapAttrsToList transformMcpServerForVscode (
+                          lib.filterAttrs (_: server: server.enabled) config.programs.mcp.servers
+                        )
+                      )
                     else
                       { };
                   # Merge MCP servers: transformed servers + user servers, with user servers taking precedence

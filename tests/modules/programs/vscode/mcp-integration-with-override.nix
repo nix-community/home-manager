@@ -29,6 +29,7 @@ lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
     enable = true;
     servers = {
       everything = {
+        type = "stdio";
         command = "npx";
         args = [
           "-y"
@@ -36,6 +37,7 @@ lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
         ];
       };
       context7 = {
+        type = "http";
         url = "https://mcp.context7.com/mcp";
         headers = {
           CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
