@@ -1,17 +1,43 @@
 {
   "mcpServers": {
+    "atlassian": {
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer token"
+      },
+      "timeout": 10000,
+      "type": "sse",
+      "url": "https://api-private.atlassian.com/mcp"
+    },
     "context7": {
+      "enabled": true,
       "headers": {
         "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       },
-      "serverUrl": "https://mcp.context7.com/mcp"
+      "timeout": null,
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "disabled": {
+      "args": [],
+      "command": "echo",
+      "enabled": false,
+      "env": {},
+      "timeout": null,
+      "type": "stdio"
     },
     "everything": {
       "args": [
         "-y",
         "@modelcontextprotocol/server-everything"
       ],
-      "command": "npx"
+      "command": "npx",
+      "enabled": true,
+      "env": {
+        "DEBUG": "1"
+      },
+      "timeout": 5000,
+      "type": "stdio"
     }
   }
 }
