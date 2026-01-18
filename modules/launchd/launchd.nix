@@ -888,11 +888,12 @@ in
                   types.enum [
                     "IPv4"
                     "IPv6"
+                    "Unix"
                   ]
                 );
                 default = null;
                 description = ''
-                  This optional key can be used to specifically request that "IPv4" or "IPv6" socket(s) be created.
+                  This optional key can be used to specifically request that "IPv4" or "IPv6" or "Unix" socket(s) be created.
                 '';
               };
 

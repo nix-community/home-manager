@@ -4,6 +4,15 @@ let
   inherit (pkgs.stdenv) isDarwin;
 in
 {
+  test.unstubs = [
+    (_: _: {
+      runCommandCC = (
+        _: _: _:
+        "@gpg-agent-wrapper@"
+      );
+    })
+  ];
+
   services.gpg-agent.enable = true;
   programs.gpg = {
     enable = true;
