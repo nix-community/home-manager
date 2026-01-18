@@ -11,7 +11,7 @@ let
   cfg = config.programs.vscode;
   willUseIfd = package.pname != "vscode";
 
-  argvPath = "${cfg.nameShort}/argv.json";
+  argvPath = "${cfg.dataFolderName}/argv.json";
 
   content = ''
     {

@@ -81,7 +81,7 @@ let
     else
       "${config.xdg.configHome}/${configDir}/User";
 
-  argvPath = "${configDir}/argv.json";
+  argvPath = "${extensionDir}/argv.json";
   configFilePath =
     name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}settings.json";
   tasksFilePath =
