@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ config, ... }:
 {
   time = "2026-01-13T01:11:50+00:00";
-  condition = pkgs.stdenv.hostPlatform.isLinux;
+  condition = config.home-manager.autoUpgrade.enable;
   message = ''
 
     Multiple new options are available:
