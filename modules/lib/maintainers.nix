@@ -204,11 +204,6 @@
     github = "gauthsvenkat";
     githubId = 26820345;
   };
-  genericnerdyusername = {
-    email = "genericnerdyusername@proton.me";
-    github = "genericnerdyusername";
-    githubId = 111183546;
-  };
   henrisota = {
     email = "henrisota@users.noreply.github.com";
     github = "henrisota";
