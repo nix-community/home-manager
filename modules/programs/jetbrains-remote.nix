@@ -3,7 +3,7 @@ let
   cfg = config.programs.jetbrains-remote;
 in
 {
-  meta.maintainers = with lib.maintainers; [ genericnerdyusername ];
+  meta.maintainers = [ ];
 
   options.programs.jetbrains-remote = {
     enable = lib.mkEnableOption "JetBrains remote development system";
