@@ -47,7 +47,7 @@
   };
 
   test.asserts.assertions.expected = [
-    "`programs.claude-code.package` cannot be null when `mcpServers` is configured"
+    "`programs.claude-code.package` cannot be null when `mcpServers` or `enableMcpIntegration` is configured"
     "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`"
     "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`"
     "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`"

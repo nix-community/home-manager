@@ -7,6 +7,17 @@
 let
   cfg = config.programs.claude-code;
   jsonFormat = pkgs.formats.json { };
+  transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
+    lib.mapAttrs (
+      name: server:
+      (removeAttrs server [ "disabled" ])
+      // (lib.optionalAttrs (server ? url) { type = "http"; })
+      // (lib.optionalAttrs (server ? command) { type = "stdio"; })
+      // {
+        enabled = !(server.disabled or false);
+      }
+    ) config.programs.mcp.servers
+  );
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -21,6 +32,20 @@ in
       readOnly = true;
       internal = true;
       description = "Resulting customized claude-code package.";
+    };
+
+    enableMcpIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP servers config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.opencode.settings.mcp`.
+
+        Note: Settings defined in {option}`programs.mcp.servers` are merged
+        with {option}`programs.claude-code.mcpServers`, with Claude Code servers
+        taking precedence.
+      '';
     };
 
     settings = lib.mkOption {
@@ -359,8 +384,8 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.mcpServers == { } || cfg.package != null;
-        message = "`programs.claude-code.package` cannot be null when `mcpServers` is configured";
+        assertion = (cfg.mcpServers == { } && !cfg.enableMcpIntegration) || cfg.package != null;
+        message = "`programs.claude-code.package` cannot be null when `mcpServers` or `enableMcpIntegration` is configured";
       }
       {
         assertion = !(cfg.memory.text != null && cfg.memory.source != null);
@@ -390,11 +415,14 @@ in
 
     programs.claude-code.finalPackage =
       let
+        mergedMcpServers = transformedMcpServers // cfg.mcpServers;
         makeWrapperArgs = lib.flatten (
           lib.filter (x: x != [ ]) [
-            (lib.optional (cfg.mcpServers != { }) [
+            (lib.optional (cfg.mcpServers != { } || transformedMcpServers != { }) [
               "--append-flags"
-              "--mcp-config ${jsonFormat.generate "claude-code-mcp-config.json" { inherit (cfg) mcpServers; }}"
+              "--mcp-config ${
+                jsonFormat.generate "claude-code-mcp-config.json" { mcpServers = mergedMcpServers; }
+              }"
             ])
           ]
         );
