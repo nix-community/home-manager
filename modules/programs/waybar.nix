@@ -336,6 +336,10 @@ in
       }
 
       (mkIf cfg.systemd.enable {
+
+        systemd.user.packages = [
+          cfg.package
+        ];
         systemd.user.services.waybar = {
           Unit = {
             Description = "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
@@ -345,7 +349,6 @@ in
               "tray.target"
             ];
             After = [ cfg.systemd.target ];
-            ConditionEnvironment = "WAYLAND_DISPLAY";
             X-Reload-Triggers =
               optional (settings != [ ]) "${config.xdg.configFile."waybar/config".source}"
               ++ optional (cfg.style != null) "${config.xdg.configFile."waybar/style.css".source}";
