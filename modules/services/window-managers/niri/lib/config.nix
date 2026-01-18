@@ -10,6 +10,8 @@ let
     mapAttrsToList
     singleton
     filterAttrs
+    length
+    mapAttrs
     ;
 
   # --- Utilities ---
@@ -174,7 +176,7 @@ let
     )) description
     // {
       apply = bindNull (
-        builtins.map (ruleProps: {
+        map (ruleProps: {
           "${if isExclude then "exclude" else "match"}" = {
             _props = ruleProps;
           };
@@ -209,13 +211,23 @@ let
           ${if isLayerRule then "layerRule" else "windowRule"} = {
             _children = (valueOrEmptyList v.matches) ++ (valueOrEmptyList v.excludes);
           }
-          // (builtins.removeAttrs v [
+          // (removeAttrs v [
             "matches"
             "excludes"
           ]);
         })
       );
     };
+
+  # Helper for switch event actions
+  mkSwitchEventActionOption = mkNullOption (
+    types.attrTag {
+      spawn = mkOption {
+        description = "Spawn a command with its arguments.";
+        type = types.listOf types.str;
+      };
+    }
+  );
 
   # --- Config Options ---
 
@@ -300,7 +312,7 @@ let
   tabletOptions = {
     off = mkFlagOption "Don't send events from this device.";
     calibrationMatrix =
-      mkNullOption (types.addCheck (types.listOf types.float) (vs: (builtins.length vs) == 6))
+      mkNullOption (types.addCheck (types.listOf types.float) (vs: (length vs) == 6))
         "See the [LIBINPUT_CALIBRATION_MATRIX documentation](https://wayland.freedesktop.org/libinput/doc/latest/device-configuration-via-udev.html) for examples.";
     mapToOutput = mkNullOption types.str "Map input device to specific output.";
   };
@@ -309,7 +321,7 @@ let
   touchOptions = {
     off = mkFlagOption "Don't send events from this device.";
     calibrationMatrix =
-      mkNullOption (types.addCheck (types.listOf types.float) (vs: (builtins.length vs) == 6))
+      mkNullOption (types.addCheck (types.listOf types.float) (vs: (length vs) == 6))
         "See the [LIBINPUT_CALIBRATION_MATRIX documentation](https://wayland.freedesktop.org/libinput/doc/latest/device-configuration-via-udev.html) for examples.";
     mapToOutput = mkNullOption types.str "Map input device to specific output.";
   };
@@ -453,7 +465,7 @@ let
           mkSubOptions options description
           // {
             apply = bindNull (v: {
-              _props = builtins.removeAttrs v [ argName ];
+              _props = removeAttrs v [ argName ];
               _args = bindNull singleton v.${argName};
             });
           };
@@ -637,7 +649,7 @@ let
           switchLayout = mkArgActionOption {
             layout = mkNullOption (types.either types.ints.unsigned (types.strMatching "next|prev")) null // {
               description = "The layout to switch to by index or `prev`/`next`.";
-              apply = bindNull builtins.toString;
+              apply = bindNull toString;
             };
           } "layout" "Switch between keyboard layouts.";
           showHotkeyOverlay = mkPlainActionOption "Show the hotkey overlay.";
@@ -674,6 +686,21 @@ let
           closeOverview = mkPlainActionOption "Close the Overview.";
         };
       };
+
+  };
+
+  # switch event options
+  switchEventOptions = {
+    lidClose = mkSwitchEventActionOption "Actions to take when lid is closed.";
+    lidOpen = mkSwitchEventActionOption "Actions to take when lid is opened.";
+    tabletModeOn = mkSwitchEventActionOption "Actions to take when tablet mode is turned on.";
+    tabletModeOff = mkSwitchEventActionOption "Actions to take when tablet mode is turned off.";
+  };
+
+  # workspace options
+  workspaceOptions = {
+    openOnOutput = mkNullOption types.str "Name of monitor.";
+    layout = mkSubOptions layoutOptions "Layout options.";
   };
 in
 {
@@ -695,7 +722,7 @@ in
     binds = mkNullOption (types.attrsOf (types.submodule { options = bindOptions; })) null // {
       description = "Bind options.";
       apply = bindNull (
-        builtins.mapAttrs (
+        mapAttrs (
           n: v: {
             # don't rename bind keys
             _preserve_name = { };
@@ -710,5 +737,18 @@ in
         )
       );
     };
+    workspace = mkSubOptions workspaceOptions null // {
+      description = "Workspace options.";
+      apply = bindNull (
+        mapAttrsToList (
+          name: value: {
+            workspace = value // {
+              _args = [ name ];
+            };
+          }
+        )
+      );
+    };
+    switchEvents = mkSubOptions switchEventOptions "Switch event options.";
   };
 }
