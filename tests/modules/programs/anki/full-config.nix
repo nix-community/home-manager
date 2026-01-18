@@ -1,7 +1,9 @@
 { pkgs, ... }:
 let
   # This would normally not be a file in the store for security reasons.
-  testKeyFile = pkgs.writeText "test-key-file" "a-sync-key";
+  globalKeyFile = pkgs.writeText "global-key-file" "a-sync-key";
+  fooKeyFile = pkgs.writeText "foo-key-file" "a-sync-key";
+  barKeyFile = pkgs.writeText "bar-key-file" "a-sync-key";
 in
 {
   programs.anki = {
@@ -37,7 +39,26 @@ in
       networkTimeout = 60;
       url = "http://example.com/anki-sync/";
       username = "lovelearning@email.com";
-      keyFile = testKeyFile;
+      keyFile = globalKeyFile;
+    };
+    profiles = {
+      foo = {
+        sync = {
+          autoSync = false;
+          syncMedia = false;
+          autoSyncMediaMinutes = 20;
+          networkTimeout = 120;
+          url = "http://foo.com/anki-sync/";
+          username = "foo@email.com";
+          keyFile = fooKeyFile;
+        };
+      };
+      bar = {
+        sync = {
+          username = "bar@email.com";
+          keyFile = barKeyFile;
+        };
+      };
     };
   };
 

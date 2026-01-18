@@ -117,28 +117,44 @@ let
       profile_manager.set_answer_key(ease, key)
 
     # Profile specific options
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (name: pCfg: ''
+        profile_manager.create("${name}")
+        profile_manager.openProfile("${name}")
 
-    profile_manager.create("User 1")
-    profile_manager.openProfile("User 1")
+        # Without this, the collection DB won't get automatically optimized.
+        profile_manager.profile["lastOptimize"] = None
 
-    # Without this, the collection DB won't get automatically optimized.
-    profile_manager.profile["lastOptimize"] = None
+        auto_sync: bool | None = ${pyOptionalBool pCfg.sync.autoSync}
+        if auto_sync is not None:
+          profile_manager.profile["autoSync"] = auto_sync
 
-    auto_sync: bool | None = ${pyOptionalBool cfg.sync.autoSync}
-    if auto_sync is not None:
-      profile_manager.profile["autoSync"] = auto_sync
+        sync_media: bool | None = ${pyOptionalBool pCfg.sync.syncMedia}
+        if sync_media is not None:
+          profile_manager.profile["syncMedia"] = sync_media
 
-    sync_media: bool | None = ${pyOptionalBool cfg.sync.syncMedia}
-    if sync_media is not None:
-      profile_manager.profile["syncMedia"] = sync_media
+        media_sync_minutes_str: str = "${toString pCfg.sync.autoSyncMediaMinutes}"
+        if media_sync_minutes_str:
+          profile_manager.set_periodic_sync_media_minutes(int(media_sync_minutes_str))
 
-    media_sync_minutes_str: str = "${toString cfg.sync.autoSyncMediaMinutes}"
-    if media_sync_minutes_str:
-      profile_manager.set_periodic_sync_media_minutes = int(media_sync_minutes_str)
+        network_timeout_str: str = "${toString pCfg.sync.networkTimeout}"
+        if network_timeout_str:
+          profile_manager.set_network_timeout(int(network_timeout_str))
 
-    network_timeout_str: str = "${toString cfg.sync.networkTimeout}"
-    if network_timeout_str:
-      profile_manager.set_network_timeout = int(network_timeout_str)
+        profile_manager.save()
+      '') cfg.profiles
+    )}
+
+    last_opened_profile: str | None = ${
+      let
+        lastOpenedProfiles = lib.filterAttrs (_: prof: prof.lastOpened) cfg.profiles;
+        lastOpenedName =
+          if lastOpenedProfiles == { } then null else lib.head (lib.attrNames lastOpenedProfiles);
+      in
+      if lastOpenedName == null then "None" else "'${lastOpenedName}'"
+    }
+    if last_opened_profile is not None:
+      profile_manager.set_last_loaded_profile_name(last_opened_profile)
 
     profile_manager.save()
   '';
@@ -169,24 +185,36 @@ in
       import aqt
       from pathlib import Path
 
-      username: str | None = ${if cfg.sync.username == null then "None" else "'${cfg.sync.username}'"}
-      username_file: Path | None = ${
-        if cfg.sync.usernameFile == null then "None" else "Path('${cfg.sync.usernameFile}')"
+      profile_sync_map = {
+        ${lib.concatStringsSep ",\n      " (
+          lib.mapAttrsToList (name: pCfg: ''
+            "${name}": {
+              "username": ${if pCfg.sync.username == null then "None" else "'${pCfg.sync.username}'"},
+              "username_file": ${
+                if pCfg.sync.usernameFile == null then "None" else "Path('${pCfg.sync.usernameFile}')"
+              },
+              "key_file": ${if pCfg.sync.keyFile == null then "None" else "Path('${pCfg.sync.keyFile}')"},
+              "url": ${if pCfg.sync.url == null then "None" else "'${pCfg.sync.url}'"},
+            }
+          '') cfg.profiles
+        )}
       }
-      key_file: Path | None = ${
-        if cfg.sync.keyFile == null then "None" else "Path('${cfg.sync.keyFile}')"
-      }
-      custom_sync_url: str | None = ${if cfg.sync.url == null then "None" else "'${cfg.sync.url}'"}
 
       def set_server() -> None:
-          if custom_sync_url:
-            aqt.mw.pm.set_custom_sync_url(custom_sync_url)
-          if username:
-            aqt.mw.pm.set_sync_username(username)
-          elif username_file and username_file.exists():
-              aqt.mw.pm.set_sync_username(username_file.read_text().strip())
-          if key_file and key_file.exists():
-              aqt.mw.pm.set_sync_key(key_file.read_text().strip())
+        name = aqt.mw.pm.name
+        conf = profile_sync_map.get(name)
+
+        if not conf:
+          return
+
+        if conf["url"]:
+          aqt.mw.pm.set_custom_sync_url(conf["url"])
+        if conf["username"]:
+          aqt.mw.pm.set_sync_username(conf["username"])
+        elif conf["username_file"] and conf["username_file"].exists():
+          aqt.mw.pm.set_sync_username(conf["username_file"].read_text().strip())
+        if conf["key_file"] and conf["key_file"].exists():
+          aqt.mw.pm.set_sync_key(conf["key_file"].read_text().strip())
 
       aqt.gui_hooks.profile_did_open.append(set_server)
     '';
@@ -251,7 +279,7 @@ in
         QMessageBox.warning(
           aqt.mw,
           "NixOS Info",
-          ("Profiles cannot be changed or added while settings are managed with "
+          ("Profiles cannot be added while settings are managed with "
            "Home Manager.")
         )
 
