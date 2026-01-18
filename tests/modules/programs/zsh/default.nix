@@ -12,6 +12,7 @@
   zsh-dotdir-path-normalization-abs-space = import ./dotdir.nix "abs-space";
   zsh-dotdir-relative = import ./dotdir.nix "relative";
   zsh-dotdir-shell-variable = import ./dotdir.nix "shell-variable";
+  zsh-history-disable-config = ./history-disable-config.nix;
   zsh-history-ignore-pattern = ./history-ignore-pattern.nix;
   zsh-history-path-absolute = import ./history-path.nix "absolute";
   zsh-history-path-default = import ./history-path.nix "default";
