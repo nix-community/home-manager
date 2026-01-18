@@ -77,7 +77,9 @@ let
 
     (lib.optional useNixpkgsModule ./misc/nixpkgs.nix)
 
-    (lib.optional (!useNixpkgsModule) ./misc/nixpkgs-disabled.nix)
+    (lib.optional (!useNixpkgsModule) (
+      lib.warn "useNixpkgsModule is going to be ineffective after 26.11" ./misc/nixpkgs-disabled.nix
+    ))
 
     (
       if minimal then
