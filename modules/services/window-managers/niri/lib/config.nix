@@ -698,7 +698,7 @@ let
   };
 
   # workspace options
-  workspaceOptions = {
+  perWorkspaceOptions = {
     openOnOutput = mkNullOption types.str "Name of monitor.";
     layout = mkSubOptions layoutOptions "Layout options.";
   };
@@ -737,18 +737,21 @@ in
         )
       );
     };
-    workspace = mkSubOptions workspaceOptions null // {
-      description = "Workspace options.";
-      apply = bindNull (
-        mapAttrsToList (
-          name: value: {
-            workspace = value // {
-              _args = [ name ];
-            };
-          }
-        )
-      );
-    };
+    workspaces =
+      mkNullOption (types.attrsOf (types.submodule { options = perWorkspaceOptions; })) null
+      // {
+        description = "Workspace options.";
+        apply = bindNull (
+          mapAttrsToList (
+            name: value: {
+              workspace = value // {
+                _args = [ name ];
+              };
+            }
+          )
+        );
+      };
+
     switchEvents = mkSubOptions switchEventOptions "Switch event options.";
   };
 }

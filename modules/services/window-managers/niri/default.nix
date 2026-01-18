@@ -104,6 +104,17 @@ in
       ++ optional (cfg.xwayland.enable && cfg.xwayland.package != null) pkgs.xwayland;
 
     xdg.configFile."niri/config.kdl".text =
-      cfg.extraConfigPre + (configGenerator cfg.config) + cfg.extraConfig;
+      let
+        valueOrEmptyList = v: if v == null then [ ] else v;
+        config =
+          removeAttrs cfg.config [
+            "workspaces"
+            "outputs"
+          ]
+          // {
+            _children = valueOrEmptyList cfg.config.workspaces ++ valueOrEmptyList cfg.config.outputs;
+          };
+      in
+      cfg.extraConfigPre + (configGenerator config) + cfg.extraConfig;
   };
 }
