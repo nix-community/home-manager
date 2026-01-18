@@ -27,5 +27,8 @@ let config = {
 
 
 alias "ll" = ls -a
+def "mixed" [] { echo 'start'; ls | where type == dir }
 alias "multi word alias" = cd -
+def "multi-cmd" [] { echo 'first'; echo 'second' }
+def "pipe-cmd" [] { ls | where type == dir | length }
 alias "z" = __zoxide_z
