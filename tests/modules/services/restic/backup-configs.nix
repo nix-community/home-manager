@@ -91,6 +91,11 @@ in
       ;
     initialize = true;
     repository = "rclone:local:/root/restic-rclone-backup";
+    rcloneOptions = {
+      checksum = true;
+      color = "ALWAYS";
+      list-cutoff = 5;
+    };
   };
 
   prune = {
