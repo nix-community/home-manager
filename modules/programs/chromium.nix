@@ -16,6 +16,10 @@ let
     vivaldi = "Vivaldi Browser";
   };
 
+  plasmaSupportedBrowsers = [
+    "google-chrome"
+  ];
+
   browserModule =
     browser: name: visible:
     let
@@ -64,6 +68,15 @@ let
           To search switches for other components, see
           [Chromium codesearch](https://source.chromium.org/search?q=file:switches.cc&ss=chromium%2Fchromium%2Fsrc).
         '';
+      };
+    }
+    // lib.optionalAttrs (lib.elem browser plasmaSupportedBrowsers) {
+      plasmaSupport = mkOption {
+        inherit visible;
+        type = types.bool;
+        default = false;
+        example = true;
+        description = "Whether to enable the 'Use QT' theme for ${name}.";
       };
     }
     // lib.optionalAttrs (!isProprietaryChrome) {
@@ -152,6 +165,7 @@ let
           List of ${name} dictionaries to install.
         '';
       };
+
       nativeMessagingHosts = mkOption {
         type = types.listOf types.package;
         default = [ ];
@@ -230,10 +244,18 @@ let
       ];
 
       programs.${browser}.finalPackage =
-        if cfg.commandLineArgs != [ ] then
-          cfg.package.override {
-            commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
-          }
+        if cfg.package == null then
+          null
+        else if cfg.commandLineArgs != [ ] || (cfg.plasmaSupport or false) then
+          cfg.package.override (
+            lib.optionalAttrs (cfg.commandLineArgs != [ ]) {
+              commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
+            }
+            // lib.optionalAttrs (cfg.plasmaSupport or false) {
+              plasmaSupport = true;
+              kdePackages = pkgs.kdePackages;
+            }
+          )
         else
           cfg.package;
 
