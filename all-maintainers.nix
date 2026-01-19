@@ -8,13 +8,6 @@
 # To regenerate: ./lib/python/generate-all-maintainers.py
 #
 {
-  "0x5a4" = {
-    email = "bej86nug@hhu.de";
-    github = "0x5a4";
-    githubId = 54070204;
-    name = "0x5a4";
-    source = "nixpkgs";
-  };
   "0xda157" = {
     email = "da157@voidq.com";
     github = "0xda157";
@@ -187,6 +180,13 @@
     githubId = 80165193;
     matrix = "@janik0:matrix.org";
     name = "Janik";
+    source = "nixpkgs";
+  };
+  JasmineLowen = {
+    email = "robwalter96@gmail.com";
+    github = "JasmineLowen";
+    githubId = 26892280;
+    name = "Robert Walter";
     source = "nixpkgs";
   };
   JoaquinTrinanes = {
@@ -994,6 +994,13 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
     source = "home-manager";
+  };
+  einetuer = {
+    email = "bej86nug@hhu.de";
+    github = "einetuer";
+    githubId = 54070204;
+    name = "0x5a4";
+    source = "nixpkgs";
   };
   elanora96 = {
     email = "git@elanora.lol";
@@ -1971,13 +1978,6 @@
     githubId = 496447;
     matrix = "@roberthensing:matrix.org";
     name = "Robert Hensing";
-    source = "nixpkgs";
-  };
-  robwalt = {
-    email = "robwalter96@gmail.com";
-    github = "robwalt";
-    githubId = 26892280;
-    name = "Robert Walter";
     source = "nixpkgs";
   };
   rouven0 = {
