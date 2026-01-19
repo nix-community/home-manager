@@ -24,10 +24,11 @@ let
     lib.pipe opt [
       (lib.replaceStrings [ "-" ] [ "_" ])
       lib.toUpper
-      (lib.add "RCLONE_")
+      (upper: "RCLONE_" + upper)
     ];
 
-  toEnvVal = v: if lib.isBool v then lib.boolToString v else v;
+  toEnvVal = v: if lib.isBool v then lib.boolToString v else toString v;
+
   attrsToEnvs =
     attrs:
     lib.pipe attrs [
@@ -127,6 +128,7 @@ in
                   attrsOf (oneOf [
                     str
                     bool
+                    int
                   ]);
                 default = { };
                 apply = lib.mapAttrs' (opt: v: lib.nameValuePair (fmtRcloneOpt opt) v);
