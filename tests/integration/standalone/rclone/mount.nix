@@ -41,6 +41,23 @@ let
             };
           };
         };
+
+        non-automounted-remote = {
+          config = {
+            type = "sftp";
+            host = "remote";
+            user = "alice";
+            key_pem = "${keyPem}";
+            known_hosts = "${sshKeys.snakeOilEd25519PublicKey}";
+          };
+          mounts = {
+            "/home/alice/even-more-files" = {
+              enable = true;
+              autoMount = false;
+              mountPoint = "/home/alice/even-more-files";
+            };
+          };
+        };
       };
     }
   '';
@@ -120,5 +137,25 @@ in
       expected = "started"
       assert expected in test_log, \
         f"Mounted file does not have expected contents. Expected {test_log} to contain \"{expected}\""
+
+    with subtest("Non-automounted mounts aren't started"):
+      svc_name = "rclone-mount:.home.alice.even-more-files@non-automounted-remote.service"
+
+      _status, out = machine.systemctl(f"show -p WantedBy --value {svc_name}", "alice")
+      assert not "default.target" in out, \
+        f"Non-automounted service, {svc_name}, contains \"WantedBy\" default.target"
+
+      fail_as_alice("ls /home/alice/even-more-files")
+
+      succeed_as_alice(
+        "mkdir /home/alice/even-more-files",
+        box=remote
+      )
+
+      status, _out = machine.systemctl(f"start {svc_name}", "alice")
+      assert status == 0, \
+        f"Failed to start {svc_name}"
+
+      succeed_as_alice("ls /home/alice/even-more-files")
   '';
 }
