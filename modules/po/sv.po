@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-20 13:03+0100\n"
-"PO-Revision-Date: 2025-07-23 12:02+0000\n"
+"PO-Revision-Date: 2026-01-20 16:49+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/"
 "modules/sv/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: modules/files.nix:214
 msgid "Creating home file links in %s"
@@ -81,15 +81,15 @@ msgstr "Kunde inte hitta lämplig profil-katalog, försökte med %s och %s"
 
 #: modules/lib-bash/activation-init.sh:106
 msgid "Environment variable USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Miljövariabel USER är satt till \"%s\" men vi förväntar oss \"%s\""
 
 #: modules/lib-bash/activation-init.sh:115
 msgid "Environment variable HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Miljövariabel HOME är satt till \"%s\" men vi förväntar oss \"%s\""
 
 #: modules/lib-bash/activation-init.sh:126
 msgid "Environment variable UID is \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "Miljövariabel UID är satt till \"%s\" men vi förväntar oss \"%s\""
 
 #: modules/lib-bash/activation-init.sh:143
 msgid "Starting Home Manager activation"

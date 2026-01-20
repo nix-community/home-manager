@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-20 13:03+0100\n"
-"PO-Revision-Date: 2025-07-23 12:02+0000\n"
+"PO-Revision-Date: 2026-01-20 16:49+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/cli/"
 "sv/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -201,7 +201,7 @@ msgstr "Kan inte bygga i katalog med bara läsrättigheter"
 
 #: home-manager/home-manager:822
 msgid "The configuration does not contain the specialisation \"%s\""
-msgstr ""
+msgstr "Konfigurationen innehåller inte specialiseringen \"%s\""
 
 #: home-manager/home-manager:876
 msgid "No generation with ID %s"

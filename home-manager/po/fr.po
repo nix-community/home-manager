@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-20 13:03+0100\n"
-"PO-Revision-Date: 2025-08-01 14:01+0000\n"
-"Last-Translator: Yk Cheese <yakforcom@gmail.com>\n"
+"PO-Revision-Date: 2026-01-20 16:49+0000\n"
+"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/home-manager/cli/"
 "fr/>\n"
 "Language: fr\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr "%s: argument manquant pour %s"
+msgstr "%s : argument manquant pour %s"
 
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
@@ -116,7 +116,7 @@ msgstr "Impossible d'inspecter les options de la configuration d'un flake"
 #: home-manager/home-manager:340 home-manager/home-manager:363
 #: home-manager/home-manager:769 home-manager/home-manager:1289
 msgid "%s: unknown option '%s'"
-msgstr "%s: l'option '%s' est inconnue"
+msgstr "%s : l'option '%s' est inconnue"
 
 #: home-manager/home-manager:345 home-manager/home-manager:1290
 msgid "Run '%s --help' for usage help"
