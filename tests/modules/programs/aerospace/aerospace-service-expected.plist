@@ -6,8 +6,12 @@
 	<true/>
 	<key>Label</key>
 	<string>org.nix-community.home.aerospace</string>
-	<key>Program</key>
-	<string>/nix/store/00000000000000000000000000000000-aerospace/Applications/AeroSpace.app/Contents/MacOS/AeroSpace</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /nix/store/00000000000000000000000000000000-aerospace/Applications/AeroSpace.app/Contents/MacOS/AeroSpace</string>
+	</array>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>StandardErrorPath</key>

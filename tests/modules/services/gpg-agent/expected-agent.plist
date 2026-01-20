@@ -20,8 +20,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@gpg@/bin/gpg-agent</string>
-		<string>--supervised</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @gpg@/bin/gpg-agent --supervised</string>
 	</array>
 	<key>RunAtLoad</key>
 	<false/>

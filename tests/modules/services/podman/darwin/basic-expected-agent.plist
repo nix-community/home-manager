@@ -15,7 +15,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/nix/store/00000000000000000000000000000000-podman-machine-watchdog-podman-machine-default</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /nix/store/00000000000000000000000000000000-podman-machine-watchdog-podman-machine-default</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

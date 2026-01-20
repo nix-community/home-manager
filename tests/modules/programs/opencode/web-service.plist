@@ -15,20 +15,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@opencode@/bin/opencode</string>
-		<string>web</string>
-		<string>--hostname</string>
-		<string>0.0.0.0</string>
-		<string>--port</string>
-		<string>4096</string>
-		<string>--mdns</string>
-		<string>--cors</string>
-		<string>https://example.com</string>
-		<string>--cors</string>
-		<string>http://localhost:3000</string>
-		<string>--print-logs</string>
-		<string>--log-level</string>
-		<string>DEBUG</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @opencode@/bin/opencode web --hostname 0.0.0.0 --port 4096 --mdns --cors https://example.com --cors http://localhost:3000 --print-logs --log-level DEBUG</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

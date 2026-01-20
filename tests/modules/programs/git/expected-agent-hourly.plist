@@ -6,13 +6,9 @@
 	<string>org.nix-community.home.git-maintenance-hourly</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@git@/bin/git</string>
-		<string>for-each-repo</string>
-		<string>--keep-going</string>
-		<string>--config=maintenance.repo</string>
-		<string>maintenance</string>
-		<string>run</string>
-		<string>--schedule=hourly</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @git@/bin/git for-each-repo --keep-going &apos;--config=maintenance.repo&apos; maintenance run &apos;--schedule=hourly&apos;</string>
 	</array>
 	<key>StartCalendarInterval</key>
 	<array>
