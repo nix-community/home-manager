@@ -284,7 +284,7 @@ function doInspectOption() {
     NIXOS_OPTION_NIX=$(nix-store -q --references "${NIXOS_OPTION_REAL}" | grep 'nixos-option\.nix$')
 
     if [[ ! -f "$NIXOS_OPTION_NIX" ]]; then
-        _iError "nixos-option.nix not found."
+        errorEcho "home-manager option: could not find nixos-option.nix" >&2
         exit 1
     fi
 
@@ -819,7 +819,7 @@ function doSwitch() {
     if [[ -v specialisation ]]; then
        activateScript="$generation/specialisation/$specialisation/activate"
        if [[ ! -x $activateScript ]]; then
-         _iError 'The configuration did not contain the specialisation "%s"' "$specialisation"
+         _iError 'The configuration does not contain the specialisation "%s"' "$specialisation"
          exit 1
        fi
     fi
