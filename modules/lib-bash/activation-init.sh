@@ -103,7 +103,7 @@ function checkUsername() {
   local expectedUser="$1"
 
   if [[ "$USER" != "$expectedUser" ]]; then
-    _iError 'Error: USER is set to "%s" but we expect "%s"' "$USER" "$expectedUser"
+    _iError 'Environment variable USER is set to "%s" but we expect "%s"' "$USER" "$expectedUser"
     exit 1
   fi
 }
@@ -112,7 +112,7 @@ function checkHomeDirectory() {
   local expectedHome="$1"
 
   if ! [[ $HOME -ef $expectedHome ]]; then
-    _iError 'Error: HOME is set to "%s" but we expect "%s"' "$HOME" "$expectedHome"
+    _iError 'Environment variable HOME is set to "%s" but we expect "%s"' "$HOME" "$expectedHome"
     exit 1
   fi
 }
@@ -123,7 +123,7 @@ function checkUid() {
   actualUid="$(id -u)"
 
   if [[ "$actualUid" != "$expectedUid" ]]; then
-    _iError 'Error: UID is "%s" but we expect "%s"' "$actualUid" "$expectedUid"
+    _iError 'Environment variable UID is "%s" but we expect "%s"' "$actualUid" "$expectedUid"
     exit 1
   fi
 }
