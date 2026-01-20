@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2026-01-20 13:03+0100\n"
+"POT-Creation-Date: 2026-01-20 21:51+0100\n"
 "PO-Revision-Date: 2026-01-20 16:49+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/"
@@ -80,16 +80,16 @@ msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "Kunde inte hitta lämplig profil-katalog, försökte med %s och %s"
 
 #: modules/lib-bash/activation-init.sh:106
-msgid "Environment variable USER is set to \"%s\" but we expect \"%s\""
-msgstr "Miljövariabel USER är satt till \"%s\" men vi förväntar oss \"%s\""
+msgid "USER is set to \"%s\" but we expect \"%s\""
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:115
-msgid "Environment variable HOME is set to \"%s\" but we expect \"%s\""
-msgstr "Miljövariabel HOME är satt till \"%s\" men vi förväntar oss \"%s\""
+msgid "HOME is set to \"%s\" but we expect \"%s\""
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:126
-msgid "Environment variable UID is \"%s\" but we expect \"%s\""
-msgstr "Miljövariabel UID är satt till \"%s\" men vi förväntar oss \"%s\""
+msgid "UID is \"%s\" but we expect \"%s\""
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:143
 msgid "Starting Home Manager activation"
@@ -114,6 +114,15 @@ msgstr "Använder Nix-version: %s"
 #: modules/lib-bash/activation-init.sh:173
 msgid "Activation variables:"
 msgstr "Aktiveringsvariabler:"
+
+#~ msgid "Environment variable USER is set to \"%s\" but we expect \"%s\""
+#~ msgstr "Miljövariabel USER är satt till \"%s\" men vi förväntar oss \"%s\""
+
+#~ msgid "Environment variable HOME is set to \"%s\" but we expect \"%s\""
+#~ msgstr "Miljövariabel HOME är satt till \"%s\" men vi förväntar oss \"%s\""
+
+#~ msgid "Environment variable UID is \"%s\" but we expect \"%s\""
+#~ msgstr "Miljövariabel UID är satt till \"%s\" men vi förväntar oss \"%s\""
 
 #~ msgid "Error: USER is set to \"%s\" but we expect \"%s\""
 #~ msgstr "Fel: USER är satt till \"%s\" men \"%s\" förväntades"
