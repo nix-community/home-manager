@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2026-01-20 13:03+0100\n"
+"POT-Creation-Date: 2026-01-20 21:51+0100\n"
 "PO-Revision-Date: 2025-07-24 19:05+0000\n"
 "Last-Translator: Harrizon Soler <harryalex0281@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/home-manager/"
@@ -82,15 +82,15 @@ msgstr ""
 "con %s y %s"
 
 #: modules/lib-bash/activation-init.sh:106
-msgid "Environment variable USER is set to \"%s\" but we expect \"%s\""
+msgid "USER is set to \"%s\" but we expect \"%s\""
 msgstr ""
 
 #: modules/lib-bash/activation-init.sh:115
-msgid "Environment variable HOME is set to \"%s\" but we expect \"%s\""
+msgid "HOME is set to \"%s\" but we expect \"%s\""
 msgstr ""
 
 #: modules/lib-bash/activation-init.sh:126
-msgid "Environment variable UID is \"%s\" but we expect \"%s\""
+msgid "UID is \"%s\" but we expect \"%s\""
 msgstr ""
 
 #: modules/lib-bash/activation-init.sh:143
