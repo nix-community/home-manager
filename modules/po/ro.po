@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"POT-Creation-Date: 2026-01-20 13:03+0100\n"
 "PO-Revision-Date: 2024-10-13 22:15+0000\n"
 "Last-Translator: AtomicDude <vasilescutoma4@gmail.com>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/home-manager/"
@@ -20,23 +20,23 @@ msgstr ""
 "20)) ? 1 : 2;\n"
 "X-Generator: Weblate 5.8-dev\n"
 
-#: modules/files.nix:206
+#: modules/files.nix:214
 msgid "Creating home file links in %s"
 msgstr "Se creează legături ale fișierelor personale în %s"
 
-#: modules/files.nix:219
+#: modules/files.nix:227
 msgid "Cleaning up orphan links from %s"
 msgstr "Se curăță legăturile orfane din %s"
 
-#: modules/home-environment.nix:647
+#: modules/home-environment.nix:680
 msgid "Creating new profile generation"
 msgstr ""
 
-#: modules/home-environment.nix:650
+#: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
 msgstr ""
 
-#: modules/home-environment.nix:699
+#: modules/home-environment.nix:732
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -64,11 +64,11 @@ msgstr ""
 "\n"
 "Apoi încearcă să activați configurația ta Home Manager din nou."
 
-#: modules/home-environment.nix:735
+#: modules/home-environment.nix:768
 msgid "Activating %s"
 msgstr "Se activează %s"
 
-#: modules/home-environment.nix:807
+#: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
 msgstr ""
 
@@ -82,36 +82,46 @@ msgstr ""
 "Nu s-a putut găsi un director cu un profil potrivit, s-a încercat %s și %s"
 
 #: modules/lib-bash/activation-init.sh:106
-msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr "Eroare: USER este setat la \"%s\", dar noi ne așteptam la \"%s\""
+msgid "Environment variable USER is set to \"%s\" but we expect \"%s\""
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:115
-msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr "Eroare: HOME este setat la \"%s\", dar noi ne așteptam la \"%s\""
+msgid "Environment variable HOME is set to \"%s\" but we expect \"%s\""
+msgstr ""
 
-#: modules/lib-bash/activation-init.sh:132
+#: modules/lib-bash/activation-init.sh:126
+msgid "Environment variable UID is \"%s\" but we expect \"%s\""
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:143
 msgid "Starting Home Manager activation"
 msgstr "Se pornește activarea Home Managerului"
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:147
 msgid "Sanity checking Nix"
 msgstr "Se verifică corectitudinea Nix"
 
-#: modules/lib-bash/activation-init.sh:149
+#: modules/lib-bash/activation-init.sh:160
 msgid "This is a dry run"
 msgstr "Aceasta este o rulare simulată"
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:164
 msgid "This is a live run"
 msgstr "Aceasta este o rulare directă"
 
-#: modules/lib-bash/activation-init.sh:159
+#: modules/lib-bash/activation-init.sh:170
 msgid "Using Nix version: %s"
 msgstr "Folosind versiunea Nix: %s"
 
-#: modules/lib-bash/activation-init.sh:162
+#: modules/lib-bash/activation-init.sh:173
 msgid "Activation variables:"
 msgstr "Variabile de activație:"
+
+#~ msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+#~ msgstr "Eroare: USER este setat la \"%s\", dar noi ne așteptam la \"%s\""
+
+#~ msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+#~ msgstr "Eroare: HOME este setat la \"%s\", dar noi ne așteptam la \"%s\""
 
 #~ msgid "Creating profile generation %s"
 #~ msgstr "Se creează generația %s a profilului"
