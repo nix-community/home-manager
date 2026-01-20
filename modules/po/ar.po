@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"POT-Creation-Date: 2026-01-20 13:03+0100\n"
 "PO-Revision-Date: 2025-08-25 05:01+0000\n"
 "Last-Translator: Omar Mohamed <mohamed.omar67492@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/home-manager/"
@@ -20,23 +20,23 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Weblate 5.13\n"
 
-#: modules/files.nix:206
+#: modules/files.nix:214
 msgid "Creating home file links in %s"
 msgstr "جارى إنشاء روابط الملفات الرئيسية في %s"
 
-#: modules/files.nix:219
+#: modules/files.nix:227
 msgid "Cleaning up orphan links from %s"
 msgstr "جارى تنظيف الروابط اليتيمة من %s"
 
-#: modules/home-environment.nix:647
+#: modules/home-environment.nix:680
 msgid "Creating new profile generation"
 msgstr "جارى إنشاء جيل جديد لملف التعريف"
 
-#: modules/home-environment.nix:650
+#: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
 msgstr "لا يوجد تغيير لذا سيتم إعادة استخدام أحدث جيل من الملف الشخصي"
 
-#: modules/home-environment.nix:699
+#: modules/home-environment.nix:732
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -64,11 +64,11 @@ msgstr ""
 "\n"
 "ثم حاول تفعيل إعدادات Home Manager مرة أخرى."
 
-#: modules/home-environment.nix:735
+#: modules/home-environment.nix:768
 msgid "Activating %s"
 msgstr "جارى تفعيل %s"
 
-#: modules/home-environment.nix:807
+#: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
 msgstr "%s: خيار غير معروف '%s'"
 
@@ -81,33 +81,43 @@ msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "لم يتم العثور على مجلد الملف الشخصي المناسب، تم تجريب %s و%s"
 
 #: modules/lib-bash/activation-init.sh:106
-msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr "خطأ: تم تعيين USER ك \"%s\" ولكن نتوقع \"%s\""
+msgid "Environment variable USER is set to \"%s\" but we expect \"%s\""
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:115
-msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr "خطأ: تم تعيين HOME ك \"%s\" ولكن نتوقع \"%s\""
+msgid "Environment variable HOME is set to \"%s\" but we expect \"%s\""
+msgstr ""
 
-#: modules/lib-bash/activation-init.sh:132
+#: modules/lib-bash/activation-init.sh:126
+msgid "Environment variable UID is \"%s\" but we expect \"%s\""
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:143
 msgid "Starting Home Manager activation"
 msgstr "جارى بدء تنشيط Home Manager"
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:147
 msgid "Sanity checking Nix"
 msgstr "جارى فحص سلامة Nix"
 
-#: modules/lib-bash/activation-init.sh:149
+#: modules/lib-bash/activation-init.sh:160
 msgid "This is a dry run"
 msgstr "هذا تنفيذ جاف"
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:164
 msgid "This is a live run"
 msgstr "هذا تنفيذ مباشر"
 
-#: modules/lib-bash/activation-init.sh:159
+#: modules/lib-bash/activation-init.sh:170
 msgid "Using Nix version: %s"
 msgstr "استخدام إصدار Nix: %s"
 
-#: modules/lib-bash/activation-init.sh:162
+#: modules/lib-bash/activation-init.sh:173
 msgid "Activation variables:"
 msgstr "متغيرات التنشيط:"
+
+#~ msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+#~ msgstr "خطأ: تم تعيين USER ك \"%s\" ولكن نتوقع \"%s\""
+
+#~ msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+#~ msgstr "خطأ: تم تعيين HOME ك \"%s\" ولكن نتوقع \"%s\""

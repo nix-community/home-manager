@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"POT-Creation-Date: 2026-01-20 13:03+0100\n"
 "PO-Revision-Date: 2025-12-04 04:17+0000\n"
 "Last-Translator: \"Urocissa Caerulea.Tw\" <urocissa.tw@proton.me>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.15-dev\n"
 
-#: modules/files.nix:206
+#: modules/files.nix:214
 msgid "Creating home file links in %s"
 msgstr "正在 %s 中建立家目錄檔案連結"
 
-#: modules/files.nix:219
+#: modules/files.nix:227
 msgid "Cleaning up orphan links from %s"
 msgstr "正在清理 %s 中的孤立連結"
 
-#: modules/home-environment.nix:647
+#: modules/home-environment.nix:680
 msgid "Creating new profile generation"
 msgstr "正在建立新的世代設定檔"
 
-#: modules/home-environment.nix:650
+#: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
 msgstr "沒有變更，將重複使用最新的設定檔世代"
 
-#: modules/home-environment.nix:699
+#: modules/home-environment.nix:732
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,11 +63,11 @@ msgstr ""
 "\n"
 "然後再次嘗試啟用您的 Home Manager 設定。"
 
-#: modules/home-environment.nix:735
+#: modules/home-environment.nix:768
 msgid "Activating %s"
 msgstr "正在啟用 %s"
 
-#: modules/home-environment.nix:807
+#: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
 msgstr "%s：未知選項 '%s'"
 
@@ -80,36 +80,46 @@ msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "找不到合適的設定檔目錄，已嘗試 %s 和 %s"
 
 #: modules/lib-bash/activation-init.sh:106
-msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr "錯誤：USER 被設定為「%s」，但我們的預期為「%s」"
+msgid "Environment variable USER is set to \"%s\" but we expect \"%s\""
+msgstr ""
 
 #: modules/lib-bash/activation-init.sh:115
-msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr "錯誤：HOME 被設定為「%s」，但我們的預期為「%s」"
+msgid "Environment variable HOME is set to \"%s\" but we expect \"%s\""
+msgstr ""
 
-#: modules/lib-bash/activation-init.sh:132
+#: modules/lib-bash/activation-init.sh:126
+msgid "Environment variable UID is \"%s\" but we expect \"%s\""
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:143
 msgid "Starting Home Manager activation"
 msgstr "正在進行 Home Manager 啟用程序"
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:147
 msgid "Sanity checking Nix"
 msgstr "正在進行 Nix 完整性檢查"
 
-#: modules/lib-bash/activation-init.sh:149
+#: modules/lib-bash/activation-init.sh:160
 msgid "This is a dry run"
 msgstr "這是模擬執行"
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:164
 msgid "This is a live run"
 msgstr "這是實際執行"
 
-#: modules/lib-bash/activation-init.sh:159
+#: modules/lib-bash/activation-init.sh:170
 msgid "Using Nix version: %s"
 msgstr "使用中的 Nix 版本：%s"
 
-#: modules/lib-bash/activation-init.sh:162
+#: modules/lib-bash/activation-init.sh:173
 msgid "Activation variables:"
 msgstr "啟用變數："
+
+#~ msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+#~ msgstr "錯誤：USER 被設定為「%s」，但我們的預期為「%s」"
+
+#~ msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+#~ msgstr "錯誤：HOME 被設定為「%s」，但我們的預期為「%s」"
 
 #~ msgid "Creating profile generation %s"
 #~ msgstr "正在建立配置檔案世代 %s"
