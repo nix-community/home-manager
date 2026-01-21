@@ -43,8 +43,8 @@ embedded in the system configuration.</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">false
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -68,11 +68,11 @@ rather than exiting with an error.</p>
 <p><span class="emphasis"><em>Type:</em></span>
 null or string or absolute path</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">null
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">${pkgs.trash-cli}/bin/trash</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">${pkgs.trash-cli}/bin/trash
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -96,11 +96,11 @@ file extension rather than exiting with an error.</p>
 <p><span class="emphasis"><em>Type:</em></span>
 null or string</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">null</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">null
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;backup&quot;</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">&quot;backup&quot;
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -124,11 +124,11 @@ option can be used to pass additional arguments to all modules.</p>
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">{ }</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">{ }
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">{ inherit emacs-overlay; }</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">{ inherit emacs-overlay; }
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -154,11 +154,11 @@ THIS SHOULD NOT BE ENABLED UNLESS YOU KNOW THE IMPLICATIONS.
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">false
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">true
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -182,11 +182,11 @@ boolean</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">false
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">true
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -209,11 +209,11 @@ boolean</p>
 <p><span class="emphasis"><em>Type:</em></span>
 list of raw value</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">[ ]</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">[ ]
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">[ { home.packages = [ nixpkgs-fmt ]; } ]</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">[ { home.packages = [ nixpkgs-fmt ]; } ]
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -245,8 +245,8 @@ systemd-managed user context.</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">false
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -271,11 +271,11 @@ options <code class="option">nixpkgs.*</code>.</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">false
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">true
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -299,11 +299,11 @@ boolean</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">false
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">true
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -326,8 +326,8 @@ boolean</p>
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set of (Home Manager module)</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">{ }</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">{ }
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -350,11 +350,11 @@ attribute set of (Home Manager module)</p>
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">false</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting nix">false
+</code></pre>
 
-<p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">true</code></p>
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting nix">true
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
