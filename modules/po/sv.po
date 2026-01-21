@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-20 21:51+0100\n"
-"PO-Revision-Date: 2026-01-20 16:49+0000\n"
+"PO-Revision-Date: 2026-01-21 12:14+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/"
 "modules/sv/>\n"
@@ -81,7 +81,7 @@ msgstr "Kunde inte hitta lämplig profil-katalog, försökte med %s och %s"
 
 #: modules/lib-bash/activation-init.sh:106
 msgid "USER is set to \"%s\" but we expect \"%s\""
-msgstr ""
+msgstr "USER är satt till \"%s\" men vi förväntade oss \"%s\""
 
 #: modules/lib-bash/activation-init.sh:115
 msgid "HOME is set to \"%s\" but we expect \"%s\""
