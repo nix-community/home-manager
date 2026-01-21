@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2026-01-20 21:51+0100\n"
+"POT-Creation-Date: 2026-01-21 09:53+0100\n"
 "PO-Revision-Date: 2025-12-04 04:17+0000\n"
 "Last-Translator: \"Urocissa Caerulea.Tw\" <urocissa.tw@proton.me>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
@@ -79,39 +79,33 @@ msgstr "正在將設定檔從 %s 遷移至 %s"
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "找不到合適的設定檔目錄，已嘗試 %s 和 %s"
 
-#: modules/lib-bash/activation-init.sh:106
-msgid "USER is set to \"%s\" but we expect \"%s\""
+#. translators: For example: HOME is "/home/foo", expected "/home/bar"
+#: modules/lib-bash/activation-init.sh:109
+#: modules/lib-bash/activation-init.sh:121
+msgid "%s is \"%s\", expected \"%s\""
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:115
-msgid "HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
-
-#: modules/lib-bash/activation-init.sh:126
-msgid "UID is \"%s\" but we expect \"%s\""
-msgstr ""
-
-#: modules/lib-bash/activation-init.sh:143
+#: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
 msgstr "正在進行 Home Manager 啟用程序"
 
-#: modules/lib-bash/activation-init.sh:147
+#: modules/lib-bash/activation-init.sh:142
 msgid "Sanity checking Nix"
 msgstr "正在進行 Nix 完整性檢查"
 
-#: modules/lib-bash/activation-init.sh:160
+#: modules/lib-bash/activation-init.sh:155
 msgid "This is a dry run"
 msgstr "這是模擬執行"
 
-#: modules/lib-bash/activation-init.sh:164
+#: modules/lib-bash/activation-init.sh:159
 msgid "This is a live run"
 msgstr "這是實際執行"
 
-#: modules/lib-bash/activation-init.sh:170
+#: modules/lib-bash/activation-init.sh:165
 msgid "Using Nix version: %s"
 msgstr "使用中的 Nix 版本：%s"
 
-#: modules/lib-bash/activation-init.sh:173
+#: modules/lib-bash/activation-init.sh:168
 msgid "Activation variables:"
 msgstr "啟用變數："
 
