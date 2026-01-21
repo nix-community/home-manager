@@ -2,6 +2,6 @@
   home.uid = 1000;
 
   nmt.script = ''
-    assertFileContains activate "checkUid 1000"
+    assertFileContains activate 'checkStringEq UID "$(id -u)" 1000'
   '';
 }
