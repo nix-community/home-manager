@@ -63,7 +63,7 @@
 
     with subtest("Home Manager switch to missing specialisation"):
       actual = fail_as_alice("home-manager switch --specialisation no-such-specialisation")
-      expected = "The configuration did not contain the specialisation \"no-such-specialisation\""
+      expected = "The configuration does not contain the specialisation \"no-such-specialisation\""
       assert expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 
