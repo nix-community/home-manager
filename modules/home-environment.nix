@@ -847,10 +847,10 @@ in
           ${builtins.readFile ./lib-bash/activation-init.sh}
 
           if [[ ! -v SKIP_SANITY_CHECKS ]]; then
-            checkUsername ${lib.escapeShellArg config.home.username}
-            checkHomeDirectory ${lib.escapeShellArg config.home.homeDirectory}
+            checkStringEq USER "$USER" ${lib.escapeShellArg config.home.username}
+            checkPathEq HOME "$HOME" ${lib.escapeShellArg config.home.homeDirectory}
             ${lib.optionalString (config.home.uid != null) ''
-              checkUid ${toString config.home.uid}
+              checkStringEq UID "$(id -u)" ${toString config.home.uid}
             ''}
           fi
 
