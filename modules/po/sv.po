@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-01-21 12:14+0000\n"
+"PO-Revision-Date: 2026-01-21 16:20+0000\n"
 "Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/home-manager/"
 "modules/sv/>\n"
@@ -83,7 +83,7 @@ msgstr "Kunde inte hitta lämplig profil-katalog, försökte med %s och %s"
 #: modules/lib-bash/activation-init.sh:109
 #: modules/lib-bash/activation-init.sh:121
 msgid "%s is \"%s\", expected \"%s\""
-msgstr ""
+msgstr "%s är \"%s\", förväntade \"%s\""
 
 #: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
