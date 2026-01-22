@@ -29,8 +29,8 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/config.json
-    assertFileContent home-files/.config/opencode/config.json \
+    assertFileExists home-files/.config/opencode/opencode.json
+    assertFileContent home-files/.config/opencode/opencode.json \
       ${./mcp-integration.json}
   '';
 }
