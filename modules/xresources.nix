@@ -94,8 +94,17 @@ in
 
     xresources.path = mkOption {
       type = types.str;
-      default = "${config.home.homeDirectory}/.Xresources";
-      defaultText = "$HOME/.Xresources";
+      default =
+        if config.home.preferXdgDirectories then
+          "${config.xdg.configHome}/X11/xresources"
+        else
+          "${config.home.homeDirectory}/.Xresources";
+      defaultText = lib.literalExpression ''
+        if config.home.preferXdgDirectories then
+          "''${config.xdg.configHome}/X11/xresources"
+        else
+          "''${config.home.homeDirectory}/.Xresources";
+      '';
       description = "Path where Home Manager should link the {file}`.Xresources` file.";
     };
   };
