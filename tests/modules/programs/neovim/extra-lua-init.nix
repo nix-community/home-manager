@@ -4,15 +4,15 @@
   programs.neovim = {
     enable = true;
 
-    extraLuaConfig = ''
-      -- extraLuaConfig
+    initLua = ''
+      -- initLua
     '';
   };
 
   nmt.script = ''
     nvimFolder="home-files/.config/nvim"
     assertFileContent "$nvimFolder/init.lua" ${builtins.toFile "init.lua-expected" ''
-      -- extraLuaConfig
+      -- initLua
     ''}
   '';
 }

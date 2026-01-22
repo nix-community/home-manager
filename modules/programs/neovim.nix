@@ -35,6 +35,13 @@ in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "programs" "neovim" "extraLuaConfig" ]
+      [ "programs" "neovim" "initLua" ]
+    )
+  ];
+
   options = {
     programs.neovim = {
       enable = mkEnableOption "Neovim";
@@ -211,7 +218,7 @@ in
         '';
       };
 
-      extraLuaConfig = mkOption {
+      initLua = mkOption {
         type = types.lines;
         default = "";
         example = lib.literalExpression ''
@@ -488,7 +495,7 @@ in
       programs.neovim.extraConfig = lib.concatStringsSep "\n" vimPackageInfo.userPluginViml;
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
 
-      programs.neovim.extraLuaConfig =
+      programs.neovim.initLua =
         let
           # using default 'foldmarker', to be used with foldmethod=marker
           foldedLuaBlock =
@@ -543,8 +550,8 @@ in
         (map (x: x.runtime) pluginsNormalized)
         ++ [
           {
-            "nvim/init.lua" = mkIf (cfg.extraLuaConfig != "") {
-              text = cfg.extraLuaConfig;
+            "nvim/init.lua" = mkIf (cfg.initLua != "") {
+              text = cfg.initLua;
             };
 
             "nvim/coc-settings.json" = mkIf cfg.coc.enable {
