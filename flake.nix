@@ -221,7 +221,14 @@
             docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
             docs-manpages = docs.manPages;
           }
-          // (buildTests system)
+        );
+
+        legacyPackages = forAllPkgs (
+          pkgs:
+          let
+            system = pkgs.system;
+          in
+          (buildTests system)
           // (integrationTestPackages system)
           // (buildTestsNoBig system)
           // (buildTestsNoBigIfd system)
