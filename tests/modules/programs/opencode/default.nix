@@ -23,4 +23,5 @@
   opencode-themes-bulk-directory = ./themes-bulk-directory.nix;
   opencode-mcp-integration = ./mcp-integration.nix;
   opencode-mcp-integration-with-override = ./mcp-integration-with-override.nix;
+  opencode-web-service = ./web-service.nix;
 }
