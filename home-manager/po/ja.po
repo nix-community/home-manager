@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2025-11-14 16:51+0000\n"
-"Last-Translator: Mikenu Takeru <mikenu-jp@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2026-01-22 09:42+0000\n"
+"Last-Translator: Takeru Mikenu <mikenu-jp@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
 "Language: ja\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -201,7 +201,7 @@ msgstr "読み込み専用ディレクトリ内ではbuild（作成）できま�
 
 #: home-manager/home-manager:822
 msgid "The configuration does not contain the specialisation \"%s\""
-msgstr ""
+msgstr "設定にスペシャライゼーション「%s」が含まれていません"
 
 #: home-manager/home-manager:876
 msgid "No generation with ID %s"
