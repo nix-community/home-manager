@@ -4,6 +4,6 @@
     settings = { };
   };
   nmt.script = ''
-    assertPathNotExists home-files/.config/opencode/config.json
+    assertPathNotExists home-files/.config/opencode/opencode.json
   '';
 }
