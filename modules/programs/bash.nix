@@ -74,7 +74,13 @@ in
 
       historyFile = mkOption {
         type = types.nullOr types.str;
-        default = null;
+        default = if config.home.preferXdgDirectories then "${config.xdg.stateHome}/bash/history" else null;
+        defaultText = lib.literalExpression ''
+          if config.home.preferXdgDirectories then
+            "${config.xdg.stateHome}/bash/history"
+          else
+            null;
+        '';
         description = "Location of the bash history file.";
       };
 
