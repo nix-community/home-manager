@@ -521,7 +521,7 @@ in
           (lib.mkIf (wrappedNeovim'.initRc != "") (
             lib.mkBefore "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
           ))
-          (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs) (
+          (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs && cfg.generatedConfigs.lua != "") (
             lib.mkAfter (foldedLuaBlock "user-associated plugin config" cfg.generatedConfigs.lua)
           ))
 
