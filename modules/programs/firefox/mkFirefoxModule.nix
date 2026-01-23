@@ -555,6 +555,25 @@ in
                 description = "Declarative search engine configuration.";
               };
 
+              handlers = mkOption {
+                type = types.submodule (
+                  args:
+                  import ./profiles/handlers.nix {
+                    inherit (args) config;
+                    inherit lib pkgs appName;
+                    package = cfg.finalPackage;
+                    modulePath = modulePath ++ [
+                      "profiles"
+                      name
+                      "handlers"
+                    ];
+                    profilePath = config.path;
+                  }
+                );
+                default = { };
+                description = "Declarative handlers configuration for MIME types and URL schemes.";
+              };
+
               containersForce = mkOption {
                 type = types.bool;
                 default = false;
@@ -903,7 +922,8 @@ in
                   }
                 ]
               ) (lib.attrsToList config.extensions.settings))
-              ++ config.bookmarks.assertions;
+              ++ config.bookmarks.assertions
+              ++ config.handlers.assertions;
             };
           }
         )
@@ -1054,6 +1074,11 @@ in
                 enable = profile.search.enable;
                 force = profile.search.force;
                 source = profile.search.file;
+              };
+
+              "${cfg.profilesPath}/${profile.path}/handlers.json" = mkIf (profile.handlers.enable) {
+                source = profile.handlers.configFile;
+                force = profile.handlers.force;
               };
 
               "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
