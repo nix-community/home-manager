@@ -14,3 +14,7 @@ test *pattern:
 # Run integration tests
 integration_tests:
   nix run .#tests -- -t -l
+
+# Create a news entry
+create-news-entry:
+  modules/misc/news/create-news-entry.sh
