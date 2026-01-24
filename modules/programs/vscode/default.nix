@@ -22,6 +22,13 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
+  libPath =
+    if vscodePname == "antigravity" then
+      "${cfg.package}/lib/antigravity"
+    else
+      "${cfg.package}/lib/vscode";
+  sharePrefix = if vscodePname == "antigravity" then "/share/antigravity" else "/share/vscode";
+
   productInfoPath =
     if
       lib.pathExists "${cfg.package}/Applications/${
@@ -31,9 +38,9 @@ let
       "${cfg.package}/Applications/${
         cfg.package.passthru.longName or "Code"
       }.app/Contents/Resources/app/product.json"
-    else if lib.pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
-      # Visual Studio Code, VSCodium, Windsurf, Cursor
-      "${cfg.package}/lib/vscode/resources/app/product.json"
+    else if lib.pathExists "${libPath}/resources/app/product.json" then
+      # Visual Studio Code, VSCodium, Windsurf, Cursor, Antigravity
+      "${libPath}/resources/app/product.json"
     else
       # OpenVSCode Server
       "${cfg.package}/product.json";
@@ -70,6 +77,10 @@ let
       dataFolderName = ".windsurf";
       nameShort = "Windsurf";
     };
+    antigravity = {
+      dataFolderName = ".antigravity";
+      nameShort = "Antigravity";
+    };
   };
 
   configDir = cfg.nameShort;
@@ -100,7 +111,7 @@ let
     pkgs.writeTextFile {
       inherit text;
       name = "extensions-json-${name}";
-      destination = "/share/vscode/extensions/extensions.json";
+      destination = "${sharePrefix}/extensions/extensions.json";
     };
 
   mergedUserSettings =
@@ -579,7 +590,7 @@ in
         lib.mapAttrs' (
           n: v:
           lib.nameValuePair "${userDir}/profiles/${n}/extensions.json" {
-            source = "${extensionJsonFile n (extensionJson v.extensions)}/share/vscode/extensions/extensions.json";
+            source = "${extensionJsonFile n (extensionJson v.extensions)}${sharePrefix}/extensions/extensions.json";
           }
         ) allProfilesExceptDefault
       ))
@@ -587,7 +598,7 @@ in
       (mkIf (cfg.profiles != { }) (
         let
           # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-          subDir = "share/vscode/extensions";
+          subDir = "${sharePrefix}/extensions";
           toPaths =
             ext:
             map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
