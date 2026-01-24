@@ -104,6 +104,16 @@ in
         '';
       };
     };
+
+    jujutsu = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to enable jujutsu integration for difftastic.
+        '';
+      };
+    };
   };
 
   config =
@@ -141,6 +151,19 @@ in
               })
             ];
         };
+      })
+
+      (mkIf (cfg.enable && cfg.jujutsu.enable) {
+        programs.jujutsu.settings.ui.diff-formatter = [
+          (lib.getExe cfg.package)
+        ]
+        ++ (lib.cli.toCommandLineGNU { } cfg.options)
+        ++ [
+          "--color=always"
+          "--sort-paths"
+          "$left"
+          "$right"
+        ];
       })
     ];
 }
