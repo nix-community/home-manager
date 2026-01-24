@@ -79,7 +79,7 @@ in
           if config.home.preferXdgDirectories then
             "${config.xdg.stateHome}/bash/history"
           else
-            null;
+            null
         '';
         description = "Location of the bash history file.";
       };
