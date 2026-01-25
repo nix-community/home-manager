@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2025-09-02 00:02+0000\n"
-"Last-Translator: Fareesh Vijayarangam <fareesh@gmail.com>\n"
+"PO-Revision-Date: 2026-01-25 08:32+0000\n"
+"Last-Translator: adityalal01 <erc202009@gmail.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/home-manager/cli/"
 "hi/>\n"
 "Language: hi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13.1-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -206,7 +206,7 @@ msgstr ""
 
 #: home-manager/home-manager:1035
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "खाली Home Manager कन्फि़गरेशन में बदलना।"
 
 #: home-manager/home-manager:1050
 msgid "Yay!"
