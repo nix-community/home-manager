@@ -7,6 +7,7 @@
       enable = true;
       package = pkgs.hello;
       highlighters = [
+        "main"
         "brackets"
         "pattern"
         "cursor"
@@ -18,7 +19,7 @@
 
   nmt.script = ''
     assertFileContains home-files/.zshrc "source ${pkgs.hello}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-    assertFileContains home-files/.zshrc "ZSH_HIGHLIGHT_HIGHLIGHTERS+=(brackets pattern cursor)"
+    assertFileContains home-files/.zshrc "ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)"
     assertFileContains home-files/.zshrc "ZSH_HIGHLIGHT_STYLES[comment]='fg=#6c6c6c'"
   '';
 }
