@@ -322,6 +322,17 @@ in
           '';
         };
 
+        functions = mkOption {
+          type = types.attrsOf types.lines;
+          default = { };
+          example = {
+            pargs = "print $0: $*";
+          };
+          description = ''
+            Functions added to .zshrc
+          '';
+        };
+
         setOptions = mkOption {
           type = types.listOf types.str;
           default = [ ];
@@ -509,6 +520,18 @@ in
             ))
 
             (lib.mkIf (localVarsStr != "") (mkOrder 540 localVarsStr))
+
+            (lib.mkIf (cfg.functions != { }) (
+              mkOrder 550 (
+                concatStringsSep "\n" (
+                  lib.mapAttrsToList (name: def: ''
+                    function ${name} {
+                      ${def}
+                    }
+                  '') cfg.functions
+                )
+              )
+            ))
 
             # NOTE: Oh-My-Zsh/Prezto calls compinit during initialization,
             # calling it twice causes slight start up slowdown
