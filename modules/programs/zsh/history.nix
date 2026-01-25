@@ -186,6 +186,30 @@ in
           ''
         ];
 
+    programs.zsh.setOptions =
+      let
+        historyOptions = {
+          APPEND_HISTORY = cfg.history.append;
+          HIST_IGNORE_DUPS = cfg.history.ignoreDups;
+          HIST_IGNORE_ALL_DUPS = cfg.history.ignoreAllDups;
+          HIST_SAVE_NO_DUPS = cfg.history.saveNoDups;
+          HIST_FIND_NO_DUPS = cfg.history.findNoDups;
+          HIST_IGNORE_SPACE = cfg.history.ignoreSpace;
+          HIST_EXPIRE_DUPS_FIRST = cfg.history.expireDuplicatesFirst;
+          SHARE_HISTORY = cfg.history.share;
+          EXTENDED_HISTORY = cfg.history.extended;
+        }
+        // lib.optionalAttrs (cfg.autocd != null) {
+          inherit (cfg) autocd;
+        };
+
+        enabledOpts = lib.filterAttrs (_: enabled: enabled) historyOptions;
+        disabledOpts = lib.filterAttrs (_: enabled: !enabled) historyOptions;
+      in
+      [ "HIST_FCNTL_LOCK" ]
+      ++ (lib.mapAttrsToList (name: _: name) enabledOpts)
+      ++ (lib.mapAttrsToList (name: _: "NO_" + name) disabledOpts);
+
     programs.zsh.initContent = lib.mkMerge [
       (lib.mkOrder 910 ''
         # History options should be set in .zshrc and after oh-my-zsh sourcing.
@@ -197,48 +221,6 @@ in
         ) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
         HISTFILE="${mkShellVarPathStr cfg.history.path}"
         mkdir -p "$(dirname "$HISTFILE")"
-
-        setopt HIST_FCNTL_LOCK
-
-        ${
-          let
-            historyOptions = {
-              APPEND_HISTORY = cfg.history.append;
-              HIST_IGNORE_DUPS = cfg.history.ignoreDups;
-              HIST_IGNORE_ALL_DUPS = cfg.history.ignoreAllDups;
-              HIST_SAVE_NO_DUPS = cfg.history.saveNoDups;
-              HIST_FIND_NO_DUPS = cfg.history.findNoDups;
-              HIST_IGNORE_SPACE = cfg.history.ignoreSpace;
-              HIST_EXPIRE_DUPS_FIRST = cfg.history.expireDuplicatesFirst;
-              SHARE_HISTORY = cfg.history.share;
-              EXTENDED_HISTORY = cfg.history.extended;
-            }
-            // lib.optionalAttrs (cfg.autocd != null) {
-              inherit (cfg) autocd;
-            };
-
-            enabledOpts = lib.filterAttrs (_: enabled: enabled) historyOptions;
-            disabledOpts = lib.filterAttrs (_: enabled: !enabled) historyOptions;
-          in
-          lib.concatStringsSep "\n\n" (
-            lib.filter (s: s != "") [
-              (lib.optionalString (enabledOpts != { }) ''
-                # Enabled history options
-                ${lib.hm.zsh.define "enabled_opts" (lib.mapAttrsToList (name: _: name) enabledOpts)}
-                for opt in "''${enabled_opts[@]}"; do
-                  setopt "$opt"
-                done
-                unset opt enabled_opts'')
-              (lib.optionalString (disabledOpts != { }) ''
-                # Disabled history options
-                ${lib.hm.zsh.define "disabled_opts" (lib.mapAttrsToList (name: _: name) disabledOpts)}
-                for opt in "''${disabled_opts[@]}"; do
-                  unsetopt "$opt"
-                done
-                unset opt disabled_opts'')
-            ]
-          )
-        }
       '')
 
       (lib.mkIf (cfg.historySubstringSearch.enable or false) (
