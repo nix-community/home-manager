@@ -4,6 +4,7 @@
 }:
 let
   config = { };
+  options = { };
   releaseInfo = lib.importJSON ../../release.json;
 
   isNixFile = lib.hasSuffix ".nix" file;
@@ -44,7 +45,7 @@ let
               fileContent { inherit lib; }
             else
               fileContent {
-                inherit lib config;
+                inherit lib config options;
                 pkgs = null;
               }
           else
