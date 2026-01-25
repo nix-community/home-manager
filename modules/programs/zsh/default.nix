@@ -349,6 +349,24 @@ in
           '';
         };
 
+        zstyle = mkOption {
+          type = types.attrsOf (types.attrsOf types.anything);
+          default = { };
+          example = {
+            auto-description = "'+%d'";
+            file-sort = "name";
+            use-cache = true;
+            ignore-parents = [
+              "parent"
+              "pwd"
+            ];
+          };
+          description = ''
+            Configure zstyle options. See {manpage}`zshmodules(1)`.
+            These are used to configure the completion System See {manpage}`zshcompsys(1).
+          '';
+        };
+
         bindkey = mkOption {
           type = types.attrsOf types.str;
           default = { };
@@ -618,6 +636,21 @@ in
                     ) cfg.shellGlobalAliases
                   ))
                 ))
+              )
+            ))
+
+            (lib.mkIf (cfg.zstyle != { }) (
+              mkOrder 1120 (
+                concatStringsSep "\n" (
+                  lib.flatten (
+                    lib.mapAttrsToList (
+                      pattern: set:
+                      map (opts: "zstyle '${pattern}' ${opts}") (
+                        lib.mapAttrsToList (name: val: "${name} ${(toString val)}") set
+                      )
+                    ) cfg.zstyle
+                  )
+                )
               )
             ))
 
