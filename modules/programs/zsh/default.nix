@@ -349,6 +349,21 @@ in
           '';
         };
 
+        zleFunctions = mkOption {
+          type = types.attrsOf types.lines;
+          default = { };
+          description = ''
+            Functions that are added to the Zsh environment and are added to the
+            zsh command line editor via `zle -N`. The key is the name
+            and the value is the body of the function to be added
+          '';
+          example = {
+            mkcd = ''
+              mkdir --parents "$1" && cd "$1"
+            '';
+          };
+        };
+
         siteFunctions = mkOption {
           type = types.attrsOf types.lines;
           default = { };
@@ -475,6 +490,8 @@ in
           );
         })
 
+        (lib.mkIf (cfg.zleFunctions != { }) { programs.zsh.functions = cfg.zleFunctions; })
+
         {
           home.file."${dotDirRel}/.zshenv".text = ''
             # Environment variables
@@ -530,6 +547,12 @@ in
                     }
                   '') cfg.functions
                 )
+              )
+            ))
+
+            (lib.mkIf (cfg.zleFunctions != { }) (
+              mkOrder 560 (
+                concatStringsSep "\n" (lib.mapAttrsToList (name: def: "zle -N ${name}") cfg.zleFunctions)
               )
             ))
 
