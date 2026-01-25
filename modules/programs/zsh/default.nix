@@ -349,6 +349,18 @@ in
           '';
         };
 
+        bindkey = mkOption {
+          type = types.attrsOf types.str;
+          default = { };
+          description = ''
+            Keybinds set in Zsh via bindkey. The name is the keybind and value
+            is the command.
+          '';
+          example = {
+            "^A" = "beginning-of-line";
+          };
+        };
+
         zleFunctions = mkOption {
           type = types.attrsOf types.lines;
           default = { };
@@ -561,6 +573,12 @@ in
             # as all $fpath entries will be traversed again.
             (lib.mkIf (cfg.enableCompletion && !cfg.oh-my-zsh.enable && !cfg.prezto.enable) (
               mkOrder 570 cfg.completionInit
+            ))
+
+            (lib.mkIf (cfg.bindkey != { }) (
+              mkOrder 580 (
+                concatStringsSep "\n" (lib.mapAttrsToList (name: def: "bindkey '${name}' ${def}") cfg.bindkey)
+              )
             ))
 
             (lib.mkIf cfg.autosuggestion.enable (
