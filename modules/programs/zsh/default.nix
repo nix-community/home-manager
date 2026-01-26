@@ -44,11 +44,15 @@ in
 
           highlighters = mkOption {
             type = types.listOf types.str;
-            default = [ "main" ];
+            default = [ ];
+            defaultText = ''[ "main" ]'';
             example = [ "brackets" ];
             description = ''
               Highlighters to enable
               See the list of highlighters: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
+
+              Note: The "main" highlighter is always included automatically.
+              If you'd like to exclude it, please configure with a higher priority using `mkForce`.
             '';
           };
 
@@ -475,6 +479,10 @@ in
 
         {
           home.packages = [ cfg.package ] ++ lib.optional cfg.enableCompletion pkgs.nix-zsh-completions;
+
+          # NOTE: Always include "main" highlighter with normal priority.
+          # Option default priority will cause `main` to get dropped by customization.
+          programs.zsh.syntaxHighlighting.highlighters = lib.mkIf cfg.syntaxHighlighting.enable [ "main" ];
 
           programs.zsh.initContent = lib.mkMerge [
             (mkOrder 510 "typeset -U path cdpath fpath manpath")
