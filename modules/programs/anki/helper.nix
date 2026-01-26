@@ -134,11 +134,11 @@ let
 
     media_sync_minutes_str: str = "${toString cfg.sync.autoSyncMediaMinutes}"
     if media_sync_minutes_str:
-      profile_manager.set_periodic_sync_media_minutes = int(media_sync_minutes_str)
+      profile_manager.set_periodic_sync_media_minutes(int(media_sync_minutes_str))
 
     network_timeout_str: str = "${toString cfg.sync.networkTimeout}"
     if network_timeout_str:
-      profile_manager.set_network_timeout = int(network_timeout_str)
+      profile_manager.set_network_timeout(int(network_timeout_str))
 
     profile_manager.save()
   '';
