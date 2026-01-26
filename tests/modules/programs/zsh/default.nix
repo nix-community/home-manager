@@ -26,6 +26,7 @@
   zsh-session-variables = ./session-variables.nix;
   zsh-smart-formatting = ./smart-formatting.nix;
   zsh-syntax-highlighting = ./syntax-highlighting.nix;
+  zsh-syntax-highlighting-override = ./syntax-highlighting-override.nix;
   zsh-xdg-default = ./xdg-default.nix;
   zsh-xdg-disabled = ./xdg-disabled.nix;
   zsh-zprof = ./zprof.nix;
