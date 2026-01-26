@@ -44,7 +44,7 @@ in
 
           highlighters = mkOption {
             type = types.listOf types.str;
-            default = [ ];
+            default = [ "main" ];
             example = [ "brackets" ];
             description = ''
               Highlighters to enable
@@ -562,7 +562,7 @@ in
                 # https://github.com/zsh-users/zsh-syntax-highlighting#faq
                 ''
                   source ${cfg.syntaxHighlighting.package}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-                  ZSH_HIGHLIGHT_HIGHLIGHTERS+=(${lib.concatStringsSep " " (map lib.escapeShellArg cfg.syntaxHighlighting.highlighters)})
+                  ZSH_HIGHLIGHT_HIGHLIGHTERS=(${lib.concatStringsSep " " (map lib.escapeShellArg cfg.syntaxHighlighting.highlighters)})
                   ${lib.concatStringsSep "\n" (
                     lib.mapAttrsToList (
                       name: value: "ZSH_HIGHLIGHT_STYLES[${lib.escapeShellArg name}]=${lib.escapeShellArg value}"
