@@ -78,7 +78,7 @@ in
 
       Service = {
         ExecStart = "${lib.getExe cfg.package} -d";
-        Restart = "always";
+        Restart = "on-failure";
         RestartSec = "10";
       };
     };
