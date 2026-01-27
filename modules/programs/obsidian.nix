@@ -570,7 +570,7 @@ in
             if [ -f "$OBSIDIAN_CONFIG" ]; then
               verboseEcho "Merging existing Obsidian config with generated template"
               tmp="$(mktemp)"
-              run ${lib.getExe pkgs.jq} -s '.[0] * .[1]' "$OBSIDIAN_CONFIG" "${template}" > "$tmp"
+              run ${lib.getExe pkgs.jq} -s '(.[0] // {}) * (.[1] // {})' "$OBSIDIAN_CONFIG" "${template}" > "$tmp"
               run install -m644 "$tmp" "$OBSIDIAN_CONFIG"
               rm -f "$tmp"
             else
