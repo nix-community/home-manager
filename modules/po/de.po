@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2025-09-04 09:01+0000\n"
-"Last-Translator: Josef Dalibor <josefkruse@googlemail.com>\n"
+"PO-Revision-Date: 2026-01-27 15:01+0000\n"
+"Last-Translator: programmerlexi <lexi@reyer.name>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/home-manager/"
 "modules/de/>\n"
 "Language: de\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.1-rc\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: modules/files.nix:214
 msgid "Creating home file links in %s"
-msgstr "Erstelle home Dateiverknpfungen in %s"
+msgstr "Erstelle home Dateiverknüpfungen in %s"
 
 #: modules/files.nix:227
 msgid "Cleaning up orphan links from %s"
@@ -86,7 +86,7 @@ msgstr ""
 #: modules/lib-bash/activation-init.sh:109
 #: modules/lib-bash/activation-init.sh:121
 msgid "%s is \"%s\", expected \"%s\""
-msgstr ""
+msgstr "%s ist \"%s\", aber \" %s\" wurde erwartet"
 
 #: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
