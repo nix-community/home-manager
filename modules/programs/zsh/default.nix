@@ -155,6 +155,17 @@ in
           type = types.attrsOf types.str;
         };
 
+        shellSuffixAliases = mkOption {
+          default = { };
+          example = {
+            ps = "gv --";
+          };
+          description = ''
+            Suffix Aliases used when a file with a matching suffix is called
+            without any other commands.
+          '';
+        };
+
         dirHashes = mkOption {
           default = { };
           example = literalExpression ''
@@ -627,7 +638,7 @@ in
               ''
             ))
 
-            (lib.mkIf (aliasesStr != "" || cfg.shellGlobalAliases != { }) (
+            (lib.mkIf (aliasesStr != "" || cfg.shellGlobalAliases != { } || cfg.shellSuffixAliases != { }) (
               mkOrder 1100 (
                 (optionalString (aliasesStr != "") aliasesStr)
                 + (optionalString (cfg.shellGlobalAliases != { }) (
@@ -636,6 +647,14 @@ in
                     lib.mapAttrsToList (
                       k: v: "alias -g -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}"
                     ) cfg.shellGlobalAliases
+                  ))
+                ))
+                + (optionalString (cfg.shellSuffixAliases != { }) (
+                  optionalString (cfg.shellGlobalAliases != { } || cfg.shellAliases != { }) "\n"
+                  + (concatStringsSep "\n" (
+                    lib.mapAttrsToList (
+                      k: v: "alias -s -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}"
+                    ) cfg.shellSuffixAliases
                   ))
                 ))
               )
