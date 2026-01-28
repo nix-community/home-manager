@@ -8,7 +8,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@git-sync@/bin/git-sync</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @git-sync@/bin/git-sync</string>
 	</array>
 	<key>StartInterval</key>
 	<integer>500</integer>

@@ -15,9 +15,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@bash-interactive@/bin/bash</string>
+		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>@openssh@/bin/ssh-agent -D -a &quot;$(@getconf-system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent&quot; -t 1337</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @bash-interactive@/bin/bash -c &apos;@openssh@/bin/ssh-agent -D -a &quot;$(@getconf-system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent&quot; -t 1337&apos;</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
