@@ -16,17 +16,124 @@ let
 
   cfg = config.programs.ssh;
 
+  mkSshOptions =
+    {
+      indent ? "",
+    }:
+    let
+      # OpenSSH is very inconsistent with options that can take multiple values.
+      # For some of them, they can simply appear multiple times and are appended, for others the
+      # values must be separated by whitespace or even commas.
+      # Consult either ssh_config(5) or, as last resort, the OpehSSH source for parsing
+      # the options at ssh.c:process_config_files() to determine the right "mode"
+      # for each. But fortunately this fact is documented for most of them in the manpage.
+      fixListValues =
+        let
+          commaSeparated = [
+            "Ciphers"
+            "HostbasedAcceptedAlgorithms"
+            "MACs"
+            "PubkeyAcceptedAlgorithms"
+            # FIXME: Match?
+          ];
+          spaceSeparated = [
+            "ChannelTimeout"
+            "GlobalKnownHostsFile"
+            "IPQoS"
+            "PermitRemoteOpen"
+            "UserKnownHostsFile"
+            # FIXME: Host?
+          ];
+          multiLine = [
+            "CertificateFile"
+            "DynamicForward"
+            "IdentityAgent"
+            "IdentityFile"
+            "LocalForward"
+            "RemoteForward"
+            "SendEnv" # NOTE: could be spaceSeparated instead
+          ];
+          transformList =
+            key: val:
+            if lib.isList val then
+              if lib.elem key commaSeparated then
+                lib.concatStringsSep "," val
+              else if lib.elem key spaceSeparated then
+                lib.concatStringsSep " " val
+              else if lib.elem key multiLine then
+                val
+              else
+                throw "list value for unknown key ${key}: ${(lib.generators.toPretty { }) val}"
+            else
+              val;
+        in
+        lib.mapAttrs transformList;
+
+      removeNulls = lib.filterAttrs (_: v: v != null);
+
+      # reports boolean as yes / no
+      mkValueString =
+        v:
+        if lib.isInt v then
+          toString v
+        else if lib.isStringLike v then
+          v
+        else if lib.isBool v then
+          lib.hm.booleans.yesNo v
+        else
+          throw "unsupported type ${builtins.typeOf v}: ${(lib.generators.toPretty { }) v}";
+
+      keyValue = lib.generators.toKeyValue {
+        mkKeyValue = lib.generators.mkKeyValueDefault { inherit mkValueString; } " ";
+        listsAsDuplicateKeys = true;
+        inherit indent;
+      };
+    in
+    conf: keyValue (lib.traceVal (fixListValues (removeNulls  conf)));
+
+  sshConfigType =
+    let
+      singleAtom =
+        with types;
+        nullOr (oneOf [
+          bool
+          int
+          str
+        ]);
+      atom =
+        with types;
+        (either singleAtom (listOf singleAtom))
+        // {
+          description = "SSH configuration atom (bool, int, string, or list there-of).";
+        };
+    in
+    types.attrsOf atom;
+
+  mkMatchBlock =
+    key: cf:
+    let
+      hostOrDagName = if cf.Host != null then cf.Host else key;
+      matchHead = if cf.Match != null then "Match ${cf.Match}" else "Host ${hostOrDagName}";
+      cf' = lib.removeAttrs cf [
+        "Host"
+        "Match"
+      ];
+    in
+    concatStringsSep "\n" (
+      [ "${matchHead}" ]
+      # \
+      ++ [ (mkSshOptions { indent = "  "; } cf') ]
+    );
+
   isPath = x: builtins.substring 0 1 (toString x) == "/";
 
   addressPort =
     entry:
-    if isPath entry.address then " ${entry.address}" else " [${entry.address}]:${toString entry.port}";
-
-  unwords = builtins.concatStringsSep " ";
+    if isPath entry.address then "${entry.address}" else "[${entry.address}]:${toString entry.port}";
 
   mkSetEnvStr =
     envStr:
-    unwords (
+    builtins.concatStringsSep " " (
       mapAttrsToList (name: value: ''${name}="${lib.escape [ ''"'' "\\" ] (toString value)}"'') envStr
     );
 
@@ -37,6 +144,14 @@ let
     }:
     types.submodule {
       options = {
+        # Define `__toString` so that the configuration serialization uses it
+        __toString = mkOption {
+          default = addressPort;
+          visible = false;
+          internal = true;
+          readOnly = true;
+        };
+
         address = mkOption {
           type = if nullableAddress then types.nullOr types.str else types.str;
           default = if nullableAddress then null else "localhost";
@@ -57,6 +172,14 @@ let
 
   forwardModule = types.submodule {
     options = {
+      # Define `__toString` so that the configuration serialization uses it
+      __toString = mkOption {
+        default = f: "${toString f.bind} ${toString f.host}";
+        visible = false;
+        internal = true;
+        readOnly = true;
+      };
+
       bind = mkOption {
         type = mkAddressPortModule { actionType = "bind"; };
         description = "Local port binding options";
@@ -69,8 +192,48 @@ let
   };
 
   matchBlockModule = types.submodule {
+    freeformType = sshConfigType;
+
+    # Rename options
+    imports = lib.mapAttrsToList (prev: new: (lib.mkRenamedOptionModule [ prev ] [ new ])) {
+      addKeysToAgent = "AddKeysToAgent";
+      addressFamily = "AddressFamily";
+      certificateFile = "CertificateFile";
+      checkHostIP = "CheckHostIP";
+      compression = "Compression";
+      controlMaster = "ControlMaster";
+      controlPath = "ControlPath";
+      controlPersist = "ControlPersist";
+      dynamicForwards = "DynamicForward";
+      forwardAgent = "ForwardAgent";
+      forwardX11 = "ForwardX11";
+      forwardX11Trusted = "ForwardX11Trusted";
+      hashKnownHosts = "HashKnownHosts";
+      host = "Host";
+      hostname = "Hostname";
+      identitiesOnly = "IdentitiesOnly";
+      identityAgent = "IdentityAgent";
+      identityFile = "IdentityFile";
+      kexAlgorithms = "KexAlgorithms";
+      localForwards = "LocalForward";
+      match = "Match";
+      port = "Port";
+      proxyCommand = "ProxyCommand";
+      proxyJump = "ProxyJump";
+      remoteForwards = "RemoteForward";
+      sendEnv = "SendEnv";
+      serverAliveCountMax = "ServerAliveCountMax";
+      serverAliveInterval = "ServerAliveInterval";
+      setEnv = "SetEnv";
+      user = "User";
+      userKnownHostsFile = "UserKnownHostsFile";
+    }
+    ++ [
+      (lib.mkRemovedOptionModule [ "extraOptions" ] "")
+    ];
+
     options = {
-      host = mkOption {
+      Host = mkOption {
         type = types.nullOr types.str;
         default = null;
         example = "*.example.org";
@@ -85,7 +248,7 @@ let
         '';
       };
 
-      match = mkOption {
+      Match = mkOption {
         type = types.nullOr types.str;
         default = null;
         example = ''
@@ -101,13 +264,13 @@ let
         '';
       };
 
-      port = mkOption {
+      Port = mkOption {
         type = types.nullOr types.port;
         default = null;
         description = "Specifies port number to connect on remote host.";
       };
 
-      forwardAgent = mkOption {
+      ForwardAgent = mkOption {
         default = null;
         type = types.nullOr types.bool;
         description = ''
@@ -116,27 +279,27 @@ let
         '';
       };
 
-      forwardX11 = mkOption {
-        type = types.bool;
-        default = false;
+      ForwardX11 = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Specifies whether X11 connections will be automatically redirected
           over the secure channel and {env}`DISPLAY` set.
         '';
       };
 
-      forwardX11Trusted = mkOption {
-        type = types.bool;
-        default = false;
+      ForwardX11Trusted = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Specifies whether remote X11 clients will have full access to the
           original X11 display.
         '';
       };
 
-      identitiesOnly = mkOption {
-        type = types.bool;
-        default = false;
+      IdentitiesOnly = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Specifies that ssh should only use the authentication
           identity explicitly configured in the
@@ -146,44 +309,44 @@ let
         '';
       };
 
-      identityFile = mkOption {
+      IdentityFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
-        default = [ ];
-        apply = p: if p == null then [ ] else lib.toList p;
+        default = null;
+        apply = p: if p == null then null else lib.toList p;
         description = ''
           Specifies files from which the user identity is read.
           Identities will be tried in the given order.
         '';
       };
 
-      identityAgent = mkOption {
+      IdentityAgent = mkOption {
         type = with types; either (listOf str) (nullOr str);
-        default = [ ];
-        apply = p: if p == null then [ ] else lib.toList p;
+        default = null;
+        apply = p: if p == null then null else lib.toList p;
         description = ''
           Specifies the location of the ssh identity agent.
         '';
       };
 
-      user = mkOption {
+      User = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = "Specifies the user to log in as.";
       };
 
-      hostname = mkOption {
+      Hostname = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = "Specifies the real host name to log into.";
       };
 
-      serverAliveInterval = mkOption {
+      ServerAliveInterval = mkOption {
         type = types.nullOr types.int;
         default = null;
         description = "Set timeout in seconds after which response will be requested.";
       };
 
-      serverAliveCountMax = mkOption {
+      ServerAliveCountMax = mkOption {
         type = types.nullOr types.ints.positive;
         default = null;
         description = ''
@@ -192,16 +355,17 @@ let
         '';
       };
 
-      sendEnv = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
+      SendEnv = mkOption {
+        type = with types; either (listOf str) (nullOr str);
+        default = null;
+        apply = p: if p == null then null else lib.toList p;
         description = ''
           Environment variables to send from the local host to the
           server.
         '';
       };
 
-      setEnv = mkOption {
+      SetEnv = mkOption {
         type =
           with types;
           attrsOf (oneOf [
@@ -211,12 +375,13 @@ let
             float
           ]);
         default = { };
+        apply = mkSetEnvStr;
         description = ''
           Environment variables and their value to send to the server.
         '';
       };
 
-      compression = mkOption {
+      Compression = mkOption {
         type = types.nullOr types.bool;
         default = null;
         description = ''
@@ -225,37 +390,37 @@ let
         '';
       };
 
-      checkHostIP = mkOption {
-        type = types.bool;
-        default = true;
+      CheckHostIP = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Check the host IP address in the
           {file}`known_hosts` file.
         '';
       };
 
-      proxyCommand = mkOption {
+      ProxyCommand = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = "The command to use to connect to the server.";
       };
 
-      proxyJump = mkOption {
+      ProxyJump = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = "The proxy host to use to connect to the server.";
       };
 
-      certificateFile = mkOption {
+      CertificateFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
-        default = [ ];
-        apply = p: if p == null then [ ] else lib.toList p;
+        default = null;
+        apply = p: if p == null then null else lib.toList p;
         description = ''
           Specifies files from which the user certificate is read.
         '';
       };
 
-      addressFamily = mkOption {
+      AddressFamily = mkOption {
         default = null;
         type = types.nullOr (
           types.enum [
@@ -269,9 +434,10 @@ let
         '';
       };
 
-      localForwards = mkOption {
-        type = types.listOf forwardModule;
-        default = [ ];
+      LocalForward = mkOption {
+        type = types.nullOr (types.listOf forwardModule);
+        apply = p: if p == null then null else lib.toList p;
+        default = null;
         example = literalExpression ''
           [
             {
@@ -287,9 +453,10 @@ let
         '';
       };
 
-      remoteForwards = mkOption {
-        type = types.listOf forwardModule;
-        default = [ ];
+      RemoteForward = mkOption {
+        type = types.nullOr (types.listOf forwardModule);
+        apply = p: if p == null then null else lib.toList p;
+        default = null;
         example = literalExpression ''
           [
             {
@@ -305,9 +472,10 @@ let
         '';
       };
 
-      dynamicForwards = mkOption {
-        type = types.listOf dynamicForwardModule;
-        default = [ ];
+      DynamicForward = mkOption {
+        type = types.nullOr (types.listOf dynamicForwardModule);
+        apply = p: if p == null then null else lib.toList p;
+        default = null;
         example = literalExpression ''
           [ { port = 8080; } ];
         '';
@@ -317,13 +485,7 @@ let
         '';
       };
 
-      extraOptions = mkOption {
-        type = types.attrsOf types.str;
-        default = { };
-        description = "Extra configuration options for the host.";
-      };
-
-      addKeysToAgent = mkOption {
+      AddKeysToAgent = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = ''
@@ -334,7 +496,7 @@ let
         '';
       };
 
-      hashKnownHosts = mkOption {
+      HashKnownHosts = mkOption {
         type = types.nullOr types.bool;
         default = null;
         description = ''
@@ -345,7 +507,7 @@ let
         '';
       };
 
-      userKnownHostsFile = mkOption {
+      UserKnownHostsFile = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = ''
@@ -355,7 +517,7 @@ let
         '';
       };
 
-      controlMaster = mkOption {
+      ControlMaster = mkOption {
         default = null;
         type = types.nullOr (
           types.enum [
@@ -369,20 +531,20 @@ let
         description = "Configure sharing of multiple sessions over a single network connection.";
       };
 
-      controlPath = mkOption {
+      ControlPath = mkOption {
         type = types.nullOr types.str;
         default = null;
         description = "Specify path to the control socket used for connection sharing.";
       };
 
-      controlPersist = mkOption {
+      ControlPersist = mkOption {
         type = types.nullOr types.str;
         default = null;
         example = "10m";
         description = "Whether control socket should remain open in the background.";
       };
 
-      kexAlgorithms = mkOption {
+      KexAlgorithms = mkOption {
         type = types.nullOr (types.listOf types.str);
         default = null;
         example = [
@@ -393,65 +555,25 @@ let
           Specifies the available KEX (Key Exchange) algorithms.
         '';
       };
+
+      # mkRemovedOptionModule does not work in submodules, this is a work-around
+      # for https://github.com/NixOS/nixpkgs/issues/96006
+      assertions = mkOption {
+        type = types.listOf types.unspecified;
+        default = [ ];
+        visible = false;
+        internal = true;
+      };
+      warnings = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        visible = false;
+        internal = true;
+      };
     };
 
     #    config.host = mkDefault dagName;
   };
-
-  matchBlockStr =
-    key: cf:
-    concatStringsSep "\n" (
-      let
-        hostOrDagName = if cf.host != null then cf.host else key;
-        matchHead = if cf.match != null then "Match ${cf.match}" else "Host ${hostOrDagName}";
-      in
-      [ "${matchHead}" ]
-      ++ optional (cf.port != null) "  Port ${toString cf.port}"
-      ++ optional (cf.forwardAgent != null) "  ForwardAgent ${lib.hm.booleans.yesNo cf.forwardAgent}"
-      ++ optional cf.forwardX11 "  ForwardX11 yes"
-      ++ optional cf.forwardX11Trusted "  ForwardX11Trusted yes"
-      ++ optional cf.identitiesOnly "  IdentitiesOnly yes"
-      ++ optional (cf.user != null) "  User ${cf.user}"
-      ++ optional (cf.hostname != null) "  HostName ${cf.hostname}"
-      ++ optional (cf.addressFamily != null) "  AddressFamily ${cf.addressFamily}"
-      ++ optional (cf.sendEnv != [ ]) "  SendEnv ${unwords cf.sendEnv}"
-      ++ optional (cf.setEnv != { }) "  SetEnv ${mkSetEnvStr cf.setEnv}"
-      ++ optional (
-        cf.serverAliveInterval != null
-      ) "  ServerAliveInterval ${toString cf.serverAliveInterval}"
-      ++ optional (
-        cf.serverAliveCountMax != null
-      ) "  ServerAliveCountMax ${toString cf.serverAliveCountMax}"
-      ++ optional (cf.compression != null) "  Compression ${lib.hm.booleans.yesNo cf.compression}"
-      ++ optional (!cf.checkHostIP) "  CheckHostIP no"
-      ++ optional (cf.proxyCommand != null) "  ProxyCommand ${cf.proxyCommand}"
-      ++ optional (cf.proxyJump != null) "  ProxyJump ${cf.proxyJump}"
-      ++ optional (cf.addKeysToAgent != null) "  AddKeysToAgent ${cf.addKeysToAgent}"
-      ++ optional (
-        cf.hashKnownHosts != null
-      ) "  HashKnownHosts ${lib.hm.booleans.yesNo cf.hashKnownHosts}"
-      ++ optional (cf.userKnownHostsFile != null) "  UserKnownHostsFile ${cf.userKnownHostsFile}"
-      ++ optional (cf.controlMaster != null) "  ControlMaster ${cf.controlMaster}"
-      ++ optional (cf.controlPath != null) "  ControlPath ${cf.controlPath}"
-      ++ optional (cf.controlPersist != null) "  ControlPersist ${cf.controlPersist}"
-      ++ map (file: "  IdentityFile ${file}") cf.identityFile
-      ++ map (file: "  IdentityAgent ${file}") cf.identityAgent
-      ++ map (file: "  CertificateFile ${file}") cf.certificateFile
-      ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.localForwards
-      ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.remoteForwards
-      ++ map (f: "  DynamicForward" + addressPort f) cf.dynamicForwards
-      ++ optional (
-        cf.kexAlgorithms != null
-      ) "  KexAlgorithms ${builtins.concatStringsSep "," cf.kexAlgorithms}"
-      ++ [
-        (lib.generators.toKeyValue {
-          mkKeyValue = lib.generators.mkKeyValueDefault { } " ";
-          listsAsDuplicateKeys = true;
-          indent = "  ";
-        } cf.extraOptions)
-      ]
-    );
-
 in
 {
   meta.maintainers = [ lib.maintainers.rycee ];
@@ -503,7 +625,7 @@ in
     };
 
     extraOptionOverrides = mkOption {
-      type = types.attrsOf types.str;
+      type = sshConfigType;
       default = { };
       description = ''
         Extra SSH configuration options that take precedence over any
@@ -530,12 +652,12 @@ in
       example = literalExpression ''
         {
           "john.example.com" = {
-            hostname = "example.com";
-            user = "john";
+            Hostname = "example.com";
+            User = "john";
           };
           foo = lib.hm.dag.entryBefore ["john.example.com"] {
-            hostname = "example.com";
-            identityFile = "/home/john/.ssh/foo_rsa";
+            Hostname = "example.com";
+            IdentityFile = "/home/john/.ssh/foo_rsa";
           };
         };
       '';
@@ -561,16 +683,16 @@ in
         code snippet in your config:
 
         programs.ssh.matchBlocks."*" = {
-          forwardAgent = false;
-          addKeysToAgent = "no";
-          compression = false;
-          serverAliveInterval = 0;
-          serverAliveCountMax = 3;
-          hashKnownHosts = false;
-          userKnownHostsFile = "~/.ssh/known_hosts";
-          controlMaster = "no";
-          controlPath = "~/.ssh/master-%r@%n:%p";
-          controlPersist = "no";
+          ForwardAgent = false;
+          AddKeysToAgent = "no";
+          Compression = false;
+          ServerAliveInterval = 0;
+          ServerAliveCountMax = 3;
+          HashKnownHosts = false;
+          UserKnownHostsFile = "~/.ssh/known_hosts";
+          ControlMaster = "no";
+          ControlPath = "~/.ssh/master-%r@%n:%p";
+          ControlPersist = "no";
         };
       '';
     };
@@ -588,10 +710,10 @@ in
                 # Check that if `entry.address` is defined, and is a path, that `entry.port` has not
                 # been defined.
                 noPathWithPort = entry: entry.address != null && isPath entry.address -> entry.port == null;
-                checkDynamic = block: any' noPathWithPort block.dynamicForwards;
+                checkDynamic = block: any' noPathWithPort block.DynamicForward;
                 checkBindAndHost = fwd: noPathWithPort fwd.bind && noPathWithPort fwd.host;
-                checkLocal = block: any' checkBindAndHost block.localForwards;
-                checkRemote = block: any' checkBindAndHost block.remoteForwards;
+                checkLocal = block: any' checkBindAndHost block.LocalForward;
+                checkRemote = block: any' checkBindAndHost block.RemoteForward;
                 checkMatchBlock =
                   block:
                   lib.all (fn: fn block) [
@@ -607,7 +729,9 @@ in
             assertion = (cfg.extraConfig != "") -> (cfg.matchBlocks ? "*");
             message = ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.matchBlocks."*"` (default host config) is not declared.'';
           }
-        ];
+        ]
+        # ++ lib.flatten (lib.mapAttrsToList (_: v: v.data.assertions) cfg.matchBlocks);
+        ;
 
         home.packages = optional (cfg.package != null) cfg.package;
 
@@ -625,14 +749,14 @@ in
           in
           ''
             ${concatStringsSep "\n" (
-              (mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
+              [ (mkSshOptions { } cfg.extraOptionOverrides) ]
               ++ (optional (cfg.includes != [ ]) ''
                 Include ${concatStringsSep " " cfg.includes}
               '')
-              ++ (map (block: matchBlockStr block.name block.data) matchBlocks)
+              ++ (map (block: mkMatchBlock block.name block.data) matchBlocks)
             )}
 
-            ${if (defaultHostBlock != null) then (matchBlockStr "*" defaultHostBlock.data) else ""}
+            ${if (defaultHostBlock != null) then (mkMatchBlock "*" defaultHostBlock.data) else ""}
               ${lib.replaceStrings [ "\n" ] [ "\n  " ] cfg.extraConfig}
           '';
 
@@ -641,7 +765,9 @@ in
             (n: v: ''
               The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
               The match option takes precedence.'')
-            (lib.filterAttrs (n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
+            (lib.filterAttrs (n: v: v.data.Host != null && v.data.Match != null) cfg.matchBlocks)
+          # ++ lib.flatten (lib.mapAttrsToList (_: v: v.data.warnings) cfg.matchBlocks);
+          ;
       }
       (lib.mkIf cfg.enableDefaultConfig {
         warnings = [
@@ -654,16 +780,16 @@ in
         ];
 
         programs.ssh.matchBlocks."*" = {
-          forwardAgent = lib.mkDefault false;
-          addKeysToAgent = lib.mkDefault "no";
-          compression = lib.mkDefault false;
-          serverAliveInterval = lib.mkDefault 0;
-          serverAliveCountMax = lib.mkDefault 3;
-          hashKnownHosts = lib.mkDefault false;
-          userKnownHostsFile = lib.mkDefault "~/.ssh/known_hosts";
-          controlMaster = lib.mkDefault "no";
-          controlPath = lib.mkDefault "~/.ssh/master-%r@%n:%p";
-          controlPersist = lib.mkDefault "no";
+          ForwardAgent = lib.mkDefault false;
+          AddKeysToAgent = lib.mkDefault "no";
+          Compression = lib.mkDefault false;
+          ServerAliveInterval = lib.mkDefault 0;
+          ServerAliveCountMax = lib.mkDefault 3;
+          HashKnownHosts = lib.mkDefault false;
+          UserKnownHostsFile = lib.mkDefault "~/.ssh/known_hosts";
+          ControlMaster = lib.mkDefault "no";
+          ControlPath = lib.mkDefault "~/.ssh/master-%r@%n:%p";
+          ControlPersist = lib.mkDefault "no";
         };
       })
     ]
