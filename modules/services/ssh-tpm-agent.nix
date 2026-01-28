@@ -59,11 +59,14 @@ in
 
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = {
-      # Override ssh-agent's $SSH_AUTH_SOCK definition since ssh-tpm-agent is a
-      # proxy to it.
-      SSH_AUTH_SOCK = lib.mkOverride 90 "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock";
-      SSH_TPM_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock";
+    home.sessionVariables.SSH_TPM_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock";
+
+    # Override ssh-agent's $SSH_AUTH_SOCK definition since ssh-tpm-agent is a
+    # proxy to it.
+    ssh_auth_sock.initialization = lib.mkOverride 90 {
+      bash = ''export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"'';
+      fish = ''set -x SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"'';
+      nushell = ''$env.SSH_AUTH_SOCK = $"($env.XDG_RUNTIME_DIR)/ssh-tpm-agent.sock"'';
     };
 
     systemd.user = {

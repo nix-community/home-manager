@@ -188,6 +188,7 @@ import nmtSrc {
           ./modules/misc/nix
           ./modules/misc/nix-remote-build
           ./modules/misc/specialisation
+          ./modules/misc/ssh_auth_sock/default.nix
           ./modules/misc/xdg
           ./modules/xresources
           # keep-sorted end
