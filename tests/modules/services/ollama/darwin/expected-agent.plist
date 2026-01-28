@@ -24,8 +24,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@ollama@/bin/ollama</string>
-		<string>serve</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @ollama@/bin/ollama serve</string>
 	</array>
 </dict>
 </plist>

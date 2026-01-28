@@ -18,8 +18,9 @@
 	<string>org.nix-community.home.espanso</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@espanso@/Applications/Espanso.app/Contents/MacOS/espanso</string>
-		<string>launcher</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @espanso@/Applications/Espanso.app/Contents/MacOS/espanso launcher</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

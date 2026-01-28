@@ -13,12 +13,9 @@
 	<string>org.nix-community.home.colima-default</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@colima@/bin/colima</string>
-		<string>start</string>
-		<string>default</string>
-		<string>-f</string>
-		<string>--activate=true</string>
-		<string>--save-config=false</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @colima@/bin/colima start default -f &apos;--activate=true&apos; &apos;--save-config=false&apos;</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

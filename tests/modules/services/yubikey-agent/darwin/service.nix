@@ -27,9 +27,9 @@
       	<string>Background</string>
       	<key>ProgramArguments</key>
       	<array>
-      		<string>@yubikey-agent@/bin/yubikey-agent</string>
-      		<string>-l</string>
-      		<string>/tmp/yubikey-agent.sock</string>
+      		<string>/bin/sh</string>
+      		<string>-c</string>
+      		<string>/bin/wait4path /nix/store &amp;&amp; exec @yubikey-agent@/bin/yubikey-agent -l /tmp/yubikey-agent.sock</string>
       	</array>
       	<key>Sockets</key>
       	<dict>

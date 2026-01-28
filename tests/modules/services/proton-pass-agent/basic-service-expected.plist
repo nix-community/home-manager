@@ -15,9 +15,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@bash-interactive@/bin/bash</string>
+		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>@proton-pass-cli@/bin/pass-cli ssh-agent start --socket-path $(@getconf-system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/proton-pass-agent/socket</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @bash-interactive@/bin/bash -c &apos;@proton-pass-cli@/bin/pass-cli ssh-agent start --socket-path $(@getconf-system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/proton-pass-agent/socket&apos;</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

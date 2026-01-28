@@ -17,9 +17,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/some/command</string>
-		<string>--with-arguments</string>
-		<string>foo</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /some/command --with-arguments foo</string>
 	</array>
 	<key>UnrecognizedByHomeManager</key>
 	<string>should make it to the resulting plist</string>
