@@ -19,26 +19,26 @@ let
   jsonFormat = pkgs.formats.json { };
 
   transformMcpServer = name: server: {
-    name = name;
+    inherit name;
     value = {
-      enabled = !(server.disabled or false);
+      inherit (server) enabled;
     }
     // (
-      if server ? url then
-        {
-          type = "remote";
-          url = server.url;
-        }
-        // (lib.optionalAttrs (server ? headers) { headers = server.headers; })
-      else if server ? command then
+      if server.type == "stdio" then
         {
           type = "local";
-          command = [ server.command ] ++ (server.args or [ ]);
+          command = [ server.command ] ++ server.args;
+          environment = server.env;
         }
-        // (lib.optionalAttrs (server ? env) { environment = server.env; })
+      else if server.type == "sse" || server.type == "http" then
+        {
+          inherit (server) url headers;
+          type = "remote";
+        }
       else
-        { }
-    );
+        throw "Unexpected MCP server type: ${server.type}"
+    )
+    // (lib.optionalAttrs (server.timeout != null) { inherit (server) timeout; });
   };
 
   transformedMcpServers =
