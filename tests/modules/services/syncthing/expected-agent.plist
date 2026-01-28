@@ -19,5 +19,9 @@
 		<string>-c</string>
 		<string>/bin/wait4path /nix/store &amp;&amp; exec @syncthing-wrapper@</string>
 	</array>
+	<key>StandardErrorPath</key>
+	<string>/home/hm-user/Library/Logs/Syncthing/syncthing-stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/home/hm-user/Library/Logs/Syncthing/syncthing-stdout.log</string>
 </dict>
 </plist>
