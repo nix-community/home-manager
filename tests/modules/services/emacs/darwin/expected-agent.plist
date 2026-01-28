@@ -13,8 +13,9 @@
 	<string>org.nix-community.home.emacs</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@emacs@/bin/emacs</string>
-		<string>--fg-daemon</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @emacs@/bin/emacs --fg-daemon</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
