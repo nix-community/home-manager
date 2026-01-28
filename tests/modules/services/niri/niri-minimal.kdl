@@ -1,0 +1,33 @@
+workspace "music"
+workspace "web" {
+	layout {
+		gaps 32
+	}
+	open-on-output "DP-2"
+}
+output "HDMI-A-1" {
+	off
+}
+output "eDP-1" {
+	mode "1920x1080@120.030"
+}
+input {
+	keyboard {
+		numlock
+		xkb {
+			file "~/.config/keymap.xkb"
+			layout "us"
+		}
+	}
+	mouse {
+		accel-speed 0.200000
+	}
+	touchpad {
+		natural-scroll
+		tap
+	}
+	trackpoint {
+		left-handed
+		off
+	}
+}
