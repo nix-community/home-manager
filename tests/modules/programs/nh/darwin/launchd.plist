@@ -6,9 +6,9 @@
 	<string>org.nix-community.home.nh-clean</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@nh@/bin/nh</string>
-		<string>clean</string>
-		<string>user</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @nh@/bin/nh clean user</string>
 	</array>
 	<key>StartCalendarInterval</key>
 	<array>

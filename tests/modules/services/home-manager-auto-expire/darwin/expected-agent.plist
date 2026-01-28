@@ -8,7 +8,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/nix/store/00000000000000000000000000000000-home-manager-auto-expire</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /nix/store/00000000000000000000000000000000-home-manager-auto-expire</string>
 	</array>
 	<key>StandardErrorPath</key>
 	<string>/home/hm-user/Library/Logs/home-manager-auto-expire/launchd-stderr.log</string>

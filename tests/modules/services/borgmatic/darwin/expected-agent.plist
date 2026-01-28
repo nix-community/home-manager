@@ -8,9 +8,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@borgmatic@/bin/borgmatic</string>
-		<string>--stats</string>
-		<string>--list</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @borgmatic@/bin/borgmatic --stats --list</string>
 	</array>
 	<key>StandardErrorPath</key>
 	<string>/home/hm-user/Library/Logs/borgmatic/launchd-stderr.log</string>

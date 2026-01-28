@@ -17,9 +17,9 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@goimapnotify@/bin/goimapnotify</string>
-		<string>-conf</string>
-		<string>/nix/store/00000000000000000000000000000000-imapnotify-hm-example.com-config.json</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @goimapnotify@/bin/goimapnotify -conf /nix/store/00000000000000000000000000000000-imapnotify-hm-example.com-config.json</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
