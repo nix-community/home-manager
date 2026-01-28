@@ -105,7 +105,7 @@ in
     };
 
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (
-      lib.mkOrder 1999 ''
+      lib.mkOrder 1900 ''
         if [[ $TERM != "dumb" ]]; then
           eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
         fi
