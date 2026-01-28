@@ -104,11 +104,13 @@ in
       };
     };
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-      if [[ $TERM != "dumb" ]]; then
-        eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
-      fi
-    '';
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration (
+      lib.mkOrder 1900 ''
+        if [[ $TERM != "dumb" ]]; then
+          eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
+        fi
+      ''
+    );
 
     programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
       if [[ $TERM != "dumb" ]]; then
