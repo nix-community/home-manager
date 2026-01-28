@@ -428,20 +428,6 @@ in
         (lib.makeBinPath cfg.extraPackages)
       ];
 
-      extraMakeWrapperLuaCArgs = optionals (resolvedExtraLuaPackages != [ ]) [
-        "--suffix"
-        "LUA_CPATH"
-        ";"
-        (concatMapStringsSep ";" luaPackages.getLuaCPath resolvedExtraLuaPackages)
-      ];
-
-      extraMakeWrapperLuaArgs = optionals (resolvedExtraLuaPackages != [ ]) [
-        "--suffix"
-        "LUA_PATH"
-        ";"
-        (concatMapStringsSep ";" luaPackages.getLuaPath resolvedExtraLuaPackages)
-      ];
-
       vimPackageInfo = neovimUtils.makeVimPackageInfo (map suppressNotVimlConfig pluginsNormalized);
 
       wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package {
@@ -463,7 +449,7 @@ in
           ps: (cfg.extraPython3Packages ps) ++ (lib.concatMap (f: f ps) vimPackageInfo.pluginPython3Packages);
         neovimRcContent = cfg.extraConfig;
         wrapperArgs =
-          cfg.extraWrapperArgs ++ extraMakeWrapperArgs ++ extraMakeWrapperLuaCArgs ++ extraMakeWrapperLuaArgs;
+          cfg.extraWrapperArgs ++ extraMakeWrapperArgs;
         wrapRc = false;
       };
     in
