@@ -76,7 +76,7 @@ let
       };
 
       keybindings = mkOption {
-        type = types.attrsOf (types.nullOr types.str);
+        type = types.attrsOf (types.nullOr (commonOptions.withPriority types.str));
         default = lib.mapAttrs (n: lib.mkOptionDefault) {
           "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
           "${cfg.config.modifier}+Shift+q" = "kill";
@@ -114,16 +114,46 @@ let
           "${cfg.config.modifier}+Shift+space" = "floating toggle";
           "${cfg.config.modifier}+space" = "focus mode_toggle";
 
-          "${cfg.config.modifier}+1" = "workspace number 1";
-          "${cfg.config.modifier}+2" = "workspace number 2";
-          "${cfg.config.modifier}+3" = "workspace number 3";
-          "${cfg.config.modifier}+4" = "workspace number 4";
-          "${cfg.config.modifier}+5" = "workspace number 5";
-          "${cfg.config.modifier}+6" = "workspace number 6";
-          "${cfg.config.modifier}+7" = "workspace number 7";
-          "${cfg.config.modifier}+8" = "workspace number 8";
-          "${cfg.config.modifier}+9" = "workspace number 9";
-          "${cfg.config.modifier}+0" = "workspace number 10";
+          "${cfg.config.modifier}+1" = {
+            priority = 101;
+            value = "workspace number 1";
+          };
+          "${cfg.config.modifier}+2" = {
+            priority = 102;
+            value = "workspace number 2";
+          };
+          "${cfg.config.modifier}+3" = {
+            priority = 103;
+            value = "workspace number 3";
+          };
+          "${cfg.config.modifier}+4" = {
+            priority = 104;
+            value = "workspace number 4";
+          };
+          "${cfg.config.modifier}+5" = {
+            priority = 105;
+            value = "workspace number 5";
+          };
+          "${cfg.config.modifier}+6" = {
+            priority = 106;
+            value = "workspace number 6";
+          };
+          "${cfg.config.modifier}+7" = {
+            priority = 107;
+            value = "workspace number 7";
+          };
+          "${cfg.config.modifier}+8" = {
+            priority = 108;
+            value = "workspace number 8";
+          };
+          "${cfg.config.modifier}+9" = {
+            priority = 109;
+            value = "workspace number 9";
+          };
+          "${cfg.config.modifier}+0" = {
+            priority = 110;
+            value = "workspace number 10";
+          };
 
           "${cfg.config.modifier}+Shift+1" = "move container to workspace number 1";
           "${cfg.config.modifier}+Shift+2" = "move container to workspace number 2";
@@ -150,6 +180,10 @@ let
           An attribute set that assigns a key press to an action using a key symbol.
           See <https://i3wm.org/docs/userguide.html#keybindings>.
 
+          Can set priority by using a set `{ priority = 100; value = "..."; }`,
+          default priority is 1000, but bindings for Mod+N where N is 0, ..., 9
+          have priority 100+N.
+
           Consider to use `lib.mkOptionDefault` function to extend or override
           default keybindings instead of specifying all of them from scratch.
         '';
@@ -157,6 +191,8 @@ let
           let
             modifier = config.wayland.windowManager.sway.config.modifier;
           in lib.mkOptionDefault {
+            "''${modifier}+0" = { priority = 100; value = "workspace number 0"; };
+            "''${modifier}+Shift+0" = { priority = 200; value = "move container to workspace number 0"; };
             "''${modifier}+Return" = "exec ''${cfg.config.terminal}";
             "''${modifier}+Shift+q" = "kill";
             "''${modifier}+d" = "exec ''${cfg.config.menu}";
@@ -372,8 +408,6 @@ let
     colorSetStr
     windowBorderString
     fontConfigStr
-    keybindingDefaultWorkspace
-    keybindingsRest
     workspaceOutputStr
     ;
 
@@ -467,12 +501,9 @@ let
               "client.urgent ${colorSetStr colors.urgent}"
               "client.placeholder ${colorSetStr colors.placeholder}"
               "client.background ${colors.background}"
+              ""
               (keybindingsStr {
-                keybindings = keybindingDefaultWorkspace;
-                bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
-              })
-              (keybindingsStr {
-                keybindings = keybindingsRest;
+                inherit keybindings;
                 bindsymArgs = lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
               })
               (keycodebindingsStr keycodebindings)
