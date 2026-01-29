@@ -2,7 +2,6 @@
   pkgs,
   config,
   lib,
-  putter,
   ...
 }:
 
@@ -103,13 +102,13 @@ in
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
     home.activation.checkLinkTargets = lib.hm.dag.entryBefore [ "writeBoundary" ] ''
-      ${lib.getExe putter} check -v \
+      ${lib.getExe pkgs.putter} check -v \
         --state-file "${putterStatePath}" \
         ${config.home.internal.filePutterConfig}
     '';
 
     home.activation.linkGeneration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      ${lib.getExe putter} apply $VERBOSE_ARG -v ''${DRY_RUN:+--dry-run} \
+      ${lib.getExe pkgs.putter} apply $VERBOSE_ARG -v ''${DRY_RUN:+--dry-run} \
         --state-file "${putterStatePath}" \
         ${config.home.internal.filePutterConfig}
     '';
