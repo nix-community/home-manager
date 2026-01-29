@@ -2,13 +2,11 @@
   description = "Home Manager for Nix";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.putter.url = "git+file:///home/rycee/devel/putter";
 
   outputs =
     {
       self,
       nixpkgs,
-      putter,
       ...
     }:
     {
