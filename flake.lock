@@ -116,10 +116,10 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1769696348,
-        "narHash": "sha256-7PfqOSShROCqvTb2dMS61jM/6lzgh1cYvbUShitIGDM=",
-        "rev": "59e1ce703d998e41f68839f27cba5bda84ea9b80",
-        "revCount": 116,
+        "lastModified": 1769709293,
+        "narHash": "sha256-dEj2vaUX/E4lMljL7emiHYwRdqFdEkMnKXp/SJ0Zsu8=",
+        "rev": "f109ef2983039b2824c38e10f92576eff1caf0c6",
+        "revCount": 117,
         "type": "git",
         "url": "file:///home/rycee/devel/putter"
       },
