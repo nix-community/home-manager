@@ -26,14 +26,18 @@ in
     }:
     let
       # Create a Putter entry for the given file.
-      mkEntry = f: {
-        source = "${sourceBaseDirectory}/${f.target}";
-        target = (if hasPrefix "/" f.target then "" else "${targetBaseDirectory}/") + f.target;
-      } // optionalAttrs f.force  {
-        collision.resolution = "force";
-      } // optionalAttrs f.recursive {
-        action.type = "symlink_recursive";
-      };
+      mkEntry =
+        f:
+        {
+          source = "${sourceBaseDirectory}/${f.target}";
+          target = (if hasPrefix "/" f.target then "" else "${targetBaseDirectory}/") + f.target;
+        }
+        // optionalAttrs f.force {
+          collision.resolution = "force";
+        }
+        // optionalAttrs f.recursive {
+          action.type = "symlink_recursive";
+        };
 
       putterJson = {
         version = "1";
