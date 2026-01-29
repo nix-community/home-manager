@@ -332,21 +332,43 @@ in
         home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
         assertions = [
-          {
-            assertion =
-              let
-                enabled = [
-                  (config.programs.delta.enable && config.programs.delta.enableGitIntegration)
-                  (config.programs.diff-highlight.enable && config.programs.diff-highlight.enableGitIntegration)
-                  (config.programs.diff-so-fancy.enable && config.programs.diff-so-fancy.enableGitIntegration)
-                  (config.programs.difftastic.enable && config.programs.difftastic.git.enable)
-                  (config.programs.patdiff.enable && config.programs.patdiff.enableGitIntegration)
-                  (config.programs.riff.enable && config.programs.riff.enableGitIntegration)
-                ];
-              in
-              lib.count lib.id enabled <= 1;
-            message = "Only one of 'programs.git.delta.enable' or 'programs.git.difftastic.enable' or 'programs.git.diff-so-fancy.enable' or 'programs.git.diff-highlight' or 'programs.git.patdiff' can be set to true at the same time.";
-          }
+          (
+            let
+              configOf =
+                {
+                  name,
+                  gitIntegrationOption ? [ "enableGitIntegration" ],
+                }:
+                {
+                  name = "programs.${name}.${lib.concatStringsSep "." gitIntegrationOption}";
+                  value =
+                    config.programs.${name}.enable && lib.getAttrFromPath gitIntegrationOption config.programs.${name};
+                };
+              enabled = builtins.filter (x: x.value) (
+                map configOf [
+                  { name = "delta"; }
+                  { name = "diff-highlight"; }
+                  { name = "diff-so-fancy"; }
+                  {
+                    name = "difftastic";
+                    gitIntegrationOption = [
+                      "git"
+                      "enable"
+                    ];
+                  }
+                  { name = "patdiff"; }
+                  { name = "riff"; }
+                ]
+              );
+            in
+            {
+              assertion = lib.length enabled <= 1;
+              message = ''
+                Only one of the following options can be enabled at a time.
+                  - ${lib.concatStringsSep "\n  - " (map (x: "`${x.name}'") enabled)}
+              '';
+            }
+          )
         ];
 
         xdg.configFile = {
