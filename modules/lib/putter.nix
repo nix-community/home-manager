@@ -5,8 +5,9 @@
 let
 
   inherit (lib)
-    hasPrefix
     filter
+    hasPrefix
+    optionalAttrs
     ;
 
 in
@@ -26,10 +27,12 @@ in
     let
       # Create a Putter entry for the given file.
       mkEntry = f: {
-        collision.resolution = if f.force then "force" else "abort";
-        action.type = if f.recursive then "symlink_recursive" else "symlink";
         source = "${sourceBaseDirectory}/${f.target}";
         target = (if hasPrefix "/" f.target then "" else "${targetBaseDirectory}/") + f.target;
+      } // optionalAttrs f.force  {
+        collision.resolution = "force";
+      } // optionalAttrs f.recursive {
+        action.type = "symlink_recursive";
       };
 
       putterJson = {
