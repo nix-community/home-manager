@@ -88,7 +88,7 @@ in
             "~/.lazygit/newdir";
 
         bashIntegration = ''
-          ${cfg.shellWrapperName}() {
+          function ${cfg.shellWrapperName}() {
               export LAZYGIT_NEW_DIR_FILE=${lazygitNewDirFilePath}
               command lazygit "$@"
               if [ -f $LAZYGIT_NEW_DIR_FILE ]; then
