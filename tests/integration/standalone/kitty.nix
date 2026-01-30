@@ -59,6 +59,14 @@
       assert expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 
+    with subtest("Switch to Bad Kitty Auto Theme"):
+      succeed_as_alice("cp ${./kitty-auto-theme-bad-home.nix} /home/alice/.config/home-manager/home.nix")
+
+      actual = fail_as_alice("home-manager switch")
+      expected = "kitty-themes does not contain the theme file"
+      assert expected in actual, \
+        f"expected home-manager switch to contain {expected}, but got {actual}"
+
     with subtest("Switch to Good Kitty"):
       succeed_as_alice("cp ${./kitty-theme-good-home.nix} /home/alice/.config/home-manager/home.nix")
 
