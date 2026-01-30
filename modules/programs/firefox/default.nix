@@ -12,6 +12,9 @@ let
   moduleName = lib.concatStringsSep "." modulePath;
 
   mkFirefoxModule = import ./mkFirefoxModule.nix;
+
+  xdgConfigHome = lib.removePrefix config.home.homeDirectory config.xdg.configHome;
+
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -29,7 +32,11 @@ in
       visible = true;
 
       platforms.linux = {
-        configPath = ".mozilla/firefox";
+        configPath =
+          if ((lib.versionAtLeast config.home.stateVersion "26.05") && config.home.preferXdgDirectories) then
+            "${xdgConfigHome}/mozilla/firefox"
+          else
+            ".mozilla/firefox";
       };
       platforms.darwin = {
         configPath = "Library/Application Support/Firefox";
