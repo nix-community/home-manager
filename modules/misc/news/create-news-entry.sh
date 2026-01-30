@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/72ac591e737060deab2b86d6952babd1f896d7c5.tar.gz -i bash -p coreutils
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/88d3861acdd3d2f0e361767018218e51810df8a1.tar.gz -i bash -p coreutils
 
 DATE="$(date --iso-8601=second --universal)"
 YEAR="$(date --date="$DATE" +"%Y")"
