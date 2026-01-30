@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2025-02-07 22:02+0000\n"
-"Last-Translator: Bruno Fragoso <darth_signa@hotmail.com>\n"
+"PO-Revision-Date: 2026-01-30 22:01+0000\n"
+"Last-Translator: Pedro de Mattia <pedromattia@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/home-manager/"
 "modules/pt/>\n"
 "Language: pt\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: modules/files.nix:214
 msgid "Creating home file links in %s"
@@ -70,7 +70,7 @@ msgstr "Ativando %s"
 
 #: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: opção desconhecida '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
@@ -86,7 +86,7 @@ msgstr ""
 #: modules/lib-bash/activation-init.sh:109
 #: modules/lib-bash/activation-init.sh:121
 msgid "%s is \"%s\", expected \"%s\""
-msgstr ""
+msgstr "%s é \"%s\", o esperado era \"%s\""
 
 #: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
