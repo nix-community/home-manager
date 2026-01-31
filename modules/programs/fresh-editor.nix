@@ -28,6 +28,15 @@ in
       example = literalExpression "[ pkgs.rust-analyzer ]";
       description = "Extra package to add to fresh";
     };
+    defaultEditor = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to configure {command}`fresh` as the default
+        editor using the {env}`EDITOR` and {env}`VISUAL`
+        environment variables.
+      '';
+    };
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -63,6 +72,12 @@ in
         ]
       else
         [ cfg.package ];
+
+    home.sessionVariables = mkIf cfg.defaultEditor {
+      EDITOR = "fresh";
+      VISUAL = "fresh";
+    };
+
     xdg.configFile."fresh/config.json" = mkIf (cfg.settings != { }) {
       source = jsonFormat.generate "config.json" cfg.settings;
     };
