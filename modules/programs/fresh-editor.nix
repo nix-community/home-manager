@@ -10,6 +10,8 @@ let
     mkEnableOption
     mkPackageOption
     mkOption
+    types
+    literalExpression
     ;
 
   cfg = config.programs.fresh-editor;
@@ -20,6 +22,12 @@ in
   options.programs.fresh-editor = {
     enable = mkEnableOption "fresh-editor";
     package = mkPackageOption pkgs "fresh-editor" { nullable = true; };
+    extraPackages = mkOption {
+      type = with types; listOf package;
+      default = [ ];
+      example = literalExpression "[ pkgs.rust-analyzer ]";
+      description = "Extra package to add to fresh";
+    };
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -39,7 +47,22 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = mkIf (cfg.package != null) [ cfg.package ];
+    home.packages =
+      if cfg.extraPackages != [ ] then
+        [
+          (pkgs.symlinkJoin {
+            name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+            paths = [ cfg.package ];
+            preferLocalBuild = true;
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/fresh \
+                --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+            '';
+          })
+        ]
+      else
+        [ cfg.package ];
     xdg.configFile."fresh/config.json" = mkIf (cfg.settings != { }) {
       source = jsonFormat.generate "config.json" cfg.settings;
     };
