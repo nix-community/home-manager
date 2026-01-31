@@ -58,24 +58,22 @@ in
       oldOptionEnabled =
         oldOption != null && oldOption.isDefined && (builtins.length oldOption.files) > 0;
     in
-    lib.mkMerge [
-      (lib.mkIf cfg.enable {
-        home.packages = [ cfg.package ];
+    {
+      home.packages = lib.mkIf cfg.enable [ cfg.package ];
 
-        xdg.configFile."diffnav/config.yml".text = pkgs.writeText "diffnav-config" (
-          lib.generators.toYAML { diffnav = cfg.options; }
-        );
-      })
+      xdg.configFile."diffnav/config.yml".text = (
+        lib.mkIf cfg.enable (
+          pkgs.writeText "diffnav-config" (lib.generators.toYAML { diffnav = cfg.options; })
+        )
+      );
 
-      (lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
-        programs.git.iniContent =
-          let
-            diffnavCommand = lib.getExe cfg.package;
-          in
-          {
-            interactive.diffFilter = diffnavCommand;
-            pager.diff = diffnavCommand;
-          };
-      })
-    ];
+      programs.git.iniContent =
+        let
+          diffnavCommand = lib.getExe cfg.package;
+        in
+        (lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
+          interactive.diffFilter = diffnavCommand;
+          pager.diff = diffnavCommand;
+        });
+    };
 }
