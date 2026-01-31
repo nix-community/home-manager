@@ -36,7 +36,7 @@ in
           collision.resolution = "force";
         }
         // optionalAttrs f.recursive {
-          action.type = "symlink_recursive";
+          action.type = "recursive_symlink";
         };
 
       putterJson = {
