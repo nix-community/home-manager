@@ -19,7 +19,7 @@ in
   options.programs.diffnav = {
     enable = lib.mkEnableOption "diffnav, a git diff pager based on delta but with a file tree, à la GitHub";
 
-    package = lib.mkPackageOption pkgs "diffnav" { };
+    package = lib.mkPackageOption pkgs "diffnav" { nullable = true; };
 
     settings = mkOption {
       type = pkgs.formats.yaml;
@@ -52,28 +52,19 @@ in
     };
   };
 
-  config =
-    let
-      oldOption = lib.attrByPath [ "programs" "git" "diffnav" "enable" ] null options;
-      oldOptionEnabled =
-        oldOption != null && oldOption.isDefined && (builtins.length oldOption.files) > 0;
-    in
-    {
-      home.packages = lib.mkIf cfg.enable [ cfg.package ];
+  config = {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      xdg.configFile."diffnav/config.yml".text = (
-        lib.mkIf cfg.enable (
-          pkgs.writeText "diffnav-config" (lib.generators.toYAML { diffnav = cfg.options; })
-        )
-      );
+    xdg.configFile."diffnav/config.yml".text = (
+      lib.mkIf cfg.enable (
+        pkgs.writeText "diffnav-config" (lib.generators.toYAML { diffnav = cfg.options; })
+      )
+    );
 
-      programs.git.iniContent =
-        let
-          diffnavCommand = lib.getExe cfg.package;
-        in
-        (lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
-          interactive.diffFilter = diffnavCommand;
-          pager.diff = diffnavCommand;
-        });
-    };
+    programs.git.iniContent =
+      (lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
+        interactive.diffFilter = "diffnav";
+        pager.diff = "diffnav";
+      });
+  };
 }
