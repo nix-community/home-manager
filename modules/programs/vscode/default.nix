@@ -27,7 +27,6 @@ let
       "${cfg.package}/lib/antigravity"
     else
       "${cfg.package}/lib/vscode";
-  sharePrefix = if vscodePname == "antigravity" then "/share/antigravity" else "/share/vscode";
 
   productInfoPath =
     if
@@ -111,7 +110,7 @@ let
     pkgs.writeTextFile {
       inherit text;
       name = "extensions-json-${name}";
-      destination = "${sharePrefix}/extensions/extensions.json";
+      destination = "/share/vscode/extensions/extensions.json";
     };
 
   mergedUserSettings =
@@ -590,7 +589,7 @@ in
         lib.mapAttrs' (
           n: v:
           lib.nameValuePair "${userDir}/profiles/${n}/extensions.json" {
-            source = "${extensionJsonFile n (extensionJson v.extensions)}${sharePrefix}/extensions/extensions.json";
+            source = "${extensionJsonFile n (extensionJson v.extensions)}/share/vscode/extensions/extensions.json";
           }
         ) allProfilesExceptDefault
       ))
@@ -598,7 +597,7 @@ in
       (mkIf (cfg.profiles != { }) (
         let
           # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-          subDir = "${sharePrefix}/extensions";
+          subDir = "share/vscode/extensions";
           toPaths =
             ext:
             map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
@@ -654,6 +653,7 @@ in
                         || builtins.elem vscodePname [
                           "cursor"
                           "windsurf"
+                          "antigravity"
                         ]
                       )
                       && defaultProfile != { }
