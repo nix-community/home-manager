@@ -89,6 +89,17 @@ in
           }
         '';
       };
+      extraQuickCss = lib.mkOption {
+        type = lib.types.lines;
+        default = "";
+        description = ''
+          Additional CSS rules.
+        '';
+        example = ''
+          /* disable webcam preview mirroring */
+          .media-engine-video { transform: none; }
+        '';
+      };
     };
   };
 
@@ -105,6 +116,9 @@ in
             };
             "vesktop/settings/settings.json" = lib.mkIf (cfg.vencord.settings != { }) {
               source = jsonFormat.generate "vencord-settings" cfg.vencord.settings;
+            };
+            "vesktop/settings/quickCss.css" = lib.mkIf (cfg.vencord.extraQuickCss != "") {
+              text = cfg.vencord.extraQuickCss;
             };
           }
           (
