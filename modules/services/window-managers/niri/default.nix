@@ -110,9 +110,15 @@ in
           removeAttrs cfg.config [
             "workspaces"
             "outputs"
+            "windowRules"
+            "layerRules"
           ]
           // {
-            _children = valueOrEmptyList cfg.config.workspaces ++ valueOrEmptyList cfg.config.outputs;
+            _children =
+              valueOrEmptyList cfg.config.workspaces
+              ++ valueOrEmptyList cfg.config.outputs
+              ++ valueOrEmptyList cfg.config.windowRules
+              ++ valueOrEmptyList cfg.config.layerRules;
           };
       in
       cfg.extraConfigPre + (configGenerator config) + cfg.extraConfig;

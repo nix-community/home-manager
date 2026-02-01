@@ -11,6 +11,65 @@ output "HDMI-A-1" {
 output "eDP-1" {
 	mode "1920x1080@120.030"
 }
+window-rule {
+	match title="Firefox"
+	match is-active=true
+	opacity 0.500000
+	shadow {
+		draw-behind-window true
+	}
+}
+window-rule {
+	match app-id="^org\\.telegram\\.desktop$"
+	exclude title="^Media viewer$"
+	open-on-output "HDMI-A-1"
+}
+layer-rule {
+	match namespace="waybar"
+	shadow {
+		draw-behind-window false
+		off
+	}
+}
+layer-rule {
+	match namespace="waybar"
+	match at-startup=true
+	baba-is-float true
+	block-out-from "screencast"
+	geometry-corner-radius 12
+	opacity 0.500000
+	place-within-backdrop true
+	shadow {
+		color "#00000064"
+		draw-behind-window true
+		offset x=0 y=5
+		on
+		softness 40
+		spread 5
+	}
+}
+animations {
+	config-notification-open-close damping-ratio=0.600000 epsilon=0.001000 stiffness=1000
+	exit-confirmation-open-close damping-ratio=0.600000 epsilon=0.010000 stiffness=500
+	horizontal-view-movement damping-ratio=1.000000 epsilon=0.000100 stiffness=800
+	overview-open-close damping-ratio=1.000000 epsilon=0.000100 stiffness=800
+	recent-windows-close damping-ratio=1.000000 epsilon=0.001000 stiffness=800
+	screenshot-ui-open {
+		curve "cubic-bezier" 0.050000 0.700000 0.100000 1
+		duration-ms 200
+	}
+	window-close {
+		curve "ease-out-quad"
+		duration-ms 150
+	}
+	window-movement damping-ratio=1.000000 epsilon=0.000100 stiffness=800
+	window-open {
+		curve "ease-out-expo"
+		duration-ms 150
+	}
+	window-resize damping-ratio=1.000000 epsilon=0.000100 stiffness=800
+	workspace-switch damping-ratio=1.000000 epsilon=0.000100 stiffness=1000
+}
 input {
 	keyboard {
 		numlock
@@ -29,5 +88,74 @@ input {
 	trackpoint {
 		left-handed
 		off
+	}
+}
+layout {
+	always-center-single-column
+	background-color "#003300"
+	border {
+		active-gradient angle=45 from="#ffbb66" relative-to="workspace-view" to="#ffc880"
+		inactive-gradient angle=45 from="#505050" in="srgb-linear" relative-to="workspace-view" to="#808080"
+		urgent-gradient angle=45 from="#800" to="#a33"
+		width 4
+	}
+	center-focused-column "never"
+	default-column-display "tabbed"
+	default-column-width {
+		proportion 0.500000
+	}
+	empty-workspace-above-first
+	focus-ring {
+		active-gradient angle=45 from="#80c8ff" in="oklch longer hue" to="#bbddff"
+		inactive-color "#505050"
+		inactive-gradient angle=45 from="#505050" relative-to="workspace-view" to="#808080"
+		on
+		urgent-color "#9b0000"
+		width 4
+	}
+	gaps 16
+	insert-hint {
+		color "#ffc87f80"
+		on
+	}
+	preset-column-widths {
+		proportion 0.333330
+		proportion 0.500000
+		proportion 0.666670
+	}
+	preset-window-heights {
+		proportion 0.333330
+		proportion 0.500000
+		proportion 0.666670
+	}
+	shadow {
+		color "#00000070"
+		draw-behind-window true
+		offset x=0 y=5
+		softness 30
+		spread 5
+	}
+	struts {
+		bottom 64
+		left 64
+		right 64
+		top 64
+	}
+	tab-indicator {
+		active-color "red"
+		active-gradient angle=45 from="#80c8ff" to="#bbddff"
+		corner-radius 8
+		gap 5
+		gaps-between-tabs 2
+		hide-when-single-tab
+		inactive-color "gray"
+		inactive-gradient angle=45 from="#505050" relative-to="workspace-view" to="#808080"
+		length total-proportion=1.000000
+		on
+		place-within-column
+		position "right"
+		urgent-color "blue"
+		urgent-gradient angle=45 from="#800" to="#a33"
+		width 4
 	}
 }

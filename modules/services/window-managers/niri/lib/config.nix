@@ -12,6 +12,11 @@ let
     filterAttrs
     length
     mapAttrs
+    flatten
+    optionalAttrs
+    hasAttr
+    optional
+    optionals
     ;
 
   # --- Utilities ---
@@ -96,12 +101,22 @@ let
   # --- Option makers ---
 
   # Helper for gradient options
-  mkGradientOption = mkPropOptions {
-    from = mkNullOption types.str "'From' value as hex color. [linear-gradient()](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/linear-gradient)";
-    to = mkNullOption types.str "'To' value as hex color. [linear-gradient()](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/linear-gradient)";
-    angle = mkNullOption types.number "'Angle' value. [linear-gradient()](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/linear-gradient)";
-    relativeTo = mkNullOption (types.strMatching "window|workspace-view") "Gradients can be colored relative to windows individually (default or 'window'), or to the whole view of the workspace ('workspace-view').";
-  };
+  mkGradientOption =
+    description:
+    (mkSubOptions {
+      from = mkNullOption types.str "'From' value as hex color. [linear-gradient()](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/linear-gradient)";
+      to = mkNullOption types.str "'To' value as hex color. [linear-gradient()](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/linear-gradient)";
+      angle = mkNullOption types.number "'Angle' value. [linear-gradient()](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/linear-gradient)";
+      relativeTo = mkNullOption (types.strMatching "window|workspace-view") "Gradients can be colored relative to windows individually (default or 'window'), or to the whole view of the workspace ('workspace-view').";
+      colorSpace = mkNullOption (types.strMatching "srgb|srgb-linear|oklab|oklch( (shorter hue|longer hue|increasing hue|decreasing hue))?") "Gradient interpolation color space.";
+    } description)
+    // {
+      apply = bindNull (v: {
+        _props = removeAttrs v [ "colorSpace" ] // {
+          "in" = v.colorSpace;
+        };
+      });
+    };
 
   # Common border color options
   borderColorOptions = {
@@ -117,6 +132,7 @@ let
   mkBorderOptions = mkSubOptions (
     {
       off = mkFlagOption "Disable border.";
+      on = mkFlagOption "Enable border.";
       width = mkNullOption types.ints.unsigned "Width of border in logical pixels.";
     }
     // borderColorOptions
@@ -126,6 +142,7 @@ let
   mkTabIndicatorOptions = mkSubOptions (
     {
       off = mkFlagOption "Hide the tab indicator.";
+      on = mkFlagOption "Show the tab indicator.";
       hideWhenSingleTab = mkFlagOption "Hide the indicator for tabbed columns with single window.";
       placeWithinColumn = mkFlagOption "Put the tab indicator within the column, rather than outside.";
       gap = mkNullOption types.int "Gap between the tab indicator and the window in logical pixels.";
@@ -149,10 +166,10 @@ let
         softness = mkNullOption types.ints.unsigned "Shadow softness in logical pixels.";
         spread = mkNullOption types.ints.unsigned "Distance to expand the window rectangle in logical pixels.";
         offset = mkPropOptions {
-          x = mkNullOption types.int;
-          y = mkNullOption types.int;
+          x = mkNullOption types.int "X offset.";
+          y = mkNullOption types.int "Y offset.";
         } "Moves the shadow relative to the window in logical pixels.";
-        drawBehindWindow = mkFlagOption "Make shadows draw behind the window.";
+        drawBehindWindow = mkBoolOption "Make shadows draw behind the window.";
         color = mkNullOption types.str "Shadow color and opacity.";
         inactiveColor = mkNullOption types.str "Shadow color and opacity for inactive windows.";
       }
@@ -186,7 +203,7 @@ let
 
   # Helper for match rule options
   mkMatchRuleOptions =
-    isLayerRule: matchProps: options: description:
+    isLayerRule: matchProps: commonOptions: description:
     mkOption {
       default = null;
       inherit description;
@@ -199,10 +216,10 @@ let
           ]
           (
             {
-              matches = mkMatchOrExludeOptions false matchProps "";
-              excludes = mkMatchOrExludeOptions true matchProps "";
+              matches = mkMatchOrExludeOptions false matchProps "Match rules.";
+              excludes = mkMatchOrExludeOptions true matchProps "Exclude filters.";
             }
-            // options
+            // commonOptions
           );
     }
     // {
@@ -219,7 +236,7 @@ let
       );
     };
 
-  # Helper for switch event actions
+  # Helper for switch event action options
   mkSwitchEventActionOption = mkNullOption (
     types.attrTag {
       spawn = mkOption {
@@ -400,6 +417,8 @@ let
       shadow = mkShadowOption false "Shadow rendered behind a window.";
       tabIndicator = mkTabIndicatorOptions "Appearance of the tab indicator.";
       insertHint = mkSubOptions {
+        on = mkFlagOption "Enable insert hint.";
+        off = mkFlagOption "Disable insert hint.";
         color = mkNullOption types.str "Color options for insert hint.";
         gradient = mkGradientOption "Gradient options for insert hint.";
       } "Settings for the window insert position hint during an interactive window move.";
@@ -702,6 +721,185 @@ let
     openOnOutput = mkNullOption types.str "Name of monitor.";
     layout = mkSubOptions layoutOptions "Layout options.";
   };
+
+  # helper for window rules
+  mkWindowRuleOptions =
+    let
+      mkDefaultPresetSize =
+        description:
+        mkOption {
+          inherit description;
+          default = null;
+          type = types.nullOr (
+            types.attrTag {
+              fixed = mkNullOption types.ints.unsigned "Fixed size.";
+              proportion = mkNullOption types.ints.unsigned "Relative size.";
+            }
+          );
+        };
+    in
+    mkMatchRuleOptions false
+      {
+        title = mkNullOption types.str "Match by title.";
+        appId = mkNullOption types.str "Match by app-id.";
+        isActive = mkBoolOption "Match active windows.";
+        isFocused = mkBoolOption "Match focused window.";
+        isActiveInColumn = mkBoolOption "Match active windows in columns.";
+        isFloating = mkBoolOption "Match floating windows.";
+        isWindowCastTarget = mkBoolOption "Match targets of ongoing window screencasts.";
+        isUrgent = mkBoolOption "Match windows that request user's attention.";
+        atStartup = mkBoolOption "Match during the first 60 seconds.";
+      }
+      {
+        defaultColumnWidth = mkDefaultPresetSize "Set the default width for the new window.";
+        defaultColumnHeight = mkDefaultPresetSize "Set the default height for the new window.";
+        openOnOutput = mkNullOption types.str "Output to open on.";
+        openOnWorkspace = mkNullOption types.str "Workspace to open on.";
+        openMaximized = mkBoolOption "Open new window maximized.";
+        openFullscreen = mkBoolOption "Open the new window in fullscreen.";
+        openFloating = mkBoolOption "Open the new window in floating layout.";
+        openFocused = mkBoolOption "Focus the new window.";
+        blockOutFrom = mkNullOption (types.strMatching "screencast|screen-capture") "Block out matching window from screencast or screen-capture.";
+        opacity = mkNullOption (types.numbers.between 0 1) "Set opacity of matching window.";
+        variableRefreshRate = mkBoolOption "Enable or disable variable refresh rate of matching window.";
+        defaultColumnDisplay = mkNullOption (types.strMatching "normal|tabbed") "Set whether the matching column should be tabbed or normal.";
+        defaultFloatingPosition = mkPropOptions {
+          x = mkNullOption types.int "X position.";
+          y = mkNullOption types.int "Y position.";
+          relativeTo = mkNullOption (types.strMatching "top-left|top-right|bottom-left|bottom-right|top|bottom|left|right") "Anchor.";
+        } "Set the initial position for this window when it opens on, or moves to the floating layout.";
+        scrollFactor = mkNullOption types.numbers.nonnegative "Set a scroll factor for all scroll events sent to a window.";
+        drawBorderWithBackground = mkBoolOption "Override whether the border and the focus ring draw with a background.";
+        focusRing = mkBorderOptions "Override the focus ring options for the window.";
+        border = mkBorderOptions "Override the focus border options for the window.";
+        shadow = mkShadowOption true "Override the shadow options for the window.";
+        tabIndicator = mkTabIndicatorOptions "Override the tab indicator options for the window.";
+        geometryCornerRadius =
+          mkNullOption (types.either types.ints.unsigned (
+            types.addCheck (types.listOf types.ints.unsigned) (v: (builtins.length v) == 4)
+          )) null
+          // {
+            description = "Set the corner radius of the window.";
+            apply = bindNull (
+              flip pipe [
+                singleton
+                flatten
+              ]
+            );
+          };
+        clipToGeometry = mkBoolOption "Clips the window to its visual geometry.";
+        tiledState = mkBoolOption "Informs the window that it is tiled.";
+        babaIsFloat = mkBoolOption "Make your windows FLOAT up and down.";
+        minWidth = mkNullOption types.ints.unsigned "Override minimal width.";
+        maxWidth = mkNullOption types.ints.unsigned "Override maximum width.";
+        minHeight = mkNullOption types.ints.unsigned "Override minimal height.";
+        maxHeight = mkNullOption types.ints.unsigned "Override maximum height.";
+      };
+
+  # helper for layer rules
+  mkLayerRuleOptions =
+    mkMatchRuleOptions true
+      {
+        namespace = mkNullOption types.str "This is a regular expression that should match anywhere in the surface namespace.";
+        atStartup = mkBoolOption "Matches during the first 60 seconds after starting niri.";
+      }
+      {
+        blockOutFrom = mkNullOption (types.strMatching "screencast|screen-capture") "Block out surfaces from xdg-desktop-portal screencasts or all screen captures.";
+        opacity = mkNullOption (types.numbers.between 0 1) "Set the opacity of the surface.";
+        shadow = mkShadowOption true "Override the shadow options for the surface.";
+        geometryCornerRadius =
+          mkNullOption (types.either types.ints.unsigned (
+            types.addCheck (types.listOf types.ints.unsigned) (v: (builtins.length v) == 4)
+          )) "Set the corner radius of the surface."
+          // {
+            apply = bindNull (
+              flip pipe [
+                singleton
+                flatten
+              ]
+            );
+          };
+        placeWithinBackdrop = mkBoolOption "Set to true to place the surface into the backdrop visible in the Overview and between workspaces.";
+        babaIsFloat = mkBoolOption "Make your layer surfaces FLOAT up and down.";
+      };
+
+  # curve animation options
+  mkEaseAnimationOptions =
+    withCustomShaderOption: description:
+    (mkSubOptions (
+      {
+        durationMs = mkNullOption types.ints.unsigned "Duration of the animation in milliseconds.";
+        curve = mkNullOption (types.strMatching "ease-out-quad|ease-out-cubic|ease-out-expo|linear|cubic-bezier") "The easing curve to use.";
+        controlPoints = mkNullOption (types.addCheck (types.listOf types.number) (
+          v: (length v) == 4
+        )) "Control points for cubic-bezier";
+      }
+      // optionalAttrs withCustomShaderOption {
+        customShader = mkNullOption types.lines "Custom shader for drawing the window during an open animation.";
+      }
+    ) description)
+    // {
+      apply = bindNull (
+        v:
+        removeAttrs v [
+          "curve"
+          "controlPoints"
+        ]
+        // {
+          curve = bindNull (curve: {
+            _args = [ curve ] ++ optionals (v.controlPoints != null) v.controlPoints;
+          }) v.curve;
+        }
+      );
+    };
+
+  # spring animation options
+  mkSpringAnimationOptions =
+    withCustomShaderOption: description:
+    (mkSubOptions (
+      {
+        dampingRatio = mkNullOption (types.numbers.between 0.1 10.0) "Damping ratio.";
+        stiffness = mkNullOption (types.ints.unsigned) "Stiffness.";
+        epsilon = mkNullOption (types.numbers.nonnegative) "Epsilon.";
+      }
+      // (optionalAttrs withCustomShaderOption {
+        customShader = mkNullOption types.lines "Custom shader for drawing the window during an open animation.";
+      })
+    ) description)
+    // {
+      apply = bindNull (v: {
+        _props = removeAttrs v [ "customShader" ];
+        customShader = if withCustomShaderOption then v.customShader else null;
+      });
+    };
+
+  mkAnimationTypeOptions =
+    withCustomShaderOption: description:
+    (mkNullOption (types.attrTag {
+      ease = mkEaseAnimationOptions withCustomShaderOption "Easing animation options.";
+      spring = mkSpringAnimationOptions withCustomShaderOption "Spring animation options.";
+    }) description)
+    // {
+      apply = bindNull (
+        v: (optionalAttrs (hasAttr "ease" v) v.ease) // (optionalAttrs (hasAttr "spring" v) v.spring)
+      );
+    };
+
+  # animation options
+  animationOptions = {
+    off = mkFlagOption "Disable all animations";
+    workspaceSwitch = mkAnimationTypeOptions false "Animation when switching workspaces up and down.";
+    windowOpen = mkAnimationTypeOptions true "Window opening animation.";
+    windowClose = mkAnimationTypeOptions true "Window closing animation.";
+    horizontalViewMovement = mkAnimationTypeOptions false "All horizontal camera view movement animations.";
+    windowMovement = mkAnimationTypeOptions false "Movement of individual windows within a workspace.";
+    windowResize = mkAnimationTypeOptions true "Window resize animation.";
+    configNotificationOpenClose = mkAnimationTypeOptions false "The open/close animation of the config parse error and new default config notifications.";
+    exitConfirmationOpenClose = mkAnimationTypeOptions false "The open/close animation of the exit confirmation dialog.";
+    screenshotUiOpen = mkAnimationTypeOptions false "The open (fade-in) animation of the screenshot UI.";
+    overviewOpenClose = mkAnimationTypeOptions false "The open/close zoom animation of the Overview.";
+    recentWindowsClose = mkAnimationTypeOptions false "The close fade-out animation of the recent windows switcher.";
+  };
 in
 {
   options = {
@@ -751,7 +949,9 @@ in
           )
         );
       };
-
+    windowRules = mkWindowRuleOptions "Window rules.";
+    layerRules = mkLayerRuleOptions "Layer rules.";
     switchEvents = mkSubOptions switchEventOptions "Switch event options.";
+    animations = mkSubOptions animationOptions "Animation options.";
   };
 }
