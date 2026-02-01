@@ -502,12 +502,12 @@ in
         in
 
         lib.mkMerge [
-          (lib.mkIf (
-            resolvedExtraLuaPackages != [ ]
-          ) ''package.path = "${generatedLuaPath}".. ";" .. package.path'')
-          (lib.mkIf (
-            resolvedExtraLuaPackages != [ ]
-          ) ''package.cpath = "${generatedLuaCPath}".. ";" .. package.cpath'')
+          (lib.mkIf (resolvedExtraLuaPackages != [ ]) (
+            lib.mkOrder 100 ''
+              package.path = "${generatedLuaPath}".. ";" .. package.path
+              package.cpath = "${generatedLuaCPath}".. ";" .. package.cpath
+            ''
+          ))
           (lib.mkIf (advisedLua != null) (lib.mkOrder 510 advisedLua))
           (lib.mkIf (wrappedNeovim'.initRc != "") (
             lib.mkBefore "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
