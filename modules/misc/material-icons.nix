@@ -135,9 +135,17 @@ in
       readOnly = true;
       description = "The resulting derivation containing the icons.";
     };
+
+    absolutePath = mkOption {
+      type = types.functionTo types.path;
+      readOnly = true;
+      description = "Returns the absolute path for an icon with the given relative path.";
+    };
   };
 
-  config = mkIf cfg.enable {
+  config = let
+    rootIconPath = "share/icons/material";
+  in mkIf cfg.enable {
     misc.material-icons.package = pkgs.stdenvNoCC.mkDerivation {
       pname = "material-icons-subset";
       version = "4.0.0-unstable-2026-01-29";
@@ -160,7 +168,7 @@ in
           mapAttrsToList (
             destinationPath: iconCfg:
             let
-              finalPath = "$out/share/icons/material/${destinationPath}";
+              finalPath = "$out/${rootIconPath}/${destinationPath}";
             in
             ''
               install -Dm644 "${iconCfg.path}" "${finalPath}"
@@ -174,6 +182,7 @@ in
         runHook postInstall
       '';
     };
+    misc.material-icons.absolutePath = relativePath: "${cfg.package}/${rootIconPath}/${relativePath}";
 
     home.packages = [ cfg.package ];
   };
