@@ -135,48 +135,59 @@ in
       readOnly = true;
       description = "The resulting derivation containing the icons.";
     };
-  };
 
-  config = mkIf cfg.enable {
-    misc.material-icons.package = pkgs.stdenvNoCC.mkDerivation {
-      pname = "material-icons-subset";
-      version = "4.0.0-unstable-2026-01-29";
-
-      src = pkgs.fetchFromGitHub {
-        owner = "google";
-        repo = "material-design-icons";
-        rev = cfg.rev;
-        hash = cfg.hash;
-        sparseCheckout = unique (mapAttrsToList (_: iconCfg: iconCfg.path) finalIconEntries);
-      };
-
-      dontConfigure = true;
-      dontBuild = true;
-
-      installPhase = ''
-        runHook preInstall
-
-        ${concatStringsSep "\n" (
-          mapAttrsToList (
-            destinationPath: iconCfg:
-            let
-              finalPath = "$out/share/icons/material/${destinationPath}";
-            in
-            ''
-              install -Dm644 "${iconCfg.path}" "${finalPath}"
-              ${lib.optionalString (iconCfg.color != null) ''
-                sed -i 's/<svg /<svg fill="${iconCfg.color}" /' "${finalPath}"
-              ''}
-            ''
-          ) finalIconEntries
-        )}
-
-        runHook postInstall
-      '';
+    absolutePath = mkOption {
+      type = types.functionTo types.path;
+      readOnly = true;
+      description = "Returns the absolute path for an icon with the given relative path.";
     };
-
-    home.packages = [ cfg.package ];
   };
+
+  config =
+    let
+      rootIconPath = "share/icons/material";
+    in
+    mkIf cfg.enable {
+      misc.material-icons.package = pkgs.stdenvNoCC.mkDerivation {
+        pname = "material-icons-subset";
+        version = "4.0.0-unstable-2026-01-29";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "google";
+          repo = "material-design-icons";
+          rev = cfg.rev;
+          hash = cfg.hash;
+          sparseCheckout = unique (mapAttrsToList (_: iconCfg: iconCfg.path) finalIconEntries);
+        };
+
+        dontConfigure = true;
+        dontBuild = true;
+
+        installPhase = ''
+          runHook preInstall
+
+          ${concatStringsSep "\n" (
+            mapAttrsToList (
+              destinationPath: iconCfg:
+              let
+                finalPath = "$out/${rootIconPath}/${destinationPath}";
+              in
+              ''
+                install -Dm644 "${iconCfg.path}" "${finalPath}"
+                ${lib.optionalString (iconCfg.color != null) ''
+                  sed -i 's/<svg /<svg fill="${iconCfg.color}" /' "${finalPath}"
+                ''}
+              ''
+            ) finalIconEntries
+          )}
+
+          runHook postInstall
+        '';
+      };
+      misc.material-icons.absolutePath = relativePath: "${cfg.package}/${rootIconPath}/${relativePath}";
+
+      home.packages = [ cfg.package ];
+    };
 
   meta.maintainers = [ lib.maintainers.appsforartists ];
 }
