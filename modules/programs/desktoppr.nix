@@ -22,7 +22,7 @@ in
 
         options = {
           picture = lib.mkOption {
-            type = with lib.types; nullOr (either path (strMatching "^http(s)?:\/\/.*$"));
+            type = with lib.types; nullOr (either path (strMatching "^http(s)?://.*$"));
             default = null;
             example = "/System/Library/Desktop Pictures/Solid Colors/Stone.png";
             description = ''
