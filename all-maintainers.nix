@@ -1538,6 +1538,12 @@
     name = "Lukas Nagel";
     source = "home-manager";
   };
+  magicquark = {
+    github = "magicquark";
+    githubId = 198001825;
+    name = "magicquark";
+    source = "nixpkgs";
+  };
   mainrs = {
     email = "5113257+mainrs@users.noreply.github.com";
     github = "mainrs";
