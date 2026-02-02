@@ -51,11 +51,29 @@ in
         available keys.
       '';
     };
+
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
     home.sessionVariables = cfg.settings;
+
+    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
+      source ${cfg.package}/share/bash-completion/completions/pass
+    '';
+
+    programs.fish.shellInit = lib.mkIf cfg.enableFishIntegration ''
+      source ${cfg.package}/share/fish/vendor_completions.d/pass.fish
+    '';
+
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
+      source ${cfg.package}/share/zsh/site-functions/_pass
+    '';
 
     services.pass-secret-service = lib.mkIf (builtins.hasAttr "PASSWORD_STORE_DIR" cfg.settings) {
       storePath = cfg.settings.PASSWORD_STORE_DIR;
