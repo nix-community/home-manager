@@ -4,18 +4,14 @@
   pkgs,
   ...
 }:
-
 let
   inherit (lib)
     concatMapAttrs
-    concatStringsSep
     mapAttrs
-    mapAttrsToList
     mkEnableOption
     mkIf
     mkOption
     types
-    unique
     ;
 
   cfg = config.misc.material-icons;
@@ -44,6 +40,7 @@ let
   ) cfg.groups;
 
   finalIconEntries = individualIconEntrys // groupedIconEntrys;
+  rootIconPath = "share/icons/material";
 in
 {
   options.misc.material-icons = {
@@ -143,44 +140,11 @@ in
     };
   };
 
-  config = let
-    rootIconPath = "share/icons/material";
-  in mkIf cfg.enable {
-    misc.material-icons.package = pkgs.stdenvNoCC.mkDerivation {
-      pname = "material-icons-subset";
-      version = "4.0.0-unstable-2026-01-29";
-
-      src = pkgs.fetchFromGitHub {
-        owner = "google";
-        repo = "material-design-icons";
-        rev = cfg.rev;
-        hash = cfg.hash;
-        sparseCheckout = unique (mapAttrsToList (_: iconCfg: iconCfg.path) finalIconEntries);
-      };
-
-      dontConfigure = true;
-      dontBuild = true;
-
-      installPhase = ''
-        runHook preInstall
-
-        ${concatStringsSep "\n" (
-          mapAttrsToList (
-            destinationPath: iconCfg:
-            let
-              finalPath = "$out/${rootIconPath}/${destinationPath}";
-            in
-            ''
-              install -Dm644 "${iconCfg.path}" "${finalPath}"
-              ${lib.optionalString (iconCfg.color != null) ''
-                sed -i 's/<svg /<svg fill="${iconCfg.color}" /' "${finalPath}"
-              ''}
-            ''
-          ) finalIconEntries
-        )}
-
-        runHook postInstall
-      '';
+  config = mkIf cfg.enable {
+    misc.material-icons.package = pkgs.callPackage ./package.nix {
+      inherit (cfg) rev hash;
+      inherit rootIconPath;
+      iconEntries = finalIconEntries;
     };
     misc.material-icons.absolutePath = relativePath: "${cfg.package}/${rootIconPath}/${relativePath}";
 
