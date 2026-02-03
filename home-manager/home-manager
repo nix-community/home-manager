@@ -998,9 +998,11 @@ function doShowNews() {
             return 1
     esac
 
+    local formattedNewsFile="$WORK_DIR/news.txt"
     nix-instantiate --quiet --eval --json --expr "(import ${newsNixFile}).news.$newsAttr" \
         | jq -r . \
-        | ${PAGER:-less}
+        > "$formattedNewsFile"
+    ${PAGER:-less} "$formattedNewsFile"
 
     local allIds
     allIds="$(nix-instantiate --quiet --eval --expr "(import ${newsNixFile}).meta.ids")"
