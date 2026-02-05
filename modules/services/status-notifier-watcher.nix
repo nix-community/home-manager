@@ -29,7 +29,7 @@ in
     systemd.user.services.status-notifier-watcher = {
       Unit = {
         Description = "SNI watcher";
-        PartOf = [ "tray.target" ];
+        PartOf = [ "tray-sni.target" ];
         Before = [ "taffybar.service" ];
       };
 
@@ -41,7 +41,7 @@ in
 
       Install = {
         WantedBy = [
-          "tray.target"
+          "tray-sni.target"
           "taffybar.service"
         ];
       };

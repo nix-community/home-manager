@@ -7,7 +7,7 @@ ExecStart=@pasystray@/bin/pasystray -g
 
 [Unit]
 After=graphical-session.target
-After=tray.target
+After=tray-xembed.target
 Description=PulseAudio system tray
 PartOf=graphical-session.target
-Requires=tray.target
+Requires=tray-xembed.target

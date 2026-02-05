@@ -8,8 +8,8 @@ RestartSec=3
 
 [Unit]
 After=graphical-session.target
-After=tray.target
+After=tray-xembed.target
 Description=Gammastep colour temperature adjuster
 Documentation=https://gitlab.com/chinstrap/gammastep/
 PartOf=graphical-session.target
-Requires=tray.target
+Requires=tray-xembed.target

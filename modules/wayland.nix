@@ -22,7 +22,5 @@
     };
   };
 
-  config = lib.mkIf (!config.xsession.enable) {
-    systemd.user.targets.tray = config.xsession.trayTarget;
-  };
+  config = { };
 }

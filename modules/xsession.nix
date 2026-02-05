@@ -18,20 +18,6 @@ in
     xsession = {
       enable = lib.mkEnableOption "X Session";
 
-      trayTarget = mkOption {
-        readOnly = true;
-        internal = true;
-        visible = false;
-        description = "Common tray.target for both xsession and wayland";
-        type = types.attrs;
-        default = {
-          Unit = {
-            Description = "Home Manager System Tray";
-            Requires = [ "graphical-session-pre.target" ];
-          };
-        };
-      };
-
       scriptPath = mkOption {
         type = types.str;
         default = ".xsession";
@@ -202,7 +188,6 @@ in
           };
         };
 
-        tray = cfg.trayTarget;
       };
     };
 

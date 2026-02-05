@@ -64,11 +64,11 @@ in
         systemd.user.services.stalonetray = {
           Unit = {
             Description = "Stalonetray system tray";
-            PartOf = [ "tray.target" ];
+            PartOf = [ "tray-xembed.target" ];
           };
 
           Install = {
-            WantedBy = [ "tray.target" ];
+            WantedBy = [ "tray-xembed.target" ];
           };
 
           Service = {
