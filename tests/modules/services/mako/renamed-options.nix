@@ -64,9 +64,9 @@
     in
     map (
       option:
-      ''The option `services.mako.${option}' defined in ${
+      "The option `services.mako.${option}' defined in ${
         lib.showFiles options.services.mako.${option}.files
-      } has been renamed to `services.mako.settings.${lib.hm.strings.toKebabCase option}'.''
+      } has been renamed to `services.mako.settings.${lib.hm.strings.toKebabCase option}'."
     ) renamedOptions;
 
   nmt.script = ''
