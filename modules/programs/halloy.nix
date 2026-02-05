@@ -36,7 +36,7 @@ in
       };
       description = ''
         Configuration settings for halloy. All available options can be
-        found here: <https://halloy.chat/configuration/index.html>. Note that
+        found here: <https://halloy.chat/configuration.html>. Note that
         halloy requires at least one `server` to be configured, see example.
       '';
     };
