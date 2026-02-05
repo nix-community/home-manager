@@ -91,7 +91,7 @@ in
       home = {
         packages = lib.mkMerge ([ (mkIf (cfg.package != null) [ cfg.package ]) ] ++ cfg.extraPackages);
 
-        activation = {
+        activation = lib.mkIf (cfg.settings != { }) {
           prismlauncherConfigActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
             impureConfigMerger "${dataDir}/prismlauncher.cfg" (iniFormat.generate "prismlauncher-static.cfg" {
               General = cfg.settings;
