@@ -102,7 +102,7 @@ let
     else if (n == "itemTypes") then
       "item_types = ${listString (map wrap v)}"
     else if (n == "useVcard4") then
-      ''use_vcard_4 = ${v}''
+      "use_vcard_4 = ${v}"
     else if (n == "userName") then
       ''username = "${v}"''
     else if (n == "userNameCommand") then
