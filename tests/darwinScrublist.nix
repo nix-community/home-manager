@@ -78,6 +78,7 @@ let
     "jankyborders"
     "joplin-desktop"
     "jqp"
+    "jrnl"
     "jujutsu"
     "k9s"
     "kakoune"
