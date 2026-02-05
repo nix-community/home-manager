@@ -64,9 +64,8 @@ let
           # Needed by pretty much all tests that have anything to do with fish.
           babelfish
           fish
+          lndir
           ;
-
-        xorg = super.xorg.overrideScope (self: super: { inherit (pkgs.xorg) lndir; });
       };
 
       outer =
