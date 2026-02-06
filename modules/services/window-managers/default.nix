@@ -7,6 +7,7 @@
     ./hyprland.nix
     ./i3-sway
     ./labwc
+    ./niri.nix
     ./river.nix
     ./spectrwm.nix
     ./wayfire.nix
