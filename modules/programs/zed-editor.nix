@@ -304,7 +304,7 @@ in
       (mkIf (!cfg.mutableUserSettings && mergedSettings != { }) {
         "zed/settings.json".source = jsonFormat.generate "zed-user-settings" mergedSettings;
       })
-      (mkIf (!cfg.mutableUserKeymaps && cfg.userKeymaps != { }) {
+      (mkIf (!cfg.mutableUserKeymaps && cfg.userKeymaps != [ ]) {
         "zed/keymap.json".source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
       })
       (mkIf (!cfg.mutableUserTasks && cfg.userTasks != [ ]) {
