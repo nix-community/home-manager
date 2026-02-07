@@ -1,0 +1,31 @@
+{
+  "defaultHandlersVersion": {},
+  "isDownloadsImprovementsAlreadyMigrated": false,
+  "mimeTypes": {
+    "application/pdf": {
+      "action": 2,
+      "ask": false,
+      "extensions": [],
+      "handlers": [
+        {},
+        {
+          "name": "Default App",
+          "path": "@hello@/bin/hello"
+        }
+      ]
+    }
+  },
+  "schemes": {
+    "https": {
+      "action": 2,
+      "ask": false,
+      "handlers": [
+        {},
+        {
+          "name": "Default App",
+          "path": "@hello@/bin/hello"
+        }
+      ]
+    }
+  }
+}
