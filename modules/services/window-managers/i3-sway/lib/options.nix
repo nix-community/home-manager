@@ -995,6 +995,8 @@ in
     description = ''
       The default workspace to show when ${if isSway then "sway" else "i3"} is launched.
       This must to correspond to the value of the keybinding of the default workspace.
+      Alternatively you can specify a priority for any keybinding, default
+      priority is 1000, keybinding matching defaultWorkspace priority is 100.
     '';
     example = "workspace number 9";
   };
@@ -1031,4 +1033,15 @@ in
     default = [ ];
     description = "Assign workspaces to outputs.";
   };
+
+  withPriority =
+    type:
+    types.either type (
+      types.submodule {
+        options = {
+          priority = mkOption { type = types.int; };
+          value = mkOption { inherit type; };
+        };
+      }
+    );
 }
