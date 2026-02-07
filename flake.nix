@@ -54,10 +54,18 @@
           "x86_64-linux"
         ];
 
+        # Helper to get pkgs with unfree allowed for tests
+        pkgsWithUnfree =
+          system:
+          import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+
         testChunks =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = pkgsWithUnfree system;
             inherit (pkgs) lib;
 
             # Create chunked test packages for better CI parallelization
@@ -99,7 +107,7 @@
         integrationTests =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = pkgsWithUnfree system;
             inherit (pkgs) lib;
           in
           lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux (
@@ -113,7 +121,7 @@
         buildTests =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = pkgsWithUnfree system;
             tests = import ./tests { inherit pkgs; };
             renameTestPkg = n: nixpkgs.lib.nameValuePair "test-${n}";
           in
@@ -122,7 +130,7 @@
         buildTestsNoBig =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = pkgsWithUnfree system;
             tests = import ./tests {
               inherit pkgs;
               enableBig = false;
@@ -135,7 +143,7 @@
         buildTestsNoBigIfd =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = pkgsWithUnfree system;
             tests = import ./tests {
               inherit pkgs;
               enableBig = false;
@@ -149,7 +157,7 @@
         integrationTestPackages =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = pkgsWithUnfree system;
             inherit (pkgs) lib;
             tests = import ./tests/integration { inherit pkgs lib; };
             renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
