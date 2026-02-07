@@ -429,27 +429,31 @@ in
 
       vimPackageInfo = neovimUtils.makeVimPackageInfo (map suppressNotVimlConfig pluginsNormalized);
 
-      wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package {
-        withNodeJs = cfg.withNodeJs || cfg.coc.enable;
-        plugins = [ ];
+      wrappedNeovim' =
+        (pkgs.wrapNeovimUnstable cfg.package {
+          withNodeJs = cfg.withNodeJs || cfg.coc.enable;
+          plugins = [ ];
 
-        inherit (cfg)
-          withPython3
-          withRuby
-          withPerl
-          viAlias
-          vimAlias
-          extraName
-          autowrapRuntimeDeps
-          waylandSupport
-          ;
+          inherit (cfg)
+            withPython3
+            withRuby
+            withPerl
+            viAlias
+            vimAlias
+            extraName
+            autowrapRuntimeDeps
+            waylandSupport
+            ;
 
-        extraPython3Packages =
-          ps: (cfg.extraPython3Packages ps) ++ (lib.concatMap (f: f ps) vimPackageInfo.pluginPython3Packages);
-        neovimRcContent = cfg.extraConfig;
-        wrapperArgs = cfg.extraWrapperArgs ++ extraMakeWrapperArgs;
-        wrapRc = false;
-      };
+          extraPython3Packages =
+            ps: (cfg.extraPython3Packages ps) ++ (lib.concatMap (f: f ps) vimPackageInfo.pluginPython3Packages);
+          neovimRcContent = cfg.extraConfig;
+          wrapperArgs = cfg.extraWrapperArgs ++ extraMakeWrapperArgs;
+          wrapRc = false;
+        }).overrideAttrs
+          {
+            generatedWrapperArgs = [ ];
+          };
     in
     {
       programs.neovim = {
@@ -478,6 +482,12 @@ in
 
       programs.neovim.extraConfig = lib.concatStringsSep "\n" vimPackageInfo.userPluginViml;
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
+
+      programs.neovim.extraWrapperArgs = lib.mkIf cfg.withRuby [
+        "--set"
+        "GEM_HOME"
+        "${wrappedNeovim'.rubyEnv}/${wrappedNeovim'.rubyEnv.ruby.gemPath}"
+      ];
 
       programs.neovim.initLua =
         let
@@ -508,6 +518,7 @@ in
               package.cpath = "${generatedLuaCPath}".. ";" .. package.cpath
             ''
           ))
+          (lib.mkOrder 200 (wrappedNeovim'.providerLuaRc))
           (lib.mkIf (advisedLua != null) (lib.mkOrder 510 advisedLua))
           (lib.mkIf (wrappedNeovim'.initRc != "") (
             lib.mkBefore "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
@@ -515,7 +526,6 @@ in
           (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs && cfg.generatedConfigs.lua != "") (
             lib.mkAfter (foldedLuaBlock "user-associated plugin config" cfg.generatedConfigs.lua)
           ))
-
         ];
 
       # link the packpath in expected folder so that even unwrapped neovim can pick
