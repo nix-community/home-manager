@@ -8,16 +8,6 @@
       profileExtra = "profile extra commands";
     };
 
-    nixpkgs.overlays = [
-      (self: super: {
-        xorg = super.xorg // {
-          setxkbmap = super.xorg.setxkbmap // {
-            outPath = "@setxkbmap@";
-          };
-        };
-      })
-    ];
-
     nmt.script = ''
       assertFileExists home-files/.xprofile
       assertFileContent \
