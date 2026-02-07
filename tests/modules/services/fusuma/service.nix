@@ -8,7 +8,7 @@
     extraPackages = [
       (config.lib.test.mkStubPackage { outPath = "@coreutils@"; })
       (config.lib.test.mkStubPackage { outPath = "@xdotool@"; })
-      (config.lib.test.mkStubPackage { outPath = "@xorg.xprop@"; })
+      (config.lib.test.mkStubPackage { outPath = "@xprop@"; })
     ];
     settings = { };
   };

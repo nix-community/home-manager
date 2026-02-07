@@ -224,7 +224,7 @@ in
 
         (mkIf cfg.x11.enable {
           xsession.profileExtra = ''
-            ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${cursorPath} ${toString cfg.size}
+            ${lib.getExe pkgs.xsetroot} -xcf ${cursorPath} ${toString cfg.size}
           '';
 
           xresources.properties = {

@@ -371,7 +371,7 @@ in
                     exit 1
                 esac
 
-                echo "Xft.dpi: $DPI" | ''${pkgs.xorg.xrdb}/bin/xrdb -merge
+                echo "Xft.dpi: $DPI" | ''${lib.getExe pkgs.xrdb} -merge
               '''
             };
           }

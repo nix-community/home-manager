@@ -31,7 +31,7 @@ let
     in
     "${n}: ${formatValue v}";
 
-  xrdbMerge = "${pkgs.xorg.xrdb}/bin/xrdb -merge ${cfg.path}";
+  xrdbMerge = "${lib.getExe pkgs.xrdb} -merge ${cfg.path}";
 
 in
 {
