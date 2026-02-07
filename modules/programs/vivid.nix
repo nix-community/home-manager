@@ -17,7 +17,10 @@ let
     mkBashIntegrationOption
     mkZshIntegrationOption
     mkFishIntegrationOption
+    mkNushellIntegrationOption
     ;
+
+  inherit (lib.hm.nushell) mkNushellInline;
 
   cfg = config.programs.vivid;
   yamlFormat = pkgs.formats.yaml { };
@@ -35,6 +38,7 @@ in
     enableBashIntegration = mkBashIntegrationOption { inherit config; };
     enableZshIntegration = mkZshIntegrationOption { inherit config; };
     enableFishIntegration = mkFishIntegrationOption { inherit config; };
+    enableNushellIntegration = mkNushellIntegrationOption { inherit config; };
 
     colorMode = mkOption {
       type =
@@ -160,5 +164,9 @@ in
       programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
         set -gx LS_COLORS "$(${vividCommand})"
       '';
+
+      programs.nushell.environmentVariables = mkIf cfg.enableNushellIntegration {
+        LS_COLORS = mkNushellInline vividCommand;
+      };
     };
 }
