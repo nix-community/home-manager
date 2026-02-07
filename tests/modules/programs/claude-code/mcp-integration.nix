@@ -13,7 +13,7 @@
       };
       enable = true;
 
-      enableMcpIntagretion = true;
+      enableMcpIntegration = true;
 
       mcpServers = {
         github = {
@@ -43,23 +43,24 @@
             "/other-tmp"
           ];
         };
-        database = {
-          command = "npx";
-          args = [
-            "-y"
-            "@bytebase/dbhub"
-            "--dsn"
-            "postgresql://user:pass@localhost:5432/db"
-          ];
-          env = {
-            DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
+        context7 = {
+          type = "http";
+          url = "https://mcp.context7.com/mcp";
+          headers = {
+            API_KEY = "secret";
           };
         };
-        customTransport = {
-          type = "websocket";
-          url = "wss://example.com/mcp";
-          customOption = "value";
-          timeout = 5000;
+        atlassian = {
+          type = "sse";
+          url = "https://api-private.atlassian.com/mcp";
+          headers = {
+            Authorization = "Bearer token";
+          };
+        };
+        disabled = {
+          type = "stdio";
+          command = "echo";
+          enabled = false;
         };
       };
     };

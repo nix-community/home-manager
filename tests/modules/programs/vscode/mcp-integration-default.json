@@ -1,17 +1,18 @@
 {
   "servers": {
+    "atlassian": {
+      "headers": {
+        "Authorization": "Bearer token"
+      },
+      "type": "sse",
+      "url": "https://api-private.atlassian.com/mcp"
+    },
     "context7": {
-      "enabled": true,
       "headers": {
         "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       },
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
-    },
-    "disabled-server": {
-      "command": "echo",
-      "enabled": false,
-      "type": "stdio"
     },
     "everything": {
       "args": [
@@ -19,7 +20,7 @@
         "@modelcontextprotocol/server-everything"
       ],
       "command": "npx",
-      "enabled": true,
+      "env": {},
       "type": "stdio"
     }
   }
