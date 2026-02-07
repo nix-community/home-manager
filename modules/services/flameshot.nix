@@ -52,11 +52,13 @@ in
     systemd.user.services.flameshot = {
       Unit = {
         Description = "Flameshot screenshot tool";
-        Requires = [ "tray.target" ];
+        Requires = [ "tray-sni.target" ] ++ config.lib.tray.sniWatcherRequires;
         After = [
           "graphical-session.target"
-          "tray.target"
-        ];
+          "tray-sni.target"
+        ]
+        ++ config.lib.tray.sniWatcherAfter;
+        Wants = config.lib.tray.sniWatcherWants;
         PartOf = [ "graphical-session.target" ];
         X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [ "${iniFile}" ];
       };

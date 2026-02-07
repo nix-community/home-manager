@@ -872,11 +872,13 @@ in
         ${cfg.tray.package.pname} = {
           Unit = {
             Description = cfg.tray.package.pname;
-            Requires = [ "tray.target" ];
+            Requires = [ "tray-sni.target" ] ++ config.lib.tray.sniWatcherRequires;
             After = [
               "graphical-session.target"
-              "tray.target"
-            ];
+              "tray-sni.target"
+            ]
+            ++ config.lib.tray.sniWatcherAfter;
+            Wants = config.lib.tray.sniWatcherWants;
             PartOf = [ "graphical-session.target" ];
           };
 

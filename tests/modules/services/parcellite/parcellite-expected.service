@@ -7,7 +7,7 @@ Restart=on-abort
 
 [Unit]
 After=graphical-session.target
-After=tray.target
+After=tray-xembed.target
 Description=Lightweight GTK+ clipboard manager
 PartOf=graphical-session.target
-Requires=tray.target
+Requires=tray-xembed.target
