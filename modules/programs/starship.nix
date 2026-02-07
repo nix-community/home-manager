@@ -120,14 +120,14 @@ in
 
     programs.fish.${initFish} = mkIf cfg.enableFishIntegration ''
       if test "$TERM" != "dumb"
-        ${lib.getExe cfg.package} init fish | source
+        ${lib.getExe cfg.package} init fish --print-full-init | source
         ${lib.optionalString cfg.enableTransience "enable_transience"}
       end
     '';
 
     programs.ion.initExtra = mkIf cfg.enableIonIntegration ''
       if test $TERM != "dumb"
-        eval $(${lib.getExe cfg.package} init ion)
+        eval $(${lib.getExe cfg.package} init ion --print-full-init)
       end
     '';
 
