@@ -1,0 +1,19 @@
+{
+  "lsp": {
+    "go": {
+      "command": "gopls",
+      "env": {
+        "GOTOOLCHAIN": "go1.24.5"
+      }
+    },
+    "nix": {
+      "command": "nil"
+    },
+    "typescript": {
+      "args": [
+        "--stdio"
+      ],
+      "command": "typescript-language-server"
+    }
+  }
+}

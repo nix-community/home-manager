@@ -1,0 +1,12 @@
+{
+  "providers": {
+    "custom": {
+      "api_key": "$CUSTOM_API_KEY",
+      "base_url": "https://api.example.com/v1",
+      "type": "openai-compat"
+    },
+    "openrouter": {
+      "api_key": "$OPENROUTER_API_KEY"
+    }
+  }
+}
