@@ -45,7 +45,7 @@ in
               primary = true;
               atomic = true;
               execute_after = [
-                "''${pkgs.xorg.xrandr}/bin/xrandr --dpi 96"
+                "''${lib.getExe pkgs.xrandr} --dpi 96"
                 "''${pkgs.xmonad-with-packages}/bin/xmonad --restart";
               ];
             }
@@ -56,7 +56,7 @@ in
               primary = true;
               atomic = true;
               execute_after = [
-                "''${pkgs.xorg.xrandr}/bin/xrandr --dpi 120"
+                "''${lib.getExe pkgs.xrandr} --dpi 120"
                 "''${pkgs.xmonad-with-packages}/bin/xmonad --restart";
               ];
             }
@@ -92,7 +92,7 @@ in
         ExecStart = "${lib.getExe cfg.package} watch -v";
         Restart = "always";
         RestartSec = "2s";
-        Environment = [ "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.bash}/bin" ];
+        Environment = [ "PATH=${pkgs.xrandr}/bin:${pkgs.bash}/bin" ];
       };
 
       Install = {

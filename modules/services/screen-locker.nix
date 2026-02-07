@@ -161,7 +161,7 @@ in
         };
       }
       (mkIf (!cfg.xautolock.enable) {
-        systemd.user.services.xss-lock.Service.ExecStartPre = "${pkgs.xorg.xset}/bin/xset s ${
+        systemd.user.services.xss-lock.Service.ExecStartPre = "${lib.getExe pkgs.xset} s ${
           toString (cfg.inactiveInterval * 60)
         } ${toString cfg.xss-lock.screensaverCycle}";
       })

@@ -150,7 +150,7 @@ in
                   ++ [ "-option ''" ]
                   ++ map (v: "-option '${v}'") options;
               in
-              "${pkgs.xorg.setxkbmap}/bin/setxkbmap ${toString args}";
+              "${lib.getExe pkgs.setxkbmap} ${toString args}";
           };
         };
 
