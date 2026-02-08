@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/72ac591e737060deab2b86d6952babd1f896d7c5.tar.gz -i bash -p coreutils
+#! nix-shell -i bash -p coreutils
 
 DATE="$(date --iso-8601=second --universal)"
 YEAR="$(date --date="$DATE" +"%Y")"
@@ -15,7 +15,7 @@ cd "$DIRNAME" || {
   exit 1
 }
 
-cat - << EOF > "$YEAR/$MONTH/$FILENAME_BASE.nix"
+cat - <<EOF >"$YEAR/$MONTH/$FILENAME_BASE.nix"
 {
   time = "$DATE";
   condition = true;
