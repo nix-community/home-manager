@@ -706,7 +706,11 @@ in
         '';
         example = {
           options.localAnnounceEnabled = false;
-          gui.theme = "black";
+          gui = {
+            theme = "black";
+            user = config.home.username;
+            useTLS = true;
+          };
         };
       };
 
