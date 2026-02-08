@@ -1,0 +1,1 @@
+{ lazyworktree-settings = ./settings.nix; }
