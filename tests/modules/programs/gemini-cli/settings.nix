@@ -2,12 +2,6 @@
   programs.gemini-cli = {
     enable = true;
     defaultModel = "gemini-2.5-flash";
-    settings = {
-      theme = "Default";
-      vimMode = true;
-      preferredEditor = "nvim";
-      autoAccept = true;
-    };
     commands = {
       changelog = {
         prompt = ''
@@ -22,9 +16,6 @@
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.gemini/settings.json
-    assertFileContent home-files/.gemini/settings.json \
-      ${./settings.json}
     assertFileContent home-files/.gemini/commands/changelog.toml \
       ${./changelog.toml}
     assertFileContent home-files/.gemini/commands/git/fix.toml \
