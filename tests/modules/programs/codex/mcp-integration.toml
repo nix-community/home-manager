@@ -1,0 +1,16 @@
+[mcp_servers.context7]
+enabled = true
+url = "https://mcp.context7.com/mcp"
+
+[mcp_servers.context7.http_headers]
+CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}"
+
+[mcp_servers.disabled-server]
+args = ["test"]
+command = "echo"
+enabled = false
+
+[mcp_servers.everything]
+args = ["-y", "@modelcontextprotocol/server-everything"]
+command = "npx"
+enabled = true

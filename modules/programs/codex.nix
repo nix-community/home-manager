@@ -26,6 +26,20 @@ in
 
     package = lib.mkPackageOption pkgs "codex" { nullable = true; };
 
+    enableMcpIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP server config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.codex.settings.mcp_servers`.
+
+        Note: Settings defined in {option}`programs.mcp.servers` are merged
+        with {option}`programs.codex.settings.mcp_servers`, with settings-based
+        values taking precedence.
+      '';
+    };
+
     settings = lib.mkOption {
       # NOTE: `yaml` type supports null, using `nullOr` for backwards compatibility period
       type = lib.types.nullOr tomlFormat.type;
@@ -46,6 +60,15 @@ in
               name = "Ollama";
               baseURL = "http://localhost:11434/v1";
               envKey = "OLLAMA_API_KEY";
+            };
+          };
+          mcp_servers = {
+            context7 = {
+              command = "npx";
+              args = [
+                "-y"
+                "@upstash/context7-mcp"
+              ];
             };
           };
         }
@@ -111,10 +134,36 @@ in
 
   config =
     let
-      useXdgDirectories = (config.home.preferXdgDirectories && isTomlConfig);
+      useXdgDirectories = config.home.preferXdgDirectories && isTomlConfig;
       xdgConfigHome = lib.removePrefix config.home.homeDirectory config.xdg.configHome;
       configDir = if useXdgDirectories then "${xdgConfigHome}/codex" else ".codex";
       configFileName = if isTomlConfig then "config.toml" else "config.yaml";
+
+      transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
+        lib.mapAttrs (
+          _name: server:
+          # NOTE: Convert shared programs.mcp fields to Codex config keys:
+          # - removeAttrs drops keys that Codex does not use directly
+          # - "disabled" becomes inverse "enabled"
+          # - "headers" is renamed to "http_headers"
+          # See: https://developers.openai.com/codex/mcp#other-configuration-options
+          (lib.removeAttrs server [
+            "disabled"
+            "headers"
+          ])
+          // (lib.optionalAttrs (server ? headers && !(server ? http_headers)) {
+            http_headers = server.headers;
+          })
+          // {
+            enabled = !(server.disabled or false);
+          }
+        ) config.programs.mcp.servers
+      );
+
+      settingMcpServers = lib.attrByPath [ "mcp_servers" ] { } cfg.settings;
+      mergedMcpServers = transformedMcpServers // settingMcpServers;
+      mergedSettings =
+        cfg.settings // lib.optionalAttrs (mergedMcpServers != { }) { mcp_servers = mergedMcpServers; };
     in
     mkIf cfg.enable {
       assertions = [
@@ -126,9 +175,10 @@ in
 
       home = {
         packages = mkIf (cfg.package != null) [ cfg.package ];
+
         file = {
-          "${configDir}/${configFileName}" = lib.mkIf (cfg.settings != { }) {
-            source = settingsFormat.generate "codex-config" cfg.settings;
+          "${configDir}/${configFileName}" = lib.mkIf (mergedSettings != { }) {
+            source = settingsFormat.generate "codex-config" mergedSettings;
           };
           "${configDir}/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
             text = cfg.custom-instructions;
@@ -150,6 +200,7 @@ in
               if lib.isPath content then { source = content; } else { text = content; }
             )
         ) (if builtins.isAttrs cfg.skills then cfg.skills else { }));
+
         sessionVariables = mkIf useXdgDirectories {
           CODEX_HOME = "${config.xdg.configHome}/codex";
         };
