@@ -32,9 +32,11 @@ in
         privacy.usageStatisticsEnabled = false;
         tools.autoAccept = false;
         context.loadMemoryFromIncludeDirectories = true;
-        security.auth.selectedType = "oauth-personal";
       };
-      description = "JSON config for gemini-cli";
+      description = ''
+        Configuration settings for gemini-cli. All the available options can be found here:
+        <https://geminicli.com/docs/get-started/configuration/#available-settings-in-settingsjson>
+      '';
     };
 
     commands =
@@ -140,8 +142,19 @@ in
       {
         home = {
           packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-          file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
-            source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
+          activation = lib.mkIf (cfg.settings != { }) {
+            copyGeminiCLIConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              configFile=${config.home.homeDirectory}/.gemini/settings.json
+              generatedConfig=${jsonFormat.generate "gemini-cli-settings" cfg.settings}
+
+              if [[ -f "$configFile" ]]; then
+                ${lib.getExe pkgs.jq} '.[0] * .[1]' "$configFile" "$generatedConfig" > "$configFile"
+              else
+                cp "$generatedConfig" "$configFile"
+              fi
+
+              chmod 600 "$configFile"
+            '';
           };
           sessionVariables = lib.mkIf (cfg.defaultModel != null) {
             GEMINI_MODEL = cfg.defaultModel;
