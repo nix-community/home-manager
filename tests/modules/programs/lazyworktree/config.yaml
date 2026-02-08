@@ -1,0 +1,8 @@
+auto_fetch_prs: false
+auto_refresh: true
+fuzzy_finder_input: false
+icon_set: nerd-font-v3
+refresh_interval: 10
+search_auto_select: false
+sort_mode: switched
+worktree_dir: ~/.local/share/worktrees
