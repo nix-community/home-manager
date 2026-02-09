@@ -1640,6 +1640,13 @@
     name = "Shahar \"Dawn\" Or";
     source = "nixpkgs";
   };
+  mikaeladev = {
+    email = "mikaeladev@users.noreply.github.com";
+    github = "mikaeladev";
+    githubId = 100416544;
+    name = "mikaeladev";
+    source = "home-manager";
+  };
   mikilio = {
     email = "official.mikilio+dev@gmail.com";
     github = "mikilio";
