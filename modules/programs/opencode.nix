@@ -81,7 +81,7 @@ in
         }
       '';
       description = ''
-        Configuration written to {file}`$XDG_CONFIG_HOME/opencode/opencode.json`.
+        Configuration written to {file}`$XDG_CONFIG_HOME/opencode/config.json`.
         See <https://opencode.ai/docs/config/> for the documentation.
 
         Note, `"$schema": "https://opencode.ai/config.json"` is automatically added to the configuration.
@@ -378,7 +378,7 @@ in
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
-      "opencode/opencode.json" = mkIf (cfg.settings != { } || transformedMcpServers != { }) {
+      "opencode/config.json" = mkIf (cfg.settings != { } || transformedMcpServers != { }) {
         source =
           let
             # Merge MCP servers: transformed servers + user settings, with user settings taking precedence
@@ -387,7 +387,7 @@ in
             mergedSettings =
               cfg.settings // (lib.optionalAttrs (mergedMcpServers != { }) { mcp = mergedMcpServers; });
           in
-          jsonFormat.generate "opencode.json" (
+          jsonFormat.generate "config.json" (
             {
               "$schema" = "https://opencode.ai/config.json";
             }
