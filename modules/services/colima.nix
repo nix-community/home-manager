@@ -202,7 +202,9 @@ in
             "--activate=${if profile.isActive then "true" else "false"}"
             "--save-config=false"
           ];
-          KeepAlive = true;
+          KeepAlive = {
+            SuccessfulExit = true;
+          };
           RunAtLoad = true;
           EnvironmentVariables.PATH = lib.makeBinPath [
             cfg.package

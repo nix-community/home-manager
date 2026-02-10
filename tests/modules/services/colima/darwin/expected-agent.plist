@@ -8,7 +8,10 @@
 		<string>@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin:@DarwinTools@/bin</string>
 	</dict>
 	<key>KeepAlive</key>
-	<true/>
+	<dict>
+		<key>SuccessfulExit</key>
+		<true/>
+	</dict>
 	<key>Label</key>
 	<string>org.nix-community.home.colima-default</string>
 	<key>ProgramArguments</key>
