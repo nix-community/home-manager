@@ -21,7 +21,18 @@ in
         '';
       };
 
-      package = lib.mkPackageOption pkgs "man" { };
+      package = mkOption {
+        type = with types; nullOr package;
+        default =
+          if pkgs.stdenv.isDarwin && lib.versionAtLeast config.home.stateVersion "26.05" then
+            null
+          else
+            pkgs.man;
+        defaultText = lib.literalExpression ''
+          if pkgs.stdenv.isDarwin && lib.versionAtLeast config.home.stateVersion "26.05" then null else pkgs.man
+        '';
+        description = "The {command}`man` package to use.";
+      };
 
       extraConfig = mkOption {
         type = types.lines;
@@ -51,11 +62,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    warnings = lib.optional (
+      cfg.generateCaches && cfg.package == null
+    ) "programs.man.generateCaches has no effect when programs.man.package is null";
+
+    home.packages = lib.optional (cfg.package != null) cfg.package;
     home.extraOutputsToInstall = [ "man" ];
 
     # This is mostly copy/pasted/adapted from NixOS' documentation.nix.
-    home.file = lib.mkIf cfg.generateCaches {
+    home.file = lib.mkIf (cfg.generateCaches && cfg.package != null) {
       ".manpath".text =
         let
           # Generate a directory containing installed packages' manpages.
