@@ -157,7 +157,7 @@
 
       finalPackage = pkgs.wayfire-with-plugins.override {
         wayfire = cfg.package;
-        plugins = cfg.plugins;
+        plugins = cfg.plugins ++ (lib.optional cfg.wf-shell.enable cfg.wf-shell.package);
       };
     in
     lib.mkIf cfg.enable {
@@ -172,8 +172,9 @@
         ]
       );
 
-      wayland.windowManager.wayfire = {
-        settings = {
+      xdg.configFile."wayfire.ini".text = lib.generators.toINI { } (
+        cfg.settings
+        // {
           autostart = lib.mkIf cfg.systemd.enable { inherit systemdActivation; };
           core = {
             plugins = lib.concatStringsSep " " (
@@ -184,12 +185,8 @@
             );
             xwayland = cfg.xwayland.enable;
           };
-        };
-
-        plugins = lib.optional cfg.wf-shell.enable cfg.wf-shell.package;
-      };
-
-      xdg.configFile."wayfire.ini".text = lib.generators.toINI { } cfg.settings;
+        }
+      );
 
       xdg.configFile."wf-shell.ini" = lib.mkIf cfg.wf-shell.enable {
         text = lib.generators.toINI { } cfg.wf-shell.settings;
