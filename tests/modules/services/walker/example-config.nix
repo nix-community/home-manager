@@ -1,3 +1,7 @@
+{ pkgs, ... }:
+let
+  layout_xml = builtins.readFile ./item_dmenu.xml;
+in
 {
   services.walker = {
     enable = true;
@@ -17,41 +21,33 @@
 
     theme = {
       name = "mytheme";
-      layout = {
-        ui = {
-          anchors = {
-            bottom = true;
-            left = true;
-            right = true;
-            top = true;
-          };
-
-          window = {
-            h_align = "fill";
-            v_align = "fill";
-          };
-        };
-      };
       style = ''
         * {
           color: #dcd7ba;
         }
       '';
+      # create 2 identical files, one points into the store the other is a direct text
+      layout.item_dmenu_two = pkgs.writeText "item_dmenu.xml" layout_xml;
+      layout.item_dmenu_one = layout_xml;
     };
   };
 
   nmt.script = ''
     assertFileExists home-files/.config/walker/config.toml
-    assertFileExists home-files/.config/walker/themes/mytheme.toml
-    assertFileExists home-files/.config/walker/themes/mytheme.css
+    assertFileExists home-files/.config/walker/themes/mytheme/style.css
+    assertFileExists home-files/.config/walker/themes/mytheme/item_dmenu_one.xml
+    assertFileExists home-files/.config/walker/themes/mytheme/item_dmenu_two.xml
+
+    assertFileContent home-files/.config/walker/themes/mytheme/item_dmenu_one.xml \
+    ${./item_dmenu.xml}
+
+    assertFileContent home-files/.config/walker/themes/mytheme/item_dmenu_two.xml \
+    ${./item_dmenu.xml}
 
     assertFileContent home-files/.config/walker/config.toml \
     ${./config.toml}
 
-    assertFileContent home-files/.config/walker/themes/mytheme.toml \
-    ${./mytheme.toml}
-
-    assertFileContent home-files/.config/walker/themes/mytheme.css \
+    assertFileContent home-files/.config/walker/themes/mytheme/style.css \
     ${./mytheme.css}
   '';
 }
