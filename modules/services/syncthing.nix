@@ -853,6 +853,7 @@ in
             enable = cleanedConfig != { };
             config = {
               ProgramArguments = [ "${updateConfig}" ];
+              RunAtLoad = true;
               WatchPaths = [
                 "${config.home.homeDirectory}/Library/Application Support/Syncthing/${watch_file}"
               ];
