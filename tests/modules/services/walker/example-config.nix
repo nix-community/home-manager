@@ -17,21 +17,6 @@
 
     theme = {
       name = "mytheme";
-      layout = {
-        ui = {
-          anchors = {
-            bottom = true;
-            left = true;
-            right = true;
-            top = true;
-          };
-
-          window = {
-            h_align = "fill";
-            v_align = "fill";
-          };
-        };
-      };
       style = ''
         * {
           color: #dcd7ba;
@@ -42,16 +27,12 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/walker/config.toml
-    assertFileExists home-files/.config/walker/themes/mytheme.toml
-    assertFileExists home-files/.config/walker/themes/mytheme.css
+    assertFileExists home-files/.config/walker/themes/mytheme/style.css
 
     assertFileContent home-files/.config/walker/config.toml \
     ${./config.toml}
 
-    assertFileContent home-files/.config/walker/themes/mytheme.toml \
-    ${./mytheme.toml}
-
-    assertFileContent home-files/.config/walker/themes/mytheme.css \
+    assertFileContent home-files/.config/walker/themes/mytheme/style.css \
     ${./mytheme.css}
   '';
 }
