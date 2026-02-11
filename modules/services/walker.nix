@@ -56,20 +56,16 @@ in
               description = "The theme name.";
             };
 
-            layout = mkOption {
-              inherit (tomlFormat) type;
-              default = { };
-              description = ''
-                The layout of the theme.
-
-                See <https://github.com/abenz1267/walker/wiki/Theming> for the full list of options.
-              '';
-            };
-
             style = mkOption {
               type = lines;
               default = "";
               description = "The styling of the theme, written in GTK CSS.";
+            };
+
+            layout = lib.mkOption { visible = false; } // {
+              apply =
+                x:
+                throw "The option `services.walker.theme.layout' has been removed since upstream moved to XML. more information can be found here: <https://github.com/abenz1267/walker?tab=readme-ov-file#theming>";
             };
           };
         });
@@ -111,9 +107,7 @@ in
     (mkIf (cfg.theme != null) {
       services.walker.settings.theme = cfg.theme.name;
       xdg.configFile = {
-        "walker/themes/${cfg.theme.name}.toml".source =
-          tomlFormat.generate "walker-theme-${cfg.theme.name}.toml" cfg.theme.layout;
-        "walker/themes/${cfg.theme.name}.css".text = cfg.theme.style;
+        "walker/themes/${cfg.theme.name}/style.css".text = cfg.theme.style;
       };
     })
   ]);
