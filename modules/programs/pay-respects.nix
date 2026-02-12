@@ -6,8 +6,7 @@
 }:
 let
   cfg = config.programs.pay-respects;
-  payRespectsCmd = lib.getExe cfg.package;
-  cfgOptions = lib.concatStringsSep " " cfg.options;
+
   tomlFormat = pkgs.formats.toml { };
 in
 {
@@ -92,26 +91,31 @@ in
       }
     ) cfg.rules;
 
-    programs = {
-      bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
-        eval "$(${payRespectsCmd} bash ${cfgOptions})"
-      '';
+    programs =
+      let
+        payRespectsCmd = lib.getExe cfg.package;
+        cfgOptions = lib.concatStringsSep " " cfg.options;
+      in
+      {
+        bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
+          eval "$(${payRespectsCmd} bash ${cfgOptions})"
+        '';
 
-      zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
-        eval "$(${payRespectsCmd} zsh ${cfgOptions})"
-      '';
+        zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
+          eval "$(${payRespectsCmd} zsh ${cfgOptions})"
+        '';
 
-      fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
-        ${payRespectsCmd} fish ${cfgOptions} | source
-      '';
+        fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
+          ${payRespectsCmd} fish ${cfgOptions} | source
+        '';
 
-      nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration ''
-        source ${
-          pkgs.runCommand "pay-respects-nushell-config.nu" { } ''
-            ${payRespectsCmd} nushell ${cfgOptions} >> "$out"
-          ''
-        }
-      '';
-    };
+        nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration ''
+          source ${
+            pkgs.runCommand "pay-respects-nushell-config.nu" { } ''
+              ${payRespectsCmd} nushell ${cfgOptions} >> "$out"
+            ''
+          }
+        '';
+      };
   };
 }
