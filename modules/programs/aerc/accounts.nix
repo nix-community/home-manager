@@ -209,7 +209,7 @@ in
 
           in
           {
-            source = "${protocol}://${imapUser}@${imap.host}${port'}${oauthParams'}";
+            source = "${protocol}://${imap.userName}@${imap.host}${port'}${oauthParams'}";
           }
           // optPwCmd "source" passwordCommand;
 
