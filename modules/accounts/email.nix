@@ -209,7 +209,7 @@ let
     };
   };
 
-  smtpModule = types.submodule {
+  smtpModule = {accountConfig, ...}: {
     options = {
       host = mkOption {
         type = types.str;
