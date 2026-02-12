@@ -506,7 +506,12 @@ let
         };
 
         imap = mkOption {
-          type = types.nullOr imapModule;
+          type = types.nullOr (types.submoduleWith {
+            modules = [ imapModule ];
+            specialArgs.accountConfig = config;
+            shorthandOnlyDefinesConfig = true;
+          });
+
           default = null;
           description = ''
             The IMAP configuration to use for this account.
