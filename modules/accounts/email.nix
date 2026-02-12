@@ -538,7 +538,12 @@ let
         };
 
         smtp = mkOption {
-          type = types.nullOr smtpModule;
+          type = types.nullOr (types.submoduleWith {
+            modules = [ smtpModule ];
+            specialArgs.accountConfig = config;
+            shorthandOnlyDefinesConfig = true;
+          });
+
           default = null;
           description = ''
             The SMTP configuration to use for this account.

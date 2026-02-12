@@ -241,7 +241,7 @@ in
 
           in
           {
-            outgoing = "${protocol}://${smtpUser}@${smtp.host}${port'}${oauthParams'}";
+            outgoing = "${protocol}://${smtp.userName}@${smtp.host}${port'}${oauthParams'}";
           }
           // optPwCmd "outgoing" passwordCommand;
 
