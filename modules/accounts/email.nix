@@ -137,7 +137,7 @@ let
     description = "The authentication mechanism.";
   };
 
-  imapModule = types.submodule {
+  imapModule = { accountConfig, ... }: {
     options = {
       host = mkOption {
         type = types.str;
