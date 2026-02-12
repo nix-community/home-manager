@@ -159,11 +159,12 @@ let
 
       userName = mkOption {
         type = types.nullOr types.str;
-        default = null;
-        description = ''
-          The server username for IMAP. If `null`,
-          the account-level `userName` will be used.
+        default = accountConfig.userName;
+        defaultText = lib.literalExpression ''
+          # Inherits account configuration
+          accountConfig.userName
         '';
+
       };
 
       authentication = authenticationOption;
