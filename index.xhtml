@@ -716,9 +716,8 @@ to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><
 </code></pre><p>and it is also rebuilt with the nix-darwin generations. The rebuild
 command here may be <code class="literal">darwin-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">~/.config/darwin</code> by</p><pre><code class="programlisting  shell">$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
 </code></pre>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-flake-parts-module" class="title" style="clear: both">flake-parts module   </h2>  </div> </div></div><p>When using <a class="link" href="https://flake.parts"  target="_top">flake-parts</a>
-you may wish to import Home Manager’s flake module,
-<code class="literal">flakeModules.home-manager</code>.</p><pre><code class="programlisting  nix">{
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-flake-parts-module" class="title" style="clear: both">flake-parts module   </h2>  </div> </div></div><p>When using <a class="link" href="https://flake.parts"  target="_top">flake-parts</a> you may wish to import Home
+Manager’s flake module, <code class="literal">flakeModules.home-manager</code>.</p><pre><code class="programlisting nix">{
   description = &quot;flake-parts configuration&quot;;
 
   inputs = {
@@ -728,15 +727,41 @@ you may wish to import Home Manager’s flake module,
     flake-parts.url = &quot;github:hercules-ci/flake-parts&quot;;
   };
 
-  outputs = inputs@{ flake-parts, ... }:
+  outputs = inputs@{
+    flake-parts,
+    home-manager,
+    nixpkgs,
+    ...
+  }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         # Import home-manager&#x27;s flake module
         inputs.home-manager.flakeModules.home-manager
       ];
       flake = {
-        # Define `homeModules`, `homeConfigurations`,
-        # `nixosConfigurations`, etc here
+        # Reusable Home Manager module.
+        homeModules.bash= { pkgs, ... }: {
+          programs.bash = {
+            enable = true;
+            shellAliases = {
+              ll = &quot;ls -l&quot;;
+            };
+          };
+          home.packages = [ pkgs.hello ];
+        };
+
+        # Concrete Home Manager configuration.
+        homeConfigurations.alice = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { system = &quot;x86_64-linux&quot;; };
+          modules = [
+            inputs.self.homeModules.bash
+            {
+              home.username = &quot;alice&quot;;
+              home.homeDirectory = &quot;/home/alice&quot;;
+              home.stateVersion = &quot;25.11&quot;;
+            }
+          ];
+        };
       };
       # See flake.parts for more features, such as `perSystem`
     };
