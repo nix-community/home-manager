@@ -231,7 +231,11 @@ let
 
       userName = mkOption {
         type = types.nullOr types.str;
-        default = null;
+        default = accountConfig.userName;
+        defaultText = lib.literalExpression ''
+          # Inherits account configuration
+          accountConfig.userName
+        '';
         description = ''
           The server username for SMTP. If `null`,
           the account-level `userName` will be used.
