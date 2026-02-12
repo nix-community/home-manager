@@ -50,6 +50,7 @@ let
     "eza"
     "fastfetch"
     "feh"
+    "flameshot"
     "fzf"
     "gallery-dl"
     "getconf"
