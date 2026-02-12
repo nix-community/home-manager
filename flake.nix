@@ -1,7 +1,8 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  # inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "path:/home/teto/nixpkgs3";
 
   outputs =
     {
