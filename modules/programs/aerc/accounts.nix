@@ -192,9 +192,6 @@ in
             ...
           }@cfg:
           let
-            # Use IMAP-specific username if set, otherwise fall back to account username
-            imapUser = if imap.userName != null then imap.userName else userName;
-
             loginMethod' = if cfg.aerc.imapAuth != null then "+${cfg.aerc.imapAuth}" else "";
 
             oauthParams' = oauthParams {
