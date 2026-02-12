@@ -21,71 +21,6 @@ let
       })
     ) cfg;
 
-  # Generate validation assertions for a configuration
-  genAssertions =
-    cfg:
-    lib.flatten (
-      lib.attrValues (
-        lib.mapAttrs (
-          cfgName: value:
-          (map (
-            { path, uriTemplate, ... }:
-            {
-              assertion = path == null || uriTemplate == null;
-              message = "'${cfgName}': handler can't have both 'path' and 'uriTemplate' set.";
-            }
-          ) value.handlers)
-          ++ (map (
-            {
-              name,
-              path,
-              uriTemplate,
-            }:
-            {
-              assertion = name != null -> (path != null || uriTemplate != null);
-              message = "'${cfgName}': handler has a 'name' but no 'path' or 'uriTemplate'.";
-            }
-          ) value.handlers)
-          ++ (lib.imap0 (idx: handler: {
-            assertion =
-              idx != 0
-              ->
-                handler != {
-                  name = null;
-                  path = null;
-                  uriTemplate = null;
-                };
-            message = "'${cfgName}': only the first handler can be empty, to indicate no default.";
-          }) value.handlers)
-          ++ [
-            {
-              assertion = value.action != 2 -> value.handlers == [ ];
-              message = "'${cfgName}': handlers can only be set when 'action' is set to 2 (Use helper app).";
-            }
-            {
-              assertion = value.action == 2 -> value.handlers != [ ];
-              message = "'${cfgName}': handlers must be set when 'action' is set to 2 (Use helper app).";
-            }
-            {
-              assertion =
-                value.action == 2
-                -> (
-                  (builtins.length value.handlers) == 1
-                  -> (
-                    (builtins.elemAt value.handlers 0) != {
-                      name = null;
-                      path = null;
-                      uriTemplate = null;
-                    }
-                  )
-                );
-              message = "'${cfgName}': an empty handler can only be used when there are additional handlers.";
-            }
-          ]
-        ) cfg
-      )
-    );
-
   # Common options shared between mimeTypes and schemes
   commonHandlerOptions = {
     action = lib.mkOption {
@@ -215,6 +150,8 @@ in
       '';
       description = ''
         Attribute set mapping MIME types to their handler configurations.
+
+        For a configuration example, see [this file on Firefox’s source code](https://github.com/mozilla-firefox/firefox/blob/c3797cdebac1316dd7168e995e3468c5a597e8d1/uriloader/exthandler/tests/unit/handlers.json).
       '';
     };
 
@@ -241,16 +178,8 @@ in
       '';
       description = ''
         Attribute set mapping URL schemes to their handler configurations.
-      '';
-    };
 
-    assertions = lib.mkOption {
-      type = lib.types.listOf lib.types.unspecified;
-      internal = true;
-      readOnly = true;
-      default = (genAssertions config.mimeTypes) ++ (genAssertions config.schemes);
-      description = ''
-        Validation assertions for handler configuration.
+        For a configuration example, see [this file on Firefox’s source code](https://github.com/mozilla-firefox/firefox/blob/c3797cdebac1316dd7168e995e3468c5a597e8d1/uriloader/exthandler/tests/unit/handlers.json).
       '';
     };
 

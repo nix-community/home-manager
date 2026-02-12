@@ -922,8 +922,7 @@ in
                   }
                 ]
               ) (lib.attrsToList config.extensions.settings))
-              ++ config.bookmarks.assertions
-              ++ config.handlers.assertions;
+              ++ config.bookmarks.assertions;
             };
           }
         )
