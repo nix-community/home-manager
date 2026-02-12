@@ -1,10 +1,9 @@
 # flake-parts module {#sec-flakes-flake-parts-module}
 
-When using [flake-parts](https://flake.parts)
-you may wish to import Home Manager's flake module,
-`flakeModules.home-manager`.
+When using [flake-parts](https://flake.parts) you may wish to import Home
+Manager's flake module, `flakeModules.home-manager`.
 
-``` nix
+```nix
 {
   description = "flake-parts configuration";
 
@@ -15,15 +14,41 @@ you may wish to import Home Manager's flake module,
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = inputs@{ flake-parts, ... }:
+  outputs = inputs@{
+    flake-parts,
+    home-manager,
+    nixpkgs,
+    ...
+  }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         # Import home-manager's flake module
         inputs.home-manager.flakeModules.home-manager
       ];
       flake = {
-        # Define `homeModules`, `homeConfigurations`,
-        # `nixosConfigurations`, etc here
+        # Reusable Home Manager module.
+        homeModules.bash= { pkgs, ... }: {
+          programs.bash = {
+            enable = true;
+            shellAliases = {
+              ll = "ls -l";
+            };
+          };
+          home.packages = [ pkgs.hello ];
+        };
+
+        # Concrete Home Manager configuration.
+        homeConfigurations.alice = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { system = "x86_64-linux"; };
+          modules = [
+            inputs.self.homeModules.bash
+            {
+              home.username = "alice";
+              home.homeDirectory = "/home/alice";
+              home.stateVersion = "25.11";
+            }
+          ];
+        };
       };
       # See flake.parts for more features, such as `perSystem`
     };
