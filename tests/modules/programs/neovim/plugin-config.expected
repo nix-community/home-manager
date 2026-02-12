@@ -1,6 +1,9 @@
-vim.cmd [[source /nix/store/00000000000000000000000000000000-nvim-init-home-manager.vim]]
 package.path = "/nix/store/00000000000000000000000000000000-luajit2.1-luautf8/share/lua/5.1/?.lua;/nix/store/00000000000000000000000000000000-luajit2.1-luautf8/share/lua/5.1/?/init.lua".. ";" .. package.path
 package.cpath = "/nix/store/00000000000000000000000000000000-luajit2.1-luautf8/lib/lua/5.1/?.so".. ";" .. package.cpath
+
+vim.g.loaded_node_provider=0;vim.g.loaded_perl_provider=0;vim.g.loaded_python_provider=0;vim.g.python3_host_prog='/nix/store/00000000000000000000000000000000-hm_nviminit.lua/bin/nvim-python3';vim.g.ruby_host_prog='/nix/store/00000000000000000000000000000000-hm_nviminit.lua/bin/nvim-ruby'
+vim.cmd.source "/nix/store/00000000000000000000000000000000-init.vim"
+
 -- user-associated plugin config {{{
 function HM_PLUGIN_LUA_CONFIG ()
 end
