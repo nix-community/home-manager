@@ -1,6 +1,7 @@
 .PHONY: all all-tests test test-install format
-NIXPKGS_REV := nixpkgs-unstable
-NIX_PATH := nixpkgs=https://github.com/NixOS/nixpkgs/archive/${NIXPKGS_REV}.tar.gz
+NIXPKGS_REV := 40f55bb03a0142e7d5e523939732737c6053f208
+# NIX_PATH := nixpkgs=https://github.com/NixOS/nixpkgs/archive/${NIXPKGS_REV}.tar.gz
+NIX_PATH := nixpkgs=https://github.com/teto/nixpkgs/archive/${NIXPKGS_REV}.tar.gz
 
 all: all-tests test-install
 
