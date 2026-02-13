@@ -69,6 +69,57 @@ let
 
   hmPath = toString ./..;
 
+  # Keep submodule option docs visible when wrapped in `either` (and therefore
+  # in `nullOr (either ...)`), which upstream currently omits.
+  docsLib = lib.extend (
+    _self: super:
+    let
+      mergeEitherSubOptions =
+        prefix: leftType: rightType:
+        let
+          getSubOptionsOrEmpty =
+            optionType:
+            let
+              subOptions = optionType.getSubOptions prefix;
+            in
+            if builtins.isAttrs subOptions then subOptions else { };
+
+          mkOptionDecl = options: {
+            _file = "<docs/default.nix>";
+            pos = null;
+            inherit options;
+          };
+
+          optionSets = lib.filter (options: options != { }) [
+            (getSubOptionsOrEmpty leftType)
+            (getSubOptionsOrEmpty rightType)
+          ];
+          mergedOptions = lib.foldl' (
+            acc: options:
+            if acc == { } then
+              options
+            else
+              (super.mergeOptionDecls prefix [
+                (mkOptionDecl acc)
+                (mkOptionDecl options)
+              ]).options
+          ) { } optionSets;
+        in
+        mergedOptions;
+
+    in
+    {
+      types = super.types // {
+        either =
+          leftType: rightType:
+          (super.types.either leftType rightType)
+          // {
+            getSubOptions = prefix: mergeEitherSubOptions prefix leftType rightType;
+          };
+      };
+    }
+  );
+
   buildOptionsDocs =
     args@{
       modules,
@@ -103,7 +154,7 @@ let
         };
 
       options =
-        (lib.evalModules {
+        (docsLib.evalModules {
           modules = modules ++ [ poisonModule ];
           class = "homeManager";
         }).options;
@@ -141,7 +192,8 @@ let
   hmOptionsDocs = buildOptionsDocs {
     modules =
       import ../modules/modules.nix {
-        inherit lib pkgs;
+        lib = docsLib;
+        inherit pkgs;
         check = false;
       }
       ++ [ scrubbedPkgsModule ];
