@@ -34,7 +34,6 @@ in
       description = "LibreWolf is a privacy enhanced Firefox fork.";
       wrappedPackageName = "librewolf";
       unwrappedPackageName = "librewolf-unwrapped";
-      visible = true;
 
       platforms.linux = {
         configPath = ".librewolf";
