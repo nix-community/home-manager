@@ -1,0 +1,43 @@
+{
+  "defaultHandlersVersion": {},
+  "isDownloadsImprovementsAlreadyMigrated": false,
+  "mimeTypes": {
+    "application/pdf": {
+      "action": 2,
+      "ask": false,
+      "extensions": [
+        "pdf"
+      ],
+      "handlers": [
+        {
+          "name": "Hello App",
+          "path": "@hello@/bin/hello"
+        }
+      ]
+    },
+    "text/html": {
+      "action": 4,
+      "ask": true,
+      "extensions": [
+        "html",
+        "htm"
+      ]
+    }
+  },
+  "schemes": {
+    "http": {
+      "action": 3,
+      "ask": true
+    },
+    "mailto": {
+      "action": 2,
+      "ask": false,
+      "handlers": [
+        {
+          "name": "Gmail",
+          "uriTemplate": "https://mail.google.com/mail/?extsrc=mailto&url=%s"
+        }
+      ]
+    }
+  }
+}
