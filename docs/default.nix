@@ -298,4 +298,7 @@ in
     in
     builtins.toJSON result.config.meta.maintainers
   );
+
+  # Unstable, for tests.
+  _internal = { inherit docsLib; };
 }
