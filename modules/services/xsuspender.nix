@@ -113,7 +113,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.offline ];
+  meta.maintainers = [ ];
 
   options = {
     services.xsuspender = {

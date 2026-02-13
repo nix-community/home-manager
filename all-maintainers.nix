@@ -1827,13 +1827,6 @@
     name = "Judson Lester";
     source = "nixpkgs";
   };
-  offlinehacker = {
-    email = "jaka@x-truder.net";
-    github = "offlinehacker";
-    githubId = 585547;
-    name = "Jaka Hudoklin";
-    source = "nixpkgs";
-  };
   olmokramer = {
     email = "olmokramer@users.noreply.github.com";
     github = "olmokramer";
