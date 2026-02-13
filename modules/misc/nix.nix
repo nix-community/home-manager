@@ -327,6 +327,8 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
+    (mkIf (cfg.package != null) { home.packages = [ cfg.package ]; })
+
     (mkIf (cfg.nixPath != [ ] && !cfg.keepOldNixPath) {
       home.sessionVariables.NIX_PATH = "${nixPath}";
     })
