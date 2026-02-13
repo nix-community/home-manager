@@ -275,8 +275,14 @@ in
         listOf (
           either str (submodule {
             options = {
-              name = mkOption { type = str; };
-              path = mkOption { type = str; };
+              name = mkOption {
+                type = str;
+                description = "Name used to reference the custom mode in the mode list.";
+              };
+              path = mkOption {
+                type = str;
+                description = "Executable path for the custom rofi script mode.";
+              };
             };
           })
         );
