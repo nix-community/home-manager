@@ -186,14 +186,6 @@
           (testChunks system) // workingIntegrationTests
         );
 
-        devShells = forAllPkgs (
-          pkgs:
-          let
-            tests = import ./tests { inherit pkgs; };
-          in
-          tests.run
-        );
-
         packages = forAllPkgs (
           pkgs:
           let
@@ -203,7 +195,6 @@
               inherit (releaseInfo) release isReleaseBranch;
             };
             hmPkg = pkgs.callPackage ./home-manager { path = "${self}"; };
-            system = pkgs.system;
           in
           {
             default = hmPkg;
