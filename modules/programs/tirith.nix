@@ -38,7 +38,7 @@ in
           fail_mode = "open";
           allow_bypass = true;
           severity_overrides = {
-            docker_untrusted_registry = "critical";
+            docker_untrusted_registry = "CRITICAL";
           };
         }
       '';
