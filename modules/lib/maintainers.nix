@@ -359,7 +359,7 @@
   melihdarcanxyz = {
     name = "Melih Darcan";
     github = "MelihDarcanxyz";
-    githubId = "57872471";
+    githubId = 57872471;
     email = "57872471+MelihDarcanxyz@users.noreply.github.com";
   };
   mforster = {
