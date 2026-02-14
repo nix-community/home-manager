@@ -60,6 +60,12 @@ in
               type = str;
               description = "Stream URL of the radio station.";
             };
+
+            volume = mkOption {
+              type = ints.between 0 130;
+              default = 50;
+              description = "Volume to use for the station.";
+            };
           };
         });
       default = [ ];
@@ -111,7 +117,7 @@ in
             stations:
             let
               body = lib.concatMapStringsSep "\n" (
-                station: "${escapeCSV station.name},${escapeCSV station.url}"
+                station: "${escapeCSV station.name},${escapeCSV station.url},,,,,,${toString station.volume}"
               ) stations;
             in
             "${body}\n";

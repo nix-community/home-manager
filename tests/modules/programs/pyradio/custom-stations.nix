@@ -19,6 +19,12 @@
         name = ''DEF CON Radio on "SomaFM"'';
         url = "https://somafm.com/defcon256.pls";
       }
+      # The station below tests the additional configuration options.
+      {
+        name = "DEF CON Radio (SomaFM)";
+        url = "https://somafm.com/defcon256.pls";
+        volume = 85;
+      }
     ];
   };
 
