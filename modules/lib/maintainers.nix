@@ -356,6 +356,12 @@
     github = "mainrs";
     githubId = 5113257;
   };
+  melihdarcanxyz = {
+    name = "Melih Darcan";
+    github = "MelihDarcanxyz";
+    githubId = "57872471";
+    email = "57872471+MelihDarcanxyz@users.noreply.github.com";
+  };
   mforster = {
     name = "Michael Forster";
     email = "email@michael-forster.de";
