@@ -302,7 +302,7 @@ in
               Appearance = {
                 style = "kvantum";
                 icon_theme = "Papirus-Dark";
-                standar_dialogs = "xdgdesktopportal";
+                standard_dialogs = "xdgdesktopportal";
               };
               Fonts = {
                 fixed = "\"DejaVuSansM Nerd Font Mono,12\"";
