@@ -100,6 +100,22 @@ in
         '';
         default = { };
       };
+
+      enableBashIntegration = lib.mkEnableOption "Bash integration" // {
+        default = true;
+      };
+
+      enableZshIntegration = lib.mkEnableOption "Zsh integration" // {
+        default = true;
+      };
+
+      enableFishIntegration = lib.mkEnableOption "Fish integration" // {
+        default = true;
+      };
+
+      quitcd = lib.mkEnableOption "cd on quit" // {
+        default = false;
+      };
     };
   };
 
@@ -116,10 +132,25 @@ in
             --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}"
         '';
       });
+
+      quitcd = {
+        bash_sh_zsh = builtins.readFile "${nnnPackage}/share/quitcd/quitcd.bash_sh_zsh";
+        fish = builtins.readFile "${nnnPackage}/share/quitcd/quitcd.fish";
+      };
     in
     lib.mkIf cfg.enable {
       programs.nnn.finalPackage = nnnPackage;
       home.packages = [ nnnPackage ];
       xdg.configFile."nnn/plugins" = lib.mkIf (cfg.plugins.src != null) { source = cfg.plugins.src; };
+
+      programs.bash.initExtra = lib.mkIf (cfg.enableBashIntegration && cfg.quitcd) (
+        lib.mkAfter quitcd.bash_sh_zsh
+      );
+      programs.zsh.initContent = lib.mkIf (cfg.enableZshIntegration && cfg.quitcd) (
+        lib.mkAfter quitcd.bash_sh_zsh
+      );
+      programs.fish.interactiveShellInit = lib.mkIf (cfg.enableFishIntegration && cfg.quitcd) (
+        lib.mkAfter quitcd.fish
+      );
     };
 }
