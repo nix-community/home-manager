@@ -65,6 +65,6 @@ in
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."harsh/habits".text = header + "\n" + (toHarshConfig cfg.habits) + "\n" + cfg.extraConfig;
+    xdg.configFile."harsh/habits".text = header + "\n" + (toHarshConfig cfg.config) + "\n" + cfg.extraConfig;
   };
 }
