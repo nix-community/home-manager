@@ -236,7 +236,7 @@ in
     systemd.user.services.polybar = {
       Unit = {
         Description = "Polybar status bar";
-        PartOf = [ "tray.target" ];
+        PartOf = [ "tray-xembed.target" ];
         X-Restart-Triggers = mkIf (configFile != null) [ "${configFile}" ];
       };
 
@@ -252,7 +252,7 @@ in
       };
 
       Install = {
-        WantedBy = [ "tray.target" ];
+        WantedBy = [ "tray-xembed.target" ];
       };
     };
   };

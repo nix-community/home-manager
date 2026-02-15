@@ -31,11 +31,13 @@ in
     systemd.user.services.tailscale-systray = {
       Unit = {
         Description = "Official Tailscale systray application for Linux";
-        Requires = [ "tray.target" ];
+        Requires = [ "tray-sni.target" ] ++ config.lib.tray.sniWatcherRequires;
         After = [
           "graphical-session.target"
-          "tray.target"
-        ];
+          "tray-sni.target"
+        ]
+        ++ config.lib.tray.sniWatcherAfter;
+        Wants = config.lib.tray.sniWatcherWants;
         PartOf = [ "graphical-session.target" ];
       };
       Install = {

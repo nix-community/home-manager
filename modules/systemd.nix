@@ -45,6 +45,8 @@ let
     let
       filename = "${name}.${style}";
       pathSafeName = mkPathSafeName filename;
+      installCfg = serviceCfg.Install or { };
+      aliases = lib.toList (installCfg.Alias or [ ]);
 
       # The actual unit content after filtering.
       finalUnit =
@@ -77,13 +79,19 @@ let
         name = "systemd/user/${target}.${variant}/${filename}";
         value = { inherit source; };
       };
+
+      installAlias = alias: {
+        name = "systemd/user/${alias}";
+        value = { inherit source; };
+      };
     in
     lib.singleton {
       name = "systemd/user/${filename}";
       value = { inherit source; };
     }
-    ++ map (install "wants") (serviceCfg.Install.WantedBy or [ ])
-    ++ map (install "requires") (serviceCfg.Install.RequiredBy or [ ]);
+    ++ map (install "wants") (installCfg.WantedBy or [ ])
+    ++ map (install "requires") (installCfg.RequiredBy or [ ])
+    ++ map installAlias aliases;
 
   buildServices =
     style: serviceCfgs: lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
