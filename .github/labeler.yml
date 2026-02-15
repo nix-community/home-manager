@@ -371,6 +371,7 @@
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/comodoro.nix
+          - modules/programs/harsh.nix
           - modules/programs/info.nix
           - modules/programs/joplin-desktop.nix
           - modules/programs/ledger.nix
