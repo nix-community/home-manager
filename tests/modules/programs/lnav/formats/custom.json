@@ -1,0 +1,29 @@
+{
+  "$schema": "https://lnav.org/schemas/format-v1.schema.json",
+  "custom_log": {
+    "title": "Custom Log Format",
+    "description": "A custom log format for testing",
+    "regex": {
+      "std": {
+        "pattern": "^(?<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) (?<level>\\w+) (?<body>.*)$"
+      }
+    },
+    "level-field": "level",
+    "level": {
+      "error": "ERROR",
+      "warning": "WARN",
+      "info": "INFO",
+      "debug": "DEBUG"
+    },
+    "value": {
+      "level": {
+        "kind": "string"
+      }
+    },
+    "sample": [
+      {
+        "line": "2024-01-15 10:30:00 INFO Application started"
+      }
+    ]
+  }
+}
