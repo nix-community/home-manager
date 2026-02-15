@@ -34,17 +34,22 @@ let
   accountCommand =
     let
       imapAccounts = filter (
-        a: a.imap.host != null && a.userName != null && a.passwordCommand != null
+        a:
+        a.imap.host != null
+        && (a.userName != null || (a.imap.userName != null))
+        && a.passwordCommand != null
       ) neomuttAccounts;
       accountCase =
         account:
         let
           passwordCmd = toString account.passwordCommand;
+          # Use IMAP-specific username if set, otherwise fall back to account username
+          imapUser = if account.imap.userName != null then account.imap.userName else account.userName;
         in
         ''
-          ${account.userName}@${account.imap.host})
+          ${imapUser}@${account.imap.host})
               found=1
-              username="${account.userName}"
+              username="${imapUser}"
               password="$(${passwordCmd})"
               ;;'';
     in
@@ -195,7 +200,9 @@ let
   accountRootIMAP =
     account:
     let
-      userName = lib.optionalString (account.userName != null) "${account.userName}@";
+      # Use IMAP-specific username if set, otherwise fall back to account username
+      imapUser = if account.imap.userName != null then account.imap.userName else account.userName;
+      userName = lib.optionalString (imapUser != null) "${imapUser}@";
       port = lib.optionalString (account.imap.port != null) ":${toString account.imap.port}";
       protocol = if account.imap.tls.enable then "imaps" else "imap";
     in
@@ -220,6 +227,8 @@ let
     with account;
     let
       passCmd = concatStringsSep " " passwordCommand;
+      # Use SMTP-specific username if set, otherwise fall back to account username
+      smtpUser = if smtp.userName != null then smtp.userName else userName;
     in
     if neomutt.sendMailCommand != null then
       {
@@ -229,7 +238,7 @@ let
       let
         smtpProto = if smtp.tls.enable && !smtp.tls.useStartTls then "smtps" else "smtp";
         smtpPort = if smtp.port != null then ":${toString smtp.port}" else "";
-        smtpBaseUrl = "${smtpProto}://${escape userName}@${smtp.host}${smtpPort}";
+        smtpBaseUrl = "${smtpProto}://${escape smtpUser}@${smtp.host}${smtpPort}";
       in
       {
         smtp_url = "'${smtpBaseUrl}'";

@@ -209,7 +209,7 @@ in
 
           in
           {
-            source = "${protocol}://${userName}@${imap.host}${port'}${oauthParams'}";
+            source = "${protocol}://${imap.userName}@${imap.host}${port'}${oauthParams'}";
           }
           // optPwCmd "source" passwordCommand;
 
@@ -221,6 +221,9 @@ in
             ...
           }@cfg:
           let
+            # Use SMTP-specific username if set, otherwise fall back to account username
+            smtpUser = if smtp.userName != null then smtp.userName else userName;
+
             loginMethod' = if cfg.aerc.smtpAuth != null then "+${cfg.aerc.smtpAuth}" else "";
 
             oauthParams' = oauthParams {
@@ -238,7 +241,7 @@ in
 
           in
           {
-            outgoing = "${protocol}://${userName}@${smtp.host}${port'}${oauthParams'}";
+            outgoing = "${protocol}://${smtp.userName}@${smtp.host}${port'}${oauthParams'}";
           }
           // optPwCmd "outgoing" passwordCommand;
 
