@@ -1,0 +1,60 @@
+{
+  "lsp": {
+    "go": {
+      "command": "gopls"
+    },
+    "nix": {
+      "command": "nil"
+    }
+  },
+  "mcp": {
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/tmp"
+      ],
+      "command": "npx",
+      "type": "stdio"
+    }
+  },
+  "options": {
+    "attribution": {
+      "generated_with": true,
+      "trailer_style": "co-authored-by"
+    },
+    "disable_metrics": true,
+    "disable_provider_auto_update": true,
+    "disabled_tools": [
+      "bash",
+      "sourcegraph"
+    ],
+    "initialize_as": "AGENTS.md",
+    "skills_paths": [
+      "~/.config/crush/skills",
+      "./project-skills"
+    ]
+  },
+  "permissions": {
+    "allowed_tools": [
+      "view",
+      "ls",
+      "grep",
+      "edit"
+    ]
+  },
+  "providers": {
+    "deepseek": {
+      "api_key": "$DEEPSEEK_API_KEY",
+      "base_url": "https://api.deepseek.com/v1",
+      "models": [
+        {
+          "context_window": 64000,
+          "id": "deepseek-chat",
+          "name": "Deepseek V3"
+        }
+      ],
+      "type": "openai-compat"
+    }
+  }
+}

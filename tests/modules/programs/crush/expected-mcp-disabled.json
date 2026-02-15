@@ -1,0 +1,26 @@
+{
+  "mcp": {
+    "disabled-server": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/tmp"
+      ],
+      "command": "npx",
+      "disabled": true,
+      "timeout": 120,
+      "type": "stdio"
+    },
+    "enabled-server": {
+      "headers": {
+        "Authorization": "Bearer test"
+      },
+      "type": "http",
+      "url": "https://api.example.com/mcp"
+    },
+    "unknown-server": {
+      "command": "test-server",
+      "type": "stdio"
+    }
+  }
+}

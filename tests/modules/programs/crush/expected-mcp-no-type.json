@@ -1,0 +1,21 @@
+{
+  "mcp": {
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/tmp"
+      ],
+      "command": "npx",
+      "timeout": 120,
+      "type": "stdio"
+    },
+    "github": {
+      "headers": {
+        "Authorization": "Bearer $(echo $GH_PAT)"
+      },
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}

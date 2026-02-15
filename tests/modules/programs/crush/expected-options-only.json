@@ -1,0 +1,12 @@
+{
+  "options": {
+    "disable_metrics": true,
+    "disabled_tools": [
+      "bash"
+    ],
+    "initialize_as": "AGENTS.md",
+    "skills_paths": [
+      "~/.config/crush/skills"
+    ]
+  }
+}
