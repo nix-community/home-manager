@@ -15,13 +15,42 @@ rec {
     in
     "[${concatStringsSep " " (mapAttrsToList toCriteria criteria)}]";
 
-  keybindingDefaultWorkspace = lib.filterAttrs (
-    n: v: cfg.config.defaultWorkspace != null && v == cfg.config.defaultWorkspace
-  ) cfg.config.keybindings;
+  # Gets the value for something which may be either
+  #
+  #     {name = ...; value = {priority = <int>; value = <value>; }; }
+  #
+  # or just a
+  #
+  #     {name = ...; value = <value>; }
+  getPriorityValue =
+    name-value:
+    if
+      builtins.typeOf name-value.value == "set" && name-value.value ? priority && name-value.value ? value
+    then
+      name-value.value.value
+    else
+      name-value.value;
 
-  keybindingsRest = lib.filterAttrs (
-    n: v: cfg.config.defaultWorkspace == null || v != cfg.config.defaultWorkspace
-  ) cfg.config.keybindings;
+  # Gets the priority if present, or 100 for defaultWorkspace and 1000 for
+  # anything else)
+  getPriority =
+    name-value:
+    if
+      cfg.config.defaultWorkspace != null && getPriorityValue name-value == cfg.config.defaultWorkspace
+    then
+      100
+    else if
+      builtins.typeOf name-value.value == "set" && name-value.value ? priority && name-value.value ? value
+    then
+      name-value.value.priority
+    else
+      1000;
+
+  mapSortedAttrs =
+    f: attrs:
+    builtins.map (name-value: f name-value.name (getPriorityValue name-value)) (
+      builtins.sort (lhs: rhs: getPriority lhs < getPriority rhs) (lib.attrsToList attrs)
+    );
 
   keybindingsStr =
     {
@@ -30,7 +59,7 @@ rec {
       indent ? "",
     }:
     concatStringsSep "\n" (
-      mapAttrsToList (
+      mapSortedAttrs (
         keycomb: action:
         optionalString (action != null)
           "${indent}bindsym ${lib.optionalString (bindsymArgs != "") "${bindsymArgs} "}${keycomb} ${action}"
