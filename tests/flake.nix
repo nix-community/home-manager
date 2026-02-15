@@ -15,7 +15,7 @@
 {
   description = "Tests of Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:teto/nixpkgs?ref=teto/neovim-set-provider-in-init";
 
   outputs =
     { nixpkgs, ... }:
