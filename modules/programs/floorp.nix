@@ -18,7 +18,6 @@ in
       name = "Floorp";
       wrappedPackageName = "floorp-bin";
       unwrappedPackageName = "floorp-bin-unwrapped";
-      visible = true;
 
       platforms.linux = {
         configPath = ".floorp";
