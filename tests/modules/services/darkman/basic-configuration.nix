@@ -17,7 +17,7 @@
     '';
 
     lightModeScripts.color-scheme-light = pkgs.writeScript "my-python-script" ''
-      #!${pkgs.python}/bin/python
+      #!${pkgs.python2}/bin/python
 
       print('Do something!')
     '';

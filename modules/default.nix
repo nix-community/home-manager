@@ -2,7 +2,7 @@
   configuration,
   pkgs,
   lib ? pkgs.lib,
-
+  minimal ? false,
   # Whether to check that each option has a matching declaration.
   check ? true,
   # Extra arguments passed to specialArgs.
@@ -18,12 +18,12 @@ let
     let
       f = w: x: builtins.trace "[1;31mwarning: ${w}[0m" x;
     in
-    lib.fold f res res.config.warnings;
+    lib.foldr f res res.config.warnings;
 
   extendedLib = import ./lib/stdlib-extended.nix lib;
 
   hmModules = import ./modules.nix {
-    inherit check pkgs;
+    inherit check pkgs minimal;
     lib = extendedLib;
   };
 
@@ -31,7 +31,7 @@ let
     modules = [ configuration ] ++ hmModules;
     class = "homeManager";
     specialArgs = {
-      modulesPath = builtins.toString ./.;
+      modulesPath = toString ./.;
     }
     // extraSpecialArgs;
   };
@@ -57,9 +57,8 @@ let
     let
       module = moduleChecks rawModule;
     in
-    {
-      inherit (module) options config;
-
+    module
+    // {
       activationPackage = module.config.home.activationPackage;
 
       # For backwards compatibility. Please use activationPackage instead.

@@ -7,6 +7,17 @@
 let
   cfg = config.programs.claude-code;
   jsonFormat = pkgs.formats.json { };
+  transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
+    lib.mapAttrs (
+      name: server:
+      (removeAttrs server [ "disabled" ])
+      // (lib.optionalAttrs (server ? url) { type = "http"; })
+      // (lib.optionalAttrs (server ? command) { type = "stdio"; })
+      // {
+        enabled = !(server.disabled or false);
+      }
+    ) config.programs.mcp.servers
+  );
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -21,6 +32,20 @@ in
       readOnly = true;
       internal = true;
       description = "Resulting customized claude-code package.";
+    };
+
+    enableMcpIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP servers config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.opencode.settings.mcp`.
+
+        Note: Settings defined in {option}`programs.mcp.servers` are merged
+        with {option}`programs.claude-code.mcpServers`, with Claude Code servers
+        taking precedence.
+      '';
     };
 
     settings = lib.mkOption {
@@ -197,6 +222,47 @@ in
       };
     };
 
+    rules = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Modular rule files for Claude Code.
+        The attribute name becomes the rule filename, and the value is either:
+        - Inline content as a string
+        - A path to a file containing the rule content
+        Rules are stored in .claude/rules/ directory.
+        All markdown files in .claude/rules/ are automatically loaded as project memory.
+      '';
+      example = lib.literalExpression ''
+        {
+          code-style = '''
+            # Code Style Guidelines
+
+            - Use consistent formatting
+            - Follow language conventions
+          ''';
+          testing = '''
+            # Testing Conventions
+
+            - Write tests for all new features
+            - Maintain test coverage above 80%
+          ''';
+          security = ./rules/security.md;
+        }
+      '';
+    };
+
+    rulesDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing rule files for Claude Code.
+        Rule files from this directory will be symlinked to .claude/rules/.
+        All markdown files in this directory are automatically loaded as project memory.
+      '';
+      example = lib.literalExpression "./rules";
+    };
+
     agentsDir = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;
@@ -225,6 +291,53 @@ in
         Hook files from this directory will be symlinked to .claude/hooks/.
       '';
       example = lib.literalExpression "./hooks";
+    };
+
+    skills = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Custom skills for Claude Code.
+        The attribute name becomes the skill filename or directory name, and the value is either:
+        - Inline content as a string (creates .claude/skills/<name>.md)
+        - A path to a file (creates .claude/skills/<name>.md)
+        - A path to a directory (creates .claude/skills/<name>/ with all files)
+      '';
+      example = lib.literalExpression ''
+        {
+          xlsx = ./skills/xlsx.md;
+          data-analysis = ./skills/data-analysis;
+          pdf-processing = '''
+            ---
+            name: pdf-processing
+            description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+            ---
+
+            # PDF Processing
+
+            ## Quick start
+
+            Use pdfplumber to extract text from PDFs:
+
+            ```python
+            import pdfplumber
+
+            with pdfplumber.open("document.pdf") as pdf:
+                text = pdf.pages[0].extract_text()
+            ```
+          ''';
+        }
+      '';
+    };
+
+    skillsDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to a directory containing skill files for Claude Code.
+        Skill files from this directory will be symlinked to .claude/skills/.
+      '';
+      example = lib.literalExpression "./skills";
     };
 
     mcpServers = lib.mkOption {
@@ -271,12 +384,16 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.mcpServers == { } || cfg.package != null;
-        message = "`programs.claude-code.package` cannot be null when `mcpServers` is configured";
+        assertion = (cfg.mcpServers == { } && !cfg.enableMcpIntegration) || cfg.package != null;
+        message = "`programs.claude-code.package` cannot be null when `mcpServers` or `enableMcpIntegration` is configured";
       }
       {
         assertion = !(cfg.memory.text != null && cfg.memory.source != null);
         message = "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`";
+      }
+      {
+        assertion = !(cfg.rules != { } && cfg.rulesDir != null);
+        message = "Cannot specify both `programs.claude-code.rules` and `programs.claude-code.rulesDir`";
       }
       {
         assertion = !(cfg.agents != { } && cfg.agentsDir != null);
@@ -290,15 +407,22 @@ in
         assertion = !(cfg.hooks != { } && cfg.hooksDir != null);
         message = "Cannot specify both `programs.claude-code.hooks` and `programs.claude-code.hooksDir`";
       }
+      {
+        assertion = !(cfg.skills != { } && cfg.skillsDir != null);
+        message = "Cannot specify both `programs.claude-code.skills` and `programs.claude-code.skillsDir`";
+      }
     ];
 
     programs.claude-code.finalPackage =
       let
+        mergedMcpServers = transformedMcpServers // cfg.mcpServers;
         makeWrapperArgs = lib.flatten (
           lib.filter (x: x != [ ]) [
-            (lib.optional (cfg.mcpServers != { }) [
-              "--add-flags"
-              "--mcp-config ${jsonFormat.generate "claude-code-mcp-config.json" { inherit (cfg) mcpServers; }}"
+            (lib.optional (cfg.mcpServers != { } || transformedMcpServers != { }) [
+              "--append-flags"
+              "--mcp-config ${
+                jsonFormat.generate "claude-code-mcp-config.json" { mcpServers = mergedMcpServers; }
+              }"
             ])
           ]
         );
@@ -335,6 +459,11 @@ in
           if cfg.memory.text != null then { text = cfg.memory.text; } else { source = cfg.memory.source; }
         );
 
+        ".claude/rules" = lib.mkIf (cfg.rulesDir != null) {
+          source = cfg.rulesDir;
+          recursive = true;
+        };
+
         ".claude/agents" = lib.mkIf (cfg.agentsDir != null) {
           source = cfg.agentsDir;
           recursive = true;
@@ -349,7 +478,18 @@ in
           source = cfg.hooksDir;
           recursive = true;
         };
+
+        ".claude/skills" = lib.mkIf (cfg.skillsDir != null) {
+          source = cfg.skillsDir;
+          recursive = true;
+        };
       }
+      // lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair ".claude/rules/${name}.md" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
+      ) cfg.rules
       // lib.mapAttrs' (
         name: content:
         lib.nameValuePair ".claude/agents/${name}.md" (
@@ -367,7 +507,19 @@ in
         lib.nameValuePair ".claude/hooks/${name}" {
           text = content;
         }
-      ) cfg.hooks;
+      ) cfg.hooks
+      // lib.mapAttrs' (
+        name: content:
+        if lib.isPath content && lib.pathIsDirectory content then
+          lib.nameValuePair ".claude/skills/${name}" {
+            source = content;
+            recursive = true;
+          }
+        else
+          lib.nameValuePair ".claude/skills/${name}.md" (
+            if lib.isPath content then { source = content; } else { text = content; }
+          )
+      ) cfg.skills;
     };
   };
 }

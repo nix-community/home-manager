@@ -6,12 +6,13 @@
 }:
 
 let
-  cfg = config.targets.darwin;
+  cfg = config.targets.darwin.linkApps;
 in
 {
   options.targets.darwin.linkApps = {
     enable = lib.mkEnableOption "linking macOS applications to the user environment" // {
-      default = true;
+      default = pkgs.stdenv.hostPlatform.isDarwin && (lib.versionOlder config.home.stateVersion "25.11");
+      defaultText = lib.literalExpression ''pkgs.stdenv.hostPlatform.isDarwin && (lib.versionOlder config.home.stateVersion "25.11")'';
     };
 
     directory = lib.mkOption {
@@ -21,14 +22,22 @@ in
     };
   };
 
-  config = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.linkApps.enable) {
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !config.targets.darwin.copyApps.enable;
+        message = "`targets.darwin.linkApps.enable` conflicts with `targets.darwin.copyApps.enable`. Please disable one of them.";
+      }
+      (lib.hm.assertions.assertPlatform "targets.darwin.linkApps" pkgs lib.platforms.darwin)
+    ];
+
     # Install MacOS applications to the user environment.
-    home.file.${cfg.linkApps.directory}.source =
+    home.file.${cfg.directory}.source =
       let
         apps = pkgs.buildEnv {
           name = "home-manager-applications";
           paths = config.home.packages;
-          pathsToLink = "/Applications";
+          pathsToLink = [ "/Applications" ];
         };
       in
       "${apps}/Applications";

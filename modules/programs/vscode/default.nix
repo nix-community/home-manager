@@ -22,6 +22,12 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
+  libPath =
+    if vscodePname == "antigravity" then
+      "${cfg.package}/lib/antigravity"
+    else
+      "${cfg.package}/lib/vscode";
+
   productInfoPath =
     if
       lib.pathExists "${cfg.package}/Applications/${
@@ -31,9 +37,9 @@ let
       "${cfg.package}/Applications/${
         cfg.package.passthru.longName or "Code"
       }.app/Contents/Resources/app/product.json"
-    else if lib.pathExists "${cfg.package}/lib/vscode/resources/app/product.json" then
-      # Visual Studio Code, VSCodium, Windsurf, Cursor
-      "${cfg.package}/lib/vscode/resources/app/product.json"
+    else if lib.pathExists "${libPath}/resources/app/product.json" then
+      # Visual Studio Code, VSCodium, Windsurf, Cursor, Antigravity
+      "${libPath}/resources/app/product.json"
     else
       # OpenVSCode Server
       "${cfg.package}/product.json";
@@ -70,6 +76,10 @@ let
       dataFolderName = ".windsurf";
       nameShort = "Windsurf";
     };
+    antigravity = {
+      dataFolderName = ".antigravity";
+      nameShort = "Antigravity";
+    };
   };
 
   configDir = cfg.nameShort;
@@ -81,6 +91,7 @@ let
     else
       "${config.xdg.configHome}/${configDir}/User";
 
+  argvPath = "${extensionDir}/argv.json";
   configFilePath =
     name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}settings.json";
   tasksFilePath =
@@ -113,6 +124,33 @@ let
     };
 
   isPath = p: builtins.isPath p || lib.isStorePath p;
+
+  transformMcpServerForVscode =
+    name: server:
+    let
+      # Remove the disabled field from the server config
+      cleanServer = lib.filterAttrs (n: v: n != "disabled") server;
+    in
+    {
+      name = name;
+      value = {
+        enabled = !(server.disabled or false);
+      }
+      // (
+        if server ? url then
+          {
+            type = "http";
+          }
+          // cleanServer
+        else if server ? command then
+          {
+            type = "stdio";
+          }
+          // cleanServer
+        else
+          { }
+      );
+    };
 
   profileType = types.submodule {
     options = {
@@ -151,6 +189,20 @@ let
           Configuration written to Visual Studio Code's
           {file}`tasks.json`.
           This can be a JSON object or a path to a custom JSON file.
+        '';
+      };
+
+      enableMcpIntegration = mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to integrate the MCP servers config from
+          {option}`programs.mcp.servers` into
+          {option}`programs.vscode.profiles.<name>.userMcp`.
+
+          Note: Settings defined in {option}`programs.mcp.servers` are merged
+          with {option}`programs.vscode.profiles.<name>.userMcp`, with VSCode
+          settings taking precedence.
         '';
       };
 
@@ -371,6 +423,21 @@ in
       '';
     };
 
+    argvSettings = mkOption {
+      type = types.either types.path jsonFormat.type;
+      default = { };
+      example = literalExpression ''
+        {
+          enable-crash-reporter = false;
+        }
+      '';
+      description = ''
+        Configuration written to Visual Studio Code's
+        {file}`argv.json`.
+        This can be a JSON object or a path to a custom JSON file.
+      '';
+    };
+
     profiles = mkOption {
       type = types.attrsOf profileType;
       default = { };
@@ -418,7 +485,7 @@ in
             existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
 
             for profile in "''${profiles[@]}"; do
-              if [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile $profile 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile $profile '.[$profile]')" != "\"$profile\"" ]]; then
+              if [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile "$profile" '.[$profile]')" != "\"$profile\"" ]]; then
                 file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
               fi
             done
@@ -441,6 +508,14 @@ in
     );
 
     home.file = lib.mkMerge (flatten [
+      (mkIf (cfg.argvSettings != { }) {
+        "${argvPath}".source =
+          if isPath cfg.argvSettings then
+            cfg.argvSettings
+          else
+            jsonFormat.generate "vscode-argv" cfg.argvSettings;
+      })
+
       (mapAttrsToList (n: v: [
         (mkIf ((mergedUserSettings v.userSettings v.enableUpdateCheck v.enableExtensionUpdateCheck) != { })
           {
@@ -459,10 +534,31 @@ in
             if isPath v.userTasks then v.userTasks else jsonFormat.generate "vscode-user-tasks" v.userTasks;
         })
 
-        (mkIf (v.userMcp != { }) {
-          "${mcpFilePath n}".source =
-            if isPath v.userMcp then v.userMcp else jsonFormat.generate "vscode-user-mcp" v.userMcp;
-        })
+        (mkIf
+          (
+            v.userMcp != { }
+            || (v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { })
+          )
+          {
+            "${mcpFilePath n}".source =
+              if isPath v.userMcp then
+                v.userMcp
+              else
+                let
+                  transformedMcpServers =
+                    if v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
+                      lib.listToAttrs (lib.mapAttrsToList transformMcpServerForVscode config.programs.mcp.servers)
+                    else
+                      { };
+                  # Merge MCP servers: transformed servers + user servers, with user servers taking precedence
+                  mergedServers = transformedMcpServers // (v.userMcp.servers or { });
+                  # Merge all MCP config
+                  mergedMcpConfig =
+                    v.userMcp // (lib.optionalAttrs (mergedServers != { }) { servers = mergedServers; });
+                in
+                jsonFormat.generate "vscode-user-mcp" mergedMcpConfig;
+          }
+        )
 
         (mkIf (v.keybindings != [ ]) {
           "${keybindingsFilePath n}".source =
@@ -557,6 +653,7 @@ in
                         || builtins.elem vscodePname [
                           "cursor"
                           "windsurf"
+                          "antigravity"
                         ]
                       )
                       && defaultProfile != { }

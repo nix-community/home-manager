@@ -1,0 +1,6 @@
+autocert: false
+debuglevel: debug
+listenaddr: localhost:8081
+servername: aperture.example.com
+servestatic: false
+staticroot: ./static

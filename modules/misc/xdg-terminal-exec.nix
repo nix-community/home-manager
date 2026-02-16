@@ -8,6 +8,8 @@ let
   cfg = config.xdg.terminal-exec;
 in
 {
+  meta.maintainers = with lib.maintainers; [ nukdokplex ];
+
   options = {
     xdg.terminal-exec = {
       enable = lib.mkEnableOption ''
@@ -45,11 +47,9 @@ in
       desktop: terminals:
       # Map desktop name such as GNOME to `.config/gnome-xdg-terminals.list`,
       # default to `.config/xdg-terminals.list`.
-      lib.nameValuePair (
-        "${if desktop == "default" then "" else "${lib.toLower desktop}-"}xdg-terminals.list"
-      ) { text = lib.concatLines terminals; }
+      lib.nameValuePair "${
+        if desktop == "default" then "" else "${lib.toLower desktop}-"
+      }xdg-terminals.list" { text = lib.concatLines terminals; }
     ) cfg.settings;
   };
-
-  meta.maintainers = with lib.maintainers; [ nukdokplex ];
 }

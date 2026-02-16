@@ -48,8 +48,23 @@ in
 
     shellWrapperName = lib.mkOption {
       type = types.str;
-      default = "yy";
-      example = "y";
+      default =
+        if lib.versionAtLeast config.home.stateVersion "26.05" then
+          "y"
+        else
+          lib.warn ''
+            The default value of `programs.yazi.shellWrapperName` has changed from `yy` to `y`.
+            You are currently using the legacy default (`yy`) because `home.stateVersion` is less than "26.05".
+            To silence this warning and keep legacy behavior, set:
+              programs.yazi.shellWrapperName = "yy";
+            To adopt the new default behavior, set:
+              programs.yazi.shellWrapperName = "y";
+          '' "yy";
+      defaultText = literalExpression ''
+        "y"  for state version ≥ 26.05
+        "yy" for state version < 26.05
+      '';
+      example = "yy";
       description = ''
         Name of the shell wrapper to be called.
       '';
@@ -220,8 +235,8 @@ in
         bashIntegration = ''
           function ${cfg.shellWrapperName}() {
             local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-            yazi "$@" --cwd-file="$tmp"
-            if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+            command yazi "$@" --cwd-file="$tmp"
+            if cwd="$(<"$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
               builtin cd -- "$cwd"
             fi
             rm -f -- "$tmp"
@@ -231,7 +246,7 @@ in
         fishIntegration = ''
           set -l tmp (mktemp -t "yazi-cwd.XXXXX")
           command yazi $argv --cwd-file="$tmp"
-          if set cwd (cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+          if read cwd < "$tmp"; and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
             builtin cd -- "$cwd"
           end
           rm -f -- "$tmp"
@@ -240,7 +255,7 @@ in
         nushellIntegration = ''
           def --env ${cfg.shellWrapperName} [...args] {
             let tmp = (mktemp -t "yazi-cwd.XXXXX")
-            yazi ...$args --cwd-file $tmp
+            ^yazi ...$args --cwd-file $tmp
             let cwd = (open $tmp)
             if $cwd != "" and $cwd != $env.PWD {
               cd $cwd

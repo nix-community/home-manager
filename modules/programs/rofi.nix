@@ -135,6 +135,8 @@ let
   modes = map (mode: if isString mode then mode else "${mode.name}:${mode.path}") cfg.modes;
 in
 {
+  meta.maintainers = [ ];
+
   options.programs.rofi = {
     enable = lib.mkEnableOption "Rofi: A window switcher, application launcher and dmenu replacement";
 
@@ -273,8 +275,14 @@ in
         listOf (
           either str (submodule {
             options = {
-              name = mkOption { type = str; };
-              path = mkOption { type = str; };
+              name = mkOption {
+                type = str;
+                description = "Name used to reference the custom mode in the mode list.";
+              };
+              path = mkOption {
+                type = str;
+                description = "Executable path for the custom rofi script mode.";
+              };
             };
           })
         );
@@ -366,6 +374,4 @@ in
         }
     );
   };
-
-  meta.maintainers = with lib.maintainers; [ ];
 }

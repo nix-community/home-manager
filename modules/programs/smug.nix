@@ -59,6 +59,14 @@ in
                           '';
                         };
 
+                        selected = lib.mkOption {
+                          type = lib.types.nullOr lib.types.bool;
+                          default = null;
+                          description = ''
+                            Whether this window should be selected by default at session start.
+                          '';
+                        };
+
                         root = mkOptionRoot "Root path of window. This is relative to the path of the smug project.";
 
                         commands = mkOptionCommands "Commands to execute when window starts.";
@@ -150,7 +158,7 @@ in
               prjConf =
                 lib.attrsets.mapAttrs' (
                   name: value:
-                  (lib.attrsets.nameValuePair (if name == "beforeStart" then "before_start" else name) (value))
+                  (lib.attrsets.nameValuePair (if name == "beforeStart" then "before_start" else name) value)
                 ) v
                 // {
                   session = k;

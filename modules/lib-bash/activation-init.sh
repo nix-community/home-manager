@@ -99,22 +99,28 @@ function nixProfileRemove() {
     fi
 }
 
-function checkUsername() {
-  local expectedUser="$1"
+function checkStringEq() {
+    local name="$1"
+    local actual="$2"
+    local expected="$3"
 
-  if [[ "$USER" != "$expectedUser" ]]; then
-    _iError 'Error: USER is set to "%s" but we expect "%s"' "$USER" "$expectedUser"
-    exit 1
-  fi
+    if [[ "$actual" != "$expected" ]]; then
+        # translators: For example: HOME is "/home/foo", expected "/home/bar"
+        _iError '%s is "%s", expected "%s"' "$name" "$actual" "$expected"
+        exit 1
+    fi
 }
 
-function checkHomeDirectory() {
-  local expectedHome="$1"
+function checkPathEq() {
+    local name="$1"
+    local actual="$2"
+    local expected="$3"
 
-  if ! [[ $HOME -ef $expectedHome ]]; then
-    _iError 'Error: HOME is set to "%s" but we expect "%s"' "$HOME" "$expectedHome"
-    exit 1
-  fi
+    if ! [[ "$actual" -ef "$expected" ]]; then
+        # translators: For example: HOME is "/home/foo", expected "/home/bar"
+        _iError '%s is "%s", expected "%s"' "$name" "$actual" "$expected"
+        exit 1
+    fi
 }
 
 # Note, the VERBOSE_ECHO variable is deprecated and should not be used inside

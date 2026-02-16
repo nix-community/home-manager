@@ -24,10 +24,11 @@ let
     lib.pipe opt [
       (lib.replaceStrings [ "-" ] [ "_" ])
       lib.toUpper
-      (lib.add "RCLONE_")
+      (upper: "RCLONE_" + upper)
     ];
 
-  toEnvVal = v: if lib.isBool v then lib.boolToString v else v;
+  toEnvVal = v: if lib.isBool v then lib.boolToString v else toString v;
+
   attrsToEnvs =
     attrs:
     lib.pipe attrs [
@@ -43,14 +44,55 @@ let
     gnugrep
     which
   ];
+
+  # Create the base restic environment variables for both systemd
+  # and the helper script
+  mkEnvironment =
+    backup:
+    lib.flatten [
+      "PATH=${backup.ssh-package}/bin"
+
+      (attrsToEnvs (
+        {
+          RESTIC_PROGRESS_FPS = backup.progressFps;
+          RESTIC_PASSWORD_FILE = backup.passwordFile;
+          RESTIC_REPOSITORY = backup.repository;
+          RESTIC_REPOSITORY_FILE = backup.repositoryFile;
+        }
+        // backup.rcloneOptions
+      ))
+    ];
+
+  # Until we have launchd support (#7924), mark the options
+  # not used in the helper script as "linux exclusive"
+  linuxExclusive =
+    option:
+    option
+    // {
+      readOnly = !pkgs.stdenv.hostPlatform.isLinux;
+
+      description = option.description + ''
+
+        This option is only supported on linux.
+      '';
+    };
 in
 {
+  meta.maintainers = [ lib.maintainers.jess ];
+
   options.services.restic = {
     enable = lib.mkEnableOption "restic";
 
     backups = lib.mkOption {
       description = ''
-        Periodic backups to create with Restic.
+        Backup configurations for Restic.
+
+        On Linux systems, a corresponding systemd user service
+        (and optionally a systemd timer for automatic scheduling)
+        will be created, along with a helper wrapper script.
+
+        On non-Linux platforms, only the helper wrapper script
+        will be created.
       '';
       type = lib.types.attrsOf (
         lib.types.submodule (
@@ -86,6 +128,7 @@ in
                   attrsOf (oneOf [
                     str
                     bool
+                    int
                   ]);
                 default = { };
                 apply = lib.mapAttrs' (opt: v: lib.nameValuePair (fmtRcloneOpt opt) v);
@@ -102,16 +145,18 @@ in
                 };
               };
 
-              inhibitsSleep = lib.mkOption {
-                default = false;
-                type = lib.types.bool;
-                example = true;
-                description = ''
-                  Prevents the system from sleeping while backing up. This uses systemd-inhibit
-                  to block system idling so you may need to enable polkitd with
-                  {option}`security.polkit.enable`.
-                '';
-              };
+              inhibitsSleep = linuxExclusive (
+                lib.mkOption {
+                  default = false;
+                  type = lib.types.bool;
+                  example = true;
+                  description = ''
+                    Prevents the system from sleeping while backing up. This uses systemd-inhibit
+                    to block system idling so you may need to enable polkitd with
+                    {option}`security.polkit.enable`.
+                  '';
+                }
+              );
 
               repository = lib.mkOption {
                 type = with lib.types; nullOr str;
@@ -136,63 +181,71 @@ in
                 '';
               };
 
-              paths = lib.mkOption {
-                type = with lib.types; listOf str;
-                default = [ ];
-                description = ''
-                  Paths to back up, alongside those defined by the {option}`dynamicFilesFrom`
-                  option. If left empty and {option}`dynamicFilesFrom` is also not specified, no
-                  backup command will be run. This can be used to create a prune-only job.
-                '';
-                example = [
-                  "/var/lib/postgresql"
-                  "/home/user/backup"
-                ];
-              };
+              paths = linuxExclusive (
+                lib.mkOption {
+                  type = with lib.types; listOf str;
+                  default = [ ];
+                  description = ''
+                    Paths to back up, alongside those defined by the {option}`dynamicFilesFrom`
+                    option. If left empty and {option}`dynamicFilesFrom` is also not specified, no
+                    backup command will be run. This can be used to create a prune-only job.
+                  '';
+                  example = [
+                    "/var/lib/postgresql"
+                    "/home/user/backup"
+                  ];
+                }
+              );
 
-              exclude = lib.mkOption {
-                type = with lib.types; listOf str;
-                default = [ ];
-                description = ''
-                  Patterns to exclude when backing up. See
-                  <https://restic.readthedocs.io/en/stable/040_backup.html#excluding-files> for
-                  details on syntax.
-                '';
-                example = [
-                  "/var/cache"
-                  "/home/*/.cache"
-                  ".git"
-                ];
-              };
+              exclude = linuxExclusive (
+                lib.mkOption {
+                  type = with lib.types; listOf str;
+                  default = [ ];
+                  description = ''
+                    Patterns to exclude when backing up. See
+                    <https://restic.readthedocs.io/en/stable/040_backup.html#excluding-files> for
+                    details on syntax.
+                  '';
+                  example = [
+                    "/var/cache"
+                    "/home/*/.cache"
+                    ".git"
+                  ];
+                }
+              );
 
-              timerConfig = lib.mkOption {
-                type = lib.types.nullOr unitType;
-                default = {
-                  OnCalendar = "daily";
-                  Persistent = true;
-                };
-                description = ''
-                  When to run the backup. See {manpage}`systemd.timer(5)` for details. If null
-                  no timer is created and the backup will only run when explicitly started.
-                '';
-                example = {
-                  OnCalendar = "00:05";
-                  RandomizedDelaySec = "5h";
-                  Persistent = true;
-                };
-              };
+              timerConfig = linuxExclusive (
+                lib.mkOption {
+                  type = lib.types.nullOr unitType;
+                  default = {
+                    OnCalendar = "daily";
+                    Persistent = true;
+                  };
+                  description = ''
+                    When to run the backup. See {manpage}`systemd.timer(5)` for details. If null
+                    no timer is created and the backup will only run when explicitly started.
+                  '';
+                  example = {
+                    OnCalendar = "00:05";
+                    RandomizedDelaySec = "5h";
+                    Persistent = true;
+                  };
+                }
+              );
 
-              extraBackupArgs = lib.mkOption {
-                type = with lib.types; listOf str;
-                default = [ ];
-                description = ''
-                  Extra arguments passed to restic backup.
-                '';
-                example = [
-                  "--cleanup-cache"
-                  "--exclude-file=/etc/nixos/restic-ignore"
-                ];
-              };
+              extraBackupArgs = linuxExclusive (
+                lib.mkOption {
+                  type = with lib.types; listOf str;
+                  default = [ ];
+                  description = ''
+                    Extra arguments passed to restic backup.
+                  '';
+                  example = [
+                    "--cleanup-cache"
+                    "--exclude-file=/etc/nixos/restic-ignore"
+                  ];
+                }
+              );
 
               extraOptions = lib.mkOption {
                 type = with lib.types; listOf str;
@@ -206,77 +259,91 @@ in
                 ];
               };
 
-              initialize = lib.mkOption {
-                type = lib.types.bool;
-                default = false;
-                description = ''
-                  Create the repository if it does not already exist.
-                '';
-              };
+              initialize = linuxExclusive (
+                lib.mkOption {
+                  type = lib.types.bool;
+                  default = false;
+                  description = ''
+                    Create the repository if it does not already exist.
+                  '';
+                }
+              );
 
-              pruneOpts = lib.mkOption {
-                type = with lib.types; listOf str;
-                default = [ ];
-                description = ''
-                  A list of policy options for 'restic forget --prune', to automatically
-                  prune old snapshots. See
-                  <https://restic.readthedocs.io/en/latest/060_forget.html#removing-snapshots-according-to-a-policy>
-                  for a full list of options.
+              pruneOpts = linuxExclusive (
+                lib.mkOption {
+                  type = with lib.types; listOf str;
+                  default = [ ];
+                  description = ''
+                    A list of policy options for 'restic forget --prune', to automatically
+                    prune old snapshots. See
+                    <https://restic.readthedocs.io/en/latest/060_forget.html#removing-snapshots-according-to-a-policy>
+                    for a full list of options.
 
-                  Note: The 'forget' command is run *after* the 'backup' command, so keep
-                  that in mind when constructing the --keep-\* options.
-                '';
-                example = [
-                  "--keep-daily 7"
-                  "--keep-weekly 5"
-                  "--keep-monthly 12"
-                  "--keep-yearly 75"
-                ];
-              };
+                    Note: The 'forget' command is run *after* the 'backup' command, so keep
+                    that in mind when constructing the --keep-\* options.
+                  '';
+                  example = [
+                    "--keep-daily 7"
+                    "--keep-weekly 5"
+                    "--keep-monthly 12"
+                    "--keep-yearly 75"
+                  ];
+                }
+              );
 
-              runCheck = lib.mkOption {
-                type = lib.types.bool;
-                default = lib.length config.checkOpts > 0 || lib.length config.pruneOpts > 0;
-                defaultText = lib.literalExpression "lib.length config.checkOpts > 0 || lib.length config.pruneOpts > 0";
-                description = "Whether to run 'restic check' with the provided `checkOpts` options.";
-                example = true;
-              };
+              runCheck = linuxExclusive (
+                lib.mkOption {
+                  type = lib.types.bool;
+                  default = lib.length config.checkOpts > 0 || lib.length config.pruneOpts > 0;
+                  defaultText = lib.literalExpression "lib.length config.checkOpts > 0 || lib.length config.pruneOpts > 0";
+                  description = "Whether to run 'restic check' with the provided `checkOpts` options.";
+                  example = true;
+                }
+              );
 
-              checkOpts = lib.mkOption {
-                type = with lib.types; listOf str;
-                default = [ ];
-                description = ''
-                  A list of options for 'restic check'.
-                '';
-                example = [ "--with-cache" ];
-              };
+              checkOpts = linuxExclusive (
+                lib.mkOption {
+                  type = with lib.types; listOf str;
+                  default = [ ];
+                  description = ''
+                    A list of options for 'restic check'.
+                  '';
+                  example = [ "--with-cache" ];
+                }
+              );
 
-              dynamicFilesFrom = lib.mkOption {
-                type = with lib.types; nullOr str;
-                default = null;
-                description = ''
-                  A script that produces a list of files to back up. The results of
-                  this command, along with the paths specified via {option}`paths`,
-                  are given to the '--files-from' option.
-                '';
-                example = "find /home/alice/git -type d -name .git";
-              };
+              dynamicFilesFrom = linuxExclusive (
+                lib.mkOption {
+                  type = with lib.types; nullOr str;
+                  default = null;
+                  description = ''
+                    A script that produces a list of files to back up. The results of
+                    this command, along with the paths specified via {option}`paths`,
+                    are given to the '--files-from' option.
+                  '';
+                  example = "find /home/alice/git -type d -name .git";
+                }
+              );
 
-              backupPrepareCommand = lib.mkOption {
-                type = with lib.types; nullOr str;
-                default = null;
-                description = ''
-                  A script that must run before starting the backup process.
-                '';
-              };
+              backupPrepareCommand = linuxExclusive (
+                lib.mkOption {
+                  type = with lib.types; nullOr str;
+                  default = null;
+                  description = ''
+                    A script that must run before starting the backup process.
+                  '';
+                }
+              );
 
-              backupCleanupCommand = lib.mkOption {
-                type = with lib.types; nullOr str;
-                default = null;
-                description = ''
-                  A script that must run after finishing the backup process.
-                '';
-              };
+              backupCleanupCommand = linuxExclusive (
+                lib.mkOption {
+                  type = with lib.types; nullOr str;
+                  default = null;
+                  description = ''
+                    A script that must run after finishing the backup process.
+                  '';
+                }
+              );
 
               createWrapper = lib.mkOption {
                 type = lib.types.bool;
@@ -404,19 +471,7 @@ in
           CacheDirectoryMode = "0700";
           PrivateTmp = true;
 
-          Environment = [
-            "RESTIC_CACHE_DIR=%C"
-            "PATH=${backup.ssh-package}/bin"
-          ]
-          ++ attrsToEnvs (
-            {
-              RESTIC_PROGRESS_FPS = backup.progressFps;
-              RESTIC_PASSWORD_FILE = backup.passwordFile;
-              RESTIC_REPOSITORY = backup.repository;
-              RESTIC_REPOSITORY_FILE = backup.repositoryFile;
-            }
-            // backup.rcloneOptions
-          );
+          Environment = mkEnvironment backup ++ [ "RESTIC_CACHE_DIR=%C/${serviceName}" ];
 
           ExecStart =
             lib.optional doBackup backupCmd
@@ -434,7 +489,7 @@ in
                 set -x
 
                 ${lib.optionalString (backup.backupPrepareCommand != null) ''
-                  ${pkgs.writeScript "backupPrepareCommand" backup.backupPrepareCommand}
+                  ${pkgs.writeShellScript "backupPrepareCommand" backup.backupPrepareCommand}
                 ''}
 
                 ${lib.optionalString (backup.initialize) ''
@@ -451,7 +506,7 @@ in
                 ''}
 
                 ${lib.optionalString (backup.dynamicFilesFrom != null) ''
-                  ${pkgs.writeScript "dynamicFilesFromScript" backup.dynamicFilesFrom} >> ${filesFromTmpFile}
+                  ${pkgs.writeShellScript "dynamicFilesFromScript" backup.dynamicFilesFrom} >> ${filesFromTmpFile}
                 ''}
               '';
             }
@@ -465,7 +520,7 @@ in
                 set -x
 
                 ${lib.optionalString (backup.backupCleanupCommand != null) ''
-                  ${pkgs.writeScript "backupCleanupCommand" backup.backupCleanupCommand}
+                  ${pkgs.writeShellScript "backupCleanupCommand" backup.backupCleanupCommand}
                 ''}
               '';
             }
@@ -491,7 +546,7 @@ in
       name: backup:
       let
         serviceName = "restic-backups-${name}";
-        backupService = config.systemd.user.services.${serviceName};
+        environment = mkEnvironment backup;
         notPathVar = x: !(lib.hasPrefix "PATH" x);
         extraOptions = lib.concatMap (arg: [
           "-o"
@@ -523,16 +578,15 @@ in
           ''}
 
           # Set same environment variables as the systemd service
-          ${lib.pipe backupService.Service.Environment [
+          ${lib.pipe environment [
             (lib.filter notPathVar)
             lib.concatLines
           ]}
 
-          # Override this as %C will not work
-          RESTIC_CACHE_DIR=$HOME/.cache/${serviceName}
+          RESTIC_CACHE_DIR=${config.xdg.cacheHome}/${serviceName}
 
           PATH=${
-            lib.pipe backupService.Service.Environment [
+            lib.pipe environment [
               (lib.filter (lib.hasPrefix "PATH="))
               lib.head
               (lib.removePrefix "PATH=")
@@ -544,6 +598,4 @@ in
       }
     ) (lib.filterAttrs (_: v: v.createWrapper) cfg.backups);
   };
-
-  meta.maintainers = [ lib.maintainers.jess ];
 }

@@ -20,8 +20,8 @@
   };
 
   nmt.script = ''
-    assertFileExists 'home-files/.config/kube/color.yaml'
-    assertFileContent 'home-files/.config/kube/color.yaml' \
+    assertFileExists 'home-files/.config/kubecolor.yaml'
+    assertFileContent 'home-files/.config/kubecolor.yaml' \
       ${builtins.toFile "expected.yaml" ''
         kubectl: kubectl
         objFreshThreshold: 0

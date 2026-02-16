@@ -42,7 +42,7 @@ let
       if lib.isDerivation value then scrubbedValue // newDrvAttrs else scrubbedValue
     else
       value;
-  scrubDerivations = attrs: lib.mapAttrs scrubDerivation attrs;
+  scrubDerivations = lib.mapAttrs scrubDerivation;
 
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
   whitelist =
@@ -64,9 +64,8 @@ let
           # Needed by pretty much all tests that have anything to do with fish.
           babelfish
           fish
+          lndir
           ;
-
-        xorg = super.xorg.overrideScope (self: super: { inherit (pkgs.xorg) lndir; });
       };
 
       outer =
@@ -111,10 +110,7 @@ let
             pkgs =
               let
                 overlays =
-                  config.test.stubOverlays
-                  ++ lib.optionals (
-                    config.nixpkgs.overlays != null && config.nixpkgs.overlays != [ ]
-                  ) config.nixpkgs.overlays;
+                  config.test.stubOverlays ++ lib.optionals (config.nixpkgs.overlays != null) config.nixpkgs.overlays;
                 stubbedPkgs =
                   if overlays == [ ] then
                     scrubbedPkgs
@@ -132,6 +128,13 @@ let
             homeDirectory = "/home/hm-user";
             stateVersion = lib.mkDefault "18.09";
           };
+
+          # NOTE: Added 2025-12-27
+          # Avoid option change deprecation warning
+          # Remove after deprecation period
+          programs.zsh.dotDir = lib.mkIf (config.home.stateVersion == "18.09") (
+            lib.mkDefault "/home/hm-user"
+          );
 
           # Avoid including documentation since this will cause
           # unnecessary rebuilds of the tests.

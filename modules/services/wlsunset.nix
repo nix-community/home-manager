@@ -124,6 +124,8 @@ in
       }
     ];
 
+    home.packages = [ cfg.package ];
+
     systemd.user.services.wlsunset = {
       Unit = {
         Description = "Day/night gamma adjustments for Wayland compositors.";
@@ -134,7 +136,7 @@ in
       Service = {
         ExecStart =
           let
-            args = lib.cli.toGNUCommandLineShell { } {
+            args = lib.cli.toCommandLineShellGNU { } {
               t = cfg.temperature.night;
               T = cfg.temperature.day;
               g = cfg.gamma;

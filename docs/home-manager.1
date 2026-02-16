@@ -24,7 +24,7 @@
 .Cm | generations
 .Cm | help
 .Cm | news
-.Cm | option Ar option.name
+.Cm | option Oo Fl -recursive Oc Ar option.name
 .Cm | packages
 .Cm | remove-generations Ar ID \&...
 .Cm | switch
@@ -138,10 +138,14 @@ Show news entries in a pager.
 .RE
 .PP
 
-.It Cm option Ar option.name
+.It Cm option Oo Fl -recursive Oc Ar option.name
 .RS 4
 Inspect the given option name in the home configuration, like
 \fBnixos-option\fR(8)\&.
+.sp
+If the
+.Fl -recursive
+option is given, print all the values at or below the option name recursively\&.
 .RE
 .Pp
 
@@ -416,5 +420,5 @@ Author.
 
 .Sh COPYRIGHT
 .br
-Copyright \(co 2017\(en2025 Home Manager contributors
+Copyright \(co 2017\(en2026 Home Manager contributors
 .br

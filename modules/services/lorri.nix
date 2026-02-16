@@ -100,20 +100,31 @@ in
         };
 
         Service = {
+          # Don't start until lorri daemon is actually running
+          ExecStartPre = pkgs.writeShellScript "lorri-notify-check" ''
+            lorri info --shell-file . | grep 'Lorri Daemon Status:.*running'
+          '';
+          RestartSec = "5s";
+
           ExecStart =
             let
               jqFile = ''
                 (
-                  (.Started?   | values | "Build starting in \(.nix_file)"),
-                  (.Completed? | values | "Build complete in \(.nix_file)"),
-                  (.Failure?   | values | "Build failed in \(.nix_file)")
+                  (.Started?   | values | ["Build starting", .nix_file, "emblem-synchronizing"]),
+                  (.Completed? | values | ["Build complete", .nix_file, "checkmark"]),
+                  (.Failure?   | values | ["Build failed", .nix_file, "dialog-error"])
                 )
+                | @tsv
               '';
 
               notifyScript = pkgs.writeShellScript "lorri-notify" ''
+                set -o pipefail
                 lorri internal stream-events --kind live \
-                  | jq --unbuffered '${jqFile}' \
-                  | xargs -n 1 notify-send "Lorri Build"
+                  | jq --unbuffered -r '${jqFile}' \
+                  | while IFS=$'\t' read -r status nixFile icon; do
+                      notify-send --app-name "Lorri" --hint=int:transient:1 \
+                        --icon "$icon" "$status" "$nixFile"
+                    done
               '';
             in
             toString notifyScript;
@@ -124,8 +135,8 @@ in
                 with pkgs;
                 [
                   bash
+                  gnugrep
                   jq
-                  findutils
                   libnotify
                   cfg.package
                 ]

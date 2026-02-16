@@ -338,6 +338,8 @@ let
 
 in
 {
+  meta.maintainers = [ lib.maintainers.uvnikita ];
+
   options = {
     programs.autorandr = {
       enable = lib.mkEnableOption "Autorandr";
@@ -369,7 +371,7 @@ in
                     exit 1
                 esac
 
-                echo "Xft.dpi: $DPI" | ''${pkgs.xorg.xrdb}/bin/xrdb -merge
+                echo "Xft.dpi: $DPI" | ''${lib.getExe pkgs.xrdb} -merge
               '''
             };
           }
@@ -432,6 +434,4 @@ in
       (lib.mkMerge (mapAttrsToList profileToFiles cfg.profiles))
     ];
   };
-
-  meta.maintainers = [ lib.maintainers.uvnikita ];
 }

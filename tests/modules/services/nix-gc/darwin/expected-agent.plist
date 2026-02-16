@@ -6,8 +6,9 @@
 	<string>org.nix-community.home.nix-gc</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@nix@/bin/nix-collect-garbage</string>
-		<string>--delete-older-than 30d</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @nix@/bin/nix-collect-garbage &apos;--delete-older-than 30d&apos;</string>
 	</array>
 	<key>StartCalendarInterval</key>
 	<array>

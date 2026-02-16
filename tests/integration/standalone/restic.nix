@@ -24,20 +24,18 @@ in
 {
   name = "restic";
 
-  nodes.machine =
-    { ... }:
-    {
-      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-      virtualisation.memorySize = 2048;
-      users.users.alice = {
-        isNormalUser = true;
-        description = "Alice Foobar";
-        password = "foobar";
-        uid = 1000;
-      };
-
-      security.polkit.enable = true;
+  nodes.machine = {
+    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+    virtualisation.memorySize = 2048;
+    users.users.alice = {
+      isNormalUser = true;
+      description = "Alice Foobar";
+      password = "foobar";
+      uid = 1000;
     };
+
+    security.polkit.enable = true;
+  };
 
   testScript = ''
     start_all()
@@ -218,7 +216,7 @@ in
 
       def make_backup(time):
         global snapshot_count
-        machine.succeed(f"timedatectl set-time '{time}'")
+        machine.succeed(f"date --set='{time}'")
         systemctl_succeed_as_alice("start restic-backups-prune-me.service")
         snapshot_count += 1
         actual = \

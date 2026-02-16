@@ -171,14 +171,7 @@ in
   options.programs.waybar = with lib.types; {
     enable = mkEnableOption "Waybar";
 
-    package = mkOption {
-      type = package;
-      default = pkgs.waybar;
-      defaultText = literalExpression "pkgs.waybar";
-      description = ''
-        Waybar package to use. Set to `null` to use the default package.
-      '';
-    };
+    package = lib.mkPackageOption pkgs "waybar" { };
 
     settings = mkOption {
       type = either (listOf waybarBarConfig) (attrsOf waybarBarConfig);
@@ -308,7 +301,7 @@ in
       {
         assertions = [
           (lib.hm.assertions.assertPlatform "programs.waybar" pkgs lib.platforms.linux)
-          ({
+          {
             assertion =
               if lib.versionAtLeast config.home.stateVersion "22.05" then
                 all (x: !hasAttr "modules" x || x.modules == null) settings
@@ -318,7 +311,7 @@ in
               The `programs.waybar.settings.[].modules` option has been removed.
               It is now possible to declare modules in the configuration without nesting them under the `modules` option.
             '';
-          })
+          }
         ];
 
         home.packages = [ cfg.package ];

@@ -37,13 +37,17 @@ in
       options = lib.mkOption {
         type =
           with lib.types;
-          attrsOf (oneOf [
-            bool
-            int
-            str
-          ]);
-        default = { };
-        description = "GNU-style options to be set via {env}`$LESS`.";
+          let
+            scalar = oneOf [
+              bool
+              int
+              str
+            ];
+            attrs = attrsOf (either scalar (listOf scalar));
+          in
+          coercedTo attrs (lib.cli.toCommandLineGNU { }) (listOf str);
+        default = [ ];
+        description = "Options to be set via {env}`$LESS`.";
         example = {
           RAW-CONTROL-CHARS = true;
           quiet = true;
@@ -58,10 +62,10 @@ in
 
     xdg.configFile."lesskey" = lib.mkIf (cfg.config != "") { text = cfg.config; };
 
-    programs.less.config = lib.mkIf (cfg.options != { }) (
+    programs.less.config = lib.mkIf (cfg.options != [ ]) (
       lib.mkBefore ''
         #env
-        LESS = ${lib.cli.toGNUCommandLineShell { } cfg.options}
+        LESS = ${lib.concatStringsSep " " cfg.options}
       ''
     );
   };

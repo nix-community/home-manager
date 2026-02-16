@@ -3,18 +3,16 @@
   name = "kitty-theme-path";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine =
-    { ... }:
-    {
-      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-      virtualisation.memorySize = 2048;
-      users.users.alice = {
-        isNormalUser = true;
-        description = "Alice Foobar";
-        password = "foobar";
-        uid = 1000;
-      };
+  nodes.machine = {
+    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+    virtualisation.memorySize = 2048;
+    users.users.alice = {
+      isNormalUser = true;
+      description = "Alice Foobar";
+      password = "foobar";
+      uid = 1000;
     };
+  };
 
   testScript = ''
     start_all()
@@ -55,6 +53,14 @@
 
     with subtest("Switch to Bad Kitty"):
       succeed_as_alice("cp ${./kitty-theme-bad-home.nix} /home/alice/.config/home-manager/home.nix")
+
+      actual = fail_as_alice("home-manager switch")
+      expected = "kitty-themes does not contain the theme file"
+      assert expected in actual, \
+        f"expected home-manager switch to contain {expected}, but got {actual}"
+
+    with subtest("Switch to Bad Kitty Auto Theme"):
+      succeed_as_alice("cp ${./kitty-auto-theme-bad-home.nix} /home/alice/.config/home-manager/home.nix")
 
       actual = fail_as_alice("home-manager switch")
       expected = "kitty-themes does not contain the theme file"

@@ -372,6 +372,7 @@ let
             "migadu.com"
             "outlook.office365.com"
             "plain"
+            "posteo.de"
             "runbox.com"
             "yandex.com"
           ];
@@ -618,6 +619,24 @@ let
             port = if config.smtp.tls.useStartTls then 587 else 465;
           };
         })
+
+        (
+          let
+            tls.enable = true;
+            host = "posteo.de";
+          in
+          mkIf ("posteo.de" == config.flavor) {
+            userName = mkDefault config.address;
+            imap = {
+              inherit host tls;
+              port = 993;
+            };
+            smtp = {
+              inherit host tls;
+              port = 465;
+            };
+          }
+        )
 
         (mkIf (config.flavor == "runbox.com") {
           imap = {

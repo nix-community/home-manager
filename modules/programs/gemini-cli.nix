@@ -11,7 +11,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.rrvsh ];
+  meta.maintainers = [ lib.maintainers.rrvsh ];
 
   options.programs.gemini-cli = {
     enable = lib.mkEnableOption "gemini-cli";
@@ -21,14 +21,19 @@ in
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          "theme": "Default",
-          "vimMode": true,
-          "preferredEditor": "nvim",
-          "autoAccept": true
-        }
-      '';
+      example = {
+        ui.theme = "Default";
+        general = {
+          vimMode = true;
+          preferredEditor = "nvim";
+          previewFeatures = true;
+        };
+        ide.enabled = true;
+        privacy.usageStatisticsEnabled = false;
+        tools.autoAccept = false;
+        context.loadMemoryFromIncludeDirectories = true;
+        security.auth.selectedType = "oauth-personal";
+      };
       description = "JSON config for gemini-cli";
     };
 
@@ -81,12 +86,51 @@ in
       };
 
     defaultModel = lib.mkOption {
-      type = lib.types.str;
-      default = "gemini-2.5-pro";
+      type = lib.types.nullOr lib.types.str;
+      default = null;
       example = "gemini-2.5-flash";
       description = ''
         The default model to use for the CLI.
-        Will be set as $GEMINI_MODEL.
+        Will be set as $GEMINI_MODEL when configured.
+      '';
+    };
+
+    context = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      example = lib.literalExpression ''
+        {
+          GEMINI = '''
+            # Global Context
+
+            You are a helpful AI assistant for software development.
+
+            ## Coding Standards
+
+            - Follow consistent code style
+            - Write clear comments
+            - Test your changes
+          ''';
+
+          AGENTS = ./path/to/agents.md;
+
+          CONTEXT = '''
+            Additional context instructions here.
+          ''';
+        }
+      '';
+      description = ''
+        An attribute set of context files to create in `~/.gemini/`.
+        The attribute name becomes the filename with `.md` extension automatically added.
+        The value is either inline content or a path to a file.
+
+        Note: You can customize which context file names gemini-cli looks for by setting
+        `settings.context.fileName`. For example:
+        ```nix
+        settings = {
+          context.fileName = ["AGENTS.md", "CONTEXT.md", "GEMINI.md"];
+        };
+        ```
       '';
     };
   };
@@ -99,8 +143,15 @@ in
           file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
           };
-          sessionVariables.GEMINI_MODEL = cfg.defaultModel;
+          sessionVariables = lib.mkIf (cfg.defaultModel != null) {
+            GEMINI_MODEL = cfg.defaultModel;
+          };
         };
+      }
+      {
+        home.file = lib.mapAttrs' (
+          n: v: lib.nameValuePair ".gemini/${n}.md" (if lib.isPath v then { source = v; } else { text = v; })
+        ) cfg.context;
       }
       {
         home.file = lib.mapAttrs' (

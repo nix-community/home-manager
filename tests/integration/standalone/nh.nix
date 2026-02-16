@@ -9,30 +9,28 @@ in
   name = "works-with-nh-stable";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine =
-    { ... }:
-    {
-      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-      virtualisation.memorySize = 2048;
-      environment.systemPackages = [ pkgs.nh ];
-      nix = {
-        registry.home-manager.to = {
-          type = "path";
-          path = ../../..;
-        };
-        settings.extra-experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
+  nodes.machine = {
+    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+    virtualisation.memorySize = 2048;
+    environment.systemPackages = [ pkgs.nh ];
+    nix = {
+      registry.home-manager.to = {
+        type = "path";
+        path = ../../..;
       };
-      users.users.alice = {
-        isNormalUser = true;
-        description = "Alice Foobar";
-        password = "foobar";
-        uid = 1000;
-        inherit home;
-      };
+      settings.extra-experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
     };
+    users.users.alice = {
+      isNormalUser = true;
+      description = "Alice Foobar";
+      password = "foobar";
+      uid = 1000;
+      inherit home;
+    };
+  };
 
   testScript = ''
     import shlex

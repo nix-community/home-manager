@@ -12,6 +12,8 @@ let
   cfg = config.nix;
 in
 {
+  meta.maintainers = [ lib.maintainers.GaetanLepage ];
+
   options = {
     nix = {
       buildMachines = mkOption {
@@ -202,6 +204,4 @@ in
       };
     }
   );
-
-  meta.maintainers = [ lib.maintainers.GaetanLepage ];
 }

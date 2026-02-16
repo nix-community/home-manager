@@ -87,7 +87,7 @@ in
         pathStr = toString path;
         name = lib.hm.strings.storeFileName (baseNameOf pathStr);
       in
-      pkgs.runCommandLocal name { } ''ln -s ${lib.escapeShellArg pathStr} $out'';
+      pkgs.runCommandLocal name { } "ln -s ${lib.escapeShellArg pathStr} $out";
 
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
@@ -146,13 +146,18 @@ in
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" && ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
-              # The target exists, back it up
-              backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
-              if [[ -e "$backup" && -n "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
-                run rm $VERBOSE_ARG "$backup"
+            if [[ -e "$targetPath" && ! -L "$targetPath" ]] ; then
+              if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
+                verboseEcho "Running $HOME_MANAGER_BACKUP_COMMAND $targetPath."
+                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running `$HOME_MANAGER_BACKUP_COMMAND` on '$targetPath' failed."
+              elif [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
+                # The target exists, back it up
+                backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
+                if [[ -e "$backup" && -n "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
+                  run rm $VERBOSE_ARG "$backup"
+                fi
+                run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
               fi
-              run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
             fi
 
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
@@ -286,7 +291,7 @@ in
     home-files =
       pkgs.runCommandLocal "home-manager-files"
         {
-          nativeBuildInputs = [ pkgs.xorg.lndir ];
+          nativeBuildInputs = [ pkgs.lndir ];
         }
         (
           ''

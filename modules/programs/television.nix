@@ -10,7 +10,7 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [
-    awwpotato
+    da157
     PopeRigby
   ];
 
@@ -86,6 +86,7 @@ in
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
@@ -106,13 +107,16 @@ in
     ];
 
     programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
-      eval "$(${lib.getExe cfg.package} init bash)"
+      source ${cfg.package}/share/television/completion.bash
     '';
     programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
-      eval "$(${lib.getExe cfg.package} init zsh)"
+      source ${cfg.package}/share/television/completion.zsh
     '';
     programs.fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
-      ${lib.getExe cfg.package} init fish | source
+      source ${cfg.package}/share/television/completion.fish
     '';
+    programs.nushell = lib.mkIf cfg.enableNushellIntegration {
+      extraConfig = "source ${cfg.package}/share/television/completion.nu";
+    };
   };
 }

@@ -42,12 +42,16 @@ in
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [
-      (cfg.package.override {
-        discordAlias = cfg.discordAlias;
-        discord = lib.mkIf (cfg.discordPackage != null) cfg.discordPackage;
-      })
+      (cfg.package.override (
+        {
+          inherit (cfg) discordAlias;
+        }
+        // lib.optionalAttrs (cfg.discordPackage != null) { discord = cfg.discordPackage; }
+      ))
     ];
 
-    xdg.configFile."discocss/custom.css".text = cfg.css;
+    xdg.configFile."discocss/custom.css" = lib.mkIf (cfg.css != "") {
+      text = cfg.css;
+    };
   };
 }

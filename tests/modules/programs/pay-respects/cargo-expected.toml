@@ -1,0 +1,5 @@
+command = "cargo"
+
+[[match_err]]
+pattern = ["run `cargo init` to initialize a new rust project"]
+suggest = ["cargo init"]

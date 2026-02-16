@@ -17,13 +17,19 @@ let
     mkBashIntegrationOption
     mkZshIntegrationOption
     mkFishIntegrationOption
+    mkNushellIntegrationOption
     ;
+
+  inherit (lib.hm.nushell) mkNushellInline;
 
   cfg = config.programs.vivid;
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
+  meta.maintainers = [
+    lib.hm.maintainers.aguirre-matteo
+    lib.maintainers.arunoruto
+  ];
 
   options.programs.vivid = {
     enable = mkEnableOption "vivid";
@@ -32,9 +38,17 @@ in
     enableBashIntegration = mkBashIntegrationOption { inherit config; };
     enableZshIntegration = mkZshIntegrationOption { inherit config; };
     enableFishIntegration = mkFishIntegrationOption { inherit config; };
+    enableNushellIntegration = mkNushellIntegrationOption { inherit config; };
 
     colorMode = mkOption {
-      type = with types; nullOr str;
+      type =
+        with types;
+        nullOr (
+          either str (enum [
+            "8-bit"
+            "24-bit"
+          ])
+        );
       default = null;
       example = "8-bit";
       description = ''
@@ -80,7 +94,7 @@ in
     };
 
     themes = mkOption {
-      type = with types; attrsOf path;
+      type = with types; attrsOf (either path yamlFormat.type);
       default = { };
       example = lib.literalExpression ''
         {
@@ -93,10 +107,27 @@ in
             url = "https://raw.githubusercontent.com/NearlyTRex/Vivid/refs/heads/master/themes/catppuccin-mocha.yml";
             hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
           };
+
+          my-custom-theme = {
+            colors = {
+              blue = "0000ff";
+            };
+            core = {
+              directory = {
+                foreground = "blue";
+                font-style = "bold";
+              };
+            };
+          };
         }
       '';
-      description = "Theme for vivid";
+      description = ''
+        An attribute set of vivid themes.
+        Each value can either be a path to a theme file or an attribute set
+        defining the theme directly (which will be converted from Nix to YAML).
+      '';
     };
+
   };
 
   config =
@@ -116,7 +147,10 @@ in
         };
       }
       // (lib.mapAttrs' (
-        name: path: lib.nameValuePair "vivid/themes/${name}.yml" { source = path; }
+        name: value:
+        lib.nameValuePair "vivid/themes/${name}.yml" {
+          source = if lib.isAttrs value then pkgs.writeText "${name}.json" (builtins.toJSON value) else value;
+        }
       ) cfg.themes);
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
@@ -130,5 +164,9 @@ in
       programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
         set -gx LS_COLORS "$(${vividCommand})"
       '';
+
+      programs.nushell.environmentVariables = mkIf cfg.enableNushellIntegration {
+        LS_COLORS = mkNushellInline vividCommand;
+      };
     };
 }

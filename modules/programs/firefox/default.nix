@@ -26,7 +26,6 @@ in
       name = "Firefox";
       wrappedPackageName = "firefox";
       unwrappedPackageName = "firefox-unwrapped";
-      visible = true;
 
       platforms.linux = {
         configPath = ".mozilla/firefox";

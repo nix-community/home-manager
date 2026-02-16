@@ -30,11 +30,11 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.enable {
-      home.packages = [ cfg.package ];
-
       assertions = [
         (lib.hm.assertions.assertPlatform "services.kdeconnect" pkgs lib.platforms.linux)
       ];
+
+      home.packages = [ cfg.package ];
 
       systemd.user.services.kdeconnect = {
         Unit = {

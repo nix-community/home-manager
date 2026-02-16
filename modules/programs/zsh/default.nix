@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  options,
   ...
 }:
 let
@@ -26,14 +27,13 @@ let
   inherit (import ./lib.nix { inherit config lib; }) homeDir dotDirAbs dotDirRel;
 in
 {
+  meta.maintainers = [ lib.maintainers.khaneliman ];
+
   imports = [
     ./plugins
     ./deprecated.nix
     ./history.nix
   ];
-
-  meta.maintainers = [ lib.maintainers.khaneliman ];
-
   options =
     let
       syntaxHighlightingModule = types.submodule {
@@ -45,10 +45,14 @@ in
           highlighters = mkOption {
             type = types.listOf types.str;
             default = [ ];
+            defaultText = ''[ "main" ]'';
             example = [ "brackets" ];
             description = ''
               Highlighters to enable
               See the list of highlighters: <https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md>
+
+              Note: The "main" highlighter is always included automatically.
+              If you'd like to exclude it, please configure with a higher priority using `mkForce`.
             '';
           };
 
@@ -101,9 +105,18 @@ in
         };
 
         dotDir = mkOption {
-          default = homeDir;
-          defaultText = "`config.home.homeDirectory`";
-          example = "`\${config.xdg.configHome}/zsh`";
+          default =
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "${config.xdg.configHome}/zsh"
+            else
+              homeDir;
+          defaultText = lib.literalExpression ''
+            if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+              "''${config.xdg.configHome}/zsh"
+            else
+              config.home.homeDirectory
+          '';
+          example = literalExpression ''"''${config.xdg.configHome}/zsh"'';
           description = ''
             Directory where the zsh configuration and more should be located,
             relative to the users home directory. The default is the home
@@ -392,7 +405,24 @@ in
                   - config.xdg.dataHome (XDG data directory)
                   - config.xdg.cacheHome (XDG cache directory)
                 ''
-              ];
+              ]
+            ++
+              lib.optionals
+                (
+                  config.xdg.enable
+                  && !lib.versionAtLeast config.home.stateVersion "26.05"
+                  && options.programs.zsh.dotDir.highestPrio >= 1500
+                )
+                [
+                  ''
+                    The default value of `programs.zsh.dotDir` will change in future versions.
+                    You are currently using the legacy default (home directory) because `home.stateVersion` is less than "26.05".
+                    To silence this warning and lock in the current behavior, set:
+                      programs.zsh.dotDir = config.home.homeDirectory;
+                    To adopt the new behavior (XDG config directory), set:
+                      programs.zsh.dotDir = "''${config.xdg.configHome}/zsh";
+                  ''
+                ];
         }
 
         (mkIf (cfg.envExtra != "") {
@@ -413,7 +443,7 @@ in
 
         (mkIf (dotDirAbs != homeDir) {
           home.file."${dotDirRel}/.zshenv".text = ''
-            export ZDOTDIR=${dotDirAbs}
+            ${config.lib.zsh.export "ZDOTDIR" dotDirAbs}
           '';
 
           # When dotDir is set, only use ~/.zshenv to source ZDOTDIR/.zshenv,
@@ -421,7 +451,7 @@ in
           # already set correctly (by e.g. spawning a zsh inside a zsh), all env
           # vars still get exported
           home.file.".zshenv".text = ''
-            source ${dotDirAbs}/.zshenv
+            source ${lib.escapeShellArg "${dotDirAbs}/.zshenv"}
           '';
         })
 
@@ -449,6 +479,10 @@ in
 
         {
           home.packages = [ cfg.package ] ++ lib.optional cfg.enableCompletion pkgs.nix-zsh-completions;
+
+          # NOTE: Always include "main" highlighter with normal priority.
+          # Option default priority will cause `main` to get dropped by customization.
+          programs.zsh.syntaxHighlighting.highlighters = lib.mkIf cfg.syntaxHighlighting.enable [ "main" ];
 
           programs.zsh.initContent = lib.mkMerge [
             (mkOrder 510 "typeset -U path cdpath fpath manpath")
@@ -536,7 +570,7 @@ in
                 # https://github.com/zsh-users/zsh-syntax-highlighting#faq
                 ''
                   source ${cfg.syntaxHighlighting.package}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-                  ZSH_HIGHLIGHT_HIGHLIGHTERS+=(${lib.concatStringsSep " " (map lib.escapeShellArg cfg.syntaxHighlighting.highlighters)})
+                  ZSH_HIGHLIGHT_HIGHLIGHTERS=(${lib.concatStringsSep " " (map lib.escapeShellArg cfg.syntaxHighlighting.highlighters)})
                   ${lib.concatStringsSep "\n" (
                     lib.mapAttrsToList (
                       name: value: "ZSH_HIGHLIGHT_STYLES[${lib.escapeShellArg name}]=${lib.escapeShellArg value}"

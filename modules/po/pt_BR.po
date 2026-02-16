@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-07-22 10:59+0200\n"
-"PO-Revision-Date: 2024-04-19 17:07+0000\n"
-"Last-Translator: Felipe Silva <hey@felipeqq2.rocks>\n"
+"POT-Creation-Date: 2026-01-21 09:53+0100\n"
+"PO-Revision-Date: 2026-01-30 22:01+0000\n"
+"Last-Translator: Pedro de Mattia <pedromattia@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/home-"
 "manager/modules/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -17,25 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
-#: modules/files.nix:206
+#: modules/files.nix:214
 msgid "Creating home file links in %s"
 msgstr "Criando links simbólicos em %s"
 
-#: modules/files.nix:219
+#: modules/files.nix:227
 msgid "Cleaning up orphan links from %s"
 msgstr "Limpando links órfãos de %s"
 
-#: modules/home-environment.nix:647
+#: modules/home-environment.nix:680
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "Criando uma nova geração de perfil"
 
-#: modules/home-environment.nix:650
+#: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Sem alteração, então reusando a última geração de perfil"
 
-#: modules/home-environment.nix:699
+#: modules/home-environment.nix:732
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -63,13 +63,13 @@ msgstr ""
 "\n"
 "E então tente novamente ativar a sua configuração do Home Manager."
 
-#: modules/home-environment.nix:735
+#: modules/home-environment.nix:768
 msgid "Activating %s"
 msgstr "Ativando %s"
 
-#: modules/home-environment.nix:807
+#: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: opção desconhecida '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
@@ -80,37 +80,41 @@ msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
 "Não foi possível encontrar um diretório de perfil apropriado, tentou %s e %s"
 
-#: modules/lib-bash/activation-init.sh:106
-msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr "Erro: USER está definido como \"%s\" mas o esperado é \"%s\""
+#. translators: For example: HOME is "/home/foo", expected "/home/bar"
+#: modules/lib-bash/activation-init.sh:109
+#: modules/lib-bash/activation-init.sh:121
+msgid "%s is \"%s\", expected \"%s\""
+msgstr "%s é \"%s\", o esperado era \"%s\""
 
-#: modules/lib-bash/activation-init.sh:115
-msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr "Erro: HOME está definido como \"%s\" mas o esperado é \"%s\""
-
-#: modules/lib-bash/activation-init.sh:132
+#: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
 msgstr "Iniciando ativação do Home Manager"
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:142
 msgid "Sanity checking Nix"
 msgstr "Revalidando Nix"
 
-#: modules/lib-bash/activation-init.sh:149
+#: modules/lib-bash/activation-init.sh:155
 msgid "This is a dry run"
 msgstr "Essa é uma execução de teste"
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:159
 msgid "This is a live run"
 msgstr "Essa é uma execução de fato"
 
-#: modules/lib-bash/activation-init.sh:159
+#: modules/lib-bash/activation-init.sh:165
 msgid "Using Nix version: %s"
 msgstr "Usando versão do Nix: %s"
 
-#: modules/lib-bash/activation-init.sh:162
+#: modules/lib-bash/activation-init.sh:168
 msgid "Activation variables:"
 msgstr "Variáveis durante ativação:"
+
+#~ msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+#~ msgstr "Erro: USER está definido como \"%s\" mas o esperado é \"%s\""
+
+#~ msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+#~ msgstr "Erro: HOME está definido como \"%s\" mas o esperado é \"%s\""
 
 #~ msgid "Creating profile generation %s"
 #~ msgstr "Criando perfil de geração %s"

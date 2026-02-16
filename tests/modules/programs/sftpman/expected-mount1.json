@@ -3,6 +3,7 @@
   "beforeMount": "true",
   "host": "host1.example.com",
   "id": "mount1",
+  "mountDestPath": null,
   "mountOptions": [
     "idmap=user"
   ],

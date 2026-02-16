@@ -13,7 +13,7 @@ in
 {
   imports = [ firefoxMockOverlay ];
 
-  config = lib.mkIf (config.test.enableBig && !pkgs.hostPlatform.isDarwin) (
+  config = lib.mkIf (config.test.enableBig && !pkgs.stdenv.hostPlatform.isDarwin) (
     {
       home.stateVersion = "19.09";
     }
@@ -21,7 +21,7 @@ in
     // {
       nmt.script = ''
         assertFileRegex \
-          home-path/bin/${cfg.wrappedPackageName} \
+          home-path/bin/${cfg.finalPackage.meta.mainProgram} \
           MOZ_APP_LAUNCHER
       '';
     }

@@ -88,8 +88,10 @@
           - modules/services/copyq.nix
           - modules/services/parcellite.nix
           - modules/services/pbgopy.nix
+          - modules/services/wl-clip-persist.nix
           - tests/modules/services/clipman/**/*
           - tests/modules/services/copyq/**/*
+          - tests/modules/services/wl-clip-persist/**/*
 "cli-tools":
   - changed-files:
       - any-glob-to-any-file:
@@ -163,7 +165,7 @@
 "containers":
   - changed-files:
       - any-glob-to-any-file:
-          - modules/services/podman-linux/**/*
+          - modules/services/podman/linux/**/*
           - modules/programs/distrobox.nix
           - modules/programs/docker-cli.nix
 "desktop-ui":

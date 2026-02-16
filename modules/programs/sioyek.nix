@@ -21,6 +21,8 @@ let
 
 in
 {
+  meta.maintainers = [ lib.maintainers.podocarp ];
+
   options = {
     programs.sioyek = {
       enable = lib.mkEnableOption "Sioyek, a PDF viewer designed for reading research papers and technical books";
@@ -80,6 +82,4 @@ in
       })
     ]
   );
-
-  meta.maintainers = [ lib.maintainers.podocarp ];
 }

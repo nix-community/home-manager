@@ -106,6 +106,9 @@ in
     serviceFile=$serviceFiles/restic-backups-"$backup".service
     assertFileRegex $serviceFile "Environment=RESTIC_REPOSITORY=rclone:local:/root/restic-rclone-backup"
     assertFileRegex $serviceFile "Environment=RESTIC_PASSWORD_FILE"
+    assertFileRegex $serviceFile "Environment=RCLONE_CHECKSUM=true"
+    assertFileRegex $serviceFile "Environment=RCLONE_COLOR=ALWAYS"
+    assertFileRegex $serviceFile "Environment=RCLONE_LIST_CUTOFF=5"
     assertFileRegex $serviceFile "ExecStart=.*$defaultPruneOpts"
     for part in ''${defaultPruneOpts[@]}; do
       assertFileRegex $serviceFile "ExecStart=.*$part"

@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"POT-Creation-Date: 2026-01-21 09:53+0100\n"
 "PO-Revision-Date: 2025-05-28 12:05+0000\n"
-"Last-Translator: Parsa Nobahari <89968726+ParsaNobahari@users.noreply.github."
-"com>\n"
+"Last-Translator: Parsa Nobahari "
+"<89968726+ParsaNobahari@users.noreply.github.com>\n"
 "Language-Team: Persian <https://hosted.weblate.org/projects/home-manager/"
 "modules/fa/>\n"
 "Language: fa\n"
@@ -20,23 +20,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.12-dev\n"
 
-#: modules/files.nix:206
+#: modules/files.nix:214
 msgid "Creating home file links in %s"
 msgstr "درحال ساختن اتصال فایل‌ها در %s"
 
-#: modules/files.nix:219
+#: modules/files.nix:227
 msgid "Cleaning up orphan links from %s"
 msgstr "پاک‌سازی اتصلات یتیم از %s"
 
-#: modules/home-environment.nix:647
+#: modules/home-environment.nix:680
 msgid "Creating new profile generation"
 msgstr "در حال ساخت پروفایل جدید نسل"
 
-#: modules/home-environment.nix:650
+#: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
 msgstr "بدون تغییر پس استفاده دوباره از آخرین پروفایل نسل"
 
-#: modules/home-environment.nix:699
+#: modules/home-environment.nix:732
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -64,11 +64,11 @@ msgstr ""
 "\n"
 "سپس دوباره تلاش به فعال‌سازی کانفیگ Home Manager خود کنید."
 
-#: modules/home-environment.nix:735
+#: modules/home-environment.nix:768
 msgid "Activating %s"
 msgstr "فعال‌سازی %s"
 
-#: modules/home-environment.nix:807
+#: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
 msgstr ""
 
@@ -80,34 +80,38 @@ msgstr "مهاجرت پروفایل از %s به %s"
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr "بعد از امتحان کردن %s و %s , دایرکتوری مناسب برای پروفایل یافت نشد"
 
-#: modules/lib-bash/activation-init.sh:106
-msgid "Error: USER is set to \"%s\" but we expect \"%s\""
-msgstr "خطا: USER به \"%s\" تنظیم شده اما ما انتظار داریم \"%s\""
+#. translators: For example: HOME is "/home/foo", expected "/home/bar"
+#: modules/lib-bash/activation-init.sh:109
+#: modules/lib-bash/activation-init.sh:121
+msgid "%s is \"%s\", expected \"%s\""
+msgstr ""
 
-#: modules/lib-bash/activation-init.sh:115
-msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr "خطا: HOME به \"%s\" تنظیم شده اما ما انتظار داریم \"%s\""
-
-#: modules/lib-bash/activation-init.sh:132
+#: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
 msgstr "شروع فعال‌سازی Home Manager"
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:142
 msgid "Sanity checking Nix"
 msgstr "چک کردن پایداری Nix"
 
-#: modules/lib-bash/activation-init.sh:149
+#: modules/lib-bash/activation-init.sh:155
 msgid "This is a dry run"
 msgstr "این یک عمل آزمایشی است"
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:159
 msgid "This is a live run"
 msgstr "این یک عمل اجرایی است"
 
-#: modules/lib-bash/activation-init.sh:159
+#: modules/lib-bash/activation-init.sh:165
 msgid "Using Nix version: %s"
 msgstr "نسخه Nix در حال اجرا: %s"
 
-#: modules/lib-bash/activation-init.sh:162
+#: modules/lib-bash/activation-init.sh:168
 msgid "Activation variables:"
 msgstr "فعال‌سازی متغیر‌ها:"
+
+#~ msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+#~ msgstr "خطا: USER به \"%s\" تنظیم شده اما ما انتظار داریم \"%s\""
+
+#~ msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
+#~ msgstr "خطا: HOME به \"%s\" تنظیم شده اما ما انتظار داریم \"%s\""

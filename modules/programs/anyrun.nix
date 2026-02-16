@@ -6,9 +6,7 @@
 }:
 let
   inherit (builtins)
-    map
     toJSON
-    toString
     substring
     stringLength
     ;
@@ -185,7 +183,7 @@ in
 
     extraCss = mkOption {
       type = nullOr lines;
-      default = "";
+      default = null;
       description = ''
         Extra CSS lines to add to {file}`~/.config/anyrun/style.css`.
       '';

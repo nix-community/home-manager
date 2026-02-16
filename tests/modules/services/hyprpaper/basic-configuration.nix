@@ -12,8 +12,21 @@
       ];
 
       wallpaper = [
-        "DP-3,/share/wallpapers/buttons.png"
-        "DP-1,/share/wallpapers/cat_pacman.png"
+        {
+          monitor = "DP-3";
+          path = "/share/wallpapers/buttons.png";
+          fit_mode = "cover";
+        }
+        {
+          monitor = "DP-2";
+          path = "/share/wallpapers/cat_pacman.png";
+          fit_mode = "cover";
+        }
+        {
+          monitor = "";
+          path = "~/fallback.jxl";
+          fit_mode = "cover";
+        }
       ];
     };
   };

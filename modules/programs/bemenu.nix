@@ -54,7 +54,13 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     home.sessionVariables = lib.mkIf (cfg.settings != { }) {
-      BEMENU_OPTS = lib.cli.toGNUCommandLineShell { } cfg.settings;
+      # Not using `toCommandLineShellGNU` since it doesn't handle short form options with empty strings
+      # https://github.com/nix-community/home-manager/issues/8544
+      BEMENU_OPTS = lib.cli.toCommandLineShell (optionName: {
+        option = if builtins.stringLength optionName > 1 then "--${optionName}" else "-${optionName}";
+        sep = null;
+        explicitBool = false;
+      }) cfg.settings;
     };
   };
 }

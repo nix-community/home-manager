@@ -26,6 +26,38 @@ let
             };
           };
         };
+
+        alices-disabled-remote = {
+          config = {
+            type = "sftp";
+            host = "remote";
+            user = "alice";
+            key_pem = "${keyPem}";
+            known_hosts = "${sshKeys.snakeOilEd25519PublicKey}";
+          };
+          mounts = {
+            "/home/alice/other-files" = {
+              mountPoint = "/home/alice/other-files";
+            };
+          };
+        };
+
+        non-automounted-remote = {
+          config = {
+            type = "sftp";
+            host = "remote";
+            user = "alice";
+            key_pem = "${keyPem}";
+            known_hosts = "${sshKeys.snakeOilEd25519PublicKey}";
+          };
+          mounts = {
+            "/home/alice/even-more-files" = {
+              enable = true;
+              autoMount = false;
+              mountPoint = "/home/alice/even-more-files";
+            };
+          };
+        };
       };
     }
   '';
@@ -43,6 +75,23 @@ in
     remote.wait_for_unit("network.target")
     remote.wait_for_unit("multi-user.target")
 
+    succeed_as_alice(
+      "mkdir -p /home/alice/.ssh",
+      "install -m644 ${module} /home/alice/.config/home-manager/test-remote.nix"
+    )
+
+    actual = succeed_as_alice("home-manager switch")
+    expected = "rclone-config.service"
+    assert "Starting units: " in actual and expected in actual, \
+      f"expected home-manager switch to contain {expected}, but got {actual}"
+
+    with subtest("Disabled remotes aren't created"):
+        svc_name = "rclone-mount:.home.alice.other-files@alices-disabled-remote.service"
+
+        status, out = machine.systemctl(f"status {svc_name}", "alice")
+        assert status != 0, \
+          f"The disabled mount {svc_name} was created"
+
     with subtest("Mount a remote (sftp)"):
       # https://rclone.org/commands/rclone_mount/#vfs-directory-cache
       # Sending a SIGHUP evicts every dcache entry
@@ -54,16 +103,6 @@ in
           "sleep 5",
           box=remote
         )
-
-      succeed_as_alice(
-        "mkdir -p /home/alice/.ssh",
-        "install -m644 ${module} /home/alice/.config/home-manager/test-remote.nix"
-      )
-
-      actual = succeed_as_alice("home-manager switch")
-      expected = "rclone-config.service"
-      assert "Starting units: " in actual and expected in actual, \
-        f"expected home-manager switch to contain {expected}, but got {actual}"
 
       # remote -> machine
       succeed_as_alice(
@@ -98,5 +137,25 @@ in
       expected = "started"
       assert expected in test_log, \
         f"Mounted file does not have expected contents. Expected {test_log} to contain \"{expected}\""
+
+    with subtest("Non-automounted mounts aren't started"):
+      svc_name = "rclone-mount:.home.alice.even-more-files@non-automounted-remote.service"
+
+      _status, out = machine.systemctl(f"show -p WantedBy --value {svc_name}", "alice")
+      assert not "default.target" in out, \
+        f"Non-automounted service, {svc_name}, contains \"WantedBy\" default.target"
+
+      fail_as_alice("ls /home/alice/even-more-files")
+
+      succeed_as_alice(
+        "mkdir /home/alice/even-more-files",
+        box=remote
+      )
+
+      status, _out = machine.systemctl(f"start {svc_name}", "alice")
+      assert status == 0, \
+        f"Failed to start {svc_name}"
+
+      succeed_as_alice("ls /home/alice/even-more-files")
   '';
 }

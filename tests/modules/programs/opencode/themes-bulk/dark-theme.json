@@ -1,0 +1,8 @@
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "name": "dark-theme",
+  "colors": {
+    "primary": "#1e1e1e",
+    "secondary": "#252526"
+  }
+}

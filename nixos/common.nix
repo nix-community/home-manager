@@ -2,7 +2,6 @@
 # For OS-specific configuration, please edit nixos/default.nix or nix-darwin/default.nix instead.
 
 {
-  options,
   config,
   lib,
   pkgs,
@@ -30,39 +29,49 @@ let
       lib = extendedLib;
       osConfig = config;
       osClass = _class;
-      modulesPath = builtins.toString ../modules;
+      modulesPath = toString ../modules;
     }
     // cfg.extraSpecialArgs;
 
     modules = [
       (
-        { name, ... }:
+        { name, options, ... }:
         {
           imports =
             import ../modules/modules.nix {
               inherit pkgs;
               lib = extendedLib;
+              inherit (cfg) minimal;
               useNixpkgsModule = !cfg.useGlobalPkgs;
             }
             ++ cfg.sharedModules;
 
           config = {
-            submoduleSupport.enable = true;
-            submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+            submoduleSupport = {
+              enable = true;
+              externalPackageInstall = cfg.useUserPackages;
+            };
 
-            home.username = config.users.users.${name}.name;
-            home.homeDirectory = config.users.users.${name}.home;
+            home = {
+              username = config.users.users.${name}.name;
+              homeDirectory = config.users.users.${name}.home;
+              uid = mkIf (options.users.users.${name}.uid.isDefined or false) config.users.users.${name}.uid;
+            };
 
-            # Forward `nix.enable` from the OS configuration. The
-            # conditional is to check whether nix-darwin is new enough
-            # to have the `nix.enable` option; it was previously a
-            # `mkRemovedOptionModule` error, which we can crudely detect
-            # by `visible` being set to `false`.
-            nix.enable = mkIf (options.nix.enable.visible or true) config.nix.enable;
+            nix = {
+              # Forward `nix.enable` from the OS configuration. The
+              # conditional is to check whether nix-darwin is new enough
+              # to have the `nix.enable` option; it was previously a
+              # `mkRemovedOptionModule` error, which we can crudely detect
+              # by `visible` being set to `false`.
+              enable = mkIf (options.nix.enable.visible or true) config.nix.enable;
 
-            # Make activation script use same version of Nix as system as a whole.
-            # This avoids problems with Nix not being in PATH.
-            nix.package = config.nix.package;
+              # Make activation script use same version of Nix as system as a whole.
+              # This avoids problems with Nix not being in PATH.
+              # Only set package when nix is enabled to avoid errors when
+              # nix-darwin has nix.enable = false (e.g., Determinate Nix users).
+              package = mkIf config.nix.enable config.nix.package;
+            };
           };
         }
       )
@@ -80,6 +89,16 @@ in
       using the system configuration's `pkgs`
       argument in Home Manager. This disables the Home Manager
       options {option}`nixpkgs.*`'';
+
+    backupCommand = mkOption {
+      type = types.nullOr (types.either types.str types.path);
+      default = null;
+      example = lib.literalExpression "\${pkgs.trash-cli}/bin/trash";
+      description = ''
+        On activation run this command on each existing file
+        rather than exiting with an error.
+      '';
+    };
 
     backupFileExtension = mkOption {
       type = types.nullOr types.str;
@@ -104,6 +123,16 @@ in
         option can be used to pass additional arguments to all modules.
       '';
     };
+
+    minimal = mkEnableOption ''
+      only the necessary modules that allow home-manager to function.
+
+      This can be used to allow vendoring a minimal list of modules yourself, rather than
+      importing every single module.
+
+      THIS IS FOR ADVANCED USERS, AND WILL DISABLE ALMOST EVERY MODULE.
+      THIS SHOULD NOT BE ENABLED UNLESS YOU KNOW THE IMPLICATIONS.
+    '';
 
     sharedModules = mkOption {
       type = with types; listOf raw;
@@ -139,30 +168,28 @@ in
     };
   };
 
-  config = (
-    lib.mkMerge [
-      # Fix potential recursion when configuring home-manager users based on values in users.users #594
-      (mkIf (cfg.useUserPackages && cfg.users != { }) {
-        users.users = (lib.mapAttrs (_username: usercfg: { packages = [ usercfg.home.path ]; }) cfg.users);
-        environment.pathsToLink = [ "/etc/profile.d" ];
-      })
-      (mkIf (cfg.users != { }) {
-        warnings = lib.flatten (
-          flip lib.mapAttrsToList cfg.users (
-            user: config: flip map config.warnings (warning: "${user} profile: ${warning}")
-          )
-        );
+  config = lib.mkMerge [
+    # Fix potential recursion when configuring home-manager users based on values in users.users #594
+    (mkIf (cfg.useUserPackages && cfg.users != { }) {
+      users.users = lib.mapAttrs (_username: usercfg: { packages = [ usercfg.home.path ]; }) cfg.users;
+      environment.pathsToLink = [ "/etc/profile.d" ];
+    })
+    (mkIf (cfg.users != { }) {
+      warnings = lib.flatten (
+        flip lib.mapAttrsToList cfg.users (
+          user: config: flip map config.warnings (warning: "${user} profile: ${warning}")
+        )
+      );
 
-        assertions = lib.flatten (
-          flip lib.mapAttrsToList cfg.users (
-            user: config:
-            flip map config.assertions (assertion: {
-              inherit (assertion) assertion;
-              message = "${user} profile: ${assertion.message}";
-            })
-          )
-        );
-      })
-    ]
-  );
+      assertions = lib.flatten (
+        flip lib.mapAttrsToList cfg.users (
+          user: config:
+          flip map config.assertions (assertion: {
+            inherit (assertion) assertion;
+            message = "${user} profile: ${assertion.message}";
+          })
+        )
+      );
+    })
+  ];
 }

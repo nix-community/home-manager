@@ -14,44 +14,18 @@ SAVEHIST="10000"
 HISTFILE="/home/hm-user/.zsh_history"
 mkdir -p "$(dirname "$HISTFILE")"
 
-setopt HIST_FCNTL_LOCK
-
-# Enabled history options
-enabled_opts=(
-  HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
+# Set shell options
+set_opts=(
+  HIST_FCNTL_LOCK HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
+  NO_APPEND_HISTORY NO_EXTENDED_HISTORY NO_HIST_EXPIRE_DUPS_FIRST
+  NO_HIST_FIND_NO_DUPS NO_HIST_IGNORE_ALL_DUPS NO_HIST_SAVE_NO_DUPS
 )
-for opt in "${enabled_opts[@]}"; do
+for opt in "${set_opts[@]}"; do
   setopt "$opt"
 done
-unset opt enabled_opts
-
-# Disabled history options
-disabled_opts=(
-  APPEND_HISTORY EXTENDED_HISTORY HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS
-  HIST_IGNORE_ALL_DUPS HIST_SAVE_NO_DUPS
-)
-for opt in "${disabled_opts[@]}"; do
-  unsetopt "$opt"
-done
-unset opt disabled_opts
+unset opt set_opts
 
 source @zsh-history-substring-search@/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-# Bind search up keys
-search_up_keys=(
-  '^[[A' '\eOA'
-)
- for key in "${search_up_keys[@]}"; do
-   bindkey "$key" history-substring-search-up
- done
- unset key search_up_keys
-
-# Bind search down keys
-search_down_keys=(
-  '^[[B'
-)
- for key in "${search_down_keys[@]}"; do
-   bindkey "$key" history-substring-search-down
- done
- unset key search_down_keys
-
+bindkey "^[[A" history-substring-search-up
+bindkey "\eOA" history-substring-search-up
+bindkey "^[[B" history-substring-search-down

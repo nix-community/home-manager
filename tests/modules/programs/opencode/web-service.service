@@ -1,0 +1,11 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@opencode@/bin/opencode web --hostname 0.0.0.0 --port 4096 --mdns --cors https://example.com --cors http://localhost:3000 --print-logs --log-level DEBUG
+Restart=always
+RestartSec=5
+
+[Unit]
+After=network.target
+Description=OpenCode Web Service

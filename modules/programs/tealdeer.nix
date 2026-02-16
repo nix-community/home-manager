@@ -16,6 +16,7 @@ let
   settingsFormat =
     let
       updatesSection = types.submodule {
+        freeformType = tomlFormat.type;
         options = {
           auto_update = lib.mkEnableOption "auto-update";
 

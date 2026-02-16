@@ -100,11 +100,11 @@ in
       default = with pkgs; [
         xdotool
         coreutils
-        xorg.xprop
+        xprop
       ];
-      defaultText = literalExpression "pkgs.xdotool pkgs.coreutils pkgs.xorg.xprop";
+      defaultText = literalExpression "pkgs.xdotool pkgs.coreutils pkgs.xprop";
       example = literalExpression ''
-        with pkgs; [ xdotool coreutils xorg.xprop ];
+        with pkgs; [ xdotool coreutils xprop ];
       '';
       description = ''
         Extra packages needs to bring to the scope of fusuma service.
@@ -127,7 +127,7 @@ in
       };
 
       Service = {
-        Environment = with pkgs; "PATH=${makeBinPath cfg.extraPackages}";
+        Environment = "PATH=${makeBinPath cfg.extraPackages}";
         ExecStart = "${cfg.package}/bin/fusuma";
       };
 

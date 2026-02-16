@@ -8,7 +8,7 @@ let
   cfg = config.services.swww;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ hey2022 ];
+  meta.maintainers = with lib.maintainers; [ hey2022 ];
 
   options.services.swww = {
     enable = lib.mkEnableOption "swww, a Solution to your Wayland Wallpaper Woes";
@@ -50,6 +50,9 @@ in
 
       Service = {
         ExecStart = "${lib.getExe' cfg.package "swww-daemon"} ${lib.escapeShellArgs cfg.extraArgs}";
+        Environment = [
+          "PATH=$PATH:${lib.makeBinPath [ cfg.package ]}"
+        ];
         Restart = "always";
         RestartSec = 10;
       };

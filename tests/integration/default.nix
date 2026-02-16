@@ -27,6 +27,7 @@ let
     standalone-flake-basics = runTest ./standalone/flake-basics.nix;
     standalone-specialisation = runTest ./standalone/specialisation.nix;
     standalone-standard-basics = runTest ./standalone/standard-basics.nix;
+    dconf = runTest ./standalone/dconf.nix;
   };
 in
 tests

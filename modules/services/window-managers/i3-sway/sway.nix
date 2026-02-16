@@ -704,20 +704,6 @@ in
 
   config = mkIf cfg.enable (
     lib.mkMerge [
-      (mkIf (cfg.config != null) {
-        warnings =
-          (optional (lib.isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
-          ++ lib.flatten (
-            map (
-              b:
-              optional (lib.isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
-            ) cfg.config.bars
-          )
-          ++ [
-            (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
-          ];
-      })
-
       {
         assertions = [
           (lib.hm.assertions.assertPlatform "wayland.windowManager.sway" pkgs lib.platforms.linux)
@@ -753,6 +739,20 @@ in
           };
         };
       }
+
+      (mkIf (cfg.config != null) {
+        warnings =
+          (optional (lib.isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
+          ++ lib.flatten (
+            map (
+              b:
+              optional (lib.isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
+            ) cfg.config.bars
+          )
+          ++ [
+            (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
+          ];
+      })
     ]
   );
 }

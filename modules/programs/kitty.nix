@@ -42,6 +42,10 @@ let
     mkKeyValue = key: command: "map ${key} ${command}";
   };
 
+  toKittyMouseBindings = lib.generators.toKeyValue {
+    mkKeyValue = key: command: "mouse_map ${key} ${command}";
+  };
+
   toKittyActionAliases = lib.generators.toKeyValue {
     mkKeyValue = alias_name: action: "action_alias ${alias_name} ${action}";
   };
@@ -88,6 +92,8 @@ let
     };
 in
 {
+  meta.maintainers = with lib.maintainers; [ khaneliman ];
+
   imports = [
     (lib.mkChangedOptionModule
       [ "programs" "kitty" "theme" ]
@@ -118,13 +124,10 @@ in
       )
     )
   ];
-
-  meta.maintainers = with lib.maintainers; [ khaneliman ];
-
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
 
-    package = lib.mkPackageOption pkgs "kitty" { };
+    package = lib.mkPackageOption pkgs "kitty" { nullable = true; };
 
     darwinLaunchOptions = mkOption {
       type = types.nullOr (types.listOf types.str);
@@ -165,8 +168,50 @@ in
         in `kitty-themes`, without the `.conf` suffix. See
         <https://github.com/kovidgoyal/kitty-themes/tree/master/themes> for a
         list of themes.
+
+        Note that if any automatic themes are configured via
+        `programs.kitty.autoThemeFiles`, Kitty will prefer them based on the
+        OS color scheme and they will override other color and background image
+        settings.
       '';
       example = "SpaceGray_Eighties";
+    };
+
+    autoThemeFiles = mkOption {
+      type = types.nullOr (
+        types.submodule {
+          options = {
+            light = mkOption {
+              type = types.str;
+              description = "Theme name for light color scheme.";
+            };
+            dark = mkOption {
+              type = types.str;
+              description = "Theme name for dark color scheme.";
+            };
+            noPreference = mkOption {
+              type = types.str;
+              description = "Theme name for no-preference color scheme.";
+            };
+          };
+        }
+      );
+      default = null;
+      description = ''
+        Configure Kitty automatic color themes. This creates
+        {file}`$XDG_CONFIG_HOME/kitty/light-theme.auto.conf`,
+        {file}`$XDG_CONFIG_HOME/kitty/dark-theme.auto.conf`, and
+        {file}`$XDG_CONFIG_HOME/kitty/no-preference-theme.auto.conf`.
+        Kitty applies these based on the OS color scheme, and they override
+        other color and background image settings.
+      '';
+      example = literalExpression ''
+        {
+          light = "GitHub";
+          dark = "TokyoNight";
+          noPreference = "OneDark";
+        }
+      '';
     };
 
     font = mkOption {
@@ -196,6 +241,18 @@ in
           "ctrl+c" = "copy_or_interrupt";
           "ctrl+f>2" = "set_font_size 20";
         }
+      '';
+    };
+
+    mouseBindings = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = "Mapping of mouse bindings to actions.";
+      example = literalExpression ''
+        {
+          "ctrl+left click" = "ungrabbed mouse_handle_click selection link prompt";
+          "left click" = "ungrabbed no-op";
+        };
       '';
     };
 
@@ -293,7 +350,7 @@ in
       }
     ];
 
-    home.packages = [ cfg.package ] ++ optionalPackage cfg.font;
+    home.packages = (optionalPackage cfg) ++ (optionalPackage cfg.font);
 
     programs.kitty.extraConfig = mkMerge [
       (mkIf (cfg.font != null) (
@@ -316,7 +373,8 @@ in
       (mkOrder 540 (toKittyConfig cfg.settings))
       (mkOrder 550 (toKittyActionAliases cfg.actionAliases))
       (mkOrder 560 (toKittyKeybindings cfg.keybindings))
-      (mkOrder 570 (toKittyEnv cfg.environment))
+      (mkOrder 570 (toKittyMouseBindings cfg.mouseBindings))
+      (mkOrder 580 (toKittyEnv cfg.environment))
     ];
 
     xdg.configFile."kitty/kitty.conf" = {
@@ -325,16 +383,13 @@ in
         # See https://sw.kovidgoyal.net/kitty/conf.html
         ${cfg.extraConfig}
       '';
-    }
-    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-      onChange = ''
-        ${pkgs.procps}/bin/pkill -USR1 -u $USER kitty || true
-      '';
-    }
-    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-      onChange = ''
-        /usr/bin/pkill -USR1 -u $USER kitty || true
-      '';
+      onChange =
+        let
+          prefix = if pkgs.stdenv.hostPlatform.isDarwin then "/usr" else pkgs.procps;
+        in
+        ''
+          ${prefix}/bin/pkill -USR1 -u $USER kitty || true
+        '';
     };
 
     xdg.configFile."kitty/quick-access-terminal.conf" = mkIf (cfg.quickAccessTerminalConfig != { }) {
@@ -345,15 +400,35 @@ in
       '';
     };
 
-    home.activation.checkKittyTheme = mkIf (cfg.themeFile != null) (
+    xdg.configFile."kitty/light-theme.auto.conf" = mkIf (cfg.autoThemeFiles != null) {
+      text = "include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.autoThemeFiles.light}.conf\n";
+    };
+
+    xdg.configFile."kitty/dark-theme.auto.conf" = mkIf (cfg.autoThemeFiles != null) {
+      text = "include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.autoThemeFiles.dark}.conf\n";
+    };
+
+    xdg.configFile."kitty/no-preference-theme.auto.conf" = mkIf (cfg.autoThemeFiles != null) {
+      text = "include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.autoThemeFiles.noPreference}.conf\n";
+    };
+
+    home.activation.checkKittyTheme = mkIf (cfg.themeFile != null || cfg.autoThemeFiles != null) (
       let
-        themePath = "${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.themeFile}.conf";
+        themePath = name: "${pkgs.kitty-themes}/share/kitty-themes/themes/${name}.conf";
+        checkThemeFile = name: ''
+          if [[ ! -f "${themePath name}" ]]; then
+            errorEcho "kitty-themes does not contain the theme file ${themePath name}!"
+            exit 1
+          fi
+        '';
       in
       lib.hm.dag.entryBefore [ "writeBoundary" ] ''
-        if [[ ! -f "${themePath}" ]]; then
-          errorEcho "kitty-themes does not contain the theme file ${themePath}!"
-          exit 1
-        fi
+        ${lib.optionalString (cfg.themeFile != null) (checkThemeFile cfg.themeFile)}
+        ${lib.optionalString (cfg.autoThemeFiles != null) ''
+          ${checkThemeFile cfg.autoThemeFiles.light}
+          ${checkThemeFile cfg.autoThemeFiles.dark}
+          ${checkThemeFile cfg.autoThemeFiles.noPreference}
+        ''}
       ''
     );
 

@@ -4,18 +4,16 @@
   name = "standalone-specialisation";
   meta.maintainers = [ pkgs.lib.maintainers.rycee ];
 
-  nodes.machine =
-    { ... }:
-    {
-      imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-      virtualisation.memorySize = 2048;
-      users.users.alice = {
-        isNormalUser = true;
-        description = "Alice Foobar";
-        password = "foobar";
-        uid = 1000;
-      };
+  nodes.machine = {
+    imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
+    virtualisation.memorySize = 2048;
+    users.users.alice = {
+      isNormalUser = true;
+      description = "Alice Foobar";
+      password = "foobar";
+      uid = 1000;
     };
+  };
 
   testScript = ''
     start_all()
@@ -65,7 +63,7 @@
 
     with subtest("Home Manager switch to missing specialisation"):
       actual = fail_as_alice("home-manager switch --specialisation no-such-specialisation")
-      expected = "The configuration did not contain the specialisation \"no-such-specialisation\""
+      expected = "The configuration does not contain the specialisation \"no-such-specialisation\""
       assert expected in actual, \
         f"expected home-manager switch to contain {expected}, but got {actual}"
 

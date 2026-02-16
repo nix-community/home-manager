@@ -295,7 +295,7 @@ in
 {
   meta.maintainers = [
     lib.maintainers.rycee
-    lib.hm.maintainers.aionescu
+    lib.maintainers.aionescu
   ];
 
   options = {
@@ -756,12 +756,9 @@ in
           description = "Syncthing tray command to use.";
         };
 
-        package = mkOption {
-          type = types.package;
-          default = pkgs.syncthingtray-minimal;
-          defaultText = literalExpression "pkgs.syncthingtray-minimal";
-          example = literalExpression "pkgs.qsyncthingtray";
-          description = "Syncthing tray package to use.";
+        package = lib.mkPackageOption pkgs "syncthingtray" {
+          default = "syncthingtray-minimal";
+          example = "qsyncthingtray";
         };
       };
     };
@@ -828,40 +825,37 @@ in
         };
       };
 
-      launchd.agents =
-        let
-          # agent `syncthing` uses `${syncthing_dir}/${watch_file}` to notify agent `syncthing-init`
-          watch_file = ".launchd_update_config";
-        in
-        {
-          syncthing = {
-            enable = true;
-            config = {
-              ProgramArguments = [
-                "${pkgs.writers.writeBash "syncthing-wrapper" ''
-                  ${copyKeys}                               # simulate systemd's `syncthing-init.Service.ExecStartPre`
-                  touch "${syncthing_dir}/${watch_file}"    # notify syncthing-init agent
-                  exec ${lib.escapeShellArgs syncthingArgs}
-                ''}"
-              ];
-              KeepAlive = {
-                Crashed = true;
-                SuccessfulExit = false;
-              };
-              ProcessType = "Background";
+      launchd.agents = {
+        syncthing = {
+          enable = true;
+          config = {
+            ProgramArguments = [
+              "${pkgs.writers.writeBash "syncthing-wrapper" ''
+                ${copyKeys}    # simulate systemd's `syncthing-init.Service.ExecStartPre`
+                exec ${lib.escapeShellArgs syncthingArgs}
+              ''}"
+            ];
+            KeepAlive = {
+              Crashed = true;
+              SuccessfulExit = false;
             };
-          };
-
-          syncthing-init = {
-            enable = cleanedConfig != { };
-            config = {
-              ProgramArguments = [ "${updateConfig}" ];
-              WatchPaths = [
-                "${config.home.homeDirectory}/Library/Application Support/Syncthing/${watch_file}"
-              ];
-            };
+            ProcessType = "Background";
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/Syncthing/syncthing-stdout.log";
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/Syncthing/syncthing-stderr.log";
           };
         };
+
+        syncthing-init = {
+          enable = cleanedConfig != { };
+          config = {
+            ProgramArguments = [ "${updateConfig}" ];
+            ProcessType = "Background";
+            RunAtLoad = true;
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/Syncthing/syncthing-init-stdout.log";
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/Syncthing/syncthing-init-stderr.log";
+          };
+        };
+      };
     })
 
     (lib.mkIf cfg.tray.enable {

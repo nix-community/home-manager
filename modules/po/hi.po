@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"POT-Creation-Date: 2026-01-21 09:53+0100\n"
 "PO-Revision-Date: 2025-09-02 00:02+0000\n"
 "Last-Translator: Fareesh Vijayarangam <fareesh@gmail.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/home-manager/"
@@ -19,23 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.13.1-dev\n"
 
-#: modules/files.nix:206
+#: modules/files.nix:214
 msgid "Creating home file links in %s"
 msgstr "%s में होम फ़ाइल के लिंक्स बन रही हैं"
 
-#: modules/files.nix:219
+#: modules/files.nix:227
 msgid "Cleaning up orphan links from %s"
 msgstr "%s से ऑर्फे़न लिंक्स मिटाई जा रही है"
 
-#: modules/home-environment.nix:647
+#: modules/home-environment.nix:680
 msgid "Creating new profile generation"
 msgstr "नई प्रोफ़ाइल बनाई जा रही है"
 
-#: modules/home-environment.nix:650
+#: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
 msgstr ""
 
-#: modules/home-environment.nix:699
+#: modules/home-environment.nix:732
 msgid ""
 "Oops, Nix failed to install your new Home Manager profile!\n"
 "\n"
@@ -51,11 +51,11 @@ msgid ""
 "Then try activating your Home Manager configuration again."
 msgstr ""
 
-#: modules/home-environment.nix:735
+#: modules/home-environment.nix:768
 msgid "Activating %s"
 msgstr ""
 
-#: modules/home-environment.nix:807
+#: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
 msgstr ""
 
@@ -67,34 +67,32 @@ msgstr ""
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:106
-msgid "Error: USER is set to \"%s\" but we expect \"%s\""
+#. translators: For example: HOME is "/home/foo", expected "/home/bar"
+#: modules/lib-bash/activation-init.sh:109
+#: modules/lib-bash/activation-init.sh:121
+msgid "%s is \"%s\", expected \"%s\""
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:115
-msgid "Error: HOME is set to \"%s\" but we expect \"%s\""
-msgstr ""
-
-#: modules/lib-bash/activation-init.sh:132
+#: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:136
+#: modules/lib-bash/activation-init.sh:142
 msgid "Sanity checking Nix"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:149
+#: modules/lib-bash/activation-init.sh:155
 msgid "This is a dry run"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:153
+#: modules/lib-bash/activation-init.sh:159
 msgid "This is a live run"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:159
+#: modules/lib-bash/activation-init.sh:165
 msgid "Using Nix version: %s"
 msgstr ""
 
-#: modules/lib-bash/activation-init.sh:162
+#: modules/lib-bash/activation-init.sh:168
 msgid "Activation variables:"
 msgstr ""

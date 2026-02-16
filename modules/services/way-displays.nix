@@ -17,7 +17,7 @@ let
     mkOption
     types
     ;
-  mergeSets = sets: lists.fold attrsets.recursiveUpdate { } sets;
+  mergeSets = sets: lists.foldr attrsets.recursiveUpdate { } sets;
   cfg = config.services.way-displays;
   yaml = pkgs.formats.yaml { };
 in

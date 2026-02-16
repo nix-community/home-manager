@@ -5,7 +5,6 @@
   wrappedPackageName ? null,
   unwrappedPackageName ? null,
   platforms,
-  visible ? false,
   enableBookmarks ? true,
 }:
 {
@@ -209,12 +208,10 @@ in
       example = true;
       description = ''
         Whether to enable ${appName}.${optionalString (description != null) " ${description}"}
-        ${optionalString (!visible) "See `${moduleName}` for more configuration options."}
       '';
     };
 
     package = mkOption {
-      inherit visible;
       type = with types; nullOr package;
       default = pkgs.${defaultPackageName};
       defaultText = literalExpression "pkgs.${packageName}";
@@ -278,7 +275,7 @@ in
       type = types.nullOr types.str;
       default = if platforms.darwin ? "defaultsId" then platforms.darwin.defaultsId else null;
       example = if default != null then default else "com.developer.app";
-      description = ''The id for the darwin defaults in order to set policies'';
+      description = "The id for the darwin defaults in order to set policies";
     };
 
     darwinAppName = mkOption {
@@ -317,7 +314,6 @@ in
     };
 
     nativeMessagingHosts = mkOption {
-      inherit visible;
       type = types.listOf types.package;
       default = [ ];
       description = ''
@@ -327,14 +323,12 @@ in
     };
 
     finalPackage = mkOption {
-      inherit visible;
       type = with types; nullOr package;
       readOnly = true;
       description = "Resulting ${appName} package.";
     };
 
     policies = lib.optionalAttrs (wrappedPackageName != null) (mkOption {
-      inherit visible;
       type = types.attrsOf jsonFormat.type;
       default = { };
       description = "[See list of policies](https://mozilla.github.io/policy-templates/).";
@@ -360,7 +354,6 @@ in
     };
 
     profiles = mkOption {
-      inherit visible;
       type = types.attrsOf (
         types.submodule (
           { config, name, ... }:
@@ -704,6 +697,35 @@ in
                             type = types.bool;
                           };
 
+                          exhaustivePermissions = mkOption {
+                            description = ''
+                              When enabled, the user must authorize requested
+                              permissions for all extensions from
+                              {option}`${moduleName}.profiles.<profile>.extensions.packages`
+                              in
+                              {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
+                            '';
+                            default = false;
+                            example = true;
+                            type = types.bool;
+                          };
+
+                          exactPermissions = mkOption {
+                            description = ''
+                              When enabled,
+                              {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
+                              must specify the exact set of permissions that the
+                              extension will request.
+
+                              This means that if the authorized permissions are
+                              broader than what the extension requests, the
+                              assertion will fail.
+                            '';
+                            default = false;
+                            example = true;
+                            type = types.bool;
+                          };
+
                           settings = mkOption {
                             default = { };
                             example = literalExpression ''
@@ -801,11 +823,68 @@ in
                 }
               ]
               ++ (builtins.concatMap (
+                {
+                  addonId ? null,
+                  name,
+                  meta,
+                  ...
+                }:
+                let
+                  safeAddonId = if addonId != null then addonId else name;
+                  permissions = config.extensions.settings.${safeAddonId}.permissions or null;
+                  requireCheck = config.extensions.exhaustivePermissions || permissions != null;
+                  authorizedPermissions = lib.optionals (permissions != null) permissions;
+                  missingPermissions = lib.subtractLists authorizedPermissions meta.mozPermissions;
+                  redundantPermissions = lib.subtractLists meta.mozPermissions authorizedPermissions;
+                  checkSatisfied =
+                    if config.extensions.exactPermissions then
+                      missingPermissions == [ ] && redundantPermissions == [ ]
+                    else
+                      missingPermissions == [ ];
+                  errorMessage =
+                    if
+                      config.extensions.exactPermissions && missingPermissions != [ ] && redundantPermissions != [ ]
+                    then
+                      ''
+                        Extension ${safeAddonId} requests permissions that weren't
+                        authorized: ${builtins.toJSON missingPermissions}.
+                        Additionally, the following permissions were authorized,
+                        but extension ${safeAddonId} did not request them:
+                        ${builtins.toJSON redundantPermissions}.
+                        Consider adjusting the permissions in''
+                    else if config.extensions.exactPermissions && redundantPermissions != [ ] then
+                      ''
+                        The following permissions were authorized, but extension
+                        ${safeAddonId} did not request them: ${builtins.toJSON redundantPermissions}.
+                        Consider removing the redundant permissions from''
+                    else
+                      ''
+                        Extension ${safeAddonId} requests permissions that weren't
+                        authorized: ${builtins.toJSON missingPermissions}.
+                        Consider adding the missing permissions to'';
+                in
+                [
+                  {
+                    assertion = !requireCheck || checkSatisfied;
+                    message = ''
+                      ${errorMessage}
+                      '${
+                        lib.showAttrPath (
+                          profilePath
+                          ++ [
+                            "extensions"
+                            safeAddonId
+                          ]
+                        )
+                      }.permissions'.
+                    '';
+                  }
+                ]
+              ) config.extensions.packages)
+              ++ (builtins.concatMap (
                 { name, value }:
                 let
-                  packages = builtins.filter (pkg: pkg.addonId == name) config.extensions.packages;
-                  package = builtins.head packages;
-                  unauthorized = lib.subtractLists value.permissions package.meta.mozPermissions;
+                  packages = builtins.filter (pkg: (pkg.addonId or pkg.name) == name) config.extensions.packages;
                 in
                 [
                   {
@@ -813,24 +892,6 @@ in
                     message = ''
                       Must have exactly one extension with addonId '${name}'
                       in '${lib.showOption profilePath}.extensions.packages' but found ${toString (length packages)}.
-                    '';
-                  }
-
-                  {
-                    assertion = value.permissions == null || length packages != 1 || unauthorized == [ ];
-                    message = ''
-                      Extension ${name} requests permissions that weren't
-                      authorized: ${builtins.toJSON unauthorized}.
-                      Consider adding the missing permissions to
-                      '${
-                        lib.showAttrPath (
-                          profilePath
-                          ++ [
-                            "extensions"
-                            name
-                          ]
-                        )
-                      }.permissions'.
                     '';
                   }
                 ]
@@ -845,7 +906,6 @@ in
     };
 
     enableGnomeExtensions = mkOption {
-      inherit visible;
       type = types.bool;
       default = false;
       description = ''

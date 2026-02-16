@@ -5,7 +5,6 @@
   pkgs,
   ...
 }:
-
 let
   cfg = config.services.mpdscribble;
   mpdCfg = config.services.mpd;
@@ -19,8 +18,9 @@ let
   };
 in
 {
-  options.services.mpdscribble = {
+  meta.maintainers = [ lib.hm.maintainers.msyds ];
 
+  options.services.mpdscribble = {
     enable = lib.mkEnableOption ''
       mpdscribble, an MPD client which submits info about tracks being played to
       Last.fm (formerly AudioScrobbler)
@@ -123,7 +123,6 @@ in
         If the endpoint is one of "${lib.concatStringsSep ''", "'' (builtins.attrNames endpointUrls)}" the url is set automatically.
       '';
     };
-
   };
 
   config = lib.mkIf cfg.enable {
@@ -132,14 +131,14 @@ in
     ];
     systemd.user.services.mpdscribble =
       let
-        localMpd = (cfg.host == "localhost" || cfg.host == "127.0.0.1");
+        localMpd = cfg.host == "localhost" || cfg.host == "127.0.0.1";
 
         mkSection = secname: secCfg: ''
           [${secname}]
           url      = ${secCfg.url}
           username = ${secCfg.username}
           password = {{${secname}_PASSWORD}}
-          journal  = /var/lib/mpdscribble/${secname}.journal
+          journal  = ${config.xdg.dataHome}/mpdscribble/${secname}.journal
         '';
 
         endpoints = lib.concatStringsSep "\n" (lib.mapAttrsToList mkSection cfg.endpoints);
@@ -207,7 +206,6 @@ in
           configFile="${configFile}"
           exec "${lib.getExe cfg.package}" --no-daemon --conf "$configFile"
         '';
-
       in
       {
         Unit = {
@@ -225,6 +223,4 @@ in
         };
       };
   };
-
-  meta.maintainers = [ lib.hm.maintainers.msyds ];
 }

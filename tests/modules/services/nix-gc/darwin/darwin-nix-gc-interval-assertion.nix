@@ -5,6 +5,6 @@
   };
 
   test.asserts.assertions.expected = [
-    "On Darwin nix.gc.dates.* must be one of: hourly, daily, weekly, monthly, semiannually, annually."
+    "On Darwin, nix.gc.dates.* must be one of: hourly, daily, weekly, monthly, semiannually, annually."
   ];
 }

@@ -87,7 +87,7 @@ in
         '';
       };
 
-      package = lib.mkPackageOption pkgs "taskwarrior" {
+      package = lib.mkPackageOption pkgs "taskwarrior2" {
         nullable = true;
         example = "pkgs.taskwarrior3";
       };

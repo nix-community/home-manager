@@ -78,26 +78,26 @@ in
 
       example = lib.literalExpression ''
          {
-           "choose": "enter",
-           "clearSelected": "S",
-           "down": "down",
-           "end": "end",
-           "filter": "/",
-           "home": "home",
-           "more": "?",
-           "nextPage": "right",
-           "prevPage": "left",
-           "preview": "t",
-           "quit": "q",
-           "remove": "x",
-           "selectDown": "ctrl+down",
-           "selectSingle": "s",
-           "selectUp": "ctrl+up",
-           "togglePin": "p",
-           "togglePinned": "tab",
-           "up": "up",
-           "yankFilter": "ctrl+s"
-        }
+           "choose" = "enter";
+           "clearSelected" = "S";
+           "down" = "down";
+           "end" = "end";
+           "filter" = "/";
+           "home" = "home";
+           "more" = "?";
+           "nextPage" = "right";
+           "prevPage" = "left";
+           "preview" = "t";
+           "quit" = "q";
+           "remove" = "x";
+           "selectDown" = "ctrl+down";
+           "selectSingle" = "s";
+           "selectUp" = "ctrl+up";
+           "togglePin" = "p";
+           "togglePinned" = "tab";
+           "up" = "up";
+           "yankFilter" = "ctrl+s";
+        };
       '';
 
       description = "Custom key bindings";
@@ -156,7 +156,7 @@ in
 
     xdg.configFile."clipse/custom_theme.json".source = jsonFormat.generate "theme" cfg.theme;
 
-    systemd.user.services.clipse = lib.mkIf (pkgs.stdenv.isLinux && (cfg.package != null)) {
+    systemd.user.services.clipse = lib.mkIf (cfg.package != null) {
       Unit = {
         Description = "Clipse listener";
         PartOf = [ "graphical-session.target" ];

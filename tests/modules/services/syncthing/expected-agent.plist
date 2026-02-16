@@ -15,7 +15,13 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>@syncthing-wrapper@</string>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @syncthing-wrapper@</string>
 	</array>
+	<key>StandardErrorPath</key>
+	<string>/home/hm-user/Library/Logs/Syncthing/syncthing-stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/home/hm-user/Library/Logs/Syncthing/syncthing-stdout.log</string>
 </dict>
 </plist>

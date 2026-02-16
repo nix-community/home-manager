@@ -7,7 +7,6 @@ HISTFILESIZE=100000
 HISTSIZE=10000
 
 shopt -s histappend
-shopt -s checkwinsize
 shopt -s extglob
 shopt -s globstar
 shopt -s checkjobs

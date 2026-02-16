@@ -16,6 +16,10 @@ let
     vivaldi = "Vivaldi Browser";
   };
 
+  plasmaSupportedBrowsers = [
+    "google-chrome"
+  ];
+
   browserModule =
     browser: name: visible:
     let
@@ -38,6 +42,15 @@ let
         description = "The ${name} package to use.";
       };
 
+      finalPackage = mkOption {
+        inherit visible;
+        type = types.nullOr types.package;
+        readOnly = true;
+        description = ''
+          Resulting customized ${name} package
+        '';
+      };
+
       commandLineArgs = mkOption {
         inherit visible;
         type = types.listOf types.str;
@@ -55,6 +68,15 @@ let
           To search switches for other components, see
           [Chromium codesearch](https://source.chromium.org/search?q=file:switches.cc&ss=chromium%2Fchromium%2Fsrc).
         '';
+      };
+    }
+    // lib.optionalAttrs (lib.elem browser plasmaSupportedBrowsers) {
+      plasmaSupport = mkOption {
+        inherit visible;
+        type = types.bool;
+        default = false;
+        example = true;
+        description = "Whether to enable the 'Use QT' theme for ${name}.";
       };
     }
     // lib.optionalAttrs (!isProprietaryChrome) {
@@ -143,6 +165,7 @@ let
           List of ${name} dictionaries to install.
         '';
       };
+
       nativeMessagingHosts = mkOption {
         type = types.listOf types.package;
         default = [ ];
@@ -211,16 +234,33 @@ let
       };
 
     in
+
     lib.mkIf cfg.enable {
-      home.packages = lib.mkIf (cfg.package != null) [
-        (
-          if cfg.commandLineArgs != [ ] then
-            cfg.package.override {
+      assertions = [
+        {
+          assertion = !(cfg.package == null && cfg.commandLineArgs != [ ]);
+          message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
+        }
+      ];
+
+      programs.${browser}.finalPackage =
+        if cfg.package == null then
+          null
+        else if cfg.commandLineArgs != [ ] || (cfg.plasmaSupport or false) then
+          cfg.package.override (
+            lib.optionalAttrs (cfg.commandLineArgs != [ ]) {
               commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
             }
-          else
-            cfg.package
-        )
+            // lib.optionalAttrs (cfg.plasmaSupport or false) {
+              plasmaSupport = true;
+              kdePackages = pkgs.kdePackages;
+            }
+          )
+        else
+          cfg.package;
+
+      home.packages = lib.mkIf (cfg.finalPackage != null) [
+        cfg.finalPackage
       ];
       home.file = lib.optionalAttrs (!isProprietaryChrome) (
         lib.listToAttrs ((map extensionJson cfg.extensions) ++ (map dictionary cfg.dictionaries))
@@ -263,7 +303,7 @@ in
   ) supportedBrowsers;
 
   config = lib.mkMerge (
-    builtins.map (browser: browserConfig browser config.programs.${browser}) (
+    map (browser: browserConfig browser config.programs.${browser}) (
       builtins.attrNames supportedBrowsers
     )
   );

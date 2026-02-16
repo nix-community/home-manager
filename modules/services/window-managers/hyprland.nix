@@ -130,6 +130,7 @@ in
           - `HYPRLAND_INSTANCE_SIGNATURE`
           - `WAYLAND_DISPLAY`
           - `XDG_CURRENT_DESKTOP`
+          - `XDG_SESSION_TYPE`
         '';
       };
 
@@ -140,6 +141,7 @@ in
           "HYPRLAND_INSTANCE_SIGNATURE"
           "WAYLAND_DISPLAY"
           "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_TYPE"
         ];
         example = [ "--all" ];
         description = ''
@@ -164,6 +166,14 @@ in
 
     xwayland.enable = lib.mkEnableOption "XWayland" // {
       default = true;
+      description = ''
+        Whether or not to enable XWayland.
+
+        Overrides the `enableXWayland` option of the Hyprland package.
+
+        In newer versions of Hyprland, you can use the {option}`wayland.windowManager.hyprland.settings.xwayland`
+        option to avoid recompiling Hyprland.
+      '';
     };
 
     settings = lib.mkOption {
@@ -342,8 +352,7 @@ in
         warning = "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake.";
 
         filterNonBinds =
-          attrs:
-          builtins.filter (n: builtins.match ''bind[[:lower:]]*'' n == null) (builtins.attrNames attrs);
+          attrs: builtins.filter (n: builtins.match "bind[[:lower:]]*" n == null) (builtins.attrNames attrs);
 
         # attrset of { <submap name> = <list of non bind* keys>; } for all submaps
         submapWarningsAttrset = builtins.mapAttrs (
@@ -351,7 +360,7 @@ in
         ) cfg.submaps;
 
         submapWarnings = lib.mapAttrsToList (submapName: nonBinds: ''
-          wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${builtins.toString nonBinds}], which will have no effect in a submap
+          wayland.windowManager.hyprland.submaps."${submapName}".settings: found non-bind entries: [${toString nonBinds}], which will have no effect in a submap
         '') (lib.filterAttrs (n: v: v != [ ]) submapWarningsAttrset);
       in
       submapWarnings ++ lib.optional inconsistent warning;

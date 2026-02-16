@@ -12,7 +12,8 @@
         - Review for potential bugs and edge cases
         - Check for security vulnerabilities
         - Ensure code follows best practices
-        - Suggest improvements for readability and performance'';
+        - Suggest improvements for readability and performance
+      '';
       documentation = ''
         # Documentation Agent
 
@@ -23,7 +24,8 @@
         - Write clear, concise documentation
         - Include practical examples
         - Use proper formatting and structure
-        - Consider the target audience'';
+        - Consider the target audience
+      '';
     };
   };
   nmt.script = ''

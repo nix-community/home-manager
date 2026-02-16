@@ -10,6 +10,8 @@ let
 in
 
 {
+  meta.maintainers = with lib.maintainers; [ andre4ik3 ];
+
   options.programs.desktoppr = {
     enable = lib.mkEnableOption "managing the desktop picture/wallpaper on macOS using desktoppr";
     package = lib.mkPackageOption pkgs "desktoppr" { };
@@ -20,7 +22,7 @@ in
 
         options = {
           picture = lib.mkOption {
-            type = with lib.types; nullOr (either path (strMatching "^http(s)?:\/\/.*$"));
+            type = with lib.types; nullOr (either path (strMatching "^http(s)?://.*$"));
             default = null;
             example = "/System/Library/Desktop Pictures/Solid Colors/Stone.png";
             description = ''
@@ -100,6 +102,4 @@ in
       run "${lib.getExe cfg.package}" manage
     '';
   };
-
-  meta.maintainers = with lib.maintainers; [ andre4ik3 ];
 }

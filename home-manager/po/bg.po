@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
-"POT-Creation-Date: 2025-07-22 10:59+0200\n"
+"POT-Creation-Date: 2026-01-21 09:53+0100\n"
 "PO-Revision-Date: 2025-09-17 16:02+0000\n"
 "Last-Translator: Borislav Rangelov <borislav.y.rangelov@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/home-manager/"
@@ -115,29 +115,29 @@ msgstr "Не беше намерена подходяща директория �
 msgid "Can't inspect options of a flake configuration"
 msgstr "Опциите на флейк конфигурацията не могат да бъдат прегледани"
 
-#: home-manager/home-manager:305 home-manager/home-manager:328
-#: home-manager/home-manager:734 home-manager/home-manager:1237
+#: home-manager/home-manager:340 home-manager/home-manager:363
+#: home-manager/home-manager:769 home-manager/home-manager:1289
 msgid "%s: unknown option '%s'"
 msgstr "%s: непозната опция '%s'"
 
-#: home-manager/home-manager:310 home-manager/home-manager:1238
+#: home-manager/home-manager:345 home-manager/home-manager:1290
 msgid "Run '%s --help' for usage help"
 msgstr "Изпълнете командата '%s --help' за повече информация"
 
-#: home-manager/home-manager:336 home-manager/home-manager:441
+#: home-manager/home-manager:371 home-manager/home-manager:476
 msgid "The file %s already exists, leaving it unchanged..."
 msgstr "Файлът %s вече съществува, пропускане на промениете му..."
 
-#: home-manager/home-manager:338 home-manager/home-manager:443
+#: home-manager/home-manager:373 home-manager/home-manager:478
 msgid "Creating %s..."
 msgstr "Създаване на %s..."
 
-#: home-manager/home-manager:487
+#: home-manager/home-manager:522
 msgid "Creating initial Home Manager generation..."
 msgstr "Създаване на първоначалната Home Manager генерация..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
-#: home-manager/home-manager:492
+#: home-manager/home-manager:527
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -151,12 +151,12 @@ msgstr ""
 "\n"
 "....%s\n"
 "\n"
-"за да конфигурате Home Manager. Изпълнете командата 'man home-configuration."
-"nix'\n"
+"за да конфигурате Home Manager. Изпълнете командата 'man home-"
+"configuration.nix'\n"
 "за да видите всички налични опции."
 
 #. translators: The "%s" specifier will be replaced by a URL.
-#: home-manager/home-manager:497
+#: home-manager/home-manager:532
 msgid ""
 "Uh oh, the installation failed! Please create an issue at\n"
 "\n"
@@ -171,11 +171,11 @@ msgstr ""
 "ако смятате, че грешката се дължи на Home Manager."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
-#: home-manager/home-manager:508
+#: home-manager/home-manager:543
 msgid "Can't instantiate a flake configuration"
 msgstr "Флейк конфигурацията не може да се инстанцира"
 
-#: home-manager/home-manager:584
+#: home-manager/home-manager:619
 msgid ""
 "There is %d unread and relevant news item.\n"
 "Read it by running the command \"%s news\"."
@@ -189,78 +189,78 @@ msgstr[1] ""
 "Има %d непрочетени релевантни новини.\n"
 "Прочетете ги като изпълните \"%s news\" командата."
 
-#: home-manager/home-manager:598
+#: home-manager/home-manager:633
 msgid "Unknown \"news.display\" setting \"%s\"."
 msgstr "Непозната \"news.display\" настройка \"%s\"."
 
-#: home-manager/home-manager:606
+#: home-manager/home-manager:641
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
 msgstr "Моля задайте $EDITOR или $VISUAL променливите на средата"
 
-#: home-manager/home-manager:624
+#: home-manager/home-manager:659
 msgid "Cannot run build in read-only directory"
 msgstr ""
 "Компилацията не може да се стартира в директория предназначена само за четене"
 
-#: home-manager/home-manager:787
-msgid "The configuration did not contain the specialisation \"%s\""
-msgstr "Конфигурацията не съдържаше специализация \"%s\""
+#: home-manager/home-manager:822
+msgid "The configuration does not contain the specialisation \"%s\""
+msgstr ""
 
-#: home-manager/home-manager:841
+#: home-manager/home-manager:876
 msgid "No generation with ID %s"
 msgstr "Не е намерена генерация с ID %s"
 
-#: home-manager/home-manager:843
+#: home-manager/home-manager:878
 msgid "Cannot remove the current generation %s"
 msgstr "Не може да бъде премахната сегашната генерация %s"
 
-#: home-manager/home-manager:845
+#: home-manager/home-manager:880
 msgid "Removing generation %s"
 msgstr "Премахване генерацията %s"
 
-#: home-manager/home-manager:866
+#: home-manager/home-manager:901
 msgid "No generations to expire"
 msgstr "Няма изтичащи генерации"
 
-#: home-manager/home-manager:877
+#: home-manager/home-manager:912
 msgid "No home-manager packages seem to be installed."
 msgstr "Изглежда няма нито един инсталиран home-manager пакет."
 
-#: home-manager/home-manager:962
+#: home-manager/home-manager:997
 msgid "Unknown argument %s"
 msgstr "Непознат аргумент %s"
 
-#: home-manager/home-manager:987
+#: home-manager/home-manager:1022
 msgid "This will remove Home Manager from your system."
 msgstr "Това ще премахне Home Manager от системата Ви."
 
-#: home-manager/home-manager:990
+#: home-manager/home-manager:1025
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr "Това е сухо изпълнение - нищо няма да бъде деинсталирано."
 
-#: home-manager/home-manager:994
+#: home-manager/home-manager:1029
 msgid "Really uninstall Home Manager?"
 msgstr "Наистина ли искате да деинсталирате Home Manager?"
 
-#: home-manager/home-manager:1000
+#: home-manager/home-manager:1035
 msgid "Switching to empty Home Manager configuration..."
 msgstr "Превключване към празна Home Manager конфигурация..."
 
-#: home-manager/home-manager:1015
+#: home-manager/home-manager:1050
 msgid "Yay!"
 msgstr "Ура!"
 
-#: home-manager/home-manager:1020
+#: home-manager/home-manager:1055
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
 "Home Manager бе деинсталиран но Вашия home.nix файл е оставен непроменен."
 
-#: home-manager/home-manager:1285
+#: home-manager/home-manager:1334
 msgid "expire-generations expects one argument, got %d."
 msgstr "expire-generations очаква един аргумент, получил е %d."
 
-#: home-manager/home-manager:1310
+#: home-manager/home-manager:1359
 msgid "Unknown command: %s"
 msgstr "Непозната команда: %s"
 
@@ -269,3 +269,6 @@ msgid "This derivation is not buildable, please run it using nix-shell."
 msgstr ""
 "Тази деривация не може да се компилира, моля стартирайте я ползвайки nix-"
 "shell."
+
+#~ msgid "The configuration did not contain the specialisation \"%s\""
+#~ msgstr "Конфигурацията не съдържаше специализация \"%s\""

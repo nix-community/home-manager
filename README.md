@@ -28,7 +28,7 @@ Releases
 Home Manager is developed against `nixpkgs-unstable` branch, which often causes
 it to contain tweaks for changes/packages not yet released in stable [NixOS][].
 To avoid breaking users' configurations, Home Manager is released in branches
-corresponding to NixOS releases (e.g. `release-25.05`). These branches get
+corresponding to NixOS releases (e.g. `release-25.11`). These branches get
 fixes, but usually not new modules. If you need a module to be backported, then
 feel free to open an issue.
 
@@ -45,11 +45,11 @@ and gradually make it more elaborate as you learn.
 
 In some cases Home Manager cannot detect whether it will overwrite a previous
 manual configuration. For example, the Gnome Terminal module will write to your
-dconf store and cannot tell whether a configuration that it is about to be
+dconf store and cannot tell whether a configuration that is about to be
 overwritten was from a previous Home Manager generation or from manual
 configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 25.05 (the current
+Home Manager targets [NixOS][] unstable and NixOS version 25.11 (the current
 stable version), it may or may not work on other Linux distributions and NixOS
 versions.
 
