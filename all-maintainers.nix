@@ -50,7 +50,7 @@
     source = "nixpkgs";
   };
   ALameLlama = {
-    email = "NicholasACiechanowski@gmail.com";
+    email = "nicholas@ciech.anow.ski";
     github = "ALameLlama";
     githubId = 55490546;
     name = "Nicholas Ciechanowski";
@@ -1550,6 +1550,18 @@
     githubId = 5113257;
     name = "mainrs";
     source = "home-manager";
+  };
+  malikwirin = {
+    email = "abdelmalik.najhi@stud.hs-kempten.de";
+    github = "malikwirin";
+    githubId = 117918464;
+    keys = [
+      {
+        fingerprint = "B5ED 595C 8C7E 133C 6B68  63C8 CFEF 1E35 0351 F72D";
+      }
+    ];
+    name = "Malik";
+    source = "nixpkgs";
   };
   malte-v = {
     email = "nixpkgs@mal.tc";
