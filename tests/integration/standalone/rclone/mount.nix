@@ -11,6 +11,22 @@ let
   module = pkgs.writeText "mount-module" ''
     { pkgs, lib, ... }: {
       programs.rclone.remotes = {
+        alices-unclean-remote = {
+          config = {
+            type = "sftp";
+            host = "remote";
+            user = "alice";
+            key_pem = "${keyPem}";
+            known_hosts = "${sshKeys.snakeOilEd25519PublicKey}";
+          };
+          mounts = {
+            "/home/alice/invalid dirname$" = {
+              enable = true;
+              mountPoint = "/home/alice/valid-dirname";
+            };
+          };
+        };
+
         alices-sftp-remote = {
           config = {
             type = "sftp";
@@ -157,5 +173,51 @@ in
         f"Failed to start {svc_name}"
 
       succeed_as_alice("ls /home/alice/even-more-files")
+
+    with subtest("Sanitize service name"):
+      # https://rclone.org/commands/rclone_mount/#vfs-directory-cache
+      # Sending a SIGHUP evicts every dcache entry
+      def clear_vfs_dcache():
+        svc_name = "rclone-mount:.home.alice.invalid_dirname@alices-unclean-remote.service"
+        succeed_as_alice(f"kill -s HUP $(systemctl --user show -p MainPID --value {svc_name})")
+        succeed_as_alice(
+          "sync",
+          "sleep 5",
+          box=remote
+        )
+
+      # remote -> machine
+      succeed_as_alice(
+        "mkdir /home/alice/invalid\\ dirname$",
+        "touch /home/alice/invalid\\ dirname$/test",
+        "echo started > /home/alice/invalid\\ dirname$/log",
+        box=remote
+      )
+
+      succeed_as_alice("ls /home/alice/valid-dirname/test")
+
+      test_log = succeed_as_alice("cat /home/alice/valid-dirname/log")
+      expected = "started";
+      assert expected in test_log, \
+        f"Mounted file does not have expected contents. Expected {test_log} to contain \"{expected}\""
+
+      # machine -> remote
+      succeed_as_alice(
+        "touch /home/alice/valid-dirname/new-file",
+        "echo testing this works both ways! >> /home/alice/valid-dirname/log",
+      )
+
+      clear_vfs_dcache()
+
+      succeed_as_alice("ls /home/alice/invalid\\ dirname$/new-file", box=remote)
+
+      test_log = succeed_as_alice("cat /home/alice/invalid\\ dirname$/log", box=remote)
+      expected = "testing this works both ways!"
+      assert expected in test_log, \
+        f"Mounted file does not have expected contents. Expected {test_log} to contain \"{expected}\""
+
+      expected = "started"
+      assert expected in test_log, \
+        f"Mounted file does not have expected contents. Expected {test_log} to contain \"{expected}\""
   '';
 }

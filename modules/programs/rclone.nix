@@ -9,7 +9,7 @@ let
 
   cfg = config.programs.rclone;
   iniFormat = pkgs.formats.ini { };
-  replaceSlashes = builtins.replaceStrings [ "/" ] [ "." ];
+  replaceIllegalChars = builtins.replaceStrings [ "/" " " "$" ] [ "." "_" "" ];
   isUsingSecretProvisioner = name: config ? "${name}" && config."${name}".secrets != { };
 
 in
@@ -361,7 +361,7 @@ in
                 mount = value;
               in
               lib.optional mount.enable (
-                lib.nameValuePair "rclone-mount:${replaceSlashes mount-path}@${remote-name}" {
+                lib.nameValuePair "rclone-mount:${replaceIllegalChars mount-path}@${remote-name}" {
                   Unit = {
                     Description = "Rclone FUSE daemon for ${remote-name}:${mount-path}";
                   };
@@ -374,13 +374,13 @@ in
                     ]
                     ++ lib.optional (mount.logLevel != null) "RCLONE_LOG_LEVEL=${mount.logLevel}";
 
-                    ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${mount.mountPoint}";
+                    ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg mount.mountPoint}";
                     ExecStart = lib.concatStringsSep " " [
                       (lib.getExe cfg.package)
                       "mount"
                       (lib.cli.toCommandLineShellGNU { } mount.options)
-                      "${remote-name}:${mount-path}"
-                      "${mount.mountPoint}"
+                      (lib.escapeShellArg "${remote-name}:${mount-path}")
+                      (lib.escapeShellArg mount.mountPoint)
                     ];
                     Restart = "on-failure";
                   };
