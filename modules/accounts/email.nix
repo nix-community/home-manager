@@ -164,7 +164,10 @@ let
           # Inherits account configuration
           accountConfig.userName
         '';
-
+        description = ''
+          The server username for IMAP. If `null`,
+          the account-level `userName` will be used.
+        '';
       };
 
       authentication = authenticationOption;
