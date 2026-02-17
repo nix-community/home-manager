@@ -54,7 +54,7 @@
 
     # Make sure that Alice has a "nix profile" compatible profile.
     if True:
-      succeed_as_alice("nix profile install nixpkgs#cowsay")
+      succeed_as_alice("nix profile add nixpkgs#cowsay")
       result = succeed_as_alice("cowsay Hello")
       machine.log(f"\n{result}")
 
