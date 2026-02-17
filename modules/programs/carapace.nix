@@ -27,9 +27,32 @@ in
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    ignoreCase = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable case-insensitive matching for carapace completions.
+        When enabled, the carapace binary is wrapped with {env}`CARAPACE_MATCH`
+        set to `1`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    programs.carapace.package = lib.mkIf cfg.ignoreCase (
+      pkgs.symlinkJoin {
+        name = "carapace-wrapped";
+        paths = [ pkgs.carapace ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/carapace \
+            --set CARAPACE_MATCH 1
+        '';
+        meta.mainProgram = "carapace";
+      }
+    );
+
     home.packages = [ cfg.package ];
 
     programs = {
