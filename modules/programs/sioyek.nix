@@ -68,14 +68,38 @@ in
         '';
       };
 
+      startupCommands = mkOption {
+        description = ''
+          Commands to be run upon startup. Will be written to {file}`$XDG_CONFIG_HOME/sioyek/prefs_user.config`.
+          See <https://github.com/ahrm/sioyek/blob/a4ce95fd968804fbf6ff3befcbe0d9b972bd754c/pdf_viewer/prefs.config#L116>.
+        '';
+        type = types.listOf types.str;
+        default = [ ];
+        example = [
+          "toggle_visual_scroll"
+          "toggle_dark_mode"
+        ];
+      };
     };
   };
 
   config = mkIf cfg.enable (
+    let
+      prefsCfg =
+        cfg.config
+        // lib.optionalAttrs (cfg.startupCommands != [ ]) {
+          startup_commands = lib.concatStringsSep ";" cfg.startupCommands;
+        };
+    in
     lib.mkMerge [
-      { home.packages = [ cfg.package ]; }
-      (mkIf (cfg.config != { }) {
-        xdg.configFile."sioyek/prefs_user.config".text = renderConfig cfg.config;
+      {
+        home.packages = [ cfg.package ];
+        warnings = mkIf (cfg.config ? startup_commands) [
+          "`programs.sioyek.config.startup_commands` is deprecated. Use`programs.sioyek.startupCommands` instead."
+        ];
+      }
+      (mkIf (prefsCfg != { }) {
+        xdg.configFile."sioyek/prefs_user.config".text = renderConfig prefsCfg;
       })
       (mkIf (cfg.bindings != { }) {
         xdg.configFile."sioyek/keys_user.config".text = renderConfig cfg.bindings;
