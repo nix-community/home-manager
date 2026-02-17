@@ -104,6 +104,7 @@ let
     "mergiraf"
     "micro"
     "mise"
+    "mistral-vibe"
     "mpv"
     "msmtp"
     "mu"
