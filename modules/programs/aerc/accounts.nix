@@ -215,14 +215,11 @@ in
 
         smtp =
           {
-            userName,
             smtp,
             passwordCommand,
             ...
           }@cfg:
           let
-            # Use SMTP-specific username if set, otherwise fall back to account username
-            smtpUser = if smtp.userName != null then smtp.userName else userName;
 
             loginMethod' = if cfg.aerc.smtpAuth != null then "+${cfg.aerc.smtpAuth}" else "";
 
