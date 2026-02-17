@@ -18,6 +18,11 @@
     config = {
       "dark_mode_background_color" = "0.0 0.0 0.0";
       "dark_mode_contrast" = "0.8";
+
+      startup_commands = [
+        "toggle_visual_scroll"
+        "toggle_dark_mode"
+      ];
     };
   };
 
