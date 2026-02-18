@@ -26,10 +26,10 @@ in
 
     configDir = mkOption {
       type = lib.types.str;
+      apply = p: lib.removePrefix "${config.home.homeDirectory}/" p;
       default = ".docker";
-      description = ''
-        Folder relative to the user's home directory where the Docker CLI settings should be stored.
-      '';
+      example = lib.literalExpression "\${config.xdg.configHome}/docker";
+      description = "Directory to store configuration and state. This also sets $DOCKER_CONFIG.";
     };
 
     contexts = mkOption {
