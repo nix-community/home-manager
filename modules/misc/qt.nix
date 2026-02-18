@@ -92,7 +92,6 @@ in
 {
   meta.maintainers = with lib.maintainers; [
     rycee
-    thiagokokada
   ];
 
   imports = [
