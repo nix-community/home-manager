@@ -22,7 +22,7 @@ with lib; let
   };
 in
 {
-  meta.maintainers = [ lib.maintainers.melihdarcanxyz ];
+  meta.maintainers = [ lib.hm.maintainers.melihdarcanxyz ];
 
   options.programs.harsh = {
     enable = mkEnableOption "harsh, a CLI habit tracker";
