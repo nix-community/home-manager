@@ -19,6 +19,7 @@
   opencode-skills-store-path = ./skills-store-path.nix;
   opencode-skills-directory = ./skills-directory.nix;
   opencode-skills-bulk-directory = ./skills-bulk-directory.nix;
+  opencode-skills-from-derivation = ./skills-from-derivation.nix;
   opencode-themes-inline = ./themes-inline.nix;
   opencode-themes-path = ./themes-path.nix;
   opencode-themes-bulk-directory = ./themes-bulk-directory.nix;

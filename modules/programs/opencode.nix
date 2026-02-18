@@ -457,6 +457,7 @@ in
       name: content:
       if
         (lib.isPath content && lib.pathIsDirectory content)
+        || (lib.isDerivation content)
         || (builtins.isString content && lib.hasPrefix builtins.storeDir content)
 
       then
