@@ -16,6 +16,23 @@ in
   options.services.colima = {
     enable = lib.mkEnableOption "Colima, a container runtime";
 
+    colimaHomeDir = lib.mkOption {
+      type = lib.types.str;
+      apply = p: lib.removePrefix "${config.home.homeDirectory}/" p;
+      default = ".colima";
+      example = lib.literalExpression "\${config.xdg.configHome}/colima";
+      description = "Directory to store colima configuration. This also sets $COLIMA_HOME.";
+    };
+
+    limaHomeDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      apply = p: if p != null then lib.removePrefix "${config.home.homeDirectory}/" p else p;
+      default = null;
+      defaultText = "Colima uses $COLIMA_HOME/_lima by default.";
+      example = lib.literalExpression "\${config.xdg.dataHome}/lima";
+      description = "Directory to store lima files. This also sets $LIMA_HOME.";
+    };
+
     package = lib.mkPackageOption pkgs "colima" { };
     dockerPackage = lib.mkPackageOption pkgs "docker" {
       extraDescription = "Used by colima to activate profiles. Not needed if no profile is set to isActive.";
@@ -99,10 +116,20 @@ in
                 '';
               };
 
+              setDockerHost = lib.mkOption {
+                type = lib.types.bool;
+                default = false;
+                example = true;
+                description = ''
+                  Set this context as $DOCKER_HOST.
+                  Exactly one or zero profiles should have this option set.
+                '';
+              };
+
               logFile = lib.mkOption {
                 type = lib.types.path;
-                default = "${config.home.homeDirectory}/.local/state/colima-${name}.log";
-                defaultText = lib.literalExpression "\${config.home.homeDirectory}/.local/state/colima-\${name}.log";
+                default = "${config.xdg.stateHome}/colima/${name}.log";
+                defaultText = lib.literalExpression "\${config.xdg.stateHome}/colima/\${name}.log";
                 description = "Combined stdout and stderr log file for the Colima service.";
               };
 
@@ -163,85 +190,73 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = (lib.count (p: p.isActive) (lib.attrValues cfg.profiles)) <= 1;
-        message = "Only one Colima profile can be active at a time.";
-      }
-    ];
+  config =
+    let
+      colimaHome = "${config.home.homeDirectory}/${cfg.colimaHomeDir}";
+      limaHome =
+        if cfg.limaHomeDir != null then "${config.home.homeDirectory}/${cfg.limaHomeDir}" else null;
+      dockerConfig =
+        if config.programs.docker-cli.enable then config.home.sessionVariables.DOCKER_CONFIG else null;
+      activeProfile = lib.findFirst (p: p.isActive) null (lib.attrValues cfg.profiles);
+      currentContext =
+        if activeProfile != null then
+          (if activeProfile.name == "default" then "colima" else "colima-${activeProfile.name}")
+        else
+          null;
+      dockerHostProfile = lib.findFirst (p: p.setDockerHost) null (lib.attrValues cfg.profiles);
+    in
+    lib.mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = (lib.count (p: p.isActive) (lib.attrValues cfg.profiles)) <= 1;
+          message = "Only one Colima profile can be active at a time.";
+        }
+      ];
 
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      home = {
+        packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file = lib.mkMerge (
-      lib.mapAttrsToList (profileName: profile: {
-        ".colima/${profileName}/colima.yaml" = {
-          source = yamlFormat.generate "colima.yaml" profile.settings;
+        file = lib.mkMerge (
+          lib.mapAttrsToList (profileName: profile: {
+            "${cfg.colimaHomeDir}/${profileName}/colima.yaml" = {
+              source = yamlFormat.generate "colima.yaml" profile.settings;
+            };
+          }) (lib.filterAttrs (name: profile: profile.settings != { }) cfg.profiles)
+        );
+
+        sessionVariables = {
+          COLIMA_HOME = colimaHome;
+        }
+        // lib.optionalAttrs (limaHome != null) {
+          LIMA_HOME = limaHome;
+        }
+        // lib.optionalAttrs (dockerHostProfile != null) {
+          DOCKER_HOST = "unix://${colimaHome}/${dockerHostProfile.name}/docker.sock";
         };
-      }) (lib.filterAttrs (name: profile: profile.settings != { }) cfg.profiles)
-    );
+      };
 
-    programs.docker-cli.settings.currentContext =
-      let
-        activeProfile = lib.findFirst (p: p.isActive) null (lib.attrValues cfg.profiles);
-      in
-      lib.mkIf (activeProfile != null) (
-        if activeProfile.name != "default" then "colima-${activeProfile.name}" else "colima"
-      );
+      programs.docker-cli.settings.currentContext = lib.mkIf (currentContext != null) currentContext;
 
-    launchd.agents = lib.mapAttrs' (
-      name: profile:
-      lib.nameValuePair "colima-${name}" {
-        enable = true;
-        config = {
-          ProgramArguments = [
-            "${lib.getExe cfg.package}"
-            "start"
-            name
-            "-f"
-            "--activate=${if profile.isActive then "true" else "false"}"
-            "--save-config=false"
-          ];
-          KeepAlive = {
-            SuccessfulExit = true;
-          };
-          RunAtLoad = true;
-          EnvironmentVariables.PATH = lib.makeBinPath [
-            cfg.package
-            cfg.perlPackage
-            cfg.dockerPackage
-            cfg.sshPackage
-            cfg.coreutilsPackage
-            cfg.curlPackage
-            cfg.bashPackage
-            pkgs.darwin.DarwinTools
-          ];
-          StandardOutPath = profile.logFile;
-          StandardErrorPath = profile.logFile;
-        };
-      }
-    ) (lib.filterAttrs (_: p: p.isService) cfg.profiles);
-
-    systemd.user.services = lib.mapAttrs' (
-      name: profile:
-      lib.nameValuePair "colima-${name}" {
-        Unit = {
-          Description = "Colima container runtime (${name} profile)";
-          After = [ "network-online.target" ];
-          Wants = [ "network-online.target" ];
-        };
-        Service = {
-          ExecStart = ''
-            ${lib.getExe cfg.package} start ${name} \
-              -f \
-              --activate=${if profile.isActive then "true" else "false"} \
-              --save-config=false
-          '';
-          Restart = "always";
-          RestartSec = 2;
-          Environment = [
-            "PATH=${
-              lib.makeBinPath [
+      launchd.agents = lib.mapAttrs' (
+        name: profile:
+        lib.nameValuePair "colima-${name}" {
+          enable = true;
+          config = {
+            ProgramArguments = [
+              "${lib.getExe cfg.package}"
+              "start"
+              name
+              "-f"
+              "--activate=${if profile.isActive then "true" else "false"}"
+              "--save-config=false"
+            ];
+            KeepAlive = {
+              SuccessfulExit = true;
+            };
+            RunAtLoad = true;
+            EnvironmentVariables = {
+              COLIMA_HOME = colimaHome;
+              PATH = lib.makeBinPath [
                 cfg.package
                 cfg.perlPackage
                 cfg.dockerPackage
@@ -249,16 +264,64 @@ in
                 cfg.coreutilsPackage
                 cfg.curlPackage
                 cfg.bashPackage
-              ]
-            }"
-          ];
-          StandardOutput = "append:${profile.logFile}";
-          StandardError = "append:${profile.logFile}";
-        };
-        Install = {
-          WantedBy = [ "default.target" ];
-        };
-      }
-    ) (lib.filterAttrs (_: p: p.isService) cfg.profiles);
-  };
+                pkgs.darwin.DarwinTools
+              ];
+            }
+            // lib.optionalAttrs (limaHome != null) {
+              LIMA_HOME = limaHome;
+            }
+            // lib.optionalAttrs (dockerConfig != null) {
+              DOCKER_CONFIG = dockerConfig;
+            }
+            // lib.optionalAttrs config.xdg.enable {
+              XDG_CACHE_HOME = config.xdg.cacheHome;
+            };
+            StandardOutPath = profile.logFile;
+            StandardErrorPath = profile.logFile;
+          };
+        }
+      ) (lib.filterAttrs (_: p: p.isService) cfg.profiles);
+
+      systemd.user.services = lib.mapAttrs' (
+        name: profile:
+        lib.nameValuePair "colima-${name}" {
+          Unit = {
+            Description = "Colima container runtime (${name} profile)";
+            After = [ "network-online.target" ];
+            Wants = [ "network-online.target" ];
+          };
+          Service = {
+            ExecStart = ''
+              ${lib.getExe cfg.package} start ${name} \
+                -f \
+                --activate=${if profile.isActive then "true" else "false"} \
+                --save-config=false
+            '';
+            Restart = "always";
+            RestartSec = 2;
+            Environment = [
+              "COLIMA_HOME=${colimaHome}"
+              "PATH=${
+                lib.makeBinPath [
+                  cfg.package
+                  cfg.perlPackage
+                  cfg.dockerPackage
+                  cfg.sshPackage
+                  cfg.coreutilsPackage
+                  cfg.curlPackage
+                  cfg.bashPackage
+                ]
+              }"
+            ]
+            ++ lib.optional (limaHome != null) "LIMA_HOME=${limaHome}"
+            ++ lib.optional (dockerConfig != null) "DOCKER_CONFIG=${dockerConfig}";
+            StandardOutput = "append:${profile.logFile}";
+            StandardError = "append:${profile.logFile}";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+        }
+      ) (lib.filterAttrs (_: p: p.isService) cfg.profiles);
+    };
 }
