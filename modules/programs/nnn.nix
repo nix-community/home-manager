@@ -49,7 +49,7 @@ let
   };
 in
 {
-  meta.maintainers = with lib.maintainers; [ thiagokokada ];
+  meta.maintainers = [ ];
 
   options = {
     programs.nnn = {
