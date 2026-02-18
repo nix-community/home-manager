@@ -59,6 +59,10 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
+    enableXonshIntegration = lib.mkEnableOption "Xonsh integration" // {
+      default = true;
+    };
+
     enableInteractive = mkOption {
       type = types.bool;
       default = true;
@@ -129,6 +133,11 @@ in
       if test $TERM != "dumb"
         eval $(${lib.getExe cfg.package} init ion)
       end
+    '';
+
+    programs.xonsh.xonshrc = mkIf cfg.enableXonshIntegration ''
+      if $TERM != "dumb":
+        execx($(${lib.getExe cfg.package} init xonsh))
     '';
 
     programs.nushell = mkIf cfg.enableNushellIntegration {
