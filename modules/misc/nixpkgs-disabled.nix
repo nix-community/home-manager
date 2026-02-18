@@ -59,7 +59,7 @@ let
 
 in
 {
-  meta.maintainers = with lib.maintainers; [ thiagokokada ];
+  meta.maintainers = [ ];
 
   options.nixpkgs = {
     config = lib.mkOption {
