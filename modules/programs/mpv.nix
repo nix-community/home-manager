@@ -67,7 +67,6 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [
-    thiagokokada
     chuangzhu
   ];
 
