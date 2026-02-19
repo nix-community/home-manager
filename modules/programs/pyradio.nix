@@ -67,6 +67,12 @@ in
               description = "Encoding of the station's metadata block.";
             };
 
+            iconUrl = mkOption {
+              type = str;
+              default = "";
+              description = "URL of an icon to be shown in desktop notifications.";
+            };
+
             volume = mkOption {
               type = ints.between 0 130;
               default = 50;
@@ -128,7 +134,7 @@ in
                   (escapeCSV station.name)
                   (escapeCSV station.url)
                   station.encoding
-                  ""
+                  (escapeCSV station.iconUrl)
                   ""
                   ""
                   ""

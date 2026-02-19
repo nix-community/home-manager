@@ -25,6 +25,7 @@
         url = "https://somafm.com/defcon256.pls";
         volume = 85;
         encoding = "utf-8";
+        iconUrl = "https://somafm.com/img3/defcon400.png";
       }
     ];
   };
