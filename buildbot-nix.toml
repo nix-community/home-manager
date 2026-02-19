@@ -1,3 +1,1 @@
 attribute = "buildbot"
-flake_dir = "./tests"
-lock_file = "./flake.lock"
