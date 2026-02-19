@@ -61,6 +61,12 @@ in
               description = "Stream URL of the radio station.";
             };
 
+            encoding = mkOption {
+              type = str;
+              default = "";
+              description = "Encoding of the station's metadata block.";
+            };
+
             volume = mkOption {
               type = ints.between 0 130;
               default = 50;
@@ -121,7 +127,7 @@ in
                 lib.concatStringsSep "," [
                   (escapeCSV station.name)
                   (escapeCSV station.url)
-                  ""
+                  station.encoding
                   ""
                   ""
                   ""
