@@ -19,7 +19,17 @@ in
     colimaHomeDir = lib.mkOption {
       type = lib.types.str;
       apply = p: lib.removePrefix "${config.home.homeDirectory}/" p;
-      default = ".colima";
+      default =
+        if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+          "${config.xdg.configHome}/colima"
+        else
+          ".colima";
+      defaultText = lib.literalExpression ''
+        if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+          "$XDG_CONFIG_HOME/colima"
+        else
+          ".colima"
+      '';
       example = lib.literalExpression "\${config.xdg.configHome}/colima";
       description = "Directory to store colima configuration. This also sets $COLIMA_HOME.";
     };
