@@ -14,6 +14,8 @@
 
   nmt.script = ''
     initLua="home-files/.config/nvim/init.lua"
-    assertPathNotExists "$initLua"
+    assertFileExists "$initLua"
+    assertFileContains "$initLua" "python3_host_prog="
+    assertFileContains "$initLua" "loaded_node_provider=0"
   '';
 }

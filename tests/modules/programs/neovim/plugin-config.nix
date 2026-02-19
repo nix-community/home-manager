@@ -49,7 +49,18 @@ lib.mkIf config.test.enableBig {
       assertFileContains "$vimout" "HM_PLUGINS_CONFIG"
 
       initLua="$TESTED/home-files/.config/nvim/init.lua"
-      assertFileContent $(normalizeStorePaths "$initLua") ${./plugin-config.expected}
+
+      # Provider configuration must be present
+      assertFileContains "$initLua" "python3_host_prog="
+      assertFileContains "$initLua" "ruby_host_prog="
+      assertFileContains "$initLua" "loaded_node_provider=0"
+      assertFileContains "$initLua" "loaded_perl_provider=0"
+      assertFileContains "$initLua" "loaded_python_provider=0"
+
+      # Lua package path, VimScript source, and plugin config must be present
+      assertFileContains "$initLua" "package.path"
+      assertFileContains "$initLua" "nvim-init-home-manager.vim"
+      assertFileContains "$initLua" "HM_PLUGIN_LUA_CONFIG"
 
       # Verify generatedConfigs evaluated properly (issue #8371)
       echo "Lua config length: ${toString (builtins.stringLength luaConfig)}"

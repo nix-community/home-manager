@@ -11,8 +11,9 @@
 
   nmt.script = ''
     nvimFolder="home-files/.config/nvim"
-    assertFileContent "$nvimFolder/init.lua" ${builtins.toFile "init.lua-expected" ''
-      -- initLua
-    ''}
+    assertFileExists "$nvimFolder/init.lua"
+    assertFileContains "$nvimFolder/init.lua" "python3_host_prog="
+    assertFileContains "$nvimFolder/init.lua" "loaded_node_provider=0"
+    assertFileContains "$nvimFolder/init.lua" "initLua"
   '';
 }

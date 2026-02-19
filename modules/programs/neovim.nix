@@ -502,6 +502,32 @@ in
         in
 
         lib.mkMerge [
+          # Inject provider configuration (python3_host_prog, loaded_*_provider,
+          # etc.) before any plugin initialization. The nixpkgs neovim wrapper
+          # embeds providerLuaRc in rcContent, but that is only loaded when
+          # wrapRc = true. Since home-manager uses wrapRc = false, we must set
+          # provider globals explicitly. We cannot reuse the wrapper's
+          # providerLuaRc string because it contains `placeholder "out"` which
+          # would resolve to the init.lua derivation rather than the neovim
+          # package.
+          (
+            let
+              providerTable = {
+                node = cfg.withNodeJs || cfg.coc.enable;
+                python = false;
+                python3 = cfg.withPython3;
+                ruby = if cfg.withRuby == null then false else cfg.withRuby;
+                perl = cfg.withPerl;
+              };
+              mkEntry =
+                prog: enabled:
+                if enabled then
+                  "vim.g.${prog}_host_prog='${wrappedNeovim'}/bin/nvim-${prog}'"
+                else
+                  "vim.g.loaded_${prog}_provider=0";
+            in
+            lib.mkOrder 50 (lib.concatStringsSep "\n" (lib.mapAttrsToList mkEntry providerTable))
+          )
           (lib.mkIf (resolvedExtraLuaPackages != [ ]) (
             lib.mkOrder 100 ''
               package.path = "${generatedLuaPath}".. ";" .. package.path
