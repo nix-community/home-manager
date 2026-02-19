@@ -41,7 +41,11 @@ instead of <code class="literal">true</code>.</p></li><li class="listitem"><p>Th
 form <code class="literal">XDG_&lt;name&gt;_DIR</code>, they should be now be just the name. For example, if
 you had the key <code class="literal">XDG_DESKTOP_DIR</code> before, you should now use the key
 <code class="literal">DESKTOP</code>. Home Manager 26.05 introduced a warning when the <code class="literal">XDG_&lt;name&gt;_DIR</code>
-form is used.</p></li></ul></div>
+form is used.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.man.package"  ><code class="option">programs.man.package</code></a> option now defaults to <code class="literal">null</code> on
+Darwin because the GNU <code class="literal">man</code> from nixpkgs ships <code class="literal">apropos</code>/<code class="literal">man -k</code>
+and <code class="literal">whatis</code>/<code class="literal">man -f</code> binaries that don’t work on Darwin. Nix-installed
+manual pages still work with macOS’s built-in <code class="literal">man</code> via
+<a class="xref" href="options.xhtml#opt-home.extraOutputsToInstall"  ><code class="option">home.extraOutputsToInstall</code></a>.</p></li></ul></div>
 </div>
 
 </div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11" class="title" >Release 25.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-25.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-25.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 25.11 release branch became stable in November, 2025.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11-highlights" class="title" style="clear: both">Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Updating the <code class="literal">home-manager</code> Nix profile inside the activation script
