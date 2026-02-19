@@ -1221,8 +1221,8 @@ $ nix run .#tests -- alacritty -- --verbose
 through</p><pre><code class="programlisting  shell">$ nix-build --pure tests --option allow-import-from-derivation false -A build.alacritty-empty-settings
 </code></pre><p>However, those invocations will impurely source the system’s Nixpkgs,
 and may cause failures. To run against the Nixpkgs from the <code class="literal">flake.lock</code> file,
-use instead e.g.</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-all
-</code></pre><p>or</p><pre><code class="programlisting  shell">$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-alacritty-empty-settings
+use instead e.g.</p><pre><code class="programlisting  shell">$ nix build --option allow-import-from-derivation false .#test-all
+</code></pre><p>or</p><pre><code class="programlisting  shell">$ nix build --option allow-import-from-derivation false .#test-alacritty-empty-settings
 </code></pre><p>Some tests may be marked with <code class="literal">enableLegacyIfd</code>, those may be run by run with e.g.</p><pre><code class="programlisting  shell">$ nix-build --pure tests --arg enableLegacyIfd true -A build.mytest
 </code></pre>
 </div>
