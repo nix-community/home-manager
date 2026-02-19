@@ -34,11 +34,19 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+  config =
+    let
+      configFile =
+        if config.xdg.enable && config.home.preferXdgDirectories then
+          "${config.xdg.configHome}/rizin/rizinrc"
+        else
+          ".rizinrc";
+    in
+    lib.mkIf cfg.enable {
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."rizin/rizinrc" = lib.mkIf (cfg.extraConfig != "") {
-      text = cfg.extraConfig;
+      home.file.${configFile} = lib.mkIf (cfg.extraConfig != "") {
+        text = cfg.extraConfig;
+      };
     };
-  };
 }

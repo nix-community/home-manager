@@ -8,6 +8,6 @@
   };
 
   nmt.script = ''
-    assertFileExists "home-files/.config/rizin/rizinrc"
+    assertFileExists "home-files/.rizinrc"
   '';
 }
