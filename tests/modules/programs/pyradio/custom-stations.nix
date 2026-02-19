@@ -24,6 +24,7 @@
         name = "DEF CON Radio (SomaFM)";
         url = "https://somafm.com/defcon256.pls";
         volume = 85;
+        encoding = "utf-8";
       }
     ];
   };
