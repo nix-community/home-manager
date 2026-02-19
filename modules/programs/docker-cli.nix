@@ -27,7 +27,17 @@ in
     configDir = mkOption {
       type = lib.types.str;
       apply = p: lib.removePrefix "${config.home.homeDirectory}/" p;
-      default = ".docker";
+      default =
+        if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+          "${config.xdg.configHome}/docker"
+        else
+          ".docker";
+      defaultText = lib.literalExpression ''
+        if config.xdg.enable && lib.versionAtLeast config.home.stateVersion "26.05" then
+          "$XDG_CONFIG_HOME/docker"
+        else
+          ".docker"
+      '';
       example = lib.literalExpression "\${config.xdg.configHome}/docker";
       description = "Directory to store configuration and state. This also sets $DOCKER_CONFIG.";
     };
