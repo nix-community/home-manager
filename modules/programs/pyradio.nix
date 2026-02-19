@@ -117,7 +117,17 @@ in
             stations:
             let
               body = lib.concatMapStringsSep "\n" (
-                station: "${escapeCSV station.name},${escapeCSV station.url},,,,,,${toString station.volume}"
+                station:
+                lib.concatStringsSep "," [
+                  (escapeCSV station.name)
+                  (escapeCSV station.url)
+                  ""
+                  ""
+                  ""
+                  ""
+                  ""
+                  (toString station.volume)
+                ]
               ) stations;
             in
             "${body}\n";
