@@ -3,7 +3,7 @@ WantedBy=default.target
 
 [Service]
 Environment=COLIMA_HOME=/home/hm-user/.colima
-Environment=PATH=@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin
+Environment=PATH=@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin:@kubectl@/bin
 ExecStart=@colima@/bin/colima start default \
   -f \
   --activate=true \
