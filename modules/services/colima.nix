@@ -62,6 +62,9 @@ in
     bashPackage = lib.mkPackageOption pkgs "bashNonInteractive" {
       extraDescription = "Used by colima's internal scripts.";
     };
+    kubectlPackage = lib.mkPackageOption pkgs "kubectl" {
+      extraDescription = "Used by colima when kubernetes is enabled in the profile.";
+    };
 
     profiles = lib.mkOption {
       default = {
@@ -285,6 +288,7 @@ in
                 cfg.coreutilsPackage
                 cfg.curlPackage
                 cfg.bashPackage
+                cfg.kubectlPackage
                 pkgs.darwin.DarwinTools
               ];
             }
@@ -331,6 +335,7 @@ in
                   cfg.coreutilsPackage
                   cfg.curlPackage
                   cfg.bashPackage
+                  cfg.kubectlPackage
                 ]
               }"
             ]
