@@ -356,7 +356,11 @@ in
     profiles = mkOption {
       type = types.attrsOf (
         types.submodule (
-          { config, name, ... }:
+          {
+            config,
+            name,
+            ...
+          }:
           let
             profilePath = modulePath ++ [
               "profiles"
@@ -882,7 +886,10 @@ in
                 ]
               ) config.extensions.packages)
               ++ (builtins.concatMap (
-                { name, value }:
+                {
+                  name,
+                  value,
+                }:
                 let
                   packages = builtins.filter (pkg: (pkg.addonId or pkg.name) == name) config.extensions.packages;
                 in
@@ -982,7 +989,6 @@ in
         '';
       targets.darwin.defaults = (
         mkIf (cfg.darwinDefaultsId != null && isDarwin) {
-
           ${cfg.darwinDefaultsId} = {
             EnterprisePoliciesEnabled = true;
           }
@@ -1047,19 +1053,6 @@ in
                 force = profile.search.force;
                 source = profile.search.file;
               };
-
-              "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
-                source =
-                  let
-                    extensionsEnvPkg = pkgs.buildEnv {
-                      name = "hm-firefox-extensions";
-                      paths = profile.extensions.packages;
-                    };
-                  in
-                  "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
-                recursive = true;
-                force = true;
-              };
             }
 
             (mkMerge (
@@ -1085,15 +1078,34 @@ in
         NoDefaultBookmarks = lib.mkIf (builtins.any (profile: profile.bookmarks.enable) (
           builtins.attrValues cfg.profiles
         )) false;
-        ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
-          lib.listToAttrs (
-            map (
-              lang:
-              lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
-                installation_mode = "normal_installed";
-                install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
-              }
-            ) cfg.languagePacks
+        ExtensionSettings = mkMerge (
+          [
+            (lib.mkIf (cfg.languagePacks != [ ]) (
+              lib.listToAttrs (
+                map (
+                  lang:
+                  lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
+                    installation_mode = "normal_installed";
+                    install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
+                  }
+                ) cfg.languagePacks
+              )
+            ))
+          ]
+          ++ lib.flip mapAttrsToList cfg.profiles (
+            _: profile:
+            lib.listToAttrs (
+              map (
+                pkg:
+                if pkg ? addonId then
+                  lib.nameValuePair pkg.addonId {
+                    installation_mode = "force_installed";
+                    install_url = "file://${pkg.outPath}/share/mozilla/${extensionPath}/${pkg.addonId}.xpi";
+                  }
+                else
+                  { }
+              ) profile.extensions.packages
+            )
           )
         );
       };
