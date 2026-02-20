@@ -58,8 +58,18 @@ in
         default = {
           isActive = true;
           isService = true;
+          setDockerHost = lib.versionAtLeast config.home.stateVersion "26.05";
         };
       };
+      defaultText = lib.literalExpression ''
+        {
+          default = {
+            isActive = true;
+            isService = true;
+            setDockerHost = lib.versionAtLeast config.home.stateVersion "26.05";
+          };
+        };
+      '';
       description = ''
         Profiles allow multiple colima configurations. The default profile is active by default.
         If you have used colima before, you may need to delete existing configuration using `colima delete` or use a different profile.
@@ -72,6 +82,7 @@ in
           default = {
             isActive = true;
             isService = true;
+            setDockerHost = true;
           };
           rosetta = {
             isService = true;
