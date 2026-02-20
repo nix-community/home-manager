@@ -13,6 +13,6 @@
   };
 
   test.asserts.assertions.expected = [
-    ''The programs.mpv "package" option is mutually exclusive with "scripts" option.''
+    ''The programs.mpv "package" option is mutually exclusive with "scripts", "extraMakeWrapperArgs" options.''
   ];
 }

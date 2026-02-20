@@ -64,10 +64,14 @@ let
 
   wrapperRequiresOverride = lib.any (v: v != [ ]) [
     cfg.scripts
+    cfg.extraMakeWrapperArgs
   ];
 
   mpvPackage =
-    if wrapperRequiresOverride then pkgs.mpv.override { inherit (cfg) scripts; } else cfg.package;
+    if wrapperRequiresOverride then
+      pkgs.mpv.override { inherit (cfg) scripts extraMakeWrapperArgs; }
+    else
+      cfg.package;
 
 in
 {
@@ -96,6 +100,22 @@ in
         type = with types; listOf package;
         default = [ ];
         example = literalExpression "[ pkgs.mpvScripts.mpris ]";
+        description = ''
+          List of scripts to use with mpv.
+        '';
+      };
+
+      extraMakeWrapperArgs = mkOption {
+        type = with types; listOf str;
+        default = [ ];
+        example = literalExpression ''
+          [
+            "--prefix"
+            "LD_LIBRARY_PATH"
+            ":"
+            (lib.makeLibraryPath [ pkgs.libaacs pkgs.libbluray ])
+          ]
+        '';
         description = ''
           List of scripts to use with mpv.
         '';
@@ -224,7 +244,7 @@ in
         assertions = [
           {
             assertion = wrapperRequiresOverride -> (cfg.package == options.programs.mpv.package.default);
-            message = ''The programs.mpv "package" option is mutually exclusive with "scripts" option.'';
+            message = ''The programs.mpv "package" option is mutually exclusive with "scripts", "extraMakeWrapperArgs" options.'';
           }
         ];
       }
