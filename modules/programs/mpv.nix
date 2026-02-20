@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  options,
   ...
 }:
 let
@@ -61,8 +62,12 @@ let
 
   renderDefaultProfiles = profiles: renderOptions { profile = lib.concatStringsSep "," profiles; };
 
+  wrapperRequiresOverride = lib.any (v: v != [ ]) [
+    cfg.scripts
+  ];
+
   mpvPackage =
-    if cfg.scripts == [ ] then cfg.package else pkgs.mpv.override { inherit (cfg) scripts; };
+    if wrapperRequiresOverride then pkgs.mpv.override { inherit (cfg) scripts; } else cfg.package;
 
 in
 {
@@ -218,13 +223,13 @@ in
       {
         assertions = [
           {
-            assertion = (cfg.scripts == [ ]) || (cfg.package == pkgs.mpv);
+            assertion = wrapperRequiresOverride -> (cfg.package == options.programs.mpv.package.default);
             message = ''The programs.mpv "package" option is mutually exclusive with "scripts" option.'';
           }
         ];
       }
       {
-        home.packages = [ mpvPackage ];
+        home.packages = [ config.programs.mpv.finalPackage ];
         programs.mpv.finalPackage = mpvPackage;
       }
 
