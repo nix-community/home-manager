@@ -114,6 +114,34 @@ h4 {
     margin: 0.5rem 0.25rem;
 }
 
+// Permalink anchor shown on heading hover.
+.anchor-link {
+    opacity: 0;
+    font-size: 0.65em;
+    margin-left: 0.3em;
+    text-decoration: none;
+    color: $color-gray-400;
+    transition: opacity 0.15s ease-in-out;
+    vertical-align: middle;
+
+    @media (prefers-color-scheme: dark) {
+        color: $color-gray-500;
+    }
+}
+
+h1:hover .anchor-link,
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link {
+    opacity: 1;
+}
+
+// Never show anchors on note/warning icon headings.
+div.note .anchor-link,
+div.warning .anchor-link {
+    display: none;
+}
+
 p {
     @include margined;
 }
