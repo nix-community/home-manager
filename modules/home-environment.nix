@@ -540,6 +540,10 @@ in
       '';
     };
 
+    home.forceNixProfiles = lib.mkEnableOption ''
+      forcing home-manager to use `nix profile` instead of
+      `nix-env` for activating the environment'';
+
     home.enableNixpkgsReleaseCheck = mkOption {
       type = types.bool;
       default = true;
@@ -715,7 +719,9 @@ in
             run $oldNix profile install $1
           }
 
-          if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
+          if [[ ${
+            if cfg.forceNixProfiles then "true" else "false"
+          } = true || -e ${cfg.profileDirectory}/manifest.json ]] ; then
             INSTALL_CMD="nix profile install"
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
             LIST_CMD="nix profile list"
