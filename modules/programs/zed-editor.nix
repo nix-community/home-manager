@@ -246,8 +246,8 @@ in
 
     home.file = mkIf (cfg.installRemoteServer && (cfg.package ? remote_server)) (
       let
-        inherit (cfg.package) version remote_server;
-        binaryName = "zed-remote-server-stable-${version}";
+        inherit (cfg.package) remote_server;
+        binaryName = cfg.package.remoteServerExecutableName;
       in
       {
         ".zed_server/${binaryName}".source = lib.getExe' remote_server binaryName;
