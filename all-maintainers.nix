@@ -2037,6 +2037,13 @@
     name = "Mohammad Rafiq";
     source = "nixpkgs";
   };
+  rsahwe = {
+    email = "rsahwe@gmx.net";
+    github = "rsahwe";
+    githubId = 201613730;
+    name = "rsahwe";
+    source = "home-manager";
+  };
   rszamszur = {
     email = "radoslawszamszur@gmail.com";
     github = "rszamszur";
