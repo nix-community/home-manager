@@ -28,7 +28,6 @@ in
       example = lib.literalExpression ''
         {
           active_model = "devstral-latest";
-          vim_keybindings = false;
           tool_paths = [];
 
           providers = [
