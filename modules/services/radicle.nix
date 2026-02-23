@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  options,
   ...
 }:
 let
@@ -183,6 +182,7 @@ in
                 ];
               }
             ];
+            Install.WantedBy = mkIf (!cfg.node.lazy.enable) [ "default.target" ];
           };
         "radicle-node-proxy" = mkIf cfg.node.lazy.enable {
           Unit = {
