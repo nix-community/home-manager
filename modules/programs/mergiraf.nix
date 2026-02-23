@@ -12,7 +12,6 @@ let
     maintainers
     ;
   cfg = config.programs.mergiraf;
-  mergiraf = "${cfg.package}/bin/mergiraf";
 in
 {
   meta.maintainers = [ maintainers.bobvanderlinden ];
@@ -36,14 +35,27 @@ in
             merge = {
               mergiraf = {
                 name = "mergiraf";
-                driver = "${mergiraf} merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+                driver = "${lib.getExe cfg.package} merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
               };
               conflictStyle = "diff3";
             };
           };
         };
 
-        jujutsu.settings.ui.merge-editor = "mergiraf";
+        jujutsu = {
+          settings = {
+            ui = {
+              # Rely on the built-in configuration
+              merge-editor = "mergiraf";
+            };
+            # Explicitly set the path to the package
+            merge-tools = {
+              mergiraf = {
+                program = lib.getExe cfg.package;
+              };
+            };
+          };
+        };
       };
     })
   ];
