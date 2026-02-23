@@ -20,6 +20,7 @@ in
   options = {
     programs.mergiraf = {
       enable = mkEnableOption "mergiraf";
+
       package = mkPackageOption pkgs "mergiraf" { };
     };
   };
