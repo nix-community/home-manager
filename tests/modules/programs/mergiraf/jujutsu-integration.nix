@@ -20,7 +20,10 @@ in
     enable = true;
     package = config.lib.test.mkStubPackage { };
   };
-  programs.mergiraf.enable = true;
+  programs.mergiraf = {
+    enable = true;
+    enableJujutsuIntegration = true;
+  };
 
   nmt.script = ''
     assertFileExists 'home-files/${configDir}/jj/config.toml'
