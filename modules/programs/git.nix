@@ -402,7 +402,7 @@ in
               lib.nameValuePair "sendemail.${name}" (
                 if account.msmtp.enable then
                   {
-                    sendmailCmd = "${pkgs.msmtp}/bin/msmtp";
+                    sendmailCmd = lib.getExe config.programs.msmtp.package;
                     envelopeSender = "auto";
                     from = "${realName} <${address}>";
                   }

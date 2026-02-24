@@ -92,7 +92,6 @@ in
 {
   meta.maintainers = with lib.maintainers; [
     rycee
-    thiagokokada
   ];
 
   imports = [
@@ -302,7 +301,7 @@ in
               Appearance = {
                 style = "kvantum";
                 icon_theme = "Papirus-Dark";
-                standar_dialogs = "xdgdesktopportal";
+                standard_dialogs = "xdgdesktopportal";
               };
               Fonts = {
                 fixed = "\"DejaVuSansM Nerd Font Mono,12\"";

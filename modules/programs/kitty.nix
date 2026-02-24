@@ -168,8 +168,50 @@ in
         in `kitty-themes`, without the `.conf` suffix. See
         <https://github.com/kovidgoyal/kitty-themes/tree/master/themes> for a
         list of themes.
+
+        Note that if any automatic themes are configured via
+        `programs.kitty.autoThemeFiles`, Kitty will prefer them based on the
+        OS color scheme and they will override other color and background image
+        settings.
       '';
       example = "SpaceGray_Eighties";
+    };
+
+    autoThemeFiles = mkOption {
+      type = types.nullOr (
+        types.submodule {
+          options = {
+            light = mkOption {
+              type = types.str;
+              description = "Theme name for light color scheme.";
+            };
+            dark = mkOption {
+              type = types.str;
+              description = "Theme name for dark color scheme.";
+            };
+            noPreference = mkOption {
+              type = types.str;
+              description = "Theme name for no-preference color scheme.";
+            };
+          };
+        }
+      );
+      default = null;
+      description = ''
+        Configure Kitty automatic color themes. This creates
+        {file}`$XDG_CONFIG_HOME/kitty/light-theme.auto.conf`,
+        {file}`$XDG_CONFIG_HOME/kitty/dark-theme.auto.conf`, and
+        {file}`$XDG_CONFIG_HOME/kitty/no-preference-theme.auto.conf`.
+        Kitty applies these based on the OS color scheme, and they override
+        other color and background image settings.
+      '';
+      example = literalExpression ''
+        {
+          light = "GitHub";
+          dark = "TokyoNight";
+          noPreference = "OneDark";
+        }
+      '';
     };
 
     font = mkOption {
@@ -358,15 +400,35 @@ in
       '';
     };
 
-    home.activation.checkKittyTheme = mkIf (cfg.themeFile != null) (
+    xdg.configFile."kitty/light-theme.auto.conf" = mkIf (cfg.autoThemeFiles != null) {
+      text = "include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.autoThemeFiles.light}.conf\n";
+    };
+
+    xdg.configFile."kitty/dark-theme.auto.conf" = mkIf (cfg.autoThemeFiles != null) {
+      text = "include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.autoThemeFiles.dark}.conf\n";
+    };
+
+    xdg.configFile."kitty/no-preference-theme.auto.conf" = mkIf (cfg.autoThemeFiles != null) {
+      text = "include ${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.autoThemeFiles.noPreference}.conf\n";
+    };
+
+    home.activation.checkKittyTheme = mkIf (cfg.themeFile != null || cfg.autoThemeFiles != null) (
       let
-        themePath = "${pkgs.kitty-themes}/share/kitty-themes/themes/${cfg.themeFile}.conf";
+        themePath = name: "${pkgs.kitty-themes}/share/kitty-themes/themes/${name}.conf";
+        checkThemeFile = name: ''
+          if [[ ! -f "${themePath name}" ]]; then
+            errorEcho "kitty-themes does not contain the theme file ${themePath name}!"
+            exit 1
+          fi
+        '';
       in
       lib.hm.dag.entryBefore [ "writeBoundary" ] ''
-        if [[ ! -f "${themePath}" ]]; then
-          errorEcho "kitty-themes does not contain the theme file ${themePath}!"
-          exit 1
-        fi
+        ${lib.optionalString (cfg.themeFile != null) (checkThemeFile cfg.themeFile)}
+        ${lib.optionalString (cfg.autoThemeFiles != null) ''
+          ${checkThemeFile cfg.autoThemeFiles.light}
+          ${checkThemeFile cfg.autoThemeFiles.dark}
+          ${checkThemeFile cfg.autoThemeFiles.noPreference}
+        ''}
       ''
     );
 

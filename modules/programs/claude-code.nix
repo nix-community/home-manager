@@ -298,14 +298,14 @@ in
       default = { };
       description = ''
         Custom skills for Claude Code.
-        The attribute name becomes the skill filename or directory name, and the value is either:
-        - Inline content as a string (creates .claude/skills/<name>.md)
-        - A path to a file (creates .claude/skills/<name>.md)
+        The attribute name becomes the skill directory name, and the value is either:
+        - Inline content as a string (creates .claude/skills/<name>/SKILL.md)
+        - A path to a file (creates .claude/skills/<name>/SKILL.md)
         - A path to a directory (creates .claude/skills/<name>/ with all files)
       '';
       example = lib.literalExpression ''
         {
-          xlsx = ./skills/xlsx.md;
+          xlsx = ./skills/xlsx/SKILL.md;
           data-analysis = ./skills/data-analysis;
           pdf-processing = '''
             ---
@@ -334,8 +334,9 @@ in
       type = lib.types.nullOr lib.types.path;
       default = null;
       description = ''
-        Path to a directory containing skill files for Claude Code.
-        Skill files from this directory will be symlinked to .claude/skills/.
+        Path to a directory containing skill directories for Claude Code.
+        Each skill directory should contain a SKILL.md entrypoint file.
+        Skill directories from this path will be symlinked to .claude/skills/.
       '';
       example = lib.literalExpression "./skills";
     };
@@ -516,7 +517,7 @@ in
             recursive = true;
           }
         else
-          lib.nameValuePair ".claude/skills/${name}.md" (
+          lib.nameValuePair ".claude/skills/${name}/SKILL.md" (
             if lib.isPath content then { source = content; } else { text = content; }
           )
       ) cfg.skills;

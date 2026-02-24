@@ -67,7 +67,6 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [
-    thiagokokada
     chuangzhu
   ];
 
@@ -139,11 +138,14 @@ in
         default = [ ];
         example = literalExpression ''
           [
-            "~/path/to/config.inc";
-            "~/path/to/conditional.inc";
+            "~/path/to/config.inc"
+            "~~/conditional.inc"
           ]
         '';
-        description = "List of configuration files to include at the end of mpv.conf.";
+        description = ''
+          List of configuration files to include at the end of mpv.conf.
+          Mpv accepts several useful [prefixes](https://mpv.io/manual/stable/#paths).
+        '';
       };
 
       profiles = mkOption {

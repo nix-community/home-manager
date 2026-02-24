@@ -397,6 +397,20 @@ let
     echo "end"
     echo "setup_hm_session_vars") > $out/${sessionVarsFile}
   '';
+  sourceHandlersStr =
+    let
+      handlerAttrs = [
+        "onJobExit"
+        "onProcessExit"
+        "onVariable"
+        "onSignal"
+        "onEvent"
+      ];
+      isHandler = name: def: isAttrs def && builtins.any (attr: builtins.hasAttr attr def) handlerAttrs;
+      handlerFunctions = lib.filterAttrs isHandler cfg.functions;
+      sourceFunction = name: def: "source ${config.xdg.configHome}/fish/functions/${name}.fish";
+    in
+    builtins.concatStringsSep "\n" (lib.mapAttrsToList sourceFunction handlerFunctions);
 
 in
 {
@@ -725,6 +739,9 @@ in
           set -g __fish_home_manager_config_sourced 1
 
           source ${cfg.sessionVariablesPackage}/${sessionVarsFile}
+
+          # Source handler functions
+          ${sourceHandlersStr}
 
           ${cfg.shellInit}
 

@@ -43,6 +43,7 @@ stdenv.mkDerivation {
     cp ${./options.html} out/options.html
 
     cp ${./static/style.css} out/style.css
+    cp ${./static/anchor-links.js} out/anchor-links.js
 
     cp -r ${./release-notes} release-notes
 
@@ -52,6 +53,7 @@ stdenv.mkDerivation {
       --stylesheet style.css \
       --script highlightjs/highlight.pack.js \
       --script highlightjs/loader.js \
+      --script anchor-links.js \
       --toc-depth 1 \
       --section-toc-depth 1 \
       manual.md \

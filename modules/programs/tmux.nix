@@ -92,7 +92,7 @@ let
         # rebind main key: ${prefix}
         unbind ${defaultPrefix}
         set -g prefix ${prefix}
-        bind -n -N "Send the prefix key through to the application" \
+        bind -N "Send the prefix key through to the application" \
           ${prefix} send-prefix
       ''
     }

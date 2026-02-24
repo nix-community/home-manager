@@ -259,6 +259,10 @@ in
               AfterInitialDemand = mkOption {
                 type = types.nullOr types.bool;
                 default = null;
+                description = ''
+                  Whether to defer evaluating other `KeepAlive` conditions until
+                  the job has been started at least once by demand.
+                '';
               };
 
             };

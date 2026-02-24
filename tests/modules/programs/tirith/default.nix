@@ -1,0 +1,3 @@
+{
+  tirith-basic = ./basic.nix;
+}

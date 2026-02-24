@@ -478,7 +478,10 @@ in
         }
 
         {
-          home.packages = [ cfg.package ] ++ lib.optional cfg.enableCompletion pkgs.nix-zsh-completions;
+          home.packages = [
+            cfg.package
+          ]
+          ++ lib.optional cfg.enableCompletion (lib.lowPrio pkgs.nix-zsh-completions);
 
           # NOTE: Always include "main" highlighter with normal priority.
           # Option default priority will cause `main` to get dropped by customization.

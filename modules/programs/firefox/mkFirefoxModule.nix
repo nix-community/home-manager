@@ -5,7 +5,6 @@
   wrappedPackageName ? null,
   unwrappedPackageName ? null,
   platforms,
-  visible ? false,
   enableBookmarks ? true,
 }:
 {
@@ -209,12 +208,10 @@ in
       example = true;
       description = ''
         Whether to enable ${appName}.${optionalString (description != null) " ${description}"}
-        ${optionalString (!visible) "See `${moduleName}` for more configuration options."}
       '';
     };
 
     package = mkOption {
-      inherit visible;
       type = with types; nullOr package;
       default = pkgs.${defaultPackageName};
       defaultText = literalExpression "pkgs.${packageName}";
@@ -317,7 +314,6 @@ in
     };
 
     nativeMessagingHosts = mkOption {
-      inherit visible;
       type = types.listOf types.package;
       default = [ ];
       description = ''
@@ -327,14 +323,12 @@ in
     };
 
     finalPackage = mkOption {
-      inherit visible;
       type = with types; nullOr package;
       readOnly = true;
       description = "Resulting ${appName} package.";
     };
 
     policies = lib.optionalAttrs (wrappedPackageName != null) (mkOption {
-      inherit visible;
       type = types.attrsOf jsonFormat.type;
       default = { };
       description = "[See list of policies](https://mozilla.github.io/policy-templates/).";
@@ -360,7 +354,6 @@ in
     };
 
     profiles = mkOption {
-      inherit visible;
       type = types.attrsOf (
         types.submodule (
           { config, name, ... }:
@@ -553,6 +546,25 @@ in
                 );
                 default = { };
                 description = "Declarative search engine configuration.";
+              };
+
+              handlers = mkOption {
+                type = types.submodule (
+                  args:
+                  import ./profiles/handlers.nix {
+                    inherit (args) config;
+                    inherit lib pkgs appName;
+                    package = cfg.finalPackage;
+                    modulePath = modulePath ++ [
+                      "profiles"
+                      name
+                      "handlers"
+                    ];
+                    profilePath = config.path;
+                  }
+                );
+                default = { };
+                description = "Declarative handlers configuration for MIME types and URL schemes.";
               };
 
               containersForce = mkOption {
@@ -913,7 +925,6 @@ in
     };
 
     enableGnomeExtensions = mkOption {
-      inherit visible;
       type = types.bool;
       default = false;
       description = ''
@@ -1054,6 +1065,11 @@ in
                 enable = profile.search.enable;
                 force = profile.search.force;
                 source = profile.search.file;
+              };
+
+              "${cfg.profilesPath}/${profile.path}/handlers.json" = mkIf (profile.handlers.enable) {
+                source = profile.handlers.configFile;
+                force = profile.handlers.force;
               };
 
               "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {

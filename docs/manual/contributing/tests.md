@@ -217,13 +217,13 @@ and may cause failures. To run against the Nixpkgs from the `flake.lock` file,
 use instead e.g.
 
 ``` shell
-$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-all
+$ nix build --option allow-import-from-derivation false .#test-all
 ```
 
 or
 
 ``` shell
-$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-alacritty-empty-settings
+$ nix build --option allow-import-from-derivation false .#test-alacritty-empty-settings
 ```
 
 Some tests may be marked with `enableLegacyIfd`, those may be run by run with e.g.

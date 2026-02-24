@@ -50,7 +50,7 @@
     source = "nixpkgs";
   };
   ALameLlama = {
-    email = "NicholasACiechanowski@gmail.com";
+    email = "nicholas@ciech.anow.ski";
     github = "ALameLlama";
     githubId = 55490546;
     name = "Nicholas Ciechanowski";
@@ -1551,6 +1551,18 @@
     name = "mainrs";
     source = "home-manager";
   };
+  malikwirin = {
+    email = "abdelmalik.najhi@stud.hs-kempten.de";
+    github = "malikwirin";
+    githubId = 117918464;
+    keys = [
+      {
+        fingerprint = "B5ED 595C 8C7E 133C 6B68  63C8 CFEF 1E35 0351 F72D";
+      }
+    ];
+    name = "Malik";
+    source = "nixpkgs";
+  };
   malte-v = {
     email = "nixpkgs@mal.tc";
     github = "malte-v";
@@ -1827,13 +1839,6 @@
     name = "Judson Lester";
     source = "nixpkgs";
   };
-  offlinehacker = {
-    email = "jaka@x-truder.net";
-    github = "offlinehacker";
-    githubId = 585547;
-    name = "Jaka Hudoklin";
-    source = "nixpkgs";
-  };
   olmokramer = {
     email = "olmokramer@users.noreply.github.com";
     github = "olmokramer";
@@ -2031,6 +2036,13 @@
     githubId = 20300874;
     name = "Mohammad Rafiq";
     source = "nixpkgs";
+  };
+  rsahwe = {
+    email = "rsahwe@gmx.net";
+    github = "rsahwe";
+    githubId = 201613730;
+    name = "rsahwe";
+    source = "home-manager";
   };
   rszamszur = {
     email = "radoslawszamszur@gmail.com";

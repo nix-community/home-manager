@@ -1,5 +1,8 @@
 { config, ... }:
 
+let
+  executableName = "zed-remote-server-stable-57+stable";
+in
 {
   programs.zed-editor = {
     enable = true;
@@ -7,14 +10,15 @@
       remote_server = config.lib.test.mkStubPackage {
         buildScript = ''
           mkdir -p $out/bin
-          touch $out/bin/zed-remote-server-stable-57
+          touch $out/bin/${executableName}
         '';
       };
+      remoteServerExecutableName = executableName;
     };
     installRemoteServer = true;
   };
 
   nmt.script = ''
-    assertFileExists "home-files/.zed_server/zed-remote-server-stable-57"
+    assertFileExists "home-files/.zed_server/${executableName}"
   '';
 }
