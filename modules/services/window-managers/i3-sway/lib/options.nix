@@ -932,13 +932,27 @@ in
           };
 
           smartGaps = mkOption {
-            type = types.bool;
-            default = false;
+            type = types.either types.bool (
+              types.enum [
+                "on"
+                "off"
+                "inverse_outer"
+              ]
+            );
+            apply =
+              value:
+              if value == true then
+                "on"
+              else if value == false then
+                "off"
+              else
+                value;
+            default = "off";
             description = ''
               This option controls whether to disable all gaps (outer and inner)
               on workspace with a single container.
             '';
-            example = true;
+            example = "on";
           };
 
           smartBorders = mkOption {
