@@ -318,7 +318,7 @@ in
 
         xdg.configFile."waybar/config" = mkIf (settings != [ ]) {
           source = configSource;
-          onChange = ''
+          onChange = mkIf (!cfg.systemd.enable) ''
             ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
           '';
         };
@@ -329,7 +329,7 @@ in
               cfg.style
             else
               pkgs.writeText "waybar/style.css" cfg.style;
-          onChange = ''
+          onChange = mkIf (!cfg.systemd.enable) ''
             ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
           '';
         };
