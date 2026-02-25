@@ -75,7 +75,7 @@ in
       default = { };
       example = {
         color = "dark";
-        sort-path = true;
+        sort-paths = true;
         tab-width = 8;
       };
       description = "Configuration options for {command}`difftastic`. See {command}`difft --help`";
