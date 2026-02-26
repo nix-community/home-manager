@@ -61,6 +61,24 @@ in
               description = "Stream URL of the radio station.";
             };
 
+            buffering = mkOption {
+              type = nullOr (submodule {
+                options = {
+                  seconds = mkOption {
+                    type = ints.positive;
+                    description = "Number of seconds to buffer the stream.";
+                  };
+                  bitrate = mkOption {
+                    type = ints.positive;
+                    default = 128;
+                    description = "Bitrate of the stream in kbps (modify only if using MPlayer).";
+                  };
+                };
+              });
+              description = "Buffering configuration to apply to the station.";
+              default = null;
+            };
+
             encoding = mkOption {
               type = str;
               default = "";
@@ -142,7 +160,9 @@ in
                   station.encoding
                   (escapeCSV station.iconUrl)
                   ""
-                  ""
+                  (lib.optionalString (
+                    station.buffering != null
+                  ) "${toString station.buffering.seconds}@${toString station.buffering.bitrate}")
                   (if station.forceHttp then "1" else "0")
                   (toString station.volume)
                 ]

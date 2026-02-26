@@ -2,4 +2,4 @@ DEF CON Radio (SomaFM),https://somafm.com/defcon256.pls,,,,,0,50
 "DEF CON Radio, SomaFM",https://somafm.com/defcon256.pls,,,,,0,50
 "DEF CON Radio on ""SomaFM""",https://somafm.com/defcon256.pls,,,,,0,50
 "DEF CON Radio on ""SomaFM""",https://somafm.com/defcon256.pls,,,,,0,50
-DEF CON Radio (SomaFM),https://somafm.com/defcon256.pls,utf-8,https://somafm.com/img3/defcon400.png,,,1,85
+DEF CON Radio (SomaFM),https://somafm.com/defcon256.pls,utf-8,https://somafm.com/img3/defcon400.png,,10@128,1,85
