@@ -67,11 +67,14 @@ in
     options = mkOption {
       type =
         with types;
-        attrsOf (oneOf [
-          str
-          int
-          bool
-        ]);
+        let
+          atom = oneOf [
+            str
+            int
+            bool
+          ];
+        in
+        attrsOf (either atom (listOf atom));
       default = { };
       example = {
         color = "dark";
