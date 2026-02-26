@@ -97,6 +97,12 @@ in
               description = "URL of an icon to be shown in desktop notifications.";
             };
 
+            profile = mkOption {
+              type = str;
+              default = "";
+              description = "Name of the profile to use when using mpv or mplayer.";
+            };
+
             volume = mkOption {
               type = ints.between 0 130;
               default = 50;
@@ -159,7 +165,7 @@ in
                   (escapeCSV station.url)
                   station.encoding
                   (escapeCSV station.iconUrl)
-                  ""
+                  (escapeCSV station.profile)
                   (lib.optionalString (
                     station.buffering != null
                   ) "${toString station.buffering.seconds}@${toString station.buffering.bitrate}")

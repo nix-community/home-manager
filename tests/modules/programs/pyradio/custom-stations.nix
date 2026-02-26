@@ -28,6 +28,7 @@
         encoding = "utf-8";
         iconUrl = "https://somafm.com/img3/defcon400.png";
         forceHttp = true;
+        profile = "loud-mode";
       }
     ];
   };
