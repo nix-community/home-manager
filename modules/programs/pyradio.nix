@@ -67,6 +67,12 @@ in
               description = "Encoding of the station's metadata block.";
             };
 
+            forceHttp = mkOption {
+              type = bool;
+              default = false;
+              description = "If enabled, the connection is forced to use http (note when false it can either use http or https).";
+            };
+
             iconUrl = mkOption {
               type = str;
               default = "";
@@ -137,7 +143,7 @@ in
                   (escapeCSV station.iconUrl)
                   ""
                   ""
-                  ""
+                  (if station.forceHttp then "1" else "0")
                   (toString station.volume)
                 ]
               ) stations;
