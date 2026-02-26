@@ -124,6 +124,10 @@ in
       description = ''
         Radio stations to add to the {file}`stations.csv` file.
         If empty, {file}`stations.csv` defaults to the built-in playlist.
+
+        To add a group, add a station with the url set to "-" and the name set
+        to the name of the group. Its order in the list will be where it appears
+        in `pyradio`.
       '';
     };
   };
