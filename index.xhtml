@@ -1079,7 +1079,7 @@ truly noteworthy news. For example, a bug fix or new option does
 generally not need a news entry.</p><p>If you do have a change worthy of a news entry then please add one in
 <a class="link" href="https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix"  target="_top"><code class="literal">news.nix</code></a>
 but you should follow some basic guidelines:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Use the included news entry generator to create a news entry file:</p><pre><code class="programlisting  shell">$ nix run .#create-news-entry
-</code></pre><p>Alternatively, you can directly use the script:</p><pre><code class="programlisting  shell">$ modules/misc/news/create-news-entry.sh
+</code></pre><p>Alternatively, you can directly use the script:</p><pre><code class="programlisting  shell">$ nix-shell -A dev --run modules/misc/news/create-news-entry.sh
 </code></pre><p>This will create a new file inside the <code class="literal">modules/misc/news</code> directory
 with some placeholder information that you can edit.</p></li><li class="listitem"><p>The entry condition should be as specific as possible. For example,
 if you are changing or deprecating a specific option then you could
