@@ -10,6 +10,7 @@ let
   cfg = config.programs.starship;
 
   tomlFormat = pkgs.formats.toml { };
+  hasGeneratedConfig = cfg.settings != { } || cfg.presets != [ ];
 
   initFish = if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
 in
@@ -110,7 +111,7 @@ in
 
       sessionVariables.STARSHIP_CONFIG = cfg.configPath;
 
-      file.${cfg.configPath} =
+      file.${cfg.configPath} = mkIf hasGeneratedConfig (
         let
           settingsFile = tomlFormat.generate "starship-config" cfg.settings;
         in
@@ -131,7 +132,8 @@ in
                     ${settingsFile} \
                     > $out
                 '';
-          };
+          }
+      );
 
     };
 
