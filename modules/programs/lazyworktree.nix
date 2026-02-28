@@ -18,23 +18,32 @@ in
   meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.lazyworktree = {
     enable = mkEnableOption "lazyworktree";
+
     package = mkPackageOption pkgs "lazyworktree" { nullable = true; };
+
     settings = mkOption {
       inherit (yamlFormat) type;
       default = { };
       example = {
         worktree_dir = "~/.local/share/worktrees";
         sort_mode = "switched";
-        auto_fetch_prs = false;
+        layout = "default";
         auto_refresh = true;
+        ci_auto_refresh = false;
         refresh_interval = 10;
+        disable_pr = false;
         icon_set = "nerd-font-v3";
         search_auto_select = false;
         fuzzy_finder_input = false;
+        palette_mru = true;
+        palette_mru_limit = 5;
       };
       description = ''
-        Configuration settings for lazyworktree. All the available options can be found here:
+        Configuration written to
+        {file}`$XDG_CONFIG_HOME/lazyworktree/config.yaml`.
+        See
         <https://github.com/chmouel/lazyworktree?tab=readme-ov-file#global-configuration-yaml>
+        for supported values.
       '';
     };
   };
