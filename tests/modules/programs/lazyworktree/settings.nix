@@ -4,12 +4,16 @@
     settings = {
       worktree_dir = "~/.local/share/worktrees";
       sort_mode = "switched";
-      auto_fetch_prs = false;
+      layout = "default";
       auto_refresh = true;
+      ci_auto_refresh = false;
       refresh_interval = 10;
+      disable_pr = false;
       icon_set = "nerd-font-v3";
       search_auto_select = false;
       fuzzy_finder_input = false;
+      palette_mru = true;
+      palette_mru_limit = 5;
     };
   };
 
