@@ -1,4 +1,9 @@
+{ config, ... }:
 let
+  codexPackage = config.lib.test.mkStubPackage {
+    name = "codex";
+    version = "0.94.0";
+  };
   inlineSkill = ''
     ---
     name: inline-skill
@@ -13,6 +18,7 @@ in
 {
   programs.codex = {
     enable = true;
+    package = codexPackage;
     skills = {
       inline-skill = inlineSkill;
       file-skill = ./skill-file.md;
@@ -20,11 +26,11 @@ in
   };
 
   nmt.script = ''
-    assertFileExists home-files/.codex/skills/inline-skill/SKILL.md
-    assertFileContent home-files/.codex/skills/inline-skill/SKILL.md \
+    assertFileExists home-files/.agents/skills/inline-skill/SKILL.md
+    assertFileContent home-files/.agents/skills/inline-skill/SKILL.md \
       ${builtins.toFile "expected-inline-skill.md" inlineSkill}
-    assertFileExists home-files/.codex/skills/file-skill/SKILL.md
-    assertFileContent home-files/.codex/skills/file-skill/SKILL.md \
+    assertFileExists home-files/.agents/skills/file-skill/SKILL.md
+    assertFileContent home-files/.agents/skills/file-skill/SKILL.md \
       ${./skill-file.md}
   '';
 }
