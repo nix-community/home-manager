@@ -12,8 +12,9 @@ let
   tomlFormat = pkgs.formats.toml { };
   yamlFormat = pkgs.formats.yaml { };
 
-  packageVersion = if cfg.package != null then lib.getVersion cfg.package else "0.2.0";
+  packageVersion = if cfg.package != null then lib.getVersion cfg.package else "0.94.0";
   isTomlConfig = lib.versionAtLeast packageVersion "0.2.0";
+  isAgentsSkillsSupported = lib.versionAtLeast packageVersion "0.94.0";
   settingsFormat = if isTomlConfig then tomlFormat else yamlFormat;
 in
 {
@@ -98,12 +99,16 @@ in
 
         If an attribute set is used, the attribute name becomes the skill directory name,
         and the value is either:
-        - Inline content as a string (creates {file}`skills/<name>/SKILL.md`)
-        - A path to a file (creates {file}`skills/<name>/SKILL.md`)
-        - A path to a directory (creates {file}`skills/<name>/` with all files)
+        - Inline content as a string (creates {file}`<skills-dir>/<name>/SKILL.md`)
+        - A path to a file (creates {file}`<skills-dir>/<name>/SKILL.md`)
+        - A path to a directory (creates {file}`<skills-dir>/<name>/` with all files)
 
         If a path is used, it is expected to contain one folder per skill name, each
-        containing a {file}`SKILL.md`. The directory is symlinked to {file}`skills/`.
+        containing a {file}`SKILL.md`. The directory is symlinked to {file}`<skills-dir>/`.
+
+        The skills target directory depends on Codex version:
+        - {file}`~/.agents/skills` for Codex >= 0.94.0
+        - {file}`~/.codex/skills` for older versions
       '';
       example = lib.literalExpression ''
         {
@@ -138,6 +143,7 @@ in
       xdgConfigHome = lib.removePrefix config.home.homeDirectory config.xdg.configHome;
       configDir = if useXdgDirectories then "${xdgConfigHome}/codex" else ".codex";
       configFileName = if isTomlConfig then "config.toml" else "config.yaml";
+      skillsDir = if isAgentsSkillsSupported then ".agents/skills" else "${configDir}/skills";
 
       transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
         lib.mapAttrs (
@@ -183,7 +189,7 @@ in
           "${configDir}/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
             text = cfg.custom-instructions;
           };
-          "${configDir}/skills" = lib.mkIf (lib.isPath cfg.skills) {
+          "${skillsDir}" = lib.mkIf (lib.isPath cfg.skills) {
             source = cfg.skills;
             recursive = true;
           };
@@ -191,12 +197,12 @@ in
         // (lib.mapAttrs' (
           name: content:
           if lib.isPath content && lib.pathIsDirectory content then
-            lib.nameValuePair "${configDir}/skills/${name}" {
+            lib.nameValuePair "${skillsDir}/${name}" {
               source = content;
               recursive = true;
             }
           else
-            lib.nameValuePair "${configDir}/skills/${name}/SKILL.md" (
+            lib.nameValuePair "${skillsDir}/${name}/SKILL.md" (
               if lib.isPath content then { source = content; } else { text = content; }
             )
         ) (if builtins.isAttrs cfg.skills then cfg.skills else { }));
