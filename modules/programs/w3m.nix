@@ -24,35 +24,8 @@ in
     homePage = mkOption {
       type = types.str;
       default = "https://duckduckgo.com";
-      example = "\${config.programs.w3m.w3mDir}/bookmark.html";
+      example = "\${config.xdg.configHome}/w3m/bookmark.html";
       description = "Page w3m opens to if a url isn't provided.";
-    };
-
-    w3mDir = mkOption {
-      type = types.str;
-      default =
-        if config.xdg.enable && config.home.preferXdgDirectories then
-          "${config.xdg.configHome}/w3m"
-        else
-          "${config.home.homeDirectory}/.w3m";
-      defaultText = lib.literalExpression ''
-        if config.xdg.enable && config.home.preferXdgDirectories then
-          "''${config.xdg.configHome}/w3m"
-        else
-          "''${config.home.homeDirectory}/.w3m";
-      '';
-      example = "~/.w3m";
-      description = ''
-        The directory that w3m stores (most of) its configuration files. Sets
-        the environment variable W3M_DIR.
-
-        As of w3m v0.5.5, the options `mailcap`, `passwd_file`, `pre_form_file`,
-        `siteconf` and `urimethodmap` don't seem to honor the W3M_DIR environment
-        variable. so if you use any of those options and have
-        `home.preferXdgDirectories` enabled or have this option non-default, make
-        sure to change their paths in `home.programs.w3m.settings` or in w3m's
-        OPTIONS menu.
-      '';
     };
 
     w3mImg2Sixel = mkOption {
@@ -173,8 +146,7 @@ in
             };
           };
         in
-        with types;
-        attrsOf fileType;
+        types.attrsOf fileType;
       default = { };
       example = {
         "search.cgi".text = ''
@@ -190,9 +162,6 @@ in
 
           echo "W3m-control: DELETE_PREVBUF"
         '';
-        "other".source = pkgs.writeShellScript "other" ''
-          echo "script content here"
-        '';
       };
       description = ''
         Scripts located in w3m's cgi-bin directory. For security reasons, w3m can
@@ -206,8 +175,8 @@ in
         more information.
 
         As of w3m v0.5.5, the option `cgi_bin` isn't defined by default. If you
-        want to use any cgi-bin scripts in w3m then either set
-        `programs.w3m.settings.cgi_bin` or change it in the w3m OPTIONS menu.
+        want to use any cgi-bin scripts in w3m then set
+        `programs.w3m.settings.cgi_bin`.
       '';
     };
 
@@ -215,17 +184,18 @@ in
       type = with types; attrsOf (either str int);
       default = { };
       example = {
-        cgi_bin = "\${config.programs.w3m.w3mDir}/.config/w3m/cgi-bin";
-        urimethodmap = "\${config.programs.w3m.w3mDir}/.config/w3m/urimethodmap";
-        siteconf_file = "\${config.programs.w3m.w3mDir}/.config/w3m/siteconf";
+        cgi_bin = "\${config.xdg.configHome}/w3m/cgi-bin";
+        urimethodmap = "\${config.xdg.configHome}/w3m/urimethodmap";
+        siteconf_file = "\${config.xdg.configHome}/w3m/siteconf";
 
         tabstop = 4;
         extbrowser = "firefox";
       };
       description = ''
         Settings for w3m typically set on the OPTIONS page. The best way to
-        configure them is setting them in w3m then nixifying the config at
-        `''${config.programs.w3m.w3mDir}/config`.
+        configure them is setting them in w3m then nixifying the w3m `config`
+        file located at either {file}`~/.w3m/config` or
+        {file}`~/$XDG_CONFIG_HOME/w3m/config`.
       '';
     };
 
@@ -250,20 +220,12 @@ in
                   are: `substitute_url "<destination-url>"`,
                   `url_charset <charset>`, `no_referer_from on|off`,
                   `no_referer_to on|off`, `user_agent "string"`.
-
-                  As of w3m v0.5.5, siteconf doesn't respect the W3M_DIR environment
-                  variable. If you have `home.preferXdgDirectories` enabled or use
-                  a non-standard `programs.w3m.w3mDir` value, make sure to change
-                  the path to siteconf at either
-                  `home.programs.w3m.settings.siteconf_file` or in w3m's OPTIONS
-                  menu.
                 '';
               };
             };
           };
         in
-        with types;
-        listOf entryType;
+        types.listOf entryType;
       default = [ ];
       example = [
         {
@@ -287,6 +249,10 @@ in
 
         See <https://git.sr.ht/~rkta/w3m/tree/master/item/doc/README.siteconf>
         for documentation and examples.
+
+        As of w3m v0.5.5, siteconf doesn't respect the W3M_DIR environment
+        variable, so unless `programs.w3m.settings.siteconf_file` is set,
+        `siteconf` will always be at {file}`~/.w3m/siteconf`.
       '';
     };
 
@@ -300,13 +266,11 @@ in
       description = ''
         Settings for w3m's urimethodmap. It allows you to define custom uri
         schemes and map them to scripts. Scripts must be in the directory
-        defined in `programs.w3m.settings.cgi_bin` or in the w3m OPTIONS menu.
+        defined in `programs.w3m.settings.cgi_bin`.
 
         As of w3m v0.5.5, urimethodmap doesn't respect the W3M_DIR environment
-        variable. If you have `home.preferXdgDirectories` enabled or use a
-        non-standard `programs.w3m.w3mDir` value make sure to change the path
-        to the urimethodmap file at either
-        `home.programs.w3m.settings.urimethodmap` or in w3m's OPTIONS menu.
+        variable, so unless `programs.w3m.settings.urimethodmap` is set,
+        `urimethodmap` will always be at {file}`~/.w3m/urimethodmap`.
       '';
     };
 
@@ -320,13 +284,23 @@ in
 
   config =
     let
+      w3mDir =
+        if config.home.preferXdgDirectories && config.xdg.enable then
+          "${config.xdg.configHome}/w3m"
+        else
+          "${config.home.homeDirectory}/.w3m";
+
       # the locations that various files should be generated.
-      bookmarkFile = "${cfg.w3mDir}/bookmark.html";
-      keymapFile = cfg.settings.keymap_file or "${cfg.w3mDir}/keymap";
-      configFile = "${cfg.w3mDir}/config";
-      urimethodmapFile = cfg.settings.urimethodmap or "${cfg.w3mDir}/urimethodmap";
-      siteconfFile = cfg.settings.siteconf_file or "${cfg.w3mDir}/siteconf";
-      cgiBinDir = cfg.settings.cgi_bin or "${cfg.w3mDir}/cgi-bin";
+      bookmarkFile = "${w3mDir}/bookmark.html";
+      configFile = "${w3mDir}/config";
+      keymapFile = cfg.settings.keymap_file or "${w3mDir}/keymap";
+
+      # these files currently don't respect the W3M_DIR environment variable so,
+      # if not configured in programs.w3m.settings, they're expected to be at
+      # ~/.w3m. This will likely be fixed in w3m versions after v0.5.6.
+      urimethodmapFile = cfg.settings.urimethodmap or "${config.home.homeDirectory}/.w3m/urimethodmap";
+      siteconfFile = cfg.settings.siteconf_file or "${config.home.homeDirectory}/.w3m/siteconf";
+      cgiBinDir = cfg.settings.cgi_bin or "${config.home.homeDirectory}/.w3m/cgi-bin";
 
       # prepends the path of the cgiBinDir to the script name, explicitly generates
       # and replaces any text attribute with equivalent
@@ -373,7 +347,7 @@ in
           buildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
             wrapProgram $out/bin/w3m \
-            --set W3M_DIR "${cfg.w3mDir}" \
+            --set W3M_DIR "${w3mDir}" \
             --set W3M_IMG2SIXEL "${cfg.w3mImg2Sixel}" \
             --set WWW_HOME "${cfg.homePage}" \
             --suffix PATH : ${lib.makeBinPath cfg.extraPackages}

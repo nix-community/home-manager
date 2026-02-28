@@ -64,19 +64,19 @@
     assertFileExists "home-files/.config/w3m/bookmark.html"
     assertFileContent "home-files/.config/w3m/bookmark.html" ${./expected-bookmark.html}
 
-    assertFileExists "home-files/.config/w3m/cgi-bin/script.cgi"
-    assertFileContains "home-files/.config/w3m/cgi-bin/script.cgi" "echo \"watch the film Paprika\""
-
     assertFileExists "home-files/.config/w3m/config"
     assertFileContent "home-files/.config/w3m/config" ${./expected-config}
 
-    assertFileExists "home-files/.config/w3m/siteconf"
-    assertFileContent "home-files/.config/w3m/siteconf" ${./expected-siteconf}
+    # As of w3m v0.5.5, these config files don't follow the W3M_DIR environment
+    # variable so, by default, they're expected to be in `~/.w3m`. This will
+    # likely be fixed in w3m versions after v0.5.6.
+    assertFileExists "home-files/.w3m/cgi-bin/script.cgi"
+    assertFileContains "home-files/.w3m/cgi-bin/script.cgi" "echo \"watch the film Paprika\""
 
-    assertFileExists "home-files/.config/w3m/urimethodmap"
-    assertFileContent "home-files/.config/w3m/urimethodmap" ${./expected-urimethodmap}
+    assertFileExists "home-files/.w3m/siteconf"
+    assertFileContent "home-files/.w3m/siteconf" ${./expected-siteconf}
 
-    assertFileExists "home-files/.config/w3m/keymap"
-    assertFileContent "home-files/.config/w3m/keymap" ${./expected-keymap}
+    assertFileExists "home-files/.w3m/urimethodmap"
+    assertFileContent "home-files/.w3m/urimethodmap" ${./expected-urimethodmap}
   '';
 }

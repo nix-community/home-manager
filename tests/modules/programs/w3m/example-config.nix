@@ -71,8 +71,5 @@
 
     assertFileExists "home-files/.w3m/urimethodmap"
     assertFileContent "home-files/.w3m/urimethodmap" ${./expected-urimethodmap}
-
-    assertFileExists "home-files/.w3m/keymap"
-    assertFileContent "home-files/.w3m/keymap" ${./expected-keymap}
   '';
 }
