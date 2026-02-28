@@ -17,4 +17,5 @@ test-install:
 	HOME=$(shell mktemp -d) NIX_PATH=${NIX_PATH} nix-shell . -A install
 
 format:
-	nix-shell -A dev --run treefmt
+	# added 1st March
+	@echo "run \"nix-shell -A dev --run 'just format'\" instead"

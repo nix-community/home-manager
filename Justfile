@@ -18,3 +18,7 @@ integration_tests:
 # Create a news entry
 create-news-entry:
   modules/misc/news/create-news-entry.sh
+
+# format codebase with treefmt
+format:
+  treefmt
