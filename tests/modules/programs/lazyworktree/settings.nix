@@ -1,6 +1,13 @@
 {
+  programs.bash.enable = true;
+  programs.fish.enable = true;
+  programs.zsh.enable = true;
+
   programs.lazyworktree = {
     enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
     settings = {
       worktree_dir = "~/.local/share/worktrees";
       sort_mode = "switched";
@@ -21,5 +28,16 @@
     assertFileExists home-files/.config/lazyworktree/config.yaml
     assertFileContent home-files/.config/lazyworktree/config.yaml \
       ${./config.yaml}
+
+    assertFileExists home-files/.bashrc
+    assertFileContains home-files/.bashrc 'function lwt() {'
+    assertFileContains home-files/.bashrc 'lazyworktree_dir="$(command lazyworktree "$@")" || return'
+
+    assertFileExists home-files/.zshrc
+    assertFileContains home-files/.zshrc 'function lwt() {'
+    assertFileContains home-files/.zshrc 'lazyworktree_dir="$(command lazyworktree "$@")" || return'
+
+    assertFileExists home-files/.config/fish/functions/lwt.fish
+    assertFileContains home-files/.config/fish/functions/lwt.fish 'set -l lazyworktree_dir (command lazyworktree $argv)'
   '';
 }
