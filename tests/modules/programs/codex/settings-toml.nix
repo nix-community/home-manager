@@ -21,11 +21,18 @@ in
         };
       };
     };
+    custom-instructions = ''
+      - Always respond with emojis
+      - Only use git commands when explicitly requested
+    '';
   };
   nmt.script = ''
     assertFileExists home-files/.codex/config.toml
     assertFileContent home-files/.codex/config.toml \
       ${./config.toml}
+    assertFileExists home-files/.codex/AGENTS.md
+    assertFileContent home-files/.codex/AGENTS.md \
+      ${./AGENTS.md}
     assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'CODEX_HOME'
   '';
 }
