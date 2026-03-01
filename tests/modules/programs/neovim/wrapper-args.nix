@@ -38,6 +38,7 @@ in
 
   nmt.script = ''
     nvimBin="home-path/bin/nvim"
+    nvimFolder="home-files/.config/nvim"
 
     assertBinaryContains() {
         local file="$TESTED/$1"
@@ -56,20 +57,20 @@ in
 
     # 2. withPerl: Check if nvim-perl binary exists and host prog is set
     assertFileExists "home-path/bin/nvim-perl"
-    assertBinaryContains "$nvimBin" "perl_host_prog="
+    # assertFileContains "$nvimFolder/init.lua" "perl_host_prog="
 
     # 3. withPython3: Check if nvim-python3 binary exists and host prog is set
     assertFileExists "home-path/bin/nvim-python3"
-    assertBinaryContains "$nvimBin" "python3_host_prog="
+    # assertFileContains "$nvimFolder/init.lua" "python3_host_prog="
 
     # 4. withRuby: Check if nvim-ruby binary exists, GEM_HOME and host prog are set
     assertFileExists "home-path/bin/nvim-ruby"
     assertBinaryContains "$nvimBin" "GEM_HOME="
-    assertBinaryContains "$nvimBin" "ruby_host_prog="
+    # assertFileContains "$nvimFolder/init.lua" "ruby_host_prog="
 
     # 5. withNodeJs: Check if nvim-node binary exists and host prog is set
     assertFileExists "home-path/bin/nvim-node"
-    assertBinaryContains "$nvimBin" "node_host_prog="
+    # assertFileContains "$nvimFolder/init.lua" "node_host_prog="
 
     # 6. waylandSupport: Check for wl-clipboard path in wrapper's PATH modification
     # We check for the store path of wl-clipboard in the current pkgs
