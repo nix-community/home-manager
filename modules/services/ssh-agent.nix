@@ -13,6 +13,15 @@ in
     lib.hm.maintainers.lheckemann
   ];
 
+  imports =
+    map (shell: lib.mkRemovedOptionModule [ "services" "ssh-agent" "enable${shell}Integration" ] "")
+      [
+        "Bash"
+        "Zsh"
+        "Fish"
+        "Nushell"
+      ];
+
   options.services.ssh-agent = {
     enable = lib.mkEnableOption "OpenSSH private key agent";
 
@@ -47,59 +56,27 @@ in
         See {manpage}`ssh-agent(1)`.
       '';
     };
-
-    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
-
-    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
-
-    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
-
-    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
   };
 
   config = lib.mkIf cfg.enable {
 
-    programs =
+    ssh_auth_sock.initialization =
       let
         socketPath =
           if pkgs.stdenv.isDarwin then
             "$(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"
           else
             "$XDG_RUNTIME_DIR/${cfg.socket}";
-
-        # Preserve $SSH_AUTH_SOCK only if it stems from a forwarded agent which
-        # is the case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.
-        bashIntegration = ''
-          if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
-            export SSH_AUTH_SOCK=${socketPath}
-          fi
-        '';
-        fishIntegration = ''
-          if test -z "$SSH_AUTH_SOCK"; or test -z "$SSH_CONNECTION"
-            set -x SSH_AUTH_SOCK ${socketPath}
-          end
-        '';
-        nushellIntegration =
-          let
-            unsetOrEmpty = var: ''("${var}" not-in $env) or ($env.${var} | is-empty)'';
-            socketPath =
-              if pkgs.stdenv.isDarwin then
-                ''$"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"''
-              else
-                ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"'';
-          in
-          ''
-            if ${unsetOrEmpty "SSH_AUTH_SOCK"} or ${unsetOrEmpty "SSH_CONNECTION"} {
-              $env.SSH_AUTH_SOCK = ${socketPath}
-            }
-          '';
       in
       {
-        # $SSH_AUTH_SOCK has to be set early since other tools rely on it
-        bash.profileExtra = lib.mkIf cfg.enableBashIntegration (lib.mkOrder 900 bashIntegration);
-        fish.shellInit = lib.mkIf cfg.enableFishIntegration (lib.mkOrder 900 fishIntegration);
-        nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration (lib.mkOrder 900 nushellIntegration);
-        zsh.envExtra = lib.mkIf cfg.enableZshIntegration (lib.mkOrder 900 bashIntegration);
+        bash = ''export SSH_AUTH_SOCK="${socketPath}"'';
+        fish = ''set -x SSH_AUTH_SOCK "${socketPath}"'';
+        nushell = "$env.SSH_AUTH_SOCK = ${
+          if pkgs.stdenv.isDarwin then
+            ''$"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"''
+          else
+            ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"''
+        }";
       };
 
     systemd.user.services.ssh-agent = {
