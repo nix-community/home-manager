@@ -3,6 +3,7 @@
     enable = true;
     servers = {
       everything = {
+        type = "stdio";
         command = "npx";
         args = [
           "-y"
@@ -10,15 +11,24 @@
         ];
       };
       context7 = {
+        type = "http";
         url = "https://mcp.context7.com/mcp";
         headers = {
           CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
         };
       };
-      disabled-server = {
+      atlassian = {
+        type = "sse";
+        url = "https://api-private.atlassian.com/mcp";
+        headers = {
+          Authorization = "Bearer token";
+        };
+        timeout = 8000;
+      };
+      disabled = {
+        type = "stdio";
         command = "echo";
-        args = [ "test" ];
-        disabled = true;
+        enabled = false;
       };
     };
   };

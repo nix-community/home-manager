@@ -39,12 +39,6 @@
           DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
         };
       };
-      customTransport = {
-        type = "websocket";
-        url = "wss://example.com/mcp";
-        customOption = "value";
-        timeout = 5000;
-      };
     };
   };
 
