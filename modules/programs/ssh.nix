@@ -116,6 +116,24 @@ let
         '';
       };
 
+      pubkeyAuthentication = mkOption {
+        default = null;
+        type = types.nullOr (
+          types.enum [
+            "yes"
+            "no"
+            "unbound"
+            "host-bound"
+          ]
+        );
+        description = ''
+          Specifies whether to try public key authentication.
+          The argument must be one of: `yes` (the default), `no`, `unbound`, or `host-bound`.
+          The final two options relate to the OpenSSH host-bound authentication protocol extension.
+          See {manpage}`ssh_config(5)` for details.
+        '';
+      };
+
       forwardX11 = mkOption {
         type = types.bool;
         default = false;
@@ -408,6 +426,7 @@ let
       [ "${matchHead}" ]
       ++ optional (cf.port != null) "  Port ${toString cf.port}"
       ++ optional (cf.forwardAgent != null) "  ForwardAgent ${lib.hm.booleans.yesNo cf.forwardAgent}"
+      ++ optional (cf.pubkeyAuthentication != null) "  PubkeyAuthentication ${cf.pubkeyAuthentication}"
       ++ optional cf.forwardX11 "  ForwardX11 yes"
       ++ optional cf.forwardX11Trusted "  ForwardX11Trusted yes"
       ++ optional cf.identitiesOnly "  IdentitiesOnly yes"
