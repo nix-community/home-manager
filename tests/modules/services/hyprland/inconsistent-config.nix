@@ -9,7 +9,7 @@
   };
 
   test.asserts.warnings.expected = [
-    "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings or hyprland.extraConfig. This is almost certainly a mistake."
+    "You have enabled hyprland.systemd.enable or listed plugins in hyprland.plugins but do not have any configuration in hyprland.settings, hyprland.extraConfig or hyprland.submaps. This is almost certainly a mistake."
   ];
   test.asserts.warnings.enable = true;
 
