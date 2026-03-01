@@ -9,4 +9,5 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-sourceFirst-false-config = ./sourceFirst-false-config.nix;
   hyprland-inconsistent-config = ./inconsistent-config.nix;
   hyprland-submaps-config = ./submaps-config.nix;
+  hyprland-submaps-on-dispatch = ./submaps-on-dispatch.nix;
 }
