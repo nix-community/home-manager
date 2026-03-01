@@ -65,6 +65,7 @@ let
           babelfish
           fish
           lndir
+          neovim-unwrapped
           ;
       };
 
