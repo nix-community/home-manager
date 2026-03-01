@@ -20,12 +20,18 @@ in
     enable = true;
     package = config.lib.test.mkStubPackage { };
   };
-  programs.mergiraf.enable = true;
+  programs.mergiraf = {
+    enable = true;
+    enableJujutsuIntegration = true;
+  };
 
   nmt.script = ''
     assertFileExists 'home-files/${configDir}/jj/config.toml'
     assertFileContent 'home-files/${configDir}/jj/config.toml' \
       ${builtins.toFile "expected.toml" ''
+        [merge-tools.mergiraf]
+        program = "@mergiraf@/bin/mergiraf"
+
         [ui]
         merge-editor = "mergiraf"
       ''}
