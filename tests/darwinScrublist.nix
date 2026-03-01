@@ -36,6 +36,7 @@ let
     "codex"
     "comodoro"
     "cudatext"
+    "cursor-cli"
     "darcs"
     "delta"
     "difftastic"
