@@ -18,6 +18,12 @@ in
         { config, ... }:
         {
           options = {
+            enableConfig = lib.mkOption {
+              type = types.bool;
+              default = true;
+              description = "let home-manager configure history settings";
+            };
+
             append = mkOption {
               type = types.bool;
               default = false;
@@ -170,7 +176,7 @@ in
       };
     };
 
-  config = {
+  config = lib.mkIf cfg.history.enableConfig {
     warnings =
       lib.optionals (!lib.hasPrefix "/" cfg.history.path && !lib.hasInfix "$" cfg.history.path)
         [
