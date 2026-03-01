@@ -19,6 +19,7 @@
           - modules/services/mpd-mpris.nix
           - modules/services/mpd.nix
           - modules/services/mpdris2.nix
+          - modules/services/mpdris2-rs.nix
           - modules/services/mpdscribble.nix
           - modules/services/mpris-proxy.nix
           - modules/services/pasystray.nix
