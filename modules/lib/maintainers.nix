@@ -344,6 +344,13 @@
     github = "miku4k";
     githubId = 89653242;
   };
+  m-vz = {
+    name = "milan";
+    github = "m-vz";
+    githubId = 4547497;
+    email = "milan@milan.wtf";
+    matrix = "@m-vz:matrix.org";
+  };
   mager = {
     email = "andreas@mager.eu";
     github = "AndreasMager";
