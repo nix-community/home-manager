@@ -1210,6 +1210,11 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
+        --reference-lock-file)
+            [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
+            PASSTHROUGH_OPTS+=("$opt" "$1")
+            shift
+            ;;
         --extra-experimental-features)
             [[ -v 1 && $1 != -* ]] || errMissingOptArg "$opt"
             PASSTHROUGH_OPTS+=("$opt" "$1")
