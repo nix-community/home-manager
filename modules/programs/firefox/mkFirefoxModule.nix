@@ -230,7 +230,12 @@ in
         The ${appName} package to use. If state version ≥ 19.09 then
         this should be a wrapped ${appName} package. For earlier state
         versions it should be an unwrapped ${appName} package.
-        Set to `null` to disable installing ${appName}.
+        Set to `null` to disable installing ${appName}. Note that most versions
+        of ${appName} will attempt to update the `profiles.ini` configuration file
+        on startup which will fail if home-manager is managing it. If you wish to
+        use an unwrapped ${appName} (e.g. from outside Nix), consider setting the
+        environment variable `MOZ_LEGACY_PROFILES=1` to disable attempts to write
+        to the file.
       '';
     };
 
