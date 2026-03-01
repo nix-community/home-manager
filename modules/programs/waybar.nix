@@ -342,9 +342,15 @@ in
             Documentation = "https://github.com/Alexays/Waybar/wiki";
             PartOf = [
               cfg.systemd.target
-              "tray.target"
+              "tray-sni.target"
             ];
-            After = [ cfg.systemd.target ];
+            After = [
+              cfg.systemd.target
+              "tray-sni.target"
+            ]
+            ++ config.lib.tray.sniWatcherAfter;
+            Wants = config.lib.tray.sniWatcherWants;
+            Requires = config.lib.tray.sniWatcherRequires;
             ConditionEnvironment = "WAYLAND_DISPLAY";
             X-Reload-Triggers =
               optional (settings != [ ]) "${config.xdg.configFile."waybar/config".source}"
@@ -361,7 +367,7 @@ in
 
           Install.WantedBy = [
             cfg.systemd.target
-            "tray.target"
+            "tray-sni.target"
           ];
         };
       })

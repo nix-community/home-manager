@@ -14,10 +14,12 @@
 
         [Unit]
         After=graphical-session.target
-        After=tray.target
+        After=tray-sni.target
+        After=tray-watcher.service
         Description=syncthingtray
         PartOf=graphical-session.target
-        Requires=tray.target
+        Requires=tray-sni.target
+        Wants=tray-watcher.service
       ''}
   '';
 }

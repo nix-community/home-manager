@@ -16,6 +16,11 @@ let
   yaml = pkgs.formats.yaml { };
 
   cfg = config.services.udiskie;
+  trayTarget =
+    if config.xsession.preferStatusNotifierItems then
+      config.lib.tray.targets.sni
+    else
+      config.lib.tray.targets.xembed;
 
 in
 {
@@ -129,8 +134,21 @@ in
     systemd.user.services.udiskie = {
       Unit = {
         Description = "udiskie mount daemon";
-        Requires = lib.optional (cfg.tray != "never") "tray.target";
-        After = [ "graphical-session.target" ] ++ lib.optional (cfg.tray != "never") "tray.target";
+        Requires =
+          lib.optional (cfg.tray != "never") trayTarget
+          ++ lib.optionals (
+            cfg.tray != "never" && config.xsession.preferStatusNotifierItems
+          ) config.lib.tray.sniWatcherRequires;
+        Wants = lib.optionals (
+          cfg.tray != "never" && config.xsession.preferStatusNotifierItems
+        ) config.lib.tray.sniWatcherWants;
+        After = [
+          "graphical-session.target"
+        ]
+        ++ lib.optional (cfg.tray != "never") trayTarget
+        ++ lib.optionals (
+          cfg.tray != "never" && config.xsession.preferStatusNotifierItems
+        ) config.lib.tray.sniWatcherAfter;
         PartOf = [ "graphical-session.target" ];
       };
 

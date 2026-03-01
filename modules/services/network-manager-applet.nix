@@ -7,6 +7,8 @@
 let
 
   cfg = config.services.network-manager-applet;
+  trayTarget = config.lib.tray.preferredTarget;
+  useSni = config.xsession.preferStatusNotifierItems;
 
 in
 {
@@ -34,11 +36,13 @@ in
     systemd.user.services.network-manager-applet = {
       Unit = {
         Description = "Network Manager applet";
-        Requires = [ "tray.target" ];
+        Requires = [ trayTarget ] ++ lib.optionals useSni config.lib.tray.sniWatcherRequires;
         After = [
           "graphical-session.target"
-          "tray.target"
-        ];
+          trayTarget
+        ]
+        ++ lib.optionals useSni config.lib.tray.sniWatcherAfter;
+        Wants = lib.optionals useSni config.lib.tray.sniWatcherWants;
         PartOf = [ "graphical-session.target" ];
       };
 

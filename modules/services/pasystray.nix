@@ -35,10 +35,10 @@ in
     systemd.user.services.pasystray = {
       Unit = {
         Description = "PulseAudio system tray";
-        Requires = [ "tray.target" ];
+        Requires = [ "tray-xembed.target" ];
         After = [
           "graphical-session.target"
-          "tray.target"
+          "tray-xembed.target"
         ];
         PartOf = [ "graphical-session.target" ];
       };
