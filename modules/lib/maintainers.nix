@@ -278,12 +278,6 @@
     github = "kalhauge";
     githubId = 1182166;
   };
-  karaolidis = {
-    name = "Nikolaos Karaolidis";
-    email = "nick@karaolidis.com";
-    github = "karaolidis";
-    githubId = 46189100;
-  };
   kmaasrud = {
     name = "Knut Magnus Aasrud";
     email = "km@aasrud.com";
