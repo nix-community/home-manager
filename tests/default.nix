@@ -136,6 +136,13 @@ let
             lib.mkDefault "/home/hm-user"
           );
 
+          # NOTE: Added 2026-02-09
+          # Avoid option change warning for Firefox configPath
+          # Remove after deprecation period
+          programs.firefox.configPath = lib.mkIf (config.home.stateVersion == "18.09") (
+            lib.mkDefault ".mozilla/firefox"
+          );
+
           # Avoid including documentation since this will cause
           # unnecessary rebuilds of the tests.
           manual.manpages.enable = lib.mkDefault false;
