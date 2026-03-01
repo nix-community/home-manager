@@ -26,7 +26,7 @@
 
   config = lib.mkIf config.notmuch.enable {
     astroid.sendMailCommand = lib.mkIf config.msmtp.enable (
-      lib.mkOptionDefault "msmtpq --read-envelope-from --read-recipients"
+      lib.mkOptionDefault "${config.msmtp.msmtpCommand} --read-envelope-from --read-recipients"
     );
   };
 }
