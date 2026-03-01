@@ -59,10 +59,10 @@ in
         else
           ".rizinrc";
       configContent = ''
-        ; settings
+        # settings
         ${lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "e ${k}=${lib.toString v}") cfg.settings)}
 
-        ; extraConfig
+        # extraConfig
         ${cfg.extraConfig}
       '';
     in
