@@ -35,6 +35,11 @@ let
       # this part by @cmacrae
       auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
     });
+
+  editorEnv = {
+    EDITOR = "zeditor --wait";
+    VISUAL = "zeditor --wait";
+  };
 in
 {
   meta.maintainers = [ lib.hm.maintainers.libewa ];
@@ -215,6 +220,15 @@ in
         );
         default = { };
       };
+
+      defaultEditor = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to set {command}`zeditor -w` as the default editor using the
+          {env}`EDITOR` and {env}`VISUAL` environment variables.
+        '';
+      };
     };
   };
 
@@ -314,5 +328,12 @@ in
         "zed/debug.json".source = jsonFormat.generate "zed-user-debug" cfg.userDebug;
       })
     ];
+
+    # For interactive use (Terminal)
+    home.sessionVariables = mkIf (cfg.defaultEditor) editorEnv;
+
+    # For non-shell use (Background services, D-Bus, GUI portals)
+    # Safely ignored on non-Linux/non-systemd platforms
+    systemd.user.sessionVariables = mkIf (cfg.defaultEditor && pkgs.stdenv.isLinux) editorEnv;
   };
 }
