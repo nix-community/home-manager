@@ -179,6 +179,8 @@ in
         NIX_XDG_DESKTOP_PORTAL_DIR = portalsDir;
       };
 
+      systemd.user.packages = packages;
+
       xdg.configFile = lib.concatMapAttrs (
         desktop: conf:
         lib.optionalAttrs (conf != { }) {
