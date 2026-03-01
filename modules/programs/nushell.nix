@@ -231,7 +231,15 @@ in
             cfg.configFile != null || cfg.extraConfig != "" || aliasesStr != "" || cfg.settings != { };
 
           aliasesStr = lib.concatLines (
-            lib.mapAttrsToList (k: v: "alias ${toNushell { } k} = ${v}") cfg.shellAliases
+            lib.mapAttrsToList (
+              k: v:
+              # Use def instead of alias for commands with semicolons or pipes
+              # to avoid immediate execution of subsequent statements
+              if (lib.hasInfix ";" v) || (lib.hasInfix "|" v) then
+                "def ${toNushell { } k} [] { ${v} }"
+              else
+                "alias ${toNushell { } k} = ${v}"
+            ) cfg.shellAliases
           );
         in
         lib.mkIf writeConfig {
