@@ -239,7 +239,7 @@ in
     };
 
     homedir = mkOption {
-      type = types.path;
+      type = types.str;
       example = literalExpression ''"''${config.xdg.dataHome}/gnupg"'';
       default = "${config.home.homeDirectory}/.gnupg";
       defaultText = literalExpression ''"''${config.home.homeDirectory}/.gnupg"'';
