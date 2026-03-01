@@ -14,32 +14,7 @@ let
 
   cfg = config.services.mako;
 
-  generateConfig =
-    config:
-    let
-      formatValue = v: if builtins.isBool v then if v then "true" else "false" else toString v;
-
-      globalSettings = lib.filterAttrs (n: v: !(lib.isAttrs v)) config;
-      sectionSettings = lib.filterAttrs (n: v: lib.isAttrs v) config;
-
-      globalLines = lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (k: v: "${k}=${formatValue v}") globalSettings
-      );
-
-      formatSection =
-        name: attrs:
-        "\n[${name}]\n"
-        + lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "${k}=${formatValue v}") attrs);
-
-      sectionLines = lib.concatStringsSep "\n" (lib.mapAttrsToList formatSection sectionSettings);
-    in
-    lib.mkMerge [
-      globalLines
-      (lib.mkIf (sectionSettings != { }) sectionLines)
-      (lib.mkIf (cfg.extraConfig != "") ("\n" + cfg.extraConfig))
-    ];
-
-  iniFormat = pkgs.formats.ini { };
+  iniFormat = pkgs.formats.iniWithGlobalSection { listsAsDuplicateKeys = true; };
   iniAtomType = iniFormat.lib.types.atom;
 in
 {
@@ -86,12 +61,17 @@ in
         "services"
         "mako"
         "criterias"
-      ] "Use services.mako.settings instead. If order is important, use `services.mako.extraConfig`.")
+      ] "Use services.mako.settings instead.")
       (lib.mkRemovedOptionModule [
         "services"
         "mako"
         "criteria"
-      ] "Use services.mako.settings instead. If order is important, use `services.mako.extraConfig`.")
+      ] "Use services.mako.settings instead.")
+      (lib.mkRemovedOptionModule [
+        "services"
+        "mako"
+        "extraConfig"
+      ] "Use services.mako.settings.include instead.")
     ]
     ++ lib.hm.deprecations.mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) {
       transform = lib.hm.strings.toKebabCase;
@@ -135,15 +115,6 @@ in
         <https://github.com/emersion/mako/blob/master/doc/mako.5.scd>.
       '';
     };
-    extraConfig = mkOption {
-      default = "";
-      type = lib.types.lines;
-      example = lib.literalExpression ''
-        [urgency=low]
-        border-color=#b8bb26
-      '';
-      description = "Additional configuration lines to inject directly into the generated config file.";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -157,7 +128,10 @@ in
 
     xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.extraConfig != "") {
       onChange = "${cfg.package}/bin/makoctl reload || true";
-      text = generateConfig cfg.settings;
+      source = iniFormat.generate "mako-config" {
+        globalSection = lib.filterAttrs (name: value: builtins.typeOf value != "set") cfg.settings;
+        sections = lib.filterAttrs (name: value: builtins.typeOf value == "set") cfg.settings;
+      };
     };
   };
 }
