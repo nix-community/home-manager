@@ -85,10 +85,14 @@ in
       installation of user packages through the
       {option}`users.users.<name>.packages` option'';
 
-    useGlobalPkgs = mkEnableOption ''
-      using the system configuration's `pkgs`
-      argument in Home Manager. This disables the Home Manager
-      options {option}`nixpkgs.*`'';
+    useGlobalPkgs =
+      mkEnableOption ''
+        using the system configuration's `pkgs`
+        argument in Home Manager. This disables the Home Manager
+          options {option}`nixpkgs.*`''
+      // {
+        default = true;
+      };
 
     backupCommand = mkOption {
       type = types.nullOr (types.either types.str types.path);
