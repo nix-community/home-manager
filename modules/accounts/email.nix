@@ -369,6 +369,7 @@ let
             "davmail"
             "fastmail.com"
             "gmail.com"
+            "mailbox.org"
             "migadu.com"
             "outlook.office365.com"
             "plain"
@@ -590,6 +591,13 @@ let
             host = "fastmail.com";
             sessionUrl = "https://jmap.fastmail.com/.well-known/jmap";
           };
+        })
+
+        (mkIf (config.flavor == "mailbox.org") {
+          userName = mkDefault config.address;
+          folders.inbox = mkDefault "INBOX";
+          imap.host = "imap.mailbox.org";
+          smtp.host = "smtp.mailbox.org";
         })
 
         (mkIf (config.flavor == "migadu.com") {
