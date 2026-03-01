@@ -9,6 +9,10 @@ let
 
   cfg = config.systemd.user;
 
+  nixPkg = if config.nix.package == null then pkgs.nix else config.nix.package;
+
+  profileDirectory = config.home.profileDirectory;
+
   inherit (lib)
     any
     attrValues
@@ -228,6 +232,56 @@ let
       };
     '';
 
+  hmSessionVarsUserEnvGenerator = {
+    "systemd/user-environment-generators/05-home-manager.sh" = {
+      text = ''
+        #!${pkgs.bash}/bin/bash
+
+        # Displays added or modified environment variables from sourcing one or more scripts.
+        # Outputs in a clean KEY=VALUE format.
+        #
+        # Usage:
+        #   diff_env <script1.sh> [script2.sh ...]
+        #
+        diff_env() {
+          if [[ "$#" -eq 0 ]]; then
+            echo "Usage: diff_env <script1.sh> [script2.sh ...]" >&2
+            return 1
+          fi
+
+          # Capture the "before" environment into a map
+          declare -A before_env
+          while IFS= read -r line; do
+            local key="''${line%%=*}"
+            local value="''${line#*=}"
+            before_env["$key"]="$value"
+          done < <(env)
+
+          declare -A after_env
+          while IFS= read -r line; do
+            local key="''${line%%=*}"
+            local value="''${line#*=}"
+            after_env["$key"]="$value"
+          done < <(for f in "$@"; do source "$f"; done; env)
+
+          # Compare maps and print added or modified variables
+          for key in "''${!after_env[@]}"; do
+            # Print if the key is new OR if the value for an existing key has changed.
+            if ! [[ -v before_env["$key"] ]] || [[ "''${before_env[$key]}" != "''${after_env[$key]}" ]]; then
+              echo "$key=''${after_env[$key]}"
+            fi
+          done
+        }
+
+        diff_env \
+          "${nixPkg}/etc/profile.d/nix.sh" \
+          "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
+      '';
+      executable = true;
+      force = true;
+    };
+  };
+
   sessionVariables = mkIf (cfg.sessionVariables != { }) {
     "environment.d/10-home-manager.conf".text =
       lib.concatStringsSep "\n" (lib.mapAttrsToList (n: v: "${n}=${toString v}") cfg.sessionVariables)
@@ -384,12 +438,20 @@ in
       settings = mkOption {
         apply =
           sections:
+          let
+            generatorPath = "SYSTEMD_ENVIRONMENT_GENERATOR_PATH=%h/.config/systemd/user-environment-generators:/run/systemd/user-environment-generators:/etc/systemd/user-environment-generators:/usr/local/lib/systemd/user-environment-generators:/usr/lib/systemd/user-environment-generators";
+            managerEnv = sections.Manager.ManagerEnvironment or "";
+            finalManagerEnv = generatorPath + (if managerEnv == "" then "" else " " + managerEnv);
+            newManager = (sections.Manager or { }) // {
+              ManagerEnvironment = finalManagerEnv;
+            };
+          in
           sections
           // {
             # Setting one of these to an empty value would reset any
             # previous settings, so we’ll remove them instead if they
             # are not explicitly set.
-            Manager = removeIfEmpty sections.Manager [
+            Manager = removeIfEmpty newManager [
               "ManagerEnvironment"
               "DefaultEnvironment"
             ];
@@ -471,6 +533,8 @@ in
         ++ (buildServices "mount" cfg.mounts)
         ++ (buildServices "automount" cfg.automounts)
       ))
+
+      hmSessionVarsUserEnvGenerator
 
       sessionVariables
 
