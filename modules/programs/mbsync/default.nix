@@ -104,11 +104,13 @@ let
         passwordCommand
         userName
         ;
+      # Use IMAP-specific username if set, otherwise fall back to account username
+      imapUser = if imap.userName != null then imap.userName else userName;
     in
     genSection "IMAPAccount ${name}" (
       {
         Host = imap.host;
-        User = userName;
+        User = imapUser;
         PassCmd = toString passwordCommand;
       }
       // genTlsConfig imap.tls
@@ -307,7 +309,9 @@ in
             (checkAccounts (a: a.maildir == null) "Missing maildir configuration")
             (checkAccounts (a: a.imap == null) "Missing IMAP configuration")
             (checkAccounts (a: a.passwordCommand == null) "Missing passwordCommand")
-            (checkAccounts (a: a.userName == null) "Missing username")
+            (checkAccounts (
+              a: a.userName == null && (a.imap.userName == null || a.imap == null)
+            ) "Missing username (either account-level or IMAP-specific)")
           ];
       }
 

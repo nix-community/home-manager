@@ -137,7 +137,7 @@ let
     description = "The authentication mechanism.";
   };
 
-  imapModule = types.submodule {
+  imapModule = { accountConfig, ... }: {
     options = {
       host = mkOption {
         type = types.str;
@@ -154,6 +154,19 @@ let
         description = ''
           The port on which the IMAP server listens. If
           `null` then the default port is used.
+        '';
+      };
+
+      userName = mkOption {
+        type = types.nullOr types.str;
+        default = accountConfig.userName;
+        defaultText = lib.literalExpression ''
+          # Inherits account configuration
+          accountConfig.userName
+        '';
+        description = ''
+          The server username for IMAP. If `null`,
+          the account-level `userName` will be used.
         '';
       };
 
@@ -199,7 +212,7 @@ let
     };
   };
 
-  smtpModule = types.submodule {
+  smtpModule = {accountConfig, ...}: {
     options = {
       host = mkOption {
         type = types.str;
@@ -216,6 +229,19 @@ let
         description = ''
           The port on which the SMTP server listens. If
           `null` then the default port is used.
+        '';
+      };
+
+      userName = mkOption {
+        type = types.nullOr types.str;
+        default = accountConfig.userName;
+        defaultText = lib.literalExpression ''
+          # Inherits account configuration
+          accountConfig.userName
+        '';
+        description = ''
+          The server username for SMTP. If `null`,
+          the account-level `userName` will be used.
         '';
       };
 
@@ -424,7 +450,8 @@ let
           default = null;
           description = ''
             The server username of this account. This will be used as
-            the SMTP, IMAP, and JMAP user name.
+            the default SMTP, IMAP, and JMAP user name, but can be
+            overridden by setting the corresponding username option.
           '';
         };
 
@@ -482,7 +509,12 @@ let
         };
 
         imap = mkOption {
-          type = types.nullOr imapModule;
+          type = types.nullOr (types.submoduleWith {
+            modules = [ imapModule ];
+            specialArgs.accountConfig = config;
+            shorthandOnlyDefinesConfig = true;
+          });
+
           default = null;
           description = ''
             The IMAP configuration to use for this account.
@@ -514,7 +546,12 @@ let
         };
 
         smtp = mkOption {
-          type = types.nullOr smtpModule;
+          type = types.nullOr (types.submoduleWith {
+            modules = [ smtpModule ];
+            specialArgs.accountConfig = config;
+            shorthandOnlyDefinesConfig = true;
+          });
+
           default = null;
           description = ''
             The SMTP configuration to use for this account.
