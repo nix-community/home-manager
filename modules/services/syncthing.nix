@@ -706,7 +706,11 @@ in
         '';
         example = {
           options.localAnnounceEnabled = false;
-          gui.theme = "black";
+          gui = {
+            theme = "black";
+            user = config.home.username;
+            useTLS = true;
+          };
         };
       };
 
@@ -766,6 +770,13 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = (cfg.passwordFile) == null || (cfg.settings ? gui.user);
+          message = "Missing username for the provided password to connect to the GUI.";
+        }
+      ];
+
       home.packages = [ (lib.getOutput "man" cfg.package) ];
 
       systemd.user.services = {
