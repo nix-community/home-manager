@@ -712,11 +712,11 @@ in
 
             nixProfileRemove 'home-manager-path'
 
-            run $oldNix profile add $1
+            run $oldNix profile install $1
           }
 
           if [[ -e ${cfg.profileDirectory}/manifest.json ]] ; then
-            INSTALL_CMD="nix profile add"
+            INSTALL_CMD="nix profile install"
             INSTALL_CMD_ACTUAL="nixReplaceProfile"
             LIST_CMD="nix profile list"
             REMOVE_CMD_SYNTAX='nix profile remove {number | store path}'
