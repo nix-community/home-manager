@@ -205,7 +205,7 @@ let
   extraFilesSettingsType = with types; nullOr (attrsOf (submodule extraFilesOptions));
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.karaolidis ];
+  meta.maintainers = [ lib.maintainers.karaolidis ];
 
   options.programs.obsidian = {
     enable = mkEnableOption "obsidian";
