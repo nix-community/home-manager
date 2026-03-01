@@ -8,4 +8,5 @@
   tmux-shortcut-without-prefix = ./shortcut-without-prefix.nix;
   tmux-prefix = ./prefix.nix;
   tmux-mouse-enabled = ./mouse-enabled.nix;
+  tmux-truecolor-enabled = ./truecolor-enabled.nix;
 }
