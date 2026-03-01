@@ -439,6 +439,7 @@ let
 
     text = concatStringsSep "\n" (
       (optional (cfg.extraConfigEarly != "") cfg.extraConfigEarly)
+      ++ (optional (cfg.settings != { }) (lib.hm.generators.toSwayConf { } cfg.settings))
       ++ (
         if cfg.config != null then
           with cfg.config;
@@ -506,6 +507,7 @@ in
     Scrumplex
     alexarice
     sumnerevans
+    sinanmohd
   ];
 
   imports =
@@ -673,6 +675,30 @@ in
       description = ''
         Command line arguments passed to launch Sway. Please DO NOT report
         issues if you use an unsupported GPU (proprietary drivers).
+      '';
+    };
+
+    settings = lib.mkOption {
+      type =
+        with lib.types;
+        let
+          valueType =
+            oneOf [
+              int
+              float
+              str
+              path
+              (listOf str)
+              (attrsOf valueType)
+            ]
+            // {
+              description = "Sway configuration value";
+            };
+        in
+        valueType;
+      default = { };
+      description = ''
+        Configuration for `sway`. See `sway(5)` for supported values.
       '';
     };
 
