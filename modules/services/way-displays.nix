@@ -107,7 +107,7 @@ in
         Documentation = "man:way-displays(1)";
         ConditionEnvironment = "WAYLAND_DISPLAY";
         PartOf = cfg.systemdTarget;
-        Requires = cfg.systemdTarget;
+        Requisite = cfg.systemdTarget;
         After = cfg.systemdTarget;
       };
 
