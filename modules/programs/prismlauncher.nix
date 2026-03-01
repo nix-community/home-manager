@@ -23,7 +23,7 @@ let
 in
 
 {
-  meta.maintainers = with lib.hm.maintainers; [
+  meta.maintainers = with lib.maintainers; [
     mikaeladev
   ];
 

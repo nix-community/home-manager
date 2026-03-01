@@ -362,12 +362,6 @@
     github = "mifom";
     githubId = 23462908;
   };
-  mikaeladev = {
-    name = "mikaeladev";
-    email = "mikaeladev@users.noreply.github.com";
-    github = "mikaeladev";
-    githubId = 100416544;
-  };
   mikilio = {
     name = "mikilio";
     email = "official.mikilio+dev@gmail.com";
