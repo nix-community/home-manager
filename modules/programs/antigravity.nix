@@ -16,7 +16,6 @@ in
       nameShort = "Antigravity";
       dataFolderName = ".antigravity";
       skipVersionCheck = true;
-      visible = true;
     })
   ];
 }

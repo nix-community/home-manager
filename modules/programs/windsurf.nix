@@ -15,7 +15,6 @@ in
       packageName = "windsurf";
       nameShort = "Windsurf";
       dataFolderName = ".windsurf";
-      visible = true;
     })
   ];
 }

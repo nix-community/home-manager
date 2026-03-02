@@ -4,10 +4,7 @@
   packageName,
   nameShort ? null,
   dataFolderName ? null,
-  knownProducts ? {},
   skipVersionCheck ? false,
-  pnamesSkipVersionCheck ? [],
-  visible ? false,
 }:
 {
   config,
@@ -339,7 +336,7 @@ in
         if nameShort != null then
           nameShort
         else
-          knownProducts.${vscodePname}.nameShort or productInfo.nameShort;
+          productInfo.nameShort;
       defaultText = "(derived from product.json)";
       example = "MyCoolVSCodeFork";
       description = ''
@@ -355,7 +352,7 @@ in
         if dataFolderName != null then
           dataFolderName
         else
-          knownProducts.${vscodePname}.dataFolderName or productInfo.dataFolderName;
+          productInfo.dataFolderName;
       defaultText = "(derived from product.json)";
       example = ".cool-vscode";
       description = ''
@@ -564,7 +561,6 @@ in
                   (
                     lib.versionAtLeast vscodeVersion "1.74.0"
                     || skipVersionCheck
-                    || builtins.elem vscodePname pnamesSkipVersionCheck
                   )
                   && defaultProfile != { }
                 )
@@ -593,7 +589,6 @@ in
                       (
                         lib.versionAtLeast vscodeVersion "1.74.0"
                         || skipVersionCheck
-                    || builtins.elem vscodePname pnamesSkipVersionCheck
                       )
                       && defaultProfile != { }
                     ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));
