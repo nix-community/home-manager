@@ -1570,6 +1570,13 @@
     name = "Malte Voos";
     source = "nixpkgs";
   };
+  mana-byte = {
+    email = "manaikilaut@gmail.com";
+    github = "mana-byte";
+    githubId = 93316844;
+    name = "Manaiki Laut";
+    source = "nixpkgs";
+  };
   mateusauler = {
     email = "mateus@auler.dev";
     github = "mateusauler";
