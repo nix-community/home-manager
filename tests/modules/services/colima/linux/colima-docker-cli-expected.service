@@ -9,7 +9,7 @@ Environment=DOCKER_CONFIG=/home/hm-user/.config/docker
 ExecStart=@colima@/bin/colima start default \
   -f \
   --activate=true \
-  --save-config=false
+  --save-config=true
 
 Restart=always
 RestartSec=2

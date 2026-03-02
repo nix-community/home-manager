@@ -7,7 +7,7 @@ Environment=PATH=@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/
 ExecStart=@colima@/bin/colima start default \
   -f \
   --activate=true \
-  --save-config=false
+  --save-config=true
 
 Restart=always
 RestartSec=2
