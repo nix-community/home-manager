@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 let
   package = pkgs.writeScriptBin "antigravity" "" // {
