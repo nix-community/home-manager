@@ -7,6 +7,7 @@ KillMode=process
 Restart=always
 RestartSec=5
 Type=simple
+X-Restart-Triggers=/nix/store/00000000000000000000000000000000-vicinae-settings
 
 [Unit]
 After=graphical-session.target
