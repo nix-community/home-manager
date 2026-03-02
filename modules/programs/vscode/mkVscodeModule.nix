@@ -5,6 +5,7 @@
   nameShort ? null,
   dataFolderName ? null,
   knownProducts ? {},
+  pnamesSkipVersionCheck ? [],
   visible ? false,
 }:
 {
@@ -33,11 +34,7 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  libPath =
-    if vscodePname == "antigravity" then
-      "${cfg.package}/lib/antigravity"
-    else
-      "${cfg.package}/lib/vscode";
+  libPath = "${cfg.package}/lib/vscode";
 
   productInfoPath =
     if
@@ -565,11 +562,7 @@ in
                 (
                   (
                     lib.versionAtLeast vscodeVersion "1.74.0"
-                    || builtins.elem vscodePname [
-                      "cursor"
-                      "windsurf"
-                      "antigravity"
-                    ]
+                    || builtins.elem vscodePname pnamesSkipVersionCheck
                   )
                   && defaultProfile != { }
                 )
@@ -597,11 +590,7 @@ in
                     ++ lib.optional (
                       (
                         lib.versionAtLeast vscodeVersion "1.74.0"
-                        || builtins.elem vscodePname [
-                          "cursor"
-                          "windsurf"
-                          "antigravity"
-                        ]
+                        || builtins.elem vscodePname pnamesSkipVersionCheck
                       )
                       && defaultProfile != { }
                     ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));

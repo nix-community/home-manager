@@ -15,6 +15,7 @@ in
       packageName = "antigravity";
       nameShort = "Antigravity";
       dataFolderName = ".antigravity";
+      pnamesSkipVersionCheck = [ "antigravity" ];
       visible = true;
     })
   ];
