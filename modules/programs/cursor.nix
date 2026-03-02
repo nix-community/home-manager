@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 let
   modulePath = [
     "programs"
@@ -8,6 +8,8 @@ let
   mkVscodeModule = import ./vscode/mkVscodeModule.nix;
 in
 {
+  meta.maintainers = with lib.maintainers; [ sei40kr ];
+
   imports = [
     (mkVscodeModule {
       inherit modulePath;
