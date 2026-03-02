@@ -13,6 +13,8 @@ in
       inherit modulePath;
       name = "VSCodium";
       packageName = "vscodium";
+      nameShort = "VSCodium";
+      dataFolderName = ".vscode-oss";
       visible = true;
     })
   ];

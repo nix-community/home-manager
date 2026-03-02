@@ -13,6 +13,8 @@ in
       inherit modulePath;
       name = "Antigravity";
       packageName = "antigravity";
+      nameShort = "Antigravity";
+      dataFolderName = ".antigravity";
       visible = true;
     })
   ];
