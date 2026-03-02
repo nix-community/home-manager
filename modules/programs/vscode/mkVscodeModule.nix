@@ -2,6 +2,9 @@
   modulePath,
   name,
   packageName,
+  nameShort ? null,
+  dataFolderName ? null,
+  knownProducts ? {},
   visible ? false,
 }:
 {
@@ -53,42 +56,6 @@ let
       "${cfg.package}/product.json";
 
   productInfo = lib.importJSON productInfoPath;
-
-  # Use preset names for known products to avoid IFD loading it from product.json
-  knownProducts = {
-    cursor = {
-      dataFolderName = ".cursor";
-      nameShort = "Cursor";
-    };
-    kiro = {
-      dataFolderName = ".kiro";
-      nameShort = "Kiro";
-    };
-    openvscode-server = {
-      dataFolderName = ".openvscode-server";
-      nameShort = "OpenVSCode Server";
-    };
-    vscode = {
-      dataFolderName = ".vscode";
-      nameShort = "Code";
-    };
-    vscode-insiders = {
-      dataFolderName = ".vscode-insiders";
-      nameShort = "Code - Insiders";
-    };
-    vscodium = {
-      dataFolderName = ".vscode-oss";
-      nameShort = "VSCodium";
-    };
-    windsurf = {
-      dataFolderName = ".windsurf";
-      nameShort = "Windsurf";
-    };
-    antigravity = {
-      dataFolderName = ".antigravity";
-      nameShort = "Antigravity";
-    };
-  };
 
   configDir = cfg.nameShort;
   extensionDir = cfg.dataFolderName;
@@ -370,7 +337,11 @@ in
 
     nameShort = mkOption {
       type = types.str;
-      default = knownProducts.${vscodePname}.nameShort or productInfo.nameShort;
+      default =
+        if nameShort != null then
+          nameShort
+        else
+          knownProducts.${vscodePname}.nameShort or productInfo.nameShort;
       defaultText = "(derived from product.json)";
       example = "MyCoolVSCodeFork";
       description = ''
@@ -382,7 +353,11 @@ in
 
     dataFolderName = mkOption {
       type = types.str;
-      default = knownProducts.${vscodePname}.dataFolderName or productInfo.dataFolderName;
+      default =
+        if dataFolderName != null then
+          dataFolderName
+        else
+          knownProducts.${vscodePname}.dataFolderName or productInfo.dataFolderName;
       defaultText = "(derived from product.json)";
       example = ".cool-vscode";
       description = ''

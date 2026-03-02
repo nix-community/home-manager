@@ -13,6 +13,8 @@ in
       inherit modulePath;
       name = "Kiro";
       packageName = "kiro";
+      nameShort = "Kiro";
+      dataFolderName = ".kiro";
       visible = true;
     })
   ];

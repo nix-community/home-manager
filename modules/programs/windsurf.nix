@@ -13,6 +13,8 @@ in
       inherit modulePath;
       name = "Windsurf";
       packageName = "windsurf";
+      nameShort = "Windsurf";
+      dataFolderName = ".windsurf";
       visible = true;
     })
   ];

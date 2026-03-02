@@ -13,6 +13,8 @@ in
       inherit modulePath;
       name = "Cursor";
       packageName = "cursor";
+      nameShort = "Cursor";
+      dataFolderName = ".cursor";
       visible = true;
     })
   ];
