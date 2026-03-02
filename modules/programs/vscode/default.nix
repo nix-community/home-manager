@@ -13,46 +13,8 @@ in
       inherit modulePath;
       name = "Visual Studio Code";
       packageName = "vscode";
-      knownProducts = {
-        cursor = {
-          dataFolderName = ".cursor";
-          nameShort = "Cursor";
-        };
-        kiro = {
-          dataFolderName = ".kiro";
-          nameShort = "Kiro";
-        };
-        openvscode-server = {
-          dataFolderName = ".openvscode-server";
-          nameShort = "OpenVSCode Server";
-        };
-        vscode = {
-          dataFolderName = ".vscode";
-          nameShort = "Code";
-        };
-        vscode-insiders = {
-          dataFolderName = ".vscode-insiders";
-          nameShort = "Code - Insiders";
-        };
-        vscodium = {
-          dataFolderName = ".vscode-oss";
-          nameShort = "VSCodium";
-        };
-        windsurf = {
-          dataFolderName = ".windsurf";
-          nameShort = "Windsurf";
-        };
-        antigravity = {
-          dataFolderName = ".antigravity";
-          nameShort = "Antigravity";
-        };
-      };
-      pnamesSkipVersionCheck = [
-        "cursor"
-        "windsurf"
-        "antigravity"
-      ];
-      visible = true;
+      nameShort = "Code";
+      dataFolderName = ".vscode";
     })
 
     ./haskell.nix

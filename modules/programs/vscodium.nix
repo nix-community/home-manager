@@ -15,7 +15,6 @@ in
       packageName = "vscodium";
       nameShort = "VSCodium";
       dataFolderName = ".vscode-oss";
-      visible = true;
     })
   ];
 }

@@ -15,7 +15,6 @@ in
       packageName = "cursor";
       nameShort = "Cursor";
       dataFolderName = ".cursor";
-      visible = true;
     })
   ];
 }

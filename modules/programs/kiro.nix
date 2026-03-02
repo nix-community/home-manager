@@ -15,7 +15,6 @@ in
       packageName = "kiro";
       nameShort = "Kiro";
       dataFolderName = ".kiro";
-      visible = true;
     })
   ];
 }
