@@ -152,124 +152,129 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs lib.platforms.linux)
-      {
-        assertion = cfg.systemd.enable -> cfg.package != null;
-        message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
-      }
-      {
-        assertion = !cfg.useLayerShell -> !versionPost0_17;
-        message = "After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.";
-      }
-    ];
-    lib.vicinae.mkExtension = (
-      {
-        name,
-        src,
-      }:
-      (pkgs.buildNpmPackage {
-        inherit name src;
-        installPhase = ''
-          runHook preInstall
-
-          mkdir -p $out
-          cp -r /build/.local/share/vicinae/extensions/${name}/* $out/
-
-          runHook postInstall
-        '';
-        npmDeps = pkgs.importNpmLock { npmRoot = src; };
-        npmConfigHook = pkgs.importNpmLock.npmConfigHook;
-      })
-    );
-
-    lib.vicinae.mkRayCastExtension = (
-      {
-        name,
-        sha256,
-        rev,
-      }:
-      let
-        src =
-          pkgs.fetchgit {
-            inherit rev sha256;
-            url = "https://github.com/raycast/extensions";
-            sparseCheckout = [
-              "/extensions/${name}"
-            ];
+  config =
+    let
+      xdgConfig =
+        let
+          themeFormat = if themeIsToml then tomlFormat else jsonFormat;
+          themeExtension = if themeIsToml then "toml" else "json";
+          themeFiles = lib.mapAttrs' (
+            name: theme:
+            lib.nameValuePair "vicinae/themes/${name}.${themeExtension}" {
+              source = themeFormat.generate "vicinae-${name}-theme" theme;
+            }
+          ) cfg.themes;
+          settingsPath = if versionPost0_17 then "vicinae/settings.json" else "vicinae/vicinae.json";
+        in
+        {
+          configFile = {
+            "${settingsPath}" = lib.mkIf (cfg.settings != { }) {
+              source = jsonFormat.generate "vicinae-settings" cfg.settings;
+            };
           }
-          + "/extensions/${name}";
-      in
-      (pkgs.buildNpmPackage {
-        inherit name src;
-        installPhase = ''
-          runHook preInstall
+          // lib.optionalAttrs (!themeIsToml) themeFiles;
 
-          mkdir -p $out
-          cp -r /build/.config/raycast/extensions/${name}/* $out/
-
-          runHook postInstall
-        '';
-        npmDeps = pkgs.importNpmLock { npmRoot = src; };
-        npmConfigHook = pkgs.importNpmLock.npmConfigHook;
-      })
-    );
-
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-
-    xdg =
-      let
-        themeFormat = if themeIsToml then tomlFormat else jsonFormat;
-        themeExtension = if themeIsToml then "toml" else "json";
-        themeFiles = lib.mapAttrs' (
-          name: theme:
-          lib.nameValuePair "vicinae/themes/${name}.${themeExtension}" {
-            source = themeFormat.generate "vicinae-${name}-theme" theme;
-          }
-        ) cfg.themes;
-        settingsPath = if versionPost0_17 then "vicinae/settings.json" else "vicinae/vicinae.json";
-      in
-      {
-        configFile = {
-          "${settingsPath}" = lib.mkIf (cfg.settings != { }) {
-            source = jsonFormat.generate "vicinae-settings" cfg.settings;
-          };
+          dataFile =
+            builtins.listToAttrs (
+              map (item: {
+                name = "vicinae/extensions/${item.name}";
+                value.source = item;
+              }) cfg.extensions
+            )
+            // lib.optionalAttrs themeIsToml themeFiles;
+        };
+    in
+    lib.mkIf cfg.enable {
+      assertions = [
+        (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs lib.platforms.linux)
+        {
+          assertion = cfg.systemd.enable -> cfg.package != null;
+          message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
         }
-        // lib.optionalAttrs (!themeIsToml) themeFiles;
+        {
+          assertion = !cfg.useLayerShell -> !versionPost0_17;
+          message = "After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.";
+        }
+      ];
+      lib.vicinae.mkExtension = (
+        {
+          name,
+          src,
+        }:
+        (pkgs.buildNpmPackage {
+          inherit name src;
+          installPhase = ''
+            runHook preInstall
 
-        dataFile =
-          builtins.listToAttrs (
-            map (item: {
-              name = "vicinae/extensions/${item.name}";
-              value.source = item;
-            }) cfg.extensions
-          )
-          // lib.optionalAttrs themeIsToml themeFiles;
-      };
+            mkdir -p $out
+            cp -r /build/.local/share/vicinae/extensions/${name}/* $out/
 
-    systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
-      Unit = {
-        Description = "Vicinae server daemon";
-        Documentation = [ "https://docs.vicinae.com" ];
-        After = [ cfg.systemd.target ];
-        PartOf = [ cfg.systemd.target ];
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
-        Restart = "always";
-        RestartSec = 5;
-        KillMode = "process";
-        EnvironmentFile = lib.mkIf (!versionPost0_17) (
-          pkgs.writeText "vicinae-env" ''
-            USE_LAYER_SHELL=${if cfg.useLayerShell then toString 1 else toString 0}
-          ''
-        );
-      };
-      Install = lib.mkIf cfg.systemd.autoStart {
-        WantedBy = [ cfg.systemd.target ];
+            runHook postInstall
+          '';
+          npmDeps = pkgs.importNpmLock { npmRoot = src; };
+          npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+        })
+      );
+
+      lib.vicinae.mkRayCastExtension = (
+        {
+          name,
+          sha256,
+          rev,
+        }:
+        let
+          src =
+            pkgs.fetchgit {
+              inherit rev sha256;
+              url = "https://github.com/raycast/extensions";
+              sparseCheckout = [
+                "/extensions/${name}"
+              ];
+            }
+            + "/extensions/${name}";
+        in
+        (pkgs.buildNpmPackage {
+          inherit name src;
+          installPhase = ''
+            runHook preInstall
+
+            mkdir -p $out
+            cp -r /build/.config/raycast/extensions/${name}/* $out/
+
+            runHook postInstall
+          '';
+          npmDeps = pkgs.importNpmLock { npmRoot = src; };
+          npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+        })
+      );
+
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+      xdg = xdgConfig;
+
+      systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
+        Unit = {
+          Description = "Vicinae server daemon";
+          Documentation = [ "https://docs.vicinae.com" ];
+          After = [ cfg.systemd.target ];
+          PartOf = [ cfg.systemd.target ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
+          X-Restart-Triggers = lib.hashString "md5" (builtins.toJSON xdgConfig);
+          Restart = "always";
+          RestartSec = 5;
+          KillMode = "process";
+          EnvironmentFile = lib.mkIf (!versionPost0_17) (
+            pkgs.writeText "vicinae-env" ''
+              USE_LAYER_SHELL=${if cfg.useLayerShell then toString 1 else toString 0}
+            ''
+          );
+        };
+        Install = lib.mkIf cfg.systemd.autoStart {
+          WantedBy = [ cfg.systemd.target ];
+        };
       };
     };
-  };
 }
