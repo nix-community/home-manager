@@ -5,6 +5,7 @@
   nameShort ? null,
   dataFolderName ? null,
   knownProducts ? {},
+  skipVersionCheck ? false,
   pnamesSkipVersionCheck ? [],
   visible ? false,
 }:
@@ -562,6 +563,7 @@ in
                 (
                   (
                     lib.versionAtLeast vscodeVersion "1.74.0"
+                    || skipVersionCheck
                     || builtins.elem vscodePname pnamesSkipVersionCheck
                   )
                   && defaultProfile != { }
@@ -590,7 +592,8 @@ in
                     ++ lib.optional (
                       (
                         lib.versionAtLeast vscodeVersion "1.74.0"
-                        || builtins.elem vscodePname pnamesSkipVersionCheck
+                        || skipVersionCheck
+                    || builtins.elem vscodePname pnamesSkipVersionCheck
                       )
                       && defaultProfile != { }
                     ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));
