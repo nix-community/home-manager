@@ -47,6 +47,11 @@ in
           nameShort = "Antigravity";
         };
       };
+      pnamesSkipVersionCheck = [
+        "cursor"
+        "windsurf"
+        "antigravity"
+      ];
       visible = true;
     })
 
