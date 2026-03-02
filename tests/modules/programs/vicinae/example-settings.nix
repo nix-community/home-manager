@@ -90,6 +90,8 @@
     assertFileExists      "home-files/.local/share/vicinae/themes/catppuccin-mocha.toml"
     assertFileExists      "home-files/.local/share/vicinae/extensions/cdnjs/package.json"
     assertFileExists      "home-files/.local/share/vicinae/extensions/test-extension/package.json"
-    assertFileContent     "home-files/.config/systemd/user/vicinae.service"  ${./service.service}
+
+    serviceFile=$(normalizeStorePaths "home-files/.config/systemd/user/vicinae.service")
+    assertFileContent  $serviceFile  ${./service.service}
   '';
 }
