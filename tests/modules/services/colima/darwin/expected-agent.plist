@@ -22,7 +22,7 @@
 	<array>
 		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>/bin/wait4path /nix/store &amp;&amp; exec @colima@/bin/colima start default -f &apos;--activate=true&apos; &apos;--save-config=false&apos;</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @colima@/bin/colima start default -f &apos;--activate=true&apos; &apos;--save-config=true&apos;</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
