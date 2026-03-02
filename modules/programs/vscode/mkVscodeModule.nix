@@ -26,8 +26,6 @@ let
   moduleName = lib.concatStringsSep "." modulePath;
 
   cfg = lib.getAttrFromPath modulePath config;
-
-  vscodePname = cfg.package.pname;
   vscodeVersion = cfg.package.version;
 
   jsonFormat = pkgs.formats.json { };
@@ -332,11 +330,7 @@ in
 
     nameShort = mkOption {
       type = types.str;
-      default =
-        if nameShort != null then
-          nameShort
-        else
-          productInfo.nameShort;
+      default = if nameShort != null then nameShort else productInfo.nameShort;
       defaultText = "(derived from product.json)";
       example = "MyCoolVSCodeFork";
       description = ''
@@ -348,11 +342,7 @@ in
 
     dataFolderName = mkOption {
       type = types.str;
-      default =
-        if dataFolderName != null then
-          dataFolderName
-        else
-          productInfo.dataFolderName;
+      default = if dataFolderName != null then dataFolderName else productInfo.dataFolderName;
       defaultText = "(derived from product.json)";
       example = ".cool-vscode";
       description = ''
@@ -389,9 +379,9 @@ in
 
   config = mkIf cfg.enable {
     warnings = [
-      (mkIf (allProfilesExceptDefault != { } && cfg.mutableExtensionsDir)
-        "${moduleName}.mutableExtensionsDir can be used only if no profiles apart from default are set."
-      )
+      (mkIf (
+        allProfilesExceptDefault != { } && cfg.mutableExtensionsDir
+      ) "${moduleName}.mutableExtensionsDir can be used only if no profiles apart from default are set.")
       (mkIf
         (
           (lib.filterAttrs (
@@ -557,13 +547,7 @@ in
             lib.concatMap toPaths (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
             ++
               lib.optional
-                (
-                  (
-                    lib.versionAtLeast vscodeVersion "1.74.0"
-                    || skipVersionCheck
-                  )
-                  && defaultProfile != { }
-                )
+                ((lib.versionAtLeast vscodeVersion "1.74.0" || skipVersionCheck) && defaultProfile != { })
                 {
                   # Whenever our immutable extensions.json changes, force VSCode to regenerate
                   # extensions.json with both mutable and immutable extensions.
@@ -586,11 +570,7 @@ in
                   paths =
                     (flatten (mapAttrsToList (n: v: v.extensions) cfg.profiles))
                     ++ lib.optional (
-                      (
-                        lib.versionAtLeast vscodeVersion "1.74.0"
-                        || skipVersionCheck
-                      )
-                      && defaultProfile != { }
+                      (lib.versionAtLeast vscodeVersion "1.74.0" || skipVersionCheck) && defaultProfile != { }
                     ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));
                 };
               in
