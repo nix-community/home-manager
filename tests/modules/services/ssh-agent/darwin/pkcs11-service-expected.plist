@@ -17,7 +17,7 @@
 	<array>
 		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>/bin/wait4path /nix/store &amp;&amp; exec @bash-interactive@/bin/bash -c &apos;@openssh@/bin/ssh-agent -D -a &quot;$(@getconf-system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent&quot; -P &apos;\&apos;&apos;/usr/lib/libpkcs11.so,/usr/lib/other.so&apos;\&apos;&apos;&apos;</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @bash-interactive@/bin/bash -c &apos;@openssh@/bin/ssh-agent -D -a &quot;$(@system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent&quot; -P &apos;\&apos;&apos;/usr/lib/libpkcs11.so,/usr/lib/other.so&apos;\&apos;&apos;&apos;</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
