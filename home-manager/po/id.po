@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2024-02-16 22:01+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"PO-Revision-Date: 2026-03-03 13:09+0000\n"
+"Last-Translator: Wildan Nursyamsi <muhamad11wildan4n@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/home-manager/"
 "cli/id/>\n"
 "Language: id\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.4\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "argument hilang untuk"
 
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "hanya bisa digunakan setelah"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -82,6 +82,24 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
+"Untuk menghindari peringatan ini langkah-langkah berikut ini\n"
+"\n"
+"1. Beritahu Home Manager untuk menggunakan path, sebagai contoh tambahakn\n"
+"\n"
+"......{programs.home-manager.path = \"&s\";}\n"
+"\n"
+"... untuk konfigurasi kamu\n"
+"\n"
+"... jika kamu import Home Manager secara langsung, kamu dapat menggunakan "
+"`path` parameter\n"
+"\n"
+"......pkgs.callPackage/path/to/home-manager-packager {path = \"%s\";}\n"
+"\n"
+"...ketika memanggil package Home Manager.\n"
+"\n"
+"2. Hapus path yang tidak digunakan.\n"
+"\n"
+"......$ rm -r \"%s\""
 
 #: home-manager/home-manager:153
 msgid "Sanity checking Nix"
@@ -119,6 +137,7 @@ msgstr "Membuat pembuatan Home Manager awal..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:527
+#, fuzzy
 msgid ""
 "All done! The home-manager tool should now be installed and you can edit\n"
 "\n"
@@ -127,6 +146,12 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Alat home-manager sekarang sudah terpasang dan Anda dapat mengedit\n"
+"\n"
+"\n"
+"untuk mengkonfigurasi Home Manager. Jalankan 'man home-configuration.nix' "
+"untuk\n"
+"melihat semua opsi yang tersedia."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:532
@@ -166,7 +191,7 @@ msgstr "Pengaturan \"news.display\" yang tidak diketahui \"%s\"."
 #: home-manager/home-manager:641
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Tolong atur $EDITOR atau $VISUAL variabel enviorment"
 
 #: home-manager/home-manager:659
 msgid "Cannot run build in read-only directory"
@@ -174,7 +199,7 @@ msgstr "Tidak dapat menjalankan build di direktori hanya-baca"
 
 #: home-manager/home-manager:822
 msgid "The configuration does not contain the specialisation \"%s\""
-msgstr ""
+msgstr "Konfigurasi tidak mengandung specialisation"
 
 #: home-manager/home-manager:876
 msgid "No generation with ID %s"
@@ -194,15 +219,15 @@ msgstr "Tidak ada generasi yang kedaluwarsa"
 
 #: home-manager/home-manager:912
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Tidak ada paket home-manager yang tampaknya terpasang."
 
 #: home-manager/home-manager:997
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Agument tidak diketahui"
 
 #: home-manager/home-manager:1022
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Ini akan menghapus Home Manager dari sistem Anda"
 
 #: home-manager/home-manager:1025
 msgid "This is a dry run, nothing will actually be uninstalled."
