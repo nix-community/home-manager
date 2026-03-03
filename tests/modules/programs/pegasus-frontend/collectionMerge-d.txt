@@ -1,0 +1,5 @@
+collection: collection d
+file: a
+file: d
+launch: {file.path}
+not_a_setting: testing
