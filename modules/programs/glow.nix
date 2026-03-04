@@ -5,23 +5,21 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.programs.glow;
   yamlFormat = pkgs.formats.yaml { };
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 in
 {
-  meta.maintainers = [ hm.maintainers.m-vz ];
+  meta.maintainers = [ lib.hm.maintainers.m-vz ];
 
   options.programs.glow = {
-    enable = mkEnableOption "Glow, a terminal based markdown reader";
+    enable = lib.mkEnableOption "Glow, a terminal based markdown reader";
 
-    settings = mkOption {
+    settings = lib.mkOption {
       type = yamlFormat.type;
       default = { };
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           # style name or JSON path (default "auto")
           style = "auto";
@@ -44,14 +42,14 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.glow ];
 
-    home.file."Library/Preferences/glow/glow.yml" = mkIf (cfg.settings != { } && isDarwin) {
+    home.file."Library/Preferences/glow/glow.yml" = lib.mkIf (cfg.settings != { } && isDarwin) {
       source = yamlFormat.generate "glow.yml" cfg.settings;
     };
 
-    xdg.configFile."glow/glow.yml" = mkIf (cfg.settings != { } && !isDarwin) {
+    xdg.configFile."glow/glow.yml" = lib.mkIf (cfg.settings != { } && !isDarwin) {
       source = yamlFormat.generate "glow.yml" cfg.settings;
     };
   };
