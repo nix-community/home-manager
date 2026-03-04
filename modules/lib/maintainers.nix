@@ -440,6 +440,12 @@
     github = "pedorich-n";
     githubId = 15573098;
   };
+  philocalyst = {
+    name = "Myles";
+    email = "milestheperson@posteo.net";
+    github = "philocalyst";
+    githubId = 114884788;
+  };
   pltanton = {
     name = "pltanton";
     email = "plotnikovanton@gmail.com";
