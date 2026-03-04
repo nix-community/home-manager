@@ -36,9 +36,6 @@
       "ll" = "ls -a";
       "multi word alias" = "cd -";
       "z" = "__zoxide_z";
-      "multi-cmd" = "echo 'first'; echo 'second'";
-      "pipe-cmd" = "ls | where type == dir | length";
-      "mixed" = "echo 'start'; ls | where type == dir";
     };
 
     settings = {

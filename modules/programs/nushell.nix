@@ -188,6 +188,11 @@ in
       description = ''
         An attribute set that maps aliases (the top level attribute names in
         this option) to command strings or directly to build outputs.
+
+        Note that Nushell's {command}`alias` only supports aliasing a single
+        command call. Aliases containing pipes or semicolons will not work as
+        expected. For complex commands, use {option}`programs.nushell.extraConfig`
+        to define a {command}`def` manually.
       '';
     };
 
@@ -231,15 +236,7 @@ in
             cfg.configFile != null || cfg.extraConfig != "" || aliasesStr != "" || cfg.settings != { };
 
           aliasesStr = lib.concatLines (
-            lib.mapAttrsToList (
-              k: v:
-              # Use def instead of alias for commands with semicolons or pipes
-              # to avoid immediate execution of subsequent statements
-              if (lib.hasInfix ";" v) || (lib.hasInfix "|" v) then
-                "def ${toNushell { } k} [] { ${v} }"
-              else
-                "alias ${toNushell { } k} = ${v}"
-            ) cfg.shellAliases
+            lib.mapAttrsToList (k: v: "alias ${toNushell { } k} = ${v}") cfg.shellAliases
           );
         in
         lib.mkIf writeConfig {
