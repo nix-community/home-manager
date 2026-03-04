@@ -43,22 +43,22 @@ let
   paletteModule = types.submodule {
     options = {
       type = mkOption {
-        type = types.enum [
+        type = types.nullOr (types.enum [
           "Dark"
           "Light"
           "Full"
-        ];
-        default = "Full";
+        ]);
+        default = null;
         description = "Color set to use for the palette. Case-sensitive.";
       };
       glyph = mkOption {
-        type = types.str;
-        default = "() ";
+        type = types.nullOr types.str;
+        default = null;
         description = "Glyph for the palette. Append a trailing space to separate glyphs.";
       };
       visible = mkOption {
-        type = types.bool;
-        default = true;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Whether to show the palette.";
       };
     };
@@ -67,28 +67,28 @@ let
   barModule = types.submodule {
     options = {
       glyph = mkOption {
-        type = types.str;
-        default = "o";
+        type = types.nullOr types.str;
+        default = null;
         description = "Glyph to use for all bars.";
       };
       symbol_open = mkOption {
-        type = types.str;
-        default = "(";
+        type = types.nullOr types.str;
+        default = null;
         description = "Opening delimiter character. Must be a single character.";
       };
       symbol_close = mkOption {
-        type = types.str;
-        default = ")";
+        type = types.nullOr types.str;
+        default = null;
         description = "Closing delimiter character. Must be a single character.";
       };
       visible = mkOption {
-        type = types.bool;
-        default = true;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Whether to show bars.";
       };
       hide_delimiters = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Whether to hide bar delimiters.";
       };
     };
@@ -97,13 +97,13 @@ let
   innerMarginModule = types.submodule {
     options = {
       x = mkOption {
-        type = types.ints.unsigned;
-        default = 2;
+        type = types.nullOr types.ints.unsigned;
+        default = null;
         description = "Horizontal margin between content and the box border.";
       };
       y = mkOption {
-        type = types.ints.unsigned;
-        default = 1;
+        type = types.nullOr types.ints.unsigned;
+        default = null;
         description = "Vertical margin between content and the box border.";
       };
     };
@@ -118,23 +118,23 @@ let
         description = "Title displayed on the box. Omitted from config when null.";
       };
       border = mkOption {
-        type = types.enum [
+        type = types.nullOr (types.enum [
           "plain"
           "thick"
           "rounded"
           "double"
-        ];
-        default = "plain";
+        ]);
+        default = null;
         description = "Border style for the box.";
       };
       visible = mkOption {
-        type = types.bool;
-        default = true;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Whether to show the box.";
       };
       inner_margin = mkOption {
-        type = innerMarginModule;
-        default = { };
+        type = types.nullOr innerMarginModule;
+        default = null;
         description = "Inner margin between content and the box border.";
       };
     };
@@ -152,7 +152,8 @@ let
         '';
       };
       path = mkOption {
-        type = types.either types.str types.path;
+        type = types.nullOr (types.either types.str types.path);
+        default = null;
         example = "~/ascii/arch_linux";
         description = "Path to a file containing ASCII art. ANSI escape sequences are supported.";
       };
@@ -162,13 +163,13 @@ let
   randomizeModule = types.submodule {
     options = {
       key_color = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Whether to randomize the key color.";
       };
       separator_color = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Whether to randomize the separator color.";
       };
       pool = mkOption {
@@ -193,103 +194,103 @@ let
   keysModule = types.submodule {
     options = {
       host = mkOption {
-        type = types.str;
-        default = "Host";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Host readout.";
       };
       kernel = mkOption {
-        type = types.str;
-        default = "Kernel";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Kernel readout.";
       };
       os = mkOption {
-        type = types.str;
-        default = "OS";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the OperatingSystem readout.";
       };
       machine = mkOption {
-        type = types.str;
-        default = "Machine";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Machine readout.";
       };
       de = mkOption {
-        type = types.str;
-        default = "DE";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the DesktopEnvironment readout.";
       };
       wm = mkOption {
-        type = types.str;
-        default = "WM";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the WindowManager readout.";
       };
       distro = mkOption {
-        type = types.str;
-        default = "Distro";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Distribution readout.";
       };
       terminal = mkOption {
-        type = types.str;
-        default = "Terminal";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Terminal readout.";
       };
       shell = mkOption {
-        type = types.str;
-        default = "Shell";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Shell readout.";
       };
       packages = mkOption {
-        type = types.str;
-        default = "Packages";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Packages readout.";
       };
       uptime = mkOption {
-        type = types.str;
-        default = "Uptime";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Uptime readout.";
       };
       local_ip = mkOption {
-        type = types.str;
-        default = "Local IP";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the LocalIP readout.";
       };
       memory = mkOption {
-        type = types.str;
-        default = "Memory";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Memory readout.";
       };
       battery = mkOption {
-        type = types.str;
-        default = "Battery";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Battery readout.";
       };
       backlight = mkOption {
-        type = types.str;
-        default = "Brightness";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Backlight readout.";
       };
       resolution = mkOption {
-        type = types.str;
-        default = "Resolution";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Resolution readout.";
       };
       cpu = mkOption {
-        type = types.str;
-        default = "CPU";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the Processor readout.";
       };
       cpu_load = mkOption {
-        type = types.str;
-        default = "CPU Load";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the ProcessorLoad readout.";
       };
       gpu = mkOption {
-        type = types.str;
-        default = "GPU";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the GPU readout.";
       };
       disk_space = mkOption {
-        type = types.str;
-        default = "Disk Space";
+        type = types.nullOr types.str;
+        default = null;
         description = "Label for the DiskSpace readout.";
       };
     };
@@ -298,28 +299,28 @@ let
   themeModule = types.submodule {
     options = {
       spacing = mkOption {
-        type = types.ints.unsigned;
-        default = 1;
+        type = types.nullOr types.ints.unsigned;
+        default = null;
         description = "Spacing between the separator and adjacent content.";
       };
       padding = mkOption {
-        type = types.ints.unsigned;
-        default = 0;
+        type = types.nullOr types.ints.unsigned;
+        default = null;
         description = "Padding between content and its surroundings.";
       };
       hide_ascii = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Whether to disable ASCII rendering entirely.";
       };
       prefer_small_ascii = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Always use smaller variants of built-in ASCII art.";
       };
       separator = mkOption {
-        type = types.str;
-        default = "-->";
+        type = types.nullOr types.str;
+        default = null;
         description = "Glyph to use as the separator.";
       };
       key_color = mkOption {
@@ -412,38 +413,38 @@ in
       };
 
       long_uptime = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Show lengthened uptime output.";
       };
 
       long_shell = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Show lengthened shell output.";
       };
 
       long_kernel = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Show lengthened kernel output.";
       };
 
       current_shell = mkOption {
-        type = types.bool;
-        default = true;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Show the current shell rather than the user's default shell.";
       };
 
       physical_cores = mkOption {
-        type = types.bool;
-        default = true;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Show physical CPU core count rather than logical core count.";
       };
 
       disks = mkOption {
-        type = types.listOf types.str;
-        default = [ "/" ];
+        type = types.nullOr (types.listOf types.str);
+        default = null;
         example = [
           "/"
           "/home/user"
@@ -452,14 +453,14 @@ in
       };
 
       disk_space_percentage = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Show percentage next to disk space information.";
       };
 
       memory_percentage = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = "Show percentage next to memory information.";
       };
 
@@ -569,8 +570,6 @@ in
         settingsAttrs = stripNulls {
           inherit (cfg.settings)
             interface
-            theme
-            show
             long_uptime
             long_shell
             long_kernel
@@ -579,11 +578,9 @@ in
             disks
             disk_space_percentage
             memory_percentage
+            theme
+            show
             ;
-        };
-
-        configFile = mkIf (settingsAttrs != { }) {
-          "macchina/macchina.toml".source = tomlFormat.generate "macchina.toml" settingsAttrs;
         };
 
         themeFiles = lib.mapAttrs' (
@@ -593,6 +590,9 @@ in
           }
         ) cfg.themes;
       in
-      configFile // themeFiles;
+      lib.optionalAttrs (settingsAttrs != { }) {
+        "macchina/macchina.toml".source = tomlFormat.generate "macchina.toml" settingsAttrs;
+      }
+      // themeFiles;
   };
 }
