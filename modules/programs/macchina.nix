@@ -401,7 +401,7 @@ let
 
 in
 {
-  meta.maintainers = [ philocalyst ];
+  meta.maintainers = [ lib.maintainers.philocalyst ];
 
   options.programs.macchina = {
     enable = lib.mkEnableOption "macchina system information fetcher";
