@@ -1,0 +1,56 @@
+hide_ascii = true
+key_color = "Cyan"
+padding = 1
+prefer_small_ascii = true
+separator = ">"
+separator_color = "White"
+spacing = 2
+
+[bar]
+glyph = "o"
+hide_delimiters = true
+symbol_close = "]"
+symbol_open = "["
+visible = true
+
+[box]
+border = "rounded"
+inner_margin.x = 1
+inner_margin.y = 0
+title = "Hydrogen"
+visible = true
+
+[custom_ascii]
+color = "Cyan"
+path = "~/ascii/arch_linux"
+
+[keys]
+backlight = "Brightness"
+battery = "Battery"
+cpu = "CPU"
+cpu_load = "CPU Load"
+de = "DE"
+disk_space = "Disk Space"
+distro = "Distro"
+gpu = "GPU"
+host = "Host"
+kernel = "Kernel"
+local_ip = "Local IP"
+machine = "Machine"
+memory = "Memory"
+os = "OS"
+packages = "Packages"
+resolution = "Resolution"
+shell = "Shell"
+terminal = "Terminal"
+uptime = "Uptime"
+wm = "WM"
+
+[palette]
+glyph = "() "
+type = "Full"
+visible = true
+
+[randomize]
+key_color = false
+separator_color = true
