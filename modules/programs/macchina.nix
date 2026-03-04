@@ -43,11 +43,13 @@ let
   paletteModule = types.submodule {
     options = {
       type = mkOption {
-        type = types.nullOr (types.enum [
-          "Dark"
-          "Light"
-          "Full"
-        ]);
+        type = types.nullOr (
+          types.enum [
+            "Dark"
+            "Light"
+            "Full"
+          ]
+        );
         default = null;
         description = "Color set to use for the palette. Case-sensitive.";
       };
@@ -118,12 +120,14 @@ let
         description = "Title displayed on the box. Omitted from config when null.";
       };
       border = mkOption {
-        type = types.nullOr (types.enum [
-          "plain"
-          "thick"
-          "rounded"
-          "double"
-        ]);
+        type = types.nullOr (
+          types.enum [
+            "plain"
+            "thick"
+            "rounded"
+            "double"
+          ]
+        );
         default = null;
         description = "Border style for the box.";
       };
@@ -397,7 +401,7 @@ let
 
 in
 {
-  meta.maintainers = [ ];
+  meta.maintainers = [ philocalyst ];
 
   options.programs.macchina = {
     enable = lib.mkEnableOption "macchina system information fetcher";
