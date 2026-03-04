@@ -15,10 +15,12 @@ visible = true
 
 [box]
 border = "rounded"
-inner_margin.x = 1
-inner_margin.y = 0
 title = "Hydrogen"
 visible = true
+
+[box.inner_margin]
+x = 1
+y = 0
 
 [custom_ascii]
 color = "Cyan"

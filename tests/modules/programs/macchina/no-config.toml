@@ -1,8 +1,0 @@
-current_shell = true
-disk_space_percentage = false
-disks = ["/"]
-long_kernel = false
-long_shell = false
-long_uptime = false
-memory_percentage = false
-physical_cores = true
