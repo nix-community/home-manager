@@ -24,6 +24,7 @@ let
     recursiveUpdate
     listToAttrs
     getExe
+    versionOlder
     ;
   cfg = config.programs.lutris;
   settingsFormat = pkgs.formats.yaml { };
@@ -238,8 +239,10 @@ in
               source = package;
             })
           ) packages;
-        steamcompattools = map (proton: proton.steamcompattool) cfg.protonPackages;
+        differentiatesProton = versionOlder cfg.package.version "0.5.20";
+        protonPackages = map (proton: proton.steamcompattool) cfg.protonPackages;
+        protonDirectory = if differentiatesProton then "proton" else "wine";
       in
-      listToAttrs (buildWineLink "wine" cfg.winePackages ++ buildWineLink "proton" steamcompattools);
+      listToAttrs (buildWineLink "wine" cfg.winePackages ++ buildWineLink protonDirectory protonPackages);
   };
 }
