@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-03 13:09+0000\n"
+"PO-Revision-Date: 2026-03-05 23:09+0000\n"
 "Last-Translator: Wildan Nursyamsi <muhamad11wildan4n@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/home-manager/"
 "cli/id/>\n"
@@ -117,7 +117,7 @@ msgstr "Tidak dapat memeriksa opsi konfigurasi flake"
 #: home-manager/home-manager:340 home-manager/home-manager:363
 #: home-manager/home-manager:769 home-manager/home-manager:1289
 msgid "%s: unknown option '%s'"
-msgstr "%s: opsi tidak diketahui '%s'"
+msgstr "opsi tidak diketahui"
 
 #: home-manager/home-manager:345 home-manager/home-manager:1290
 msgid "Run '%s --help' for usage help"
@@ -232,30 +232,32 @@ msgstr "Ini akan menghapus Home Manager dari sistem Anda"
 #: home-manager/home-manager:1025
 msgid "This is a dry run, nothing will actually be uninstalled."
 msgstr ""
+"Ini hanya uji coba, tidak ada yang akan benar-benar dihapus instalasinya."
 
 #: home-manager/home-manager:1029
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Yakin menghapus Home Manager?"
 
 #: home-manager/home-manager:1035
 msgid "Switching to empty Home Manager configuration..."
-msgstr ""
+msgstr "Mengalihkan ke konfigurasi Home Manager yang kosong"
 
 #: home-manager/home-manager:1050
 msgid "Yay!"
 msgstr "Yey!"
 
 #: home-manager/home-manager:1055
+#, fuzzy
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
+msgstr "Home Manager telah terhapus tapi home.nix tetap utuh"
 
 #: home-manager/home-manager:1334
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
+msgstr "expire-generations mengharapkan satu argumen, tetapi menerima %d."
 
 #: home-manager/home-manager:1359
 msgid "Unknown command: %s"
-msgstr ""
+msgstr "Perintah tidak diketahui: %s"
 
 #: home-manager/install.nix:21
 msgid "This derivation is not buildable, please run it using nix-shell."
