@@ -9,6 +9,13 @@ let
   cfg = config.programs.man;
 in
 {
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "programs" "man" "generateCaches" ]
+      [ "programs" "man" "cache" "enable" ]
+    )
+  ];
+
   options = {
     programs.man = {
       enable = mkOption {
@@ -44,33 +51,35 @@ in
         '';
       };
 
-      generateCaches = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to generate the manual page index caches using
-          {manpage}`mandb(8)`. This allows searching for a page or
-          keyword using utilities like {manpage}`apropos(1)`.
+      cache = {
+        enable = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Whether to generate the manual page index caches using
+            {manpage}`mandb(8)`. This allows searching for a page or
+            keyword using utilities like {manpage}`apropos(1)`.
 
-          This feature is disabled by default because it slows down
-          building. If you don't mind waiting a few more seconds when
-          Home Manager builds a new generation, you may safely enable
-          this option.
-        '';
+            This feature is disabled by default because it slows down
+            building. If you don't mind waiting a few more seconds when
+            Home Manager builds a new generation, you may safely enable
+            this option.
+          '';
+        };
       };
     };
   };
 
   config = lib.mkIf cfg.enable {
     warnings = lib.optional (
-      cfg.generateCaches && cfg.package == null
-    ) "programs.man.generateCaches has no effect when programs.man.package is null";
+      cfg.cache.enable && cfg.package == null
+    ) "programs.man.cache.enable has no effect when programs.man.package is null";
 
     home.packages = lib.optional (cfg.package != null) cfg.package;
     home.extraOutputsToInstall = [ "man" ];
 
     # This is mostly copy/pasted/adapted from NixOS' documentation.nix.
-    home.file = lib.mkIf (cfg.generateCaches && cfg.package != null) {
+    home.file = lib.mkIf (cfg.cache.enable && cfg.package != null) {
       ".manpath".text =
         let
           # Generate a directory containing installed packages' manpages.

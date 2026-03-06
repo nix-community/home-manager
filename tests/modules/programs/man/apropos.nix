@@ -2,7 +2,7 @@
   config = {
     programs.man = {
       enable = true;
-      generateCaches = true;
+      cache.enable = true;
     };
 
     nmt.script = ''
