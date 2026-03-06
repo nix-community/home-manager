@@ -70,47 +70,51 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    warnings = lib.optional (
-      cfg.cache.enable && cfg.package == null
-    ) "programs.man.cache.enable has no effect when programs.man.package is null";
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        warnings = lib.optional (
+          cfg.cache.enable && cfg.package == null
+        ) "programs.man.cache.enable has no effect when programs.man.package is null";
+      }
+      {
+        home.packages = lib.optional (cfg.package != null) cfg.package;
+        home.extraOutputsToInstall = [ "man" ];
+      }
+      (lib.mkIf (cfg.cache.enable && cfg.package != null) {
+        # This is mostly copy/pasted/adapted from NixOS' documentation.nix.
+        home.file.".manpath".text =
+          let
+            # Generate a directory containing installed packages' manpages.
+            manualPages = pkgs.buildEnv {
+              name = "man-paths";
+              paths = config.home.packages;
+              pathsToLink = [ "/share/man" ];
+              extraOutputsToInstall = [ "man" ];
+              ignoreCollisions = true;
+            };
 
-    home.packages = lib.optional (cfg.package != null) cfg.package;
-    home.extraOutputsToInstall = [ "man" ];
+            # Generate a database of all manpages in ${manualPages}.
+            manualCache =
+              pkgs.runCommandLocal "man-cache"
+                {
+                  nativeBuildInputs = [ cfg.package ];
+                }
+                ''
+                  # Generate a temporary man.conf so mandb knows where to
+                  # write cache files.
+                  echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
 
-    # This is mostly copy/pasted/adapted from NixOS' documentation.nix.
-    home.file = lib.mkIf (cfg.cache.enable && cfg.package != null) {
-      ".manpath".text =
-        let
-          # Generate a directory containing installed packages' manpages.
-          manualPages = pkgs.buildEnv {
-            name = "man-paths";
-            paths = config.home.packages;
-            pathsToLink = [ "/share/man" ];
-            extraOutputsToInstall = [ "man" ];
-            ignoreCollisions = true;
-          };
-
-          # Generate a database of all manpages in ${manualPages}.
-          manualCache =
-            pkgs.runCommandLocal "man-cache"
-              {
-                nativeBuildInputs = [ cfg.package ];
-              }
-              ''
-                # Generate a temporary man.conf so mandb knows where to
-                # write cache files.
-                echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
-
-                # Run mandb to generate cache files:
-                mandb -C man.conf --no-straycats --create \
-                  ${manualPages}/share/man
-              '';
-        in
-        ''
-          MANDB_MAP ${config.home.profileDirectory}/share/man ${manualCache}
-        ''
-        + lib.optionalString (cfg.extraConfig != "") "\n${cfg.extraConfig}";
-    };
-  };
+                  # Run mandb to generate cache files:
+                  mandb -C man.conf --no-straycats --create \
+                    ${manualPages}/share/man
+                '';
+          in
+          ''
+            MANDB_MAP ${config.home.profileDirectory}/share/man ${manualCache}
+          ''
+          + lib.optionalString (cfg.extraConfig != "") "\n${cfg.extraConfig}";
+      })
+    ]
+  );
 }
