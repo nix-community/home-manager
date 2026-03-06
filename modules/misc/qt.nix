@@ -87,7 +87,6 @@ let
       qt6Packages.qtstyleplugin-kvantum
     ];
   };
-
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -226,6 +225,7 @@ in
             Deprecated. Use {option}`qt.platformTheme.name` instead.
           '';
         };
+
       style = {
         name = lib.mkOption {
           type = with lib.types; nullOr str;
@@ -287,6 +287,25 @@ in
             Auto-detected from {option}`qt.style.name` if possible.
             See its documentation for available options.
           '';
+        };
+      };
+
+      kvantum = {
+        theme = {
+          name = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            example = "KvAdapta";
+            description = ''
+              The name of the Kvantum theme to use.
+            '';
+          };
+
+          package = lib.mkPackageOption pkgs "Kvantum theme" {
+            nullable = true;
+            default = null;
+            example = "pkgs.catppuccin-kvantum";
+          };
         };
       };
     }
@@ -375,7 +394,6 @@ in
           QT_PLUGIN_PATH = makeQtPath "qtPluginPrefix";
           QML2_IMPORT_PATH = makeQtPath "qtQmlPrefix";
         };
-
     in
     lib.mkIf cfg.enable {
       assertions = [
@@ -419,7 +437,8 @@ in
             (lib.optionals (platformTheme.name != null) platformPackages.${platformTheme.name} or [ ])
           ]
         )
-        ++ (lib.optionals (cfg.style.package != null) (lib.toList cfg.style.package));
+        ++ (lib.optionals (cfg.style.package != null) (lib.toList cfg.style.package))
+        ++ (lib.optionals (cfg.kvantum.theme.package != null) [ cfg.kvantum.theme.package ]);
 
       xsession.importedVariables = [
         "QT_PLUGIN_PATH"
@@ -429,7 +448,7 @@ in
       ++ lib.optionals (cfg.style.name != null) [ "QT_STYLE_OVERRIDE" ];
 
       xdg.configFile =
-        lib.pipe
+        (lib.pipe
           [ "qt5ct" "qt6ct" ]
           [
             (lib.filter (qtct: cfg."${qtct}Settings" != null))
@@ -439,6 +458,17 @@ in
                 source = qtctFormat.generate "${qtct}-config" cfg."${qtct}Settings";
               }
             ))
-          ];
+          ]
+        )
+        // (
+          let
+            toIni = lib.generators.toINI { };
+          in
+          {
+            "Kvantum/kvantum.kvconfig" = {
+              text = toIni { General.theme = cfg.kvantum.theme.name; };
+            };
+          }
+        );
     };
 }
