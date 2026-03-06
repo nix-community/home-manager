@@ -1,0 +1,10 @@
+current_shell = false
+disk_space_percentage = true
+disks = ["/", "/home"]
+long_kernel = false
+long_shell = true
+long_uptime = true
+memory_percentage = true
+physical_cores = false
+show = ["Memory", "Processor", "Shell", "Uptime"]
+theme = "Hydrogen"
