@@ -55,21 +55,21 @@ let
   withExtraAttrs =
     rawModule:
     let
-      module = moduleChecks rawModule;
+      checkedModule = moduleChecks rawModule;
     in
-    module
+    rawModule
     // {
-      activationPackage = module.config.home.activationPackage;
+      activationPackage = checkedModule.config.home.activationPackage;
 
       # For backwards compatibility. Please use activationPackage instead.
-      activation-script = module.config.home.activationPackage;
+      activation-script = checkedModule.config.home.activationPackage;
 
       newsDisplay = rawModule.config.news.display;
       newsEntries = lib.sort (a: b: a.time > b.time) (
         lib.filter (a: a.condition) rawModule.config.news.entries
       );
 
-      inherit (module._module.args) pkgs;
+      inherit (checkedModule._module.args) pkgs;
 
       extendModules = args: withExtraAttrs (rawModule.extendModules args);
     };
