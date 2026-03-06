@@ -10,6 +10,16 @@ in
 {
   meta.maintainers = [ lib.maintainers.delafthi ];
 
+  imports =
+    map
+      (shell: lib.mkRemovedOptionModule [ "services" "proton-pass-agent" "enable${shell}Integration" ] "")
+      [
+        "Bash"
+        "Zsh"
+        "Fish"
+        "Nushell"
+      ];
+
   options.services.proton-pass-agent = {
     enable = lib.mkEnableOption "Proton Pass as a SSH agent";
 
@@ -43,14 +53,6 @@ in
         for more information.
       '';
     };
-
-    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
-
-    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
-
-    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
-
-    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
   };
 
   config =
@@ -72,42 +74,16 @@ in
     lib.mkIf cfg.enable {
       home.packages = [ cfg.package ];
 
-      programs =
-        let
-          # Preserve $SSH_AUTH_SOCK only if it stems from a forwarded agent which
-          # is the case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.
-          bashIntegration = ''
-            if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
-              export SSH_AUTH_SOCK=${socketPath}
-            fi
-          '';
-          fishIntegration = ''
-            if test -z "$SSH_AUTH_SOCK"; or test -z "$SSH_CONNECTION"
-              set -x SSH_AUTH_SOCK ${socketPath}
-            end
-          '';
-          nushellIntegration =
-            let
-              unsetOrEmpty = var: ''("${var}" not-in $env) or ($env.${var} | is-empty)'';
-              socketPath =
-                if pkgs.stdenv.isDarwin then
-                  ''$"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"''
-                else
-                  ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"'';
-            in
-            ''
-              if ${unsetOrEmpty "SSH_AUTH_SOCK"} or ${unsetOrEmpty "SSH_CONNECTION"} {
-                $env.SSH_AUTH_SOCK = ${socketPath}
-              }
-            '';
-        in
-        {
-          # $SSH_AUTH_SOCK has to be set early since other tools rely on it
-          bash.profileExtra = lib.mkIf cfg.enableBashIntegration (lib.mkOrder 900 bashIntegration);
-          fish.shellInit = lib.mkIf cfg.enableFishIntegration (lib.mkOrder 900 fishIntegration);
-          nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration (lib.mkOrder 900 nushellIntegration);
-          zsh.envExtra = lib.mkIf cfg.enableZshIntegration (lib.mkOrder 900 bashIntegration);
-        };
+      ssh_auth_sock.initialization = {
+        bash = ''export SSH_AUTH_SOCK="${socketPath}"'';
+        fish = ''set -x SSH_AUTH_SOCK "${socketPath}"'';
+        nushell = "$env.SSH_AUTH_SOCK = ${
+          if pkgs.stdenv.isDarwin then
+            ''$"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"''
+          else
+            ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"''
+        }";
+      };
 
       systemd.user.services.proton-pass-agent = {
         Install.WantedBy = [ "default.target" ];

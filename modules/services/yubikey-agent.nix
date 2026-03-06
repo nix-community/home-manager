@@ -22,11 +22,24 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables.SSH_AUTH_SOCK =
-      if pkgs.stdenv.isDarwin then
-        "/tmp/yubikey-agent.sock"
-      else
-        "\${XDG_RUNTIME_DIR:-/run/user/$UID}/yubikey-agent/yubikey-agent.sock";
+    ssh_auth_sock.initialization =
+      let
+        socketPath =
+          if pkgs.stdenv.isDarwin then
+            "/tmp/yubikey-agent.sock"
+          else
+            "\${XDG_RUNTIME_DIR:-/run/user/$UID}/yubikey-agent/yubikey-agent.sock";
+      in
+      {
+        bash = ''export SSH_AUTH_SOCK="${socketPath}"'';
+        fish = ''set -x SSH_AUTH_SOCK "${socketPath}"'';
+        nushell = "$env.SSH_AUTH_SOCK = ${
+          if pkgs.stdenv.isDarwin then
+            "/tmp/yubikey-agent.sock"
+          else
+            ''$"($env.XDG_RUNTIME_DIR | default $"/run/user/(id -u)")/yubikey-agent/yubikey-agent.sock"''
+        }";
+      };
 
     systemd.user.services.yubikey-agent = {
       Unit = {
