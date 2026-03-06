@@ -1,4 +1,4 @@
 {
-  gemini-cli-settings = ./settings.nix;
+  gemini-cli-commands = ./commands.nix;
   gemini-cli-context = ./context.nix;
 }
