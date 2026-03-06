@@ -415,7 +415,7 @@ in
                         "";
                     smtpSslCertPath = mkIf smtp.tls.enable (toString smtp.tls.certificatesFile);
                     smtpServer = smtp.host;
-                    smtpUser = userName;
+                    smtpUser = if smtp.userName != null then smtp.userName else userName;
                     from = "${realName} <${address}>";
                   }
                   // lib.optionalAttrs (smtp.port != null) {
