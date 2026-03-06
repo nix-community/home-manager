@@ -221,10 +221,10 @@ in
           After = [
             "graphical-session.target"
           ]
-          ++ (lib.optional cfg.tray "tray.target")
+          ++ (lib.optional cfg.tray "tray-xembed.target")
           ++ geoclueAgentService;
           Wants = geoclueAgentService;
-          Requires = lib.mkIf cfg.tray "tray.target";
+          Requires = lib.mkIf cfg.tray "tray-xembed.target";
           PartOf = [ "graphical-session.target" ];
         };
 

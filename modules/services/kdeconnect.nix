@@ -69,10 +69,12 @@ in
           Description = "kdeconnect-indicator";
           After = [
             "graphical-session.target"
-            "tray.target"
-          ];
+            "tray-sni.target"
+          ]
+          ++ config.lib.tray.sniWatcherAfter;
           PartOf = [ "graphical-session.target" ];
-          Requires = [ "tray.target" ];
+          Requires = [ "tray-sni.target" ] ++ config.lib.tray.sniWatcherRequires;
+          Wants = config.lib.tray.sniWatcherWants;
         };
 
         Install = {
