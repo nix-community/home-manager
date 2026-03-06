@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  options,
   ...
 }:
 let
@@ -47,6 +48,39 @@ in
   };
 
   config = lib.mkMerge [
+    {
+      warnings =
+        lib.optionals
+          (
+            cfg.enable
+            && !lib.versionAtLeast config.home.stateVersion "26.05"
+            && options.programs.mergiraf.enableGitIntegration.highestPrio >= 1500
+          )
+          [
+            ''
+              The default value of `programs.mergiraf.enableGitIntegration` will change in future versions.
+              You are currently using the legacy default (true) because `home.stateVersion` is less than "26.05".
+              To silence this warning set:
+                programs.mergiraf.enableGitIntegration = true;
+            ''
+          ]
+        ++
+          lib.optionals
+            (
+              cfg.enable
+              && !lib.versionAtLeast config.home.stateVersion "26.05"
+              && options.programs.mergiraf.enableJujutsuIntegration.highestPrio >= 1500
+            )
+            [
+              ''
+                The default value of `programs.mergiraf.enableJujutsuIntegration` will change in future versions.
+                You are currently using the legacy default (true) because `home.stateVersion` is less than "26.05".
+                To silence this warning set:
+                  programs.mergiraf.enableJujutsuIntegration = true;
+              ''
+            ];
+    }
+
     (mkIf cfg.enable {
       home.packages = [ cfg.package ];
     })

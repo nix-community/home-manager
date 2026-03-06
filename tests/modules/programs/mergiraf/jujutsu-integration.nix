@@ -23,6 +23,8 @@ in
   programs.mergiraf = {
     enable = true;
     enableJujutsuIntegration = true;
+    # Do not warn about default value
+    enableGitIntegration = false;
   };
 
   nmt.script = ''
