@@ -175,7 +175,7 @@ let
 
 in
 {
-  meta.maintainers = [ ];
+  meta.maintainers = [ lib.maintainers.philocalyst ];
 
   options.programs.ttyper = {
     enable = lib.mkEnableOption "ttyper, a terminal-based typing test";
