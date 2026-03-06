@@ -12,7 +12,10 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.GaetanLepage ];
+  meta.maintainers = with lib.maintainers; [
+    GaetanLepage
+    mana-byte
+  ];
 
   options.programs.mistral-vibe = {
     enable = lib.mkEnableOption "Mistral Vibe, Mistral's open-source CLI coding assistant";
@@ -25,7 +28,6 @@ in
       example = lib.literalExpression ''
         {
           active_model = "devstral-latest";
-          vim_keybindings = false;
           tool_paths = [];
 
           providers = [

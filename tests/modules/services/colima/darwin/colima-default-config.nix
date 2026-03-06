@@ -47,6 +47,10 @@
       name = "bashNonInteractive";
       outPath = "@bashNonInteractive@";
     };
+    kubectlPackage = config.lib.test.mkStubPackage {
+      name = "kubectl";
+      outPath = "@kubectl@";
+    };
   };
 
   nmt.script = ''

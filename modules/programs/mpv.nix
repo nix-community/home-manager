@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  options,
   ...
 }:
 let
@@ -61,8 +62,16 @@ let
 
   renderDefaultProfiles = profiles: renderOptions { profile = lib.concatStringsSep "," profiles; };
 
+  wrapperRequiresOverride = lib.any (v: v != [ ]) [
+    cfg.scripts
+    cfg.extraMakeWrapperArgs
+  ];
+
   mpvPackage =
-    if cfg.scripts == [ ] then cfg.package else pkgs.mpv.override { inherit (cfg) scripts; };
+    if wrapperRequiresOverride then
+      pkgs.mpv.override { inherit (cfg) scripts extraMakeWrapperArgs; }
+    else
+      cfg.package;
 
 in
 {
@@ -91,6 +100,22 @@ in
         type = with types; listOf package;
         default = [ ];
         example = literalExpression "[ pkgs.mpvScripts.mpris ]";
+        description = ''
+          List of scripts to use with mpv.
+        '';
+      };
+
+      extraMakeWrapperArgs = mkOption {
+        type = with types; listOf str;
+        default = [ ];
+        example = literalExpression ''
+          [
+            "--prefix"
+            "LD_LIBRARY_PATH"
+            ":"
+            (lib.makeLibraryPath [ pkgs.libaacs pkgs.libbluray ])
+          ]
+        '';
         description = ''
           List of scripts to use with mpv.
         '';
@@ -218,13 +243,13 @@ in
       {
         assertions = [
           {
-            assertion = (cfg.scripts == [ ]) || (cfg.package == pkgs.mpv);
-            message = ''The programs.mpv "package" option is mutually exclusive with "scripts" option.'';
+            assertion = wrapperRequiresOverride -> (cfg.package == options.programs.mpv.package.default);
+            message = ''The programs.mpv "package" option is mutually exclusive with "scripts", "extraMakeWrapperArgs" options.'';
           }
         ];
       }
       {
-        home.packages = [ mpvPackage ];
+        home.packages = [ config.programs.mpv.finalPackage ];
         programs.mpv.finalPackage = mpvPackage;
       }
 

@@ -1,5 +1,7 @@
 {
   starship-settings = ./settings.nix;
+  starship-no-settings = ./no-settings.nix;
+  starship-presets = ./presets.nix;
   starship-fish-with-transience = ./fish_with_transience.nix;
   starship-fish-without-transience = ./fish_without_transience.nix;
   starship-fish-with-interactive = ./fish_with_interactive.nix;

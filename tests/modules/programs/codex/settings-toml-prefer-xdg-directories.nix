@@ -22,6 +22,10 @@ in
         };
       };
     };
+    custom-instructions = ''
+      - Always respond with emojis
+      - Only use git commands when explicitly requested
+    '';
   };
   nmt.script = ''
     assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
@@ -29,5 +33,8 @@ in
     assertFileExists home-files/.config/codex/config.toml
     assertFileContent home-files/.config/codex/config.toml \
       ${./config.toml}
+    assertFileExists home-files/.config/codex/AGENTS.md
+    assertFileContent home-files/.config/codex/AGENTS.md \
+      ${./AGENTS.md}
   '';
 }

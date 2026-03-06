@@ -9,6 +9,6 @@
   nmt.script = ''
     assertFileContains \
       home-files/.config/nushell/config.nu \
-      '$env.SSH_AUTH_SOCK = $"(@getconf-system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent"'
+      '$env.SSH_AUTH_SOCK = $"(@system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent"'
   '';
 }

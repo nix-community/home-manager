@@ -189,7 +189,7 @@ rec {
           (optionalString (bottom != null) "gaps bottom ${toString bottom}")
           (optionalString (left != null) "gaps left ${toString left}")
           (optionalString (right != null) "gaps right ${toString right}")
-          (optionalString smartGaps "smart_gaps on")
+          (optionalString (smartGaps != "off") "smart_gaps ${smartGaps}")
           (optionalString (smartBorders != "off") "smart_borders ${smartBorders}")
         ]
     );

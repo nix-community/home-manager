@@ -293,6 +293,29 @@ in
       example = lib.literalExpression "./hooks";
     };
 
+    outputStyles = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Custom output styles for Claude Code.
+        The attribute name becomes the base of the output style filename.
+        The value is either:
+          - Inline content as a string
+          - A path to a file
+        In both cases, the contents will be written to .claude/output-styles/<name>.md
+      '';
+      example = lib.literalExpression ''
+        {
+          concise = ./output-styles/concise.md;
+          detailed = '''
+            # Detailed Output Style
+
+            Contents will be used verbatim for the detailed output format.
+          ''';
+        }
+      '';
+    };
+
     skills = lib.mkOption {
       type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
       default = { };
@@ -520,7 +543,13 @@ in
           lib.nameValuePair ".claude/skills/${name}/SKILL.md" (
             if lib.isPath content then { source = content; } else { text = content; }
           )
-      ) cfg.skills;
+      ) cfg.skills
+      // lib.mapAttrs' (
+        name: content:
+        lib.nameValuePair ".claude/output-styles/${name}.md" (
+          if lib.isPath content then { source = content; } else { text = content; }
+        )
+      ) cfg.outputStyles;
     };
   };
 }

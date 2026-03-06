@@ -157,18 +157,7 @@
           lib.mapAttrs' renameTestPkg tests;
       in
       {
-        formatter = forAllPkgs (
-          pkgs:
-          pkgs.treefmt.withConfig {
-            runtimeInputs = with pkgs; [
-              nixfmt
-              deadnix
-              keep-sorted
-              nixf-diagnose
-            ];
-            settings = pkgs.lib.importTOML ./treefmt.toml;
-          }
-        );
+        formatter = forAllPkgs (pkgs: pkgs.callPackage ./home-manager/formatter.nix { });
 
         # TODO: increase buildbot testing scope
         buildbot = forCI (
@@ -213,6 +202,10 @@
             docs-manpages = docs.manPages;
           }
         );
+
+        devShells = forAllPkgs (pkgs: {
+          default = pkgs.callPackage ./home-manager/devShell.nix { };
+        });
 
         legacyPackages = forAllPkgs (
           pkgs:

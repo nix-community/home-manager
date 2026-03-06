@@ -204,7 +204,7 @@ in
   config =
     let
       aliasesStr = lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}") cfg.shellAliases
+        lib.mapAttrsToList (k: v: "alias -- ${k}=${lib.escapeShellArg v}") cfg.shellAliases
       );
 
       shoptsStr =

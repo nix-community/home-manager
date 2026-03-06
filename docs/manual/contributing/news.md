@@ -19,7 +19,7 @@ but you should follow some basic guidelines:
     Alternatively, you can directly use the script:
 
     ``` shell
-    $ modules/misc/news/create-news-entry.sh
+    $ nix-shell -A dev --run modules/misc/news/create-news-entry.sh
     ```
 
     This will create a new file inside the `modules/misc/news` directory

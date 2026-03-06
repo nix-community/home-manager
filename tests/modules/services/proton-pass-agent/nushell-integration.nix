@@ -19,7 +19,7 @@
       assertFileContains $nu_config \
         '$env.SSH_AUTH_SOCK = $"${
           if pkgs.stdenv.hostPlatform.isDarwin then
-            "(@getconf-system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)"
+            "(@system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)"
           else
             "($env.XDG_RUNTIME_DIR)"
         }/proton-pass-agent"'

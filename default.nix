@@ -8,6 +8,18 @@ let
     name = "home-manager-source";
   };
 
+  nixpkgs = (
+    import (
+      let
+        lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+        n = lock.nodes.nixpkgs.locked;
+      in
+      fetchTarball {
+        url = "https://github.com/${n.owner}/${n.repo}/archive/${n.rev}.tar.gz";
+        sha256 = n.narHash;
+      }
+    ) { }
+  );
 in
 rec {
   docs =
@@ -31,6 +43,8 @@ rec {
 
   nixos = import ./nixos;
   lib = import ./lib { inherit (pkgs) lib; };
+
+  dev = nixpkgs.callPackage ./home-manager/devShell.nix { };
 
   inherit path;
 }

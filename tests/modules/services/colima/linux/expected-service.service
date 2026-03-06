@@ -2,7 +2,8 @@
 WantedBy=default.target
 
 [Service]
-Environment=PATH=@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin
+Environment=COLIMA_HOME=/home/hm-user/.colima
+Environment=PATH=@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin:@kubectl@/bin
 ExecStart=@colima@/bin/colima start default \
   -f \
   --activate=true \
@@ -10,8 +11,8 @@ ExecStart=@colima@/bin/colima start default \
 
 Restart=always
 RestartSec=2
-StandardError=append:/home/hm-user/.local/state/colima-default.log
-StandardOutput=append:/home/hm-user/.local/state/colima-default.log
+StandardError=append:/home/hm-user/.local/state/colima/default.log
+StandardOutput=append:/home/hm-user/.local/state/colima/default.log
 
 [Unit]
 After=network-online.target

@@ -18,21 +18,21 @@
     assertFileExists home-files/.bashrc
     assertFileContains \
       home-files/.bashrc \
-      "alias eza='eza --icons auto --git --group-directories-first --header'"
+      "alias -- eza='eza --icons auto --git --group-directories-first --header'"
     assertFileContains \
       home-files/.bashrc \
-      "alias ls=eza"
+      "alias -- ls=eza"
     assertFileContains \
       home-files/.bashrc \
-      "alias ll='eza -l'"
+      "alias -- ll='eza -l'"
     assertFileContains \
       home-files/.bashrc \
-      "alias la='eza -a'"
+      "alias -- la='eza -a'"
     assertFileContains \
       home-files/.bashrc \
-      "alias lt='eza --tree'"
+      "alias -- lt='eza --tree'"
     assertFileContains \
       home-files/.bashrc \
-      "alias lla='eza -la'"
+      "alias -- lla='eza -la'"
   '';
 }

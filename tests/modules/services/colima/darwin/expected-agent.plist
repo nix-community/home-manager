@@ -4,8 +4,12 @@
 <dict>
 	<key>EnvironmentVariables</key>
 	<dict>
+		<key>COLIMA_HOME</key>
+		<string>/home/hm-user/.colima</string>
 		<key>PATH</key>
-		<string>@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin:@DarwinTools@/bin</string>
+		<string>@colima@/bin:@perl@/bin:@docker@/bin:@openssh@/bin:@coreutils@/bin:@curl@/bin:@bashNonInteractive@/bin:@kubectl@/bin:@DarwinTools@/bin</string>
+		<key>XDG_CACHE_HOME</key>
+		<string>/home/hm-user/.cache</string>
 	</dict>
 	<key>KeepAlive</key>
 	<dict>
@@ -23,8 +27,8 @@
 	<key>RunAtLoad</key>
 	<true/>
 	<key>StandardErrorPath</key>
-	<string>/home/hm-user/.local/state/colima-default.log</string>
+	<string>/home/hm-user/.local/state/colima/default.log</string>
 	<key>StandardOutPath</key>
-	<string>/home/hm-user/.local/state/colima-default.log</string>
+	<string>/home/hm-user/.local/state/colima/default.log</string>
 </dict>
 </plist>

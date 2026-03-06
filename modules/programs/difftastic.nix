@@ -67,15 +67,18 @@ in
     options = mkOption {
       type =
         with types;
-        attrsOf (oneOf [
-          str
-          int
-          bool
-        ]);
+        let
+          atom = oneOf [
+            str
+            int
+            bool
+          ];
+        in
+        attrsOf (either atom (listOf atom));
       default = { };
       example = {
         color = "dark";
-        sort-path = true;
+        sort-paths = true;
         tab-width = 8;
       };
       description = "Configuration options for {command}`difftastic`. See {command}`difft --help`";

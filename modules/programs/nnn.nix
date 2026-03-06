@@ -101,6 +101,27 @@ in
         default = { };
       };
 
+      options = mkOption {
+        type =
+          with lib.types;
+          let
+            scalar = oneOf [
+              bool
+              int
+              str
+            ];
+            attrs = attrsOf scalar;
+          in
+          coercedTo attrs (lib.cli.toCommandLineGNU { }) (listOf str);
+        default = { };
+        example = {
+          s = "session_name";
+          t = 8;
+          A = true;
+        };
+        description = "Configuration options for {command}`nnn`. See {command}`nnn -h`";
+      };
+
       enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
       enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
@@ -115,14 +136,22 @@ in
     let
       nnnPackage = cfg.package.overrideAttrs (oldAttrs: {
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
-        postInstall = ''
-          ${oldAttrs.postInstall or ""}
+        postInstall =
+          let
+            args = lib.concatMap (arg: [
+              "--add-flags"
+              arg
+            ]) cfg.options;
+          in
+          ''
+            ${oldAttrs.postInstall or ""}
 
-          wrapProgram $out/bin/nnn \
-            --prefix PATH : "${lib.makeBinPath cfg.extraPackages}" \
-            --prefix NNN_BMS : "${renderSettings cfg.bookmarks}" \
-            --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}"
-        '';
+            wrapProgram $out/bin/nnn \
+              --prefix PATH : "${lib.makeBinPath cfg.extraPackages}" \
+              --prefix NNN_BMS : "${renderSettings cfg.bookmarks}" \
+              --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}" \
+              ${lib.concatStringsSep " " args}
+          '';
       });
 
       quitcd = {
