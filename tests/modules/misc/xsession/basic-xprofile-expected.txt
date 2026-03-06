@@ -4,6 +4,8 @@ if [ -e "$HOME/.profile" ]; then
   . "$HOME/.profile"
 fi
 
+export EXTRA_XSESSION_VARIABLE="extra_xsession_variable_value"
+
 # If there are any running services from a previous session.
 # Need to run this in xprofile because the NixOS xsession
 # script starts up graphical-session.target.
