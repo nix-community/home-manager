@@ -627,14 +627,42 @@ in
                   && defaultProfile != { }
                 )
                 {
-                  # Whenever our immutable extensions.json changes, force VSCode to regenerate
-                  # extensions.json with both mutable and immutable extensions.
+                  # Whenever our immutable extensions.json changes, merge it with
+                  # extensions.json to preserve manually-installed extensions.
                   "${extensionPath}/.extensions-immutable.json" = {
                     text = extensionJson defaultProfile.extensions;
                     onChange = ''
-                      run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
-                      verboseEcho "Regenerating VSCode extensions.json"
-                      run ${lib.getExe cfg.package} --list-extensions > /dev/null
+                      extensions_file="${extensionPath}/extensions.json"
+                      immutable_file="${extensionPath}/.extensions-immutable.json"
+                      obsolete_file="${extensionPath}/.obsolete"
+
+                      verboseEcho "Merging Nix-managed extensions into extensions.json"
+
+                      if [ -f "$extensions_file" ]; then
+                        # Merge: Nix extensions take precedence, keep manual extensions
+                        run ${pkgs.jq}/bin/jq -s '
+                          (.[0] | map({key: .identifier.id | ascii_downcase, value: .}) | from_entries) as $existing |
+                          (.[1] | map({key: .identifier.id | ascii_downcase, value: .}) | from_entries) as $immutable |
+                          ($immutable + $existing) | to_entries | map(.value)
+                        ' "$immutable_file" "$extensions_file" > "$extensions_file.tmp"
+                        run mv "$extensions_file.tmp" "$extensions_file"
+                      else
+                        # No existing extensions.json, use immutable as base
+                        run cp "$immutable_file" "$extensions_file"
+                      fi
+
+                      # Remove Nix-managed extensions from .obsolete file
+                      if [ -f "$obsolete_file" ]; then
+                        nix_ext_patterns=$(${pkgs.jq}/bin/jq -r '.[].relativeLocation | ascii_downcase' "$immutable_file" | paste -sd'|' -)
+                        if [ -n "$nix_ext_patterns" ]; then
+                          run ${pkgs.jq}/bin/jq --arg patterns "$nix_ext_patterns" '
+                            to_entries | map(select(.key | ascii_downcase | test($patterns) | not)) | from_entries
+                          ' "$obsolete_file" > "$obsolete_file.tmp"
+                          run mv "$obsolete_file.tmp" "$obsolete_file"
+                        fi
+                      fi
+
+                      run rm $VERBOSE_ARG -f ${extensionPath}/.init-default-profile-extensions
                     '';
                   };
                 }
