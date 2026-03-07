@@ -341,6 +341,7 @@ in
       lib.nameValuePair "fontconfig/conf.d/${toString config.priority}-hm-${config.label}.conf" {
         inherit (config) enable text;
         source = lib.mkIf (config.source != null) config.source;
+        force = true;
       }
     ) cfg.configFile;
   };
