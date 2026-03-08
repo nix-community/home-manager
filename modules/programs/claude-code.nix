@@ -364,6 +364,33 @@ in
       example = lib.literalExpression "./skills";
     };
 
+    lspServers = lib.mkOption {
+      type = lib.types.attrsOf jsonFormat.type;
+      default = { };
+      description = ''
+        LSP (Language Server Protocol) servers configuration.
+      '';
+      example = {
+        go = {
+          command = "gopls";
+          args = [ "serve" ];
+          extensionToLanguage = {
+            ".go" = "go";
+          };
+        };
+        typescript = {
+          command = "typescript-language-server";
+          args = [ "--stdio" ];
+          extensionToLanguage = {
+            ".ts" = "typescript";
+            ".tsx" = "typescriptreact";
+            ".js" = "javascript";
+            ".jsx" = "javascriptreact";
+          };
+        };
+      };
+    };
+
     mcpServers = lib.mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
@@ -408,8 +435,10 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = (cfg.mcpServers == { } && !cfg.enableMcpIntegration) || cfg.package != null;
-        message = "`programs.claude-code.package` cannot be null when `mcpServers` or `enableMcpIntegration` is configured";
+        assertion =
+          (cfg.mcpServers == { } && cfg.lspServers == { } && !cfg.enableMcpIntegration)
+          || cfg.package != null;
+        message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, or `enableMcpIntegration` is configured";
       }
       {
         assertion = !(cfg.memory.text != null && cfg.memory.source != null);
@@ -446,6 +475,19 @@ in
               "--append-flags"
               "--mcp-config ${
                 jsonFormat.generate "claude-code-mcp-config.json" { mcpServers = mergedMcpServers; }
+              }"
+            ])
+            (lib.optional (cfg.lspServers != { }) [
+              "--append-flags"
+              "--plugin-dir ${
+                pkgs.runCommand "claude-code-lsp-plugin" { } ''
+                  install -Dm644 ${
+                    jsonFormat.generate "claude-code-lsp-plugin.json" {
+                      name = "claude-code-lsp";
+                      lspServers = cfg.lspServers;
+                    }
+                  } $out/.claude-plugin/plugin.json
+                ''
               }"
             ])
           ]
