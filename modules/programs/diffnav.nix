@@ -57,7 +57,7 @@ in
 
     xdg.configFile."diffnav/config.yml".text = (
       lib.mkIf cfg.enable (
-        pkgs.writeText "diffnav-config" (lib.generators.toYAML { diffnav = cfg.options; })
+        pkgs.writeText "diffnav-config" (lib.generators.toYAML cfg.options)
       )
     );
 
