@@ -9,11 +9,7 @@ let
 
   jsonFormat = pkgs.formats.json { };
   tomlFormat = pkgs.formats.toml { };
-
-  packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
-  themeIsToml = lib.versionAtLeast packageVersion "0.15.0";
-  versionPost0_17 = lib.versionAtLeast packageVersion "0.17.0";
-  settingsPath = if versionPost0_17 then "vicinae/settings.json" else "vicinae/vicinae.json";
+  settingsPath = "vicinae/settings.json";
 in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
@@ -95,7 +91,6 @@ in
       example =
         lib.literalExpression # nix
           ''
-            # vicinae >= 0.15.0
             {
               catppuccin-mocha = {
                 meta = {
@@ -160,10 +155,6 @@ in
         assertion = cfg.systemd.enable -> cfg.package != null;
         message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
       }
-      {
-        assertion = !cfg.useLayerShell -> !versionPost0_17;
-        message = "After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.";
-      }
     ];
     lib.vicinae.mkExtension = (
       {
@@ -221,12 +212,10 @@ in
 
     xdg =
       let
-        themeFormat = if themeIsToml then tomlFormat else jsonFormat;
-        themeExtension = if themeIsToml then "toml" else "json";
         themeFiles = lib.mapAttrs' (
           name: theme:
-          lib.nameValuePair "vicinae/themes/${name}.${themeExtension}" {
-            source = themeFormat.generate "vicinae-${name}-theme" theme;
+          lib.nameValuePair "vicinae/themes/${name}.toml" {
+            source = tomlFormat.generate "vicinae-${name}-theme" theme;
           }
         ) cfg.themes;
       in
@@ -235,8 +224,7 @@ in
           "${settingsPath}" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "vicinae-settings" cfg.settings;
           };
-        }
-        // lib.optionalAttrs (!themeIsToml) themeFiles;
+        };
 
         dataFile =
           builtins.listToAttrs (
@@ -245,7 +233,7 @@ in
               value.source = item;
             }) cfg.extensions
           )
-          // lib.optionalAttrs themeIsToml themeFiles;
+          // themeFiles;
       };
 
     systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
@@ -261,11 +249,6 @@ in
         Restart = "always";
         RestartSec = 5;
         KillMode = "process";
-        EnvironmentFile = lib.mkIf (!versionPost0_17) (
-          pkgs.writeText "vicinae-env" ''
-            USE_LAYER_SHELL=${if cfg.useLayerShell then toString 1 else toString 0}
-          ''
-        );
         X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
           config.xdg.configFile.${settingsPath}.source
         ];
