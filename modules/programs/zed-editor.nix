@@ -37,11 +37,9 @@ let
     });
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.libewa ];
+  meta.maintainers = [ ];
 
   options = {
-    # TODO: add vscode option parity (installing extensions, configuring
-    # keybinds with nix etc.)
     programs.zed-editor = {
       enable = lib.mkEnableOption "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
 
