@@ -63,7 +63,6 @@ in
 
     programs.git.iniContent = (
       lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
-        interactive.diffFilter = "diffnav";
         pager.diff = "diffnav";
       }
     );
