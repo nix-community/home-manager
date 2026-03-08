@@ -29,7 +29,8 @@ in
       mkEntry =
         f:
         {
-          source = "${sourceBaseDirectory}/${f.target}";
+          # source = "${sourceBaseDirectory}/${f.target}";
+          source = "${f.source}";
           target = (if hasPrefix "/" f.target then "" else "${targetBaseDirectory}/") + f.target;
         }
         // optionalAttrs f.force {
