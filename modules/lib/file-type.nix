@@ -97,7 +97,7 @@ in
                 If `false` (the default) then the target
                 will be a symbolic link to the source directory. If
                 `true` then the target will be a
-                directory structure matching the source's but whose leafs
+                directory structure matching the source's but whose leaves
                 are symbolic links to the files of the source directory.
               '';
             };
