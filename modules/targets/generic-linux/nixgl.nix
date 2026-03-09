@@ -148,7 +148,7 @@ in
       description = ''
         Whether to enable Vulkan in nixGL wrappers.
 
-        This is disabled by default bacause Vulkan brings in several libraries
+        This is disabled by default because Vulkan brings in several libraries
         that can cause symbol version conflicts in wrapped programs. Your
         mileage may vary.
       '';
