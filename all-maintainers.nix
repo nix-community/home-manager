@@ -1425,7 +1425,7 @@
     github = "karaolidis";
     githubId = 46189100;
     name = "Nikolaos Karaolidis";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   khaneliman = {
     email = "khaneliman12@gmail.com";
@@ -1660,11 +1660,11 @@
     source = "nixpkgs";
   };
   mikaeladev = {
-    email = "mikaeladev@users.noreply.github.com";
+    email = "mikaeladev@icloud.com";
     github = "mikaeladev";
     githubId = 100416544;
     name = "mikaeladev";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   mikilio = {
     email = "official.mikilio+dev@gmail.com";
