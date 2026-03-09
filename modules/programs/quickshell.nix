@@ -11,7 +11,7 @@ in
   meta.maintainers = [ lib.maintainers.justdeeevin ];
 
   options.programs.quickshell = {
-    enable = lib.mkEnableOption "quickshell, a flexbile QtQuick-based desktop shell toolkit.";
+    enable = lib.mkEnableOption "quickshell, a flexible QtQuick-based desktop shell toolkit.";
     package = lib.mkPackageOption pkgs "quickshell" { nullable = true; };
     configs = lib.mkOption {
       type = lib.types.attrsOf lib.types.path;
