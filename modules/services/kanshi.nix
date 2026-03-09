@@ -272,7 +272,7 @@ in
       default = [ ];
       description = ''
         Ordered list of directives.
-        See kanshi(5) for informations.
+        See kanshi(5) for information.
       '';
       example = literalExpression ''
         [
