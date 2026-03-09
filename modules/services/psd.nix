@@ -59,7 +59,7 @@ in
       type = lib.types.bool;
       default = true;
       description = ''
-        Whether to completly enable or disable the crash recovery feature.
+        Whether to completely enable or disable the crash recovery feature.
       '';
     };
 
