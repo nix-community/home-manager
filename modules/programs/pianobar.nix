@@ -52,7 +52,7 @@ in
         freeformType = keyValueFormat.type;
         options = {
           user = mkOption {
-            description = "Username or emaill address for Pandora music service authentication";
+            description = "Username or email address for Pandora music service authentication";
             example = ''"groovy-tunes@example.com"'';
             type = nonEmptyStr;
           };
