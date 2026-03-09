@@ -168,7 +168,7 @@ in
         will enable x11 cursor configurations.
 
         Note that this will merely generate the cursor configurations.
-        To apply the configurations, the relevant subsytems must also be configured.
+        To apply the configurations, the relevant subsystems must also be configured.
         For example, [](#opt-home.pointerCursor.gtk.enable) will generate
         the gtk cursor configuration, but [](#opt-gtk.enable) needs
         to be set for it to be applied.
