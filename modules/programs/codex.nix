@@ -191,7 +191,7 @@ in
           };
           "${skillsDir}" = lib.mkIf (lib.isPath cfg.skills) {
             source = cfg.skills;
-            recursive = true;
+            recursive = false;
           };
         }
         // (lib.mapAttrs' (
