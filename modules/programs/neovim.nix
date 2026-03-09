@@ -414,12 +414,19 @@ in
       ) allPlugins;
 
       # remove attributes not understood by nixpkgs' "makeVimPackageInfo"
-      suppressIncompatibleConfig = p: lib.filterAttrs
-        (n: v: builtins.elem n ["plugin" "optional" "config"])
-        (if p.type != "viml" then p // { config = null; } else p);
+      suppressIncompatibleConfig =
+        p:
+        lib.filterAttrs (
+          n: v:
+          builtins.elem n [
+            "plugin"
+            "optional"
+            "config"
+          ]
+        ) (if p.type != "viml" then p // { config = null; } else p);
 
       # Lua & Python Package Resolution
-      luaPackages = cfg.finalPackage.unwrapped.lua.pkgs;
+      luaPackages = cfg.package.lua.pkgs;
       resolvedExtraLuaPackages = cfg.extraLuaPackages luaPackages;
 
       # Wrapper Arguments Construction
