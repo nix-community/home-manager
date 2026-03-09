@@ -410,10 +410,13 @@ in
 
       # transform all plugins into a standardized attrset
       pluginsNormalized = map (
-        x: defaultPlugin // (if (x ? plugin) then x else { plugin = x; })
+        x: defaultPlugin // (if x ? plugin then x else { plugin = x; })
       ) allPlugins;
 
-      suppressNotVimlConfig = p: if p.type != "viml" then p // { config = null; } else p;
+      # remove attributes not understood by nixpkgs' "makeVimPackageInfo"
+      suppressIncompatibleConfig = p: lib.filterAttrs
+        (n: v: builtins.elem n ["plugin" "optional" "config"])
+        (if p.type != "viml" then p // { config = null; } else p);
 
       # Lua & Python Package Resolution
       luaPackages = cfg.finalPackage.unwrapped.lua.pkgs;
@@ -427,7 +430,7 @@ in
         (lib.makeBinPath cfg.extraPackages)
       ];
 
-      vimPackageInfo = neovimUtils.makeVimPackageInfo (map suppressNotVimlConfig pluginsNormalized);
+      vimPackageInfo = neovimUtils.makeVimPackageInfo (map suppressIncompatibleConfig pluginsNormalized);
 
       wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package {
         withNodeJs = cfg.withNodeJs || cfg.coc.enable;
