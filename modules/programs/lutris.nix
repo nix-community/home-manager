@@ -105,7 +105,7 @@ in
               description = ''
                 The package to use for this runner, nix will try to find the executable for this package.
                 A more specific path can be set by using settings.runner.runner_executable instead.
-                Uncompatible with certain runners, such as wine.
+                Incompatible with certain runners, such as wine.
               '';
               type = types.nullOr types.package;
             };
@@ -130,7 +130,7 @@ in
                           default = "";
                           description = ''
                             Specific option to point to a runner executable directly, don't set runner.package if you set this.
-                            Uncompatible with certain runners such as wine.
+                            Incompatible with certain runners such as wine.
                           '';
                         };
                       };
