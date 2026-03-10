@@ -7,7 +7,28 @@
 
 let
 
-  cfg = lib.filterAttrs (n: f: f.enable) config.home.file;
+  cfg =
+    let
+      allFiles = lib.attrValues config.home.file;
+      enabledFiles = lib.filter (f: f.enable) allFiles;
+
+      # We sort to ascending target path length. This ensures that a directory
+      # end up earlier in the list so that we can more easily detect when
+      # another file is placed inside this directory.
+      #
+      # Specifically, we want to detect two cases:
+      #
+      # - A directory is symlinked to the target, attempting to place a file
+      #   inside this directory is an error since it would entail modifying the
+      #   source directory.
+      #
+      # - A directory is recursively symlinked to the target, attempting to
+      #   place a file inside this directory is allowed. If the placed file
+      #   overlaps with a path from the recursively symlinked directory it will
+      #   override the one from the directory.
+      sortedFiles = lib.lists.sortOn (f: lib.stringLength f.target) enabledFiles;
+    in
+    sortedFiles;
 
   homeDirectory = config.home.homeDirectory;
 
@@ -53,7 +74,7 @@ in
         let
           dups = lib.attrNames (
             lib.filterAttrs (n: v: v > 1) (
-              lib.foldAttrs (acc: v: acc + v) 0 (lib.mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)
+              lib.foldAttrs (acc: v: acc + v) 0 (map (v: { ${v.target} = 1; }) cfg)
             )
           );
           dupsStr = lib.concatStringsSep ", " dups;
@@ -96,7 +117,7 @@ in
         # Paths that should be forcibly overwritten by Home Manager.
         # Caveat emptor!
         forcedPaths = lib.concatMapStringsSep " " (p: ''"$HOME"/${lib.escapeShellArg p}'') (
-          lib.mapAttrsToList (n: v: v.target) (lib.filterAttrs (n: v: v.force) cfg)
+          map (v: v.target) (lib.filter (v: v.force) cfg)
         );
 
         storeDir = lib.escapeShellArg builtins.storeDir;
@@ -267,7 +288,7 @@ in
             && changedFiles[${targetArg}]=0 \
             || changedFiles[${targetArg}]=1
         ''
-      ) (lib.filter (v: v.onChange != "") (lib.attrValues cfg))
+      ) (lib.filter (v: v.onChange != "") cfg)
       + ''
         unset -f _cmp
       ''
@@ -283,7 +304,7 @@ in
             ${v.onChange}
           fi
         fi
-      '') (lib.filter (v: v.onChange != "") (lib.attrValues cfg))
+      '') (lib.filter (v: v.onChange != "") cfg)
     );
 
     # Symlink directories and files that have the right execute bit.
@@ -300,6 +321,12 @@ in
             # Needed in case /nix is a symbolic link.
             realOut="$(realpath -m "$out")"
 
+            # An associative array of previously handled target paths. This is
+            # the path handled for the declared file in home.file. That is, if a
+            # file has been specified as recursive, then this array will only
+            # contain the recursion root, not the visited files.
+            declare -A seenTargets
+
             function insertFile() {
               local source="$1"
               local relTarget="$2"
@@ -307,14 +334,25 @@ in
               local recursive="$4"
               local ignorelinks="$5"
 
-              # If the target already exists then we have a collision. Note, this
+              # If the target has already been seen then we have a collision. Note, this
               # should not happen due to the assertion found in the 'files' module.
-              # We therefore simply log the conflict and otherwise ignore it, mainly
-              # to make the `files-target-config` test work as expected.
-              if [[ -e "$realOut/$relTarget" ]]; then
+              # We therefore simply log the conflict and otherwise ignore it,
+              # mainly to make the `files-target-conflict` test work as expected.
+              if [[ ''${seenTargets["$relTarget"]} ]]; then
                 echo "File conflict for file '$relTarget'" >&2
                 return
               fi
+
+              # If the path already exists as a non-directory, then we are
+              # overriding a file from a recursively linked directory. Remove
+              # this old file so that the override can be placed instead.
+              if [[ -e "$realOut/$relTarget" && ! -d "$realOut/$relTarget" ]]; then
+                echo "$relTarget overridden by $source"
+                rm "$realOut/$relTarget"
+              fi
+
+              # Record that we have seen this target file.
+              seenTargets["$relTarget"]=1
 
               # Figure out the real absolute path to the target.
               local target
@@ -363,7 +401,7 @@ in
             }
           ''
           + lib.concatStrings (
-            lib.mapAttrsToList (n: v: ''
+            map (v: ''
               insertFile ${
                 lib.escapeShellArgs [
                   (sourceStorePath v)
