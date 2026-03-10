@@ -28,6 +28,18 @@ in
         otherwise the service may never be started.
       '';
     };
+
+    extraArgs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [
+        "--max-items"
+        "100"
+      ];
+      description = ''
+        Extra arguments to be passed to the clipman executable.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -46,7 +58,9 @@ in
       };
 
       Service = {
-        ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste -t text --watch ${cfg.package}/bin/clipman store";
+        ExecStart =
+          "${pkgs.wl-clipboard}/bin/wl-paste -t text --watch ${cfg.package}/bin/clipman store"
+          + " ${lib.escapeShellArgs cfg.extraArgs}";
         ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
         Restart = "on-failure";
         KillMode = "mixed";
