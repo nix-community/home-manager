@@ -57,7 +57,7 @@ let
     });
 in
 {
-  meta.maintainers = [ ];
+  meta.maintainers = [ lib.maintainers.alinnow ];
 
   options = {
     programs.zed-editor = {
