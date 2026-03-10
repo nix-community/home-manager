@@ -370,11 +370,11 @@ in
           shell_integration ${cfg.shellIntegration.mode}
         ''
       ))
-      (mkOrder 540 (toKittyConfig cfg.settings))
-      (mkOrder 550 (toKittyActionAliases cfg.actionAliases))
-      (mkOrder 560 (toKittyKeybindings cfg.keybindings))
-      (mkOrder 570 (toKittyMouseBindings cfg.mouseBindings))
-      (mkOrder 580 (toKittyEnv cfg.environment))
+      (mkIf (cfg.settings != { }) (mkOrder 540 (toKittyConfig cfg.settings)))
+      (mkIf (cfg.actionAliases != { }) (mkOrder 550 (toKittyActionAliases cfg.actionAliases)))
+      (mkIf (cfg.keybindings != { }) (mkOrder 560 (toKittyKeybindings cfg.keybindings)))
+      (mkIf (cfg.mouseBindings != { }) (mkOrder 570 (toKittyMouseBindings cfg.mouseBindings)))
+      (mkIf (cfg.environment != { }) (mkOrder 580 (toKittyEnv cfg.environment)))
     ];
 
     xdg.configFile."kitty/kitty.conf" = {
