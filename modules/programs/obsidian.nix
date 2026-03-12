@@ -559,6 +559,12 @@ in
 
         activation.obsidian =
           let
+            obsidianConfigDir =
+              if pkgs.stdenv.isDarwin then
+                "${config.home.homeDirectory}/Library/Application Support/obsidian"
+              else
+                "${config.xdg.configHome}/obsidian";
+
             template = (pkgs.formats.json { }).generate "obsidian.json" {
               vaults = builtins.listToAttrs (
                 map (vault: {
@@ -573,7 +579,7 @@ in
             };
           in
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            OBSIDIAN_CONFIG="$HOME/.config/obsidian/obsidian.json"
+            OBSIDIAN_CONFIG="${obsidianConfigDir}/obsidian.json"
             if [ -f "$OBSIDIAN_CONFIG" ]; then
               verboseEcho "Merging existing Obsidian config with generated template"
               tmp="$(mktemp)"
