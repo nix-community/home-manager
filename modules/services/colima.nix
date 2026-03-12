@@ -57,7 +57,7 @@ in
       extraDescription = "Used in various ways by colima.";
     };
     curlPackage = lib.mkPackageOption pkgs "curl" {
-      extraDescription = "Used by colima to donwload images.";
+      extraDescription = "Used by colima to download images.";
     };
     bashPackage = lib.mkPackageOption pkgs "bashNonInteractive" {
       extraDescription = "Used by colima's internal scripts.";

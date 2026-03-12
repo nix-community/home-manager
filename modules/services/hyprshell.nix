@@ -28,7 +28,7 @@ in
       type = jsonFormat.type;
       default = { };
       description = ''
-        Configuration settings for hyprshell. All the avaiblable
+        Configuration settings for hyprshell. All the available
         options can be found here: <https://github.com/H3rmt/hyprshell/blob/hyprshell-release/docs/CONFIGURE.md#config-options>
       '';
     };

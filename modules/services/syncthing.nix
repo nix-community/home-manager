@@ -38,7 +38,7 @@ let
     # required.
     then
       "--unix-socket ${cfg.guiAddress} http://.${path}"
-    # no adjustements are needed if cfg.guiAddress is a network address
+    # no adjustments are needed if cfg.guiAddress is a network address
     else
       "${cfg.guiAddress}${path}";
 

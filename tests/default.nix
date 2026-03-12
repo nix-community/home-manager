@@ -115,7 +115,7 @@ let
                   if overlays == [ ] then
                     scrubbedPkgs
                   else
-                    builtins.traceVerbose "eval overlayed nixpkgs" (lib.foldr (o: p: p.extend o) scrubbedPkgs overlays);
+                    builtins.traceVerbose "eval overlaid nixpkgs" (lib.foldr (o: p: p.extend o) scrubbedPkgs overlays);
               in
               lib.mkImageMediaOverride stubbedPkgs;
           };

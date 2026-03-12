@@ -81,7 +81,7 @@ in
           {
             __config__ = {
               oldver = "my_custom_oldver.json";
-              newver = "~/seperately_placed_newver.json";
+              newver = "~/separately_placed_newver.json";
               keyfile = "keyfile.toml";
             };
 
