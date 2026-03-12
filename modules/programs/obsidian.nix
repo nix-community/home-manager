@@ -211,6 +211,12 @@ in
     enable = mkEnableOption "obsidian";
     package = mkPackageOption pkgs "obsidian" { nullable = true; };
 
+    cli.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whether to enable the Obsidian CLI in `obsidian.json`.";
+    };
+
     defaultSettings = {
       app = mkOption {
         description = ''
@@ -563,6 +569,7 @@ in
                 }) vaults
               );
               updateDisabled = true;
+              cli = cfg.cli.enable;
             };
           in
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
