@@ -53,6 +53,7 @@ in
         lib.optionals
           (
             cfg.enable
+            && config.programs.git.enable
             && !lib.versionAtLeast config.home.stateVersion "26.05"
             && options.programs.mergiraf.enableGitIntegration.highestPrio >= 1500
           )
@@ -68,6 +69,7 @@ in
           lib.optionals
             (
               cfg.enable
+              && config.programs.jujutsu.enable
               && !lib.versionAtLeast config.home.stateVersion "26.05"
               && options.programs.mergiraf.enableJujutsuIntegration.highestPrio >= 1500
             )

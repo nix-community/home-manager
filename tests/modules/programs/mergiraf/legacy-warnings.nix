@@ -1,6 +1,14 @@
 {
-  programs.mergiraf = {
-    enable = true;
+  programs = {
+    mergiraf = {
+      enable = true;
+    };
+    git = {
+      enable = true;
+    };
+    jujutsu = {
+      enable = true;
+    };
   };
 
   test.asserts.warnings.expected = [
