@@ -118,7 +118,7 @@ in
 
       withRuby = mkOption {
         type = types.nullOr types.bool;
-        default = true;
+        default = false;
         description = ''
           Enable ruby provider.
         '';
