@@ -21,4 +21,6 @@
   claude-code-mixed-content = ./mixed-content.nix;
   claude-code-output-styles = ./output-styles.nix;
   claude-code-output-styles-not-set = ./output-styles-not-set.nix;
+  claude-code-plugins = ./plugins.nix;
+  claude-code-marketplacess = ./marketplaces.nix;
 }
