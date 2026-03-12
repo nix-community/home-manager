@@ -26,7 +26,7 @@ let
     };
 in
 {
-  meta.maintainers = [ ];
+  meta.maintainers = with lib.hm.maintainers; [ mattiasmts ];
 
   options.programs.amp-cli = {
     enable = lib.mkEnableOption "Amp, Sourcegraph's agentic coding CLI";
