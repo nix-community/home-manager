@@ -20,6 +20,19 @@
         description = "Generates a fix for a given GitHub issue.";
       };
     };
+    policies = {
+      "my-rules" = {
+        rule = [
+          {
+            toolName = "run_shell_command";
+            commandPrefix = "git ";
+            decision = "ask_user";
+            priority = 100;
+          }
+        ];
+      };
+      "other-rules" = ./other-rules.toml;
+    };
   };
   nmt.script = ''
     assertFileExists home-files/.gemini/settings.json
@@ -29,6 +42,10 @@
       ${./changelog.toml}
     assertFileContent home-files/.gemini/commands/git/fix.toml \
       ${./fix.toml}
+    assertFileContent home-files/.gemini/policies/my-rules.toml \
+      ${./my-rules.toml}
+    assertFileContent home-files/.gemini/policies/other-rules.toml \
+      ${./other-rules.toml}
 
     assertFileExists home-path/etc/profile.d/hm-session-vars.sh
     assertFileContains home-path/etc/profile.d/hm-session-vars.sh \

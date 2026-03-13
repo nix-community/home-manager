@@ -1,0 +1,5 @@
+[[rule]]
+commandPrefix = "git "
+decision = "ask_user"
+priority = 100
+toolName = "run_shell_command"
