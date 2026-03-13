@@ -13,6 +13,7 @@ in
   };
 
   nmt.script = ''
+    assertLinkExists home-files/.agents/skills
     assertFileExists home-files/.agents/skills/skill-one/SKILL.md
     assertFileContent home-files/.agents/skills/skill-one/SKILL.md \
       ${./skills-dir/skill-one/SKILL.md}
