@@ -85,6 +85,31 @@ in
         '';
       };
 
+    policies = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.path tomlFormat.type);
+      default = { };
+      description = ''
+        An attribute set of policy definitions to create in `~/.gemini/policies/`.
+        The attribute name becomes the filename with `.toml` extension automatically added.
+        The value can be either an attribute set representing the TOML policy or a path to a TOML file.
+      '';
+      example = lib.literalExpression ''
+        {
+          "my-rules" = {
+            rule = [
+              {
+                toolName = "run_shell_command";
+                commandPrefix = "git ";
+                decision = "ask_user";
+                priority = 100;
+              }
+            ];
+          };
+          "other-rules" = ./path/to/rules.toml;
+        }
+      '';
+    };
+
     defaultModel = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
@@ -162,6 +187,18 @@ in
             };
           }
         ) cfg.commands;
+      }
+      {
+        home.file = lib.mapAttrs' (
+          n: v:
+          lib.nameValuePair ".gemini/policies/${n}.toml" {
+            source =
+              if builtins.isPath v || builtins.isString v || lib.isDerivation v then
+                v
+              else
+                tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
+          }
+        ) cfg.policies;
       }
     ]
   );
