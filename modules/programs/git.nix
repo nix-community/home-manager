@@ -17,6 +17,25 @@ let
     ;
 
   cfg = config.programs.git;
+
+  signingFormatStateVersionDefault = lib.hm.deprecations.mkStateVersionOptionDefault {
+    stateVersion = config.home.stateVersion;
+    since = "25.05";
+    optionPath = [
+      "programs"
+      "git"
+      "signing"
+      "format"
+    ];
+    legacy = {
+      value = "openpgp";
+      text = ''"openpgp"'';
+    };
+    current = {
+      value = null;
+      text = "null";
+    };
+  };
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -69,10 +88,7 @@ in
                 "x509"
               ]
             );
-            defaultText = literalExpression ''
-              "openpgp" for state version < 25.05,
-              undefined for state version ≥ 25.05
-            '';
+            inherit (signingFormatStateVersionDefault) defaultText;
             description = ''
               The signing method to use when signing commits and tags.
               Valid values are `openpgp` (OpenPGP/GnuPG), `ssh` (SSH), and `x509` (X.509 certificates).
@@ -429,11 +445,7 @@ in
       (mkIf (cfg.signing != { }) {
         programs.git = {
           signing = {
-            format =
-              if (lib.versionOlder config.home.stateVersion "25.05") then
-                (mkOptionDefault "openpgp")
-              else
-                (mkOptionDefault null);
+            format = mkOptionDefault signingFormatStateVersionDefault.default;
             signer =
               let
                 defaultSigners = {
