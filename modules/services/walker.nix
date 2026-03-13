@@ -41,7 +41,7 @@ in
       };
       description = ''
         Configuration settings for walker. All the available options can be found here:
-        <https://github.com/abenz1267/walker/wiki/Basic-Configuration>
+        <https://github.com/abenz1267/walker/blob/master/resources/config.toml>
       '';
     };
 
@@ -56,20 +56,20 @@ in
               description = "The theme name.";
             };
 
-            layout = mkOption {
-              inherit (tomlFormat) type;
-              default = { };
-              description = ''
-                The layout of the theme.
-
-                See <https://github.com/abenz1267/walker/wiki/Theming> for the full list of options.
-              '';
-            };
-
             style = mkOption {
               type = lines;
               default = "";
               description = "The styling of the theme, written in GTK CSS.";
+            };
+
+            layout = mkOption {
+              type = types.attrsOf types.str;
+              default = { };
+              description = ''
+                The GTK XML layout used.
+                See the default layout for the correct structure: <https://github.com/abenz1267/walker/tree/master/resources/themes/default>
+              '';
+              example = lib.literalExpression ''{ "item" = builtins.readFile ./myfile.xml; };'';
             };
           };
         });
@@ -111,10 +111,11 @@ in
     (mkIf (cfg.theme != null) {
       services.walker.settings.theme = cfg.theme.name;
       xdg.configFile = {
-        "walker/themes/${cfg.theme.name}.toml".source =
-          tomlFormat.generate "walker-theme-${cfg.theme.name}.toml" cfg.theme.layout;
-        "walker/themes/${cfg.theme.name}.css".text = cfg.theme.style;
-      };
+        "walker/themes/${cfg.theme.name}/style.css".text = cfg.theme.style;
+      }
+      // lib.mapAttrs' (
+        n: v: lib.nameValuePair "walker/themes/${cfg.theme.name}/${n}.xml" { text = v; }
+      ) cfg.theme.layout;
     })
   ]);
 }
