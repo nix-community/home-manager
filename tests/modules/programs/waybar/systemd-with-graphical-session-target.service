@@ -1,6 +1,6 @@
 [Install]
 WantedBy=sway-session.target
-WantedBy=tray.target
+WantedBy=tray-sni.target
 
 [Service]
 ExecReload=/nix/store/00000000000000000000000000000000-coreutils/bin/kill -SIGUSR2 $MAINPID
@@ -10,8 +10,11 @@ Restart=on-failure
 
 [Unit]
 After=sway-session.target
+After=tray-sni.target
+After=tray-watcher.service
 ConditionEnvironment=WAYLAND_DISPLAY
 Description=Highly customizable Wayland bar for Sway and Wlroots based compositors.
 Documentation=https://github.com/Alexays/Waybar/wiki
 PartOf=sway-session.target
-PartOf=tray.target
+PartOf=tray-sni.target
+Wants=tray-watcher.service
