@@ -24,17 +24,26 @@ in
     settings = mkOption rec {
       type = with types; attrsOf str;
       apply = lib.mergeAttrs default;
-      default =
-        if lib.versionOlder config.home.stateVersion "25.11" then
-          {
-            PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
-          }
-        else
-          { };
-      defaultText = literalExpression ''
-        { }                                                       for state version ≥ 25.11
-        { PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; } for state version < 25.11
-      '';
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "25.11";
+          optionPath = [
+            "programs"
+            "password-store"
+            "settings"
+          ];
+          legacy = {
+            value = {
+              PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
+            };
+            text = ''{ PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; }'';
+          };
+          current.value = { };
+        })
+        default
+        defaultText
+        ;
       example = literalExpression ''
         {
           PASSWORD_STORE_DIR = "$\{config.xdg.dataHome\}/password-store";
