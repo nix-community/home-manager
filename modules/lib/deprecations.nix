@@ -107,4 +107,54 @@
           value;
     in
     pathStr: attrs: migrate pathStr attrs;
+
+  /*
+    Builds `default` and `defaultText` values for options whose defaults
+    change based on `home.stateVersion`, while warning users on the legacy
+    branch.
+
+    Example:
+      let
+        stateVersionDefault = lib.hm.deprecations.mkStateVersionOptionDefault {
+          stateVersion = config.home.stateVersion;
+          since = "26.05";
+          optionPath = [ "programs" "example" "foo" ];
+          legacy.value = "old";
+          current.value = "new";
+        };
+      in
+      lib.mkOption {
+        inherit (stateVersionDefault) default defaultText;
+      };
+  */
+  mkStateVersionOptionDefault =
+    {
+      stateVersion,
+      since,
+      optionPath,
+      legacy,
+      current,
+      extraWarning ? "",
+    }:
+    let
+      option = lib.showOption optionPath;
+      legacyText = legacy.text or (lib.generators.toPretty { } legacy.value);
+      currentText = current.text or (lib.generators.toPretty { } current.value);
+      warning = ''
+        The default value of `${option}` has changed from `${legacyText}` to `${currentText}`.
+        You are currently using the legacy default (`${legacyText}`) because `home.stateVersion` is less than "${since}".
+        To silence this warning and keep legacy behavior, set:
+          ${option} = ${legacyText};
+        To adopt the new default behavior, set:
+          ${option} = ${currentText};
+      ''
+      + lib.optionalString (extraWarning != "") ("\n" + extraWarning);
+    in
+    {
+      default =
+        if lib.versionAtLeast stateVersion since then current.value else lib.warn warning legacy.value;
+      defaultText = lib.literalExpression ''
+        if lib.versionAtLeast config.home.stateVersion "${since}" then ${currentText} else ${legacyText}
+      '';
+    };
 }
