@@ -13,11 +13,24 @@ in
   options.programs.swaylock = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = lib.versionOlder config.home.stateVersion "23.05" && (cfg.settings != { });
-      defaultText = lib.literalExpression ''
-        true  if state version < 23.05 and settings ≠ { },
-        false otherwise
-      '';
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "23.05";
+          optionPath = [
+            "programs"
+            "swaylock"
+            "enable"
+          ];
+          legacy = {
+            value = cfg.settings != { };
+            text = "config.programs.swaylock.settings != { }";
+          };
+          current.value = false;
+        })
+        default
+        defaultText
+        ;
       example = true;
       description = ''
         Whether to enable swaylock.
