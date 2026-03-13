@@ -136,10 +136,21 @@ in
 
     setSessionVariables = mkOption {
       type = with types; bool;
-      default = lib.versionOlder config.home.stateVersion "26.05";
-      defaultText = literalExpression ''
-        lib.versionOlder config.home.stateVersion "26.05"
-      '';
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          stateVersion = config.home.stateVersion;
+          since = "26.05";
+          optionPath = [
+            "xdg"
+            "userDirs"
+            "setSessionVariables"
+          ];
+          legacy.value = true;
+          current.value = false;
+        })
+        default
+        defaultText
+        ;
       description = ''
         Whether to set the XDG user dir environment variables, like
         `XDG_DESKTOP_DIR`.
