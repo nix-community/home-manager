@@ -48,23 +48,22 @@ in
 
     shellWrapperName = lib.mkOption {
       type = types.str;
-      default =
-        if lib.versionAtLeast config.home.stateVersion "26.05" then
-          "y"
-        else
-          lib.warn ''
-            The default value of `programs.yazi.shellWrapperName` has changed from `yy` to `y`.
-            You are currently using the legacy default (`yy`) because `home.stateVersion` is less than "26.05".
-            To silence this warning and keep legacy behavior, set:
-              programs.yazi.shellWrapperName = "yy";
-            To adopt the new default behavior, set:
-              programs.yazi.shellWrapperName = "y";
-          '' "yy";
-      defaultText = literalExpression ''
-        "y"  for state version ≥ 26.05
-        "yy" for state version < 26.05
-      '';
       example = "yy";
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          stateVersion = config.home.stateVersion;
+          since = "26.05";
+          optionPath = [
+            "programs"
+            "yazi"
+            "shellWrapperName"
+          ];
+          legacy.value = "yy";
+          current.value = "y";
+        })
+        default
+        defaultText
+        ;
       description = ''
         Name of the shell wrapper to be called.
       '';
