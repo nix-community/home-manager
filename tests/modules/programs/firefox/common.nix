@@ -22,6 +22,7 @@ builtins.mapAttrs
     "${name}-deprecated-native-messenger" = ./deprecated-native-messenger.nix;
     "${name}-null-package" = ./null-package.nix;
     "${name}-final-package" = ./final-package.nix;
+    "${name}-global-extensions-assertions" = ./global-extensions-assertions.nix;
     "${name}-policies" = ./policies.nix;
     "${name}-profiles-bookmarks" = ./profiles/bookmarks;
     "${name}-profiles-bookmarks-attrset" = ./profiles/bookmarks/attrset.nix;
