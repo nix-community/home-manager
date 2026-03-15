@@ -44,6 +44,8 @@ in
       '';
     };
 
+    package = lib.mkPackageOption pkgs "xdg-desktop-portal" { };
+
     extraPortals = mkOption {
       type = types.listOf types.package;
       default = [ ];
@@ -123,7 +125,7 @@ in
   config =
     let
       cfg = config.xdg.portal;
-      packages = [ pkgs.xdg-desktop-portal ] ++ cfg.extraPortals;
+      packages = [ cfg.package ] ++ cfg.extraPortals;
       portalsDir = "${config.home.profileDirectory}/share/xdg-desktop-portal/portals";
     in
     mkIf cfg.enable {
