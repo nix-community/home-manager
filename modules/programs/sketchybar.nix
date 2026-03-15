@@ -104,9 +104,16 @@ in
       extraDescription = "Required when using a lua configuration.";
     };
 
-    luaPackage = lib.mkPackageOption pkgs "lua5_4" {
-      nullable = true;
-      extraDescription = "Lua interpreter to use when configType is lua.";
+    luaPackage = mkOption {
+      type = types.nullOr types.package;
+      default = null;
+      example = literalExpression "pkgs.lua5_5";
+      description = ''
+        Lua interpreter to use when configType is lua.
+
+        By default this is inferred from `sbarLuaPackage.passthru.luaModule`
+        when available.
+      '';
     };
 
     extraLuaPackages = mkOption {
@@ -164,47 +171,56 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    programs.sketchybar.luaPackage = lib.mkIf (
+      cfg.configType == "lua" && lib.hasAttrByPath [ "passthru" "luaModule" ] cfg.sbarLuaPackage
+    ) (lib.mkDefault cfg.sbarLuaPackage.passthru.luaModule);
+
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.sketchybar" pkgs lib.platforms.darwin)
       {
         assertion = !(cfg.configType == "lua" && cfg.sbarLuaPackage == null);
         message = "When configType is set to \"lua\", service.sbarLuaPackage must be specified";
       }
+      {
+        assertion = !(cfg.configType == "lua" && cfg.sbarLuaPackage != null && cfg.luaPackage == null);
+        message = "When configType is set to \"lua\", programs.sketchybar.luaPackage must be specified or inferable from programs.sketchybar.sbarLuaPackage.passthru.luaModule";
+      }
     ];
 
     programs.sketchybar.finalPackage =
       let
-        resolvedExtraLuaPackages = cfg.extraLuaPackages pkgs.lua54Packages;
+        useLua = cfg.configType == "lua";
+        hasLuaPackage = useLua && cfg.luaPackage != null;
+        luaPackages = if hasLuaPackage then cfg.luaPackage.pkgs else null;
+
+        resolvedExtraLuaPackages = if hasLuaPackage then cfg.extraLuaPackages luaPackages else [ ];
+
+        configLuaPath =
+          let
+            configDir = "${config.xdg.configHome}/sketchybar";
+          in
+          "${configDir}/?.lua;${configDir}/?/init.lua;${configDir}/?/?.lua";
 
         pathPackages = [
           cfg.package
         ]
         ++ cfg.extraPackages
-        ++ lib.optional (cfg.configType == "lua" && cfg.luaPackage != null) cfg.luaPackage;
+        ++ lib.optional hasLuaPackage cfg.luaPackage;
 
-        luaPaths = lib.filter (x: x != "") [
-          (lib.optionalString (cfg.configType == "lua" && resolvedExtraLuaPackages != [ ]) (
-            lib.concatMapStringsSep ";" pkgs.lua54Packages.getLuaPath resolvedExtraLuaPackages
-          ))
-          (lib.optionalString (cfg.configType == "lua" && cfg.sbarLuaPackage != null) (
-            pkgs.lua54Packages.getLuaPath cfg.sbarLuaPackage
-          ))
-          (lib.optionalString (cfg.configType == "lua" && cfg.config != null && cfg.config.source != null) (
-            let
-              configDir = "${config.xdg.configHome}/sketchybar";
-            in
-            "${configDir}/?.lua;${configDir}/?/init.lua;${configDir}/?/?.lua"
-          ))
-        ];
+        luaPaths = lib.optionals hasLuaPackage (
+          lib.optional (resolvedExtraLuaPackages != [ ]) (
+            lib.concatMapStringsSep ";" luaPackages.getLuaPath resolvedExtraLuaPackages
+          )
+          ++ lib.optional (cfg.sbarLuaPackage != null) (luaPackages.getLuaPath cfg.sbarLuaPackage)
+          ++ lib.optional (cfg.config != null && cfg.config.source != null) configLuaPath
+        );
 
-        luaCPaths = lib.filter (x: x != "") [
-          (lib.optionalString (cfg.configType == "lua" && resolvedExtraLuaPackages != [ ]) (
-            lib.concatMapStringsSep ";" pkgs.lua54Packages.getLuaCPath resolvedExtraLuaPackages
-          ))
-          (lib.optionalString (cfg.configType == "lua" && cfg.sbarLuaPackage != null) (
-            pkgs.lua54Packages.getLuaCPath cfg.sbarLuaPackage
-          ))
-        ];
+        luaCPaths = lib.optionals hasLuaPackage (
+          lib.optional (resolvedExtraLuaPackages != [ ]) (
+            lib.concatMapStringsSep ";" luaPackages.getLuaCPath resolvedExtraLuaPackages
+          )
+          ++ lib.optional (cfg.sbarLuaPackage != null) (luaPackages.getLuaCPath cfg.sbarLuaPackage)
+        );
 
         makeWrapperArgs = lib.flatten (
           lib.filter (x: x != [ ]) [
