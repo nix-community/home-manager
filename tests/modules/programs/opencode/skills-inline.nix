@@ -18,8 +18,8 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/skill/git-release/SKILL.md
-    assertFileContent home-files/.config/opencode/skill/git-release/SKILL.md \
+    assertFileExists home-files/.config/opencode/skills/git-release/SKILL.md
+    assertFileContent home-files/.config/opencode/skills/git-release/SKILL.md \
       ${./git-release-SKILL.md}
   '';
 }
