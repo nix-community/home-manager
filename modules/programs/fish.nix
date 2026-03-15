@@ -250,11 +250,13 @@ let
           description = "Specify the bind mode that the bind is used in";
           type =
             with types;
-            nullOr (enum [
-              "default"
-              "insert"
-              "paste"
-            ]);
+            nullOr (
+              either (enum [
+                "default"
+                "insert"
+                "paste"
+              ]) str
+            );
           default = null;
         };
         command = mkOption {
@@ -279,11 +281,13 @@ let
           description = "Change current mode after bind is executed";
           type =
             with types;
-            nullOr (enum [
-              "default"
-              "insert"
-              "paste"
-            ]);
+            nullOr (
+              either (enum [
+                "default"
+                "insert"
+                "paste"
+              ]) str
+            );
           default = null;
         };
         erase = mkEnableOption "remove bind";

@@ -14,6 +14,12 @@
           command = "exit";
         };
 
+        # Allow arbitrary modes
+        "f" = {
+          mode = "something-non-default";
+          command = "exit";
+        };
+
         "ctrl-c" = {
           mode = "insert";
           command = [
@@ -57,6 +63,8 @@
           "bind --preset alt-s 'fish_commandline_prepend sudo"
         assertFileContains home-files/.config/fish/functions/fish_user_key_bindings.fish \
           "bind --mode visual ctrl-d exit"
+        assertFileContains home-files/.config/fish/functions/fish_user_key_bindings.fish \
+          "bind --mode something-non-default f exit"
       '';
     };
   };
