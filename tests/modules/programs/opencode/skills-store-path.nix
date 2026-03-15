@@ -16,9 +16,9 @@ in
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/skill/internal-skill/SKILL.md
+    assertFileExists home-files/.config/opencode/skills/internal-skill/SKILL.md
 
-    assertFileContent home-files/.config/opencode/skill/internal-skill/SKILL.md \
+    assertFileContent home-files/.config/opencode/skills/internal-skill/SKILL.md \
       "${src}/skills/external-skill/SKILL.md"
   '';
 }

@@ -247,16 +247,16 @@ in
 
         If an attribute set is used, the attribute name becomes the skill directory name,
         and the value is either:
-        - Inline content as a string (creates `opencode/skill/<name>/SKILL.md`)
-        - A path to a file (creates `opencode/skill/<name>/SKILL.md`)
-        - A path to a directory (creates `opencode/skill/<name>/` with all files)
+        - Inline content as a string (creates `opencode/skills/<name>/SKILL.md`)
+        - A path to a file (creates `opencode/skills/<name>/SKILL.md`)
+        - A path to a directory (creates `opencode/skills/<name>/` with all files)
 
         This also accepts Nix store paths (e.g., source from a package), allowing you to
         reference subdirectories within a package source.
 
         If a path is used, it is expected to contain one folder per skill name, each
         containing a {file}`SKILL.md`. The directory is symlinked to
-        {file}`$XDG_CONFIG_HOME/opencode/skill/`.
+        {file}`$XDG_CONFIG_HOME/opencode/skills/`.
 
         See <https://opencode.ai/docs/skills/> for the documentation.
       '';
@@ -419,7 +419,7 @@ in
         recursive = true;
       };
 
-      "opencode/skill" = mkIf (lib.isPath cfg.skills) {
+      "opencode/skills" = mkIf (lib.isPath cfg.skills) {
         source = cfg.skills;
         recursive = true;
       };
@@ -460,12 +460,12 @@ in
         || (builtins.isString content && lib.hasPrefix builtins.storeDir content)
 
       then
-        lib.nameValuePair "opencode/skill/${name}" {
+        lib.nameValuePair "opencode/skills/${name}" {
           source = content;
           recursive = true;
         }
       else
-        lib.nameValuePair "opencode/skill/${name}/SKILL.md" (
+        lib.nameValuePair "opencode/skills/${name}/SKILL.md" (
           if lib.isPath content then { source = content; } else { text = content; }
         )
     ) (if builtins.isAttrs cfg.skills then cfg.skills else { })

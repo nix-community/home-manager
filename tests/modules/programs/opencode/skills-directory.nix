@@ -7,9 +7,9 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/skill/data-analysis/SKILL.md
-    assertFileExists home-files/.config/opencode/skill/data-analysis/notes.txt
-    assertFileContent home-files/.config/opencode/skill/data-analysis/SKILL.md \
+    assertFileExists home-files/.config/opencode/skills/data-analysis/SKILL.md
+    assertFileExists home-files/.config/opencode/skills/data-analysis/notes.txt
+    assertFileContent home-files/.config/opencode/skills/data-analysis/SKILL.md \
       ${./skill-dir/data-analysis/SKILL.md}
   '';
 }

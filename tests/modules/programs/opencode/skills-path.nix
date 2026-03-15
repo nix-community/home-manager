@@ -7,8 +7,8 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/skill/pdf-processing/SKILL.md
-    assertFileContent home-files/.config/opencode/skill/pdf-processing/SKILL.md \
+    assertFileExists home-files/.config/opencode/skills/pdf-processing/SKILL.md
+    assertFileContent home-files/.config/opencode/skills/pdf-processing/SKILL.md \
       ${./pdf-processing-SKILL.md}
   '';
 }
