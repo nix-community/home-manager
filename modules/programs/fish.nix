@@ -235,6 +235,14 @@ let
     { config, ... }:
     {
       options = {
+        name = mkOption {
+          type = with types; nullOr str;
+          default = null;
+          description = ''
+            The key name that is used for the bind.
+            If null, the attribute set key is used.
+          '';
+        };
         enable = mkEnableOption "enable the bind. Set false if you want to ignore the bind" // {
           default = true;
         };
@@ -336,6 +344,7 @@ let
       lib.mapAttrsToList (
         k:
         {
+          name,
           silent,
           erase,
           repaint,
@@ -346,6 +355,7 @@ let
           ...
         }:
         let
+          key = if name != null then name else k;
           opts =
             lib.optionals silent [ "-s" ]
             ++ lib.optionals (!isNull operate) [ "--${operate}" ]
@@ -361,7 +371,7 @@ let
           cmdNormal = lib.concatStringsSep " " (
             [ "bind" ]
             ++ opts
-            ++ [ k ]
+            ++ [ key ]
             ++ map lib.escapeShellArg (lib.flatten [ command ])
             ++ lib.optional repaint "repaint"
           );
@@ -372,7 +382,7 @@ let
               "-e"
             ]
             ++ opts
-            ++ [ k ]
+            ++ [ key ]
           );
         in
         lib.optionals erase [ cmdErase ] ++ lib.optionals (!isNull command) [ cmdNormal ]
