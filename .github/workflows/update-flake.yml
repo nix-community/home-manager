@@ -13,7 +13,7 @@ jobs:
         branch: [master, release-25.05]
     steps:
       - name: Create GitHub App token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         if: vars.CI_APP_ID
         id: app-token
         with:
