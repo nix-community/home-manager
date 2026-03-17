@@ -1,7 +1,5 @@
 {
-  xdg.enable = true;
-
-  home.preferXdgDirectories = true;
+  xdg.enable = false;
 
   programs.rizin = {
     enable = true;
@@ -12,6 +10,6 @@
   };
 
   nmt.script = ''
-    assertFileExists "home-files/.config/rizin/rizinrc"
+    assertFileExists "home-files/.rizinrc"
   '';
 }
