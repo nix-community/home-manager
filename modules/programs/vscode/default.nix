@@ -17,8 +17,8 @@ let
 
   cfg = config.programs.vscode;
 
-  vscodePname = cfg.package.pname;
-  vscodeVersion = cfg.package.version;
+  vscodePname = cfg.package.pname or cfg.pname;
+  vscodeVersion = cfg.package.version or pkgs.vscode.version;
 
   jsonFormat = pkgs.formats.json { };
 
@@ -383,8 +383,23 @@ in
     enable = lib.mkEnableOption "Visual Studio Code";
 
     package = lib.mkPackageOption pkgs "vscode" {
+      nullable = true;
       example = "pkgs.vscodium";
       extraDescription = "Version of Visual Studio Code to install.";
+    };
+
+    pname = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "vscode";
+      description = ''
+        The package name (pname) of the VS Code variant being used.
+        Required when {option}`programs.vscode.package` is set to
+        `null`, so that {option}`programs.vscode.nameShort` and
+        {option}`programs.vscode.dataFolderName` can be derived from
+        known products. Has no effect when
+        {option}`programs.vscode.package` is set.
+      '';
     };
 
     mutableExtensionsDir = mkOption {
@@ -449,6 +464,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.package != null || cfg.pname != null;
+        message = "programs.vscode.pname must be set when programs.vscode.package is null.";
+      }
+    ];
+
     warnings = [
       (mkIf (allProfilesExceptDefault != { } && cfg.mutableExtensionsDir)
         "programs.vscode.mutableExtensionsDir can be used only if no profiles apart from default are set."
@@ -465,7 +487,7 @@ in
       )
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     # The file `${userDir}/globalStorage/storage.json` needs to be writable by VSCode,
     # since it contains other data, such as theme backgrounds, recently opened folders, etc.
@@ -625,6 +647,7 @@ in
                     ]
                   )
                   && defaultProfile != { }
+                  && cfg.package != null
                 )
                 {
                   # Whenever our immutable extensions.json changes, force VSCode to regenerate
