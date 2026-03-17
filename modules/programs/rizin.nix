@@ -6,7 +6,6 @@
 }:
 let
   cfg = config.programs.rizin;
-  eValueType = with lib.types; either str (either int (either bool float));
 in
 {
   meta.maintainers = [
@@ -20,7 +19,7 @@ in
       package = lib.mkPackageOption pkgs "rizin" { nullable = true; };
 
       settings = lib.mkOption {
-        type = lib.types.attrsOf eValueType;
+        type = with lib.types; attrsOf (either str (either int (either bool float)));
         default = { };
         example = {
           "asm.bytes" = true;
@@ -53,11 +52,7 @@ in
 
   config =
     let
-      configFile =
-        if config.xdg.enable && config.home.preferXdgDirectories then
-          "${config.xdg.configHome}/rizin/rizinrc"
-        else
-          ".rizinrc";
+      configFile = if config.xdg.enable then "${config.xdg.configHome}/rizin/rizinrc" else ".rizinrc";
       configContent = ''
         # settings
         ${lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "e ${k}=${lib.toString v}") cfg.settings)}
