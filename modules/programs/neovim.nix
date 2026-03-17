@@ -425,10 +425,6 @@ in
           ]
         ) (if p.type != "viml" then p // { config = null; } else p);
 
-      # Lua & Python Package Resolution
-      luaPackages = cfg.package.lua.pkgs;
-      resolvedExtraLuaPackages = cfg.extraLuaPackages luaPackages;
-
       # Wrapper Arguments Construction
       extraMakeWrapperArgs = optionals (cfg.extraPackages != [ ]) [
         "--suffix"
@@ -444,12 +440,13 @@ in
         plugins = [ ];
 
         inherit (cfg)
+          extraLuaPackages
+          extraName
           withPython3
           withRuby
           withPerl
           viAlias
           vimAlias
-          extraName
           autowrapRuntimeDeps
           waylandSupport
           ;
@@ -518,18 +515,8 @@ in
           advisedLua = foldedLuaBlock "home-manager generated: plugin config advised in nixpkgs" (
             lib.concatStringsSep "\n" vimPackageInfo.pluginAdvisedLua
           );
-
-          generatedLuaPath = lib.concatMapStringsSep ";" luaPackages.getLuaPath resolvedExtraLuaPackages;
-          generatedLuaCPath = lib.concatMapStringsSep ";" luaPackages.getLuaCPath resolvedExtraLuaPackages;
         in
-
         lib.mkMerge [
-          (lib.mkIf (resolvedExtraLuaPackages != [ ]) (
-            lib.mkOrder 100 ''
-              package.path = "${generatedLuaPath}".. ";" .. package.path
-              package.cpath = "${generatedLuaCPath}".. ";" .. package.cpath
-            ''
-          ))
           (lib.mkIf (advisedLua != null) (lib.mkOrder 510 advisedLua))
           (lib.mkIf wrapperHasUserConfig (
             # we want it to appear rather early
