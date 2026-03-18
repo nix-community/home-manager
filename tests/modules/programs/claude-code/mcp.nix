@@ -49,7 +49,14 @@
   };
 
   nmt.script = ''
-    normalizedWrapper=$(normalizeStorePaths home-path/bin/claude)
-    assertFileContent $normalizedWrapper ${./expected-mcp-wrapper}
+    wrapperPath="$TESTED/home-path/bin/claude"
+    normalizedWrapper=$(normalizeStorePaths "$wrapperPath")
+    assertFileContent "$normalizedWrapper" ${./expected-mcp-wrapper}
+
+    pluginDir=$(grep -o -- '--plugin-dir /nix/store/[^ ]*' "$wrapperPath")
+    pluginDir="''${pluginDir#--plugin-dir }"
+    assertFileContent "$pluginDir/.claude-plugin/plugin.json" ${./expected-plugin-manifest.json}
+    assertFileContent "$pluginDir/.mcp.json" ${./expected-mcp-plugin.json}
+    assertPathNotExists "$pluginDir/.lsp.json"
   '';
 }

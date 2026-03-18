@@ -469,39 +469,39 @@ in
     programs.claude-code.finalPackage =
       let
         mergedMcpServers = transformedMcpServers // cfg.mcpServers;
-        makeWrapperArgs = lib.flatten (
-          lib.filter (x: x != [ ]) [
-            (lib.optional (cfg.mcpServers != { } || transformedMcpServers != { }) [
-              "--append-flags"
-              "--mcp-config ${
-                jsonFormat.generate "claude-code-mcp-config.json" { mcpServers = mergedMcpServers; }
-              }"
-            ])
-            (lib.optional (cfg.lspServers != { }) [
-              "--append-flags"
-              "--plugin-dir ${
-                pkgs.runCommand "claude-code-lsp-plugin" { } ''
-                  install -Dm644 ${
-                    jsonFormat.generate "claude-code-lsp-plugin.json" {
-                      name = "claude-code-lsp";
-                      lspServers = cfg.lspServers;
-                    }
-                  } $out/.claude-plugin/plugin.json
-                ''
-              }"
-            ])
-          ]
-        );
-
-        hasWrapperArgs = makeWrapperArgs != [ ];
+        hasMcpServers = mergedMcpServers != { };
+        hasLspServers = cfg.lspServers != { };
+        pluginDir =
+          if hasMcpServers || hasLspServers then
+            pkgs.runCommand "claude-code-hm-plugin" { } ''
+              install -Dm644 ${
+                jsonFormat.generate "claude-code-plugin.json" {
+                  name = "claude-code-home-manager";
+                }
+              } $out/.claude-plugin/plugin.json
+              ${lib.optionalString hasMcpServers ''
+                install -Dm644 ${
+                  jsonFormat.generate "claude-code-mcp.json" { mcpServers = mergedMcpServers; }
+                } $out/.mcp.json
+              ''}
+              ${lib.optionalString hasLspServers ''
+                install -Dm644 ${jsonFormat.generate "claude-code-lsp.json" cfg.lspServers} $out/.lsp.json
+              ''}
+            ''
+          else
+            null;
       in
-      if hasWrapperArgs then
+      if pluginDir != null then
         pkgs.symlinkJoin {
           name = "claude-code";
           paths = [ cfg.package ];
-          nativeBuildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
-            wrapProgram $out/bin/claude ${lib.escapeShellArgs makeWrapperArgs}
+            mv $out/bin/claude $out/bin/.claude-wrapped
+            cat > $out/bin/claude <<EOF
+            #! ${pkgs.bash}/bin/bash -e
+            exec -a "\$0" "$out/bin/.claude-wrapped" --plugin-dir ${pluginDir} "\$@"
+            EOF
+            chmod +x $out/bin/claude
           '';
           inherit (cfg.package) meta;
         }
