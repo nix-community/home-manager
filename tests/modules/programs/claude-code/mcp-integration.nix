@@ -13,7 +13,7 @@
       };
       enable = true;
 
-      enableMcpIntagretion = true;
+      enableMcpIntegration = true;
 
       mcpServers = {
         github = {
@@ -66,7 +66,17 @@
   };
 
   nmt.script = ''
-    normalizedWrapper=$(normalizeStorePaths home-path/bin/claude)
-    assertFileContent $normalizedWrapper ${./expected-mcp-wrapper}
+    wrapperPath="$TESTED/home-path/bin/claude"
+    normalizedWrapper=$(normalizeStorePaths "$wrapperPath")
+    assertFileContent "$normalizedWrapper" ${./expected-mcp-wrapper}
+
+    pluginDir=$(grep -o -- '--plugin-dir /nix/store/[^ ]*' "$wrapperPath")
+    pluginDir="''${pluginDir#--plugin-dir }"
+    assertFileContent "$pluginDir/.claude-plugin/plugin.json" ${./expected-plugin-manifest.json}
+    assertFileRegex "$pluginDir/.mcp.json" '"github"'
+    assertFileRegex "$pluginDir/.mcp.json" '"database"'
+    assertFileRegex "$pluginDir/.mcp.json" '"/tmp"'
+    (! grep -q -- '/other-tmp' "$pluginDir/.mcp.json")
+    assertPathNotExists "$pluginDir/.lsp.json"
   '';
 }
