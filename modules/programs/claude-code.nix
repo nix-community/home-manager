@@ -7,17 +7,35 @@
 let
   cfg = config.programs.claude-code;
   jsonFormat = pkgs.formats.json { };
-  transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
-    lib.mapAttrs (
-      name: server:
-      (removeAttrs server [ "disabled" ])
-      // (lib.optionalAttrs (server ? url) { type = "http"; })
-      // (lib.optionalAttrs (server ? command) { type = "stdio"; })
-      // {
-        enabled = !(server.disabled or false);
-      }
-    ) config.programs.mcp.servers
-  );
+
+  transformMcpServer = name: server: {
+    inherit name;
+    value = {
+      inherit (server) type;
+    }
+    // (
+      if server.type == "stdio" then
+        {
+          inherit (server) command args env;
+        }
+      else if server.type == "sse" || server.type == "http" then
+        {
+          inherit (server) url headers;
+        }
+      else
+        throw "Unexpected MCP server type: ${server.type}"
+    );
+  };
+
+  transformedMcpServers =
+    if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
+      lib.listToAttrs (
+        lib.mapAttrsToList transformMcpServer (
+          lib.filterAttrs (_: server: server.enabled) config.programs.mcp.servers
+        )
+      )
+    else
+      { };
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
