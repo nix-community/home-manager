@@ -16,15 +16,13 @@ in
       ...
     }:
     let
-      cfg = config.programs.kiro;
-
-      argvPath = "${cfg.dataFolderName}/argv.json";
+      argvPath = ".kiro/argv.json";
 
       settingsPath =
         if pkgs.stdenv.hostPlatform.isDarwin then
-          "Library/Application Support/${cfg.nameShort}/User/settings.json"
+          "Library/Application Support/Kiro/User/settings.json"
         else
-          ".config/${cfg.nameShort}/User/settings.json";
+          ".config/Kiro/User/settings.json";
     in
     {
       programs.kiro = {

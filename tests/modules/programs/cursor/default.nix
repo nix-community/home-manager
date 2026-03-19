@@ -16,15 +16,13 @@ in
       ...
     }:
     let
-      cfg = config.programs.cursor;
-
-      argvPath = "${cfg.dataFolderName}/argv.json";
+      argvPath = ".cursor/argv.json";
 
       settingsPath =
         if pkgs.stdenv.hostPlatform.isDarwin then
-          "Library/Application Support/${cfg.nameShort}/User/settings.json"
+          "Library/Application Support/Cursor/User/settings.json"
         else
-          ".config/${cfg.nameShort}/User/settings.json";
+          ".config/Cursor/User/settings.json";
     in
     {
       programs.cursor = {

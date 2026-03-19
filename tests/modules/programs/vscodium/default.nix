@@ -16,15 +16,13 @@ in
       ...
     }:
     let
-      cfg = config.programs.vscodium;
-
-      argvPath = "${cfg.dataFolderName}/argv.json";
+      argvPath = ".vscode-oss/argv.json";
 
       settingsPath =
         if pkgs.stdenv.hostPlatform.isDarwin then
-          "Library/Application Support/${cfg.nameShort}/User/settings.json"
+          "Library/Application Support/VSCodium/User/settings.json"
         else
-          ".config/${cfg.nameShort}/User/settings.json";
+          ".config/VSCodium/User/settings.json";
     in
     {
       programs.vscodium = {

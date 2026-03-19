@@ -8,23 +8,20 @@ package:
 }:
 
 let
-  cfg = config.programs.vscode;
-  willUseIfd = package.pname != "vscode";
-
   mcpFilePath =
     name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${cfg.nameShort}/User/${
+      "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }mcp.json"
     else
-      ".config/${cfg.nameShort}/User/${
+      ".config/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }mcp.json";
 
 in
 
-lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
+{
   programs.mcp = {
     enable = true;
     servers = {

@@ -9,9 +9,6 @@ package:
 }:
 
 let
-  cfg = config.programs.vscode;
-  willUseIfd = package.pname != "vscode";
-
   bindings = [
     {
       key = "ctrl+c";
@@ -40,22 +37,22 @@ let
   keybindingsPath =
     name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${cfg.nameShort}/User/${
+      "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }keybindings.json"
     else
-      ".config/${cfg.nameShort}/User/${
+      ".config/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }keybindings.json";
 
   settingsPath =
     name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${cfg.nameShort}/User/${
+      "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }settings.json"
     else
-      ".config/${cfg.nameShort}/User/${
+      ".config/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }settings.json";
 
@@ -125,7 +122,7 @@ let
   expectedCustomKeybindings = pkgs.writeText "custom-expected.json" content;
 in
 
-lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
+{
   programs.vscode = {
     enable = true;
     profiles = {

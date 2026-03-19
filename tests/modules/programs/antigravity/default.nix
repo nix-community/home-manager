@@ -16,15 +16,13 @@ in
       ...
     }:
     let
-      cfg = config.programs.antigravity;
-
-      argvPath = "${cfg.dataFolderName}/argv.json";
+      argvPath = ".antigravity/argv.json";
 
       settingsPath =
         if pkgs.stdenv.hostPlatform.isDarwin then
-          "Library/Application Support/${cfg.nameShort}/User/settings.json"
+          "Library/Application Support/Antigravity/User/settings.json"
         else
-          ".config/${cfg.nameShort}/User/settings.json";
+          ".config/Antigravity/User/settings.json";
     in
     {
       programs.antigravity = {

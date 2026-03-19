@@ -2,8 +2,8 @@
   modulePath,
   name,
   packageName,
-  nameShort ? null,
-  dataFolderName ? null,
+  nameShort,
+  dataFolderName,
   skipVersionCheck ? false,
 }:
 {
@@ -30,36 +30,13 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  libPath = "${cfg.package}/lib/vscode";
-
-  productInfoPath =
-    if
-      lib.pathExists "${cfg.package}/Applications/${
-        cfg.package.passthru.longName or "Code"
-      }.app/Contents/Resources/app/product.json"
-    then
-      "${cfg.package}/Applications/${
-        cfg.package.passthru.longName or "Code"
-      }.app/Contents/Resources/app/product.json"
-    else if lib.pathExists "${libPath}/resources/app/product.json" then
-      # Visual Studio Code, VSCodium, Windsurf, Cursor, Antigravity
-      "${libPath}/resources/app/product.json"
-    else
-      # OpenVSCode Server
-      "${cfg.package}/product.json";
-
-  productInfo = lib.importJSON productInfoPath;
-
-  configDir = cfg.nameShort;
-  extensionDir = cfg.dataFolderName;
-
   userDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "${config.home.homeDirectory}/Library/Application Support/${configDir}/User"
+      "${config.home.homeDirectory}/Library/Application Support/${nameShort}/User"
     else
-      "${config.xdg.configHome}/${configDir}/User";
+      "${config.xdg.configHome}/${nameShort}/User";
 
-  argvPath = "${extensionDir}/argv.json";
+  argvPath = "${dataFolderName}/argv.json";
   configFilePath =
     name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}settings.json";
   tasksFilePath =
@@ -70,7 +47,7 @@ let
 
   snippetDir = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}snippets";
 
-  extensionPath = "${extensionDir}/extensions";
+  extensionPath = "${dataFolderName}/extensions";
 
   extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
   extensionJsonFile =
@@ -325,30 +302,6 @@ in
         Whether extensions can be installed or updated manually
         or by ${name}. Mutually exclusive to
         ${moduleName}.profiles.
-      '';
-    };
-
-    nameShort = mkOption {
-      type = types.str;
-      default = if nameShort != null then nameShort else productInfo.nameShort;
-      defaultText = "(derived from product.json)";
-      example = "MyCoolVSCodeFork";
-      description = ''
-        Override for package "short name", used for generating configuration.
-
-        This should match the `shortName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
-      '';
-    };
-
-    dataFolderName = mkOption {
-      type = types.str;
-      default = if dataFolderName != null then dataFolderName else productInfo.dataFolderName;
-      defaultText = "(derived from product.json)";
-      example = ".cool-vscode";
-      description = ''
-        Override for extensions directory.
-
-        This should match the `dataFolderName` field in the package's product.json. If `null`, then searches common locations for a product.json and uses the value from there.
       '';
     };
 

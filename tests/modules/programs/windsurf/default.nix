@@ -16,15 +16,13 @@ in
       ...
     }:
     let
-      cfg = config.programs.windsurf;
-
-      argvPath = "${cfg.dataFolderName}/argv.json";
+      argvPath = ".windsurf/argv.json";
 
       settingsPath =
         if pkgs.stdenv.hostPlatform.isDarwin then
-          "Library/Application Support/${cfg.nameShort}/User/settings.json"
+          "Library/Application Support/Windsurf/User/settings.json"
         else
-          ".config/${cfg.nameShort}/User/settings.json";
+          ".config/Windsurf/User/settings.json";
     in
     {
       programs.windsurf = {
