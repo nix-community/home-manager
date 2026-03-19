@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-05 23:09+0000\n"
+"PO-Revision-Date: 2026-03-19 06:09+0000\n"
 "Last-Translator: Wildan Nursyamsi <muhamad11wildan4n@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/home-manager/"
 "modules/id/>\n"
@@ -29,7 +29,7 @@ msgstr "Membersihkan link yatim piatu dari %s"
 
 #: modules/home-environment.nix:680
 msgid "Creating new profile generation"
-msgstr "Membuat profil  baru"
+msgstr "Membuat profil baru"
 
 #: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
@@ -82,9 +82,8 @@ msgstr "Tidak dapat menemukan direktori profil yang sesuai, coba %s dan %s"
 #. translators: For example: HOME is "/home/foo", expected "/home/bar"
 #: modules/lib-bash/activation-init.sh:109
 #: modules/lib-bash/activation-init.sh:121
-#, fuzzy
 msgid "%s is \"%s\", expected \"%s\""
-msgstr "ini mengharapkan"
+msgstr "%s ini \"%s\", mengharapkan \"%s\""
 
 #: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
