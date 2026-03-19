@@ -7,9 +7,10 @@
 let
   cfg = config.programs.claude-code;
   jsonFormat = pkgs.formats.json { };
+
   transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
     lib.mapAttrs (
-      name: server:
+      _name: server:
       (removeAttrs server [ "disabled" ])
       // (lib.optionalAttrs (server ? url) { type = "http"; })
       // (lib.optionalAttrs (server ? command) { type = "stdio"; })
@@ -18,6 +19,29 @@ let
       }
     ) config.programs.mcp.servers
   );
+
+  mkContentOption =
+    {
+      description,
+      example ? null,
+    }:
+    lib.mkOption (
+      {
+        type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+        default = { };
+        inherit description;
+      }
+      // lib.optionalAttrs (example != null) { inherit example; }
+    );
+
+  mkDirOption =
+    { description, example }:
+    lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      inherit description example;
+    };
+
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -104,9 +128,7 @@ in
       description = "JSON configuration for Claude Code settings.json";
     };
 
-    agents = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
-      default = { };
+    agents = mkContentOption {
       description = ''
         Custom agents for Claude Code.
         The attribute name becomes the agent filename, and the value is either:
@@ -131,9 +153,7 @@ in
       '';
     };
 
-    commands = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
-      default = { };
+    commands = mkContentOption {
       description = ''
         Custom commands for Claude Code.
         The attribute name becomes the command filename, and the value is either:
@@ -222,9 +242,7 @@ in
       };
     };
 
-    rules = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
-      default = { };
+    rules = mkContentOption {
       description = ''
         Modular rule files for Claude Code.
         The attribute name becomes the rule filename, and the value is either:
@@ -252,9 +270,7 @@ in
       '';
     };
 
-    rulesDir = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    rulesDir = mkDirOption {
       description = ''
         Path to a directory containing rule files for Claude Code.
         Rule files from this directory will be symlinked to .claude/rules/.
@@ -263,9 +279,7 @@ in
       example = lib.literalExpression "./rules";
     };
 
-    agentsDir = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    agentsDir = mkDirOption {
       description = ''
         Path to a directory containing agent files for Claude Code.
         Agent files from this directory will be symlinked to .claude/agents/.
@@ -273,9 +287,7 @@ in
       example = lib.literalExpression "./agents";
     };
 
-    commandsDir = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    commandsDir = mkDirOption {
       description = ''
         Path to a directory containing command files for Claude Code.
         Command files from this directory will be symlinked to .claude/commands/.
@@ -283,9 +295,7 @@ in
       example = lib.literalExpression "./commands";
     };
 
-    hooksDir = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    hooksDir = mkDirOption {
       description = ''
         Path to a directory containing hook files for Claude Code.
         Hook files from this directory will be symlinked to .claude/hooks/.
@@ -293,9 +303,7 @@ in
       example = lib.literalExpression "./hooks";
     };
 
-    outputStyles = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
-      default = { };
+    outputStyles = mkContentOption {
       description = ''
         Custom output styles for Claude Code.
         The attribute name becomes the base of the output style filename.
@@ -316,9 +324,7 @@ in
       '';
     };
 
-    skills = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
-      default = { };
+    skills = mkContentOption {
       description = ''
         Custom skills for Claude Code.
         The attribute name becomes the skill directory name, and the value is either:
@@ -353,9 +359,7 @@ in
       '';
     };
 
-    skillsDir = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
+    skillsDir = mkDirOption {
       description = ''
         Path to a directory containing skill directories for Claude Code.
         Each skill directory should contain a SKILL.md entrypoint file.
@@ -432,166 +436,157 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion =
-          (cfg.mcpServers == { } && cfg.lspServers == { } && !cfg.enableMcpIntegration)
-          || cfg.package != null;
-        message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, or `enableMcpIntegration` is configured";
-      }
-      {
-        assertion = !(cfg.memory.text != null && cfg.memory.source != null);
-        message = "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`";
-      }
-      {
-        assertion = !(cfg.rules != { } && cfg.rulesDir != null);
-        message = "Cannot specify both `programs.claude-code.rules` and `programs.claude-code.rulesDir`";
-      }
-      {
-        assertion = !(cfg.agents != { } && cfg.agentsDir != null);
-        message = "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`";
-      }
-      {
-        assertion = !(cfg.commands != { } && cfg.commandsDir != null);
-        message = "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`";
-      }
-      {
-        assertion = !(cfg.hooks != { } && cfg.hooksDir != null);
-        message = "Cannot specify both `programs.claude-code.hooks` and `programs.claude-code.hooksDir`";
-      }
-      {
-        assertion = !(cfg.skills != { } && cfg.skillsDir != null);
-        message = "Cannot specify both `programs.claude-code.skills` and `programs.claude-code.skillsDir`";
-      }
-    ];
+  config =
+    let
+      mkSourceEntry = content: if lib.isPath content then { source = content; } else { text = content; };
 
-    programs.claude-code.finalPackage =
-      let
-        mergedMcpServers = transformedMcpServers // cfg.mcpServers;
-        hasMcpServers = mergedMcpServers != { };
-        hasLspServers = cfg.lspServers != { };
-        pluginDir =
-          if hasMcpServers || hasLspServers then
-            pkgs.runCommand "claude-code-hm-plugin" { } ''
-              install -Dm644 ${
-                jsonFormat.generate "claude-code-plugin.json" {
-                  name = "claude-code-home-manager";
-                }
-              } $out/.claude-plugin/plugin.json
-              ${lib.optionalString hasMcpServers ''
-                install -Dm644 ${
-                  jsonFormat.generate "claude-code-mcp.json" { mcpServers = mergedMcpServers; }
-                } $out/.mcp.json
-              ''}
-              ${lib.optionalString hasLspServers ''
-                install -Dm644 ${jsonFormat.generate "claude-code-lsp.json" cfg.lspServers} $out/.lsp.json
-              ''}
-            ''
-          else
-            null;
-      in
-      if pluginDir != null then
-        pkgs.symlinkJoin {
-          name = "claude-code";
-          paths = [ cfg.package ];
-          postBuild = ''
-            mv $out/bin/claude $out/bin/.claude-wrapped
-            cat > $out/bin/claude <<EOF
-            #! ${pkgs.bash}/bin/bash -e
-            exec -a "\$0" "$out/bin/.claude-wrapped" --plugin-dir ${pluginDir} "\$@"
-            EOF
-            chmod +x $out/bin/claude
-          '';
-          inherit (cfg.package) meta;
-        }
-      else
-        cfg.package;
+      mkMarkdownEntries =
+        subdir: attrs:
+        lib.mapAttrs' (
+          name: content: lib.nameValuePair ".claude/${subdir}/${name}.md" (mkSourceEntry content)
+        ) attrs;
 
-    home = {
-      packages = lib.mkIf (cfg.package != null) [ cfg.finalPackage ];
+      mkTextEntries =
+        subdir: attrs:
+        lib.mapAttrs' (
+          name: content: lib.nameValuePair ".claude/${subdir}/${name}" { text = content; }
+        ) attrs;
 
-      file = {
-        ".claude/settings.json" = lib.mkIf (cfg.settings != { }) {
-          source = jsonFormat.generate "claude-code-settings.json" (
-            cfg.settings
-            // {
-              "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-            }
-          );
-        };
-
-        ".claude/CLAUDE.md" = lib.mkIf (cfg.memory.text != null || cfg.memory.source != null) (
-          if cfg.memory.text != null then { text = cfg.memory.text; } else { source = cfg.memory.source; }
-        );
-
-        ".claude/rules" = lib.mkIf (cfg.rulesDir != null) {
-          source = cfg.rulesDir;
-          recursive = true;
-        };
-
-        ".claude/agents" = lib.mkIf (cfg.agentsDir != null) {
-          source = cfg.agentsDir;
-          recursive = true;
-        };
-
-        ".claude/commands" = lib.mkIf (cfg.commandsDir != null) {
-          source = cfg.commandsDir;
-          recursive = true;
-        };
-
-        ".claude/hooks" = lib.mkIf (cfg.hooksDir != null) {
-          source = cfg.hooksDir;
-          recursive = true;
-        };
-
-        ".claude/skills" = lib.mkIf (cfg.skillsDir != null) {
-          source = cfg.skillsDir;
-          recursive = true;
-        };
-      }
-      // lib.mapAttrs' (
-        name: content:
-        lib.nameValuePair ".claude/rules/${name}.md" (
-          if lib.isPath content then { source = content; } else { text = content; }
-        )
-      ) cfg.rules
-      // lib.mapAttrs' (
-        name: content:
-        lib.nameValuePair ".claude/agents/${name}.md" (
-          if lib.isPath content then { source = content; } else { text = content; }
-        )
-      ) cfg.agents
-      // lib.mapAttrs' (
-        name: content:
-        lib.nameValuePair ".claude/commands/${name}.md" (
-          if lib.isPath content then { source = content; } else { text = content; }
-        )
-      ) cfg.commands
-      // lib.mapAttrs' (
-        name: content:
-        lib.nameValuePair ".claude/hooks/${name}" {
-          text = content;
-        }
-      ) cfg.hooks
-      // lib.mapAttrs' (
-        name: content:
-        if lib.isPath content && lib.pathIsDirectory content then
-          lib.nameValuePair ".claude/skills/${name}" {
-            source = content;
+      mkRecursiveDirAttrs =
+        subdir: dir:
+        lib.optionalAttrs (dir != null) {
+          ".claude/${subdir}" = {
+            source = dir;
             recursive = true;
+          };
+        };
+    in
+    lib.mkIf cfg.enable {
+      assertions =
+        let
+          exclusiveInlineDirPairs = [
+            {
+              inline = "rules";
+              dir = "rulesDir";
+            }
+            {
+              inline = "agents";
+              dir = "agentsDir";
+            }
+            {
+              inline = "commands";
+              dir = "commandsDir";
+            }
+            {
+              inline = "hooks";
+              dir = "hooksDir";
+            }
+            {
+              inline = "skills";
+              dir = "skillsDir";
+            }
+          ];
+
+          mkExclusiveAssertion =
+            { inline, dir }:
+            {
+              assertion = !(cfg.${inline} != { } && cfg.${dir} != null);
+              message = "Cannot specify both `programs.claude-code.${inline}` and `programs.claude-code.${dir}`";
+            };
+        in
+        [
+          {
+            assertion =
+              (cfg.mcpServers == { } && cfg.lspServers == { } && !cfg.enableMcpIntegration)
+              || cfg.package != null;
+            message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, or `enableMcpIntegration` is configured";
+          }
+          {
+            assertion = !(cfg.memory.text != null && cfg.memory.source != null);
+            message = "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`";
+          }
+        ]
+        ++ map mkExclusiveAssertion exclusiveInlineDirPairs;
+
+      programs.claude-code.finalPackage =
+        let
+          mergedMcpServers = transformedMcpServers // cfg.mcpServers;
+          hasMcpServers = mergedMcpServers != { };
+          hasLspServers = cfg.lspServers != { };
+          pluginDir =
+            if hasMcpServers || hasLspServers then
+              pkgs.runCommand "claude-code-hm-plugin" { } ''
+                install -Dm644 ${
+                  jsonFormat.generate "claude-code-plugin.json" {
+                    name = "claude-code-home-manager";
+                  }
+                } $out/.claude-plugin/plugin.json
+                ${lib.optionalString hasMcpServers ''
+                  install -Dm644 ${
+                    jsonFormat.generate "claude-code-mcp.json" { mcpServers = mergedMcpServers; }
+                  } $out/.mcp.json
+                ''}
+                ${lib.optionalString hasLspServers ''
+                  install -Dm644 ${jsonFormat.generate "claude-code-lsp.json" cfg.lspServers} $out/.lsp.json
+                ''}
+              ''
+            else
+              null;
+        in
+        if pluginDir != null then
+          pkgs.symlinkJoin {
+            name = "claude-code";
+            paths = [ cfg.package ];
+            postBuild = ''
+              mv $out/bin/claude $out/bin/.claude-wrapped
+              cat > $out/bin/claude <<EOF
+              #! ${pkgs.bash}/bin/bash -e
+              exec -a "\$0" "$out/bin/.claude-wrapped" --plugin-dir ${pluginDir} "\$@"
+              EOF
+              chmod +x $out/bin/claude
+            '';
+            inherit (cfg.package) meta;
           }
         else
-          lib.nameValuePair ".claude/skills/${name}/SKILL.md" (
-            if lib.isPath content then { source = content; } else { text = content; }
-          )
-      ) cfg.skills
-      // lib.mapAttrs' (
-        name: content:
-        lib.nameValuePair ".claude/output-styles/${name}.md" (
-          if lib.isPath content then { source = content; } else { text = content; }
-        )
-      ) cfg.outputStyles;
+          cfg.package;
+
+      home = {
+        packages = lib.mkIf (cfg.package != null) [ cfg.finalPackage ];
+
+        file = {
+          ".claude/settings.json" = lib.mkIf (cfg.settings != { }) {
+            source = jsonFormat.generate "claude-code-settings.json" (
+              cfg.settings
+              // {
+                "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+              }
+            );
+          };
+
+          ".claude/CLAUDE.md" = lib.mkIf (cfg.memory.text != null || cfg.memory.source != null) (
+            if cfg.memory.text != null then { text = cfg.memory.text; } else { source = cfg.memory.source; }
+          );
+        }
+        // mkRecursiveDirAttrs "rules" cfg.rulesDir
+        // mkRecursiveDirAttrs "agents" cfg.agentsDir
+        // mkRecursiveDirAttrs "commands" cfg.commandsDir
+        // mkRecursiveDirAttrs "hooks" cfg.hooksDir
+        // mkRecursiveDirAttrs "skills" cfg.skillsDir
+        // mkMarkdownEntries "rules" cfg.rules
+        // mkMarkdownEntries "agents" cfg.agents
+        // mkMarkdownEntries "commands" cfg.commands
+        // mkTextEntries "hooks" cfg.hooks
+        // lib.mapAttrs' (
+          name: content:
+          if lib.isPath content && lib.pathIsDirectory content then
+            lib.nameValuePair ".claude/skills/${name}" {
+              source = content;
+              recursive = true;
+            }
+          else
+            lib.nameValuePair ".claude/skills/${name}/SKILL.md" (mkSourceEntry content)
+        ) cfg.skills
+        // mkMarkdownEntries "output-styles" cfg.outputStyles;
+      };
     };
-  };
 }
