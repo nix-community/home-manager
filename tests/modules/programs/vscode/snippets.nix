@@ -15,9 +15,7 @@ let
         lib.optionalString (name != "default") "profiles/${name}/"
       }/snippets"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }snippets";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}snippets";
 
   globalSnippetsPath = name: "${snippetsDir name}/global.code-snippets";
 

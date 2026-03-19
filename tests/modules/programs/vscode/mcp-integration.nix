@@ -15,9 +15,7 @@ let
         lib.optionalString (name != "default") "profiles/${name}/"
       }mcp.json"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }mcp.json";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}mcp.json";
 
 in
 

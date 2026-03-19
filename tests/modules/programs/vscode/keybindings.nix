@@ -41,9 +41,7 @@ let
         lib.optionalString (name != "default") "profiles/${name}/"
       }keybindings.json"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }keybindings.json";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}keybindings.json";
 
   settingsPath =
     name:
@@ -52,9 +50,7 @@ let
         lib.optionalString (name != "default") "profiles/${name}/"
       }settings.json"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }settings.json";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}settings.json";
 
   content = ''
     [

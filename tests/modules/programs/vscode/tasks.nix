@@ -15,9 +15,7 @@ let
         lib.optionalString (name != "default") "profiles/${name}/"
       }tasks.json"
     else
-      ".config/Code/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }tasks.json";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}tasks.json";
 
   content = ''
     {
