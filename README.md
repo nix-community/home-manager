@@ -25,7 +25,7 @@ If you would like to contribute to Home Manager, then please have a look at
 Releases
 --------
 
-Home Manager is developed against `nixpkgs-unstable` branch, which often causes
+Home Manager is developed against `nixos-unstable` branch, which often causes
 it to contain tweaks for changes/packages not yet released in stable [NixOS][].
 To avoid breaking users' configurations, Home Manager is released in branches
 corresponding to NixOS releases (e.g. `release-25.11`). These branches get
