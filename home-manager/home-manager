@@ -1,4 +1,4 @@
-#!@bash@/bin/bash
+#!/bin/bash
 
 # Prepare to use tools from Nixpkgs.
 PATH=@DEP_PATH@${PATH:+:}$PATH
