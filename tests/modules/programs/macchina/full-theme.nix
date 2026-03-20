@@ -32,7 +32,10 @@
           title = "Hydrogen";
           border = "rounded";
           visible = true;
-          inner_margin = { x = 1; y = 0; };
+          inner_margin = {
+            x = 1;
+            y = 0;
+          };
         };
 
         custom_ascii = {

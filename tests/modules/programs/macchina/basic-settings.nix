@@ -10,11 +10,19 @@
       long_kernel = false;
       current_shell = false;
       physical_cores = false;
-      disks = [ "/" "/home" ];
+      disks = [
+        "/"
+        "/home"
+      ];
       disk_space_percentage = true;
       memory_percentage = true;
       theme = "Hydrogen";
-      show = [ "Memory" "Processor" "Shell" "Uptime" ];
+      show = [
+        "Memory"
+        "Processor"
+        "Shell"
+        "Uptime"
+      ];
     };
   };
 
