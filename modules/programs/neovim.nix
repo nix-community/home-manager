@@ -439,8 +439,8 @@ in
         withNodeJs = cfg.withNodeJs || cfg.coc.enable;
         plugins = [ ];
 
+        extraLuaPackages = lp: cfg.extraLuaPackages lp ++ vimPackageInfo.luaDependencies;
         inherit (cfg)
-          extraLuaPackages
           extraName
           withPython3
           withRuby
