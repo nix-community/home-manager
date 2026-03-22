@@ -25,4 +25,5 @@
   opencode-mcp-integration = ./mcp-integration.nix;
   opencode-mcp-integration-with-override = ./mcp-integration-with-override.nix;
   opencode-web-service = ./web-service.nix;
+  opencode-web-service-environment-file = ./web-service-environment-file.nix;
 }

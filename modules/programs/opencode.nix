@@ -115,6 +115,20 @@ in
           See <https://opencode.ai/docs/web/#config-file> for available options.
         '';
       };
+
+      environmentFile = mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        example = "/run/secrets/opencode-web";
+        description = ''
+          Path to a file containing environment variables for the opencode web
+          service, in the format of an EnvironmentFile as described by
+          {manpage}`systemd.exec(5)` (i.e. `KEY=VALUE` pairs, one per line).
+
+          This is the recommended way to set `OPENCODE_SERVER_PASSWORD` without
+          exposing the secret value in the Nix store.
+        '';
+      };
     };
 
     rules = lib.mkOption {
@@ -501,6 +515,9 @@ in
           ExecStart = "${lib.getExe cfg.package} web ${lib.escapeShellArgs webCfg.extraArgs}";
           Restart = "always";
           RestartSec = 5;
+        }
+        // lib.optionalAttrs (webCfg.environmentFile != null) {
+          EnvironmentFile = webCfg.environmentFile;
         };
 
         Install = {
@@ -513,11 +530,24 @@ in
       opencode-web = {
         enable = true;
         config = {
-          ProgramArguments = [
-            (lib.getExe cfg.package)
-            "web"
-          ]
-          ++ webCfg.extraArgs;
+          ProgramArguments =
+            let
+              programArguments = [
+                (lib.getExe cfg.package)
+                "web"
+              ]
+              ++ webCfg.extraArgs;
+              opencodeLaunchdWrapper = pkgs.writeShellScriptBin "opencode-launchd-wrapper" ''
+                source ${webCfg.environmentFile}
+                ${lib.escapeShellArgs programArguments}
+              '';
+            in
+            if webCfg.environmentFile == null then
+              programArguments
+            else
+              [
+                (lib.getExe opencodeLaunchdWrapper)
+              ];
           KeepAlive = {
             Crashed = true;
             SuccessfulExit = false;
