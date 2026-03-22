@@ -68,6 +68,7 @@ let
     };
 
   hmPath = toString ./..;
+  nixpkgsPath = toString pkgs.path;
 
   # Keep submodule option docs visible when wrapped in `either` (and therefore
   # in `nullOr (either ...)`), which upstream currently omits.
@@ -170,10 +171,15 @@ let
             # source tree.
             declarations = map (
               decl:
-              if lib.hasPrefix hmPath (toString decl) then
+              let
+                declStr = toString decl;
+              in
+              if lib.hasPrefix hmPath declStr then
                 gitHubDeclaration "nix-community" "home-manager" (
-                  lib.removePrefix "/" (lib.removePrefix hmPath (toString decl))
+                  lib.removePrefix "/" (lib.removePrefix hmPath declStr)
                 )
+              else if lib.hasPrefix nixpkgsPath declStr then
+                gitHubDeclaration "NixOS" "nixpkgs" (lib.removePrefix "/" (lib.removePrefix nixpkgsPath declStr))
               else if decl == "lib/modules.nix" then
                 # TODO: handle this in a better way (may require upstream
                 # changes to nixpkgs)
