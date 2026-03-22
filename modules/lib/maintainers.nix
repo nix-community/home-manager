@@ -350,6 +350,12 @@
     github = "mainrs";
     githubId = 5113257;
   };
+  mattiasmts = {
+    name = "Mattias Sjödin";
+    email = "mattias.sjodin.6764@hotmail.com";
+    github = "MattiasMTS";
+    githubId = 86059470;
+  };
   mforster = {
     name = "Michael Forster";
     email = "email@michael-forster.de";
