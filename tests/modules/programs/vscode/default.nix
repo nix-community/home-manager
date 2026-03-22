@@ -35,6 +35,10 @@ let
   unknownTests = lib.mapAttrs' (
     k: v: lib.nameValuePair "vscode-${k}-unknown" (v unknownPackage)
   ) tests;
+
+  nullPackageTests = {
+    vscode-null-package = import ./null-package.nix;
+  };
 in
 
-knownTests // unknownTests
+knownTests // unknownTests // nullPackageTests
