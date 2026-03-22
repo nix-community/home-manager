@@ -29,7 +29,10 @@ in
     systemd.user.services.taffybar = {
       Unit = {
         Description = "Taffybar desktop bar";
-        PartOf = [ "tray.target" ];
+        PartOf = [ "tray-sni.target" ];
+        After = config.lib.tray.sniWatcherAfter;
+        Wants = config.lib.tray.sniWatcherWants;
+        Requires = config.lib.tray.sniWatcherRequires;
         StartLimitBurst = 5;
         StartLimitIntervalSec = 10;
       };
@@ -43,7 +46,7 @@ in
       };
 
       Install = {
-        WantedBy = [ "tray.target" ];
+        WantedBy = [ "tray-sni.target" ];
       };
     };
 

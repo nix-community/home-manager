@@ -31,10 +31,10 @@ in
     systemd.user.services.trayscale = {
       Unit = {
         Description = "An unofficial GUI wrapper around the Tailscale CLI client";
-        Requires = [ "tray.target" ];
+        Requires = [ "tray-xembed.target" ];
         After = [
           "graphical-session.target"
-          "tray.target"
+          "tray-xembed.target"
         ];
         PartOf = [ "graphical-session.target" ];
       };
