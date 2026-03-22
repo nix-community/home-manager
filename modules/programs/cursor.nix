@@ -14,7 +14,7 @@ in
     (mkVscodeModule {
       inherit modulePath;
       name = "Cursor";
-      packageName = "cursor";
+      packageName = "code-cursor";
       nameShort = "Cursor";
       dataFolderName = ".cursor";
     })
