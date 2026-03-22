@@ -8,19 +8,14 @@ package:
 }:
 
 let
-  cfg = config.programs.vscode;
-  willUseIfd = package.pname != "vscode";
-
   tasksFilePath =
     name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${cfg.nameShort}/User/${
+      "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }tasks.json"
     else
-      ".config/${cfg.nameShort}/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }tasks.json";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}tasks.json";
 
   content = ''
     {
@@ -70,7 +65,7 @@ let
   expectedCustomTasks = pkgs.writeText "custom-expected.json" content;
 in
 
-lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
+{
   programs.vscode = {
     enable = true;
     inherit package;
