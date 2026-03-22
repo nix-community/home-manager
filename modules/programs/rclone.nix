@@ -364,6 +364,8 @@ in
                 lib.nameValuePair "rclone-mount:${replaceIllegalChars mount-path}@${remote-name}" {
                   Unit = {
                     Description = "Rclone FUSE daemon for ${remote-name}:${mount-path}";
+                    Requires = [ "rclone-config.service" ];
+                    After = [ "rclone-config.service" ];
                   };
 
                   Service = {
