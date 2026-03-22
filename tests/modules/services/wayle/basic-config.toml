@@ -1,0 +1,23 @@
+[bar]
+location = "top"
+rounding = "sm"
+scale = 1
+
+[bar.layout]
+center = ["media"]
+left = ["clock"]
+monitor = "*"
+right = ["battery"]
+
+[modules.clock]
+format = "%H:%M"
+icon-show = true
+label-show = true
+
+[styling]
+theme-provider = "wayle"
+
+[styling.palette]
+bg = "#16161e"
+fg = "#c0caf5"
+primary = "#7aa2f7"
