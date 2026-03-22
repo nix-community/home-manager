@@ -22,7 +22,7 @@ user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c
 user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.filename", "contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.sqlite");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.identities", "id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.server", "server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
-user_pref("mail.accountmanager.accounts", "account1,account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
+user_pref("mail.accountmanager.appendaccounts", "account1,account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.autoEncryptDrafts", false);
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.fullName", "H. M. Test Jr.");
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.htmlSigText", "");
@@ -46,6 +46,7 @@ user_pref("mail.smtpserver.smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da
 user_pref("mail.smtpserver.smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.try_ssl", 2);
 user_pref("mail.smtpserver.smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.username", "home.manager.jr");
 user_pref("mail.smtpservers", "smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
+user_pref("mailnews.append_preconfig_accounts.version", 0);
 user_pref("privacy.donottrackheader.enabled", true);
 user_pref("second", {"nested":{"evenFurtherNested":[1,2,3]}});
 user_pref("second.setting", "some-test-setting");
