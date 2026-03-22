@@ -45,6 +45,7 @@ let
       ./misc/pam.nix
       ./misc/qt.nix
       ./misc/qt/kconfig.nix
+      ./misc/qt/kvantum.nix
       ./misc/shell.nix
       ./misc/specialisation.nix
       ./misc/submodule-support.nix
