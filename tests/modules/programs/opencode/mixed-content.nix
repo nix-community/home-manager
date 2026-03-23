@@ -78,14 +78,14 @@
       ${./test-tool.ts}
 
     # Skills
-    assertFileExists home-files/.config/opencode/skill/inline-skill/SKILL.md
-    assertFileExists home-files/.config/opencode/skill/path-skill/SKILL.md
-    assertFileExists home-files/.config/opencode/skill/dir-skill/SKILL.md
-    assertFileExists home-files/.config/opencode/skill/dir-skill/notes.txt
+    assertFileExists home-files/.config/opencode/skills/inline-skill/SKILL.md
+    assertFileExists home-files/.config/opencode/skills/path-skill/SKILL.md
+    assertFileExists home-files/.config/opencode/skills/dir-skill/SKILL.md
+    assertFileExists home-files/.config/opencode/skills/dir-skill/notes.txt
 
-    assertFileContent home-files/.config/opencode/skill/path-skill/SKILL.md \
+    assertFileContent home-files/.config/opencode/skills/path-skill/SKILL.md \
       ${./git-release-SKILL.md}
-    assertFileContent home-files/.config/opencode/skill/dir-skill/SKILL.md \
+    assertFileContent home-files/.config/opencode/skills/dir-skill/SKILL.md \
       ${./skill-dir/data-analysis/SKILL.md}
 
     # Themes

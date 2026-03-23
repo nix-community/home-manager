@@ -7,7 +7,16 @@ let
   mkHmLib = import ./.;
 in
 nixpkgsLib.extend (
-  self: super: {
-    hm = mkHmLib { lib = self; };
+  self: super:
+  let
+    hmLib = mkHmLib { lib = self; };
+  in
+  {
+    hm = hmLib;
+
+    # Nixpkgs now validates meta.maintainers against lib.maintainers.
+    # Mirror Home Manager-only maintainers there so existing lib.hm.maintainers
+    # references continue to satisfy the upstream type check.
+    maintainers = super.maintainers // hmLib.maintainers;
   }
 )

@@ -425,10 +425,6 @@ in
           ]
         ) (if p.type != "viml" then p // { config = null; } else p);
 
-      # Lua & Python Package Resolution
-      luaPackages = cfg.package.lua.pkgs;
-      resolvedExtraLuaPackages = cfg.extraLuaPackages luaPackages;
-
       # Wrapper Arguments Construction
       extraMakeWrapperArgs = optionals (cfg.extraPackages != [ ]) [
         "--suffix"
@@ -444,12 +440,13 @@ in
         plugins = [ ];
 
         inherit (cfg)
+          extraLuaPackages
+          extraName
           withPython3
           withRuby
           withPerl
           viAlias
           vimAlias
-          extraName
           autowrapRuntimeDeps
           waylandSupport
           ;
@@ -460,6 +457,13 @@ in
         wrapperArgs = cfg.extraWrapperArgs ++ extraMakeWrapperArgs;
         wrapRc = false;
       };
+
+      # This is a hack to avoid breaking config for users that dont want an init.lua to get generated
+      # See https://github.com/nix-community/home-manager/pull/8734
+      # we basically check if the generated wrapper lua config has any user-set config
+      # if not HM avoids creating an init.lua
+      # this makes the logic harder to understand and maintain so hopefully we can find a way out
+      wrapperHasUserConfig = wrappedNeovim'.luaRcContent != wrappedNeovim'.providerLuaRc;
     in
     {
       programs.neovim = {
@@ -489,6 +493,11 @@ in
       programs.neovim.extraConfig = lib.concatStringsSep "\n" vimPackageInfo.userPluginViml;
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
 
+      programs.neovim.extraWrapperArgs = mkIf (!wrapperHasUserConfig) [
+        "--add-flags"
+        ''--cmd 'lua dofile("${pkgs.writeText "wrapper-init-lua" wrappedNeovim'.luaRcContent}")' ''
+      ];
+
       programs.neovim.initLua =
         let
           # using default 'foldmarker', to be used with foldmethod=marker
@@ -506,21 +515,12 @@ in
           advisedLua = foldedLuaBlock "home-manager generated: plugin config advised in nixpkgs" (
             lib.concatStringsSep "\n" vimPackageInfo.pluginAdvisedLua
           );
-
-          generatedLuaPath = lib.concatMapStringsSep ";" luaPackages.getLuaPath resolvedExtraLuaPackages;
-          generatedLuaCPath = lib.concatMapStringsSep ";" luaPackages.getLuaCPath resolvedExtraLuaPackages;
         in
-
         lib.mkMerge [
-          (lib.mkIf (resolvedExtraLuaPackages != [ ]) (
-            lib.mkOrder 100 ''
-              package.path = "${generatedLuaPath}".. ";" .. package.path
-              package.cpath = "${generatedLuaCPath}".. ";" .. package.cpath
-            ''
-          ))
           (lib.mkIf (advisedLua != null) (lib.mkOrder 510 advisedLua))
-          (lib.mkIf (wrappedNeovim'.initRc != "") (
-            lib.mkBefore "vim.cmd [[source ${pkgs.writeText "nvim-init-home-manager.vim" wrappedNeovim'.initRc}]]"
+          (lib.mkIf wrapperHasUserConfig (
+            # we want it to appear rather early
+            lib.mkOrder 200 wrappedNeovim'.luaRcContent
           ))
           (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs && cfg.generatedConfigs.lua != "") (
             lib.mkAfter (foldedLuaBlock "user-associated plugin config" cfg.generatedConfigs.lua)

@@ -1,5 +1,11 @@
 { config, lib, ... }:
 
+let
+  shellIntegrationParameters = {
+    inherit config;
+    baseName = "Shell";
+  };
+in
 {
   options.home.shell = {
     enableShellIntegration = lib.mkOption {
@@ -19,25 +25,10 @@
       '';
     };
 
-    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption {
-      inherit config;
-      baseName = "Shell";
-    };
-    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption {
-      inherit config;
-      baseName = "Shell";
-    };
-    enableIonIntegration = lib.hm.shell.mkIonIntegrationOption {
-      inherit config;
-      baseName = "Shell";
-    };
-    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption {
-      inherit config;
-      baseName = "Shell";
-    };
-    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption {
-      inherit config;
-      baseName = "Shell";
-    };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption shellIntegrationParameters;
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption shellIntegrationParameters;
+    enableIonIntegration = lib.hm.shell.mkIonIntegrationOption shellIntegrationParameters;
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption shellIntegrationParameters;
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption shellIntegrationParameters;
   };
 }

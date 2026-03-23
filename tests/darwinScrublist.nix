@@ -83,6 +83,7 @@ let
     "jujutsu"
     "k9s"
     "kakoune"
+    "keepassxc"
     "khal"
     "khard"
     "kitty"
