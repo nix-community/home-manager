@@ -406,7 +406,7 @@ in
   options.programs.macchina = {
     enable = lib.mkEnableOption "macchina system information fetcher";
 
-    package = lib.mkPackageOption pkgs "macchina" { };
+    package = lib.mkPackageOption pkgs "macchina" { nullable = true; };
 
     settings = {
       interface = mkOption {
