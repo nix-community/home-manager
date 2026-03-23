@@ -243,7 +243,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf `(cfg.package != null) [ cfg.package ];
 
     xdg.configFile."ttyper/config.toml" =
       let
