@@ -112,8 +112,12 @@ in
   config = mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."ttyper/config.toml" = mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "ttyper-config.toml" cfg.settings;
-    };
+    xdg.configFile."ttyper/config.toml" =
+      let
+        filteredSettings = lib.filterAttrs (_: v: v != null) cfg.settings;
+      in
+      mkIf (filteredSettings != { }) {
+        source = tomlFormat.generate "ttyper-config.toml" filteredSettings;
+      };
   };
 }
