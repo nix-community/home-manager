@@ -1854,6 +1854,12 @@
     name = "Olmo Kramer";
     source = "home-manager";
   };
+  oneorseveralcats = {
+    github = "oneorseveralcats";
+    githubId = 170012754;
+    name = "oneorseveralcats";
+    source = "home-manager";
+  };
   onny = {
     email = "onny@project-insanity.org";
     github = "onny";
