@@ -180,7 +180,7 @@ in
   options.programs.ttyper = {
     enable = lib.mkEnableOption "ttyper, a terminal-based typing test";
 
-    package = lib.mkPackageOption pkgs "ttyper" { };
+    package = lib.mkPackageOption pkgs "ttyper" { nullable = true; };
 
     settings = {
       default_language = mkOption {
