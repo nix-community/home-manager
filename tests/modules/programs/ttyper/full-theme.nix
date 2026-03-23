@@ -6,71 +6,25 @@
 
     settings.theme = {
       border_type = "rounded";
-      default = {
-        fg = "none";
-      };
-      title = {
-        fg = "white";
-        modifiers = [ "bold" ];
-      };
-      input_border = {
-        fg = "cyan";
-      };
-      prompt_border = {
-        fg = "green";
-      };
-      prompt_correct = {
-        fg = "green";
-      };
-      prompt_incorrect = {
-        fg = "red";
-      };
-      prompt_untyped = {
-        fg = "gray";
-      };
-      prompt_current_correct = {
-        fg = "green";
-        modifiers = [ "bold" ];
-      };
-      prompt_current_incorrect = {
-        fg = "red";
-        modifiers = [ "bold" ];
-      };
-      prompt_current_untyped = {
-        fg = "blue";
-        modifiers = [ "bold" ];
-      };
-      prompt_cursor = {
-        modifiers = [ "underlined" ];
-      };
-      results_overview = {
-        fg = "cyan";
-        modifiers = [ "bold" ];
-      };
-      results_overview_border = {
-        fg = "cyan";
-      };
-      results_worst_keys = {
-        fg = "cyan";
-        modifiers = [ "bold" ];
-      };
-      results_worst_keys_border = {
-        fg = "cyan";
-      };
-      results_chart = {
-        fg = "cyan";
-      };
-      results_chart_x = {
-        fg = "cyan";
-      };
-      results_chart_y = {
-        fg = "gray";
-        modifiers = [ "italic" ];
-      };
-      results_restart_prompt = {
-        fg = "gray";
-        modifiers = [ "italic" ];
-      };
+      default = "none";
+      title = "white;bold";
+      input_border = "cyan";
+      prompt_border = "green";
+      prompt_correct = "green";
+      prompt_incorrect = "red";
+      prompt_untyped = "gray";
+      prompt_current_correct = "green;bold";
+      prompt_current_incorrect = "red;bold";
+      prompt_current_untyped = "blue;bold";
+      prompt_cursor = "none;underlined";
+      results_overview = "cyan;bold";
+      results_overview_border = "cyan";
+      results_worst_keys = "cyan;bold";
+      results_worst_keys_border = "cyan";
+      results_chart = "cyan";
+      results_chart_x = "cyan";
+      results_chart_y = "gray;italic";
+      results_restart_prompt = "gray;italic";
     };
   };
 
