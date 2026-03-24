@@ -10,10 +10,33 @@ let
     mkEnableOption
     mkOption
     mkIf
+    optionalString
     types
     ;
-
   cfg = config.programs.bat;
+
+  initScript =
+    {
+      program,
+      shell,
+      flags ? [ ],
+    }:
+    if shell != "fish" then
+      ''eval "$(${lib.getExe program} ${toString flags})"''
+    else
+      "${lib.getExe program} ${toString flags} | source";
+
+  shellInit =
+    shell:
+    optionalString (builtins.any (p: p.pname == "batpipe") cfg.extraPackages) (initScript {
+      program = lib.findFirst (p: p.pname == "batpipe") pkgs.bat-extras.batpipe cfg.extraPackages;
+      inherit shell;
+    })
+    + optionalString (builtins.any (p: p.pname == "batman") cfg.extraPackages) (initScript {
+      program = lib.findFirst (p: p.pname == "batman") pkgs.bat-extras.batman cfg.extraPackages;
+      inherit shell;
+      flags = [ "--export-env" ];
+    });
 
   toConfigFile =
     attrs:
@@ -37,6 +60,10 @@ in
 
   options.programs.bat = {
     enable = mkEnableOption "bat, a cat clone with wings";
+
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     config = mkOption {
       type =
@@ -203,6 +230,10 @@ in
             }
           ))
         );
+
+        programs.bash.initExtra = mkIf cfg.enableBashIntegration (shellInit "bash");
+        programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (shellInit "fish");
+        programs.zsh.initExtra = mkIf cfg.enableZshIntegration (shellInit "zsh");
 
         # NOTE: run `bat cache --build` in an empty directory to work
         # around failure when ~/cache exists
