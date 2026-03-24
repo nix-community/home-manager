@@ -150,9 +150,13 @@ in
       # TODO: Remove this workaround once Codex supports symlinked SKILL.md
       # files again. Upstream only supports symlinking the containing skill
       # directory today: https://github.com/openai/codex/issues/10470
+      isStorePathString = content: builtins.isString content && lib.hasPrefix builtins.storeDir content;
+      isPathLikeContent = content: lib.isPath content || isStorePathString content;
       mkSkillDir =
         content:
-        pkgs.writeTextDir "SKILL.md" (if lib.isPath content then builtins.readFile content else content);
+        pkgs.writeTextDir "SKILL.md" (
+          if isPathLikeContent content then builtins.readFile content else content
+        );
       skillSources =
         if builtins.isAttrs cfg.skills then
           cfg.skills
@@ -162,7 +166,7 @@ in
           { };
       mkSkillEntry =
         name: content:
-        if lib.isPath content && lib.pathIsDirectory content then
+        if isPathLikeContent content && lib.pathIsDirectory content then
           lib.nameValuePair "${skillsDir}/${name}" {
             source = content;
           }
