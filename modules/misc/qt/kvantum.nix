@@ -10,6 +10,7 @@ let
     concatMapStringsSep
     generators
     literalExpression
+    mkEnableOption
     mkIf
     mkOption
     types
@@ -30,6 +31,8 @@ in
 
 {
   options.qt.kvantum = {
+    enable = mkEnableOption "Kvantum configuration";
+
     settings = mkOption {
       type = types.submodule {
         freeformType = types.attrsOf kvconfigSection;
@@ -113,7 +116,7 @@ in
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     xdg.configFile = {
       "Kvantum" = mkIf (cfg.themes != [ ]) {
         recursive = true;

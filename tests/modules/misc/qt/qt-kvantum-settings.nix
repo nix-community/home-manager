@@ -4,6 +4,7 @@
   qt = {
     enable = true;
     kvantum = {
+      enable = true;
       settings = {
         General = {
           theme = "KvAdapta";
