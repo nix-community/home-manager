@@ -1,4 +1,18 @@
 {
+  # programs.${moduleName}
+  moduleName,
+  # for vesktop it is vencord, equibop -> equicord
+  cordModuleName,
+  # all config options link
+  settingsLink,
+  # all config options link for ${cordModuleName}
+  cordSettingsLink,
+  # whether to add package to home.packages
+  installPackage,
+  # meta.maintainers
+  maintainers,
+}:
+{
   config,
   lib,
   pkgs,
@@ -6,28 +20,27 @@
 }:
 
 let
-
-  cfg = config.programs.vesktop;
+  cfg = config.programs.${moduleName};
+  cordCfg = config.programs.${moduleName}.${cordModuleName};
+  package = pkgs.${moduleName};
   jsonFormat = pkgs.formats.json { };
 
+  reprName = lib.toSentenceCase moduleName;
+  cordReprName = lib.toSentenceCase cordModuleName;
 in
 {
-  meta.maintainers = with lib.maintainers; [
-    Flameopathic
-    LilleAila
-  ];
+  meta.maintainers = maintainers;
 
-  options.programs.vesktop = {
-    enable = lib.mkEnableOption "Vesktop, an alternate client for Discord with Vencord built-in";
-    package = lib.mkPackageOption pkgs "vesktop" { nullable = true; };
+  options.programs.${moduleName} = {
+    enable = lib.mkEnableOption package.meta.description;
+    package = lib.mkPackageOption pkgs moduleName { nullable = true; };
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
       description = ''
-        Vesktop settings written to
-        {file}`$XDG_CONFIG_HOME/vesktop/settings.json`. See
-        <https://github.com/Vencord/Vesktop/blob/main/src/shared/settings.d.ts>
-        for available options.
+        ${reprName} settings written to
+        {file}`$XDG_CONFIG_HOME/${moduleName}/settings.json`. See
+        <${settingsLink}> for available options.
       '';
       example = lib.literalExpression ''
         {
@@ -48,12 +61,12 @@ in
       '';
     };
 
-    vencord = {
-      useSystem = lib.mkEnableOption "Vencord package from Nixpkgs";
+    ${cordModuleName} = {
       themes = lib.mkOption {
         description = ''
-          Themes to add for Vencord, they can be enabled by setting
-          `programs.vesktop.vencord.settings.enabledThemes` to `[ "THEME_NAME.css" ]`
+          Themes to add for ${cordReprName}, they can be enabled by setting
+          `programs.${moduleName}.${cordModuleName}.settings.enabledThemes`
+          to `[ "THEME_NAME.css" ]`
         '';
         default = { };
         type =
@@ -67,10 +80,9 @@ in
         inherit (jsonFormat) type;
         default = { };
         description = ''
-          Vencord settings written to
-          {file}`$XDG_CONFIG_HOME/vesktop/settings/settings.json`. See
-          <https://github.com/Vendicated/Vencord/blob/main/src/api/Settings.ts>
-          for available options.
+          ${cordReprName} settings written to
+          {file}`$XDG_CONFIG_HOME/${moduleName}/settings/settings.json`. See
+          <${cordSettingsLink}> for available options.
         '';
         example = lib.literalExpression ''
           {
@@ -111,34 +123,31 @@ in
       configFiles =
         lib.attrsets.unionOfDisjoint
           {
-            "vesktop/settings.json" = lib.mkIf (cfg.settings != { }) {
-              source = jsonFormat.generate "vesktop-settings" cfg.settings;
+            "${moduleName}/settings.json" = lib.mkIf (cfg.settings != { }) {
+              source = jsonFormat.generate "${moduleName}-settings" cfg.settings;
             };
-            "vesktop/settings/settings.json" = lib.mkIf (cfg.vencord.settings != { }) {
-              source = jsonFormat.generate "vencord-settings" cfg.vencord.settings;
+            "${moduleName}/settings/settings.json" = lib.mkIf (cordCfg.settings != { }) {
+              source = jsonFormat.generate "${cordModuleName}-settings" cordCfg.settings;
             };
-            "vesktop/settings/quickCss.css" = lib.mkIf (cfg.vencord.extraQuickCss != "") {
-              text = cfg.vencord.extraQuickCss;
+            "${moduleName}/settings/quickCss.css" = lib.mkIf (cordCfg.extraQuickCss != "") {
+              text = cordCfg.extraQuickCss;
             };
           }
           (
             lib.mapAttrs' (
               name: value:
-              lib.nameValuePair "vesktop/themes/${name}.css" {
+              lib.nameValuePair "${moduleName}/themes/${name}.css" {
                 source =
                   if builtins.isPath value || lib.isStorePath value then
                     value
                   else
-                    pkgs.writeText "vesktop-themes-${name}" value;
+                    pkgs.writeText "${moduleName}-themes-${name}" value;
               }
-            ) cfg.vencord.themes
+            ) cordCfg.themes
           );
     in
     lib.mkIf cfg.enable {
-      home.packages = lib.mkIf (cfg.package != null) [
-        (cfg.package.override { withSystemVencord = cfg.vencord.useSystem; })
-      ];
-
+      home.packages = lib.mkIf (installPackage && cfg.package != null) [ cfg.package ];
       home.file = lib.mapAttrs' (n: lib.nameValuePair "${configDir}/${n}") configFiles;
     };
 }
