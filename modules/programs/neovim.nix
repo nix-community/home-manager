@@ -433,30 +433,40 @@ in
         (lib.makeBinPath cfg.extraPackages)
       ];
 
-      vimPackageInfo = neovimUtils.makeVimPackageInfo (map suppressIncompatibleConfig pluginsNormalized);
+      nixpkgsCompatiblePlugins = map suppressIncompatibleConfig pluginsNormalized;
+      vimPackageInfo = neovimUtils.makeVimPackageInfo nixpkgsCompatiblePlugins;
 
-      wrappedNeovim' = pkgs.wrapNeovimUnstable cfg.package {
-        withNodeJs = cfg.withNodeJs || cfg.coc.enable;
-        plugins = [ ];
+      wrappedNeovim' =
+        (pkgs.wrapNeovimUnstable cfg.package {
+          withNodeJs = cfg.withNodeJs || cfg.coc.enable;
+          plugins = nixpkgsCompatiblePlugins;
 
-        extraLuaPackages = lp: cfg.extraLuaPackages lp ++ vimPackageInfo.luaDependencies;
-        inherit (cfg)
-          extraName
-          withPython3
-          withRuby
-          withPerl
-          viAlias
-          vimAlias
-          autowrapRuntimeDeps
-          waylandSupport
-          ;
+          extraLuaPackages = lp: cfg.extraLuaPackages lp ++ vimPackageInfo.luaDependencies;
+          inherit (cfg)
+            extraName
+            withPython3
+            withRuby
+            withPerl
+            viAlias
+            vimAlias
+            autowrapRuntimeDeps
+            waylandSupport
+            ;
 
-        extraPython3Packages =
-          ps: (cfg.extraPython3Packages ps) ++ (lib.concatMap (f: f ps) vimPackageInfo.pluginPython3Packages);
-        neovimRcContent = cfg.extraConfig;
-        wrapperArgs = cfg.extraWrapperArgs ++ extraMakeWrapperArgs;
-        wrapRc = false;
-      };
+          extraPython3Packages =
+            ps: (cfg.extraPython3Packages ps) ++ (lib.concatMap (f: f ps) vimPackageInfo.pluginPython3Packages);
+          neovimRcContent = cfg.extraConfig;
+          wrapperArgs = cfg.extraWrapperArgs ++ extraMakeWrapperArgs;
+          wrapRc = false;
+        }).overrideAttrs
+          {
+
+            # nixpkgs implementation dependend: avoid nixpkgs adding rtp/packpath wrapping arguments
+            packpathDirs.myNeovimPackages = {
+              start = [ ];
+              opt = [ ];
+            };
+          };
 
       # This is a hack to avoid breaking config for users that dont want an init.lua to get generated
       # See https://github.com/nix-community/home-manager/pull/8734
@@ -512,12 +522,8 @@ in
             else
               null;
 
-          advisedLua = foldedLuaBlock "home-manager generated: plugin config advised in nixpkgs" (
-            lib.concatStringsSep "\n" vimPackageInfo.pluginAdvisedLua
-          );
         in
         lib.mkMerge [
-          (lib.mkIf (advisedLua != null) (lib.mkOrder 510 advisedLua))
           (lib.mkIf wrapperHasUserConfig (
             # we want it to appear rather early
             lib.mkOrder 200 wrappedNeovim'.luaRcContent
