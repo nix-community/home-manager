@@ -8,14 +8,11 @@ package:
 }:
 
 let
-  cfg = config.programs.vscode;
-  willUseIfd = package.pname != "vscode";
-
   settingsPath =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${cfg.nameShort}/User/settings.json"
+      "Library/Application Support/Code/User/settings.json"
     else
-      ".config/${cfg.nameShort}/User/settings.json";
+      ".config/Code/User/settings.json";
 
   expectedSettings = pkgs.writeText "settings-expected.json" ''
     {
@@ -25,7 +22,7 @@ let
   '';
 in
 
-lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
+{
   programs.vscode = {
     enable = true;
     inherit package;

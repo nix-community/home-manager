@@ -8,19 +8,14 @@ package:
 }:
 
 let
-  cfg = config.programs.vscode;
-  willUseIfd = package.pname != "vscode";
-
   snippetsDir =
     name:
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${cfg.nameShort}/User/${
+      "Library/Application Support/Code/User/${
         lib.optionalString (name != "default") "profiles/${name}/"
       }/snippets"
     else
-      ".config/${cfg.nameShort}/User/${
-        lib.optionalString (name != "default") "profiles/${name}/"
-      }snippets";
+      ".config/Code/User/${lib.optionalString (name != "default") "profiles/${name}/"}snippets";
 
   globalSnippetsPath = name: "${snippetsDir name}/global.code-snippets";
 
@@ -74,7 +69,7 @@ let
   };
 in
 
-lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
+{
   programs.vscode = {
     enable = true;
     inherit package;
