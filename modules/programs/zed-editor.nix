@@ -55,6 +55,11 @@ let
     // (lib.optionalAttrs (mergedMcpServers != { }) {
       context_servers = mergedMcpServers;
     });
+
+  editorEnv = {
+    EDITOR = "${cfg.package.meta.mainProgram} --wait";
+    VISUAL = "${cfg.package.meta.mainProgram} --wait";
+  };
 in
 {
   meta.maintainers = [ lib.maintainers.alinnow ];
@@ -246,6 +251,15 @@ in
         );
         default = { };
       };
+
+      defaultEditor = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to set {command}`zeditor -w` as the default editor using the
+          {env}`EDITOR` and {env}`VISUAL` environment variables.
+        '';
+      };
     };
   };
 
@@ -254,6 +268,10 @@ in
       {
         assertion = cfg.extraPackages != [ ] -> cfg.package != null;
         message = "{option}programs.zed-editor.extraPackages requires non null {option}programs.zed-editor.package";
+      }
+      {
+        assertion = cfg.defaultEditor -> cfg.package != null;
+        message = "{option}programs.zed-editor.defaultEditor requires non null {option}programs.zed-editor.package";
       }
     ];
 
@@ -345,5 +363,7 @@ in
         "zed/debug.json".source = jsonFormat.generate "zed-user-debug" cfg.userDebug;
       })
     ];
+
+    home.sessionVariables = mkIf cfg.defaultEditor editorEnv;
   };
 }
