@@ -62,7 +62,10 @@ let
   };
 in
 {
-  meta.maintainers = [ lib.maintainers.alinnow ];
+  meta.maintainers = [
+    lib.maintainers.alinnow
+    lib.maintainers.zh4ngx
+  ];
 
   options = {
     programs.zed-editor = {
