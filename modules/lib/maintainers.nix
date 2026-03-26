@@ -139,6 +139,12 @@
     github = "Dines97";
     githubId = 19364873;
   };
+  dosten = {
+    name = "Diego Saint Esteben";
+    email = "diego@saintesteben.me";
+    github = "dosten";
+    githubId = 510842;
+  };
   dsoverlord = {
     name = "Kirill Zakharov";
     email = "dsoverlord@vk.com";
