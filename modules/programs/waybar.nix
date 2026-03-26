@@ -168,6 +168,14 @@ in
     khaneliman
   ];
 
+  imports = [
+    (lib.mkChangedOptionModule
+      [ "programs" "waybar" "systemd" "target" ]
+      [ "programs" "waybar" "systemd" "targets" ]
+      (config: lib.toList (lib.getAttrFromPath [ "programs" "waybar" "systemd" "target" ] config))
+    )
+  ];
+
   options.programs.waybar = with lib.types; {
     enable = mkEnableOption "Waybar";
 
@@ -227,15 +235,15 @@ in
         '';
       };
 
-      target = mkOption {
-        type = str;
-        default = config.wayland.systemd.target;
-        defaultText = literalExpression "config.wayland.systemd.target";
-        example = "sway-session.target";
+      targets = mkOption {
+        type = with lib.types; listOf str;
+        default = [ config.wayland.systemd.target ];
+        defaultText = literalExpression "[ config.wayland.systemd.target ]";
+        example = [ "sway-session.target" ];
         description = ''
-          The systemd target that will automatically start the Waybar service.
+          The systemd targets that will automatically start the Waybar service.
 
-          When setting this value to `"sway-session.target"`,
+          When setting this value to `[ "sway-session.target" ]`,
           make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
           otherwise the service may never be started.
         '';
@@ -340,11 +348,8 @@ in
           Unit = {
             Description = "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
             Documentation = "https://github.com/Alexays/Waybar/wiki";
-            PartOf = [
-              cfg.systemd.target
-              "tray.target"
-            ];
-            After = [ cfg.systemd.target ];
+            PartOf = [ "tray.target" ] ++ cfg.systemd.targets;
+            After = cfg.systemd.targets;
             ConditionEnvironment = "WAYLAND_DISPLAY";
             X-Reload-Triggers =
               optional (settings != [ ]) "${config.xdg.configFile."waybar/config".source}"
@@ -359,10 +364,7 @@ in
             Restart = "on-failure";
           };
 
-          Install.WantedBy = [
-            cfg.systemd.target
-            "tray.target"
-          ];
+          Install.WantedBy = [ "tray.target" ] ++ cfg.systemd.targets;
         };
       })
     ]);
