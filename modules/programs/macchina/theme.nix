@@ -1,44 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib }:
 let
   inherit (lib)
-    literalExpression
-    mkIf
     mkOption
     types
+    literalExpression
     ;
-
-  cfg = config.programs.macchina;
-  tomlFormat = pkgs.formats.toml { };
-
   colorType = types.str;
-
-  readoutType = types.enum [
-    "Host"
-    "Machine"
-    "Kernel"
-    "Distribution"
-    "OperatingSystem"
-    "DesktopEnvironment"
-    "WindowManager"
-    "Resolution"
-    "Backlight"
-    "Packages"
-    "LocalIP"
-    "Terminal"
-    "Shell"
-    "Uptime"
-    "Processor"
-    "ProcessorLoad"
-    "Memory"
-    "Battery"
-    "GPU"
-    "DiskSpace"
-  ];
 
   paletteModule = types.submodule {
     options = {
@@ -395,208 +362,79 @@ let
       };
     };
   };
-
-  # Strip null values recursively before handing off to the TOML generator.
-  stripNulls = lib.filterAttrsRecursive (_: v: v != null);
-
 in
 {
-  meta.maintainers = [ lib.maintainers.philocalyst ];
+  themes = mkOption {
+    type = types.attrsOf themeModule;
+    default = { };
+    example = literalExpression ''
+      {
+        Hydrogen = {
+          spacing = 2;
+          padding = 0;
+          hide_ascii = true;
+          separator = ">";
+          key_color = "Cyan";
+          separator_color = "White";
 
-  options.programs.macchina = {
-    enable = lib.mkEnableOption "macchina system information fetcher";
-
-    package = lib.mkPackageOption pkgs "macchina" { nullable = true; };
-
-    settings = {
-      interface = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        example = "wlan0";
-        description = "Network interface to use for the LocalIP readout. Omitted when null.";
-      };
-
-      long_uptime = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "Show lengthened uptime output.";
-      };
-
-      long_shell = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "Show lengthened shell output.";
-      };
-
-      long_kernel = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "Show lengthened kernel output.";
-      };
-
-      current_shell = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "Show the current shell rather than the user's default shell.";
-      };
-
-      physical_cores = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "Show physical CPU core count rather than logical core count.";
-      };
-
-      disks = mkOption {
-        type = types.nullOr (types.listOf types.str);
-        default = null;
-        example = [
-          "/"
-          "/home/user"
-        ];
-        description = "Disks to show disk usage for.";
-      };
-
-      disk_space_percentage = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "Show percentage next to disk space information.";
-      };
-
-      memory_percentage = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "Show percentage next to memory information.";
-      };
-
-      theme = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        example = "Hydrogen";
-        description = ''
-          Name of the theme to use, without the .toml extension. Case-sensitive.
-          Must correspond to a file in the macchina themes directory, or be defined
-          in {option}`programs.macchina.themes`.
-          Omitted when null.
-        '';
-      };
-
-      show = mkOption {
-        type = types.nullOr (types.listOf readoutType);
-        default = null;
-        example = literalExpression ''[ "Battery" "Memory" "Processor" "Shell" ]'';
-        description = ''
-          Display only the specified readouts. When null, all readouts are shown.
-          Values are case-sensitive.
-        '';
-      };
-    };
-
-    themes = mkOption {
-      type = types.attrsOf themeModule;
-      default = { };
-      example = literalExpression ''
-        {
-          Hydrogen = {
-            spacing = 2;
-            padding = 0;
-            hide_ascii = true;
-            separator = ">";
-            key_color = "Cyan";
-            separator_color = "White";
-
-            palette = {
-              type = "Full";
-              visible = false;
-            };
-
-            bar = {
-              glyph = "o";
-              symbol_open = "[";
-              symbol_close = "]";
-              hide_delimiters = true;
-              visible = true;
-            };
-
-            box = {
-              border = "plain";
-              visible = true;
-              inner_margin = { x = 1; y = 0; };
-            };
-
-            randomize = {
-              key_color = false;
-              separator_color = false;
-            };
-
-            keys = {
-              host = "Host";
-              kernel = "Kernel";
-              battery = "Battery";
-              os = "OS";
-              de = "DE";
-              wm = "WM";
-              distro = "Distro";
-              terminal = "Terminal";
-              shell = "Shell";
-              packages = "Packages";
-              uptime = "Uptime";
-              memory = "Memory";
-              machine = "Machine";
-              local_ip = "Local IP";
-              backlight = "Brightness";
-              resolution = "Resolution";
-              cpu_load = "CPU Load";
-              cpu = "CPU";
-              gpu = "GPU";
-              disk_space = "Disk Space";
-            };
+          palette = {
+            type = "Full";
+            visible = false;
           };
-        }
-      '';
-      description = ''
-        Attribute set of macchina themes. Each entry is written to
-        {file}`$XDG_CONFIG_HOME/macchina/themes/<name>.toml`.
 
-        Theme names are case-sensitive. A theme defined here can be activated
-        by setting {option}`programs.macchina.settings.theme` to its name.
+          bar = {
+            glyph = "o";
+            symbol_open = "[";
+            symbol_close = "]";
+            hide_delimiters = true;
+            visible = true;
+          };
 
-        See <https://github.com/Macchina-CLI/macchina/wiki/Customization>
-        for details.
-      '';
-    };
-  };
+          box = {
+            border = "plain";
+            visible = true;
+            inner_margin = { x = 1; y = 0; };
+          };
 
-  config = mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+          randomize = {
+            key_color = false;
+            separator_color = false;
+          };
 
-    xdg.configFile =
-      let
-        settingsAttrs = stripNulls {
-          inherit (cfg.settings)
-            interface
-            long_uptime
-            long_shell
-            long_kernel
-            current_shell
-            physical_cores
-            disks
-            disk_space_percentage
-            memory_percentage
-            theme
-            show
-            ;
+          keys = {
+            host = "Host";
+            kernel = "Kernel";
+            battery = "Battery";
+            os = "OS";
+            de = "DE";
+            wm = "WM";
+            distro = "Distro";
+            terminal = "Terminal";
+            shell = "Shell";
+            packages = "Packages";
+            uptime = "Uptime";
+            memory = "Memory";
+            machine = "Machine";
+            local_ip = "Local IP";
+            backlight = "Brightness";
+            resolution = "Resolution";
+            cpu_load = "CPU Load";
+            cpu = "CPU";
+            gpu = "GPU";
+            disk_space = "Disk Space";
+          };
         };
-
-        themeFiles = lib.mapAttrs' (
-          name: theme:
-          lib.nameValuePair "macchina/themes/${name}.toml" {
-            source = tomlFormat.generate "macchina-theme-${name}" (stripNulls theme);
-          }
-        ) cfg.themes;
-      in
-      lib.optionalAttrs (settingsAttrs != { }) {
-        "macchina/macchina.toml".source = tomlFormat.generate "macchina.toml" settingsAttrs;
       }
-      // themeFiles;
+    '';
+    description = ''
+      Attribute set of macchina themes. Each entry is written to
+      {file}`$XDG_CONFIG_HOME/macchina/themes/<name>.toml`.
+
+      Theme names are case-sensitive. A theme defined here can be activated
+      by setting {option}`programs.macchina.settings.theme` to its name.
+
+      See <https://github.com/Macchina-CLI/macchina/wiki/Customization>
+      for details.
+    '';
   };
 }
