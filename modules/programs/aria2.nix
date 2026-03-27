@@ -17,6 +17,14 @@ in
 {
   meta.maintainers = [ lib.maintainers.justinlovinger ];
 
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "aria2"
+      "extraConfig"
+    ] "This option has been removed. Please use 'programs.aria2.settings' instead.")
+  ];
+
   options.programs.aria2 = {
     enable = lib.mkEnableOption "aria2";
 
@@ -48,23 +56,13 @@ in
         }
       '';
     };
-
-    extraConfig = lib.mkOption {
-      type = lib.types.lines;
-      default = "";
-      description = ''
-        Extra lines added to {file}`aria2.conf` file.
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."aria2/aria2.conf".text = lib.concatStringsSep "\n" (
-      [ ]
-      ++ lib.mapAttrsToList formatLine cfg.settings
-      ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
-    );
+    xdg.configFile."aria2/aria2.conf" = lib.mkIf (cfg.settings != { }){
+      text = (lib.concatStringsSep "\n" (lib.mapAttrsToList formatLine cfg.settings)) + "\n";
+    };
   };
 }
