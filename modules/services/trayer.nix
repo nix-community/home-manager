@@ -164,10 +164,10 @@ in
       {
         Unit = {
           Description = "trayer -- lightweight GTK2+ systray for UNIX desktops";
-          PartOf = [ "tray.target" ];
+          PartOf = [ "tray-xembed.target" ];
         };
 
-        Install.WantedBy = [ "tray.target" ];
+        Install.WantedBy = [ "tray-xembed.target" ];
 
         Service = {
           ExecStart = "${cfg.package}/bin/trayer ${parameters}";

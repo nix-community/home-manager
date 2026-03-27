@@ -66,6 +66,7 @@ let
       ./systemd.nix
       ./targets/darwin
       ./targets/generic-linux.nix
+      ./tray.nix
       ./wayland.nix
       ./xresources.nix
       ./xsession.nix

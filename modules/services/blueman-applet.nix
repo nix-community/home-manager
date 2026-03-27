@@ -48,8 +48,8 @@ in
     systemd.user.services.blueman-applet = {
       Unit = {
         Description = "Blueman applet";
-        Requires = [ "tray.target" ];
-        After = cfg.systemdTargets ++ [ "tray.target" ];
+        Requires = [ "tray-xembed.target" ];
+        After = cfg.systemdTargets ++ [ "tray-xembed.target" ];
         PartOf = cfg.systemdTargets;
       };
 

@@ -39,10 +39,10 @@ in
     systemd.user.services.parcellite = {
       Unit = {
         Description = "Lightweight GTK+ clipboard manager";
-        Requires = [ "tray.target" ];
+        Requires = [ "tray-xembed.target" ];
         After = [
           "graphical-session.target"
-          "tray.target"
+          "tray-xembed.target"
         ];
         PartOf = [ "graphical-session.target" ];
       };
