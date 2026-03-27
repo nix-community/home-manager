@@ -361,13 +361,6 @@
     name = "Philipp Mildenberger";
     source = "nixpkgs";
   };
-  philocalyst = {
-    name = "Myles";
-    email = "milestheperson@posteo.net";
-    github = "philocalyst";
-    githubId = 114884788;
-    source = "nixpkgs";
-  };
   Rosuavio = {
     email = "RosarioPulella@gmail.com";
     github = "Rosuavio";
