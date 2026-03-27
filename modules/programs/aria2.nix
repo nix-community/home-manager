@@ -7,12 +7,7 @@
 let
   cfg = config.programs.aria2;
 
-  formatLine =
-    n: v:
-    let
-      formatValue = v: if builtins.isBool v then (if v then "true" else "false") else toString v;
-    in
-    "${n}=${formatValue v}";
+  keyValueFormat = pkgs.formats.keyValue { };
 in
 {
   meta.maintainers = [ lib.maintainers.justinlovinger ];
@@ -31,14 +26,7 @@ in
     package = lib.mkPackageOption pkgs "aria2" { nullable = true; };
 
     settings = lib.mkOption {
-      type =
-        with lib.types;
-        attrsOf (oneOf [
-          bool
-          float
-          int
-          str
-        ]);
+      type = keyValueFormat.type;
       default = { };
       description = ''
         Options to add to {file}`aria2.conf` file.
@@ -61,8 +49,8 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."aria2/aria2.conf" = lib.mkIf (cfg.settings != { }){
-      text = (lib.concatStringsSep "\n" (lib.mapAttrsToList formatLine cfg.settings)) + "\n";
+    xdg.configFile."aria2/aria2.conf" = lib.mkIf (cfg.settings != { }) {
+      source = keyValueFormat.generate "aria2.conf" cfg.settings;
     };
   };
 }
