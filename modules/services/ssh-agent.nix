@@ -108,15 +108,18 @@ in
         Description = "SSH authentication agent";
         Documentation = "man:ssh-agent(1)";
       };
-      Service.ExecStart = "${lib.getExe' cfg.package "ssh-agent"} -D -a %t/${cfg.socket}${
-        lib.optionalString (
-          cfg.defaultMaximumIdentityLifetime != null
-        ) " -t ${toString cfg.defaultMaximumIdentityLifetime}"
-      }${
-        lib.optionalString (
-          cfg.pkcs11Whitelist != [ ]
-        ) " -P '${lib.concatStringsSep "," cfg.pkcs11Whitelist}'"
-      }";
+      Service = {
+        ExecStart = "${lib.getExe' cfg.package "ssh-agent"} -D -a %t/${cfg.socket}${
+          lib.optionalString (
+            cfg.defaultMaximumIdentityLifetime != null
+          ) " -t ${toString cfg.defaultMaximumIdentityLifetime}"
+        }${
+          lib.optionalString (
+            cfg.pkcs11Whitelist != [ ]
+          ) " -P '${lib.concatStringsSep "," cfg.pkcs11Whitelist}'"
+        }";
+        SuccessExitStatus = 2;
+      };
     };
 
     launchd.agents.ssh-agent = {
