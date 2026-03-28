@@ -155,6 +155,17 @@ in
           type = types.attrsOf types.str;
         };
 
+        shellSuffixAliases = mkOption {
+          default = { };
+          example = {
+            ps = "gv --";
+          };
+          description = ''
+            Suffix Aliases used when a file with a matching suffix is called
+            without any other commands.
+          '';
+        };
+
         dirHashes = mkOption {
           default = { };
           example = literalExpression ''
@@ -322,6 +333,17 @@ in
           '';
         };
 
+        functions = mkOption {
+          type = types.attrsOf types.lines;
+          default = { };
+          example = {
+            pargs = "print $0: $*";
+          };
+          description = ''
+            Functions added to .zshrc
+          '';
+        };
+
         setOptions = mkOption {
           type = types.listOf types.str;
           default = [ ];
@@ -336,6 +358,51 @@ in
 
             To unset an option, prefix it with "NO_".
           '';
+        };
+
+        zstyle = mkOption {
+          type = types.attrsOf (types.attrsOf types.anything);
+          default = { };
+          example = {
+            auto-description = "'+%d'";
+            file-sort = "name";
+            use-cache = true;
+            ignore-parents = [
+              "parent"
+              "pwd"
+            ];
+          };
+          description = ''
+            Configure zstyle options. See {manpage}`zshmodules(1)`.
+            These are used to configure the completion System See {manpage}`zshcompsys(1).
+          '';
+        };
+
+        bindkey = mkOption {
+          type = types.attrsOf types.str;
+          default = { };
+          description = ''
+            Keybinds set in Zsh via bindkey. The name is the keybind and value
+            is the command.
+          '';
+          example = {
+            "^A" = "beginning-of-line";
+          };
+        };
+
+        zleFunctions = mkOption {
+          type = types.attrsOf types.lines;
+          default = { };
+          description = ''
+            Functions that are added to the Zsh environment and are added to the
+            zsh command line editor via `zle -N`. The key is the name
+            and the value is the body of the function to be added
+          '';
+          example = {
+            mkcd = ''
+              mkdir --parents "$1" && cd "$1"
+            '';
+          };
         };
 
         siteFunctions = mkOption {
@@ -464,6 +531,8 @@ in
           );
         })
 
+        (lib.mkIf (cfg.zleFunctions != { }) { programs.zsh.functions = cfg.zleFunctions; })
+
         {
           home.file."${dotDirRel}/.zshenv".text = ''
             # Environment variables
@@ -513,11 +582,35 @@ in
 
             (lib.mkIf (localVarsStr != "") (mkOrder 540 localVarsStr))
 
+            (lib.mkIf (cfg.functions != { }) (
+              mkOrder 550 (
+                concatStringsSep "\n" (
+                  lib.mapAttrsToList (name: def: ''
+                    function ${name} {
+                      ${def}
+                    }
+                  '') cfg.functions
+                )
+              )
+            ))
+
+            (lib.mkIf (cfg.zleFunctions != { }) (
+              mkOrder 560 (
+                concatStringsSep "\n" (lib.mapAttrsToList (name: def: "zle -N ${name}") cfg.zleFunctions)
+              )
+            ))
+
             # NOTE: Oh-My-Zsh/Prezto calls compinit during initialization,
             # calling it twice causes slight start up slowdown
             # as all $fpath entries will be traversed again.
             (lib.mkIf (cfg.enableCompletion && !cfg.oh-my-zsh.enable && !cfg.prezto.enable) (
               mkOrder 570 cfg.completionInit
+            ))
+
+            (lib.mkIf (cfg.bindkey != { }) (
+              mkOrder 580 (
+                concatStringsSep "\n" (lib.mapAttrsToList (name: def: "bindkey '${name}' ${def}") cfg.bindkey)
+              )
             ))
 
             (lib.mkIf cfg.autosuggestion.enable (
@@ -546,7 +639,7 @@ in
               ''
             ))
 
-            (lib.mkIf (aliasesStr != "" || cfg.shellGlobalAliases != { }) (
+            (lib.mkIf (aliasesStr != "" || cfg.shellGlobalAliases != { } || cfg.shellSuffixAliases != { }) (
               mkOrder 1100 (
                 (optionalString (aliasesStr != "") aliasesStr)
                 + (optionalString (cfg.shellGlobalAliases != { }) (
@@ -557,6 +650,29 @@ in
                     ) cfg.shellGlobalAliases
                   ))
                 ))
+                + (optionalString (cfg.shellSuffixAliases != { }) (
+                  optionalString (cfg.shellGlobalAliases != { } || cfg.shellAliases != { }) "\n"
+                  + (concatStringsSep "\n" (
+                    lib.mapAttrsToList (
+                      k: v: "alias -s -- ${lib.escapeShellArg k}=${lib.escapeShellArg v}"
+                    ) cfg.shellSuffixAliases
+                  ))
+                ))
+              )
+            ))
+
+            (lib.mkIf (cfg.zstyle != { }) (
+              mkOrder 1120 (
+                concatStringsSep "\n" (
+                  lib.flatten (
+                    lib.mapAttrsToList (
+                      pattern: set:
+                      map (opts: "zstyle '${pattern}' ${opts}") (
+                        lib.mapAttrsToList (name: val: "${name} ${(toString val)}") set
+                      )
+                    ) cfg.zstyle
+                  )
+                )
               )
             ))
 
