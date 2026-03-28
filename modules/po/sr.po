@@ -1,0 +1,100 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Home Manager contributors
+# This file is distributed under the same license as the Home Manager Modules package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Home Manager Modules\n"
+"Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
+"POT-Creation-Date: 2026-01-21 09:53+0100\n"
+"PO-Revision-Date: 2026-03-28 17:41+0000\n"
+"Last-Translator: Marko Milovanov <markomilovanov03@gmail.com>\n"
+"Language-Team: Serbian <https://hosted.weblate.org/projects/home-manager/"
+"modules/sr/>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.17-dev\n"
+
+#: modules/files.nix:214
+msgid "Creating home file links in %s"
+msgstr "Kreiranje veza ka fajlovima u home direktorijumu %s"
+
+#: modules/files.nix:227
+#, fuzzy
+msgid "Cleaning up orphan links from %s"
+msgstr "Uklanjanje zaostalih veza iz %s"
+
+#: modules/home-environment.nix:680
+msgid "Creating new profile generation"
+msgstr "Kreiranje nove generacije profila"
+
+#: modules/home-environment.nix:683
+msgid "No change so reusing latest profile generation"
+msgstr ""
+
+#: modules/home-environment.nix:732
+msgid ""
+"Oops, Nix failed to install your new Home Manager profile!\n"
+"\n"
+"Perhaps there is a conflict with a package that was installed using\n"
+"\"%s\"? Try running\n"
+"\n"
+"    %s\n"
+"\n"
+"and if there is a conflicting package you can remove it with\n"
+"\n"
+"    %s\n"
+"\n"
+"Then try activating your Home Manager configuration again."
+msgstr ""
+
+#: modules/home-environment.nix:768
+msgid "Activating %s"
+msgstr ""
+
+#: modules/home-environment.nix:840
+msgid "%s: unknown option '%s'"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:22
+msgid "Migrating profile from %s to %s"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:54
+msgid "Could not find suitable profile directory, tried %s and %s"
+msgstr "Nije pronađen odgovarajući direktorijum profila, pokušani su %s i %s"
+
+#. translators: For example: HOME is "/home/foo", expected "/home/bar"
+#: modules/lib-bash/activation-init.sh:109
+#: modules/lib-bash/activation-init.sh:121
+msgid "%s is \"%s\", expected \"%s\""
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:138
+msgid "Starting Home Manager activation"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:142
+msgid "Sanity checking Nix"
+msgstr "Provera ispravnosti Nix-a"
+
+#: modules/lib-bash/activation-init.sh:155
+msgid "This is a dry run"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:159
+msgid "This is a live run"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:165
+msgid "Using Nix version: %s"
+msgstr ""
+
+#: modules/lib-bash/activation-init.sh:168
+msgid "Activation variables:"
+msgstr ""
