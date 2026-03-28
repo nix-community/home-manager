@@ -1,0 +1,12 @@
+[Install]
+WantedBy=tray.target
+
+[Service]
+ExecStart=@telegram@/bin/dummy -startintray -scale 75
+Restart=on-failure
+
+[Unit]
+After=tray.target
+Description=Telegram, the instant messaging client
+Documentation=https://github.com/telegramdesktop/tdesktop/wiki
+PartOf=tray.target
