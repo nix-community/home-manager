@@ -24,6 +24,7 @@ in
     ./secrets-arbitrary-characters.nix
     ./no-type.nix
     ./mount.nix
+    # ./serve.nix
     ./shell.nix
     ./atomic.nix
     ./write-after.nix
