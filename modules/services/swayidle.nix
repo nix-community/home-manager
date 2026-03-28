@@ -18,6 +18,14 @@ in
 {
   meta.maintainers = [ lib.maintainers.c0deaddict ];
 
+  imports = [
+    (lib.mkChangedOptionModule
+      [ "services" "swayidle" "systemdTarget" ]
+      [ "services" "swayidle" "systemdTargets" ]
+      (config: lib.toList (lib.getAttrFromPath [ "services" "swayidle" "systemdTarget" ] config))
+    )
+  ];
+
   options.services.swayidle =
     let
 
@@ -124,13 +132,13 @@ in
         description = "Extra arguments to pass to swayidle.";
       };
 
-      systemdTarget = mkOption {
-        type = types.str;
-        default = config.wayland.systemd.target;
-        defaultText = literalExpression "config.wayland.systemd.target";
-        example = "sway-session.target";
+      systemdTargets = mkOption {
+        type = with types; listOf str;
+        default = [ config.wayland.systemd.target ];
+        defaultText = literalExpression "[ config.wayland.systemd.target ]";
+        example = [ "sway-session.target" ];
         description = ''
-          Systemd target to bind to.
+          Systemd targets to bind to.
         '';
       };
 
@@ -148,8 +156,8 @@ in
         Description = "Idle manager for Wayland";
         Documentation = "man:swayidle(1)";
         ConditionEnvironment = "WAYLAND_DISPLAY";
-        PartOf = [ cfg.systemdTarget ];
-        After = [ cfg.systemdTarget ];
+        PartOf = cfg.systemdTargets;
+        After = cfg.systemdTargets;
       };
 
       Service = {
@@ -187,7 +195,7 @@ in
       };
 
       Install = {
-        WantedBy = [ cfg.systemdTarget ];
+        WantedBy = cfg.systemdTargets;
       };
     };
   };
