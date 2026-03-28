@@ -975,7 +975,8 @@ in
                   cfg.settings
 
                   (optionalAttrs (length orderedAccounts != 0) {
-                    "mail.accountmanager.accounts" = concatStringsSep "," orderedAccounts;
+                    "mail.accountmanager.appendaccounts" = concatStringsSep "," orderedAccounts;
+                    "mailnews.append_preconfig_accounts.version" = 0;
                   })
 
                   (optionalAttrs (length orderedCalendarAccounts != 0) {
