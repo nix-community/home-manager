@@ -19,7 +19,7 @@ in
 
   options.programs.vesktop = {
     enable = lib.mkEnableOption "Vesktop, an alternate client for Discord with Vencord built-in";
-    package = lib.mkPackageOption pkgs "vesktop" { };
+    package = lib.mkPackageOption pkgs "vesktop" { nullable = true; };
     settings = lib.mkOption {
       type = jsonFormat.type;
       default = { };
@@ -135,7 +135,7 @@ in
           );
     in
     lib.mkIf cfg.enable {
-      home.packages = [
+      home.packages = lib.mkIf (cfg.package != null) [
         (cfg.package.override { withSystemVencord = cfg.vencord.useSystem; })
       ];
 
