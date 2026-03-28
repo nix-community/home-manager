@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-28 17:41+0000\n"
+"PO-Revision-Date: 2026-03-28 19:50+0000\n"
 "Last-Translator: Marko Milovanov <markomilovanov03@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/home-manager/"
 "modules/sr/>\n"
@@ -35,7 +35,7 @@ msgstr "Kreiranje nove generacije profila"
 
 #: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Nema promene, ponovo se koristi poslednja generacija profila"
 
 #: modules/home-environment.nix:732
 msgid ""
@@ -52,18 +52,30 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"Ups, Nix nije uspeo da instalira vaš novi Home Manager profil!\n"
+"\n"
+"Možda postoji konflikt sa paketom koji je instaliran sa\n"
+"\"%s\"? Pokušajte da izvršite:\n"
+"\n"
+"    %s\n"
+"\n"
+"i ukoliko postoji paket u konfliktu možete ga ukloniti sa\n"
+"\n"
+"    %s\n"
+"\n"
+"Zatim pokušajte da aktivirate vašu Home Manager konfiguraciju ponovo."
 
 #: modules/home-environment.nix:768
 msgid "Activating %s"
-msgstr ""
+msgstr "Aktiviranje %s"
 
 #: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: nepoznata opcija '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "Migriranje profila sa %s na %s"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
@@ -73,11 +85,11 @@ msgstr "Nije pronađen odgovarajući direktorijum profila, pokušani su %s i %s"
 #: modules/lib-bash/activation-init.sh:109
 #: modules/lib-bash/activation-init.sh:121
 msgid "%s is \"%s\", expected \"%s\""
-msgstr ""
+msgstr "%s je %s, očekovano \"%s\""
 
 #: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
-msgstr ""
+msgstr "Startovanje Home Manager aktivacije"
 
 #: modules/lib-bash/activation-init.sh:142
 msgid "Sanity checking Nix"
@@ -85,7 +97,7 @@ msgstr "Provera ispravnosti Nix-a"
 
 #: modules/lib-bash/activation-init.sh:155
 msgid "This is a dry run"
-msgstr ""
+msgstr "Ovo je probno izvršavanje"
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "This is a live run"
