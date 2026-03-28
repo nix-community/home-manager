@@ -998,7 +998,28 @@ in
         ++ optional (cfg.vendorPath != null) ''
           Using '${moduleName}.vendorPath' has been deprecated and
           will be removed in the future. Native messaging hosts will function normally without specifying this path.
-        '';
+        ''
+        ++ (
+          let
+            nonXdgPath = ".mozilla/firefox";
+          in
+          optional
+            (
+              config.home.preferXdgDirectories
+              && pkgs.stdenv.hostPlatform.isLinux
+              && (builtins.pathExists (config.home.homeDirectory + "/${nonXdgPath}"))
+            )
+            ''
+              Found existing Firefox profile at '${nonXdgPath}'. Since
+              'home.preferXdgDirectories' is true, the profile path is now
+              '${cfg.configPath}'.
+
+              Unfortunately, there is no automatic way to migrate your
+              profile. You must manually move the contents of '${nonXdgPath}' to
+              '${cfg.configPath}' and remove the old directory.
+            ''
+        );
+
       targets.darwin.defaults = (
         mkIf (cfg.darwinDefaultsId != null && isDarwin) {
 
