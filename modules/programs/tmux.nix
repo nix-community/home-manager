@@ -313,8 +313,6 @@ in
 
       tmuxp.enable = mkEnableOption "tmuxp";
 
-      tmuxinator.enable = mkEnableOption "tmuxinator";
-
       plugins = mkOption {
         type =
           with types;
@@ -352,9 +350,7 @@ in
     lib.mkMerge [
       {
         home.packages =
-          lib.optional (cfg.package != null) cfg.package
-          ++ lib.optional cfg.tmuxinator.enable pkgs.tmuxinator
-          ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
+          lib.optional (cfg.package != null) cfg.package ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
       }
 
       { xdg.configFile."tmux/tmux.conf".text = lib.mkBefore tmuxConf; }
