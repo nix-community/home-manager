@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-28 19:50+0000\n"
+"PO-Revision-Date: 2026-03-28 19:56+0000\n"
 "Last-Translator: Marko Milovanov <markomilovanov03@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/home-manager/cli/"
 "sr/>\n"
@@ -241,11 +241,11 @@ msgstr "Ovo će ukloniti Home Manager sa vašeg sistema."
 
 #: home-manager/home-manager:1025
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "Ovo je probno izvršavanje, ništa neće stvarno biti deinstalirano."
 
 #: home-manager/home-manager:1029
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Zaista deinstalirati Home Manager?"
 
 #: home-manager/home-manager:1035
 msgid "Switching to empty Home Manager configuration..."
