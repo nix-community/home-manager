@@ -34,6 +34,11 @@ lib.mkIf config.test.enableBig {
         # to test passthru.initLua is taken into account
         plugin = unicode-vim;
       }
+      {
+        # test pure lua dependencies
+        # this relies on
+        plugin = telescope-nvim;
+      }
     ];
     extraLuaPackages = ps: [ ps.luautf8 ];
   };
@@ -55,6 +60,9 @@ lib.mkIf config.test.enableBig {
       assertFileContains "$vimout" "HM_PLUGINS_CONFIG"
       # testing that unicode-vim's value is echoed
       assertFileContains "$vimout" "autoload/unicode"
+
+      # check telescope can find plenary/does not trigger any error
+      ${pkgs.neovim}/bin/nvim -es --cmd "lua require 'telescope'" --cmd "quit"
 
       initLua="$TESTED/home-files/.config/nvim/init.lua"
       assertFileContent $(normalizeStorePaths "$initLua") ${./plugin-config.expected}
