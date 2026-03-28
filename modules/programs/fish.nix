@@ -680,7 +680,7 @@ in
         in
         {
           # Support completion for `man` by building a cache for `apropos`.
-          programs.man.generateCaches = lib.mkDefault true;
+          programs.man.cache.enable = lib.mkDefault true;
 
           xdg.dataFile."fish/home-manager/generated_completions".source =
             let
