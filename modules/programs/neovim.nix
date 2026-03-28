@@ -441,8 +441,8 @@ in
           withNodeJs = cfg.withNodeJs || cfg.coc.enable;
           plugins = nixpkgsCompatiblePlugins;
 
-          extraLuaPackages = lp: cfg.extraLuaPackages lp ++ vimPackageInfo.luaDependencies;
           inherit (cfg)
+            extraLuaPackages
             extraName
             withPython3
             withRuby
@@ -521,7 +521,6 @@ in
               ''
             else
               null;
-
         in
         lib.mkMerge [
           (lib.mkIf wrapperHasUserConfig (
