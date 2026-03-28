@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-28 19:50+0000\n"
+"PO-Revision-Date: 2026-03-28 19:56+0000\n"
 "Last-Translator: Marko Milovanov <markomilovanov03@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/home-manager/"
 "modules/sr/>\n"
@@ -101,12 +101,12 @@ msgstr "Ovo je probno izvršavanje"
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "This is a live run"
-msgstr ""
+msgstr "Ovo je stvarno izvršavanje"
 
 #: modules/lib-bash/activation-init.sh:165
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "Korišćena verzija Nix-a: %s"
 
 #: modules/lib-bash/activation-init.sh:168
 msgid "Activation variables:"
-msgstr ""
+msgstr "Aktivacione promenljive:"
