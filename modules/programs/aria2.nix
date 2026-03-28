@@ -44,6 +44,22 @@ in
         }
       '';
     };
+
+    systemd = {
+      enable = lib.mkEnableOption "Aria2 systemd integration";
+
+      targets = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ "default.target" ];
+        example = [ "graphical-session.target" ];
+        description = ''
+          Systemd targets that will start the aria2c user service.
+
+          Note: if `programs.aria2.settings.input-file` is set but
+          the file doesn't exist, then the aria2 service will fail.
+        '';
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -51,6 +67,25 @@ in
 
     xdg.configFile."aria2/aria2.conf" = lib.mkIf (cfg.settings != { }) {
       source = keyValueFormat.generate "aria2.conf" cfg.settings;
+    };
+
+    systemd.user.services.aria2 = lib.mkIf cfg.systemd.enable {
+      Unit = {
+        Description = "Aria2c daemon";
+        Documentation = "man:aria2c(1)";
+        PartOf = cfg.systemd.targets;
+        After = cfg.systemd.targets;
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."aria2/aria2.conf".source}"
+        ];
+      };
+
+      Service = {
+        ExecStart = "${lib.getExe cfg.package} --enable-rpc";
+        Restart = "on-failure";
+      };
+
+      Install.WantedBy = cfg.systemd.targets;
     };
   };
 }
