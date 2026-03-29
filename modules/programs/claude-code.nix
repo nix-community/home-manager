@@ -349,7 +349,7 @@ in
           lib.filter (x: x != [ ]) [
             (lib.optional (cfg.mcpServers != { }) [
               "--add-flags"
-              "--mcp-config ${jsonFormat.generate "claude-code-mcp-config.json" { inherit (cfg) mcpServers; }}"
+              "--mcp-config ${jsonFormat.generate "claude-code-mcp-config.json" { inherit (cfg) mcpServers; }} --"
             ])
           ]
         );
