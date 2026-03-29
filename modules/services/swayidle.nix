@@ -84,6 +84,12 @@ in
 
       package = lib.mkPackageOption pkgs "swayidle" { };
 
+      idlehint = mkOption {
+        type = with types; nullOr int;
+        default = null;
+        description = "Number of seconds after which to indicate an idle logind/elogind session";
+      };
+
       timeouts = mkOption {
         type = with types; listOf (submodule timeoutModule);
         default = [ ];
@@ -184,12 +190,22 @@ in
               command
             ];
 
+            mkIdleHint =
+              if cfg.idlehint != null then
+                [
+                  "idlehint"
+                  (toString cfg.idlehint)
+                ]
+              else
+                [ ];
+
             nonemptyEvents = lib.filterAttrs (event: command: command != null) cfg.events;
 
             args =
               cfg.extraArgs
               ++ (lib.concatMap mkTimeout cfg.timeouts)
-              ++ (lib.flatten (lib.mapAttrsToList mkEvent nonemptyEvents));
+              ++ (lib.flatten (lib.mapAttrsToList mkEvent nonemptyEvents))
+              ++ mkIdleHint;
           in
           "${lib.getExe cfg.package} ${lib.escapeShellArgs args}";
       };
