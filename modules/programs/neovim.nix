@@ -254,7 +254,23 @@ in
                   "fennel"
                 ]) types.str;
                 description = "Language used in config. Configurations are aggregated per-language.";
-                default = "viml";
+                inherit
+                  (lib.hm.deprecations.mkStateVersionOptionDefault {
+                    inherit (config.home) stateVersion;
+                    optionPath = [
+                      "programs"
+                      "neovim"
+                      "plugins"
+                      "PLUGIN"
+                      "type"
+                    ];
+                    since = "26.05";
+                    legacy.value = "viml";
+                    current.value = "lua";
+                  })
+                  default
+                  defaultText
+                  ;
               };
 
               optional = mkEnableOption "optional" // {
