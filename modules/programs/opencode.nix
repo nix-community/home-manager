@@ -109,7 +109,7 @@ in
           "DEBUG"
         ];
         description = ''
-          Extra arguments to pass to the opencode web command.
+          Extra arguments to pass to the opencode serve command.
 
           These arguments override the "server" options defined in the configuration file.
           See <https://opencode.ai/docs/web/#config-file> for available options.
@@ -498,7 +498,7 @@ in
         };
 
         Service = {
-          ExecStart = "${lib.getExe cfg.package} web ${lib.escapeShellArgs webCfg.extraArgs}";
+          ExecStart = "${lib.getExe cfg.package} serve ${lib.escapeShellArgs webCfg.extraArgs}";
           Restart = "always";
           RestartSec = 5;
         };
@@ -515,7 +515,7 @@ in
         config = {
           ProgramArguments = [
             (lib.getExe cfg.package)
-            "web"
+            "serve"
           ]
           ++ webCfg.extraArgs;
           KeepAlive = {
