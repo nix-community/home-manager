@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-28 17:41+0000\n"
+"PO-Revision-Date: 2026-03-28 19:56+0000\n"
 "Last-Translator: Marko Milovanov <markomilovanov03@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/home-manager/cli/"
 "sr/>\n"
@@ -114,28 +114,28 @@ msgstr "Nije pronađen odgovarajući direktorijum profila, pokušani su %s i %s"
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:230
 msgid "Can't inspect options of a flake configuration"
-msgstr ""
+msgstr "Nije moguće pregledati opcije flake konfiguracije"
 
 #: home-manager/home-manager:340 home-manager/home-manager:363
 #: home-manager/home-manager:769 home-manager/home-manager:1289
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: nepoznata opcija '%s'"
 
 #: home-manager/home-manager:345 home-manager/home-manager:1290
 msgid "Run '%s --help' for usage help"
-msgstr ""
+msgstr "Izvršite '%s --help' za pomoć oko upotrebe"
 
 #: home-manager/home-manager:371 home-manager/home-manager:476
 msgid "The file %s already exists, leaving it unchanged..."
-msgstr ""
+msgstr "Fajl %s već postoji, ostaje nepromenjen..."
 
 #: home-manager/home-manager:373 home-manager/home-manager:478
 msgid "Creating %s..."
-msgstr ""
+msgstr "Kreiranje %s..."
 
 #: home-manager/home-manager:522
 msgid "Creating initial Home Manager generation..."
-msgstr ""
+msgstr "Kreiranje inicijalne generacije Home Manager-a..."
 
 #. translators: The "%s" specifier will be replaced by a file path.
 #: home-manager/home-manager:527
@@ -147,6 +147,14 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
+"Sve je gotovo! Alat home-manager bi sada trebalo da bude instaliran i možete "
+"da izmenite\n"
+"\n"
+"    %s\n"
+"\n"
+"da biste podesili Home Manager. Izvršite 'man home-configuration.nix' da "
+"biste\n"
+"videli sve dostupne opcije."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:532
@@ -157,11 +165,16 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
+"O ne, instalacija nije uspela! Kreirajte issue na\n"
+"\n"
+"    %s\n"
+"\n"
+"ako smatrate da je grešku izazvao Home Manager."
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:543
 msgid "Can't instantiate a flake configuration"
-msgstr ""
+msgstr "Nije moguće instancirati flake konfiguraciju"
 
 #: home-manager/home-manager:619
 msgid ""
@@ -171,60 +184,68 @@ msgid_plural ""
 "There are %d unread and relevant news items.\n"
 "Read them by running the command \"%s news\"."
 msgstr[0] ""
+"Postoji %d nepročitana i relevantna novost.\n"
+"Pročitajte je izvršavanjem komande \"%s news\"."
 msgstr[1] ""
+"Postoje %d nepročitane i relevantne novosti.\n"
+"Pročitajte ih izvršavanjem komande \"%s news\"."
+msgstr[2] ""
+"Postoji %d nepročitanih i relevantnih novosti.\n"
+"Pročitajte ih izvršavanjem komande \"%s news\"."
 
 #: home-manager/home-manager:633
 msgid "Unknown \"news.display\" setting \"%s\"."
-msgstr ""
+msgstr "Nepoznata \"news.display\" postavka \"%s\"."
 
 #: home-manager/home-manager:641
 #, sh-format
 msgid "Please set the $EDITOR or $VISUAL environment variable"
-msgstr ""
+msgstr "Postavite promenljivu okruženja $EDITOR ili $VISUAL"
 
 #: home-manager/home-manager:659
 msgid "Cannot run build in read-only directory"
 msgstr ""
+"Nije moguće pokrenuti izgradnju u direktorijumu namenjenom samo za čitanje"
 
 #: home-manager/home-manager:822
 msgid "The configuration does not contain the specialisation \"%s\""
-msgstr ""
+msgstr "Konfiguracija ne sadrži specijalizaciju \"%s\""
 
 #: home-manager/home-manager:876
 msgid "No generation with ID %s"
-msgstr ""
+msgstr "Ne postoji generacija sa ID-jem %s"
 
 #: home-manager/home-manager:878
 msgid "Cannot remove the current generation %s"
-msgstr ""
+msgstr "Nije moguće ukloniti trenutnu generaciju %s"
 
 #: home-manager/home-manager:880
 msgid "Removing generation %s"
-msgstr ""
+msgstr "Uklanjanje generacije %s"
 
 #: home-manager/home-manager:901
 msgid "No generations to expire"
-msgstr ""
+msgstr "Nema isteklih generacija"
 
 #: home-manager/home-manager:912
 msgid "No home-manager packages seem to be installed."
-msgstr ""
+msgstr "Izgleda da nema instaliranih home-manager paketa."
 
 #: home-manager/home-manager:997
 msgid "Unknown argument %s"
-msgstr ""
+msgstr "Nepoznat argument %s"
 
 #: home-manager/home-manager:1022
 msgid "This will remove Home Manager from your system."
-msgstr ""
+msgstr "Ovo će ukloniti Home Manager sa vašeg sistema."
 
 #: home-manager/home-manager:1025
 msgid "This is a dry run, nothing will actually be uninstalled."
-msgstr ""
+msgstr "Ovo je probno izvršavanje, ništa neće stvarno biti deinstalirano."
 
 #: home-manager/home-manager:1029
 msgid "Really uninstall Home Manager?"
-msgstr ""
+msgstr "Zaista deinstalirati Home Manager?"
 
 #: home-manager/home-manager:1035
 msgid "Switching to empty Home Manager configuration..."
