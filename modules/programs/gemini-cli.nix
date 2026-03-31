@@ -25,6 +25,11 @@ in
         Whether to integrate the MCP servers config from
         {option}`programs.mcp.servers` into
         {option}`programs.gemini-cli.settings.mcpServers`.
+
+        Note: Any servers already present in
+        {option}`programs.gemini-cli.settings.mcpServers`
+        is not overridden by server present under the same
+        name in {option}`programs.mcp.servers`
       '';
     };
 
@@ -44,7 +49,13 @@ in
         context.loadMemoryFromIncludeDirectories = true;
         security.auth.selectedType = "oauth-personal";
       };
-      description = "JSON config for gemini-cli";
+      description = ''
+        JSON config for gemini-cli
+
+        Note: Do not add any 'mcpServers' key in this
+        option. Use {option}`programs.gemini-cli.mcpServers`
+        instead.
+      '';
     };
 
     commands =
@@ -203,67 +214,107 @@ in
         The value is either inline content or a path to a file.
       '';
     };
-  };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        programs.gemini-cli.settings.mcpServers = lib.mkIf (
-          cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { }
-        ) config.programs.mcp.servers;
-      }
-      {
-        home = {
-          packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-          file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
-            source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
-          };
-          sessionVariables = lib.mkIf (cfg.defaultModel != null) {
-            GEMINI_MODEL = cfg.defaultModel;
+    mcpServers = lib.mkOption {
+      type = lib.types.attrsOf jsonFormat.type;
+      default = { };
+      description = "MCP (Model Context Protocol) servers configuration";
+      example = {
+        github = {
+          url = "https://api.githubcopilot.com/mcp/";
+        };
+        filesystem = {
+          command = "npx";
+          args = [
+            "-y"
+            "@modelcontextprotocol/server-filesystem"
+            "/tmp"
+          ];
+        };
+        database = {
+          command = "npx";
+          args = [
+            "-y"
+            "@bytebase/dbhub"
+            "--dsn"
+            "postgresql://user:pass@localhost:5432/db"
+          ];
+          env = {
+            DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
           };
         };
-      }
-      {
-        home.file = lib.mapAttrs' (
-          n: v: lib.nameValuePair ".gemini/${n}.md" (if lib.isPath v then { source = v; } else { text = v; })
-        ) cfg.context;
-      }
-      {
-        home.file = lib.mapAttrs' (
-          n: v:
-          lib.nameValuePair ".gemini/commands/${n}.toml" {
-            source = tomlFormat.generate "gemini-cli-command-${n}.toml" {
-              inherit (v) description prompt;
+      };
+    };
+  };
+
+  config =
+    let
+      globalMcpServersToIntegrate = lib.filterAttrs (
+        n: _v: !(lib.hasAttr n cfg.mcpServers)
+      ) config.programs.mcp.servers;
+    in
+    lib.mkIf cfg.enable (
+      lib.mkMerge [
+        {
+          programs.gemini-cli.settings.mcpServers = lib.mkIf (cfg.mcpServers != { }) cfg.mcpServers;
+        }
+        {
+          programs.gemini-cli.settings.mcpServers = lib.mkIf (
+            cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { }
+          ) globalMcpServersToIntegrate;
+        }
+        {
+          home = {
+            packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+            file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
+              source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
             };
-          }
-        ) cfg.commands;
-      }
-      {
-        home.file = lib.mapAttrs' (
-          n: v:
-          lib.nameValuePair ".gemini/policies/${n}.toml" {
-            source =
-              if builtins.isPath v || builtins.isString v || lib.isDerivation v then
-                v
-              else
-                tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
-          }
-        ) cfg.policies;
-      }
-      {
-        home.file = lib.mapAttrs' (
-          n: v:
-          if lib.isPath v && lib.pathIsDirectory v then
-            lib.nameValuePair ".gemini/skills/${n}" {
-              source = v;
-              recursive = true;
+            sessionVariables = lib.mkIf (cfg.defaultModel != null) {
+              GEMINI_MODEL = cfg.defaultModel;
+            };
+          };
+        }
+        {
+          home.file = lib.mapAttrs' (
+            n: v: lib.nameValuePair ".gemini/${n}.md" (if lib.isPath v then { source = v; } else { text = v; })
+          ) cfg.context;
+        }
+        {
+          home.file = lib.mapAttrs' (
+            n: v:
+            lib.nameValuePair ".gemini/commands/${n}.toml" {
+              source = tomlFormat.generate "gemini-cli-command-${n}.toml" {
+                inherit (v) description prompt;
+              };
             }
-          else
-            lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
-              if lib.isPath v then { source = v; } else { text = v; }
-            )
-        ) cfg.skills;
-      }
-    ]
-  );
+          ) cfg.commands;
+        }
+        {
+          home.file = lib.mapAttrs' (
+            n: v:
+            lib.nameValuePair ".gemini/policies/${n}.toml" {
+              source =
+                if builtins.isPath v || builtins.isString v || lib.isDerivation v then
+                  v
+                else
+                  tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
+            }
+          ) cfg.policies;
+        }
+        {
+          home.file = lib.mapAttrs' (
+            n: v:
+            if lib.isPath v && lib.pathIsDirectory v then
+              lib.nameValuePair ".gemini/skills/${n}" {
+                source = v;
+                recursive = true;
+              }
+            else
+              lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
+                if lib.isPath v then { source = v; } else { text = v; }
+              )
+          ) cfg.skills;
+        }
+      ]
+    );
 }

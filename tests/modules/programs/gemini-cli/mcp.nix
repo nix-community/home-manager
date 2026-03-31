@@ -6,18 +6,18 @@
       settings = {
         theme = "Default";
         vimMode = true;
-        mcpServers = {
-          github = {
-            url = "https://api.githubcopilot.com/mcp/";
-          };
-          filesystem = {
-            command = "npx";
-            args = [
-              "-y"
-              "@modelcontextprotocol/server-filesystem"
-              "/tmp"
-            ];
-          };
+      };
+      mcpServers = {
+        github = {
+          url = "https://api.githubcopilot.com/mcp/";
+        };
+        filesystem = {
+          command = "npx";
+          args = [
+            "-y"
+            "@modelcontextprotocol/server-filesystem"
+            "/tmp"
+          ];
         };
       };
     };
@@ -44,11 +44,6 @@
             DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
           };
         };
-        customTransport = {
-          url = "wss://example.com/mcp";
-          trusted = true;
-          timeout = 5000;
-        };
       };
     };
   };
@@ -57,5 +52,6 @@
     assertFileRegex home-files/.gemini/settings.json '"github"'
     assertFileRegex home-files/.gemini/settings.json '"filesystem"'
     assertFileRegex home-files/.gemini/settings.json '"database"'
+    assertFileNotRegex home-files/.gemini/settings.json '"other-tmp"'
   '';
 }
