@@ -2,13 +2,13 @@
 WantedBy=graphical-session.target
 
 [Service]
-Environment=PATH=$PATH:@swww@/bin
-ExecStart=@swww@/bin/swww-daemon --no-cache --layer bottom
+Environment=PATH=$PATH:@awww@/bin
+ExecStart=@awww@/bin/awww-daemon --no-cache --layer bottom
 Restart=always
 RestartSec=10
 
 [Unit]
 After=graphical-session.target
 ConditionEnvironment=WAYLAND_DISPLAY
-Description=swww-daemon
+Description=awww-daemon
 PartOf=graphical-session.target
