@@ -25,10 +25,6 @@ in
         Whether to integrate the MCP servers config from
         {option}`programs.mcp.servers` into
         {option}`programs.gemini-cli.settings.mcpServers`.
-
-        Note: Settings defined in {option}`programs.mcp.servers` are merged
-        with {option}`programs.gemini-cli.mcpServers`, with Gemini servers
-        taking precedence.
       '';
     };
 
@@ -207,50 +203,10 @@ in
         The value is either inline content or a path to a file.
       '';
     };
-
-    mcpServers = lib.mkOption {
-      type = lib.types.attrsOf jsonFormat.type;
-      default = { };
-      description = "MCP (Model Context Protocol) servers configuration";
-      example = {
-        github = {
-          url = "https://api.githubcopilot.com/mcp/";
-        };
-        filesystem = {
-          command = "npx";
-          args = [
-            "-y"
-            "@modelcontextprotocol/server-filesystem"
-            "/tmp"
-          ];
-        };
-        database = {
-          command = "npx";
-          args = [
-            "-y"
-            "@bytebase/dbhub"
-            "--dsn"
-            "postgresql://user:pass@localhost:5432/db"
-          ];
-          env = {
-            DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
-          };
-        };
-        customTransport = {
-          url = "wss://example.com/mcp";
-          customOption = "value";
-          timeout = 5000;
-          trust = true;
-        };
-      };
-    };
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
-      {
-        programs.gemini-cli.settings.mcpServers = lib.mkIf (cfg.mcpServers != { }) cfg.mcpServers;
-      }
       {
         programs.gemini-cli.settings.mcpServers = lib.mkIf (
           cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers
