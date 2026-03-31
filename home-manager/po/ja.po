@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
 "PO-Revision-Date: 2026-03-31 16:14+0000\n"
-"Last-Translator: Narazaki Shuji <shujinarazaki@protonmail.com>\n"
+"Last-Translator: Markus Amano <markus.a.amano@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
 "Language: ja\n"
@@ -107,8 +107,7 @@ msgstr "Nixの健全性検査中です"
 
 #: home-manager/home-manager:173
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
-"適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
+msgstr "適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:230

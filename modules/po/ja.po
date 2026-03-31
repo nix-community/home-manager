@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
 "PO-Revision-Date: 2026-03-31 16:16+0000\n"
-"Last-Translator: Narazaki Shuji <shujinarazaki@protonmail.com>\n"
+"Last-Translator: Markus Amano <markus.a.amano@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "modules/ja/>\n"
 "Language: ja\n"
@@ -77,8 +77,7 @@ msgstr "%s から %s にプロファイルを転送中"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
-"適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
+msgstr "適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
 
 #. translators: For example: HOME is "/home/foo", expected "/home/bar"
 #: modules/lib-bash/activation-init.sh:109
