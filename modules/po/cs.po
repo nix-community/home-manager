@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-31 16:15+0000\n"
-"Last-Translator: Dark Templar <dark.templar0007@gmail.com>\n"
+"PO-Revision-Date: 2026-03-31 21:17+0000\n"
+"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/home-manager/"
 "modules/cs/>\n"
 "Language: cs\n"
@@ -69,7 +69,7 @@ msgstr "Aktivuji %s"
 
 #: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: neznámý parametr '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
