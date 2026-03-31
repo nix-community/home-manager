@@ -18,6 +18,20 @@ in
 
     package = lib.mkPackageOption pkgs "gemini-cli" { nullable = true; };
 
+    enableMcpIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP servers config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.gemini-cli.settings.mcpServers`.
+
+        Note: Settings defined in {option}`programs.mcp.servers` are merged
+        with {option}`programs.gemini-cli.mcpServers`, with Gemini servers
+        taking precedence.
+      '';
+    };
+
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -158,10 +172,90 @@ in
         ```
       '';
     };
+
+    skills = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      example = lib.literalExpression ''
+        {
+          xlsx = ./skills/xlsx/SKILL.md;
+          data-analysis = ./skills/data-analysis;
+          pdf-processing = '''
+            ---
+            name: pdf-processing
+            description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+            ---
+
+            # PDF Processing
+
+            ## Quick start
+
+            Use pdfplumber to extract text from PDFs:
+
+            ```python
+            import pdfplumber
+
+            with pdfplumber.open("document.pdf") as pdf:
+                text = pdf.pages[0].extract_text()
+            ```
+          ''';
+        }
+      '';
+      description = ''
+        An attribute set of skill files to create in `~/.gemini/skills`.
+        The attribute name becomes the directory name.
+        The value is either inline content or a path to a file.
+      '';
+    };
+
+    mcpServers = lib.mkOption {
+      type = lib.types.attrsOf jsonFormat.type;
+      default = { };
+      description = "MCP (Model Context Protocol) servers configuration";
+      example = {
+        github = {
+          url = "https://api.githubcopilot.com/mcp/";
+        };
+        filesystem = {
+          command = "npx";
+          args = [
+            "-y"
+            "@modelcontextprotocol/server-filesystem"
+            "/tmp"
+          ];
+        };
+        database = {
+          command = "npx";
+          args = [
+            "-y"
+            "@bytebase/dbhub"
+            "--dsn"
+            "postgresql://user:pass@localhost:5432/db"
+          ];
+          env = {
+            DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
+          };
+        };
+        customTransport = {
+          url = "wss://example.com/mcp";
+          customOption = "value";
+          timeout = 5000;
+          trust = true;
+        };
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
+      {
+        programs.gemini-cli.settings.mcpServers = lib.mkIf (cfg.mcpServers != { }) cfg.mcpServers;
+      }
+      {
+        programs.gemini-cli.settings.mcpServers = lib.mkIf (
+          cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers
+        ) config.programs.mcp.servers;
+      }
       {
         home = {
           packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -199,6 +293,20 @@ in
                 tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
           }
         ) cfg.policies;
+      }
+      {
+        home.file = lib.mapAttrs' (
+          n: v:
+          if lib.isPath v && lib.pathIsDirectory v then
+            lib.nameValuePair ".gemini/skills/${n}" {
+              source = v;
+              recursive = true;
+            }
+          else
+            lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
+              if lib.isPath v then { source = v; } else { text = v; }
+            )
+        ) cfg.skills;
       }
     ]
   );
