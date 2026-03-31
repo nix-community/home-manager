@@ -209,7 +209,7 @@ in
     lib.mkMerge [
       {
         programs.gemini-cli.settings.mcpServers = lib.mkIf (
-          cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers
+          cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { }
         ) config.programs.mcp.servers;
       }
       {
