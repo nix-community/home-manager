@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
 "PO-Revision-Date: 2026-03-31 16:14+0000\n"
-"Last-Translator: Heman Gandhi <hemangandhi@gmail.com>\n"
+"Last-Translator: Turmoil Nailsis <indianrunner@duck.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
 "Language: ja\n"
@@ -255,8 +255,7 @@ msgstr ""
 
 #: home-manager/home-manager:1334
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
-"expire-generations は一つしか引数を取らないところ、%d 個が与えられました。"
+msgstr "expire-generations は一つしか引数を取らないところ、%d 個が与えられました。"
 
 #: home-manager/home-manager:1359
 msgid "Unknown command: %s"
