@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
 "PO-Revision-Date: 2026-03-31 16:14+0000\n"
-"Last-Translator: Robert Helgesson <robert@rycee.net>\n"
+"Last-Translator: HeartBlin913861820c094e37 <heartblin@proton.me>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/home-manager/"
 "cli/ro/>\n"
 "Language: ro\n"
@@ -257,8 +257,7 @@ msgstr "Ura!"
 
 #: home-manager/home-manager:1055
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
-"Home Manager a fost dezinstalat, dar fișierul home.nix a rămas neatins."
+msgstr "Home Manager a fost dezinstalat, dar fișierul home.nix a rămas neatins."
 
 #: home-manager/home-manager:1334
 msgid "expire-generations expects one argument, got %d."
