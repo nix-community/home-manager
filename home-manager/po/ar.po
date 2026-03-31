@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2025-08-25 05:01+0000\n"
+"PO-Revision-Date: 2026-03-31 16:16+0000\n"
 "Last-Translator: Omar Mohamed <mohamed.omar67492@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/home-manager/cli/"
 "ar/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -260,8 +260,7 @@ msgstr "مرحا!"
 
 #: home-manager/home-manager:1055
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
-"تم إلغاء تثبيت Home Manager ولكن تم ترك ملف home.nix الخاص بك دون مساس."
+msgstr "تم إلغاء تثبيت Home Manager ولكن تم ترك ملف home.nix الخاص بك دون مساس."
 
 #: home-manager/home-manager:1334
 msgid "expire-generations expects one argument, got %d."
