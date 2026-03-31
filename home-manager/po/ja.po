@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-01-22 09:42+0000\n"
-"Last-Translator: Takeru Mikenu <mikenu-jp@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2026-03-31 16:14+0000\n"
+"Last-Translator: Kento Okamoto <kentokamoto@protonmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/home-manager/"
 "cli/ja/>\n"
 "Language: ja\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -90,8 +90,8 @@ msgstr ""
 "\n"
 "   を設定に追加します。\n"
 "\n"
-"   もし Home Manager を直接インポートしているのであれば、 Home Manager パッ"
-"ケージを呼び出すときに `path` パラメーターを使って\n"
+"   もし Home Manager を直接インポートしているのであれば、 Home Manager "
+"パッケージを呼び出すときに `path` パラメーターを使って\n"
 "\n"
 "     pkgs.callPackage /path/to/home-manager-package { path = \"%s\"; }\n"
 "\n"
@@ -107,8 +107,7 @@ msgstr "Nixの健全性検査中です"
 
 #: home-manager/home-manager:173
 msgid "Could not find suitable profile directory, tried %s and %s"
-msgstr ""
-"適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
+msgstr "適切なプロファイル ディレクトリが見つかりませんでした。%s と %s を試しました"
 
 #. translators: Here "flake" is a noun that refers to the Nix Flakes feature.
 #: home-manager/home-manager:230
@@ -250,13 +249,12 @@ msgstr "イェイ！"
 #: home-manager/home-manager:1055
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
 msgstr ""
-"Home Managerはアンインストールされましたが、home.nixはそのまま残してありま"
-"す。"
+"Home Managerはアンインストールされましたが、home.nixはそのまま残してあります"
+"。"
 
 #: home-manager/home-manager:1334
 msgid "expire-generations expects one argument, got %d."
-msgstr ""
-"expire-generations は一つしか引数を取らないところ、%d 個が与えられました。"
+msgstr "expire-generations は一つしか引数を取らないところ、%d 個が与えられました。"
 
 #: home-manager/home-manager:1359
 msgid "Unknown command: %s"
