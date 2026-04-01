@@ -774,6 +774,8 @@ in
             Description = "Syncthing - Open Source Continuous File Synchronization";
             Documentation = "man:syncthing(1)";
             After = [ "network.target" ];
+            StartLimitIntervalSec = 60;
+            StartLimitBurst = 4;
           };
 
           Service = {
