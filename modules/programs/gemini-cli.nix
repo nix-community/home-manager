@@ -28,7 +28,7 @@ in
 
         Note: Any servers already present in
         {option}`programs.gemini-cli.settings.mcpServers`
-        is not overridden by server present under the same
+        is not overridden by servers present under the same
         name in {option}`programs.mcp.servers`
       '';
     };
@@ -51,10 +51,6 @@ in
       };
       description = ''
         JSON config for gemini-cli
-
-        Note: Do not add any 'mcpServers' key in this
-        option. Use {option}`programs.gemini-cli.mcpServers`
-        instead.
       '';
     };
 
@@ -211,7 +207,9 @@ in
       description = ''
         An attribute set of skill files to create in `~/.gemini/skills`.
         The attribute name becomes the directory name.
-        The value is either inline content or a path to a file.
+        The value is either inline content or a path to a file or directory.
+        If the path points to a directory, all files under that directory are symlinked to `~/.gemini/skills/<attrname>/`.
+        If the path points to a file, that file is symlinked to `~/.gemini/skills/<attrname>/SKILL.md`.
       '';
     };
 
