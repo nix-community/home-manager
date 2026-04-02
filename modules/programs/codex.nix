@@ -137,6 +137,30 @@ in
         }
       '';
     };
+
+    rules = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Codex rules files to manage under {file}`CODEX_HOME/rules/`.
+
+        The attribute name becomes the filename, with a {file}`.rules`
+        extension added automatically. The value is either:
+        - Inline content as a string
+        - A path to an existing rules file
+
+        This is useful for declaratively managing persistent
+        `prefix_rule()` definitions, including the default
+        {file}`default.rules` allow-list Codex writes when you accept
+        recurring approvals interactively.
+      '';
+      example = lib.literalExpression ''
+        {
+          default = "prefix_rule(pattern = [\"nix\", \"build\"], decision = \"allow\")\n";
+          github = ./codex/github.rules;
+        }
+      '';
+    };
   };
 
   config =
@@ -174,6 +198,11 @@ in
           lib.nameValuePair "${skillsDir}/${name}" {
             source = mkSkillDir content;
           };
+      mkRuleEntry =
+        name: content:
+        lib.nameValuePair "${configDir}/rules/${name}.rules" (
+          if isPathLikeContent content then { source = content; } else { text = content; }
+        );
 
       transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
         lib.mapAttrs (
@@ -207,6 +236,12 @@ in
           assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
           message = "`programs.codex.skills` must be a directory when set to a path";
         }
+        {
+          assertion = lib.all (content: !(isPathLikeContent content && lib.pathIsDirectory content)) (
+            lib.attrValues cfg.rules
+          );
+          message = "`programs.codex.rules` attribute values must be files when set to paths";
+        }
       ];
 
       home = {
@@ -220,7 +255,8 @@ in
             text = cfg.custom-instructions;
           };
         }
-        // lib.mapAttrs' mkSkillEntry skillSources;
+        // lib.mapAttrs' mkSkillEntry skillSources
+        // lib.mapAttrs' mkRuleEntry cfg.rules;
 
         sessionVariables = mkIf useXdgDirectories {
           CODEX_HOME = "${config.xdg.configHome}/codex";
