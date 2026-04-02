@@ -500,7 +500,6 @@ in
         shellAliases = mkIf cfg.vimdiffAlias { vimdiff = "nvim -d"; };
       };
 
-      programs.neovim.extraConfig = lib.concatStringsSep "\n" vimPackageInfo.userPluginViml;
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
 
       programs.neovim.extraWrapperArgs = mkIf (!wrapperHasUserConfig) [
