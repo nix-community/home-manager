@@ -3,7 +3,7 @@ WantedBy=graphical-session.target
 
 [Service]
 Environment=PATH=$PATH:@awww@/bin
-ExecStart=@awww@/bin/awww-daemon --no-cache --layer bottom
+ExecStart=@awww@/bin/awww-daemon
 Restart=always
 RestartSec=10
 
