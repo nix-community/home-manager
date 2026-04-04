@@ -178,6 +178,8 @@ in
           };
 
           Service = {
+            # Disable X11's screen blanking, rely on `xautolock`
+            ExecStartPre = "${lib.getExe pkgs.xset} s 0 0";
             ExecStart = lib.concatStringsSep " " (
               [
                 "${cfg.xautolock.package}/bin/xautolock"
