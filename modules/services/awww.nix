@@ -57,7 +57,12 @@ in
       };
 
       Service = {
-        ExecStart = "${lib.getExe' cfg.package "${cfg.package.meta.mainProgram}-daemon"} ${lib.escapeShellArgs cfg.extraArgs}";
+        ExecStart = lib.escapeShellArgs (
+          [
+            (lib.getExe' cfg.package "${cfg.package.meta.mainProgram}-daemon")
+          ]
+          ++ cfg.extraArgs
+        );
         Environment = [
           "PATH=$PATH:${lib.makeBinPath [ cfg.package ]}"
         ];

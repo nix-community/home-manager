@@ -6,15 +6,11 @@
       name = "awww";
       outPath = "@awww@";
     };
-    extraArgs = [
-      "--no-cache"
-      "--layer"
-      "bottom"
-    ];
   };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/awww.service
-    assertFileContent $serviceFile ${./awww-graphical-session-target.service}
+    assertFileExists $serviceFile
+    assertFileContent $serviceFile ${./awww-default.service}
   '';
 }
