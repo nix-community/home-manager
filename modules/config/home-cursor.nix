@@ -60,12 +60,28 @@ let
           example = "X_cursor";
           description = "The default cursor file to use within the package.";
         };
+
+        size = mkOption {
+          type = types.int;
+          example = 32;
+          default = config.home.pointerCursor.size;
+          defaultText = "config.home.pointerCursor.size";
+          description = "The cursor size for x11.";
+        };
       };
 
       gtk = {
         enable = mkEnableOption ''
           gtk config generation for {option}`home.pointerCursor`
         '';
+
+        size = mkOption {
+          type = types.int;
+          example = 32;
+          default = config.home.pointerCursor.size;
+          defaultText = "config.home.pointerCursor.size";
+          description = "The cursor size for gtk.";
+        };
       };
 
       dotIcons = {
@@ -92,6 +108,14 @@ let
 
       sway = {
         enable = mkEnableOption "sway config generation for {option}`home.pointerCursor`";
+
+        size = mkOption {
+          type = types.int;
+          example = 32;
+          default = config.home.pointerCursor.size;
+          defaultText = "config.home.pointerCursor.size";
+          description = "The cursor size for sway.";
+        };
       };
     };
   };
@@ -197,7 +221,7 @@ in
           ];
 
           home.sessionVariables = {
-            XCURSOR_SIZE = mkDefault cfg.size;
+            XCURSOR_SIZE = mkDefault cfg.x11.size;
             XCURSOR_THEME = mkDefault cfg.name;
           };
 
@@ -224,17 +248,20 @@ in
 
         (mkIf cfg.x11.enable {
           xsession.profileExtra = ''
-            ${lib.getExe pkgs.xsetroot} -xcf ${cursorPath} ${toString cfg.size}
+            ${lib.getExe pkgs.xsetroot} -xcf ${cursorPath} ${toString cfg.x11.size}
           '';
 
           xresources.properties = {
             "Xcursor.theme" = cfg.name;
-            "Xcursor.size" = cfg.size;
+            "Xcursor.size" = cfg.x11.size;
           };
         })
 
         (mkIf cfg.gtk.enable {
-          gtk.cursorTheme = mkDefault { inherit (cfg) package name size; };
+          gtk.cursorTheme = mkDefault {
+            inherit (cfg) package name;
+            inherit (cfg.gtk) size;
+          };
         })
 
         (mkIf cfg.hyprcursor.enable {
@@ -249,7 +276,7 @@ in
             config = {
               seat = {
                 "*" = {
-                  xcursor_theme = "${cfg.name} ${toString cfg.size}";
+                  xcursor_theme = "${cfg.name} ${toString cfg.sway.size}";
                 };
               };
             };
