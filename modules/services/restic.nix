@@ -55,6 +55,7 @@ let
       (attrsToEnvs (
         {
           RESTIC_PROGRESS_FPS = backup.progressFps;
+          RESTIC_PASSWORD_COMMAND = lib.escapeShellArg backup.passwordCommand;
           RESTIC_PASSWORD_FILE = backup.passwordFile;
           RESTIC_REPOSITORY = backup.repository;
           RESTIC_REPOSITORY_FILE = backup.repositoryFile;
@@ -104,11 +105,23 @@ in
               ssh-package = lib.mkPackageOption pkgs "openssh" { };
 
               passwordFile = lib.mkOption {
-                type = lib.types.str;
+                type = lib.types.nullOr lib.types.str;
+                default = null;
                 description = ''
                   A file containing the repository password.
                 '';
                 example = "/etc/nixos/restic-password";
+              };
+
+              passwordCommand = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+                description = ''
+                  Command which returns one of the repository's passwords. Since
+                  {env}`PATH` is set in the systemd service you need to provide
+                  the absolute path to the executable.
+                '';
+                example = lib.literalExpression ''"''${lib.getExe pkgs.gopass} show backups"'';
               };
 
               environmentFile = lib.mkOption {
@@ -394,10 +407,26 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = lib.mapAttrsToList (n: v: {
-      assertion = lib.xor (v.repository == null) (v.repositoryFile == null);
-      message = "services.restic.backups.${n}: exactly one of repository or repositoryFile should be set";
-    }) cfg.backups;
+    assertions =
+      let
+        assertBackup =
+          { assertion, message }:
+          lib.mapAttrsToList (n: v: {
+            assertion = assertion n v;
+            message = "services.restic.backups.${n}: ${message}";
+          }) cfg.backups;
+
+        mustSetRepository = assertBackup {
+          assertion = n: v: lib.xor (v.repository == null) (v.repositoryFile == null);
+          message = "exactly one of repository or repositoryFile should be set";
+        };
+
+        mustSetPassword = assertBackup {
+          assertion = n: v: lib.xor (v.passwordCommand == null) (v.passwordFile == null);
+          message = "exactly one of passwordCommand or passwordFile should be set";
+        };
+      in
+      mustSetPassword ++ mustSetRepository;
 
     systemd.user.services = lib.mapAttrs' (
       name: backup:
