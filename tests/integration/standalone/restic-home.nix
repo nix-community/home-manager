@@ -1,6 +1,7 @@
 { pkgs, ... }:
 let
   passwordFile = "/home/alice/password";
+  passwordCommand = "${pkgs.coreutils}/bin/cat /home/alice/password";
   paths = [ "/home/alice/files" ];
   exclude = [ "*exclude*" ];
 in
@@ -41,6 +42,12 @@ in
 
       basic = {
         inherit passwordFile paths exclude;
+        initialize = true;
+        repository = "/home/alice/repos/basic";
+      };
+
+      basic-command = {
+        inherit passwordCommand paths exclude;
         initialize = true;
         repository = "/home/alice/repos/basic";
       };
