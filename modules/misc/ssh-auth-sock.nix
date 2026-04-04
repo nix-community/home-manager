@@ -1,7 +1,7 @@
 { config, lib, ... }:
 
 let
-  cfg = config.ssh_auth_sock;
+  cfg = config.sshAuthSock;
 
   mkShellInitOption =
     shell:
@@ -44,7 +44,7 @@ in
 {
   meta.maintainers = [ lib.maintainers.bmrips ];
 
-  options.ssh_auth_sock.initialization = lib.mkOption {
+  options.sshAuthSock.initialization = lib.mkOption {
     description = ''
       Shell-specific code to initialize {env}`SSH_AUTH_SOCK`.
 

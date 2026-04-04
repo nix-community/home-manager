@@ -366,7 +366,7 @@ in
       ++ [ cfg.extraConfig ]
     );
 
-    ssh_auth_sock.initialization = lib.mkIf cfg.enableSshSupport {
+    sshAuthSock.initialization = lib.mkIf cfg.enableSshSupport {
       bash = ''
         unset SSH_AGENT_PID
         if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then

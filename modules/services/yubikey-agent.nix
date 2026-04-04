@@ -22,7 +22,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    ssh_auth_sock.initialization =
+    sshAuthSock.initialization =
       let
         socketPath =
           if pkgs.stdenv.isDarwin then
