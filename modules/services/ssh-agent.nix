@@ -60,7 +60,7 @@ in
 
   config = lib.mkIf cfg.enable {
 
-    ssh_auth_sock.initialization =
+    sshAuthSock.initialization =
       let
         socketPath =
           if pkgs.stdenv.isDarwin then

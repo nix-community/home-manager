@@ -4,7 +4,7 @@
   programs.nushell.enable = true;
   programs.zsh.enable = true;
 
-  ssh_auth_sock.initialization = {
+  sshAuthSock.initialization = {
     bash = "echo bash/zsh";
     fish = "echo fish";
     nushell = "echo nushell";
