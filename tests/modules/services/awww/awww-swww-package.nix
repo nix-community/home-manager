@@ -3,18 +3,13 @@
   services.awww = {
     enable = true;
     package = config.lib.test.mkStubPackage {
-      name = "awww";
-      outPath = "@awww@";
+      name = "swww";
+      outPath = "@swww@";
     };
-    extraArgs = [
-      "--no-cache"
-      "--layer"
-      "bottom"
-    ];
   };
 
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/awww.service
-    assertFileContent $serviceFile ${./awww-graphical-session-target.service}
+    assertFileContains $serviceFile "ExecStart=@swww@/bin/swww-daemon"
   '';
 }
