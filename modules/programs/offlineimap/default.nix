@@ -65,6 +65,9 @@ let
         optionalAttrs (passwordCommand != null) {
           remotepasseval = ''get_pass("${name}", [${arglist}]).strip(b"\n")'';
         };
+
+      # Use IMAP-specific username if set, otherwise fall back to account username
+      imapUser = if imap.userName != null then imap.userName else account.userName;
     in
     toIni {
       "Account ${name}" = {
@@ -82,7 +85,7 @@ let
 
       "Repository ${name}-remote" = {
         type = remoteType;
-        remoteuser = account.userName;
+        remoteuser = imapUser;
       }
       // remoteHost
       // remotePort
