@@ -134,6 +134,8 @@ in
     let
       joinCfg = cfgs: lib.concatStringsSep "\n" (lib.filter (v: v != "") cfgs);
 
+      bindsConf = builtins.readFile "${pkgs.aerc}/share/aerc/binds.conf";
+
       sectionsToINI =
         conf:
         let
@@ -277,6 +279,7 @@ in
         "${configDir}/binds.conf" = mkIf genBindsConf {
           text = joinCfg [
             header
+            bindsConf
             (mkINI cfg.extraBinds)
             (joinContextual accountsExtraBinds)
           ];
