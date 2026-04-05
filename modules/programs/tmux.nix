@@ -189,7 +189,7 @@ in
       enable = mkEnableOption "tmux";
 
       escapeTime = mkOption {
-        default = 500;
+        default = 10;
         example = 0;
         type = types.ints.unsigned;
         description = ''
