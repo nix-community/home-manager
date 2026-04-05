@@ -41,7 +41,7 @@
         :orientation "vertical"
         :halign "center"
         :valign "center"
-        "Are you sure you want to ${action}"
+        "Are you sure you want to ''${action}"
         (box
             :orientation "horizontal"
             :spacing 10
