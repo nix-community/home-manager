@@ -52,6 +52,12 @@ in
         repository = "/home/alice/repos/basic";
       };
 
+      repository-spaced = {
+        inherit passwordFile paths exclude;
+        initialize = true;
+        repository = "/home/alice/repos/repository with spaces!";
+      };
+
       repo-file = {
         inherit passwordFile paths exclude;
         initialize = true;

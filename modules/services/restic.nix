@@ -27,7 +27,7 @@ let
       (upper: "RCLONE_" + upper)
     ];
 
-  toEnvVal = v: if lib.isBool v then lib.boolToString v else toString v;
+  toEnvVal = v: if lib.isBool v then lib.boolToString v else lib.escapeShellArg v;
 
   attrsToEnvs =
     attrs:
@@ -55,7 +55,7 @@ let
       (attrsToEnvs (
         {
           RESTIC_PROGRESS_FPS = backup.progressFps;
-          RESTIC_PASSWORD_COMMAND = lib.escapeShellArg backup.passwordCommand;
+          RESTIC_PASSWORD_COMMAND = backup.passwordCommand;
           RESTIC_PASSWORD_FILE = backup.passwordFile;
           RESTIC_REPOSITORY = backup.repository;
           RESTIC_REPOSITORY_FILE = backup.repositoryFile;
