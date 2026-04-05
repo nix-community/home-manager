@@ -586,14 +586,6 @@
     name = "Bruno BELANYI";
     source = "nixpkgs";
   };
-  amesgen = {
-    email = "amesgen@amesgen.de";
-    github = "amesgen";
-    githubId = 15369874;
-    matrix = "@amesgen:amesgen.de";
-    name = "Alexander Esgen";
-    source = "nixpkgs";
-  };
   andre4ik3 = {
     email = "andre4ik3@fastmail.com";
     github = "andre4ik3";
