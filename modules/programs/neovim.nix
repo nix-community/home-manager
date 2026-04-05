@@ -502,9 +502,11 @@ in
 
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
 
-      programs.neovim.extraWrapperArgs = mkIf (!wrapperHasUserConfig) [
+      programs.neovim.extraWrapperArgs = [
         "--add-flags"
-        ''--cmd 'lua dofile("${pkgs.writeText "wrapper-init-lua" wrappedNeovim'.luaRcContent}")' ''
+        ''${
+          if !wrapperHasUserConfig then "--cmd" else "-c"
+        } 'lua dofile("${pkgs.writeText "wrapper-init-lua" wrappedNeovim'.luaRcContent}")' ''
       ];
 
       programs.neovim.initLua =
@@ -522,10 +524,6 @@ in
               null;
         in
         lib.mkMerge [
-          (lib.mkIf wrapperHasUserConfig (
-            # we want it to appear rather early
-            lib.mkOrder 200 wrappedNeovim'.luaRcContent
-          ))
           (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs && cfg.generatedConfigs.lua != "") (
             lib.mkAfter (foldedLuaBlock "user-associated plugin config" cfg.generatedConfigs.lua)
           ))
