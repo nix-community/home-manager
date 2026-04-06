@@ -217,6 +217,17 @@ in
         '';
       };
 
+      wrapGeneratedConfigs = mkOption {
+        type = types.enum [
+          null
+          "preload"
+          "postload"
+          "user"
+        ];
+        default = "preload";
+        description = "";
+      };
+
       initLua = mkOption {
         type = types.lines;
         default = "";
@@ -468,12 +479,14 @@ in
             };
           };
 
-      # This is a hack to avoid breaking config for users that dont want an init.lua to get generated
-      # See https://github.com/nix-community/home-manager/pull/8734
-      # we basically check if the generated wrapper lua config has any user-set config
-      # if not HM avoids creating an init.lua
-      # this makes the logic harder to understand and maintain so hopefully we can find a way out
-      wrapperHasUserConfig = wrappedNeovim'.luaRcContent != wrappedNeovim'.providerLuaRc;
+      hmGeneratedLua = pkgs.writeTextDir "lua/hm-generated.lua" (
+        lib.concatLines (
+          [ wrappedNeovim'.luaRcContent ]
+          ++ lib.optional (
+            lib.hasAttr "lua" cfg.generatedConfigs && cfg.generatedConfigs.lua != ""
+          ) cfg.generatedConfigs.lua
+        )
+      );
     in
     {
       programs.neovim = {
@@ -502,10 +515,20 @@ in
 
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
 
-      programs.neovim.extraWrapperArgs = mkIf (!wrapperHasUserConfig) [
-        "--add-flags"
-        ''--cmd 'lua dofile("${pkgs.writeText "wrapper-init-lua" wrappedNeovim'.luaRcContent}")' ''
-      ];
+      programs.neovim.extraWrapperArgs = mkIf (cfg.wrapGeneratedConfigs != null) (
+        [
+          "--add-flags"
+          ''--cmd 'lua vim.opt.runtimepath:prepend("${hmGeneratedLua}")' ''
+        ]
+        ++ lib.optionals (cfg.wrapGeneratedConfigs == "preload") [
+          "--add-flags"
+          ''--cmd 'lua require("hm-generated")' ''
+        ]
+        ++ lib.optionals (cfg.wrapGeneratedConfigs == "postload") [
+          "--add-flags"
+          ''-c 'lua require("hm-generated")' ''
+        ]
+      );
 
       programs.neovim.initLua =
         let
@@ -521,16 +544,11 @@ in
             else
               null;
         in
-        lib.mkMerge [
-          (lib.mkIf wrapperHasUserConfig (
-            # we want it to appear rather early
-            lib.mkOrder 200 wrappedNeovim'.luaRcContent
-          ))
-          (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs && cfg.generatedConfigs.lua != "") (
-            lib.mkAfter (foldedLuaBlock "user-associated plugin config" cfg.generatedConfigs.lua)
-          ))
-
-        ];
+        lib.mkIf (cfg.wrapGeneratedConfigs == null) (
+          lib.mkBefore (
+            foldedLuaBlock "user-associated plugin config" ''dofile("${hmGeneratedLua}/lua/hm-generated.lua")''
+          )
+        );
 
       # link the packpath in expected folder so that even unwrapped neovim can pick
       # home-manager's plugins
@@ -548,9 +566,18 @@ in
         (map (x: x.runtime) pluginsNormalized)
         ++ [
           {
-            "nvim/init.lua" = mkIf (cfg.initLua != "") {
-              text = cfg.initLua;
-            };
+            "nvim/init.lua" =
+              mkIf
+                (
+                  (builtins.elem cfg.wrapGeneratedConfigs [
+                    null
+                    "user"
+                  ])
+                  && cfg.initLua != ""
+                )
+                {
+                  text = cfg.initLua;
+                };
 
             "nvim/coc-settings.json" = mkIf cfg.coc.enable {
               source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
