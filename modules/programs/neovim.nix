@@ -219,7 +219,7 @@ in
 
       wrapGeneratedConfigs = mkOption {
         type = types.enum [
-          null
+          false
           "preload"
           "postload"
           "user"
@@ -515,7 +515,7 @@ in
 
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
 
-      programs.neovim.extraWrapperArgs = mkIf (cfg.wrapGeneratedConfigs != null) (
+      programs.neovim.extraWrapperArgs = mkIf (cfg.wrapGeneratedConfigs != false) (
         [
           "--add-flags"
           ''--cmd 'lua vim.opt.runtimepath:prepend("${hmGeneratedLua}")' ''
@@ -544,7 +544,7 @@ in
             else
               null;
         in
-        lib.mkIf (cfg.wrapGeneratedConfigs == null) (
+        lib.mkIf (cfg.wrapGeneratedConfigs == false) (
           lib.mkBefore (
             foldedLuaBlock "user-associated plugin config" ''dofile("${hmGeneratedLua}/lua/hm-generated.lua")''
           )
@@ -570,7 +570,7 @@ in
               mkIf
                 (
                   (builtins.elem cfg.wrapGeneratedConfigs [
-                    null
+                    false
                     "user"
                   ])
                   && cfg.initLua != ""
