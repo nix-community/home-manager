@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-31 16:14+0000\n"
-"Last-Translator: Tomi Ockier <ockier1@gmail.com>\n"
+"PO-Revision-Date: 2026-04-06 10:09+0000\n"
+"Last-Translator: Nara Díaz Viñolas <nara.diaz.vinolas@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/home-manager/cli/"
 "ca/>\n"
 "Language: ca\n"
@@ -27,7 +27,7 @@ msgstr "%: falta un argument per %s"
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%s: %s només pot ser utilitzat rere %s"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
@@ -204,7 +204,7 @@ msgstr "Impossible executar la compilació en un directori només lectura"
 
 #: home-manager/home-manager:822
 msgid "The configuration does not contain the specialisation \"%s\""
-msgstr ""
+msgstr "La configuració no conté l'especialització \"%s\""
 
 #: home-manager/home-manager:876
 msgid "No generation with ID %s"
