@@ -94,12 +94,6 @@ in
 
       home.packages = (
         [ cfg.package ]
-        # Alias awww to swww.
-        ++ (lists.optional settings.wallpaper.engine-enabled (
-          pkgs.writeShellScriptBin "awww" ''
-            exec swww "$@"
-          ''
-        ))
         # Install the appropriate theme-provider, if set.
         ++ (lists.optional (
           cfg.autoInstallDependencies
@@ -137,7 +131,9 @@ in
       };
 
       # Wallpaper-engine dependency.
-      services.swww.enable = mkIf settings.wallpaper.engine-enabled (lib.mkDefault true);
+      services.awww.enable = mkIf (cfg.autoInstallDependencies && settings.wallpaper.engine-enabled) (
+        lib.mkDefault true
+      );
     }
   );
 }
