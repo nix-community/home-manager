@@ -175,6 +175,11 @@ in
           "";
 
       mkConfig = {
+        notmuch = cfg: {
+          source = "notmuch://${config.accounts.email.maildirBasePath}";
+          maildir-store = "${config.accounts.email.maildirBasePath}";
+          maildir-account-path = "${cfg.maildir.path}";
+        };
         maildir = cfg: {
           source = "maildir://${config.accounts.email.maildirBasePath}/${cfg.maildir.path}";
         };
@@ -260,7 +265,9 @@ in
 
       sourceCfg =
         account:
-        if
+        if account.notmuch.enable then
+          mkConfig.notmuch account
+        else if
           account.mbsync.enable && account.mbsync.flatten == null && account.mbsync.subFolders == "Maildir++"
         then
           mkConfig.maildirpp account

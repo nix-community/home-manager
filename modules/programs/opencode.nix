@@ -74,7 +74,6 @@ in
       default = { };
       example = literalExpression ''
         {
-          theme = "opencode";
           model = "anthropic/claude-sonnet-4-20250514";
           autoshare = false;
           autoupdate = true;
@@ -85,6 +84,32 @@ in
         See <https://opencode.ai/docs/config/> for the documentation.
 
         Note, `"$schema": "https://opencode.ai/config.json"` is automatically added to the configuration.
+      '';
+    };
+
+    tui = mkOption {
+      inherit (jsonFormat) type;
+      default = { };
+      example = literalExpression ''
+        {
+          theme = "system";
+          keybinds = {
+            leader = "alt+b";
+          };
+        }
+      '';
+
+      description = ''
+        TUI-specific configuration written to {file}`$XDG_CONFIG_HOME/opencode/tui.json`.
+
+        This includes theme, keybinds, scroll settings, and other TUI-only options.
+        See <https://opencode.ai/docs/tui#configure> for the documentation.
+
+        Note that `"$schema": "https://opencode.ai/tui.json"` is automatically added.
+
+        Since OpenCode v1.2.15, TUI settings must be in a separate tui.json file.
+        Settings like `theme`, `keybinds`, and `tui` in {option}`programs.opencode.settings`
+        are deprecated and should be moved here.
       '';
     };
 
@@ -109,10 +134,24 @@ in
           "DEBUG"
         ];
         description = ''
-          Extra arguments to pass to the opencode web command.
+          Extra arguments to pass to the opencode serve command.
 
           These arguments override the "server" options defined in the configuration file.
           See <https://opencode.ai/docs/web/#config-file> for available options.
+        '';
+      };
+
+      environmentFile = mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        example = "/run/secrets/opencode-web";
+        description = ''
+          Path to a file containing environment variables for the opencode web
+          service, in the format of an EnvironmentFile as described by
+          {manpage}`systemd.exec(5)` (i.e. `KEY=VALUE` pairs, one per line).
+
+          This is the recommended way to set `OPENCODE_SERVER_PASSWORD` without
+          exposing the secret value in the Nix store.
         '';
       };
     };
@@ -302,7 +341,7 @@ in
         If a path is used, it is expected to contain theme files.
         The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/themes/`.
 
-        Set `programs.opencode.settings.theme` to enable the custom theme.
+        Set `programs.opencode.tui.theme` to enable the custom theme.
         See <https://opencode.ai/docs/themes/> for the documentation.
       '';
     };
@@ -375,6 +414,31 @@ in
       }
     ];
 
+    warnings =
+      let
+        deprecatedConfigKeys = lib.filter (
+          k:
+          lib.elem k [
+            "theme"
+            "keybinds"
+            "tui"
+          ]
+        ) (lib.attrNames cfg.settings);
+
+        packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
+        hasTuiConfig = lib.versionAtLeast packageVersion "1.2.15";
+      in
+      lib.optionals (hasTuiConfig && deprecatedConfigKeys != [ ]) [
+        ''
+          programs.opencode.settings contains deprecated TUI-specific keys: ${lib.concatStringsSep ", " deprecatedConfigKeys}
+
+          These settings should be moved to programs.opencode.tui instead.
+
+          OpenCode v1.2.15+ requires TUI settings in a separate tui.json file.
+          See: https://opencode.ai/docs/config#tui
+        ''
+      ];
+
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
@@ -393,6 +457,15 @@ in
             }
             // mergedSettings
           );
+      };
+
+      "opencode/tui.json" = mkIf (cfg.tui != { }) {
+        source = jsonFormat.generate "tui.json" (
+          {
+            "$schema" = "https://opencode.ai/tui.json";
+          }
+          // cfg.tui
+        );
       };
 
       "opencode/AGENTS.md" = (
@@ -458,7 +531,6 @@ in
       if
         (lib.isPath content && lib.pathIsDirectory content)
         || (builtins.isString content && lib.hasPrefix builtins.storeDir content)
-
       then
         lib.nameValuePair "opencode/skills/${name}" {
           source = content;
@@ -498,9 +570,12 @@ in
         };
 
         Service = {
-          ExecStart = "${lib.getExe cfg.package} web ${lib.escapeShellArgs webCfg.extraArgs}";
+          ExecStart = "${lib.getExe cfg.package} serve ${lib.escapeShellArgs webCfg.extraArgs}";
           Restart = "always";
           RestartSec = 5;
+        }
+        // lib.optionalAttrs (webCfg.environmentFile != null) {
+          EnvironmentFile = webCfg.environmentFile;
         };
 
         Install = {
@@ -513,11 +588,24 @@ in
       opencode-web = {
         enable = true;
         config = {
-          ProgramArguments = [
-            (lib.getExe cfg.package)
-            "web"
-          ]
-          ++ webCfg.extraArgs;
+          ProgramArguments =
+            let
+              programArguments = [
+                (lib.getExe cfg.package)
+                "serve"
+              ]
+              ++ webCfg.extraArgs;
+              opencodeLaunchdWrapper = pkgs.writeShellScriptBin "opencode-launchd-wrapper" ''
+                source ${webCfg.environmentFile}
+                ${lib.escapeShellArgs programArguments}
+              '';
+            in
+            if webCfg.environmentFile == null then
+              programArguments
+            else
+              [
+                (lib.getExe opencodeLaunchdWrapper)
+              ];
           KeepAlive = {
             Crashed = true;
             SuccessfulExit = false;

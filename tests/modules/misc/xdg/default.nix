@@ -7,4 +7,6 @@
   xdg-user-dirs-mixed = ./user-dirs-mixed.nix;
   xdg-user-dirs-null = ./user-dirs-null.nix;
   xdg-user-dirs-short = ./user-dirs-short.nix;
+  xdg-user-dirs-session-vars-legacy = ./user-dirs-session-vars-legacy.nix;
+  xdg-user-dirs-session-vars-current = ./user-dirs-session-vars-current.nix;
 }

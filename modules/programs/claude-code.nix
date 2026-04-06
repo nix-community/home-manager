@@ -50,6 +50,7 @@ let
       default = null;
       inherit description example;
     };
+
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -134,6 +135,51 @@ in
         includeCoAuthoredBy = false;
       };
       description = "JSON configuration for Claude Code settings.json";
+    };
+
+    plugins = lib.mkOption {
+      type = with lib.types; listOf (either package path);
+      default = [ ];
+      description = ''
+        List of plugins to use when running Claude Code.
+        Each entry is either:
+        - A path to the plugin directory
+        - The plugin package, whether a nix package or the output of a fetcher
+        Plugins are enabled via a `--plugin-dir` argument in the wrapper script.
+      '';
+      example = literalExpression ''
+        [
+          ./my-local-plugin
+          fetchFromGithub {
+            owner = "some-github-org";
+            repo = "claude-plugin";
+            rev = "779a68ebc2a75e4a184d2c87e5a43a758e6458a1";
+            sha256 = "228fdd7e5908ea1d2f65218ecd9c71e1eefa0834d200d55fbb8bf8b5563acec0";
+          }
+        ]
+      '';
+    };
+
+    marketplaces = lib.mkOption {
+      type = with lib.types; attrsOf (either package path);
+      default = { };
+      description = ''
+        Custom marketplaces for Claude Code plugins.
+        The attribute name becomes the marketplace name, and the value is either:
+        - A path to the marketplace directory
+        - The marketplace package, whether a nix package or the output of a fetcher
+      '';
+      example = literalExpression ''
+        {
+          local-marketplace = ./my-local-marketplace;
+          gh-marketplace = fetchFromGithub {
+            owner = "some-github-org";
+            repo = "claude-marketplace";
+            rev = "8a873a220b8427b25b03ce1a821593a24e098c34";
+            sha256 = "5c2dce95122b5bb73fa547edabbb6c3061c2d193d11e51faecd4d22659e67279";
+          };
+        }
+      '';
     };
 
     agents = mkContentOption {
@@ -476,6 +522,22 @@ in
           }
         else
           nameValuePair ".claude/skills/${name}/SKILL.md" (mkSourceEntry content);
+
+      mkMarketplaceEntry = name: content: {
+        source = {
+          source = "directory";
+          path = content;
+        };
+      };
+
+      mkInstalledMarketplaceEntry =
+        name: content:
+        (mkMarketplaceEntry name content)
+        // {
+          installLocation = content;
+          lastUpdated = "1970-01-01T00:00:00Z";
+        };
+
     in
     lib.mkIf cfg.enable {
       assertions =
@@ -496,9 +558,9 @@ in
         [
           {
             assertion =
-              (cfg.mcpServers == { } && cfg.lspServers == { } && !cfg.enableMcpIntegration)
+              (cfg.mcpServers == { } && cfg.lspServers == { } && !cfg.enableMcpIntegration && cfg.plugins == [ ])
               || cfg.package != null;
-            message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, or `enableMcpIntegration` is configured";
+            message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, `enableMcpIntegration`, or `plugins` is configured";
           }
           {
             assertion = !(cfg.memory.text != null && cfg.memory.source != null);
@@ -531,8 +593,15 @@ in
               map (pluginFile: "install -Dm644 ${pluginFile.path} $out/${pluginFile.name}") pluginFiles
             )
           );
+          allPluginPaths = (if pluginFiles != [ ] then [ pluginDir ] else [ ]) ++ cfg.plugins;
+          wrapperArgs = lib.flatten (
+            map (p: [
+              "--plugin-dir"
+              "${p}"
+            ]) allPluginPaths
+          );
         in
-        if pluginFiles != [ ] then
+        if allPluginPaths != [ ] then
           pkgs.symlinkJoin {
             name = "claude-code";
             paths = [ cfg.package ];
@@ -540,7 +609,7 @@ in
               mv $out/bin/claude $out/bin/.claude-wrapped
               cat > $out/bin/claude <<EOF
               #! ${pkgs.bash}/bin/bash -e
-              exec -a "\$0" "$out/bin/.claude-wrapped" --plugin-dir ${pluginDir} "\$@"
+              exec -a "\$0" "$out/bin/.claude-wrapped" ${lib.escapeShellArgs wrapperArgs} "\$@"
               EOF
               chmod +x $out/bin/claude
             '';
@@ -553,11 +622,14 @@ in
         packages = lib.mkIf (cfg.package != null) [ cfg.finalPackage ];
 
         file = lib.mkMerge [
-          (lib.mkIf (cfg.settings != { }) {
+          (lib.mkIf (cfg.settings != { } || cfg.marketplaces != { }) {
             ".claude/settings.json".source = jsonFormat.generate "claude-code-settings.json" (
               cfg.settings
               // {
                 "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+              }
+              // optionalAttrs (cfg.marketplaces != { }) {
+                extraKnownMarketplaces = lib.mapAttrs mkMarketplaceEntry cfg.marketplaces;
               }
             );
           })
@@ -566,6 +638,12 @@ in
           })
           (lib.mkIf (cfg.memory.source != null) {
             ".claude/CLAUDE.md".source = cfg.memory.source;
+          })
+          (lib.mkIf (cfg.marketplaces != { }) {
+            ".claude/plugins/known_marketplaces.json".source =
+              jsonFormat.generate "claude-code-known-marketplaces.json" (
+                lib.mapAttrs mkInstalledMarketplaceEntry cfg.marketplaces
+              );
           })
           (mkMarkdownEntries "agents" cfg.agents)
           (mkMarkdownEntries "commands" cfg.commands)

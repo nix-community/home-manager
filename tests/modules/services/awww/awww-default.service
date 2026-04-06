@@ -1,0 +1,14 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+Environment=PATH=$PATH:@awww@/bin
+ExecStart=@awww@/bin/awww-daemon
+Restart=always
+RestartSec=10
+
+[Unit]
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+Description=awww-daemon
+PartOf=graphical-session.target

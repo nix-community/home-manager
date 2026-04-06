@@ -99,12 +99,14 @@ in
 
         If an attribute set is used, the attribute name becomes the skill directory name,
         and the value is either:
-        - Inline content as a string (creates {file}`<skills-dir>/<name>/SKILL.md`)
-        - A path to a file (creates {file}`<skills-dir>/<name>/SKILL.md`)
-        - A path to a directory (creates {file}`<skills-dir>/<name>/` with all files)
+        - Inline content as a string (creates a generated skill directory at {file}`<skills-dir>/<name>/`)
+        - A path to a file (creates a generated skill directory at {file}`<skills-dir>/<name>/`)
+        - A path to a directory (symlinks {file}`<skills-dir>/<name>/` to that directory)
 
         If a path is used, it is expected to contain one folder per skill name, each
-        containing a {file}`SKILL.md`. The directory is symlinked to {file}`<skills-dir>/`.
+        containing a {file}`SKILL.md`. Each top-level skill entry is symlinked into
+        {file}`<skills-dir>/`, leaving {file}`<skills-dir>/` itself as a normal
+        directory so unmanaged skills can coexist.
 
         The skills target directory depends on Codex version:
         - {file}`~/.agents/skills` for Codex >= 0.94.0
@@ -135,6 +137,30 @@ in
         }
       '';
     };
+
+    rules = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      description = ''
+        Codex rules files to manage under {file}`CODEX_HOME/rules/`.
+
+        The attribute name becomes the filename, with a {file}`.rules`
+        extension added automatically. The value is either:
+        - Inline content as a string
+        - A path to an existing rules file
+
+        This is useful for declaratively managing persistent
+        `prefix_rule()` definitions, including the default
+        {file}`default.rules` allow-list Codex writes when you accept
+        recurring approvals interactively.
+      '';
+      example = lib.literalExpression ''
+        {
+          default = "prefix_rule(pattern = [\"nix\", \"build\"], decision = \"allow\")\n";
+          github = ./codex/github.rules;
+        }
+      '';
+    };
   };
 
   config =
@@ -144,6 +170,39 @@ in
       configDir = if useXdgDirectories then "${xdgConfigHome}/codex" else ".codex";
       configFileName = if isTomlConfig then "config.toml" else "config.yaml";
       skillsDir = if isAgentsSkillsSupported then ".agents/skills" else "${configDir}/skills";
+
+      # TODO: Remove this workaround once Codex supports symlinked SKILL.md
+      # files again. Upstream only supports symlinking the containing skill
+      # directory today: https://github.com/openai/codex/issues/10470
+      isStorePathString = content: builtins.isString content && lib.hasPrefix builtins.storeDir content;
+      isPathLikeContent = content: lib.isPath content || isStorePathString content;
+      mkSkillDir =
+        content:
+        pkgs.writeTextDir "SKILL.md" (
+          if isPathLikeContent content then builtins.readFile content else content
+        );
+      skillSources =
+        if builtins.isAttrs cfg.skills then
+          cfg.skills
+        else if lib.isPath cfg.skills && lib.pathIsDirectory cfg.skills then
+          lib.mapAttrs (name: _type: cfg.skills + "/${name}") (builtins.readDir cfg.skills)
+        else
+          { };
+      mkSkillEntry =
+        name: content:
+        if isPathLikeContent content && lib.pathIsDirectory content then
+          lib.nameValuePair "${skillsDir}/${name}" {
+            source = content;
+          }
+        else
+          lib.nameValuePair "${skillsDir}/${name}" {
+            source = mkSkillDir content;
+          };
+      mkRuleEntry =
+        name: content:
+        lib.nameValuePair "${configDir}/rules/${name}.rules" (
+          if isPathLikeContent content then { source = content; } else { text = content; }
+        );
 
       transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
         lib.mapAttrs (
@@ -177,6 +236,12 @@ in
           assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
           message = "`programs.codex.skills` must be a directory when set to a path";
         }
+        {
+          assertion = lib.all (content: !(isPathLikeContent content && lib.pathIsDirectory content)) (
+            lib.attrValues cfg.rules
+          );
+          message = "`programs.codex.rules` attribute values must be files when set to paths";
+        }
       ];
 
       home = {
@@ -189,23 +254,9 @@ in
           "${configDir}/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
             text = cfg.custom-instructions;
           };
-          "${skillsDir}" = lib.mkIf (lib.isPath cfg.skills) {
-            source = cfg.skills;
-            recursive = true;
-          };
         }
-        // (lib.mapAttrs' (
-          name: content:
-          if lib.isPath content && lib.pathIsDirectory content then
-            lib.nameValuePair "${skillsDir}/${name}" {
-              source = content;
-              recursive = true;
-            }
-          else
-            lib.nameValuePair "${skillsDir}/${name}/SKILL.md" (
-              if lib.isPath content then { source = content; } else { text = content; }
-            )
-        ) (if builtins.isAttrs cfg.skills then cfg.skills else { }));
+        // lib.mapAttrs' mkSkillEntry skillSources
+        // lib.mapAttrs' mkRuleEntry cfg.rules;
 
         sessionVariables = mkIf useXdgDirectories {
           CODEX_HOME = "${config.xdg.configHome}/codex";

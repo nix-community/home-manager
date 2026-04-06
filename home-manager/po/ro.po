@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2024-09-09 10:09+0000\n"
+"PO-Revision-Date: 2026-03-31 16:14+0000\n"
 "Last-Translator: Felix Puscasu <puscasu.felix1@gmail.com>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/home-manager/"
 "cli/ro/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -257,8 +257,7 @@ msgstr "Ura!"
 
 #: home-manager/home-manager:1055
 msgid "Home Manager is uninstalled but your home.nix is left untouched."
-msgstr ""
-"Home Manager a fost dezinstalat, dar fișierul home.nix a rămas neatins."
+msgstr "Home Manager a fost dezinstalat, dar fișierul home.nix a rămas neatins."
 
 #: home-manager/home-manager:1334
 msgid "expire-generations expects one argument, got %d."

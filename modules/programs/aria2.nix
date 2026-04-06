@@ -7,15 +7,18 @@
 let
   cfg = config.programs.aria2;
 
-  formatLine =
-    n: v:
-    let
-      formatValue = v: if builtins.isBool v then (if v then "true" else "false") else toString v;
-    in
-    "${n}=${formatValue v}";
+  keyValueFormat = pkgs.formats.keyValue { };
 in
 {
   meta.maintainers = [ lib.maintainers.justinlovinger ];
+
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "aria2"
+      "extraConfig"
+    ] "This option has been removed. Please use 'programs.aria2.settings' instead.")
+  ];
 
   options.programs.aria2 = {
     enable = lib.mkEnableOption "aria2";
@@ -23,14 +26,7 @@ in
     package = lib.mkPackageOption pkgs "aria2" { nullable = true; };
 
     settings = lib.mkOption {
-      type =
-        with lib.types;
-        attrsOf (oneOf [
-          bool
-          float
-          int
-          str
-        ]);
+      type = keyValueFormat.type;
       default = { };
       description = ''
         Options to add to {file}`aria2.conf` file.
@@ -49,22 +45,31 @@ in
       '';
     };
 
-    extraConfig = lib.mkOption {
-      type = lib.types.lines;
-      default = "";
-      description = ''
-        Extra lines added to {file}`aria2.conf` file.
-      '';
-    };
+    systemd.enable = lib.mkEnableOption "Aria2 systemd integration";
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."aria2/aria2.conf".text = lib.concatStringsSep "\n" (
-      [ ]
-      ++ lib.mapAttrsToList formatLine cfg.settings
-      ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
-    );
+    xdg.configFile."aria2/aria2.conf" = lib.mkIf (cfg.settings != { }) {
+      source = keyValueFormat.generate "aria2.conf" cfg.settings;
+    };
+
+    systemd.user.services.aria2 = lib.mkIf cfg.systemd.enable {
+      Unit = {
+        Description = "Aria2c daemon";
+        Documentation = "man:aria2c(1)";
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."aria2/aria2.conf".source}"
+        ];
+      };
+
+      Service = {
+        ExecStart = "${lib.getExe cfg.package} --enable-rpc";
+        Restart = "on-failure";
+      };
+
+      Install.WantedBy = [ "default.target" ];
+    };
   };
 }

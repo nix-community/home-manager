@@ -22,24 +22,8 @@ let
       type = lib.types.bool;
     };
 
-in
-rec {
-  # Produces a Bourne shell like statement that prepend new values to
-  # an possibly existing variable, using sep(arator).
-  # Example:
-  #   prependToVar ":" "PATH" [ "$HOME/bin" "$HOME/.local/bin" ]
-  #   => "$HOME/bin:$HOME/.local/bin:${PATH:+:}\$PATH"
-  prependToVar =
-    sep: n: v:
-    "${lib.concatStringsSep sep v}\${${n}:+${sep}}\$${n}";
-
   # Produces a Bourne shell like variable export statement.
   export = n: v: ''export ${n}="${toString v}"'';
-
-  # Given an attribute set containing shell variable names and their
-  # assignment, this function produces a string containing an export
-  # statement for each set entry.
-  exportAll = vars: lib.concatStringsSep "\n" (lib.mapAttrsToList export vars);
 
   # Wrap a list of strings to a given line width.
   # Packs as many items as possible per line without exceeding maxWidth.
@@ -69,6 +53,23 @@ rec {
       } items;
     in
     foldResult.finishedLines ++ lib.optional (foldResult.currentLine != "") foldResult.currentLine;
+in
+{
+  inherit export wrapLines;
+
+  # Produces a Bourne shell like statement that prepend new values to
+  # an possibly existing variable, using sep(arator).
+  # Example:
+  #   prependToVar ":" "PATH" [ "$HOME/bin" "$HOME/.local/bin" ]
+  #   => "$HOME/bin:$HOME/.local/bin:${PATH:+:}\$PATH"
+  prependToVar =
+    sep: n: v:
+    "${lib.concatStringsSep sep v}\${${n}:+${sep}}\$${n}";
+
+  # Given an attribute set containing shell variable names and their
+  # assignment, this function produces a string containing an export
+  # statement for each set entry.
+  exportAll = vars: lib.concatStringsSep "\n" (lib.mapAttrsToList export vars);
 
   # Formats a list of items for shell array content with intelligent width optimization.
   # IMPORTANT: This formats the CONTENTS of an array (what goes inside parentheses),

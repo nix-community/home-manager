@@ -107,4 +107,113 @@
           value;
     in
     pathStr: attrs: migrate pathStr attrs;
+
+  /*
+    Builds the state-version migration values for options whose defaults change
+    based on `home.stateVersion`.
+
+    In the default mode, this returns `default` and `defaultText` for direct use
+    in `mkOption`, and emits the migration warning with `lib.warn` when the
+    legacy branch is active.
+
+    In deferred mode (`deferWarningToConfig = true`), this keeps `default`
+    pinned to `current.value` and additionally returns:
+      - `warning`: the warning text to add to `config.warnings`
+      - `shouldWarn`: whether the warning should be emitted
+      - `effectiveDefault`: the state-version-selected value
+      - `optionUsesDefaultPriority`: whether the option is still at its module default priority
+
+    Deferred mode is intended for merged attrset options where warning from the
+    option default itself is too early to be silenced reliably by explicit user
+    assignments. It requires passing both `config` and `options`.
+
+    Direct example:
+      let
+        stateVersionDefault = lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "26.05";
+          optionPath = [ "programs" "example" "foo" ];
+          legacy.value = "old";
+          current.value = "new";
+        };
+      in
+      lib.mkOption {
+        inherit (stateVersionDefault) default defaultText;
+      };
+
+    Deferred-warning example:
+      let
+        stateVersionDefault = lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          inherit config options;
+          since = "26.05";
+          optionPath = [ "programs" "example" "settings" ];
+          legacy.value = { FOO = "legacy"; };
+          current.value = { };
+          deferWarningToConfig = true;
+        };
+      in {
+        options.programs.example.settings = lib.mkOption {
+          default = { };
+          inherit (stateVersionDefault) defaultText;
+        };
+
+        config.warnings = lib.optional stateVersionDefault.shouldWarn stateVersionDefault.warning;
+      };
+  */
+  mkStateVersionOptionDefault =
+    {
+      stateVersion,
+      since,
+      optionPath,
+      legacy,
+      current,
+      extraWarning ? "",
+      config ? null,
+      options ? null,
+      warningPriority ? (lib.mkOptionDefault { }).priority,
+      shouldWarn ? null,
+      deferWarningToConfig ? false,
+    }:
+    let
+      option = lib.showOption optionPath;
+      legacyText = legacy.text or (lib.generators.toPretty { } legacy.value);
+      currentText = current.text or (lib.generators.toPretty { } current.value);
+      warning = ''
+        The default value of `${option}` has changed from `${legacyText}` to `${currentText}`.
+        You are currently using the legacy default (`${legacyText}`) because `home.stateVersion` is less than "${since}".
+        To silence this warning and keep legacy behavior, set:
+          ${option} = ${legacyText};
+        To adopt the new default behavior, set:
+          ${option} = ${currentText};
+      ''
+      + lib.optionalString (extraWarning != "") ("\n" + extraWarning);
+      canDeferWarning = config != null && options != null;
+      optionInfo = lib.optionalAttrs canDeferWarning (lib.getAttrFromPath optionPath options);
+      optionUsesDefaultPriority = canDeferWarning && optionInfo.highestPrio >= warningPriority;
+
+      usingLegacyBranch = lib.versionOlder stateVersion since;
+    in
+    assert lib.assertMsg (!deferWarningToConfig || canDeferWarning) ''
+      `lib.hm.deprecations.mkStateVersionOptionDefault` requires both `config` and `options`
+      when `deferWarningToConfig = true`.
+    '';
+    {
+      default =
+        if usingLegacyBranch && !deferWarningToConfig then lib.warn warning legacy.value else current.value;
+      defaultText = lib.literalExpression ''
+        if lib.versionAtLeast config.home.stateVersion "${since}" then ${currentText} else ${legacyText}
+      '';
+      effectiveDefault = if usingLegacyBranch then legacy.value else current.value;
+      inherit warning optionUsesDefaultPriority;
+      shouldWarn =
+        deferWarningToConfig
+        && usingLegacyBranch
+        && (
+          if lib.isFunction shouldWarn then
+            shouldWarn { inherit optionInfo optionUsesDefaultPriority; }
+          else
+            optionUsesDefaultPriority
+        );
+    };
 }

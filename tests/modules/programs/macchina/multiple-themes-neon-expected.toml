@@ -1,0 +1,11 @@
+hide_ascii = true
+separator = "=>"
+separator_color = "#ff00ff"
+spacing = 3
+
+[bar]
+glyph = "#"
+hide_delimiters = false
+symbol_close = ")"
+symbol_open = "("
+visible = true

@@ -45,8 +45,10 @@ let
       ./misc/pam.nix
       ./misc/qt.nix
       ./misc/qt/kconfig.nix
+      ./misc/qt/kvantum.nix
       ./misc/shell.nix
       ./misc/specialisation.nix
+      ./misc/ssh-auth-sock.nix
       ./misc/submodule-support.nix
       ./misc/tmpfiles.nix
       ./misc/uninstall.nix

@@ -1,0 +1,18 @@
+{
+  "test-duplicate": {
+    "installLocation": "/nix/store/00000000000000000000000000000000-test-marketplace",
+    "lastUpdated": "1970-01-01T00:00:00Z",
+    "source": {
+      "path": "/nix/store/00000000000000000000000000000000-test-marketplace",
+      "source": "directory"
+    }
+  },
+  "test-market": {
+    "installLocation": "/nix/store/00000000000000000000000000000000-test-marketplace",
+    "lastUpdated": "1970-01-01T00:00:00Z",
+    "source": {
+      "path": "/nix/store/00000000000000000000000000000000-test-marketplace",
+      "source": "directory"
+    }
+  }
+}

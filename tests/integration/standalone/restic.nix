@@ -134,6 +134,40 @@ in
         f"expected diff -ur restore/basic/home/alice/files files to contain \
           {expected1} and {expected2}, but got {actual}"
 
+    with subtest("Repository with spaces backup"):
+      systemctl_succeed_as_alice("start restic-backups-repository-spaced.service")
+      actual = succeed_as_alice("restic-repository-spaced ls latest")
+      assert_list("restic-repository-spaced ls latest", expectedIncluded, actual)
+
+      assert "exclude" not in actual, \
+        f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
+
+    with subtest("Repository with spaces restore"):
+      succeed_as_alice("restic-repository-spaced restore latest --target restore/repository-spaced")
+      actual = fail_as_alice("diff -urNa restore/repository-spaced/home/alice/files files")
+      expected1 = "alices-secret-diary"
+      expected2 = "alices-bank-details"
+      assert expected1 in actual and expected2 in actual, \
+        f"expected diff -ur restore/repository-spaced/home/alice/files files to contain \
+          {expected1} and {expected2}, but got {actual}"
+
+    with subtest("Basic backup (password command)"):
+      systemctl_succeed_as_alice("start restic-backups-basic-command.service")
+      actual = succeed_as_alice("restic-basic-command ls latest")
+      assert_list("restic-basic-command ls latest", expectedIncluded, actual)
+
+      assert "exclude" not in actual, \
+        f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
+
+    with subtest("Basic restore (password command)"):
+      succeed_as_alice("restic-basic-command restore latest --target restore/basic-command")
+      actual = fail_as_alice("diff -urNa restore/basic-command/home/alice/files files")
+      expected1 = "alices-secret-diary"
+      expected2 = "alices-bank-details"
+      assert expected1 in actual and expected2 in actual, \
+        f"expected diff -ur restore/basic-command/home/alice/files files to contain \
+          {expected1} and {expected2}, but got {actual}"
+
     with subtest("Fails to start with an un-initialized repo"):
       systemctl_fail_as_alice("start restic-backups-noinit.service")
 

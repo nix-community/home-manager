@@ -10,6 +10,16 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
+  # atuin 18.13.0 deprecated `atuin daemon` in favour of `atuin daemon start`
+  daemonArgs =
+    if lib.versionAtLeast cfg.package.version "18.13.0" then
+      [
+        "daemon"
+        "start"
+      ]
+    else
+      [ "daemon" ];
+
   inherit (lib) mkIf mkOption types;
 in
 {
@@ -223,12 +233,6 @@ in
         (mkIf daemonCfg.enable {
           assertions = [
             {
-              assertion = lib.versionAtLeast cfg.package.version "18.2.0";
-              message = ''
-                The Atuin daemon requires at least version 18.2.0 or later.
-              '';
-            }
-            {
               assertion = config.systemd.user.enable || config.launchd.enable;
               message = "The Atuin daemon can only be configured on systems with systemd or launchd.";
             }
@@ -252,7 +256,7 @@ in
               WantedBy = [ "default.target" ];
             };
             Service = {
-              ExecStart = "${lib.getExe cfg.package} daemon";
+              ExecStart = "${lib.getExe cfg.package} ${lib.concatStringsSep " " daemonArgs}";
               Environment = lib.optionals (daemonCfg.logLevel != null) [ "ATUIN_LOG=${daemonCfg.logLevel}" ];
               Restart = "on-failure";
               RestartSteps = 3;
@@ -281,10 +285,7 @@ in
           launchd.agents.atuin-daemon = {
             enable = true;
             config = {
-              ProgramArguments = [
-                "${lib.getExe cfg.package}"
-                "daemon"
-              ];
+              ProgramArguments = [ (lib.getExe cfg.package) ] ++ daemonArgs;
               EnvironmentVariables = lib.optionalAttrs (daemonCfg.logLevel != null) {
                 ATUIN_LOG = daemonCfg.logLevel;
               };

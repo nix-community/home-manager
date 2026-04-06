@@ -22,7 +22,6 @@
     enable = true;
     enableMcpIntegration = true;
     settings = {
-      theme = "opencode";
       model = "anthropic/claude-sonnet-4-20250514";
       # User's custom MCP settings should override generated ones
       mcp = {

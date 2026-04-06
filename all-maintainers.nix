@@ -230,6 +230,14 @@
     name = "kiara";
     source = "nixpkgs";
   };
+  Kladki = {
+    email = "matthias@ahouansou.cz";
+    github = "Kladki";
+    githubId = 158313939;
+    matrix = "@matthias:ahouansou.cz";
+    name = "Matthias Ahouansou";
+    source = "nixpkgs";
+  };
   Kranzes = {
     email = "personal@ilanjoselevich.com";
     github = "Kranzes";
@@ -576,14 +584,6 @@
     github = "ambroisie";
     githubId = 12465195;
     name = "Bruno BELANYI";
-    source = "nixpkgs";
-  };
-  amesgen = {
-    email = "amesgen@amesgen.de";
-    github = "amesgen";
-    githubId = 15369874;
-    matrix = "@amesgen:amesgen.de";
-    name = "Alexander Esgen";
     source = "nixpkgs";
   };
   andre4ik3 = {
@@ -975,6 +975,13 @@
     ];
     name = "Donovan Glover";
     source = "nixpkgs";
+  };
+  dosten = {
+    email = "diego@saintesteben.me";
+    github = "dosten";
+    githubId = 510842;
+    name = "Diego Saint Esteben";
+    source = "home-manager";
   };
   drupol = {
     email = "pol.dellaiera@protonmail.com";
@@ -1854,6 +1861,12 @@
     name = "Olmo Kramer";
     source = "home-manager";
   };
+  oneorseveralcats = {
+    github = "oneorseveralcats";
+    githubId = 170012754;
+    name = "oneorseveralcats";
+    source = "home-manager";
+  };
   onny = {
     email = "onny@project-insanity.org";
     github = "onny";
@@ -1915,6 +1928,13 @@
     githubId = 29627898;
     matrix = "@phanirithvij:matrix.org";
     name = "Phani Rithvij";
+    source = "nixpkgs";
+  };
+  philocalyst = {
+    email = "milestheperson@posteo.net";
+    github = "philocalyst";
+    githubId = 114884788;
+    name = "Myles Wirth";
     source = "nixpkgs";
   };
   pinage404 = {

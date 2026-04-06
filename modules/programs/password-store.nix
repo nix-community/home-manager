@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -9,6 +10,28 @@ let
 
   cfg = config.programs.password-store;
 
+  settingsStateVersion = lib.hm.deprecations.mkStateVersionOptionDefault {
+    inherit (config.home) stateVersion;
+    inherit config options;
+    since = "25.11";
+    optionPath = [
+      "programs"
+      "password-store"
+      "settings"
+    ];
+    legacy = {
+      value = {
+        PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
+      };
+      text = ''{ PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; }'';
+    };
+    current.value = { };
+    deferWarningToConfig = true;
+  };
+
+  legacyCompatibleSettings =
+    lib.optionalAttrs settingsStateVersion.shouldWarn settingsStateVersion.effectiveDefault
+    // cfg.settings;
 in
 {
   meta.maintainers = with lib.maintainers; [ euxane ];
@@ -21,20 +44,9 @@ in
       extraDescription = "Can be used to specify extensions.";
     };
 
-    settings = mkOption rec {
+    settings = mkOption {
       type = with types; attrsOf str;
-      apply = lib.mergeAttrs default;
-      default =
-        if lib.versionOlder config.home.stateVersion "25.11" then
-          {
-            PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
-          }
-        else
-          { };
-      defaultText = literalExpression ''
-        { }                                                       for state version ≥ 25.11
-        { PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; } for state version < 25.11
-      '';
+      inherit (settingsStateVersion) default defaultText;
       example = literalExpression ''
         {
           PASSWORD_STORE_DIR = "$\{config.xdg.dataHome\}/password-store";
@@ -54,15 +66,21 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
-    home.sessionVariables = cfg.settings;
+    warnings = lib.optional settingsStateVersion.shouldWarn settingsStateVersion.warning;
 
-    services.pass-secret-service = lib.mkIf (builtins.hasAttr "PASSWORD_STORE_DIR" cfg.settings) {
-      storePath = cfg.settings.PASSWORD_STORE_DIR;
+    home = {
+      packages = [ cfg.package ];
+      sessionVariables = legacyCompatibleSettings;
     };
 
+    services.pass-secret-service =
+      lib.mkIf (builtins.hasAttr "PASSWORD_STORE_DIR" legacyCompatibleSettings)
+        {
+          storePath = legacyCompatibleSettings.PASSWORD_STORE_DIR;
+        };
+
     xsession.importedVariables = lib.mkIf config.xsession.enable (
-      lib.mapAttrsToList (name: value: name) cfg.settings
+      lib.mapAttrsToList (name: _value: name) legacyCompatibleSettings
     );
   };
 }

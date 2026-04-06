@@ -25,4 +25,8 @@
   opencode-mcp-integration = ./mcp-integration.nix;
   opencode-mcp-integration-with-override = ./mcp-integration-with-override.nix;
   opencode-web-service = ./web-service.nix;
+  opencode-web-service-environment-file = ./web-service-environment-file.nix;
+  opencode-tui-settings = ./tui-settings.nix;
+  opencode-tui-empty = ./tui-empty.nix;
+  opencode-tui-with-settings = ./tui-with-settings.nix;
 }
