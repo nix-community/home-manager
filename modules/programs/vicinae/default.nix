@@ -204,6 +204,12 @@ in
           // lib.optionalAttrs themeIsToml themeFiles;
       };
 
+    home.activation.vicinae-refresh-apps = lib.mkIf (cfg.package != null) (
+      lib.hm.dag.entryAfter [ "installPackages" ] ''
+        run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps
+      ''
+    );
+
     systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
       Unit = {
         Description = "Vicinae server daemon";
