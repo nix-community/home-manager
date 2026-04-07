@@ -655,6 +655,7 @@
       - any-glob-to-any-file:
           - modules/programs/ashell.nix
           - modules/programs/anyrun.nix
+          - modules/services/awww.nix
           - modules/programs/bemenu.nix
           - modules/programs/fuzzel.nix
           - modules/programs/hyprlock.nix
@@ -688,7 +689,6 @@
           - modules/services/swayidle.nix
           - modules/services/swaync.nix
           - modules/services/swayosd.nix
-          - modules/services/swww.nix
           - modules/services/walker.nix
           - modules/services/way-displays.nix
           - modules/services/wlsunset.nix

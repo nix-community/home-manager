@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-31 16:13+0000\n"
+"PO-Revision-Date: 2026-04-02 18:09+0000\n"
 "Last-Translator: Marko Milovanov <markomilovanov03@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/home-manager/"
 "modules/sr/>\n"
@@ -25,9 +25,8 @@ msgid "Creating home file links in %s"
 msgstr "Kreiranje veza ka fajlovima u home direktorijumu %s"
 
 #: modules/files.nix:227
-#, fuzzy
 msgid "Cleaning up orphan links from %s"
-msgstr "Uklanjanje zaostalih veza iz %s"
+msgstr "Uklanjanje veza bez roditelja iz %s"
 
 #: modules/home-environment.nix:680
 msgid "Creating new profile generation"
