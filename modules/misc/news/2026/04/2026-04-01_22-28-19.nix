@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 {
   time = "2026-04-01T20:28:19+00:00";
   condition = config.programs.neovim.enable;
@@ -22,20 +22,13 @@
     which can be triggered for instance by:
 
       programs.neovim.plugins = [
-          { plugin = vimPlugins.fugitive-vim; }
+          { plugin = vimPlugins.fugitive-vim; config = "# some viml"; }
       ];
 
     Fix it with:
 
       programs.neovim.plugins = [
-          { plugin = vimPlugins.fugitive-vim; type = "viml"; }
+          { plugin = vimPlugins.fugitive-vim; config = "# some viml"; type = "viml"; }
       ];
-
-    or
-
-      programs.neovim.plugins = [
-          vimPlugins.fugitive-vim
-      ];
-
   '';
 }
