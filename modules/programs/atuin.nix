@@ -230,6 +230,12 @@ in
           };
         }
 
+        (mkIf config.home.preferXdgDirectories {
+          programs.atuin.settings.log = {
+            dir = lib.mkDefault "${config.xdg.stateHome}/atuin/logs";
+          };
+        })
+
         (mkIf daemonCfg.enable {
           assertions = [
             {
