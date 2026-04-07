@@ -183,6 +183,30 @@ let
           3;
       "mail.smtpserver.smtp_${id}.username" = account.userName;
     }
+    // optionalAttrs (account.ews != null) {
+      "mail.smtpserver.ews_${id}.type" = "ews";
+      "mail.outgoingserver.ews_${id}.auth_method" = 3;
+      "mail.outgoingserver.ews_${id}.ews_url" = account.ews.serviceDescriptionURL;
+      "mail.outgoingserver.ews_${id}.key" = "ews_${id}";
+      "mail.outgoingserver.ews_${id}.username" = account.userName;
+
+      "mail.server.server_${id}.directory" = "${thunderbirdProfilesPath}/${profile.name}/Mail/${id}";
+      "mail.server.server_${id}.directory-rel" = "[ProfD]Mail/${id}";
+      "mail.server.server_${id}.hostname" = account.ews.host;
+      "mail.server.server_${id}.ews_url" = account.ews.serviceDescriptionURL;
+      "mail.server.server_${id}.login_at_startup" = true;
+      "mail.server.server_${id}.name" = account.name;
+      "mail.server.server_${id}.port" = 443;
+      "mail.server.server_${id}.socketType" =
+        if !account.ews.tls.enable then
+          0
+        else if account.ews.tls.useStartTls then
+          2
+        else
+          3;
+      "mail.server.server_${id}.type" = "ews";
+      "mail.server.server_${id}.userName" = account.userName;
+    }
     // builtins.foldl' (a: b: a // b) { } (map (address: toThunderbirdSMTP account address) addresses)
     // optionalAttrs (account.smtp != null && account.primary) {
       "mail.smtp.defaultserver" = "smtp_${id}";
@@ -926,6 +950,8 @@ in
                 flatten (map getAliasesWithId emailAccounts);
               smtp = accountsSmtp ++ aliasesSmtp;
 
+              ews = filter (a: a.ews != null) emailAccounts;
+
               feedAccounts = addId (attrValues profile.feedAccounts);
 
               # NOTE: `calendarAccounts` not added here as calendars are not part of the 'Mail' view
@@ -982,8 +1008,10 @@ in
                     "calendar.list.sortOrder" = concatStringsSep " " orderedCalendarAccounts;
                   })
 
-                  (optionalAttrs (length smtp != 0) {
-                    "mail.smtpservers" = concatStringsSep "," (map (a: "smtp_${a.id}") smtp);
+                  (optionalAttrs (length smtp != 0 || length ews != 0) {
+                    "mail.smtpservers" = concatStringsSep "," (
+                      (map (a: "smtp_${a.id}") smtp) ++ (map (a: "ews_${a.id}") ews)
+                    );
                   })
 
                   { "mail.openpgp.allow_external_gnupg" = profile.withExternalGnupg; }
