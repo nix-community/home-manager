@@ -53,8 +53,8 @@ in
 
     xdg.configFile = lib.mapAttrs' (
       k: v:
-      lib.nameValuePair "tmuxinator/${k}.yaml" {
-        source = yamlFormat.generate "${k}.yaml" v;
+      lib.nameValuePair "tmuxinator/${k}.yml" {
+        source = yamlFormat.generate "${k}.yml" v;
       }
     ) cfg.tmuxinator.projects;
   };

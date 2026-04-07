@@ -31,10 +31,10 @@
     };
 
     nmt.script = ''
-      assertFileExists home-files/.config/tmuxinator/myproject.yaml
-      assertFileContent home-files/.config/tmuxinator/myproject.yaml ${./tmuxinator-projects-1.yaml}
-      assertFileExists home-files/.config/tmuxinator/my-second-project.yaml
-      assertFileContent home-files/.config/tmuxinator/my-second-project.yaml ${./tmuxinator-projects-2.yaml}
+      assertFileExists home-files/.config/tmuxinator/myproject.yml
+      assertFileContent home-files/.config/tmuxinator/myproject.yml ${./tmuxinator-projects-1.yml}
+      assertFileExists home-files/.config/tmuxinator/my-second-project.yml
+      assertFileContent home-files/.config/tmuxinator/my-second-project.yml ${./tmuxinator-projects-2.yml}
     '';
   };
 }
