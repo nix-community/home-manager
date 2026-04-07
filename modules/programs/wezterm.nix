@@ -27,6 +27,7 @@ in
   meta.maintainers = [
     lib.hm.maintainers.blmhemu
     lib.maintainers.khaneliman
+    lib.hm.maintainers.philip-730
   ];
 
   options.programs.wezterm = {
