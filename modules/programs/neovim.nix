@@ -217,15 +217,12 @@ in
         '';
       };
 
-      wrapGeneratedConfigs = mkOption {
-        type = types.enum [
-          false
-          "preload"
-          "postload"
-          "user"
-        ];
-        default = "preload";
-        description = "";
+      sideloadInitLua = mkOption {
+        type =  types.bool;
+        default = false;
+        description = ''
+          Whether to sideload the content of {var}`initLua` without generating a {file}`init.lua`.
+        '';
       };
 
       initLua = mkOption {
@@ -478,15 +475,6 @@ in
               opt = [ ];
             };
           };
-
-      hmGeneratedLua = pkgs.writeTextDir "lua/hm-generated.lua" (
-        lib.concatLines (
-          [ wrappedNeovim'.luaRcContent ]
-          ++ lib.optional (
-            lib.hasAttr "lua" cfg.generatedConfigs && cfg.generatedConfigs.lua != ""
-          ) cfg.generatedConfigs.lua
-        )
-      );
     in
     {
       programs.neovim = {
@@ -515,20 +503,10 @@ in
 
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
 
-      programs.neovim.extraWrapperArgs = mkIf (cfg.wrapGeneratedConfigs != false) (
-        [
-          "--add-flags"
-          ''--cmd 'lua vim.opt.runtimepath:prepend("${hmGeneratedLua}")' ''
-        ]
-        ++ lib.optionals (cfg.wrapGeneratedConfigs == "preload") [
-          "--add-flags"
-          ''--cmd 'lua require("hm-generated")' ''
-        ]
-        ++ lib.optionals (cfg.wrapGeneratedConfigs == "postload") [
-          "--add-flags"
-          ''-c 'lua require("hm-generated")' ''
-        ]
-      );
+      programs.neovim.extraWrapperArgs = mkIf (cfg.sideloadInitLua && cfg.initLua != "") [
+        "--add-flags"
+        ''--cmd 'lua dofile("${pkgs.writeText "wrapper-init-lua" cfg.initLua}")' ''
+      ];
 
       programs.neovim.initLua =
         let
@@ -544,11 +522,16 @@ in
             else
               null;
         in
-        lib.mkIf (cfg.wrapGeneratedConfigs == false) (
-          lib.mkBefore (
-            foldedLuaBlock "user-associated plugin config" ''dofile("${hmGeneratedLua}/lua/hm-generated.lua")''
-          )
-        );
+        lib.mkMerge [
+          (lib.mkIf (wrappedNeovim'.luaRcContent != "") (
+            # we want it to appear rather early
+            lib.mkOrder 200 wrappedNeovim'.luaRcContent
+          ))
+          (lib.mkIf (lib.hasAttr "lua" cfg.generatedConfigs && cfg.generatedConfigs.lua != "") (
+            lib.mkAfter (foldedLuaBlock "user-associated plugin config" cfg.generatedConfigs.lua)
+          ))
+
+        ];
 
       # link the packpath in expected folder so that even unwrapped neovim can pick
       # home-manager's plugins
@@ -566,18 +549,10 @@ in
         (map (x: x.runtime) pluginsNormalized)
         ++ [
           {
-            "nvim/init.lua" =
-              mkIf
-                (
-                  (builtins.elem cfg.wrapGeneratedConfigs [
-                    false
-                    "user"
-                  ])
-                  && cfg.initLua != ""
-                )
-                {
-                  text = cfg.initLua;
-                };
+            "nvim/init.lua" = mkIf (cfg.initLua != "") {
+              enable = !cfg.sideloadInitLua;
+              text = cfg.initLua;
+            };
 
             "nvim/coc-settings.json" = mkIf cfg.coc.enable {
               source = jsonFormat.generate "coc-settings.json" cfg.coc.settings;
