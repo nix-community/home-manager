@@ -117,7 +117,7 @@ in
       description = ''
         SVG templates installed to
         {file}`$XDG_CONFIG_HOME/inkscape/templates/`.
-        Appear in {guilabel}`File → New from Template`.
+        Appear in **File → New from Template**.
         Each attribute name is the filename; the value is either a path or
         inline text.
       '';
@@ -132,7 +132,7 @@ in
       description = ''
         SVG files with symbol definitions installed to
         {file}`$XDG_CONFIG_HOME/inkscape/symbols/`.
-        Appear as collections in {guilabel}`Object → Symbols`.
+        Appear as collections in **Object → Symbols**.
       '';
     };
 
@@ -147,7 +147,7 @@ in
         {file}`$XDG_CONFIG_HOME/inkscape/palettes/`.
         Supported formats: SVG swatches, GIMP Palette (`.gpl`),
         Adobe Swatch Exchange (`.ase`), Adobe Color Book (`.acb`).
-        Appear in the palette bar and {guilabel}`Object → Swatches`.
+        Appear in the palette bar and **Object → Swatches**.
       '';
     };
 
@@ -161,7 +161,7 @@ in
         SVG files with pattern definitions installed to
         {file}`$XDG_CONFIG_HOME/inkscape/paint/`.
         Appear in the pattern dropdown in
-        {guilabel}`Object → Fill and Stroke`.
+        **Object → Fill and Stroke**.
       '';
     };
 
@@ -174,7 +174,7 @@ in
       description = ''
         SVG files with filter effect definitions installed to
         {file}`$XDG_CONFIG_HOME/inkscape/filters/`.
-        Appear under {guilabel}`Filters → Custom`.
+        Appear under **Filters → Custom**.
       '';
     };
 
