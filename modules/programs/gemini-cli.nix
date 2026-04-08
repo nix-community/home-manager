@@ -160,9 +160,14 @@ in
         }
       '';
       description = ''
-        An attribute set of context files to create in `~/.gemini/`.
-        The attribute name becomes the filename with `.md` extension automatically added.
-        The value is either inline content or a path to a file.
+        Global context(s) for gemini-cli.
+
+        The attribute name becomes the filename, with a {file}`.md`
+        extension added automatically. Each value is either:
+        - Inline content as a string
+        - A path to a file containing the content
+
+        The configured files are written to {file}`~/.gemini/`.
 
         Note: You can customize which context file names gemini-cli looks for by setting
         `settings.context.fileName`. For example:
@@ -175,7 +180,7 @@ in
     };
 
     skills = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
       default = { };
       example = lib.literalExpression ''
         {
@@ -203,11 +208,21 @@ in
         }
       '';
       description = ''
-        An attribute set of skill files to create in `~/.gemini/skills`.
-        The attribute name becomes the directory name.
-        The value is either inline content or a path to a file or directory.
-        If the path points to a directory, all files under that directory are symlinked to `~/.gemini/skills/<attrname>/`.
-        If the path points to a file, that file is symlinked to `~/.gemini/skills/<attrname>/SKILL.md`.
+        Custom skills for gemini-cli.
+
+        This option can be either:
+        - An attribute set defining skills
+        - A path to a directory containing skill folders
+
+        If an attribute set is used, the attribute name becomes the
+        skill directory name, and the value is either:
+        - Inline content as a string (creates `~/.gemini/skills/<name>/SKILL.md`)
+        - A path to a file (creates `~/.gemini/skills/<name>/SKILL.md`)
+        - A path to a directory (symlinks `~/.gemini/skills/<name>/` to that directory)
+
+        If a path is used, it is expected to contain one folder per
+        skill name, each containing a {file}`SKILL.md`. The directory is
+        symlinked to {file}`~/.gemini/skills/`.
       '';
     };
   };
@@ -258,18 +273,35 @@ in
         ) cfg.policies;
       }
       {
-        home.file = lib.mapAttrs' (
-          n: v:
-          if lib.isPath v && lib.pathIsDirectory v then
-            lib.nameValuePair ".gemini/skills/${n}" {
-              source = v;
-              recursive = true;
+        assertions = [
+          {
+            assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
+            message = "`programs.gemini-cli.skills` must be a directory when set to a path";
+          }
+        ];
+      }
+      {
+        home.file =
+          if lib.isPath cfg.skills then
+            {
+              ".gemini/skills" = {
+                source = cfg.skills;
+                recursive = true;
+              };
             }
           else
-            lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
-              if lib.isPath v then { source = v; } else { text = v; }
-            )
-        ) cfg.skills;
+            lib.mapAttrs' (
+              n: v:
+              if lib.isPath v && lib.pathIsDirectory v then
+                lib.nameValuePair ".gemini/skills/${n}" {
+                  source = v;
+                  recursive = true;
+                }
+              else
+                lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
+                  if lib.isPath v then { source = v; } else { text = v; }
+                )
+            ) cfg.skills;
       }
     ]
   );
