@@ -13,7 +13,7 @@ let
 
   cfg = config.fonts.fontconfig;
 
-  profileDirectory = config.home.profileDirectory;
+  inherit (config.home) profileDirectory;
 
   fontConfigFileType = lib.types.submodule (
     { name, ... }:

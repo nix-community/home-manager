@@ -6,6 +6,7 @@ mkShell {
   name = "devShell";
   packages = [
     pkgs.coreutils
+    pkgs.statix
     formatter
   ];
 }

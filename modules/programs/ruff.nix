@@ -20,7 +20,7 @@ in
     package = lib.mkPackageOption pkgs "ruff" { nullable = true; };
 
     settings = lib.mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

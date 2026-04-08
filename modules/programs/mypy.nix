@@ -20,7 +20,7 @@ in
     package = lib.mkPackageOption pkgs "mypy" { nullable = true; };
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

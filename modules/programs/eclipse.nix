@@ -54,7 +54,7 @@ in
         eclipse = cfg.package;
         jvmArgs =
           cfg.jvmArgs ++ lib.optional cfg.enableLombok "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
-        plugins = cfg.plugins;
+        inherit (cfg) plugins;
       })
     ];
   };

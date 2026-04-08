@@ -16,7 +16,7 @@
         int = 5;
         float = 0.8;
         bool = true;
-        null = null;
+        inherit null;
       };
 
       nested-attrs-section = {

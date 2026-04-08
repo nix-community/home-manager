@@ -19,7 +19,7 @@ in
       package = lib.mkPackageOption pkgs "micro" { nullable = true; };
 
       settings = lib.mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = { };
         example = lib.literalExpression ''
           {

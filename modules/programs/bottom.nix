@@ -23,7 +23,7 @@ in
       package = lib.mkPackageOption pkgs "bottom" { nullable = true; };
 
       settings = lib.mkOption {
-        type = tomlFormat.type;
+        inherit (tomlFormat) type;
         default = { };
         description = ''
           Configuration written to

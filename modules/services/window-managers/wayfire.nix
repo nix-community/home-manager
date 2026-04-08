@@ -9,7 +9,7 @@
 
   options.wayland.windowManager.wayfire =
     let
-      types = lib.types;
+      inherit (lib) types;
 
       configIniType =
         with types;
@@ -157,7 +157,7 @@
 
       finalPackage = pkgs.wayfire-with-plugins.override {
         wayfire = cfg.package;
-        plugins = cfg.plugins;
+        inherit (cfg) plugins;
       };
     in
     lib.mkIf cfg.enable {

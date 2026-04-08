@@ -347,12 +347,14 @@ in
       toRasi {
         configuration = (
           {
-            font = cfg.font;
-            terminal = cfg.terminal;
-            cycle = cfg.cycle;
+            inherit (cfg)
+              cycle
+              font
+              terminal
+              xoffset
+              yoffset
+              ;
             location = (lib.getAttr cfg.location locationsMap);
-            xoffset = cfg.xoffset;
-            yoffset = cfg.yoffset;
           }
           // lib.optionalAttrs (modes != [ ]) { inherit modes; }
           // cfg.extraConfig

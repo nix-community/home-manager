@@ -59,7 +59,7 @@ in
     package = lib.mkPackageOption pkgs "pet" { nullable = true; };
 
     settings = mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       description = ''
         Settings written to {file}`config.toml`. See the pet
@@ -110,7 +110,7 @@ in
           }
       );
       "pet/snippet.toml" = lib.mkIf (cfg.snippets != [ ]) {
-        source = format.generate "snippet.toml" { snippets = cfg.snippets; };
+        source = format.generate "snippet.toml" { inherit (cfg) snippets; };
       };
     };
   };

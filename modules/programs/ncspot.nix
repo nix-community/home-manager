@@ -20,7 +20,7 @@ in
     package = lib.mkPackageOption pkgs "ncspot" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

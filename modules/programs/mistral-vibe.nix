@@ -23,7 +23,7 @@ in
     package = lib.mkPackageOption pkgs "mistral-vibe" { nullable = true; };
 
     settings = lib.mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

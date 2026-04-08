@@ -17,7 +17,7 @@ in
     package = lib.mkPackageOption pkgs "looking-glass-client" { nullable = true; };
 
     settings = lib.mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       description = "looking-glass-client settings.";
       example = lib.literalExpression ''

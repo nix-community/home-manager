@@ -116,7 +116,7 @@ rec {
           + " ${showFiles (getFiles defs)}."
         )
       else if gvar.isArray sharedDefType && allChecked then
-        gvar.mkValue ((types.listOf gvariant).merge loc (map (d: d // { value = d.value.value; }) vdefs))
+        gvar.mkValue ((types.listOf gvariant).merge loc (map (d: d // { inherit (d.value) value; }) vdefs))
         // {
           type = sharedDefType;
         }

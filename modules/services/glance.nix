@@ -31,7 +31,7 @@ in
     package = mkPackageOption pkgs "glance" { };
 
     settings = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = {
         pages = [
           {

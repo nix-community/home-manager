@@ -72,7 +72,7 @@ in
     home.file.".rbenv/plugins" = mkIf (cfg.plugins != [ ]) {
       source = pkgs.linkFarm "rbenv-plugins" (
         map (p: {
-          name = p.name;
+          inherit (p) name;
           path = p.src;
         }) cfg.plugins
       );

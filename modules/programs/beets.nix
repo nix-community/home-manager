@@ -61,7 +61,7 @@ in
       };
 
       settings = mkOption {
-        type = yamlFormat.type;
+        inherit (yamlFormat) type;
         default = { };
         description = ''
           Configuration written to
@@ -101,8 +101,7 @@ in
 
     (mkIf (cfg.mpdIntegration.enableStats || cfg.mpdIntegration.enableUpdate) {
       programs.beets.settings.mpd = {
-        host = cfg.mpdIntegration.host;
-        port = cfg.mpdIntegration.port;
+        inherit (cfg.mpdIntegration) host port;
       };
     })
 

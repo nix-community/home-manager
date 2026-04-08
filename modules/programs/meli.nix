@@ -46,7 +46,7 @@ let
 
   mkSmtp = account: {
     hostname = account.smtp.host;
-    port = account.smtp.port;
+    inherit (account.smtp) port;
     auth = {
       type = "auto";
       username = account.userName;

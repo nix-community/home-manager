@@ -386,7 +386,7 @@ in
       fade-exclude = cfg.fadeExclude;
 
       # shadows
-      shadow = cfg.shadow;
+      inherit (cfg) shadow;
       shadow-offset-x = elemAt cfg.shadowOffsets 0;
       shadow-offset-y = elemAt cfg.shadowOffsets 1;
       shadow-opacity = cfg.shadowOpacity;
@@ -395,13 +395,10 @@ in
       # opacity
       active-opacity = cfg.activeOpacity;
       inactive-opacity = cfg.inactiveOpacity;
-
-      wintypes = cfg.wintypes;
-
       opacity-rule = cfg.opacityRules;
 
       # other options
-      backend = cfg.backend;
+      inherit (cfg) backend wintypes;
       vsync = cfg.vSync;
     };
 

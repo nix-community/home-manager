@@ -29,7 +29,7 @@ in
     package = lib.mkPackageOption pkgs "lazygit" { nullable = true; };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       defaultText = lib.literalExpression "{ }";
       example = lib.literalExpression ''

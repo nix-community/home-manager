@@ -32,7 +32,7 @@ in
     package = mkPackageOption pkgs "inori" { nullable = true; };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = literalExpression ''
         {

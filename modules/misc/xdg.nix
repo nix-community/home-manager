@@ -15,11 +15,15 @@ let
 
   cfg = config.xdg;
 
-  fileType =
-    (import ../lib/file-type.nix {
-      inherit (config.home) homeDirectory;
-      inherit lib pkgs;
-    }).fileType;
+  inherit
+    (
+      (import ../lib/file-type.nix {
+        inherit (config.home) homeDirectory;
+        inherit lib pkgs;
+      })
+    )
+    fileType
+    ;
 
   defaultCacheHome = "${config.home.homeDirectory}/.cache";
   defaultConfigHome = "${config.home.homeDirectory}/.config";

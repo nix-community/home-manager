@@ -71,7 +71,7 @@ in
     package = lib.mkPackageOption pkgs "fusuma" { };
 
     settings = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       example = literalExpression ''
         {
           threshold = {

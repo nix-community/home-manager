@@ -22,7 +22,7 @@ in
     enable = mkEnableOption "twitch-tui";
     package = mkPackageOption pkgs "twitch-tui" { nullable = true; };
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = {
         twitch = {

@@ -141,7 +141,7 @@ let
   toThunderbirdAccount =
     account: profile:
     let
-      id = account.id;
+      inherit (account) id;
       addresses = [ account.address ] ++ account.aliases;
     in
     {
@@ -246,7 +246,7 @@ let
   toThunderbirdFeed =
     feed: profile:
     let
-      id = feed.id;
+      inherit (feed) id;
     in
     {
       "mail.account.account_${id}.server" = "server_${id}";
@@ -496,7 +496,7 @@ in
                       inherit (args) config;
                       inherit lib pkgs;
                       appName = "Thunderbird";
-                      package = cfg.package;
+                      inherit (cfg) package;
                       modulePath = [
                         "programs"
                         "thunderbird"
@@ -935,7 +935,7 @@ in
                 let
                   accountNameToId = builtins.listToAttrs (
                     map (a: {
-                      name = a.name;
+                      inherit (a) name;
                       value = "account_${a.id}";
                     }) accounts
                   );
@@ -956,7 +956,7 @@ in
                 let
                   accountNameToId = builtins.listToAttrs (
                     map (a: {
-                      name = a.name;
+                      inherit (a) name;
                       value = "calendar_${a.id}";
                     }) calendarAccounts
                   );
@@ -998,8 +998,7 @@ in
             };
 
           "${thunderbirdProfilesPath}/${name}/search.json.mozlz4" = mkIf (profile.search.enable) {
-            enable = profile.search.enable;
-            force = profile.search.force;
+            inherit (profile.search) enable force;
             source = profile.search.file;
           };
 

@@ -23,7 +23,7 @@ in
     enable = mkEnableOption "kickoff";
     package = mkPackageOption pkgs "kickoff" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         padding = 100;

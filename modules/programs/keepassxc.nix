@@ -42,7 +42,7 @@ in
     package = lib.mkPackageOption pkgs "keepassxc" { nullable = true; };
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

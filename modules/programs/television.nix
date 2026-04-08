@@ -19,7 +19,7 @@ in
     package = lib.mkPackageOption pkgs "television" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/television/config.toml`.

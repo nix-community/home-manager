@@ -118,7 +118,7 @@ let
         };
 
         modules = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           visible = false;
           default = null;
           description = "Modules configuration.";

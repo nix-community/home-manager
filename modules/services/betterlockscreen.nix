@@ -41,7 +41,7 @@ in
 
     services.screen-locker = {
       enable = true;
-      inactiveInterval = cfg.inactiveInterval;
+      inherit (cfg) inactiveInterval;
       lockCmd = "${cfg.package}/bin/betterlockscreen --lock ${lib.concatStringsSep " " cfg.arguments}";
     };
   };

@@ -111,7 +111,7 @@ in
               explicitBool = false;
             };
             args = lib.cli.toCommandLineShell optionFormat {
-              host = cfg.host;
+              inherit (cfg) host;
               no-notification = !cfg.notifications.enable;
               notification-timeout = cfg.notifications.timeout;
               notification-summary = cfg.notifications.summary;

@@ -24,7 +24,7 @@ in
     package = lib.mkPackageOption pkgs "hyprpanel" { };
 
     settings = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       example = lib.literalExpression ''
         bar.battery.label = true;

@@ -26,7 +26,7 @@ in
   config = {
     programs.sbt = {
       enable = true;
-      repositories = repositories;
+      inherit repositories;
       package = pkgs.writeScriptBin "sbt" "";
     };
 

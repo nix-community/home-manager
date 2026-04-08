@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs "sqls" { nullable = true; };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

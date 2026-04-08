@@ -19,7 +19,7 @@ let
   jsonFormat = pkgs.formats.json { };
 
   transformMcpServer = name: server: {
-    name = name;
+    inherit name;
     value = {
       enabled = !(server.disabled or false);
     }
@@ -27,9 +27,9 @@ let
       if server ? url then
         {
           type = "remote";
-          url = server.url;
+          inherit (server) url;
         }
-        // (lib.optionalAttrs (server ? headers) { headers = server.headers; })
+        // (lib.optionalAttrs (server ? headers) { inherit (server) headers; })
       else if server ? command then
         {
           type = "local";

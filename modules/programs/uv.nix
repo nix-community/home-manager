@@ -27,7 +27,7 @@ in
     package = mkPackageOption pkgs "uv" { nullable = true; };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = literalExpression ''
         {

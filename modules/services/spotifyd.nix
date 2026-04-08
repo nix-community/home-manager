@@ -27,7 +27,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = "Configuration for spotifyd";
       example = literalExpression ''

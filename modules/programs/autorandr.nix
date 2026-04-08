@@ -39,7 +39,7 @@ let
             "*"
           ]
         );
-      getSubModules = elemType.getSubModules;
+      inherit (elemType) getSubModules;
       substSubModules = mod: matrixOf n m (elemType.substSubModules mod);
       functor = (lib.defaultFunctor name) // {
         wrapped = elemType;

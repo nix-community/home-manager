@@ -180,7 +180,7 @@ in
       pkgs.runCommandLocal "get_settings-compile"
         {
           nativeBuildInputs = [ cfg.package ];
-          pythonFile = cfg.pythonFile;
+          inherit (cfg) pythonFile;
           passAsFile = [ "pythonFile" ];
         }
         ''

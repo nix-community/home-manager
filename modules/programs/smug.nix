@@ -14,7 +14,7 @@ let
     lib.mkOption {
       type = lib.types.nullOr (lib.types.listOf lib.types.str);
       default = null;
-      description = description;
+      inherit description;
     };
 
   mkOptionRoot =
@@ -22,7 +22,7 @@ let
     lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
-      description = description;
+      inherit description;
     };
 
 in
@@ -169,7 +169,7 @@ in
                   (lib.attrsets.nameValuePair (if name == "beforeStart" then "before_start" else name) value)
                 ) v
                 // {
-                  session = v.session;
+                  inherit (v) session;
                   windows = lib.lists.forEach v.windows (
                     winprop: (lib.filterAttrsRecursive (name: value: value != null) winprop)
                   );

@@ -132,7 +132,7 @@ let
       cleanServer = lib.filterAttrs (n: v: n != "disabled") server;
     in
     {
-      name = name;
+      inherit name;
       value = {
         enabled = !(server.disabled or false);
       }
@@ -289,7 +289,7 @@ let
       };
 
       languageSnippets = mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = { };
         example = {
           haskell = {
@@ -304,7 +304,7 @@ let
       };
 
       globalSnippets = mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = { };
         example = {
           fixme = {

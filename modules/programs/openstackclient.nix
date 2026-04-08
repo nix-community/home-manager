@@ -69,7 +69,7 @@ in
     xdg.configFile."openstack/clouds.yaml".source =
       yamlFormat.generate "openstackclient-clouds-yaml-${config.home.username}"
         {
-          clouds = cfg.clouds;
+          inherit (cfg) clouds;
         };
 
     xdg.configFile."openstack/clouds-public.yaml".source =
