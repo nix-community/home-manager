@@ -18,6 +18,21 @@ in
 
     package = lib.mkPackageOption pkgs "gemini-cli" { nullable = true; };
 
+    enableMcpIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP servers config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.gemini-cli.settings.mcpServers`.
+
+        Note: Any servers already present in
+        {option}`programs.gemini-cli.settings.mcpServers`
+        is not overridden by servers present under the same
+        name in {option}`programs.mcp.servers`
+      '';
+    };
+
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -199,6 +214,11 @@ in
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
+      {
+        programs.gemini-cli.settings.mcpServers = lib.mkIf (
+          cfg.enableMcpIntegration && config.programs.mcp.enable
+        ) (lib.mapAttrs (_n: lib.mkDefault) config.programs.mcp.servers);
+      }
       {
         home = {
           packages = lib.mkIf (cfg.package != null) [ cfg.package ];
