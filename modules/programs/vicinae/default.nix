@@ -205,7 +205,7 @@ in
       home.activation.vicinae-refresh-apps = lib.mkIf (cfg.package != null) (
         lib.hm.dag.entryAfter [ "installPackages" ] ''
           verboseEcho "Refreshing the vicinae app list"
-          run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps
+          run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps || verboseEcho "Failed to refresh the vicinae app list"
         ''
       );
 
