@@ -1,4 +1,3 @@
-{ ... }:
 {
   programs.nom.enable = false;
 
