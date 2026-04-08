@@ -73,30 +73,28 @@ let
   # A specific type for Recoll config format. Taken from `pkgs.formats`
   # implementation from nixpkgs. See the 'Nix-representable formats' from the
   # NixOS manual for more information.
-  recollConfFormat =
-    { }:
-    {
-      type =
-        with types;
-        let
-          valueType =
-            nullOr (oneOf [
-              bool
-              float
-              int
-              path
-              str
-              (attrsOf valueType)
-              (listOf valueType)
-            ])
-            // {
-              description = "Recoll config value";
-            };
-        in
-        attrsOf valueType;
+  recollConfFormat = _: {
+    type =
+      with types;
+      let
+        valueType =
+          nullOr (oneOf [
+            bool
+            float
+            int
+            path
+            str
+            (attrsOf valueType)
+            (listOf valueType)
+          ])
+          // {
+            description = "Recoll config value";
+          };
+      in
+      attrsOf valueType;
 
-      generate = name: value: pkgs.writeText name (toRecollConf { } value);
-    };
+    generate = name: value: pkgs.writeText name (toRecollConf { } value);
+  };
 
   # The actual object we're going to use for this module. This is for the sake
   # of consistency (and dogfooding the settings format implementation).

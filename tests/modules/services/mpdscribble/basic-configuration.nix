@@ -1,8 +1,4 @@
 {
-  ...
-}:
-
-{
   services.mpdscribble = {
     enable = true;
     endpoints = {

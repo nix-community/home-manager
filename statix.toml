@@ -5,7 +5,6 @@ disabled = [
   "deprecated_to_path",
   "empty_inherit",
   "empty_let_in",
-  "empty_pattern",
   "eta_reduction",
   "faster_groupby",
   "faster_zipattrswith",

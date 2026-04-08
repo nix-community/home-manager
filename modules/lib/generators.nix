@@ -67,7 +67,7 @@
     toHyprconf' initialIndent attrs;
 
   toKDL =
-    { }:
+    _:
     let
       inherit (lib)
         concatStringsSep
@@ -223,7 +223,7 @@
     '';
 
   toSCFG =
-    { }:
+    _:
     let
       inherit (lib) concatStringsSep any;
       inherit (builtins) typeOf replaceStrings elem;

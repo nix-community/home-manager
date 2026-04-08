@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   programs.tirith = {
     enable = true;
