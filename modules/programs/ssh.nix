@@ -616,10 +616,7 @@ in
             sortedMatchBlocks = lib.hm.dag.topoSort (lib.removeAttrs cfg.matchBlocks [ "*" ]);
             sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
             matchBlocks =
-              if sortedMatchBlocks ? result then
-                sortedMatchBlocks.result
-              else
-                abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
+              sortedMatchBlocks.result or (abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}");
 
             defaultHostBlock = cfg.matchBlocks."*" or null;
           in
