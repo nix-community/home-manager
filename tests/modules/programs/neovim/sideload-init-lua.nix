@@ -1,10 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, realPkgs, ... }:
 
 {
   tests.stubs.wl-clipboard = { };
 
   programs.neovim = {
     enable = true;
+    package = realPkgs.neovim-unwrapped;
     vimAlias = true;
     withNodeJs = false;
     withPython3 = true;
