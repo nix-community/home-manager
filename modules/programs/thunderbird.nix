@@ -294,7 +294,7 @@ let
       version="9"
       logging="no"
     ''
-    + lib.concatStrings (map (f: mkFilterToIniString f) filters);
+    + lib.concatStrings (map mkFilterToIniString filters);
 
   getAccountsForProfile =
     profileName: accounts:

@@ -193,7 +193,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = lib.mapAttrs (n: v: toString v) (
+    home.sessionVariables = lib.mapAttrs (n: toString) (
       lib.filterAttrs (n: v: v != [ ] && v != null) {
         FZF_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         FZF_ALT_C_OPTS = cfg.changeDirWidgetOptions;

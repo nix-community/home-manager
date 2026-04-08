@@ -144,7 +144,7 @@ in
               if lib.isBool v then
                 "${optionalString (!v) "no"}${k}"
               else if lib.isList v then
-                ''${k} "${concatStringsSep ":" (map (w: toString w) v)}"''
+                ''${k} "${concatStringsSep ":" (map toString v)}"''
               else
                 "${k} ${if lib.isInt v then toString v else ''"${v}"''}"
             }";

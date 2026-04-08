@@ -98,7 +98,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = lib.mapAttrs (n: v: toString v) (
+    home.sessionVariables = lib.mapAttrs (n: toString) (
       lib.filterAttrs (n: v: v != [ ] && v != null) {
         SKIM_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         SKIM_ALT_C_OPTS = cfg.changeDirWidgetOptions;

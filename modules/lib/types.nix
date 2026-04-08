@@ -107,7 +107,7 @@ rec {
         sameOrNull = x: y: if x == y then y else null;
         # A bit naive to just check the first entry…
         sharedDefType = foldl' sameOrNull (head defTypes) defTypes;
-        allChecked = all (x: check x) vals;
+        allChecked = all check vals;
       in
       if sharedDefType == null then
         throw (
